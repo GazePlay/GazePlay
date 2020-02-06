@@ -9,14 +9,13 @@ import java.util.List;
 /**
  * This class implies that all Images are loaded in memory at all time. So it is only appropriate when the number of
  * items is limited.
- *
+ * <p>
  * For that reason, the constructor accepting a directory File is only present for compatibility reason, and should
  * generally not be used.
- * 
+ * <p>
  * Please consider using LazyImageLibrary instead, when the number of item is unknown or may be high.
- * 
+ * <p>
  * EagerImageLibrary exists essentially as an opposite of LazyImageLibrary and should generally not be used.
- * 
  */
 @Slf4j
 public class EagerImageLibrary extends AbstractImageLibrary {
@@ -24,21 +23,21 @@ public class EagerImageLibrary extends AbstractImageLibrary {
     private final List<Image> allImages;
 
     @Deprecated
-    public EagerImageLibrary(File directoryFile) {
+    public EagerImageLibrary(final File directoryFile) {
         this(ImageUtils.loadAllImages(directoryFile), null);
     }
 
     @Deprecated
-    public EagerImageLibrary(File directoryFile, ImageLibrary defaultImageLibrary) {
+    public EagerImageLibrary(final File directoryFile, final ImageLibrary defaultImageLibrary) {
         this(ImageUtils.loadAllImages(directoryFile), defaultImageLibrary);
     }
 
-    public EagerImageLibrary(List<Image> allImages) {
+    public EagerImageLibrary(final List<Image> allImages) {
         this.allImages = allImages;
         setFallbackImageLibrary(null);
     }
 
-    public EagerImageLibrary(List<Image> allImages, ImageLibrary defaultImageLibrary) {
+    public EagerImageLibrary(final List<Image> allImages, final ImageLibrary defaultImageLibrary) {
         this.allImages = allImages;
         setFallbackImageLibrary(defaultImageLibrary);
     }
@@ -48,7 +47,8 @@ public class EagerImageLibrary extends AbstractImageLibrary {
         return allImages.size();
     }
 
-    public Image loadImageAtIndex(int index) {
+    @Override
+    public Image loadImageAtIndex(final int index) {
         return allImages.get(index);
     }
 

@@ -20,19 +20,19 @@ import net.gazeplay.commons.utils.stats.Stats;
  */
 public class MouseV4 extends Mouse {
 
-    private EventHandler<Event> eventBox;
+    private final EventHandler<Event> eventBox;
 
     private Timeline timelineProgressBar;
-    private ProgressIndicator indicator;
+    private final ProgressIndicator indicator;
 
     private boolean isSelectioned;
 
-    MouseV4(double positionX, double positionY, double width, double height, IGameContext gameContext,
-            Stats stats, Labyrinth gameInstance) {
+    MouseV4(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext,
+            final Stats stats, final Labyrinth gameInstance) {
         super(positionX, positionY, width, height, gameContext, stats, gameInstance);
 
         isSelectioned = false;
-        EventHandler<Event> eventMouse = buildEventMouse();
+        final EventHandler<Event> eventMouse = buildEventMouse();
         eventBox = buildEventBox();
         indicator = createProgressIndicator(mouse.getX(), mouse.getY(), width, height);
         this.mouse.addEventHandler(GazeEvent.ANY, eventMouse);
@@ -54,19 +54,19 @@ public class MouseV4 extends Mouse {
         }
     }
 
-    private boolean conditionToMove(Event e) {
+    private boolean conditionToMove(final Event e) {
         if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
             && isSelectioned) {
-            GameBox gb = (GameBox) e.getSource();
+            final GameBox gb = (GameBox) e.getSource();
             return gb.isNextTo(indiceY, indiceX) && gameInstance.isFreeForMouse(gb.numRow, gb.numCol);
         }
         return false;
     }
 
-    private boolean conditionToStop(Event e) {
+    private boolean conditionToStop(final Event e) {
         if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
             && isSelectioned) {
-            GameBox gb = (GameBox) e.getSource();
+            final GameBox gb = (GameBox) e.getSource();
             if (gb.isNextTo(indiceY, indiceX)) { // fo comfort with eye tracker
                 return false;
             }
@@ -75,8 +75,8 @@ public class MouseV4 extends Mouse {
         return false;
     }
 
-    private boolean isCurrentBox(Event e) {
-        GameBox gb = (GameBox) e.getSource();
+    private boolean isCurrentBox(final Event e) {
+        final GameBox gb = (GameBox) e.getSource();
         return (gb.numCol == indiceX && gb.numRow == indiceY);
     }
 
@@ -88,14 +88,14 @@ public class MouseV4 extends Mouse {
             }
 
             if (conditionToMove(e)) {
-                GameBox gb = (GameBox) e.getSource();
+                final GameBox gb = (GameBox) e.getSource();
                 gb.getIndicator().setOpacity(0);
                 reOrientateMouse(indiceX, indiceY, gb.numCol, gb.numRow);
                 putInBold();
                 indiceX = gb.numCol;
                 indiceY = gb.numRow;
-                double coordX = gameInstance.positionX(indiceX);
-                double coordY = gameInstance.positionY(indiceY);
+                final double coordX = gameInstance.positionX(indiceX);
+                final double coordY = gameInstance.positionY(indiceY);
                 mouse.setX(coordX);
                 mouse.setY(coordY);
                 indicator.setTranslateX(coordX);
@@ -107,10 +107,11 @@ public class MouseV4 extends Mouse {
                 isSelectioned = false;
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-                Timeline timeline = new Timeline();
+                final Timeline timeline = new Timeline();
                 timeline.play();
-                if (timelineProgressBar != null)
+                if (timelineProgressBar != null) {
                     timelineProgressBar.stop();
+                }
             }
         };
 
@@ -136,10 +137,11 @@ public class MouseV4 extends Mouse {
                 timelineProgressBar.play();
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-                Timeline timeline = new Timeline();
+                final Timeline timeline = new Timeline();
                 timeline.play();
-                if (timelineProgressBar != null)
+                if (timelineProgressBar != null) {
                     timelineProgressBar.stop();
+                }
 
                 indicator.setOpacity(0);
                 indicator.setProgress(0);

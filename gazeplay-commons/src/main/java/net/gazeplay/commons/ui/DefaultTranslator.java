@@ -18,27 +18,27 @@ public class DefaultTranslator implements Translator {
 
     private final List<LanguageChangeListener> languageChangeListeners = new CopyOnWriteArrayList<>();
 
-    public DefaultTranslator(Configuration config, Multilinguism multilinguism) {
+    public DefaultTranslator(final Configuration config, final Multilinguism multilinguism) {
         this.config = config;
         this.multilinguism = multilinguism;
     }
 
     @Override
-    public String translate(String key) {
+    public String translate(final String key) {
         return multilinguism.getTrad(key, config.getLanguage());
     }
 
     @Override
-    public String translate(String... keys) {
-        StringBuilder textBuilder = new StringBuilder();
-        for (String key : keys) {
+    public String translate(final String... keys) {
+        final StringBuilder textBuilder = new StringBuilder();
+        for (final String key : keys) {
             textBuilder.append(translate(key));
         }
         return textBuilder.toString();
     }
 
     @Override
-    public void registerLanguageChangeListener(LanguageChangeListener listener) {
+    public void registerLanguageChangeListener(final LanguageChangeListener listener) {
         languageChangeListeners.add(listener);
     }
 
@@ -50,11 +50,11 @@ public class DefaultTranslator implements Translator {
 
     @Override
     public Locale currentLocale() {
-        return new Locale(config.getLanguage(),config.getCountry());
+        return new Locale(config.getLanguage(), config.getCountry());
     }
 
     private void notifyAllListeners() {
-        for (LanguageChangeListener l : languageChangeListeners) {
+        for (final LanguageChangeListener l : languageChangeListeners) {
             l.languageChanged();
         }
     }

@@ -13,7 +13,7 @@ public class RatioChangeListener implements ChangeListener<Number> {
     private final DoubleProperty doubleProperty;
 
     @Override
-    public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+    public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
         if (newValue.doubleValue() > 1d) {
             log.warn("Invalid value set : {}. 1 set instead", newValue);
             doubleProperty.setValue(1);

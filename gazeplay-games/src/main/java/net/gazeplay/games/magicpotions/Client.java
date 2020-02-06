@@ -16,22 +16,22 @@ class Client extends Rectangle {
 
     @Getter
     private final Rectangle client;
-    
+
     @Getter
     private final PotionMix potionRequest;
-    
+
     @Getter
     private final List<Color> colorsToMix;
 
-    Client(double posX, double posY, double width, double height, Image clientImage, PotionMix request) {
+    Client(final double posX, final double posY, final double width, final double height, final Image clientImage, final PotionMix request) {
         this.client = new Rectangle(posX, posY, width, height);
         this.client.setFill(new ImagePattern(clientImage, 0, 0, 1, 1, true));
         this.potionRequest = request;
         this.colorsToMix = toMix(request);
     }
 
-    private List<Color> toMix(PotionMix potionRequest) {
-        List<Color> colorsToMix = new LinkedList<>();
+    private List<Color> toMix(final PotionMix potionRequest) {
+        final List<Color> colorsToMix = new LinkedList<>();
         if (potionRequest.getColor() == Color.RED || potionRequest.getColor() == Color.YELLOW
             || potionRequest.getColor() == Color.BLUE) {
             colorsToMix.add(potionRequest.getColor());

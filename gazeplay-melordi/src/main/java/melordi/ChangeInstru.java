@@ -13,24 +13,21 @@ import javafx.scene.layout.GridPane;
  */
 public class ChangeInstru extends Parent {
 
-    private Instru instru;
-    private RadioButton rb_piano;
-    private RadioButton rb_guitare;
-    private RadioButton rb_orgue;
+    private final RadioButton rb_piano;
+    private final RadioButton rb_guitare;
 
-    public ChangeInstru(Instru instru) {
+    public ChangeInstru(final Instru instru) {
 
-        this.instru = instru;
-        GridPane gridpane = new GridPane();
+        final GridPane gridpane = new GridPane();
 
         // création des images des 3 instruments
-        ImageView piano = new ImageView(new Image(ChangeInstru.class.getResourceAsStream("images/piano.png")));
+        final ImageView piano = new ImageView(new Image(ChangeInstru.class.getResourceAsStream("images/piano.png")));
         piano.setFitHeight(50);
         piano.setPreserveRatio(true);
-        ImageView guitare = new ImageView(new Image(ChangeInstru.class.getResourceAsStream("images/guitare.png")));
+        final ImageView guitare = new ImageView(new Image(ChangeInstru.class.getResourceAsStream("images/guitare.png")));
         guitare.setFitHeight(50);
         guitare.setPreserveRatio(true);
-        ImageView orgue = new ImageView(new Image(ChangeInstru.class.getResourceAsStream("images/orgue.png")));
+        final ImageView orgue = new ImageView(new Image(ChangeInstru.class.getResourceAsStream("images/orgue.png")));
         orgue.setFitHeight(50);
         orgue.setPreserveRatio(true);
 
@@ -41,10 +38,10 @@ public class ChangeInstru extends Parent {
         gridpane.setVgap(15);
 
         // création des boutons radio
-        ToggleGroup groupe = new ToggleGroup();
+        final ToggleGroup groupe = new ToggleGroup();
         rb_piano = new RadioButton();
         rb_guitare = new RadioButton();
-        rb_orgue = new RadioButton();
+        final RadioButton rb_orgue = new RadioButton();
         rb_piano.setToggleGroup(groupe);
         rb_guitare.setToggleGroup(groupe);
         rb_orgue.setToggleGroup(groupe);
@@ -55,12 +52,13 @@ public class ChangeInstru extends Parent {
 
         // ajout d'un ChangeListener au groupe de boutons radio
         groupe.selectedToggleProperty().addListener((ChangeListener) (observable, oldValue, newValue) -> {
-            if (newValue.equals(rb_piano))
+            if (newValue.equals(rb_piano)) {
                 instru.set_instrument(0);// numéro MIDI du piano = 0
-            else if (newValue.equals(rb_guitare))
+            } else if (newValue.equals(rb_guitare)) {
                 instru.set_instrument(26);// numéro MIDI de la guitare = 26
-            else
+            } else {
                 instru.set_instrument(16);// numéro MIDI de l'orgue = 16
+            }
         });
 
         // on ajoute les boutons radio au layout

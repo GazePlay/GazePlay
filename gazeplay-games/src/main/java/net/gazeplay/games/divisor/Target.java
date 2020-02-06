@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- *
  * @author vincent
  */
 @Slf4j
@@ -45,8 +44,8 @@ class Target extends Parent {
     private final Circle cercle;
     private Timeline timeline;
 
-    public Target(IGameContext gameContext, Stats stats, ImageLibrary imgLib, int level, long start,
-            Divisor gameInstance, Position pos, boolean lapin) {
+    public Target(final IGameContext gameContext, final Stats stats, final ImageLibrary imgLib, final int level, final long start,
+                  final Divisor gameInstance, final Position pos, final boolean lapin) {
         this.level = level;
         this.difficulty = 3;
         this.gameContext = gameContext;
@@ -67,7 +66,7 @@ class Target extends Parent {
         enterEvent = e -> enter();
 
         if (level != 0) {
-            Timeline waitbeforestart = new Timeline();
+            final Timeline waitbeforestart = new Timeline();
 
             waitbeforestart.getKeyFrames().add(new KeyFrame(Duration.seconds(0.6)));
             waitbeforestart.setOnFinished(actionEvent -> addEvent());
@@ -92,16 +91,15 @@ class Target extends Parent {
                 int dx = randomDirection();
                 int dy = randomDirection();
 
-                double height = dimension.getHeight();
-                double width = dimension.getWidth();
+                final double height = dimension.getHeight();
+                final double width = dimension.getWidth();
 
                 @Override
-                public void handle(ActionEvent t) {
-                    double newCenterX = Target.this.pos.getX() + dx;
-                    double newCenterY = Target.this.pos.getY() + dy;
+                public void handle(final ActionEvent t) {
+                    final double newCenterX = Target.this.pos.getX() + dx;
+                    final double newCenterY = Target.this.pos.getY() + dy;
 
-                    Position newPos = new Position(newCenterX, newCenterY);
-                    Target.this.pos = newPos;
+                    Target.this.pos = new Position(newCenterX, newCenterY);
 
                     Target.this.cercle.setCenterX(newCenterX);
                     Target.this.cercle.setCenterY(newCenterY);
@@ -130,8 +128,8 @@ class Target extends Parent {
         this.removeEventFilter(MouseEvent.ANY, enterEvent);
         this.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-        double x = this.pos.getX();
-        double y = this.pos.getY();
+        final double x = this.pos.getX();
+        final double y = this.pos.getY();
 
         explodeAnimation(x, y);
 
@@ -142,34 +140,34 @@ class Target extends Parent {
         }
     }
 
-    private void explodeAnimation(double x, double y) {
-        double particleRadius = 2;
-        ArrayList<Circle> particles = new ArrayList<>();
-        Timeline timelineParticle = new Timeline();
+    private void explodeAnimation(final double x, final double y) {
+        final double particleRadius = 2;
+        final ArrayList<Circle> particles = new ArrayList<>();
+        final Timeline timelineParticle = new Timeline();
         for (int i = 0; i < 30; i++) {
-            Circle particle = new Circle(x, y, particleRadius);
+            final Circle particle = new Circle(x, y, particleRadius);
             particle.setFill(Color.color(Math.random(), Math.random(), Math.random()));
 
             particles.add(particle);
             this.gameContext.getChildren().add(particle);
-            Position particleDestination = randomPosWithRange(this.pos, this.radius * 1.5, particleRadius);
+            final Position particleDestination = randomPosWithRange(this.pos, this.radius * 1.5, particleRadius);
             timelineParticle.getKeyFrames()
-                    .add(new KeyFrame(new Duration(1000), new KeyValue(particles.get(i).centerXProperty(),
-                            particleDestination.getX(), Interpolator.EASE_OUT)));
+                .add(new KeyFrame(new Duration(1000), new KeyValue(particles.get(i).centerXProperty(),
+                    particleDestination.getX(), Interpolator.EASE_OUT)));
             timelineParticle.getKeyFrames()
-                    .add(new KeyFrame(new Duration(1000), new KeyValue(particles.get(i).centerYProperty(),
-                            particleDestination.getY(), Interpolator.EASE_OUT)));
+                .add(new KeyFrame(new Duration(1000), new KeyValue(particles.get(i).centerYProperty(),
+                    particleDestination.getY(), Interpolator.EASE_OUT)));
             timelineParticle.getKeyFrames()
-                    .add(new KeyFrame(new Duration(1000), new KeyValue(particles.get(i).opacityProperty(), 0.0)));
+                .add(new KeyFrame(new Duration(1000), new KeyValue(particles.get(i).opacityProperty(), 0.0)));
         }
 
         timelineParticle.setOnFinished(actionEvent -> {
             Target.this.gameContext.getChildren().removeAll(particles);
             if (((!lapin) && (gameContext.getChildren().isEmpty()))
                 || ((lapin) && (gameContext.getChildren().size() <= 1))) {
-                long totalTime = (System.currentTimeMillis() - startTime) / 1000;
-                Label l = new Label("Score : " + totalTime + "s");
-                Color color = (gameContext.getConfiguration().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
+                final long totalTime = (System.currentTimeMillis() - startTime) / 1000;
+                final Label l = new Label("Score : " + totalTime + "s");
+                final Color color = (gameContext.getConfiguration().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
                 l.setTextFill(color);
                 l.setFont(Font.font(50));
                 l.setLineSpacing(10);
@@ -182,10 +180,10 @@ class Target extends Parent {
         timelineParticle.play();
     }
 
-    private void createChildren(double x, double y) {
+    private void createChildren(final double x, double y) {
         for (int i = 0; i < 2; i++) {
-            Target target = new Target(gameContext, stats, this.imgLib, level + 1, startTime, gameInstance,
-                    new Position(x, y), lapin);
+            final Target target = new Target(gameContext, stats, this.imgLib, level + 1, startTime, gameInstance,
+                new Position(x, y), lapin);
 
             if (y + target.radius > (int) dimension.getHeight()) {
                 y = (int) dimension.getHeight() - (int) target.radius * 2;
@@ -196,7 +194,7 @@ class Target extends Parent {
     }
 
     private int randomDirection() {
-        Random r = new Random();
+        final Random r = new Random();
         int x = r.nextInt(3) + 4;
         if (r.nextInt(2) >= 1) {
             x = -x;
@@ -204,13 +202,13 @@ class Target extends Parent {
         return x;
     }
 
-    private Position randomPosWithRange(Position start, double range, double radius) {
-        Random random = new Random();
+    private Position randomPosWithRange(final Position start, final double range, final double radius) {
+        final Random random = new Random();
 
-        double minX = (start.getX() - range);
-        double minY = (start.getY() - range);
-        double maxX = (start.getX() + range);
-        double maxY = (start.getY() + range);
+        final double minX = (start.getX() - range);
+        final double minY = (start.getY() - range);
+        final double maxX = (start.getX() + range);
+        final double maxY = (start.getY() + range);
 
         double positionX = random.nextInt((int) (maxX - minX)) + minX;
         double positionY = random.nextInt((int) (maxY - minY)) + minY;
@@ -232,7 +230,7 @@ class Target extends Parent {
         gameContext.getGazeDeviceManager().addEventFilter(this);
     }
 
-    private void setPos(Position pos) {
+    private void setPos(final Position pos) {
         this.pos = pos;
     }
 }

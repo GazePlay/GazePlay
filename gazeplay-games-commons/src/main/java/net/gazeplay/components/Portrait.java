@@ -23,7 +23,7 @@ public class Portrait extends Circle {
     @Getter
     private final int initialRadius;
 
-    public Portrait(int initialRadius, RandomPositionGenerator randomPositionGenerator, ImageLibrary imageLibrary) {
+    public Portrait(final int initialRadius, final RandomPositionGenerator randomPositionGenerator, final ImageLibrary imageLibrary) {
         super(initialRadius);
         this.initialRadius = initialRadius;
 
@@ -32,7 +32,7 @@ public class Portrait extends Circle {
         setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
     }
 
-    public void setPosition(Position position) {
+    public void setPosition(final Position position) {
         this.setCenterX(position.getX());
         this.setCenterY(position.getY());
     }
@@ -45,11 +45,11 @@ public class Portrait extends Circle {
         return new Position((int) getCenterX() + (int) getTranslateX(), (int) getCenterY() + (int) getTranslateY());
     }
 
-    protected Image pickRandomImage(List<Image> availableImages) {
-        int count = availableImages.size();
+    protected Image pickRandomImage(final List<Image> availableImages) {
+        final int count = availableImages.size();
         // int index = (int) (count * Math.random());
-        Random r = new Random();
-        int index = r.nextInt(count);
+        final Random r = new Random();
+        final int index = r.nextInt(count);
         return availableImages.get(index);
     }
 

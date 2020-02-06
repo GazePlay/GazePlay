@@ -1,11 +1,14 @@
 package net.gazeplay.commons.gaze.devicemanager;
 
+import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 
+import java.util.function.Supplier;
+
 public interface GazeDeviceManager {
 
-    void init();
+    void init(Supplier<Dimension2D> currentScreenDimensionSupplier);
 
     void destroy();
 

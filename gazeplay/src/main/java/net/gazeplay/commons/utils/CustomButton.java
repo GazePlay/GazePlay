@@ -1,23 +1,15 @@
 package net.gazeplay.commons.utils;
 
+import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Screen;
 
 public class CustomButton extends Rectangle {
 
-    private static final double DEFAULT_SIZE;
-
-    static {
-        // DEFAULT_SIZE = 128;
-        // DEFAULT_SIZE = Screen.getPrimary().getBounds().getWidth() / 10;
-        DEFAULT_SIZE = Screen.getPrimary().getBounds().getWidth() / 20;
-    }
-
-    public CustomButton(String imageResourceLocation) {
-        super(0, 0, DEFAULT_SIZE, DEFAULT_SIZE);
+    public CustomButton(String imageResourceLocation, Dimension2D screenDimension) {
+        this(imageResourceLocation, screenDimension.getWidth() / 20d);
 
         ImagePattern value = new ImagePattern(new Image(imageResourceLocation), 0, 0, 1, 1, true);
         this.setFill(value);

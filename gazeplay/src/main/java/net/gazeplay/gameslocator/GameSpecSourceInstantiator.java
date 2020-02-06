@@ -24,10 +24,10 @@ public class GameSpecSourceInstantiator {
                     return defaultConstructor.newInstance();
                 } catch (
                     NoSuchMethodException |
-                    IllegalAccessException |
-                    InstantiationException |
-                    InvocationTargetException |
-                    ClassCastException e) {
+                        IllegalAccessException |
+                        InstantiationException |
+                        InvocationTargetException |
+                        ClassCastException e) {
                     throw new GameSpecInstantiationException("Failed to create new instance of class " + gameClass, e);
                 }
             })

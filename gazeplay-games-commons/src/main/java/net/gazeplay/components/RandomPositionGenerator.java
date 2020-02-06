@@ -14,32 +14,29 @@ public abstract class RandomPositionGenerator {
 
     public abstract Dimension2D getDimension2D();
 
-    public Position newRandomPosition(double radius) {
+    public Position newRandomPosition(final double radius) {
 
-        double minX = radius;
-        double minY = radius;
+        final Dimension2D dimension2D = getDimension2D();
 
-        Dimension2D dimension2D = getDimension2D();
+        final double maxX = dimension2D.getWidth() - radius;
+        final double maxY = dimension2D.getHeight() - radius;
 
-        double maxX = dimension2D.getWidth() - radius;
-        double maxY = dimension2D.getHeight() - radius;
-
-        return createPosition(minX, minY, maxX, maxY);
+        return createPosition(radius, radius, maxX, maxY);
     }
 
-    public Position newRandomBoundedPosition(double radius, double ratioXLeft, double ratioXRight, double ratioYBottom,
-                                             double ratioYTop) {
+    public Position newRandomBoundedPosition(final double radius, final double ratioXLeft, final double ratioXRight, final double ratioYBottom,
+                                             final double ratioYTop) {
 
         double minX = radius;
         double minY = radius;
 
-        Dimension2D dimension2D = getDimension2D();
+        final Dimension2D dimension2D = getDimension2D();
 
         minX = minX + (dimension2D.getWidth() * ratioXLeft);
         minY = minY + (dimension2D.getHeight() * ratioYBottom);
 
-        double maxX = (dimension2D.getWidth() * ratioXRight) - radius;
-        double maxY = (dimension2D.getHeight() * ratioYTop) - radius;
+        final double maxX = (dimension2D.getWidth() * ratioXRight) - radius;
+        final double maxY = (dimension2D.getHeight() * ratioYTop) - radius;
 
         log.debug("the width is ={}", dimension2D.getWidth());
         log.debug("the height is ={}", dimension2D.getHeight());
@@ -51,10 +48,10 @@ public abstract class RandomPositionGenerator {
         return createPosition(minX, minY, maxX, maxY);
     }
 
-    public Position createPosition(double minX, double minY, double maxX, double maxY) {
+    public Position createPosition(final double minX, final double minY, final double maxX, final double maxY) {
         if (maxX > 0 && maxY > 0) {
-            double positionX = random.nextInt((int) (maxX - minX)) + minX;
-            double positionY = random.nextInt((int) (maxY - minY)) + minY;
+            final double positionX = random.nextInt((int) (maxX - minX)) + minX;
+            final double positionY = random.nextInt((int) (maxY - minY)) + minY;
             log.debug("the posX is ={}", positionX);
             log.debug("the posY is ={}", positionY);
 

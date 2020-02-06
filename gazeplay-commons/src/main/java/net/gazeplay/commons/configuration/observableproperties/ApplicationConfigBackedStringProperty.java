@@ -9,18 +9,18 @@ public class ApplicationConfigBackedStringProperty extends PropertiesStringPrope
 
     private final ApplicationConfig properties;
 
-    public ApplicationConfigBackedStringProperty(ApplicationConfig properties, String propertyName, String defaultValue, PropertyChangeListener propertyChangeListener) {
+    public ApplicationConfigBackedStringProperty(final ApplicationConfig properties, final String propertyName, final String defaultValue, final PropertyChangeListener propertyChangeListener) {
         super(propertyName, defaultValue, propertyChangeListener);
         this.properties = properties;
     }
 
     @Override
-    protected void setProperty(String propertyName, String propertyValue) {
+    protected void setProperty(final String propertyName, final String propertyValue) {
         properties.setProperty(propertyName, propertyValue);
     }
 
     @Override
-    protected String getProperty(String propertyName) {
+    protected String getProperty(final String propertyName) {
         return properties.getProperty(propertyName);
     }
 

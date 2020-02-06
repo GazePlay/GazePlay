@@ -25,42 +25,42 @@ public class LightningSimulator extends Application {
     private static final Random random = new Random(42);
 
     @Override
-    public void start(Stage stage) {
+    public void start(final Stage stage) {
 
-        TilePane field = generateField();
+        final TilePane field = generateField();
 
-        Scene scene = new Scene(field);
+        final Scene scene = new Scene(field);
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
 
         field.addEventFilter(LightningEvent.PLASMA_STRIKE,
-                event -> log.info("Field filtered strike: " + event.getI() + ", " + event.getJ()));
+            event -> log.info("Field filtered strike: " + event.getI() + ", " + event.getJ()));
 
         field.addEventHandler(LightningEvent.PLASMA_STRIKE,
-                event -> log.info("Field handled strike: " + event.getI() + ", " + event.getJ()));
+            event -> log.info("Field handled strike: " + event.getI() + ", " + event.getJ()));
 
         periodicallyStrikeRandomNodes(field);
     }
 
-    private void periodicallyStrikeRandomNodes(TilePane field) {
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0), event -> strikeRandomNode(field)),
-                new KeyFrame(Duration.seconds(2)));
+    private void periodicallyStrikeRandomNodes(final TilePane field) {
+        final Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0), event -> strikeRandomNode(field)),
+            new KeyFrame(Duration.seconds(2)));
 
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
 
-    private void strikeRandomNode(TilePane field) {
-        LightningReactor struckNode = (LightningReactor) field.getChildren()
-                .get(random.nextInt(FIELD_SIZE * FIELD_SIZE));
-        LightningEvent lightningStrike = new LightningEvent(this, struckNode);
+    private void strikeRandomNode(final TilePane field) {
+        final LightningReactor struckNode = (LightningReactor) field.getChildren()
+            .get(random.nextInt(FIELD_SIZE * FIELD_SIZE));
+        final LightningEvent lightningStrike = new LightningEvent(this, struckNode);
 
         struckNode.fireEvent(lightningStrike);
     }
 
     private TilePane generateField() {
-        TilePane field = new TilePane();
+        final TilePane field = new TilePane();
         field.setPrefColumns(10);
         field.setMinWidth(TilePane.USE_PREF_SIZE);
         field.setMaxWidth(TilePane.USE_PREF_SIZE);
@@ -78,15 +78,15 @@ public class LightningSimulator extends Application {
         private final int i;
         private final int j;
 
-        private FillTransition fillTransition = new FillTransition(Duration.seconds(4));
+        private final FillTransition fillTransition = new FillTransition(Duration.seconds(4));
 
-        public LightningReactor(int i, int j, EventHandler<? super LightningEvent> lightningEventHandler) {
+        public LightningReactor(final int i, final int j, final EventHandler<? super LightningEvent> lightningEventHandler) {
             super(SIZE, SIZE);
 
             this.i = i;
             this.j = j;
 
-            Color baseColor = (i + j) % 2 == 0 ? Color.RED : Color.WHITE;
+            final Color baseColor = (i + j) % 2 == 0 ? Color.RED : Color.WHITE;
             setFill(baseColor);
 
             fillTransition.setFromValue(Color.YELLOW);
@@ -111,8 +111,8 @@ public class LightningSimulator extends Application {
 
     private static class StrikeEventHandler implements EventHandler<LightningEvent> {
         @Override
-        public void handle(LightningEvent event) {
-            LightningReactor reactor = (LightningReactor) event.getTarget();
+        public void handle(final LightningEvent event) {
+            final LightningReactor reactor = (LightningReactor) event.getTarget();
             reactor.strike();
 
             log.info("Reactor received strike: " + reactor.getI() + ", " + reactor.getJ());
@@ -153,12 +153,10 @@ public class LightningSimulator extends Application {
          * set to {@code null}, it is replaced by the {@code NULL_SOURCE_TARGET} value. All LightningEvents have their
          * type set to {@code PLASMA_STRIKE}.
          *
-         * @param source
-         *            the event source which sent the event
-         * @param target
-         *            the event Target to associate with the event
+         * @param source the event source which sent the event
+         * @param target the event Target to associate with the event
          */
-        public LightningEvent(Object source, EventTarget target) {
+        public LightningEvent(final Object source, final EventTarget target) {
             super(source, target, PLASMA_STRIKE);
 
             this.i = ((LightningReactor) target).getI();
@@ -166,7 +164,7 @@ public class LightningSimulator extends Application {
         }
 
         @Override
-        public LightningEvent copyFor(Object newSource, EventTarget newTarget) {
+        public LightningEvent copyFor(final Object newSource, final EventTarget newTarget) {
             return (LightningEvent) super.copyFor(newSource, newTarget);
         }
 

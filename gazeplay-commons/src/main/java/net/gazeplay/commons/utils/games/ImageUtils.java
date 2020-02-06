@@ -11,13 +11,13 @@ import java.util.*;
 public class ImageUtils {
 
     static final Set<String> supportedFilesExtensions = Collections
-            .unmodifiableSet(Sets.newHashSet("jpg", "jpeg", "png", "gif", "bmp", "wbmp"));
+        .unmodifiableSet(Sets.newHashSet("jpg", "jpeg", "png", "gif", "bmp", "wbmp"));
 
-    public static ImageLibrary createImageLibrary(File directoryFile) {
+    public static ImageLibrary createImageLibrary(final File directoryFile) {
         return new LazyImageLibrary(directoryFile, createDefaultImageLibrary(null));
     }
 
-    public static ImageLibrary createImageLibrary(File directoryFile, File defaultDirectoryFile) {
+    public static ImageLibrary createImageLibrary(final File directoryFile, final File defaultDirectoryFile) {
         return new LazyImageLibrary(directoryFile,
             createDefaultImageLibrary(new LazyImageLibrary(defaultDirectoryFile)));
     }
@@ -30,8 +30,8 @@ public class ImageUtils {
      * @return A ResourceImageLibrary including the <pre>fallbackImageLibrary</pre>
      * @see net.gazeplay.commons.utils.games.ResourceImageLibrary
      */
-    public static ImageLibrary createDefaultImageLibrary(ImageLibrary fallbackImageLibrary) {
-        String defaultResourceDirectory = "data/common/default/images/";
+    public static ImageLibrary createDefaultImageLibrary(final ImageLibrary fallbackImageLibrary) {
+        final String defaultResourceDirectory = "data/common/default/images/";
 
         return new ResourceImageLibrary(defaultResourceDirectory, fallbackImageLibrary);
     }
@@ -46,47 +46,47 @@ public class ImageUtils {
      * @return A ResourceImageLibrary including the <pre>fallbackImageLibrary</pre>
      * @see net.gazeplay.commons.utils.games.ResourceImageLibrary
      */
-    public static ImageLibrary createCustomizedImageLibrary(ImageLibrary fallbackImageLibrary, String path) {
-        String defaultResourceDirectory = "data/" + path;
+    public static ImageLibrary createCustomizedImageLibrary(final ImageLibrary fallbackImageLibrary, final String path) {
+        final String defaultResourceDirectory = "data/" + path;
 
         return new ResourceImageLibrary(defaultResourceDirectory, fallbackImageLibrary);
     }
 
     @Deprecated
-    public static List<Image> loadAllImages(File directoryFile) {
-        List<File> files = listImageFiles(directoryFile);
+    public static List<Image> loadAllImages(final File directoryFile) {
+        final List<File> files = listImageFiles(directoryFile);
 
         return loadAllAsImages(files);
     }
 
-    public static List<File> listImageFiles(File directoryFile) {
+    public static List<File> listImageFiles(final File directoryFile) {
         log.debug("Listing images in directory {}", directoryFile.getAbsolutePath());
         File[] files = directoryFile.listFiles(ImageUtils::isImage);
         if (files == null) {
             files = new File[0];
         }
-        List<File> result = Arrays.asList(files);
+        final List<File> result = Arrays.asList(files);
         log.debug("Found {} files in directory {}", files.length, directoryFile.getAbsolutePath());
         return result;
     }
 
-    public static List<Image> loadAllAsImages(List<File> imageFiles) {
-        List<Image> result = new ArrayList<>();
-        for (File currentFile : imageFiles) {
+    public static List<Image> loadAllAsImages(final List<File> imageFiles) {
+        final List<Image> result = new ArrayList<>();
+        for (final File currentFile : imageFiles) {
             result.add(loadImage(currentFile));
         }
         return result;
     }
 
-    public static Image loadImage(File file) {
+    public static Image loadImage(final File file) {
         return new Image(file.toURI().toString());
     }
 
-    public static Image loadImage(String resource) {
+    public static Image loadImage(final String resource) {
         return new Image(resource);
     }
 
-    private static boolean isImage(File file) {
+    private static boolean isImage(final File file) {
         if (file.isDirectory()) {
             return false;
         }

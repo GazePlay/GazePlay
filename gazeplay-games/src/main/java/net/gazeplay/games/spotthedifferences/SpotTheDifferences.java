@@ -18,7 +18,6 @@ import javafx.scene.text.TextAlignment;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -36,31 +35,31 @@ public class SpotTheDifferences implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Dimension2D dimensions;
 
-    private ImageView leftImage;
+    private final ImageView leftImage;
     private double leftGap;
-    private ImageView rightImage;
+    private final ImageView rightImage;
     private double rightGap;
-    private BorderPane borderPane;
-    private GridPane gridPane;
-    private Text scoreText;
-    private ProgressButton nextButton;
+    private final BorderPane borderPane;
+    private final GridPane gridPane;
+    private final Text scoreText;
+    private final ProgressButton nextButton;
 
     private int numberDiffFound;
     private int totalNumberDiff;
 
-    private JsonArray instances;
+    private final JsonArray instances;
 
     private int currentInstance;
 
-    public SpotTheDifferences(IGameContext gameContext, Stats stats) {
+    public SpotTheDifferences(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Configuration config = gameContext.getConfiguration();
+        final Configuration config = gameContext.getConfiguration();
         this.currentInstance = 0;
 
-        Multilinguism translate = Multilinguism.getSingleton();
-        String language = config.getLanguage();
+        final Multilinguism translate = Multilinguism.getSingleton();
+        final String language = config.getLanguage();
 
         borderPane = new BorderPane();
         gridPane = new GridPane();
@@ -77,7 +76,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         rightImage.setPreserveRatio(true);
         gridPane.add(rightImage, 1, 0);
 
-        VBox texts = new VBox();
+        final VBox texts = new VBox();
         borderPane.setBottom(texts);
 
         scoreText = new Text(0, 50, "");
@@ -86,13 +85,13 @@ public class SpotTheDifferences implements GameLifeCycle {
         scoreText.setFont(new Font(70));
         scoreText.setWrappingWidth(dimensions.getWidth());
 
-        Text findText = new Text(0, 50, translate.getTrad("Spot all the differences", language));
+        final Text findText = new Text(0, 50, translate.getTrad("Spot all the differences", language));
         findText.setTextAlignment(TextAlignment.CENTER);
         findText.setFill(Color.WHITE);
         findText.setFont(new Font(50));
         findText.setWrappingWidth(dimensions.getWidth());
 
-        Text foundText = new Text(0, 50,
+        final Text foundText = new Text(0, 50,
             translate.getTrad("Differences found", language) + translate.getTrad("Colon", language));
         foundText.setTextAlignment(TextAlignment.CENTER);
         foundText.setFill(Color.WHITE);
@@ -102,7 +101,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         texts.getChildren().addAll(findText, foundText, scoreText);
 
         nextButton = new ProgressButton();
-        ImageView nextImage = new ImageView("data/spotthedifferences/next.png");
+        final ImageView nextImage = new ImageView("data/spotthedifferences/next.png");
         nextImage.setFitHeight(dimensions.getHeight() / 8);
         nextImage.setFitWidth(dimensions.getHeight() / 8);
         nextButton.setLayoutX(dimensions.getWidth() / 2 - nextImage.getFitWidth() / 2);
@@ -112,7 +111,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         this.gameContext.getGazeDeviceManager().addEventFilter(nextButton);
         nextButton.active();
 
-        JsonParser parser = new JsonParser();
+        final JsonParser parser = new JsonParser();
         instances = (JsonArray) parser
             .parse(new InputStreamReader(
                 Objects.requireNonNull(
@@ -120,9 +119,9 @@ public class SpotTheDifferences implements GameLifeCycle {
                 StandardCharsets.UTF_8));
     }
 
-    private void createDifference(double x, double y, double radius) {
-        Difference d1 = new Difference(gameContext, this, leftGap + x, y, radius);
-        Difference d2 = new Difference(gameContext, this, rightGap + x, y, radius);
+    private void createDifference(final double x, final double y, final double radius) {
+        final Difference d1 = new Difference(gameContext, this, leftGap + x, y, radius);
+        final Difference d2 = new Difference(gameContext, this, rightGap + x, y, radius);
         d1.setPair(d2);
         d2.setPair(d1);
     }
@@ -136,7 +135,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         stats.incNbGoals();
         try {
             ForegroundSoundsUtils.playSound("data/spotthedifferences/ding.wav");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
     }
@@ -146,7 +145,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         gameContext.clear();
         gameContext.getChildren().addAll(borderPane, nextButton);
 
-        JsonObject instance = (JsonObject) instances.get(currentInstance);// random.nextInt(instances.size()));
+        final JsonObject instance = (JsonObject) instances.get(currentInstance);// random.nextInt(instances.size()));
         currentInstance = (currentInstance + 1) % instances.size();
 
         leftImage.setImage(new Image("data/spotthedifferences/" + instance.get("image1").getAsString()));
@@ -163,10 +162,10 @@ public class SpotTheDifferences implements GameLifeCycle {
         leftGap = (dimensions.getWidth() / 2) - leftImage.getBoundsInLocal().getWidth();
         rightGap = dimensions.getWidth() / 2 + gridPane.getHgap();
 
-        JsonArray diffs = (JsonArray) instance.get("differences");
-        double ratio = rightImage.getBoundsInLocal().getHeight() / rightImage.getImage().getHeight();
-        for (JsonElement diff : diffs) {
-            JsonObject obj = (JsonObject) diff;
+        final JsonArray diffs = (JsonArray) instance.get("differences");
+        final double ratio = rightImage.getBoundsInLocal().getHeight() / rightImage.getImage().getHeight();
+        for (final JsonElement diff : diffs) {
+            final JsonObject obj = (JsonObject) diff;
             createDifference(ratio * obj.get("x").getAsDouble(), ratio * obj.get("y").getAsDouble(),
                 ratio * obj.get("radius").getAsDouble());
         }

@@ -20,42 +20,37 @@ import java.util.Random;
 
 @Slf4j
 public class SoundMakingEntity extends Parent {
-    private ImageView imageView;
-    private ArrayList<String> audioClips;
-    private ProgressIndicator progressIndicator;
-    private Random random;
-    private int fixationLength;
-    private Timeline progressTimeline;
-    private Timeline movetimeline;
+    private final ArrayList<String> audioClips;
+    private final ProgressIndicator progressIndicator;
+    private final Timeline progressTimeline;
+    private final Timeline movetimeline;
     private int soundIter;
-    private Stats stats;
+    private final Stats stats;
 
-    public SoundMakingEntity(ImageView imageView, Stats stats, ArrayList<String> audioClips,
-            ProgressIndicator progressIndicator, int fixationLength) {
-        this.imageView = imageView;
+    public SoundMakingEntity(final ImageView imageView, final Stats stats, final ArrayList<String> audioClips,
+                             final ProgressIndicator progressIndicator, final int fixationLength) {
         this.audioClips = audioClips;
         this.progressIndicator = progressIndicator;
-        this.fixationLength = fixationLength;
         this.stats = stats;
 
-        random = new Random();
+        final Random random = new Random();
         soundIter = random.nextInt(audioClips.size());
 
         this.getChildren().addAll(imageView, progressIndicator);
 
         progressTimeline = new Timeline(
-                new KeyFrame(new Duration(fixationLength), new KeyValue(progressIndicator.progressProperty(), 1)));
+            new KeyFrame(new Duration(fixationLength), new KeyValue(progressIndicator.progressProperty(), 1)));
 
         progressTimeline.setOnFinished(e -> selected());
 
         movetimeline = new Timeline(new KeyFrame(Duration.seconds(0.5), new KeyValue(imageView.rotateProperty(), 10)),
-                new KeyFrame(Duration.seconds(1), new KeyValue(imageView.rotateProperty(), -10)),
-                new KeyFrame(Duration.seconds(1.5), new KeyValue(imageView.rotateProperty(), 10)),
-                new KeyFrame(Duration.seconds(2), new KeyValue(imageView.rotateProperty(), -10)),
-                new KeyFrame(Duration.seconds(2.5), new KeyValue(imageView.rotateProperty(), 10)),
-                new KeyFrame(Duration.seconds(3), new KeyValue(imageView.rotateProperty(), 0)));
+            new KeyFrame(Duration.seconds(1), new KeyValue(imageView.rotateProperty(), -10)),
+            new KeyFrame(Duration.seconds(1.5), new KeyValue(imageView.rotateProperty(), 10)),
+            new KeyFrame(Duration.seconds(2), new KeyValue(imageView.rotateProperty(), -10)),
+            new KeyFrame(Duration.seconds(2.5), new KeyValue(imageView.rotateProperty(), 10)),
+            new KeyFrame(Duration.seconds(3), new KeyValue(imageView.rotateProperty(), 0)));
 
-        EventHandler<Event> enterHandler = (Event event) -> {
+        final EventHandler<Event> enterHandler = (Event event) -> {
             progressIndicator.setOpacity(1);
             progressTimeline.playFromStart();
         };
@@ -63,7 +58,7 @@ public class SoundMakingEntity extends Parent {
         this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterHandler);
         this.addEventFilter(GazeEvent.GAZE_ENTERED, enterHandler);
 
-        EventHandler<Event> exitHandler = (Event event) -> {
+        final EventHandler<Event> exitHandler = (Event event) -> {
             progressIndicator.setOpacity(0);
             progressIndicator.setProgress(0);
             progressTimeline.stop();
@@ -80,7 +75,7 @@ public class SoundMakingEntity extends Parent {
         movetimeline.playFromStart();
         try {
             ForegroundSoundsUtils.playSound(audioClips.get(soundIter));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
 

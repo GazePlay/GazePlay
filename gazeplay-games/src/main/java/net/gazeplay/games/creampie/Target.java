@@ -27,11 +27,11 @@ public class Target extends Portrait {
 
     private final Hand hand;
 
-    EventHandler<Event> enterEvent;
+    final EventHandler<Event> enterEvent;
 
     private boolean anniOff = true;
 
-    private static int radius = 100;
+    private static final int radius = 100;
 
     private final RandomPositionGenerator randomPositionGenerator;
 
@@ -39,12 +39,12 @@ public class Target extends Portrait {
 
     private final ImageLibrary imageLibrary;
 
-    private ArrayList<TargetAOI> targetAOIList;
+    private final ArrayList<TargetAOI> targetAOIList;
 
     private static final String SOUNDS_MISSILE = "data/creampie/sounds/missile.mp3";
 
-    public Target(RandomPositionGenerator randomPositionGenerator, Hand hand, Stats stats, IGameContext gameContext,
-            ImageLibrary imageLibrary) {
+    public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
+                  final ImageLibrary imageLibrary) {
 
         super(radius, randomPositionGenerator, imageLibrary);
         this.randomPositionGenerator = randomPositionGenerator;
@@ -55,8 +55,8 @@ public class Target extends Portrait {
 
         enterEvent = e -> {
             if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED
-                    || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)
-                    && anniOff) {
+                || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)
+                && anniOff) {
 
                 anniOff = false;
                 stats.incNbGoals();
@@ -77,14 +77,14 @@ public class Target extends Portrait {
 
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
-        Animation animation = createAnimation();
+        final Animation animation = createAnimation();
         animation.play();
 
         hand.onTargetHit(this);
 
         try {
             ForegroundSoundsUtils.playSound(SOUNDS_MISSILE);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.warn("Can't play sound: no associated sound : " + e.toString());
         }
 
@@ -95,32 +95,31 @@ public class Target extends Portrait {
     }
 
     private Animation createAnimation() {
-        Timeline timeline = new Timeline();
-        Timeline timeline2 = new Timeline();
+        final Timeline timeline = new Timeline();
+        final Timeline timeline2 = new Timeline();
 
         timeline.getKeyFrames()
-                .add(new KeyFrame(new Duration(2000), new KeyValue(radiusProperty(), getInitialRadius() * 1.6)));
+            .add(new KeyFrame(new Duration(2000), new KeyValue(radiusProperty(), getInitialRadius() * 1.6)));
         timeline.getKeyFrames()
-                .add(new KeyFrame(new Duration(2000), new KeyValue(rotateProperty(), getRotate() + (360 * 3))));
+            .add(new KeyFrame(new Duration(2000), new KeyValue(rotateProperty(), getRotate() + (360 * 3))));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(visibleProperty(), false)));
 
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(radiusProperty(), radius)));
 
-        Position newPosition = randomPositionGenerator.newRandomBoundedPosition(getInitialRadius(), 0, 1, 0, 0.8);
-        // System.out.println("The radius is "+ getInitialRadius());
-        TargetAOI targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(), getInitialRadius(),
+        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(getInitialRadius(), 0, 1, 0, 0.8);
+        final TargetAOI targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(), getInitialRadius(),
             System.currentTimeMillis());
         targetAOIList.add(targetAOI);
         timeline2.getKeyFrames()
-                .add(new KeyFrame(new Duration(1), new KeyValue(centerXProperty(), newPosition.getX())));
+            .add(new KeyFrame(new Duration(1), new KeyValue(centerXProperty(), newPosition.getX())));
         timeline2.getKeyFrames()
-                .add(new KeyFrame(new Duration(1), new KeyValue(centerYProperty(), newPosition.getY())));
+            .add(new KeyFrame(new Duration(1), new KeyValue(centerYProperty(), newPosition.getY())));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),
-                new KeyValue(fillProperty(), new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true))));
+            new KeyValue(fillProperty(), new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true))));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(rotateProperty(), 0)));
         timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(visibleProperty(), true)));
 
-        SequentialTransition sequence = new SequentialTransition(timeline, timeline2);
+        final SequentialTransition sequence = new SequentialTransition(timeline, timeline2);
 
         sequence.setOnFinished(actionEvent -> {
 

@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -144,7 +145,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private HomeButton createHomeButtonInConfigurationManagementScreen(@NonNull GazePlay gazePlay) {
 
-        HomeButton homeButton = new HomeButton();
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+
+        HomeButton homeButton = new HomeButton(screenDimension);
 
         EventHandler<Event> homeEvent = e -> {
 
@@ -542,7 +545,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             final GazePlay gazePlay = configurationContext.getGazePlay();
             // final Scene scene = gazePlay.getPrimaryScene();
 
-            CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene());
+            CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
 
             /*
              * scene.getStylesheets().removeAll(scene.getStylesheets()); String styleSheetPath =
@@ -679,7 +682,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         String currentCodeLanguage = configuration.getLanguage();
         String currentCodeCountry = configuration.getCountry();
-        Locale currentLocale = new Locale(currentCodeLanguage,currentCodeCountry);
+        Locale currentLocale = new Locale(currentCodeLanguage, currentCodeCountry);
         LanguageDetails currentLanguageDetails = Languages.getLocale(currentLocale);
 
         Image currentFlag = new Image(currentLanguageDetails.getFlags().get(0));

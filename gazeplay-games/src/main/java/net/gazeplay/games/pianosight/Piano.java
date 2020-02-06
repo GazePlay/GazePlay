@@ -11,7 +11,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.stage.Screen;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
@@ -33,15 +32,15 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private static final int[] NOTE_NAMES = {0, 7, 1, 8, 2, 3, 9, 4, 10, 5, 11, 6};
 
-    private double centerX;
-    private double centerY;
+    private final double centerX;
+    private final double centerY;
 
     private int firstNote;
 
     private Circle circ;
     private Circle circleTemp;
-    private List<Tile> tilesTab;
-    private Jukebox jukebox;
+    private final List<Tile> tilesTab;
+    private final Jukebox jukebox;
 
     private final Stats stats;
 
@@ -53,10 +52,10 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private final List<ImageView> fragments;
 
-    public Piano(IGameContext gameContext, Stats stats) {
+    public Piano(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2.2;
         this.fragments = buildFragments();
@@ -70,14 +69,14 @@ public class Piano extends Parent implements GameLifeCycle {
     private List<ImageView> buildFragments() {
         final int nbFragments = 5;
 
-        List<ImageView> fragments = new ArrayList<>();
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final List<ImageView> fragments = new ArrayList<>();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         for (int i = 0; i < nbFragments; i++) {
 
-            String s = "data/pianosight/images/" + i + ".png";
+            final String s = "data/pianosight/images/" + i + ".png";
 
-            ImageView fragment = new ImageView(new Image(s));
+            final ImageView fragment = new ImageView(new Image(s));
             fragment.setOpacity(0);
             fragment.setPreserveRatio(true);
             fragment.setFitHeight(dimension2D.getHeight() / 10);
@@ -89,14 +88,14 @@ public class Piano extends Parent implements GameLifeCycle {
         return fragments;
     }
 
-    private void explose(double xcenter, double ycenter) {
+    private void explose(final double xcenter, final double ycenter) {
 
         final Timeline timeline1 = new Timeline();
         final Timeline timeline2 = new Timeline();
 
         final Random random = new Random();
 
-        for (ImageView fragment : fragments) {
+        for (final ImageView fragment : fragments) {
 
             timeline1.getKeyFrames().add(
                 new KeyFrame(new Duration(1), new KeyValue(fragment.xProperty(), xcenter, Interpolator.LINEAR)));
@@ -106,24 +105,26 @@ public class Piano extends Parent implements GameLifeCycle {
 
             final int worh = random.nextInt(4);
 
+            final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
+
             final double xEndValue;
             final double yEndValue;
             switch (worh) {
                 case 0:
                     xEndValue = 0;
-                    yEndValue = random.nextDouble() * Screen.getPrimary().getBounds().getHeight();
+                    yEndValue = random.nextDouble() * screenDimension.getHeight();
                     break;
                 case 1:
-                    xEndValue = random.nextDouble() * Screen.getPrimary().getBounds().getWidth();
+                    xEndValue = random.nextDouble() * screenDimension.getWidth();
                     yEndValue = 0;
                     break;
                 case 2:
-                    xEndValue = Screen.getPrimary().getBounds().getWidth();
-                    yEndValue = random.nextDouble() * Screen.getPrimary().getBounds().getHeight();
+                    xEndValue = screenDimension.getWidth();
+                    yEndValue = random.nextDouble() * screenDimension.getHeight();
                     break;
                 case 3:
-                    xEndValue = random.nextDouble() * Screen.getPrimary().getBounds().getWidth();
-                    yEndValue = Screen.getPrimary().getBounds().getHeight();
+                    xEndValue = random.nextDouble() * screenDimension.getWidth();
+                    yEndValue = screenDimension.getHeight();
                     break;
                 default:
                     throw new UnsupportedOperationException("Unsupported value : " + worh);
@@ -136,25 +137,25 @@ public class Piano extends Parent implements GameLifeCycle {
             timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(fragment.opacityProperty(), 0)));
         }
 
-        SequentialTransition sequence = new SequentialTransition();
+        final SequentialTransition sequence = new SequentialTransition();
         sequence.getChildren().addAll(timeline1, timeline2);
         sequence.play();
 
     }
 
-    private void loadMusic(boolean b) throws IOException {
+    private void loadMusic(final boolean b) throws IOException {
         if (b) {
-            String fileName = jukebox.getS();
+            final String fileName = jukebox.getS();
             if (fileName == null) {
                 return;
             }
             log.info("you loaded the song : " + fileName);
-            File f = new File(fileName);
+            final File f = new File(fileName);
             try (InputStream inputStream = new FileInputStream(f)) {
                 loadMusicStream(inputStream);
             }
         } else {
-            String fileName = "RIVER.mid";
+            final String fileName = "RIVER.mid";
             log.info("you loaded the song : " + fileName);
             try (InputStream inputStream = Utils.getInputStream("data/pianosight/songs/" + fileName)) {
                 loadMusicStream(inputStream);
@@ -162,10 +163,10 @@ public class Piano extends Parent implements GameLifeCycle {
         }
     }
 
-    private void loadMusicStream(InputStream inputStream) {
+    private void loadMusicStream(final InputStream inputStream) {
         midiReader = new MidiReader(inputStream);
         firstNote = midiReader.nextNote();
-        for (Tile tile : tilesTab) {
+        for (final Tile tile : tilesTab) {
             tile.arc.setFill(tile.color1);
         }
 
@@ -178,7 +179,7 @@ public class Piano extends Parent implements GameLifeCycle {
     public void launch() {
         this.gameContext.resetBordersToFront();
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         circ = new Circle(centerX, centerY, dimension2D.getHeight() / 4);
         circ.setFill(Color.BLACK);
         this.getChildren().add(circ);
@@ -193,13 +194,13 @@ public class Piano extends Parent implements GameLifeCycle {
 
         this.getChildren().remove(circ);
 
-        EventHandler<Event> circleEvent = e -> {
+        final EventHandler<Event> circleEvent = e -> {
             if (circleTemp.getFill() == Color.YELLOW) {
                 if (firstNote != -1) {
-                    int precNote = firstNote;
-                    int precKey = midiReader.getKey();
+                    final int precNote = firstNote;
+                    final int precKey = midiReader.getKey();
 
-                    int index = midiReader.nextNote();
+                    final int index = midiReader.nextNote();
                     if (index > -1) {
                         firstNote = NOTE_NAMES[index];
                     } else {
@@ -236,12 +237,12 @@ public class Piano extends Parent implements GameLifeCycle {
 
         this.getChildren().addAll(this.tilesTab);
         this.getChildren().get(this.getChildren().indexOf(circleTemp)).toFront();
-        ImageView iv = new ImageView(new Image("data/pianosight/images/1.png"));
-        Button b = new Button("Open", iv);
+        final ImageView iv = new ImageView(new Image("data/pianosight/images/1.png"));
+        final Button b = new Button("Open", iv);
 
         b.setOpacity(1);
 
-        Timeline buttonOpacityTimeline = new Timeline();
+        final Timeline buttonOpacityTimeline = new Timeline();
         buttonOpacityTimeline.getKeyFrames().add(
             new KeyFrame(Duration.seconds(1), new KeyValue(b.opacityProperty(), 0.1, Interpolator.LINEAR)));
 
@@ -265,7 +266,7 @@ public class Piano extends Parent implements GameLifeCycle {
         b.setOnMousePressed(evt -> {
             try {
                 loadMusic(true);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
@@ -276,7 +277,7 @@ public class Piano extends Parent implements GameLifeCycle {
 
             loadMusic(false);
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
         stats.notifyNewRoundReady();
@@ -287,25 +288,25 @@ public class Piano extends Parent implements GameLifeCycle {
 
     }
 
-    private void createArc(int index, double angle, Color color1, Color color2, double l, double origin) {
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        double size = dimension2D.getHeight() / l;
-        double theta = ((index * 360d) / 7d - origin);
-        Tile a3 = new Tile(centerX, centerY, size, size, theta, angle, circ);
+    private void createArc(final int index, final double angle, final Color color1, final Color color2, final double l, final double origin) {
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final double size = dimension2D.getHeight() / l;
+        final double theta = ((index * 360d) / 7d - origin);
+        final Tile a3 = new Tile(centerX, centerY, size, size, theta, angle, circ);
         a3.color1 = color1;
         //a3.color2 = color2;
         a3.arc.setFill(color1);
         a3.arc.setStrokeWidth(10);
         a3.setVisible(true);
 
-        EventHandler<Event> tileEventEnter = e -> {
+        final EventHandler<Event> tileEventEnter = e -> {
 
             if (((Tile) e.getTarget()).note == firstNote) {
 
-                int precNote = firstNote;
-                int precKey = midiReader.getKey();
+                final int precNote = firstNote;
+                final int precKey = midiReader.getKey();
 
-                int index1 = midiReader.nextNote();
+                final int index1 = midiReader.nextNote();
                 if (index1 > -1) {
                     firstNote = NOTE_NAMES[index1];
                 } else {
@@ -320,18 +321,18 @@ public class Piano extends Parent implements GameLifeCycle {
                     double y;
 
                     if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                        MouseEvent me = (MouseEvent) e;
+                        final MouseEvent me = (MouseEvent) e;
                         x = me.getX();
                         y = me.getY();
                     } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                        GazeEvent ge = (GazeEvent) e;
+                        final GazeEvent ge = (GazeEvent) e;
                         x = ge.getX();
                         y = ge.getY();
                     } else {
                         x = centerX + size * Math.cos(Math.toRadians(-theta));
                         y = centerY + size * Math.sin(Math.toRadians(-theta));
                         explose(x, y);
-                        double theta1 = (((index1 + 1) * 360d) / 7d - origin);
+                        final double theta1 = (((index1 + 1) * 360d) / 7d - origin);
                         x = centerX + size * Math.cos(Math.toRadians(-theta1));
                         y = centerY + size * Math.sin(Math.toRadians(-theta1));
                     }
@@ -358,7 +359,7 @@ public class Piano extends Parent implements GameLifeCycle {
 
         };
 
-        EventHandler<Event> tileEventExited = e -> {
+        final EventHandler<Event> tileEventExited = e -> {
             log.info("index ={}", index);
             if (tilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == color2) {
                 tilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color1);
@@ -387,12 +388,12 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private void createArcs() {
         for (int i = 0; i < 7; i++) {
-            double angle = 360d / 7d;
+            final double angle = 360d / 7d;
             createArc(i, angle, Color.GHOSTWHITE, Color.GAINSBORO.darker(), 2.3, -90 + (720d / 7d));
         }
 
         for (int i = 7; i < 14; i++) {
-            double angle = 360d / 14d;
+            final double angle = 360d / 14d;
             createArc(i, angle, Color.BLACK, Color.DIMGREY.darker(), 2.7, -90 + (720d / 7d) + 2 * angle + angle / 2);
         }
 
