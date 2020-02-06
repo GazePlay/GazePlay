@@ -58,13 +58,7 @@ public class Moles extends Parent implements GameLifeCycle {
 
         Rectangle imageFond = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageFond.setFill(new ImagePattern(new Image("data/whackmole/images/molesGround.jpg")));
-        int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
-
-        ColorAdjust colorAdjust = new ColorAdjust();
-        colorAdjust.setBrightness(coef * 0.9);
-
-        imageFond.setEffect(colorAdjust);
-
+        adjustBackground(imageFond);
         gameContext.getChildren().add(imageFond);
 
         List<MolesChar> molesList = initMoles(config);
@@ -74,9 +68,7 @@ public class Moles extends Parent implements GameLifeCycle {
 
         Rectangle imageFondTrans = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageFondTrans.setFill(new ImagePattern(new Image("data/whackmole/images/molesGroundTransparent.png")));
-
-        imageFondTrans.setEffect(colorAdjust);
-
+        adjustBackground(imageFondTrans);
         gameContext.getChildren().add(imageFondTrans);
 
         this.nbMolesWhacked = 0;
@@ -98,6 +90,20 @@ public class Moles extends Parent implements GameLifeCycle {
 
         play();
 
+    }
+
+    void adjustBackground(Rectangle image) {
+        int whiteCoef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : -1;
+
+        ColorAdjust colorAdjust = new ColorAdjust();
+
+        if (gameContext.getConfiguration().isBackgroundEnabled()) {
+            colorAdjust.setBrightness((whiteCoef + 1) * 0.25);
+        } else {
+            colorAdjust.setBrightness(whiteCoef);
+        }
+
+        image.setEffect(colorAdjust);
     }
 
     /* Moles get out randomly */
