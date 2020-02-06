@@ -37,8 +37,8 @@ public class ScreenCake extends LinkedList {
         for (int i = 0; i < 6; i++) { // HomePage of the game
             ProgressButton bt = new ProgressButton();
             bt.getButton().setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
-                    + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
-                    + "-fx-max-height: " + buttonSize + "px;");
+                + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
+                + "-fx-max-height: " + buttonSize + "px;");
             bt.setLayoutX((i + 1) * dimension2D.getWidth() / 6 - buttonSize / 2);
             EventHandler<Event> buttonHandler = createprogessButtonHandler(i, cakef);
             if (i != 5) {
@@ -97,7 +97,7 @@ public class ScreenCake extends LinkedList {
                     cakef.getCake()[c].toFront();
                 }
                 cakef.active(i + 1);
-                cakef.r.setFill(cakef.col[i + 1]);
+                cakef.updateBackgroundColor(cakef.col[i + 1]);
             };
         } else {
             buttonHandler = e -> {

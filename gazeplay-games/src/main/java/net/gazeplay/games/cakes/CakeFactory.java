@@ -1,4 +1,3 @@
-
 package net.gazeplay.games.cakes;
 
 import javafx.animation.FadeTransition;
@@ -48,7 +47,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     private FadeTransition ft;
     @Getter
-    public Rectangle r;
+    public Rectangle background;
 
     Color[] col = {Color.LIGHTPINK, Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.LIGHTBLUE, Color.LIGHTCORAL};
 
@@ -112,13 +111,25 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         buttons = new ProgressButton[6];
         this.fixationLength = gameContext.getConfiguration().getFixationLength();
 
-        r = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        r.setFill(col[0]);
-        this.getChildren().add(r);
-        Rectangle back = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        back.setFill(new ImagePattern(new Image("data/cake/images/background.png")));
-        back.setMouseTransparent(true);
-        this.getChildren().add(back);
+        initBackground(dimension2D);
+    }
+
+    private void initBackground(Dimension2D dimension2D) {
+        if (gameContext.getConfiguration().isBackgroundEnabled()) {
+            background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+            updateBackgroundColor(col[0]);
+            this.getChildren().add(background);
+            Rectangle back = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+            back.setFill(new ImagePattern(new Image("data/cake/images/background.png")));
+            back.setMouseTransparent(true);
+            this.getChildren().add(back);
+        }
+    }
+
+    void updateBackgroundColor(Color c) {
+        if (background != null) {
+            background.setFill(c);
+        }
     }
 
     void winButton(boolean winOnly) {
@@ -179,43 +190,6 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             }
         }
 
-    }
-
-    public EventHandler<Event> createprogessButtonHandler(int i) {
-        EventHandler<Event> buttonHandler;
-        if (i != 4) {
-            buttonHandler = e -> {
-                for (Node child : p[i + 1]) {
-                    child.toFront();
-                }
-                for (int c = 0; c <= maxCake; c++) {
-                    cake[c].toFront();
-                }
-                active(i + 1);
-            };
-        } else {
-            buttonHandler = e -> {
-                if (!variant.equals(CakeGameVariant.FREE)) {
-                    winButton(false);
-                }
-                if (maxCake < 2) {
-                    maxCake++;
-                    currentCake = maxCake;
-                    createCake(maxCake);
-                }
-                if (!variant.equals(CakeGameVariant.FREE)) {
-                    winButton(false);
-                }
-                if (maxCake >= 2) {
-                    p[0].get(p[0].size() - 2).disable();
-                    p[0].get(p[0].size() - 2).setOpacity(0.5);
-
-                }
-
-            };
-        }
-
-        return buttonHandler;
     }
 
     void winFunction() {
@@ -470,7 +444,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
                 child.toFront();
             }
 
-            r.setFill(col[0]);
+            updateBackgroundColor(col[0]);
         };
         bt.assignIndicator(buttonHandler, fixationLength);
         bt.active();
