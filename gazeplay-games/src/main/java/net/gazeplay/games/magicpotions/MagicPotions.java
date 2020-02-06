@@ -35,13 +35,13 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         private final PotionMix request;
 
         private final List<Color> mixture = new LinkedList<>(); // what we select to mix we put it in this list
-        
+
         private Rectangle mixPot;
 
         private Ellipse mixPotColor;
 
         private Color colorRequest;
-        
+
         public RoundDetails(List<Color> potionsToMix, PotionMix request) {
             this.potionsToMix = potionsToMix;
             this.request = request;
@@ -71,6 +71,8 @@ public class MagicPotions extends Parent implements GameLifeCycle {
     @Setter
     private Potion potionBlue;
 
+    private static String image_PATH = "data/potions/images/";
+
     MagicPotions(IGameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
@@ -81,17 +83,10 @@ public class MagicPotions extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
 
+
         /* BACKGROUND */
-        Rectangle background = new Rectangle(0, 0, (int) gameDimension2D.getWidth(), (int) gameDimension2D.getHeight());
-        background.widthProperty().bind(gameContext.getRoot().widthProperty());
-        background.heightProperty().bind(gameContext.getRoot().heightProperty());
-        String image_PATH = "data/potions/images/";
-        background.setFill(new ImagePattern(new Image(image_PATH + "background-potions.jpg")));
+        initBackground();
 
-        int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
-        background.setOpacity(1 - coef * 0.9);
-
-        gameContext.getChildren().add(background);
         /* BIBOULE - CLIENT */
         Image bibouleClient = new Image(image_PATH + "Biboule-Client.png");
 
@@ -154,12 +149,19 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
     }
 
+    void initBackground() {
+        if (gameContext.getConfiguration().isBackgroundEnabled()) {
+            Rectangle background = new Rectangle(0, 0, (int) gameDimension2D.getWidth(), (int) gameDimension2D.getHeight());
+            background.widthProperty().bind(gameContext.getRoot().widthProperty());
+            background.heightProperty().bind(gameContext.getRoot().heightProperty());
+            background.setFill(new ImagePattern(new Image(image_PATH + "background-potions.jpg")));
+            gameContext.getChildren().add(background);
+        }
+    }
+
     @Override
     public void dispose() {
         currentRoundDetails.getPotionsToMix().clear();
         currentRoundDetails = null;
-        // potionRed.setChosen(false);
-        // potionBlue.setChosen(false);
-        // potionYellow.setChosen(false);
     }
 }
