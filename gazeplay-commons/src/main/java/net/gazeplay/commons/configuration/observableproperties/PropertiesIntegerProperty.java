@@ -33,7 +33,7 @@ public abstract class PropertiesIntegerProperty extends IntegerPropertyBase {
 
     @Override
     public int get() {
-        String propertyValue = getProperty(propertyName);
+        final String propertyValue = getProperty(propertyName);
         if (propertyValue == null) {
             return defaultValue;
         }
@@ -41,7 +41,7 @@ public abstract class PropertiesIntegerProperty extends IntegerPropertyBase {
     }
 
     @Override
-    public void set(int value) {
+    public void set(final int value) {
         log.info("Set property {} to {}", propertyName, value);
         setProperty(propertyName, Integer.toString(value));
         propertyChangeListener.propertyChange(new PropertyChangeEvent(this, propertyName, null, value));

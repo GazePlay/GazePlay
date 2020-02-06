@@ -16,25 +16,33 @@ import java.util.Enumeration;
 @Slf4j
 public class ArduinoSerialCommunication implements SerialPortEventListener {
     SerialPort serialPort;
-    /** The port we're normally going to use. */
-    private static final String[] PORT_NAMES = { "/dev/tty.HC-06-DevB", // bluetooth
-            "/dev/tty.usbserial-A9007UX1", // Mac OS X
-            "/dev/ttyACM0", // Raspberry Pi
-            "/dev/ttyUSB0", // Linux
-            "COM3", // Windows
-            "/dev/cu.usbmodem1421", // Mon arduino
-            "/dev/cu.usbmodem1411", // Mon arduino
+    /**
+     * The port we're normally going to use.
+     */
+    private static final String[] PORT_NAMES = {"/dev/tty.HC-06-DevB", // bluetooth
+        "/dev/tty.usbserial-A9007UX1", // Mac OS X
+        "/dev/ttyACM0", // Raspberry Pi
+        "/dev/ttyUSB0", // Linux
+        "COM3", // Windows
+        "/dev/cu.usbmodem1421", // Mon arduino
+        "/dev/cu.usbmodem1411", // Mon arduino
     };
     /**
      * A BufferedReader which will be fed by a InputStreamReader converting the bytes into characters making the
      * displayed results codepage independent
      */
     private BufferedReader input;
-    /** The output stream to the port */
+    /**
+     * The output stream to the port
+     */
     private OutputStream output;
-    /** Milliseconds to block while waiting for port open */
+    /**
+     * Milliseconds to block while waiting for port open
+     */
     private static final int TIME_OUT = 2000;
-    /** Default bits per second for COM port. */
+    /**
+     * Default bits per second for COM port.
+     */
     private static final int DATA_RATE = 9600;
 
     public void initialize() {
@@ -45,13 +53,13 @@ public class ArduinoSerialCommunication implements SerialPortEventListener {
         // System.setProperty("gnu.io.rxtx.SerialPorts", "/dev/tty.usbserial-A9007UX1");
 
         CommPortIdentifier portId = null;
-        Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
+        final Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
 
         // First, Find an instance of serial port as set in PORT_NAMES.
         while (portEnum.hasMoreElements()) {
-            CommPortIdentifier currPortId = (CommPortIdentifier) portEnum.nextElement();
+            final CommPortIdentifier currPortId = (CommPortIdentifier) portEnum.nextElement();
             log.info(currPortId.getName());
-            for (String portName : PORT_NAMES) {
+            for (final String portName : PORT_NAMES) {
                 if (currPortId.getName().equals(portName)) {
                     log.info("Found : " + portName);
                     portId = currPortId;
@@ -70,7 +78,7 @@ public class ArduinoSerialCommunication implements SerialPortEventListener {
 
             // set port parameters
             serialPort.setSerialPortParams(DATA_RATE, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
-                    SerialPort.PARITY_NONE);
+                SerialPort.PARITY_NONE);
 
             // open the streams
             input = new BufferedReader(new InputStreamReader(serialPort.getInputStream(), StandardCharsets.UTF_8));
@@ -79,7 +87,7 @@ public class ArduinoSerialCommunication implements SerialPortEventListener {
             // add event listeners
             serialPort.addEventListener(this);
             serialPort.notifyOnDataAvailable(true);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.error("error 1 " + e.toString(), e);
             System.exit(0);
         }
@@ -95,36 +103,34 @@ public class ArduinoSerialCommunication implements SerialPortEventListener {
         }
     }
 
-    public void sendArduino(String s) {
+    public void sendArduino(final String s) {
 
         try {
             log.info("Envoi : " + s);
             output.write(s.getBytes(StandardCharsets.UTF_8));
-        } catch (IOException e) {
+        } catch (final IOException e) {
             log.error("Exception", e);
         }
-        /*
-         * PrintWriter writer = new PrintWriter(output); writer.println(s); writer.flush(); writer.close();
-         */
     }
 
     /**
      * Handle an event on the serial port. Read the data and print it.
      */
-    public synchronized void serialEvent(SerialPortEvent oEvent) {
+    @Override
+    public synchronized void serialEvent(final SerialPortEvent oEvent) {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
-                String inputLine = input.readLine();
+                final String inputLine = input.readLine();
                 log.info("Reçoit : " + inputLine);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 log.error("error 2 " + e.toString());
             }
         }
         // Ignore all the other eventTypes, but you should consider the other ones.
     }
 
-    public static void main(String[] args) throws Exception {
-        ArduinoSerialCommunication arduino = new ArduinoSerialCommunication();
+    public static void main(final String[] args) throws Exception {
+        final ArduinoSerialCommunication arduino = new ArduinoSerialCommunication();
         arduino.initialize();
 
         log.info("Started");

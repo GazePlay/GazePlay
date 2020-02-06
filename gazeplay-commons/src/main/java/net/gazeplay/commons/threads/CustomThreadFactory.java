@@ -12,21 +12,22 @@ public class CustomThreadFactory implements ThreadFactory {
 
     private final ThreadFactory delegate;
 
-    public CustomThreadFactory(String namePrefix) {
+    public CustomThreadFactory(final String namePrefix) {
         this(namePrefix, Executors.defaultThreadFactory());
     }
 
-    public CustomThreadFactory(String namePrefix, ThreadFactory delegate) {
+    public CustomThreadFactory(final String namePrefix, final ThreadFactory delegate) {
         this.namePrefix = namePrefix;
         this.delegate = delegate;
     }
 
-    public Thread newThread(Runnable runnable) {
-        Thread result = delegate.newThread(runnable);
+    @Override
+    public Thread newThread(final Runnable runnable) {
+        final Thread result = delegate.newThread(runnable);
 
-        Class<? extends Runnable> runnableClass = runnable.getClass();
+        final Class<? extends Runnable> runnableClass = runnable.getClass();
 
-        String nameBuilder = namePrefix +
+        final String nameBuilder = namePrefix +
             "-" +
             runnableClass.getSimpleName() +
             "-" +

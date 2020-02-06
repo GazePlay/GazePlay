@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class GameSpecSourceInstantiatorTest {
 
     @Test
-
     void shouldInstantiateFromListOfSources() throws ClassNotFoundException {
         List<Class> classList = new ArrayList<>(List.of(
             Class.forName("net.gazeplay.games.videogrid.VideoGridGameSpecSource"),

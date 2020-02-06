@@ -44,7 +44,7 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
     @Getter
     private boolean isStarted;
 
-    public AbstractGazeIndicator(IGameContext gameContext) {
+    public AbstractGazeIndicator(final IGameContext gameContext) {
         super(0);
 
         this.setVisible(false);
@@ -58,7 +58,7 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
     }
 
     @Override
-    public void setOnFinish(EventHandler<ActionEvent> handler) {
+    public void setOnFinish(final EventHandler<ActionEvent> handler) {
         this.finishHandler = handler;
     }
 
@@ -110,7 +110,7 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
         }
 
         @Override
-        public void handle(ActionEvent event) {
+        public void handle(final ActionEvent event) {
             isStarted = false;
             if (finishHandler != null) {
                 finishHandler.handle(event);
@@ -122,7 +122,7 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
 
             lock.lock();
             try {
-                TimerTask timerTask = new TimerTask() {
+                final TimerTask timerTask = new TimerTask() {
                     @Override
                     public void run() {
                         thisIndicator.stop();
@@ -161,7 +161,7 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
             if (event.getEventType() == MouseEvent.MOUSE_ENTERED || event.getEventType() == GazeEvent.GAZE_ENTERED) {
                 thisIndicator.start();
             } else if (event.getEventType() == MouseEvent.MOUSE_EXITED
-                    || event.getEventType() == GazeEvent.GAZE_EXITED) {
+                || event.getEventType() == GazeEvent.GAZE_EXITED) {
                 thisIndicator.stop();
             }
         };
@@ -185,7 +185,7 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
     @Override
     public boolean removeNodeToListen(final Node node, final GazeDeviceManager gazeDeviceManager) {
 
-        EventHandler eventHandler = this.nodedToListenTo.remove(node);
+        final EventHandler eventHandler = this.nodedToListenTo.remove(node);
         node.removeEventFilter(MouseEvent.ANY, eventHandler);
         node.removeEventFilter(GazeEvent.ANY, eventHandler);
 

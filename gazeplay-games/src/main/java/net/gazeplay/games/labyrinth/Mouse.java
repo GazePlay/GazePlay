@@ -14,7 +14,7 @@ public abstract class Mouse extends Parent {
 
     protected final Labyrinth gameInstance;
 
-    protected Rectangle mouse;
+    protected final Rectangle mouse;
     private String orientation;
 
     int indiceX; // j
@@ -22,8 +22,8 @@ public abstract class Mouse extends Parent {
 
     int nbMove;
 
-    public Mouse(double positionX, double positionY, double width, double height, IGameContext gameContext, Stats stats,
-                 Labyrinth gameInstance) {
+    public Mouse(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext, final Stats stats,
+                 final Labyrinth gameInstance) {
 
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
@@ -41,7 +41,7 @@ public abstract class Mouse extends Parent {
 
     }
 
-    boolean isTheMouse(int i, int j) {
+    boolean isTheMouse(final int i, final int j) {
         return (i == indiceY && j == indiceX);
     }
 
@@ -87,7 +87,7 @@ public abstract class Mouse extends Parent {
         }
     }
 
-    void reOrientateMouse(int oldColumn, int oldRow, int newColumn, int newRow) {
+    void reOrientateMouse(final int oldColumn, final int oldRow, final int newColumn, final int newRow) {
         putInBold();
         nbMove++;
         if (oldColumn != newColumn) {
@@ -113,8 +113,8 @@ public abstract class Mouse extends Parent {
         }
     }
 
-    protected ProgressIndicator createProgressIndicator(double x, double y, double width, double height) {
-        ProgressIndicator indicator = new ProgressIndicator(0);
+    protected ProgressIndicator createProgressIndicator(final double x, final double y, final double width, final double height) {
+        final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(x + width * 0.05);
         indicator.setTranslateY(y + height * 0.2);
         indicator.setMouseTransparent(true);

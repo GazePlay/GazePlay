@@ -3,6 +3,7 @@ package net.gazeplay.ui.scenes.stats;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -243,7 +244,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             gazePlay.onDisplayAOI(stats);
         };
 
-        HomeButton aoiButton = new HomeButton("data/common/images/aoibtn.png");
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+
+        CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
         aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
 
         EventHandler<Event> viewScanpath = s -> {
@@ -251,7 +254,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             gazePlay.onDisplayScanpath(scanpath);
         };
 
-        HomeButton scanpathButton = new HomeButton("data/common/images/scanpathButton.png");
+        CustomButton scanpathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
         scanpathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanpath);
 
         HBox controlButtonPane = new HBox();

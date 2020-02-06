@@ -3,6 +3,7 @@ package net.gazeplay.commons.utils.games;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import javafx.scene.image.Image;
+import net.gazeplay.commons.utils.RuntimeExecutionException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class ResourceImageLibrary extends AbstractImageLibrary {
                 return ImageUtils.loadImage(resource);
             });
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeExecutionException(e);
         }
     }
 }

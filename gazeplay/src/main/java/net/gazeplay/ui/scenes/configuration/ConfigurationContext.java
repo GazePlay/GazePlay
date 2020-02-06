@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -148,7 +149,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     HomeButton createHomeButtonInConfigurationManagementScreen(@NonNull GazePlay gazePlay) {
-        HomeButton homeButton = new HomeButton();
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+        HomeButton homeButton = new HomeButton(screenDimension);
 
         EventHandler<Event> homeEvent = e -> {
             if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
@@ -491,7 +493,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             String newPropertyValue = newValue.getPreferredConfigPropertyValue();
             configuration.getCssfileProperty().setValue(newPropertyValue);
             final GazePlay gazePlay = configurationContext.getGazePlay();
-            CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene());
+
+            CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
         });
 
         return themesBox;

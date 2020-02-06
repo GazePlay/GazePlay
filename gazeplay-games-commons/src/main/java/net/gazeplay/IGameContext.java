@@ -3,6 +3,7 @@ package net.gazeplay;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -15,11 +16,13 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
 
+import java.util.function.Supplier;
+
 public interface IGameContext {
 
     @NonNull
     Configuration getConfiguration();
-    
+
     AnimationSpeedRatioSource getAnimationSpeedRatioSource();
 
     @NonNull
@@ -57,5 +60,7 @@ public interface IGameContext {
     void endWinTransition();
 
     void resetBordersToFront();
+
+    Supplier<Dimension2D> getCurrentScreenDimensionSupplier();
 
 }

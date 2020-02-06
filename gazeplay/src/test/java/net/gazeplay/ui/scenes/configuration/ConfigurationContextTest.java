@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.HPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -43,6 +44,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -69,6 +71,7 @@ class ConfigurationContextTest {
     void setup() {
         MockitoAnnotations.initMocks(this);
         when(mockGazePlay.getTranslator()).thenReturn(mockTranslator);
+        when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(() -> new Dimension2D(20d, 20d));
     }
 
     @Test

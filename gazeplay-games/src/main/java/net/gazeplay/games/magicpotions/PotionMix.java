@@ -16,17 +16,17 @@ public enum PotionMix {
 
     @Getter
     private final String colorName;
-    
+
     @Getter
     private final Color color;
 
-    PotionMix(String name, Color color) {
+    PotionMix(final String name, final Color color) {
         this.colorName = name;
         this.color = color;
     }
 
     public static PotionMix getRandomPotionRequest() {
-        Random random = new Random();
+        final Random random = new Random();
         return values()[random.nextInt(values().length)];
     }
 }

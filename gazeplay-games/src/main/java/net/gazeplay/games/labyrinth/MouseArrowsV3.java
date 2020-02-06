@@ -8,14 +8,14 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /*
- * MouseArrowsV3 : 
- * Arrows are around the labyrinth. 
+ * MouseArrowsV3 :
+ * Arrows are around the labyrinth.
  */
 
 public class MouseArrowsV3 extends MouseArrows {
 
-    public MouseArrowsV3(double positionX, double positionY, double width, double height, IGameContext gameContext,
-            Stats stats, Labyrinth gameInstance) {
+    public MouseArrowsV3(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext,
+                         final Stats stats, final Labyrinth gameInstance) {
         super(positionX, positionY, width, height, gameContext, stats, gameInstance);
 
     }
@@ -27,9 +27,9 @@ public class MouseArrowsV3 extends MouseArrows {
     @Override
     protected void placementFleche() {
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        double delta = dimension2D.getHeight() / 15;
+        final double delta = dimension2D.getHeight() / 15;
 
         double x = gameInstance.entiereRecX + gameInstance.entiereRecWidth / 2 - delta;
         double y = gameInstance.entiereRecY - 2 * delta;

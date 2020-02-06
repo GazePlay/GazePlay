@@ -3,6 +3,7 @@ package net.gazeplay.ui.scenes.stats;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,7 +34,9 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
 
         final Pane center = buildCenterPane(stats);
 
-        HomeButton homeButton = new HomeButton("data/common/images/home-button.png");
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+
+        HomeButton homeButton = new HomeButton(screenDimension);
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
             StatsContext statsContext = StatsContext.newInstance(gazePlay, stats);
             this.clear();

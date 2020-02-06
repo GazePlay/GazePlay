@@ -15,13 +15,13 @@ public class Instru {
 
     private final MidiChannel canal;
 
-    Instru()  {
+    Instru() {
         // On récupère le synthétiseur, on l'ouvre et on obtient un canal
-        Synthesizer synthetiseur;
+        final Synthesizer synthetiseur;
         try {
             synthetiseur = MidiSystem.getSynthesizer();
             synthetiseur.open();
-        } catch (MidiUnavailableException e) {
+        } catch (final MidiUnavailableException e) {
             throw new RuntimeException(e);
         }
         canal = synthetiseur.getChannels()[0];
@@ -33,22 +33,22 @@ public class Instru {
     /**
      * Joue la note dont le numéro est en paramètre
      */
-    void noteOn(int note) {
-        int volume = 100;
+    void noteOn(final int note) {
+        final int volume = 100;
         canal.noteOn(note, volume);
     }
 
     /**
      * Arrête de jouer la note dont le numéro est en paramètre
      */
-    public void noteOff(int note) {
+    public void noteOff(final int note) {
         canal.noteOff(note);
     }
 
     /**
      * Set le type d'instrument dont le numéro MIDI est précisé en paramètre
      */
-    public void setInstrument(int instru) {
+    public void setInstrument(final int instru) {
         canal.programChange(instru);
     }
 

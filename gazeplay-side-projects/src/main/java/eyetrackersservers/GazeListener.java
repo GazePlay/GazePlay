@@ -14,7 +14,7 @@ class GazeListener implements IGazeListener {
     }
 
     @Override
-    public void onGazeUpdate(GazeData gazeData) {
+    public void onGazeUpdate(final GazeData gazeData) {
 
         log.debug("gazedata = " + gazeData.rawCoordinates);
     }

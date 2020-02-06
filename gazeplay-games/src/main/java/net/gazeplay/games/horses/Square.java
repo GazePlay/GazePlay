@@ -14,25 +14,25 @@ public class Square {
     @Setter
     private Square previousSquare;
     @Getter
-    private Position pawnPosition;
+    private final Position pawnPosition;
     protected Pawn stationnedPawn;
-    protected Horses game;
+    protected final Horses game;
 
-    public Square(Position pawnPosition, Horses game) {
+    public Square(final Position pawnPosition, final Horses game) {
         this.pawnPosition = pawnPosition;
         this.game = game;
         stationnedPawn = null;
     }
 
-    protected Square getNextSquare(Pawn pawn) {
+    protected Square getNextSquare(final Pawn pawn) {
         return nextSquare;
     }
 
-    protected Square getPreviousSquare(Pawn pawn) {
+    protected Square getPreviousSquare(final Pawn pawn) {
         return previousSquare;
     }
 
-    public void pawnLands(Pawn pawn) {
+    public void pawnLands(final Pawn pawn) {
         if (stationnedPawn != null && stationnedPawn != pawn && stationnedPawn.getTeam() != pawn.getTeam()) {
             stationnedPawn.moveBackToStart();
         } else if (stationnedPawn != null) {
@@ -42,7 +42,7 @@ public class Square {
         game.endOfTurn();
     }
 
-    public Square getDestination(Pawn pawn, int nbMovementsLeft, int nbMovementsTotal) {
+    public Square getDestination(final Pawn pawn, final int nbMovementsLeft, final int nbMovementsTotal) {
         if (nbMovementsLeft == nbMovementsTotal) {
             stationnedPawn = null;
         }
@@ -53,7 +53,7 @@ public class Square {
         }
     }
 
-    public boolean canPawnMove(int diceOutcome) {
+    public boolean canPawnMove(final int diceOutcome) {
         return true;
     }
 

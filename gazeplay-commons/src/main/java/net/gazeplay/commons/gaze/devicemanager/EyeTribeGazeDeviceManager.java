@@ -3,7 +3,10 @@ package net.gazeplay.commons.gaze.devicemanager;
 import com.theeyetribe.clientsdk.GazeManager;
 import com.theeyetribe.clientsdk.IGazeListener;
 import com.theeyetribe.clientsdk.data.GazeData;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
+
+import java.util.function.Supplier;
 
 /**
  * Created by schwab on 16/08/2016.
@@ -17,7 +20,7 @@ class EyeTribeGazeDeviceManager extends AbstractGazeDeviceManager implements IGa
     }
 
     @Override
-    public void init() {
+    public void init(Supplier<Dimension2D> currentScreenDimensionSupplier) {
         gazeManager = GazeManager.getInstance();
         gazeManager.activate();
         gazeManager.addGazeListener(this);

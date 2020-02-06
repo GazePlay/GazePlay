@@ -8,13 +8,13 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 public class PortraitBubblesGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.EnumGameVariant<BubblesGameVariant>> {
     @Override
-    public Stats createNewStats(Scene scene) {
+    public Stats createNewStats(final Scene scene) {
         return new BubblesGamesStats(scene);
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.EnumGameVariant<BubblesGameVariant> gameVariant,
-                                       Stats stats) {
-        return new Bubble(gameContext, BubbleType.PORTRAIT, stats, false,gameVariant.getEnumValue());
+    public GameLifeCycle createNewGame(final IGameContext gameContext, final GameSpec.EnumGameVariant<BubblesGameVariant> gameVariant,
+                                       final Stats stats) {
+        return new Bubble(gameContext, BubbleType.PORTRAIT, stats, false, gameVariant.getEnumValue());
     }
 }

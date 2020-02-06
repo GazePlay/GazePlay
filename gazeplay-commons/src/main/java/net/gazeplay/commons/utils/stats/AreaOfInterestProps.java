@@ -23,12 +23,12 @@ public class AreaOfInterestProps {
     private double priority;
 
     public AreaOfInterestProps(
-        List<CoordinatesTracker> listOfPoints,
-        int centerX, int centerY,
-        Double[] convexPoints, Point2D[] allPoint2DOfConvex,
-        int startingIndex, int endingIndex,
-        javafx.scene.shape.Polygon areaOfInterest, InfoBoxProps infoBoxProps,
-        long areaStartTime, long areaEndTime
+        final List<CoordinatesTracker> listOfPoints,
+        final int centerX, final int centerY,
+        final Double[] convexPoints, final Point2D[] allPoint2DOfConvex,
+        final int startingIndex, final int endingIndex,
+        final javafx.scene.shape.Polygon areaOfInterest, final InfoBoxProps infoBoxProps,
+        final long areaStartTime, final long areaEndTime
     ) {
         this.listOfPoints = listOfPoints;
         this.fixations = listOfPoints.size();

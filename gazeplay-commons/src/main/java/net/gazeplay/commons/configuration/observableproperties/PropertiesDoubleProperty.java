@@ -33,7 +33,7 @@ public abstract class PropertiesDoubleProperty extends DoublePropertyBase {
 
     @Override
     public double get() {
-        String propertyValue = getProperty(propertyName);
+        final String propertyValue = getProperty(propertyName);
         if (propertyValue == null) {
             return defaultValue;
         }
@@ -41,7 +41,7 @@ public abstract class PropertiesDoubleProperty extends DoublePropertyBase {
     }
 
     @Override
-    public void set(double value) {
+    public void set(final double value) {
         log.info("Set property {} to {}", propertyName, value);
         setProperty(propertyName, Double.toString(value));
         propertyChangeListener.propertyChange(new PropertyChangeEvent(this, propertyName, null, value));

@@ -17,11 +17,11 @@ import net.gazeplay.components.ProgressButton;
 public class Pawn {
 
     @Getter
-    private Horses.TEAMS team;
-    private ImageView pawnDisplay;
-    private ProgressButton button;
-    private Position initialPosition;
-    private Square startSquare;
+    private final Horses.TEAMS team;
+    private final ImageView pawnDisplay;
+    private final ProgressButton button;
+    private final Position initialPosition;
+    private final Square startSquare;
     @Setter
     private Square currentSquare;
 
@@ -29,8 +29,8 @@ public class Pawn {
     private int nbMovementsLeft;
     private int movementOrientation;
 
-    public Pawn(Horses.TEAMS team, ImageView pawnDisplay, ProgressButton button, Position initialPosition,
-            Square startSquare) {
+    public Pawn(final Horses.TEAMS team, final ImageView pawnDisplay, final ProgressButton button, final Position initialPosition,
+                final Square startSquare) {
         this.team = team;
         this.pawnDisplay = pawnDisplay;
         this.button = button;
@@ -39,15 +39,15 @@ public class Pawn {
         currentSquare = null;
     }
 
-    public void moveToSquare(Square square) {
+    public void moveToSquare(final Square square) {
         currentSquare = square;
-        Position position = square.getPawnPosition();
-        double targetX = position.getX() - pawnDisplay.getFitWidth() / 2;
-        double targetY = position.getY() - pawnDisplay.getFitHeight() / 2;
+        final Position position = square.getPawnPosition();
+        final double targetX = position.getX() - pawnDisplay.getFitWidth() / 2;
+        final double targetY = position.getY() - pawnDisplay.getFitHeight() / 2;
 
-        Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
-                new KeyValue(pawnDisplay.layoutXProperty(), targetX, Interpolator.EASE_BOTH),
-                new KeyValue(pawnDisplay.layoutYProperty(), targetY, Interpolator.EASE_BOTH)));
+        final Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
+            new KeyValue(pawnDisplay.layoutXProperty(), targetX, Interpolator.EASE_BOTH),
+            new KeyValue(pawnDisplay.layoutYProperty(), targetY, Interpolator.EASE_BOTH)));
         newTimeline.setOnFinished(e -> move());
 
         newTimeline.playFromStart();
@@ -55,9 +55,9 @@ public class Pawn {
 
     public void moveBackToStart() {
         currentSquare = null;
-        Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
-                new KeyValue(pawnDisplay.layoutXProperty(), initialPosition.getX(), Interpolator.EASE_BOTH),
-                new KeyValue(pawnDisplay.layoutYProperty(), initialPosition.getY(), Interpolator.EASE_BOTH)));
+        final Timeline newTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
+            new KeyValue(pawnDisplay.layoutXProperty(), initialPosition.getX(), Interpolator.EASE_BOTH),
+            new KeyValue(pawnDisplay.layoutYProperty(), initialPosition.getY(), Interpolator.EASE_BOTH)));
         newTimeline.playFromStart();
     }
 
@@ -65,7 +65,7 @@ public class Pawn {
         moveToSquare(startSquare);
     }
 
-    public boolean canMove(int diceOutcome) {
+    public boolean canMove(final int diceOutcome) {
         return currentSquare.canPawnMove(diceOutcome);
     }
 
@@ -73,7 +73,7 @@ public class Pawn {
         return currentSquare != null;
     }
 
-    public void activate(EventHandler<Event> eventHandler, int fixationLength) {
+    public void activate(final EventHandler<Event> eventHandler, final int fixationLength) {
         button.assignIndicator(eventHandler, fixationLength);
         button.active();
         button.setLayoutX(pawnDisplay.getLayoutX());
@@ -87,7 +87,7 @@ public class Pawn {
 
     private void move() {
         if (nbMovementsLeft > 0) {
-            Square destination = currentSquare.getDestination(this, nbMovementsLeft * movementOrientation, lastThrow);
+            final Square destination = currentSquare.getDestination(this, nbMovementsLeft * movementOrientation, lastThrow);
             if (destination == currentSquare.getPreviousSquare()) {
                 movementOrientation = -1;
             } else {
@@ -105,7 +105,7 @@ public class Pawn {
         }
     }
 
-    public void move(int nbMovements) {
+    public void move(final int nbMovements) {
         if (currentSquare == null) {
             currentSquare = startSquare;
         }

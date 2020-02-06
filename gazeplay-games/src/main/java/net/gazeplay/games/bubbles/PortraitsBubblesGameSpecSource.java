@@ -10,6 +10,6 @@ public class PortraitsBubblesGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("PortraitBubbles").gameThumbnail("data/Thumbnails/bubble.png").category(GameCategories.Category.ACTION_REACTION).build(),
-            new BubbleGameVariantGenerator(),new PortraitBubblesGameLauncher());
+            new BubbleGameVariantGenerator(), new PortraitBubblesGameLauncher());
     }
 }

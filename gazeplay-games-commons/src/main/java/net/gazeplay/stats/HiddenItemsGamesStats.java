@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 
 public class HiddenItemsGamesStats extends Stats {
 
-    public HiddenItemsGamesStats(Scene scene) {
+    public HiddenItemsGamesStats(final Scene scene) {
         super(scene);
     }
 

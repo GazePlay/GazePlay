@@ -3,11 +3,10 @@ package net.gazeplay.latestnews;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.Rectangle2D;
-import javafx.stage.Screen;
-import mockit.MockUp;
+import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.screen.ScreenDimensionSupplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +30,6 @@ import java.util.concurrent.TimeUnit;
 
 import static net.gazeplay.TestingUtils.waitForRunLater;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -40,13 +38,22 @@ import static org.mockito.MockitoAnnotations.initMocks;
 class LatestNewsPopupTest {
 
     @Mock
-    Translator mockTranslator;
+    private Translator mockTranslator;
+
     @Mock
     private Configuration mockConfig;
+
+    @Mock
+    private GazePlay gazePlay;
+
+    @Mock
+    private ScreenDimensionSupplier screenDimensionSupplier;
 
     @BeforeEach
     void setup() {
         initMocks(this);
+        when(gazePlay.getCurrentScreenDimensionSupplier()).thenReturn(screenDimensionSupplier);
+        when(screenDimensionSupplier.get()).thenReturn(new Dimension2D(1024, 768));
     }
 
     void createMockManifest(List<String> lines) throws IOException {
@@ -82,17 +89,7 @@ class LatestNewsPopupTest {
 
     @Test
     void shouldComputePreferredDimension() {
-        Screen mockScreen = mock(Screen.class);
-        when(mockScreen.getBounds()).thenReturn(new Rectangle2D(0, 0, 10, 10));
-
-        new MockUp<Screen>() {
-            @mockit.Mock
-            public Screen getPrimary() {
-                return mockScreen;
-            }
-        };
-
-        assertEquals(new Dimension2D(7.5, 7.5), LatestNewsPopup.computePreferredDimension());
+        assertEquals(new Dimension2D(7.5, 7.5), LatestNewsPopup.computePreferredDimension(() -> new Dimension2D(10, 10)));
     }
 
     @Test
@@ -108,7 +105,7 @@ class LatestNewsPopupTest {
         when(mockTranslator.translate(ArgumentMatchers.<String>any())).thenReturn("some translation");
 
         Platform.runLater(() -> {
-            LatestNewsPopup.displayIfNeeded(mockConfig, mockTranslator);
+            LatestNewsPopup.displayIfNeeded(mockConfig, mockTranslator, screenDimensionSupplier);
             assertNotEquals(mockLastTime - 100, mockConfig.getLatestNewsPopupShownTime().get());
             removeMockManifest();
         });
@@ -130,7 +127,7 @@ class LatestNewsPopupTest {
         when(mockTranslator.translate(ArgumentMatchers.<String>any())).thenReturn("some translation");
 
         Platform.runLater(() -> {
-            LatestNewsPopup.displayIfNeeded(mockConfig, mockTranslator);
+            LatestNewsPopup.displayIfNeeded(mockConfig, mockTranslator, screenDimensionSupplier);
             assertNotEquals(lastTime, mockConfig.getLatestNewsPopupShownTime().get());
             removeMockManifest();
         });
@@ -143,7 +140,7 @@ class LatestNewsPopupTest {
         long lastTime = System.currentTimeMillis() - 100;
         when(mockConfig.getLatestNewsPopupShownTime()).thenReturn(new SimpleLongProperty(lastTime));
 
-        LatestNewsPopup.displayIfNeeded(mockConfig, mockTranslator);
+        LatestNewsPopup.displayIfNeeded(mockConfig, mockTranslator, screenDimensionSupplier);
         assertEquals(lastTime, mockConfig.getLatestNewsPopupShownTime().get());
     }
 
@@ -158,7 +155,7 @@ class LatestNewsPopupTest {
         when(mockTranslator.translate(ArgumentMatchers.<String>any())).thenReturn("some translation");
 
         Platform.runLater(() -> {
-            LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator);
+            LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator, screenDimensionSupplier);
             assertEquals("gazeplay-1-7-fra", latestNewsPopup.createDocumentUri());
             removeMockManifest();
         });
@@ -177,7 +174,7 @@ class LatestNewsPopupTest {
         when(mockTranslator.translate(ArgumentMatchers.<String>any())).thenReturn("some translation");
 
         Platform.runLater(() -> {
-            LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator);
+            LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator, screenDimensionSupplier);
             assertEquals("gazeplay-1-7-eng", latestNewsPopup.createDocumentUri());
             removeMockManifest();
         });
@@ -196,7 +193,7 @@ class LatestNewsPopupTest {
         when(mockTranslator.translate(ArgumentMatchers.<String>any())).thenReturn("some translation");
 
         Platform.runLater(() -> {
-            LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator);
+            LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator, screenDimensionSupplier);
             assertEquals("", latestNewsPopup.createDocumentUri());
             removeMockManifest();
         });
@@ -216,7 +213,7 @@ class LatestNewsPopupTest {
         when(mockTranslator.translate(ArgumentMatchers.<String>any())).thenReturn("some translation");
 
         Platform.runLater(() -> {
-            LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator);
+            LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator, screenDimensionSupplier);
             assertTrue(latestNewsPopup.getOfflinePageContent().contains("<html>Eng 1.7<html/>"));
             removeMockManifest();
         });
@@ -236,7 +233,7 @@ class LatestNewsPopupTest {
         when(mockTranslator.translate(ArgumentMatchers.<String>any())).thenReturn("some translation");
 
         Platform.runLater(() -> {
-            LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator);
+            LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator, screenDimensionSupplier);
             assertTrue(latestNewsPopup.getOfflinePageContent().contains("<html>Fra 1.7<html/>"));
             removeMockManifest();
         });
@@ -256,7 +253,7 @@ class LatestNewsPopupTest {
         when(mockTranslator.translate(ArgumentMatchers.<String>any())).thenReturn("some translation");
 
         Platform.runLater(() -> {
-            LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator);
+            LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator, screenDimensionSupplier);
             assertTrue(latestNewsPopup.getOfflinePageContent().contains("<html>Eng 1.7<html/>"));
             removeMockManifest();
         });
@@ -276,7 +273,7 @@ class LatestNewsPopupTest {
         when(mockTranslator.translate(ArgumentMatchers.<String>any())).thenReturn("some translation");
 
         Platform.runLater(() -> {
-            LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator);
+            LatestNewsPopup latestNewsPopup = new LatestNewsPopup(mockConfig, mockTranslator, screenDimensionSupplier);
             assertTrue(latestNewsPopup.getOfflinePageContent().contains("<html>Eng unknown version<html/>"));
             removeMockManifest();
         });

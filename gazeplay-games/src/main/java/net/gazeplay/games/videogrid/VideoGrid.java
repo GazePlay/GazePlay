@@ -20,7 +20,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NText;
@@ -53,7 +52,7 @@ public class VideoGrid implements GameLifeCycle {
 
     private final ColorAdjust greyscale;
 
-    public VideoGrid(IGameContext gameContext, Stats stats, int nbColumns, int nbLines) {
+    public VideoGrid(final IGameContext gameContext, final Stats stats, final int nbColumns, final int nbLines) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.nbLines = nbLines;
@@ -90,7 +89,7 @@ public class VideoGrid implements GameLifeCycle {
             }
 
             // Separate list where we will pick files from randomly. To reduce the number of duplicates
-            List<File> filesChooseFrom = Arrays.asList(files);
+            final List<File> filesChooseFrom = Arrays.asList(files);
 
             for (int i = 0; i < nbColumns; i++) {
                 for (int j = 0; j < nbLines; j++) {
@@ -99,27 +98,27 @@ public class VideoGrid implements GameLifeCycle {
                         filesChooseFrom.addAll(Arrays.asList(files));
                     }
                     // Picking a random file from the array, and removing it
-                    int index = random.nextInt(filesChooseFrom.size());
-                    File file = filesChooseFrom.remove(index);
+                    final int index = random.nextInt(filesChooseFrom.size());
+                    final File file = filesChooseFrom.remove(index);
                     // Creating the mediaplayer
-                    Media media = new Media(file.toURI().toString());
-                    MediaPlayer mediaPlayer = new MediaPlayer(media);
+                    final Media media = new Media(file.toURI().toString());
+                    final MediaPlayer mediaPlayer = new MediaPlayer(media);
                     mediaPlayer.volumeProperty().bind(config.getEffectsVolumeProperty());
                     // Loop when the video is over
                     mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.ZERO));
                     // Creating mediaview, the graphic container which plays the mediaplayer's content
-                    MediaView mediaView = new MediaView();
+                    final MediaView mediaView = new MediaView();
                     mediaView.setMediaPlayer(mediaPlayer);
                     mediaView.setFitHeight(dimensions.getHeight() / nbLines - GAP);
                     mediaView.setFitWidth(dimensions.getWidth() / nbColumns - GAP);
                     mediaView.setEffect(greyscale);
 
                     // Play only when the mouse or gaze is on the video, otherwise add a greyscale effect to the video
-                    EventHandler<Event> enterEvent = (Event event) -> {
+                    final EventHandler<Event> enterEvent = (Event event) -> {
                         mediaPlayer.play();
                         mediaView.setEffect(null);
                     };
-                    EventHandler<Event> exitEvent = (Event event) -> {
+                    final EventHandler<Event> exitEvent = (Event event) -> {
                         mediaPlayer.pause();
                         mediaView.setEffect(greyscale);
                     };
@@ -134,7 +133,7 @@ public class VideoGrid implements GameLifeCycle {
 
                     // Adding the video to a stack pane with a grey background, this helps centering the video inside
                     // the grid square
-                    StackPane pane = new StackPane();
+                    final StackPane pane = new StackPane();
                     pane.setAlignment(Pos.CENTER);// j == 0?Pos.BOTTOM_CENTER:j==nbLines-1?Pos.TOP_CENTER:Pos.CENTER);
                     pane.getChildren().addAll(new Rectangle(dimensions.getWidth() / nbColumns - GAP,
                         dimensions.getHeight() / nbLines - GAP, Color.grayRgb(50)), mediaView);
@@ -142,7 +141,7 @@ public class VideoGrid implements GameLifeCycle {
 
                     // When a video is larger than 1920x1080, it won't work, and sends an error
                     mediaPlayer.setOnError(() -> {
-                        Text errorText = new Text((String.format(
+                        final Text errorText = new Text((String.format(
                             translate.getTrad("File %s is not supported", config.getLanguage()), file.getName())));
                         errorText.setFill(Color.WHITE);
                         errorText.setTextAlignment(TextAlignment.CENTER);
@@ -160,7 +159,7 @@ public class VideoGrid implements GameLifeCycle {
     }
 
     private void noVideoFound() {
-        I18NText errorText = new I18NText(gameContext.getTranslator(), "No video found");
+        final I18NText errorText = new I18NText(gameContext.getTranslator(), "No video found");
         errorText.setY(dimensions.getHeight() / 2);
         errorText.setTextAlignment(TextAlignment.CENTER);
         errorText.setFill(config.isBackgroundWhite() ? Color.BLACK : Color.WHITE);
