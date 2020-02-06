@@ -91,20 +91,13 @@ public class Race extends Parent implements GameLifeCycle {
         score = 0;
         gameType = type;
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         centerX = 8.7 * dimension2D.getWidth() / 29.7;
         centerY = 10 * dimension2D.getHeight() / 21;
         hand = new StackPane();
 
-        Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
-        imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
-        imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
+        Rectangle imageRectangle = createBackground();
 
-        int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
-        imageRectangle.setOpacity(1 - coef * 0.5);
-
-        gameContext.getChildren().add(imageRectangle);
         gameContext.getChildren().add(this);
 
         EventHandler<MouseEvent> handEvent = new EventHandler<MouseEvent>() {
@@ -173,6 +166,21 @@ public class Race extends Parent implements GameLifeCycle {
             }
         };
 
+    }
+
+    Rectangle createBackground() {
+        Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
+        imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
+        imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
+
+        int whiteCoef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
+        int isBackgroundEnabled = (gameContext.getConfiguration().isBackgroundEnabled()) ? 1 : 0;
+        imageRectangle.setOpacity(isBackgroundEnabled * (1 - whiteCoef * 0.5));
+
+        gameContext.getChildren().add(imageRectangle);
+
+        return imageRectangle;
     }
 
     private void updatePoints(final Rectangle rectangle) {
@@ -556,7 +564,7 @@ public class Race extends Parent implements GameLifeCycle {
         ParallelTransition pt = new ParallelTransition();
         pt.getChildren().addAll(tt1);
         pt.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
-        
+
         frogRacer.t = pt;
         pt.setOnFinished(event -> {
 
