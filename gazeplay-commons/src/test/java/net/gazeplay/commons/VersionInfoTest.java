@@ -18,9 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class VersionInfoTest {
 
-    void createMockManifest(List<String> lines) throws IOException {
+    void createMockManifest(final List<String> lines) throws IOException {
         new File("build/resources/test/META-INF").mkdir();
-        Path file = Paths.get("build/resources/test/META-INF/MANIFEST.MF");
+        final Path file = Paths.get("build/resources/test/META-INF/MANIFEST.MF");
         Files.write(file, lines, StandardCharsets.UTF_8);
     }
 
@@ -38,40 +38,40 @@ class VersionInfoTest {
 
     @Test
     void shouldFindTheDefaultVersionInfo() throws IOException {
-        List<String> lines = Arrays.asList("Implementation-Title: gazeplay", "Implementation-Version: 1.7", "Build-Time: 1234");
+        final List<String> lines = Arrays.asList("Implementation-Title: gazeplay", "Implementation-Version: 1.7", "Build-Time: 1234");
         createMockManifest(lines);
 
-        String result = VersionInfo.findVersionInfo();
+        final String result = VersionInfo.findVersionInfo();
 
         assertEquals("1.7 (1234)", result);
     }
 
     @Test
     void shouldReturnCurrentVersion() throws IOException {
-        List<String> lines = Arrays.asList("Implementation-Title: wrong-game", "Implementation-Version: 1.7", "Build-Time: 1234");
+        final List<String> lines = Arrays.asList("Implementation-Title: wrong-game", "Implementation-Version: 1.7", "Build-Time: 1234");
         createMockManifest(lines);
 
-        String result = VersionInfo.findVersionInfo();
+        final String result = VersionInfo.findVersionInfo();
 
         assertEquals("Current Version", result);
     }
 
     @Test
     void shouldFindVersionWithoutBuildTime() throws IOException {
-        List<String> lines = Arrays.asList("Implementation-Title: gazeplay", "Implementation-Version: 1.7");
+        final List<String> lines = Arrays.asList("Implementation-Title: gazeplay", "Implementation-Version: 1.7");
         createMockManifest(lines);
 
-        String result = VersionInfo.findVersionInfo("gazeplay", false).get();
+        final String result = VersionInfo.findVersionInfo("gazeplay", false).get();
 
         assertEquals("1.7", result);
     }
 
     @Test
     void shouldReturnEmptyWithIncorrectManifest() throws IOException {
-        List<String> lines = Arrays.asList("Implementation-Title: wrong-game", "Implementation-Version: 1.7");
+        final List<String> lines = Arrays.asList("Implementation-Title: wrong-game", "Implementation-Version: 1.7");
         createMockManifest(lines);
 
-        Optional<String> result = VersionInfo.findVersionInfo("gazeplay", false);
+        final Optional<String> result = VersionInfo.findVersionInfo("gazeplay", false);
 
         assertTrue(result.isEmpty());
     }

@@ -51,8 +51,9 @@ public class MemoryCard extends Parent {
 
     final boolean isOpen;
 
-    public MemoryCard(double positionX, double positionY, double width, double height, Image image, int idc,
-                      IGameContext gameContext, Stats stats, Memory gameInstance, int fixationlength, boolean isOpen) {
+
+    public MemoryCard(final double positionX, final double positionY, final double width, final double height, final Image image, final int idc,
+                      final IGameContext gameContext, final Stats stats, final Memory gameInstance, final int fixationlength, final boolean isOpen) {
 
         this.isOpen = isOpen;
 
@@ -103,8 +104,8 @@ public class MemoryCard extends Parent {
         });
     }
 
-    private ProgressIndicator createProgressIndicator(double width, double height) {
-        ProgressIndicator indicator = new ProgressIndicator(0);
+    private ProgressIndicator createProgressIndicator(final double width, final double height) {
+        final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(card.getX() + width * 0.05);
         indicator.setTranslateY(card.getY() + height * 0.2);
         indicator.setMinWidth(width * 0.9);
@@ -229,7 +230,7 @@ public class MemoryCard extends Parent {
                             }
                         } else {
                             /* Timeline : To see the 2nd card */
-                            Timeline timelineCard = new Timeline();
+                            final Timeline timelineCard = new Timeline();
 
                             timelineCard.getKeyFrames().add(new KeyFrame(new Duration(1000)));
 

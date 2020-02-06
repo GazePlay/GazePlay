@@ -109,8 +109,6 @@ public class ColorToolBox extends Pane {
 
     private EventHandler disableColorizeButton = null;
 
-    private CustomColorPicker CustomColorPicker;
-
     private boolean previousEnableColor;
 
     public ColorToolBox(final Pane root, final ColorsGame colorsGame, final IGameContext gameContext) {
@@ -123,7 +121,7 @@ public class ColorToolBox extends Pane {
         this.root = root;
 
         // the main pane for the tool box
-        BorderPane thisRoot = new BorderPane();
+        final BorderPane thisRoot = new BorderPane();
         this.getChildren().add(thisRoot);
 
         mainPane = new VBox();
@@ -141,7 +139,7 @@ public class ColorToolBox extends Pane {
 
         // COLORS
 
-        List<Color> colors = new ArrayList<>();
+        final List<Color> colors = new ArrayList<>();
         colors.add(Color.RED);
         colors.add(Color.BLUE);
         colors.add(Color.GREEN);
@@ -151,7 +149,7 @@ public class ColorToolBox extends Pane {
 
         // Build color boxes
         colorBoxes = new ArrayList<>();
-        ToggleGroup group = new ToggleGroup();
+        final ToggleGroup group = new ToggleGroup();
         firstColorDisplayed = 0;
         Color color;
         for (int i = 0; i < colors.size(); ++i) {
@@ -177,7 +175,7 @@ public class ColorToolBox extends Pane {
         try {
             buttonImg = new Image(CUSTOM_BUTTON_IMAGE_PATH, COLORIZE_BUTTONS_SIZE_PX, COLORIZE_BUTTONS_SIZE_PX, false,
                 true);
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             log.warn(e.toString() + " : " + CUSTOM_BUTTON_IMAGE_PATH);
         }
 
@@ -218,10 +216,10 @@ public class ColorToolBox extends Pane {
         colorPicker.prefWidthProperty().bind(customBox.widthProperty());
         customColorPickerButton.prefWidthProperty().bind(customBox.widthProperty());
 
-        Button previousPallet = new Button("");
+        final Button previousPallet = new Button("");
         previousPallet.setPrefHeight(PAGE_MOVING_BUTTONS_SIZE_PIXEL);
         previousPallet.setPrefWidth(PAGE_MOVING_BUTTONS_SIZE_PIXEL);
-        Button nextPallet = new Button("");
+        final Button nextPallet = new Button("");
         nextPallet.setPrefHeight(PAGE_MOVING_BUTTONS_SIZE_PIXEL);
         nextPallet.setPrefWidth(PAGE_MOVING_BUTTONS_SIZE_PIXEL);
 
@@ -268,7 +266,7 @@ public class ColorToolBox extends Pane {
      */
     private static void saveImageToFile(final Image image, final File file, final String format) throws IOException {
 
-        BufferedImage swingImg = SwingFXUtils.fromFXImage(image, null);
+        final BufferedImage swingImg = SwingFXUtils.fromFXImage(image, null);
         ImageIO.write(swingImg, format, file);
     }
 
@@ -286,26 +284,26 @@ public class ColorToolBox extends Pane {
         return "png".equals(format);
     }
 
-    private void copyFile(File imageFile) {
+    private void copyFile(final File imageFile) {
         if (imageFile != null) {
-            Path from = Paths.get(imageFile.toURI());
-            File to = new File(this.getColorsDirectory(), imageFile.getName());
-            CopyOption[] options = new CopyOption[]{
+            final Path from = Paths.get(imageFile.toURI());
+            final File to = new File(this.getColorsDirectory(), imageFile.getName());
+            final CopyOption[] options = new CopyOption[]{
                 StandardCopyOption.REPLACE_EXISTING,
                 StandardCopyOption.COPY_ATTRIBUTES
             };
             try {
                 Files.copy(from, to.toPath(), options);
                 gameContext.getConfiguration().getColorsDefaultImageProperty().setValue(to.getAbsolutePath());
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 log.debug("Impossible to copy file" + imageFile.getAbsolutePath() + " to " + to.getAbsolutePath());
             }
         }
     }
 
     private Pane buildImageManager() {
-        Translator translator = gameContext.getTranslator();
-        Stage primaryStage = gameContext.getPrimaryStage();
+        final Translator translator = gameContext.getTranslator();
+        final Stage primaryStage = gameContext.getPrimaryStage();
 
         final HBox bottomBox = new HBox(7);
         bottomBox.setPadding(new Insets(0, 5, 0, 5));
@@ -314,8 +312,8 @@ public class ColorToolBox extends Pane {
         configureImageFileChooser(imageChooser);
         imageChooser.setTitle(translator.translate("imgChooserTitle"));
 
-        Button imageChooserButton = new Button(translator.translate("LoadImg"));
-        imageChooserButton.setPrefHeight(COLORIZE_BUTTONS_SIZE_PX/2);
+        final Button imageChooserButton = new Button(translator.translate("LoadImg"));
+        imageChooserButton.setPrefHeight(COLORIZE_BUTTONS_SIZE_PX / 2);
         imageChooserButton.setOnAction((event) -> {
 
             final File imageFile = imageChooser.showOpenDialog(primaryStage);
@@ -323,7 +321,7 @@ public class ColorToolBox extends Pane {
 
                 copyFile(imageFile);
 
-                Image image = new Image(imageFile.toURI().toString());
+                final Image image = new Image(imageFile.toURI().toString());
 
                 this.colorsGame.updateImage(image, imageFile.getName());
             }
@@ -332,15 +330,15 @@ public class ColorToolBox extends Pane {
         final FileChooser imageSaveChooser = new FileChooser();
         configureImageFileSaver(imageSaveChooser);
         imageSaveChooser.setTitle(translator.translate("imgSaveChooserTitle"));
-        Button imageSaverButton = new Button(translator.translate("SaveImg"));
-        imageSaverButton.setPrefHeight(COLORIZE_BUTTONS_SIZE_PX/2);
+        final Button imageSaverButton = new Button(translator.translate("SaveImg"));
+        imageSaverButton.setPrefHeight(COLORIZE_BUTTONS_SIZE_PX / 2);
         imageSaverButton.setOnAction((event) -> {
 
             File imageFile = imageSaveChooser.showSaveDialog(primaryStage);
             if (imageFile != null) {
 
                 try {
-                    String name = imageFile.getName();
+                    final String name = imageFile.getName();
                     String extension = name.substring(1 + name.lastIndexOf(".")).toLowerCase();
 
                     if (!checkFormat(extension)) {
@@ -349,7 +347,7 @@ public class ColorToolBox extends Pane {
                     }
 
                     saveImageToFile(colorsGame.getWritableImg(), imageFile, extension);
-                } catch (IOException ex) {
+                } catch (final IOException ex) {
                     log.error("Error while saving image : " + ex.toString());
                 }
             }
@@ -362,10 +360,10 @@ public class ColorToolBox extends Pane {
     }
 
     private File getColorsDirectory() {
-        Configuration config = gameContext.getConfiguration();
-        String userName = config.getUserName();
+        final Configuration config = gameContext.getConfiguration();
+        final String userName = config.getUserName();
         final File colorsDirectory = new File(GazePlayDirectories.getUserDataFolder(userName), "colors");
-        boolean mkDirSuccess = colorsDirectory.mkdirs();
+        final boolean mkDirSuccess = colorsDirectory.mkdirs();
 
         if (!mkDirSuccess) {
             log.debug(colorsDirectory.getAbsolutePath() + " can't be created");
@@ -374,7 +372,7 @@ public class ColorToolBox extends Pane {
         return colorsDirectory;
     }
 
-    private void updatePallet(Button previousPallet, Button nextPallet) {
+    private void updatePallet(final Button previousPallet, final Button nextPallet) {
 
         mainPane.getChildren().clear();
 
@@ -402,7 +400,7 @@ public class ColorToolBox extends Pane {
 
     private void buildAddCustomCostomColorButton() {
 
-        Pane customColorPane = new VBox(customBox, customColorPickerButton);
+        final Pane customColorPane = new VBox(customBox, customColorPickerButton);
         mainPane.getChildren().add(customColorPane);
     }
 
@@ -412,11 +410,11 @@ public class ColorToolBox extends Pane {
         try {
             buttonImg = new Image(COLORIZE_BUTTON_IMAGE_NAME, COLORIZE_BUTTONS_SIZE_PX, COLORIZE_BUTTONS_SIZE_PX, false,
                 true);
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             log.warn(e.toString() + " : " + COLORIZE_BUTTON_IMAGE_NAME);
         }
 
-        Button colorize;
+        final Button colorize;
         if (buttonImg != null) {
             colorize = new Button("", new ImageView(buttonImg));
             colorize.setPrefHeight(buttonImg.getHeight());
@@ -428,11 +426,11 @@ public class ColorToolBox extends Pane {
         try {
             buttonImg = new Image(STOP_COLORIZE_BUTTON_IMAGE_PATH, COLORIZE_BUTTONS_SIZE_PX, COLORIZE_BUTTONS_SIZE_PX,
                 false, true);
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             log.warn(e.toString() + " : " + STOP_COLORIZE_BUTTON_IMAGE_PATH);
         }
 
-        Button stopColorize;
+        final Button stopColorize;
         if (buttonImg != null) {
             stopColorize = new Button("", new ImageView(buttonImg));
             stopColorize.setPrefHeight(stopColorize.getHeight());
@@ -440,12 +438,12 @@ public class ColorToolBox extends Pane {
             stopColorize = new Button("S");
         }
 
-        AbstractGazeIndicator colorizeButtonIndicator = new GazeFollowerIndicator(gameContext, root);
+        final AbstractGazeIndicator colorizeButtonIndicator = new GazeFollowerIndicator(gameContext, root);
 
-        Pane colorizeButtonPane = new StackPane(colorize);
-        Pane stopColorizeButtonPane = new StackPane(stopColorize);
+        final Pane colorizeButtonPane = new StackPane(colorize);
+        final Pane stopColorizeButtonPane = new StackPane(stopColorize);
 
-        EventHandler enableColorizeButton = (Event event1) -> colorsGame.setEnableColorization(false);
+        final EventHandler enableColorizeButton = (Event event1) -> colorsGame.setEnableColorization(false);
 
         disableColorizeButton = (Event event1) -> colorsGame.setEnableColorization(true);
 
@@ -471,14 +469,12 @@ public class ColorToolBox extends Pane {
         stopColorizeButtonPane.setVisible(false);
         root.getChildren().add(colorizeButtonIndicator);
 
-        Pane colorPane = new StackPane(colorizeButtonPane, stopColorizeButtonPane);
-
-        return colorPane;
+        return new StackPane(colorizeButtonPane, stopColorizeButtonPane);
     }
 
     private Stage buildCustomColorDialog() {
-        Translator translator = gameContext.getTranslator();
-        Stage primaryStage = gameContext.getPrimaryStage();
+        final Translator translator = gameContext.getTranslator();
+        final Stage primaryStage = gameContext.getPrimaryStage();
 
         final Stage dialog = new Stage();
 
@@ -490,12 +486,12 @@ public class ColorToolBox extends Pane {
         dialog.setTitle(translator.translate("customColorDialogTitle"));
         dialog.setAlwaysOnTop(true);
 
-        CustomColorPicker = new CustomColorPicker(gameContext, root, this, customBox, dialog);
+        final net.gazeplay.games.colors.CustomColorPicker customColorPicker = new CustomColorPicker(gameContext, root, this, customBox, dialog);
 
-        final Scene scene = new Scene(CustomColorPicker, Color.TRANSPARENT);
+        final Scene scene = new Scene(customColorPicker, Color.TRANSPARENT);
 
         final Configuration config = gameContext.getConfiguration();
-        CssUtil.setPreferredStylesheets(config, scene);
+        CssUtil.setPreferredStylesheets(config, scene, gameContext.getCurrentScreenDimensionSupplier());
 
         dialog.setScene(scene);
 

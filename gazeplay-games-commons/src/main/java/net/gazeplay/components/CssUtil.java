@@ -1,8 +1,8 @@
 package net.gazeplay.components;
 
 import javafx.collections.ObservableList;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
-import javafx.stage.Screen;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
@@ -10,18 +10,19 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
 import java.io.File;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @Slf4j
 public class CssUtil {
 
-    private static int[] supportedWidth = {2560, 1920, 1600, 1440, 1280, 1024, 800};
+    private static final int[] supportedWidth = {2560, 1920, 1600, 1440, 1280, 1024, 800};
 
-    public static void setPreferredStylesheets(Configuration config, Scene scene) {
-        ObservableList<String> stylesheets = scene.getStylesheets();
+    public static void setPreferredStylesheets(final Configuration config, final Scene scene, final Supplier<Dimension2D> screenDimensionSupplier) {
+        final ObservableList<String> stylesheets = scene.getStylesheets();
 
-        String cssfile = config.getCssFile();
+        final String cssfile = config.getCssFile();
 
-        Optional<BuiltInUiTheme> configuredBuiltInUiTheme = BuiltInUiTheme.findFromConfigPropertyValue(cssfile);
+        final Optional<BuiltInUiTheme> configuredBuiltInUiTheme = BuiltInUiTheme.findFromConfigPropertyValue(cssfile);
 
         final String styleSheetPath;
 
@@ -39,7 +40,7 @@ public class CssUtil {
 
         stylesheets.add("data/stylesheets/base.css");
 
-        addMediaWidthStylesheet(stylesheets);
+        addMediaWidthStylesheet(stylesheets, screenDimensionSupplier);
 
         if (styleSheetPath != null) {
             stylesheets.add(styleSheetPath);
@@ -49,13 +50,13 @@ public class CssUtil {
         log.info(stylesheets.toString());
     }
 
-    private static void addMediaWidthStylesheet(ObservableList<String> stylesheets) {
-        final int actualScreenWidth = (int) Screen.getPrimary().getBounds().getWidth();
+    private static void addMediaWidthStylesheet(final ObservableList<String> stylesheets, final Supplier<Dimension2D> screenDimensionSupplier) {
+        final int actualScreenWidth = (int) screenDimensionSupplier.get().getWidth();
         log.info("actualScreenWidth = {}", actualScreenWidth);
 
-        for (int width : supportedWidth) {
+        for (final int width : supportedWidth) {
             if (width <= actualScreenWidth) {
-                String stylesheet = "data/stylesheets/base-max-width-" + String.format("%04d", width) + ".css";
+                final String stylesheet = "data/stylesheets/base-max-width-" + String.format("%04d", width) + ".css";
                 stylesheets.add(stylesheet);
                 log.info("Added : {}", stylesheet);
                 return;
@@ -63,12 +64,12 @@ public class CssUtil {
         }
     }
 
-    public static void addStylesheets(ObservableList<String> styleSheets) {
+    public static void addStylesheets(final ObservableList<String> styleSheets) {
         final File styleFolder = getStylesFolder();
         if (styleFolder.exists()) {
-            File[] filesInStyleFolder = styleFolder.listFiles();
+            final File[] filesInStyleFolder = styleFolder.listFiles();
             assert filesInStyleFolder != null;
-            for (File f : filesInStyleFolder) {
+            for (final File f : filesInStyleFolder) {
                 if (f.toString().endsWith(".css")) {
                     styleSheets.add("file://" + f.toString());
                 }

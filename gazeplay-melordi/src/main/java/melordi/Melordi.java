@@ -8,28 +8,28 @@ import javafx.stage.Stage;
 
 public class Melordi extends Application {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         Application.launch(Melordi.class, args);
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(final Stage primaryStage) {
         primaryStage.setTitle("Melordi");
-        Group root = new Group();
-        Scene scene = new Scene(root, 500, 500, Color.WHITE);
+        final Group root = new Group();
+        final Scene scene = new Scene(root, 500, 500, Color.WHITE);
 
-        Instru mon_instru = new Instru();
+        final Instru mon_instru = new Instru();
 
-        Clavier mon_clavier = new Clavier(mon_instru);// on créé un objet clavier
-        ChangeInstru instrus = new ChangeInstru(mon_instru);
+        final Clavier mon_clavier = new Clavier(mon_instru);// on créé un objet clavier
+        final ChangeInstru instrus = new ChangeInstru(mon_instru);
 
         root.getChildren().add(mon_clavier);// on l'ajoute à notre groupe root
         root.getChildren().add(instrus);
 
-        Son mon_son = new Son(mon_clavier);
+        final Son mon_son = new Son(mon_clavier);
         root.getChildren().add(mon_son);
 
-        Metronome mon_metronome = new Metronome();
+        final Metronome mon_metronome = new Metronome();
         root.getChildren().add(mon_metronome);
 
         primaryStage.setScene(scene);

@@ -24,15 +24,15 @@ public class DrawBuilder {
     @Setter
     private int drawLineWidth = 8;
 
-    public Canvas createCanvas(Dimension2D canvasDimension, double coefficient) {
-        Canvas canvas = createCanvas(canvasDimension);
+    public Canvas createCanvas(final Dimension2D canvasDimension, final double coefficient) {
+        final Canvas canvas = createCanvas(canvasDimension);
         canvas.setLayoutX(canvasDimension.getWidth() * (coefficient - 1) / 2);
         canvas.setLayoutY(canvasDimension.getHeight() * (coefficient - 1) / 2);
         return canvas;
     }
 
-    public Canvas createCanvas(Dimension2D canvasDimension) {
-        Canvas canvas = new Canvas(canvasDimension.getWidth(), canvasDimension.getHeight());
+    public Canvas createCanvas(final Dimension2D canvasDimension) {
+        final Canvas canvas = new Canvas(canvasDimension.getWidth(), canvasDimension.getHeight());
 
         final GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         initDraw(graphicsContext);
@@ -52,14 +52,14 @@ public class DrawBuilder {
 
         canvas.addEventFilter(GazeEvent.GAZE_MOVED, new EventHandler<>() {
 
-            AtomicInteger rateLimiter = new AtomicInteger(0);
+            final AtomicInteger rateLimiter = new AtomicInteger(0);
 
             private static final int RATE_LIMIT = 5;
 
             @Override
-            public void handle(GazeEvent event) {
+            public void handle(final GazeEvent event) {
                 log.debug("GAZE_MOVED : event = " + event);
-                int rateLimiterValue = rateLimiter.incrementAndGet();
+                final int rateLimiterValue = rateLimiter.incrementAndGet();
                 if (rateLimiterValue == RATE_LIMIT) {
                     rateLimiter.set(0);
 
@@ -80,9 +80,9 @@ public class DrawBuilder {
         return canvas;
     }
 
-    private void initDraw(GraphicsContext gc) {
-        double canvasWidth = gc.getCanvas().getWidth();
-        double canvasHeight = gc.getCanvas().getHeight();
+    private void initDraw(final GraphicsContext gc) {
+        final double canvasWidth = gc.getCanvas().getWidth();
+        final double canvasHeight = gc.getCanvas().getHeight();
 
         gc.setFill(Color.WHITE);
         gc.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -90,16 +90,16 @@ public class DrawBuilder {
         gc.setStroke(borderRectangleColor);
         gc.setLineWidth(5);
         gc.strokeRect(0, // x of the upper left corner
-                0, // y of the upper left corner
-                canvasWidth, // width of the rectangle
-                canvasHeight); // height of the rectangle
+            0, // y of the upper left corner
+            canvasWidth, // width of the rectangle
+            canvasHeight); // height of the rectangle
 
         gc.setFill(Color.RED);
         gc.setStroke(Color.BLUE);
         gc.setLineWidth(drawLineWidth);
     }
 
-    public void clear(Canvas canvas) {
+    public void clear(final Canvas canvas) {
         initDraw(canvas.getGraphicsContext2D());
     }
 

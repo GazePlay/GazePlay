@@ -35,6 +35,6 @@ public class FixationPoint {
     @Override
     public String toString() {
         return "FixationPoint{" + "timeGaze=" + timeGaze + ", gazeDuration=" + gazeDuration + ", x=" + x + ", y=" + y
-                + '}';
+            + '}';
     }
 }

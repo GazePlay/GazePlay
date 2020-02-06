@@ -4,7 +4,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Worker;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -14,7 +13,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.VersionInfo;
@@ -29,6 +27,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * Created by schwab on 24/08/2019.
@@ -37,7 +36,7 @@ import java.util.concurrent.TimeUnit;
  * default HTML page if no connexion
  */
 @Slf4j
-public class LatestNewPopup {
+public class LatestNewsPopup {
 
     private static final String serviceBaseUrl = "https://gazeplay.github.io/GazePlay/updates";
 
@@ -51,7 +50,13 @@ public class LatestNewPopup {
 
     private final Optional<String> versionNumber = VersionInfo.findVersionInfo(VersionInfo.artifactId, false);
 
-    private static String findEnvInfo() {
+    static class NewsPopupException extends RuntimeException {
+        NewsPopupException(Throwable cause) {
+            super(cause);
+        }
+    }
+
+    static String findEnvInfo() {
         String osName = System.getProperty("os.name");
         String osVersion = System.getProperty("os.version");
         String javaVmVendor = System.getProperty("java.vm.vendor");
@@ -59,25 +64,28 @@ public class LatestNewPopup {
         return osName + " " + osVersion + " - " + javaVmVendor + " " + javaVmVersion;
     }
 
-    private static Dimension2D computePreferedDimension() {
-        Rectangle2D screen = Screen.getPrimary().getBounds();
+    public static Dimension2D computePreferredDimension(Supplier<Dimension2D> screenDimensionSupplier) {
+        Dimension2D screenDimension = screenDimensionSupplier.get();
         float ratio = 3f / 4f;
 
-        double width = screen.getWidth() * ratio;
-        double height = screen.getHeight() * ratio;
+        double width = screenDimension.getWidth() * ratio;
+        double height = screenDimension.getHeight() * ratio;
         return new Dimension2D(width, height);
     }
 
-    public static void displayIfNeeded(Configuration config, Translator translator) {
-        if (wasDisplayRecently(config)) {
-            // popup was already show recently
+    public static void displayIfNeeded(
+        Configuration config,
+        Translator translator,
+        Supplier<Dimension2D> screenDimensionSupplier) {
+        if (wasDisplayRecently(config) && !config.isLatestNewsDisplayForced()) {
+            // popup was already shown recently
             // we do not want to bother the user again with this popup
-           // return;
+            return;
         }
 
-        LatestNewPopup latestNewPopup = new LatestNewPopup(config, translator);
-        latestNewPopup.loadPage();
-        latestNewPopup.showAndWait();
+        LatestNewsPopup latestNewsPopup = new LatestNewsPopup(config, translator, screenDimensionSupplier);
+        latestNewsPopup.loadPage();
+        latestNewsPopup.showAndWait();
     }
 
     private static boolean wasDisplayRecently(Configuration config) {
@@ -88,10 +96,17 @@ public class LatestNewPopup {
         config.getLatestNewsPopupShownTime().set(System.currentTimeMillis());
     }
 
-    LatestNewPopup(Configuration config, Translator translator) {
+
+    public LatestNewsPopup(
+        Configuration config,
+        Translator translator,
+        Supplier<Dimension2D> screenDimensionSupplier
+    ) {
         this.config = config;
 
-        final Dimension2D preferredDimension = computePreferedDimension();
+        stage = new Stage();
+
+        final Dimension2D preferredDimension = computePreferredDimension(screenDimensionSupplier);
 
         final String userAgentString = "GazePlay " + versionNumber.orElse("unknown version") + " - " + findEnvInfo();
 
@@ -121,7 +136,9 @@ public class LatestNewPopup {
         I18NLabel closeInstructionLabel = new I18NLabel(translator, "closeWindowToContinueToGazePlay");
         closeInstructionLabel.setStyle("-fx-font-weight: bold");
 
-        CustomButton continueButton = new CustomButton("data/common/images/continue.png");
+        Dimension2D screenDimension = screenDimensionSupplier.get();
+
+        CustomButton continueButton = new CustomButton("data/common/images/continue.png", screenDimension);
 
         topPane.getChildren().addAll(userAgentLabel, locationUrlLabel);
         bottomPane.getChildren().addAll(closeInstructionLabel, continueButton);
@@ -130,7 +147,6 @@ public class LatestNewPopup {
         root.setCenter(browser);
         root.setBottom(bottomPane);
 
-        stage = new Stage();
         stage.setScene(scene);
         stage.setTitle("GazePlay News");
 
@@ -174,12 +190,11 @@ public class LatestNewPopup {
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> stage.close());
     }
 
-
     String createDocumentUri() {
         if (versionNumber.isEmpty()) {
             return "";
         }
-        //
+
         String languageCode = config.getLanguage();
         if (!languageCode.equals("fra")) {
             languageCode = "eng";
@@ -197,16 +212,12 @@ public class LatestNewPopup {
         webEngine.load(serviceUrl);
     }
 
-    public void show() {
-        stage.show();
-    }
-
     private void showAndWait() {
         stage.showAndWait();
     }
 
-    private String getOfflinePageContent() {
-        return loadOfflinePageTemplate().replaceAll("\\{ version \\}", versionNumber.orElse("unknown version"));
+    String getOfflinePageContent() {
+        return loadOfflinePageTemplate().replaceAll("\\{ version }", versionNumber.orElse("unknown version"));
     }
 
     private String loadOfflinePageTemplate() {
@@ -224,7 +235,7 @@ public class LatestNewPopup {
             return IOUtils.toString(resourceUrl, StandardCharsets.UTF_8);
         } catch (IOException e) {
             log.warn("Failed to load page", e);
-            throw new RuntimeException(e);
+            throw new NewsPopupException(e);
         }
     }
 

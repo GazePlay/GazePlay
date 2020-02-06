@@ -1,26 +1,13 @@
 package net.gazeplay.commons.utils;
 
-import javafx.scene.input.MouseEvent;
-import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.GazePlay;
+import javafx.geometry.Dimension2D;
 
 /**
  * Created by schwab on 28/10/2017.
  */
 
-@Slf4j
 public class ConfigurationButton extends CustomButton {
-
-    public static ConfigurationButton createConfigurationButton(GazePlay gazePlay) {
-        ConfigurationButton configurationButton = new ConfigurationButton();
-        configurationButton.addEventHandler(
-            MouseEvent.MOUSE_CLICKED,
-            e -> gazePlay.onDisplayConfigurationManagement());
-        return configurationButton;
+    ConfigurationButton(Dimension2D screenDimension) {
+        super("data/common/images/configuration-button-alt4.png", screenDimension);
     }
-
-    private ConfigurationButton() {
-        super("data/common/images/configuration-button-alt4.png");
-    }
-
 }

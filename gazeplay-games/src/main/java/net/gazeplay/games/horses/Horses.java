@@ -45,40 +45,36 @@ public class Horses implements GameLifeCycle {
     }
 
     private final IGameContext gameContext;
-    private final Stats stats;
     private final Dimension2D dimensions;
     private final Configuration config;
     private final int nbPlayers;
     @Getter
     private final Multilinguism translate;
-    private final String jsonPath;
     private final int nbPawns;
 
     private final Group backgroundLayer;
     private final Group foregroundLayer;
 
-    private final ImageView boardImage;
-    private double gridElementSize;
+    private final double gridElementSize;
 
     private final DiceRoller die;
     private final ProgressButton rollButton;
-    private HashMap<TEAMS, ImageView> rollImages;
+    private final HashMap<TEAMS, ImageView> rollImages;
     private int diceOutcome;
 
-    private ArrayList<ProgressButton> teamChoosers;
-    private ArrayList<TEAMS> chosenTeams;
+    private final ArrayList<ProgressButton> teamChoosers;
+    private final ArrayList<TEAMS> chosenTeams;
     private int currentTeam;
     private int nbTeamsChosen;
-    private HashMap<TEAMS, Square> startSquares;
-    private HashMap<TEAMS, ArrayList<Pawn>> pawns;
-    private HashMap<TEAMS, ArrayList<Position>> spawnPoints;
-    private HashMap<TEAMS, Color> fontColors;
+    private final HashMap<TEAMS, Square> startSquares;
+    private final HashMap<TEAMS, ArrayList<Pawn>> pawns;
+    private final HashMap<TEAMS, ArrayList<Position>> spawnPoints;
+    private final HashMap<TEAMS, Color> fontColors;
 
-    private VBox messages;
+    private final VBox messages;
 
-    public Horses(IGameContext gameContext, Stats stats, int gameVersion, int nbPlayers) {
+    public Horses(final IGameContext gameContext, final Stats stats, final int gameVersion, final int nbPlayers) {
         this.gameContext = gameContext;
-        this.stats = stats;
         this.nbPlayers = nbPlayers;
 
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -91,24 +87,25 @@ public class Horses implements GameLifeCycle {
         messages.setAlignment(Pos.CENTER);
         this.gameContext.getChildren().addAll(backgroundLayer, messages, foregroundLayer);
 
+        final String jsonPath;
         if (gameVersion == 0) {
             jsonPath = "data/horses/positions.json";
         } else {
             jsonPath = "data/horses/positionsSimplified.json";
         }
 
-        JsonParser parser = new JsonParser();
-        JsonObject positions;
+        final JsonParser parser = new JsonParser();
+        final JsonObject positions;
         positions = (JsonObject) parser.parse(new InputStreamReader(
-                Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(jsonPath)), StandardCharsets.UTF_8));
+            Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(jsonPath)), StandardCharsets.UTF_8));
 
         nbPawns = positions.get("nbPawns").getAsInt();
-        int nbElementsPerSide = positions.get("elementsPerSide").getAsInt();
-        boardImage = new ImageView("data/horses/" + positions.get("imageName").getAsString());
-        double imageSize = Math.min(dimensions.getHeight(), dimensions.getWidth());
+        final int nbElementsPerSide = positions.get("elementsPerSide").getAsInt();
+        final ImageView boardImage = new ImageView("data/horses/" + positions.get("imageName").getAsString());
+        final double imageSize = Math.min(dimensions.getHeight(), dimensions.getWidth());
         gridElementSize = imageSize / nbElementsPerSide;
-        double xOffset = (dimensions.getWidth() - imageSize) / 2;
-        double yOffset = (dimensions.getHeight() - imageSize) / 2;
+        final double xOffset = (dimensions.getWidth() - imageSize) / 2;
+        final double yOffset = (dimensions.getHeight() - imageSize) / 2;
         boardImage.setFitHeight(imageSize);
         boardImage.setFitWidth(imageSize);
         boardImage.setX(xOffset);
@@ -116,8 +113,8 @@ public class Horses implements GameLifeCycle {
         backgroundLayer.getChildren().add(boardImage);
 
         die = new DiceRoller((float) gridElementSize / 2);
-        double diePositionInImage = imageSize / 2 - gridElementSize / 2;
-        StackPane dieContainer = new StackPane();
+        final double diePositionInImage = imageSize / 2 - gridElementSize / 2;
+        final StackPane dieContainer = new StackPane();
         dieContainer.getChildren().add(die);
         dieContainer.setLayoutX(xOffset + diePositionInImage);
         dieContainer.setLayoutY(yOffset + diePositionInImage);
@@ -142,31 +139,31 @@ public class Horses implements GameLifeCycle {
         fontColors.put(TEAMS.RED, Color.INDIANRED);
         fontColors.put(TEAMS.GREEN, Color.LIGHTGREEN);
 
-        HashMap<TEAMS, double[]> teamChooserPositions = new HashMap<>();
-        int elementOffset = (nbElementsPerSide - 3) / 2 + 3;
-        teamChooserPositions.put(TEAMS.YELLOW, new double[] { xOffset, yOffset });
-        teamChooserPositions.put(TEAMS.BLUE, new double[] { xOffset + elementOffset * gridElementSize, yOffset });
+        final HashMap<TEAMS, double[]> teamChooserPositions = new HashMap<>();
+        final int elementOffset = (nbElementsPerSide - 3) / 2 + 3;
+        teamChooserPositions.put(TEAMS.YELLOW, new double[]{xOffset, yOffset});
+        teamChooserPositions.put(TEAMS.BLUE, new double[]{xOffset + elementOffset * gridElementSize, yOffset});
         teamChooserPositions.put(TEAMS.RED,
-                new double[] { xOffset + elementOffset * gridElementSize, yOffset + elementOffset * gridElementSize });
-        teamChooserPositions.put(TEAMS.GREEN, new double[] { xOffset, yOffset + elementOffset * gridElementSize });
+            new double[]{xOffset + elementOffset * gridElementSize, yOffset + elementOffset * gridElementSize});
+        teamChooserPositions.put(TEAMS.GREEN, new double[]{xOffset, yOffset + elementOffset * gridElementSize});
 
-        double scaleRatio = imageSize / boardImage.getImage().getHeight();
+        final double scaleRatio = imageSize / boardImage.getImage().getHeight();
         Square loopBack = null;
         Square previousCommonSquare = null;
-        Square centerSquare = new FinishSquare(new Position(xOffset + imageSize / 2, yOffset + imageSize / 2), this);
-        for (TEAMS team : TEAMS.values()) {
-            JsonObject teamObject = (JsonObject) positions.get(team.name());
-            JsonArray finalPath = (JsonArray) teamObject.get("finalPath");
-            JsonArray commonPath = (JsonArray) teamObject.get("commonPath");
-            JsonArray spawnPointsArray = (JsonArray) teamObject.get("spawnPoints");
+        final Square centerSquare = new FinishSquare(new Position(xOffset + imageSize / 2, yOffset + imageSize / 2), this);
+        for (final TEAMS team : TEAMS.values()) {
+            final JsonObject teamObject = (JsonObject) positions.get(team.name());
+            final JsonArray finalPath = (JsonArray) teamObject.get("finalPath");
+            final JsonArray commonPath = (JsonArray) teamObject.get("commonPath");
+            final JsonArray spawnPointsArray = (JsonArray) teamObject.get("spawnPoints");
 
             Square firstFromFinal = null;
             Square previousSquare = null;
             for (int i = 0; i < finalPath.size(); i++) {
-                JsonObject object = (JsonObject) finalPath.get(i);
-                Position position = new Position(xOffset + object.get("x").getAsDouble() * scaleRatio,
-                        yOffset + object.get("y").getAsDouble() * scaleRatio);
-                FinalPathSquare square = new FinalPathSquare(position, this, i + 1);
+                final JsonObject object = (JsonObject) finalPath.get(i);
+                final Position position = new Position(xOffset + object.get("x").getAsDouble() * scaleRatio,
+                    yOffset + object.get("y").getAsDouble() * scaleRatio);
+                final FinalPathSquare square = new FinalPathSquare(position, this, i + 1);
                 square.setPreviousSquare(previousSquare);
                 if (previousSquare != null) {
                     previousSquare.setNextSquare(square);
@@ -179,10 +176,10 @@ public class Horses implements GameLifeCycle {
             previousSquare.setNextSquare(centerSquare);
 
             for (int i = 0; i < commonPath.size(); i++) {
-                JsonObject object = (JsonObject) commonPath.get(i);
-                Position position = new Position(xOffset + object.get("x").getAsDouble() * scaleRatio,
-                        yOffset + object.get("y").getAsDouble() * scaleRatio);
-                Square square;
+                final JsonObject object = (JsonObject) commonPath.get(i);
+                final Position position = new Position(xOffset + object.get("x").getAsDouble() * scaleRatio,
+                    yOffset + object.get("y").getAsDouble() * scaleRatio);
+                final Square square;
                 if (i == 0) {
                     square = new FinalPathStart(position, this, team, firstFromFinal);
                     firstFromFinal.setPreviousSquare(square);
@@ -208,17 +205,17 @@ public class Horses implements GameLifeCycle {
                 previousCommonSquare = square;
             }
 
-            ArrayList<Position> spawnPositionsList = new ArrayList<>();
+            final ArrayList<Position> spawnPositionsList = new ArrayList<>();
             for (int i = 0; i < nbPawns; i++) {
-                JsonObject object = (JsonObject) spawnPointsArray.get(i);
-                Position position = new Position(
-                        xOffset + object.get("x").getAsDouble() * scaleRatio - gridElementSize / 2,
-                        yOffset + object.get("y").getAsDouble() * scaleRatio - gridElementSize / 2);
+                final JsonObject object = (JsonObject) spawnPointsArray.get(i);
+                final Position position = new Position(
+                    xOffset + object.get("x").getAsDouble() * scaleRatio - gridElementSize / 2,
+                    yOffset + object.get("y").getAsDouble() * scaleRatio - gridElementSize / 2);
                 spawnPositionsList.add(position);
             }
             spawnPoints.put(team, spawnPositionsList);
 
-            ProgressButton chooseButton = new ProgressButton();
+            final ProgressButton chooseButton = new ProgressButton();
             chooseButton.setPrefWidth((nbElementsPerSide - 3d) / 2d * gridElementSize);
             chooseButton.setPrefHeight((nbElementsPerSide - 3d) / 2d * gridElementSize);
             chooseButton.setLayoutX(teamChooserPositions.get(team)[0]);
@@ -232,7 +229,7 @@ public class Horses implements GameLifeCycle {
             foregroundLayer.getChildren().add(chooseButton);
             teamChoosers.add(chooseButton);
 
-            ImageView rollImage = new ImageView(String.format(ROLLIMAGESPATH, team));
+            final ImageView rollImage = new ImageView(String.format(ROLLIMAGESPATH, team));
             rollImage.setFitHeight(dimensions.getHeight() / 6);
             rollImage.setFitWidth(dimensions.getHeight() / 6);
             rollImages.put(team, rollImage);
@@ -244,20 +241,20 @@ public class Horses implements GameLifeCycle {
      * When a team is selected (by gazing at a big round button) This adds the pawns to the game, in their initial
      * position
      */
-    private void selectTeam(TEAMS team) {
+    private void selectTeam(final TEAMS team) {
         chosenTeams.add(team);
-        ArrayList<Pawn> pawnList = new ArrayList();
-        ArrayList<Position> spawnPositions = spawnPoints.get(team);
+        final ArrayList<Pawn> pawnList = new ArrayList();
+        final ArrayList<Position> spawnPositions = spawnPoints.get(team);
         for (int i = 0; i < nbPawns; i++) {
 
-            ImageView bibouleImage = new ImageView(String.format(BIBOULEPATH, team.toString()));
+            final ImageView bibouleImage = new ImageView(String.format(BIBOULEPATH, team.toString()));
             bibouleImage.setFitHeight(gridElementSize);
             bibouleImage.setFitWidth(gridElementSize);
             bibouleImage.setLayoutX(spawnPositions.get(i).getX());
             bibouleImage.setLayoutY(spawnPositions.get(i).getY());
 
-            ProgressButton button = new ProgressButton();
-            ImageView selector = new ImageView("data/horses/selector.png");
+            final ProgressButton button = new ProgressButton();
+            final ImageView selector = new ImageView("data/horses/selector.png");
             selector.setFitHeight(gridElementSize);
             selector.setFitWidth(gridElementSize);
             button.setImage(selector);
@@ -269,7 +266,7 @@ public class Horses implements GameLifeCycle {
             backgroundLayer.getChildren().add(bibouleImage);
             foregroundLayer.getChildren().add(button);
 
-            Pawn pawn = new Pawn(team, bibouleImage, button, spawnPositions.get(i), startSquares.get(team));
+            final Pawn pawn = new Pawn(team, bibouleImage, button, spawnPositions.get(i), startSquares.get(team));
             pawnList.add(pawn);
         }
         pawns.put(team, pawnList);
@@ -304,9 +301,9 @@ public class Horses implements GameLifeCycle {
      * Checks which pawns from the current team are allowed to move, if they are, their button is activated
      */
     private void showMovablePawns() {
-        ArrayList<Pawn> currentPawns = pawns.get(chosenTeams.get(currentTeam));
+        final ArrayList<Pawn> currentPawns = pawns.get(chosenTeams.get(currentTeam));
         int nbNonMovablePawns = 0;
-        for (Pawn pawn : currentPawns) {
+        for (final Pawn pawn : currentPawns) {
             if (!pawn.isOnTrack() && diceOutcome == 6 && !startSquares.get(chosenTeams.get(currentTeam)).isOccupied()) {
                 pawn.activate(e -> {
                     deactivatePawns();
@@ -333,8 +330,8 @@ public class Horses implements GameLifeCycle {
      * When a pawn is selected, all other pawns need to be deactivated
      */
     private void deactivatePawns() {
-        ArrayList<Pawn> currentPawns = pawns.get(chosenTeams.get(currentTeam));
-        for (Pawn pawn : currentPawns) {
+        final ArrayList<Pawn> currentPawns = pawns.get(chosenTeams.get(currentTeam));
+        for (final Pawn pawn : currentPawns) {
             pawn.deactivate();
         }
     }
@@ -349,9 +346,9 @@ public class Horses implements GameLifeCycle {
     /**
      * Displays a message in a vertical queue, which disappears after a short time
      */
-    public void showMessage(Color fontColor, String message, Object... values) {
-        Text messageText = new Text(0, dimensions.getHeight() / 3,
-                String.format(translate.getTrad(message, config.getLanguage()), values));
+    public void showMessage(final Color fontColor, final String message, final Object... values) {
+        final Text messageText = new Text(0, dimensions.getHeight() / 3,
+            String.format(translate.getTrad(message, config.getLanguage()), values));
         messageText.setTextAlignment(TextAlignment.CENTER);
         messageText.setFill(fontColor);
         messageText.setFont(new Font(dimensions.getHeight() / 10));
@@ -361,10 +358,10 @@ public class Horses implements GameLifeCycle {
 
         messages.getChildren().add(messageText);
 
-        Timeline showMessage = new Timeline(
-                new KeyFrame(Duration.seconds(0.3), new KeyValue(messageText.opacityProperty(), 1)),
-                new KeyFrame(Duration.seconds(4), new KeyValue(messageText.opacityProperty(), 1)),
-                new KeyFrame(Duration.seconds(4.3), new KeyValue(messageText.opacityProperty(), 0)));
+        final Timeline showMessage = new Timeline(
+            new KeyFrame(Duration.seconds(0.3), new KeyValue(messageText.opacityProperty(), 1)),
+            new KeyFrame(Duration.seconds(4), new KeyValue(messageText.opacityProperty(), 1)),
+            new KeyFrame(Duration.seconds(4.3), new KeyValue(messageText.opacityProperty(), 0)));
 
         showMessage.setOnFinished(e -> messages.getChildren().remove(messageText));
 
@@ -379,11 +376,11 @@ public class Horses implements GameLifeCycle {
         if (diceOutcome != 6) {
             currentTeam = (currentTeam + 1) % nbPlayers;
             showMessage(getCurrentFontColor(), "%s team's turn",
-                    translate.getTrad(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
+                translate.getTrad(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
         } else {
             showMessage(getCurrentFontColor(), "Play again");
         }
-        ImageView rollImage = rollImages.get(chosenTeams.get(currentTeam));
+        final ImageView rollImage = rollImages.get(chosenTeams.get(currentTeam));
         rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() / 2 - rollImage.getFitHeight() / 2);
         rollButton.setImage(rollImage);
@@ -392,9 +389,9 @@ public class Horses implements GameLifeCycle {
     /**
      * Plays the win animation at the end of the game
      */
-    public void win(Pawn pawn) {
+    public void win(final Pawn pawn) {
         showMessage(getCurrentFontColor(), "%s team wins",
-                translate.getTrad(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
+            translate.getTrad(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
         gameContext.playWinTransition(100, e -> {
 
         });

@@ -131,15 +131,52 @@ subprojects {
 
     pmd {
         ignoreFailures = true
-        rulePriority = 1
+        rulePriority = 2
         sourceSets = [sourceSets.main, sourceSets.test]
         reportsDir = file("$project.buildDir/reports/pmd")
         ruleSets = []
         ruleSetFiles = files(rootProject.file("pmd-ruleset.xml"))
     }
-    
+
     pmdMain.enabled = pmdEnabled
     pmdTest.enabled = pmdEnabled
+
+    task checkPMDReport {
+        doLast {
+            def pmdReportDir = file("$project.buildDir/reports/pmd/")
+            if (pmdReportDir.exists()) {
+                def pmdReportXml = file("$project.buildDir/reports/pmd/main.xml")
+                if (pmdReportXml.exists()) {
+                    def pmdReportHtml = file("$project.buildDir/reports/pmd/main.html")
+                    def rootNode = new XmlSlurper().parse("$pmdReportXml")
+                    // thresholds are set from actual observations of the number of violation
+                    // goal is that no new violations come in the code base
+                    // as we progressively fix existing violations (or exclude them in pmd-ruleset.xml), we should lower the threshold accordingly
+                    // until the threshold is zero
+                    def violationsThresholds = [
+                            1: 40,
+                            2: 6,
+                            3: 5201,
+                            4: 197,
+                            5: 449
+                    ]
+                    violationsThresholds.each {
+                        priorityLevel, violationsThreshold ->
+
+                            def violationsCount = rootNode.children().children().findAll({ node -> node.name() == 'violation' && node.@priority == priorityLevel }).size()
+                            def violationsMessage = "$violationsCount PMD rule 'priority $priorityLevel' violations were found. See the report at: file://$pmdReportHtml" 
+                            if (violationsCount > violationsThreshold) {
+                                throw new GradleException(violationsMessage)
+                            } else {
+                                if (violationsCount > 0) {
+                                    println violationsMessage
+                                }
+                            }
+                    }
+                }
+            }
+        }
+    }
 
 }
 
@@ -197,7 +234,7 @@ release {
 
 mainClassName = 'net.gazeplay.GazePlayLauncher'
 
-defaultTasks 'clean', 'build'
+defaultTasks 'clean', 'build', 'checkPMDReport'
 startScripts.enabled = false
 
 afterReleaseBuild.dependsOn generateInstaller

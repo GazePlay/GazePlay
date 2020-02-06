@@ -9,18 +9,18 @@ public class ApplicationConfigBackedDoubleProperty extends PropertiesDoublePrope
 
     private final ApplicationConfig properties;
 
-    public ApplicationConfigBackedDoubleProperty(ApplicationConfig properties, String propertyName, double defaultValue, PropertyChangeListener propertyChangeListener) {
+    public ApplicationConfigBackedDoubleProperty(final ApplicationConfig properties, final String propertyName, final double defaultValue, final PropertyChangeListener propertyChangeListener) {
         super(propertyName, defaultValue, propertyChangeListener);
         this.properties = properties;
     }
 
     @Override
-    protected void setProperty(String propertyName, String propertyValue) {
+    protected void setProperty(final String propertyName, final String propertyValue) {
         properties.setProperty(propertyName, propertyValue);
     }
 
     @Override
-    protected String getProperty(String propertyName) {
+    protected String getProperty(final String propertyName) {
         return properties.getProperty(propertyName);
     }
 

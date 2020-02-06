@@ -3,6 +3,7 @@ package net.gazeplay.ui.scenes.stats;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -25,8 +26,8 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.HomeButton;
+import net.gazeplay.commons.utils.stats.StatDisplayUtils;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.commons.utils.stats.StatsDisplay;
 import net.gazeplay.stats.ExplorationGamesStats;
 import net.gazeplay.stats.HiddenItemsGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
@@ -116,7 +117,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         AtomicInteger currentFormRow = new AtomicInteger(1);
         {
             I18NText label = new I18NText(translator, "TotalLength", COLON);
-            Text value = new Text(StatsDisplay.convert(stats.computeTotalElapsedDuration()));
+            Text value = new Text(StatDisplayUtils.convert(stats.computeTotalElapsedDuration()));
             addToGrid(grid, currentFormRow, label, value, alignLeft);
         }
 
@@ -147,7 +148,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
         {
             I18NText label = new I18NText(translator, "Length", COLON);
-            Text value = new Text(StatsDisplay.convert(stats.getRoundsTotalAdditiveDuration()));
+            Text value = new Text(StatDisplayUtils.convert(stats.getRoundsTotalAdditiveDuration()));
             if (!(stats instanceof ExplorationGamesStats)) {
                 addToGrid(grid, currentFormRow, label, value, alignLeft);
             }
@@ -161,7 +162,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 label = new I18NText(translator, "AverageLength", COLON);
             }
 
-            Text value = new Text(StatsDisplay.convert(stats.computeRoundsDurationAverageDuration()));
+            Text value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationAverageDuration()));
 
             if (!(stats instanceof ExplorationGamesStats)) {
                 addToGrid(grid, currentFormRow, label, value, alignLeft);
@@ -177,7 +178,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 label = new I18NText(translator, "MedianLength", COLON);
             }
 
-            Text value = new Text(StatsDisplay.convert(stats.computeRoundsDurationMedianDuration()));
+            Text value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationMedianDuration()));
             if (!(stats instanceof ExplorationGamesStats)) {
                 addToGrid(grid, currentFormRow, label, value, alignLeft);
             }
@@ -186,7 +187,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "StandDev", COLON);
 
-            Text value = new Text(StatsDisplay.convert((long) stats.computeRoundsDurationStandardDeviation()));
+            Text value = new Text(StatDisplayUtils.convert((long) stats.computeRoundsDurationStandardDeviation()));
             if (!(stats instanceof ExplorationGamesStats)) {
                 addToGrid(grid, currentFormRow, label, value, alignLeft);
             }
@@ -203,7 +204,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         VBox centerPane = new VBox();
         centerPane.setAlignment(Pos.CENTER);
 
-        ImageView gazeMetrics = StatsDisplay.buildGazeMetrics(stats, root);
+        ImageView gazeMetrics = StatDisplayUtils.buildGazeMetrics(stats, root);
         root.widthProperty().addListener((observable, oldValue, newValue) -> gazeMetrics.setFitWidth(newValue.doubleValue() * RATIO));
         root.heightProperty().addListener((observable, oldValue, newValue) -> gazeMetrics.setFitHeight(newValue.doubleValue() * RATIO));
 
@@ -214,12 +215,12 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         // charts
 
-        LineChart<String, Number> lineChart = StatsDisplay.buildLineChart(stats, root);
+        LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(stats, root);
         centerPane.getChildren().add(lineChart);
         AreaChart<Number, Number> areaChart;
         RadioButton colorBands = new RadioButton("Color Bands");
         if (!config.isFixationSequenceDisabled()) {
-            areaChart = StatsDisplay.buildAreaChart(stats.getFixationSequence(), root);
+            areaChart = StatDisplayUtils.buildAreaChart(stats.getFixationSequence(), root);
 
             colorBands.setTextFill(Color.WHITE);
             colorBands.getStylesheets().add("data/common/radio.css");
@@ -237,13 +238,15 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             });
         }
 
-        HomeButton homeButton = StatsDisplay.createHomeButtonInStatsScreen(gazePlay, this);
+        HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
 
         EventHandler<Event> AOIEvent = e -> {
             gazePlay.onDisplayAOI(stats);
         };
 
-        HomeButton aoiButton = new HomeButton("data/common/images/aoibtn.png");
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+
+        CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
         aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
 
         EventHandler<Event> viewScanpath = s -> {
@@ -251,7 +254,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             gazePlay.onDisplayScanpath(scanpath);
         };
 
-        HomeButton scanpathButton = new HomeButton("data/common/images/scanpathButton.png");
+        CustomButton scanpathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
         scanpathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanpath);
 
         HBox controlButtonPane = new HBox();

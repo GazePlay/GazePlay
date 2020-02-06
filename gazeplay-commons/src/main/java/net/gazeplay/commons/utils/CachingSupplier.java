@@ -1,31 +1,39 @@
 package net.gazeplay.commons.utils;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 /**
  * Supplier that caches the value to prevent multiple calls.
- * 
- * @see org.springframework.boot.context.properties.PropertyMapper.CachingSupplier
+ * but also supports cache expiry
  */
 public class CachingSupplier<T> implements Supplier<T> {
 
     private final Supplier<T> supplier;
 
-    private boolean hasResult;
+    private final Cache<String, T> cache;
 
-    private T result;
-
-    public CachingSupplier(Supplier<T> supplier) {
+    public CachingSupplier(final Supplier<T> supplier, final long expiryDuration, final TimeUnit expiryDurationUnit) {
         this.supplier = supplier;
+
+        cache = CacheBuilder.newBuilder()
+            .initialCapacity(1)
+            .maximumSize(1)
+            .expireAfterWrite(expiryDuration, expiryDurationUnit)
+            .build();
     }
 
     @Override
     public T get() {
-        if (!this.hasResult) {
-            this.result = this.supplier.get();
-            this.hasResult = true;
+        try {
+            return cache.get("UNIQ", this.supplier::get);
+        } catch (final ExecutionException e) {
+            throw new RuntimeExecutionException(e);
         }
-        return this.result;
     }
 
 }

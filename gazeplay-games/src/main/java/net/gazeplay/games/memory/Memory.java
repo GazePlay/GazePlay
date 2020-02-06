@@ -55,11 +55,11 @@ public class Memory implements GameLifeCycle {
 
     private final boolean isOpen;
 
-    public Memory(final MemoryGameType gameType, IGameContext gameContext, int nbLines, int nbColumns, Stats stats,
-                  boolean isOpen) {
+    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
+                  final boolean isOpen) {
         super();
         this.isOpen = isOpen;
-        int cardsCount = nbLines * nbColumns;
+        final int cardsCount = nbLines * nbColumns;
         if ((cardsCount & 1) != 0) {
             // nbLines * nbColumns must be a multiple of 2
             throw new IllegalArgumentException("Cards count must be an even number in this game");
@@ -78,21 +78,21 @@ public class Memory implements GameLifeCycle {
 
             this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers");
 
-        } else
-
+        } else {
             this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"),
                 Utils.getImagesSubDirectory("default"));
+        }
 
     }
 
     HashMap<Integer, Image> pickRandomImages() {
         final int cardsCount = nbColumns * nbLines;
-        HashMap<Integer, Image> res = new HashMap<>();
+        final HashMap<Integer, Image> res = new HashMap<>();
 
-        Set<Image> images = imageLibrary.pickMultipleRandomDistinctImages(cardsCount / 2);
+        final Set<Image> images = imageLibrary.pickMultipleRandomDistinctImages(cardsCount / 2);
 
         int i = 0;
-        for (Image image : images) {
+        for (final Image image : images) {
             res.put(i, image);
             i++;
         }
@@ -101,12 +101,12 @@ public class Memory implements GameLifeCycle {
 
     @Override
     public void launch() {
-        Configuration config = gameContext.getConfiguration();
+        final Configuration config = gameContext.getConfiguration();
         final int cardsCount = nbColumns * nbLines;
 
         images = pickRandomImages();
 
-        List<MemoryCard> cardList = createCards(images, config);
+        final List<MemoryCard> cardList = createCards(images, config);
 
         nbRemainingPeers = cardsCount / 2;
 
@@ -131,8 +131,8 @@ public class Memory implements GameLifeCycle {
         if (this.currentRoundDetails == null) {
             return;
         }
-        List<MemoryCard> cardsToHide = new ArrayList<>();
-        for (MemoryCard pictureCard : this.currentRoundDetails.cardList) {
+        final List<MemoryCard> cardsToHide = new ArrayList<>();
+        for (final MemoryCard pictureCard : this.currentRoundDetails.cardList) {
             if (pictureCard.isTurned()) {
                 cardsToHide.add(pictureCard);
             }
@@ -142,8 +142,8 @@ public class Memory implements GameLifeCycle {
         gameContext.getChildren().removeAll(cardsToHide);
     }
 
-    private List<MemoryCard> createCards(HashMap<Integer, Image> im, Configuration config) {
-        javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+    private List<MemoryCard> createCards(final HashMap<Integer, Image> im, final Configuration config) {
+        final javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         log.debug("Width {} ; height {}", gameDimension2D.getWidth(), gameDimension2D.getHeight());
 
@@ -152,14 +152,14 @@ public class Memory implements GameLifeCycle {
 
         log.debug("cardWidth {} ; cardHeight {}", cardWidth, cardHeight);
 
-        double width = computeCardWidth(gameDimension2D, nbColumns) - cardWidth;
+        final double width = computeCardWidth(gameDimension2D, nbColumns) - cardWidth;
 
         log.debug("width {} ", width);
 
-        List<MemoryCard> result = new ArrayList<>();
+        final List<MemoryCard> result = new ArrayList<>();
 
         // HashMap <index, number of times the index was used >
-        HashMap<Integer, Integer> indUsed = new HashMap<>();
+        final HashMap<Integer, Integer> indUsed = new HashMap<>();
         indUsed.clear();
 
         final int fixationlength = config.getFixationLength();
@@ -167,12 +167,12 @@ public class Memory implements GameLifeCycle {
         for (int currentLineIndex = 0; currentLineIndex < nbLines; currentLineIndex++) {
             for (int currentColumnIndex = 0; currentColumnIndex < nbColumns; currentColumnIndex++) {
 
-                double positionX = width / 2d + (width + cardWidth) * currentColumnIndex;
-                double positionY = minHeight / 2d + (minHeight + cardHeight) * currentLineIndex;
+                final double positionX = width / 2 + (width + cardWidth) * currentColumnIndex;
+                final double positionY = minHeight / 2d + (minHeight + cardHeight) * currentLineIndex;
 
                 log.debug("positionX : {} ; positionY : {}", positionX, positionY);
 
-                int id = getRandomValue(indUsed);
+                final int id = getRandomValue(indUsed);
 
                 if (indUsed.containsKey(id)) {
                     indUsed.replace(id, 1, 2);
@@ -180,9 +180,9 @@ public class Memory implements GameLifeCycle {
                     indUsed.put(id, 1);
                 }
 
-                Image image = images.get(id);
+                final Image image = images.get(id);
 
-                MemoryCard card = new MemoryCard(positionX, positionY, cardWidth, cardHeight, image, id, gameContext,
+                final MemoryCard card = new MemoryCard(positionX, positionY, cardWidth, cardHeight, image, id, gameContext,
                     stats, this, fixationlength, isOpen);
 
                 result.add(card);
@@ -191,17 +191,17 @@ public class Memory implements GameLifeCycle {
         return result;
     }
 
-    private static double computeCardHeight(Dimension2D gameDimension2D, int nbLines) {
+    private static double computeCardHeight(final Dimension2D gameDimension2D, final int nbLines) {
         return gameDimension2D.getHeight() * 0.9 / nbLines;
     }
 
-    private static double computeCardWidth(Dimension2D gameDimension2D, int nbColumns) {
+    private static double computeCardWidth(final Dimension2D gameDimension2D, final int nbColumns) {
         return gameDimension2D.getWidth() / nbColumns;
     }
 
-    private int getRandomValue(HashMap<Integer, Integer> indUsed) {
+    private int getRandomValue(final HashMap<Integer, Integer> indUsed) {
         int value;
-        Random rdm = new Random();
+        final Random rdm = new Random();
         do {
             value = rdm.nextInt(images.size());
         } while ((!images.containsKey(value)) || (indUsed.containsKey(value) && (indUsed.get(value) == 2)));
