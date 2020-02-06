@@ -102,7 +102,7 @@ public class Race extends Parent implements GameLifeCycle {
         imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
 
         int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
-        imageRectangle.setOpacity(1 - coef * 0.9);
+        imageRectangle.setOpacity(1 - coef * 0.5);
 
         gameContext.getChildren().add(imageRectangle);
         gameContext.getChildren().add(this);

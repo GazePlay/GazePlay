@@ -204,7 +204,7 @@ public class Math101 implements GameLifeCycle {
         }
     }
 
-    void initBackground() {
+    private void initBackground() {
         if (gameContext.getConfiguration().isBackgroundEnabled()) {
             Rectangle imageRectangle = new Rectangle(0, 0, gameDimension2D.getWidth(), gameDimension2D.getHeight());
             imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
@@ -212,7 +212,7 @@ public class Math101 implements GameLifeCycle {
             imageRectangle.setFill(gameType.getBackgroundColor());
 
             int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
-            imageRectangle.setOpacity(1 - coef * 0.9);
+            imageRectangle.setOpacity(1 - coef * 0.5);
             gameContext.getChildren().add(imageRectangle);
 
         }
