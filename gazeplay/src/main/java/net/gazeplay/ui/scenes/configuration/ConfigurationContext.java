@@ -1,5 +1,6 @@
 package net.gazeplay.ui.scenes.configuration;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -209,7 +210,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         {
             I18NText label = new I18NText(translator, "EnableRewardSound", COLON);
-            CheckBox input = buildEnableRewardSoundBox(config);
+            CheckBox input = buildCheckBox(config.getEnableRewardSoundProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -245,7 +246,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         {
             I18NText label = new I18NText(translator, "WhiteBackground", COLON);
-            CheckBox input = buildEnabledWhiteBackground(config);
+            CheckBox input = buildCheckBox(config.getWhiteBackgroundProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -291,7 +292,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // HeatMap settings
         {
             I18NText label = new I18NText(translator, "DisableHeatMap", COLON);
-            CheckBox input = buildDisableHeatMapSoundBox(config);
+            CheckBox input = buildCheckBox(config.getHeatMapDisabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -312,13 +313,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // AOI settings
         {
             I18NText label = new I18NText(translator, "EnableAreaOfInterest", COLON);
-            CheckBox input = buildDisableAreaOfInterest(config);
+            CheckBox input = buildCheckBox(config.getAreaOfInterestDisabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "EnableConvexHull", COLON);
-            CheckBox input = buildDisableConvexHull(config);
+            CheckBox input = buildCheckBox(config.getConvexHullDisabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -326,13 +327,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // More Stats settings
         {
             I18NText label = new I18NText(translator, "DisableSequence", COLON);
-            CheckBox input = buildDisableFixationSequenceCheckBox(config);
+            CheckBox input = buildCheckBox(config.getFixationSequenceDisabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "EnableVideoRecording", COLON);
-            CheckBox input = buildEnableVideoRecordingCheckbox(config);
+            CheckBox input = buildCheckBox(config.getVideoRecordingEnabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -347,7 +348,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         {
             I18NText label = new I18NText(translator, "EnableGazeMouse", COLON);
-            CheckBox input = buildGazeMouseEnabledCheckBox(config);
+            CheckBox input = buildCheckBox(config.getGazeMouseEnabledProperty());
             String[] labelParts = label.getText().split(";");
             StringBuilder concatenateLabel = new StringBuilder();
             for (String labels : labelParts) {
@@ -672,7 +673,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return languageBox;
     }
 
-    private static ChoiceBox<EyeTracker> buildEyeTrackerConfigChooser(Configuration configuration) {
+    static ChoiceBox<EyeTracker> buildEyeTrackerConfigChooser(Configuration configuration) {
         ChoiceBox<EyeTracker> choiceBox = new ChoiceBox<>();
 
         choiceBox.getItems().addAll(EyeTracker.values());
@@ -700,67 +701,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return null;
     }
 
-    private static CheckBox buildEnableRewardSoundBox(
-        Configuration configuration
-    ) {
+    static CheckBox buildCheckBox(BooleanProperty selectionProperty) {
         CheckBox checkBox = new CheckBox();
-        checkBox.setSelected(configuration.isEnableRewardSound());
-        checkBox.selectedProperty().addListener((o) ->
-            configuration.getEnableRewardSoundProperty().setValue(checkBox.isSelected()));
-        return checkBox;
-    }
-
-    private static CheckBox buildDisableHeatMapSoundBox(
-        Configuration configuration
-    ) {
-        CheckBox checkBox = new CheckBox();
-        checkBox.setSelected(configuration.isHeatMapDisabled());
-        checkBox.selectedProperty().addListener((o) -> configuration.getHeatMapDisabledProperty().setValue(checkBox.isSelected()));
-        return checkBox;
-    }
-
-    private static CheckBox buildDisableAreaOfInterest(
-        Configuration configuration
-    ) {
-        CheckBox checkBox = new CheckBox();
-        checkBox.setSelected(configuration.getAreaOfInterestDisabledProperty().getValue());
-        checkBox.selectedProperty().bindBidirectional(configuration.getAreaOfInterestDisabledProperty());
-        return checkBox;
-    }
-
-    private static CheckBox buildDisableConvexHull(
-        Configuration configuration
-    ) {
-        CheckBox checkBox = new CheckBox();
-        checkBox.setSelected(configuration.getConvexHullDisabledProperty().getValue());
-        checkBox.selectedProperty().bindBidirectional(configuration.getConvexHullDisabledProperty());
-        return checkBox;
-    }
-
-    private static CheckBox buildEnableVideoRecordingCheckbox(
-        Configuration configuration
-    ) {
-        CheckBox checkBox = new CheckBox();
-        checkBox.setSelected(configuration.getVideoRecordingEnabledProperty().getValue());
-        checkBox.selectedProperty().bindBidirectional(configuration.getVideoRecordingEnabledProperty());
-        return checkBox;
-    }
-
-    private static CheckBox buildDisableFixationSequenceCheckBox(
-        Configuration configuration
-    ) {
-        CheckBox checkBox = new CheckBox();
-        checkBox.setSelected(configuration.getFixationSequenceDisabledProperty().getValue());
-        checkBox.selectedProperty().bindBidirectional(configuration.getFixationSequenceDisabledProperty());
-        return checkBox;
-    }
-
-    private CheckBox buildEnabledWhiteBackground(
-        Configuration configuration
-    ) {
-        CheckBox checkBox = new CheckBox();
-        checkBox.setSelected(configuration.getWhiteBackgroundProperty().getValue());
-        checkBox.selectedProperty().bindBidirectional(configuration.getWhiteBackgroundProperty());
+        checkBox.setSelected(selectionProperty.getValue());
+        checkBox.selectedProperty().bindBidirectional(selectionProperty);
         return checkBox;
     }
 
@@ -774,13 +718,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         checkBox.setDisable(true);
         // TO HERE TO ENABLE******
 
-        return checkBox;
-    }
-
-    private static CheckBox buildGazeMouseEnabledCheckBox(Configuration configuration) {
-        CheckBox checkBox = new CheckBox();
-        checkBox.setSelected(configuration.getGazeMouseEnabledProperty().getValue());
-        checkBox.selectedProperty().bindBidirectional(configuration.getGazeMouseEnabledProperty());
         return checkBox;
     }
 

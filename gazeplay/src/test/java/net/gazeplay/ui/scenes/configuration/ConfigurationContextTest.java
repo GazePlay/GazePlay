@@ -1,9 +1,7 @@
 package net.gazeplay.ui.scenes.configuration;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -21,6 +19,7 @@ import mockit.Verifications;
 import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
@@ -370,6 +369,35 @@ class ConfigurationContextTest {
         ImageView image = (ImageView) result.getGraphic();
         assertTrue(image.getImage().getUrl().contains("Arab"));
         assertEquals("ara", languageProperty.getValue());
+    }
+
+    @Test
+    void shouldBuildEyeTrackerChooser() {
+        StringProperty eyeTrackerProperty = new SimpleStringProperty("mouse_control");
+
+        when(mockConfig.getEyeTracker()).thenReturn(eyeTrackerProperty.getValue());
+        when(mockConfig.getEyetrackerProperty()).thenReturn(eyeTrackerProperty);
+
+        ChoiceBox<EyeTracker> result = ConfigurationContext.buildEyeTrackerConfigChooser(mockConfig);
+
+        assertEquals(3, result.getItems().size());
+
+        result.setValue(EyeTracker.eyetribe);
+
+        assertEquals("eyetribe", eyeTrackerProperty.getValue());
+    }
+
+    @Test
+    void shouldBuildCheckBox() throws InterruptedException {
+        BooleanProperty testProperty = new SimpleBooleanProperty(true);
+
+        CheckBox result = ConfigurationContext.buildCheckBox(testProperty);
+        assertTrue(result.isSelected());
+
+        Platform.runLater(result::fire);
+        TestingUtils.waitForRunLater();
+
+        assertFalse(testProperty.getValue());
     }
 
     @Test
