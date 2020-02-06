@@ -50,8 +50,6 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final Stats stats;
 
-    private final boolean image;
-
     private final ImageLibrary imageLibrary;
 
     private final List<Circle> fragments;
@@ -64,22 +62,11 @@ public class Bubble extends Parent implements GameLifeCycle {
         this.gameContext = gameContext;
         this.type = type;
         this.stats = stats;
-        this.image = useBackgroundImage;
         this.direction = direction;
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("portraits"));
 
-        if (useBackgroundImage) {
-
-            Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-            Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-            int i = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
-
-            imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
-            imageRectangle.setOpacity(1 - i * 0.9);
-
-            gameContext.getChildren().add(imageRectangle);
-        }
+        initBackground(useBackgroundImage);
 
         gameContext.getChildren().add(this);
 
@@ -100,6 +87,19 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     }
 
+    void initBackground(boolean useBackgroundImage) {
+        if (useBackgroundImage && gameContext.getConfiguration().isBackgroundEnabled()) {
+            Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+            Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+            int i = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
+
+            imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
+            imageRectangle.setOpacity(1 - i * 0.9);
+
+            gameContext.getChildren().add(imageRectangle);
+        }
+    }
+
     @Override
     public void launch() {
 
@@ -114,7 +114,8 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     @Override
     public void dispose() {
-        enterEvent = e -> {};
+        enterEvent = e -> {
+        };
         this.getChildren().clear();
     }
 
