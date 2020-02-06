@@ -7,6 +7,7 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -103,9 +104,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         this.platformHeight = dimensions.getHeight() / 10;
         this.platformWidth = dimensions.getWidth() / 7;
 
-        Rectangle backgroundImage = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
-        backgroundImage.setFill(Color.SKYBLUE);
-        this.backgroundLayer.getChildren().add(backgroundImage);
+        initBackground();
 
         onScreenText = new Label();
         foregroundLayer.getChildren().add(onScreenText);
@@ -168,6 +167,21 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
             ForegroundSoundsUtils.playSound(DATA_PATH + "/sounds/" + soundName);
         } catch (Exception e) {
             log.warn("Can't play sound: no associated sound : " + e.toString());
+        }
+    }
+
+    void initBackground() {
+        if (gameContext.getConfiguration().isBackgroundEnabled()) {
+            Rectangle backgroundImage = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
+            if (gameContext.getConfiguration().isBackgroundWhite()) {
+                ColorAdjust grayscale = new ColorAdjust();
+                grayscale.setSaturation(-0.7);
+                backgroundImage.setFill(Color.LIGHTSKYBLUE);
+                backgroundImage.setEffect(grayscale);
+            } else {
+                backgroundImage.setFill(Color.SKYBLUE);
+            }
+            this.backgroundLayer.getChildren().add(backgroundImage);
         }
     }
 
@@ -300,10 +314,10 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         Platform p;
         if (!moving) {
             p = new Platform(
-                centerX - platformWidth / 2, centerY - platformHeight / 2, 
+                centerX - platformWidth / 2, centerY - platformHeight / 2,
                 platformWidth, platformHeight,
-                "bounce.wav", 
-                3, 
+                "bounce.wav",
+                3,
                 0.5, 0, 0, 0
             );
         } else {
