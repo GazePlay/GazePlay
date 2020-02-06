@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -122,6 +123,13 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             Rectangle back = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
             back.setFill(new ImagePattern(new Image("data/cake/images/background.png")));
             back.setMouseTransparent(true);
+
+            if (gameContext.getConfiguration().isBackgroundWhite()) {
+                ColorAdjust colorAdjust = new ColorAdjust();
+                colorAdjust.setBrightness(0.5);
+                back.setEffect(colorAdjust);
+            }
+
             this.getChildren().add(back);
         }
     }
@@ -129,6 +137,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     void updateBackgroundColor(Color c) {
         if (background != null) {
             background.setFill(c);
+            if (gameContext.getConfiguration().isBackgroundWhite()) {
+                background.setOpacity(0.5);
+            }
         }
     }
 
