@@ -33,6 +33,7 @@ import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
+import net.gazeplay.commons.ui.I18NToggleButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.HomeButton;
@@ -214,7 +215,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         {
             I18NText label = new I18NText(translator, "EnableRewardSound", COLON);
-            CheckBox input = buildEnableRewardSoundBox(config, configurationContext);
+            CheckBox input = buildEnableRewardSoundBox(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -249,19 +250,19 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         {
             I18NText label = new I18NText(translator, "WhiteBackground", COLON);
-            HBox input = buildEnabledWhiteBackground(config, configurationContext);
+            HBox input = buildEnabledWhiteBackground(config, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "BackgroundEnabled", COLON);
-            CheckBox input = buildEnabledBackground(config, configurationContext);
+            CheckBox input = buildEnabledBackground(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "MenuOrientation", COLON);
-            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config, configurationContext);
+            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -301,7 +302,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // HeatMap settings
         {
             I18NText label = new I18NText(translator, "DisableHeatMap", COLON);
-            CheckBox input = buildDisableHeatMapSoundBox(config, configurationContext);
+            CheckBox input = buildDisableHeatMapSoundBox(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -322,13 +323,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // AOI settings
         {
             I18NText label = new I18NText(translator, "EnableAreaOfInterest", COLON);
-            CheckBox input = buildDisableAreaOfInterest(config, configurationContext);
+            CheckBox input = buildDisableAreaOfInterest(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "EnableConvexHull", COLON);
-            CheckBox input = buildDisableConvexHull(config, configurationContext);
+            CheckBox input = buildDisableConvexHull(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -336,13 +337,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // More Stats settings
         {
             I18NText label = new I18NText(translator, "DisableSequence", COLON);
-            CheckBox input = buildDisableFixationSequenceCheckBox(config, configurationContext);
+            CheckBox input = buildDisableFixationSequenceCheckBox(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "EnableVideoRecording", COLON);
-            CheckBox input = buildEnableVideoRecordingCheckbox(config, configurationContext);
+            CheckBox input = buildEnableVideoRecordingCheckbox(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -782,8 +783,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildEnableRewardSoundBox(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.isEnableRewardSound());
@@ -794,8 +794,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildDisableHeatMapSoundBox(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.isHeatMapDisabled());
@@ -806,8 +805,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildDisableAreaOfInterest(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getAreaOfInterestDisabledProperty().getValue());
@@ -816,8 +814,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildDisableConvexHull(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getConvexHullDisabledProperty().getValue());
@@ -826,8 +823,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildEnableVideoRecordingCheckbox(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getVideoRecordingEnabledProperty().getValue());
@@ -836,8 +832,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static CheckBox buildDisableFixationSequenceCheckBox(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getFixationSequenceDisabledProperty().getValue());
@@ -847,11 +842,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private HBox buildEnabledWhiteBackground(
         Configuration configuration,
-        ConfigurationContext configurationContext
+        Translator translator
     ) {
         ToggleGroup group = new ToggleGroup();
-        ToggleButton blackButton = new ToggleButton("Black");
-        ToggleButton whiteButton = new ToggleButton("White");
+        I18NToggleButton blackButton = new I18NToggleButton(translator,"Black");
+        I18NToggleButton whiteButton = new I18NToggleButton(translator,"White");
         blackButton.setToggleGroup(group);
         whiteButton.setToggleGroup(group);
 
@@ -868,8 +863,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private CheckBox buildEnabledBackground(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getBackgroundEnabledProperty().getValue());
@@ -898,8 +892,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(
-        Configuration configuration,
-        ConfigurationContext configurationContext
+        Configuration configuration
     ) {
         ChoiceBox<GameButtonOrientation> choiceBox = new ChoiceBox<>();
         choiceBox.getItems().addAll(GameButtonOrientation.values());
