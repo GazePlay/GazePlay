@@ -70,20 +70,9 @@ public class Shooter extends Parent implements GameLifeCycle {
         date = DateTimeFormatter.ofPattern("d MMMM uuuu ").format(localDate);
         score = 0;
         gameType = type;
-
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         hand = new StackPane();
 
-        Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
-        imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
-        System.out.println("The game is data/" + gameType + "/images/Background.jpg");
-        imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
-
-        int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
-        imageRectangle.setOpacity(1 - coef * 0.5);
-
-        gameContext.getChildren().add(imageRectangle);
+        Rectangle imageRectangle = createBackground();
         gameContext.getChildren().add(this);
 
         EventHandler<Event> handEvent = e -> {
@@ -138,6 +127,22 @@ public class Shooter extends Parent implements GameLifeCycle {
             }
         };
 
+    }
+
+    private Rectangle createBackground() {
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
+        imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
+        imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
+
+        int whiteCoef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
+        int isBackgroundEnabled = (gameContext.getConfiguration().isBackgroundEnabled()) ? 1 : 0;
+        imageRectangle.setOpacity(isBackgroundEnabled * (1 - whiteCoef * 0.5));
+
+        gameContext.getChildren().add(imageRectangle);
+
+        return imageRectangle;
     }
 
     private void updatePoints(final Rectangle rectangle) {
