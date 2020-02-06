@@ -95,7 +95,7 @@ public class GooseGame implements GameLifeCycle {
         boardImage = new ImageView("data/goosegame/gooseboard.png");
         if (!gameContext.getConfiguration().isBackgroundEnabled()) {
             ColorAdjust grayscale = new ColorAdjust();
-            grayscale.setSaturation(-1);
+            grayscale.setSaturation(-0.7);
             boardImage.setEffect(grayscale);
         }
         // The board is scaled according to the window size, this influences the position we got above, so we need to
