@@ -341,11 +341,19 @@ public class StatDisplayUtils {
     }
 
     public static String convert(long totalTime) {
-        return String.format("%02d d %02d h %02d m %02d s %04d ms",
-            TimeUnit.MILLISECONDS.toDays(totalTime),
-            TimeUnit.MILLISECONDS.toHours(totalTime) % TimeUnit.DAYS.toHours(1),
-            TimeUnit.MILLISECONDS.toMinutes(totalTime) % TimeUnit.HOURS.toMinutes(1),
-            TimeUnit.MILLISECONDS.toSeconds(totalTime) % TimeUnit.MINUTES.toSeconds(1),
-            TimeUnit.MILLISECONDS.toMillis(totalTime) % TimeUnit.SECONDS.toMillis(1));
+        long days = TimeUnit.MILLISECONDS.toDays(totalTime);
+        long hours = TimeUnit.MILLISECONDS.toHours(totalTime) % TimeUnit.DAYS.toHours(1);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(totalTime) % TimeUnit.HOURS.toMinutes(1);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(totalTime) % TimeUnit.MINUTES.toSeconds(1);
+        long millis = TimeUnit.MILLISECONDS.toMillis(totalTime) % TimeUnit.SECONDS.toMillis(1);
+
+        StringBuilder builder = new StringBuilder();
+        if (days > 0) builder.append(String.format("%d d ", days));
+        if (hours > 0) builder.append(String.format("%02d h ", hours));
+        if (minutes > 0) builder.append(String.format("%02d m ", minutes));
+        if (seconds > 0) builder.append(String.format("%02d s ", seconds));
+        builder.append(String.format("%04d ms", millis));
+
+        return builder.toString();
     }
 }
