@@ -20,7 +20,7 @@ class EyeTribeGazeDeviceManager extends AbstractGazeDeviceManager implements IGa
     }
 
     @Override
-    public void init(Supplier<Dimension2D> currentScreenDimensionSupplier) {
+    public void init(Supplier<Dimension2D> currentScreenDimensionSupplier, Supplier<Point2D> currentScreenPositionSupplier) {
         gazeManager = GazeManager.getInstance();
         gazeManager.activate();
         gazeManager.addGazeListener(this);

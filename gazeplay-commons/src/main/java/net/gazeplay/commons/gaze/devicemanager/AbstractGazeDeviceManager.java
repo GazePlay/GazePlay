@@ -43,7 +43,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     }
 
     @Override
-    public abstract void init(Supplier<Dimension2D> currentScreenDimensionSupplier);
+    public abstract void init(Supplier<Dimension2D> currentScreenDimensionSupplier, Supplier<Point2D> currentScreenPositionSupplier);
 
     @Override
     public abstract void destroy();
@@ -198,7 +198,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                 if (gi.isOn()) {
                     Platform.runLater(
                         () ->
-                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), positionX, positionY))
+                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), localPosition.getX(), localPosition.getY()))
                     );
                 } else {
 
@@ -206,19 +206,25 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                     gi.setTime(System.currentTimeMillis());
                     Platform.runLater(
                         () ->
-                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), positionX, positionY))
+                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), localPosition.getX(), localPosition.getY()))
                     );
                 }
             } else {// gaze is not on the shape
 
                 if (gi.isOn()) {// gaze was on the shape previously
-
                     gi.setOn(false);
                     gi.setTime(-1);
-                    Platform.runLater(
-                        () ->
-                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), positionX, positionY))
-                    );
+                    if (localPosition != null) {
+                        Platform.runLater(
+                            () ->
+                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                        );
+                    } else {
+                        Platform.runLater(
+                            () ->
+                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), -1, -1))
+                        );
+                    }
                 } else {// gaze was not on the shape previously
                     // nothing to do
 

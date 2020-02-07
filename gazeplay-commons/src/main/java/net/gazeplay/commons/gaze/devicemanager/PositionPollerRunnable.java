@@ -16,13 +16,16 @@ public class PositionPollerRunnable implements Runnable {
 
     private final Supplier<Dimension2D> screenDimensionSupplier;
 
+    private final Supplier<Point2D> screenPositionSupplier;
+
     private final TobiiGazeDeviceManager tobiiGazeDeviceManager;
 
     @Setter
     private transient boolean stopRequested = false;
 
-    public PositionPollerRunnable(final Supplier<Dimension2D> screenDimensionSupplier, final TobiiGazeDeviceManager tobiiGazeDeviceManager) {
+    public PositionPollerRunnable(final Supplier<Dimension2D> screenDimensionSupplier, final Supplier<Point2D> screenPositionSupplier, final TobiiGazeDeviceManager tobiiGazeDeviceManager) {
         this.screenDimensionSupplier = screenDimensionSupplier;
+        this.screenPositionSupplier = screenPositionSupplier;
         this.tobiiGazeDeviceManager = tobiiGazeDeviceManager;
     }
 
@@ -58,7 +61,12 @@ public class PositionPollerRunnable implements Runnable {
         final double positionX = xRatio * screenDimension.getWidth();
         final double positionY = yRatio * screenDimension.getHeight();
 
-        final Point2D point = new Point2D(positionX, positionY);
+
+        final Point2D screenPosition = screenPositionSupplier.get();
+        final double offsetX = screenPosition.getX();
+        final double offsetY = screenPosition.getY();
+
+        final Point2D point = new Point2D(positionX + offsetX, positionY + offsetY);
         Platform.runLater(() -> tobiiGazeDeviceManager.onGazeUpdate(point));
     }
 
