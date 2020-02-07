@@ -123,6 +123,10 @@ subprojects {
         }
     }
 
+    tasks.withType(Test) {
+        maxHeapSize = "3g"
+    }
+
     jacoco {
         toolVersion '0.8.3' // We need this version for JMockit to work.
     }
