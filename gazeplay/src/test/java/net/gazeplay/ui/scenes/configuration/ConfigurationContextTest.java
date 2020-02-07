@@ -351,6 +351,7 @@ class ConfigurationContextTest {
 
         resetButton.fire();
         assertEquals(answers.get(type), fileDirProperty.getValue());
+        assertEquals(fileDirProperty.getValue(), loadButton.textProperty().getValue());
     }
 
     @Test
