@@ -102,29 +102,16 @@ public class Car extends Rectangle {
         this.addEventFilter(GazeEvent.GAZE_ENTERED, enterEvent);
 
         final EventHandler<Event> exitEvent = e -> {
-            Point mouse = MouseInfo.getPointerInfo().getLocation();
+            Point pointerPosition = new Point();;
             if (e.getEventType() == GazeEvent.GAZE_EXITED) {
-                final Screen mainScreen = Screen.getMainScreen();
-
-                final double screenWidth = mainScreen.getWidth();
-                final double screenHeight = mainScreen.getHeight();
-
-                final float[] pointAsFloatArray = Tobii.gazePosition();
-
-                final float xRatio = pointAsFloatArray[0];
-                final float yRatio = pointAsFloatArray[1];
-
-                final double positionX = xRatio * screenWidth;
-                final double positionY = yRatio * screenHeight;
-
-                mouse = new Point();
-                mouse.setLocation(positionX, positionY);
+                pointerPosition.setLocation(((GazeEvent)e).getX(), ((GazeEvent)e).getY());
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED) {
+                pointerPosition.setLocation(((MouseEvent)e).getX(), ((MouseEvent)e).getY());
             }
 
-            final int way = checkPos(mouse);
-            if (selected && !endOfGame && !intersect && !onMouse(mouse)) {
-                // moveToMouse(mouse);
-                moveTo(way, mouse);
+            final int way = checkPos(pointerPosition);
+            if (selected && !endOfGame && !intersect && !onMouse(pointerPosition)) {
+                moveTo(way, pointerPosition);
             }
             intersect = false;
             // }
@@ -153,16 +140,11 @@ public class Car extends Rectangle {
     }
 
     private int checkPos(final Point mouse) {
-        final Point2D coord = this.sceneToLocal(
-            mouse.getX() - gameContext.getPrimaryScene().getX()
-                - gameContext.getPrimaryStage().getX(),
-            mouse.getY() - gameContext.getPrimaryScene().getY()
-                - gameContext.getPrimaryStage().getY());
 
-        if (!direction && (this.getX() < coord.getX()) && (coord.getX() < this.getX() + this.getWidth())) {
-            return (this.getY() > coord.getY()) ? -1 : 1;
-        } else if (direction && (this.getY() < coord.getY()) && (coord.getY() < this.getY() + this.getHeight())) {
-            return (this.getX() > coord.getX()) ? -1 : 1;
+        if (!direction && (this.getX() < mouse.getX()) && (mouse.getX() < this.getX() + this.getWidth())) {
+            return (this.getY() > mouse.getY()) ? -1 : 1;
+        } else if (direction && (this.getY() < mouse.getY()) && (mouse.getY() < this.getY() + this.getHeight())) {
+            return (this.getX() > mouse.getX()) ? -1 : 1;
         }
 
         setSelected(false);
