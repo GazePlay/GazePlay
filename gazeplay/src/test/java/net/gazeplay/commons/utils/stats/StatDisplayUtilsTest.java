@@ -289,10 +289,13 @@ class StatDisplayUtilsTest {
     void shouldConvertTimeToString() {
         final Calendar cal = Calendar.getInstance();
         cal.set(2020, Calendar.JANUARY, 28, 13, 25, 20);
-        final long input = cal.getTimeInMillis();
+        final long start = cal.getTimeInMillis();
 
-        final String result = StatDisplayUtils.convert(input);
+        cal.set(2020, Calendar.JANUARY, 28, 14, 25, 25);
+        final long end = cal.getTimeInMillis();
 
-        assertTrue(result.contains("28 d 13 h 25 m 20 s"));
+        final String result = StatDisplayUtils.convert(end - start);
+
+        assertTrue(result.contains("00 d 01 h 00 m 05 s"));
     }
 }

@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static javafx.scene.chart.XYChart.Data;
 
@@ -340,9 +341,11 @@ public class StatDisplayUtils {
     }
 
     public static String convert(long totalTime) {
-        Date date = new Date(totalTime);
-        DateFormat df = new SimpleDateFormat("dd 'd' HH 'h' mm 'm' ss 's' S 'ms'");
-
-        return df.format(date);
+        return String.format("%02d d %02d h %02d m %02d s %04d ms",
+            TimeUnit.MILLISECONDS.toDays(totalTime),
+            TimeUnit.MILLISECONDS.toHours(totalTime) % TimeUnit.DAYS.toHours(1),
+            TimeUnit.MILLISECONDS.toMinutes(totalTime) % TimeUnit.HOURS.toMinutes(1),
+            TimeUnit.MILLISECONDS.toSeconds(totalTime) % TimeUnit.MINUTES.toSeconds(1),
+            TimeUnit.MILLISECONDS.toMillis(totalTime) % TimeUnit.SECONDS.toMillis(1));
     }
 }
