@@ -630,7 +630,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 resetButton.setOnAction(
                     e -> {
                         changeMusicFolder(Configuration.DEFAULT_VALUE_MUSIC_FOLDER, configuration);
-                        buttonLoad.textProperty().setValue(configuration.getMusicFolder());
+                        buttonLoad.textProperty().setValue(configuration.getMusicFolderProperty().getValue());
                     });
                 break;
             case VIDEO:

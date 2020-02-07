@@ -311,7 +311,7 @@ class ConfigurationContextTest {
 
     @ParameterizedTest
     @EnumSource(ConfigurationContext.DirectoryType.class)
-    void shouldCreateDirectoryChooser(ConfigurationContext.DirectoryType type) {
+    void shouldCreateDirectoryChooser(ConfigurationContext.DirectoryType type) throws InterruptedException {
         new MockUp<BackgroundMusicManager>() {
             public BackgroundMusicManager getInstance() {
                 return mock(BackgroundMusicManager.class);
@@ -351,7 +351,7 @@ class ConfigurationContextTest {
 
         resetButton.fire();
         assertEquals(answers.get(type), fileDirProperty.getValue());
-        assertEquals(fileDirProperty.getValue(), loadButton.textProperty().getValue());
+        assertEquals(answers.get(type), loadButton.textProperty().getValue());
     }
 
     @Test
