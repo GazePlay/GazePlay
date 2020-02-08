@@ -33,7 +33,7 @@ public abstract class PropertiesStringProperty extends StringPropertyBase {
 
     @Override
     public String get() {
-        String propertyValue = getProperty(propertyName);
+        final String propertyValue = getProperty(propertyName);
         if (propertyValue == null) {
             return defaultValue;
         }
@@ -41,7 +41,7 @@ public abstract class PropertiesStringProperty extends StringPropertyBase {
     }
 
     @Override
-    public void set(String value) {
+    public void set(final String value) {
         log.info("Set property {} to {}", propertyName, value);
         setProperty(propertyName, value);
         propertyChangeListener.propertyChange(new PropertyChangeEvent(this, propertyName, null, value));

@@ -7,15 +7,15 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /*
- * MouseArrowsV2 : 
+ * MouseArrowsV2 :
  * Arrows are at around the mouse
  * They move with the mouse.
  */
 
 public class MouseArrowsV2 extends MouseArrows {
 
-    public MouseArrowsV2(double positionX, double positionY, double width, double height, IGameContext gameContext,
-            Stats stats, Labyrinth gameInstance) {
+    public MouseArrowsV2(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext,
+                         final Stats stats, final Labyrinth gameInstance) {
         super(positionX, positionY, width, height, gameContext, stats, gameInstance);
 
     }
@@ -26,13 +26,13 @@ public class MouseArrowsV2 extends MouseArrows {
         buttonDimHeight = buttonDimHeight / 1.5;
         buttonDimWidth = buttonDimWidth / 2.5;
 
-        double x = gameInstance.positionX(indiceX) + gameInstance.adjustmentCaseWidth;
-        double y = gameInstance.positionY(indiceY) + gameInstance.adjustmentCaseHeight;
+        final double x = gameInstance.positionX(indiceX) + gameInstance.adjustmentCaseWidth;
+        final double y = gameInstance.positionY(indiceY) + gameInstance.adjustmentCaseHeight;
 
-        double dx = gameInstance.caseWidth;
-        double dy = gameInstance.caseHeight;
-        double dx2 = dx * 0.8;
-        double dy2 = dy * 0.8;
+        final double dx = gameInstance.caseWidth;
+        final double dy = gameInstance.caseHeight;
+        final double dx2 = dx * 0.8;
+        final double dy2 = dy * 0.8;
 
         this.buttonUp = new Rectangle(x, y - 1.2 * dy, buttonDimWidth, buttonDimHeight);
         this.buttonUp.setFill(new ImagePattern(new Image("data/labyrinth/images/upArrow.png"), 5, 5, 1, 1, true));
@@ -54,12 +54,12 @@ public class MouseArrowsV2 extends MouseArrows {
     @Override
     protected void recomputeArrowsPositions() {
 
-        double x = gameInstance.positionX(indiceX) + gameInstance.adjustmentCaseWidth;
-        double y = gameInstance.positionY(indiceY) + gameInstance.adjustmentCaseHeight;
-        double dx = gameInstance.caseWidth;
-        double dy = gameInstance.caseHeight;
-        double dx2 = dx * 0.8;
-        double dy2 = dy * 0.8;
+        final double x = gameInstance.positionX(indiceX) + gameInstance.adjustmentCaseWidth;
+        final double y = gameInstance.positionY(indiceY) + gameInstance.adjustmentCaseHeight;
+        final double dx = gameInstance.caseWidth;
+        final double dy = gameInstance.caseHeight;
+        final double dx2 = dx * 0.8;
+        final double dy2 = dy * 0.8;
 
         this.buttonUp.setX(x);
         this.buttonUp.setY(y - 1.2 * dy);

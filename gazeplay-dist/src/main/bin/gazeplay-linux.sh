@@ -25,6 +25,10 @@ echo "LIB_DIR_RELATIVE = ${LIB_DIR_RELATIVE}"
 
 CLASSPATH=$(find ./$LIB_DIR_RELATIVE -name "*.jar" | sort | tr '\n' ':')
 
+JAVA_HOME=${LIB_DIR}/jre/bin
+
+echo "JAVA_HOME = ${JAVA_HOME}"
+
 export JAVA_CMD="java -cp \"$CLASSPATH\" ${JAVA_OPTS} net.gazeplay.GazePlayLauncher"
 
 echo "Executing command line: $JAVA_CMD"

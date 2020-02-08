@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -40,6 +41,7 @@ import net.gazeplay.ui.MusicControl;
 import net.gazeplay.ui.scenes.stats.StatsContext;
 
 import java.io.IOException;
+import java.util.function.Supplier;
 
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> implements IGameContext {
@@ -119,6 +121,11 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         // rootBorderPane.setBottom(bottomPane);
     }
 
+    @Override
+    public Supplier<Dimension2D> getCurrentScreenDimensionSupplier() {
+        return getGazePlay().getCurrentScreenDimensionSupplier();
+    }
+
     public void createQuitShortcut(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
         Configuration config = ActiveConfigurationContext.getInstance();
         final Scene scene = gazePlay.getPrimaryScene();
@@ -176,7 +183,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             root.setCursor(Cursor.DEFAULT); // Change cursor to default style
         };
 
-        HomeButton homeButton = new HomeButton();
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+
+        HomeButton homeButton = new HomeButton(screenDimension);
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
         return homeButton;
     }
@@ -254,7 +263,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             asynchronousStatsPersistTask.run();
         }
 
-        CustomButton continueButton = new CustomButton("data/common/images/continue.png");
+        Dimension2D screenDimension = getGazePlay().getCurrentScreenDimensionSupplier().get();
+
+        CustomButton continueButton = new CustomButton("data/common/images/continue.png", screenDimension);
         continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             getGazePlay().onGameLaunch(this);
             stats.reset();

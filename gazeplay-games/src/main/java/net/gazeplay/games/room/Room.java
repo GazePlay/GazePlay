@@ -22,7 +22,7 @@ public class Room implements GameLifeCycle {
 
     private final double xLength;
     private final double yLength;
-    
+
     private final IGameContext gameContext;
 
     private final javafx.geometry.Dimension2D dimension2D;
@@ -43,12 +43,12 @@ public class Room implements GameLifeCycle {
     private final Image arrowImSouth;
     private final Rectangle rectangleArrowSouth;
 
-    public Room(IGameContext gameContext) {
+    public Room(final IGameContext gameContext) {
         super();
         this.gameContext = gameContext;
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        double imageWidth = dimension2D.getWidth() / 12;
-        double imageHeight = dimension2D.getHeight() / 12;
+        final double imageWidth = dimension2D.getWidth() / 12;
+        final double imageHeight = dimension2D.getHeight() / 12;
 
         arrowImNorth = new Image("data/room/arrowNorth.png", imageWidth, imageHeight, true, true);
         rectangleArrowNorth = new Rectangle(arrowImNorth.getWidth(), arrowImNorth.getHeight());
@@ -77,50 +77,50 @@ public class Room implements GameLifeCycle {
 
     @Override
     public void launch() {
-        Group objects = new Group();
+        final Group objects = new Group();
 
-        Wall top = new Wall(Y, -1, "top", xLength, yLength);
+        final Wall top = new Wall(Y, -1, "top", xLength, yLength);
         objects.getChildren().add(top.getItem());
 
-        Wall bottom = new Wall(Y, 1, "bottom", xLength, yLength);
+        final Wall bottom = new Wall(Y, 1, "bottom", xLength, yLength);
         objects.getChildren().add(bottom.getItem());
 
-        Wall back = new Wall(Z, -1, "back", xLength, yLength);
+        final Wall back = new Wall(Z, -1, "back", xLength, yLength);
         objects.getChildren().add(back.getItem());
 
-        Wall front = new Wall(Z, 1, "front", xLength, yLength);
+        final Wall front = new Wall(Z, 1, "front", xLength, yLength);
         objects.getChildren().add(front.getItem());
 
-        Wall left = new Wall(X, -1, "left", xLength, yLength);
+        final Wall left = new Wall(X, -1, "left", xLength, yLength);
         objects.getChildren().add(left.getItem());
 
-        Wall right = new Wall(X, 1, "right", xLength, yLength);
+        final Wall right = new Wall(X, 1, "right", xLength, yLength);
         objects.getChildren().add(right.getItem());
 
-        SubScene subScene = new SubScene(objects,
-                dimension2D.getWidth() - arrowImWest.getWidth() - arrowImEast.getWidth(),
-                dimension2D.getHeight() - arrowImNorth.getHeight() - arrowImSouth.getHeight());
+        final SubScene subScene = new SubScene(objects,
+            dimension2D.getWidth() - arrowImWest.getWidth() - arrowImEast.getWidth(),
+            dimension2D.getHeight() - arrowImNorth.getHeight() - arrowImSouth.getHeight());
 
-        PerspectiveCamera camera = new PerspectiveCamera(true);
+        final PerspectiveCamera camera = new PerspectiveCamera(true);
         camera.setVerticalFieldOfView(false);
 
         camera.setNearClip(0.1);
         camera.setFarClip(2000.0);
         camera.getTransforms().addAll(rotateY, rotateX, new Translate(0, 0, positionCamera));
 
-        PointLight light = new PointLight(Color.GAINSBORO);
+        final PointLight light = new PointLight(Color.GAINSBORO);
         objects.getChildren().add(light);
         objects.getChildren().add(new AmbientLight(Color.WHITE));
         subScene.setCamera(camera);
 
-        BorderPane root = new BorderPane(subScene);
+        final BorderPane root = new BorderPane(subScene);
 
-        HBox topB = new HBox();
+        final HBox topB = new HBox();
         topB.getChildren().add(rectangleArrowNorth);
         topB.setAlignment(Pos.CENTER);
         root.setTop(topB);
 
-        HBox bottomB = new HBox();
+        final HBox bottomB = new HBox();
         bottomB.getChildren().add(rectangleArrowSouth);
         bottomB.setAlignment(Pos.CENTER);
         root.setBottom(bottomB);

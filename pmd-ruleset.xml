@@ -18,23 +18,25 @@
     <rule ref="category/java/bestpractices.xml">
         <exclude name="GuardLogStatement"/>
     </rule>
-    
+
     <rule ref="category/java/codestyle.xml">
         <exclude name="FieldNamingConventions"/>
     </rule>
 
     <rule ref="category/java/codestyle.xml/ClassNamingConventions">
         <properties>
-            <property name="utilityClassPattern" value="[A-Z][a-zA-Z0-9]+(Utils?|Helper|Factory)" />
+            <!-- default utilityClassPattern is a bit outdated, there should not be strict rule for naming classes identified as "utility classes" --> 
+            <property name="utilityClassPattern" value="[A-Z][a-zA-Z0-9]*"/>
         </properties>
     </rule>
 
     <rule ref="category/java/design.xml">
+        <exclude name="AvoidThrowingRawExceptionTypes"/>
     </rule>
-    
+
     <rule ref="category/java/multithreading.xml">
     </rule>
-    
+
     <rule ref="category/java/performance.xml">
     </rule>
 

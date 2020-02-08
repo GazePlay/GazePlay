@@ -15,31 +15,44 @@ public class VersionInfo {
         return findVersionInfo(artifactId, true).orElse("Current Version");
     }
 
-    public static Optional<String> findVersionInfo(String applicationName, boolean includeBuildTime) {
+    public static Optional<String> findVersionInfo(final String applicationName, final boolean includeBuildTime) {
         try {
             return locateVersionInfo(applicationName, includeBuildTime);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException("Failed to load the version info", e);
         }
     }
 
-    private static Optional<String> locateVersionInfo(String applicationName, boolean includeBuildTime) throws IOException {
-        Enumeration<URL> resources = Thread.currentThread().getContextClassLoader()
+    private static Optional<String> locateVersionInfo(final String applicationName, final boolean includeBuildTime) throws IOException {
+        final Enumeration<URL> resources = Thread.currentThread().getContextClassLoader()
             .getResources("META-INF/MANIFEST.MF");
+
         while (resources.hasMoreElements()) {
-            URL manifestUrl = resources.nextElement();
-            Manifest manifest = new Manifest(manifestUrl.openStream());
-            Attributes mainAttributes = manifest.getMainAttributes();
-            String implementationTitle = mainAttributes.getValue("Implementation-Title");
+            final URL manifestUrl = resources.nextElement();
+            final Manifest manifest = new Manifest(manifestUrl.openStream());
+            final Attributes mainAttributes = manifest.getMainAttributes();
+            final String implementationTitle = mainAttributes.getValue("Implementation-Title");
+
             if (implementationTitle != null && implementationTitle.equals(applicationName)) {
-                String implementationVersion = mainAttributes.getValue("Implementation-Version");
-                StringBuilder resultBuilder = new StringBuilder();
-                resultBuilder.append(implementationVersion);
-                if (includeBuildTime) {
-                    String buildTime = mainAttributes.getValue("Build-Time");
-                    resultBuilder.append(" (").append(buildTime).append(")");
+                final String implementationVersion = mainAttributes.getValue("Implementation-Version");
+                final StringBuilder resultBuilder = new StringBuilder();
+
+                if (implementationVersion != null) {
+                    resultBuilder.append(implementationVersion);
                 }
-                return Optional.of(resultBuilder.toString());
+
+                if (includeBuildTime) {
+                    final String buildTime = mainAttributes.getValue("Build-Time");
+
+                    if (buildTime != null) {
+                        resultBuilder.append(" (").append(buildTime).append(")");
+                    }
+                }
+                if (resultBuilder.toString().isEmpty()) {
+                    return Optional.empty();
+                } else {
+                    return Optional.of(resultBuilder.toString());
+                }
             }
         }
         return Optional.empty();

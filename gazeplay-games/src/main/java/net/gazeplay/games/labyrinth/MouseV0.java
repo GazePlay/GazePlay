@@ -22,11 +22,11 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 public class MouseV0 extends Mouse {
 
-    private EventHandler<Event> event;
+    private final EventHandler<Event> event;
     private Timeline timelineProgressBar;
 
-    public MouseV0(double positionX, double positionY, double width, double height, IGameContext gameContext,
-                   Stats stats, Labyrinth gameInstance) {
+    public MouseV0(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext,
+                   final Stats stats, final Labyrinth gameInstance) {
         super(positionX, positionY, width, height, gameContext, stats, gameInstance);
 
         event = buildEvent();
@@ -60,7 +60,7 @@ public class MouseV0 extends Mouse {
         return e -> {
 
             if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
-                GameBox gb = (GameBox) e.getSource();
+                final GameBox gb = (GameBox) e.getSource();
 
                 gb.getIndicator().setOpacity(1);
                 gb.getIndicator().setProgress(0);
@@ -83,12 +83,13 @@ public class MouseV0 extends Mouse {
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                GameBox gb = (GameBox) e.getSource();
+                final GameBox gb = (GameBox) e.getSource();
 
-                Timeline timeline = new Timeline();
+                final Timeline timeline = new Timeline();
                 timeline.play();
-                if (timelineProgressBar != null)
+                if (timelineProgressBar != null) {
                     timelineProgressBar.stop();
+                }
 
                 gb.getIndicator().setOpacity(0);
                 gb.getIndicator().setProgress(0);

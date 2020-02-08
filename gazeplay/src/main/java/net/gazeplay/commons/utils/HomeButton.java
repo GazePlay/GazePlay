@@ -1,13 +1,11 @@
 package net.gazeplay.commons.utils;
 
+import javafx.geometry.Dimension2D;
+
 public class HomeButton extends CustomButton {
 
-    public HomeButton() {
-        super("data/common/images/home-button.png");
-    }
-
-    public HomeButton(String resource) {
-        super(resource);
+    public HomeButton(Dimension2D screenDimension) {
+        super("data/common/images/home-button.png", screenDimension);
     }
 
 }

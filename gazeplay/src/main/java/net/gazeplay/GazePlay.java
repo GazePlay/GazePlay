@@ -1,6 +1,7 @@
 package net.gazeplay;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lombok.Getter;
@@ -22,7 +23,10 @@ import net.gazeplay.ui.scenes.stats.StatsContext;
 import net.gazeplay.ui.scenes.userselect.UserProfilContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
+import java.util.function.Supplier;
 
 @Slf4j
 @Component
@@ -43,6 +47,11 @@ public class GazePlay {
     @Autowired
     @Getter
     private GamesLocator gamesLocator;
+
+    @Autowired
+    @Getter
+    @Lazy
+    private Supplier<Dimension2D> currentScreenDimensionSupplier;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -86,7 +95,7 @@ public class GazePlay {
 
         translator.notifyLanguageChanged();
 
-        CssUtil.setPreferredStylesheets(config, getPrimaryScene());
+        CssUtil.setPreferredStylesheets(config, getPrimaryScene(), getCurrentScreenDimensionSupplier());
 
         BackgroundMusicManager.onConfigurationChanged();
 

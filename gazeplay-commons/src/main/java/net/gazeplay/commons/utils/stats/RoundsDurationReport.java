@@ -14,18 +14,18 @@ public class RoundsDurationReport {
 
     private final List<Long> durationBetweenGoals = new ArrayList<>();
 
-    public void addRoundDuration(long lastRoundDuration) {
+    public void addRoundDuration(final long lastRoundDuration) {
         this.durationBetweenGoals.add(lastRoundDuration);
         this.totalAdditiveDuration += lastRoundDuration;
     }
 
     public long computeMedianDuration() {
-        int count = durationBetweenGoals.size();
+        final int count = durationBetweenGoals.size();
         if (count == 0) {
             return 0L;
         }
 
-        List<Long> sortedList = new ArrayList<>(durationBetweenGoals);
+        final List<Long> sortedList = new ArrayList<>(durationBetweenGoals);
         Collections.sort(sortedList);
 
         int middle = count / 2;
@@ -42,7 +42,7 @@ public class RoundsDurationReport {
     }
 
     public long computeAverageLength() {
-        int count = durationBetweenGoals.size();
+        final int count = durationBetweenGoals.size();
         if (count == 0) {
             return 0L;
         }
@@ -50,10 +50,10 @@ public class RoundsDurationReport {
     }
 
     public double computeVariance() {
-        double average = computeAverageLength();
+        final double average = computeAverageLength();
         double sum = 0;
-        int count = durationBetweenGoals.size();
-        for (Long value : durationBetweenGoals) {
+        final int count = durationBetweenGoals.size();
+        for (final Long value : durationBetweenGoals) {
             sum += Math.pow((value - average), 2);
         }
         return sum / count;
@@ -68,17 +68,17 @@ public class RoundsDurationReport {
     }
 
     public List<Long> getSortedDurationsBetweenGoals() {
-        int count = durationBetweenGoals.size();
+        final int count = durationBetweenGoals.size();
 
-        List<Long> normalList = new ArrayList<>(durationBetweenGoals);
-        List<Long> sortedList = new ArrayList<>(normalList);
+        final List<Long> normalList = new ArrayList<>(durationBetweenGoals);
+        final List<Long> sortedList = new ArrayList<>(normalList);
         Collections.sort(sortedList);
 
         int j = 0;
         for (int i = 0; i < count; i++) {
-            if (i % 2 == 0)
+            if (i % 2 == 0) {
                 normalList.set(j, sortedList.get(i));
-            else {
+            } else {
                 normalList.set(count - 1 - j, sortedList.get(i));
                 j++;
             }
@@ -87,8 +87,8 @@ public class RoundsDurationReport {
         return normalList;
     }
 
-    void printLengthBetweenGoalsToString(PrintWriter out) {
-        for (Long value : durationBetweenGoals) {
+    void printLengthBetweenGoalsToString(final PrintWriter out) {
+        for (final Long value : durationBetweenGoals) {
             out.print(value);
             out.print(',');
         }

@@ -23,7 +23,7 @@ public class GameCategories {
         @NonNull
         private final String thumbnail;
 
-        Category(String category, String thumbnailResource) {
+        Category(final String category, final String thumbnailResource) {
             this.gameCategory = category;
             this.thumbnail = thumbnailResource;
         }

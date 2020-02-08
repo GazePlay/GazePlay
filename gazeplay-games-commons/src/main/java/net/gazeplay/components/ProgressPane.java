@@ -15,7 +15,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 @Slf4j
 public class ProgressPane extends StackPane {
 
-    public BorderPane button;
+    public final BorderPane button;
     ProgressIndicator indicator;
     Timeline timelineProgressBar;
     double buttonWidth;
@@ -30,7 +30,7 @@ public class ProgressPane extends StackPane {
         this.getChildren().addAll(button, indicator);
     }
 
-    public void enable(boolean b) {
+    public void enable(final boolean b) {
         if (b) {
             enable();
         } else {
@@ -56,7 +56,7 @@ public class ProgressPane extends StackPane {
             indicator.setMinHeight(newVal.doubleValue() * 0.9);
             buttonHeight = newVal.doubleValue();
             indicator.setTranslateY(
-                    indicator.getTranslateY() - (oldVal.doubleValue() / 0.1) + (newVal.doubleValue()) * 0.1);
+                indicator.getTranslateY() - (oldVal.doubleValue() / 0.1) + (newVal.doubleValue()) * 0.1);
             // log.info("button size modified: " + newVal.doubleValue());
             indicator.toFront();
         });
@@ -64,7 +64,7 @@ public class ProgressPane extends StackPane {
             indicator.setMinWidth(newVal.doubleValue() * 0.9);
             buttonWidth = newVal.doubleValue();
             indicator.setTranslateX(
-                    indicator.getTranslateX() - (oldVal.doubleValue() / 0.1) * 2 + (newVal.doubleValue() / 2) * 0.1);
+                indicator.getTranslateX() - (oldVal.doubleValue() / 0.1) * 2 + (newVal.doubleValue() / 2) * 0.1);
             indicator.toFront();
             // log.info("button size modified: " + newVal.doubleValue());
         });
@@ -80,7 +80,7 @@ public class ProgressPane extends StackPane {
         });
     }
 
-    public void assignIndicator(EventHandler<Event> enterEvent) {
+    public void assignIndicator(final EventHandler<Event> enterEvent) {
         indicator.setMouseTransparent(true);
 
         indicator.setOpacity(0);

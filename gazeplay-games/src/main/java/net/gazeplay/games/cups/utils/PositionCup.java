@@ -24,8 +24,8 @@ public class PositionCup {
     @Getter
     private final double imageHeight;
 
-    public PositionCup(int initCellX, int initCellY, int maxCellsX, int maxCellsY, double screenHeight,
-            double screenWidth, double imageWidth, double imageHeight) {
+    public PositionCup(final int initCellX, final int initCellY, final int maxCellsX, final int maxCellsY, final double screenHeight,
+                       final double screenWidth, final double imageWidth, final double imageHeight) {
         this.cellX = initCellX;
         this.cellY = initCellY;
         this.maxCellsX = maxCellsX;
@@ -36,11 +36,11 @@ public class PositionCup {
         this.imageHeight = imageHeight;
     }
 
-    public Point calculateXY(int newCellX, int newCellY) {
-        double cellSizeWidth = screenWidth / maxCellsX;
-        double cellSizeHeight = screenHeight / maxCellsY;
-        double newXPos = cellSizeWidth * newCellX + (cellSizeWidth - imageWidth) / 2;
-        double newYPos = cellSizeHeight * newCellY + (cellSizeHeight - imageHeight) / 2;
+    public Point calculateXY(final int newCellX, final int newCellY) {
+        final double cellSizeWidth = screenWidth / maxCellsX;
+        final double cellSizeHeight = screenHeight / maxCellsY;
+        final double newXPos = cellSizeWidth * newCellX + (cellSizeWidth - imageWidth) / 2;
+        final double newYPos = cellSizeHeight * newCellY + (cellSizeHeight - imageHeight) / 2;
         return new Point((int) newXPos, (int) newYPos);
     }
 }

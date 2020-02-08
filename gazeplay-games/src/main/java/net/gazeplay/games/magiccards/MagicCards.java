@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
@@ -46,7 +45,7 @@ public class MagicCards implements GameLifeCycle {
 
     private RoundDetails currentRoundDetails;
 
-    public MagicCards(IGameContext gameContext, int nbLines, int nbColumns, Stats stats) {
+    public MagicCards(final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats) {
         super();
         this.gameContext = gameContext;
         this.nbLines = nbLines;
@@ -62,9 +61,9 @@ public class MagicCards implements GameLifeCycle {
 
         final int cardsCount = nbColumns * nbLines;
         // final int winnerCardIndex = (int) (cardsCount * Math.random());
-        Random r = new Random();
+        final Random r = new Random();
         final int winnerCardIndex = r.nextInt(cardsCount);
-        List<Card> cardList = createCards(winnerCardIndex, config);
+        final List<Card> cardList = createCards(winnerCardIndex, config);
 
         currentRoundDetails = new RoundDetails(cardList, winnerCardIndex);
 
@@ -91,8 +90,8 @@ public class MagicCards implements GameLifeCycle {
         }
 
         // Collect all items to be removed from the User Interface
-        List<Card> cardsToHide = new ArrayList<>();
-        for (Card pictureCard : this.currentRoundDetails.cardList) {
+        final List<Card> cardsToHide = new ArrayList<>();
+        for (final Card pictureCard : this.currentRoundDetails.cardList) {
             if (!pictureCard.isWinner()) {
                 cardsToHide.add(pictureCard);
             }
@@ -102,8 +101,8 @@ public class MagicCards implements GameLifeCycle {
         gameContext.getChildren().removeAll(cardsToHide);
     }
 
-    private List<Card> createCards(int winnerCardIndex, Configuration config) {
-        javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+    private List<Card> createCards(final int winnerCardIndex, final Configuration config) {
+        final javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         log.debug("Width {} ; height {}", gameDimension2D.getWidth(), gameDimension2D.getHeight());
 
@@ -112,11 +111,11 @@ public class MagicCards implements GameLifeCycle {
 
         log.debug("cardWidth {} ; cardHeight {}", cardWidth, cardHeight);
 
-        double width = computeCardWidth(gameDimension2D, nbColumns) - cardWidth;
+        final double width = computeCardWidth(gameDimension2D, nbColumns) - cardWidth;
 
         log.debug("width {} ", width);
 
-        List<Card> result = new ArrayList<>();
+        final List<Card> result = new ArrayList<>();
 
         int currentCardIndex = 0;
 
@@ -136,13 +135,13 @@ public class MagicCards implements GameLifeCycle {
                     image = new Image("data/common/images/error.png");
                 }
 
-                double positionX = width / 2 + (width + cardWidth) * currentColumnIndex;
-                double positionY = minHeight / 2 + (minHeight + cardHeight) * currentLineIndex;
+                final double positionX = width / 2 + (width + cardWidth) * currentColumnIndex;
+                final double positionY = minHeight / 2d + (minHeight + cardHeight) * currentLineIndex;
 
                 log.debug("positionX : {} ; positionY : {}", positionX, positionY);
 
-                Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, gameContext,
-                        stats, this, fixationlength);
+                final Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, gameContext,
+                    stats, this, fixationlength);
 
                 result.add(card);
                 currentCardIndex++;
@@ -152,11 +151,11 @@ public class MagicCards implements GameLifeCycle {
         return result;
     }
 
-    private static double computeCardHeight(Dimension2D gameDimension2D, int nbLines) {
+    private static double computeCardHeight(final Dimension2D gameDimension2D, final int nbLines) {
         return gameDimension2D.getHeight() * 0.9 / nbLines;
     }
 
-    private static double computeCardWidth(Dimension2D gameDimension2D, int nbColumns) {
+    private static double computeCardWidth(final Dimension2D gameDimension2D, final int nbColumns) {
         return gameDimension2D.getWidth() / nbColumns;
     }
 

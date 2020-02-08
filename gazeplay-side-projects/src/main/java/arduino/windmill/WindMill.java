@@ -16,26 +16,26 @@ import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
  */
 public class WindMill extends Application {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         Application.launch(WindMill.class, args);
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(final Stage primaryStage) {
 
         primaryStage.setTitle("WindMill");
 
         primaryStage.setFullScreen(true);
 
-        Group root = new Group();
+        final Group root = new Group();
 
-        Scene scene = new Scene(root, Screen.getScreens().get(0).getWidth(), Screen.getScreens().get(0).getHeight(),
-                Color.BLACK);
+        final Scene scene = new Scene(root, Screen.getScreens().get(0).getWidth(), Screen.getScreens().get(0).getHeight(),
+            Color.BLACK);
 
-        GazeDeviceManagerFactory gazeDeviceManagerFactory = new GazeDeviceManagerFactory();
-        GazeDeviceManager gazeDeviceManager = gazeDeviceManagerFactory.get();
+        final GazeDeviceManagerFactory gazeDeviceManagerFactory = new GazeDeviceManagerFactory();
+        final GazeDeviceManager gazeDeviceManager = gazeDeviceManagerFactory.get();
 
-        Choices pictos = new Choices(scene, gazeDeviceManager);
+        final Choices pictos = new Choices(scene, gazeDeviceManager);
 
         root.getChildren().add(pictos);
 
