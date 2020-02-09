@@ -25,6 +25,7 @@ import net.gazeplay.ui.scenes.stats.StatsContext;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -341,19 +342,15 @@ public class StatDisplayUtils {
     }
 
     public static String convert(long totalTime) {
-        long days = TimeUnit.MILLISECONDS.toDays(totalTime);
-        long hours = TimeUnit.MILLISECONDS.toHours(totalTime) % TimeUnit.DAYS.toHours(1);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(totalTime) % TimeUnit.HOURS.toMinutes(1);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(totalTime) % TimeUnit.MINUTES.toSeconds(1);
-        long millis = TimeUnit.MILLISECONDS.toMillis(totalTime) % TimeUnit.SECONDS.toMillis(1);
+        Duration duration = Duration.ofMillis(totalTime);
 
-        StringBuilder builder = new StringBuilder();
-        if (days > 0) builder.append(String.format("%d d ", days));
-        if (hours > 0) builder.append(String.format("%02d h ", hours));
-        if (minutes > 0) builder.append(String.format("%02d m ", minutes));
-        if (seconds > 0) builder.append(String.format("%02d s ", seconds));
-        builder.append(String.format("%04d ms", millis));
+        // Extract the days from the duration, then take it away so we can format the rest of the string.
+        long days = duration.toDaysPart();
+        Duration durationLessDays = duration.minusDays(days);
 
-        return builder.toString();
+        return String.format("%dd ", days) + durationLessDays.toString()
+            .substring(2)
+            .replaceAll("(\\d[HMS])(?!$)", "$1 ")
+            .toLowerCase();
     }
 }
