@@ -55,9 +55,19 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private MediaPlayer player;
     private final List<AreaOfInterestProps> allAOIList;
     private List<CoordinatesTracker> areaOfInterestList;
-    private final Color[] colors;
+
+    private final Color[] colors = new Color[]{
+        Color.PURPLE,
+        Color.WHITE,
+        Color.PINK,
+        Color.ORANGE,
+        Color.BLUE,
+        Color.RED,
+        Color.CHOCOLATE
+    };
+
     private final Configuration config;
-    private int intereatorAOI;
+
     private Polygon currentAreaDisplay;
     private GridPane currentInfoBox;
     private Line currentLineToInfoBox;
@@ -70,32 +80,35 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private final ArrayList<InitialAreaOfInterestProps> combinedAreaList;
     private final int[] areaMap;
     private boolean playing = false;
-    private double highestFixationTime;
+
+    private double highestFixationTime = 0;
+    private int intereatorAOI = 0;
 
     public AreaOfInterest(final GazePlay gazePlay, final Stats stats) {
         super(gazePlay, new BorderPane());
-        colors = new Color[]{Color.PURPLE, Color.WHITE, Color.PINK, Color.ORANGE, Color.BLUE, Color.RED,
-            Color.CHOCOLATE};
+
         config = ActiveConfigurationContext.getInstance();
+        allAOIList = new ArrayList<>();
+        areaOfInterestList = new ArrayList<>();
+        graphicsPane = new Pane();
+        movementHistory = stats.getMovementHistoryWithTime();
+
         final GridPane grid = new GridPane();
         final StackPane stackPane = new StackPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(100);
         grid.setVgap(50);
-        highestFixationTime = 0;
-        intereatorAOI = 0;
         grid.setPadding(new Insets(50, 50, 50, 50));
-        allAOIList = new ArrayList<>();
+
         final I18NLabel screenTitleText = new I18NLabel(gazePlay.getTranslator(), "AreaOfInterest");
         screenTitleText.setId("title");
+
         final HBox topPane;
         final VBox centerPane = new VBox();
         centerPane.setAlignment(Pos.CENTER);
-        graphicsPane = new Pane();
-        areaOfInterestList = new ArrayList<>();
-        movementHistory = stats.getMovementHistoryWithTime();
+
         this.dataTreatment();
-        for (int i = 0; i < movementHistory.size(); i++) {
+        for (int i = 1; i < movementHistory.size(); i++) {
             calculateAreaOfInterest(i, stats.getStartTime());
         }
 
@@ -226,7 +239,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             // stackPane.getChildren().add(screenshot);
         }
 
-        final EventHandler<Event> AOIEvent = e -> {
+        final EventHandler<Event> aoiEvent = e -> {
 
             final StatsContext statsContext;
             statsContext = StatsContext.newInstance(gazePlay, stats);
@@ -271,7 +284,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         final Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
         final HomeButton homeButton = new HomeButton(screenDimension);
-        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
+        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, aoiEvent);
 
         final HBox homebox = new HBox(homeButton);
         homebox.setStyle("-fx-background-color: transparent; -fx-max-height: 100px; -fx-max-width: 100px;");
@@ -367,68 +380,70 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     }
 
     private void calculateAreaOfInterest(final int index, final double startTime) {
-        if (index != 0) {
-            final double x1 = movementHistory.get(index).getXValue();
-            final double y1 = movementHistory.get(index).getYValue();
-            final double x2 = movementHistory.get(index - 1).getXValue();
-            final double y2 = movementHistory.get(index - 1).getYValue();
-            final double eDistance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-            if (eDistance < 120 && movementHistory.get(index).getIntervalTime() > 10) {
-                if (index == 1) {
-                    areaOfInterestList.add(movementHistory.get(0));
-                }
-                areaOfInterestList.add(movementHistory.get(index));
-            } else if (areaOfInterestList.size() != 0) {
-                if (areaOfInterestList.size() > 2) {
-                    final double AreaStartTime = areaOfInterestList.get(0).getTimeStarted();
-                    final double AreaEndTime = areaOfInterestList.get(areaOfInterestList.size() - 1).getTimeStarted()
-                        + areaOfInterestList.get(areaOfInterestList.size() - 1).getIntervalTime();
-                    final double TTFF = (AreaStartTime - startTime) / 1000.0;
-                    final double timeSpent = (AreaEndTime - AreaStartTime) / 1000.0;
-                    if (timeSpent > highestFixationTime) {
-                        highestFixationTime = timeSpent;
-                    }
-                    int centerX = 0;
-                    int centerY = 0;
-                    final int movementHistoryEndingIndex = index - 1;
-                    final int movementHistoryStartingIndex = movementHistoryEndingIndex - areaOfInterestList.size();
-                    final Point2D[] point2DS = new Point2D[areaOfInterestList.size()];
-                    for (int i = 0; i < areaOfInterestList.size(); i++) {
-                        centerX += areaOfInterestList.get(i).getXValue();
-                        centerY += areaOfInterestList.get(i).getYValue();
-                        point2DS[i] = new Point2D(areaOfInterestList.get(i).getXValue(),
-                            areaOfInterestList.get(i).getYValue());
-                    }
-                    final Double[] polygonPoints;
-                    if (config.getConvexHullDisabledProperty().getValue()) {
-                        polygonPoints = calculateConvexHull(point2DS, areaOfInterestList.size());
-                    } else {
-                        polygonPoints = calculateRectangle(point2DS);
-                    }
-                    final Polygon areaOfInterest = new Polygon();
-                    areaOfInterest.getPoints().addAll(polygonPoints);
-                    colorIterator = index % 7;
-                    areaOfInterest.setStroke(colors[colorIterator]);
-                    centerX = centerX / areaOfInterestList.size();
-                    centerY = centerY / areaOfInterestList.size();
-                    final InfoBoxProps infoBox = calculateInfoBox("AOI number " + (allAOIList.size() + 1), TTFF, timeSpent,
-                        areaOfInterestList.size(), centerX, centerY, areaOfInterest);
-                    final AreaOfInterestProps areaOfInterestProps = new AreaOfInterestProps(areaOfInterestList, centerX,
-                        centerY, polygonPoints, point2DS, movementHistoryStartingIndex, movementHistoryEndingIndex,
-                        areaOfInterest, infoBox, (long) AreaStartTime, (long) AreaEndTime);
-                    allAOIList.add(areaOfInterestProps);
-                }
-                areaOfInterestList = new ArrayList<>();
-            }
-        }
+        final double x1 = movementHistory.get(index).getXValue();
+        final double y1 = movementHistory.get(index).getYValue();
+        final double x2 = movementHistory.get(index - 1).getXValue();
+        final double y2 = movementHistory.get(index - 1).getYValue();
+        final double eDistance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 
+        if (eDistance < 120 && movementHistory.get(index).getIntervalTime() > 10) {
+            if (index == 1) {
+                areaOfInterestList.add(movementHistory.get(0));
+            }
+            areaOfInterestList.add(movementHistory.get(index));
+        } else if (!areaOfInterestList.isEmpty()) {
+            if (areaOfInterestList.size() > 2) {
+                final double areaStartTime = areaOfInterestList.get(0).getTimeStarted();
+                final double areaEndTime = areaOfInterestList.get(areaOfInterestList.size() - 1).getTimeStarted()
+                    + areaOfInterestList.get(areaOfInterestList.size() - 1).getIntervalTime();
+                final double ttff = (areaStartTime - startTime) / 1000.0;
+                final double timeSpent = (areaEndTime - areaStartTime) / 1000.0;
+
+                if (timeSpent > highestFixationTime) {
+                    highestFixationTime = timeSpent;
+                }
+
+                int centerX = 0;
+                int centerY = 0;
+                final int movementHistoryEndingIndex = index - 1;
+                final int movementHistoryStartingIndex = movementHistoryEndingIndex - areaOfInterestList.size();
+                final Point2D[] points = new Point2D[areaOfInterestList.size()];
+
+                for (int i = 0; i < areaOfInterestList.size(); i++) {
+                    CoordinatesTracker coordinate = areaOfInterestList.get(i);
+                    centerX += coordinate.getXValue();
+                    centerY += coordinate.getYValue();
+                    points[i] = new Point2D(coordinate.getXValue(), coordinate.getYValue());
+                }
+
+                final Double[] polygonPoints;
+                if (config.getConvexHullDisabledProperty().getValue()) {
+                    polygonPoints = calculateConvexHull(points);
+                } else {
+                    polygonPoints = calculateRectangle(points);
+                }
+                final Polygon areaOfInterest = new Polygon();
+                areaOfInterest.getPoints().addAll(polygonPoints);
+                colorIterator = index % 7;
+                areaOfInterest.setStroke(colors[colorIterator]);
+                centerX = centerX / areaOfInterestList.size();
+                centerY = centerY / areaOfInterestList.size();
+                final InfoBoxProps infoBox = calculateInfoBox("AOI number " + (allAOIList.size() + 1), ttff, timeSpent,
+                    areaOfInterestList.size(), centerX, centerY, areaOfInterest);
+                final AreaOfInterestProps areaOfInterestProps = new AreaOfInterestProps(areaOfInterestList, centerX,
+                    centerY, polygonPoints, points, movementHistoryStartingIndex, movementHistoryEndingIndex,
+                    areaOfInterest, infoBox, (long) areaStartTime, (long) areaEndTime);
+                allAOIList.add(areaOfInterestProps);
+            }
+            areaOfInterestList = new ArrayList<>();
+        }
     }
 
-    private InfoBoxProps calculateInfoBox(final String aoiID, final double TTFF, final double TimeSpent, final int Fixation, final int centerX,
+    private InfoBoxProps calculateInfoBox(final String aoiID, final double ttff, final double timeSpent, final int fixation, final int centerX,
                                           final int centerY, final Polygon currentAreaDisplay) {
 
-        final GridPane infoBox = makeInfoBox(aoiID, new DecimalFormat("##.###s").format(TTFF),
-            new DecimalFormat("##.###s").format(TimeSpent), Fixation + "", 0);
+        final GridPane infoBox = makeInfoBox(aoiID, new DecimalFormat("##.###s").format(ttff),
+            new DecimalFormat("##.###s").format(timeSpent), fixation + "", 0);
 
         final Dimension2D screenDimension = getGazePlay().getCurrentScreenDimensionSupplier().get();
         final double screenWidthCenter = screenDimension.getWidth() / 2;
@@ -451,7 +466,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         }
         infoBox.setLayoutY(centerY - 60);
         infoBox.setStyle("-fx-background-color: rgba(255,255,153, 0.4);");
-        return new InfoBoxProps(infoBox, line, aoiID, TTFF, TimeSpent, Fixation);
+        return new InfoBoxProps(infoBox, line, aoiID, ttff, timeSpent, fixation);
     }
 
     private Double[] calculateRectangle(final Point2D[] point2D) {
@@ -486,6 +501,15 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         return squarePoints;
     }
 
+    /**
+     * Determines the orientation of an ordered triplet of 2D points on a plane.
+     * The points provided can be counterclockwise, clockwise and collinear.
+     * @param p1 First Point
+     * @param p2 Second Point
+     * @param p3 Third Point
+     * @return Will return 0 if the points are collinear, 1 if the points are clockwise,
+     * or -1 if the points are counterclockwise.
+     */
     private int orientation(final Point2D p1, final Point2D p2, final Point2D p3) {
 
         final int val = (int) ((p2.getY() - p1.getY()) * (p3.getX() - p2.getX())
@@ -495,33 +519,40 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             return 0;
         }
 
-        return (val > 0) ? 1 : 2;
+        return (val > 0) ? 1 : -1;
     }
 
-    private Double[] calculateConvexHull(final Point2D[] points, final int n) {
+    private Double[] calculateConvexHull(final Point2D[] points) {
+        final int numberOfPoints = points.length;
         final ArrayList<Double> convexHullPoints = new ArrayList<>();
         final Vector<Point2D> hull = new Vector<>();
-        int l = 0;
-        for (int i = 1; i < n; i++) {
-            if (points[i].getX() < points[l].getX()) {
-                l = i;
+
+        // Finding the index of the lowest X value, or left-most point, in all points.
+        int lowestValueIndex = 0;
+        for (int i = 1; i < numberOfPoints; i++) {
+            if (points[i].getX() < points[lowestValueIndex].getX()) {
+                lowestValueIndex = i;
             }
         }
-        int point = l, q;
+
+        // https://www.geeksforgeeks.org/convex-hull-set-1-jarviss-algorithm-or-wrapping/
+        int point = lowestValueIndex, q;
         do {
             hull.add(points[point]);
-            q = (point + 1) % n;
-            for (int i = 0; i < n; i++) {
-                if (orientation(points[point], points[i], points[q]) == 2) {
+            q = (point + 1) % numberOfPoints;
+            for (int i = 0; i < numberOfPoints; i++) {
+                if (orientation(points[point], points[i], points[q]) < 0) { // Checking if the points are convex.
                     q = i;
                 }
             }
             point = q;
-        } while (point != l);
+        } while (point != lowestValueIndex);
+
         for (final Point2D temp : hull) {
             convexHullPoints.add(temp.getX());
             convexHullPoints.add(temp.getY());
         }
+
         final Double[] pointsToReturn = new Double[convexHullPoints.size()];
         for (int i = 0; i < convexHullPoints.size(); i++) {
             pointsToReturn[i] = convexHullPoints.get(i);
@@ -571,31 +602,31 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         }
     }
 
-    private GridPane makeInfoBox(final String aoiID, final String TTFF, final String TimeSpent, final String Fixation, final int revisit) {
+    private GridPane makeInfoBox(final String aoiID, final String ttff, final String timeSpent, final String fixation, final int revisit) {
         final GridPane infoBox = new GridPane();
         infoBox.setHgap(10);
         infoBox.setVgap(10);
         infoBox.setPadding(new Insets(10, 10, 10, 10));
         final Text boxID = new Text(aoiID);
-        final Text TTFFLabel = new Text("TTFF:");
-        final Text TTFFV = new Text(TTFF);
-        final Text TimeSpentLabel = new Text("Time Spent:");
-        final Text TimeSpentLabelV = new Text(TimeSpent);
-        final Text Fixations = new Text("Fixations:");
-        final Text FixationV = new Text(Fixation);
+        final Text ttffLabel = new Text("TTFF:");
+        final Text ttffV = new Text(ttff);
+        final Text timeSpentLabel = new Text("Time Spent:");
+        final Text timeSpentLabelV = new Text(timeSpent);
+        final Text fixations = new Text("Fixations:");
+        final Text fixationV = new Text(fixation);
 
         infoBox.add(boxID, 1, 0);
-        infoBox.add(TTFFLabel, 0, 2);
-        infoBox.add(TTFFV, 2, 2);
-        infoBox.add(TimeSpentLabel, 0, 3);
-        infoBox.add(TimeSpentLabelV, 2, 3);
-        infoBox.add(Fixations, 0, 4);
-        infoBox.add(FixationV, 2, 4);
+        infoBox.add(ttffLabel, 0, 2);
+        infoBox.add(ttffV, 2, 2);
+        infoBox.add(timeSpentLabel, 0, 3);
+        infoBox.add(timeSpentLabelV, 2, 3);
+        infoBox.add(fixations, 0, 4);
+        infoBox.add(fixationV, 2, 4);
         if (revisit != 0) {
-            final Text Revisit = new Text("Revisits: ");
-            final Text RevisitV = new Text(revisit + "");
-            infoBox.add(Revisit, 0, 5);
-            infoBox.add(RevisitV, 2, 5);
+            final Text revisitT = new Text("Revisits: ");
+            final Text revisitV = new Text(revisit + "");
+            infoBox.add(revisitT, 0, 5);
+            infoBox.add(revisitV, 2, 5);
         }
         return infoBox;
     }
@@ -641,23 +672,23 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             if (areaMap[i] == i) {
                 tempPolygon = allAOIList.get(i).getAreaOfInterest();
                 final String aoiID = allAOIList.get(i).getInfoBoxProps().getAoiID();
-                double TTFF = allAOIList.get(i).getInfoBoxProps().getTTFF();
-                double TimeSpent = allAOIList.get(i).getInfoBoxProps().getTimeSpent();
-                int Fixation = allAOIList.get(i).getFixations();
+                double ttff = allAOIList.get(i).getInfoBoxProps().getTTFF();
+                double timeSpent = allAOIList.get(i).getInfoBoxProps().getTimeSpent();
+                int fixations = allAOIList.get(i).getFixations();
                 int revisit = 1;
                 // Double ratioDouble = 0.0;
                 for (int j = i + 1; j < allAOIList.size(); j++) {
                     if (areaMap[j] == i) {
-                        TTFF += allAOIList.get(j).getInfoBoxProps().getTTFF();
+                        ttff += allAOIList.get(j).getInfoBoxProps().getTTFF();
                         revisit++;
-                        TimeSpent += allAOIList.get(j).getInfoBoxProps().getTimeSpent();
-                        Fixation += allAOIList.get(j).getInfoBoxProps().getTimeSpent();
+                        timeSpent += allAOIList.get(j).getInfoBoxProps().getTimeSpent();
+                        fixations += allAOIList.get(j).getInfoBoxProps().getTimeSpent();
                         tempPolygon = Shape.union(tempPolygon, allAOIList.get(j).getAreaOfInterest());
                         tempPolygon.setFill(Color.rgb(249, 166, 2, 0.15));
                     }
                 }
-                infoBox = makeInfoBox(aoiID, new DecimalFormat("##.###s").format(TTFF),
-                    new DecimalFormat("##.###s").format(TimeSpent), Fixation + " ", revisit);
+                infoBox = makeInfoBox(aoiID, new DecimalFormat("##.###s").format(ttff),
+                    new DecimalFormat("##.###s").format(timeSpent), fixations + " ", revisit);
             }
             if (tempPolygon != null) {
                 final Shape finalTempPolygon = tempPolygon;
