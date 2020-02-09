@@ -348,7 +348,13 @@ public class StatDisplayUtils {
         long days = duration.toDaysPart();
         Duration durationLessDays = duration.minusDays(days);
 
-        return String.format("%dd ", days) + durationLessDays.toString()
+        String result = "";
+
+        if (days > 0) {
+            result += String.format("%dd ", days);
+        }
+
+        return result + durationLessDays.toString()
             .substring(2)
             .replaceAll("(\\d[HMS])(?!$)", "$1 ")
             .toLowerCase();
