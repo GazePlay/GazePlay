@@ -45,6 +45,7 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.DoubleStream;
 
 @Slf4j
 public class AreaOfInterest extends GraphicalContext<BorderPane> {
@@ -422,12 +423,15 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 } else {
                     polygonPoints = calculateRectangle(points);
                 }
+
                 final Polygon areaOfInterest = new Polygon();
                 areaOfInterest.getPoints().addAll(polygonPoints);
+
                 colorIterator = index % 7;
                 areaOfInterest.setStroke(colors[colorIterator]);
-                centerX = centerX / areaOfInterestList.size();
-                centerY = centerY / areaOfInterestList.size();
+                centerX /= areaOfInterestList.size();
+                centerY /= areaOfInterestList.size();
+
                 final InfoBoxProps infoBox = calculateInfoBox("AOI number " + (allAOIList.size() + 1), ttff, timeSpent,
                     areaOfInterestList.size(), centerX, centerY, areaOfInterest);
                 final AreaOfInterestProps areaOfInterestProps = new AreaOfInterestProps(areaOfInterestList, centerX,
@@ -469,27 +473,30 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         return new InfoBoxProps(infoBox, line, aoiID, ttff, timeSpent, fixation);
     }
 
-    private Double[] calculateRectangle(final Point2D[] point2D) {
-        double leftPoint = point2D[0].getX();
-        double rightPoint = point2D[0].getX();
-        double topPoint = point2D[0].getY();
-        double bottomPoint = point2D[0].getY();
-        for (int i = 1; i < point2D.length; i++) {
-            if (point2D[i].getX() < leftPoint) {
-                leftPoint = point2D[i].getX();
-            }
-            if (point2D[i].getX() > rightPoint) {
-                rightPoint = point2D[i].getX();
-            }
-            if (point2D[i].getY() > topPoint) {
-                topPoint = point2D[i].getY();
-            }
-            if (point2D[i].getY() < bottomPoint) {
-                bottomPoint = point2D[i].getY();
-            }
-        }
+    /**
+     * Calculates a rectangle that can enclose all the points provided, with
+     * a set padding around the points.
+     * @param point2D The points to enclose.
+     * @return Double array containing all X and Y values of each rectangle point in
+     * sequence.
+     */
+    static Double[] calculateRectangle(final Point2D[] point2D) {
+        double[] xValues = Arrays.stream(point2D)
+            .flatMapToDouble(p -> DoubleStream.of(p.getX())).toArray();
+        double[] yValues = Arrays.stream(point2D)
+            .flatMapToDouble(p -> DoubleStream.of(p.getY())).toArray();
+
+        Arrays.sort(xValues);
+        Arrays.sort(yValues);
+
+        double leftPoint = xValues[0];
+        double rightPoint = xValues[xValues.length - 1];
+        double topPoint = yValues[yValues.length - 1];
+        double bottomPoint = yValues[0];
+
         final Double[] squarePoints = new Double[8];
         final int bias = 15;
+
         squarePoints[0] = leftPoint - bias;
         squarePoints[1] = topPoint + bias;
         squarePoints[2] = rightPoint + bias;
@@ -504,6 +511,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     /**
      * Determines the orientation of an ordered triplet of 2D points on a plane.
      * The points provided can be counterclockwise, clockwise and collinear.
+     *
      * @param p1 First Point
      * @param p2 Second Point
      * @param p3 Third Point
@@ -522,6 +530,16 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         return (val > 0) ? 1 : -1;
     }
 
+    /**
+     * Implements Jarvis's Algorithm to calculate the points on a Convex Hull.
+     * It starts by calculating the left-most point and will loop through all
+     * the points until it reaches this point again, finding the most convex points.
+     *
+     * @param points The array of Point2D objects to calculate the hull around.
+     * @return Double array containing all X and Y values of each hull point in
+     * sequence.
+     * @see Point2D
+     */
     private Double[] calculateConvexHull(final Point2D[] points) {
         final int numberOfPoints = points.length;
         final ArrayList<Double> convexHullPoints = new ArrayList<>();
@@ -535,7 +553,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             }
         }
 
-        // https://www.geeksforgeeks.org/convex-hull-set-1-jarviss-algorithm-or-wrapping/
         int point = lowestValueIndex, q;
         do {
             hull.add(points[point]);
@@ -553,11 +570,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             convexHullPoints.add(temp.getY());
         }
 
-        final Double[] pointsToReturn = new Double[convexHullPoints.size()];
-        for (int i = 0; i < convexHullPoints.size(); i++) {
-            pointsToReturn[i] = convexHullPoints.get(i);
-        }
-        return pointsToReturn;
+        return (Double[]) convexHullPoints.toArray();
     }
 
     private void calculateTargetAOI(final ArrayList<TargetAOI> targetAOIArrayList) {
