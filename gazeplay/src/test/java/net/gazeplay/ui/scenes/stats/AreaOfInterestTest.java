@@ -1,6 +1,7 @@
 package net.gazeplay.ui.scenes.stats;
 
 import javafx.geometry.Point2D;
+import net.gazeplay.commons.utils.stats.TargetAOI;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,6 +9,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.testfx.framework.junit5.ApplicationExtension;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -83,5 +87,29 @@ class AreaOfInterestTest {
         Double[] actual = AreaOfInterest.calculateConvexHull(input);
 
         assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    void shouldCalculateTargetAOI() {
+        TargetAOI t1 = new TargetAOI(500, 500, 300, 1234);
+        TargetAOI t2 = new TargetAOI(650, 700, 200, 1234);
+
+        Double[] e1 = new Double[] {
+            385d, 615d, 815d, 615d, 815d, 185d, 385d, 185d
+        };
+        Double[] e2 = new Double[] {
+            535d, 815d, 865d, 815d, 865d, 485d, 535d, 485d
+        };
+
+        ArrayList<TargetAOI> input = new ArrayList<>(List.of(t1, t2));
+
+        AreaOfInterest.calculateTargetAOI(input);
+
+        Double[] r1 = new Double[8], r2 = new Double[8];
+        input.get(0).getPolygon().getPoints().toArray(r1);
+        input.get(1).getPolygon().getPoints().toArray(r2);
+
+        assertArrayEquals(r1, e1);
+        assertArrayEquals(r2, e2);
     }
 }

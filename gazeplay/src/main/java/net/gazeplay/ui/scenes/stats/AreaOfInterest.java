@@ -584,16 +584,27 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         return hullPointsArray;
     }
 
-    private void calculateTargetAOI(final ArrayList<TargetAOI> targetAOIArrayList) {
+    /**
+     * Creates a rectangle surrounding each Area Of Interest in the provided
+     * list. The rectangle is added as a transparent Polygon to each TargetAOI.
+     * @param targetAOIArrayList TargetAOIs to apply Polygons to.
+     * @see Polygon
+     */
+    static void calculateTargetAOI(final ArrayList<TargetAOI> targetAOIArrayList) {
         for (final TargetAOI targetAOI : targetAOIArrayList) {
-            log.debug("The target is at " + targetAOI.getXValue() + " Y " + targetAOI.getYValue());
+            log.debug("The target is at (" + targetAOI.getXValue() + ", " + targetAOI.getYValue() + ")");
+
             final int radius = targetAOI.getAreaRadius();
-            final Point2D[] point2D = {new Point2D(targetAOI.getXValue() - 100, targetAOI.getYValue()),
+            final Point2D[] point2D = {
+                new Point2D(targetAOI.getXValue() - 100, targetAOI.getYValue()),
                 new Point2D(targetAOI.getXValue() + radius, targetAOI.getYValue() + 100),
                 new Point2D(targetAOI.getXValue(), targetAOI.getYValue() - radius),
-                new Point2D(targetAOI.getXValue() + radius, targetAOI.getYValue() - radius)};
+                new Point2D(targetAOI.getXValue() + radius, targetAOI.getYValue() - radius)
+            };
+
             final Double[] polygonPoints;
             polygonPoints = calculateRectangle(point2D);
+
             final Polygon targetArea;
             targetArea = new Polygon();
             targetArea.getPoints().addAll(polygonPoints);
