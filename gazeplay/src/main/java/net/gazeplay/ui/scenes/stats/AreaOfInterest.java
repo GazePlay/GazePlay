@@ -476,23 +476,31 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     /**
      * Calculates a rectangle that can enclose all the points provided, with
      * a set padding around the points.
+     *
      * @param point2D The points to enclose.
      * @return Double array containing all X and Y values of each rectangle point in
      * sequence.
      */
     static Double[] calculateRectangle(final Point2D[] point2D) {
-        double[] xValues = Arrays.stream(point2D)
-            .flatMapToDouble(p -> DoubleStream.of(p.getX())).toArray();
-        double[] yValues = Arrays.stream(point2D)
-            .flatMapToDouble(p -> DoubleStream.of(p.getY())).toArray();
+        double leftPoint = point2D[0].getX();
+        double rightPoint = point2D[0].getX();
+        double topPoint = point2D[0].getY();
+        double bottomPoint = point2D[0].getY();
 
-        Arrays.sort(xValues);
-        Arrays.sort(yValues);
-
-        double leftPoint = xValues[0];
-        double rightPoint = xValues[xValues.length - 1];
-        double topPoint = yValues[yValues.length - 1];
-        double bottomPoint = yValues[0];
+        for (int i = 1; i < point2D.length; i++) {
+            if (point2D[i].getX() < leftPoint) {
+                leftPoint = point2D[i].getX();
+            }
+            if (point2D[i].getX() > rightPoint) {
+                rightPoint = point2D[i].getX();
+            }
+            if (point2D[i].getY() > topPoint) {
+                topPoint = point2D[i].getY();
+            }
+            if (point2D[i].getY() < bottomPoint) {
+                bottomPoint = point2D[i].getY();
+            }
+        }
 
         final Double[] squarePoints = new Double[8];
         final int bias = 15;
@@ -518,7 +526,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
      * @return Will return 0 if the points are collinear, 1 if the points are clockwise,
      * or -1 if the points are counterclockwise.
      */
-    private int orientation(final Point2D p1, final Point2D p2, final Point2D p3) {
+    static int orientation(final Point2D p1, final Point2D p2, final Point2D p3) {
 
         final int val = (int) ((p2.getY() - p1.getY()) * (p3.getX() - p2.getX())
             - (p2.getX() - p1.getX()) * (p3.getY() - p2.getY()));
