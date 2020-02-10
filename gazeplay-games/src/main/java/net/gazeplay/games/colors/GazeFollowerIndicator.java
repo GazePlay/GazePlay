@@ -15,10 +15,13 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
     public static final double GAZE_PROGRESS_INDICATOR_HEIGHT = GAZE_PROGRESS_INDICATOR_WIDTH;
     public static final double GAZE_PROGRESS_INDICATOR_OFFSET = GAZE_PROGRESS_INDICATOR_HEIGHT / 4;
     Polygon triangle;
+    final Pane root;
 
     public GazeFollowerIndicator(IGameContext gameContext, final Pane root) {
 
         super(gameContext);
+
+        this.root =root;
 
         this.setOpacity(0.7);
         this.setMouseTransparent(true);
@@ -29,13 +32,13 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
         triangle = new Polygon();
         triangle.getPoints().addAll(0.0, 0.0, 10.0, 20.0, 20.0, 10.0);
 
-        this.getChildren().add(triangle);
+        this.root.getChildren().add(triangle);
 
-        root.addEventFilter(MouseEvent.ANY, (event) -> {
+        this.root.addEventFilter(MouseEvent.MOUSE_MOVED, (event) -> {
             moveGazeIndicator(event.getX(), event.getY());
         });
 
-        root.addEventFilter(GazeEvent.ANY, (event) -> {
+        this.root.addEventFilter(GazeEvent.GAZE_MOVED, (event) -> {
             moveGazeIndicator(event.getX(), event.getY());
         });
     }

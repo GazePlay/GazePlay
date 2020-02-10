@@ -193,7 +193,10 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         // log.info("GazeInfo: " + gi);
         if (!node.isDisable()) {
 
+
             Point2D localPosition = node.screenToLocal(positionX, positionY);
+
+
             if (localPosition != null && node.contains(localPosition)) {
                 if (gi.isOn()) {
                     Platform.runLater(
@@ -222,7 +225,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                     } else {
                         Platform.runLater(
                             () ->
-                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), -1, -1))
+                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), -100, -100))
                         );
                     }
                 } else {// gaze was not on the shape previously

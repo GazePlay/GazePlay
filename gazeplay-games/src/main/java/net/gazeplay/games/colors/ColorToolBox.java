@@ -114,7 +114,7 @@ public class ColorToolBox extends Pane {
     public ColorToolBox(final Pane root, final ColorsGame colorsGame, final IGameContext gameContext) {
         super();
         this.gameContext = gameContext;
-        progressIndicator = new GazeFollowerIndicator(gameContext, root);
+        progressIndicator = new GazeFollowerIndicator(gameContext, this);
 
         this.selectedColorBox = null;
         this.colorsGame = colorsGame;

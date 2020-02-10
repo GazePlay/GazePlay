@@ -184,7 +184,7 @@ public class ColorsGame implements GameLifeCycle {
 
         // Add it here so it appears on top of the tool box
         final AbstractGazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
-        root.getChildren().add(progressIndicator);
+        colorToolBox.getChildren().add(progressIndicator);
         progressIndicator.toFront();
 
 
