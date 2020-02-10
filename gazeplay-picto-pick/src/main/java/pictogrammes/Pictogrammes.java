@@ -15,24 +15,24 @@ import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
  */
 public class Pictogrammes extends Application {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         Application.launch(pictogrammes.Pictogrammes.class, args);
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(final Stage primaryStage) {
 
         primaryStage.setTitle("Pictogrammes");
 
         primaryStage.setFullScreen(true);
 
-        Group root = new Group();
-        Scene scene = new Scene(root, 1200, 700, Color.BLACK);
+        final Group root = new Group();
+        final Scene scene = new Scene(root, 1200, 700, Color.BLACK);
 
-        GazeDeviceManagerFactory gazeDeviceManagerFactory = new GazeDeviceManagerFactory();
-        GazeDeviceManager gazeDeviceManager = gazeDeviceManagerFactory.get();
+        final GazeDeviceManagerFactory gazeDeviceManagerFactory = new GazeDeviceManagerFactory();
+        final GazeDeviceManager gazeDeviceManager = gazeDeviceManagerFactory.get();
 
-        Pictos pictos = new Pictos(scene, gazeDeviceManager);
+        final Pictos pictos = new Pictos(scene, gazeDeviceManager);
 
         root.getChildren().add(pictos);
 

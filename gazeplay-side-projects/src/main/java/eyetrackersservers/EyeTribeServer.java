@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class EyeTribeServer {
 
-    public static void main(String[] argv) {
+    public static void main(final String[] argv) {
 
         final GazeManager gm = GazeManager.getInstance();
         log.info("" + gm.activate());

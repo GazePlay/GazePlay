@@ -50,28 +50,28 @@ public abstract class PropertiesStringSetProperty extends SetPropertyBase<String
 
     @Override
     public ObservableSet<String> get() {
-        SetChangeListener<String> observer = new SetChangeListener<>() {
+        final SetChangeListener<String> observer = new SetChangeListener<>() {
             @Override
-            public void onChanged(Change<? extends String> change) {
+            public void onChanged(final Change<? extends String> change) {
                 PropertiesStringSetProperty.this.set((ObservableSet<String>) change.getSet());
             }
         };
         //
-        String propertyValue = getProperty(propertyName);
+        final String propertyValue = getProperty(propertyName);
         if (propertyValue == null) {
-            ObservableSetWrapper<String> result = new ObservableSetWrapper<>(new LinkedHashSet<>(defaultValue));
+            final ObservableSetWrapper<String> result = new ObservableSetWrapper<>(new LinkedHashSet<>(defaultValue));
             result.addListener(observer);
             return result;
         }
-        Set<String> unmarshalledValue = Arrays.stream(propertyValue.split(delimiter)).filter(itemUnmarshallingFilter).map(itemUnmarshallingMapper).collect(Collectors.toCollection(LinkedHashSet::new));
-        ObservableSetWrapper<String> result = new ObservableSetWrapper<>(unmarshalledValue);
+        final Set<String> unmarshalledValue = Arrays.stream(propertyValue.split(delimiter)).filter(itemUnmarshallingFilter).map(itemUnmarshallingMapper).collect(Collectors.toCollection(LinkedHashSet::new));
+        final ObservableSetWrapper<String> result = new ObservableSetWrapper<>(unmarshalledValue);
         result.addListener(observer);
         return result;
     }
 
     @Override
-    public void set(ObservableSet<String> value) {
-        String marshalledValue = value.stream().map(itemMarshallingMapper).collect(Collectors.joining(delimiter));
+    public void set(final ObservableSet<String> value) {
+        final String marshalledValue = value.stream().map(itemMarshallingMapper).collect(Collectors.joining(delimiter));
         log.info("Set property {} to {}", propertyName, marshalledValue);
         setProperty(propertyName, marshalledValue);
         propertyChangeListener.propertyChange(new PropertyChangeEvent(this, propertyName, null, value));

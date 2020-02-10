@@ -88,7 +88,7 @@ public class MarqueeText extends Region {
         this.text.setTranslateY(this.getTranslateY() + 15);
         final double textWidth = getTextWidth(text.getText());
 
-        double diff = textWidth - this.getWidth();
+        final double diff = textWidth - this.getWidth();
         // log.info("textWidth {}, diff {}", textWidth, diff);
         if (diff < 0) {
             transition.setDuration(new Duration(0));
@@ -102,9 +102,8 @@ public class MarqueeText extends Region {
     private double computeDuration() {
 
         final double textWidth = getTextWidth(text.getText());
-        final double duration = textWidth / speed.getValue() * 1000;
         // log.info ("textWidth : {} / speed : {} = duration {}", textWidth, speed.getValue(), duration);
-        return duration;
+        return textWidth / speed.getValue() * 1000;
     }
 
     private double getTextWidth(final String textToMeasure) {
@@ -113,8 +112,7 @@ public class MarqueeText extends Region {
 
         testText.setFont(this.text.getFont());
         testText.applyCss();
-        double width = testText.getBoundsInLocal().getWidth();
 
-        return width;
+        return testText.getBoundsInLocal().getWidth();
     }
 }

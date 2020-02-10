@@ -4,11 +4,10 @@ import javafx.scene.Scene;
 import net.gazeplay.stats.ShootGamesStats;
 
 /**
- *
  * @author vincent
  */
 public class DivisorStats extends ShootGamesStats {
-    public DivisorStats(Scene scene) {
+    public DivisorStats(final Scene scene) {
         super(scene);
         this.gameName = "divisor";
     }

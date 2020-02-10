@@ -4,11 +4,11 @@ import java.util.concurrent.ExecutionException;
 
 public class RuntimeExecutionException extends RuntimeException {
 
-    public RuntimeExecutionException(String message, ExecutionException cause) {
+    public RuntimeExecutionException(final String message, final ExecutionException cause) {
         super(message, cause);
     }
 
-    public RuntimeExecutionException(ExecutionException cause) {
+    public RuntimeExecutionException(final ExecutionException cause) {
         super(cause);
     }
 

@@ -12,11 +12,11 @@ public class Multilinguism {
     private final static String mainFilePath = "data/multilinguism/multilinguism.csv";
 
     @Getter
-    private static Multilinguism singleton = new Multilinguism(new I18N(mainFilePath));
+    private static final Multilinguism singleton = new Multilinguism(new I18N(mainFilePath));
 
-    private static Map<String, Multilinguism> byResourceLocation = new HashMap<>();
+    private static final Map<String, Multilinguism> byResourceLocation = new HashMap<>();
 
-    public static Multilinguism getForResource(String resourceLocation) {
+    public static Multilinguism getForResource(final String resourceLocation) {
         Multilinguism result = byResourceLocation.get(resourceLocation);
         if (result == null) {
             result = new Multilinguism(new I18N(resourceLocation));
@@ -27,12 +27,12 @@ public class Multilinguism {
 
     private final I18N i18n;
 
-    private Multilinguism(I18N i18n) {
+    private Multilinguism(final I18N i18n) {
         this.i18n = i18n;
     }
 
-    public String getTrad(String key, String language) {
-        String translate = i18n.translate(key, language);
+    public String getTrad(final String key, final String language) {
+        final String translate = i18n.translate(key, language);
         if (translate == null || "".equals(translate)) {
             log.warn("No translation found for key '{}'", key);
 
@@ -42,12 +42,10 @@ public class Multilinguism {
     }
 
     /**
-     *
      * This function is used if no key exist for the language in getTrad(String key, String language) function
-     *
      */
-    public String getENGTrad(String key) {
-        String translate = i18n.translate(key, "eng");
+    public String getENGTrad(final String key) {
+        final String translate = i18n.translate(key, "eng");
         if (translate == null || "".equals(translate)) {
             log.warn("No translation found for key '{}'", key);
 

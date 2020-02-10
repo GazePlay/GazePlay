@@ -39,7 +39,7 @@ public class GameSpec {
         private final int height;
 
         @Override
-        public String getLabel(Translator translator) {
+        public String getLabel(final Translator translator) {
             return width + "x" + height;
         }
     }
@@ -50,7 +50,7 @@ public class GameSpec {
         private final int number;
 
         @Override
-        public String getLabel(Translator translator) {
+        public String getLabel(final Translator translator) {
             return Integer.toString(number);
         }
     }
@@ -63,7 +63,7 @@ public class GameSpec {
         private final String value;
 
         @Override
-        public String getLabel(Translator translator) {
+        public String getLabel(final Translator translator) {
             return translator.translate(label);
         }
     }
@@ -76,7 +76,7 @@ public class GameSpec {
         private final Function<K, String> extractLabelCodeFunction;
 
         @Override
-        public String getLabel(Translator translator) {
+        public String getLabel(final Translator translator) {
             return translator.translate(extractLabelCodeFunction.apply(enumValue));
         }
 
@@ -105,15 +105,15 @@ public class GameSpec {
         private final K[] enumValues;
 
         private final Function<K, String> extractLabelCodeFunction;
-        
+
         @Getter
         @Setter
         private String variantChooseText = "Choose Game Variant";
 
         @Override
         public Set<GameVariant> getVariants() {
-            LinkedHashSet<GameVariant> result = new LinkedHashSet<>();
-            for (K value : enumValues) {
+            final LinkedHashSet<GameVariant> result = new LinkedHashSet<>();
+            for (final K value : enumValues) {
                 result.add(new EnumGameVariant<>(value, extractLabelCodeFunction));
             }
             return result;
@@ -124,14 +124,14 @@ public class GameSpec {
     public static class IntRangeVariantGenerator implements GameVariantGenerator {
 
         private final String variantChooseText;
-        
+
         private final int min;
 
         private final int max;
 
         @Override
         public Set<GameVariant> getVariants() {
-            LinkedHashSet<GameVariant> result = new LinkedHashSet<>();
+            final LinkedHashSet<GameVariant> result = new LinkedHashSet<>();
             for (int i = min; i <= max; i++) {
                 result.add(new IntGameVariant(i));
             }
@@ -144,18 +144,18 @@ public class GameSpec {
     public static class IntListVariantGenerator implements GameVariantGenerator {
 
         private final String variantChooseText;
-        
+
         private final int[] values;
 
-        public IntListVariantGenerator(String variantChooseText, int... values) {
+        public IntListVariantGenerator(final String variantChooseText, final int... values) {
             this.variantChooseText = variantChooseText;
             this.values = values;
         }
 
         @Override
         public Set<GameVariant> getVariants() {
-            LinkedHashSet<GameVariant> result = new LinkedHashSet<>();
-            for (int i : values) {
+            final LinkedHashSet<GameVariant> result = new LinkedHashSet<>();
+            for (final int i : values) {
                 result.add(new IntGameVariant(i));
             }
             return result;
@@ -176,16 +176,16 @@ public class GameSpec {
     private final GameLauncher gameLauncher;
 
     public GameSpec(
-        GameSummary gameSummary,
-        GameVariantGenerator gameVariantGenerator,
-        GameLauncher gameLauncher
+        final GameSummary gameSummary,
+        final GameVariantGenerator gameVariantGenerator,
+        final GameLauncher gameLauncher
     ) {
         this.gameSummary = gameSummary;
         this.gameVariantGenerator = gameVariantGenerator;
         this.gameLauncher = gameLauncher;
     }
 
-    public GameSpec(GameSummary gameSummary, GameLauncher gameLauncher) {
+    public GameSpec(final GameSummary gameSummary, final GameLauncher gameLauncher) {
         this(gameSummary, new NoVariantGenerator(), gameLauncher);
     }
 

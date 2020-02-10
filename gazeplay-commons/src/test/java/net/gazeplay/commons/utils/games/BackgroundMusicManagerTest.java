@@ -17,9 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(ApplicationExtension.class)
 class BackgroundMusicManagerTest {
 
-    private BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
-    private String sep = File.separator;
-    private String localDataFolder =
+    private final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
+    private final String sep = File.separator;
+    private final String localDataFolder =
         System.getProperty("user.dir") + sep
             + "src" + sep
             + "test" + sep
@@ -32,7 +32,7 @@ class BackgroundMusicManagerTest {
 
     @BeforeEach
     void setup() {
-        String uri = new File(localDataFolder + "song.mp3").toURI().toString();
+        final String uri = new File(localDataFolder + "song.mp3").toURI().toString();
         musicManager.getAudioFromFolder(localDataFolder);
         mediaPlayer = musicManager.createMediaPlayer(uri);
         previousVolume = musicManager.getCurrentMusic().getVolume();
@@ -40,7 +40,9 @@ class BackgroundMusicManagerTest {
 
     @AfterEach
     void teardown() {
-        if (musicManager.getCurrentMusic() != null) musicManager.getCurrentMusic().setVolume(previousVolume);
+        if (musicManager.getCurrentMusic() != null) {
+            musicManager.getCurrentMusic().setVolume(previousVolume);
+        }
     }
 
     @Test
@@ -50,34 +52,34 @@ class BackgroundMusicManagerTest {
 
     @Test
     void shouldReturnNullOnError() {
-        String uri = new File(localDataFolder + "test.properties").toURI().toString();
+        final String uri = new File(localDataFolder + "test.properties").toURI().toString();
         mediaPlayer = musicManager.createMediaPlayer(uri);
         assert mediaPlayer == null;
     }
 
     @Test
     void shouldHaveTheSameVolumeAsVolumeProperty() {
-        double actualVolume = ActiveConfigurationContext.getInstance().getMusicVolumeProperty().getValue();
-        double currentVolume = mediaPlayer.getVolume();
+        final double actualVolume = ActiveConfigurationContext.getInstance().getMusicVolumeProperty().getValue();
+        final double currentVolume = mediaPlayer.getVolume();
         assert currentVolume == actualVolume;
     }
 
     @ParameterizedTest
     @ValueSource(doubles = {0, 0.1, 0.5, 1})
-    void shouldSetTheVolume(double volume) {
+    void shouldSetTheVolume(final double volume) {
         musicManager.setVolume(volume);
         assert musicManager.getCurrentMusic().getVolume() == volume;
     }
 
     @ParameterizedTest
     @ValueSource(doubles = {-0.1, 100, 1.1})
-    void shouldNotSetTheVolume(double volume) {
+    void shouldNotSetTheVolume(final double volume) {
         assertThrows(IllegalArgumentException.class, () -> musicManager.setVolume(volume));
     }
 
     @Test
     void shouldBackupAndRestorePlaylist() {
-        int numberOfTracks = musicManager.getPlaylist().size();
+        final int numberOfTracks = musicManager.getPlaylist().size();
         musicManager.backupPlaylist();
         musicManager.emptyPlaylist();
         musicManager.restorePlaylist();
@@ -86,7 +88,7 @@ class BackgroundMusicManagerTest {
 
     @Test
     void shouldNotBackupOrRestoreEmptyPlaylist() {
-        int numberOfTracks = musicManager.getPlaylist().size();
+        final int numberOfTracks = musicManager.getPlaylist().size();
         musicManager.emptyPlaylist();
 
         musicManager.backupPlaylist();
@@ -97,7 +99,7 @@ class BackgroundMusicManagerTest {
 
     @Test
     void shouldOnlyBackupThePlaylistOnce() {
-        int numberOfTracks = musicManager.getPlaylist().size();
+        final int numberOfTracks = musicManager.getPlaylist().size();
         musicManager.backupPlaylist();
         musicManager.backupPlaylist();
 
@@ -109,7 +111,7 @@ class BackgroundMusicManagerTest {
 
     @Test
     void shouldOnlyRestoreThePlaylistOnce() {
-        int numberOfTracks = musicManager.getPlaylist().size();
+        final int numberOfTracks = musicManager.getPlaylist().size();
         musicManager.backupPlaylist();
 
         musicManager.emptyPlaylist();

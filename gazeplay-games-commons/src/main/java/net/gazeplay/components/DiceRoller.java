@@ -22,40 +22,40 @@ import java.util.Random;
 @Slf4j
 public class DiceRoller extends MeshView {
 
-    private Random random;
-    private ArrayList<Rotate> rotations;
+    private final Random random;
+    private final ArrayList<Rotate> rotations;
 
-    public DiceRoller(float dieWidth) {
+    public DiceRoller(final float dieWidth) {
         super();
         random = new Random();
         rotations = new ArrayList<>();
 
-        TriangleMesh mesh = new TriangleMesh();
-        float[] points = { -dieWidth, dieWidth, -dieWidth, dieWidth, dieWidth, -dieWidth, dieWidth, -dieWidth,
-                -dieWidth, -dieWidth, -dieWidth, -dieWidth, -dieWidth, dieWidth, dieWidth, dieWidth, dieWidth, dieWidth,
-                dieWidth, -dieWidth, dieWidth, -dieWidth, -dieWidth, dieWidth };
+        final TriangleMesh mesh = new TriangleMesh();
+        final float[] points = {-dieWidth, dieWidth, -dieWidth, dieWidth, dieWidth, -dieWidth, dieWidth, -dieWidth,
+            -dieWidth, -dieWidth, -dieWidth, -dieWidth, -dieWidth, dieWidth, dieWidth, dieWidth, dieWidth, dieWidth,
+            dieWidth, -dieWidth, dieWidth, -dieWidth, -dieWidth, dieWidth};
         mesh.getPoints().addAll(points);
-        float[] texCoords = { 0.333f, 0, 0.666f, 0, 0, 0.333f, 0.333f, 0.333f, 0.666f, 0.333f, 1, 0.333f, 0, 0.666f,
-                0.333f, 0.666f, 0.666f, 0.666f, 1, 0.666f, 0.333f, 1, 0.666f, 1, 1, 1 };
+        final float[] texCoords = {0.333f, 0, 0.666f, 0, 0, 0.333f, 0.333f, 0.333f, 0.666f, 0.333f, 1, 0.333f, 0, 0.666f,
+            0.333f, 0.666f, 0.666f, 0.666f, 1, 0.666f, 0.333f, 1, 0.666f, 1, 1, 1};
         mesh.getTexCoords().addAll(texCoords);
-        int[] faces = {
-                // front
-                0, 3, 1, 4, 2, 8, 0, 3, 2, 8, 3, 7,
-                // right
-                1, 4, 5, 5, 6, 9, 1, 4, 6, 9, 2, 8,
-                // up
-                4, 0, 5, 1, 1, 4, 4, 0, 1, 4, 0, 3,
-                // left
-                4, 2, 0, 3, 3, 7, 4, 2, 3, 7, 7, 6,
-                // back
-                5, 8, 4, 9, 7, 12, 5, 8, 7, 12, 6, 11,
-                // down
-                3, 7, 2, 8, 6, 11, 3, 7, 6, 11, 7, 10 };
+        final int[] faces = {
+            // front
+            0, 3, 1, 4, 2, 8, 0, 3, 2, 8, 3, 7,
+            // right
+            1, 4, 5, 5, 6, 9, 1, 4, 6, 9, 2, 8,
+            // up
+            4, 0, 5, 1, 1, 4, 4, 0, 1, 4, 0, 3,
+            // left
+            4, 2, 0, 3, 3, 7, 4, 2, 3, 7, 7, 6,
+            // back
+            5, 8, 4, 9, 7, 12, 5, 8, 7, 12, 6, 11,
+            // down
+            3, 7, 2, 8, 6, 11, 3, 7, 6, 11, 7, 10};
         mesh.getFaces().addAll(faces);
 
         setMesh(mesh);
 
-        PhongMaterial mat = new PhongMaterial();
+        final PhongMaterial mat = new PhongMaterial();
         mat.setSelfIlluminationMap(new Image("data/common/images/dice.png"));
         mat.setDiffuseColor(Color.BLACK);
         mat.setSpecularMap(new Image("data/common/images/dice.png"));
@@ -66,7 +66,7 @@ public class DiceRoller extends MeshView {
         getTransforms().addAll(rotations.get(0), rotations.get(1));
     }
 
-    public int roll(EventHandler<ActionEvent> onFinishedEventHandler) {
+    public int roll(final EventHandler<ActionEvent> onFinishedEventHandler) {
         // Resetting angles to 0
         rotations.get(0).setAngle(0);
         rotations.get(1).setAngle(0);
@@ -75,18 +75,18 @@ public class DiceRoller extends MeshView {
         int angleX = (2 + random.nextInt(1)) * 360 + random.nextInt(360);
         int angleY = (2 + random.nextInt(1)) * 360 + random.nextInt(360);
 
-        Timeline rollTimeline = new Timeline(new KeyFrame(Duration.seconds(1),
-                new KeyValue(rotations.get(0).angleProperty(), angleX, Interpolator.SPLINE(0.2, 0.6, 0.4, 0.9)),
-                new KeyValue(rotations.get(1).angleProperty(), angleY, Interpolator.SPLINE(0.2, 0.6, 0.4, 0.9))));
+        final Timeline rollTimeline = new Timeline(new KeyFrame(Duration.seconds(1),
+            new KeyValue(rotations.get(0).angleProperty(), angleX, Interpolator.SPLINE(0.2, 0.6, 0.4, 0.9)),
+            new KeyValue(rotations.get(1).angleProperty(), angleY, Interpolator.SPLINE(0.2, 0.6, 0.4, 0.9))));
 
-        int modX = angleX % 90;
-        int modY = angleY % 90;
+        final int modX = angleX % 90;
+        final int modY = angleY % 90;
         angleX = angleX - modX + (modX > 45 ? 1 : 0) * 90;
         angleY = angleY - modY + (modY > 45 ? 1 : 0) * 90;
 
-        Timeline squareUpTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
-                new KeyValue(rotations.get(0).angleProperty(), angleX, Interpolator.EASE_OUT),
-                new KeyValue(rotations.get(1).angleProperty(), angleY, Interpolator.EASE_OUT)));
+        final Timeline squareUpTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
+            new KeyValue(rotations.get(0).angleProperty(), angleX, Interpolator.EASE_OUT),
+            new KeyValue(rotations.get(1).angleProperty(), angleY, Interpolator.EASE_OUT)));
 
         rollTimeline.setOnFinished(e -> squareUpTimeline.play());
 
@@ -95,13 +95,13 @@ public class DiceRoller extends MeshView {
         }
 
         // Compute outcome of roll
-        int finalX = angleX % 360;
-        int finalY = angleY % 360;
+        final int finalX = angleX % 360;
+        final int finalY = angleY % 360;
 
         rollTimeline.play();
         try {
             ForegroundSoundsUtils.playSound("data/common/sounds/diceRollSound.wav");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
 

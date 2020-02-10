@@ -13,7 +13,7 @@ public class GameSummaryComparator implements Comparator<GameSummary> {
     private final Translator translator;
 
     @Override
-    public int compare(GameSummary o1, GameSummary o2) {
+    public int compare(final GameSummary o1, final GameSummary o2) {
         return Comparator
             .comparing(GameSummary::getCategories, categoriesCollectionComparator)
             .thenComparing(Comparator.comparing(GameSummary::getPriority).reversed())

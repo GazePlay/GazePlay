@@ -20,10 +20,9 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 public class ProgressButton extends StackPane {
 
     @Getter
-    private Circle button;
+    private final Circle button;
     private ProgressIndicator indicator;
     private Timeline timelineProgressBar;
-    private double buttonWidth;
     private double buttonHeight;
     private EventHandler<Event> enterbuttonHandler;
     private EventHandler<Event> exitbuttonHandler;
@@ -49,7 +48,7 @@ public class ProgressButton extends StackPane {
         this.button.setDisable(false);
     }
 
-    public void disable(boolean b) {
+    public void disable(final boolean b) {
         if (b) {
             disable();
         } else {
@@ -64,7 +63,7 @@ public class ProgressButton extends StackPane {
         this.button.setDisable(true);
     }
 
-    public void setImage(ImageView img) {
+    public void setImage(final ImageView img) {
         image = img;
         image.setMouseTransparent(true);
         this.getChildren().set(1, image);
@@ -83,7 +82,7 @@ public class ProgressButton extends StackPane {
     }
 
     public void init() {
-        buttonWidth = 0;
+        final double buttonWidth = 0;
         buttonHeight = 0;
         indicator = new ProgressIndicator(0);
         indicator.setMouseTransparent(true);
@@ -100,11 +99,11 @@ public class ProgressButton extends StackPane {
         indicator.setOpacity(0);
     }
 
-    public ProgressIndicator assignIndicator(EventHandler<Event> enterEvent, int fixationLength) {
+    public ProgressIndicator assignIndicator(final EventHandler<Event> enterEvent, final int fixationLength) {
         indicator.setMouseTransparent(true);
         indicator.setOpacity(0);
-        ProgressButton pb = this;
-        Event e1 = new Event(pb, pb, GazeEvent.ANY);
+        final ProgressButton pb = this;
+        final Event e1 = new Event(pb, pb, GazeEvent.ANY);
 
         enterbuttonHandler = e -> {
             if (inuse) {

@@ -19,5 +19,5 @@ public class FileUtils {
             log.debug("File {} was deleted", file.getAbsolutePath());
         }
     }
-    
+
 }

@@ -11,10 +11,10 @@ public class ImageDirectoryLocator {
 
     public static File locateImagesDirectoryInUnpackedDistDirectory(String parentImagesPackageResourceLocation) {
         log.info("locateImagesDirectoryInUnpackedDistDirectory : parentImagesPackageResourceLocation = {}",
-                parentImagesPackageResourceLocation);
+            parentImagesPackageResourceLocation);
         final File workingDirectory = new File(".");
         log.info("locateImagesDirectoryInUnpackedDistDirectory : workingDirectory = {}",
-                workingDirectory.getAbsolutePath());
+            workingDirectory.getAbsolutePath());
         final String workingDirectoryName;
         try {
             workingDirectoryName = workingDirectory.getCanonicalFile().getName();
@@ -28,18 +28,18 @@ public class ImageDirectoryLocator {
 
         if (checked) {
             log.info("locateImagesDirectoryInUnpackedDistDirectory : imagesDirectory = {}",
-                    imagesDirectory.getAbsolutePath());
+                imagesDirectory.getAbsolutePath());
             return imagesDirectory;
         } else {
             log.debug("locateImagesDirectoryInUnpackedDistDirectory : could not locate images directory at {}", imagesDirectory.getAbsolutePath());
 
             // Checking this location as a last resort - should only get this far if running the program from Gradle.
             imagesDirectory = new File(workingDirectory,
-                    "/gazeplay/src/main/resources/" + parentImagesPackageResourceLocation);
+                "/gazeplay/src/main/resources/" + parentImagesPackageResourceLocation);
             checked = checkImageDirectory(imagesDirectory);
             if (checked) {
                 log.info("locateImagesDirectoryInUnpackedDistDirectory : imagesDirectory = {}",
-                        imagesDirectory.getAbsolutePath());
+                    imagesDirectory.getAbsolutePath());
                 return imagesDirectory;
             }
         }
@@ -47,7 +47,7 @@ public class ImageDirectoryLocator {
         if (workingDirectoryName.equals("bin")) {
             imagesDirectory = new File(workingDirectory, "../" + parentImagesPackageResourceLocation);
             log.info("locateImagesDirectoryInUnpackedDistDirectory : imagesDirectory = {}",
-                    imagesDirectory.getAbsolutePath());
+                imagesDirectory.getAbsolutePath());
             checked = checkImageDirectory(imagesDirectory);
             if (checked) {
                 return imagesDirectory;

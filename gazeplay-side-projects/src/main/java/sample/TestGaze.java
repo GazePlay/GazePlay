@@ -15,17 +15,17 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 @Slf4j
 public class TestGaze extends Application {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         Application.launch(sample.TestGaze.class, args);
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(final Stage primaryStage) {
         primaryStage.setTitle("TestGaze");
-        Group root = new Group();
-        Scene scene = new Scene(root, 1200, 700, Color.BLACK);
+        final Group root = new Group();
+        final Scene scene = new Scene(root, 1200, 700, Color.BLACK);
 
-        Circle c = new Circle(300, 300, 100, Color.WHITESMOKE);
+        final Circle c = new Circle(300, 300, 100, Color.WHITESMOKE);
 
         root.getChildren().add(c);
 

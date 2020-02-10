@@ -1,7 +1,5 @@
 package net.gazeplay.games.blocs;
 
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
@@ -47,7 +45,7 @@ public class Blocs implements GameLifeCycle {
 
         private final Bloc[][] blocs;
 
-        CurrentRoundDetails(int initCount, int nbLines, int nbColumns) {
+        CurrentRoundDetails(final int initCount, final int nbLines, final int nbColumns) {
             this.remainingCount = initCount;
             this.finished = false;
             this.blocs = new Bloc[nbColumns][nbLines];
@@ -57,8 +55,8 @@ public class Blocs implements GameLifeCycle {
 
     private CurrentRoundDetails currentRoundDetails;
 
-    public Blocs(IGameContext gameContext, int nbLines, int nbColumns, boolean colors, float percents4Win,
-                 boolean useTrail, Stats stats) {
+    public Blocs(final IGameContext gameContext, final int nbLines, final int nbColumns, final boolean colors, final float percents4Win,
+                 final boolean useTrail, final Stats stats) {
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColomns = nbColumns;
@@ -73,15 +71,15 @@ public class Blocs implements GameLifeCycle {
         initCount = nbColumns * nbLines;
     }
 
-    private void setHiddenPicture(IGameContext gameContext) {
+    private void setHiddenPicture(final IGameContext gameContext) {
         final Image randomPicture = imageLibrary.pickRandomImage();
 
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        final Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageRectangle.setFill(new ImagePattern(randomPicture, 0, 0, 1, 1, true));
 
-        AspectRatioImageRectangleUtil aspectRatioImageRectangleUtil = new AspectRatioImageRectangleUtil();
+        final AspectRatioImageRectangleUtil aspectRatioImageRectangleUtil = new AspectRatioImageRectangleUtil();
         aspectRatioImageRectangleUtil.setFillImageKeepingAspectRatio(imageRectangle, randomPicture, dimension2D);
 
         gameContext.getChildren().add(imageRectangle);
@@ -91,23 +89,23 @@ public class Blocs implements GameLifeCycle {
     public void launch() {
         this.currentRoundDetails = new CurrentRoundDetails(initCount, nbLines, nbColomns);
 
-        javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         setHiddenPicture(gameContext);
 
-        double width = dimension2D.getWidth() / nbColomns;
-        double height = dimension2D.getHeight() / nbLines;
+        final double width = dimension2D.getWidth() / nbColomns;
+        final double height = dimension2D.getHeight() / nbLines;
 
         for (int i = 0; i < nbColomns; i++) {
             for (int j = 0; j < nbLines; j++) {
 
-                Bloc bloc = new Bloc(i * width, j * height, width + 1, height + 1, i, j);// width+1, height+1 to avoid
+                final Bloc bloc = new Bloc(i * width, j * height, width + 1, height + 1, i, j);// width+1, height+1 to avoid
                 // spaces between blocks for
                 // Scratchcard
                 if (colors) {
                     bloc.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
                 } else {
-                    Color c = (gameContext.getConfiguration().isBackgroundWhite()) ? Color.WHITE : Color.BLACK;
+                    final Color c = (gameContext.getConfiguration().isBackgroundWhite()) ? Color.WHITE : Color.BLACK;
                     bloc.setFill(c);
                 }
                 gameContext.getChildren().add(bloc);
@@ -133,8 +131,8 @@ public class Blocs implements GameLifeCycle {
 
     private void removeAllBlocs() {
         final Bloc[][] blocs = currentRoundDetails.blocs;
-        int maxY = blocs[0].length;
-        for (Bloc[] bloc : blocs) {
+        final int maxY = blocs[0].length;
+        for (final Bloc[] bloc : blocs) {
             for (int j = 0; j < maxY; j++) {
 
                 removeBloc(bloc[j]);
@@ -142,7 +140,7 @@ public class Blocs implements GameLifeCycle {
         }
     }
 
-    private void removeBloc(Bloc toRemove) {
+    private void removeBloc(final Bloc toRemove) {
 
         if (toRemove == null) {
             return;
@@ -156,7 +154,7 @@ public class Blocs implements GameLifeCycle {
         currentRoundDetails.remainingCount--;
     }
 
-    private EventHandler<Event> buildEvent(IGameContext gameContext, Stats stats, boolean useTrail) {
+    private EventHandler<Event> buildEvent(final IGameContext gameContext, final Stats stats, final boolean useTrail) {
         return e -> {
 
             if (e.getEventType().equals(MouseEvent.MOUSE_ENTERED)
@@ -164,19 +162,19 @@ public class Blocs implements GameLifeCycle {
 
                 if (!useTrail) {
 
-                    Bloc bloc = (Bloc) e.getTarget();
+                    final Bloc bloc = (Bloc) e.getTarget();
                     removeBloc(bloc);
                 } else {
 
-                    Bloc bloc = (Bloc) e.getTarget();
+                    final Bloc bloc = (Bloc) e.getTarget();
 
-                    int posX = bloc.posX;
-                    int posY = bloc.posY;
+                    final int posX = bloc.posX;
+                    final int posY = bloc.posY;
 
                     final Bloc[][] blocs = currentRoundDetails.blocs;
 
-                    int maxX = blocs.length;
-                    int maxY = blocs[0].length;
+                    final int maxX = blocs.length;
+                    final int maxY = blocs[0].length;
 
                     for (int i = -trail; i < trail; i++) {
                         for (int j = -trail; j < trail; j++) {
@@ -215,7 +213,7 @@ public class Blocs implements GameLifeCycle {
         final int posX;
         final int posY;
 
-        Bloc(double x, double y, double width, double height, int posX, int posY) {
+        Bloc(final double x, final double y, final double width, final double height, final int posX, final int posY) {
             super(x, y, width, height);
             this.posX = posX;
             this.posY = posY;

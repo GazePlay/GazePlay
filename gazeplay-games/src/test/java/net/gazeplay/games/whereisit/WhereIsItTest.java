@@ -34,7 +34,7 @@ class WhereIsItTest {
     @Mock
     Configuration mockConfig;
 
-    private static String FILESEPARATOR = File.separator;
+    private static final String FILESEPARATOR = File.separator;
 
     @BeforeEach
     public void initMocks() {
@@ -43,35 +43,35 @@ class WhereIsItTest {
 
     @ParameterizedTest
     @EnumSource(value = WhereIsItGameType.class, mode = EnumSource.Mode.EXCLUDE, names = {"CUSTOMIZED"})
-    void shouldPickAndBuildRandomPictures(WhereIsItGameType gameType) {
-        WhereIsIt whereIsIt = new WhereIsIt(gameType, 2, 2, false, mockGameContext, mockStats);
+    void shouldPickAndBuildRandomPictures(final WhereIsItGameType gameType) {
+        final WhereIsIt whereIsIt = new WhereIsIt(gameType, 2, 2, false, mockGameContext, mockStats);
         when(mockConfig.getLanguage()).thenReturn("eng");
 
-        Dimension2D mockDimension = new Dimension2D(20, 20);
+        final Dimension2D mockDimension = new Dimension2D(20, 20);
         when(mockGameContext.getGamePanelDimensionProvider().getDimension2D()).thenReturn(mockDimension);
         when(mockGameContext.getConfiguration()).thenReturn(mockConfig);
 
-        Random random = new Random();
-        RoundDetails randomPictures = whereIsIt.pickAndBuildRandomPictures(4, random, 0);
+        final Random random = new Random();
+        final RoundDetails randomPictures = whereIsIt.pickAndBuildRandomPictures(4, random, 0);
         assert randomPictures.getPictureCardList().size() == 4;
     }
 
     @Test
     void shouldPickAndBuildRandomCustomPictures() {
-        WhereIsIt whereIsIt = new WhereIsIt(WhereIsItGameType.CUSTOMIZED, 2, 2, false, mockGameContext, mockStats);
+        final WhereIsIt whereIsIt = new WhereIsIt(WhereIsItGameType.CUSTOMIZED, 2, 2, false, mockGameContext, mockStats);
         when(mockConfig.getLanguage()).thenReturn("eng");
-        String currentDir = System.getProperty("user.dir") +
+        final String currentDir = System.getProperty("user.dir") +
             FILESEPARATOR + "src" +
             FILESEPARATOR + "test" +
             FILESEPARATOR + "resources";
         when(mockConfig.getWhereIsItDir()).thenReturn(currentDir);
 
-        Dimension2D mockDimension = new Dimension2D(20, 20);
+        final Dimension2D mockDimension = new Dimension2D(20, 20);
         when(mockGameContext.getGamePanelDimensionProvider().getDimension2D()).thenReturn(mockDimension);
         when(mockGameContext.getConfiguration()).thenReturn(mockConfig);
 
-        Random random = new Random();
-        RoundDetails randomPictures = whereIsIt.pickAndBuildRandomPictures(4, random, 0);
+        final Random random = new Random();
+        final RoundDetails randomPictures = whereIsIt.pickAndBuildRandomPictures(4, random, 0);
         assert randomPictures.getPictureCardList().size() == 4;
     }
 

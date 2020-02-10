@@ -2,12 +2,9 @@ package net.gazeplay.ui.scenes.ingame;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import mockit.Expectations;
 import mockit.MockUp;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GazePlay;
@@ -28,8 +25,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
@@ -114,7 +109,7 @@ class GameContextTest {
     void shouldRemoveEventFiltersWhenRecording() {
         new MockUp<StatsContext>() {
             @mockit.Mock
-            public StatsContext newInstance(GazePlay gazePlay, Stats stats) {
+            public StatsContext newInstance(final GazePlay gazePlay, final Stats stats) {
                 return mock(StatsContext.class);
             }
         };
@@ -123,7 +118,7 @@ class GameContextTest {
         when(mockRoot.getChildren()).thenReturn(mockList);
         when(mockGamingRoot.getChildren()).thenReturn(mockList);
 
-        GameContext context =
+        final GameContext context =
             new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo, mockHBox, mockGazeDeviceManager, mockConfigPane);
 
         context.exitGame(mockStats, mockGazePlay, mockGameLifeCycle);
@@ -138,7 +133,7 @@ class GameContextTest {
     void shouldNotRemoveEventFiltersWhenNotRecording() {
         new MockUp<StatsContext>() {
             @mockit.Mock
-            public StatsContext newInstance(GazePlay gazePlay, Stats stats) {
+            public StatsContext newInstance(final GazePlay gazePlay, final Stats stats) {
                 return mock(StatsContext.class);
             }
         };
@@ -147,7 +142,7 @@ class GameContextTest {
         when(mockRoot.getChildren()).thenReturn(mockList);
         when(mockGamingRoot.getChildren()).thenReturn(mockList);
 
-        GameContext context =
+        final GameContext context =
             new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo, mockHBox, mockGazeDeviceManager, mockConfigPane);
 
         context.exitGame(mockStats, mockGazePlay, mockGameLifeCycle);

@@ -33,7 +33,7 @@ public abstract class PropertiesLongProperty extends LongPropertyBase {
 
     @Override
     public long get() {
-        String propertyValue = getProperty(propertyName);
+        final String propertyValue = getProperty(propertyName);
         if (propertyValue == null) {
             return defaultValue;
         }
@@ -41,7 +41,7 @@ public abstract class PropertiesLongProperty extends LongPropertyBase {
     }
 
     @Override
-    public void set(long value) {
+    public void set(final long value) {
         log.info("Set property {} to {}", propertyName, value);
         setProperty(propertyName, Long.toString(value));
         propertyChangeListener.propertyChange(new PropertyChangeEvent(this, propertyName, null, value));

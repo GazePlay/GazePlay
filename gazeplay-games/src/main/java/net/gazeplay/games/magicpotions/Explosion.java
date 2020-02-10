@@ -10,9 +10,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 
 /**
- *
  * @author Johana MARKU
- *
  */
 @Slf4j
 class Explosion extends Rectangle {
@@ -24,16 +22,16 @@ class Explosion extends Rectangle {
     @Setter
     private boolean enableRewardSound;
 
-    Explosion(IGameContext gameContext, Dimension2D gameDimension/* , Image expImage */) {
+    Explosion(final IGameContext gameContext, final Dimension2D gameDimension/* , Image expImage */) {
         super(0, 0, 0, 0);
         this.enableRewardSound = gameContext.getConfiguration().isEnableRewardSound();
 
-        Image img = new Image(defaultPictureResourceLocation);
-        double imgWidth = img.getWidth();
-        double imgHeight = img.getHeight();
+        final Image img = new Image(defaultPictureResourceLocation);
+        final double imgWidth = img.getWidth();
+        final double imgHeight = img.getHeight();
 
-        double posX = (gameDimension.getWidth() - imgWidth) / 2;
-        double posY = (gameDimension.getHeight() - imgHeight);
+        final double posX = (gameDimension.getWidth() - imgWidth) / 2;
+        final double posY = (gameDimension.getHeight() - imgHeight);
 
         setFill(new ImagePattern(img));
         setX(posX);
@@ -54,7 +52,7 @@ class Explosion extends Rectangle {
             log.debug("Playing sound animation ...");
             try {
                 ForegroundSoundsUtils.playSound(defaultSoundResourceLocation);
-            } catch (Exception e) {
+            } catch (final Exception e) {
 
                 log.warn("file doesn't exist : {}", defaultSoundResourceLocation);
                 log.warn(e.getMessage());

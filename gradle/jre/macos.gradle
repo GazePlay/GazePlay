@@ -1,0 +1,19 @@
+def downloadLocation = project.ext.downloadLocation
+
+def jreSource = project.ext.jreSource
+def zuluVersion = project.ext.zuluVersion
+def jreVersion = project.ext.jreVersion
+def jreFolder = project.ext.jreFolder
+
+def filename = "zulu${zuluVersion}-ca-fx-jre${jreVersion}-macosx_x64"
+
+task downloadMacosJRE(type: Download, group: 'custom jre') {
+    src "${jreSource}/${filename}.tar.gz"
+    dest new File("${downloadLocation}/jre", 'macos.tar.gz')
+    overwrite false
+}
+
+task downloadAndExtractMacosJRE(dependsOn: downloadMacosJRE, type: Copy, group: 'custom jre') {
+    from tarTree(downloadMacosJRE.dest)
+    into "${jreFolder}/macos"
+}

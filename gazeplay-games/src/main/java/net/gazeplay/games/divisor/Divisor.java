@@ -21,7 +21,7 @@ public class Divisor implements GameLifeCycle {
     private final Stats stats;
     private final boolean lapin;
 
-    public Divisor(IGameContext gameContext, Stats stats, boolean lapin) {
+    public Divisor(final IGameContext gameContext, final Stats stats, final boolean lapin) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
@@ -30,10 +30,10 @@ public class Divisor implements GameLifeCycle {
 
     @Override
     public void launch() {
-        Target target;
+        final Target target;
 
         if (lapin) {
-            ImageLibrary imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "divisor/rabbit/images");
+            final ImageLibrary imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "divisor/rabbit/images");
 
             initBackground();
 
@@ -43,7 +43,7 @@ public class Divisor implements GameLifeCycle {
                 this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
         } else {
 
-            ImageLibrary imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("divisor/basic"));
+            final ImageLibrary imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("divisor/basic"));
             target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
                 this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
         }

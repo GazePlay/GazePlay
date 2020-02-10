@@ -21,23 +21,24 @@ public class PositionPollerRunnable implements Runnable {
     @Setter
     private transient boolean stopRequested = false;
 
-    public PositionPollerRunnable(Supplier<Dimension2D> screenDimensionSupplier, TobiiGazeDeviceManager tobiiGazeDeviceManager) {
+    public PositionPollerRunnable(final Supplier<Dimension2D> screenDimensionSupplier, final TobiiGazeDeviceManager tobiiGazeDeviceManager) {
         this.screenDimensionSupplier = screenDimensionSupplier;
         this.tobiiGazeDeviceManager = tobiiGazeDeviceManager;
     }
 
+    @Override
     public void run() {
         while (!stopRequested) {
             try {
                 poll();
-            } catch (RuntimeException e) {
+            } catch (final RuntimeException e) {
                 log.warn("Exception while polling position of gaze", e);
             }
 
             // sleep is mandatory to avoid too much calls to gazePosition()
             try {
                 Thread.sleep(10);
-                Configuration config = ActiveConfigurationContext.getInstance();
+                final Configuration config = ActiveConfigurationContext.getInstance();
                 if (config.isGazeMenuEnable()) {
                     Thread.sleep(10);
                 }
@@ -48,7 +49,7 @@ public class PositionPollerRunnable implements Runnable {
     }
 
     private void poll() {
-        float[] pointAsFloatArray = Tobii.gazePosition();
+        final float[] pointAsFloatArray = Tobii.gazePosition();
 
         final float xRatio = pointAsFloatArray[0];
         final float yRatio = pointAsFloatArray[1];
@@ -57,7 +58,7 @@ public class PositionPollerRunnable implements Runnable {
         final double positionX = xRatio * screenDimension.getWidth();
         final double positionY = yRatio * screenDimension.getHeight();
 
-        Point2D point = new Point2D(positionX, positionY);
+        final Point2D point = new Point2D(positionX, positionY);
         Platform.runLater(() -> tobiiGazeDeviceManager.onGazeUpdate(point));
     }
 

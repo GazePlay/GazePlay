@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 /**
  * Supplier that caches the value to prevent multiple calls.
- * 
+ *
  * @see org.springframework.boot.context.properties.PropertyMapper.CachingSupplier
  */
 public class ImmutableCachingSupplier<T> implements Supplier<T> {

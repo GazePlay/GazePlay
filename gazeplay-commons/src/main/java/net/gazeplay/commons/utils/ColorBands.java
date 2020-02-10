@@ -17,9 +17,9 @@ public class ColorBands {
      * Writable image used to create the fixation Sequence image
      */
     @Getter
-    private WritableImage image;
+    private final WritableImage image;
 
-    public ColorBands(int width, int height, LinkedList<FixationPoint> points) {
+    public ColorBands(final int width, final int height, final LinkedList<FixationPoint> points) {
         this.image = new WritableImage(width, height);
 
     }
@@ -27,15 +27,14 @@ public class ColorBands {
     /**
      * Saves the fixation Sequence to a PNG file
      *
-     * @param outputFile
-     *            The output file (Must be open and writable)
+     * @param outputFile The output file (Must be open and writable)
      */
     // creates a clear background image
-    public void saveToFile(File outputFile) {
-        BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
+    public void saveToFile(final File outputFile) {
+        final BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
         try {
             ImageIO.write(bImage, "png", outputFile);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }

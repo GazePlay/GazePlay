@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import static net.gazeplay.TestingUtils.waitForRunLater;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -74,12 +75,6 @@ class LatestNewsPopupTest {
         List<String> linesFra = Collections.singletonList("<html>Fra { version }<html/>");
         Files.write(fileEng, linesEng, StandardCharsets.UTF_8);
         Files.write(fileFra, linesFra, StandardCharsets.UTF_8);
-    }
-
-    public static void waitForRunLater() throws InterruptedException {
-        Semaphore semaphore = new Semaphore(0);
-        Platform.runLater(semaphore::release);
-        semaphore.acquire();
     }
 
     @Test

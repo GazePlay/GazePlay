@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 public class TETSimple {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
 
         final GazeManager gm = GazeManager.getInstance();
         gm.activate();
@@ -24,7 +24,7 @@ public class TETSimple {
 class GazeListener implements IGazeListener {
 
     @Override
-    public void onGazeUpdate(GazeData gazeData) {
+    public void onGazeUpdate(final GazeData gazeData) {
         log.info("" + GazeUtils.getEyesCenterNormalized(gazeData));
     }
 }

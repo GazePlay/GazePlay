@@ -14,7 +14,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -46,49 +45,42 @@ public class GooseGame implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Stats stats;
     private final Dimension2D dimensions;
-    private final Configuration config;
     private final int nbPlayers;
 
-    private Rectangle background;
-    private ImageView boardImage;
-    private ArrayList<String> bibouleColors;
+    private final ImageView boardImage;
+    private final ArrayList<String> bibouleColors;
 
-    private ArrayList<DiceRoller> diceRollers;
-    private Timeline moveDiceIn;
-    private Timeline moveDiceOut;
-    private GridPane diceDisplay;
-    private int[] rolls;
+    private final ArrayList<DiceRoller> diceRollers;
+    private final Timeline moveDiceIn;
+    private final Timeline moveDiceOut;
+    private final GridPane diceDisplay;
+    private final int[] rolls;
     private ProgressButton rollButton;
 
-    private VBox messages;
+    private final VBox messages;
 
-    private JsonArray positions;
-
-    private ArrayList<Pawn> pawns;
+    private final ArrayList<Pawn> pawns;
     private int currentPawn;
     private Square firstSquare;
 
-    private ImageView turnIndicator;
-    private Timeline showPlayingBiboule;
+    private final ImageView turnIndicator;
+    private final Timeline showPlayingBiboule;
 
-    private Random random;
-    private AudioClip mvmt;
+    private final Random random;
 
-    public GooseGame(IGameContext gameContext, Stats stats, int nbPlayers) {
+    public GooseGame(final IGameContext gameContext, final Stats stats, final int nbPlayers) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.nbPlayers = nbPlayers;
 
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.config = gameContext.getConfiguration();
+        final Configuration config = gameContext.getConfiguration();
 
         this.random = new Random();
 
-        mvmt = new AudioClip(ClassLoader.getSystemResource("data/goosegame/sounds/mvmt0.wav").toString());
-
         // JSON file used to store the position of each square, later used for pawn movement
-        JsonParser parser = new JsonParser();
-        positions = (JsonArray) parser.parse(new InputStreamReader(
+        final JsonParser parser = new JsonParser();
+        final JsonArray positions = (JsonArray) parser.parse(new InputStreamReader(
             Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("data/goosegame/positions.json")),
             StandardCharsets.UTF_8));
 
@@ -100,28 +92,29 @@ public class GooseGame implements GameLifeCycle {
         }
         // The board is scaled according to the window size, this influences the position we got above, so we need to
         // scale those too
-        double scaleRatio = Math.min((dimensions.getHeight() * 0.9) / boardImage.getImage().getHeight(),
+
+        final double scaleRatio = Math.min((dimensions.getHeight() * 0.9) / boardImage.getImage().getHeight(),
             (dimensions.getWidth() * 0.9) / boardImage.getImage().getWidth());
-        double boardWidth = boardImage.getImage().getWidth() * scaleRatio;
-        double boardHeight = boardImage.getImage().getHeight() * scaleRatio;
+        final double boardWidth = boardImage.getImage().getWidth() * scaleRatio;
+        final double boardHeight = boardImage.getImage().getHeight() * scaleRatio;
         boardImage.setFitHeight(boardHeight);
         boardImage.setFitWidth(boardWidth);
         // Board is centered
-        double xOffset = (dimensions.getWidth() - boardWidth) / 2;
-        double yOffset = (dimensions.getHeight() - boardHeight) / 2;
+        final double xOffset = (dimensions.getWidth() - boardWidth) / 2;
+        final double yOffset = (dimensions.getHeight() - boardHeight) / 2;
         boardImage.setX(xOffset);
         boardImage.setY(yOffset);
 
         // Creating the squares
-        ArrayList<Integer> repeatSquares = new ArrayList<>(Arrays.asList(5, 9, 13, 18, 24, 28, 34, 36, 40, 45, 49, 54));
+        final ArrayList<Integer> repeatSquares = new ArrayList<>(Arrays.asList(5, 9, 13, 18, 24, 28, 34, 36, 40, 45, 49, 54));
         Square previousSquare = null;
         BridgeSquare beginBridge = null;
         for (int i = 0; i < 64; i++) {
-            JsonObject jsonPos = (JsonObject) positions.get(i);
-            Position position = new Position(xOffset + jsonPos.get("x").getAsDouble() * scaleRatio,
+            final JsonObject jsonPos = (JsonObject) positions.get(i);
+            final Position position = new Position(xOffset + jsonPos.get("x").getAsDouble() * scaleRatio,
                 yOffset + jsonPos.get("y").getAsDouble() * scaleRatio);
 
-            Square newSquare;
+            final Square newSquare;
             if (repeatSquares.contains(i)) {
                 newSquare = new RepeatSquare(i, position, previousSquare, this);
             } else if (i == 31 || i == 52) {
@@ -156,7 +149,7 @@ public class GooseGame implements GameLifeCycle {
         pawns = new ArrayList<>();
         bibouleColors = new ArrayList<>(Arrays.asList("Blue", "Orange", "green", "Yellow", "Red"));
         for (int i = 0; i < nbPlayers; i++) {
-            ImageView imagePawn = new ImageView(String.format(BIBOULEPATH, bibouleColors.get(i)));
+            final ImageView imagePawn = new ImageView(String.format(BIBOULEPATH, bibouleColors.get(i)));
             imagePawn.setFitHeight(dimensions.getWidth() / 20);
             imagePawn.setFitWidth(dimensions.getWidth() / 20);
             pawns.add(new Pawn(imagePawn, firstSquare, i + 1, gameContext.getAnimationSpeedRatioSource()));
@@ -200,10 +193,10 @@ public class GooseGame implements GameLifeCycle {
         diceDisplay.setHgap(dimensions.getWidth() / 20);
         rolls = new int[2];
         diceRollers = new ArrayList<>();
-        float dieWidth = (float) (dimensions.getWidth() / 20);
+        final float dieWidth = (float) (dimensions.getWidth() / 20);
 
         for (int i = 0; i < 2; i++) {
-            DiceRoller dr = new DiceRoller(dieWidth);
+            final DiceRoller dr = new DiceRoller(dieWidth);
             diceRollers.add(dr);
             diceDisplay.add(dr, i, 0);
             // init rolls to 1s
@@ -232,7 +225,7 @@ public class GooseGame implements GameLifeCycle {
 
         // Button which starts the beginning of a turn by rolling the dice
         rollButton = new ProgressButton();
-        ImageView rollImage = new ImageView("data/dice/roll.png");
+        final ImageView rollImage = new ImageView("data/dice/roll.png");
         rollImage.setFitHeight(dimensions.getHeight() / 6);
         rollImage.setFitWidth(dimensions.getHeight() / 6);
         rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
@@ -265,7 +258,7 @@ public class GooseGame implements GameLifeCycle {
      */
     private void playTurn() {
         moveDiceOut.play();
-        int rollResult = rolls[0] + rolls[1];
+        final int rollResult = rolls[0] + rolls[1];
         pawns.get(currentPawn).move(rollResult);
     }
 
@@ -274,12 +267,12 @@ public class GooseGame implements GameLifeCycle {
      */
     @Override
     public void launch() {
-        background = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
+        final Rectangle background = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
         background.setFill(Color.GRAY);
 
         gameContext.getChildren().addAll(background, boardImage);
 
-        for (Pawn pawn : pawns) {
+        for (final Pawn pawn : pawns) {
             pawn.reset(firstSquare);
             gameContext.getChildren().add(pawn.getPawnDisplay());
         }
@@ -296,7 +289,7 @@ public class GooseGame implements GameLifeCycle {
     @Override
     public void dispose() {
         gameContext.getChildren().remove(gameContext.getChildren().size() - 1);
-        for (Pawn pawn : pawns) {
+        for (final Pawn pawn : pawns) {
             pawn.reset(firstSquare);
         }
         currentPawn = 0;
@@ -346,8 +339,8 @@ public class GooseGame implements GameLifeCycle {
      * Show a message on screen, the messages are in a vertical queue. The message is translated, not the values
      *
      */
-    public void showMessage(String message, Object... values) {
-        Text messageText = new Text(0, dimensions.getHeight() / 3,
+    public void showMessage(final String message, final Object... values) {
+        final Text messageText = new Text(0, dimensions.getHeight() / 3,
             String.format(gameContext.getTranslator().translate(message), values));
         messageText.setTextAlignment(TextAlignment.CENTER);
         messageText.setFill(Color.WHITE);
@@ -357,7 +350,7 @@ public class GooseGame implements GameLifeCycle {
 
         messages.getChildren().add(messageText);
 
-        Timeline showMessage = new Timeline(
+        final Timeline showMessage = new Timeline(
             new KeyFrame(Duration.seconds(0.3), new KeyValue(messageText.opacityProperty(), 1)),
             new KeyFrame(Duration.seconds(4), new KeyValue(messageText.opacityProperty(), 1)),
             new KeyFrame(Duration.seconds(4.3), new KeyValue(messageText.opacityProperty(), 0)));
@@ -374,7 +367,7 @@ public class GooseGame implements GameLifeCycle {
      * @param pawn
      *            winner pawn
      */
-    void winner(Pawn pawn) {
+    void winner(final Pawn pawn) {
         showMessage("Player %d wins the game", pawn.getNumber());
         gameContext.playWinTransition(200, actionEvent -> dispose());
     }
@@ -383,7 +376,7 @@ public class GooseGame implements GameLifeCycle {
 
         try {
             ForegroundSoundsUtils.playSound(String.format("data/goosegame/sounds/mvmt%d.wav", random.nextInt(6)));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
 

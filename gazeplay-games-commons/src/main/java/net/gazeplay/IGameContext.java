@@ -22,7 +22,7 @@ public interface IGameContext {
 
     @NonNull
     Configuration getConfiguration();
-    
+
     AnimationSpeedRatioSource getAnimationSpeedRatioSource();
 
     @NonNull

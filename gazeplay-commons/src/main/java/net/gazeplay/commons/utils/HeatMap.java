@@ -29,11 +29,11 @@ public class HeatMap {
      * Writable image used to create the heatmap image
      */
     @Getter
-    private WritableImage image;
+    private final WritableImage image;
     /**
      * Array of the different colors used to interpolate
      */
-    private List<Color> colors;
+    private final List<Color> colors;
     /**
      * Maximum value of the data
      */
@@ -45,23 +45,21 @@ public class HeatMap {
     /**
      * Value interval between each color
      */
-    private double subdivisionValue;
+    private final double subdivisionValue;
 
     /**
      * Opacity of each pixel
      */
-    private double opacity;
+    private final double opacity;
 
     /**
      * Custom colors constructor, builds a heatmap from the given data, by interpolating the values through the given
      * colors.
-     * 
-     * @param data
-     *            monitor data
-     * @param colors
-     *            custom colors for the heatmap, must be on order from minimum to maximum.
+     *
+     * @param data   monitor data
+     * @param colors custom colors for the heatmap, must be on order from minimum to maximum.
      */
-    public HeatMap(double[][] data, double opacity, List<Color> colors) {
+    public HeatMap(final double[][] data, final double opacity, final List<Color> colors) {
 
         this.image = new WritableImage(data[0].length, data.length);
         this.colors = colors;
@@ -70,8 +68,8 @@ public class HeatMap {
         // Computing max and min values
         minValue = Double.MAX_VALUE;
         maxValue = Double.MIN_VALUE;
-        for (double[] datum : data) {
-            for (double v : datum) {
+        for (final double[] datum : data) {
+            for (final double v : datum) {
                 if (v > maxValue) {
                     maxValue = v;
                 }
@@ -83,7 +81,7 @@ public class HeatMap {
         subdivisionValue = (maxValue - minValue) / (this.colors.size() - 1);
 
         // Create heatmap pixel per pixel
-        PixelWriter pxWriter = image.getPixelWriter();
+        final PixelWriter pxWriter = image.getPixelWriter();
         for (int x = 0; x < data.length; x++) {
             for (int y = 0; y < data[x].length; y++) {
                 pxWriter.setColor(y, x, getColor(data[x][y]));
@@ -93,12 +91,11 @@ public class HeatMap {
 
     /**
      * Computes the correct color of the value, by interpolating between the 2 colors in the right subdivision.
-     * 
-     * @param value
-     *            the value of the pixel (in data).
+     *
+     * @param value the value of the pixel (in data).
      * @return the resulting color after interpolation.
      */
-    private Color getColor(double value) {
+    private Color getColor(final double value) {
         if (value == 0) {
             return Color.TRANSPARENT;
         } else {
@@ -109,29 +106,29 @@ public class HeatMap {
                 i++;
                 compValue += subdivisionValue;
             }
-            double red = Interpolator.LINEAR.interpolate(colors.get(i).getRed(), colors.get(i + 1).getRed(),
-                    (value % subdivisionValue) / subdivisionValue);
-            double green = Interpolator.LINEAR.interpolate(colors.get(i).getGreen(), colors.get(i + 1).getGreen(),
-                    (value % subdivisionValue) / subdivisionValue);
-            double blue = Interpolator.LINEAR.interpolate(colors.get(i).getBlue(), colors.get(i + 1).getBlue(),
-                    (value % subdivisionValue) / subdivisionValue);
+            final double red = Interpolator.LINEAR.interpolate(colors.get(i).getRed(), colors.get(i + 1).getRed(),
+                (value % subdivisionValue) / subdivisionValue);
+            final double green = Interpolator.LINEAR.interpolate(colors.get(i).getGreen(), colors.get(i + 1).getGreen(),
+                (value % subdivisionValue) / subdivisionValue);
+            final double blue = Interpolator.LINEAR.interpolate(colors.get(i).getBlue(), colors.get(i + 1).getBlue(),
+                (value % subdivisionValue) / subdivisionValue);
             return Color.color(red, green, blue, opacity);
         }
     }
 
-    public WritableImage getColorKey(int width, int height) {
-        WritableImage keyImage = new WritableImage(width, height);
-        Canvas canvas = new Canvas(width, height);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+    public WritableImage getColorKey(final int width, final int height) {
+        final WritableImage keyImage = new WritableImage(width, height);
+        final Canvas canvas = new Canvas(width, height);
+        final GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        ArrayList<Stop> stops = new ArrayList<>();
+        final ArrayList<Stop> stops = new ArrayList<>();
         for (int i = 0; i < colors.size(); i++) {
             stops.add(new Stop((double) i / (double) (colors.size() - 1), colors.get(colors.size() - 1 - i)));
         }
-        LinearGradient heatGradient = new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, stops);
+        final LinearGradient heatGradient = new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE, stops);
 
-        double margin = height / 20d;
-        double barHeight = height - 2 * margin;
+        final double margin = height / 20d;
+        final double barHeight = height - 2 * margin;
         gc.setFont(new Font(margin));
         gc.setFill(heatGradient);
         gc.fillRect(0, margin, width / 3d, barHeight);
@@ -139,17 +136,17 @@ public class HeatMap {
         gc.setStroke(Color.BLACK);
         gc.setFill(Color.WHITE);
 
-        DecimalFormat numberFormat = new DecimalFormat("#.00");
+        final DecimalFormat numberFormat = new DecimalFormat("#.00");
 
         for (int i = 0; i < colors.size(); i++) {
-            double y = margin + (double) i / (double) (colors.size() - 1) * barHeight;
+            final double y = margin + (double) i / (double) (colors.size() - 1) * barHeight;
             gc.strokeLine(0, y, width / 3d, y);
             gc.setTextBaseline(VPos.CENTER);
             gc.fillText(numberFormat.format(maxValue - (i * subdivisionValue)) + "", width / 3d + 5, y,
-                    2 * width / 3d - 5);
+                2 * width / 3d - 5);
         }
 
-        SnapshotParameters params = new SnapshotParameters();
+        final SnapshotParameters params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
         canvas.snapshot(params, keyImage);
         return keyImage;

@@ -62,8 +62,8 @@ public class Card extends Parent {
      */
     private Timeline currentTimeline;
 
-    public Card(double positionX, double positionY, double width, double height, Image image, boolean winner,
-            IGameContext gameContext, Stats stats, MagicCards gameInstance, int fixationlength) {
+    public Card(final double positionX, final double positionY, final double width, final double height, final Image image, final boolean winner,
+                final IGameContext gameContext, final Stats stats, final MagicCards gameInstance, final int fixationlength) {
 
         this.card = new Rectangle(positionX, positionY, width, height);
         this.card.setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
@@ -101,8 +101,8 @@ public class Card extends Parent {
         currentTimeline = new Timeline();
     }
 
-    private ProgressIndicator createProgressIndicator(double width, double height) {
-        ProgressIndicator indicator = new ProgressIndicator(0);
+    private ProgressIndicator createProgressIndicator(final double width, final double height) {
+        final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(card.getX() + width * 0.05);
         indicator.setTranslateY(card.getY() + height * 0.2);
         indicator.setMinWidth(width * 0.9);
@@ -113,11 +113,11 @@ public class Card extends Parent {
 
     private void onCorrectCardSelected() {
 
-        javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         stats.incNbGoals();
 
-        int final_zoom = 2;
+        final int final_zoom = 2;
 
         progressIndicator.setOpacity(0);
 
@@ -127,13 +127,13 @@ public class Card extends Parent {
         currentTimeline = new Timeline();
 
         currentTimeline.getKeyFrames().add(
-                new KeyFrame(new Duration(1000), new KeyValue(card.widthProperty(), card.getWidth() * final_zoom)));
+            new KeyFrame(new Duration(1000), new KeyValue(card.widthProperty(), card.getWidth() * final_zoom)));
         currentTimeline.getKeyFrames().add(
-                new KeyFrame(new Duration(1000), new KeyValue(card.heightProperty(), card.getHeight() * final_zoom)));
+            new KeyFrame(new Duration(1000), new KeyValue(card.heightProperty(), card.getHeight() * final_zoom)));
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                new KeyValue(card.xProperty(), (dimension2D.getWidth() - card.getWidth() * final_zoom) / 2)));
+            new KeyValue(card.xProperty(), (dimension2D.getWidth() - card.getWidth() * final_zoom) / 2)));
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                new KeyValue(card.yProperty(), (dimension2D.getHeight() - card.getHeight() * final_zoom) / 2)));
+            new KeyValue(card.yProperty(), (dimension2D.getHeight() - card.getHeight() * final_zoom) / 2)));
 
         currentTimeline.onFinishedProperty().set(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
             gameInstance.dispose();
@@ -166,8 +166,9 @@ public class Card extends Parent {
 
         return e -> {
 
-            if (turned)
+            if (turned) {
                 return;
+            }
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
