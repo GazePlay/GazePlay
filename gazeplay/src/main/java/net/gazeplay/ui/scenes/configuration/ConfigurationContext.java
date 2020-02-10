@@ -3,7 +3,6 @@ package net.gazeplay.ui.scenes.configuration;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
@@ -26,7 +25,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
-import javafx.util.converter.IntegerStringConverter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
@@ -54,13 +52,10 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.text.NumberFormat;
-import java.text.ParsePosition;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.UnaryOperator;
 
 @Slf4j
 public class ConfigurationContext extends GraphicalContext<BorderPane> {
@@ -553,31 +548,25 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         switch (type) {
             case WHERE_IS_IT:
                 fileDir = configuration.getWhereIsItDir();
-                buttonLoad = new Button(fileDir);
-                buttonLoad.textProperty().bind(configuration.getWhereIsItDirProperty());
                 break;
             case MUSIC:
                 changeMusicFolder(configuration.getMusicFolder(), configuration);
                 fileDir = configuration.getMusicFolder();
-                buttonLoad = new Button(fileDir);
-                buttonLoad.textProperty().bind(configuration.getMusicFolderProperty());
                 break;
             case VIDEO:
                 fileDir = configuration.getVideoFolder();
-                buttonLoad = new Button(fileDir);
-                buttonLoad.textProperty().bind(configuration.getVideoFolderProperty());
                 break;
             default:
                 fileDir = configuration.getFileDir();
-                buttonLoad = new Button(fileDir);
-                buttonLoad.textProperty().bind(configuration.getFiledirProperty());
         }
+
+        buttonLoad = new Button(fileDir);
 
         buttonLoad.setOnAction(arg0 -> {
             DirectoryChooser directoryChooser = new DirectoryChooser();
             final File currentFolder;
 
-            switch(type) {
+            switch (type) {
                 case WHERE_IS_IT:
                     currentFolder = new File(configuration.getWhereIsItDir());
                     break;
@@ -607,6 +596,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
             }
 
+            buttonLoad.textProperty().setValue(newPropertyValue);
+
             switch (type) {
                 case WHERE_IS_IT:
                     configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
@@ -628,22 +619,35 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         switch (type) {
             case WHERE_IS_IT:
                 resetButton.setOnAction(
-                    e -> configuration.getWhereIsItDirProperty()
-                        .setValue(Configuration.DEFAULT_VALUE_WHEREISIT_DIR));
+                    e -> {
+                        String defaultValue = Configuration.DEFAULT_VALUE_WHEREISIT_DIR;
+                        configuration.getWhereIsItDirProperty()
+                            .setValue(defaultValue);
+                        buttonLoad.textProperty().setValue(defaultValue);
+                    });
                 break;
             case MUSIC:
                 resetButton.setOnAction(
-                    e -> changeMusicFolder(Configuration.DEFAULT_VALUE_MUSIC_FOLDER, configuration));
+                    e -> {
+                        changeMusicFolder(Configuration.DEFAULT_VALUE_MUSIC_FOLDER, configuration);
+                        buttonLoad.textProperty().setValue(configuration.getMusicFolderProperty().getValue());
+                    });
                 break;
             case VIDEO:
                 resetButton.setOnAction(
-                    e -> configuration.getVideoFolderProperty()
-                        .setValue(GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath()));
+                    e -> {
+                        String defaultValue = GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath();
+                        configuration.getVideoFolderProperty().setValue(defaultValue);
+                        buttonLoad.textProperty().setValue(defaultValue);
+                    });
                 break;
             default:
                 resetButton.setOnAction(
-                    e -> configuration.getFiledirProperty()
-                        .setValue(GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath()));
+                    e -> {
+                        String defaultValue = GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath();
+                        configuration.getFiledirProperty().setValue(defaultValue);
+                        buttonLoad.textProperty().setValue(defaultValue);
+                    });
         }
 
         pane.getChildren().addAll(buttonLoad, resetButton);
