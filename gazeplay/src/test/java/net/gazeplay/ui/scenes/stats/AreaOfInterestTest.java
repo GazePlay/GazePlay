@@ -35,9 +35,9 @@ class AreaOfInterestTest {
             670.0 - 15
         };
 
-        Double[] result = AreaOfInterest.calculateRectangle(input);
+        Double[] actual = AreaOfInterest.calculateRectangle(input);
 
-        assertArrayEquals(expected, result);
+        assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -46,7 +46,8 @@ class AreaOfInterestTest {
         assertEquals(0, AreaOfInterest.orientation(
             new Point2D(0, 0),
             new Point2D(1, 1),
-            new Point2D(2, 2)));
+            new Point2D(2, 2)
+        ));
 
         // Clockwise
         assertEquals(1, AreaOfInterest.orientation(
@@ -63,4 +64,24 @@ class AreaOfInterestTest {
         ));
     }
 
+    @Test
+    void shouldCalculateConvexHull() {
+        Point2D[] input = new Point2D[]{
+            new Point2D(2, 2),
+            new Point2D(2, 3),
+            new Point2D(3, 5),
+            new Point2D(1, 2),
+            new Point2D(1.25, 3),
+            new Point2D(2, 1),
+            new Point2D(4, 2)
+        };
+
+        Double[] expected = new Double[] {
+          1d, 2d, 2d, 1d, 4d, 2d, 3d, 5d, 1.25, 3d
+        };
+
+        Double[] actual = AreaOfInterest.calculateConvexHull(input);
+
+        assertArrayEquals(expected, actual);
+    }
 }

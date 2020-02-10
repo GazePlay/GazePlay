@@ -548,7 +548,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
      * sequence.
      * @see Point2D
      */
-    private Double[] calculateConvexHull(final Point2D[] points) {
+    static Double[] calculateConvexHull(final Point2D[] points) {
         final int numberOfPoints = points.length;
         final ArrayList<Double> convexHullPoints = new ArrayList<>();
         final Vector<Point2D> hull = new Vector<>();
@@ -578,7 +578,10 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             convexHullPoints.add(temp.getY());
         }
 
-        return (Double[]) convexHullPoints.toArray();
+        Double[] hullPointsArray = new Double[convexHullPoints.size()];
+        convexHullPoints.toArray(hullPointsArray);
+
+        return hullPointsArray;
     }
 
     private void calculateTargetAOI(final ArrayList<TargetAOI> targetAOIArrayList) {
