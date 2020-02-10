@@ -25,9 +25,11 @@ import net.gazeplay.ui.scenes.stats.StatsContext;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static javafx.scene.chart.XYChart.Data;
 
@@ -340,9 +342,21 @@ public class StatDisplayUtils {
     }
 
     public static String convert(long totalTime) {
-        Date date = new Date(totalTime);
-        DateFormat df = new SimpleDateFormat("dd 'd' HH 'h' mm 'm' ss 's' S 'ms'");
+        Duration duration = Duration.ofMillis(totalTime);
 
-        return df.format(date);
+        // Extract the days from the duration, then take it away so we can format the rest of the string.
+        long days = duration.toDaysPart();
+        Duration durationLessDays = duration.minusDays(days);
+
+        String result = "";
+
+        if (days > 0) {
+            result += String.format("%dd ", days);
+        }
+
+        return result + durationLessDays.toString()
+            .substring(2)
+            .replaceAll("(\\d[HMS])(?!$)", "$1 ")
+            .toLowerCase();
     }
 }
