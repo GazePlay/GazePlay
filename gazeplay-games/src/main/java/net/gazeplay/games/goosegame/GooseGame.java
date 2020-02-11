@@ -92,7 +92,6 @@ public class GooseGame implements GameLifeCycle {
         }
         // The board is scaled according to the window size, this influences the position we got above, so we need to
         // scale those too
-
         final double scaleRatio = Math.min((dimensions.getHeight() * 0.9) / boardImage.getImage().getHeight(),
             (dimensions.getWidth() * 0.9) / boardImage.getImage().getWidth());
         final double boardWidth = boardImage.getImage().getWidth() * scaleRatio;

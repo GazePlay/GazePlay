@@ -55,8 +55,8 @@ public class Divisor implements GameLifeCycle {
             Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
             imageRectangle.setFill(new ImagePattern(new Image("data/divisor/images/Background.png")));
-            int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
-            imageRectangle.setOpacity(1 - coef * 0.5);
+            double imageRectangleOpacity = (gameContext.getConfiguration().isBackgroundWhite()) ? 0.5 : 1;
+            imageRectangle.setOpacity(imageRectangleOpacity);
             gameContext.getChildren().add(imageRectangle);
         }
     }

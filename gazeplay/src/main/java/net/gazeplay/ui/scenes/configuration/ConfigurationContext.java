@@ -211,7 +211,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             CheckBox input = buildCheckBox(config.getEnableRewardSoundProperty());
 
-
             addToGrid(grid, currentFormRow, label, input);
         }
 
@@ -779,23 +778,23 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         Translator translator
     ) {
         ToggleGroup group = new ToggleGroup();
-        I18NToggleButton blackButton = new I18NToggleButton(translator,"Black");
-        I18NToggleButton whiteButton = new I18NToggleButton(translator,"White");
+        I18NToggleButton blackButton = new I18NToggleButton(translator, "Black");
+        I18NToggleButton whiteButton = new I18NToggleButton(translator, "White");
         blackButton.setToggleGroup(group);
         whiteButton.setToggleGroup(group);
 
-        boolean isWhite= configuration.getWhiteBackgroundProperty().getValue();
+        boolean isWhite = configuration.getWhiteBackgroundProperty().getValue();
 
         blackButton.setSelected(!isWhite);
         whiteButton.setSelected(isWhite);
 
         whiteButton.selectedProperty().bindBidirectional(configuration.getWhiteBackgroundProperty());
         HBox hb = new HBox();
-        hb.getChildren().addAll(blackButton,whiteButton);
+        hb.getChildren().addAll(blackButton, whiteButton);
 
         return hb;
     }
-  
+
     private static CheckBox buildGazeMenu(Configuration configuration) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getGazeMenuEnabledProperty().getValue());

@@ -74,7 +74,7 @@ public class Race extends Parent implements GameLifeCycle {
         this.stats = stats;
         score = 0;
         gameType = type;
-      
+
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         hand = new StackPane();
 
@@ -147,9 +147,10 @@ public class Race extends Parent implements GameLifeCycle {
         imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
         imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
 
-        int whiteCoef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
-        int isBackgroundEnabled = (gameContext.getConfiguration().isBackgroundEnabled()) ? 1 : 0;
-        imageRectangle.setOpacity(isBackgroundEnabled * (1 - whiteCoef * 0.5));
+        double whiteBackgroundCoef = (gameContext.getConfiguration().isBackgroundWhite()) ? 0.5 : 1;
+        int backgroundEnabledCoef = (gameContext.getConfiguration().isBackgroundEnabled()) ? 1 : 0;
+
+        imageRectangle.setOpacity(backgroundEnabledCoef * whiteBackgroundCoef);
 
         gameContext.getChildren().add(imageRectangle);
 

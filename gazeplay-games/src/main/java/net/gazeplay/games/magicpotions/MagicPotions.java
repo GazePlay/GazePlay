@@ -42,7 +42,6 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
         private Color colorRequest;
 
-
         public RoundDetails(final List<Color> potionsToMix, final PotionMix request) {
             this.potionsToMix = potionsToMix;
             this.request = request;

@@ -93,14 +93,14 @@ public class Moles extends Parent implements GameLifeCycle {
     }
 
     void adjustBackground(Rectangle image) {
-        int whiteCoef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : -1;
+        int whiteBackgroundCoef = (gameContext.getConfiguration().isBackgroundWhite()) ? 2 : 0;
 
         ColorAdjust colorAdjust = new ColorAdjust();
 
         if (gameContext.getConfiguration().isBackgroundEnabled()) {
-            colorAdjust.setBrightness((whiteCoef + 1) * 0.25);
+            colorAdjust.setBrightness(whiteBackgroundCoef * 0.25); //0.5 or 0
         } else {
-            colorAdjust.setBrightness(whiteCoef);
+            colorAdjust.setBrightness(whiteBackgroundCoef - 1); //1 or -1
         }
 
         image.setEffect(colorAdjust);
