@@ -20,6 +20,12 @@
 
 ## Features
 
+- Background options improved (_Sébastien Riou_)
+    - black/white background color
+    - enable/disable background image
+    
+- GazePlay works on linux with Tobii 4C (_Sébastien Riou_)
+
 ## Various translations and bug resolution
 
 ## Tests and Supervision
