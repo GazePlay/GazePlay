@@ -32,6 +32,29 @@ everything up into Zip and Tar formats.
 $ ./gradlew packageApp
 ```
 
+## Distributing JREs
+
+There are a number of JRE related tasks in [jre.gradle](../gradle/jre.gradle) that will download a specific JRE from
+[Zulu Community JREs](https://www.azul.com/downloads/zulu-community), that include JavaFX. 
+Each platform has the same tasks; 
+* Download the JRE
+* Unzip the JRE to your Maven local repository
+* Copy the JRE to the build folder when creating distributions.
+
+Before running `distribution` for the first time, you must run
+```
+> gradlew downloadAndExtractJREs
+$ ./gradlew downloadAndExtractJREs
+```
+
+The JREs will be downloaded to your local Maven repository. By default, this will be `/home/user/.m2/repository/jre` on 
+UNIX, and `C:\Users\current user\.m2\repository\jre` on Windows.
+
+Any future builds will rely on these folders being present locally. You can always rerun the task to restore your 
+repository.
+
+The JRE can then be found in [the build folder](../build/jre) and will be built into the distribution for the relevant OS.
+
 ## How to release the software, for version tagging in the official SCM and binary distribution
 ```
 # Make sure local repository is clean, so that you get the same result as a first time user
