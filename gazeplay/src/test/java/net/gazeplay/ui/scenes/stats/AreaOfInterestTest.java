@@ -1,24 +1,73 @@
 package net.gazeplay.ui.scenes.stats;
 
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
-import net.gazeplay.commons.utils.stats.TargetAOI;
+import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Polygon;
+import net.gazeplay.GazePlay;
+import net.gazeplay.commons.utils.stats.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 @ExtendWith(ApplicationExtension.class)
 class AreaOfInterestTest {
+
+    @Mock
+    private GazePlay mockGazePlay;
+
+    @Mock
+    private Stats mocksStats;
+
+    SavedStatsInfo statsInfo = new SavedStatsInfo(
+        new File("file1.csv"),
+        new File("metrics.csv"),
+        new File("screenshot.png"),
+        new File("colors.txt")
+    );
+    Dimension2D screen = new Dimension2D(700, 800);
+    Supplier<Dimension2D> supplier = () -> screen;
+
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.initMocks(this);
+        when(mocksStats.getSavedStatsInfo()).thenReturn(statsInfo);
+        when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(supplier);
+    }
+
+    @Test
+    void shouldCalculateInfoBox() {
+        List<CoordinatesTracker> coordinatesTrackers = List.of(
+            new CoordinatesTracker(100, 200, 1234, 3456),
+            new CoordinatesTracker(200, 200, 4321, 4567)
+        );
+        when(mocksStats.getMovementHistoryWithTime()).thenReturn(coordinatesTrackers);
+
+        AreaOfInterest areaOfInterest = new AreaOfInterest(mockGazePlay, mocksStats);
+
+        Polygon currentArea = new Polygon();
+        currentArea.getPoints().addAll(1d, 1d, 2d, 1d, 2d, 3d, 1d, 3d);
+        InfoBoxProps result1 = areaOfInterest.calculateInfoBox("id", 12.34, 1.23, 3, 300, 400, currentArea);
+        InfoBoxProps result2 = areaOfInterest.calculateInfoBox("id", 12.34, 1.23, 3, 500, 400, currentArea);
+
+        assertEquals(401, result1.getInfoBox().getLayoutX());
+        assertEquals(209, result2.getInfoBox().getLayoutX());
+    }
 
     @Test
     void shouldCalculateRectangle() {
@@ -80,8 +129,8 @@ class AreaOfInterestTest {
             new Point2D(4, 2)
         };
 
-        Double[] expected = new Double[] {
-          1d, 2d, 2d, 1d, 4d, 2d, 3d, 5d, 1.25, 3d
+        Double[] expected = new Double[]{
+            1d, 2d, 2d, 1d, 4d, 2d, 3d, 5d, 1.25, 3d
         };
 
         Double[] actual = AreaOfInterest.calculateConvexHull(input);
@@ -94,10 +143,10 @@ class AreaOfInterestTest {
         TargetAOI t1 = new TargetAOI(500, 500, 300, 1234);
         TargetAOI t2 = new TargetAOI(650, 700, 200, 1234);
 
-        Double[] e1 = new Double[] {
+        Double[] e1 = new Double[]{
             385d, 615d, 815d, 615d, 815d, 185d, 385d, 185d
         };
-        Double[] e2 = new Double[] {
+        Double[] e2 = new Double[]{
             535d, 815d, 865d, 815d, 865d, 485d, 535d, 485d
         };
 
@@ -111,5 +160,20 @@ class AreaOfInterestTest {
 
         assertArrayEquals(r1, e1);
         assertArrayEquals(r2, e2);
+    }
+
+    @Test
+    void shouldMakeInfoBox() {
+        String aoiID = "id";
+        String ttff = "12.345";
+        String timeSpent = "45.678";
+        int fixations = 5;
+
+        GridPane result1 = AreaOfInterest.makeInfoBox(aoiID, ttff, timeSpent, fixations, 10);
+        GridPane result2 = AreaOfInterest.makeInfoBox(aoiID, ttff, timeSpent, fixations, 0);
+
+        assertEquals(3, result1.getColumnCount());
+        assertEquals(6, result1.getRowCount());
+        assertEquals(5, result2.getRowCount());
     }
 }

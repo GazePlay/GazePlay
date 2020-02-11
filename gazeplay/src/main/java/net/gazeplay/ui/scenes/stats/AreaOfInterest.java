@@ -94,20 +94,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         graphicsPane = new Pane();
         movementHistory = stats.getMovementHistoryWithTime();
 
-        final GridPane grid = new GridPane();
-        final StackPane stackPane = new StackPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(100);
-        grid.setVgap(50);
-        grid.setPadding(new Insets(50, 50, 50, 50));
-
-        final I18NLabel screenTitleText = new I18NLabel(gazePlay.getTranslator(), "AreaOfInterest");
-        screenTitleText.setId("title");
-
-        final HBox topPane;
-        final VBox centerPane = new VBox();
-        centerPane.setAlignment(Pos.CENTER);
-
         this.dataTreatment();
         for (int i = 1; i < movementHistory.size(); i++) {
             calculateAreaOfInterest(i, stats.getStartTime());
@@ -124,29 +110,30 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 areaOfInterestProps.setPriority(priority);
             }
         }
+
         for (final InitialAreaOfInterestProps initialAreaOfInterestProps : combinedAreaList) {
             graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
         }
 
         if (stats.getTargetAOIList() != null) {
-            calculateTargetAOI(stats.getTargetAOIList());
             final ArrayList<TargetAOI> targetAOIArrayList = stats.getTargetAOIList();
+            calculateTargetAOI(targetAOIArrayList);
 
             long timeTargetAreaStart;
             long timeTargetAreaEnd;
             score = 0;
+            int targetAOIIterator = 0;
 
             for (final AreaOfInterestProps areaOfInterestProps : allAOIList) {
-                int targetAOIIterator = 0;
                 if (targetAOIIterator < targetAOIArrayList.size()) {
                     timeTargetAreaStart = targetAOIArrayList.get(targetAOIIterator).getTimeStarted();
                     timeTargetAreaEnd = targetAOIArrayList.get(targetAOIIterator).getTimeStarted()
                         + targetAOIArrayList.get(targetAOIIterator).getDuration();
+
                     final long timeAreaStart = areaOfInterestProps.getAreaStartTime();
                     final long timeAreaEnd = areaOfInterestProps.getAreaEndTime();
 
                     if (timeTargetAreaStart <= timeAreaStart) {
-
                         final Shape intersect = Shape.intersect(targetAOIArrayList.get(targetAOIIterator).getPolygon(),
                             areaOfInterestProps.getAreaOfInterest());
                         if (intersect.getBoundsInLocal().getWidth() != -1) {
@@ -160,9 +147,114 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                     }
                 }
             }
-            score = score / allAOIList.size();
+            score /= allAOIList.size();
+        }
+        final StackPane stackPane = new StackPane();
+
+        if (config.isVideoRecordingEnabled()) {
+            final File source;
+            final File target;
+            try {
+                source = new File(stats.getDirectoryOfVideo() + ".avi");
+                target = new File(stats.getDirectoryOfVideo() + ".mp4");
+
+                // Audio Attributes
+                final VideoAttributes videoAttributes = new VideoAttributes();
+                videoAttributes.setCodec("mpeg4");
+
+                // Encoding attributes
+                final EncodingAttributes attrs = new EncodingAttributes();
+                attrs.setFormat("mp4");
+                attrs.setVideoAttributes(videoAttributes);
+
+                // Encode
+                final Encoder encoder = new Encoder();
+                encoder.encode(new MultimediaObject(source), target, attrs);
+                final Media media = new Media(target.toURI().toString());
+                player = new MediaPlayer(media);
+                final MediaView mediaView = new MediaView(player);
+                stackPane.getChildren().add(mediaView);
+            } catch (final Exception ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            final SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+            final javafx.scene.image.ImageView screenshot = new javafx.scene.image.ImageView();
+            screenshot.setPreserveRatio(true);
+            screenshot.setImage(new Image(savedStatsInfo.getScreenshotFile().toURI().toString()));
         }
 
+        final GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(100);
+        grid.setVgap(50);
+        grid.setPadding(new Insets(50, 50, 50, 50));
+
+        final Region region1 = new Region();
+        HBox.setHgrow(region1, Priority.ALWAYS);
+
+        final Region region2 = new Region();
+        HBox.setHgrow(region2, Priority.ALWAYS);
+
+        timeLabel = new Label();
+        timeLabel.setTextFill(Color.web("#FFFFFF"));
+        timeLabel.setMinSize(100, 0);
+        timeLabel.setTextFill(Color.GREEN);
+
+        final Label scoreLabel = new Label();
+        scoreLabel.setTextFill(Color.WHITE);
+        scoreLabel.setFont(new Font("Arial", 20));
+        scoreLabel.setText("Score: " + score);
+
+        final HBox topPane;
+        final VBox centerPane = new VBox();
+        centerPane.setAlignment(Pos.CENTER);
+
+        final HBox buttonBox = createButtonBox();
+        if (stats.getTargetAOIList() != null) {
+            topPane = new HBox(scoreLabel, timeLabel, region2, buttonBox);
+        } else {
+            topPane = new HBox(timeLabel, region2, buttonBox);
+        }
+
+        topPane.setPadding(new Insets(15, 15, 0, 15));
+        topPane.setSpacing(10);
+        topPane.setStyle("-fx-background-color: transparent; -fx-max-height: 80px;");
+
+        final Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+
+        final EventHandler<Event> aoiEvent = e -> {
+            final StatsContext statsContext;
+            statsContext = StatsContext.newInstance(gazePlay, stats);
+
+            if (config.isVideoRecordingEnabled()) {
+                player.stop();
+            }
+            this.clear();
+            gazePlay.onDisplayStats(statsContext);
+        };
+
+        final HomeButton homeButton = new HomeButton(screenDimension);
+        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, aoiEvent);
+
+        final HBox homeBox = new HBox(homeButton);
+        homeBox.setStyle("-fx-background-color: transparent; -fx-max-height: 100px; -fx-max-width: 100px;");
+        homeBox.setPadding(new Insets(10, 10, 10, 10));
+
+        stackPane.getChildren().add(graphicsPane);
+        stackPane.getChildren().add(topPane);
+        stackPane.getChildren().add(homeBox);
+        StackPane.setAlignment(homeBox, Pos.BOTTOM_RIGHT);
+        StackPane.setAlignment(topPane, Pos.TOP_CENTER);
+
+        graphicsPane.setPickOnBounds(false);
+        graphicsPane.setStyle("-fx-background-color: transparent;");
+        root.setCenter(stackPane);
+        root.setStyle(
+            "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+    }
+
+    HBox createButtonBox() {
         final Button slowBtn10 = new Button("10X Slow ");
         final Button slowBtn8 = new Button("8X Slow ");
         final Button slowBtn5 = new Button("5X Slow ");
@@ -209,97 +301,13 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 addAllInitialArea();
             }
         });
-        if (config.isVideoRecordingEnabled()) {
-            final File source;
-            final File target;
-            try {
-                source = new File(stats.getDirectoryOfVideo() + ".avi");
-                target = new File(stats.getDirectoryOfVideo() + ".mp4");
-                // Audio Attributes
-                final VideoAttributes videoAttributes = new VideoAttributes();
-                videoAttributes.setCodec("mpeg4");
-                // Encoding attributes
-                final EncodingAttributes attrs = new EncodingAttributes();
-                attrs.setFormat("mp4");
-                attrs.setVideoAttributes(videoAttributes);
-                // Encode
-                final Encoder encoder = new Encoder();
-                encoder.encode(new MultimediaObject(source), target, attrs);
-                final Media media = new Media(target.toURI().toString());
-                player = new MediaPlayer(media);
-                final MediaView mediaView = new MediaView(player);
-                stackPane.getChildren().add(mediaView);
-            } catch (final Exception ex) {
-                ex.printStackTrace();
-            }
-        } else {
-            final SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
-            final javafx.scene.image.ImageView screenshot = new javafx.scene.image.ImageView();
-            screenshot.setPreserveRatio(true);
-            screenshot.setImage(new Image(savedStatsInfo.getScreenshotFile().toURI().toString()));
-            // stackPane.getChildren().add(screenshot);
-        }
 
-        final EventHandler<Event> aoiEvent = e -> {
-
-            final StatsContext statsContext;
-            statsContext = StatsContext.newInstance(gazePlay, stats);
-
-            if (config.isVideoRecordingEnabled()) {
-                player.stop();
-            }
-            this.clear();
-            gazePlay.onDisplayStats(statsContext);
-        };
-
-        final Region region1 = new Region();
-        HBox.setHgrow(region1, Priority.ALWAYS);
-
-        final Region region2 = new Region();
-        HBox.setHgrow(region2, Priority.ALWAYS);
         final HBox buttonBox = new HBox(cancelBtn, playBtn, slowBtn5, slowBtn8, slowBtn10);
         buttonBox.setSpacing(10);
         buttonBox.setFillHeight(true);
         buttonBox.setPadding(new Insets(10, 10, 10, 10));
 
-        timeLabel = new Label();
-        timeLabel.setTextFill(Color.web("#FFFFFF"));
-        timeLabel.setMinSize(100, 0);
-        timeLabel.setTextFill(Color.GREEN);
-
-        final Label scoreLabel = new Label();
-        scoreLabel.setTextFill(Color.WHITE);
-        scoreLabel.setFont(new Font("Arial", 20));
-        scoreLabel.setText("Score: " + score);
-        if (stats.getTargetAOIList() != null) {
-            topPane = new HBox(scoreLabel, timeLabel, region2, buttonBox);
-
-        } else {
-            topPane = new HBox(timeLabel, region2, buttonBox);
-
-        }
-        topPane.setPadding(new Insets(15, 15, 0, 15));
-        topPane.setSpacing(10);
-        topPane.setStyle("-fx-background-color: transparent; -fx-max-height: 80px;");
-
-        final Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-
-        final HomeButton homeButton = new HomeButton(screenDimension);
-        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, aoiEvent);
-
-        final HBox homebox = new HBox(homeButton);
-        homebox.setStyle("-fx-background-color: transparent; -fx-max-height: 100px; -fx-max-width: 100px;");
-        homebox.setPadding(new Insets(10, 10, 10, 10));
-        stackPane.getChildren().add(graphicsPane);
-        stackPane.getChildren().add(topPane);
-        stackPane.getChildren().add(homebox);
-        StackPane.setAlignment(homebox, Pos.BOTTOM_RIGHT);
-        StackPane.setAlignment(topPane, Pos.TOP_CENTER);
-        graphicsPane.setPickOnBounds(false);
-        graphicsPane.setStyle("-fx-background-color: transparent;");
-        root.setCenter(stackPane);
-        root.setStyle(
-            "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        return buttonBox;
     }
 
     @Override
@@ -362,12 +370,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                         plotMovement(movementIndex + 1, graphicsPane);
                     } else {
                         clock.stop();
-                        //addAllInitialArea();
                         playing = false;
-                        // if (config.isVideoRecordingEnabled())
-                        // {
-                        // stats.endVideoRecording();
-                        // }
                     }
                 });
             }
@@ -443,11 +446,29 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         }
     }
 
-    private InfoBoxProps calculateInfoBox(final String aoiID, final double ttff, final double timeSpent, final int fixation, final int centerX,
-                                          final int centerY, final Polygon currentAreaDisplay) {
-
+    /**
+     * Determines how the Info Box will be shown for a particular area of interest.
+     *
+     * @param aoiID              Area of Interest ID
+     * @param ttff               Time to First Fixation
+     * @param timeSpent          Time spent on the AOI
+     * @param fixations          The number of fixations in that AOI
+     * @param centerX            Center X value of the AOI
+     * @param centerY            Center Y value of the AOI
+     * @param currentAreaDisplay The area around which to display
+     * @return The created InfoBoxProps object
+     */
+    InfoBoxProps calculateInfoBox(
+        final String aoiID,
+        final double ttff,
+        final double timeSpent,
+        final int fixations,
+        final int centerX,
+        final int centerY,
+        final Polygon currentAreaDisplay
+    ) {
         final GridPane infoBox = makeInfoBox(aoiID, new DecimalFormat("##.###s").format(ttff),
-            new DecimalFormat("##.###s").format(timeSpent), fixation + "", 0);
+            new DecimalFormat("##.###s").format(timeSpent), fixations, 0);
 
         final Dimension2D screenDimension = getGazePlay().getCurrentScreenDimensionSupplier().get();
         final double screenWidthCenter = screenDimension.getWidth() / 2;
@@ -457,20 +478,22 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         line.setStartY(centerY);
         line.setEndY(centerY);
         line.setStroke(Color.YELLOW);
+
         if (centerX > screenWidthCenter) {
+            // will display infobox on the left side
             infoBox.setLayoutX(centerX - widthOfArea - 290);
             line.setStartX(currentAreaDisplay.getBoundsInLocal().getMinX());
             line.setEndX(centerX - widthOfArea - 30);
-            // will display infobox on the left side
         } else {
+            // will display infobox on the right
             infoBox.setLayoutX(centerX + widthOfArea + 100);
             line.setEndX(centerX + widthOfArea + 100);
             line.setStartX(currentAreaDisplay.getBoundsInLocal().getMaxX());
-            // will display infobox on the right
         }
+
         infoBox.setLayoutY(centerY - 60);
         infoBox.setStyle("-fx-background-color: rgba(255,255,153, 0.4);");
-        return new InfoBoxProps(infoBox, line, aoiID, ttff, timeSpent, fixation);
+        return new InfoBoxProps(infoBox, line, aoiID, ttff, timeSpent, fixations);
     }
 
     /**
@@ -587,6 +610,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     /**
      * Creates a rectangle surrounding each Area Of Interest in the provided
      * list. The rectangle is added as a transparent Polygon to each TargetAOI.
+     *
      * @param targetAOIArrayList TargetAOIs to apply Polygons to.
      * @see Polygon
      */
@@ -637,31 +661,49 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         }
     }
 
-    private GridPane makeInfoBox(final String aoiID, final String ttff, final String timeSpent, final String fixation, final int revisit) {
+    /**
+     * Will create a GridPane with the supplied values and their respective labels.
+     *
+     * @param aoiID     Area Of Interest ID
+     * @param ttff      Time to First Fixation
+     * @param timeSpent Time spent in the AOI
+     * @param fixations Number of fixations
+     * @param revisits  Number of revisits
+     * @return The info box pane with formatted labels and values.
+     */
+    static GridPane makeInfoBox(
+        final String aoiID,
+        final String ttff,
+        final String timeSpent,
+        final int fixations,
+        final int revisits
+    ) {
         final GridPane infoBox = new GridPane();
         infoBox.setHgap(10);
         infoBox.setVgap(10);
         infoBox.setPadding(new Insets(10, 10, 10, 10));
+
         final Text boxID = new Text(aoiID);
         final Text ttffLabel = new Text("TTFF:");
-        final Text ttffV = new Text(ttff);
+        final Text ttffValue = new Text(ttff);
         final Text timeSpentLabel = new Text("Time Spent:");
-        final Text timeSpentLabelV = new Text(timeSpent);
-        final Text fixations = new Text("Fixations:");
-        final Text fixationV = new Text(fixation);
+        final Text timeSpentLabelValue = new Text(timeSpent);
+        final Text fixationsLabel = new Text("Fixations:");
+        final Text fixationsValue = new Text(String.valueOf(fixations));
 
         infoBox.add(boxID, 1, 0);
         infoBox.add(ttffLabel, 0, 2);
-        infoBox.add(ttffV, 2, 2);
+        infoBox.add(ttffValue, 2, 2);
         infoBox.add(timeSpentLabel, 0, 3);
-        infoBox.add(timeSpentLabelV, 2, 3);
-        infoBox.add(fixations, 0, 4);
-        infoBox.add(fixationV, 2, 4);
-        if (revisit != 0) {
-            final Text revisitT = new Text("Revisits: ");
-            final Text revisitV = new Text(revisit + "");
-            infoBox.add(revisitT, 0, 5);
-            infoBox.add(revisitV, 2, 5);
+        infoBox.add(timeSpentLabelValue, 2, 3);
+        infoBox.add(fixationsLabel, 0, 4);
+        infoBox.add(fixationsValue, 2, 4);
+
+        if (revisits != 0) {
+            final Text revisitsLabel = new Text("Revisits: ");
+            final Text revisitsValue = new Text(String.valueOf(revisits));
+            infoBox.add(revisitsLabel, 0, 5);
+            infoBox.add(revisitsValue, 2, 5);
         }
         return infoBox;
     }
@@ -723,7 +765,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                     }
                 }
                 infoBox = makeInfoBox(aoiID, new DecimalFormat("##.###s").format(ttff),
-                    new DecimalFormat("##.###s").format(timeSpent), fixations + " ", revisit);
+                    new DecimalFormat("##.###s").format(timeSpent), fixations, revisit);
             }
             if (tempPolygon != null) {
                 final Shape finalTempPolygon = tempPolygon;
