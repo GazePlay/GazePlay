@@ -3,6 +3,9 @@ package net.gazeplay.ui.scenes.stats;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Polygon;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.utils.stats.*;
@@ -48,6 +51,21 @@ class AreaOfInterestTest {
         MockitoAnnotations.initMocks(this);
         when(mocksStats.getSavedStatsInfo()).thenReturn(statsInfo);
         when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(supplier);
+    }
+
+    @Test
+    void shouldCreateButtonBox() {
+        List<CoordinatesTracker> coordinatesTrackers = List.of(
+            new CoordinatesTracker(100, 200, 1234, 3456),
+            new CoordinatesTracker(200, 200, 4321, 4567)
+        );
+        when(mocksStats.getMovementHistoryWithTime()).thenReturn(coordinatesTrackers);
+
+        AreaOfInterest areaOfInterest = new AreaOfInterest(mockGazePlay, mocksStats);
+
+        HBox result = areaOfInterest.createButtonBox();
+
+        assertEquals(5, result.getChildren().size());
     }
 
     @Test

@@ -32,7 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.ui.GraphicalContext;
@@ -45,7 +44,6 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.DoubleStream;
 
 @Slf4j
 public class AreaOfInterest extends GraphicalContext<BorderPane> {
@@ -75,7 +73,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private double score;
     private int colorIterator;
     private final Pane graphicsPane;
-    private double progressRate = 1;
     private Double previousInfoBoxX;
     private Double previousInfoBoxY;
     private final ArrayList<InitialAreaOfInterestProps> combinedAreaList;
@@ -259,47 +256,34 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         final Button slowBtn8 = new Button("8X Slow ");
         final Button slowBtn5 = new Button("5X Slow ");
         final Button playBtn = new Button("Play ");
-        final Button stopBtn = new Button("Stop ");
         final Button cancelBtn = new Button("Cancel ");
 
         playBtn.setPrefSize(100, 20);
         slowBtn5.setPrefSize(100, 20);
         slowBtn8.setPrefSize(100, 20);
         slowBtn10.setPrefSize(100, 20);
-        stopBtn.setPrefSize(100, 20);
         cancelBtn.setPrefSize(100, 20);
 
+        final double baseProgressRate = 0.60;
+
         playBtn.setOnAction(e -> {
-            progressRate = 0.60;
-            // if (config.isVideoRecordingEnabled())
-            // player.setRate(1.0);
-            playButtonPressed();
+            playButtonPressed(baseProgressRate);
         });
         slowBtn5.setOnAction(e -> {
-            // if (config.isVideoRecordingEnabled())
-            // player.setRate(0.5);
-
-            playButtonPressed();
+            playButtonPressed(baseProgressRate * 5);
         });
         slowBtn8.setOnAction(e -> {
-            // if (config.isVideoRecordingEnabled())
-            // player.setRate(0.2);
-
-            playButtonPressed();
+            playButtonPressed(baseProgressRate * 8);
         });
-
         slowBtn10.setOnAction(e -> {
-            // if (config.isVideoRecordingEnabled())
-            // player.setRate(0.1);
-
-            playButtonPressed();
+            playButtonPressed(baseProgressRate * 10);
         });
         cancelBtn.setOnAction(e -> {
             if (playing) {
                 playing = false;
-                graphicsPane.getChildren().removeAll();
-                addAllInitialArea();
             }
+            graphicsPane.getChildren().removeAll();
+            addAllInitialArea();
         });
 
         final HBox buttonBox = new HBox(cancelBtn, playBtn, slowBtn5, slowBtn8, slowBtn10);
@@ -326,7 +310,31 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         }
     }
 
-    private void plotMovement(final int movementIndex, final Pane graphicsPane) {
+    private void playButtonPressed(final double progressRate) {
+        if (!playing) {
+            playing = true;
+            for (final InitialAreaOfInterestProps areaOfInterestProps : combinedAreaList) {
+                graphicsPane.getChildren().remove(areaOfInterestProps.getAreaOfInterest());
+            }
+            graphicsPane.getChildren().remove(currentInfoBox);
+
+            if (config.isVideoRecordingEnabled()) {
+                player.stop();
+                player.play();
+            }
+            intereatorAOI = 0;
+            plotMovement(0, graphicsPane, progressRate);
+            final long startTime = System.currentTimeMillis();
+            clock = new Timeline(new KeyFrame(Duration.ZERO, f -> {
+                final long theTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
+                timeLabel.setText(theTime + "");
+            }), new KeyFrame(Duration.seconds(1)));
+            clock.setCycleCount(Animation.INDEFINITE);
+            clock.play();
+        }
+    }
+
+    private void plotMovement(final int movementIndex, final Pane graphicsPane, final double progressRate) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -342,6 +350,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                     circle.setStroke(Color.LIGHTGREEN);
                     circle.setFill(Color.GREEN);
                 }
+
                 Platform.runLater(() -> {
                     if (intereatorAOI < allAOIList.size()) {
                         if (movementIndex == allAOIList.get(intereatorAOI).getStartingIndex()) {
@@ -359,6 +368,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                             intereatorAOI++;
                         }
                     }
+
                     graphicsPane.getChildren().add(circle);
                     new Timer().schedule(new TimerTask() {
                         @Override
@@ -366,18 +376,22 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                             Platform.runLater(() -> graphicsPane.getChildren().remove(circle));
                         }
                     }, 2000);
-                    if (movementIndex != movementHistory.size() - 1 && playing) {
-                        plotMovement(movementIndex + 1, graphicsPane);
+
+                    if (movementIndex < movementHistory.size() - 1 && playing) {
+                        plotMovement(movementIndex + 1, graphicsPane, progressRate);
                     } else {
                         clock.stop();
+                        timeLabel.setText("");
                         playing = false;
+                        graphicsPane.getChildren().removeAll(); // Reset the view to how it was before playback started.
+                        addAllInitialArea();
                     }
                 });
             }
         }, (long) (movementHistory.get(movementIndex).getIntervalTime() * progressRate));
     }
 
-    private void addAllInitialArea() {
+    void addAllInitialArea() {
         for (final InitialAreaOfInterestProps initialAreaOfInterestProps : combinedAreaList) {
             graphicsPane.getChildren().add(initialAreaOfInterestProps.getAreaOfInterest());
         }
@@ -637,29 +651,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         }
     }
 
-    private void playButtonPressed() {
-        if (!playing) {
-            playing = true;
-            for (final InitialAreaOfInterestProps areaOfInterestProps : combinedAreaList) {
-                graphicsPane.getChildren().remove(areaOfInterestProps.getAreaOfInterest());
-            }
-            graphicsPane.getChildren().remove(currentInfoBox);
-
-            if (config.isVideoRecordingEnabled()) {
-                player.stop();
-                player.play();
-            }
-            intereatorAOI = 0;
-            plotMovement(0, graphicsPane);
-            final long startTime = System.currentTimeMillis();
-            clock = new Timeline(new KeyFrame(Duration.ZERO, f -> {
-                final long theTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - startTime);
-                timeLabel.setText(theTime + "");
-            }), new KeyFrame(Duration.seconds(1)));
-            clock.setCycleCount(Animation.INDEFINITE);
-            clock.play();
-        }
-    }
 
     /**
      * Will create a GridPane with the supplied values and their respective labels.
@@ -709,51 +700,58 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     }
 
     private ArrayList<InitialAreaOfInterestProps> computeConnectedArea() {
-        for (int index = 0; index < allAOIList.size(); index++) {
-            final double areaSize = allAOIList.get(index).getAreaOfInterest().getBoundsInLocal().getWidth()
-                * allAOIList.get(index).getAreaOfInterest().getBoundsInLocal().getHeight();
-            for (int i = 0; i < allAOIList.size(); i++) {
-                if (allAOIList.get(i).getAreaOfInterest() != allAOIList.get(index).getAreaOfInterest()) {
-                    final Shape intersect = Shape.intersect(allAOIList.get(index).getAreaOfInterest(),
-                        allAOIList.get(i).getAreaOfInterest());
+        for (int i = 0; i < allAOIList.size(); i++) {
+            AreaOfInterestProps currentAOI = allAOIList.get(i);
+
+            final double areaSize =
+                currentAOI.getAreaOfInterest().getBoundsInLocal().getWidth() *
+                    currentAOI.getAreaOfInterest().getBoundsInLocal().getHeight();
+
+            for (int j = 0; j < allAOIList.size(); j++) {
+                if (allAOIList.get(j).getAreaOfInterest() != currentAOI.getAreaOfInterest()) {
+                    final Shape intersect = Shape.intersect(currentAOI.getAreaOfInterest(),
+                        allAOIList.get(j).getAreaOfInterest());
+
                     if (intersect.getBoundsInLocal().getWidth() != -1) {
-                        final double toCompareAreaSize = intersect.getBoundsInLocal().getWidth()
-                            * intersect.getBoundsInLocal().getHeight();
+                        final double toCompareAreaSize =
+                            intersect.getBoundsInLocal().getWidth() *
+                                intersect.getBoundsInLocal().getHeight();
                         final double combinationThreshHold = 0.70;
+
                         if ((toCompareAreaSize / areaSize) > combinationThreshHold) {
-                            if (areaMap[index] == -1) {
-                                if (areaMap[i] != -1) {
-                                    areaMap[index] = areaMap[i];
-                                } else {
-                                    areaMap[index] = index;
-                                }
+                            if (areaMap[j] != -1) {
+                                areaMap[i] = areaMap[j];
+                            } else {
+                                areaMap[i] = i;
+                                areaMap[j] = i;
                             }
-                            if (areaMap[i] == -1) {
-                                areaMap[i] = index;
-                            }
+                            break; // We break here as we have finished calculating this pair of areas.
                         }
                     }
                 }
             }
         }
+
         final ArrayList<InitialAreaOfInterestProps> listOfCombinedPolygons = new ArrayList<>();
 
         for (int i = 0; i < allAOIList.size(); i++) {
             GridPane infoBox = new GridPane();
             Shape tempPolygon = null;
+            AreaOfInterestProps currentAOI = allAOIList.get(i);
 
             if (areaMap[i] == -1) {
-                tempPolygon = allAOIList.get(i).getAreaOfInterest();
-                infoBox = allAOIList.get(i).getInfoBoxProps().getInfoBox();
+                tempPolygon = currentAOI.getAreaOfInterest();
+                infoBox = currentAOI.getInfoBoxProps().getInfoBox();
             }
+
             if (areaMap[i] == i) {
-                tempPolygon = allAOIList.get(i).getAreaOfInterest();
-                final String aoiID = allAOIList.get(i).getInfoBoxProps().getAoiID();
-                double ttff = allAOIList.get(i).getInfoBoxProps().getTTFF();
-                double timeSpent = allAOIList.get(i).getInfoBoxProps().getTimeSpent();
-                int fixations = allAOIList.get(i).getFixations();
+                tempPolygon = currentAOI.getAreaOfInterest();
+                final String aoiID = currentAOI.getInfoBoxProps().getAoiID();
+                double ttff = currentAOI.getInfoBoxProps().getTTFF();
+                double timeSpent = currentAOI.getInfoBoxProps().getTimeSpent();
+                int fixations = currentAOI.getFixations();
                 int revisit = 1;
-                // Double ratioDouble = 0.0;
+
                 for (int j = i + 1; j < allAOIList.size(); j++) {
                     if (areaMap[j] == i) {
                         ttff += allAOIList.get(j).getInfoBoxProps().getTTFF();
@@ -767,10 +765,12 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 infoBox = makeInfoBox(aoiID, new DecimalFormat("##.###s").format(ttff),
                     new DecimalFormat("##.###s").format(timeSpent), fixations, revisit);
             }
+
             if (tempPolygon != null) {
                 final Shape finalTempPolygon = tempPolygon;
                 final GridPane finalInfoBox = infoBox;
                 final int finalI = i;
+
                 tempPolygon.setOnMouseEntered(event -> {
                     if (!playing) {
                         if (areaMap[finalI] == -1) {
@@ -779,6 +779,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                             finalTempPolygon
                                 .setFill(Color.rgb(249, 166, 2, allAOIList.get(finalI).getPriority() + 0.15));
                         }
+
                         previousInfoBoxX = finalInfoBox.getLayoutX();
                         previousInfoBoxY = finalInfoBox.getLayoutY();
                         currentInfoBox = new GridPane();
@@ -789,16 +790,19 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                         graphicsPane.getChildren().add(finalInfoBox);
                     }
                 });
+
                 tempPolygon.setOnMouseExited(event -> {
                     graphicsPane.getChildren().remove(currentInfoBox);
                     finalInfoBox.setLayoutY(previousInfoBoxY);
                     finalInfoBox.setLayoutX(previousInfoBoxX);
+
                     if (areaMap[finalI] == -1) {
                         finalTempPolygon.setFill(Color.rgb(255, 0, 0, allAOIList.get(finalI).getPriority()));
                     } else {
                         finalTempPolygon.setFill(Color.rgb(249, 166, 2, allAOIList.get(finalI).getPriority()));
                     }
                 });
+
                 colorIterator = i % 7;
                 tempPolygon.setStroke(colors[colorIterator]);
                 listOfCombinedPolygons.add(new InitialAreaOfInterestProps(tempPolygon, infoBox));
