@@ -1,0 +1,39 @@
+pmdMain.group = 'verification'
+pmdTest.group = 'verification'
+
+task checkPMDReport(dependsOn: 'pmdMain', group: 'verification') {
+    doLast {
+        def pmdReportDir = file("$project.buildDir/reports/pmd/")
+        if (pmdReportDir.exists()) {
+            def pmdReportXml = file("$project.buildDir/reports/pmd/main.xml")
+            if (pmdReportXml.exists()) {
+                def pmdReportHtml = file("$project.buildDir/reports/pmd/main.html")
+                def rootNode = new XmlSlurper().parse("$pmdReportXml")
+                // thresholds are set from actual observations of the number of violation
+                // goal is that no new violations come in the code base
+                // as we progressively fix existing violations (or exclude them in pmd-ruleset.xml), we should lower the threshold accordingly
+                // until the threshold is zero
+                def violationsThresholds = [
+                        1: 37,
+                        2: 6,
+                        3: 5201,
+                        4: 197,
+                        5: 449
+                ]
+                violationsThresholds.each {
+                    priorityLevel, violationsThreshold ->
+
+                        def violationsCount = rootNode.children().children().findAll({ node -> node.name() == 'violation' && node.@priority == priorityLevel }).size()
+                        def violationsMessage = "$violationsCount PMD rule 'priority $priorityLevel' violations were found. See the report at: file://$pmdReportHtml"
+                        if (violationsCount > violationsThreshold) {
+                            throw new GradleException(violationsMessage)
+                        } else {
+                            if (violationsCount > 0) {
+                                println violationsMessage
+                            }
+                        }
+                }
+            }
+        }
+    }
+}
