@@ -52,6 +52,5 @@ public class GazeFollowerIndicator extends AbstractGazeIndicator {
         triangle.setTranslateY(y);
         this.setTranslateX(x);
         this.setTranslateY(y);
-
     }
 }

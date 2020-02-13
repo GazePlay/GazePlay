@@ -146,13 +146,15 @@ public class ColorBox extends StackPane {
             } else if (event.getEventType() == MouseEvent.MOUSE_ENTERED
                 || event.getEventType() == GazeEvent.GAZE_ENTERED) {
 
+                progressIndicator.setTranslateX(colorBox.getLayoutX() + colorBox.getWidth()/2);
+                progressIndicator.setTranslateY(colorBox.getLayoutY() + colorBox.getBoundsInLocal().getHeight()/2);
                 progressIndicator.setOnFinish((ActionEvent event1) -> action());
-                colorBox.progressIndicator.start();
+                progressIndicator.start();
 
             } else if (event.getEventType() == MouseEvent.MOUSE_EXITED
                 || event.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                colorBox.progressIndicator.stop();
+                progressIndicator.stop();
             }
         }
     }

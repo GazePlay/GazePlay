@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -114,7 +115,7 @@ public class ColorToolBox extends Pane {
     public ColorToolBox(final Pane root, final ColorsGame colorsGame, final IGameContext gameContext) {
         super();
         this.gameContext = gameContext;
-        progressIndicator = new GazeFollowerIndicator(gameContext, this);
+        progressIndicator = new AbstractGazeIndicator(gameContext);
 
         this.selectedColorBox = null;
         this.colorsGame = colorsGame;
