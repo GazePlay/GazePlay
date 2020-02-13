@@ -8,7 +8,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -439,7 +438,7 @@ public class ColorToolBox extends Pane {
             stopColorize = new Button("S");
         }
 
-        final AbstractGazeIndicator colorizeButtonIndicator = new GazeFollowerIndicator(gameContext, root);
+        final AbstractGazeIndicator colorizeButtonIndicator = new AbstractGazeIndicator(gameContext);
 
         final Pane colorizeButtonPane = new StackPane(colorize);
         final Pane stopColorizeButtonPane = new StackPane(stopColorize);
@@ -468,9 +467,8 @@ public class ColorToolBox extends Pane {
             getColorsGame().getGameContext().getGazeDeviceManager());
 
         stopColorizeButtonPane.setVisible(false);
-        root.getChildren().add(colorizeButtonIndicator);
 
-        return new StackPane(colorizeButtonPane, stopColorizeButtonPane);
+        return new StackPane(colorizeButtonPane, stopColorizeButtonPane,colorizeButtonIndicator );
     }
 
     private Stage buildCustomColorDialog() {
