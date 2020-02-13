@@ -15,6 +15,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
@@ -91,7 +92,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         if (useBackgroundImage && gameContext.getConfiguration().isBackgroundEnabled()) {
             Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-            double imageRectangleOpacity = (gameContext.getConfiguration().isBackgroundWhite()) ? 0.1 : 1;
+            double imageRectangleOpacity = (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) ? 0.1 : 1;
 
             imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
             imageRectangle.setOpacity(imageRectangleOpacity);

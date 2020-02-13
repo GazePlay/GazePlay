@@ -162,7 +162,7 @@ public class VideoGrid implements GameLifeCycle {
         final I18NText errorText = new I18NText(gameContext.getTranslator(), "No video found");
         errorText.setY(dimensions.getHeight() / 2);
         errorText.setTextAlignment(TextAlignment.CENTER);
-        errorText.setFill(config.isBackgroundWhite() ? Color.BLACK : Color.WHITE);
+        errorText.setFill(gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT) ? Color.BLACK : Color.WHITE);
         errorText.setFont(new Font(dimensions.getHeight() / 10));
         errorText.setWrappingWidth(dimensions.getWidth());
         gameContext.getChildren().add(errorText);

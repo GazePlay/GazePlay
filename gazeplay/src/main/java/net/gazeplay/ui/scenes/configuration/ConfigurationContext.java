@@ -783,12 +783,25 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         blackButton.setToggleGroup(group);
         whiteButton.setToggleGroup(group);
 
-        boolean isWhite = configuration.getWhiteBackgroundProperty().getValue();
 
-        blackButton.setSelected(!isWhite);
-        whiteButton.setSelected(isWhite);
+        boolean isLIGHT = configuration.getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT);
+        blackButton.setSelected(!isLIGHT);
+        whiteButton.setSelected(isLIGHT);
 
-        whiteButton.selectedProperty().bindBidirectional(configuration.getWhiteBackgroundProperty());
+        configuration.getWhiteBackgroundProperty().addListener((o, oldO, newO) -> {
+            boolean isNewLIGHT = newO.equals(Configuration.BackgroundStyle.LIGHT);
+            blackButton.setSelected(!isNewLIGHT);
+            whiteButton.setSelected(isNewLIGHT);
+        });
+
+        group.selectedToggleProperty().addListener((o, oldO, newO) -> {
+            if (newO.equals(whiteButton)) {
+                configuration.setBackgroundStyle(Configuration.BackgroundStyle.LIGHT);
+            } else {
+                configuration.setBackgroundStyle(Configuration.BackgroundStyle.DARK);
+            }
+        });
+
         HBox hb = new HBox();
         hb.getChildren().addAll(blackButton, whiteButton);
 

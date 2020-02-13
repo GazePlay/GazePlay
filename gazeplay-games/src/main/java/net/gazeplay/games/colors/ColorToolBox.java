@@ -249,7 +249,7 @@ public class ColorToolBox extends Pane {
 
         root.getChildren().add(customColorButtonIndic);
 
-        if (!gameContext.getConfiguration().isBackgroundWhite()) {
+        if (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.DARK)) {
 
             this.getStyleClass().add("bg-colored");
         }

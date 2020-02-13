@@ -167,7 +167,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     void initBackground() {
         if (gameContext.getConfiguration().isBackgroundEnabled()) {
             Rectangle backgroundImage = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
-            if (gameContext.getConfiguration().isBackgroundWhite()) {
+            if (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) {
                 ColorAdjust grayscale = new ColorAdjust();
                 grayscale.setSaturation(-0.7);
                 backgroundImage.setFill(Color.LIGHTSKYBLUE);

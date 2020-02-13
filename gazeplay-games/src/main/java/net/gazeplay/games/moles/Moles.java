@@ -77,7 +77,7 @@ public class Moles extends Parent implements GameLifeCycle {
         lab = new Label();
         String s = "Score:" + nbMolesWhacked;
         lab.setText(s);
-        Color col = (gameContext.getConfiguration().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
+        Color col = (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) ? Color.BLACK : Color.WHITE;
         lab.setTextFill(col);
         lab.setFont(Font.font(dimension2D.getHeight() / 14));
         lab.setLineSpacing(10);
@@ -93,7 +93,7 @@ public class Moles extends Parent implements GameLifeCycle {
     }
 
     void adjustBackground(Rectangle image) {
-        int whiteBackgroundCoef = (gameContext.getConfiguration().isBackgroundWhite()) ? 2 : 0;
+        int whiteBackgroundCoef = (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) ? 2 : 0;
 
         ColorAdjust colorAdjust = new ColorAdjust();
 

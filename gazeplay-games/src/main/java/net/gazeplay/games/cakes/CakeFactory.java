@@ -25,6 +25,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
@@ -124,7 +125,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             back.setFill(new ImagePattern(new Image("data/cake/images/background.png")));
             back.setMouseTransparent(true);
 
-            if (gameContext.getConfiguration().isBackgroundWhite()) {
+            if (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) {
                 ColorAdjust colorAdjust = new ColorAdjust();
                 colorAdjust.setBrightness(0.5);
                 back.setEffect(colorAdjust);
@@ -137,7 +138,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     void updateBackgroundColor(Color c) {
         if (background != null) {
             background.setFill(c);
-            if (gameContext.getConfiguration().isBackgroundWhite()) {
+            if (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) {
                 background.setOpacity(0.5);
             }
         }

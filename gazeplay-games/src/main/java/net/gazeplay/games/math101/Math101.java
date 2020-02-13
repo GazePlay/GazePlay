@@ -211,7 +211,7 @@ public class Math101 implements GameLifeCycle {
             imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
             imageRectangle.setFill(gameType.getBackgroundColor());
 
-            double imageRectangleOpacity = (gameContext.getConfiguration().isBackgroundWhite()) ? 0.5 : 1;
+            double imageRectangleOpacity = (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) ? 0.5 : 1;
             imageRectangle.setOpacity(imageRectangleOpacity);
             gameContext.getChildren().add(imageRectangle);
 

@@ -89,7 +89,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         questionText.setTranslateY(0);
 
-        final String color = (gameContext.getConfiguration().isBackgroundWhite()) ? "titleB" : "titleW";
+        final String color = (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) ? "titleB" : "titleW";
         questionText.setId(color);
 
         final Dimension2D gamePaneDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();

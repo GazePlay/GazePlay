@@ -86,7 +86,7 @@ public class Configuration {
 
     private static final boolean DEFAULT_VALUE_GAZE_MENU = false;
     private static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
-    private static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
+    private static final BackgroundStyle DEFAULT_VALUE_WHITE_BCKGRD = BackgroundStyle.DARK;
     private static final boolean DEFAULT_VALUE_BCKGRD_ENABLED = true;
     private static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
     private static final String DEFAULT_VALUE_USER_NAME = "";
@@ -97,6 +97,29 @@ public class Configuration {
     source : "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
     * */
     public static final String DEFAULT_VALUE_COLORS_DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
+
+    public enum BackgroundStyle {
+        LIGHT,
+        DARK;
+
+        public String toString() {
+            if (DARK.equals(this)) {
+                return "DARK";
+            } else if (LIGHT.equals(this)) {
+                return "LIGHT";
+            }
+            return "DARK";
+        }
+
+        public static BackgroundStyle parseBackgroundStyle(String value) {
+            if (value.equals("DARK")) {
+                return DARK;
+            } else if (value.equals("LIGHT")) {
+                return LIGHT;
+            }
+            return DARK;
+        }
+    }
 
 
     @Getter
@@ -173,10 +196,10 @@ public class Configuration {
     private final BooleanProperty gazeMouseEnabledProperty;
 
     @Getter
-    private final  BooleanProperty whiteBackgroundProperty;
+    private final ObjectPropertyBase<BackgroundStyle> whiteBackgroundProperty;
 
     @Getter
-    private final  BooleanProperty backgroundEnabledProperty;
+    private final BooleanProperty backgroundEnabledProperty;
 
     @Getter
     private final DoubleProperty musicVolumeProperty;
@@ -240,7 +263,7 @@ public class Configuration {
         fixationSequenceDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED, propertyChangeListener);
         gazeMenuEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU, propertyChangeListener);
         gazeMouseEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE, propertyChangeListener);
-        whiteBackgroundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD, propertyChangeListener);
+        whiteBackgroundProperty = new ApplicationConfigBackedBackgroundStyleProperty(applicationConfig, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD, propertyChangeListener);
         backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BCKGRD_ENABLED, DEFAULT_VALUE_BCKGRD_ENABLED, propertyChangeListener);
 
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
@@ -383,9 +406,17 @@ public class Configuration {
         return gazeMouseEnabledProperty.getValue();
     }
 
-    public Boolean isBackgroundWhite() { return whiteBackgroundProperty.getValue(); }
+    public BackgroundStyle getBackgroundStyle() {
+        return whiteBackgroundProperty.getValue();
+    }
 
-    public Boolean isBackgroundEnabled() { return backgroundEnabledProperty.getValue(); }
+    public void setBackgroundStyle(final BackgroundStyle newValue) {
+        whiteBackgroundProperty.setValue(newValue);
+    }
+
+    public Boolean isBackgroundEnabled() {
+        return backgroundEnabledProperty.getValue();
+    }
 
     public String getUserName() {
         return userNameProperty.getValue();
