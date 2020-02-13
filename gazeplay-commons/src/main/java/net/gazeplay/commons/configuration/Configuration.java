@@ -101,24 +101,6 @@ public class Configuration {
     public enum BackgroundStyle {
         LIGHT,
         DARK;
-
-        public String toString() {
-            if (DARK.equals(this)) {
-                return "DARK";
-            } else if (LIGHT.equals(this)) {
-                return "LIGHT";
-            }
-            return "DARK";
-        }
-
-        public static BackgroundStyle parseBackgroundStyle(String value) {
-            if (value.equals("DARK")) {
-                return DARK;
-            } else if (value.equals("LIGHT")) {
-                return LIGHT;
-            }
-            return DARK;
-        }
     }
 
 
@@ -196,7 +178,7 @@ public class Configuration {
     private final BooleanProperty gazeMouseEnabledProperty;
 
     @Getter
-    private final ObjectPropertyBase<BackgroundStyle> backgroundStyleProperty;
+    private final ObjectProperty<BackgroundStyle> backgroundStyleProperty;
 
     @Getter
     private final BooleanProperty backgroundEnabledProperty;

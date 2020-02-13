@@ -38,13 +38,13 @@ public abstract class PropertiesBackgroundStyleProperty extends ObjectPropertyBa
         if (propertyValue == null) {
             return defaultValue;
         }
-        return Configuration.BackgroundStyle.parseBackgroundStyle(propertyValue);
+        return Configuration.BackgroundStyle.valueOf(propertyValue);
     }
 
     @Override
     public void set(final Configuration.BackgroundStyle value) {
         log.info("Set property {} to {}", propertyName, value);
-        setProperty(propertyName, value.toString());
+        setProperty(propertyName, value.name());
         propertyChangeListener.propertyChange(new PropertyChangeEvent(this, propertyName, null, value));
     }
 
