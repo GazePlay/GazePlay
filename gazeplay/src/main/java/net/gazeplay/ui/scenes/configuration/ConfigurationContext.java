@@ -244,8 +244,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            I18NText label = new I18NText(translator, "WhiteBackground", COLON);
-            HBox input = buildEnabledWhiteBackground(config, translator);
+            I18NText label = new I18NText(translator, "BackgroundStyle", COLON);
+            HBox input = buildBackgroundStyleToggleGroup(config, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -773,29 +773,29 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return checkBox;
     }
 
-    private HBox buildEnabledWhiteBackground(
+    private HBox buildBackgroundStyleToggleGroup(
         Configuration configuration,
         Translator translator
     ) {
         ToggleGroup group = new ToggleGroup();
-        I18NToggleButton blackButton = new I18NToggleButton(translator, "Black");
-        I18NToggleButton whiteButton = new I18NToggleButton(translator, "White");
-        blackButton.setToggleGroup(group);
-        whiteButton.setToggleGroup(group);
+        I18NToggleButton darkButton = new I18NToggleButton(translator, "Dark");
+        I18NToggleButton lightButton = new I18NToggleButton(translator, "Light");
+        darkButton.setToggleGroup(group);
+        lightButton.setToggleGroup(group);
 
 
         boolean isLIGHT = configuration.getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT);
-        blackButton.setSelected(!isLIGHT);
-        whiteButton.setSelected(isLIGHT);
+        darkButton.setSelected(!isLIGHT);
+        lightButton.setSelected(isLIGHT);
 
-        configuration.getWhiteBackgroundProperty().addListener((o, oldO, newO) -> {
+        configuration.getBackgroundStyleProperty().addListener((o, oldO, newO) -> {
             boolean isNewLIGHT = newO.equals(Configuration.BackgroundStyle.LIGHT);
-            blackButton.setSelected(!isNewLIGHT);
-            whiteButton.setSelected(isNewLIGHT);
+            darkButton.setSelected(!isNewLIGHT);
+            lightButton.setSelected(isNewLIGHT);
         });
 
         group.selectedToggleProperty().addListener((o, oldO, newO) -> {
-            if (newO.equals(whiteButton)) {
+            if (newO.equals(lightButton)) {
                 configuration.setBackgroundStyle(Configuration.BackgroundStyle.LIGHT);
             } else {
                 configuration.setBackgroundStyle(Configuration.BackgroundStyle.DARK);
@@ -803,7 +803,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         });
 
         HBox hb = new HBox();
-        hb.getChildren().addAll(blackButton, whiteButton);
+        hb.getChildren().addAll(darkButton, lightButton);
 
         return hb;
     }

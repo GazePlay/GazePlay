@@ -196,7 +196,7 @@ public class Configuration {
     private final BooleanProperty gazeMouseEnabledProperty;
 
     @Getter
-    private final ObjectPropertyBase<BackgroundStyle> whiteBackgroundProperty;
+    private final ObjectPropertyBase<BackgroundStyle> backgroundStyleProperty;
 
     @Getter
     private final BooleanProperty backgroundEnabledProperty;
@@ -263,7 +263,7 @@ public class Configuration {
         fixationSequenceDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED, propertyChangeListener);
         gazeMenuEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU, propertyChangeListener);
         gazeMouseEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE, propertyChangeListener);
-        whiteBackgroundProperty = new ApplicationConfigBackedBackgroundStyleProperty(applicationConfig, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD, propertyChangeListener);
+        backgroundStyleProperty = new ApplicationConfigBackedBackgroundStyleProperty(applicationConfig, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD, propertyChangeListener);
         backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BCKGRD_ENABLED, DEFAULT_VALUE_BCKGRD_ENABLED, propertyChangeListener);
 
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
@@ -407,11 +407,11 @@ public class Configuration {
     }
 
     public BackgroundStyle getBackgroundStyle() {
-        return whiteBackgroundProperty.getValue();
+        return backgroundStyleProperty.getValue();
     }
 
     public void setBackgroundStyle(final BackgroundStyle newValue) {
-        whiteBackgroundProperty.setValue(newValue);
+        backgroundStyleProperty.setValue(newValue);
     }
 
     public Boolean isBackgroundEnabled() {

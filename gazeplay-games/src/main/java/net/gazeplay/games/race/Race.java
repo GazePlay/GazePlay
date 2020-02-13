@@ -148,10 +148,10 @@ public class Race extends Parent implements GameLifeCycle {
         imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
         imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
 
-        double whiteBackgroundCoef = (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) ? 0.5 : 1;
+        double backgroundStyleCoef = (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) ? 0.5 : 1;
         int backgroundEnabledCoef = (gameContext.getConfiguration().isBackgroundEnabled()) ? 1 : 0;
 
-        imageRectangle.setOpacity(backgroundEnabledCoef * whiteBackgroundCoef);
+        imageRectangle.setOpacity(backgroundEnabledCoef * backgroundStyleCoef);
 
         gameContext.getChildren().add(imageRectangle);
 
