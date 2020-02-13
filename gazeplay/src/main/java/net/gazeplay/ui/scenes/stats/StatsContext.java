@@ -39,61 +39,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class StatsContext extends GraphicalContext<BorderPane> {
 
-    private static final String COLON = "Colon";
+    private final String COLON = "Colon";
 
-    private static final double RATIO = 0.35;
+    private final double RATIO = 0.35;
 
-    public static StatsContext newInstance(
-        @NonNull GazePlay gazePlay,
-        @NonNull Stats stats
-    ) {
-        BorderPane root = new BorderPane();
-        return new StatsContext(gazePlay, root, stats);
-    }
-
-    public static StatsContext newInstance(
-        @NonNull GazePlay gazePlay,
-        @NonNull Stats stats,
-        CustomButton continueButton
-    ) {
-        BorderPane root = new BorderPane();
-        return new StatsContext(gazePlay, root, stats, continueButton);
-    }
-
-    private static void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, Text value, boolean alignLeft) {
-
-        final int COLUMN_INDEX_LABEL_LEFT = 0;
-        final int COLUMN_INDEX_INPUT_LEFT = 1;
-        final int COLUMN_INDEX_LABEL_RIGHT = 1;
-        final int COLUMN_INDEX_INPUT_RIGHT = 0;
-
-        final int currentRowIndex = currentFormRow.incrementAndGet();
-
-        label.setId("item");
-        // label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); in CSS
-
-        value.setId("item");
-        // value.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); in CSS
-        if (alignLeft) {
-            grid.add(label, COLUMN_INDEX_LABEL_LEFT, currentRowIndex);
-            grid.add(value, COLUMN_INDEX_INPUT_LEFT, currentRowIndex);
-
-            GridPane.setHalignment(label, HPos.LEFT);
-            GridPane.setHalignment(value, HPos.LEFT);
-        } else {
-            grid.add(value, COLUMN_INDEX_INPUT_RIGHT, currentRowIndex);
-            grid.add(label, COLUMN_INDEX_LABEL_RIGHT, currentRowIndex);
-
-            GridPane.setHalignment(label, HPos.RIGHT);
-            GridPane.setHalignment(value, HPos.RIGHT);
-        }
-    }
-
-    private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats) {
+    StatsContext(GazePlay gazePlay, BorderPane root, Stats stats) {
         this(gazePlay, root, stats, null);
     }
 
-    private StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton) {
+    StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton) {
         super(gazePlay, root);
 
         final Translator translator = gazePlay.getTranslator();
@@ -240,14 +194,14 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
 
-        EventHandler<Event> AOIEvent = e -> {
+        EventHandler<Event> aoiEvent = e -> {
             gazePlay.onDisplayAOI(stats);
         };
 
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
         CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
-        aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, AOIEvent);
+        aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, aoiEvent);
 
         EventHandler<Event> viewScanpath = s -> {
             ScanpathView scanpath = new ScanpathView(gazePlay, stats);
@@ -302,6 +256,35 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         root.setStyle(
             "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+    }
+
+    private void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, Text value, boolean alignLeft) {
+
+        final int columnIndexLabelLeft = 0;
+        final int columnIndexInputLeft = 1;
+        final int columnIndexLabelRight = 1;
+        final int columnIndexInputRight = 0;
+
+        final int currentRowIndex = currentFormRow.incrementAndGet();
+
+        label.setId("item");
+        // label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); in CSS
+
+        value.setId("item");
+        // value.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); in CSS
+        if (alignLeft) {
+            grid.add(label, columnIndexLabelLeft, currentRowIndex);
+            grid.add(value, columnIndexInputLeft, currentRowIndex);
+
+            GridPane.setHalignment(label, HPos.LEFT);
+            GridPane.setHalignment(value, HPos.LEFT);
+        } else {
+            grid.add(value, columnIndexInputRight, currentRowIndex);
+            grid.add(label, columnIndexLabelRight, currentRowIndex);
+
+            GridPane.setHalignment(label, HPos.RIGHT);
+            GridPane.setHalignment(value, HPos.RIGHT);
+        }
     }
 
     @Override

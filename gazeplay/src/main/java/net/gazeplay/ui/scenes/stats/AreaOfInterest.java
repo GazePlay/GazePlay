@@ -222,7 +222,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
         final EventHandler<Event> aoiEvent = e -> {
             final StatsContext statsContext;
-            statsContext = StatsContext.newInstance(gazePlay, stats);
+            statsContext = StatsContextFactory.newInstance(gazePlay, stats);
 
             if (config.isVideoRecordingEnabled()) {
                 player.stop();
