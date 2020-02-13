@@ -143,11 +143,13 @@ public class ColorBox extends StackPane {
             if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
                 action();
+
             } else if (event.getEventType() == MouseEvent.MOUSE_ENTERED
                 || event.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                progressIndicator.setTranslateX(colorBox.getLayoutX() + colorBox.getWidth()/2);
-                progressIndicator.setTranslateY(colorBox.getLayoutY() + colorBox.getBoundsInLocal().getHeight()/2);
+                progressIndicator.setMinSize(colorBox.button.getHeight()/1.5 ,colorBox.button.getHeight()/1.5);
+                progressIndicator.setTranslateX(colorBox.getLayoutX() + colorBox.getWidth()/2 - progressIndicator.getWidth()/2);
+                progressIndicator.setTranslateY(colorBox.getLayoutY() + colorBox.getHeight()/2 + progressIndicator.getMinHeight()/2.5);
                 progressIndicator.setOnFinish((ActionEvent event1) -> action());
                 progressIndicator.start();
 
@@ -155,6 +157,7 @@ public class ColorBox extends StackPane {
                 || event.getEventType() == GazeEvent.GAZE_EXITED) {
 
                 progressIndicator.stop();
+
             }
         }
     }
