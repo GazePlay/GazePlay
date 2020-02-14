@@ -1,5 +1,7 @@
 package net.gazeplay.ui.scenes.stats;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -92,7 +94,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                     centerPane.getChildren().remove(lineChart);
                     centerPane.getChildren().add(areaChart);
                     centerPane.getStylesheets().add("data/common/chart.css");
-
                 } else {
                     centerPane.getChildren().remove(areaChart);
                     centerPane.getChildren().add(lineChart);

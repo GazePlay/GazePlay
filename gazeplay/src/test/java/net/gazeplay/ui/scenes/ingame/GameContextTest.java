@@ -1,6 +1,8 @@
 package net.gazeplay.ui.scenes.ingame;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -14,6 +16,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.Bravo;
+import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.stats.StatsContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +27,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
+
+import java.io.File;
+import java.util.Locale;
 
 import static org.mockito.Mockito.*;
 
@@ -72,6 +78,13 @@ class GameContextTest {
     private GameLifeCycle mockGameLifeCycle;
     //endregion
 
+    private SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(
+        new File("file.csv"),
+        new File("file.csv"),
+        new File("file.csv"),
+        new File("file.csv")
+    );
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -115,8 +128,15 @@ class GameContextTest {
         };
 
         when(mockConfiguration.isVideoRecordingEnabled()).thenReturn(true);
+        when(mockConfiguration.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));
+        when(mockConfiguration.isFixationSequenceDisabled()).thenReturn(false);
         when(mockRoot.getChildren()).thenReturn(mockList);
         when(mockGamingRoot.getChildren()).thenReturn(mockList);
+        when(mockGazePlay.getTranslator()).thenReturn(mockTranslator);
+        when(mockTranslator.currentLocale()).thenReturn(Locale.ENGLISH);
+        when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
+        when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(() -> new Dimension2D(1920, 1080));
+
 
         final GameContext context =
             new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo, mockHBox, mockGazeDeviceManager, mockConfigPane);
@@ -139,8 +159,15 @@ class GameContextTest {
         };
 
         when(mockConfiguration.isVideoRecordingEnabled()).thenReturn(false);
+        when(mockConfiguration.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));
+        when(mockConfiguration.isFixationSequenceDisabled()).thenReturn(false);
         when(mockRoot.getChildren()).thenReturn(mockList);
         when(mockGamingRoot.getChildren()).thenReturn(mockList);
+        when(mockGazePlay.getTranslator()).thenReturn(mockTranslator);
+        when(mockTranslator.currentLocale()).thenReturn(Locale.ENGLISH);
+        when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
+        when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(() -> new Dimension2D(1920, 1080));
+
 
         final GameContext context =
             new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo, mockHBox, mockGazeDeviceManager, mockConfigPane);
