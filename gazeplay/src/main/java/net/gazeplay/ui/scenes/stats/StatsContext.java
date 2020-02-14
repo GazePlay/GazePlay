@@ -43,10 +43,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
     private final double RATIO = 0.35;
 
-    StatsContext(GazePlay gazePlay, BorderPane root, Stats stats) {
-        this(gazePlay, root, stats, null);
-    }
-
     StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton) {
         super(gazePlay, root);
 
@@ -54,11 +50,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         Locale currentLocale = translator.currentLocale();
 
-        boolean alignLeft = true;
         // Align right for Arabic Language
-        if (currentLocale.getLanguage().equals("ara")) {
-            alignLeft = false;
-        }
+        boolean alignLeft = !currentLocale.getLanguage().equals("ara");
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -85,25 +78,22 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 label = new I18NText(translator, "Score", COLON);
             }
 
-            Text value;
-            value = new Text(String.valueOf(stats.getNbGoals()));
-
             if (!(stats instanceof ExplorationGamesStats)) {
+                Text value = new Text(String.valueOf(stats.getNbGoals()));
                 addToGrid(grid, currentFormRow, label, value, alignLeft);
             }
         }
         {
-            final I18NText label;
             if (stats instanceof ShootGamesStats) {
-                label = new I18NText(translator, "HitRate", COLON);
+                I18NText label = new I18NText(translator, "HitRate", COLON);
                 Text value = new Text(stats.getShotRatio() + "%");
                 addToGrid(grid, currentFormRow, label, value, alignLeft);
             }
         }
         {
-            I18NText label = new I18NText(translator, "Length", COLON);
-            Text value = new Text(StatDisplayUtils.convert(stats.getRoundsTotalAdditiveDuration()));
             if (!(stats instanceof ExplorationGamesStats)) {
+                I18NText label = new I18NText(translator, "Length", COLON);
+                Text value = new Text(StatDisplayUtils.convert(stats.getRoundsTotalAdditiveDuration()));
                 addToGrid(grid, currentFormRow, label, value, alignLeft);
             }
         }
@@ -116,9 +106,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 label = new I18NText(translator, "AverageLength", COLON);
             }
 
-            Text value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationAverageDuration()));
-
             if (!(stats instanceof ExplorationGamesStats)) {
+                Text value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationAverageDuration()));
                 addToGrid(grid, currentFormRow, label, value, alignLeft);
             }
         }
@@ -132,17 +121,16 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 label = new I18NText(translator, "MedianLength", COLON);
             }
 
-            Text value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationMedianDuration()));
             if (!(stats instanceof ExplorationGamesStats)) {
+                Text value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationMedianDuration()));
                 addToGrid(grid, currentFormRow, label, value, alignLeft);
             }
         }
 
         {
-            I18NText label = new I18NText(translator, "StandDev", COLON);
-
-            Text value = new Text(StatDisplayUtils.convert((long) stats.computeRoundsDurationStandardDeviation()));
             if (!(stats instanceof ExplorationGamesStats)) {
+                I18NText label = new I18NText(translator, "StandDev", COLON);
+                Text value = new Text(StatDisplayUtils.convert((long) stats.computeRoundsDurationStandardDeviation()));
                 addToGrid(grid, currentFormRow, label, value, alignLeft);
             }
         }
@@ -159,8 +147,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         centerPane.setAlignment(Pos.CENTER);
 
         ImageView gazeMetrics = StatDisplayUtils.buildGazeMetrics(stats, root);
-        root.widthProperty().addListener((observable, oldValue, newValue) -> gazeMetrics.setFitWidth(newValue.doubleValue() * RATIO));
-        root.heightProperty().addListener((observable, oldValue, newValue) -> gazeMetrics.setFitHeight(newValue.doubleValue() * RATIO));
+        root.widthProperty().addListener(
+            (observable, oldValue, newValue) -> gazeMetrics.setFitWidth(newValue.doubleValue() * RATIO));
+        root.heightProperty().addListener(
+            (observable, oldValue, newValue) -> gazeMetrics.setFitHeight(newValue.doubleValue() * RATIO));
 
         gazeMetrics.setFitWidth(root.getWidth() * RATIO);
         gazeMetrics.setFitHeight(root.getHeight() * RATIO);
@@ -194,22 +184,20 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
 
-        EventHandler<Event> aoiEvent = e -> {
-            gazePlay.onDisplayAOI(stats);
-        };
-
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
         CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
-        aoiButton.addEventHandler(MouseEvent.MOUSE_CLICKED, aoiEvent);
+        aoiButton.addEventHandler(
+            MouseEvent.MOUSE_CLICKED,
+            e -> gazePlay.onDisplayAOI(stats));
 
-        EventHandler<Event> viewScanpath = s -> {
-            ScanpathView scanpath = new ScanpathView(gazePlay, stats);
-            gazePlay.onDisplayScanpath(scanpath);
+        EventHandler<Event> viewScanPath = s -> {
+            ScanpathView scanPath = new ScanpathView(gazePlay, stats);
+            gazePlay.onDisplayScanpath(scanPath);
         };
 
-        CustomButton scanpathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
-        scanpathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanpath);
+        CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
+        scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
 
         HBox controlButtonPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
@@ -219,7 +207,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             controlButtonPane.getChildren().add(aoiButton);
         if (!config.isFixationSequenceDisabled()) {
             controlButtonPane.getChildren().add(colorBands);
-            controlButtonPane.getChildren().add(scanpathButton);
+            controlButtonPane.getChildren().add(scanPathButton);
         }
 
         controlButtonPane.getChildren().add(homeButton);
@@ -232,9 +220,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         centerStackPane.getChildren().add(centerPane);
 
         I18NText screenTitleText = new I18NText(translator, "StatsTitle");
-        // screenTitleText.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         screenTitleText.setId("title");
-        // screenTitleText.setTextAlignment(TextAlignment.CENTER);
 
         StackPane topPane = new StackPane();
         topPane.getChildren().add(screenTitleText);
@@ -268,10 +254,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         final int currentRowIndex = currentFormRow.incrementAndGet();
 
         label.setId("item");
-        // label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); in CSS
-
         value.setId("item");
-        // value.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14)); in CSS
+
         if (alignLeft) {
             grid.add(label, columnIndexLabelLeft, currentRowIndex);
             grid.add(value, columnIndexInputLeft, currentRowIndex);

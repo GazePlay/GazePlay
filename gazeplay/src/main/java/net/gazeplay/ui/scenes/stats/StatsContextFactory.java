@@ -12,8 +12,7 @@ public class StatsContextFactory {
         @NonNull GazePlay gazePlay,
         @NonNull Stats stats
     ) {
-        BorderPane root = new BorderPane();
-        return new StatsContext(gazePlay, root, stats);
+        return StatsContextFactory.newInstance(gazePlay, stats, null);
     }
 
     public static StatsContext newInstance(
