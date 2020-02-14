@@ -11,6 +11,9 @@ public class EnumUnmarshaller<T extends Enum<T>> implements Function<String, T> 
 
     @Override
     public T apply(final String name) {
+        if (name == null) {
+            return null;
+        }
         return Enum.valueOf(enumClass, name);
     }
 }
