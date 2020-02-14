@@ -45,8 +45,8 @@ public class Configuration {
     private static final String PROPERTY_NAME_EFFECTS_VOLUME = "EFFECTS_VOLUME";
     private static final String PROPERTY_NAME_GAZE_MENU = "GAZE_MENU";
     private static final String PROPERTY_NAME_GAZE_MOUSE = "GAZE_MOUSE";
-    private static final String PROPERTY_NAME_WHITE_BCKGRD = "WHITE_BACKGROUND";
-    private static final String PROPERTY_NAME_BCKGRD_ENABLED = "BACKGROUND_ENABLED";
+    private static final String PROPERTY_NAME_BACKGROUND_STYLE = "BACKGROUND_STYLE";
+    private static final String PROPERTY_NAME_BACKGROUND_ENABLED = "BACKGROUND_ENABLED";
     private static final String PROPERTY_NAME_ANIMATION_SPEED_RATIO = "ANIMATION_SPEED_RATIO";
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
@@ -86,8 +86,8 @@ public class Configuration {
 
     private static final boolean DEFAULT_VALUE_GAZE_MENU = false;
     private static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
-    private static final BackgroundStyle DEFAULT_VALUE_WHITE_BCKGRD = BackgroundStyle.DARK;
-    private static final boolean DEFAULT_VALUE_BCKGRD_ENABLED = true;
+    private static final BackgroundStyle DEFAULT_VALUE_BACKGROUND_STYLE = BackgroundStyle.DARK;
+    private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = true;
     private static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
@@ -245,8 +245,8 @@ public class Configuration {
         fixationSequenceDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED, propertyChangeListener);
         gazeMenuEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU, propertyChangeListener);
         gazeMouseEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE, propertyChangeListener);
-        backgroundStyleProperty = new ApplicationConfigBackedBackgroundStyleProperty(applicationConfig, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD, propertyChangeListener);
-        backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BCKGRD_ENABLED, DEFAULT_VALUE_BCKGRD_ENABLED, propertyChangeListener);
+        backgroundStyleProperty = new ApplicationConfigBackedBackgroundStyleProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_STYLE, DEFAULT_VALUE_BACKGROUND_STYLE, propertyChangeListener);
+        backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_ENABLED, DEFAULT_VALUE_BACKGROUND_ENABLED, propertyChangeListener);
 
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
         cssfileProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_CSSFILE, DEFAULT_VALUE_CSS_FILE, propertyChangeListener);
