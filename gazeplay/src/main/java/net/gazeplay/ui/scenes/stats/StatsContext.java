@@ -61,87 +61,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         grid.setVgap(50);
         grid.setPadding(new Insets(0, 50, 0, 50));
 
-        AtomicInteger currentFormRow = new AtomicInteger(1);
-        {
-            I18NText label = new I18NText(translator, "TotalLength", COLON);
-            Text value = new Text(StatDisplayUtils.convert(stats.computeTotalElapsedDuration()));
-            addToGrid(grid, currentFormRow, label, value, alignLeft);
-        }
-
-        {
-            final I18NText label;
-            if (stats instanceof ShootGamesStats) {
-                label = new I18NText(translator, "Shots", COLON);
-            } else if (stats instanceof HiddenItemsGamesStats) {
-                label = new I18NText(translator, "HiddenItemsShot", COLON);
-            } else {
-                label = new I18NText(translator, "Score", COLON);
-            }
-
-            if (!(stats instanceof ExplorationGamesStats)) {
-                Text value = new Text(String.valueOf(stats.getNbGoals()));
-                addToGrid(grid, currentFormRow, label, value, alignLeft);
-            }
-        }
-        {
-            if (stats instanceof ShootGamesStats) {
-                I18NText label = new I18NText(translator, "HitRate", COLON);
-                Text value = new Text(stats.getShotRatio() + "%");
-                addToGrid(grid, currentFormRow, label, value, alignLeft);
-            }
-        }
-        {
-            if (!(stats instanceof ExplorationGamesStats)) {
-                I18NText label = new I18NText(translator, "Length", COLON);
-                Text value = new Text(StatDisplayUtils.convert(stats.getRoundsTotalAdditiveDuration()));
-                addToGrid(grid, currentFormRow, label, value, alignLeft);
-            }
-        }
-        {
-            final I18NText label;
-
-            if (stats instanceof ShootGamesStats) {
-                label = new I18NText(translator, "ShotaverageLength", COLON);
-            } else {
-                label = new I18NText(translator, "AverageLength", COLON);
-            }
-
-            if (!(stats instanceof ExplorationGamesStats)) {
-                Text value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationAverageDuration()));
-                addToGrid(grid, currentFormRow, label, value, alignLeft);
-            }
-        }
-
-        {
-            final I18NText label;
-
-            if (stats instanceof ShootGamesStats) {
-                label = new I18NText(translator, "ShotmedianLength", COLON);
-            } else {
-                label = new I18NText(translator, "MedianLength", COLON);
-            }
-
-            if (!(stats instanceof ExplorationGamesStats)) {
-                Text value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationMedianDuration()));
-                addToGrid(grid, currentFormRow, label, value, alignLeft);
-            }
-        }
-
-        {
-            if (!(stats instanceof ExplorationGamesStats)) {
-                I18NText label = new I18NText(translator, "StandDev", COLON);
-                Text value = new Text(StatDisplayUtils.convert((long) stats.computeRoundsDurationStandardDeviation()));
-                addToGrid(grid, currentFormRow, label, value, alignLeft);
-            }
-        }
-
-        {
-            if (stats instanceof ShootGamesStats && stats.getNbUnCountedShots() != 0) {
-                final I18NText label = new I18NText(translator, "UncountedShot", COLON);
-                final Text value = new Text(String.valueOf(stats.getNbUnCountedShots()));
-                addToGrid(grid, currentFormRow, label, value, alignLeft);
-            }
-        }
+        addAllToGrid(stats, translator, grid, alignLeft);
 
         VBox centerPane = new VBox();
         centerPane.setAlignment(Pos.CENTER);
@@ -157,14 +77,12 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         centerPane.getChildren().add(gazeMetrics);
 
-        // charts
-
         LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(stats, root);
         centerPane.getChildren().add(lineChart);
-        AreaChart<Number, Number> areaChart;
         RadioButton colorBands = new RadioButton("Color Bands");
+
         if (!config.isFixationSequenceDisabled()) {
-            areaChart = StatDisplayUtils.buildAreaChart(stats.getFixationSequence(), root);
+            AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(stats.getFixationSequence(), root);
 
             colorBands.setTextFill(Color.WHITE);
             colorBands.getStylesheets().add("data/common/radio.css");
@@ -182,39 +100,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             });
         }
 
-        HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
-
-        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-
-        CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
-        aoiButton.addEventHandler(
-            MouseEvent.MOUSE_CLICKED,
-            e -> gazePlay.onDisplayAOI(stats));
-
-        EventHandler<Event> viewScanPath = s -> {
-            ScanpathView scanPath = new ScanpathView(gazePlay, stats);
-            gazePlay.onDisplayScanpath(scanPath);
-        };
-
-        CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
-        scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
-
-        HBox controlButtonPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
-        controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
-
-        if (config.getAreaOfInterestDisabledProperty().getValue())
-            controlButtonPane.getChildren().add(aoiButton);
-        if (!config.isFixationSequenceDisabled()) {
-            controlButtonPane.getChildren().add(colorBands);
-            controlButtonPane.getChildren().add(scanPathButton);
-        }
-
-        controlButtonPane.getChildren().add(homeButton);
-
-        if (continueButton != null) {
-            controlButtonPane.getChildren().add(continueButton);
-        }
+        HBox controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, continueButton);
 
         StackPane centerStackPane = new StackPane();
         centerStackPane.getChildren().add(centerPane);
@@ -244,14 +130,82 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
 
-    private void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, Text value, boolean alignLeft) {
+    void addAllToGrid(Stats stats, Translator translator, GridPane grid, boolean alignLeft) {
+        AtomicInteger currentFormRow = new AtomicInteger(1);
 
+        Text value;
+        String labelValue;
+
+        value = new Text(StatDisplayUtils.convert(stats.computeTotalElapsedDuration()));
+        addToGrid(grid, currentFormRow, translator, "TotalLength", value, alignLeft);
+
+        if (!(stats instanceof ExplorationGamesStats)) {
+
+            if (stats instanceof ShootGamesStats) {
+                labelValue = "Shots";
+            } else if (stats instanceof HiddenItemsGamesStats) {
+                labelValue = "HiddenItemsShot";
+            } else {
+                labelValue = "Score";
+            }
+
+            value = new Text(String.valueOf(stats.getNbGoals()));
+            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+        }
+
+        if (stats instanceof ShootGamesStats) {
+            labelValue = "HitRate";
+            value = new Text(stats.getShotRatio() + "%");
+            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+        }
+
+        if (!(stats instanceof ExplorationGamesStats)) {
+            labelValue = "Length";
+            value = new Text(StatDisplayUtils.convert(stats.getRoundsTotalAdditiveDuration()));
+            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+        }
+
+        if (!(stats instanceof ExplorationGamesStats)) {
+            labelValue = stats instanceof ShootGamesStats ? "ShotaverageLength" : "AverageLength";
+            value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationAverageDuration()));
+            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+        }
+
+        if (!(stats instanceof ExplorationGamesStats)) {
+            labelValue = stats instanceof ShootGamesStats ? "ShotmedianLength" : "MedianLength";
+            value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationMedianDuration()));
+            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+        }
+
+        if (!(stats instanceof ExplorationGamesStats)) {
+            labelValue = "StandDev";
+            value = new Text(StatDisplayUtils.convert((long) stats.computeRoundsDurationStandardDeviation()));
+            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+        }
+
+        if (stats instanceof ShootGamesStats && stats.getNbUnCountedShots() != 0) {
+            labelValue = "UncountedShot";
+            value = new Text(String.valueOf(stats.getNbUnCountedShots()));
+            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+        }
+    }
+
+    private void addToGrid(
+        GridPane grid,
+        AtomicInteger currentFormRow,
+        Translator translator,
+        String labelText,
+        Text value,
+        boolean alignLeft
+    ) {
         final int columnIndexLabelLeft = 0;
         final int columnIndexInputLeft = 1;
         final int columnIndexLabelRight = 1;
         final int columnIndexInputRight = 0;
 
         final int currentRowIndex = currentFormRow.incrementAndGet();
+
+        I18NText label = new I18NText(translator, labelText, COLON);
 
         label.setId("item");
         value.setId("item");
@@ -269,6 +223,51 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             GridPane.setHalignment(label, HPos.RIGHT);
             GridPane.setHalignment(value, HPos.RIGHT);
         }
+    }
+
+    HBox createControlButtonPane(
+        GazePlay gazePlay,
+        Stats stats,
+        Configuration config,
+        RadioButton colorBands,
+        CustomButton continueButton
+    ) {
+        HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
+
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+
+        CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
+        aoiButton.addEventHandler(
+            MouseEvent.MOUSE_CLICKED,
+            e -> gazePlay.onDisplayAOI(stats));
+
+        EventHandler<Event> viewScanPath = s -> {
+            ScanpathView scanPath = new ScanpathView(gazePlay, stats);
+            gazePlay.onDisplayScanpath(scanPath);
+        };
+
+        CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
+        scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
+
+        HBox controlButtonPane = new HBox();
+        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
+        controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
+
+        if (config.getAreaOfInterestDisabledProperty().getValue())
+            controlButtonPane.getChildren().add(aoiButton);
+
+        if (!config.isFixationSequenceDisabled()) {
+            controlButtonPane.getChildren().add(colorBands);
+            controlButtonPane.getChildren().add(scanPathButton);
+        }
+
+        controlButtonPane.getChildren().add(homeButton);
+
+        if (continueButton != null) {
+            controlButtonPane.getChildren().add(continueButton);
+        }
+
+        return controlButtonPane;
     }
 
     @Override
