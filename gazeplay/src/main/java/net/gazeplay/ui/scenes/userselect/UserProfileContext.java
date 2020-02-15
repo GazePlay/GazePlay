@@ -44,7 +44,10 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.GraphicalContext;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,7 +55,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class UserProfilContext extends GraphicalContext<BorderPane> {
+public class UserProfileContext extends GraphicalContext<BorderPane> {
 
     private static List<String> findAllUsersProfiles() {
         final File profilesDirectory = GazePlayDirectories.getProfilesDirectory();
@@ -76,7 +79,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
 
     private final double cardWidth;
 
-    public UserProfilContext(
+    public UserProfileContext(
         final GazePlay gazePlay
     ) {
         super(gazePlay, new BorderPane());
@@ -160,7 +163,7 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         if (userPicture != null) {
             final File userPictureFile = new File(userPicture);
             if (userPictureFile.exists()) {
-                try (InputStream is = new FileInputStream(userPictureFile)) {
+                try (InputStream is = Files.newInputStream(userPictureFile.toPath())) {
                     imagePattern = new ImagePattern(new Image(is));
                 } catch (final IOException e) {
                     throw new RuntimeException(e);
@@ -559,13 +562,14 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         }
         final String result = selectedImageFile.getAbsolutePath();
         try {
-            final ImageView imageView = new ImageView(new Image(new FileInputStream(selectedImageFile)));
+            final ImageView imageView = new ImageView(new Image(Files.newInputStream(selectedImageFile.toPath())));
             imageView.setPreserveRatio(true);
             imageView.setFitHeight(primaryStage.getHeight() / 10);
             targetButton.setGraphic(imageView);
-        } catch (final FileNotFoundException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
+
         return result;
     }
 
