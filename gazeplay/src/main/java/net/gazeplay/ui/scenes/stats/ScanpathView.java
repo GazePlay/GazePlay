@@ -38,7 +38,7 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
 
         HomeButton homeButton = new HomeButton(screenDimension);
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
-            StatsContext statsContext = StatsContext.newInstance(gazePlay, stats);
+            StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
             this.clear();
             gazePlay.onDisplayStats(statsContext);
         });
