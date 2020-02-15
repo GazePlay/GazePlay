@@ -45,7 +45,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
     private static HBox createControlPanel() {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER_LEFT);
-        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(hbox);
+        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(hbox);
 
         hbox.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
 

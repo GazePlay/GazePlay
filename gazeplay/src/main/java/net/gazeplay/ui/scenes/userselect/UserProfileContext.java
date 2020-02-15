@@ -50,6 +50,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -57,31 +58,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserProfileContext extends GraphicalContext<BorderPane> {
 
-    private static List<String> findAllUsersProfiles() {
-        final File profilesDirectory = GazePlayDirectories.getProfilesDirectory();
-        log.info("profilesDirectory = {}", profilesDirectory);
-        //
-        final File[] directoryContent = profilesDirectory.listFiles();
-        if (directoryContent == null) {
-            return new ArrayList<>();
-        }
-        final List<String> listOfUsers = Arrays.stream(directoryContent)
-            .filter(f -> !f.getName().startsWith("."))
-            .filter(File::isDirectory)
-            .map(File::getName)
-            .sorted()
-            .collect(Collectors.toList());
-        log.info("HERE IS THE FULL LIST OF THE USERS OF GAZEPLAY" + listOfUsers);
-        return listOfUsers;
-    }
-
     private final double cardHeight;
-
     private final double cardWidth;
 
-    public UserProfileContext(
-        final GazePlay gazePlay
-    ) {
+    public UserProfileContext(final GazePlay gazePlay) {
         super(gazePlay, new BorderPane());
 
         final GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(() -> root, gazePlay::getPrimaryScene);
@@ -94,12 +74,13 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         final Node logo = LogoFactory.getInstance().createLogoAnimated(gazePlay.getPrimaryStage());
 
         final HBox topRightPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(topRightPane);
+        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(topRightPane);
         topRightPane.setAlignment(Pos.TOP_CENTER);
-        final CustomButton exitButton = createExitButton(screenDimension);
-        topRightPane.getChildren().addAll(exitButton);
 
-        final Node userPickerChoicePane = createuUserPickerChoicePane(gazePlay);
+        final CustomButton exitButton = createExitButton(screenDimension);
+        topRightPane.getChildren().add(exitButton);
+
+        final Node userPickerChoicePane = createUserPickerChoicePane(gazePlay);
 
         final VBox centerCenterPane = new VBox();
         centerCenterPane.setSpacing(40);
@@ -116,7 +97,6 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
             + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
             + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-
     }
 
     @Override
@@ -124,7 +104,26 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
-    private ScrollPane createuUserPickerChoicePane(final GazePlay gazePlay) {
+    static List<String> findAllUsersProfiles() {
+        final File profilesDirectory = GazePlayDirectories.getProfilesDirectory();
+        log.info("profilesDirectory = {}", profilesDirectory);
+
+        final File[] directoryContent = profilesDirectory.listFiles();
+        if (directoryContent == null) {
+            return Collections.emptyList();
+        }
+
+        final List<String> listOfUsers = Arrays.stream(directoryContent)
+            .filter(f -> !f.isHidden())
+            .filter(File::isDirectory)
+            .map(File::getName)
+            .sorted()
+            .collect(Collectors.toList());
+        log.info("FULL LIST OF GAZEPLAY USERS: " + listOfUsers);
+        return listOfUsers;
+    }
+
+    private ScrollPane createUserPickerChoicePane(final GazePlay gazePlay) {
         final int flowpaneGap = 40;
         final FlowPane choicePanel = new FlowPane();
         choicePanel.setAlignment(Pos.CENTER);

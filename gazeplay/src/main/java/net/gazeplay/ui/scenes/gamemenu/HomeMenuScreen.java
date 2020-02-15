@@ -78,7 +78,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         I18NButton toggleFullScreenButton = createToggleFullScreenButtonInGameScreen(gazePlay);
 
         HBox rightControlPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(rightControlPane);
+        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(rightControlPane);
         rightControlPane.setAlignment(Pos.CENTER);
         rightControlPane.getChildren().add(toggleFullScreenButton);
 
@@ -98,7 +98,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topLogoPane.getChildren().add(logo);
 
         HBox topRightPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(topRightPane);
+        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(topRightPane);
         topRightPane.setAlignment(Pos.TOP_CENTER);
         topRightPane.getChildren().addAll(logoutButton, exitButton);
 
