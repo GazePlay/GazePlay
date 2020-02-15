@@ -4,25 +4,33 @@ pmdTest.group = 'verification'
 def gazeplayViolationThresholds = [
         1: 2,
         2: 0,
-        3: 0,
-        4: 0,
-        5: 0
+        3: 1895,
+        4: 22,
+        5: 132
 ]
 
 def gazeplayCommonsViolationThresholds = [
         1: 20,
         2: 6,
-        3: 0,
-        4: 0,
-        5: 0
+        3: 1011,
+        4: 35,
+        5: 74
 ]
 
 def gazeplayGamesViolationThresholds = [
         1: 37,
         2: 2,
-        3: 0,
-        4: 0,
-        5: 0
+        3: 5079,
+        4: 197,
+        5: 438
+]
+
+def gazeplayGamesCommonsViolationThresholds = [
+        1: 0,
+        2: 0,
+        3: 122,
+        4: 6,
+        5: 21
 ]
 
 task checkPMDReport(dependsOn: 'pmdMain', group: 'verification') {
@@ -46,6 +54,9 @@ task checkPMDReport(dependsOn: 'pmdMain', group: 'verification') {
                     break
                 case 'gazeplay-games':
                     violationsThresholds = gazeplayGamesViolationThresholds
+                    break
+                case 'gazeplay-games-commons':
+                    violationsThresholds = gazeplayGamesCommonsViolationThresholds
                     break
                 default:
                     violationsThresholds = [

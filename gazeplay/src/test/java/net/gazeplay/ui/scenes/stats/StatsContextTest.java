@@ -118,7 +118,7 @@ class StatsContextTest {
         when(mockStats.getFixationSequence()).thenReturn(fixationPoints);
 
         BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
+        new StatsContext(mockGazePlay, root, mockStats, null);
 
         BorderPane sidePane = (BorderPane) root.getCenter();
         StackPane centerStackPane = (StackPane) sidePane.getTop();
