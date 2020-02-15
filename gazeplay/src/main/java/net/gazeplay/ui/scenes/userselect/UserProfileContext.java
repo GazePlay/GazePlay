@@ -48,7 +48,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -123,40 +122,66 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return listOfUsers;
     }
 
-    private ScrollPane createUserPickerChoicePane(final GazePlay gazePlay) {
-        final int flowpaneGap = 40;
+    ScrollPane createUserPickerChoicePane(final GazePlay gazePlay) {
+        final int flowPaneGap = 40;
         final FlowPane choicePanel = new FlowPane();
         choicePanel.setAlignment(Pos.CENTER);
-        choicePanel.setHgap(flowpaneGap);
-        choicePanel.setVgap(flowpaneGap);
+        choicePanel.setHgap(flowPaneGap);
+        choicePanel.setVgap(flowPaneGap);
         choicePanel.setPadding(new Insets(20, 60, 20, 60));
 
-        final ScrollPane choicePanelScroller = new ScrollPane(choicePanel);
-        choicePanelScroller.setFitToWidth(true);
-        choicePanelScroller.setFitToHeight(true);
+        final ScrollPane choicePanelScrollPane = new ScrollPane(choicePanel);
+        choicePanelScrollPane.setFitToWidth(true);
+        choicePanelScrollPane.setFitToHeight(true);
 
         final List<String> allUsersProfiles = findAllUsersProfiles();
 
         final Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
-        final HBox configUserCard = createUser(gazePlay, choicePanel, getGazePlay().getTranslator().translate("DefaultUser"), new ImagePattern(new Image("data/common/images/ConfigUser.png")), false, false, screenDimension);
+        final HBox configUserCard = createUser(
+            gazePlay,
+            choicePanel,
+            getGazePlay().getTranslator().translate("DefaultUser"),
+            new ImagePattern(new Image("data/common/images/ConfigUser.png")),
+            false,
+            false,
+            screenDimension
+        );
+
         choicePanel.getChildren().add(configUserCard);
 
         for (final String currentUserProfile : allUsersProfiles) {
-            log.info("Profile founded : {}", currentUserProfile);
+            log.info("Profile found : {}", currentUserProfile);
             final Configuration currentUserProfileConfiguration = ConfigurationSource.createFromProfile(currentUserProfile);
-            final ImagePattern imagePattern = lookupForProfilePicture(currentUserProfileConfiguration);
-            final HBox userCard = createUser(gazePlay, choicePanel, currentUserProfile, imagePattern, true, false, screenDimension);
+            final ImagePattern imagePattern = lookupProfilePicture(currentUserProfileConfiguration);
+            final HBox userCard = createUser(
+                gazePlay,
+                choicePanel,
+                currentUserProfile,
+                imagePattern,
+                true,
+                false,
+                screenDimension
+            );
+
             choicePanel.getChildren().add(userCard);
         }
 
-        final HBox newUserCard = createUser(gazePlay, choicePanel, getGazePlay().getTranslator().translate("AddUser"), new ImagePattern(new Image("data/common/images/AddUser.png")), false, true, screenDimension);
+        final HBox newUserCard = createUser(
+            gazePlay,
+            choicePanel,
+            getGazePlay().getTranslator().translate("AddUser"),
+            new ImagePattern(new Image("data/common/images/AddUser.png")),
+            false,
+            true,
+            screenDimension
+        );
         choicePanel.getChildren().add(newUserCard);
 
-        return choicePanelScroller;
+        return choicePanelScrollPane;
     }
 
-    private static ImagePattern lookupForProfilePicture(final Configuration currentUserProfileConfiguration) {
+    private static ImagePattern lookupProfilePicture(final Configuration currentUserProfileConfiguration) {
         ImagePattern imagePattern = null;
         final String userPicture = currentUserProfileConfiguration.getUserPicture();
         if (userPicture != null) {
