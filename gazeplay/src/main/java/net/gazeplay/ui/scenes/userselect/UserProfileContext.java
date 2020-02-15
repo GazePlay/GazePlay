@@ -522,7 +522,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                 if (chooseImageButton.getGraphic() != null) {
                     ip = new ImagePattern(((ImageView) chooseImageButton.getGraphic()).getImage());
                 }
-                modifUser(user, choicePanel, gazePlay, user.getName(), ip);
+                modifyUser(user, user.getName(), ip);
 
                 final Configuration conf2 = ConfigurationSource.createFromProfile(user.getName());
 
@@ -556,7 +556,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return (isNew && !s.equals(getGazePlay().getTranslator().translate("DefaultUser")));
     }
 
-    private void modifUser(final HBox user, final FlowPane choicePanel, final GazePlay gazePlay, final String name, final ImagePattern ip) {
+    private void modifyUser(final HBox user, final String name, final ImagePattern ip) {
         final BorderPane c = (BorderPane) user.getChildren().get(0);
         final Rectangle r = (Rectangle) c.getCenter();
         if (ip != null) {
@@ -596,13 +596,11 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return result;
     }
 
-    private static boolean copyFile(final File source, final File dest) {
+    private static void copyFile(final File source, final File dest) {
         try {
             org.apache.commons.io.FileUtils.copyFile(source, dest);
-            return true;
         } catch (final Exception e) {
             log.info("Unable to copy the profile picture");
-            return false;
         }
     }
 

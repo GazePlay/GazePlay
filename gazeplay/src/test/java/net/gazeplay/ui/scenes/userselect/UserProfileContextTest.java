@@ -1,8 +1,16 @@
 package net.gazeplay.ui.scenes.userselect;
 
+import javafx.geometry.Dimension2D;
+import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.ImagePattern;
+import javafx.stage.Stage;
 import mockit.MockUp;
+import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,6 +31,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -31,6 +41,12 @@ class UserProfileContextTest {
 
     @Mock
     private Configuration mockConfig;
+
+    @Mock
+    private GazePlay mockGazePlay;
+
+    @Mock
+    private Translator mockTranslator;
 
     private static String profileRoot = "profiles";
     private static String profileDirectory = "test1";
@@ -62,6 +78,11 @@ class UserProfileContextTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
+        when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(() -> new Dimension2D(1920, 1080));
+        when(mockGazePlay.getPrimaryStage()).thenReturn(mock(Stage.class));
+        when(mockGazePlay.getPrimaryScene()).thenReturn(mock(Scene.class));
+        when(mockGazePlay.getTranslator()).thenReturn(mockTranslator);
+        when(mockTranslator.translate(anyString())).thenReturn("UserName");
     }
 
     @AfterAll
@@ -100,6 +121,23 @@ class UserProfileContextTest {
         List<String> result = UserProfileContext.findAllUsersProfiles();
 
         assertEquals(Collections.emptyList(), result);
+    }
+
+    @Test
+    void shouldCreateUserPickerChoicePane() {
+        new MockUp<GazePlayDirectories>() {
+            @mockit.Mock
+            public File getProfilesDirectory() {
+                return new File(profileRoot);
+            }
+        };
+
+        UserProfileContext context = new UserProfileContext(mockGazePlay);
+
+        ScrollPane result = context.createUserPickerChoicePane(mockGazePlay);
+        FlowPane panel = (FlowPane) result.getContent();
+
+        assertEquals(3, panel.getChildren().size()); // Should render Default, New User and test1
     }
 
     @Test
