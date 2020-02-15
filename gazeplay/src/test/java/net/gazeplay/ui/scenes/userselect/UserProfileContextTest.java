@@ -1,11 +1,19 @@
 package net.gazeplay.ui.scenes.userselect;
 
-import mockit.Mock;
+import javafx.scene.paint.ImagePattern;
 import mockit.MockUp;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,13 +23,26 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(ApplicationExtension.class)
 class UserProfileContextTest {
+
+    @Mock
+    private Configuration mockConfig;
 
     private static String profileRoot = "profiles";
     private static String profileDirectory = "test1";
     private static String exampleFile = "test.txt";
     private static String hiddenDirectory = ".hidden";
+
+    private final String sep = File.separator;
+    private final String localDataFolder =
+        System.getProperty("user.dir") + sep
+            + "src" + sep
+            + "test" + sep
+            + "resources" + sep;
 
     @BeforeAll
     static void setupMockProfiles() throws IOException {
@@ -38,6 +59,11 @@ class UserProfileContextTest {
         realFile.createNewFile();
     }
 
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
+
     @AfterAll
     static void tearDownMockProfiles() {
         new File(profileRoot, hiddenDirectory).delete();
@@ -49,7 +75,7 @@ class UserProfileContextTest {
     @Test
     void shouldFindAllUsersProfiles() {
         new MockUp<GazePlayDirectories>() {
-            @Mock
+            @mockit.Mock
             public File getProfilesDirectory() {
                 return new File(profileRoot);
             }
@@ -65,7 +91,7 @@ class UserProfileContextTest {
     @Test
     void shouldReturnEmptyListIfNoProfiles() {
         new MockUp<GazePlayDirectories>() {
-            @Mock
+            @mockit.Mock
             public File getProfilesDirectory() {
                 return new File("bad/path");
             }
@@ -74,5 +100,25 @@ class UserProfileContextTest {
         List<String> result = UserProfileContext.findAllUsersProfiles();
 
         assertEquals(Collections.emptyList(), result);
+    }
+
+    @Test
+    void shouldLookupProfilePicture() {
+        when(mockConfig.getUserPicture()).thenReturn(localDataFolder + "bear.jpg");
+
+        ImagePattern result = UserProfileContext.lookupProfilePicture(mockConfig);
+
+        assertNotNull(result.getImage());
+    }
+
+    @Test
+    void shouldGetDefaultProfilePicture() {
+        when(mockConfig.getUserPicture()).thenReturn(null).thenReturn("someOtherFile.png");
+
+        ImagePattern result1 = UserProfileContext.lookupProfilePicture(mockConfig);
+        ImagePattern result2 = UserProfileContext.lookupProfilePicture(mockConfig);
+
+        assertTrue(result1.getImage().getUrl().contains("DefaultUser.png"));
+        assertTrue(result2.getImage().getUrl().contains("DefaultUser.png"));
     }
 }

@@ -181,9 +181,10 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return choicePanelScrollPane;
     }
 
-    private static ImagePattern lookupProfilePicture(final Configuration currentUserProfileConfiguration) {
-        ImagePattern imagePattern = null;
+    static ImagePattern lookupProfilePicture(final Configuration currentUserProfileConfiguration) {
+        ImagePattern imagePattern = new ImagePattern(new Image("data/common/images/DefaultUser.png"));
         final String userPicture = currentUserProfileConfiguration.getUserPicture();
+
         if (userPicture != null) {
             final File userPictureFile = new File(userPicture);
             if (userPictureFile.exists()) {
@@ -194,9 +195,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                 }
             }
         }
-        if (imagePattern == null) {
-            imagePattern = new ImagePattern(new Image("data/common/images/DefaultUser.png"));
-        }
+
         return imagePattern;
     }
 
