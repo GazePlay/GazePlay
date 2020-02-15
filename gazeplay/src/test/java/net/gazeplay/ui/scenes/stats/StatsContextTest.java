@@ -11,6 +11,7 @@ import javafx.scene.layout.*;
 import mockit.MockUp;
 import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CustomButton;
@@ -116,6 +117,16 @@ class StatsContextTest {
             new FixationPoint(4567, 1234, 40, 60)
         ));
         when(mockStats.getFixationSequence()).thenReturn(fixationPoints);
+
+        Configuration mockConfig = mock(Configuration.class);
+        when(mockConfig.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));
+
+        new MockUp<ActiveConfigurationContext>() {
+            @mockit.Mock
+            public Configuration getInstance() {
+                return mockConfig;
+            }
+        };
 
         BorderPane root = new BorderPane();
         new StatsContext(mockGazePlay, root, mockStats, null);
