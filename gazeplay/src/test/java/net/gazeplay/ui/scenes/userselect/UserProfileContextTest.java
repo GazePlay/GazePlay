@@ -1,8 +1,8 @@
 package net.gazeplay.ui.scenes.userselect;
 
+import com.ginsberg.junit.exit.ExpectSystemExitWithStatus;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
@@ -10,6 +10,7 @@ import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -22,10 +23,9 @@ import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
-import nonapi.io.github.classgraph.utils.VersionFinder;
-import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -218,7 +218,7 @@ class UserProfileContextTest {
             @mockit.Mock
             public void onConfigurationChanged() {
                 called.set(true);  // Really, this should be the same as the ActiveConfigurationContext
-                                   // but I just couldn't make it work...
+                // but I just couldn't make it work...
             }
         };
 
@@ -231,10 +231,13 @@ class UserProfileContextTest {
         BorderPane content = (BorderPane) result.getChildren().get(0);
         Rectangle picture = (Rectangle) content.getCenter();
         VBox buttonBox = (VBox) result.getChildren().get(1);
+        BorderPane editButton = (BorderPane) buttonBox.getChildren().get(0);
+        BorderPane deleteButton = (BorderPane) buttonBox.getChildren().get(1);
 
         assertEquals("Test User", result.getName());
         assertNotNull(picture.getFill());
-        assertEquals(2, buttonBox.getChildren().size());
+        assertTrue(deleteButton.getStyleClass().containsAll(List.of("gameChooserButton", "button")));
+        assertTrue(editButton.getStyleClass().containsAll(List.of("gameChooserButton", "button")));
 
         content.fireEvent(TestingUtils.clickOnTarget(content));
         verify(mockGazePlay).onReturnToMenu();
@@ -268,13 +271,25 @@ class UserProfileContextTest {
     }
 
     @Test
-    void shouldThrowExceptionIfNameIsEmpty() {
+    void shouldThrowExceptionIfUserNameIsEmpty() {
         UserProfileContext context = new UserProfileContext(mockGazePlay);
         FlowPane choicePanel = new FlowPane();
         ImagePattern imagePattern = new ImagePattern(new Image("bear.jpg"));
 
         assertThrows(IllegalArgumentException.class,
             () -> context.createUser(mockGazePlay, choicePanel, "", imagePattern, false, false, screenDimension));
+    }
+
+    @Test
+    @ExpectSystemExitWithStatus(0)
+    void shouldCreateExitButton() {
+        UserProfileContext context = new UserProfileContext(mockGazePlay);
+        BorderPane topPane = (BorderPane) context.getRoot().getTop();
+        HBox topRightPane = (HBox) topPane.getRight();
+
+        CustomButton exitButton = (CustomButton) topRightPane.getChildren().get(0);
+
+        exitButton.fireEvent(TestingUtils.clickOnTarget(exitButton));
     }
 
 }

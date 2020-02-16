@@ -277,7 +277,12 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return user;
     }
 
-    private BorderPane createDeleteUserButton(final GazePlay gazePlay, final FlowPane choicePanel, final User user, final double size) {
+    private BorderPane createDeleteUserButton(
+        final GazePlay gazePlay,
+        final FlowPane choicePanel,
+        final User user,
+        final double size
+    ) {
         final CustomButton button = new CustomButton("data/common/images/error.png", size);
 
         button.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
