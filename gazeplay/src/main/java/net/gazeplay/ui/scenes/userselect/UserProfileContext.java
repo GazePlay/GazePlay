@@ -199,7 +199,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return imagePattern;
     }
 
-    private User createUser(
+    User createUser(
         @NonNull final GazePlay gazePlay,
         @NonNull final FlowPane choicePanel,
         @NonNull final String userProfileName,
@@ -225,20 +225,19 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         final BorderPane content = new BorderPane();
         content.getStyleClass().add("gameChooserButton");
         content.getStyleClass().add("button");
-        content.setPadding(new Insets(10, 10, 10, 10));
+        content.setPadding(new Insets(10));
         content.setCenter(pictureRectangle);
         content.setBottom(userNameText);
 
         user.setAlignment(Pos.TOP_RIGHT);
         user.getChildren().add(content);
 
-
         if (editable) {
             final double buttonsSize = screenDimension.getWidth() / 50;
             final BorderPane editUserButton = createEditUserButton(getGazePlay(), choicePanel, user, buttonsSize, screenDimension);
             final BorderPane deleteUserButton = createDeleteUserButton(getGazePlay(), choicePanel, user, buttonsSize);
             final VBox buttonBox = new VBox();
-            // buttonBox.setSpacing(10);
+
             buttonBox.getChildren().addAll(editUserButton, deleteUserButton);
             user.getChildren().add(buttonBox);
         }
