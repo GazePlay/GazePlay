@@ -147,12 +147,12 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
     }
 
-    void initBackground(final String image_PATH) {
+    void initBackground(final String imagePATH) {
         if (gameContext.getConfiguration().isBackgroundEnabled()) {
             Rectangle background = new Rectangle(0, 0, (int) gameDimension2D.getWidth(), (int) gameDimension2D.getHeight());
             background.widthProperty().bind(gameContext.getRoot().widthProperty());
             background.heightProperty().bind(gameContext.getRoot().heightProperty());
-            background.setFill(new ImagePattern(new Image(image_PATH + "background-potions.jpg")));
+            background.setFill(new ImagePattern(new Image(imagePATH + "background-potions.jpg")));
             gameContext.getChildren().add(background);
         }
     }

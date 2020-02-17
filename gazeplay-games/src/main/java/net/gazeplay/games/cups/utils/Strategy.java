@@ -38,7 +38,7 @@ public class Strategy {
                     final ArrayList<Integer> cupsExchangeCellsXrud = randomCupTwoChoices(false);
                     final ArrayList<Integer> cupsExchangeCellsYrud = randomCupTwoChoices(true);
 
-                    rotation_up_down(cupsExchangeCellsXrud.get(0), cupsExchangeCellsXrud.get(1),
+                    rotationUpDown(cupsExchangeCellsXrud.get(0), cupsExchangeCellsXrud.get(1),
                         cupsExchangeCellsYrud.get(0), cupsExchangeCellsYrud.get(1));
                     break;
                 case rotationMoveClosestInPlace:
@@ -47,7 +47,7 @@ public class Strategy {
                     final ArrayList<Integer> cupsExchangeCellsXrmcip = randomCupTwoChoices(false);
                     final Integer cupStartCellYrmcip = randomCupOneChoice(true);
 
-                    rotation_move_closest_in_place(cupsExchangeCellsXrmcip.get(0), cupsExchangeCellsXrmcip.get(1),
+                    rotationMoveClosestInPlace(cupsExchangeCellsXrmcip.get(0), cupsExchangeCellsXrmcip.get(1),
                         cupStartCellYrmcip);
                     break;
             }
@@ -55,8 +55,8 @@ public class Strategy {
         return actions;
     }
 
-    private void rotation_up_down(final Integer startCellX, final Integer targetCellX, final Integer firstCupMoveToY,
-                                  final Integer secondCupMoveToY) {
+    private void rotationUpDown(final Integer startCellX, final Integer targetCellX, final Integer firstCupMoveToY,
+                                final Integer secondCupMoveToY) {
         actions.add(new Action(startCellX, maxCellsY / 2, startCellX, firstCupMoveToY));
         actions.add(new Action(startCellX, firstCupMoveToY, targetCellX, firstCupMoveToY));
         actions.add(new Action(targetCellX, maxCellsY / 2, targetCellX, secondCupMoveToY));
@@ -65,7 +65,7 @@ public class Strategy {
         actions.add(new Action(targetCellX, firstCupMoveToY, targetCellX, maxCellsY / 2));
     }
 
-    private void rotation_move_closest_in_place(final Integer startCellX, final Integer targetCellX, final Integer firstCupMoveToY) {
+    private void rotationMoveClosestInPlace(final Integer startCellX, final Integer targetCellX, final Integer firstCupMoveToY) {
         actions.add(new Action(startCellX, maxCellsY / 2, startCellX, firstCupMoveToY));
         actions.add(new Action(startCellX, firstCupMoveToY, targetCellX, firstCupMoveToY));
         if (Math.abs(startCellX - targetCellX) == 1) {

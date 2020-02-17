@@ -144,7 +144,7 @@ public class Card extends Parent {
     private void onCorrectCardSelected() {
         stats.incNbGoals();
 
-        final double final_zoom = 1.15;
+        final double finalZoom = 1.15;
 
         progressIndicator.setOpacity(0);
         text.setOpacity(0);
@@ -155,9 +155,9 @@ public class Card extends Parent {
         currentTimeline = new Timeline();
 
         currentTimeline.getKeyFrames().add(
-            new KeyFrame(new Duration(1000), new KeyValue(card.widthProperty(), card.getWidth() * final_zoom)));
+            new KeyFrame(new Duration(1000), new KeyValue(card.widthProperty(), card.getWidth() * finalZoom)));
         currentTimeline.getKeyFrames().add(
-            new KeyFrame(new Duration(1000), new KeyValue(card.heightProperty(), card.getHeight() * final_zoom)));
+            new KeyFrame(new Duration(1000), new KeyValue(card.heightProperty(), card.getHeight() * finalZoom)));
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.xProperty(), 0)));
 
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.yProperty(), 0)));

@@ -234,8 +234,8 @@ public class ColorsGame implements GameLifeCycle {
 
             getGameContext().getConfiguration().getColorsDefaultImageProperty().set(Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE);
 
-            imgURL = Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE;
-            img = new Image(imgURL);
+            String defaultImgURL = Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE;
+            img = new Image(defaultImgURL);
         }
         return img;
     }
