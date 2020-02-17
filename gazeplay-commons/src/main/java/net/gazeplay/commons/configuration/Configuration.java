@@ -257,7 +257,14 @@ public class Configuration {
         fixationSequenceDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED, propertyChangeListener);
         gazeMenuEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU, propertyChangeListener);
         gazeMouseEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE, propertyChangeListener);
-        backgroundStyleProperty = new ApplicationConfigBackedBackgroundStyleProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_STYLE, DEFAULT_VALUE_BACKGROUND_STYLE, propertyChangeListener);
+        backgroundStyleProperty = new ApplicationConfigBackedObjectProperty<BackgroundStyle>(applicationConfig, PROPERTY_NAME_BACKGROUND_STYLE, DEFAULT_VALUE_BACKGROUND_STYLE, propertyChangeListener,
+            Enum::name,
+            (String name) -> {
+                if (name == null) {
+                    return BackgroundStyle.DARK;
+                }
+                return Configuration.BackgroundStyle.valueOf(name);
+            });
         backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_ENABLED, DEFAULT_VALUE_BACKGROUND_ENABLED, propertyChangeListener);
 
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
