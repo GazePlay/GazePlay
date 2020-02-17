@@ -1,6 +1,5 @@
 package net.gazeplay.ui.scenes.configuration;
 
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
@@ -807,11 +806,19 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         });
 
         group.selectedToggleProperty().addListener((o, oldO, newO) -> {
-            if (newO.equals(lightButton)) {
-                configuration.setBackgroundStyle(Configuration.BackgroundStyle.LIGHT);
-            } else {
-                configuration.setBackgroundStyle(Configuration.BackgroundStyle.DARK);
-            }
+            configuration.getBackgroundStyle().accept(new BackgroundStyleVisitor<Void>() {
+                @Override
+                public Void visitLight() {
+                    configuration.setBackgroundStyle(Configuration.BackgroundStyle.LIGHT);
+                    return null;
+                }
+
+                @Override
+                public Void visitDark() {
+                    configuration.setBackgroundStyle(Configuration.BackgroundStyle.DARK);
+                    return null;
+                }
+            });
         });
 
         HBox hb = new HBox();
