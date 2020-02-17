@@ -24,8 +24,11 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -227,8 +230,8 @@ public class ColorsGame implements GameLifeCycle {
     private Image getDrawingImage(String imgURL) {
         Image img;
         try {
-            img = new Image(new FileInputStream(imgURL));
-        } catch (final FileNotFoundException e) {
+            img = new Image(Files.newInputStream(new File(imgURL).toPath()));
+        } catch (final IOException e) {
 
             log.debug("Drawing image " + imgURL + " cannot be found");
 
