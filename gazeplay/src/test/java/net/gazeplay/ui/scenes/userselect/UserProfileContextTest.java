@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
@@ -44,6 +45,7 @@ import java.nio.file.LinkOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -290,6 +292,39 @@ class UserProfileContextTest {
         CustomButton exitButton = (CustomButton) topRightPane.getChildren().get(0);
 
         exitButton.fireEvent(TestingUtils.clickOnTarget(exitButton));
+    }
+
+    @Test
+    void shouldCreateRemoveDialog() throws InterruptedException {
+        UserProfileContext context = new UserProfileContext(mockGazePlay);
+        Stage mockStage = mock(Stage.class);
+        when(mockStage.getHeight()).thenReturn(1080d);
+        when(mockStage.getWidth()).thenReturn(1920d);
+        when(mockStage.getScene()).thenReturn(mockScene);
+        when(mockScene.getRoot()).thenReturn(new BorderPane());
+
+        FlowPane choicePanel = new FlowPane();
+        User user = new User("test");
+
+        choicePanel.getChildren().add(user);
+
+        Platform.runLater(() -> {
+            Stage result = context.createRemoveDialog(mockStage, choicePanel, user, () -> screenDimension);
+            ScrollPane scroller = (ScrollPane) result.getScene().getRoot();
+            HBox choicePane = (HBox) scroller.getContent();
+            assertEquals(2, choicePane.getChildren().size());
+
+            Button yes = (Button) choicePane.getChildren().get(0);
+            Button no = (Button) choicePane.getChildren().get(1);
+
+            yes.fireEvent(TestingUtils.clickOnTarget(yes));
+            assertFalse(choicePanel.getChildren().contains(user));
+
+            result.show();
+            no.fireEvent(TestingUtils.clickOnTarget(no));
+            assertFalse(result.isShowing());
+        });
+        TestingUtils.waitForRunLater();
     }
 
 }
