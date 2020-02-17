@@ -67,6 +67,7 @@ subprojects {
     }
 
     apply from: "${rootDir}/gradle/integration.gradle"
+    apply from: "${rootDir}/gradle/pmd.gradle"
 
     configurations {
         integrationTestImplementation.extendsFrom testImplementation
@@ -96,7 +97,7 @@ subprojects {
     }
 
     dependencies {
-        testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.6.0'
         testImplementation "org.testfx:testfx-core:4.0.16-alpha"
         testImplementation "org.testfx:testfx-junit5:4.0.16-alpha"
         testImplementation "org.testfx:openjfx-monocle:jdk-11+26"
@@ -144,44 +145,6 @@ subprojects {
 
     pmdMain.enabled = pmdEnabled
     pmdTest.enabled = pmdEnabled
-
-    task checkPMDReport {
-        doLast {
-            def pmdReportDir = file("$project.buildDir/reports/pmd/")
-            if (pmdReportDir.exists()) {
-                def pmdReportXml = file("$project.buildDir/reports/pmd/main.xml")
-                if (pmdReportXml.exists()) {
-                    def pmdReportHtml = file("$project.buildDir/reports/pmd/main.html")
-                    def rootNode = new XmlSlurper().parse("$pmdReportXml")
-                    // thresholds are set from actual observations of the number of violation
-                    // goal is that no new violations come in the code base
-                    // as we progressively fix existing violations (or exclude them in pmd-ruleset.xml), we should lower the threshold accordingly
-                    // until the threshold is zero
-                    def violationsThresholds = [
-                            1: 40,
-                            2: 6,
-                            3: 5201,
-                            4: 197,
-                            5: 449
-                    ]
-                    violationsThresholds.each {
-                        priorityLevel, violationsThreshold ->
-
-                            def violationsCount = rootNode.children().children().findAll({ node -> node.name() == 'violation' && node.@priority == priorityLevel }).size()
-                            def violationsMessage = "$violationsCount PMD rule 'priority $priorityLevel' violations were found. See the report at: file://$pmdReportHtml" 
-                            if (violationsCount > violationsThreshold) {
-                                throw new GradleException(violationsMessage)
-                            } else {
-                                if (violationsCount > 0) {
-                                    println violationsMessage
-                                }
-                            }
-                    }
-                }
-            }
-        }
-    }
-
 }
 
 dependencies {

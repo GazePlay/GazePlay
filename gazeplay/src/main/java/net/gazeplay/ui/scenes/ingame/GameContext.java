@@ -39,6 +39,7 @@ import net.gazeplay.ui.AnimationSpeedRatioControl;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.MusicControl;
 import net.gazeplay.ui.scenes.stats.StatsContext;
+import net.gazeplay.ui.scenes.stats.StatsContextFactory;
 
 import java.io.IOException;
 import java.util.function.Supplier;
@@ -216,7 +217,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             asynchronousStatsPersistTask.run();
         }
 
-        StatsContext statsContext = StatsContext.newInstance(gazePlay, stats);
+        StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
 
         this.clear();
 
@@ -272,7 +273,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             currentGame.launch();
         });
 
-        StatsContext statsContext = StatsContext.newInstance(getGazePlay(), stats, continueButton);
+        StatsContext statsContext = StatsContextFactory.newInstance(getGazePlay(), stats, continueButton);
 
         this.clear();
         getGazePlay().onDisplayStats(statsContext);
