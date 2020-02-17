@@ -83,7 +83,6 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
         final String image_PATH = "data/potions/images/";
 
-        /* BACKGROUND */
         initBackground(image_PATH);
 
         /* BIBOULE - CLIENT */

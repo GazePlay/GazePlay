@@ -145,8 +145,6 @@ public class Math101 implements GameLifeCycle {
 
         final Text question = createQuestionText(formula);
 
-        // Background Color
-
         initBackground();
 
         // Add biboule pictures
