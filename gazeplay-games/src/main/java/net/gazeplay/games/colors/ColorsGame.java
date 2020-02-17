@@ -293,9 +293,9 @@ public class ColorsGame implements GameLifeCycle {
 
         final double width = dimension2D.getWidth();
 
-        final double ToolBoxWidth = colorToolBox.getWidth();
-        final double x = width - ToolBoxWidth;
-        log.debug("translated tool box to : {}, x toolBoxWidth : {}", x, ToolBoxWidth);
+        final double toolBoxWidth = colorToolBox.getWidth();
+        final double x = width - toolBoxWidth;
+        log.debug("translated tool box to : {}, x toolBoxWidth : {}", x, toolBoxWidth);
         colorToolBox.setTranslateX(x);
     }
 

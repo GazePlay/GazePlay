@@ -162,10 +162,10 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         fullScreen = new Button();
         fullScreen.setPrefWidth(dimension2D.getWidth() / 12);
         fullScreen.setPrefHeight(dimension2D.getHeight() / 8);
-        final ImageView ScreenIv = new ImageView(new Image("data/gazeMediaPlayer/fullon.png"));
-        ScreenIv.setPreserveRatio(true);
-        ScreenIv.setFitHeight((90 * fullScreen.getHeight()) / 100);
-        fullScreen.setGraphic(ScreenIv);
+        final ImageView screenIv = new ImageView(new Image("data/gazeMediaPlayer/fullon.png"));
+        screenIv.setPreserveRatio(true);
+        screenIv.setFitHeight((90 * fullScreen.getHeight()) / 100);
+        fullScreen.setGraphic(screenIv);
 
         tools.setSpacing(dimension2D.getWidth() / 20);
         tools.setAlignment(Pos.CENTER);

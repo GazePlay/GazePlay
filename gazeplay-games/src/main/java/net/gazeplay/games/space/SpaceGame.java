@@ -189,8 +189,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         shade.setFill(new Color(0, 0, 0, 0.75));
 
         restartButton = new ProgressButton();
-        final String DATA_PATH = "data/space";
-        final ImageView restartImage = new ImageView(DATA_PATH + "/menu/restart.png");
+        final String dataPath = "data/space";
+        final ImageView restartImage = new ImageView(dataPath + "/menu/restart.png");
         restartImage.setFitHeight(dimension2D.getHeight() / 6);
         restartImage.setFitWidth(dimension2D.getHeight() / 6);
         restartButton.setImage(restartImage);

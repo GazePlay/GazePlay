@@ -81,12 +81,12 @@ public class MagicPotions extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
 
-        final String image_PATH = "data/potions/images/";
+        final String imagePATH = "data/potions/images/";
 
-        initBackground(image_PATH);
+        initBackground(imagePATH);
 
         /* BIBOULE - CLIENT */
-        final Image bibouleClient = new Image(image_PATH + "Biboule-Client.png");
+        final Image bibouleClient = new Image(imagePATH + "Biboule-Client.png");
 
         final double bibX = gameDimension2D.getWidth() * 2 / 3 - bibouleClient.getWidth() / 2;
         final double bibY = 50;//
@@ -108,9 +108,9 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         currentRoundDetails.colorRequest = request.getColor();
 
         // 3 potions
-        final Image red = new Image(image_PATH + "potionRed.png");
-        final Image yellow = new Image(image_PATH + "potionYellow.png");
-        final Image blue = new Image(image_PATH + "potionBlue.png");
+        final Image red = new Image(imagePATH + "potionRed.png");
+        final Image yellow = new Image(imagePATH + "potionYellow.png");
+        final Image blue = new Image(imagePATH + "potionBlue.png");
         potionRed = new Potion(gameDimension2D.getWidth() * 6 / 7 - (red.getWidth() + red.getWidth()) * 1.5,
             gameDimension2D.getHeight() - red.getHeight() - 10, red.getWidth(), red.getHeight(), red, Color.RED,
             gameContext, stats, this, gameContext.getConfiguration().getFixationLength());
@@ -130,7 +130,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         gameContext.getChildren().addAll(potionsOnTable);
 
         // mixing Pot
-        final Image mixPotImage = new Image(image_PATH + "mixingPot.png");
+        final Image mixPotImage = new Image(imagePATH + "mixingPot.png");
         currentRoundDetails.mixPot = new Rectangle(gameDimension2D.getWidth() * 2 / 7,
             gameDimension2D.getHeight() - mixPotImage.getHeight(), mixPotImage.getWidth(), mixPotImage.getHeight());
         currentRoundDetails.mixPot.setFill(new ImagePattern(mixPotImage, 0, 0, 1, 1, true));

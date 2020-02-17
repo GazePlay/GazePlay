@@ -321,10 +321,10 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             / ((ImageView) cake[currentCake].getChildren().get(0)).getImage().getWidth();
         final double cakewidth = ((ImageView) cake[currentCake].getChildren().get(0)).getFitWidth();
 
-        double Ypos = cake[currentCake]
+        double posY = cake[currentCake]
             .localToParent(cake[currentCake].getChildren().get(0).localToParent(0, 0)).getY();
-        final double Yppos = Ypos + 7 * cakeheight / 8;
-        Ypos = Ypos + 1.9 * cakeheight / 8;
+        final double updatedPosY = posY + 7 * cakeheight / 8;
+        posY = posY + 1.9 * cakeheight / 8;
 
         final ImageView aerograph = new ImageView(new Image("data/cake/images/aero.png"));
         final ImageView aerograph2 = new ImageView(new Image("data/cake/images/aero.png"));
@@ -345,15 +345,15 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         final Polygon spray = new Polygon();
         spray.getPoints()
             .addAll(offset, 9 * height / 11 + aerograph.localToParent(0, 0).getY(),
-                dimension2D.getWidth() / 2 + cakewidth / 4, Ypos, dimension2D.getWidth() / 2 + cakewidth / 3,
-                Yppos, dimension2D.getWidth() / 2 - cakewidth / 3, Yppos);
+                dimension2D.getWidth() / 2 + cakewidth / 4, posY, dimension2D.getWidth() / 2 + cakewidth / 3,
+                updatedPosY, dimension2D.getWidth() / 2 - cakewidth / 3, updatedPosY);
 
         final Polygon spray2 = new Polygon();
         spray2.getPoints()
             .addAll(dimension2D.getWidth() - offset,
                 9 * height / 11 + aerograph.localToParent(0, 0).getY(),
-                dimension2D.getWidth() / 2 - cakewidth / 4, Ypos, dimension2D.getWidth() / 2 - cakewidth / 3,
-                Yppos, dimension2D.getWidth() / 2 + cakewidth / 3, Yppos);
+                dimension2D.getWidth() / 2 - cakewidth / 4, posY, dimension2D.getWidth() / 2 - cakewidth / 3,
+                updatedPosY, dimension2D.getWidth() / 2 + cakewidth / 3, updatedPosY);
 
         spray.setOpacity(0);
         spray2.setOpacity(0);

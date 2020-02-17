@@ -155,7 +155,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         return fragments;
     }
 
-    public void explose(final double Xcenter, final double Ycenter) {
+    public void explose(final double centerX, final double centerY) {
 
         final Timeline goToCenterTimeline = new Timeline();
         final Timeline timeline = new Timeline();
@@ -164,24 +164,24 @@ public class Bubble extends Parent implements GameLifeCycle {
 
             final Circle fragment = fragments.get(i);
 
-            fragment.setCenterX(Xcenter);
-            fragment.setCenterY(Ycenter);
+            fragment.setCenterX(centerX);
+            fragment.setCenterY(centerY);
             fragment.setOpacity(1);
 
             goToCenterTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                new KeyValue(fragment.centerXProperty(), Xcenter, Interpolator.LINEAR)));
+                new KeyValue(fragment.centerXProperty(), centerX, Interpolator.LINEAR)));
             goToCenterTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                new KeyValue(fragment.centerYProperty(), Ycenter, Interpolator.EASE_OUT)));
+                new KeyValue(fragment.centerYProperty(), centerY, Interpolator.EASE_OUT)));
             goToCenterTimeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.opacityProperty(), 1)));
 
             final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
-            final double XendValue = Math.random() * screenDimension.getWidth();
-            final double YendValue = Math.random() * screenDimension.getHeight();
+            final double endXValue = Math.random() * screenDimension.getWidth();
+            final double endYValue = Math.random() * screenDimension.getHeight();
 
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                new KeyValue(fragment.centerXProperty(), XendValue, Interpolator.LINEAR)));
+                new KeyValue(fragment.centerXProperty(), endXValue, Interpolator.LINEAR)));
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
-                new KeyValue(fragment.centerYProperty(), YendValue, Interpolator.EASE_OUT)));
+                new KeyValue(fragment.centerYProperty(), endYValue, Interpolator.EASE_OUT)));
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(fragment.opacityProperty(), 0)));
         }
 
@@ -213,13 +213,13 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private void enter(final Circle target) {
 
-        final double Xcenter = target.getCenterX();
-        final double Ycenter = target.getCenterY();
+        final double centerX = target.getCenterX();
+        final double centerY = target.getCenterY();
 
         gameContext.getGazeDeviceManager().removeEventFilter(target);
         this.getChildren().remove(target);
 
-        explose(Xcenter, Ycenter); // instead of C to avoid wrong position of the explosion
+        explose(centerX, centerY); // instead of C to avoid wrong position of the explosion
 
         this.newCircle();
         stats.incNbGoals();
@@ -242,21 +242,21 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private Circle buildCircle() {
 
-        final Circle C = new Circle();
+        final Circle newCircle = new Circle();
 
         final double radius = (maxRadius - minRadius) * Math.random() + minRadius;
 
-        C.setRadius(radius);
+        newCircle.setRadius(radius);
 
         if (type == BubbleType.COLOR) {
-            C.setFill(new Color(Math.random(), Math.random(), Math.random(), 0.9));
+            newCircle.setFill(new Color(Math.random(), Math.random(), Math.random(), 0.9));
         } else {
-            C.setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
+            newCircle.setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
         }
         stats.incNbShots();
         stats.incNbShots();
 
-        return C;
+        return newCircle;
     }
 
     private void moveCircle(final Circle circle) {

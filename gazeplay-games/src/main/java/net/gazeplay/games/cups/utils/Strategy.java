@@ -15,7 +15,7 @@ public class Strategy {
     private final int maxCellsY;
 
     private enum Strategies {
-        rotation_up_down, rotation_move_closest_in_place
+        rotationUpDown, rotationMoveClosestInPlace
     }
 
     public Strategy(final int nbCups, final int nbExchanges, final int maxCellsX, final int maxCellsY) {
@@ -29,10 +29,10 @@ public class Strategy {
         for (int iteration = 0; iteration < nbExchanges; iteration++) {
 
             final Random randomGenerator = new Random();
-            final int strategy_choice = randomGenerator.nextInt(Strategies.values().length);
+            final int strategyChoice = randomGenerator.nextInt(Strategies.values().length);
 
-            switch (Strategies.values()[strategy_choice]) {
-                case rotation_up_down:
+            switch (Strategies.values()[strategyChoice]) {
+                case rotationUpDown:
                     log.info("Strategy chosen : rotation_up_down");
 
                     final ArrayList<Integer> cupsExchangeCellsXrud = randomCupTwoChoices(false);
@@ -41,7 +41,7 @@ public class Strategy {
                     rotation_up_down(cupsExchangeCellsXrud.get(0), cupsExchangeCellsXrud.get(1),
                         cupsExchangeCellsYrud.get(0), cupsExchangeCellsYrud.get(1));
                     break;
-                case rotation_move_closest_in_place:
+                case rotationMoveClosestInPlace:
                     log.info("Strategy chosen : rotation_move_closest_in_place");
 
                     final ArrayList<Integer> cupsExchangeCellsXrmcip = randomCupTwoChoices(false);

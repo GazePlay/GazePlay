@@ -24,7 +24,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 public class Card extends Parent {
 
-    private static final float zoom_factor = 1.05f;
+    private static final float zoomFactor = 1.05f;
 
     private final double fixationlength;
 
@@ -207,13 +207,13 @@ public class Card extends Parent {
                 currentTimeline = new Timeline();
 
                 currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                    new KeyValue(card.xProperty(), card.getX() - (initWidth * zoom_factor - initWidth) / 2)));
+                    new KeyValue(card.xProperty(), card.getX() - (initWidth * zoomFactor - initWidth) / 2)));
                 currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                    new KeyValue(card.yProperty(), card.getY() - (initHeight * zoom_factor - initHeight) / 2)));
+                    new KeyValue(card.yProperty(), card.getY() - (initHeight * zoomFactor - initHeight) / 2)));
                 currentTimeline.getKeyFrames().add(
-                    new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth * zoom_factor)));
+                    new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth * zoomFactor)));
                 currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                    new KeyValue(card.heightProperty(), initHeight * zoom_factor)));
+                    new KeyValue(card.heightProperty(), initHeight * zoomFactor)));
 
                 timelineProgressBar = new Timeline();
 
@@ -245,9 +245,9 @@ public class Card extends Parent {
                 currentTimeline = new Timeline();
 
                 currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                    new KeyValue(card.xProperty(), card.getX() + (initWidth * zoom_factor - initWidth) / 2)));
+                    new KeyValue(card.xProperty(), card.getX() + (initWidth * zoomFactor - initWidth) / 2)));
                 currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                    new KeyValue(card.yProperty(), card.getY() + (initHeight * zoom_factor - initHeight) / 2)));
+                    new KeyValue(card.yProperty(), card.getY() + (initHeight * zoomFactor - initHeight) / 2)));
                 currentTimeline.getKeyFrames()
                     .add(new KeyFrame(new Duration(1), new KeyValue(card.widthProperty(), initWidth)));
                 currentTimeline.getKeyFrames()
