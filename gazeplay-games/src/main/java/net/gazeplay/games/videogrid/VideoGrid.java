@@ -20,6 +20,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NText;
@@ -162,7 +163,18 @@ public class VideoGrid implements GameLifeCycle {
         final I18NText errorText = new I18NText(gameContext.getTranslator(), "No video found");
         errorText.setY(dimensions.getHeight() / 2);
         errorText.setTextAlignment(TextAlignment.CENTER);
-        errorText.setFill(gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT) ? Color.BLACK : Color.WHITE);
+        Color errorTextColor = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+            @Override
+            public Color visitLight() {
+                return Color.BLACK;
+            }
+
+            @Override
+            public Color visitDark() {
+                return Color.WHITE;
+            }
+        });
+        errorText.setFill(errorTextColor);
         errorText.setFont(new Font(dimensions.getHeight() / 10));
         errorText.setWrappingWidth(dimensions.getWidth());
         gameContext.getChildren().add(errorText);

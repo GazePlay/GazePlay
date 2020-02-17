@@ -20,6 +20,7 @@ import javafx.scene.text.TextAlignment;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
@@ -167,14 +168,24 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     void initBackground() {
         if (gameContext.getConfiguration().isBackgroundEnabled()) {
             Rectangle backgroundImage = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
-            if (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) {
-                ColorAdjust grayscale = new ColorAdjust();
-                grayscale.setSaturation(-0.7);
-                backgroundImage.setFill(Color.LIGHTSKYBLUE);
-                backgroundImage.setEffect(grayscale);
-            } else {
-                backgroundImage.setFill(Color.SKYBLUE);
-            }
+
+
+            gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Void>() {
+                @Override
+                public Void visitLight() {
+                    ColorAdjust grayscale = new ColorAdjust();
+                    grayscale.setSaturation(-0.7);
+                    backgroundImage.setFill(Color.LIGHTSKYBLUE);
+                    backgroundImage.setEffect(grayscale);
+                    return null;
+                }
+
+                @Override
+                public Void visitDark() {
+                    backgroundImage.setFill(Color.SKYBLUE);
+                    return null;
+                }
+            });
             this.backgroundLayer.getChildren().add(backgroundImage);
         }
     }

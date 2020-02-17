@@ -87,7 +87,7 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_GAZE_MENU = false;
     private static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
     private static final BackgroundStyle DEFAULT_VALUE_BACKGROUND_STYLE = BackgroundStyle.DARK;
-    private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = true;
+    private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = false;
     private static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
@@ -99,8 +99,20 @@ public class Configuration {
     public static final String DEFAULT_VALUE_COLORS_DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
 
     public enum BackgroundStyle {
-        LIGHT,
-        DARK;
+        LIGHT {
+            @Override
+            public <E> E accept(BackgroundStyleVisitor<E> visitor) {
+                return visitor.visitLight();
+            }
+        },
+        DARK {
+            @Override
+            public <E> E accept(BackgroundStyleVisitor<E> visitor) {
+                return visitor.visitDark();
+            }
+
+        };
+        public abstract <E> E accept(BackgroundStyleVisitor<E> visitor);
     }
 
 

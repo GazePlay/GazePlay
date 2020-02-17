@@ -13,6 +13,7 @@ import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -211,7 +212,17 @@ public class Math101 implements GameLifeCycle {
             imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
             imageRectangle.setFill(gameType.getBackgroundColor());
 
-            double imageRectangleOpacity = (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) ? 0.5 : 1;
+            double imageRectangleOpacity = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Double>() {
+                @Override
+                public Double visitLight() {
+                    return 0.5;
+                }
+
+                @Override
+                public Double visitDark() {
+                    return 1.d;
+                }
+            });
             imageRectangle.setOpacity(imageRectangleOpacity);
             gameContext.getChildren().add(imageRectangle);
 

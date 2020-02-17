@@ -25,6 +25,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -125,11 +126,20 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             back.setFill(new ImagePattern(new Image("data/cake/images/background.png")));
             back.setMouseTransparent(true);
 
-            if (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) {
-                ColorAdjust colorAdjust = new ColorAdjust();
-                colorAdjust.setBrightness(0.5);
-                back.setEffect(colorAdjust);
-            }
+            gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Void>() {
+                @Override
+                public Void visitLight() {
+                    ColorAdjust colorAdjust = new ColorAdjust();
+                    colorAdjust.setBrightness(0.5);
+                    back.setEffect(colorAdjust);
+                    return null;
+                }
+
+                @Override
+                public Void visitDark() {
+                    return null;
+                }
+            });
 
             this.getChildren().add(back);
         }
@@ -138,9 +148,19 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     void updateBackgroundColor(Color c) {
         if (background != null) {
             background.setFill(c);
-            if (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) {
-                background.setOpacity(0.5);
-            }
+
+            gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Void>() {
+                @Override
+                public Void visitLight() {
+                    background.setOpacity(0.5);
+                    return null;
+                }
+
+                @Override
+                public Void visitDark() {
+                    return null;
+                }
+            });
         }
     }
 

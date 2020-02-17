@@ -1,5 +1,6 @@
 package net.gazeplay.ui.scenes.configuration;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
@@ -29,6 +30,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
@@ -784,9 +786,19 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         lightButton.setToggleGroup(group);
 
 
-        boolean isLIGHT = configuration.getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT);
-        darkButton.setSelected(!isLIGHT);
-        lightButton.setSelected(isLIGHT);
+        boolean isSelected = configuration.getBackgroundStyle().accept(new BackgroundStyleVisitor<Boolean>() {
+            @Override
+            public Boolean visitLight() {
+                return true;
+            }
+
+            @Override
+            public Boolean visitDark() {
+                return false;
+            }
+        });
+        lightButton.setSelected(isSelected);
+        darkButton.setSelected(!isSelected);
 
         configuration.getBackgroundStyleProperty().addListener((o, oldO, newO) -> {
             boolean isNewLIGHT = newO.equals(Configuration.BackgroundStyle.LIGHT);

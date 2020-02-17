@@ -19,6 +19,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
@@ -148,7 +149,17 @@ public class Race extends Parent implements GameLifeCycle {
         imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
         imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
 
-        double backgroundStyleCoef = (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) ? 0.5 : 1;
+        double backgroundStyleCoef = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Double>() {
+            @Override
+            public Double visitLight() {
+                return 0.5;
+            }
+
+            @Override
+            public Double visitDark() {
+                return 1.d;
+            }
+        });
         int backgroundEnabledCoef = (gameContext.getConfiguration().isBackgroundEnabled()) ? 1 : 0;
 
         imageRectangle.setOpacity(backgroundEnabledCoef * backgroundStyleCoef);

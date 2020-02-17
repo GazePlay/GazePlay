@@ -3,6 +3,7 @@ package net.gazeplay.games.blocs;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -12,6 +13,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ImageLibrary;
@@ -106,7 +108,17 @@ public class Blocs implements GameLifeCycle {
                 if (colors) {
                     bloc.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
                 } else {
-                    final Color c = (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) ? Color.WHITE : Color.BLACK;
+                    final Color c = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+                        @Override
+                        public Color visitLight() {
+                           return Color.WHITE;
+                        }
+
+                        @Override
+                        public Color visitDark() {
+                            return Color.BLACK;
+                        }
+                    });
                     bloc.setFill(c);
                 }
                 gameContext.getChildren().add(bloc);

@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
@@ -249,10 +250,18 @@ public class ColorToolBox extends Pane {
 
         root.getChildren().add(customColorButtonIndic);
 
-        if (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.DARK)) {
+        gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Void>() {
+            @Override
+            public Void visitLight() {
+                return null;
+            }
 
-            this.getStyleClass().add("bg-colored");
-        }
+            @Override
+            public Void visitDark() {
+                getStyleClass().add("bg-colored");
+                return null;
+            }
+        });
 
 
     }

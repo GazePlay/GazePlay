@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -77,7 +78,17 @@ public class Moles extends Parent implements GameLifeCycle {
         lab = new Label();
         String s = "Score:" + nbMolesWhacked;
         lab.setText(s);
-        Color col = (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) ? Color.BLACK : Color.WHITE;
+        Color col = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+            @Override
+            public Color visitLight() {
+                return Color.BLACK;
+            }
+
+            @Override
+            public Color visitDark() {
+                return Color.WHITE;
+            }
+        });
         lab.setTextFill(col);
         lab.setFont(Font.font(dimension2D.getHeight() / 14));
         lab.setLineSpacing(10);
@@ -93,7 +104,17 @@ public class Moles extends Parent implements GameLifeCycle {
     }
 
     void adjustBackground(Rectangle image) {
-        int backgroundStyleCoef = (gameContext.getConfiguration().getBackgroundStyle().equals(Configuration.BackgroundStyle.LIGHT)) ? 2 : 0;
+        int backgroundStyleCoef = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Integer>() {
+            @Override
+            public Integer visitLight() {
+                return 2;
+            }
+
+            @Override
+            public Integer visitDark() {
+                return 0;
+            }
+        });
 
         ColorAdjust colorAdjust = new ColorAdjust();
 
