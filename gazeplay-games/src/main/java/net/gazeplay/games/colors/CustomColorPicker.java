@@ -60,15 +60,12 @@ public class CustomColorPicker extends Pane {
 
         final ToggleGroup colorGroup = new ToggleGroup();
 
-        final AbstractGazeIndicator progressIndicator = new AbstractGazeIndicator(gameContext);
-        progressIndicator.setMouseTransparent(true);
 
         for (int i = 0; i < COLOR_LIST.length / NB_COLOR_PER_ROW; ++i) {
 
             for (int j = 0; j < NB_COLOR_PER_ROW; ++j) {
                 final ColorBox colorBox = new CustomColorBox(gameContext, COLOR_LIST[i * NB_COLOR_PER_ROW + j], root, toolBox, colorGroup,
                     representingBox);
-                colorBox.setProgressIndicator(progressIndicator);
 
                 colorGrid.add(colorBox, j, i);
             }
@@ -106,8 +103,6 @@ public class CustomColorPicker extends Pane {
         closeProgressIndic.addNodeToListen(closeButton,
             toolBox.getColorsGame().getGameContext().getGazeDeviceManager());
 
-        this.getChildren().add(progressIndicator);
         this.getChildren().add(closeProgressIndic);
-        progressIndicator.toFront();
     }
 }
