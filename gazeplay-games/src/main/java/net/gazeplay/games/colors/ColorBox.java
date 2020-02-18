@@ -61,8 +61,8 @@ public class ColorBox extends StackPane {
 
         ColorEventHandler eventHandler = new ColorEventHandler(this);
 
-        this.addEventHandler(MouseEvent.ANY, eventHandler);
-        this.addEventHandler(GazeEvent.ANY, eventHandler);
+        button.addEventHandler(MouseEvent.ANY, eventHandler);
+        button.addEventHandler(GazeEvent.ANY, eventHandler);
 
         this.getChildren().add(button);
 
@@ -146,16 +146,16 @@ public class ColorBox extends StackPane {
 
             } else if (event.getEventType() == MouseEvent.MOUSE_ENTERED
                 || event.getEventType() == GazeEvent.GAZE_ENTERED) {
-
+                getChildren().add(progressIndicator);
                 progressIndicator.setMinSize(colorBox.button.getHeight()/1.5 ,colorBox.button.getHeight()/1.5);
-                progressIndicator.setTranslateX(colorBox.getLayoutX() + colorBox.getWidth()/2 - progressIndicator.getWidth()/2);
-                progressIndicator.setTranslateY(colorBox.getLayoutY() + colorBox.getHeight()/2 + progressIndicator.getMinHeight()/2.5);
                 progressIndicator.setOnFinish((ActionEvent event1) -> action());
+                progressIndicator.toFront();
                 progressIndicator.start();
 
             } else if (event.getEventType() == MouseEvent.MOUSE_EXITED
                 || event.getEventType() == GazeEvent.GAZE_EXITED) {
 
+                getChildren().remove(progressIndicator);
                 progressIndicator.stop();
 
             }

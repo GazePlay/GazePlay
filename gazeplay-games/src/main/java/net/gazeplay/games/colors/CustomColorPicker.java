@@ -60,7 +60,8 @@ public class CustomColorPicker extends Pane {
 
         final ToggleGroup colorGroup = new ToggleGroup();
 
-        final AbstractGazeIndicator progressIndicator = new GazeFollowerIndicator(gameContext, this);
+        final AbstractGazeIndicator progressIndicator = new AbstractGazeIndicator(gameContext);
+        progressIndicator.setMouseTransparent(true);
 
         for (int i = 0; i < COLOR_LIST.length / NB_COLOR_PER_ROW; ++i) {
 

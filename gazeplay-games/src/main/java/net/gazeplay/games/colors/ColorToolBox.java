@@ -115,6 +115,7 @@ public class ColorToolBox extends Pane {
         super();
         this.gameContext = gameContext;
         progressIndicator = new AbstractGazeIndicator(gameContext);
+        progressIndicator.setMouseTransparent(true);
 
         this.selectedColorBox = null;
         this.colorsGame = colorsGame;
@@ -439,6 +440,7 @@ public class ColorToolBox extends Pane {
         }
 
         final AbstractGazeIndicator colorizeButtonIndicator = new AbstractGazeIndicator(gameContext);
+        colorizeButtonIndicator.setMouseTransparent(true);
 
         final Pane colorizeButtonPane = new StackPane(colorize);
         final Pane stopColorizeButtonPane = new StackPane(stopColorize);
