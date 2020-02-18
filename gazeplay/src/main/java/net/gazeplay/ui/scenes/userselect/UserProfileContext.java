@@ -531,7 +531,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                 }
                 modifyUser(user, user.getName(), ip);
 
-                final Configuration conf2 = ConfigurationSource.createFromProfile(user.getName());
+                final Configuration conf = ConfigurationSource.createFromProfile(user.getName());
 
                 if (!chooseImageButton.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
 
@@ -539,7 +539,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                     final File dst = new File(GazePlayDirectories.getUserProfileDirectory(user.getName()), src.getName());
                     copyFile(src, dst);
 
-                    conf2.setUserPicture(dst.getAbsolutePath());
+                    conf.setUserPicture(dst.getAbsolutePath());
                 }
 
                 dialog.close();
