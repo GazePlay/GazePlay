@@ -401,7 +401,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return dialog;
     }
 
-    private Stage createDialog(
+    Stage createDialog(
         final GazePlay gazePlay,
         final Stage primaryStage,
         final FlowPane choicePanel,
@@ -443,7 +443,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             primaryStage.getHeight() / 20,
             primaryStage.getWidth() / 10
         );
-        chooseImageButton.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
+        chooseImageButton.setOnMouseClicked(event -> {
             final String s = getImage(dialog, chooseImageButton);
             if (s != null) {
                 chooseImageButton.setText(s);
@@ -455,7 +455,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             primaryStage.getHeight() / 20,
             primaryStage.getWidth() / 20
         );
-        reset.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event1 -> {
+        reset.setOnMouseClicked(event -> {
             chooseImageButton.setGraphic(null);
             chooseImageButton.setText(getGazePlay().getTranslator().translate("ChooseImage"));
         });
@@ -465,12 +465,12 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         final ImageView iv = new ImageView();
         choicePane.getChildren().addAll(imageField, nameField, iv);
 
-        final Button button = createDialogButton(
+        final Button okButton = createDialogButton(
             "Ok",
             primaryStage.getHeight() / 10,
             primaryStage.getWidth() / 10
         );
-        choicePane.getChildren().add(button);
+        choicePane.getChildren().add(okButton);
 
         final EventHandler<Event> event;
 
@@ -493,14 +493,14 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                     choicePanel.getChildren().add(user);
 
                     ActiveConfigurationContext.switchToUser(newUser1.getName());
-                    final Configuration conf2 = ActiveConfigurationContext.getInstance();
+                    final Configuration conf = ActiveConfigurationContext.getInstance();
                     final File userDirectory = GazePlayDirectories.getUserProfileDirectory(newUser1.getName());
                     final boolean userDirectoryCreated = userDirectory.mkdirs();
                     log.debug("userDirectoryCreated = {}", userDirectoryCreated);
 
-                    conf2.setUserName(newUser1.getName());
+                    conf.setUserName(newUser1.getName());
 
-                    log.info("THE NAME OF THE NEW USER IS = {}", conf2.getUserName());
+                    log.info("THE NAME OF THE NEW USER IS = {}", conf.getUserName());
 
                     if (!chooseImageButton.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
 
@@ -508,10 +508,10 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                         final File dst = new File(GazePlayDirectories.getUserProfileDirectory(newUser1.getName()), src.getName());
                         copyFile(src, dst);
 
-                        conf2.setUserPicture(dst.getAbsolutePath());
+                        conf.setUserPicture(dst.getAbsolutePath());
                     }
 
-                    conf2.setFileDir(GazePlayDirectories.getFileDirectoryUserValue(newUser1.getName()).getAbsolutePath());
+                    conf.setFileDir(GazePlayDirectories.getFileDirectoryUserValue(newUser1.getName()).getAbsolutePath());
 
                     dialog.close();
                     primaryStage.getScene().getRoot().setEffect(null);
@@ -546,7 +546,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                 primaryStage.getScene().getRoot().setEffect(null);
             };
         }
-        button.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
+        okButton.setOnMouseClicked(event);
 
         final Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
 
@@ -558,7 +558,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return dialog;
     }
 
-    static Button createDialogButton(String text, double minHeight, double minWidth) {
+    private static Button createDialogButton(String text, double minHeight, double minWidth) {
         final Button button = new Button(text);
         button.getStyleClass().add("gameChooserButton");
         button.getStyleClass().add("gameVariation");
@@ -579,7 +579,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         if (ip != null) {
             r.setFill(ip);
         }
-        if ((name != null) && (!name.equals(""))) {
+        if ((name != null) && (!name.isBlank())) {
             ((Text) c.getBottom()).setText(name);
         }
     }
