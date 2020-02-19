@@ -146,8 +146,10 @@ public class ColorBox extends StackPane {
 
             } else if (event.getEventType() == MouseEvent.MOUSE_ENTERED
                 || event.getEventType() == GazeEvent.GAZE_ENTERED) {
-                getChildren().add(progressIndicator);
-                progressIndicator.setMinSize(colorBox.button.getHeight()/1.5 ,colorBox.button.getHeight()/1.5);
+                if (!getChildren().contains(progressIndicator)) {
+                    getChildren().add(progressIndicator);
+                }
+                progressIndicator.setMinSize(colorBox.button.getHeight() / 1.5, colorBox.button.getHeight() / 1.5);
                 progressIndicator.setOnFinish((ActionEvent event1) -> action());
                 progressIndicator.toFront();
                 progressIndicator.start();

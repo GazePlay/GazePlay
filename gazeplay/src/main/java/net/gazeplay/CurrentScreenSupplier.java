@@ -51,7 +51,7 @@ public class CurrentScreenSupplier implements Supplier<Screen> {
             return primaryScreenSupplier.get();
         }
         Screen screen = screensForRectangle.get(0);
-        log.info("current screen = {}", screen);
+        //log.info("current screen = {}", screen);
         return screen;
     }
 }

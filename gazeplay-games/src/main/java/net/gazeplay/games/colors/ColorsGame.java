@@ -6,7 +6,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -609,14 +608,6 @@ public class ColorsGame implements GameLifeCycle {
             currentX = event.getX();
             currentY = event.getY();
 
-            final Point2D eventCoord = new Point2D(currentX, currentY);
-            final Point2D localCoord = root.screenToLocal(eventCoord);
-
-            if (localCoord != null) {
-                currentX = localCoord.getX();
-                currentY = localCoord.getY();
-            }
-
             // If gaze still around first point
             if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
                 && gazeYOrigin - GAZE_MOVING_THRESHOLD < currentY
@@ -640,14 +631,6 @@ public class ColorsGame implements GameLifeCycle {
         private void onGazeEntered(final GazeEvent event) {
             currentX = event.getX();
             currentY = event.getY();
-
-            final Point2D eventCoord = new Point2D(currentX, currentY);
-            final Point2D localCoord = root.screenToLocal(eventCoord);
-
-            if (localCoord != null) {
-                currentX = localCoord.getX();
-                currentY = localCoord.getY();
-            }
 
             gazeXOrigin = currentX;
             gazeYOrigin = currentY;
