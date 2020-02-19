@@ -2,7 +2,7 @@ pmdMain.group = 'verification'
 pmdTest.group = 'verification'
 
 def gazeplayViolationThresholds = [
-        1: 2,
+        1: 0,
         2: 0,
         3: 1895,
         4: 22,

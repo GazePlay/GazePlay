@@ -1,7 +1,5 @@
 package net.gazeplay.ui.scenes.stats;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -18,7 +16,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
@@ -251,7 +248,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
 
         HBox controlButtonPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(controlButtonPane);
+        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(controlButtonPane);
         controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
 
         if (config.getAreaOfInterestDisabledProperty().getValue())
