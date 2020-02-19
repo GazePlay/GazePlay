@@ -216,7 +216,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
                 gazeTarget = new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
             } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
-                gazeTarget = interactionOverlay.screenToLocal(((GazeEvent) event).getX(), ((GazeEvent) event).getY());
+                gazeTarget = new Point2D(((GazeEvent) event).getX(), ((GazeEvent) event).getY());
             }
         };
 
