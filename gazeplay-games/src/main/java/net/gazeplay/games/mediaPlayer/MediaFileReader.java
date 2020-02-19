@@ -27,6 +27,7 @@ public class MediaFileReader {
     @Getter
     private IntegerProperty firstMediaDisplayedIndex;
 
+    @Getter
     private IntegerProperty playingMediaIndex;
 
     private IntegerProperty newIntegerProperty(){
@@ -42,6 +43,7 @@ public class MediaFileReader {
             }
         };
     }
+
 
     public void setPlayingMediaIndex (int newIndex){
         playingMediaIndex.setValue( newIndex);
@@ -102,12 +104,20 @@ public class MediaFileReader {
         return mediaList.get(playingMediaIndex.getValue());
     }
 
+
     MediaFile mediaToPlayPrevious() {
         if (mediaList.isEmpty()) {
             return null;
         }
         playingMediaIndex.setValue((playingMediaIndex.getValue() - 1 + mediaList.size()) % mediaList.size());
         return mediaList.get(playingMediaIndex.getValue());
+    }
+
+    int getIndexofFirsToDisplay() {
+        if (mediaList.isEmpty()) {
+            return -1;
+        }
+        return firstMediaDisplayedIndex.getValue();
     }
 
     void addMedia(MediaFile mf) {
