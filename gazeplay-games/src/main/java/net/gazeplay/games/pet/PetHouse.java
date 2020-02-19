@@ -215,17 +215,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
                     - gameContext.getPrimaryStage().getY() - hand.getHeight() / 2);
             } else if (e.getEventType() == GazeEvent.GAZE_MOVED) {
-                final float[] pointAsFloatArray = Tobii.gazePosition();
-
-                final float xRatio = pointAsFloatArray[0];
-                final float yRatio = pointAsFloatArray[1];
-
-                final double positionX = xRatio * screenWidth;
-                final double positionY = yRatio * screenHeight;
-
-                hand.setX(offsetx + positionX - gameContext.getPrimaryStage().getX()
+                hand.setX(offsetx + ((GazeEvent) e).getX()
                     - hand.getWidth() / 2);
-                hand.setY(offsety + positionY - gameContext.getPrimaryStage().getY()
+                hand.setY(offsety + ((GazeEvent) e).getY()
                     - hand.getHeight() / 2);
             }
         };
@@ -245,23 +237,14 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 offsety = -hand.getHeight() / 4;
             }
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
-                    - gameContext.getPrimaryStage().getX() - hand.getWidth() / 2);
-                hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
-                    - gameContext.getPrimaryStage().getY() - hand.getHeight() / 2);
-
-            } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                final float[] pointAsFloatArray = Tobii.gazePosition();
-
-                final float xRatio = pointAsFloatArray[0];
-                final float yRatio = pointAsFloatArray[1];
-
-                final double positionX = xRatio * screenWidth;
-                final double positionY = yRatio * screenHeight;
-
-                hand.setX(offsetx + positionX - gameContext.getPrimaryStage().getX()
+                hand.setX(offsetx + ((MouseEvent) e).getX()
                     - hand.getWidth() / 2);
-                hand.setY(offsety + positionY - gameContext.getPrimaryStage().getY()
+                hand.setY(offsety + ((MouseEvent) e).getY()
+                    - hand.getHeight() / 2);
+            } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                hand.setX(offsetx + ((GazeEvent) e).getX()
+                    - hand.getWidth() / 2);
+                hand.setY(offsety + ((GazeEvent) e).getY()
                     - hand.getHeight() / 2);
             }
         };
@@ -620,7 +603,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
         bowl.addEventFilter(GazeEvent.GAZE_ENTERED, handenter);
 
         bowl.addEventFilter(MouseEvent.MOUSE_MOVED, handevent);
-        bowl.addEventFilter(GazeEvent.GAZE_MOVED, handevent);
         gameContext.getGazeDeviceManager().addEventFilter(bowl);
 
         gameContext.getChildren().add(bowl);
