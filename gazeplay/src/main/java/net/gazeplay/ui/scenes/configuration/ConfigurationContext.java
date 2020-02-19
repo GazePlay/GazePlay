@@ -29,6 +29,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.BackgroundStyle;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
@@ -785,40 +786,42 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         lightButton.setToggleGroup(group);
 
 
-        boolean isSelected = configuration.getBackgroundStyle().accept(new BackgroundStyleVisitor<Boolean>() {
+        configuration.getBackgroundStyle().accept(new BackgroundStyleVisitor<Void>() {
             @Override
-            public Boolean visitLight() {
-                return true;
+            public Void visitLight() {
+                lightButton.setSelected(true);
+                return null;
             }
 
             @Override
-            public Boolean visitDark() {
-                return false;
+            public Void visitDark() {
+                darkButton.setSelected(true);
+                return null;
             }
         });
-        lightButton.setSelected(isSelected);
-        darkButton.setSelected(!isSelected);
 
         configuration.getBackgroundStyleProperty().addListener((o, oldO, newO) -> {
-            boolean isNewLIGHT = newO.equals(Configuration.BackgroundStyle.LIGHT);
-            darkButton.setSelected(!isNewLIGHT);
-            lightButton.setSelected(isNewLIGHT);
-        });
-
-        group.selectedToggleProperty().addListener((o, oldO, newO) -> {
-            configuration.getBackgroundStyle().accept(new BackgroundStyleVisitor<Void>() {
+            newO.accept(new BackgroundStyleVisitor<Void>() {
                 @Override
                 public Void visitLight() {
-                    configuration.setBackgroundStyle(Configuration.BackgroundStyle.LIGHT);
+                    lightButton.setSelected(true);
                     return null;
                 }
 
                 @Override
                 public Void visitDark() {
-                    configuration.setBackgroundStyle(Configuration.BackgroundStyle.DARK);
+                    darkButton.setSelected(true);
                     return null;
                 }
             });
+        });
+
+        group.selectedToggleProperty().addListener((o, oldO, newO) -> {
+            if (newO == lightButton) {
+                configuration.setBackgroundStyle(BackgroundStyle.LIGHT);
+            } else if (newO == darkButton) {
+                configuration.setBackgroundStyle(BackgroundStyle.DARK);
+            }
         });
 
         HBox hb = new HBox();
@@ -839,7 +842,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         return checkBox;
     }
-
 
     static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(
         Configuration configuration
