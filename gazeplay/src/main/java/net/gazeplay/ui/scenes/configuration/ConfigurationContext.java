@@ -816,10 +816,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             });
         });
 
-        group.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == lightButton) {
+        lightButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal){
                 configuration.setBackgroundStyle(BackgroundStyle.LIGHT);
-            } else if (newVal == darkButton) {
+            }
+        });
+
+        darkButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal){
                 configuration.setBackgroundStyle(BackgroundStyle.DARK);
             }
         });
