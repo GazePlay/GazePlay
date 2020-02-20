@@ -291,12 +291,6 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                 videoSide.getChildren().remove(addVideo);
                 final BorderPane bp = new BorderPane();
                 bp.setCenter(videoSide);
-                /*
-                 * double offset = (mediaView.getFitHeight() == 0) ? (7 * dimension2D.getHeight()) / 8 :
-                 * mediaView.getFitHeight();
-                 *
-                 * double x = (dimension2D.getHeight() - (offset + left.getHeight()));
-                 */
                 bp.setLayoutY(0);
                 gameContext.getChildren().add(bp);
             } else {

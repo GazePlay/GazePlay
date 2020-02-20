@@ -3,7 +3,6 @@ package net.gazeplay.games.mediaPlayer;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.IntegerPropertyBase;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -29,25 +28,6 @@ public class MediaFileReader {
 
     @Getter
     private IntegerProperty playingMediaIndex;
-
-    private IntegerProperty newIntegerProperty(){
-        return new IntegerPropertyBase() {
-            @Override
-            public Object getBean() {
-                return null;
-            }
-
-            @Override
-            public String getName() {
-                return null;
-            }
-        };
-    }
-
-
-    public void setPlayingMediaIndex (int newIndex){
-        playingMediaIndex.setValue( newIndex);
-    }
 
     MediaFileReader(IGameContext gameContext) {
         this.gameContext = gameContext;
@@ -80,20 +60,34 @@ public class MediaFileReader {
         }
     }
 
-    public MediaFile next() {
-        if (mediaList.isEmpty()) {
-            return null;
-        }
-        firstMediaDisplayedIndex.setValue((firstMediaDisplayedIndex.getValue() + 1) % mediaList.size());
-        return mediaList.get(firstMediaDisplayedIndex.getValue());
+    private IntegerProperty newIntegerProperty() {
+        return new IntegerPropertyBase() {
+            @Override
+            public Object getBean() {
+                return null;
+            }
+
+            @Override
+            public String getName() {
+                return null;
+            }
+        };
     }
 
-    MediaFile previous() {
-        if (mediaList.isEmpty()) {
-            return null;
+    public void setPlayingMediaIndex(int newIndex) {
+        playingMediaIndex.setValue(newIndex);
+    }
+
+    public void next() {
+        if (!mediaList.isEmpty()) {
+            firstMediaDisplayedIndex.setValue((firstMediaDisplayedIndex.getValue() + 1) % mediaList.size());
         }
-        firstMediaDisplayedIndex.setValue((firstMediaDisplayedIndex.getValue() - 1 + mediaList.size()) % mediaList.size());
-        return mediaList.get(firstMediaDisplayedIndex.getValue());
+    }
+
+    void previous() {
+        if (!mediaList.isEmpty()) {
+            firstMediaDisplayedIndex.setValue((firstMediaDisplayedIndex.getValue() - 1 + mediaList.size()) % mediaList.size());
+        }
     }
 
     MediaFile mediaToPlayNext() {
