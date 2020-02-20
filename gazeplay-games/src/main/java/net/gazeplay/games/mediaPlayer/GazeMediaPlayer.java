@@ -365,12 +365,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     private void setMusicListListener() {
         musicList.getFirstMediaDisplayedIndex().addListener((o, oldValue, newValue) -> {
 
-            if (oldValue.intValue() < newValue.intValue()) {
                 updateMusic();
-
-            } else {
-                updateMusic();
-            }
 
         });
     }
