@@ -158,6 +158,8 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     private Button createButton(String text, double width, double height) {
         Button button = new Button(text);
+        button.setMinWidth(width);
+        button.setMinHeight(height);
         button.setPrefWidth(width);
         button.setPrefHeight(height);
         return button;
@@ -371,10 +373,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         title.setPromptText("enter the title of the media");
         title.setMaxWidth(primaryStage.getWidth() / 5);
 
-        final Button tfi = new Button(gameContext.getTranslator().translate("ChooseImage"));
-        tfi.getStyleClass().add("gameChooserButton");
-        tfi.getStyleClass().add("gameVariation");
-        tfi.getStyleClass().add("button");
+        final Button tfi = createMediaButton(gameContext.getTranslator().translate("ChooseImage"), primaryStage.getWidth() / 10, primaryStage.getHeight() / 10);
         tfi.setMinHeight(primaryStage.getHeight() / 20);
         tfi.setMinWidth(primaryStage.getWidth() / 10);
 
@@ -398,12 +397,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         tf.setMaxWidth(primaryStage.getWidth() / 10);
         urlField.getChildren().add(tf);
 
-        final Button buttonURL = new Button("Ok");
-        buttonURL.getStyleClass().add("gameChooserButton");
-        buttonURL.getStyleClass().add("gameVariation");
-        buttonURL.getStyleClass().add("button");
-        buttonURL.setMinHeight(primaryStage.getHeight() / 10);
-        buttonURL.setMinWidth(primaryStage.getWidth() / 10);
+        final Button buttonURL = createMediaButton("Ok", primaryStage.getWidth() / 10, primaryStage.getHeight() / 10);
 
         urlSide.getChildren().addAll(urlField, buttonURL);
         // ___ URL BLOCK
@@ -412,12 +406,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         final VBox pathSide = new VBox();
         pathSide.setSpacing(10);
 
-        final Button pathField = new Button("new media");
-        pathField.getStyleClass().add("gameChooserButton");
-        pathField.getStyleClass().add("gameVariation");
-        pathField.getStyleClass().add("button");
-        pathField.minHeightProperty().bind(tf.heightProperty());
-        pathField.setMinWidth(primaryStage.getWidth() / 10);
+        final Button pathField = createMediaButton("new Media", primaryStage.getWidth() / 10, primaryStage.getHeight() / 10);
 
         final EventHandler<Event> eventNew;
         eventNew = mouseEvent -> {
@@ -427,13 +416,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
         pathField.addEventHandler(MouseEvent.MOUSE_CLICKED, eventNew);
 
-        final Button buttonPath = new Button("Ok");
-        buttonPath.getStyleClass().add("gameChooserButton");
-        buttonPath.getStyleClass().add("gameVariation");
-        buttonPath.getStyleClass().add("button");
-        buttonPath.setMinHeight(primaryStage.getHeight() / 10);
-        buttonPath.setMinWidth(primaryStage.getWidth() / 10);
-
+        final Button buttonPath = createMediaButton("Ok", primaryStage.getWidth() / 10, primaryStage.getHeight() / 10);
         pathSide.getChildren().addAll(pathField, buttonPath);
         // ___ PATH BLOCK
 
@@ -501,6 +484,15 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         return dialog;
     }
 
+    private Button createMediaButton(String text, double width, double height) {
+        Button button = createButton(text, width, height);
+        button.getStyleClass().add("gameChooserButton");
+        button.getStyleClass().add("gameVariation");
+        button.getStyleClass().add("button");
+        return button;
+    }
+
+
     private String getPath(final Stage primaryStage) {
         String s = null;
         final FileChooser fileChooser = new FileChooser();
@@ -558,43 +550,32 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         };
     }
 
-    private void putMusic(final boolean up) {
+    private void setupMedia(int i, MediaFile mediaFile) {
+        mediaButtons[i].setText(mediaFile.getName());
+        mediaButtons[i].setMediaFile(mediaFile);
+        switch (mediaFile.getType()) {
+            case "URL":
+                mediaButtons[i].setupEvent(handlerURL(mediaFile));
+                break;
+            case "MEDIA":
+                mediaButtons[i].setupEvent(handlerMedia(mediaFile));
+                break;
+        }
+    }
+
+    private void putMusic(final boolean ArrowDirection) {
         int index = musicList.getIndexofFirsToDisplay();
         if (index != -1) {
             for (int i = 0; i < 3; i++) {
-                MediaFile mf = musicList.getMediaList().get(index);
 
-                final EventHandler<Event> event;
+                MediaFile mediaFile = musicList.getMediaList().get(index);
 
-                if (mf != null && mf.getType().equals("URL")) {
-
-                    mediaButtons[i].setText(mf.getName());
-
-                    event = handlerURL(mf);
-
-                    mediaButtons[i].setupEvent(event);
-
-                } else if (mf != null && mf.getType().equals("MEDIA")) {
-
-                    mediaButtons[i].setText(mf.getName());
-
-                    event = handlerMedia(mf);
-
-                    mediaButtons[i].setupEvent(event);
+                if (mediaFile != null) {
+                    setupMedia(i, mediaFile);
+                    mediaButtons[i].setupImage();
                 }
 
-                if (mf != null && mf.getImagepath() != null) {
-                    final File f = new File(mf.getImagepath());
-                    final ImageView iv = new ImageView(new Image(f.toURI().toString()));
-                    iv.setPreserveRatio(true);
-                    iv.fitHeightProperty().bind(mediaButtons[i].heightProperty().multiply(9.0 / 10.0));
-                    iv.fitWidthProperty().bind(mediaButtons[i].widthProperty().multiply(9.0 / 10.0));
-                    mediaButtons[i].setGraphic(iv);
-                } else {
-                    mediaButtons[i].setGraphic(null);
-                }
-
-                if (up) {
+                if (ArrowDirection) {
                     index = (index + 1) % musicList.getMediaList().size();
                 } else {
                     index = (index - 1 + musicList.getMediaList().size()) % musicList.getMediaList().size();

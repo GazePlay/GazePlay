@@ -16,19 +16,20 @@ public class MediaButton extends Button {
 
     @Getter
     @Setter
-    private EventHandler<Event> mediaEvent = e -> { };
+    private EventHandler<Event> mediaEvent = e -> {
+    };
 
     @Getter
     @Setter
     private MediaFile mediaFile;
 
-    MediaButton(double width, double height){
+    MediaButton(double width, double height) {
         super();
         this.setPrefWidth(width);
         this.setPrefHeight(height);
     }
 
-    public void setupImage(){
+    void setupImage() {
         if (mediaFile != null && mediaFile.getImagepath() != null) {
             final File f = new File(mediaFile.getImagepath());
             final ImageView iv = new ImageView(new Image(f.toURI().toString()));
@@ -41,12 +42,12 @@ public class MediaButton extends Button {
         }
     }
 
-    public void setupEvent(EventHandler<Event> newMediaEvent){
+    void setupEvent(EventHandler<Event> newMediaEvent) {
         this.removeEventFilter(MouseEvent.MOUSE_CLICKED, mediaEvent);
         this.removeEventFilter(GazeEvent.GAZE_ENTERED, mediaEvent);
-       this.setMediaEvent(newMediaEvent);
-       this.addEventFilter(MouseEvent.MOUSE_CLICKED, this.getMediaEvent());
-       this.addEventFilter(GazeEvent.GAZE_ENTERED, this.getMediaEvent());
+        this.setMediaEvent(newMediaEvent);
+        this.addEventFilter(MouseEvent.MOUSE_CLICKED, this.getMediaEvent());
+        this.addEventFilter(GazeEvent.GAZE_ENTERED, this.getMediaEvent());
     }
 
 
