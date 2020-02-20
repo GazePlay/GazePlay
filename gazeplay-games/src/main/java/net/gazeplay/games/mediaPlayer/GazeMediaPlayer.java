@@ -600,6 +600,8 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             case "MEDIA":
                 mediaButtons[i].setupEvent(handlerMedia(mediaFile), progressIndicator);
                 break;
+            default :
+                break;
         }
     }
 
