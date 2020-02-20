@@ -277,7 +277,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         };
 
         setupHandlerWithProgressIndicator(left, eventLeft);
-        setupHandlerWithProgressIndicator(right, eventLeft);
+        setupHandlerWithProgressIndicator(right, eventRight);
 
     }
 
