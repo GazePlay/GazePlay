@@ -213,7 +213,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         createAddVideoHandler();
         createUpDownHandlers();
         createLeftRightHandlers();
-        setMusicListeListener();
+        setMusicListListener();
     }
 
     private void stopMedia() {
@@ -316,14 +316,14 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     }
 
-    private void setMusicListeListener() {
+    private void setMusicListListener() {
         musicList.getFirstMediaDisplayedIndex().addListener((o, oldValue, newValue) -> {
 
             if (oldValue.intValue() < newValue.intValue()) {
-                putMusic(false);
+                updateMusic(false);
 
             } else {
-                putMusic(true);
+                updateMusic(true);
             }
 
         });
@@ -563,24 +563,20 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         }
     }
 
-    private void putMusic(final boolean ArrowDirection) {
+    private void updateMusic(final boolean ArrowDirection) {
         int index = musicList.getIndexofFirsToDisplay();
         if (index != -1) {
-            for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 3; i++) {
 
-                MediaFile mediaFile = musicList.getMediaList().get(index);
+                    MediaFile mediaFile = musicList.getMediaList().get(index);
 
-                if (mediaFile != null) {
-                    setupMedia(i, mediaFile);
-                    mediaButtons[i].setupImage();
-                }
+                    if (mediaFile != null) {
+                        setupMedia(i, mediaFile);
+                        mediaButtons[i].setupImage();
+                    }
 
-                if (ArrowDirection) {
                     index = (index + 1) % musicList.getMediaList().size();
-                } else {
-                    index = (index - 1 + musicList.getMediaList().size()) % musicList.getMediaList().size();
                 }
-            }
         }
 
     }
