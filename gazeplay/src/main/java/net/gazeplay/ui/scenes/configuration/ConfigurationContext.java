@@ -800,8 +800,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             }
         });
 
-        configuration.getBackgroundStyleProperty().addListener((o, oldO, newO) -> {
-            newO.accept(new BackgroundStyleVisitor<Void>() {
+        configuration.getBackgroundStyleProperty().addListener((obs, oldVal, newVal) -> {
+            newVal.accept(new BackgroundStyleVisitor<Void>() {
                 @Override
                 public Void visitLight() {
                     lightButton.setSelected(true);
@@ -816,10 +816,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             });
         });
 
-        group.selectedToggleProperty().addListener((o, oldO, newO) -> {
-            if (newO == lightButton) {
+        group.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal == lightButton) {
                 configuration.setBackgroundStyle(BackgroundStyle.LIGHT);
-            } else if (newO == darkButton) {
+            } else if (newVal == darkButton) {
                 configuration.setBackgroundStyle(BackgroundStyle.DARK);
             }
         });
