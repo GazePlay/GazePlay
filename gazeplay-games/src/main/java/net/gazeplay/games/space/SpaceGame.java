@@ -34,6 +34,7 @@ import net.gazeplay.components.ProgressButton;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -189,8 +190,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         shade.setFill(new Color(0, 0, 0, 0.75));
 
         restartButton = new ProgressButton();
-        final String DATA_PATH = "data/space";
-        final ImageView restartImage = new ImageView(DATA_PATH + "/menu/restart.png");
+        final String dataPath = "data/space";
+        final ImageView restartImage = new ImageView(dataPath + "/menu/restart.png");
         restartImage.setFitHeight(dimension2D.getHeight() / 6);
         restartImage.setFitWidth(dimension2D.getHeight() / 6);
         restartButton.setImage(restartImage);
@@ -568,7 +569,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                 highscores = new ArrayList(highscores.subList(highscores.size() - 3, highscores.size()));
             }
 
-            final Writer writer = new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8);
+            final Writer writer = new OutputStreamWriter(Files.newOutputStream(f.toPath()), StandardCharsets.UTF_8);
             for (final int i : highscores) {
                 writer.write(i + ":");
             }

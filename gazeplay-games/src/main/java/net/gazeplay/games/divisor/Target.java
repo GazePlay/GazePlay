@@ -15,6 +15,7 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -167,7 +168,17 @@ class Target extends Parent {
                 || ((lapin) && (gameContext.getChildren().size() <= 1))) {
                 final long totalTime = (System.currentTimeMillis() - startTime) / 1000;
                 final Label l = new Label("Score : " + totalTime + "s");
-                final Color color = (gameContext.getConfiguration().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
+                final Color color = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+                    @Override
+                    public Color visitLight() {
+                        return Color.BLACK;
+                    }
+
+                    @Override
+                    public Color visitDark() {
+                        return Color.WHITE;
+                    }
+                });
                 l.setTextFill(color);
                 l.setFont(Font.font(50));
                 l.setLineSpacing(10);
@@ -181,12 +192,14 @@ class Target extends Parent {
     }
 
     private void createChildren(final double x, double y) {
+        double tempX = x;
+        double tempY = y;
         for (int i = 0; i < 2; i++) {
             final Target target = new Target(gameContext, stats, this.imgLib, level + 1, startTime, gameInstance,
-                new Position(x, y), lapin);
+                new Position(tempX, tempY), lapin);
 
-            if (y + target.radius > (int) dimension.getHeight()) {
-                y = (int) dimension.getHeight() - (int) target.radius * 2;
+            if (tempY + target.radius > (int) dimension.getHeight()) {
+                tempY = (int) dimension.getHeight() - (int) target.radius * 2;
             }
 
             gameContext.getChildren().add(target);

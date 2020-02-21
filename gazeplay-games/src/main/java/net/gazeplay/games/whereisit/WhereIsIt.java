@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
@@ -83,13 +84,24 @@ public class WhereIsIt implements GameLifeCycle {
 
     }
 
-    private Transition createQuestionTransition(final String question, final List<Image> Pictos) {
+    private Transition createQuestionTransition(final String question, final List<Image> listOfPictos) {
 
         questionText = new Text(question);
 
         questionText.setTranslateY(0);
 
-        final String color = (gameContext.getConfiguration().isBackgroundWhite()) ? "titleB" : "titleW";
+        final String color = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<String>() {
+            @Override
+            public String visitLight() {
+                return "titleB";
+            }
+
+            @Override
+            public String visitDark() {
+                return "titleW";
+            }
+        });
+
         questionText.setId(color);
 
         final Dimension2D gamePaneDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -108,12 +120,12 @@ public class WhereIsIt implements GameLifeCycle {
         // them
         // from the group later
 
-        if (Pictos != null && !Pictos.isEmpty() && Pictos.size() <= NBMAXPICTO) {
+        if (listOfPictos != null && !listOfPictos.isEmpty() && listOfPictos.size() <= NBMAXPICTO) {
 
             final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
             final double screenWidth = screenDimension.getWidth();
 
-            final double nbPicto = Pictos.size();
+            final double nbPicto = listOfPictos.size();
 
             double pictoSize = screenWidth / (nbPicto + 1);
 
@@ -128,13 +140,13 @@ public class WhereIsIt implements GameLifeCycle {
 
             log.debug("shift Size: {}", shift);
 
-            for (final Image I : Pictos) {
+            for (final Image picto : listOfPictos) {
 
-                final Rectangle R = new Rectangle(pictoSize, pictoSize);
-                R.setFill(new ImagePattern(I));
-                R.setY(positionY + 100);
-                R.setX(shift + (i++ * pictoSize * 1.1));
-                pictogramesList.add(R);
+                final Rectangle pictoRectangle = new Rectangle(pictoSize, pictoSize);
+                pictoRectangle.setFill(new ImagePattern(picto));
+                pictoRectangle.setY(positionY + 100);
+                pictoRectangle.setX(shift + (i++ * pictoSize * 1.1));
+                pictogramesList.add(pictoRectangle);
             }
 
             gameContext.getChildren().addAll(pictogramesList);
@@ -466,9 +478,9 @@ public class WhereIsIt implements GameLifeCycle {
 
             final Configuration config = gameContext.getConfiguration();
 
-            final File F = new File(config.getWhereIsItDir() + "/questions.csv");
+            final File questionFile = new File(config.getWhereIsItDir() + "/questions.csv");
 
-            final Multilinguism localMultilinguism = Multilinguism.getForResource(F.toString());
+            final Multilinguism localMultilinguism = Multilinguism.getForResource(questionFile.toString());
 
             return localMultilinguism.getTrad(folder, language);
         }

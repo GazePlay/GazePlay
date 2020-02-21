@@ -15,7 +15,7 @@ public class Strategy {
     private final int maxCellsY;
 
     private enum Strategies {
-        rotation_up_down, rotation_move_closest_in_place
+        rotationUpDown, rotationMoveClosestInPlace
     }
 
     public Strategy(final int nbCups, final int nbExchanges, final int maxCellsX, final int maxCellsY) {
@@ -29,25 +29,25 @@ public class Strategy {
         for (int iteration = 0; iteration < nbExchanges; iteration++) {
 
             final Random randomGenerator = new Random();
-            final int strategy_choice = randomGenerator.nextInt(Strategies.values().length);
+            final int strategyChoice = randomGenerator.nextInt(Strategies.values().length);
 
-            switch (Strategies.values()[strategy_choice]) {
-                case rotation_up_down:
+            switch (Strategies.values()[strategyChoice]) {
+                case rotationUpDown:
                     log.info("Strategy chosen : rotation_up_down");
 
                     final ArrayList<Integer> cupsExchangeCellsXrud = randomCupTwoChoices(false);
                     final ArrayList<Integer> cupsExchangeCellsYrud = randomCupTwoChoices(true);
 
-                    rotation_up_down(cupsExchangeCellsXrud.get(0), cupsExchangeCellsXrud.get(1),
+                    rotationUpDown(cupsExchangeCellsXrud.get(0), cupsExchangeCellsXrud.get(1),
                         cupsExchangeCellsYrud.get(0), cupsExchangeCellsYrud.get(1));
                     break;
-                case rotation_move_closest_in_place:
+                case rotationMoveClosestInPlace:
                     log.info("Strategy chosen : rotation_move_closest_in_place");
 
                     final ArrayList<Integer> cupsExchangeCellsXrmcip = randomCupTwoChoices(false);
                     final Integer cupStartCellYrmcip = randomCupOneChoice(true);
 
-                    rotation_move_closest_in_place(cupsExchangeCellsXrmcip.get(0), cupsExchangeCellsXrmcip.get(1),
+                    rotationMoveClosestInPlace(cupsExchangeCellsXrmcip.get(0), cupsExchangeCellsXrmcip.get(1),
                         cupStartCellYrmcip);
                     break;
             }
@@ -55,8 +55,8 @@ public class Strategy {
         return actions;
     }
 
-    private void rotation_up_down(final Integer startCellX, final Integer targetCellX, final Integer firstCupMoveToY,
-                                  final Integer secondCupMoveToY) {
+    private void rotationUpDown(final Integer startCellX, final Integer targetCellX, final Integer firstCupMoveToY,
+                                final Integer secondCupMoveToY) {
         actions.add(new Action(startCellX, maxCellsY / 2, startCellX, firstCupMoveToY));
         actions.add(new Action(startCellX, firstCupMoveToY, targetCellX, firstCupMoveToY));
         actions.add(new Action(targetCellX, maxCellsY / 2, targetCellX, secondCupMoveToY));
@@ -65,7 +65,7 @@ public class Strategy {
         actions.add(new Action(targetCellX, firstCupMoveToY, targetCellX, maxCellsY / 2));
     }
 
-    private void rotation_move_closest_in_place(final Integer startCellX, final Integer targetCellX, final Integer firstCupMoveToY) {
+    private void rotationMoveClosestInPlace(final Integer startCellX, final Integer targetCellX, final Integer firstCupMoveToY) {
         actions.add(new Action(startCellX, maxCellsY / 2, startCellX, firstCupMoveToY));
         actions.add(new Action(startCellX, firstCupMoveToY, targetCellX, firstCupMoveToY));
         if (Math.abs(startCellX - targetCellX) == 1) {

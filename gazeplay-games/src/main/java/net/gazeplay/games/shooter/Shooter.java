@@ -19,6 +19,8 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -70,19 +72,9 @@ public class Shooter extends Parent implements GameLifeCycle {
         date = DateTimeFormatter.ofPattern("d MMMM uuuu ").format(localDate);
         score = 0;
         gameType = type;
-
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         hand = new StackPane();
 
-        final Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
-        imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
-        imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
-
-        final int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
-        imageRectangle.setOpacity(1 - coef * 0.9);
-
-        gameContext.getChildren().add(imageRectangle);
+        Rectangle imageRectangle = createBackground();
         gameContext.getChildren().add(this);
 
         final EventHandler<Event> handEvent = e -> {
@@ -137,6 +129,32 @@ public class Shooter extends Parent implements GameLifeCycle {
             }
         };
 
+    }
+
+    private Rectangle createBackground() {
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
+        imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
+        imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
+
+        double backgroundStyleCoef = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Double>() {
+            @Override
+            public Double visitLight() {
+                return 0.5;
+            }
+
+            @Override
+            public Double visitDark() {
+                return 1.d;
+            }
+        });
+        int isBackgroundEnabled = (gameContext.getConfiguration().isBackgroundEnabled()) ? 1 : 0;
+        imageRectangle.setOpacity(isBackgroundEnabled * backgroundStyleCoef);
+
+        gameContext.getChildren().add(imageRectangle);
+
+        return imageRectangle;
     }
 
     private void updatePoints(final Rectangle rectangle) {

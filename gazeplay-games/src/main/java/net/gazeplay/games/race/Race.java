@@ -19,6 +19,8 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -75,18 +77,11 @@ public class Race extends Parent implements GameLifeCycle {
         score = 0;
         gameType = type;
 
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         hand = new StackPane();
 
-        final Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
-        imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
-        imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
+        Rectangle imageRectangle = createBackground();
 
-        final int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
-        imageRectangle.setOpacity(1 - coef * 0.9);
-
-        gameContext.getChildren().add(imageRectangle);
         gameContext.getChildren().add(this);
 
         final EventHandler<MouseEvent> handEvent = e -> {
@@ -146,6 +141,32 @@ public class Race extends Parent implements GameLifeCycle {
             }
         };
 
+    }
+
+    Rectangle createBackground() {
+        Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
+        imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
+        imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
+
+        double backgroundStyleCoef = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Double>() {
+            @Override
+            public Double visitLight() {
+                return 0.5;
+            }
+
+            @Override
+            public Double visitDark() {
+                return 1.d;
+            }
+        });
+        int backgroundEnabledCoef = (gameContext.getConfiguration().isBackgroundEnabled()) ? 1 : 0;
+
+        imageRectangle.setOpacity(backgroundEnabledCoef * backgroundStyleCoef);
+
+        gameContext.getChildren().add(imageRectangle);
+
+        return imageRectangle;
     }
 
     private void updatePoints(final Rectangle rectangle) {

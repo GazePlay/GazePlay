@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -58,13 +59,7 @@ public class Moles extends Parent implements GameLifeCycle {
 
         Rectangle imageFond = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageFond.setFill(new ImagePattern(new Image("data/whackmole/images/molesGround.jpg")));
-        int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
-
-        ColorAdjust colorAdjust = new ColorAdjust();
-        colorAdjust.setBrightness(coef * 0.9);
-
-        imageFond.setEffect(colorAdjust);
-
+        adjustBackground(imageFond);
         gameContext.getChildren().add(imageFond);
 
         List<MolesChar> molesList = initMoles(config);
@@ -74,9 +69,7 @@ public class Moles extends Parent implements GameLifeCycle {
 
         Rectangle imageFondTrans = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageFondTrans.setFill(new ImagePattern(new Image("data/whackmole/images/molesGroundTransparent.png")));
-
-        imageFondTrans.setEffect(colorAdjust);
-
+        adjustBackground(imageFondTrans);
         gameContext.getChildren().add(imageFondTrans);
 
         this.nbMolesWhacked = 0;
@@ -85,7 +78,17 @@ public class Moles extends Parent implements GameLifeCycle {
         lab = new Label();
         String s = "Score:" + nbMolesWhacked;
         lab.setText(s);
-        Color col = (gameContext.getConfiguration().isBackgroundWhite()) ? Color.BLACK : Color.WHITE;
+        Color col = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+            @Override
+            public Color visitLight() {
+                return Color.BLACK;
+            }
+
+            @Override
+            public Color visitDark() {
+                return Color.WHITE;
+            }
+        });
         lab.setTextFill(col);
         lab.setFont(Font.font(dimension2D.getHeight() / 14));
         lab.setLineSpacing(10);
@@ -98,6 +101,30 @@ public class Moles extends Parent implements GameLifeCycle {
 
         play();
 
+    }
+
+    void adjustBackground(Rectangle image) {
+        int backgroundStyleCoef = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Integer>() {
+            @Override
+            public Integer visitLight() {
+                return 2;
+            }
+
+            @Override
+            public Integer visitDark() {
+                return 0;
+            }
+        });
+
+        ColorAdjust colorAdjust = new ColorAdjust();
+
+        if (gameContext.getConfiguration().isBackgroundEnabled()) {
+            colorAdjust.setBrightness(backgroundStyleCoef * 0.25); //0.5 or 0
+        } else {
+            colorAdjust.setBrightness(backgroundStyleCoef - 1); //1 or -1
+        }
+
+        image.setEffect(colorAdjust);
     }
 
     /* Moles get out randomly */
@@ -159,7 +186,7 @@ public class Moles extends Parent implements GameLifeCycle {
         stats.incNbShots();
     }
 
-    private double[][] CreationTableauPlacement(double width, double height, double distTrans) {
+    private double[][] creationTableauPlacement(double width, double height, double distTrans) {
         double[][] tabPlacement = new double[10][2];
 
         tabPlacement[0][0] = 0.05 * width;
@@ -197,7 +224,7 @@ public class Moles extends Parent implements GameLifeCycle {
         double width = gameDimension2D.getWidth();
         double distTrans = computeDistTransMole(gameDimension2D);
 
-        double[][] place = CreationTableauPlacement(width, height, distTrans);
+        double[][] place = creationTableauPlacement(width, height, distTrans);
 
         /* Creation and placement of moles in the field */
         for (double[] doubles : place) {

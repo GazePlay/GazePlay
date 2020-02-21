@@ -29,11 +29,14 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.BackgroundStyle;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
+import net.gazeplay.commons.ui.I18NToggleButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.HomeButton;
@@ -207,6 +210,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         {
             I18NText label = new I18NText(translator, "EnableRewardSound", COLON);
+
             CheckBox input = buildCheckBox(config.getEnableRewardSoundProperty());
 
             addToGrid(grid, currentFormRow, label, input);
@@ -242,8 +246,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            I18NText label = new I18NText(translator, "WhiteBackground", COLON);
-            CheckBox input = buildCheckBox(config.getWhiteBackgroundProperty());
+            I18NText label = new I18NText(translator, "BackgroundStyle", COLON);
+            HBox input = buildBackgroundStyleToggleGroup(config, translator);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "BackgroundEnabled", COLON);
+            CheckBox input = buildCheckBox(config.getBackgroundEnabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -289,6 +299,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // HeatMap settings
         {
             I18NText label = new I18NText(translator, "DisableHeatMap", COLON);
+
             CheckBox input = buildCheckBox(config.getHeatMapDisabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
@@ -310,12 +321,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // AOI settings
         {
             I18NText label = new I18NText(translator, "EnableAreaOfInterest", COLON);
+
             CheckBox input = buildCheckBox(config.getAreaOfInterestDisabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "EnableConvexHull", COLON);
+
             CheckBox input = buildCheckBox(config.getConvexHullDisabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
@@ -324,12 +337,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         // More Stats settings
         {
             I18NText label = new I18NText(translator, "DisableSequence", COLON);
+
             CheckBox input = buildCheckBox(config.getFixationSequenceDisabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "EnableVideoRecording", COLON);
+
             CheckBox input = buildCheckBox(config.getVideoRecordingEnabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
@@ -752,11 +767,71 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return null;
     }
 
+
     static CheckBox buildCheckBox(BooleanProperty selectionProperty) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(selectionProperty.getValue());
         checkBox.selectedProperty().bindBidirectional(selectionProperty);
         return checkBox;
+    }
+
+    private HBox buildBackgroundStyleToggleGroup(
+        Configuration configuration,
+        Translator translator
+    ) {
+        ToggleGroup group = new ToggleGroup();
+        I18NToggleButton darkButton = new I18NToggleButton(translator, "Dark");
+        I18NToggleButton lightButton = new I18NToggleButton(translator, "Light");
+        darkButton.setToggleGroup(group);
+        lightButton.setToggleGroup(group);
+
+
+        configuration.getBackgroundStyle().accept(new BackgroundStyleVisitor<Void>() {
+            @Override
+            public Void visitLight() {
+                lightButton.setSelected(true);
+                return null;
+            }
+
+            @Override
+            public Void visitDark() {
+                darkButton.setSelected(true);
+                return null;
+            }
+        });
+
+        configuration.getBackgroundStyleProperty().addListener((obs, oldVal, newVal) -> {
+            newVal.accept(new BackgroundStyleVisitor<Void>() {
+                @Override
+                public Void visitLight() {
+                    lightButton.setSelected(true);
+                    return null;
+                }
+
+                @Override
+                public Void visitDark() {
+                    darkButton.setSelected(true);
+                    return null;
+                }
+            });
+        });
+
+        lightButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal){
+                configuration.setBackgroundStyle(BackgroundStyle.LIGHT);
+            }
+        });
+
+        darkButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal){
+                configuration.setBackgroundStyle(BackgroundStyle.DARK);
+            }
+        });
+
+        HBox hb = new HBox();
+        hb.getChildren().addAll(darkButton, lightButton);
+
+        return hb;
     }
 
     private static CheckBox buildGazeMenu(Configuration configuration) {
