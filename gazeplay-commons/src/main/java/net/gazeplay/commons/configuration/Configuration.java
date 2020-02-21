@@ -13,8 +13,9 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,12 +55,9 @@ public class Configuration {
     private static final String PROPERTY_NAME_VIDEO_FOLDER = "VIDEO_FOLDER";
     private static final String PROPERTY_NAME_COLORS_DEFAULT_IMAGE = "COLORS_DEFAULT_IMAGE";
     private static final String PROPERTY_NAME_FORCE_DISPLAY_NEWS = "FORCE_DISPLAY_NEWS";
-
     private static final String PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME = "LATEST_NEWS_POPUP_LAST_SHOWN_TIME";
-
     private static final String PROPERTY_NAME_FAVORITE_GAMES = "FAVORITE_GAMES";
     private static final String PROPERTY_NAME_HIDDEN_CATEGORIES = "HIDDEN_CATEGORIES";
-
 
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
@@ -83,7 +81,6 @@ public class Configuration {
     public static final String DEFAULT_VALUE_BACKGROUND_MUSIC = "songidea(copycat)_0.mp3";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
     private static final boolean DEFAULT_VALUE_FORCE_DISPLAY_NEWS = false;
-
     private static final boolean DEFAULT_VALUE_GAZE_MENU = false;
     private static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
     private static final BackgroundStyle DEFAULT_VALUE_BACKGROUND_STYLE = BackgroundStyle.DARK;
@@ -221,14 +218,14 @@ public class Configuration {
         musicVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_MUSIC_VOLUME, DEFAULT_VALUE_MUSIC_VOLUME, propertyChangeListener);
         effectsVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_EFFECTS_VOLUME, DEFAULT_VALUE_EFFECTS_VOLUME, propertyChangeListener);
 
+        musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
+        effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
+
         animationSpeedRatioProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_ANIMATION_SPEED_RATIO, DEFAULT_VALUE_ANIMATION_SPEED_RATIO, propertyChangeListener);
 
         heatMapOpacityProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY, propertyChangeListener);
         heatMapColorsProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_HEATMAP_COLORS, DEFAULT_VALUE_HEATMAP_COLORS, propertyChangeListener);
         heatMapDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED, propertyChangeListener);
-
-        musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
-        effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
 
         enableRewardSoundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND, propertyChangeListener);
 
@@ -238,9 +235,9 @@ public class Configuration {
         fixationSequenceDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED, propertyChangeListener);
         gazeMenuEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU, propertyChangeListener);
         gazeMouseEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE, propertyChangeListener);
-        backgroundStyleProperty = new ApplicationConfigBackedObjectProperty<BackgroundStyle>(applicationConfig, PROPERTY_NAME_BACKGROUND_STYLE, DEFAULT_VALUE_BACKGROUND_STYLE, propertyChangeListener,
-            new EnumMarshaller<BackgroundStyle>(),
-            new EnumUnmarshaller<BackgroundStyle>(BackgroundStyle.class));
+        backgroundStyleProperty = new ApplicationConfigBackedObjectProperty<>(applicationConfig, PROPERTY_NAME_BACKGROUND_STYLE, DEFAULT_VALUE_BACKGROUND_STYLE, propertyChangeListener,
+            new EnumMarshaller<>(),
+            new EnumUnmarshaller<>(BackgroundStyle.class));
         backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_ENABLED, DEFAULT_VALUE_BACKGROUND_ENABLED, propertyChangeListener);
 
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
@@ -265,13 +262,11 @@ public class Configuration {
         hiddenCategoriesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_HIDDEN_CATEGORIES, Sets.newLinkedHashSet(), propertyChangeListener);
 
         latestNewsDisplayForced = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FORCE_DISPLAY_NEWS, DEFAULT_VALUE_FORCE_DISPLAY_NEWS, propertyChangeListener);
-        populateFromApplicationConfig(applicationConfig);
-
     }
 
     private void saveConfig() throws IOException {
         log.info("Saving Config {} ...", configFile);
-        try (final FileOutputStream fileOutputStream = new FileOutputStream(configFile)) {
+        try (final OutputStream fileOutputStream = Files.newOutputStream(configFile.toPath())) {
             final String fileComment = "Automatically generated by GazePlay";
             applicationConfig.store(fileOutputStream, fileComment);
         }
@@ -289,9 +284,6 @@ public class Configuration {
         } catch (final IOException e) {
             log.error("Exception while writing configuration to file {}", configFile, e);
         }
-    }
-
-    private void populateFromApplicationConfig(final ApplicationConfig prop) {
     }
 
     public String getEyeTracker() {
