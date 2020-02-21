@@ -36,7 +36,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.games.colors.AbstractGazeIndicator;
+import net.gazeplay.components.AbstractGazeIndicator;
+import net.gazeplay.components.StackPaneButton;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,13 +50,13 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
 
     private final MediaButton[] mediaButtons;
-    private final ButtonWithProgressIndicator left;
-    private final ButtonWithProgressIndicator playPause;
-    private final ButtonWithProgressIndicator right;
-    private final ButtonWithProgressIndicator fullScreen;
-    private final ButtonWithProgressIndicator addVideo;
-    private final ButtonWithProgressIndicator upArrow;
-    private final ButtonWithProgressIndicator downArrow;
+    private final StackPaneButton left;
+    private final StackPaneButton playPause;
+    private final StackPaneButton right;
+    private final StackPaneButton fullScreen;
+    private final StackPaneButton addVideo;
+    private final StackPaneButton upArrow;
+    private final StackPaneButton downArrow;
     private final BorderPane videoRoot;
     private final HBox window;
     private final HBox tools;
@@ -148,8 +149,8 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     }
 
-    private ButtonWithProgressIndicator createButtonWithGraphic(double width, double height, String imageURL) {
-        ButtonWithProgressIndicator bwpi = createButton(width, height);
+    private StackPaneButton createButtonWithGraphic(double width, double height, String imageURL) {
+        StackPaneButton bwpi = createButton(width, height);
         final ImageView imageButton = new ImageView(new Image(imageURL));
         imageButton.setPreserveRatio(true);
         imageButton.setFitHeight((90 * bwpi.getButton().getHeight()) / 100);
@@ -157,15 +158,15 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         return bwpi;
     }
 
-    private ButtonWithProgressIndicator createButton(double width, double height) {
-        ButtonWithProgressIndicator bwpi = new ButtonWithProgressIndicator();
+    private StackPaneButton createButton(double width, double height) {
+        StackPaneButton bwpi = new StackPaneButton();
         bwpi.getButton().setPrefWidth(width);
         bwpi.getButton().setPrefHeight(height);
         return bwpi;
     }
 
-    private ButtonWithProgressIndicator createButton(String text, double width, double height) {
-        ButtonWithProgressIndicator bwpi = new ButtonWithProgressIndicator(text);
+    private StackPaneButton createButton(String text, double width, double height) {
+        StackPaneButton bwpi = new StackPaneButton(text);
         bwpi.getButton().setMinWidth(width);
         bwpi.getButton().setMinHeight(height);
         bwpi.getButton().setPrefWidth(width);
@@ -184,7 +185,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         this.stopMedia();
     }
 
-    private void setupHandlerWithProgressIndicator(ButtonWithProgressIndicator button, EventHandler<ActionEvent> handler) {
+    private void setupHandlerWithProgressIndicator(StackPaneButton button, EventHandler<ActionEvent> handler) {
 
         button.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
             handler.handle(null);

@@ -24,7 +24,9 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
+import net.gazeplay.components.AbstractGazeIndicator;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.components.GazeFollowerIndicator;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

@@ -9,11 +9,12 @@ import javafx.scene.input.MouseEvent;
 import lombok.Getter;
 import lombok.Setter;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.games.colors.AbstractGazeIndicator;
+import net.gazeplay.components.AbstractGazeIndicator;
+import net.gazeplay.components.StackPaneButton;
 
 import java.io.File;
 
-public class MediaButton extends ButtonWithProgressIndicator {
+public class MediaButton extends StackPaneButton {
 
 
     private EventHandler<Event> enterEvent = e -> {

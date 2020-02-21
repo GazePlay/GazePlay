@@ -1,20 +1,20 @@
-package net.gazeplay.games.mediaPlayer;
+package net.gazeplay.components;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import lombok.Getter;
 
-public class ButtonWithProgressIndicator extends StackPane {
+public class StackPaneButton extends StackPane {
 
     @Getter
     private Button button;
 
-    ButtonWithProgressIndicator() {
+    public StackPaneButton() {
         super();
         button = createButton();
     }
 
-    ButtonWithProgressIndicator(String text) {
+    public StackPaneButton(String text) {
         super();
         button = createButton();
         button.setText(text);
