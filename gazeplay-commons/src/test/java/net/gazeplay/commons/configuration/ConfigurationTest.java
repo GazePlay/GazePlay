@@ -1,6 +1,7 @@
 package net.gazeplay.commons.configuration;
 
 import javafx.scene.paint.Color;
+import lombok.extern.slf4j.Slf4j;
 import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,12 +9,14 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Slf4j
 class ConfigurationTest {
 
     private final String sep = File.separator;
@@ -29,10 +32,16 @@ class ConfigurationTest {
     private File testProperties;
 
     @BeforeEach
-    void setup() throws IOException {
+    void setup() {
         testProperties = new File(localDataFolder, "GazePlay.properties");
         properties = new Properties();
-        properties.load(Files.newInputStream(testProperties.toPath()));
+
+        try(InputStream is = Files.newInputStream(testProperties.toPath())) {
+            properties.load(is);
+        } catch (IOException ie) {
+            log.debug("Error in loading test properties: ", ie);
+        }
+
         applicationConfig = ConfigFactory.create(ApplicationConfig.class, properties);
         configuration = new Configuration(testProperties, applicationConfig);
     }
@@ -43,14 +52,19 @@ class ConfigurationTest {
     }
 
     @Test
-    void shouldStoreTheApplicationConfig() throws IOException {
+    void shouldStoreTheApplicationConfig() {
         String oldPath = configuration.getWhereIsItDir();
         String newPath = "some/path";
 
         configuration.getWhereIsItDirProperty().set(newPath);
         configuration.saveConfigIgnoringExceptions();
 
-        properties.load(Files.newInputStream(testProperties.toPath()));
+        try(InputStream is = Files.newInputStream(testProperties.toPath())) {
+            properties.load(is);
+        } catch (IOException ie) {
+            log.debug("Error in loading test properties: ", ie);
+        }
+
         assertEquals(newPath, properties.getProperty("WHEREISITDIR"));
 
         configuration.getWhereIsItDirProperty().set(oldPath);
