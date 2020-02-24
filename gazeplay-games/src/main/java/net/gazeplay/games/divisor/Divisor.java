@@ -7,6 +7,8 @@ import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -35,17 +37,8 @@ public class Divisor implements GameLifeCycle {
         if (lapin) {
             final ImageLibrary imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "divisor/rabbit/images");
 
-            final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-            final Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-            try {
-                imageRectangle.setFill(new ImagePattern(new Image("data/divisor/images/Background.png")));
-                final int coef = (gameContext.getConfiguration().isBackgroundWhite()) ? 1 : 0;
-                imageRectangle.setOpacity(1 - coef * 0.9);
+            initBackground();
 
-            } catch (final Exception e) {
-                log.debug("File not found : {}", e.getMessage());
-            }
-            gameContext.getChildren().add(imageRectangle);
             this.gameContext.resetBordersToFront();
 
             target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
@@ -57,6 +50,27 @@ public class Divisor implements GameLifeCycle {
                 this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
         }
         gameContext.getChildren().add(target);
+    }
+
+    private void initBackground() {
+        if (gameContext.getConfiguration().isBackgroundEnabled()) {
+            Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+            Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+            imageRectangle.setFill(new ImagePattern(new Image("data/divisor/images/Background.png")));
+            double imageRectangleOpacity = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Double>() {
+                @Override
+                public Double visitLight() {
+                    return 0.5;
+                }
+
+                @Override
+                public Double visitDark() {
+                    return 1.d;
+                }
+            });
+            imageRectangle.setOpacity(imageRectangleOpacity);
+            gameContext.getChildren().add(imageRectangle);
+        }
     }
 
     public void restart() {

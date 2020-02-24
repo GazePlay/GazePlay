@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.ui.Translator;
@@ -45,7 +46,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
     private static HBox createControlPanel() {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER_LEFT);
-        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(hbox);
+        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(hbox);
 
         hbox.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
 
@@ -102,7 +103,17 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
         gamingRoot.minHeightProperty().bind(primaryStage.heightProperty());
 
         Configuration config = ActiveConfigurationContext.getInstance();
-        Color color = (config.isBackgroundWhite()) ? Color.WHITE : Color.BLACK;
+        Color color = config.getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+            @Override
+            public Color visitLight() {
+                return Color.WHITE;
+            }
+
+            @Override
+            public Color visitDark() {
+                return Color.BLACK;
+            }
+        });
         gamingRoot.setBackground(new Background(new BackgroundFill(color, null, null)));
 
         HBox controlPanel = createControlPanel();

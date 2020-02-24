@@ -9,19 +9,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UserProfilContextFactoryBean implements FactoryBean<UserProfilContext> {
+public class UserProfileContextFactoryBean implements FactoryBean<UserProfileContext> {
 
     @Autowired
     private GazePlay gazePlay;
 
     @Override
-    public UserProfilContext getObject() {
-        return new UserProfilContext(gazePlay);
+    public UserProfileContext getObject() {
+        return new UserProfileContext(gazePlay);
     }
 
     @Override
-    public Class<UserProfilContext> getObjectType() {
-        return UserProfilContext.class;
+    public Class<UserProfileContext> getObjectType() {
+        return UserProfileContext.class;
     }
 
 }

@@ -3,6 +3,18 @@
 In these instructions, actions performed in the Windows command line are prefixed with `>`, and those on the Unix
 shell are prefixed with `$`. Select the command appropriate for your platform.
 
+## Issues running tests with JMockit dependencies
+
+JMockit is a bit strange, when compared to JUnit or Mockito. Instead of using annotations to setup the test class, you 
+need to add a JVM argument to your commands. When running the default `./gradlew test` task, this argument will be added
+for you, but in some cases your IDE may not pick this up. To get around this, add the following argument to your JVM args 
+for each test (or your test templates in IntelliJ): 
+```shell script
+-javaagent:<user directory>/.gradle/caches/modules-2/files-2.1/org.jmockit/jmockit/<version>/jmockit-<version>.jar
+```
+
+You can find the exact directory this file is in by looking for the JMockit library on your classpath.
+
 ## Issues with DLL dependencies
 
 See this [example issue](https://github.com/schwabdidier/GazePlay/issues/161#issuecomment-362115364)

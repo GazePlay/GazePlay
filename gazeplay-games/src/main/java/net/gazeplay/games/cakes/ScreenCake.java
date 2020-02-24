@@ -97,7 +97,7 @@ public class ScreenCake extends LinkedList {
                     cakef.getCake()[c].toFront();
                 }
                 cakef.active(i + 1);
-                cakef.r.setFill(cakef.col[i + 1]);
+                cakef.updateBackgroundColor(cakef.col[i + 1]);
             };
         } else {
             buttonHandler = e -> {
