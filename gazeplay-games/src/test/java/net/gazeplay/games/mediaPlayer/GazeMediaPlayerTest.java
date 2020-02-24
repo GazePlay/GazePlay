@@ -35,14 +35,10 @@ public class GazeMediaPlayerTest {
 
     @Test
     void shouldCreateButtonOfGraphicStackPaneButton() {
-        try {
-            StackPaneButton stackPaneButton = GazeMediaPlayer.createGraphicStackPaneButton(500, 500, "src/test/resources/images/blue/blue.jpg");
+            StackPaneButton stackPaneButton = GazeMediaPlayer.createGraphicStackPaneButton(500, 500, "images/blue/blue.jpg");
             ImageView graphicImageView = (ImageView) stackPaneButton.getButton().getGraphic();
             assert stackPaneButton.getButton() != null;
             assert graphicImageView.getImage().getUrl().contains("blue.jpg");
-        } catch (Exception ignored) {
-
-        }
     }
 
     @Test

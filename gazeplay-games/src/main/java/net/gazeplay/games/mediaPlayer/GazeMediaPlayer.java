@@ -151,11 +151,15 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     }
 
     public static StackPaneButton createGraphicStackPaneButton(double width, double height, @NonNull String imageURL) {
-        StackPaneButton bwpi = createSimpleStackPaneButton(width, height);
-        final ImageView imageButton = new ImageView(new Image(imageURL));
-        imageButton.setPreserveRatio(true);
-        imageButton.setFitHeight((90 * bwpi.getButton().getHeight()) / 100);
-        bwpi.getButton().setGraphic(imageButton);
+        StackPaneButton bwpi = GazeMediaPlayer.createSimpleStackPaneButton(width, height);
+        try {
+            final ImageView imageButton = new ImageView(new Image(imageURL));
+            imageButton.setPreserveRatio(true);
+            imageButton.setFitHeight((90 * bwpi.getButton().getHeight()) / 100);
+            bwpi.getButton().setGraphic(imageButton);
+        } catch (Exception e) {
+            log.debug(" Image with url {} can't be loaded into StackPaneButton.", imageURL);
+        }
         return bwpi;
     }
 
