@@ -32,6 +32,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -149,7 +150,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     }
 
-    private StackPaneButton createGraphicStackPaneButton(double width, double height, String imageURL) {
+    public static StackPaneButton createGraphicStackPaneButton(double width, double height, @NonNull String imageURL) {
         StackPaneButton bwpi = createSimpleStackPaneButton(width, height);
         final ImageView imageButton = new ImageView(new Image(imageURL));
         imageButton.setPreserveRatio(true);
@@ -158,7 +159,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         return bwpi;
     }
 
-    private StackPaneButton createSimpleStackPaneButton(double width, double height) {
+    public static StackPaneButton createSimpleStackPaneButton(double width, double height) {
         StackPaneButton bwpi = new StackPaneButton();
         bwpi.getButton().setPrefWidth(width);
         bwpi.getButton().setPrefHeight(height);
@@ -167,8 +168,8 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         return bwpi;
     }
 
-    private StackPaneButton createTextStackPaneButton(String text, double width, double height) {
-        StackPaneButton bwpi = createSimpleStackPaneButton(width,height);
+    public static StackPaneButton createTextStackPaneButton(String text, double width, double height) {
+        StackPaneButton bwpi = createSimpleStackPaneButton(width, height);
         bwpi.getButton().setText(text);
         return bwpi;
     }
@@ -365,7 +366,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     private void setMusicListListener() {
         musicList.getFirstMediaDisplayedIndex().addListener((o, oldValue, newValue) -> {
 
-                updateMusic();
+            updateMusic();
 
         });
     }
@@ -520,7 +521,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         return dialog;
     }
 
-    private Button createMediaButton(String text, double width, double height) {
+    public static Button createMediaButton(String text, double width, double height) {
         Button button = new Button(text);
         button.setMinWidth(width);
         button.setMinHeight(height);
@@ -531,7 +532,6 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         button.getStyleClass().add("button");
         return button;
     }
-
 
     private String getPath(final Stage primaryStage) {
         String s = null;
@@ -600,7 +600,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             case "MEDIA":
                 mediaButtons[i].setupEvent(handlerMedia(mediaFile), progressIndicator);
                 break;
-            default :
+            default:
                 break;
         }
     }

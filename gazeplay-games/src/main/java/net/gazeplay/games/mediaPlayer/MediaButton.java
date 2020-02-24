@@ -16,13 +16,15 @@ import java.io.File;
 
 public class MediaButton extends StackPaneButton {
 
+    public static final EventHandler<Event> emptyEvent = e -> {
+    };
 
-    private EventHandler<Event> enterEvent = e -> {
-    };
-    private EventHandler<Event> exitEvent = e -> {
-    };
-    private EventHandler<Event> clickEvent = e -> {
-    };
+    @Getter
+    private EventHandler<Event> enterEvent = emptyEvent;
+    @Getter
+    private EventHandler<Event> exitEvent = emptyEvent;
+    @Getter
+    private EventHandler<Event> clickEvent = emptyEvent;
 
     @Getter
     @Setter

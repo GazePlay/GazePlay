@@ -1,0 +1,53 @@
+package net.gazeplay.games.mediaPlayer;
+
+import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
+import net.gazeplay.components.StackPaneButton;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.testfx.framework.junit5.ApplicationExtension;
+
+@ExtendWith(ApplicationExtension.class)
+@RunWith(MockitoJUnitRunner.class)
+public class GazeMediaPlayerTest {
+
+    @BeforeEach
+    public void initMocks() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    void shouldCreateButtonOfSimpleStackPaneButton() {
+        StackPaneButton stackPaneButton = GazeMediaPlayer.createSimpleStackPaneButton(500, 500);
+        assert stackPaneButton.getButton() != null;
+    }
+
+    @Test
+    void shouldCreateButtonOfTextStackPaneButton() {
+        StackPaneButton stackPaneButton = GazeMediaPlayer.createTextStackPaneButton("Test", 500, 500);
+        assert stackPaneButton.getButton() != null;
+        assert stackPaneButton.getButton().getText().equals("Test");
+    }
+
+    @Test
+    void shouldCreateButtonOfGraphicStackPaneButton() {
+        try {
+            StackPaneButton stackPaneButton = GazeMediaPlayer.createGraphicStackPaneButton(500, 500, "src/test/resources/images/blue/blue.jpg");
+            ImageView graphicImageView = (ImageView) stackPaneButton.getButton().getGraphic();
+            assert stackPaneButton.getButton() != null;
+            assert graphicImageView.getImage().getUrl().contains("blue.jpg");
+        } catch (Exception ignored) {
+
+        }
+    }
+
+    @Test
+    void shouldCreateTextButtonWhenCallingMediaButton() {
+        Button button = GazeMediaPlayer.createMediaButton("Test", 500, 500);
+        assert button.getText().equals("Test");
+    }
+}
