@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -24,6 +25,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
@@ -47,7 +50,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     private FadeTransition ft;
     @Getter
-    public final Rectangle r;
+    public Rectangle background;
 
     final Color[] col = {Color.LIGHTPINK, Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.LIGHTBLUE, Color.LIGHTCORAL};
 
@@ -111,13 +114,54 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         buttons = new ProgressButton[6];
         this.fixationLength = gameContext.getConfiguration().getFixationLength();
 
-        r = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        r.setFill(col[0]);
-        this.getChildren().add(r);
-        final Rectangle back = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        back.setFill(new ImagePattern(new Image("data/cake/images/background.png")));
-        back.setMouseTransparent(true);
-        this.getChildren().add(back);
+        initBackground(dimension2D);
+    }
+
+    private void initBackground(Dimension2D dimension2D) {
+        if (gameContext.getConfiguration().isBackgroundEnabled()) {
+            background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+            updateBackgroundColor(col[0]);
+            this.getChildren().add(background);
+            Rectangle back = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+            back.setFill(new ImagePattern(new Image("data/cake/images/background.png")));
+            back.setMouseTransparent(true);
+
+            gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Void>() {
+                @Override
+                public Void visitLight() {
+                    ColorAdjust colorAdjust = new ColorAdjust();
+                    colorAdjust.setBrightness(0.5);
+                    back.setEffect(colorAdjust);
+                    return null;
+                }
+
+                @Override
+                public Void visitDark() {
+                    return null;
+                }
+            });
+
+            this.getChildren().add(back);
+        }
+    }
+
+    void updateBackgroundColor(Color c) {
+        if (background != null) {
+            background.setFill(c);
+
+            gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Void>() {
+                @Override
+                public Void visitLight() {
+                    background.setOpacity(0.5);
+                    return null;
+                }
+
+                @Override
+                public Void visitDark() {
+                    return null;
+                }
+            });
+        }
     }
 
     void winButton(final boolean winOnly) {
@@ -178,43 +222,6 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             }
         }
 
-    }
-
-    public EventHandler<Event> createprogessButtonHandler(final int i) {
-        final EventHandler<Event> buttonHandler;
-        if (i != 4) {
-            buttonHandler = e -> {
-                for (final Node child : p[i + 1]) {
-                    child.toFront();
-                }
-                for (int c = 0; c <= maxCake; c++) {
-                    cake[c].toFront();
-                }
-                active(i + 1);
-            };
-        } else {
-            buttonHandler = e -> {
-                if (!variant.equals(CakeGameVariant.FREE)) {
-                    winButton(false);
-                }
-                if (maxCake < 2) {
-                    maxCake++;
-                    currentCake = maxCake;
-                    createCake(maxCake);
-                }
-                if (!variant.equals(CakeGameVariant.FREE)) {
-                    winButton(false);
-                }
-                if (maxCake >= 2) {
-                    p[0].get(p[0].size() - 2).disable();
-                    p[0].get(p[0].size() - 2).setOpacity(0.5);
-
-                }
-
-            };
-        }
-
-        return buttonHandler;
     }
 
     void winFunction() {
@@ -314,10 +321,10 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             / ((ImageView) cake[currentCake].getChildren().get(0)).getImage().getWidth();
         final double cakewidth = ((ImageView) cake[currentCake].getChildren().get(0)).getFitWidth();
 
-        double Ypos = cake[currentCake]
+        double posY = cake[currentCake]
             .localToParent(cake[currentCake].getChildren().get(0).localToParent(0, 0)).getY();
-        final double Yppos = Ypos + 7 * cakeheight / 8;
-        Ypos = Ypos + 1.9 * cakeheight / 8;
+        final double updatedPosY = posY + 7 * cakeheight / 8;
+        posY = posY + 1.9 * cakeheight / 8;
 
         final ImageView aerograph = new ImageView(new Image("data/cake/images/aero.png"));
         final ImageView aerograph2 = new ImageView(new Image("data/cake/images/aero.png"));
@@ -338,15 +345,15 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         final Polygon spray = new Polygon();
         spray.getPoints()
             .addAll(offset, 9 * height / 11 + aerograph.localToParent(0, 0).getY(),
-                dimension2D.getWidth() / 2 + cakewidth / 4, Ypos, dimension2D.getWidth() / 2 + cakewidth / 3,
-                Yppos, dimension2D.getWidth() / 2 - cakewidth / 3, Yppos);
+                dimension2D.getWidth() / 2 + cakewidth / 4, posY, dimension2D.getWidth() / 2 + cakewidth / 3,
+                updatedPosY, dimension2D.getWidth() / 2 - cakewidth / 3, updatedPosY);
 
         final Polygon spray2 = new Polygon();
         spray2.getPoints()
             .addAll(dimension2D.getWidth() - offset,
                 9 * height / 11 + aerograph.localToParent(0, 0).getY(),
-                dimension2D.getWidth() / 2 - cakewidth / 4, Ypos, dimension2D.getWidth() / 2 - cakewidth / 3,
-                Yppos, dimension2D.getWidth() / 2 + cakewidth / 3, Yppos);
+                dimension2D.getWidth() / 2 - cakewidth / 4, posY, dimension2D.getWidth() / 2 - cakewidth / 3,
+                updatedPosY, dimension2D.getWidth() / 2 + cakewidth / 3, updatedPosY);
 
         spray.setOpacity(0);
         spray2.setOpacity(0);
@@ -469,7 +476,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
                 child.toFront();
             }
 
-            r.setFill(col[0]);
+            updateBackgroundColor(col[0]);
         };
         bt.assignIndicator(buttonHandler, fixationLength);
         bt.active();

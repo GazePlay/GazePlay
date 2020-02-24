@@ -699,12 +699,13 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             final ImageView iv;
             final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             try {
-                iv = new ImageView(new Image(new FileInputStream(selectedFile)));
+                iv = new ImageView(new Image(Files.newInputStream(selectedFile.toPath())));
                 iv.setPreserveRatio(true);
                 iv.setFitHeight(dimension2D.getHeight() / 10);
                 tfi.setGraphic(iv);
-            } catch (final FileNotFoundException e) {
-                e.printStackTrace();
+            } catch (final IOException e) {
+                log.debug("selectedFile IOException : {}", selectedFile);
+                s = null;
             }
         }
         return s;

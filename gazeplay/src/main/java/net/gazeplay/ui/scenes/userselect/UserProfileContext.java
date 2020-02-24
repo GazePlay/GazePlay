@@ -15,10 +15,7 @@ import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -44,41 +41,23 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.GraphicalContext;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class UserProfilContext extends GraphicalContext<BorderPane> {
-
-    private static List<String> findAllUsersProfiles() {
-        final File profilesDirectory = GazePlayDirectories.getProfilesDirectory();
-        log.info("profilesDirectory = {}", profilesDirectory);
-        //
-        final File[] directoryContent = profilesDirectory.listFiles();
-        if (directoryContent == null) {
-            return new ArrayList<>();
-        }
-        final List<String> listOfUsers = Arrays.stream(directoryContent)
-            .filter(f -> !f.getName().startsWith("."))
-            .filter(File::isDirectory)
-            .map(File::getName)
-            .sorted()
-            .collect(Collectors.toList());
-        log.info("HERE IS THE FULL LIST OF THE USERS OF GAZEPLAY" + listOfUsers);
-        return listOfUsers;
-    }
+public class UserProfileContext extends GraphicalContext<BorderPane> {
 
     private final double cardHeight;
-
     private final double cardWidth;
 
-    public UserProfilContext(
-        final GazePlay gazePlay
-    ) {
+    public UserProfileContext(final GazePlay gazePlay) {
         super(gazePlay, new BorderPane());
 
         final GamePanelDimensionProvider gamePanelDimensionProvider = new GamePanelDimensionProvider(() -> root, gazePlay::getPrimaryScene);
@@ -91,12 +70,13 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         final Node logo = LogoFactory.getInstance().createLogoAnimated(gazePlay.getPrimaryStage());
 
         final HBox topRightPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(topRightPane);
+        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(topRightPane);
         topRightPane.setAlignment(Pos.TOP_CENTER);
-        final CustomButton exitButton = createExitButton(screenDimension);
-        topRightPane.getChildren().addAll(exitButton);
 
-        final Node userPickerChoicePane = createuUserPickerChoicePane(gazePlay);
+        final CustomButton exitButton = createExitButton(screenDimension);
+        topRightPane.getChildren().add(exitButton);
+
+        final Node userPickerChoicePane = createUserPickerChoicePane(gazePlay);
 
         final VBox centerCenterPane = new VBox();
         centerCenterPane.setSpacing(40);
@@ -113,7 +93,6 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
             + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
             + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-
     }
 
     @Override
@@ -121,59 +100,103 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
-    private ScrollPane createuUserPickerChoicePane(final GazePlay gazePlay) {
-        final int flowpaneGap = 40;
+    static List<String> findAllUsersProfiles() {
+        final File profilesDirectory = GazePlayDirectories.getProfilesDirectory();
+        log.info("profilesDirectory = {}", profilesDirectory);
+
+        final File[] directoryContent = profilesDirectory.listFiles();
+        if (directoryContent == null) {
+            return Collections.emptyList();
+        }
+
+        final List<String> listOfUsers = Arrays.stream(directoryContent)
+            .filter(f -> !f.isHidden())
+            .filter(File::isDirectory)
+            .map(File::getName)
+            .sorted()
+            .collect(Collectors.toList());
+        log.info("FULL LIST OF GAZEPLAY USERS: " + listOfUsers);
+        return listOfUsers;
+    }
+
+    ScrollPane createUserPickerChoicePane(final GazePlay gazePlay) {
+        final int flowPaneGap = 40;
         final FlowPane choicePanel = new FlowPane();
         choicePanel.setAlignment(Pos.CENTER);
-        choicePanel.setHgap(flowpaneGap);
-        choicePanel.setVgap(flowpaneGap);
+        choicePanel.setHgap(flowPaneGap);
+        choicePanel.setVgap(flowPaneGap);
         choicePanel.setPadding(new Insets(20, 60, 20, 60));
 
-        final ScrollPane choicePanelScroller = new ScrollPane(choicePanel);
-        choicePanelScroller.setFitToWidth(true);
-        choicePanelScroller.setFitToHeight(true);
+        final ScrollPane choicePanelScrollPane = new ScrollPane(choicePanel);
+        choicePanelScrollPane.setFitToWidth(true);
+        choicePanelScrollPane.setFitToHeight(true);
 
         final List<String> allUsersProfiles = findAllUsersProfiles();
 
         final Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
-        final HBox configUserCard = createUser(gazePlay, choicePanel, getGazePlay().getTranslator().translate("DefaultUser"), new ImagePattern(new Image("data/common/images/ConfigUser.png")), false, false, screenDimension);
+        final HBox configUserCard = createUser(
+            gazePlay,
+            choicePanel,
+            getGazePlay().getTranslator().translate("DefaultUser"),
+            new ImagePattern(new Image("data/common/images/ConfigUser.png")),
+            false,
+            false,
+            screenDimension
+        );
+
         choicePanel.getChildren().add(configUserCard);
 
         for (final String currentUserProfile : allUsersProfiles) {
-            log.info("Profile founded : {}", currentUserProfile);
+            log.info("Profile found : {}", currentUserProfile);
             final Configuration currentUserProfileConfiguration = ConfigurationSource.createFromProfile(currentUserProfile);
-            final ImagePattern imagePattern = lookupForProfilePicture(currentUserProfileConfiguration);
-            final HBox userCard = createUser(gazePlay, choicePanel, currentUserProfile, imagePattern, true, false, screenDimension);
+            final ImagePattern imagePattern = lookupProfilePicture(currentUserProfileConfiguration);
+            final HBox userCard = createUser(
+                gazePlay,
+                choicePanel,
+                currentUserProfile,
+                imagePattern,
+                true,
+                false,
+                screenDimension
+            );
+
             choicePanel.getChildren().add(userCard);
         }
 
-        final HBox newUserCard = createUser(gazePlay, choicePanel, getGazePlay().getTranslator().translate("AddUser"), new ImagePattern(new Image("data/common/images/AddUser.png")), false, true, screenDimension);
+        final HBox newUserCard = createUser(
+            gazePlay,
+            choicePanel,
+            getGazePlay().getTranslator().translate("AddUser"),
+            new ImagePattern(new Image("data/common/images/AddUser.png")),
+            false,
+            true,
+            screenDimension
+        );
         choicePanel.getChildren().add(newUserCard);
 
-        return choicePanelScroller;
+        return choicePanelScrollPane;
     }
 
-    private static ImagePattern lookupForProfilePicture(final Configuration currentUserProfileConfiguration) {
-        ImagePattern imagePattern = null;
+    static ImagePattern lookupProfilePicture(final Configuration currentUserProfileConfiguration) {
+        ImagePattern imagePattern = new ImagePattern(new Image("data/common/images/DefaultUser.png"));
         final String userPicture = currentUserProfileConfiguration.getUserPicture();
+
         if (userPicture != null) {
             final File userPictureFile = new File(userPicture);
             if (userPictureFile.exists()) {
-                try (InputStream is = new FileInputStream(userPictureFile)) {
+                try (InputStream is = Files.newInputStream(userPictureFile.toPath())) {
                     imagePattern = new ImagePattern(new Image(is));
                 } catch (final IOException e) {
                     throw new RuntimeException(e);
                 }
             }
         }
-        if (imagePattern == null) {
-            imagePattern = new ImagePattern(new Image("data/common/images/DefaultUser.png"));
-        }
+
         return imagePattern;
     }
 
-    private User createUser(
+    User createUser(
         @NonNull final GazePlay gazePlay,
         @NonNull final FlowPane choicePanel,
         @NonNull final String userProfileName,
@@ -199,20 +222,19 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         final BorderPane content = new BorderPane();
         content.getStyleClass().add("gameChooserButton");
         content.getStyleClass().add("button");
-        content.setPadding(new Insets(10, 10, 10, 10));
+        content.setPadding(new Insets(10));
         content.setCenter(pictureRectangle);
         content.setBottom(userNameText);
 
         user.setAlignment(Pos.TOP_RIGHT);
         user.getChildren().add(content);
 
-
         if (editable) {
             final double buttonsSize = screenDimension.getWidth() / 50;
             final BorderPane editUserButton = createEditUserButton(getGazePlay(), choicePanel, user, buttonsSize, screenDimension);
             final BorderPane deleteUserButton = createDeleteUserButton(getGazePlay(), choicePanel, user, buttonsSize);
             final VBox buttonBox = new VBox();
-            // buttonBox.setSpacing(10);
+
             buttonBox.getChildren().addAll(editUserButton, deleteUserButton);
             user.getChildren().add(buttonBox);
         }
@@ -252,7 +274,12 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         return user;
     }
 
-    private BorderPane createDeleteUserButton(final GazePlay gazePlay, final FlowPane choicePanel, final User user, final double size) {
+    private BorderPane createDeleteUserButton(
+        final GazePlay gazePlay,
+        final FlowPane choicePanel,
+        final User user,
+        final double size
+    ) {
         final CustomButton button = new CustomButton("data/common/images/error.png", size);
 
         button.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
@@ -312,21 +339,44 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         return exitButton;
     }
 
-    private Stage createRemoveDialog(final Stage primaryStage, final FlowPane choicePanel, final User user, final Supplier<Dimension2D> currentScreenDimensionSupplier) {
+    private Stage initializeDialog(Stage primaryStage) {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initOwner(primaryStage);
         dialog.initStyle(StageStyle.UTILITY);
         dialog.setOnCloseRequest(windowEvent -> primaryStage.getScene().getRoot().setEffect(null));
+        return dialog;
+    }
 
+    private ScrollPane initializeScroller(Pane choicePane, Stage primaryStage) {
+        final ScrollPane choicePanelScroller = new ScrollPane(choicePane);
+        choicePanelScroller.setMinHeight(primaryStage.getHeight() / 3);
+        choicePanelScroller.setMinWidth(primaryStage.getWidth() / 3);
+        choicePanelScroller.setFitToWidth(true);
+        choicePanelScroller.setFitToHeight(true);
+        return choicePanelScroller;
+    }
 
-        final Button yes = new Button(getGazePlay().getTranslator().translate("YesRemove"));
-        yes.getStyleClass().add("gameChooserButton");
-        yes.getStyleClass().add("gameVariation");
-        yes.getStyleClass().add("button");
-        yes.setMinHeight(primaryStage.getHeight() / 10);
-        yes.setMinWidth(primaryStage.getWidth() / 10);
-        yes.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
+    Stage createRemoveDialog(
+        final Stage primaryStage,
+        final FlowPane choicePanel,
+        final User user,
+        final Supplier<Dimension2D> currentScreenDimensionSupplier
+    ) {
+        final Stage dialog = initializeDialog(primaryStage);
+
+        final HBox choicePane = new HBox();
+        choicePane.setSpacing(20);
+        choicePane.setAlignment(Pos.CENTER);
+
+        final ScrollPane choicePanelScroller = initializeScroller(choicePane, primaryStage);
+
+        final Button yes = createDialogButton(
+            getGazePlay().getTranslator().translate("YesRemove"),
+            primaryStage.getHeight() / 10,
+            primaryStage.getWidth() / 10
+        );
+        yes.setOnMouseClicked(event -> {
             dialog.close();
             choicePanel.getChildren().remove(user);
             final File userDirectory = GazePlayDirectories.getUserProfileDirectory(user.getName());
@@ -334,26 +384,15 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
             log.info("Profile: " + user.getName() + " deleted");
         });
 
-        final Button no = new Button(getGazePlay().getTranslator().translate("NoCancel"));
-        no.getStyleClass().add("gameChooserButton");
-        no.getStyleClass().add("gameVariation");
-        no.getStyleClass().add("button");
-        no.setMinHeight(primaryStage.getHeight() / 10);
-        no.setMinWidth(primaryStage.getWidth() / 10);
-        no.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> dialog.close());
-
-        final HBox choicePane = new HBox();
-        choicePane.setSpacing(20);
-        choicePane.setAlignment(Pos.CENTER);
+        final Button no = createDialogButton(
+            getGazePlay().getTranslator().translate("NoCancel"),
+            primaryStage.getHeight() / 10,
+            primaryStage.getWidth() / 10
+        );
+        no.setOnMouseClicked(event -> dialog.close());
 
         choicePane.getChildren().add(yes);
         choicePane.getChildren().add(no);
-
-        final ScrollPane choicePanelScroller = new ScrollPane(choicePane);
-        choicePanelScroller.setMinHeight(primaryStage.getHeight() / 3);
-        choicePanelScroller.setMinWidth(primaryStage.getWidth() / 3);
-        choicePanelScroller.setFitToWidth(true);
-        choicePanelScroller.setFitToHeight(true);
 
         final Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
         final Configuration config = ActiveConfigurationContext.getInstance();
@@ -362,24 +401,21 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         return dialog;
     }
 
-    private Stage createDialog(final GazePlay gazePlay, final Stage primaryStage, final FlowPane choicePanel, final User user,
-                               final boolean newUser, final Dimension2D screenDimension) {
-        // initialize the confirmation dialog
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.WINDOW_MODAL);
-        dialog.initOwner(primaryStage);
-        dialog.initStyle(StageStyle.UTILITY);
-        dialog.setOnCloseRequest(windowEvent -> primaryStage.getScene().getRoot().setEffect(null));
+    Stage createDialog(
+        final GazePlay gazePlay,
+        final Stage primaryStage,
+        final FlowPane choicePanel,
+        final User user,
+        final boolean newUser,
+        final Dimension2D screenDimension
+    ) {
+        final Stage dialog = initializeDialog(primaryStage);
 
         final VBox choicePane = new VBox();
         choicePane.setSpacing(20);
         choicePane.setAlignment(Pos.CENTER);
 
-        final ScrollPane choicePanelScroller = new ScrollPane(choicePane);
-        choicePanelScroller.setMinHeight(primaryStage.getHeight() / 3);
-        choicePanelScroller.setMinWidth(primaryStage.getWidth() / 3);
-        choicePanelScroller.setFitToWidth(true);
-        choicePanelScroller.setFitToHeight(true);
+        final ScrollPane choicePanelScroller = initializeScroller(choicePane, primaryStage);
 
         final HBox nameField = new HBox();
 
@@ -402,26 +438,24 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         final Text ti = new Text(getGazePlay().getTranslator().translate("Image"));
         ti.setFill(Color.WHITE);
 
-        final Button chooseImageButton = new Button(getGazePlay().getTranslator().translate("ChooseImage"));
-        chooseImageButton.getStyleClass().add("gameChooserButton");
-        chooseImageButton.getStyleClass().add("gameVariation");
-        chooseImageButton.getStyleClass().add("button");
-        chooseImageButton.setMinHeight(primaryStage.getHeight() / 20);
-        chooseImageButton.setMinWidth(primaryStage.getWidth() / 10);
-        chooseImageButton.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
+        final Button chooseImageButton = createDialogButton(
+            getGazePlay().getTranslator().translate("ChooseImage"),
+            primaryStage.getHeight() / 20,
+            primaryStage.getWidth() / 10
+        );
+        chooseImageButton.setOnMouseClicked(event -> {
             final String s = getImage(dialog, chooseImageButton);
             if (s != null) {
                 chooseImageButton.setText(s);
             }
         });
 
-        final Button reset = new Button(getGazePlay().getTranslator().translate("reset"));
-        reset.getStyleClass().add("gameChooserButton");
-        reset.getStyleClass().add("gameVariation");
-        reset.getStyleClass().add("button");
-        reset.setMinHeight(primaryStage.getHeight() / 20);
-        reset.setMinWidth(primaryStage.getWidth() / 20);
-        reset.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event1 -> {
+        final Button reset = createDialogButton(
+            getGazePlay().getTranslator().translate("reset"),
+            primaryStage.getHeight() / 20,
+            primaryStage.getWidth() / 20
+        );
+        reset.setOnMouseClicked(event -> {
             chooseImageButton.setGraphic(null);
             chooseImageButton.setText(getGazePlay().getTranslator().translate("ChooseImage"));
         });
@@ -431,13 +465,12 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         final ImageView iv = new ImageView();
         choicePane.getChildren().addAll(imageField, nameField, iv);
 
-        final Button button = new Button("Ok");
-        button.getStyleClass().add("gameChooserButton");
-        button.getStyleClass().add("gameVariation");
-        button.getStyleClass().add("button");
-        button.setMinHeight(primaryStage.getHeight() / 10);
-        button.setMinWidth(primaryStage.getWidth() / 10);
-        choicePane.getChildren().add(button);
+        final Button okButton = createDialogButton(
+            "Ok",
+            primaryStage.getHeight() / 10,
+            primaryStage.getWidth() / 10
+        );
+        choicePane.getChildren().add(okButton);
 
         final EventHandler<Event> event;
 
@@ -460,14 +493,14 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     choicePanel.getChildren().add(user);
 
                     ActiveConfigurationContext.switchToUser(newUser1.getName());
-                    final Configuration conf2 = ActiveConfigurationContext.getInstance();
+                    final Configuration conf = ActiveConfigurationContext.getInstance();
                     final File userDirectory = GazePlayDirectories.getUserProfileDirectory(newUser1.getName());
                     final boolean userDirectoryCreated = userDirectory.mkdirs();
                     log.debug("userDirectoryCreated = {}", userDirectoryCreated);
 
-                    conf2.setUserName(newUser1.getName());
+                    conf.setUserName(newUser1.getName());
 
-                    log.info("THE NAME OF THE NEW USER IS = {}", conf2.getUserName());
+                    log.info("THE NAME OF THE NEW USER IS = {}", conf.getUserName());
 
                     if (!chooseImageButton.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
 
@@ -475,10 +508,10 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                         final File dst = new File(GazePlayDirectories.getUserProfileDirectory(newUser1.getName()), src.getName());
                         copyFile(src, dst);
 
-                        conf2.setUserPicture(dst.getAbsolutePath());
+                        conf.setUserPicture(dst.getAbsolutePath());
                     }
 
-                    conf2.setFileDir(GazePlayDirectories.getFileDirectoryUserValue(newUser1.getName()).getAbsolutePath());
+                    conf.setFileDir(GazePlayDirectories.getFileDirectoryUserValue(newUser1.getName()).getAbsolutePath());
 
                     dialog.close();
                     primaryStage.getScene().getRoot().setEffect(null);
@@ -496,9 +529,9 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                 if (chooseImageButton.getGraphic() != null) {
                     ip = new ImagePattern(((ImageView) chooseImageButton.getGraphic()).getImage());
                 }
-                modifUser(user, choicePanel, gazePlay, user.getName(), ip);
+                modifyUser(user, user.getName(), ip);
 
-                final Configuration conf2 = ConfigurationSource.createFromProfile(user.getName());
+                final Configuration conf = ConfigurationSource.createFromProfile(user.getName());
 
                 if (!chooseImageButton.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
 
@@ -506,14 +539,14 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
                     final File dst = new File(GazePlayDirectories.getUserProfileDirectory(user.getName()), src.getName());
                     copyFile(src, dst);
 
-                    conf2.setUserPicture(dst.getAbsolutePath());
+                    conf.setUserPicture(dst.getAbsolutePath());
                 }
 
                 dialog.close();
                 primaryStage.getScene().getRoot().setEffect(null);
             };
         }
-        button.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
+        okButton.setOnMouseClicked(event);
 
         final Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
 
@@ -525,18 +558,28 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         return dialog;
     }
 
+    private static Button createDialogButton(String text, double minHeight, double minWidth) {
+        final Button button = new Button(text);
+        button.getStyleClass().add("gameChooserButton");
+        button.getStyleClass().add("gameVariation");
+        button.getStyleClass().add("button");
+        button.setMinHeight(minHeight);
+        button.setMinWidth(minWidth);
+        return button;
+    }
+
     private boolean checkNewName(final String s) {
         final boolean isNew = !findAllUsersProfiles().contains(s);
         return (isNew && !s.equals(getGazePlay().getTranslator().translate("DefaultUser")));
     }
 
-    private void modifUser(final HBox user, final FlowPane choicePanel, final GazePlay gazePlay, final String name, final ImagePattern ip) {
+    private void modifyUser(final HBox user, final String name, final ImagePattern ip) {
         final BorderPane c = (BorderPane) user.getChildren().get(0);
         final Rectangle r = (Rectangle) c.getCenter();
         if (ip != null) {
             r.setFill(ip);
         }
-        if ((name != null) && (!name.equals(""))) {
+        if ((name != null) && (!name.isBlank())) {
             ((Text) c.getBottom()).setText(name);
         }
     }
@@ -559,23 +602,22 @@ public class UserProfilContext extends GraphicalContext<BorderPane> {
         }
         final String result = selectedImageFile.getAbsolutePath();
         try {
-            final ImageView imageView = new ImageView(new Image(new FileInputStream(selectedImageFile)));
+            final ImageView imageView = new ImageView(new Image(Files.newInputStream(selectedImageFile.toPath())));
             imageView.setPreserveRatio(true);
             imageView.setFitHeight(primaryStage.getHeight() / 10);
             targetButton.setGraphic(imageView);
-        } catch (final FileNotFoundException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
+
         return result;
     }
 
-    private static boolean copyFile(final File source, final File dest) {
+    private static void copyFile(final File source, final File dest) {
         try {
             org.apache.commons.io.FileUtils.copyFile(source, dest);
-            return true;
         } catch (final Exception e) {
             log.info("Unable to copy the profile picture");
-            return false;
         }
     }
 

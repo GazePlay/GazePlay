@@ -21,7 +21,7 @@ public class QuickControlPanel {
         Configuration config
     ) {
         HBox leftControlPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlePaneLayout(leftControlPane);
+        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(leftControlPane);
         leftControlPane.setAlignment(Pos.TOP_CENTER);
         leftControlPane.getChildren().add(configurationButton);
         leftControlPane.getChildren().add(musicControl.createMusicControlPane());

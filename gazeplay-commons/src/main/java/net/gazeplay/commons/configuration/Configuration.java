@@ -45,7 +45,8 @@ public class Configuration {
     private static final String PROPERTY_NAME_EFFECTS_VOLUME = "EFFECTS_VOLUME";
     private static final String PROPERTY_NAME_GAZE_MENU = "GAZE_MENU";
     private static final String PROPERTY_NAME_GAZE_MOUSE = "GAZE_MOUSE";
-    private static final String PROPERTY_NAME_WHITE_BCKGRD = "WHITE_BACKGROUND";
+    private static final String PROPERTY_NAME_BACKGROUND_STYLE = "BACKGROUND_STYLE";
+    private static final String PROPERTY_NAME_BACKGROUND_ENABLED = "BACKGROUND_ENABLED";
     private static final String PROPERTY_NAME_ANIMATION_SPEED_RATIO = "ANIMATION_SPEED_RATIO";
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
@@ -85,17 +86,16 @@ public class Configuration {
 
     private static final boolean DEFAULT_VALUE_GAZE_MENU = false;
     private static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
-    private static final boolean DEFAULT_VALUE_WHITE_BCKGRD = false;
+    private static final BackgroundStyle DEFAULT_VALUE_BACKGROUND_STYLE = BackgroundStyle.DARK;
+    private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = false;
     private static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
-
 
     /*
     source : "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
     * */
     public static final String DEFAULT_VALUE_COLORS_DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
-
 
     @Getter
     @Setter
@@ -171,7 +171,10 @@ public class Configuration {
     private final BooleanProperty gazeMouseEnabledProperty;
 
     @Getter
-    private final BooleanProperty whiteBackgroundProperty;
+    private final ObjectProperty<BackgroundStyle> backgroundStyleProperty;
+
+    @Getter
+    private final BooleanProperty backgroundEnabledProperty;
 
     @Getter
     private final DoubleProperty musicVolumeProperty;
@@ -235,7 +238,10 @@ public class Configuration {
         fixationSequenceDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED, propertyChangeListener);
         gazeMenuEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU, propertyChangeListener);
         gazeMouseEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE, propertyChangeListener);
-        whiteBackgroundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_WHITE_BCKGRD, DEFAULT_VALUE_WHITE_BCKGRD, propertyChangeListener);
+        backgroundStyleProperty = new ApplicationConfigBackedObjectProperty<BackgroundStyle>(applicationConfig, PROPERTY_NAME_BACKGROUND_STYLE, DEFAULT_VALUE_BACKGROUND_STYLE, propertyChangeListener,
+            new EnumMarshaller<BackgroundStyle>(),
+            new EnumUnmarshaller<BackgroundStyle>(BackgroundStyle.class));
+        backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_ENABLED, DEFAULT_VALUE_BACKGROUND_ENABLED, propertyChangeListener);
 
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
         cssfileProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_CSSFILE, DEFAULT_VALUE_CSS_FILE, propertyChangeListener);
@@ -377,8 +383,16 @@ public class Configuration {
         return gazeMouseEnabledProperty.getValue();
     }
 
-    public Boolean isBackgroundWhite() {
-        return whiteBackgroundProperty.getValue();
+    public BackgroundStyle getBackgroundStyle() {
+        return backgroundStyleProperty.getValue();
+    }
+
+    public void setBackgroundStyle(final BackgroundStyle newValue) {
+        backgroundStyleProperty.setValue(newValue);
+    }
+
+    public Boolean isBackgroundEnabled() {
+        return backgroundEnabledProperty.getValue();
     }
 
     public String getUserName() {

@@ -9,7 +9,7 @@ public class ControlPanelConfigurator {
     @Getter
     private static final ControlPanelConfigurator singleton = new ControlPanelConfigurator();
 
-    public void customizeControlePaneLayout(HBox controlPane) {
+    public void customizeControlPaneLayout(HBox controlPane) {
         controlPane.setPadding(new Insets(15, 12, 15, 12));
         controlPane.setSpacing(10);
     }

@@ -24,7 +24,6 @@ import java.util.Random;
 
 public class Bloc extends Parent {// Rectangle {
 
-    private static final float zoom_factor = 1.0f;
     private final double fixationlength;
 
     private final String letterStr;
@@ -116,7 +115,7 @@ public class Bloc extends Parent {// Rectangle {
     private void onCorrectBlocSelected() {
         stats.incNbGoals();
 
-        double final_zoom = 1.0;
+        double finalZoom = 1.0;
 
         progressIndicator.setOpacity(0);
         letter.setOpacity(0);
@@ -138,9 +137,9 @@ public class Bloc extends Parent {// Rectangle {
         currentTimeline = new Timeline();
 
         currentTimeline.getKeyFrames().add(
-            new KeyFrame(new Duration(1000), new KeyValue(bloc.widthProperty(), bloc.getWidth() * final_zoom)));
+            new KeyFrame(new Duration(1000), new KeyValue(bloc.widthProperty(), bloc.getWidth() * finalZoom)));
         currentTimeline.getKeyFrames().add(
-            new KeyFrame(new Duration(1000), new KeyValue(bloc.heightProperty(), bloc.getHeight() * final_zoom)));
+            new KeyFrame(new Duration(1000), new KeyValue(bloc.heightProperty(), bloc.getHeight() * finalZoom)));
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(bloc.xProperty(), 0)));
 
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(bloc.yProperty(), 0)));
@@ -209,26 +208,9 @@ public class Bloc extends Parent {// Rectangle {
                 currentTimeline.stop();
                 currentTimeline = new Timeline();
 
-                // currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                // new KeyValue(bloc.xProperty(), bloc.getX() - (width * zoom_factor - width) / 2)));
-                // currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                // new KeyValue(bloc.yProperty(), bloc.getY() - (height * zoom_factor - height) / 2)));
-                // currentTimeline.getKeyFrames().add(
-                // new KeyFrame(new Duration(1), new KeyValue(bloc.widthProperty(), width * zoom_factor)));
-                // currentTimeline.getKeyFrames().add(
-                // new KeyFrame(new Duration(1), new KeyValue(bloc.heightProperty(), height * zoom_factor)));
-
-                // timelineProgressBar = new Timeline();
-
-                // timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
-                // new KeyValue(progressIndicator.progressProperty(), 1)));
-
                 currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
                     new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                // timelineProgressBar.play();
-
-                // timelineProgressBar.setOnFinished(new EventHandler<ActionEvent>() {
                 currentTimeline.setOnFinished(actionEvent -> {
 
                     bloc.removeEventFilter(MouseEvent.ANY, enterEvent);
@@ -255,15 +237,7 @@ public class Bloc extends Parent {// Rectangle {
                 currentTimeline.getKeyFrames()
                     .add(new KeyFrame(new Duration(1), new KeyValue(bloc.heightProperty(), height)));
 
-                // Be sure that the card is properly positionned at the end
-                // currentTimeline.setOnFinished((event) -> {
-                // bloc.setX(posX);
-                // bloc.setY(posY);
-                // });
-
                 currentTimeline.play();
-
-                // timelineProgressBar.stop();
 
                 progressIndicator.setOpacity(0);
                 progressIndicator.setProgress(0);

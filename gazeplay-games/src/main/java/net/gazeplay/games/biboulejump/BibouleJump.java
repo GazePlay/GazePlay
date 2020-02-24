@@ -7,6 +7,7 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -19,6 +20,7 @@ import javafx.scene.text.TextAlignment;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
@@ -30,6 +32,8 @@ import net.gazeplay.components.ProgressButton;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -97,9 +101,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         this.platformHeight = dimensions.getHeight() / 10;
         this.platformWidth = dimensions.getWidth() / 7;
 
-        final Rectangle backgroundImage = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
-        backgroundImage.setFill(Color.SKYBLUE);
-        this.backgroundLayer.getChildren().add(backgroundImage);
+        initBackground();
 
         final Label onScreenText = new Label();
         foregroundLayer.getChildren().add(onScreenText);
@@ -108,6 +110,18 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         scoreText.setTextAlignment(TextAlignment.CENTER);
         scoreText.setFont(new Font(50));
         scoreText.setWrappingWidth(dimensions.getWidth());
+        Color textColor = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+            @Override
+            public Color visitLight() {
+               return Color.BLACK;
+            }
+
+            @Override
+            public Color visitDark() {
+              return Color.WHITE;
+            }
+        });
+        scoreText.setFill(textColor);
         foregroundLayer.getChildren().add(scoreText);
 
         // Menu
@@ -162,6 +176,31 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
             ForegroundSoundsUtils.playSound(DATA_PATH + "/sounds/" + soundName);
         } catch (final Exception e) {
             log.warn("Can't play sound: no associated sound : " + e.toString());
+        }
+    }
+
+    void initBackground() {
+        if (gameContext.getConfiguration().isBackgroundEnabled()) {
+            Rectangle backgroundImage = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
+
+
+            gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Void>() {
+                @Override
+                public Void visitLight() {
+                    ColorAdjust grayscale = new ColorAdjust();
+                    grayscale.setSaturation(-0.7);
+                    backgroundImage.setFill(Color.LIGHTSKYBLUE);
+                    backgroundImage.setEffect(grayscale);
+                    return null;
+                }
+
+                @Override
+                public Void visitDark() {
+                    backgroundImage.setFill(Color.SKYBLUE);
+                    return null;
+                }
+            });
+            this.backgroundLayer.getChildren().add(backgroundImage);
         }
     }
 
@@ -233,7 +272,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
                 highscores = new ArrayList(highscores.subList(highscores.size() - 3, highscores.size()));
             }
 
-            final Writer writer = new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8);
+            final Writer writer = new OutputStreamWriter(Files.newOutputStream(f.toPath()), StandardCharsets.UTF_8);
             for (final int i : highscores) {
                 writer.write(i + ":");
             }

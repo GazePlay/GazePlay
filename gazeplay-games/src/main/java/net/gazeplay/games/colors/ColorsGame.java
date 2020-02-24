@@ -26,8 +26,11 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.AbstractGazeIndicator;
 import net.gazeplay.components.GazeFollowerIndicator;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -229,15 +232,15 @@ public class ColorsGame implements GameLifeCycle {
     private Image getDrawingImage(String imgURL) {
         Image img;
         try {
-            img = new Image(new FileInputStream(imgURL));
-        } catch (final FileNotFoundException e) {
+            img = new Image(Files.newInputStream(new File(imgURL).toPath()));
+        } catch (final IOException e) {
 
             log.debug("Drawing image " + imgURL + " cannot be found");
 
             getGameContext().getConfiguration().getColorsDefaultImageProperty().set(Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE);
 
-            imgURL = Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE;
-            img = new Image(imgURL);
+            String defaultImgURL = Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE;
+            img = new Image(defaultImgURL);
         }
         return img;
     }
@@ -295,9 +298,9 @@ public class ColorsGame implements GameLifeCycle {
 
         final double width = dimension2D.getWidth();
 
-        final double ToolBoxWidth = colorToolBox.getWidth();
-        final double x = width - ToolBoxWidth;
-        log.debug("translated tool box to : {}, x toolBoxWidth : {}", x, ToolBoxWidth);
+        final double toolBoxWidth = colorToolBox.getWidth();
+        final double x = width - toolBoxWidth;
+        log.debug("translated tool box to : {}, x toolBoxWidth : {}", x, toolBoxWidth);
         colorToolBox.setTranslateX(x);
     }
 

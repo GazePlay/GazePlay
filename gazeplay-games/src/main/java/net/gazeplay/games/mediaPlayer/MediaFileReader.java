@@ -10,8 +10,12 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.nio.file.StandardOpenOption.APPEND;
 
 @Slf4j
 public class MediaFileReader {
@@ -42,7 +46,7 @@ public class MediaFileReader {
 
         if (playlistFile.exists()) {
             try (
-                FileInputStream fileInputStream = new FileInputStream(playlistFile);
+                InputStream fileInputStream = Files.newInputStream(playlistFile.toPath());
                 BufferedReader b = new BufferedReader(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))
             ) {
                 String readLine;
@@ -122,7 +126,7 @@ public class MediaFileReader {
         final File playlistFile = new File(mediaPlayerDirectory, PLAYER_LIST_CSV);
 
         try (
-            FileOutputStream fileOutputStream = new FileOutputStream(playlistFile, true);
+            OutputStream fileOutputStream = Files.newOutputStream(playlistFile.toPath(), APPEND);
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8))
         ) {
             if (mediaList.size() == 0) {
