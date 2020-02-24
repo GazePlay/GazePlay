@@ -43,6 +43,10 @@ import net.gazeplay.components.StackPaneButton;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 public class GazeMediaPlayer extends Parent implements GameLifeCycle {
