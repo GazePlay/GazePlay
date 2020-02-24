@@ -1,12 +1,9 @@
 package net.gazeplay.commons.gaze;
 
-import javafx.collections.ObservableList;
+import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,45 +21,12 @@ public class SecondScreen implements GazeMotionListener {
 
     private final Lighting[][] lightings;
 
-    private SecondScreen(final Stage stage2, final Lighting[][] lightings) {
+    SecondScreen(final Stage stage2, final Lighting[][] lightings) {
         this.stage2 = stage2;
         this.lightings = lightings;
     }
 
-    public static SecondScreen launch() {
-        final ObservableList<Screen> screens = Screen.getScreens();
-
-        final Screen screen1 = screens.get(0);
-
-        final Screen screen2;
-        if (screens.size() == 1) {
-            screen2 = screens.get(0);
-        } else {
-            screen2 = screens.get(1);
-        }
-
-        log.debug("screen1.getBounds() = " + screen1.getBounds());
-        log.debug("screen2.getBounds() = " + screen2.getBounds());
-
-        final Stage stage2 = new Stage();
-        stage2.setScene(new Scene(new Label("primary")));
-        stage2.setX(screen2.getVisualBounds().getMinX());
-        stage2.setY(screen2.getVisualBounds().getMinY());
-        stage2.setWidth(screen1.getBounds().getWidth());
-        stage2.setHeight(screen1.getBounds().getHeight());
-        final Group root = new Group();
-        final Scene scene = new Scene(root, screen1.getBounds().getWidth(), screen1.getBounds().getHeight(), Color.BLACK);
-
-        final Lighting[][] lightings = makeLighting(root, screen2.getBounds());
-
-        stage2.setScene(scene);
-
-        stage2.show();
-
-        return new SecondScreen(stage2, lightings);
-    }
-
-    private static Lighting[][] makeLighting(final Group root, final Rectangle2D screen2Bounds) {
+    static Lighting[][] makeLighting(final Group root, final Rectangle2D screen2Bounds) {
 
         final int width = (int) screen2Bounds.getWidth();
         final int height = (int) screen2Bounds.getHeight();
@@ -84,7 +48,7 @@ public class SecondScreen implements GazeMotionListener {
         stage2.close();
     }
 
-    public void light(final javafx.geometry.Point2D rawCoordinates) {
+    public void light(final Point2D rawCoordinates) {
         final int x = (int) (rawCoordinates.getX() / pixelWidth);
         final int y = (int) (rawCoordinates.getY() / pixelWidth);
         if (x < 0 || x >= lightings.length) {
@@ -97,7 +61,7 @@ public class SecondScreen implements GazeMotionListener {
     }
 
     @Override
-    public void gazeMoved(final javafx.geometry.Point2D position) {
+    public void gazeMoved(final Point2D position) {
         light(position);
     }
 }
