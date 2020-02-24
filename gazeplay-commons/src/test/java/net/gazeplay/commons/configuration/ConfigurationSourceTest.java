@@ -1,5 +1,6 @@
 package net.gazeplay.commons.configuration;
 
+import lombok.extern.slf4j.Slf4j;
 import mockit.Mock;
 import mockit.MockUp;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
@@ -9,6 +10,7 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 class ConfigurationSourceTest {
 
     private final String sep = File.separator;
@@ -22,6 +24,7 @@ class ConfigurationSourceTest {
 
     @Test
     void shouldCreateFromDefaultProfile() {
+        log.info(resourcesFolder.getAbsolutePath());
         new MockUp<GazePlayDirectories>() {
             @Mock
             public File getGazePlayFolder() {
