@@ -18,12 +18,14 @@ class ConfigurationSourceTest {
             + "test" + sep
             + "resources" + sep;
 
+    private final File resourcesFolder = new File(localDataFolder);
+
     @Test
     void shouldCreateFromDefaultProfile() {
         new MockUp<GazePlayDirectories>() {
             @Mock
             public File getGazePlayFolder() {
-                return new File(localDataFolder);
+                return resourcesFolder;
             }
         };
 
@@ -44,7 +46,7 @@ class ConfigurationSourceTest {
         new MockUp<GazePlayDirectories>() {
             @Mock
             public File getUserProfileDirectory(String id) {
-                return new File(localDataFolder);
+                return resourcesFolder;
             }
         };
 
