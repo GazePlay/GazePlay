@@ -83,14 +83,14 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         mediaButtons = new MediaButton[3];
 
 
-        upArrow = createButton("^", dimension2D.getWidth() / 5, dimension2D.getHeight() / 7);
+        upArrow = createTextStackPaneButton("^", dimension2D.getWidth() / 5, dimension2D.getHeight() / 7);
         upArrow.getButton().setStyle("-fx-background-radius: 5em; ");
 
         for (int i = 0; i < 3; i++) {
             mediaButtons[i] = new MediaButton(dimension2D.getWidth() / 4, dimension2D.getHeight() / 7);
         }
 
-        downArrow = createButton("v", dimension2D.getWidth() / 5, dimension2D.getHeight() / 7);
+        downArrow = createTextStackPaneButton("v", dimension2D.getWidth() / 5, dimension2D.getHeight() / 7);
         downArrow.getButton().setStyle("-fx-background-radius: 5em; ");
 
         scrollList.setSpacing(dimension2D.getHeight() / 30);
@@ -99,7 +99,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
         videoSide = new VBox();
 
-        addVideo = createButton("+", dimension2D.getWidth() / 6, dimension2D.getHeight() / 8);
+        addVideo = createTextStackPaneButton("+", dimension2D.getWidth() / 6, dimension2D.getHeight() / 8);
 
         videoRoot = new BorderPane();
 
@@ -122,10 +122,10 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
         tools = new HBox();
 
-        left = createButtonWithGraphic(dimension2D.getWidth() / 12, dimension2D.getHeight() / 8, "data/gazeMediaPlayer/prev.png");
-        playPause = createButtonWithGraphic(dimension2D.getWidth() / 12, dimension2D.getHeight() / 8, "data/gazeMediaPlayer/playPause.png");
-        right = createButtonWithGraphic(dimension2D.getWidth() / 12, dimension2D.getHeight() / 8, "data/gazeMediaPlayer/next.png");
-        fullScreen = createButtonWithGraphic(dimension2D.getWidth() / 12, dimension2D.getHeight() / 8, "data/gazeMediaPlayer/fullon.png");
+        left = createGraphicStackPaneButton(dimension2D.getWidth() / 12, dimension2D.getHeight() / 8, "data/gazeMediaPlayer/prev.png");
+        playPause = createGraphicStackPaneButton(dimension2D.getWidth() / 12, dimension2D.getHeight() / 8, "data/gazeMediaPlayer/playPause.png");
+        right = createGraphicStackPaneButton(dimension2D.getWidth() / 12, dimension2D.getHeight() / 8, "data/gazeMediaPlayer/next.png");
+        fullScreen = createGraphicStackPaneButton(dimension2D.getWidth() / 12, dimension2D.getHeight() / 8, "data/gazeMediaPlayer/fullon.png");
 
         tools.setSpacing(dimension2D.getWidth() / 20);
         tools.setAlignment(Pos.CENTER);
@@ -149,8 +149,8 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     }
 
-    private StackPaneButton createButtonWithGraphic(double width, double height, String imageURL) {
-        StackPaneButton bwpi = createButton(width, height);
+    private StackPaneButton createGraphicStackPaneButton(double width, double height, String imageURL) {
+        StackPaneButton bwpi = createSimpleStackPaneButton(width, height);
         final ImageView imageButton = new ImageView(new Image(imageURL));
         imageButton.setPreserveRatio(true);
         imageButton.setFitHeight((90 * bwpi.getButton().getHeight()) / 100);
@@ -158,19 +158,18 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         return bwpi;
     }
 
-    private StackPaneButton createButton(double width, double height) {
+    private StackPaneButton createSimpleStackPaneButton(double width, double height) {
         StackPaneButton bwpi = new StackPaneButton();
         bwpi.getButton().setPrefWidth(width);
         bwpi.getButton().setPrefHeight(height);
+        bwpi.getButton().setMinWidth(width);
+        bwpi.getButton().setMinHeight(height);
         return bwpi;
     }
 
-    private StackPaneButton createButton(String text, double width, double height) {
-        StackPaneButton bwpi = new StackPaneButton(text);
-        bwpi.getButton().setMinWidth(width);
-        bwpi.getButton().setMinHeight(height);
-        bwpi.getButton().setPrefWidth(width);
-        bwpi.getButton().setPrefHeight(height);
+    private StackPaneButton createTextStackPaneButton(String text, double width, double height) {
+        StackPaneButton bwpi = createSimpleStackPaneButton(width,height);
+        bwpi.getButton().setText(text);
         return bwpi;
     }
 
