@@ -3,7 +3,7 @@ package net.gazeplay.games.mediaPlayer;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import net.gazeplay.components.StackPaneButton;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,27 +24,27 @@ public class GazeMediaPlayerTest {
     @Test
     void shouldCreateButtonOfSimpleStackPaneButton() {
         StackPaneButton stackPaneButton = GazeMediaPlayer.createSimpleStackPaneButton(500, 500);
-        Assert.assertNotNull(stackPaneButton.getButton());
+        Assertions.assertNotNull(stackPaneButton.getButton());
     }
 
     @Test
     void shouldCreateButtonOfTextStackPaneButton() {
         StackPaneButton stackPaneButton = GazeMediaPlayer.createTextStackPaneButton("Test", 500, 500);
-        Assert.assertNotNull(stackPaneButton.getButton());
-        Assert.assertEquals("Test", stackPaneButton.getButton().getText());
+        Assertions.assertNotNull(stackPaneButton.getButton());
+        Assertions.assertEquals("Test", stackPaneButton.getButton().getText());
     }
 
     @Test
     void shouldCreateButtonOfGraphicStackPaneButton() {
         StackPaneButton stackPaneButton = GazeMediaPlayer.createGraphicStackPaneButton(500, 500, "images/blue/blue.jpg");
         ImageView graphicImageView = (ImageView) stackPaneButton.getButton().getGraphic();
-        Assert.assertNotNull(stackPaneButton.getButton());
-        Assert.assertTrue(graphicImageView.getImage().getUrl().contains("blue.jpg"));
+        Assertions.assertNotNull(stackPaneButton.getButton());
+        Assertions.assertTrue(graphicImageView.getImage().getUrl().contains("blue.jpg"));
     }
 
     @Test
     void shouldCreateTextButtonWhenCallingMediaButton() {
         Button button = GazeMediaPlayer.createMediaButton("Test", 500, 500);
-        Assert.assertEquals("Test", button.getText());
+        Assertions.assertEquals("Test", button.getText());
     }
 }
