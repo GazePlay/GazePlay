@@ -24,5 +24,5 @@ You can find the distribution of the version currently in development on our AWS
 
 AWS Bucket Link here: [https://gazeplay-dist.s3.eu-west-3.amazonaws.com/](https://gazeplay-dist.s3.eu-west-3.amazonaws.com/)
 
-(Download and use these versions at your own risk)
+(Download and use these versions at your own risks)
 
