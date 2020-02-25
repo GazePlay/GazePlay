@@ -22,6 +22,6 @@ Vous pouvez trouver les versions précédentes de GazePlay sur [la page des vers
 ### Pour utilisateurs avancés et développeurs
 Vous pouvez trouver la distribution de la version actuellement en développement sur notre Bucket AWS Amazon S3.
 
-Lien du bucket AWS ici: https://gazeplay-dist.s3.eu-west-3.amazonaws.com/
+Lien du bucket AWS ici: [https://gazeplay-dist.s3.eu-west-3.amazonaws.com/](https://gazeplay-dist.s3.eu-west-3.amazonaws.com/)
 
 (Téléchargez et utilisez à vos propres risques)
