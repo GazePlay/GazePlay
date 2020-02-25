@@ -10,7 +10,6 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Slf4j
 class ConfigurationSourceTest {
 
     private final String sep = File.separator;
@@ -24,7 +23,6 @@ class ConfigurationSourceTest {
 
     @Test
     void shouldCreateFromDefaultProfile() {
-        log.info(resourcesFolder.getAbsolutePath());
         new MockUp<GazePlayDirectories>() {
             @Mock
             public File getGazePlayFolder() {
