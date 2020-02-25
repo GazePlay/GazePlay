@@ -22,15 +22,8 @@ class ConfigurationSourceTest {
     private final File resourcesFolder = new File(localDataFolder);
 
     @Test
-    void shouldCreateFromDefaultProfile() {
-        new MockUp<GazePlayDirectories>() {
-            @Mock
-            public File getGazePlayFolder() {
-                return resourcesFolder;
-            }
-        };
-
-        Configuration result = ConfigurationSource.createFromDefaultProfile();
+    void shouldCreateFromPropertiesResource() {
+        Configuration result = ConfigurationSource.createFromPropertiesResource(new File(resourcesFolder, "GazePlay.properties"));
 
         assertEquals("eng", result.getLanguage());
     }
