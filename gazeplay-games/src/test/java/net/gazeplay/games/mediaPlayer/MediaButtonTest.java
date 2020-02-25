@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
 import net.gazeplay.components.AbstractGazeIndicator;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,14 +29,14 @@ public class MediaButtonTest {
     @Test
     void shouldNotSetUpGraphicForMediaButtonWithNoSetUpImageMethodCall() {
         MediaButton mediaButton = new MediaButton(500, 500);
-        assert mediaButton.getButton().getGraphic() == null;
+        Assert.assertNull(mediaButton.getButton().getGraphic());
     }
 
     @Test
     void shouldNotSetUpGraphicForMediaButtonWithNoMediaFileSet() {
         MediaButton mediaButton = new MediaButton(500, 500);
         mediaButton.setupImage();
-        assert mediaButton.getButton().getGraphic() == null;
+        Assert.assertNull(mediaButton.getButton().getGraphic());
     }
 
     @Test
@@ -44,7 +45,7 @@ public class MediaButtonTest {
         MediaFile mediaFile = new MediaFile("URL", "https://github.com/GazePlay/GazePlay", "gazeplayTest", null);
         mediaButton.setMediaFile(mediaFile);
         mediaButton.setupImage();
-        assert mediaButton.getButton().getGraphic() == null;
+        Assert.assertNull(mediaButton.getButton().getGraphic());
     }
 
     @Test
@@ -54,15 +55,15 @@ public class MediaButtonTest {
         mediaButton.setMediaFile(mediaFile);
         mediaButton.setupImage();
         ImageView graphicImageView = (ImageView) mediaButton.getButton().getGraphic();
-        assert graphicImageView.getImage().getUrl().contains("blue.jpg");
+        Assert.assertTrue(graphicImageView.getImage().getUrl().contains("blue.jpg"));
     }
 
     @Test
     void shouldKeepEmptyEventHandlersForMediaButtonWithNoSetUpEventMethodCall() {
         MediaButton mediaButton = new MediaButton(500, 500);
-        assert mediaButton.getClickEvent().equals(MediaButton.emptyEvent);
-        assert mediaButton.getEnterEvent().equals(MediaButton.emptyEvent);
-        assert mediaButton.getExitEvent().equals(MediaButton.emptyEvent);
+        Assert.assertEquals(mediaButton.getClickEvent(), MediaButton.emptyEvent);
+        Assert.assertEquals(mediaButton.getEnterEvent(), MediaButton.emptyEvent);
+        Assert.assertEquals(mediaButton.getExitEvent(), MediaButton.emptyEvent);
     }
 
     @Test
@@ -72,8 +73,8 @@ public class MediaButtonTest {
             String testString = "test";
         };
         mediaButton.setupEvent(testEvent, progressIndicator);
-        assert !mediaButton.getClickEvent().equals(MediaButton.emptyEvent);
-        assert !mediaButton.getEnterEvent().equals(MediaButton.emptyEvent);
-        assert !mediaButton.getExitEvent().equals(MediaButton.emptyEvent);
+        Assert.assertNotEquals(mediaButton.getClickEvent(), (MediaButton.emptyEvent));
+        Assert.assertNotEquals(mediaButton.getEnterEvent(), (MediaButton.emptyEvent));
+        Assert.assertNotEquals(mediaButton.getExitEvent(), (MediaButton.emptyEvent));
     }
 }

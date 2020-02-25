@@ -3,6 +3,7 @@ package net.gazeplay.games.mediaPlayer;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import net.gazeplay.components.StackPaneButton;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,27 +24,27 @@ public class GazeMediaPlayerTest {
     @Test
     void shouldCreateButtonOfSimpleStackPaneButton() {
         StackPaneButton stackPaneButton = GazeMediaPlayer.createSimpleStackPaneButton(500, 500);
-        assert stackPaneButton.getButton() != null;
+        Assert.assertNotNull(stackPaneButton.getButton());
     }
 
     @Test
     void shouldCreateButtonOfTextStackPaneButton() {
         StackPaneButton stackPaneButton = GazeMediaPlayer.createTextStackPaneButton("Test", 500, 500);
-        assert stackPaneButton.getButton() != null;
-        assert stackPaneButton.getButton().getText().equals("Test");
+        Assert.assertNotNull(stackPaneButton.getButton());
+        Assert.assertEquals("Test", stackPaneButton.getButton().getText());
     }
 
     @Test
     void shouldCreateButtonOfGraphicStackPaneButton() {
-            StackPaneButton stackPaneButton = GazeMediaPlayer.createGraphicStackPaneButton(500, 500, "images/blue/blue.jpg");
-            ImageView graphicImageView = (ImageView) stackPaneButton.getButton().getGraphic();
-            assert stackPaneButton.getButton() != null;
-            assert graphicImageView.getImage().getUrl().contains("blue.jpg");
+        StackPaneButton stackPaneButton = GazeMediaPlayer.createGraphicStackPaneButton(500, 500, "images/blue/blue.jpg");
+        ImageView graphicImageView = (ImageView) stackPaneButton.getButton().getGraphic();
+        Assert.assertNotNull(stackPaneButton.getButton());
+        Assert.assertTrue(graphicImageView.getImage().getUrl().contains("blue.jpg"));
     }
 
     @Test
     void shouldCreateTextButtonWhenCallingMediaButton() {
         Button button = GazeMediaPlayer.createMediaButton("Test", 500, 500);
-        assert button.getText().equals("Test");
+        Assert.assertEquals("Test", button.getText());
     }
 }
