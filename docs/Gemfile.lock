@@ -201,16 +201,9 @@ GEM
       jekyll (>= 3.5, < 5.0)
       jekyll-feed (~> 0.9)
       jekyll-seo-tag (~> 2.1)
-    minimal-mistakes-jekyll (4.17.2)
-      jekyll (>= 3.6, < 5.0)
-      jekyll-feed (~> 0.1)
-      jekyll-gist (~> 1.5)
-      jekyll-include-cache (~> 0.1)
-      jekyll-paginate (~> 1.1)
-      jekyll-sitemap (~> 1.3)
     multi_json (1.14.1)
     multipart-post (2.1.1)
-    nokogiri (1.10.7)
+    nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
     octokit (4.15.0)
       faraday (>= 0.9)
@@ -248,14 +241,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  faraday (< 1.0)
   github-pages
   jekyll-gist
   jekyll-include-cache
   jekyll-remote-theme
   jekyll-sitemap
   jemoji
-  minimal-mistakes-jekyll
   tzinfo-data
 
 BUNDLED WITH
