@@ -581,21 +581,26 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return dropShadowRight;
     }
 
-    void updatGridPane(GridPane gp) {
+    void updatGridPane(FlowPane gp) {
         ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("portraits"));
         Set<Image> set = lib.pickMultipleRandomDistinctImages(10);
-        gp.setBackground(new Background(new BackgroundFill(Color.YELLOW,CornerRadii.EMPTY,null)));
         int index = 0;
         for(Image i : set){
             log.info("the index of this image is {}",index);
             ImageView iv = new ImageView(i);
-            iv.setFitWidth(90);
-            iv.setFitHeight(90);
-            GridPane.setRowIndex( iv,index / 5);
-            GridPane.setColumnIndex( iv,index % 5);
+            iv.setFitHeight(100);
+            iv.setFitWidth(100);
             gp.getChildren().add(iv);
             index++;
         }
+        Button add = new Button("+");
+        gp.setAlignment(Pos.CENTER);
+        gp.setHgap(10);
+        gp.setVgap(10);
+        gp.setPadding(new Insets(20, 60, 20, 60));
+        add.setPrefWidth(100);
+        add.setPrefHeight(100);
+        gp.getChildren().add(add);
     }
 
     Pane createImageSelectorPane(){
@@ -614,13 +619,20 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             background[i].setLayoutY(100);
             background[i].setLayoutX(0);
             background[i].minWidthProperty().bind(p.widthProperty());
+            background[i].maxWidthProperty().bind(p.widthProperty());
             background[i].minHeightProperty().bind(p.heightProperty().subtract(100));
             background[i].setBackground(new Background(new BackgroundFill(Color.DARKGRAY,CornerRadii.EMPTY,null)));
 
-            GridPane gp = new GridPane();
-            updatGridPane(gp);
+            FlowPane flowPane = new FlowPane();
+            updatGridPane(flowPane);
+            flowPane.setBackground(new Background(new BackgroundFill(Color.DARKGRAY,CornerRadii.EMPTY,null)));
 
-            background[i].setCenter(gp);
+            ScrollPane scrollPane = new ScrollPane(flowPane);
+            scrollPane.setBackground(new Background(new BackgroundFill(Color.DARKGRAY,CornerRadii.EMPTY,null)));
+            scrollPane.setFitToWidth(true);
+            scrollPane.setFitToHeight(true);
+
+            background[i].setCenter(scrollPane);
 
             onglets[i] = new Rectangle();
             onglets[i].setHeight(100);
