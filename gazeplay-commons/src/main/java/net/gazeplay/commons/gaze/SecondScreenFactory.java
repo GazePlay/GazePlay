@@ -29,14 +29,19 @@ public class SecondScreenFactory {
         stage2.setHeight(screen1.getBounds().getHeight());
 
         final Group root = new Group();
-        final Scene scene = new Scene(root, screen1.getBounds().getWidth(), screen1.getBounds().getHeight(), Color.BLACK);
+        final Scene scene = new Scene(
+            root,
+            screen1.getBounds().getWidth(),
+            screen1.getBounds().getHeight(),
+            Color.BLACK
+        );
 
-        final Lighting[][] lightings = SecondScreen.makeLighting(root, screen2.getBounds());
+        final Lighting[][] lightingArray = SecondScreen.makeLighting(root, screen2.getBounds());
 
         stage2.setScene(scene);
 
         stage2.show();
 
-        return new SecondScreen(stage2, lightings);
+        return new SecondScreen(stage2, lightingArray);
     }
 }

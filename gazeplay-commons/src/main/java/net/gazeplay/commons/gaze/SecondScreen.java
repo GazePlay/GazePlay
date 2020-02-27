@@ -19,11 +19,11 @@ public class SecondScreen implements GazeMotionListener {
 
     private final Stage stage2;
 
-    private final Lighting[][] lightings;
+    private final Lighting[][] lightingArray;
 
-    SecondScreen(final Stage stage2, final Lighting[][] lightings) {
+    SecondScreen(final Stage stage2, final Lighting[][] lightingArray) {
         this.stage2 = stage2;
-        this.lightings = lightings;
+        this.lightingArray = lightingArray;
     }
 
     static Lighting[][] makeLighting(final Group root, final Rectangle2D screen2Bounds) {
@@ -31,17 +31,22 @@ public class SecondScreen implements GazeMotionListener {
         final int width = (int) screen2Bounds.getWidth();
         final int height = (int) screen2Bounds.getHeight();
 
-        final Lighting[][] lightings = new Lighting[width / pixelWidth][height / pixelWidth];
+        final Lighting[][] lightingArray = new Lighting[width / pixelWidth][height / pixelWidth];
 
-        for (int i = 0; i < lightings.length; i++) {
-            for (int j = 0; j < lightings[i].length; j++) {
-                lightings[i][j] = new Lighting(i * pixelWidth, j * pixelWidth, pixelWidth, lightingLength,
-                    lightingColor);
-                root.getChildren().add(lightings[i][j]);
+        for (int i = 0; i < lightingArray.length; i++) {
+            for (int j = 0; j < lightingArray[i].length; j++) {
+                lightingArray[i][j] = new Lighting(
+                    i * pixelWidth,
+                    j * pixelWidth,
+                    pixelWidth,
+                    lightingLength,
+                    lightingColor
+                );
+                root.getChildren().add(lightingArray[i][j]);
             }
         }
 
-        return lightings;
+        return lightingArray;
     }
 
     public void close() {
@@ -51,13 +56,13 @@ public class SecondScreen implements GazeMotionListener {
     public void light(final Point2D rawCoordinates) {
         final int x = (int) (rawCoordinates.getX() / pixelWidth);
         final int y = (int) (rawCoordinates.getY() / pixelWidth);
-        if (x < 0 || x >= lightings.length) {
+
+        if ((x < 0 || x >= lightingArray.length) ||
+            (y < 0 || y >= lightingArray[x].length)) {
             return;
         }
-        if (y < 0 || y >= lightings[x].length) {
-            return;
-        }
-        lightings[x][y].enter();
+
+        lightingArray[x][y].enter();
     }
 
     @Override
