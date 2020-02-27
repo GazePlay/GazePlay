@@ -4,7 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import org.aeonbits.owner.ConfigFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Properties;
 
 @Slf4j
@@ -26,23 +30,22 @@ public class ConfigurationSource {
 
     public static Configuration createFromPropertiesResource(final File propertiesFile) {
         Properties properties;
+
         try {
             log.info("Loading Properties from : {}", propertiesFile);
             properties = loadProperties(propertiesFile);
             log.info("Properties loaded : {}", properties);
-        } catch (final FileNotFoundException e) {
-            log.warn("Properties file not found : {}", propertiesFile);
-            properties = new Properties();
         } catch (final IOException e) {
             log.error("Failure while loading Properties file {}", propertiesFile, e);
             properties = new Properties();
         }
+
         final ApplicationConfig applicationConfig = ConfigFactory.create(ApplicationConfig.class, properties);
         return new Configuration(propertiesFile, applicationConfig);
     }
 
     private static Properties loadProperties(final File propertiesFile) throws IOException {
-        try (InputStream inputStream = new FileInputStream(propertiesFile)) {
+        try (InputStream inputStream = Files.newInputStream(propertiesFile.toPath())) {
             final Properties properties = new Properties();
             properties.load(inputStream);
             return properties;
