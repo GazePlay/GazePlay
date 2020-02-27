@@ -98,7 +98,7 @@ public class CustomColorPicker extends Pane {
         closeButton.setOnAction(closeEvent);
         mainNode.getChildren().add(closeButton);
 
-        final AbstractGazeIndicator closeProgressIndic = new GazeFollowerIndicator(gameContext, this);
+        final GazeIndicator closeProgressIndic = new GazeFollowerIndicator(gameContext, this);
         closeProgressIndic.setOnFinish(closeEvent);
         closeProgressIndic.addNodeToListen(closeButton,
             toolBox.getColorsGame().getGameContext().getGazeDeviceManager());

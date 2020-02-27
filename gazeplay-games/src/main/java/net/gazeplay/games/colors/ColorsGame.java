@@ -81,7 +81,7 @@ public class ColorsGame implements GameLifeCycle {
     /**
      * The gaze progress indicator to show time before colorization.
      */
-    private AbstractGazeIndicator gazeProgressIndicator;
+    private GazeIndicator gazeProgressIndicator;
 
     /**
      * The pixel writer to into wich we modify pixels
@@ -182,7 +182,7 @@ public class ColorsGame implements GameLifeCycle {
         this.root.getChildren().add(colorToolBox);
 
         // Add it here so it appears on top of the tool box
-        final AbstractGazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
+        final GazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
         colorToolBox.getChildren().add(progressIndicator);
         progressIndicator.toFront();
 

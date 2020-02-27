@@ -69,7 +69,7 @@ public class ColorToolBox extends Pane {
 
     private final VBox mainPane;
 
-    private final AbstractGazeIndicator progressIndicator;
+    private final GazeIndicator progressIndicator;
 
     /**
      * All the color boxes
@@ -114,7 +114,7 @@ public class ColorToolBox extends Pane {
     public ColorToolBox(final Pane root, final ColorsGame colorsGame, final IGameContext gameContext) {
         super();
         this.gameContext = gameContext;
-        progressIndicator = new AbstractGazeIndicator(gameContext);
+        progressIndicator = new GazeIndicator(gameContext);
         progressIndicator.setMouseTransparent(true);
 
         this.selectedColorBox = null;
@@ -202,7 +202,7 @@ public class ColorToolBox extends Pane {
             }
         };
 
-        final AbstractGazeIndicator customColorButtonIndic = new GazeFollowerIndicator(gameContext, root);
+        final GazeIndicator customColorButtonIndic = new GazeFollowerIndicator(gameContext, root);
         customColorButtonIndic.setOnFinish(customColorButtonHandler);
         customColorButtonIndic.addNodeToListen(customColorPickerButton,
             colorsGame.getGameContext().getGazeDeviceManager());
@@ -439,7 +439,7 @@ public class ColorToolBox extends Pane {
             stopColorize = new Button("S");
         }
 
-        final AbstractGazeIndicator colorizeButtonIndicator = new AbstractGazeIndicator(gameContext);
+        final GazeIndicator colorizeButtonIndicator = new GazeIndicator(gameContext);
         colorizeButtonIndicator.setMouseTransparent(true);
 
         final Pane colorizeButtonPane = new StackPane(colorize);
@@ -470,7 +470,7 @@ public class ColorToolBox extends Pane {
 
         stopColorizeButtonPane.setVisible(false);
 
-        return new StackPane(colorizeButtonPane, stopColorizeButtonPane,colorizeButtonIndicator );
+        return new StackPane(colorizeButtonPane, stopColorizeButtonPane, colorizeButtonIndicator);
     }
 
     private Stage buildCustomColorDialog() {
@@ -499,7 +499,7 @@ public class ColorToolBox extends Pane {
         return dialog;
     }
 
-    public AbstractGazeIndicator getProgressIndicator() {
+    public GazeIndicator getProgressIndicator() {
         return progressIndicator;
     }
 }

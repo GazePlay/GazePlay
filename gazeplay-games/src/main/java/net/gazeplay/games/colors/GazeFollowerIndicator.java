@@ -8,7 +8,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 @Slf4j
-public class GazeFollowerIndicator extends AbstractGazeIndicator {
+public class GazeFollowerIndicator extends GazeIndicator {
 
     private static final double GAZE_PROGRESS_INDICATOR_SIZE = 100;
     private Polygon triangle;

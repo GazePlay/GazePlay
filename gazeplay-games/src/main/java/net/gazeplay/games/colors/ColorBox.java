@@ -34,7 +34,7 @@ public class ColorBox extends StackPane {
     private Color color;
 
     @Setter
-    private AbstractGazeIndicator progressIndicator;
+    private GazeIndicator progressIndicator;
 
     public ColorBox(final IGameContext gameContext, final Color color, final Pane root, final ColorToolBox toolBox, final ToggleGroup group) {
         super();

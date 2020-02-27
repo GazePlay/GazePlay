@@ -1,6 +1,5 @@
 package net.gazeplay.games.rushhour;
 
-import com.sun.glass.ui.Screen;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -21,7 +20,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import tobii.Tobii;
 
 import java.awt.*;
 
@@ -111,7 +109,7 @@ public class Car extends Rectangle {
 
             final int way = checkPos(pointerPosition);
             if (selected && !endOfGame && !intersect && !onMouse(pointerPosition)) {
-                moveTo(way, pointerPosition);
+                moveTo(way);
             }
             intersect = false;
             // }
@@ -139,12 +137,12 @@ public class Car extends Rectangle {
         this.setToY(y);
     }
 
-    private int checkPos(final Point mouse) {
+    private int checkPos(final Point pointerCoordinates) {
 
-        if (!direction && (this.getX() < mouse.getX()) && (mouse.getX() < this.getX() + this.getWidth())) {
-            return (this.getY() > mouse.getY()) ? -1 : 1;
-        } else if (direction && (this.getY() < mouse.getY()) && (mouse.getY() < this.getY() + this.getHeight())) {
-            return (this.getX() > mouse.getX()) ? -1 : 1;
+        if (!direction && (this.getX() < pointerCoordinates.getX()) && (pointerCoordinates.getX() < this.getX() + this.getWidth())) {
+            return (this.getY() > pointerCoordinates.getY()) ? -1 : 1;
+        } else if (direction && (this.getY() < pointerCoordinates.getY()) && (pointerCoordinates.getY() < this.getY() + this.getHeight())) {
+            return (this.getX() > pointerCoordinates.getX()) ? -1 : 1;
         }
 
         setSelected(false);
@@ -154,7 +152,7 @@ public class Car extends Rectangle {
         return 0;
     }
 
-    private void moveTo(final int way, final Point mouse) {
+    private void moveTo(final int way) {
         final double saveX = this.getX();
         final double saveY = this.getY();
         final int prevx = x;
@@ -174,11 +172,11 @@ public class Car extends Rectangle {
         }
     }
 
-    private boolean onMouse(final Point mouse) {
+    private boolean onMouse(final Point mousePosition) {
         final Point2D coord = this.sceneToLocal(
-            mouse.getX() - gameContext.getPrimaryScene().getX()
+            mousePosition.getX() - gameContext.getPrimaryScene().getX()
                 - gameContext.getPrimaryStage().getX(),
-            mouse.getY() - gameContext.getPrimaryScene().getY()
+            mousePosition.getY() - gameContext.getPrimaryScene().getY()
                 - gameContext.getPrimaryStage().getY());
         return (this.getX() < coord.getX()) && (coord.getX() < this.getX() + this.getWidth())
             && (this.getY() < coord.getY()) && (coord.getY() < this.getY() + this.getHeight());
