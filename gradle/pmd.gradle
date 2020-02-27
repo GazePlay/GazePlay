@@ -10,7 +10,7 @@ def gazeplayViolationThresholds = [
 ]
 
 def gazeplayCommonsViolationThresholds = [
-        1: 12,
+        1: 11,
         2: 6,
         3: 1011,
         4: 35,
