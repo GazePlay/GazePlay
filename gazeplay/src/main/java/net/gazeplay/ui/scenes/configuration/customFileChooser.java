@@ -74,7 +74,7 @@ public class customFileChooser extends Stage {
     }
 
     private void buildCustomColorDialog() {
-        final GridPane imageSelector = createImageSelectorPane();
+        final BorderPane imageSelector = createImageSelectorPane();
         final Scene scene = new Scene(imageSelector, 500, 500, Color.TRANSPARENT);
         imageSelector.prefWidthProperty().bind(scene.widthProperty());
         imageSelector.prefHeightProperty().bind(scene.heightProperty());
@@ -140,24 +140,29 @@ public class customFileChooser extends Stage {
         return add;
     }
 
-    private GridPane createImageSelectorPane() {
-        GridPane p = new GridPane();
+    private BorderPane createImageSelectorPane() {
+        BorderPane imageSelectorGridPane = new BorderPane();
 
         Group[] group = new Group[3];
-        StackPane[] onglets = new StackPane[3];
+        StackPane[] section = new StackPane[3];
         Color[] colors = {Color.PALEGOLDENROD, Color.LIGHTSEAGREEN, Color.PALEVIOLETRED};
 
-        DropShadow dropShadowOnglet = createNewDropShadow();
+        HBox input = buildFileChooser();
+        input.setPadding(new Insets(20,0,20,0));
+        input.setAlignment(Pos.CENTER);
+        imageSelectorGridPane.setTop(input);
+
+        DropShadow dropShadow = createNewDropShadow();
 
         for (int i = 0; i < 3; i++) {
-            group[i] = new Group();
             int index = i;
+            group[i] = new Group();
+
             BorderPane background = new BorderPane();
-            background.setLayoutY(100);
+            background.layoutYProperty().bind(input.heightProperty().add(50));
             background.setLayoutX(0);
-            background.minWidthProperty().bind(p.widthProperty());
-            background.maxWidthProperty().bind(p.widthProperty());
-            background.minHeightProperty().bind(p.heightProperty().subtract(100));
+            background.prefWidthProperty().bind(imageSelectorGridPane.widthProperty());
+            background.prefHeightProperty().bind(imageSelectorGridPane.heightProperty().subtract(50).subtract(input.heightProperty()));
             background.setBackground(new Background(new BackgroundFill(colors[i], CornerRadii.EMPTY, null)));
 
             flowPanes[i] = new FlowPane();
@@ -172,26 +177,24 @@ public class customFileChooser extends Stage {
             scrollPane.setFitToWidth(true);
             scrollPane.setFitToHeight(true);
 
-            Node input = buildFileChooser();
-            background.setTop(input);
             background.setCenter(scrollPane);
 
-            onglets[i] = new StackPane();
+            section[i] = new StackPane();
+            section[i].layoutYProperty().bind(input.heightProperty());
             Rectangle ongletBackground = new Rectangle();
-            ongletBackground.setHeight(100);
+            ongletBackground.setHeight(50);
             ongletBackground.widthProperty().bind(background.widthProperty().divide(3));
-            ongletBackground.setY(0);
             ongletBackground.setFill(colors[i]);
-            onglets[i].getChildren().add(ongletBackground);
-            onglets[i].setOnMouseClicked(e -> {
+            section[i].getChildren().add(ongletBackground);
+            section[i].setOnMouseClicked(e -> {
                 group[index].toFront();
             });
 
-            group[i].getChildren().addAll(background, onglets[i]);
-            group[i].setEffect(dropShadowOnglet);
+            group[i].getChildren().addAll(background, section[i]);
+            group[i].setEffect(dropShadow);
 
             updateFlow(i);
-            onglets[i].getChildren().add(new HBox(new Label(folder[i])));
+            section[i].getChildren().add(new HBox(new Label(folder[i])));
         }
 
         configuration.getFiledirProperty().addListener(e -> {
@@ -201,12 +204,12 @@ public class customFileChooser extends Stage {
         });
 
 
-        onglets[0].setLayoutX(0);
-        onglets[1].layoutXProperty().bind(onglets[0].widthProperty());
-        onglets[2].layoutXProperty().bind(onglets[0].widthProperty().add(onglets[1].widthProperty()));
+        section[0].setLayoutX(0);
+        section[1].layoutXProperty().bind(section[0].widthProperty());
+        section[2].layoutXProperty().bind(section[0].widthProperty().add(section[1].widthProperty()));
 
-        p.getChildren().addAll(group);
-        return p;
+        imageSelectorGridPane.getChildren().addAll(group);
+        return imageSelectorGridPane;
     }
 
     private void updateFlows() {
@@ -215,7 +218,7 @@ public class customFileChooser extends Stage {
         updateFlow(2);
     }
 
-    private Node buildFileChooser() {
+    private HBox buildFileChooser() {
         final HBox pane = new HBox(5);
         final String fileDir;
         Button buttonLoad;
