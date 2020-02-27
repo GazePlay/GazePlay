@@ -19,6 +19,8 @@ boolean spotbugsEnabled = Boolean.parseBoolean(project.getProperties().get('Spot
 // Add -Ppmd=false to the Gradle Command Line to not run PMD
 boolean pmdEnabled = Boolean.parseBoolean(project.getProperties().get('pmd')) ?: true
 
+logging.captureStandardOutput LogLevel.INFO
+
 ext.javafxVersion = "11.0.2"
 
 apply from: "${rootDir}/gradle/package.gradle"
@@ -101,6 +103,8 @@ subprojects {
         testImplementation "org.testfx:testfx-core:4.0.16-alpha"
         testImplementation "org.testfx:testfx-junit5:4.0.16-alpha"
         testImplementation "org.testfx:openjfx-monocle:jdk-11+26"
+        testImplementation "org.jmockit:jmockit:1.49"
+        testImplementation "org.mockito:mockito-core:2.+"
     }
 
     sourceCompatibility = '11'
