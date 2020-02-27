@@ -25,6 +25,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 import javafx.stage.*;
 import javafx.util.StringConverter;
 import lombok.NonNull;
@@ -581,8 +582,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return dropShadowRight;
     }
 
-    void updatGridPane(FlowPane gp) {
-        ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("portraits"));
+    void updatGridPane(FlowPane gp, String folderName) {
+        ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory(folderName));
         Set<Image> set = lib.pickMultipleRandomDistinctImages(10);
         int index = 0;
         for(Image i : set){
@@ -607,49 +608,60 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         Pane p = new Pane();
 
         Group[] group = new Group[3];
-        BorderPane[] background = new BorderPane[3];
-        Rectangle[] onglets = new Rectangle[3];
+        FlowPane[] flowPanes = new FlowPane[3];
+        StackPane[] onglets = new StackPane[3];
 
         DropShadow dropShadowOnglet = createOngletShadow();
 
         for (int i = 0; i<3 ; i++){
             group[i] = new Group();
 
-            background[i] = new BorderPane();
-            background[i].setLayoutY(100);
-            background[i].setLayoutX(0);
-            background[i].minWidthProperty().bind(p.widthProperty());
-            background[i].maxWidthProperty().bind(p.widthProperty());
-            background[i].minHeightProperty().bind(p.heightProperty().subtract(100));
-            background[i].setBackground(new Background(new BackgroundFill(Color.DARKGRAY,CornerRadii.EMPTY,null)));
+            BorderPane background = new BorderPane();
+            background.setLayoutY(100);
+            background.setLayoutX(0);
+            background.minWidthProperty().bind(p.widthProperty());
+            background.maxWidthProperty().bind(p.widthProperty());
+            background.minHeightProperty().bind(p.heightProperty().subtract(100));
+            background.setBackground(new Background(new BackgroundFill(Color.DARKGRAY,CornerRadii.EMPTY,null)));
 
-            FlowPane flowPane = new FlowPane();
-            updatGridPane(flowPane);
-            flowPane.setBackground(new Background(new BackgroundFill(Color.DARKGRAY,CornerRadii.EMPTY,null)));
+            flowPanes[i] = new FlowPane();
+            flowPanes[i].setBackground(new Background(new BackgroundFill(Color.DARKGRAY,CornerRadii.EMPTY,null)));
 
-            ScrollPane scrollPane = new ScrollPane(flowPane);
+            ScrollPane scrollPane = new ScrollPane(flowPanes[i]);
             scrollPane.setBackground(new Background(new BackgroundFill(Color.DARKGRAY,CornerRadii.EMPTY,null)));
             scrollPane.setFitToWidth(true);
             scrollPane.setFitToHeight(true);
 
-            background[i].setCenter(scrollPane);
+            background.setCenter(scrollPane);
 
-            onglets[i] = new Rectangle();
-            onglets[i].setHeight(100);
-            onglets[i].widthProperty().bind(background[i].widthProperty().divide(3));
-            onglets[i].setY(0);
-            onglets[i].setFill(Color.DARKGRAY);
+            onglets[i] = new StackPane();
+            Rectangle ongletBackground = new Rectangle();
+            ongletBackground.setHeight(100);
+            ongletBackground.widthProperty().bind(background.widthProperty().divide(3));
+            ongletBackground.setY(0);
+            ongletBackground.setFill(Color.DARKGRAY);
             int index = i;
+            onglets[i].getChildren().add(ongletBackground);
             onglets[i].setOnMouseClicked( e-> {
                 group[index].toFront();
             });
 
-            group[i].getChildren().addAll(background[i],onglets[i]);
+            group[i].getChildren().addAll(background,onglets[i]);
             group[i].setEffect(dropShadowOnglet);
         }
-        onglets[0].setX(0);
-        onglets[1].xProperty().bind(onglets[0].widthProperty());
-        onglets[2].xProperty().bind(onglets[0].widthProperty().add(onglets[1].widthProperty()));
+
+
+        updatGridPane(flowPanes[0],"magiccards");
+        updatGridPane(flowPanes[1], "portraits");
+        updatGridPane(flowPanes[2], "bloc");
+
+        onglets[0].getChildren().add(new HBox(new Label("magiccards")));
+        onglets[1].getChildren().add(new HBox(new Label("portraits")));
+        onglets[2].getChildren().add(new HBox(new Label("bloc")));
+
+        onglets[0].setLayoutX(0);
+        onglets[1].layoutXProperty().bind(onglets[0].widthProperty());
+        onglets[2].layoutXProperty().bind(onglets[0].widthProperty().add(onglets[1].widthProperty()));
 
         p.getChildren().addAll(group);
         return p;
