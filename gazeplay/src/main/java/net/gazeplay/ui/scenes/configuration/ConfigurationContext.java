@@ -10,23 +10,21 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.text.TextFlow;
-import javafx.stage.*;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -40,11 +38,12 @@ import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.HomeButton;
-import net.gazeplay.commons.utils.games.*;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.components.CssUtil;
-import net.gazeplay.components.Portrait;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
 
@@ -57,7 +56,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -262,7 +260,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "FileDir", COLON);
 
-            Node input = buildImageChooser();
+            Node input = buildImageChooser(config, configurationContext, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -533,138 +531,19 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         FILE, WHERE_IS_IT, MUSIC, VIDEO
     }
 
-    Node buildImageChooser(){
+    private Node buildImageChooser(Configuration configuration,
+                                   ConfigurationContext configurationContext,
+                                   Translator translator) {
 
-        final Button selectButton = new Button( "select");
-        Stage dialog = buildCustomColorDialog();
+        final Button selectButton = new Button("select");
+        Stage dialog = new customFileChooser(configuration, configurationContext, translator, getGazePlay());
 
         selectButton.setOnAction(e -> {
             dialog.show();
             dialog.sizeToScene();
         });
 
-        return  selectButton;
-    }
-
-    private Stage buildCustomColorDialog() {
-        final Stage primaryStage = getGazePlay().getPrimaryStage();
-        final Stage dialog = new Stage();
-        dialog.initOwner(primaryStage);
-        dialog.initModality(Modality.WINDOW_MODAL);
-        dialog.initStyle(StageStyle.UTILITY);
-        dialog.setOnCloseRequest(
-            windowEvent -> primaryStage.getScene().getRoot().setEffect(null));
-        dialog.setTitle("customColorDialogTitle");
-        dialog.setAlwaysOnTop(true);
-
-        Pane imageSelector = createImageSelectorPane();
-        imageSelector.minWidth(500);
-        imageSelector.minHeight(500);
-
-       final Scene scene = new Scene(imageSelector, 500,500, Color.TRANSPARENT);
-
-        imageSelector.minWidthProperty().bind(scene.widthProperty());
-        imageSelector.minHeightProperty().bind(scene.heightProperty());
-        imageSelector.prefWidthProperty().bind(scene.widthProperty());
-        imageSelector.prefHeightProperty().bind(scene.heightProperty());
-
-        dialog.setScene(scene);
-
-        return dialog;
-    }
-
-    DropShadow createOngletShadow(){
-        DropShadow dropShadowRight = new DropShadow();
-        dropShadowRight.setRadius(10);
-        dropShadowRight.setOffsetX(0);
-        dropShadowRight.setOffsetY(0);
-        dropShadowRight.setColor(Color.color(0, 0, 0,0.5));
-        return dropShadowRight;
-    }
-
-    void updatGridPane(FlowPane gp, String folderName) {
-        ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory(folderName));
-        Set<Image> set = lib.pickMultipleRandomDistinctImages(10);
-        int index = 0;
-        for(Image i : set){
-            log.info("the index of this image is {}",index);
-            ImageView iv = new ImageView(i);
-            iv.setFitHeight(100);
-            iv.setFitWidth(100);
-            gp.getChildren().add(iv);
-            index++;
-        }
-        Button add = new Button("+");
-        gp.setAlignment(Pos.CENTER);
-        gp.setHgap(10);
-        gp.setVgap(10);
-        gp.setPadding(new Insets(20, 60, 20, 60));
-        add.setPrefWidth(100);
-        add.setPrefHeight(100);
-        gp.getChildren().add(add);
-    }
-
-    Pane createImageSelectorPane(){
-        Pane p = new Pane();
-
-        Group[] group = new Group[3];
-        FlowPane[] flowPanes = new FlowPane[3];
-        StackPane[] onglets = new StackPane[3];
-
-        DropShadow dropShadowOnglet = createOngletShadow();
-
-        for (int i = 0; i<3 ; i++){
-            group[i] = new Group();
-
-            BorderPane background = new BorderPane();
-            background.setLayoutY(100);
-            background.setLayoutX(0);
-            background.minWidthProperty().bind(p.widthProperty());
-            background.maxWidthProperty().bind(p.widthProperty());
-            background.minHeightProperty().bind(p.heightProperty().subtract(100));
-            background.setBackground(new Background(new BackgroundFill(Color.DARKGRAY,CornerRadii.EMPTY,null)));
-
-            flowPanes[i] = new FlowPane();
-            flowPanes[i].setBackground(new Background(new BackgroundFill(Color.DARKGRAY,CornerRadii.EMPTY,null)));
-
-            ScrollPane scrollPane = new ScrollPane(flowPanes[i]);
-            scrollPane.setBackground(new Background(new BackgroundFill(Color.DARKGRAY,CornerRadii.EMPTY,null)));
-            scrollPane.setFitToWidth(true);
-            scrollPane.setFitToHeight(true);
-
-            background.setCenter(scrollPane);
-
-            onglets[i] = new StackPane();
-            Rectangle ongletBackground = new Rectangle();
-            ongletBackground.setHeight(100);
-            ongletBackground.widthProperty().bind(background.widthProperty().divide(3));
-            ongletBackground.setY(0);
-            ongletBackground.setFill(Color.DARKGRAY);
-            int index = i;
-            onglets[i].getChildren().add(ongletBackground);
-            onglets[i].setOnMouseClicked( e-> {
-                group[index].toFront();
-            });
-
-            group[i].getChildren().addAll(background,onglets[i]);
-            group[i].setEffect(dropShadowOnglet);
-        }
-
-
-        updatGridPane(flowPanes[0],"magiccards");
-        updatGridPane(flowPanes[1], "portraits");
-        updatGridPane(flowPanes[2], "bloc");
-
-        onglets[0].getChildren().add(new HBox(new Label("magiccards")));
-        onglets[1].getChildren().add(new HBox(new Label("portraits")));
-        onglets[2].getChildren().add(new HBox(new Label("bloc")));
-
-        onglets[0].setLayoutX(0);
-        onglets[1].layoutXProperty().bind(onglets[0].widthProperty());
-        onglets[2].layoutXProperty().bind(onglets[0].widthProperty().add(onglets[1].widthProperty()));
-
-        p.getChildren().addAll(group);
-        return p;
+        return selectButton;
     }
 
     Node buildDirectoryChooser(
