@@ -26,6 +26,7 @@ dependencies {
 
 test {
     jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
+    exclude '**/VersionInfoTest.class'
 }
 
 jar {

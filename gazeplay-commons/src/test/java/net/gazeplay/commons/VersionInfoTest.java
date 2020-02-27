@@ -25,8 +25,10 @@ class VersionInfoTest {
     }
 
     void deleteMockManifest() {
-        new File("build/resources/test/META-INF/MANIFEST.MF").delete();
-        new File("build/resources/test/META-INF").delete();
+        if (new File("build/resources/test/META-INF/MANIFEST.MF").isFile()) {
+            new File("build/resources/test/META-INF/MANIFEST.MF").delete();
+            new File("build/resources/test/META-INF").delete();
+        }
     }
 
     @AfterEach
