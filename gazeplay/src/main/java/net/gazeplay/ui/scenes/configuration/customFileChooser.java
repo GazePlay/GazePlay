@@ -235,9 +235,9 @@ public class customFileChooser extends Stage {
         StackPane[] section = new StackPane[3];
         Color[] colors = {Color.PALEGOLDENROD, Color.LIGHTSEAGREEN, Color.PALEVIOLETRED};
         String[] imagePath = {
-            "data/magiccards/images/red-card-game.png",
-            "data/magiccards/images/red-card-game.png",
-            "data/magiccards/images/red-card-game.png"
+            "data/common/images/cards.png",
+            "data/common/images/small.png",
+            "data/common/images/large.png"
         };
 
         HBox input = buildFileChooser();
