@@ -16,7 +16,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.components.GazeIndicator;
+import net.gazeplay.components.AbstractGazeIndicator;
 
 @Slf4j
 public class ColorBox extends StackPane {
@@ -35,7 +35,7 @@ public class ColorBox extends StackPane {
     private Color color;
 
     @Setter
-    private GazeIndicator progressIndicator;
+    private AbstractGazeIndicator progressIndicator;
 
     public ColorBox(final IGameContext gameContext, final Color color, final Pane root, final ColorToolBox toolBox, final ToggleGroup group) {
         super();

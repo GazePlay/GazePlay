@@ -9,7 +9,7 @@ import javafx.scene.input.MouseEvent;
 import lombok.Getter;
 import lombok.Setter;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.components.GazeIndicator;
+import net.gazeplay.components.AbstractGazeIndicator;
 import net.gazeplay.components.StackPaneButton;
 
 import java.io.File;
@@ -49,7 +49,7 @@ public class MediaButton extends StackPaneButton {
         }
     }
 
-    void setupEvent(EventHandler<ActionEvent> newMediaEvent, GazeIndicator progressIndicator) {
+    void setupEvent(EventHandler<ActionEvent> newMediaEvent, AbstractGazeIndicator progressIndicator) {
         this.removeEventFilter(MouseEvent.MOUSE_CLICKED, clickEvent);
         this.removeEventFilter(GazeEvent.GAZE_ENTERED, enterEvent);
         this.removeEventFilter(GazeEvent.GAZE_EXITED, exitEvent);

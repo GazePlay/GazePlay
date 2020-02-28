@@ -23,7 +23,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.components.GazeIndicator;
+import net.gazeplay.components.AbstractGazeIndicator;
 import net.gazeplay.components.GazeFollowerIndicator;
 
 import java.io.File;
@@ -85,7 +85,7 @@ public class ColorsGame implements GameLifeCycle {
     /**
      * The gaze progress indicator to show time before colorization.
      */
-    private GazeIndicator gazeProgressIndicator;
+    private AbstractGazeIndicator gazeProgressIndicator;
 
     /**
      * The pixel writer to into wich we modify pixels
@@ -186,7 +186,7 @@ public class ColorsGame implements GameLifeCycle {
         this.root.getChildren().add(colorToolBox);
 
         // Add it here so it appears on top of the tool box
-        final GazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
+        final AbstractGazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
         root.getChildren().add(progressIndicator);
         progressIndicator.toFront();
 
