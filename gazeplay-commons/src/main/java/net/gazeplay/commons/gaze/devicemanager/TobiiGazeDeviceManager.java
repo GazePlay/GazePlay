@@ -1,6 +1,7 @@
 package net.gazeplay.commons.gaze.devicemanager;
 
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Point2D;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ExecutorService;
@@ -19,8 +20,8 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
     }
 
     @Override
-    public void init(Supplier<Dimension2D> currentScreenDimensionSupplier) {
-        positionPollerRunnable = new PositionPollerRunnable(currentScreenDimensionSupplier, this);
+    public void init(Supplier<Dimension2D> currentScreenDimensionSupplier, Supplier<Point2D> currentScreenPositionSupplier) {
+        positionPollerRunnable = new PositionPollerRunnable(currentScreenDimensionSupplier, currentScreenPositionSupplier, this);
         executorService = Executors.newSingleThreadExecutor();
         executorService.submit(positionPollerRunnable);
     }
