@@ -273,7 +273,9 @@ public class customFileChooser extends Stage {
             group[i].setEffect(dropShadow);
 
             updateFlow(i);
-            section[i].getChildren().add(new HBox(new Label(folder[i])));
+            HBox title = new HBox(new Label(folder[i]));
+            StackPane.setAlignment(title,Pos.CENTER);
+            section[i].getChildren().add(title);
         }
 
         configuration.getFiledirProperty().addListener(e -> {
