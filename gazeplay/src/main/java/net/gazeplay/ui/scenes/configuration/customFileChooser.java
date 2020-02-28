@@ -40,7 +40,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 @Slf4j
 public class customFileChooser extends Stage {

@@ -5,8 +5,10 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -55,7 +57,7 @@ public abstract class AbstractImageLibrary implements ImageLibrary {
     public List<Image> pickAllImages() {
         final int distinctImagesCount = getImagesCount();
         List<Image> list = new LinkedList<>();
-        for(int i = 0; i< distinctImagesCount; i++){
+        for (int i = 0; i < distinctImagesCount; i++) {
             list.add(loadImageAtIndex(i));
         }
         return list;
