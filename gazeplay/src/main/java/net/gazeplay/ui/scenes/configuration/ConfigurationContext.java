@@ -13,6 +13,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -541,6 +542,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         selectButton.setOnAction(e -> {
             dialog.show();
             dialog.sizeToScene();
+            getGazePlay().getPrimaryStage().getScene().getRoot().setEffect(new GaussianBlur());
         });
 
         return selectButton;

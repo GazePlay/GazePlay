@@ -5,12 +5,12 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -23,18 +23,15 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.FileUtils;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
-import net.gazeplay.components.CssUtil;
 
 import javax.swing.*;
 import java.io.File;
@@ -118,7 +115,7 @@ public class customFileChooser extends Stage {
             Button delete = new Button("x");
             delete.setPrefWidth(10);
             delete.setPrefHeight(10);
-            StackPane.setAlignment(delete,Pos.TOP_RIGHT);
+            StackPane.setAlignment(delete, Pos.TOP_RIGHT);
             delete.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
                 final Stage dialog = removeDialogue(flowPaneIndex, i, preview);
 
@@ -129,6 +126,7 @@ public class customFileChooser extends Stage {
                 dialog.setAlwaysOnTop(true);
 
                 dialog.show();
+                this.getScene().getRoot().setEffect(new GaussianBlur());
             });
 
             preview.getChildren().addAll(backgroundPreview, imagePreview, delete);
@@ -139,12 +137,13 @@ public class customFileChooser extends Stage {
         flowPanes[flowPaneIndex].getChildren().add(add);
     }
 
-    private Stage removeDialogue(int index, Image i, StackPane preview){
+    private Stage removeDialogue(int index, Image i, StackPane preview) {
         final Stage dialog = new Stage();
         dialog.initModality(Modality.WINDOW_MODAL);
-      //  dialog.initOwner();
+        dialog.initOwner(this);
         dialog.initStyle(StageStyle.UTILITY);
-      //  dialog.setOnCloseRequest(windowEvent -> primaryStage.getScene().getRoot().setEffect(null));
+        dialog.setAlwaysOnTop(true);
+        dialog.setOnCloseRequest(windowEvent -> this.getScene().getRoot().setEffect(null));
 
 
         final Button yes = new Button(translator.translate("YesRemove"));
@@ -157,8 +156,12 @@ public class customFileChooser extends Stage {
             dialog.close();
             log.info("The Adress is ************** {} ", i.getUrl());
             final File imageToDelete = new File(i.getUrl().replaceFirst("file:", ""));
-            boolean returbo = imageToDelete.delete();
-            flowPanes[index].getChildren().remove(preview);
+            boolean success = imageToDelete.delete();
+            if (success) {
+                flowPanes[index].getChildren().remove(preview);
+            } else {
+                log.debug("the file {} can't be deleted", i.getUrl());
+            }
         });
 
         final Button no = new Button(translator.translate("NoCancel"));
@@ -167,7 +170,10 @@ public class customFileChooser extends Stage {
         no.getStyleClass().add("button");
         no.setMinHeight(gazePlay.getPrimaryStage().getHeight() / 10);
         no.setMinWidth(gazePlay.getPrimaryStage().getWidth() / 10);
-        no.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> dialog.close());
+        no.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
+            this.getScene().getRoot().setEffect(null);
+            dialog.close();
+        });
 
         final HBox choicePane = new HBox();
         choicePane.setSpacing(20);
@@ -220,7 +226,7 @@ public class customFileChooser extends Stage {
         Color[] colors = {Color.PALEGOLDENROD, Color.LIGHTSEAGREEN, Color.PALEVIOLETRED};
 
         HBox input = buildFileChooser();
-        input.setPadding(new Insets(20,0,20,0));
+        input.setPadding(new Insets(20, 0, 20, 0));
         input.setAlignment(Pos.CENTER);
         imageSelectorGridPane.setTop(input);
 
