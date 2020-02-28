@@ -25,7 +25,7 @@ import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
-import net.gazeplay.components.AbstractGazeIndicator;
+import net.gazeplay.components.GazeIndicator;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.components.GazeFollowerIndicator;
 
@@ -72,7 +72,7 @@ public class ColorToolBox extends Pane {
 
     private final VBox mainPane;
 
-    private final AbstractGazeIndicator progressIndicator;
+    private final GazeIndicator progressIndicator;
 
     /**
      * All the color boxes
@@ -204,7 +204,7 @@ public class ColorToolBox extends Pane {
             }
         };
 
-        final AbstractGazeIndicator customColorButtonIndic = new GazeFollowerIndicator(gameContext, root);
+        final GazeIndicator customColorButtonIndic = new GazeFollowerIndicator(gameContext, root);
         customColorButtonIndic.setOnFinish(customColorButtonHandler);
         customColorButtonIndic.addNodeToListen(customColorPickerButton,
             colorsGame.getGameContext().getGazeDeviceManager());
@@ -449,7 +449,7 @@ public class ColorToolBox extends Pane {
             stopColorize = new Button("S");
         }
 
-        final AbstractGazeIndicator colorizeButtonIndicator = new GazeFollowerIndicator(gameContext, root);
+        final GazeIndicator colorizeButtonIndicator = new GazeFollowerIndicator(gameContext, root);
 
         final Pane colorizeButtonPane = new StackPane(colorize);
         final Pane stopColorizeButtonPane = new StackPane(stopColorize);
@@ -509,7 +509,7 @@ public class ColorToolBox extends Pane {
         return dialog;
     }
 
-    public AbstractGazeIndicator getProgressIndicator() {
+    public GazeIndicator getProgressIndicator() {
         return progressIndicator;
     }
 }

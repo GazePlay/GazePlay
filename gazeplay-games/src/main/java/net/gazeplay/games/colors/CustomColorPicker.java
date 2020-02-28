@@ -17,7 +17,7 @@ import javafx.stage.WindowEvent;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.components.AbstractGazeIndicator;
+import net.gazeplay.components.GazeIndicator;
 import net.gazeplay.components.GazeFollowerIndicator;
 
 import static net.gazeplay.games.colors.ColorToolBox.COLORIZE_BUTTONS_SIZE_PX;
@@ -62,7 +62,7 @@ public class CustomColorPicker extends Pane {
 
         final ToggleGroup colorGroup = new ToggleGroup();
 
-        final AbstractGazeIndicator progressIndicator = new GazeFollowerIndicator(gameContext, this);
+        final GazeIndicator progressIndicator = new GazeFollowerIndicator(gameContext, this);
 
         for (int i = 0; i < COLOR_LIST.length / NB_COLOR_PER_ROW; ++i) {
 
@@ -102,7 +102,7 @@ public class CustomColorPicker extends Pane {
         closeButton.setOnAction(closeEvent);
         mainNode.getChildren().add(closeButton);
 
-        final AbstractGazeIndicator closeProgressIndic = new GazeFollowerIndicator(gameContext, this);
+        final GazeIndicator closeProgressIndic = new GazeFollowerIndicator(gameContext, this);
         closeProgressIndic.setOnFinish(closeEvent);
         closeProgressIndic.addNodeToListen(closeButton,
             toolBox.getColorsGame().getGameContext().getGazeDeviceManager());
