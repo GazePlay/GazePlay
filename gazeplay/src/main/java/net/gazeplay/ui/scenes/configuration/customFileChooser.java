@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
@@ -36,6 +37,10 @@ import net.gazeplay.commons.utils.multilinguism.Languages;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
@@ -154,14 +159,19 @@ public class customFileChooser extends Stage {
         yes.setMinWidth(gazePlay.getPrimaryStage().getWidth() / 10);
         yes.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
             dialog.close();
-            log.info("The Adress is ************** {} ", i.getUrl());
-            final File imageToDelete = new File(i.getUrl().replaceFirst("file:", ""));
-            boolean success = imageToDelete.delete();
-            if (success) {
-                flowPanes[index].getChildren().remove(preview);
-            } else {
-                log.debug("the file {} can't be deleted", i.getUrl());
+            try {
+                URI url = new URI(i.getUrl());
+                final File imageToDelete = new File(url.getPath());
+                if (imageToDelete.delete()) {
+                    flowPanes[index].getChildren().remove(preview);
+                } else {
+                    log.info("the file {} can't be deleted", i.getUrl());
+                }
+            } catch (URISyntaxException e) {
+                log.info("the file {} can't be deleted", i.getUrl());;
             }
+
+            this.getScene().getRoot().setEffect(null);
         });
 
         final Button no = new Button(translator.translate("NoCancel"));
@@ -224,6 +234,11 @@ public class customFileChooser extends Stage {
         Group[] group = new Group[3];
         StackPane[] section = new StackPane[3];
         Color[] colors = {Color.PALEGOLDENROD, Color.LIGHTSEAGREEN, Color.PALEVIOLETRED};
+        String[] imagePath = {
+            "data/magiccards/images/red-card-game.png",
+            "data/magiccards/images/red-card-game.png",
+            "data/magiccards/images/red-card-game.png"
+        };
 
         HBox input = buildFileChooser();
         input.setPadding(new Insets(20, 0, 20, 0));
@@ -247,7 +262,7 @@ public class customFileChooser extends Stage {
             flowPanes[i].setAlignment(Pos.CENTER);
             flowPanes[i].setHgap(10);
             flowPanes[i].setVgap(10);
-            flowPanes[i].setPadding(new Insets(20, 60, 20, 60));
+            flowPanes[i].setPadding(new Insets(20, 20, 20, 20));
             flowPanes[i].setBackground(new Background(new BackgroundFill(colors[i], CornerRadii.EMPTY, null)));
 
             ScrollPane scrollPane = new ScrollPane(flowPanes[i]);
@@ -273,7 +288,13 @@ public class customFileChooser extends Stage {
             group[i].setEffect(dropShadow);
 
             updateFlow(i);
-            HBox title = new HBox(new Label(folder[i]));
+            ImageView sectionLogo = new ImageView(new Image(imagePath[i]));
+            sectionLogo.setPreserveRatio(true);
+            sectionLogo.setFitHeight(30);
+            Label sectionLabel = new Label(folder[i]);
+            HBox title = new HBox(sectionLogo,sectionLabel);
+            title.setSpacing(10);
+            title.setAlignment(Pos.CENTER);
             StackPane.setAlignment(title,Pos.CENTER);
             section[i].getChildren().add(title);
         }
