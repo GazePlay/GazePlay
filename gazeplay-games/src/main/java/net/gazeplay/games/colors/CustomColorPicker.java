@@ -17,7 +17,6 @@ import javafx.stage.WindowEvent;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.components.AbstractGazeIndicator;
 
 import static net.gazeplay.games.colors.ColorToolBox.COLORIZE_BUTTONS_SIZE_PX;
 import static net.gazeplay.games.colors.ColorToolBox.COLORS_IMAGES_PATH;

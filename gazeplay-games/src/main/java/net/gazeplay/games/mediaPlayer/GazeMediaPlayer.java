@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.components.AbstractGazeIndicator;
+import net.gazeplay.games.colors.AbstractGazeIndicator;
 import net.gazeplay.components.StackPaneButton;
 
 import java.io.File;

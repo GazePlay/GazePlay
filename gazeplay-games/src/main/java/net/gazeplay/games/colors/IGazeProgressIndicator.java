@@ -1,4 +1,4 @@
-package net.gazeplay.components;
+package net.gazeplay.games.colors;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

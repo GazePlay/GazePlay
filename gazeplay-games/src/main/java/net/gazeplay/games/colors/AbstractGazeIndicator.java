@@ -1,4 +1,4 @@
-package net.gazeplay.components;
+package net.gazeplay.games.colors;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
