@@ -21,6 +21,7 @@
 
     <rule ref="category/java/codestyle.xml">
         <exclude name="FieldNamingConventions"/>
+        <exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/>
     </rule>
 
     <rule ref="category/java/codestyle.xml/ClassNamingConventions">

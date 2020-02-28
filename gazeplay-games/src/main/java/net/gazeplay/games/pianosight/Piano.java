@@ -187,6 +187,7 @@ public class Piano extends Parent implements GameLifeCycle {
         circleTemp = new Circle(centerX, centerY, dimension2D.getHeight() / 5);
         circleTemp.setFill(Color.BLACK);
         circleTemp.setStroke(Color.BLACK);
+        circleTemp.setStrokeWidth(10);
         circleTemp.setOpacity(0);
         this.getChildren().add(circleTemp);
 

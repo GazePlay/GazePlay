@@ -63,7 +63,7 @@ public class DrawBuilder {
                 if (rateLimiterValue == RATE_LIMIT) {
                     rateLimiter.set(0);
 
-                    graphicsContext.lineTo(event.getX() - canvas.getLayoutX(), event.getY() - canvas.getLayoutY());
+                    graphicsContext.lineTo(event.getX(), event.getY());
                     // graphicsContext.setStroke(colorPicker.pickColor());
                     graphicsContext.stroke();
                 }

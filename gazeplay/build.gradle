@@ -20,8 +20,6 @@ dependencies {
     runtime project(':gazeplay-games')
 
     testImplementation "junit:junit:4.12"
-    testImplementation "org.mockito:mockito-core:2.+"
-    testImplementation "org.jmockit:jmockit:1.49"
     testImplementation "com.ginsberg:junit5-system-exit:1.0.0"
 }
 

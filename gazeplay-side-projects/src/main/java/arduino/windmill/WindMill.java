@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import net.gazeplay.commons.gaze.SecondScreen;
+import net.gazeplay.commons.gaze.SecondScreenFactory;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 
@@ -45,6 +46,6 @@ public class WindMill extends Application {
 
         primaryStage.show();
 
-        SecondScreen.launch();
+        SecondScreenFactory.launch();
     }
 }

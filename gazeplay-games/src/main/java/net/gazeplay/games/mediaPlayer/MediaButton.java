@@ -61,7 +61,9 @@ public class MediaButton extends StackPaneButton {
         this.addEventFilter(MouseEvent.MOUSE_CLICKED, clickEvent);
 
         enterEvent = eventEntered -> {
-            this.getChildren().add(progressIndicator);
+            if(!this.getChildren().contains(progressIndicator)) {
+                this.getChildren().add(progressIndicator);
+            }
             progressIndicator.setOnFinish(newMediaEvent);
             progressIndicator.start();
         };

@@ -1,6 +1,5 @@
 package net.gazeplay.components;
 
-import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
@@ -11,9 +10,8 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 @Slf4j
 public class GazeFollowerIndicator extends GazeIndicator {
 
-    public static final double GAZE_PROGRESS_INDICATOR_WIDTH = 100;
-    public static final double GAZE_PROGRESS_INDICATOR_HEIGHT = GAZE_PROGRESS_INDICATOR_WIDTH;
-    public static final double GAZE_PROGRESS_INDICATOR_OFFSET = GAZE_PROGRESS_INDICATOR_HEIGHT / 4;
+    private static final double GAZE_PROGRESS_INDICATOR_SIZE = 100;
+    private Polygon triangle;
 
     public GazeFollowerIndicator(IGameContext gameContext, final Pane root) {
 
@@ -22,48 +20,31 @@ public class GazeFollowerIndicator extends GazeIndicator {
         this.setOpacity(0.7);
         this.setMouseTransparent(true);
 
-        this.setMinWidth(GAZE_PROGRESS_INDICATOR_WIDTH);
-        this.setMinHeight(GAZE_PROGRESS_INDICATOR_HEIGHT);
+        this.setMinWidth(GAZE_PROGRESS_INDICATOR_SIZE);
+        this.setMinHeight(GAZE_PROGRESS_INDICATOR_SIZE);
 
-        Polygon triangle = new Polygon();
+        triangle = new Polygon();
         triangle.getPoints().addAll(0.0, 0.0, 10.0, 20.0, 20.0, 10.0);
 
-        root.addEventFilter(MouseEvent.ANY, (event) -> {
-            triangle.toFront();
-            triangle.setTranslateX(event.getX());
-            triangle.setTranslateY(event.getY());
-        });
+        triangle.visibleProperty().bind(this.visibleProperty());
 
         root.getChildren().add(triangle);
 
-        root.addEventFilter(MouseEvent.ANY, (event) -> {
-
-            this.toFront();
+        root.addEventFilter(MouseEvent.MOUSE_MOVED, (event) -> {
             moveGazeIndicator(event.getX(), event.getY());
         });
-        root.addEventFilter(GazeEvent.ANY, (event) -> {
 
-
-            this.toFront();
-
-            double x = event.getX();
-            double y = event.getY();
-
-            Point2D eventCoord = new Point2D(x, y);
-            Point2D localCoord = root.screenToLocal(eventCoord);
-
-            if (localCoord != null) {
-                x = localCoord.getX();
-                y = localCoord.getY();
-            }
-
-            moveGazeIndicator(x, y);
+        root.addEventFilter(GazeEvent.GAZE_MOVED, (event) -> {
+            moveGazeIndicator(event.getX(), event.getY());
         });
     }
 
     private void moveGazeIndicator(double x, double y) {
+        this.toFront();
+        triangle.toFront();
+        triangle.setTranslateX(x);
+        triangle.setTranslateY(y);
         this.setTranslateX(x);
         this.setTranslateY(y);
-
     }
 }
