@@ -1,5 +1,7 @@
 package net.gazeplay.ui.scenes.configuration;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -11,6 +13,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -18,16 +21,20 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.FileUtils;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
+import net.gazeplay.components.CssUtil;
 
 import javax.swing.*;
 import java.io.File;
@@ -37,6 +44,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Locale;
 import java.util.Set;
 
+@Slf4j
 public class customFileChooser extends Stage {
 
     private Configuration configuration;
@@ -67,7 +75,7 @@ public class customFileChooser extends Stage {
         this.initStyle(StageStyle.UTILITY);
         this.setOnCloseRequest(
             windowEvent -> primaryStage.getScene().getRoot().setEffect(null));
-        this.setTitle("customColorDialogTitle");
+        this.setTitle("customFileChooser");
         this.toFront();
 
         buildCustomColorDialog();
@@ -107,12 +115,76 @@ public class customFileChooser extends Stage {
             imagePreview.setFitWidth(imageRatio > 1 ? 100 : 100 * imageRatio);
             imagePreview.setFitHeight(imageRatio > 1 ? 100 / imageRatio : 100);
 
-            preview.getChildren().addAll(backgroundPreview, imagePreview);
+            Button delete = new Button("x");
+            delete.setPrefWidth(10);
+            delete.setPrefHeight(10);
+            StackPane.setAlignment(delete,Pos.TOP_RIGHT);
+            delete.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
+                final Stage dialog = removeDialogue(flowPaneIndex, i, preview);
+
+                final String dialogTitle = translator.translate("Remove");
+                dialog.setTitle(dialogTitle);
+
+                dialog.toFront();
+                dialog.setAlwaysOnTop(true);
+
+                dialog.show();
+            });
+
+            preview.getChildren().addAll(backgroundPreview, imagePreview, delete);
             flowPanes[flowPaneIndex].getChildren().add(preview);
         }
 
         Button add = createAddButton(flowPaneIndex);
         flowPanes[flowPaneIndex].getChildren().add(add);
+    }
+
+    private Stage removeDialogue(int index, Image i, StackPane preview){
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.WINDOW_MODAL);
+      //  dialog.initOwner();
+        dialog.initStyle(StageStyle.UTILITY);
+      //  dialog.setOnCloseRequest(windowEvent -> primaryStage.getScene().getRoot().setEffect(null));
+
+
+        final Button yes = new Button(translator.translate("YesRemove"));
+        yes.getStyleClass().add("gameChooserButton");
+        yes.getStyleClass().add("gameVariation");
+        yes.getStyleClass().add("button");
+        yes.setMinHeight(gazePlay.getPrimaryStage().getHeight() / 10);
+        yes.setMinWidth(gazePlay.getPrimaryStage().getWidth() / 10);
+        yes.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
+            dialog.close();
+            log.info("The Adress is ************** {} ", i.getUrl());
+            final File imageToDelete = new File(i.getUrl().replaceFirst("file:", ""));
+            boolean returbo = imageToDelete.delete();
+            flowPanes[index].getChildren().remove(preview);
+        });
+
+        final Button no = new Button(translator.translate("NoCancel"));
+        no.getStyleClass().add("gameChooserButton");
+        no.getStyleClass().add("gameVariation");
+        no.getStyleClass().add("button");
+        no.setMinHeight(gazePlay.getPrimaryStage().getHeight() / 10);
+        no.setMinWidth(gazePlay.getPrimaryStage().getWidth() / 10);
+        no.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> dialog.close());
+
+        final HBox choicePane = new HBox();
+        choicePane.setSpacing(20);
+        choicePane.setAlignment(Pos.CENTER);
+
+        choicePane.getChildren().add(yes);
+        choicePane.getChildren().add(no);
+
+        final ScrollPane choicePanelScroller = new ScrollPane(choicePane);
+        choicePanelScroller.setMinHeight(gazePlay.getPrimaryStage().getHeight() / 3);
+        choicePanelScroller.setMinWidth(gazePlay.getPrimaryStage().getWidth() / 3);
+        choicePanelScroller.setFitToWidth(true);
+        choicePanelScroller.setFitToHeight(true);
+
+        final Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
+        dialog.setScene(scene);
+        return dialog;
     }
 
     private Button createAddButton(int flowPaneIndex) {
@@ -178,6 +250,7 @@ public class customFileChooser extends Stage {
             scrollPane.setFitToHeight(true);
 
             background.setCenter(scrollPane);
+            background.setCenter(scrollPane);
 
             section[i] = new StackPane();
             section[i].layoutYProperty().bind(input.heightProperty());
@@ -198,9 +271,7 @@ public class customFileChooser extends Stage {
         }
 
         configuration.getFiledirProperty().addListener(e -> {
-            for (int i = 0; i < 3; i++) {
-                updateFlow(i);
-            }
+            updateFlows();
         });
 
 
