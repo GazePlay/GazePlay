@@ -3,7 +3,7 @@ package net.gazeplay.games.mediaPlayer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
-import net.gazeplay.games.colors.AbstractGazeIndicator;
+import net.gazeplay.components.AbstractGazeIndicator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
