@@ -26,7 +26,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
-public class AbstractGazeIndicator extends ProgressIndicator implements IGazeProgressIndicator {
+public class GazeIndicator extends ProgressIndicator implements IGazeProgressIndicator {
 
     @Getter
     @Setter
@@ -44,7 +44,7 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
     @Getter
     private boolean isStarted;
 
-    public AbstractGazeIndicator(final IGameContext gameContext) {
+    public GazeIndicator(final IGameContext gameContext) {
         super(0);
 
         this.setVisible(false);
@@ -98,11 +98,11 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
 
     private class OnFinishIndicatorEvent implements EventHandler<ActionEvent> {
 
-        private final AbstractGazeIndicator thisIndicator;
+        private final GazeIndicator thisIndicator;
         private final Lock lock;
         private Timer timer;
 
-        public OnFinishIndicatorEvent(final AbstractGazeIndicator thisIndicator) {
+        public OnFinishIndicatorEvent(final GazeIndicator thisIndicator) {
 
             this.thisIndicator = thisIndicator;
 
@@ -154,7 +154,7 @@ public class AbstractGazeIndicator extends ProgressIndicator implements IGazePro
 
     protected EventHandler buildEventHandler(final Node node) {
 
-        final AbstractGazeIndicator thisIndicator = this;
+        final GazeIndicator thisIndicator = this;
 
         return (Event event) -> {
 

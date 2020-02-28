@@ -3,7 +3,7 @@ package net.gazeplay.games.mediaPlayer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
-import net.gazeplay.components.AbstractGazeIndicator;
+import net.gazeplay.components.GazeIndicator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 public class MediaButtonTest {
 
     @Mock
-    AbstractGazeIndicator progressIndicator;
+    GazeIndicator progressIndicator;
 
     @BeforeEach
     public void initMocks() {
