@@ -1,4 +1,4 @@
-package net.gazeplay.components;
+package net.gazeplay.games.colors;
 
 import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
@@ -7,6 +7,7 @@ import javafx.scene.shape.Polygon;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.components.AbstractGazeIndicator;
 
 @Slf4j
 public class GazeFollowerIndicator extends AbstractGazeIndicator {

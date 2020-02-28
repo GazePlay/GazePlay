@@ -24,7 +24,6 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.AbstractGazeIndicator;
-import net.gazeplay.components.GazeFollowerIndicator;
 
 import java.io.File;
 import java.io.IOException;
