@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -99,9 +100,9 @@ public class customFileChooser extends Stage {
         flowPanes[flowPaneIndex].getChildren().clear();
 
         ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory(folder[flowPaneIndex]));
-        Set<Image> set = lib.pickMultipleRandomDistinctImages(lib.getImagesCount());
+        List<Image> allImagesList = lib.pickAllImages();
 
-        for (Image i : set) {
+        for (Image i : allImagesList) {
             StackPane preview = new StackPane();
 
             Rectangle backgroundPreview = new Rectangle(110, 110);
