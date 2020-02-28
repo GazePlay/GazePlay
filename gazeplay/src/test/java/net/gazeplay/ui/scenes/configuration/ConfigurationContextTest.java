@@ -92,7 +92,7 @@ class ConfigurationContextTest {
 
         ObservableList<Node> children = pane.getChildren();
 
-        assertEquals(64, children.size());
+        assertEquals(63, children.size());
         assertTrue(children.get(3) instanceof MenuButton);
         assertTrue(children.get(7) instanceof ChoiceBox);
         assertTrue(children.get(9) instanceof Spinner);
@@ -109,7 +109,6 @@ class ConfigurationContextTest {
         assertTrue(children.get(55) instanceof CheckBox);
         assertTrue(children.get(57) instanceof CheckBox);
         assertTrue(children.get(61) instanceof CheckBox);
-        assertTrue(children.get(63) instanceof CheckBox);
     }
 
     @Test
