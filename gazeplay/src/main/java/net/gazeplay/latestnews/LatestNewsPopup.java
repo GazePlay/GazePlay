@@ -139,6 +139,7 @@ public class LatestNewsPopup {
         Dimension2D screenDimension = screenDimensionSupplier.get();
 
         CustomButton continueButton = new CustomButton("data/common/images/continue.png", screenDimension);
+        continueButton.setId("continue");
 
         topPane.getChildren().addAll(userAgentLabel, locationUrlLabel);
         bottomPane.getChildren().addAll(closeInstructionLabel, continueButton);
@@ -214,6 +215,10 @@ public class LatestNewsPopup {
 
     private void showAndWait() {
         stage.showAndWait();
+    }
+
+    void show() {
+        stage.show();
     }
 
     String getOfflinePageContent() {

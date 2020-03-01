@@ -56,15 +56,23 @@ subprojects {
     apply plugin: 'com.github.spotbugs'
     apply plugin: "pmd"
     apply plugin: 'distribution'
+    apply plugin: 'idea'
 
     sourceSets {
         integrationTest {
             java {
                 compileClasspath += main.output + test.output
                 runtimeClasspath += main.output + test.output
-                srcDir file('src/integration-test/java')
+                srcDir file('src/integrationTest/java')
             }
-            resources.srcDir file('src/integration-test/resources')
+            resources.srcDir file('src/integrationTest/resources')
+        }
+    }
+
+    idea {
+        module {
+            sourceDirs -= file('src/integrationTest/java')
+            testSourceDirs += file('src/integrationTest/java')
         }
     }
 
@@ -105,6 +113,7 @@ subprojects {
         testImplementation "org.testfx:openjfx-monocle:jdk-11+26"
         testImplementation "org.jmockit:jmockit:1.49"
         testImplementation "org.mockito:mockito-core:2.+"
+        testImplementation "org.springframework.boot:spring-boot-starter-test:2.2.1.RELEASE"
     }
 
     sourceCompatibility = '11'
@@ -126,6 +135,14 @@ subprojects {
         if (project.hasProperty('excludeTests')) {
             exclude project.property('excludeTests')
         }
+    }
+
+    // Add -Pheadless=false to the Gradle Command Line to see tests running. You WILL lose control of your
+    // mouse and keyboard during tests if this is false.
+    def headless = Boolean.parseBoolean(project.getProperties().get("headless")) ?: true
+
+    integrationTest {
+        jvmArgs = [ "-Dheadless=${headless}" ]
     }
 
     tasks.withType(Test) {

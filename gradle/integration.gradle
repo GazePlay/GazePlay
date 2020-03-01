@@ -1,4 +1,4 @@
-task integrationTest(type: Test) {
+task integrationTest(type: Test, group: "verification") {
     useJUnitPlatform()
     testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
