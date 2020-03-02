@@ -107,11 +107,9 @@ public class customFileChooser extends Stage {
 
         List<Image> allImagesList = new LinkedList<>();
         if (imagefodler.equals(defaultFolder)) {
-            log.info("NOOOOOOOPE");
             ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory(folder[flowPaneIndex]));
             allImagesList.addAll(lib.pickAllImages());
         } else {
-            log.info("YAAAASSSSSSSS");
             ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory(folder[flowPaneIndex]));
             allImagesList.addAll(lib.pickAllImages());
         }
