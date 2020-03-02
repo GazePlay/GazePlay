@@ -12,6 +12,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,14 +126,25 @@ public class MediaFileReader {
         //
         final File playlistFile = new File(mediaPlayerDirectory, PLAYER_LIST_CSV);
 
-        try (
-            OutputStream fileOutputStream = Files.newOutputStream(playlistFile.toPath(), APPEND);
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8))
-        ) {
-            if (mediaList.size() == 0) {
-                bw.write("" + mf.getType() + "," + mf.getPath() + "," + mf.getName() + "," + mf.getImagepath());
-            } else {
-                bw.write("\n" + mf.getType() + "," + mf.getPath() + "," + mf.getName() + "," + mf.getImagepath());
+        try {
+            boolean fileIsUsable = playlistFile.exists();
+            if (!fileIsUsable){
+                fileIsUsable = playlistFile.createNewFile();
+            }
+
+            if ( fileIsUsable ){
+
+                OutputStream fileOutputStream = Files.newOutputStream(playlistFile.toPath(), StandardOpenOption.CREATE, APPEND);
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8));
+
+                if (mediaList.size() == 0) {
+                    bw.write("" + mf.getType() + "," + mf.getPath() + "," + mf.getName() + "," + mf.getImagepath());
+                } else {
+                    bw.write("\n" + mf.getType() + "," + mf.getPath() + "," + mf.getName() + "," + mf.getImagepath());
+                }
+
+                bw.flush();
+                bw.close();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
