@@ -384,10 +384,14 @@ public class BackgroundMusicManager {
         return outputFile;
     }
 
+    MediaPlayer makeMediaPlayer(Media media) {
+        return new MediaPlayer(media);
+    }
+
     MediaPlayer createMediaPlayer(String source) {
         try {
             final Media media = new Media(source);
-            final MediaPlayer player = new MediaPlayer(media);
+            final MediaPlayer player = makeMediaPlayer(media);
             player.setOnError(() -> log.error("error on audio media loading : " + player.getError()));
             player.volumeProperty().bindBidirectional(ActiveConfigurationContext.getInstance().getMusicVolumeProperty());
             player.setOnEndOfMedia(this::next);
