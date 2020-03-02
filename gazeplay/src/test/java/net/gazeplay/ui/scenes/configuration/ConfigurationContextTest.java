@@ -42,9 +42,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -75,53 +76,63 @@ class ConfigurationContextTest {
     }
 
     @Test
-    void shouldReturnToMenuOnHomeButtonPress() {
-        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+    void shouldReturnToMenuOnHomeButtonPress() throws InterruptedException {
+        Platform.runLater(() -> {
+            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
 
-        HomeButton button = context.createHomeButtonInConfigurationManagementScreen(mockGazePlay);
-        button.fireEvent(TestingUtils.clickOnTarget(button));
+            HomeButton button = context.createHomeButtonInConfigurationManagementScreen(mockGazePlay);
+            button.fireEvent(TestingUtils.clickOnTarget(button));
 
-        verify(mockGazePlay).onReturnToMenu();
+            verify(mockGazePlay).onReturnToMenu();
+        });
+        TestingUtils.waitForRunLater();
     }
 
     @Test
-    void shouldBuildConfigGridPane() {
-        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+    void shouldBuildConfigGridPane() throws InterruptedException {
+        Platform.runLater(() -> {
+            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
 
-        GridPane pane = context.buildConfigGridPane(context, mockTranslator);
+            GridPane pane = context.buildConfigGridPane(context, mockTranslator);
 
-        ObservableList<Node> children = pane.getChildren();
+            ObservableList<Node> children = pane.getChildren();
 
-        assertEquals(63, children.size());
-        assertTrue(children.get(3) instanceof MenuButton);
-        assertTrue(children.get(7) instanceof ChoiceBox);
-        assertTrue(children.get(9) instanceof Spinner);
-        assertTrue(children.get(11) instanceof CheckBox);
-        assertTrue(children.get(15) instanceof ChoiceBox);
-        assertTrue(children.get(17) instanceof Spinner);
-        assertTrue(children.get(21) instanceof ChoiceBox);
-        assertTrue(children.get(23) instanceof CheckBox);
-        assertTrue(children.get(25) instanceof ChoiceBox);
-        assertTrue(children.get(41) instanceof CheckBox);
-        assertTrue(children.get(43) instanceof ChoiceBox);
-        assertTrue(children.get(49) instanceof CheckBox);
-        assertTrue(children.get(51) instanceof CheckBox);
-        assertTrue(children.get(55) instanceof CheckBox);
-        assertTrue(children.get(57) instanceof CheckBox);
-        assertTrue(children.get(61) instanceof CheckBox);
+            assertEquals(64, children.size());
+            assertTrue(children.get(3) instanceof MenuButton);
+            assertTrue(children.get(7) instanceof ChoiceBox);
+            assertTrue(children.get(9) instanceof Spinner);
+            assertTrue(children.get(11) instanceof CheckBox);
+            assertTrue(children.get(15) instanceof ChoiceBox);
+            assertTrue(children.get(17) instanceof Spinner);
+            assertTrue(children.get(21) instanceof ChoiceBox);
+            assertTrue(children.get(23) instanceof CheckBox);
+            assertTrue(children.get(25) instanceof ChoiceBox);
+            assertTrue(children.get(41) instanceof CheckBox);
+            assertTrue(children.get(43) instanceof ChoiceBox);
+            assertTrue(children.get(49) instanceof CheckBox);
+            assertTrue(children.get(51) instanceof CheckBox);
+            assertTrue(children.get(55) instanceof CheckBox);
+            assertTrue(children.get(57) instanceof CheckBox);
+            assertTrue(children.get(61) instanceof CheckBox);
+
+        });
+        TestingUtils.waitForRunLater();
     }
 
     @Test
-    void shouldAddCategoryTitleLeftAligned() {
+    void shouldAddCategoryTitleLeftAligned() throws InterruptedException {
         when(mockTranslator.currentLocale()).thenReturn(Locale.FRANCE);
-        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-
         when(mockTranslator.translate(anyString())).thenReturn("category");
+
         GridPane grid = new GridPane();
         AtomicInteger currentFormRow = new AtomicInteger(1);
         I18NText label = new I18NText(mockTranslator, "category");
 
-        context.addCategoryTitle(grid, currentFormRow, label);
+        Platform.runLater(() -> {
+            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+            context.addCategoryTitle(grid, currentFormRow, label);
+        });
+        TestingUtils.waitForRunLater();
 
         assertTrue(grid.getChildren().get(0) instanceof Separator);
         assertEquals(HPos.CENTER, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
@@ -130,16 +141,19 @@ class ConfigurationContextTest {
     }
 
     @Test
-    void shouldAddCategoryTitleRightAligned() {
+    void shouldAddCategoryTitleRightAligned() throws InterruptedException {
         when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
-        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-
         when(mockTranslator.translate(anyString())).thenReturn("category");
+
         GridPane grid = new GridPane();
         AtomicInteger currentFormRow = new AtomicInteger(1);
         I18NText label = new I18NText(mockTranslator, "category");
 
-        context.addCategoryTitle(grid, currentFormRow, label);
+        Platform.runLater(() -> {
+            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+            context.addCategoryTitle(grid, currentFormRow, label);
+        });
+        TestingUtils.waitForRunLater();
 
         assertTrue(grid.getChildren().get(0) instanceof Separator);
         assertEquals(HPos.CENTER, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
@@ -148,16 +162,19 @@ class ConfigurationContextTest {
     }
 
     @Test
-    void shouldAddSubcategoryTitleLeftAligned() {
+    void shouldAddSubcategoryTitleLeftAligned() throws InterruptedException {
         when(mockTranslator.currentLocale()).thenReturn(Locale.FRANCE);
-        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-
         when(mockTranslator.translate(anyString())).thenReturn("category");
+
         GridPane grid = new GridPane();
         AtomicInteger currentFormRow = new AtomicInteger(1);
         I18NText label = new I18NText(mockTranslator, "category");
 
-        context.addSubCategoryTitle(grid, currentFormRow, label);
+        Platform.runLater(() -> {
+            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+            context.addSubCategoryTitle(grid, currentFormRow, label);
+        });
+        TestingUtils.waitForRunLater();
 
         assertTrue(grid.getChildren().contains(label));
         assertEquals(HPos.LEFT, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
@@ -166,16 +183,19 @@ class ConfigurationContextTest {
     }
 
     @Test
-    void shouldAddSubcategoryTitleRightAligned() {
+    void shouldAddSubcategoryTitleRightAligned() throws InterruptedException {
         when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
-        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-
         when(mockTranslator.translate(anyString())).thenReturn("category");
+
         GridPane grid = new GridPane();
         AtomicInteger currentFormRow = new AtomicInteger(1);
         I18NText label = new I18NText(mockTranslator, "category");
 
-        context.addSubCategoryTitle(grid, currentFormRow, label);
+        Platform.runLater(() -> {
+            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+            context.addSubCategoryTitle(grid, currentFormRow, label);
+        });
+        TestingUtils.waitForRunLater();
 
         assertTrue(grid.getChildren().contains(label));
         assertEquals(HPos.RIGHT, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
@@ -184,17 +204,20 @@ class ConfigurationContextTest {
     }
 
     @Test
-    void shouldAddNodeToGridTitleLeftAligned() {
+    void shouldAddNodeToGridTitleLeftAligned() throws InterruptedException {
         when(mockTranslator.currentLocale()).thenReturn(Locale.FRANCE);
-        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-
         when(mockTranslator.translate(anyString())).thenReturn("category");
+
         GridPane grid = new GridPane();
         AtomicInteger currentFormRow = new AtomicInteger(1);
         I18NText label = new I18NText(mockTranslator, "category");
         CheckBox input = new CheckBox();
 
-        context.addToGrid(grid, currentFormRow, label, input);
+        Platform.runLater(() -> {
+            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+            context.addToGrid(grid, currentFormRow, label, input);
+        });
+        TestingUtils.waitForRunLater();
 
         assertTrue(grid.getChildren().contains(label));
         assertEquals(HPos.LEFT, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
@@ -203,17 +226,20 @@ class ConfigurationContextTest {
     }
 
     @Test
-    void shouldAddNodeToGridRightAligned() {
+    void shouldAddNodeToGridRightAligned() throws InterruptedException {
         when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
-        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-
         when(mockTranslator.translate(anyString())).thenReturn("category");
+
         GridPane grid = new GridPane();
         AtomicInteger currentFormRow = new AtomicInteger(1);
         I18NText label = new I18NText(mockTranslator, "category");
         CheckBox input = new CheckBox();
 
-        context.addToGrid(grid, currentFormRow, label, input);
+        Platform.runLater(() -> {
+            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+            context.addToGrid(grid, currentFormRow, label, input);
+        });
+        TestingUtils.waitForRunLater();
 
         assertTrue(grid.getChildren().contains(label));
         assertEquals(HPos.RIGHT, grid.getChildren().get(0).getProperties().get("gridpane-halignment"));
@@ -317,7 +343,6 @@ class ConfigurationContextTest {
             }
         };
 
-        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
         StringProperty fileDirProperty = new SimpleStringProperty(System.getProperty("user.home") + "/GazePlay/");
         Scene mockScene = mock(Scene.class);
         Window mockWindow = mock(Window.class);
@@ -342,41 +367,45 @@ class ConfigurationContextTest {
         when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
         when(mockScene.getWindow()).thenReturn(mockWindow);
 
-        HBox result = (HBox) context.buildDirectoryChooser(mockConfig, mockContext, mockTranslator, type);
-        Button loadButton = (Button) result.getChildren().get(0);
-        Button resetButton = (Button) result.getChildren().get(1);
+        Platform.runLater(() -> {
+            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+            HBox result = (HBox) context.buildDirectoryChooser(mockConfig, mockContext, mockTranslator, type);
+            Button loadButton = (Button) result.getChildren().get(0);
+            Button resetButton = (Button) result.getChildren().get(1);
 
-        assertEquals(fileDirProperty.getValue(), loadButton.textProperty().getValue());
+            assertEquals(fileDirProperty.getValue(), loadButton.textProperty().getValue());
 
-        resetButton.fire();
-        assertEquals(answers.get(type), fileDirProperty.getValue());
-        assertEquals(answers.get(type), loadButton.textProperty().getValue());
+            resetButton.fire();
+            assertEquals(answers.get(type), fileDirProperty.getValue());
+            assertEquals(answers.get(type), loadButton.textProperty().getValue());
+        });
+        TestingUtils.waitForRunLater();
     }
 
     @Test
     void shouldBuildLanguageChooser() throws InterruptedException {
-        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-        StringProperty languageProperty = new SimpleStringProperty("eng");
-        StringProperty countryProperty = new SimpleStringProperty("GB");
-
-        when(mockConfig.getLanguage()).thenReturn(languageProperty.getValue());
-        when(mockConfig.getCountry()).thenReturn(countryProperty.getValue());
-        when(mockConfig.getLanguageProperty()).thenReturn(languageProperty);
-        when(mockConfig.getCountryProperty()).thenReturn(countryProperty);
-        when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
-
-        MenuButton result = context.buildLanguageChooser(mockConfig, context);
-
-        assertEquals(23, result.getItems().size());
-
         Platform.runLater(() -> {
+            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+            StringProperty languageProperty = new SimpleStringProperty("eng");
+            StringProperty countryProperty = new SimpleStringProperty("GB");
+
+            when(mockConfig.getLanguage()).thenReturn(languageProperty.getValue());
+            when(mockConfig.getCountry()).thenReturn(countryProperty.getValue());
+            when(mockConfig.getLanguageProperty()).thenReturn(languageProperty);
+            when(mockConfig.getCountryProperty()).thenReturn(countryProperty);
+            when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
+
+            MenuButton result = context.buildLanguageChooser(mockConfig, context);
+
+            assertEquals(23, result.getItems().size());
+
             result.getItems().get(1).fire();
+
+            ImageView image = (ImageView) result.getGraphic();
+            assertTrue(image.getImage().getUrl().contains("Arab"));
+            assertEquals("ara", languageProperty.getValue());
         });
         TestingUtils.waitForRunLater();
-
-        ImageView image = (ImageView) result.getGraphic();
-        assertTrue(image.getImage().getUrl().contains("Arab"));
-        assertEquals("ara", languageProperty.getValue());
     }
 
     @Test
@@ -541,64 +570,70 @@ class ConfigurationContextTest {
     }
 
     @Test
-    void shouldBuildQuitKeyChooser() {
-        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-        StringProperty quitProperty = new SimpleStringProperty("Y");
+    void shouldBuildQuitKeyChooser() throws InterruptedException {
+        Platform.runLater(() -> {
+            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+            StringProperty quitProperty = new SimpleStringProperty("Y");
 
-        when(mockConfig.getQuitKeyProperty()).thenReturn(quitProperty);
+            when(mockConfig.getQuitKeyProperty()).thenReturn(quitProperty);
 
-        ChoiceBox<String> result = context.buildQuitKeyChooser(mockConfig);
-        assertEquals(6, result.getItems().size());
+            ChoiceBox<String> result = context.buildQuitKeyChooser(mockConfig);
+            assertEquals(6, result.getItems().size());
 
-        result.setValue("Q");
-        assertEquals("Q", quitProperty.getValue());
+            result.setValue("Q");
+            assertEquals("Q", quitProperty.getValue());
+        });
+        TestingUtils.waitForRunLater();
     }
 
     @Test
-    void shouldBuildHeatMapOpacityChoiceBox() {
-        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-        DoubleProperty heatMapProperty = new SimpleDoubleProperty(1);
+    void shouldBuildHeatMapOpacityChoiceBox() throws InterruptedException {
+        Platform.runLater(() -> {
+            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+            DoubleProperty heatMapProperty = new SimpleDoubleProperty(1);
 
-        when(mockConfig.getHeatMapOpacityProperty()).thenReturn(heatMapProperty);
-        when(mockConfig.getHeatMapOpacity()).thenReturn(heatMapProperty.getValue());
+            when(mockConfig.getHeatMapOpacityProperty()).thenReturn(heatMapProperty);
+            when(mockConfig.getHeatMapOpacity()).thenReturn(heatMapProperty.getValue());
 
-        ChoiceBox<Double> result = context.buildHeatMapOpacityChoiceBox(mockConfig);
+            ChoiceBox<Double> result = context.buildHeatMapOpacityChoiceBox(mockConfig);
 
-        assertEquals(11, result.getItems().size());
+            assertEquals(11, result.getItems().size());
 
-        result.setValue(0.2);
-        assertEquals(0.2, heatMapProperty.getValue());
+            result.setValue(0.2);
+            assertEquals(0.2, heatMapProperty.getValue());
+        });
+        TestingUtils.waitForRunLater();
     }
 
     @Test
     void shouldBuildHeatMapColorHBox() throws InterruptedException {
-        ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-        StringProperty heatMapProperty = new SimpleStringProperty("001122, 110022, 002211, 112200");
-        List<Color> colors = List.of(Color.web("001122"), Color.web("110022"), Color.web("002211"), Color.web("112200"));
+        Platform.runLater(() -> {
+            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+            StringProperty heatMapProperty = new SimpleStringProperty("001122, 110022, 002211, 112200");
+            List<Color> colors = List.of(Color.web("001122"), Color.web("110022"), Color.web("002211"), Color.web("112200"));
 
-        when(mockConfig.getHeatMapColorsProperty()).thenReturn(heatMapProperty);
-        when(mockConfig.getHeatMapColors()).thenReturn(colors);
+            when(mockConfig.getHeatMapColorsProperty()).thenReturn(heatMapProperty);
+            when(mockConfig.getHeatMapColors()).thenReturn(colors);
 
-        HBox result = context.buildHeatMapColorHBox(mockConfig, mockTranslator);
-        assertEquals(7, result.getChildren().size());
+            HBox result = context.buildHeatMapColorHBox(mockConfig, mockTranslator);
+            assertEquals(7, result.getChildren().size());
 
-        Button reset = (Button) result.getChildren().get(0);
-        Button plus = (Button) result.getChildren().get(1);
-        Button minus = (Button) result.getChildren().get(2);
+            Button reset = (Button) result.getChildren().get(0);
+            Button plus = (Button) result.getChildren().get(1);
+            Button minus = (Button) result.getChildren().get(2);
 
-        Platform.runLater(plus::fire);
+            plus.fire();
+
+            assertEquals(8, result.getChildren().size());
+
+            reset.fire();
+
+            assertEquals(7, result.getChildren().size());
+
+            minus.fire();
+
+            assertEquals(6, result.getChildren().size());
+        });
         TestingUtils.waitForRunLater();
-
-        assertEquals(8, result.getChildren().size());
-
-        Platform.runLater(reset::fire);
-        TestingUtils.waitForRunLater();
-
-        assertEquals(7, result.getChildren().size());
-
-        Platform.runLater(minus::fire);
-        TestingUtils.waitForRunLater();
-
-        assertEquals(6, result.getChildren().size());
     }
 }
