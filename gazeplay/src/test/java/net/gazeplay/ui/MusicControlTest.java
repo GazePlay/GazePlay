@@ -1,10 +1,13 @@
 package net.gazeplay.ui;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.StackPane;
+import mockit.MockUp;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,8 +20,8 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(ApplicationExtension.class)
 @RunWith(MockitoJUnitRunner.class)
+@ExtendWith(ApplicationExtension.class)
 class MusicControlTest {
 
     @Mock
@@ -26,6 +29,9 @@ class MusicControlTest {
 
     @Mock
     Translator mockTranslator;
+
+    @Mock
+    BackgroundMusicManager mockMusicManager;
 
     Slider mockVolumeSlider;
 
@@ -40,9 +46,18 @@ class MusicControlTest {
     }
 
     void initMocks() {
+        new MockUp<BackgroundMusicManager>() {
+            @mockit.Mock
+            public BackgroundMusicManager getInstance() {
+                return mockMusicManager;
+            }
+        };
+
         MockitoAnnotations.initMocks(this);
         when(mockGazePlay.getTranslator()).thenReturn(mockTranslator);
         when(mockTranslator.translate()).thenReturn("translation");
+        when(mockMusicManager.getIsMusicChanging()).thenReturn(new SimpleBooleanProperty(false));
+        when(mockMusicManager.getIsPlayingProperty()).thenReturn(new SimpleBooleanProperty(false));
     }
 
     @Test
