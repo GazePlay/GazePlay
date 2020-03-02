@@ -34,6 +34,7 @@ import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -138,7 +139,6 @@ public class customFileChooser extends Stage {
                 dialog.setTitle(dialogTitle);
 
                 dialog.toFront();
-                dialog.setAlwaysOnTop(true);
 
                 dialog.show();
                 this.getScene().getRoot().setEffect(new GaussianBlur());
@@ -154,7 +154,6 @@ public class customFileChooser extends Stage {
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initOwner(this);
         dialog.initStyle(StageStyle.UTILITY);
-        dialog.setAlwaysOnTop(true);
         dialog.setOnCloseRequest(windowEvent -> this.getScene().getRoot().setEffect(null));
 
 
@@ -169,10 +168,20 @@ public class customFileChooser extends Stage {
             try {
                 URI url = new URI(i.getUrl());
                 final File imageToDelete = new File(url.getPath());
-                if (imageToDelete.delete()) {
-                    flowPanes[index].getChildren().remove(preview);
-                } else {
-                    log.info("the file {} can't be deleted", i.getUrl());
+                try {
+                    if (Desktop.getDesktop().moveToTrash(imageToDelete)) {
+                        flowPanes[index].getChildren().remove(preview);
+                    } else {
+                        log.info("the file {} can't be moved to trash", i.getUrl());
+                    }
+                } catch (Exception e) {
+                    log.info("the file {} can't be moved to trash", i.getUrl());
+                } finally {
+                    if (imageToDelete.delete()) {
+                        flowPanes[index].getChildren().remove(preview);
+                    } else {
+                        log.info("the file {} can't be deleted", i.getUrl());
+                    }
                 }
             } catch (URISyntaxException e) {
                 log.info("the file {} can't be deleted", i.getUrl());
