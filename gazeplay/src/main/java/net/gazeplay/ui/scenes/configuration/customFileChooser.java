@@ -16,7 +16,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
@@ -37,12 +36,11 @@ import net.gazeplay.commons.utils.multilinguism.Languages;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -103,8 +101,20 @@ public class customFileChooser extends Stage {
     private void updateFlow(int flowPaneIndex) {
         flowPanes[flowPaneIndex].getChildren().clear();
 
-        ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory(folder[flowPaneIndex]));
-        List<Image> allImagesList = lib.pickAllImages();
+        String imagefodler = Utils.getFilesFolder();
+        String defaultFolder = GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath();
+
+        List<Image> allImagesList = new LinkedList<>();
+        if (imagefodler.equals(defaultFolder)) {
+            log.info("NOOOOOOOPE");
+            ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory(folder[flowPaneIndex]));
+            allImagesList.addAll(lib.pickAllImages());
+        } else {
+            log.info("YAAAASSSSSSSS");
+            ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory(folder[flowPaneIndex]));
+            allImagesList.addAll(lib.pickAllImages());
+        }
+
 
         for (Image i : allImagesList) {
             StackPane preview = new StackPane();
@@ -165,7 +175,7 @@ public class customFileChooser extends Stage {
                     log.info("the file {} can't be deleted", i.getUrl());
                 }
             } catch (URISyntaxException e) {
-                log.info("the file {} can't be deleted", i.getUrl());;
+                log.info("the file {} can't be deleted", i.getUrl());
             }
 
             this.getScene().getRoot().setEffect(null);
@@ -200,8 +210,8 @@ public class customFileChooser extends Stage {
         return dialog;
     }
 
-    private Button createAddButton(int flowPaneIndex) {
-        Button add = new Button("add new images ...");
+    private I18NButton createAddButton(int flowPaneIndex) {
+        I18NButton add = new I18NButton(translator, "addNewImages");
         add.setPrefHeight(10);
         add.setOnAction(e -> {
             final JFileChooser fileChooser = new JFileChooser();
@@ -267,15 +277,14 @@ public class customFileChooser extends Stage {
             scrollPane.setFitToHeight(true);
 
 
-
             StackPane addButtonStackPane = new StackPane();
             Rectangle backgroundAddButton = new Rectangle();
             backgroundAddButton.widthProperty().bind(background.widthProperty());
             backgroundAddButton.setHeight(50);
             backgroundAddButton.setFill(colors[i]);
-            Button add = createAddButton(i);
-            addButtonStackPane.getChildren().addAll(backgroundAddButton,add);
-            BorderPane.setAlignment(addButtonStackPane,Pos.CENTER);
+            I18NButton add = createAddButton(i);
+            addButtonStackPane.getChildren().addAll(backgroundAddButton, add);
+            BorderPane.setAlignment(addButtonStackPane, Pos.CENTER);
             background.setTop(addButtonStackPane);
             background.setCenter(scrollPane);
 
@@ -298,10 +307,10 @@ public class customFileChooser extends Stage {
             sectionLogo.setPreserveRatio(true);
             sectionLogo.setFitHeight(30);
             Label sectionLabel = new Label(folder[i]);
-            HBox title = new HBox(sectionLogo,sectionLabel);
+            HBox title = new HBox(sectionLogo, sectionLabel);
             title.setSpacing(10);
             title.setAlignment(Pos.CENTER);
-            StackPane.setAlignment(title,Pos.CENTER);
+            StackPane.setAlignment(title, Pos.CENTER);
             section[i].getChildren().add(title);
         }
 
@@ -363,7 +372,13 @@ public class customFileChooser extends Stage {
         final I18NButton resetButton = new I18NButton(translator, "reset");
         resetButton.setOnAction(
             e -> {
-                String defaultValue = GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath();
+                String defaultValue = "";
+                String username = configuration.getUserName();
+                if (username.equals("")) {
+                    defaultValue = GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath();
+                } else {
+                    defaultValue = GazePlayDirectories.getFileDirectoryUserValue(username).getAbsolutePath();
+                }
                 configuration.getFiledirProperty().setValue(defaultValue);
                 buttonLoad.textProperty().setValue(defaultValue);
                 updateFlows();
