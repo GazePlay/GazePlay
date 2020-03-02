@@ -75,7 +75,7 @@ public class customFileChooser extends Stage {
         this.initStyle(StageStyle.UTILITY);
         this.setOnCloseRequest(
             windowEvent -> primaryStage.getScene().getRoot().setEffect(null));
-        this.setTitle("customFileChooser");
+        this.setTitle(translator.translate("customFileChooser"));
         this.toFront();
 
         buildCustomColorDialog();

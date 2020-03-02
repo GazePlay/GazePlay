@@ -246,3 +246,5 @@ toRight,,,,,,from left to right,,de gauche à droite,,,,,,,,,,de la izquierda ha
 toLeft,,,,,,from right to left,,de droite à gauche,,,,,,,,,,de la derecha hacia la izquierda,
 
 addNewImages,,,,,,Add new images ...,,Ajouter de nouvelles images ...,,,,,,,,,,Agregar nuevas imágenes ...,
+customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,,,
+
