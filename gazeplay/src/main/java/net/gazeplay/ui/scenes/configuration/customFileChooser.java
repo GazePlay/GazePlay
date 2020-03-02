@@ -137,9 +137,6 @@ public class customFileChooser extends Stage {
             preview.getChildren().addAll(backgroundPreview, imagePreview, delete);
             flowPanes[flowPaneIndex].getChildren().add(preview);
         }
-
-        Button add = createAddButton(flowPaneIndex);
-        flowPanes[flowPaneIndex].getChildren().add(add);
     }
 
     private Stage removeDialogue(int index, Image i, StackPane preview) {
@@ -204,9 +201,8 @@ public class customFileChooser extends Stage {
     }
 
     private Button createAddButton(int flowPaneIndex) {
-        Button add = new Button("+");
-        add.setPrefWidth(100);
-        add.setPrefHeight(100);
+        Button add = new Button("add new images ...");
+        add.setPrefHeight(10);
         add.setOnAction(e -> {
             final JFileChooser fileChooser = new JFileChooser();
             fileChooser.setMultiSelectionEnabled(true);
@@ -270,7 +266,17 @@ public class customFileChooser extends Stage {
             scrollPane.setFitToWidth(true);
             scrollPane.setFitToHeight(true);
 
-            background.setCenter(scrollPane);
+
+
+            StackPane addButtonStackPane = new StackPane();
+            Rectangle backgroundAddButton = new Rectangle();
+            backgroundAddButton.widthProperty().bind(background.widthProperty());
+            backgroundAddButton.setHeight(50);
+            backgroundAddButton.setFill(colors[i]);
+            Button add = createAddButton(i);
+            addButtonStackPane.getChildren().addAll(backgroundAddButton,add);
+            BorderPane.setAlignment(addButtonStackPane,Pos.CENTER);
+            background.setTop(addButtonStackPane);
             background.setCenter(scrollPane);
 
             section[i] = new StackPane();
