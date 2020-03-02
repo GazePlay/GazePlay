@@ -14,7 +14,9 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GamePanelDimensionProvider;
+import net.gazeplay.IntegrationTestBase;
 import net.gazeplay.ui.scenes.ingame.GameContext;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,9 +36,9 @@ import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Mockito.when;
 
 @Slf4j
-@ExtendWith(ApplicationExtension.class)
 @RunWith(MockitoJUnitRunner.class)
-public class BravoTest {
+@ExtendWith(ApplicationExtension.class)
+public class BravoIntegrationTest {
 
     @Mock
     private GameContext mockGameContext;

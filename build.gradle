@@ -113,7 +113,6 @@ subprojects {
         testImplementation "org.testfx:openjfx-monocle:jdk-11+26"
         testImplementation "org.jmockit:jmockit:1.49"
         testImplementation "org.mockito:mockito-core:2.+"
-        testImplementation "org.springframework.boot:spring-boot-starter-test:2.2.1.RELEASE"
     }
 
     sourceCompatibility = '11'
