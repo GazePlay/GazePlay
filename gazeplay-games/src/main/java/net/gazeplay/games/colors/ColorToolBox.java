@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
@@ -69,7 +70,7 @@ public class ColorToolBox extends Pane {
 
     private final VBox mainPane;
 
-    private final AbstractGazeIndicator progressIndicator;
+    private final GazeIndicator progressIndicator;
 
     /**
      * All the color boxes
@@ -114,7 +115,8 @@ public class ColorToolBox extends Pane {
     public ColorToolBox(final Pane root, final ColorsGame colorsGame, final IGameContext gameContext) {
         super();
         this.gameContext = gameContext;
-        progressIndicator = new GazeFollowerIndicator(gameContext, root);
+        progressIndicator = new GazeIndicator(gameContext);
+        progressIndicator.setMouseTransparent(true);
 
         this.selectedColorBox = null;
         this.colorsGame = colorsGame;
@@ -201,7 +203,7 @@ public class ColorToolBox extends Pane {
             }
         };
 
-        final AbstractGazeIndicator customColorButtonIndic = new GazeFollowerIndicator(gameContext, root);
+        final GazeIndicator customColorButtonIndic = new GazeFollowerIndicator(gameContext, root);
         customColorButtonIndic.setOnFinish(customColorButtonHandler);
         customColorButtonIndic.addNodeToListen(customColorPickerButton,
             colorsGame.getGameContext().getGazeDeviceManager());
@@ -249,10 +251,18 @@ public class ColorToolBox extends Pane {
 
         root.getChildren().add(customColorButtonIndic);
 
-        if (!gameContext.getConfiguration().isBackgroundWhite()) {
+        gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Void>() {
+            @Override
+            public Void visitLight() {
+                return null;
+            }
 
-            this.getStyleClass().add("bg-colored");
-        }
+            @Override
+            public Void visitDark() {
+                getStyleClass().add("bg-colored");
+                return null;
+            }
+        });
 
 
     }
@@ -438,7 +448,8 @@ public class ColorToolBox extends Pane {
             stopColorize = new Button("S");
         }
 
-        final AbstractGazeIndicator colorizeButtonIndicator = new GazeFollowerIndicator(gameContext, root);
+        final GazeIndicator colorizeButtonIndicator = new GazeIndicator(gameContext);
+        colorizeButtonIndicator.setMouseTransparent(true);
 
         final Pane colorizeButtonPane = new StackPane(colorize);
         final Pane stopColorizeButtonPane = new StackPane(stopColorize);
@@ -467,9 +478,8 @@ public class ColorToolBox extends Pane {
             getColorsGame().getGameContext().getGazeDeviceManager());
 
         stopColorizeButtonPane.setVisible(false);
-        root.getChildren().add(colorizeButtonIndicator);
 
-        return new StackPane(colorizeButtonPane, stopColorizeButtonPane);
+        return new StackPane(colorizeButtonPane, stopColorizeButtonPane, colorizeButtonIndicator);
     }
 
     private Stage buildCustomColorDialog() {
@@ -498,7 +508,7 @@ public class ColorToolBox extends Pane {
         return dialog;
     }
 
-    public AbstractGazeIndicator getProgressIndicator() {
+    public GazeIndicator getProgressIndicator() {
         return progressIndicator;
     }
 }

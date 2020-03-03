@@ -52,7 +52,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
     private final double handSize;
 
     private Mypet pet;
-    private HBox Bars;
+    private HBox barsHBox;
     private ImageView bowl;
 
     private Integer waterNeeded = 100;
@@ -135,8 +135,8 @@ public class PetHouse extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
 
-        Bars = createBars();
-        gameContext.getChildren().add(Bars);
+        barsHBox = createBars();
+        gameContext.getChildren().add(barsHBox);
 
         activateBars();
 
@@ -215,17 +215,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
                     - gameContext.getPrimaryStage().getY() - hand.getHeight() / 2);
             } else if (e.getEventType() == GazeEvent.GAZE_MOVED) {
-                final float[] pointAsFloatArray = Tobii.gazePosition();
-
-                final float xRatio = pointAsFloatArray[0];
-                final float yRatio = pointAsFloatArray[1];
-
-                final double positionX = xRatio * screenWidth;
-                final double positionY = yRatio * screenHeight;
-
-                hand.setX(offsetx + positionX - gameContext.getPrimaryStage().getX()
+                hand.setX(offsetx + ((GazeEvent) e).getX()
                     - hand.getWidth() / 2);
-                hand.setY(offsety + positionY - gameContext.getPrimaryStage().getY()
+                hand.setY(offsety + ((GazeEvent) e).getY()
                     - hand.getHeight() / 2);
             }
         };
@@ -245,23 +237,14 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 offsety = -hand.getHeight() / 4;
             }
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
-                    - gameContext.getPrimaryStage().getX() - hand.getWidth() / 2);
-                hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
-                    - gameContext.getPrimaryStage().getY() - hand.getHeight() / 2);
-
-            } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                final float[] pointAsFloatArray = Tobii.gazePosition();
-
-                final float xRatio = pointAsFloatArray[0];
-                final float yRatio = pointAsFloatArray[1];
-
-                final double positionX = xRatio * screenWidth;
-                final double positionY = yRatio * screenHeight;
-
-                hand.setX(offsetx + positionX - gameContext.getPrimaryStage().getX()
+                hand.setX(offsetx + ((MouseEvent) e).getX()
                     - hand.getWidth() / 2);
-                hand.setY(offsety + positionY - gameContext.getPrimaryStage().getY()
+                hand.setY(offsety + ((MouseEvent) e).getY()
+                    - hand.getHeight() / 2);
+            } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                hand.setX(offsetx + ((GazeEvent) e).getX()
+                    - hand.getWidth() / 2);
+                hand.setY(offsety + ((GazeEvent) e).getY()
                     - hand.getHeight() / 2);
             }
         };
@@ -283,45 +266,45 @@ public class PetHouse extends Parent implements GameLifeCycle {
     private HBox createBars() {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        final HBox Bars = new HBox();
+        final HBox newBarsHBox = new HBox();
 
-        Bars.widthProperty().addListener((observable, oldValue, newValue) -> Bars.setLayoutX(dimension2D.getWidth() / 2 - newValue.doubleValue() / 2));
+        newBarsHBox.widthProperty().addListener((observable, oldValue, newValue) -> newBarsHBox.setLayoutX(dimension2D.getWidth() / 2 - newValue.doubleValue() / 2));
 
-        Bars.heightProperty().addListener((observable, oldValue, newValue) -> Bars.setLayoutY(newValue.doubleValue() / 2));
+        newBarsHBox.heightProperty().addListener((observable, oldValue, newValue) -> newBarsHBox.setLayoutY(newValue.doubleValue() / 2));
 
         final double offset = dimension2D.getHeight() / LIFE_SIZE;
 
-        Bars.setSpacing(offset);
+        newBarsHBox.setSpacing(offset);
 
-        Bars.getChildren().addAll(createColoredProgressBar(0), createColoredProgressBar(1),
+        newBarsHBox.getChildren().addAll(createColoredProgressBar(0), createColoredProgressBar(1),
             createColoredProgressBar(2));
 
-        return Bars;
+        return newBarsHBox;
     }
 
     private HBox createColoredProgressBar(final int numero) {
-        final HBox Bar = new HBox();
+        final HBox progressBar = new HBox();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final double size = dimension2D.getHeight() / 20;
 
         for (int i = 0; i < LIFE_SIZE; i++) {
             final Rectangle r = new Rectangle(0, 0, (6 * size) / LIFE_SIZE, size);
             r.setFill(colorBar[numero]);
-            Bar.getChildren().add(r);
+            progressBar.getChildren().add(r);
         }
 
-        return Bar;
+        return progressBar;
     }
 
     private void activateBars() {
         for (int i = 0; i < 3; i++) {
             final int index = getIt(i);
-            final HBox Bar = (HBox) Bars.getChildren().get(i);
+            final HBox progressBar = (HBox) barsHBox.getChildren().get(i);
 
             timelines[i] = new Timeline();
             timelines[i].setDelay(Duration.seconds(regressionTime[i]));
             timelines[i].getKeyFrames().add(new KeyFrame(Duration.millis(500),
-                new KeyValue(((Rectangle) Bar.getChildren().get(index)).fillProperty(), Color.WHITE)));
+                new KeyValue(((Rectangle) progressBar.getChildren().get(index)).fillProperty(), Color.WHITE)));
             timelines[i].rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
 
             final int number = i;
@@ -332,7 +315,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
                     timelines[number].setDelay(Duration
                         .seconds(regressionTime[number]));
                     timelines[number].getKeyFrames().add(new KeyFrame(Duration.millis(500),
-                        new KeyValue(((Rectangle) Bar.getChildren().get(index1)).fillProperty(), Color.WHITE)));
+                        new KeyValue(((Rectangle) progressBar.getChildren().get(index1)).fillProperty(), Color.WHITE)));
                     timelines[number].play();
                 } else {
                     timelines[number].stop();
@@ -459,15 +442,15 @@ public class PetHouse extends Parent implements GameLifeCycle {
             timelines[i].getKeyFrames().clear();
             timelines[i].getKeyFrames()
                 .add(new KeyFrame(Duration.millis(500), new KeyValue(
-                    ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(getIt(i))).fillProperty(),
+                    ((Rectangle) ((HBox) barsHBox.getChildren().get(i)).getChildren().get(getIt(i))).fillProperty(),
                     Color.WHITE)));
 
-            ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(it[i])).setFill(this.colorBar[i]);
+            ((Rectangle) ((HBox) barsHBox.getChildren().get(i)).getChildren().get(it[i])).setFill(this.colorBar[i]);
             if (it[i] > 0) {
-                ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(it[i] - 1)).setFill(this.colorBar[i]);
+                ((Rectangle) ((HBox) barsHBox.getChildren().get(i)).getChildren().get(it[i] - 1)).setFill(this.colorBar[i]);
             }
             if ((i != 0) && (it[i] < LIFE_SIZE - 1 && it[i] >= 0)) {
-                ((Rectangle) ((HBox) Bars.getChildren().get(i)).getChildren().get(it[i] - 2)).setFill(this.colorBar[i]);
+                ((Rectangle) ((HBox) barsHBox.getChildren().get(i)).getChildren().get(it[i] - 2)).setFill(this.colorBar[i]);
             }
             timelines[i].play();
 
@@ -620,7 +603,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
         bowl.addEventFilter(GazeEvent.GAZE_ENTERED, handenter);
 
         bowl.addEventFilter(MouseEvent.MOUSE_MOVED, handevent);
-        bowl.addEventFilter(GazeEvent.GAZE_MOVED, handevent);
         gameContext.getGazeDeviceManager().addEventFilter(bowl);
 
         gameContext.getChildren().add(bowl);

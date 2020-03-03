@@ -42,15 +42,15 @@ public class EggGame implements GameLifeCycle {
     private Egg createEgg(final Configuration config) {
         final javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        final double EggHeight = gameDimension2D.getHeight() / 2;
-        final double EggWidth = 3. * EggHeight / 4.;
+        final double eggHeight = gameDimension2D.getHeight() / 2;
+        final double eggWidth = 3. * eggHeight / 4.;
 
         final int fixationlength = config.getFixationLength();
 
-        final double positionX = gameDimension2D.getWidth() / 2 - EggWidth / 2;
-        final double positionY = gameDimension2D.getHeight() / 2 - EggHeight / 2;
+        final double positionX = gameDimension2D.getWidth() / 2 - eggWidth / 2;
+        final double positionY = gameDimension2D.getHeight() / 2 - eggHeight / 2;
 
-        return new Egg(positionX, positionY, EggWidth, EggHeight, gameContext, stats, this, fixationlength, numberOfTurns);
+        return new Egg(positionX, positionY, eggWidth, eggHeight, gameContext, stats, this, fixationlength, numberOfTurns);
     }
 
 }

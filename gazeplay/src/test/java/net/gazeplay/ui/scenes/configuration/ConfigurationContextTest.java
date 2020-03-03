@@ -117,6 +117,7 @@ class ConfigurationContextTest {
 
         });
         TestingUtils.waitForRunLater();
+
     }
 
     @Test

@@ -1,6 +1,7 @@
 package net.gazeplay.commons.gaze.devicemanager;
 
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 
@@ -8,7 +9,7 @@ import java.util.function.Supplier;
 
 public interface GazeDeviceManager {
 
-    void init(Supplier<Dimension2D> currentScreenDimensionSupplier);
+    void init(Supplier<Dimension2D> currentScreenDimensionSupplier, Supplier<Point2D> currentScreenPositionSupplier);
 
     void destroy();
 

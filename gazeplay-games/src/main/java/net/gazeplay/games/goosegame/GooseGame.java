@@ -9,6 +9,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -84,6 +85,11 @@ public class GooseGame implements GameLifeCycle {
             StandardCharsets.UTF_8));
 
         boardImage = new ImageView("data/goosegame/gooseboard.png");
+        if (!gameContext.getConfiguration().isBackgroundEnabled()) {
+            ColorAdjust grayscale = new ColorAdjust();
+            grayscale.setSaturation(-0.7);
+            boardImage.setEffect(grayscale);
+        }
         // The board is scaled according to the window size, this influences the position we got above, so we need to
         // scale those too
         final double scaleRatio = Math.min((dimensions.getHeight() * 0.9) / boardImage.getImage().getHeight(),

@@ -1,6 +1,7 @@
 package net.gazeplay.commons.gaze.devicemanager;
 
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Point2D;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
@@ -21,6 +22,10 @@ public class GazeDeviceManagerFactory {
     @Autowired
     @Setter
     private Supplier<Dimension2D> currentScreenDimensionSupplier;
+
+    @Autowired
+    @Setter
+    private Supplier<Point2D> currentScreenPositionSupplier;
 
     public GazeDeviceManagerFactory() {
     }
@@ -55,7 +60,7 @@ public class GazeDeviceManagerFactory {
             default:
                 gazeDeviceManager = new AbstractGazeDeviceManager() {
                     @Override
-                    public void init(final Supplier<Dimension2D> currentScreenDimensionSupplier) {
+                    public void init(final Supplier<Dimension2D> currentScreenDimensionSupplier, final Supplier<Point2D> currentScreenPositionSupplier) {
                     }
 
                     @Override
@@ -66,7 +71,7 @@ public class GazeDeviceManagerFactory {
                 };
         }
 
-        gazeDeviceManager.init(currentScreenDimensionSupplier);
+        gazeDeviceManager.init(currentScreenDimensionSupplier, currentScreenPositionSupplier);
         return gazeDeviceManager;
     }
 

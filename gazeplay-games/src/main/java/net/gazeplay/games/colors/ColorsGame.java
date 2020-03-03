@@ -6,7 +6,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -24,8 +23,11 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -82,7 +84,7 @@ public class ColorsGame implements GameLifeCycle {
     /**
      * The gaze progress indicator to show time before colorization.
      */
-    private AbstractGazeIndicator gazeProgressIndicator;
+    private GazeIndicator gazeProgressIndicator;
 
     /**
      * The pixel writer to into wich we modify pixels
@@ -183,8 +185,8 @@ public class ColorsGame implements GameLifeCycle {
         this.root.getChildren().add(colorToolBox);
 
         // Add it here so it appears on top of the tool box
-        final AbstractGazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
-        root.getChildren().add(progressIndicator);
+        final GazeIndicator progressIndicator = colorToolBox.getProgressIndicator();
+        colorToolBox.getChildren().add(progressIndicator);
         progressIndicator.toFront();
 
 
@@ -227,15 +229,15 @@ public class ColorsGame implements GameLifeCycle {
     private Image getDrawingImage(String imgURL) {
         Image img;
         try {
-            img = new Image(new FileInputStream(imgURL));
-        } catch (final FileNotFoundException e) {
+            img = new Image(Files.newInputStream(new File(imgURL).toPath()));
+        } catch (final IOException e) {
 
             log.debug("Drawing image " + imgURL + " cannot be found");
 
             getGameContext().getConfiguration().getColorsDefaultImageProperty().set(Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE);
 
-            imgURL = Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE;
-            img = new Image(imgURL);
+            String defaultImgURL = Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE;
+            img = new Image(defaultImgURL);
         }
         return img;
     }
@@ -293,9 +295,9 @@ public class ColorsGame implements GameLifeCycle {
 
         final double width = dimension2D.getWidth();
 
-        final double ToolBoxWidth = colorToolBox.getWidth();
-        final double x = width - ToolBoxWidth;
-        log.debug("translated tool box to : {}, x toolBoxWidth : {}", x, ToolBoxWidth);
+        final double toolBoxWidth = colorToolBox.getWidth();
+        final double x = width - toolBoxWidth;
+        log.debug("translated tool box to : {}, x toolBoxWidth : {}", x, toolBoxWidth);
         colorToolBox.setTranslateX(x);
     }
 
@@ -609,14 +611,6 @@ public class ColorsGame implements GameLifeCycle {
             currentX = event.getX();
             currentY = event.getY();
 
-            final Point2D eventCoord = new Point2D(currentX, currentY);
-            final Point2D localCoord = root.screenToLocal(eventCoord);
-
-            if (localCoord != null) {
-                currentX = localCoord.getX();
-                currentY = localCoord.getY();
-            }
-
             // If gaze still around first point
             if (gazeXOrigin - GAZE_MOVING_THRESHOLD < currentX && gazeXOrigin + GAZE_MOVING_THRESHOLD > currentX
                 && gazeYOrigin - GAZE_MOVING_THRESHOLD < currentY
@@ -640,14 +634,6 @@ public class ColorsGame implements GameLifeCycle {
         private void onGazeEntered(final GazeEvent event) {
             currentX = event.getX();
             currentY = event.getY();
-
-            final Point2D eventCoord = new Point2D(currentX, currentY);
-            final Point2D localCoord = root.screenToLocal(eventCoord);
-
-            if (localCoord != null) {
-                currentX = localCoord.getX();
-                currentY = localCoord.getY();
-            }
 
             gazeXOrigin = currentX;
             gazeYOrigin = currentY;

@@ -35,9 +35,9 @@ public class Wall {
             case Y: {
                 this.box = new Box(xLength, wallThickness, xLength);
                 final double positionWall = yLength / 2;
-                final Image top_bottomImage = new Image("data/room/top_bottom.jpg");
-                this.box.setMaterial(new PhongMaterial(Color.TRANSPARENT, top_bottomImage, top_bottomImage, top_bottomImage,
-                    top_bottomImage));
+                final Image topBottomImage = new Image("data/room/top_bottom.jpg");
+                this.box.setMaterial(new PhongMaterial(Color.TRANSPARENT, topBottomImage, topBottomImage, topBottomImage,
+                    topBottomImage));
                 this.box.setTranslateY(positiveAxisMultiplier * positionWall);
             }
             break;

@@ -40,6 +40,8 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -162,10 +164,10 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         fullScreen = new Button();
         fullScreen.setPrefWidth(dimension2D.getWidth() / 12);
         fullScreen.setPrefHeight(dimension2D.getHeight() / 8);
-        final ImageView ScreenIv = new ImageView(new Image("data/gazeMediaPlayer/fullon.png"));
-        ScreenIv.setPreserveRatio(true);
-        ScreenIv.setFitHeight((90 * fullScreen.getHeight()) / 100);
-        fullScreen.setGraphic(ScreenIv);
+        final ImageView screenIv = new ImageView(new Image("data/gazeMediaPlayer/fullon.png"));
+        screenIv.setPreserveRatio(true);
+        screenIv.setFitHeight((90 * fullScreen.getHeight()) / 100);
+        fullScreen.setGraphic(screenIv);
 
         tools.setSpacing(dimension2D.getWidth() / 20);
         tools.setAlignment(Pos.CENTER);
@@ -761,12 +763,13 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             final ImageView iv;
             final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             try {
-                iv = new ImageView(new Image(new FileInputStream(selectedFile)));
+                iv = new ImageView(new Image(Files.newInputStream(selectedFile.toPath())));
                 iv.setPreserveRatio(true);
                 iv.setFitHeight(dimension2D.getHeight() / 10);
                 tfi.setGraphic(iv);
-            } catch (final FileNotFoundException e) {
-                e.printStackTrace();
+            } catch (final IOException e) {
+                log.debug("selectedFile IOException : {}", selectedFile);
+                s = null;
             }
         }
         return s;

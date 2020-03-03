@@ -20,7 +20,7 @@ import net.gazeplay.ui.scenes.ingame.GameContext;
 import net.gazeplay.ui.scenes.stats.AreaOfInterest;
 import net.gazeplay.ui.scenes.stats.ScanpathView;
 import net.gazeplay.ui.scenes.stats.StatsContext;
-import net.gazeplay.ui.scenes.userselect.UserProfilContext;
+import net.gazeplay.ui.scenes.userselect.UserProfileContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
@@ -99,7 +99,7 @@ public class GazePlay {
 
         BackgroundMusicManager.onConfigurationChanged();
 
-        UserProfilContext userProfileScreen = applicationContext.getBean(UserProfilContext.class);
+        UserProfileContext userProfileScreen = applicationContext.getBean(UserProfileContext.class);
         userProfileScreen.setUpOnStage(primaryScene);
         primaryStage.show();
     }

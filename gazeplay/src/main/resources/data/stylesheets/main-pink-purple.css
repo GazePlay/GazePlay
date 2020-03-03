@@ -65,6 +65,21 @@
     -fx-text-fill: black;
 }
 
+.toggle-button {
+    -fx-background-color: linear-gradient(lightpink, hotpink);
+    -fx-text-fill: black;
+}
+
+.toggle-button:hover {
+    -fx-background-color: linear-gradient(#98fb98, #008000);
+    -fx-text-fill: black;
+}
+
+.toggle-button:selected {
+    -fx-background-color: linear-gradient(#98fb98, #008000);
+    -fx-text-fill: black;
+}
+
 .spinner {
     -fx-body-color: linear-gradient(lightpink, hotpink);
     -fx-text-fill: black;
