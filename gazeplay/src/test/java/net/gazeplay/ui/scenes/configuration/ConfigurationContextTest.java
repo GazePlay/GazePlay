@@ -97,7 +97,7 @@ class ConfigurationContextTest {
 
             ObservableList<Node> children = pane.getChildren();
 
-            assertEquals(64, children.size());
+            assertEquals(66, children.size());
             assertTrue(children.get(3) instanceof MenuButton);
             assertTrue(children.get(7) instanceof ChoiceBox);
             assertTrue(children.get(9) instanceof Spinner);
@@ -105,15 +105,18 @@ class ConfigurationContextTest {
             assertTrue(children.get(15) instanceof ChoiceBox);
             assertTrue(children.get(17) instanceof Spinner);
             assertTrue(children.get(21) instanceof ChoiceBox);
-            assertTrue(children.get(23) instanceof CheckBox);
-            assertTrue(children.get(25) instanceof ChoiceBox);
-            assertTrue(children.get(41) instanceof CheckBox);
-            assertTrue(children.get(43) instanceof ChoiceBox);
-            assertTrue(children.get(49) instanceof CheckBox);
+            assertTrue(children.get(23) instanceof HBox);
+            assertTrue(children.get(25) instanceof CheckBox);
+            assertTrue(children.get(27) instanceof ChoiceBox);
+            assertTrue(children.get(43) instanceof CheckBox);
+            assertTrue(children.get(45) instanceof ChoiceBox);
+            assertTrue(children.get(47) instanceof HBox);
             assertTrue(children.get(51) instanceof CheckBox);
-            assertTrue(children.get(55) instanceof CheckBox);
+            assertTrue(children.get(53) instanceof CheckBox);
             assertTrue(children.get(57) instanceof CheckBox);
-            assertTrue(children.get(61) instanceof CheckBox);
+            assertTrue(children.get(59) instanceof CheckBox);
+            assertTrue(children.get(63) instanceof CheckBox);
+            assertTrue(children.get(65) instanceof CheckBox);
 
         });
         TestingUtils.waitForRunLater();
