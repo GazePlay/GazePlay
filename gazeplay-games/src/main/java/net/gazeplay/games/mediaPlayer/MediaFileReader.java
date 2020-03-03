@@ -151,6 +151,7 @@ public class MediaFileReader {
         }
 
         mediaList.add(mf);
+        firstMediaDisplayedIndex.setValue(mediaList.size()-1);
     }
 
     private File getMediaPlayerDirectory() {

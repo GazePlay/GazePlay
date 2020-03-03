@@ -485,7 +485,6 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                 t.setText("Invalid URL !");
                 t.setFill(Color.RED);
             }
-                updateMusic();
         };
 
         final EventHandler<Event> eventPath;
@@ -508,7 +507,6 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                 t.setText("Invalid File !");
                 t.setFill(Color.RED);
             }
-            updateMusic();
         };
 
         buttonPath.addEventHandler(MouseEvent.MOUSE_CLICKED, eventPath);
@@ -613,6 +611,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     private void updateMusic() {
         int index = musicList.getIndexOfFirsToDisplay();
+        log.info("THE CURRENT INDEX TO DISPLAY IS {}", index);
         if (index != -1) {
             for (int i = 0; i < 3; i++) {
 
