@@ -29,6 +29,7 @@ import net.gazeplay.commons.configuration.AnimationSpeedRatioSource;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.DefaultAnimationSpeedRatioSource;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
+import net.gazeplay.commons.soundsmanager.SoundsManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
@@ -75,6 +76,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     @Getter
     private final GazeDeviceManager gazeDeviceManager;
 
+    @Getter
+    private final SoundsManager soundsManager;
+
     private final Pane configPane;
 
     private final Pane gamingRoot;
@@ -89,6 +93,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         @NonNull Bravo bravo,
         @NonNull HBox menuHBox,
         @NonNull GazeDeviceManager gazeDeviceManager,
+        @NonNull SoundsManager soundsManager,
         @NonNull Pane configPane
     ) {
         super(gazePlay, root);
@@ -97,6 +102,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         this.bravo = bravo;
         this.menuHBox = menuHBox;
         this.gazeDeviceManager = gazeDeviceManager;
+        this.soundsManager = soundsManager;
         this.configPane = configPane;
 
         this.gamePanelDimensionProvider = new GamePanelDimensionProvider(() -> root, gazePlay::getPrimaryScene);

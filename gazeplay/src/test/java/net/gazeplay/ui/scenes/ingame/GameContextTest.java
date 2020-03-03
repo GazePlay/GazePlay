@@ -14,6 +14,7 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.soundsmanager.SoundsManager;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
@@ -63,6 +64,9 @@ class GameContextTest {
     private GazeDeviceManager mockGazeDeviceManager;
 
     @Mock
+    private SoundsManager mockSoundsManager;
+
+    @Mock
     private Pane mockConfigPane;
 
     @Mock
@@ -101,7 +105,7 @@ class GameContextTest {
         when(mockConfiguration.isVideoRecordingEnabled()).thenReturn(true);
         when(mockRoot.getChildren()).thenReturn(mockList);
 
-        new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo, mockHBox, mockGazeDeviceManager, mockConfigPane);
+        new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo, mockHBox, mockGazeDeviceManager, mockSoundsManager, mockConfigPane);
 
         verify(mockList, times(2)).add(any());
         verify(mockRoot, times(2)).addEventFilter(any(), any());
@@ -112,7 +116,7 @@ class GameContextTest {
         when(mockConfiguration.isVideoRecordingEnabled()).thenReturn(false);
         when(mockRoot.getChildren()).thenReturn(mockList);
 
-        new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo, mockHBox, mockGazeDeviceManager, mockConfigPane);
+        new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo, mockHBox, mockGazeDeviceManager, mockSoundsManager, mockConfigPane);
 
         verify(mockList, never()).add(any());
         verify(mockRoot, never()).addEventFilter(any(), any());
@@ -139,7 +143,7 @@ class GameContextTest {
 
 
         final GameContext context =
-            new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo, mockHBox, mockGazeDeviceManager, mockConfigPane);
+            new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo, mockHBox, mockGazeDeviceManager, mockSoundsManager, mockConfigPane);
 
         context.exitGame(mockStats, mockGazePlay, mockGameLifeCycle);
 
@@ -170,7 +174,7 @@ class GameContextTest {
 
 
         final GameContext context =
-            new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo, mockHBox, mockGazeDeviceManager, mockConfigPane);
+            new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo, mockHBox, mockGazeDeviceManager, mockSoundsManager, mockConfigPane);
 
         context.exitGame(mockStats, mockGazePlay, mockGameLifeCycle);
 

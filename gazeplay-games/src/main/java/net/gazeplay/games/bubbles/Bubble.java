@@ -16,9 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -191,23 +189,12 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         if (Math.random() > 0.5) {
             final String soundResource = "data/bubble/sounds/Large-Bubble-SoundBible.com-1084083477.mp3";
-            try {
-                ForegroundSoundsUtils.playSound(soundResource);
-            } catch (final Exception e) {
-
-                log.warn("file doesn't exist : {}", soundResource);
-                log.warn(e.getMessage());
-            }
+            gameContext.getSoundsManager().add(soundResource);
         } else {
             final String soundResource = "data/bubble/sounds/Blop-Mark_DiAngelo-79054334.mp3";
-            try {
-                ForegroundSoundsUtils.playSound(soundResource);
-            } catch (final Exception e) {
-
-                log.warn("file doesn't exist : {}", soundResource);
-                log.warn(e.getMessage());
-            }
+            gameContext.getSoundsManager().add(soundResource);
         }
+
 
     }
 
