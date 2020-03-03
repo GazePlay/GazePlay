@@ -112,7 +112,7 @@ public class MediaFileReader {
         return mediaList.get(playingMediaIndex.getValue());
     }
 
-    int getIndexofFirsToDisplay() {
+    int getIndexOfFirsToDisplay() {
         if (mediaList.isEmpty()) {
             return -1;
         }

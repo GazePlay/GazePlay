@@ -612,7 +612,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     }
 
     private void updateMusic() {
-        int index = musicList.getIndexofFirsToDisplay();
+        int index = musicList.getIndexOfFirsToDisplay();
         if (index != -1) {
             for (int i = 0; i < 3; i++) {
 
