@@ -266,13 +266,7 @@ public class Letters implements GameLifeCycle {
     }
 
     private void playSound(String path) {
-        try {
-            // log.debug("Letter sound path {}", path);
-            ForegroundSoundsUtils.playSound(path);
-        } catch (Exception e) {
-            // log.warn("Can't play sound: no associated sound : " + e.toString());
-        }
-
+        gameContext.getSoundsManager().add(path);
     }
 
 }

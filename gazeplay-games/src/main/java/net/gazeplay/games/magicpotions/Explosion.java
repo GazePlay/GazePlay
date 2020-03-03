@@ -50,13 +50,7 @@ class Explosion extends Rectangle {
 
         if (this.enableRewardSound) {
             log.debug("Playing sound animation ...");
-            try {
-                ForegroundSoundsUtils.playSound(defaultSoundResourceLocation);
-            } catch (final Exception e) {
-
-                log.warn("file doesn't exist : {}", defaultSoundResourceLocation);
-                log.warn(e.getMessage());
-            }
+            gameContext.getSoundsManager().add(defaultSoundResourceLocation);
         }
     }
 }

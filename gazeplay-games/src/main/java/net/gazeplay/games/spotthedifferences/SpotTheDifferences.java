@@ -133,11 +133,8 @@ public class SpotTheDifferences implements GameLifeCycle {
             gameContext.playWinTransition(200, actionEvent -> gameContext.showRoundStats(stats, this));
         }
         stats.incNbGoals();
-        try {
-            ForegroundSoundsUtils.playSound("data/spotthedifferences/ding.wav");
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
+        String soundResource = "data/spotthedifferences/ding.wav";
+        gameContext.getSoundsManager().add(soundResource);
     }
 
     @Override

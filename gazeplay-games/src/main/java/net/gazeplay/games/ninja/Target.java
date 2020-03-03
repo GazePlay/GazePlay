@@ -288,13 +288,7 @@ public class Target extends Portrait {
         });
 
         sequence.play();
-
-        try {
-            ForegroundSoundsUtils.playSound(audioClipResourceLocation);
-        } catch (final Exception exp) {
-            log.warn("file doesn't exist : {}", audioClipResourceLocation);
-            log.warn(exp.getMessage());
-        }
+        gameContext.getSoundsManager().add(audioClipResourceLocation);
     }
 
     private Transition createTransition1() {

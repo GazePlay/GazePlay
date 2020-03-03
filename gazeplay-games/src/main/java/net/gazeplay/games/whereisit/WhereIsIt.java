@@ -186,12 +186,8 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     void playQuestionSound() {
-        try {
-            log.debug("currentRoundDetails.questionSoundPath: {}", currentRoundDetails.getQuestionSoundPath());
-            ForegroundSoundsUtils.playSound(currentRoundDetails.getQuestionSoundPath());
-        } catch (final Exception e) {
-            log.warn("Can't play sound: no associated sound : " + e.toString());
-        }
+        String soundResource = currentRoundDetails.getQuestionSoundPath();
+        gameContext.getSoundsManager().add(soundResource);
     }
 
     /**

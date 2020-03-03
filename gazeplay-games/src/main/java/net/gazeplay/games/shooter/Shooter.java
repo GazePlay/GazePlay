@@ -464,11 +464,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         final int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
 
         final String soundResource = "data/" + gameType + "/sounds/hand_sound" + r + ".mp3";
-        try {
-            ForegroundSoundsUtils.playSound(soundResource);
-        } catch (final Exception e) {
-            log.warn("Can't play sound: no associated sound : " + e.toString());
-        }
+        gameContext.getSoundsManager().add(soundResource);
 
         t.getChildren().get(0).setOpacity(1);
 

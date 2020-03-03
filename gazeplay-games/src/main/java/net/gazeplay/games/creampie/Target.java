@@ -43,6 +43,8 @@ public class Target extends Portrait {
 
     private static final String SOUNDS_MISSILE = "data/creampie/sounds/missile.mp3";
 
+    private final IGameContext gameContext;
+
     public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
                   final ImageLibrary imageLibrary) {
 
@@ -51,6 +53,7 @@ public class Target extends Portrait {
         this.hand = hand;
         this.imageLibrary = imageLibrary;
         this.stats = stats;
+        this.gameContext = gameContext;
         targetAOIList = new ArrayList<>();
 
         enterEvent = e -> {
@@ -82,11 +85,7 @@ public class Target extends Portrait {
 
         hand.onTargetHit(this);
 
-        try {
-            ForegroundSoundsUtils.playSound(SOUNDS_MISSILE);
-        } catch (final Exception e) {
-            log.warn("Can't play sound: no associated sound : " + e.toString());
-        }
+        gameContext.getSoundsManager().add(SOUNDS_MISSILE);
 
     }
 

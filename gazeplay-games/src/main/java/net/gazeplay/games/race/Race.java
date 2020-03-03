@@ -20,9 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 @Slf4j
@@ -373,11 +371,7 @@ public class Race extends Parent implements GameLifeCycle {
         text.setText(cst);
 
         final String soundResource = "data/race/sounds/frog.WAV";
-        try {
-            ForegroundSoundsUtils.playSound(soundResource);
-        } catch (final Exception e) {
-            log.warn("Can't play sound: no associated sound : " + e.toString());
-        }
+        gameContext.getSoundsManager().add(soundResource);
 
         t.getChildren().get(0).setOpacity(1);
 

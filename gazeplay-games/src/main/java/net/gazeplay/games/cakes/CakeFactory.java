@@ -392,14 +392,8 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         sq.getChildren().addAll(pt, pt2);
 
         final String soundResource = "data/cake/sounds/spray.mp3";
+        gameContext.getSoundsManager().add(soundResource);
 
-        try {
-            ForegroundSoundsUtils.playSound(soundResource);
-        } catch (final Exception e) {
-
-            log.warn("file doesn't exist : {}", soundResource);
-            log.warn(e.getMessage());
-        }
         sq.setOnFinished(actionEvent -> {
             final TranslateTransition tt1 = new TranslateTransition(Duration.millis(500), aerograph);
             tt1.setToX(0);
@@ -547,14 +541,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         });
 
         final String soundResource = "data/cake/sounds/grabcoming.mp3";
-
-        try {
-            ForegroundSoundsUtils.playSound(soundResource);
-        } catch (final Exception e) {
-
-            log.warn("file doesn't exist : {}", soundResource);
-            log.warn(e.getMessage());
-        }
+        gameContext.getSoundsManager().add(soundResource);
 
         sq.play();
     }

@@ -372,12 +372,7 @@ public class GooseGame implements GameLifeCycle {
     }
 
     public void playMovementSound() {
-
-        try {
-            ForegroundSoundsUtils.playSound(String.format("data/goosegame/sounds/mvmt%d.wav", random.nextInt(6)));
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-
+        String soundResource = String.format("data/goosegame/sounds/mvmt%d.wav", random.nextInt(6));
+        gameContext.getSoundsManager().add(soundResource);
     }
 }
