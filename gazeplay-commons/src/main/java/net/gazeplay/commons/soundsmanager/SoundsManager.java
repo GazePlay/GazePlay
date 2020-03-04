@@ -18,7 +18,7 @@ public class SoundsManager {
     private SoundPlayerRunnable soundPlayerRunnable;
 
     @Getter
-    private Queue<String> listOfMusicToPlay = new LinkedList<String>();
+    private Queue<String> listOfMusicToPlay = new LinkedList<>();
 
     public void init() {
         soundPlayerRunnable = new SoundPlayerRunnable(this);

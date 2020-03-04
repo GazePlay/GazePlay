@@ -209,6 +209,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         gazeDeviceManager.clear();
         gazeDeviceManager.destroy();
 
+        soundsManager.clear();
+        soundsManager.destroy();
+
         Runnable asynchronousStatsPersistTask = () -> {
             try {
                 stats.saveStats();

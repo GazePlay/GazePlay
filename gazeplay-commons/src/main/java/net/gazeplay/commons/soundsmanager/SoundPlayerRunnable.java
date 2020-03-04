@@ -22,10 +22,9 @@ public class SoundPlayerRunnable implements Runnable {
             try {
                 poll();
             } catch (final RuntimeException e) {
-                log.warn("Exception while polling position of gaze", e);
+                log.warn("Exception while polling a sound request", e);
             }
 
-            // sleep is mandatory to avoid too much calls to gazePosition()
             try {
                 Thread.sleep(10);
             } catch (InterruptedException | RuntimeException e) {
