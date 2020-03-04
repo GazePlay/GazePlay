@@ -1,5 +1,6 @@
 package net.gazeplay.commons.utils.stats;
 
+import com.google.gson.JsonObject;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -32,16 +33,13 @@ import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
+
 
 /**
  * Created by schwab on 16/08/2017.
@@ -96,6 +94,9 @@ public class Stats implements GazeMotionListener {
     private String nameOfVideo;
 
     private Long currentRoundStartTime;
+
+    private ArrayList<String> coordinateData = new ArrayList<String>();
+    private JsonObject savedDataObj=new JsonObject();
 
     public Stats(final Scene gameContextScene) {
         this(gameContextScene, null);
@@ -213,6 +214,7 @@ public class Stats implements GazeMotionListener {
             recordGazeMovements = e -> {
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
+                saveCoordinates("{" + getX + "," + getY + "}");
                 if (!config.isHeatMapDisabled()) {
                     incHeatMap(getX, getY);
                 }
@@ -234,6 +236,9 @@ public class Stats implements GazeMotionListener {
             recordMouseMovements = e -> {
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
+                final String coordX=Integer.toString(getX);
+                final String coordY=Integer.toString(getY);
+                saveCoordinates("{" + coordX + "," + coordY + "}");
                 if (!config.isHeatMapDisabled()) {
                     incHeatMap(getX, getY);
                 }
@@ -316,11 +321,13 @@ public class Stats implements GazeMotionListener {
         final String gazeMetricsFilePrefix = Utils.now() + "-metrics";
         final String screenShotFilePrefix = Utils.now() + "-screenshot";
         final String colorBandsFilePrefix = Utils.now() + "-colorBands";
+        final String replayDataFilePrefix= Utils.now() + "-replayData";
 
         final File gazeMetricsFile = new File(todayDirectory, gazeMetricsFilePrefix + ".png");
         final File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
         final File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
         final File colorBandsFile = new File(todayDirectory, colorBandsFilePrefix + "png");
+        File replayDataFile = new File(todayDirectory, replayDataFilePrefix + ".json");
 
         final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
         saveImageAsPng(screenshotImage, screenShotFile);
@@ -333,9 +340,12 @@ public class Stats implements GazeMotionListener {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, bImage.getWidth(), bImage.getHeight());
         g.drawImage(screenshotImage, 0, 0, null);
+        BufferedWriter bf = new BufferedWriter( new FileWriter(replayDataFile) );
+        bf.write(buildSavedDataJSON(coordinateData).toString());
+        bf.flush();
 
         final SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsFile, screenShotFile,
-            colorBandsFile);
+            colorBandsFile,replayDataFile);
 
         this.savedStatsInfo = savedStatsInfo;
         if (this.heatMap != null) {
@@ -578,4 +588,27 @@ public class Stats implements GazeMotionListener {
     public WritableImage getGameScreenShot() {
         return this.gameScreenShot;
     }
+
+    private JsonObject buildSavedDataJSON(ArrayList<String> data){
+       int id=randNumb(40);
+        savedDataObj.addProperty("id",id);
+        savedDataObj.addProperty("coordinates",data.toString());
+        return savedDataObj;
+    }
+
+    private ArrayList<String> saveCoordinates (String coordinates){
+        coordinateData.add(coordinates);
+        return coordinateData;
+    }
+
+    private int randNumb(int limit)
+    {
+        /*
+        We can change the logic if generating the random number to whatever we want its a temporary function to test
+         */
+        int seed = 100000;
+        seed = (seed * 125) % 2796203;
+        return ((seed % limit) + 1);
+    }
+
 }

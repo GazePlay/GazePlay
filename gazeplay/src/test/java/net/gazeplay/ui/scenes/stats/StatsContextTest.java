@@ -58,7 +58,9 @@ class StatsContextTest {
         new File("file.csv"),
         new File("file.csv"),
         new File("file.csv"),
+        new File("file.csv"),
         new File("file.csv")
+
     );
 
     @BeforeEach
