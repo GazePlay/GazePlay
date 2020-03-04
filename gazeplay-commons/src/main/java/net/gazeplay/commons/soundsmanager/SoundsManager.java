@@ -1,5 +1,6 @@
 package net.gazeplay.commons.soundsmanager;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 
@@ -10,11 +11,13 @@ import java.util.concurrent.Executors;
 
 @Slf4j
 public class SoundsManager {
-
+    @Getter
     private ExecutorService executorService;
 
+    @Getter
     private SoundPlayerRunnable soundPlayerRunnable;
 
+    @Getter
     private Queue<String> listOfMusicToPlay = new LinkedList<String>();
 
     public void init() {
