@@ -552,7 +552,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                                    Translator translator) {
 
         final Button selectButton = new Button("select");
-        Stage dialog = new customFileChooser(configuration, configurationContext, translator, getGazePlay());
+        Stage dialog = new CustomFileChooser(configuration, configurationContext, translator, getGazePlay());
 
         selectButton.setOnAction(e -> {
             dialog.show();

@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Locale;
 
 @Slf4j
-public class customFileChooser extends Stage {
+public class CustomFileChooser extends Stage {
 
     private Configuration configuration;
     private ConfigurationContext configurationContext;
@@ -57,7 +57,7 @@ public class customFileChooser extends Stage {
     private String[] folder = {"magiccards", "portraits", "blocs"};
 
 
-    customFileChooser(Configuration configuration,
+    CustomFileChooser(Configuration configuration,
                       ConfigurationContext configurationContext,
                       Translator translator,
                       GazePlay gazePlay) {
@@ -102,18 +102,9 @@ public class customFileChooser extends Stage {
     private void updateFlow(int flowPaneIndex) {
         flowPanes[flowPaneIndex].getChildren().clear();
 
-        String imagefodler = Utils.getFilesFolder();
-        String defaultFolder = GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath();
-
         List<Image> allImagesList = new LinkedList<>();
-        if (imagefodler.equals(defaultFolder)) {
-            ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory(folder[flowPaneIndex]));
-            allImagesList.addAll(lib.pickAllImages());
-        } else {
-            ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory(folder[flowPaneIndex]));
-            allImagesList.addAll(lib.pickAllImages());
-        }
-
+        ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory(folder[flowPaneIndex]));
+        allImagesList.addAll(lib.pickAllImages());
 
         for (Image i : allImagesList) {
             StackPane preview = new StackPane();
@@ -226,19 +217,31 @@ public class customFileChooser extends Stage {
             fileChooser.showOpenDialog(new JFrame());
             File[] files = fileChooser.getSelectedFiles();
             for (File f : files) {
-                var dir = new File(Utils.getImagesSubDirectory(folder[flowPaneIndex]).getAbsolutePath());
-                dir.mkdirs();
-                var dest = new File(Utils.getImagesSubDirectory(folder[flowPaneIndex]).getAbsolutePath() + "/" + f.getName());
-                try {
-                    Files.copy(f.toPath(), dest.toPath(),
-                        StandardCopyOption.REPLACE_EXISTING);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                File dir = new File(Utils.getImagesSubDirectory(folder[flowPaneIndex]).getAbsolutePath());
+                boolean mkdirsSuccess = dir.mkdirs();
+                if(mkdirsSuccess) {
+                    copyFile(dir, f,flowPaneIndex);
+                } else {
+                    if (dir.exists()){
+                        copyFile(dir, f,flowPaneIndex);
+                    } else {
+                        log.debug("Can't copy file {} to {}", f.getName(), dir.getAbsolutePath());
+                    }
                 }
             }
             updateFlow(flowPaneIndex);
         });
         return add;
+    }
+
+    private void copyFile(File dir, File f, int flowPaneIndex ){
+        File dest = new File(dir, f.getName());
+        try {
+            Files.copy(f.toPath(), dest.toPath(),
+                StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ex) {
+            log.debug("Can't copy file {} to {}", f.getName(), dir.getAbsolutePath());
+        }
     }
 
     private BorderPane createImageSelectorPane() {
