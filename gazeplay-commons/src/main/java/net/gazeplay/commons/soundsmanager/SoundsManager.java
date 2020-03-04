@@ -1,5 +1,6 @@
 package net.gazeplay.commons.soundsmanager;
 
+import javafx.application.Platform;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
@@ -34,7 +35,7 @@ public class SoundsManager {
         }
     }
 
-    synchronized void playRequestedSounds() {
+    public void playRequestedSounds() {
         if (listOfMusicToPlay.size() > 0) {
             String nextToPlay = listOfMusicToPlay.poll();
             try {
@@ -46,12 +47,10 @@ public class SoundsManager {
     }
 
     public void clear() {
-        synchronized (listOfMusicToPlay) {
             listOfMusicToPlay.clear();
-        }
     }
 
-    synchronized public void add(String ressource) {
-        listOfMusicToPlay.add(ressource);
+     public void add(String ressource) {
+            listOfMusicToPlay.add(ressource);
     }
 }
