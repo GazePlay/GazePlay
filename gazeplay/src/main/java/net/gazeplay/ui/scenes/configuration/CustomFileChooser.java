@@ -153,7 +153,6 @@ public class CustomFileChooser extends Stage {
         yes.setMinHeight(gazePlay.getPrimaryStage().getHeight() / 10);
         yes.setMinWidth(gazePlay.getPrimaryStage().getWidth() / 10);
         yes.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
-            dialog.close();
             try {
                 URI url = new URI(i.getUrl());
                 final File imageToDelete = new File(url.getPath());
@@ -175,8 +174,7 @@ public class CustomFileChooser extends Stage {
             } catch (URISyntaxException e) {
                 log.info("the file {} can't be deleted", i.getUrl());
             }
-
-            this.getScene().getRoot().setEffect(null);
+            closeDialog(dialog);
         });
 
         final Button no = new Button(translator.translate("NoCancel"));
@@ -186,16 +184,14 @@ public class CustomFileChooser extends Stage {
         no.setMinHeight(gazePlay.getPrimaryStage().getHeight() / 10);
         no.setMinWidth(gazePlay.getPrimaryStage().getWidth() / 10);
         no.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
-            this.getScene().getRoot().setEffect(null);
-            dialog.close();
+            closeDialog(dialog);
         });
 
         final HBox choicePane = new HBox();
         choicePane.setSpacing(20);
         choicePane.setAlignment(Pos.CENTER);
 
-        choicePane.getChildren().add(yes);
-        choicePane.getChildren().add(no);
+        choicePane.getChildren().addAll(yes, no);
 
         final ScrollPane choicePanelScroller = new ScrollPane(choicePane);
         choicePanelScroller.setMinHeight(gazePlay.getPrimaryStage().getHeight() / 3);
@@ -206,6 +202,11 @@ public class CustomFileChooser extends Stage {
         final Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
         dialog.setScene(scene);
         return dialog;
+    }
+
+    void closeDialog(Stage dialog) {
+        this.getScene().getRoot().setEffect(null);
+        dialog.close();
     }
 
     private I18NButton createAddButton(int flowPaneIndex) {
@@ -219,11 +220,11 @@ public class CustomFileChooser extends Stage {
             for (File f : files) {
                 File dir = new File(Utils.getImagesSubDirectory(folder[flowPaneIndex]).getAbsolutePath());
                 boolean mkdirsSuccess = dir.mkdirs();
-                if(mkdirsSuccess) {
-                    copyFile(dir, f,flowPaneIndex);
+                if (mkdirsSuccess) {
+                    copyFile(dir, f, flowPaneIndex);
                 } else {
-                    if (dir.exists()){
-                        copyFile(dir, f,flowPaneIndex);
+                    if (dir.exists()) {
+                        copyFile(dir, f, flowPaneIndex);
                     } else {
                         log.debug("Can't copy file {} to {}", f.getName(), dir.getAbsolutePath());
                     }
@@ -234,7 +235,7 @@ public class CustomFileChooser extends Stage {
         return add;
     }
 
-    private void copyFile(File dir, File f, int flowPaneIndex ){
+    private void copyFile(File dir, File f, int flowPaneIndex) {
         File dest = new File(dir, f.getName());
         try {
             Files.copy(f.toPath(), dest.toPath(),

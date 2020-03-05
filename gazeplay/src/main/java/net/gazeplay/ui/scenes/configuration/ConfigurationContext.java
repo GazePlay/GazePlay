@@ -549,7 +549,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private Node buildImageChooser(Configuration configuration,
                                    ConfigurationContext configurationContext,
-                                   Translator translator) {
+                                   Translator translator)
+    {
 
         final Button selectButton = new Button("select");
         Stage dialog = new CustomFileChooser(configuration, configurationContext, translator, getGazePlay());
@@ -835,13 +836,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         });
 
         lightButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if(newVal){
+            if (newVal) {
                 configuration.setBackgroundStyle(BackgroundStyle.LIGHT);
             }
         });
 
         darkButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if(newVal){
+            if (newVal) {
                 configuration.setBackgroundStyle(BackgroundStyle.DARK);
             }
         });
