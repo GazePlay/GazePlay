@@ -142,13 +142,7 @@ public class CustomFileChooser extends Stage {
         dialog.setOnCloseRequest(windowEvent -> this.getScene().getRoot().setEffect(null));
 
 
-        final Button yes = new Button(translator.translate("YesRemove"));
-        yes.getStyleClass().add("gameChooserButton");
-        yes.getStyleClass().add("gameVariation");
-        yes.getStyleClass().add("button");
-        yes.setMinHeight(gazePlay.getPrimaryStage().getHeight() / 10);
-        yes.setMinWidth(gazePlay.getPrimaryStage().getWidth() / 10);
-        yes.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
+        EventHandler<Event> yesEventHandler = event -> {
             try {
                 URI url = new URI(i.getUrl());
                 final File imageToDelete = new File(url.getPath());
@@ -171,17 +165,13 @@ public class CustomFileChooser extends Stage {
                 log.info("the file {} can't be deleted", i.getUrl());
             }
             closeDialog(dialog);
-        });
+        };
+        final Button yes = createAnswerButton("YesRemove", yesEventHandler);
 
-        final Button no = new Button(translator.translate("NoCancel"));
-        no.getStyleClass().add("gameChooserButton");
-        no.getStyleClass().add("gameVariation");
-        no.getStyleClass().add("button");
-        no.setMinHeight(gazePlay.getPrimaryStage().getHeight() / 10);
-        no.setMinWidth(gazePlay.getPrimaryStage().getWidth() / 10);
-        no.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
+        EventHandler<Event> noEventHandler = event -> {
             closeDialog(dialog);
-        });
+        };
+        final Button no = createAnswerButton("NoCancel", noEventHandler);
 
         final HBox choicePane = new HBox();
         choicePane.setSpacing(20);
@@ -200,9 +190,20 @@ public class CustomFileChooser extends Stage {
         return dialog;
     }
 
-    void closeDialog(Stage dialog) {
+    private void closeDialog(Stage dialog) {
         this.getScene().getRoot().setEffect(null);
         dialog.close();
+    }
+
+    private I18NButton createAnswerButton(String text, EventHandler<Event> eventHandler) {
+        I18NButton button = new I18NButton(translator, text);
+        button.getStyleClass().add("gameChooserButton");
+        button.getStyleClass().add("gameVariation");
+        button.getStyleClass().add("button");
+        button.setMinHeight(gazePlay.getPrimaryStage().getHeight() / 10);
+        button.setMinWidth(gazePlay.getPrimaryStage().getWidth() / 10);
+        button.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+        return button;
     }
 
     private I18NButton createAddButton(int flowPaneIndex) {
