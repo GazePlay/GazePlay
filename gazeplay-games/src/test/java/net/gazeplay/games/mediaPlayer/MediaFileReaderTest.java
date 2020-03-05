@@ -1,12 +1,8 @@
 package net.gazeplay.games.mediaPlayer;
 
 
-import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.Configuration;
-import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
+import net.gazeplay.commons.utils.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,13 +13,14 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
+import static java.nio.file.StandardOpenOption.APPEND;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Slf4j
 @ExtendWith(ApplicationExtension.class)
 @RunWith(MockitoJUnitRunner.class)
 public class MediaFileReaderTest {
@@ -39,31 +36,34 @@ public class MediaFileReaderTest {
     }
 
     @Test
-    void shouldCreatePlayerListCSVFileOnMediaFileReaderConstruct() throws IOException {
-        testDir.mkdirs();
-        MediaFileReader mfr = new MediaFileReader(mockGameContext){
+    void shouldCreatePlayerListCSVFileOnMediaFileReaderConstruct() {
+        createTempTestDir();
+        MediaFileReader mfr = new MediaFileReader(mockGameContext) {
             @Override
             public File getMediaPlayerDirectory() {
                 return testDir;
             }
         };
-        assertTrue((new File(testDir,"playerList.csv")).exists());
-        FileUtils.deleteDirectory(testDir);
+        assertNotNull(mfr);
+        assertTrue((new File(testDir, "playerList.csv")).exists());
+        FileUtils.deleteDirectoryRecursively(testDir);
     }
 
     @Test
     void shouldReadPlayerListCSVCorrectly() throws IOException {
-        testDir.mkdirs();
-        File player = new File(testDir,"playerList.csv");
-        player.createNewFile();
-        FileWriter myWriter = new FileWriter(player);
-        myWriter.write("URL,https://www.test1.fr/,test1,");
-        myWriter.write("\nMEDIA,images/black/black.jpg,test2,");
-        myWriter.write("\nURL,https://www.test3.fr/,test3,images/black/black.jpg");
-        myWriter.write("\nMEDIA,images/black/black.jpg,test4,images/black/black.jpg");
-        myWriter.close();
+        createTempTestDir();
+        File player = new File(testDir, "playerList.csv");
+        if (player.createNewFile() || player.exists()) {
+            OutputStream fileOutputStream = Files.newOutputStream(player.toPath(), StandardOpenOption.CREATE, APPEND);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8));
+            bw.write("URL,https://www.test1.fr/,test1,");
+            bw.write("\nMEDIA,images/black/black.jpg,test2,");
+            bw.write("\nURL,https://www.test3.fr/,test3,images/black/black.jpg");
+            bw.write("\nMEDIA,images/black/black.jpg,test4,images/black/black.jpg");
+            bw.close();
+        }
 
-        MediaFileReader mfr = new MediaFileReader(mockGameContext){
+        MediaFileReader mfr = new MediaFileReader(mockGameContext) {
             @Override
             public File getMediaPlayerDirectory() {
                 return testDir;
@@ -89,13 +89,13 @@ public class MediaFileReaderTest {
         assertTrue(mfr.getMediaList().get(3).getPath().contains("black"));
         assertEquals("test4", mfr.getMediaList().get(3).getName());
         assertTrue(mfr.getMediaList().get(3).getImagepath().contains("black"));
-        FileUtils.deleteDirectory(testDir);
+        FileUtils.deleteDirectoryRecursively(testDir);
     }
 
     @Test
-    void shouldReturnMinusOneWhenThereIsNoMediaToDisplay() throws IOException {
-        testDir.mkdirs();
-        MediaFileReader mfr = new MediaFileReader(mockGameContext){
+    void shouldReturnMinusOneWhenThereIsNoMediaToDisplay() {
+        createTempTestDir();
+        MediaFileReader mfr = new MediaFileReader(mockGameContext) {
             @Override
             public File getMediaPlayerDirectory() {
                 return testDir;
@@ -104,44 +104,44 @@ public class MediaFileReaderTest {
 
         assertEquals(mfr.getMediaList().size(), 0);
         assertEquals(mfr.getIndexOfFirstToDisplay(), -1);
-        FileUtils.deleteDirectory(testDir);
+        FileUtils.deleteDirectoryRecursively(testDir);
     }
 
     @Test
-    void shouldAddMedia() throws IOException {
-        testDir.mkdirs();
-        MediaFileReader mfr = new MediaFileReader(mockGameContext){
+    void shouldAddMedia() {
+        createTempTestDir();
+        MediaFileReader mfr = new MediaFileReader(mockGameContext) {
             @Override
             public File getMediaPlayerDirectory() {
                 return testDir;
             }
         };
-        MediaFile mediaTypeMediaFile = new MediaFile("MEDIA","https://www.testMEDIA.fr/","testMEDIA","images/green/green.jpg");
+        MediaFile mediaTypeMediaFile = new MediaFile("MEDIA", "https://www.testMEDIA.fr/", "testMEDIA", "images/green/green.jpg");
         mfr.addMedia(mediaTypeMediaFile);
         assertTrue(mfr.getMediaList().contains(mediaTypeMediaFile));
 
 
-        MediaFile urlTypeMediaFile = new MediaFile("URL","https://www.testURL.fr/","testURL","images/green/green.jpg");
+        MediaFile urlTypeMediaFile = new MediaFile("URL", "https://www.testURL.fr/", "testURL", "images/green/green.jpg");
         mfr.addMedia(urlTypeMediaFile);
         assertTrue(mfr.getMediaList().contains(mediaTypeMediaFile));
         assertTrue(mfr.getMediaList().contains(urlTypeMediaFile));
-        FileUtils.deleteDirectory(testDir);
+        FileUtils.deleteDirectoryRecursively(testDir);
     }
 
     @Test
-    void shouldReturnGoodValuesForFirstToDisplayAfterAdd() throws IOException {
-        testDir.mkdirs();
-        MediaFileReader mfr = new MediaFileReader(mockGameContext){
+    void shouldReturnGoodValuesForFirstToDisplayAfterAdd() {
+        createTempTestDir();
+        MediaFileReader mfr = new MediaFileReader(mockGameContext) {
             @Override
             public File getMediaPlayerDirectory() {
                 return testDir;
             }
         };
-        MediaFile mediaTypeMediaFile = new MediaFile("MEDIA","https://www.testMEDIA.fr/","testMEDIA","images/green/green.jpg");
+        MediaFile mediaTypeMediaFile = new MediaFile("MEDIA", "https://www.testMEDIA.fr/", "testMEDIA", "images/green/green.jpg");
         mfr.addMedia(mediaTypeMediaFile);
 
         assertEquals(0, mfr.getIndexOfFirstToDisplay());
-        MediaFile urlTypeMediaFile = new MediaFile("URL","https://www.testURL.fr/","testURL","images/green/green.jpg");
+        MediaFile urlTypeMediaFile = new MediaFile("URL", "https://www.testURL.fr/", "testURL", "images/green/green.jpg");
         mfr.addMedia(urlTypeMediaFile);
         assertEquals(1, mfr.getIndexOfFirstToDisplay());
         mfr.previous();
@@ -153,20 +153,22 @@ public class MediaFileReaderTest {
         mfr.next();
         assertEquals(1, mfr.getIndexOfFirstToDisplay());
 
-        FileUtils.deleteDirectory(testDir);
+        FileUtils.deleteDirectoryRecursively(testDir);
     }
 
     @Test
     void shouldReturnGoodValuesForFirstToDisplayFromSave() throws IOException {
-        testDir.mkdirs();
-        File player = new File(testDir,"playerList.csv");
-        player.createNewFile();
-        FileWriter myWriter = new FileWriter(player);
-        myWriter.write("URL,https://www.test1.fr/,test1,");
-        myWriter.write("\nMEDIA,images/black/black.jpg,test2,");
-        myWriter.close();
+        createTempTestDir();
+        File player = new File(testDir, "playerList.csv");
+        if (player.createNewFile() || player.exists()) {
+            OutputStream fileOutputStream = Files.newOutputStream(player.toPath(), StandardOpenOption.CREATE, APPEND);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8));
+            bw.write("URL,https://www.test1.fr/,test1,");
+            bw.write("\nMEDIA,images/black/black.jpg,test2,");
+            bw.close();
+        }
 
-        MediaFileReader mfr = new MediaFileReader(mockGameContext){
+        MediaFileReader mfr = new MediaFileReader(mockGameContext) {
             @Override
             public File getMediaPlayerDirectory() {
                 return testDir;
@@ -181,30 +183,32 @@ public class MediaFileReaderTest {
         mfr.next();
         assertEquals(1, mfr.getIndexOfFirstToDisplay());
 
-        FileUtils.deleteDirectory(testDir);
+        FileUtils.deleteDirectoryRecursively(testDir);
     }
 
     @Test
     void shouldReturnGoodValuesForFirstToDisplayFromSaveAfterAdd() throws IOException {
-        testDir.mkdirs();
-        File player = new File(testDir,"playerList.csv");
-        player.createNewFile();
-        FileWriter myWriter = new FileWriter(player);
-        myWriter.write("URL,https://www.test1.fr/,test1,");
-        myWriter.write("\nMEDIA,images/black/black.jpg,test2,");
-        myWriter.close();
+        createTempTestDir();
+        File player = new File(testDir, "playerList.csv");
+        if (player.createNewFile() || player.exists()) {
+            OutputStream fileOutputStream = Files.newOutputStream(player.toPath(), StandardOpenOption.CREATE, APPEND);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8));
+            bw.write("URL,https://www.test1.fr/,test1,");
+            bw.write("\nMEDIA,images/black/black.jpg,test2,");
+            bw.close();
+        }
 
-        MediaFileReader mfr = new MediaFileReader(mockGameContext){
+        MediaFileReader mfr = new MediaFileReader(mockGameContext) {
             @Override
             public File getMediaPlayerDirectory() {
                 return testDir;
             }
         };
 
-        MediaFile mediaTypeMediaFile = new MediaFile("MEDIA","https://www.testMEDIA.fr/","testMEDIA","images/green/green.jpg");
+        MediaFile mediaTypeMediaFile = new MediaFile("MEDIA", "https://www.testMEDIA.fr/", "testMEDIA", "images/green/green.jpg");
         mfr.addMedia(mediaTypeMediaFile);
 
-        MediaFile urlTypeMediaFile = new MediaFile("URL","https://www.testURL.fr/","testURL","images/green/green.jpg");
+        MediaFile urlTypeMediaFile = new MediaFile("URL", "https://www.testURL.fr/", "testURL", "images/green/green.jpg");
         mfr.addMedia(urlTypeMediaFile);
 
         assertEquals(3, mfr.getIndexOfFirstToDisplay());
@@ -225,7 +229,13 @@ public class MediaFileReaderTest {
         mfr.previous();
         assertEquals(3, mfr.getIndexOfFirstToDisplay());
 
-        FileUtils.deleteDirectory(testDir);
+        FileUtils.deleteDirectoryRecursively(testDir);
+    }
+
+    private void createTempTestDir() {
+        if (testDir.mkdirs()) {
+            assertTrue(testDir.exists());
+        }
     }
 
 }
