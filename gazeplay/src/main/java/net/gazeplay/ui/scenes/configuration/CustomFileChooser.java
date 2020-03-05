@@ -17,10 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.*;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.Configuration;
@@ -33,7 +30,6 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -213,22 +209,20 @@ public class CustomFileChooser extends Stage {
         I18NButton add = new I18NButton(translator, "addNewImages");
         add.setPrefHeight(10);
         add.setOnAction(e -> {
-            final JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setMultiSelectionEnabled(true);
-            fileChooser.showOpenDialog(new JFrame());
-            File[] files = fileChooser.getSelectedFiles();
-            for (File f : files) {
-                File dir = new File(Utils.getImagesSubDirectory(folder[flowPaneIndex]).getAbsolutePath());
-                boolean mkdirsSuccess = dir.mkdirs();
-                if (mkdirsSuccess) {
+            String folderPath = Utils.getImagesSubDirectory(folder[flowPaneIndex]).getAbsolutePath();
+            File dir = new File(folderPath);
+            if (dir.mkdirs() || dir.exists()) {
+                final FileChooser fileChooser = new FileChooser();
+                fileChooser.setInitialDirectory(
+                    new File(folderPath)
+                );
+                List<File> files =
+                    fileChooser.showOpenMultipleDialog(this);
+                for (File f : files) {
                     copyFile(dir, f, flowPaneIndex);
-                } else {
-                    if (dir.exists()) {
-                        copyFile(dir, f, flowPaneIndex);
-                    } else {
-                        log.debug("Can't copy file {} to {}", f.getName(), dir.getAbsolutePath());
-                    }
                 }
+            } else {
+                log.debug("File {} doesn't exist and can't be created", dir.getAbsolutePath());
             }
             updateFlow(flowPaneIndex);
         });
