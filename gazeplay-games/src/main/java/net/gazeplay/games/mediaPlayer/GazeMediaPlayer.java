@@ -148,6 +148,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         progressIndicator = new GazeIndicator(gameContext);
         progressIndicator.setMouseTransparent(true);
 
+        updateMusic();
     }
 
     public static StackPaneButton createGraphicStackPaneButton(double width, double height, @NonNull String imageURL) {
@@ -181,7 +182,6 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
         createHandlers();
-        musicList.next();
     }
 
     @Override
@@ -610,7 +610,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     }
 
     private void updateMusic() {
-        int index = musicList.getIndexOfFirsToDisplay();
+        int index = musicList.getIndexOfFirstToDisplay();
         log.info("THE CURRENT INDEX TO DISPLAY IS {}", index);
         if (index != -1) {
             for (int i = 0; i < 3; i++) {

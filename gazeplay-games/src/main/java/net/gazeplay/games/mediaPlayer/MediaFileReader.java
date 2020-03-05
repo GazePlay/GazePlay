@@ -55,12 +55,25 @@ public class MediaFileReader {
                     String[] split = readLine.split(",");
                     if (split.length == 3 || split[3] == null || split[3].equals("")) {
                         mediaList.add(new MediaFile(split[0], split[1], split[2], null));
-                    } else {
+                    } else if (split.length == 4){
                         mediaList.add(new MediaFile(split[0], split[1], split[2], split[3]));
+                    }
+                    if (mediaList.size()>0) {
+                        firstMediaDisplayedIndex.setValue(0);
                     }
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+        } else {
+            if(mediaPlayerDirectory.mkdirs() || mediaPlayerDirectory.exists()){
+                try {
+                    if(!playlistFile.createNewFile()){
+                        log.debug("Can't create file {}", playlistFile.getAbsoluteFile());
+                    }
+                } catch (IOException ioe) {
+                    log.debug("Can't create file {}", playlistFile.getAbsoluteFile());
+                }
             }
         }
     }
@@ -112,7 +125,7 @@ public class MediaFileReader {
         return mediaList.get(playingMediaIndex.getValue());
     }
 
-    int getIndexOfFirsToDisplay() {
+    int getIndexOfFirstToDisplay() {
         if (mediaList.isEmpty()) {
             return -1;
         }
@@ -123,7 +136,6 @@ public class MediaFileReader {
         final File mediaPlayerDirectory = getMediaPlayerDirectory();
         boolean mediaPlayerDirectoryCreated = mediaPlayerDirectory.mkdirs();
         log.debug("mediaPlayerDirectoryCreated = {}", mediaPlayerDirectoryCreated);
-        //
         final File playlistFile = new File(mediaPlayerDirectory, PLAYER_LIST_CSV);
 
         try {
@@ -154,7 +166,7 @@ public class MediaFileReader {
         firstMediaDisplayedIndex.setValue(mediaList.size()-1);
     }
 
-    private File getMediaPlayerDirectory() {
+    public File getMediaPlayerDirectory() {
         Configuration config = gameContext.getConfiguration();
         String userName = config.getUserName();
         return new File(GazePlayDirectories.getUserDataFolder(userName), "mediaPlayer");
