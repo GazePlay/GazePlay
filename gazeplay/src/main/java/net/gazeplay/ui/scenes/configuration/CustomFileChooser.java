@@ -218,8 +218,10 @@ public class CustomFileChooser extends Stage {
                 );
                 List<File> files =
                     fileChooser.showOpenMultipleDialog(this);
-                for (File f : files) {
-                    copyFile(dir, f, flowPaneIndex);
+                if (files != null) {
+                    for (File f : files) {
+                        copyFile(dir, f, flowPaneIndex);
+                    }
                 }
             } else {
                 log.debug("File {} doesn't exist and can't be created", dir.getAbsolutePath());
