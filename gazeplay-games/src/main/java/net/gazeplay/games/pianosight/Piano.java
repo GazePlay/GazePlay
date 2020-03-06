@@ -209,8 +209,7 @@ public class Piano extends Parent implements GameLifeCycle {
                     }
 
                     instru.noteOn(precKey);
-                    stats.incNbGoals();
-                    stats.notifyNewRoundReady();
+                    stats.incNbShots();
 
                     if (firstNote != -1) {
                         tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);
@@ -316,8 +315,7 @@ public class Piano extends Parent implements GameLifeCycle {
 
                 if (precNote != -1 && tilesTab.get(precNote).arc.getFill() == Color.YELLOW) {
                     instru.noteOn(precKey);
-                    stats.incNbGoals();
-                    stats.notifyNewRoundReady();
+                    stats.incNbShots();
                     double x;
                     double y;
 

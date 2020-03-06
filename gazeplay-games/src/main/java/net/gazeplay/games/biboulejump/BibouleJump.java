@@ -23,7 +23,6 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
@@ -33,7 +32,6 @@ import net.gazeplay.components.ProgressButton;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -480,7 +478,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private void updateScore(final double difference) {
         final int inc = (int) (difference / dimensions.getHeight() * 100);
         score += inc;
-        stats.incNbGoals(inc);
+        stats.incNbShots(inc);
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimensions.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
     }

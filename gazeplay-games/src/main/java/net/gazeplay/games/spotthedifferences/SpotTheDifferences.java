@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
@@ -31,7 +30,7 @@ import java.util.Objects;
 @Slf4j
 public class SpotTheDifferences implements GameLifeCycle {
 
-    private final Stats stats;
+    private final SpotTheDifferencesStats stats;
     private final IGameContext gameContext;
     private final Dimension2D dimensions;
 
@@ -51,7 +50,7 @@ public class SpotTheDifferences implements GameLifeCycle {
 
     private int currentInstance;
 
-    public SpotTheDifferences(final IGameContext gameContext, final Stats stats) {
+    public SpotTheDifferences(final IGameContext gameContext, final SpotTheDifferencesStats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -129,10 +128,10 @@ public class SpotTheDifferences implements GameLifeCycle {
     void differenceFound() {
         numberDiffFound++;
         scoreText.setText(numberDiffFound + "/" + totalNumberDiff);
+        stats.incNbShots();
         if (numberDiffFound == totalNumberDiff) {
             gameContext.playWinTransition(200, actionEvent -> gameContext.showRoundStats(stats, this));
         }
-        stats.incNbGoals();
         String soundResource = "data/spotthedifferences/ding.wav";
         gameContext.getSoundsManager().add(soundResource);
     }
@@ -170,7 +169,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         numberDiffFound = 0;
         totalNumberDiff = diffs.size();
         scoreText.setText(numberDiffFound + "/" + totalNumberDiff);
-
+        stats.incNbGoals(totalNumberDiff);
         stats.notifyNewRoundReady();
     }
 

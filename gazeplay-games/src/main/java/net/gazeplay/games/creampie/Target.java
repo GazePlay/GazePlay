@@ -57,12 +57,10 @@ public class Target extends Portrait {
         targetAOIList = new ArrayList<>();
 
         enterEvent = e -> {
-            if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED
-                || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)
+            if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
                 && anniOff) {
 
                 anniOff = false;
-                stats.incNbGoals();
                 enter();
             }
         };
@@ -73,10 +71,11 @@ public class Target extends Portrait {
 
         this.addEventFilter(GazeEvent.ANY, enterEvent);
 
-        stats.notifyNewRoundReady();
     }
 
     private void enter() {
+
+        stats.incNbShots();
 
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
@@ -95,7 +94,6 @@ public class Target extends Portrait {
 
     private Animation createAnimation() {
         final Timeline timeline = new Timeline();
-        final Timeline timeline2 = new Timeline();
 
         timeline.getKeyFrames()
             .add(new KeyFrame(new Duration(2000), new KeyValue(radiusProperty(), getInitialRadius() * 1.6)));
@@ -103,29 +101,30 @@ public class Target extends Portrait {
             .add(new KeyFrame(new Duration(2000), new KeyValue(rotateProperty(), getRotate() + (360 * 3))));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(visibleProperty(), false)));
 
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(radiusProperty(), radius)));
 
+        timeline.setOnFinished(actionEvent -> {
+            anniOff = true;
+            newPosition();
+        });
+
+        return timeline;
+    }
+
+    private void newPosition(){
         final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(getInitialRadius(), 0, 1, 0, 0.8);
+
+        setRadius(radius);
+        setCenterX(newPosition.getX());
+        setCenterY(newPosition.getY());
+        setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
+        setRotate(0);
+        setVisible(true);
+
+        stats.incNbGoals();
+
         final TargetAOI targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(), getInitialRadius(),
             System.currentTimeMillis());
         targetAOIList.add(targetAOI);
-        timeline2.getKeyFrames()
-            .add(new KeyFrame(new Duration(1), new KeyValue(centerXProperty(), newPosition.getX())));
-        timeline2.getKeyFrames()
-            .add(new KeyFrame(new Duration(1), new KeyValue(centerYProperty(), newPosition.getY())));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),
-            new KeyValue(fillProperty(), new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true))));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(rotateProperty(), 0)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(visibleProperty(), true)));
 
-        final SequentialTransition sequence = new SequentialTransition(timeline, timeline2);
-
-        sequence.setOnFinished(actionEvent -> {
-
-            anniOff = true;
-            stats.notifyNewRoundReady();
-        });
-
-        return sequence;
     }
 }

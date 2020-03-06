@@ -230,27 +230,25 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             final FadeTransition ft = new FadeTransition(Duration.millis(500), randomCake);
             ft.setToValue(1);
             ft.setOnFinished(actionEvent -> {
-
-                for (int i = 0; i < 3; i++) {
-                    for (int j = 0; j < 3; j++) {
-                        if (layers[i][j] == model[i][j]) {
-                            stats.incNbGoals();
-                            stats.notifyNewRoundReady();
-                        }
-                    }
-                }
-                if (layers[2][3] == model[2][3]) {
-                    stats.incNbGoals();
-                    stats.notifyNewRoundReady();
-                }
                 playWin();
             });
-
             ft.play();
         } else {
-            stats.incNbGoals();
-            stats.notifyNewRoundReady();
+            stats.incNbShots();
+            playWin();
+        }
+    }
 
+    private void checkGoodAnswer(){
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (layers[i][j] == model[i][j]) {
+                    stats.incNbShots();
+                }
+            }
+        }
+        if (layers[2][3] == model[2][3]) {
+            stats.incNbShots();
         }
     }
 
@@ -264,8 +262,6 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             gameContext.clear();
 
             launch();
-
-            stats.notifyNewRoundReady();
 
             gameContext.onGameStarted();
         });
@@ -633,12 +629,13 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             winButton(false);
         }
 
-        stats.notifyNewRoundReady();
         this.gameContext.resetBordersToFront();
+        stats.notifyNewRoundReady();
     }
 
     @Override
     public void dispose() {
+        checkGoodAnswer();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2;

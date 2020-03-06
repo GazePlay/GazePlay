@@ -118,7 +118,7 @@ class Potion extends Parent {
         gameInstance.getPotionYellow().removeEventFilter(MouseEvent.ANY,
             gameInstance.getPotionYellow().getEnterEvent());
         gameInstance.getPotionYellow().removeEventFilter(GazeEvent.ANY, gameInstance.getPotionYellow().getEnterEvent());
-        stats.incNbGoals();
+        stats.incNbShots();
         currentTimeline.stop();
         currentTimeline = new Timeline();
 
@@ -163,8 +163,6 @@ class Potion extends Parent {
             } catch (final IOException ex) {
                 log.info("Io exception");
             }
-
-            stats.notifyNewRoundReady();
         });
     }
 

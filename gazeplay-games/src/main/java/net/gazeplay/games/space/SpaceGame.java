@@ -603,7 +603,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
     private void updateScore() {
         score = biboulesKilled.size() + +bossKilled.size() * 125;
-        spaceGameStats.incNbGoals(score);
+        spaceGameStats.incNbShots(score);
         scoreText.setText(String.valueOf(biboulesKilled.size() + bossKilled.size() * 125));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
     }

@@ -116,7 +116,7 @@ public class MemoryCard extends Parent {
 
     private void onCorrectCardSelected() {
 
-        stats.incNbGoals();
+        stats.incNbShots();
 
         for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
             if (gameInstance.currentRoundDetails.cardList.get(i).turned && gameInstance.currentRoundDetails.cardList.get(i).id ==  gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned ) {
@@ -148,8 +148,6 @@ public class MemoryCard extends Parent {
                 gameContext.clear();
 
                 gameInstance.launch();
-
-                stats.notifyNewRoundReady();
 
                 gameContext.onGameStarted();
             });

@@ -81,6 +81,6 @@ public class SoundMakingEntity extends Parent {
 
         soundIter = (soundIter + 1) % audioClips.size();
 
-        stats.incNbGoals();
+        stats.incNbShots();
     }
 }

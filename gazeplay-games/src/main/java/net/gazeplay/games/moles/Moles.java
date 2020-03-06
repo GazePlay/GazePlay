@@ -96,8 +96,8 @@ public class Moles extends Parent implements GameLifeCycle {
         lab.setLayoutY(0.08 * dimension2D.getHeight());
         gameContext.getChildren().add(lab);
 
-        stats.notifyNewRoundReady();
         this.gameContext.resetBordersToFront();
+        stats.notifyNewRoundReady();
 
         play();
 
@@ -183,7 +183,7 @@ public class Moles extends Parent implements GameLifeCycle {
         } while (!currentRoundDetails.molesList.get(indice).canGoOut);
         MolesChar m = currentRoundDetails.molesList.get(indice);
         m.getOut();
-        stats.incNbShots();
+        stats.incNbGoals();
     }
 
     private double[][] creationTableauPlacement(double width, double height, double distTrans) {
@@ -250,8 +250,7 @@ public class Moles extends Parent implements GameLifeCycle {
     void oneMoleWhacked() {
         nbMolesWhacked++;
         String s = "Score:" + nbMolesWhacked;
-        stats.incNbGoals();
-        stats.notifyNewRoundReady();
+        stats.incNbShots();
         lab.setText(s);
     }
 

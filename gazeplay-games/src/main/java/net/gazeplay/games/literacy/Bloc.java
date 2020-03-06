@@ -113,8 +113,6 @@ public class Bloc extends Parent {// Rectangle {
     }
 
     private void onCorrectBlocSelected() {
-        stats.incNbGoals();
-
         double finalZoom = 1.0;
 
         progressIndicator.setOpacity(0);
@@ -124,6 +122,7 @@ public class Bloc extends Parent {// Rectangle {
 
         if (gameInstance.currentRoundDetails.remainingCount == 1) {
             // REMOVE ALL CARDS AND REVEAL THE IMAGE
+            stats.incNbShots();
             gameInstance.removeAllBlocs();
             gameInstance.currentRoundDetails.remainingCount = 0;
         } else {
@@ -152,8 +151,6 @@ public class Bloc extends Parent {// Rectangle {
                 gameContext.clear();
 
                 gameInstance.launch();
-
-                stats.notifyNewRoundReady();
 
                 gameContext.onGameStarted();
             }));

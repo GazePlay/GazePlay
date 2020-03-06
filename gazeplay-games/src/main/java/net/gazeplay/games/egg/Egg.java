@@ -121,7 +121,7 @@ public class Egg extends Parent {
                         log.info("enter in the image 3");
 
                         if (turnNumber < totalNumberOfTurns - 1) {
-
+                            stats.incNbShots();
                             turnNumber++;
                             cards.getChildren().get(2).setOpacity(1 - turnNumber / (float) (totalNumberOfTurns - 1));
                             stats.incNbGoals();
@@ -137,7 +137,7 @@ public class Egg extends Parent {
                             cards.getChildren().get(1).setOpacity(0);
 
                             progressIndicator.setOpacity(0);
-                            stats.incNbGoals();
+                            stats.incNbShots();
                             playSound(2);
 
                             final PauseTransition t = new PauseTransition(Duration.seconds(2));

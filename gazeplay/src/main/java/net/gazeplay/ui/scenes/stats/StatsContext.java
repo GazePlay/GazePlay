@@ -147,13 +147,13 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 labelValue = "Score";
             }
 
-            value = new Text(String.valueOf(stats.getNbGoals()));
+            value = new Text(String.valueOf(stats.getNbShots()));
             addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
         }
 
         if (stats instanceof ShootGamesStats) {
             labelValue = "HitRate";
-            value = new Text(stats.getShotRatio() + "%");
+            value = new Text(stats.getShotRatio() + "% ("+ stats.getNbShots()+ "/" + stats.getNbGoals()+")");
             addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
         }
 

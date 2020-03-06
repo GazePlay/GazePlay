@@ -31,6 +31,8 @@ public class Ninja implements GameLifeCycle {
             Portrait.createImageLibrary(), gameVariant);
 
         gameContext.getChildren().add(portrait);
+        stats.notifyNewRoundReady();
+        stats.forcedIncNbGoals();
     }
 
     @Override

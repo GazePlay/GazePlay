@@ -122,8 +122,6 @@ public class Shooter extends Parent implements GameLifeCycle {
                     if (!target.isDone()) {
                         target.setDone(true);
                         enter(target);
-                        stats.incNbGoals();
-                        stats.notifyNewRoundReady();
                     }
                 }
             }
@@ -449,6 +447,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         t.removeEventFilter(MouseEvent.ANY, enterEvent);
         t.removeEventFilter(GazeEvent.ANY, enterEvent);
         t.getTransition().stop();
+        stats.incNbShots();
 
         final String cst;
         if (gameType.equals("biboule")) {
@@ -522,7 +521,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         sp.setLayoutY(y);
         sp.setCenterX(x);
         sp.setCenterY(y);
-        stats.incNbShots();
+        stats.incNbGoals();
         moveCircle(sp);
     }
 

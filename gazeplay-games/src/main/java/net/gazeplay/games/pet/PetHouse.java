@@ -454,9 +454,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
             }
             timelines[i].play();
 
-            stats.incNbGoals();
-            stats.notifyNewRoundReady();
-
+            stats.incNbShots();
         }
     }
 

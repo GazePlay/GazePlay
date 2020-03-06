@@ -161,8 +161,6 @@ public class Letters implements GameLifeCycle {
 
             stats.notifyNewRoundReady();
 
-            stats.notifyNewRoundReady();
-
             gameContext.onGameStarted();
         });
 

@@ -70,7 +70,8 @@ public class Stats implements GazeMotionListener {
     private int previousX = 0;
     private int previousY = 0;
     private File movieFolder;
-    private int nbShots = 0;
+    @Getter
+    public int nbShots = 0;
     private boolean convexHULL = true;
     private ScreenRecorder screenRecorder;
     private ArrayList<TargetAOI> targetAOIList = null;
@@ -89,6 +90,7 @@ public class Stats implements GazeMotionListener {
     private LinkedList<FixationPoint> fixationSequence;
     @Getter
     private SavedStatsInfo savedStatsInfo;
+    @Getter
     private WritableImage gameScreenShot;
 
     private String directoryOfVideo;
@@ -256,7 +258,6 @@ public class Stats implements GazeMotionListener {
             };
             gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
             gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
-            takeScreenShot();
 
         });
         currentRoundStartTime = lifeCycle.getStartTime();
@@ -403,6 +404,14 @@ public class Stats implements GazeMotionListener {
     public double computeRoundsDurationStandardDeviation() {
         return roundsDurationReport.computeSD();
     }
+    public void forcedIncNbGoals() {
+        final long currentRoundEndTime = System.currentTimeMillis();
+        final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
+        nbGoals++;
+        this.roundsDurationReport.addRoundDuration(currentRoundDuration);
+        currentRoundStartTime = currentRoundEndTime;
+        log.debug("The number of goals is " + nbGoals + "and the number shots is " + nbShots);
+    }
 
     public void incNbGoals() {
         final long currentRoundEndTime = System.currentTimeMillis();
@@ -425,7 +434,7 @@ public class Stats implements GazeMotionListener {
         if (this.nbGoals == this.nbShots || this.nbShots == 0) {
             return 100;
         } else {
-            return (int) ((float) this.nbGoals / (float) this.nbShots * 100.0);
+            return (int) ((float) this.nbShots / (float) this.nbGoals * 100.0);
         }
     }
 
@@ -571,11 +580,8 @@ public class Stats implements GazeMotionListener {
         return result;
     }
 
-    private void takeScreenShot() {
+    public void takeScreenShot() {
         gameScreenShot = gameContextScene.snapshot(null);
     }
 
-    public WritableImage getGameScreenShot() {
-        return this.gameScreenShot;
-    }
 }

@@ -75,8 +75,6 @@ public class Target extends Portrait {
         this.addEventHandler(GazeEvent.ANY, enterEvent);
 
         move();
-
-        stats.notifyNewRoundReady();
     }
 
     private List<Portrait> generateMiniBallsPortraits(final RandomPositionGenerator randomPositionGenerator,
@@ -220,7 +218,7 @@ public class Target extends Portrait {
 
     private void enter(final Event e) {
 
-        stats.incNbGoals();
+        stats.incNbShots();
 
         final Animation runningTranslation = currentTranslation;
         if (runningTranslation != null) {
@@ -283,7 +281,7 @@ public class Target extends Portrait {
 
         sequence.setOnFinished(actionEvent -> {
             animationStopped = true;
-            stats.notifyNewRoundReady();
+            stats.incNbGoals();
             move();
         });
 

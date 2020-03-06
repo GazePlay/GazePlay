@@ -50,6 +50,9 @@ public class Divisor implements GameLifeCycle {
                 this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
         }
         gameContext.getChildren().add(target);
+
+        this.stats.notifyNewRoundReady();
+        stats.forcedIncNbGoals();
     }
 
     private void initBackground() {

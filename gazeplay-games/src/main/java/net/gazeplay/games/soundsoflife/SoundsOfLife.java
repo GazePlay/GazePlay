@@ -22,10 +22,12 @@ import java.util.Objects;
 @Slf4j
 public class SoundsOfLife implements GameLifeCycle {
 
+    private final Stats stats;
+
     public SoundsOfLife(IGameContext gameContext, Stats stats, int gameVariant) {
         Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Configuration config = gameContext.getConfiguration();
-
+        this.stats = stats;
         String path = "data/soundsoflife/";
         switch (gameVariant) {
             case 0:
@@ -111,7 +113,7 @@ public class SoundsOfLife implements GameLifeCycle {
 
     @Override
     public void launch() {
-
+        stats.notifyNewRoundReady();
     }
 
     @Override

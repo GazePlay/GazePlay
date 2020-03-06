@@ -10,7 +10,7 @@ public class BibouleJumpStats extends Stats {
         this.gameName = "biboule-jump";
     }
 
-    public void incNbGoals(int increment) {
-        nbGoals += increment;
+    public void incNbShots(int increment) {
+        nbShots += increment;
     }
 }

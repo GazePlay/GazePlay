@@ -30,7 +30,6 @@ public class CreamPie implements GameLifeCycle {
 
         hand = new Hand();
         target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary);
-
         gameContext.getChildren().add(target);
         gameContext.getChildren().add(hand);
     }
@@ -42,6 +41,8 @@ public class CreamPie implements GameLifeCycle {
         gameContext.getRoot().widthProperty().addListener((obs, oldVal, newVal) -> hand.recomputePosition());
         gameContext.getRoot().heightProperty().addListener((obs, oldVal, newVal) -> hand.recomputePosition());
 
+        stats.notifyNewRoundReady();
+        stats.forcedIncNbGoals();
     }
 
     @Override

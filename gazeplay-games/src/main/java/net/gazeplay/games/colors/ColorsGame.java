@@ -418,7 +418,7 @@ public class ColorsGame implements GameLifeCycle {
             rectangle.setFill(this.createImagePattern(writableImg, rectangle));
             rectangle.toBack();
 
-            stats.incNbGoals();
+            stats.incNbShots();
         }
     }
 

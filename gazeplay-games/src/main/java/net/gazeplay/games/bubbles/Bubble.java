@@ -78,10 +78,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                // log.debug(e.getEventType());
                 enter((Circle) e.getTarget());
-                stats.incNbGoals();
-                stats.notifyNewRoundReady();
             }
         };
 
@@ -119,7 +116,6 @@ public class Bubble extends Parent implements GameLifeCycle {
         }
 
         stats.notifyNewRoundReady();
-
     }
 
     @Override
@@ -206,10 +202,11 @@ public class Bubble extends Parent implements GameLifeCycle {
         gameContext.getGazeDeviceManager().removeEventFilter(target);
         this.getChildren().remove(target);
 
+        stats.incNbShots();
+
         explose(centerX, centerY); // instead of C to avoid wrong position of the explosion
 
         this.newCircle();
-        stats.incNbGoals();
     }
 
     private void newCircle() {
@@ -218,6 +215,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         this.getChildren().add(circle);
         this.gameContext.resetBordersToFront();
+        stats.incNbGoals();
 
         gameContext.getGazeDeviceManager().addEventFilter(circle);
 
@@ -230,7 +228,6 @@ public class Bubble extends Parent implements GameLifeCycle {
     private Circle buildCircle() {
 
         final Circle newCircle = new Circle();
-
         final double radius = (maxRadius - minRadius) * Math.random() + minRadius;
 
         newCircle.setRadius(radius);
@@ -240,8 +237,6 @@ public class Bubble extends Parent implements GameLifeCycle {
         } else {
             newCircle.setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
         }
-        stats.incNbShots();
-        stats.incNbShots();
 
         return newCircle;
     }
