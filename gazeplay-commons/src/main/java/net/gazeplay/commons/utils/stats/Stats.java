@@ -404,22 +404,21 @@ public class Stats implements GazeMotionListener {
     public double computeRoundsDurationStandardDeviation() {
         return roundsDurationReport.computeSD();
     }
-    public void forcedIncNbGoals() {
-        final long currentRoundEndTime = System.currentTimeMillis();
-        final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
+
+    public void incNbGoals() {
         nbGoals++;
-        this.roundsDurationReport.addRoundDuration(currentRoundDuration);
-        currentRoundStartTime = currentRoundEndTime;
+        currentRoundStartTime = System.currentTimeMillis();
         log.debug("The number of goals is " + nbGoals + "and the number shots is " + nbShots);
     }
 
-    public void incNbGoals() {
+
+    public void incNbShots() {
         final long currentRoundEndTime = System.currentTimeMillis();
         final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
         if (currentRoundDuration < accidentalShotPreventionPeriod) {
             nbUnCountedShots++;
         } else {
-            nbGoals++;
+            nbShots++;
             this.roundsDurationReport.addRoundDuration(currentRoundDuration);
         }
         currentRoundStartTime = currentRoundEndTime;
@@ -436,10 +435,6 @@ public class Stats implements GazeMotionListener {
         } else {
             return (int) ((float) this.nbShots / (float) this.nbGoals * 100.0);
         }
-    }
-
-    public void incNbShots() {
-        this.nbShots++;
     }
 
     public List<Long> getSortedDurationsBetweenGoals() {

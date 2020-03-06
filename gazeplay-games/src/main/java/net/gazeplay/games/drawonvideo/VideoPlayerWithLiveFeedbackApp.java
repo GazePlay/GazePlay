@@ -158,6 +158,7 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
         ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3, TimeUnit.MINUTES,
             new LinkedBlockingQueue<>(), new GroupingThreadFactory(this.getClass().getSimpleName()));
         executorService.execute(canvasSwitchingTask);
+        stats.notifyNewRoundReady();
     }
 
     @Override

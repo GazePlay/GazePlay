@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -52,7 +51,7 @@ public class Divisor implements GameLifeCycle {
         gameContext.getChildren().add(target);
 
         this.stats.notifyNewRoundReady();
-        stats.forcedIncNbGoals();
+        stats.incNbGoals();
     }
 
     private void initBackground() {

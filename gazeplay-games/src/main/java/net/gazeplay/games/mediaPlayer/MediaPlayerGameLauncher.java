@@ -10,13 +10,13 @@ import net.gazeplay.games.pet.PetStats;
 public class MediaPlayerGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
-        return new PetStats(scene);
+        return new Stats(scene,"mediaPlayer");
     }
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
                                        GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-        return new GazeMediaPlayer(gameContext);
+        return new GazeMediaPlayer(gameContext, stats);
     }
 
 }

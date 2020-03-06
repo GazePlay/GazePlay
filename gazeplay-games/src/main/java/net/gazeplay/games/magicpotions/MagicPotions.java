@@ -144,7 +144,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(currentRoundDetails.mixPot);
 
         stats.notifyNewRoundReady();
-        stats.forcedIncNbGoals();
+        stats.incNbGoals();
 
     }
 

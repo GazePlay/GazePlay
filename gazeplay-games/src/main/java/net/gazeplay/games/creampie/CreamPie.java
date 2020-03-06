@@ -42,7 +42,7 @@ public class CreamPie implements GameLifeCycle {
         gameContext.getRoot().heightProperty().addListener((obs, oldVal, newVal) -> hand.recomputePosition());
 
         stats.notifyNewRoundReady();
-        stats.forcedIncNbGoals();
+        stats.incNbGoals();
     }
 
     @Override

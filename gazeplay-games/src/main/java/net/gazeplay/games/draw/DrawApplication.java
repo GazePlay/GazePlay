@@ -33,7 +33,7 @@ public class DrawApplication implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(canvas);
         gameContext.getChildren().add(canvas);
-
+        stats.notifyNewRoundReady();
     }
 
     @Override

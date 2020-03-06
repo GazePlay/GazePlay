@@ -86,7 +86,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(cheese);
 
         stats.notifyNewRoundReady();
-        stats.forcedIncNbGoals();
+        stats.incNbGoals();
     }
 
     private Mouse createMouse() {

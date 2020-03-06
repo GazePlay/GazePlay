@@ -95,7 +95,7 @@ public class Order implements GameLifeCycle {
                     stats.notifyNewRoundReady();
                     for (int j = 0; j < nbTarget; j++) {
                         tabTarget[j].addEvent();
-                        stats.forcedIncNbGoals();
+                        stats.incNbGoals();
                     }
                 }
             }

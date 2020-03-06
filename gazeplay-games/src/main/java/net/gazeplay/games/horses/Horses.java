@@ -235,6 +235,7 @@ public class Horses implements GameLifeCycle {
             rollImages.put(team, rollImage);
         }
         loopBack.setPreviousSquare(previousCommonSquare);
+        stats.notifyNewRoundReady();
     }
 
     /**

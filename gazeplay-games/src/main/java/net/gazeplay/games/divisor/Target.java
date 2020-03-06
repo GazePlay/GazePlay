@@ -202,7 +202,7 @@ class Target extends Parent {
             gameContext.getChildren().add(target);
         }
         stats.incNbGoals();
-        stats.forcedIncNbGoals();
+        stats.incNbGoals();
     }
 
     private int randomDirection() {

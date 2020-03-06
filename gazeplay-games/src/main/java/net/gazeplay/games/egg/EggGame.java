@@ -32,7 +32,7 @@ public class EggGame implements GameLifeCycle {
         gameContext.getChildren().add(egg);
 
         stats.notifyNewRoundReady();
-        stats.forcedIncNbGoals();
+        stats.incNbGoals();
     }
 
     @Override
