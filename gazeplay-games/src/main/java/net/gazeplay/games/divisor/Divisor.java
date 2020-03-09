@@ -51,7 +51,7 @@ public class Divisor implements GameLifeCycle {
         gameContext.getChildren().add(target);
 
         this.stats.notifyNewRoundReady();
-        stats.incNbGoals();
+        stats.incrementNumberOfGoalsToReach();
     }
 
     private void initBackground() {

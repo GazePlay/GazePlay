@@ -454,7 +454,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
             }
             timelines[i].play();
 
-            stats.incNbShots();
+            stats.incrementNumberOfGoalsReached();
         }
     }
 

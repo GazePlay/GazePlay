@@ -118,7 +118,7 @@ class Potion extends Parent {
         gameInstance.getPotionYellow().removeEventFilter(MouseEvent.ANY,
             gameInstance.getPotionYellow().getEnterEvent());
         gameInstance.getPotionYellow().removeEventFilter(GazeEvent.ANY, gameInstance.getPotionYellow().getEnterEvent());
-        stats.incNbShots();
+        stats.incrementNumberOfGoalsReached();
         currentTimeline.stop();
         currentTimeline = new Timeline();
 
@@ -195,7 +195,7 @@ class Potion extends Parent {
                     } else if (gameInstance.currentRoundDetails.getMixture().containsAll(gameInstance.currentRoundDetails.getPotionsToMix())) {
                         onMixAchieved();
                     } else {
-                        stats.incNbGoals();
+                        stats.incrementNumberOfGoalsToReach();
                     }
                     switch (gameInstance.currentRoundDetails.getMixture().size()) {
                         case 1:

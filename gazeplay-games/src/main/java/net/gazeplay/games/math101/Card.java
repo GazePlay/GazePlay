@@ -142,7 +142,7 @@ public class Card extends Parent {
     }
 
     private void onCorrectCardSelected() {
-        stats.incNbShots();
+        stats.incrementNumberOfGoalsReached();
 
         final double finalZoom = 1.15;
 

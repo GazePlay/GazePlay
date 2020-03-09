@@ -147,13 +147,13 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 labelValue = "Score";
             }
 
-            value = new Text(String.valueOf(stats.getNbShots()));
+            value = new Text(String.valueOf(stats.getNbGoalsReached()));
             addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
         }
 
         if (stats instanceof ShootGamesStats) {
             labelValue = "HitRate";
-            value = new Text(stats.getShotRatio() + "% ("+ stats.getNbShots()+ "/" + stats.getNbGoals()+")");
+            value = new Text(stats.getShotRatio() + "% ("+ stats.getNbGoalsReached()+ "/" + stats.getNbGoalsToReach()+")");
             addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
         }
 
@@ -181,9 +181,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
         }
 
-        if (stats instanceof ShootGamesStats && stats.getNbUnCountedShots() != 0) {
+        if (stats instanceof ShootGamesStats && stats.getNbUnCountedGoalsReached() != 0) {
             labelValue = "UncountedShot";
-            value = new Text(String.valueOf(stats.getNbUnCountedShots()));
+            value = new Text(String.valueOf(stats.getNbUnCountedGoalsReached()));
             addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
         }
     }

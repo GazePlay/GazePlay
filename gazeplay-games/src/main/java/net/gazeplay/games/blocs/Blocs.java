@@ -205,7 +205,7 @@ public class Blocs implements GameLifeCycle {
 
                     currentRoundDetails.finished = true;
 
-                    stats.incNbShots();
+                    stats.incrementNumberOfGoalsReached();
 
                     removeAllBlocs();
 

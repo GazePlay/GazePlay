@@ -119,7 +119,7 @@ class Target extends Parent {
     }
 
     public void enter() {
-        stats.incNbShots();
+        stats.incrementNumberOfGoalsReached();
         if (currentTranslation != null) {
             currentTranslation.stop();
         }
@@ -201,8 +201,8 @@ class Target extends Parent {
             }
             gameContext.getChildren().add(target);
         }
-        stats.incNbGoals();
-        stats.incNbGoals();
+        stats.incrementNumberOfGoalsToReach();
+        stats.incrementNumberOfGoalsToReach();
     }
 
     private int randomDirection() {

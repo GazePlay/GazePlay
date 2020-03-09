@@ -478,7 +478,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private void updateScore(final double difference) {
         final int inc = (int) (difference / dimensions.getHeight() * 100);
         score += inc;
-        stats.incNbShots(inc);
+        stats.incrementNumberOfGoalsReached(inc);
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimensions.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
     }

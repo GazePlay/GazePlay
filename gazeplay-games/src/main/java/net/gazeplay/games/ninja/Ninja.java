@@ -32,7 +32,7 @@ public class Ninja implements GameLifeCycle {
 
         gameContext.getChildren().add(portrait);
         stats.notifyNewRoundReady();
-        stats.incNbGoals();
+        stats.incrementNumberOfGoalsToReach();
     }
 
     @Override

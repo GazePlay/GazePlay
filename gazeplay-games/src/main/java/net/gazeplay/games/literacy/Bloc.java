@@ -121,7 +121,7 @@ public class Bloc extends Parent {// Rectangle {
 
         if (gameInstance.currentRoundDetails.remainingCount == 1) {
             // REMOVE ALL CARDS AND REVEAL THE IMAGE
-            stats.incNbShots();
+            stats.incrementNumberOfGoalsReached();
             gameInstance.removeAllBlocs();
             gameInstance.currentRoundDetails.remainingCount = 0;
         } else {

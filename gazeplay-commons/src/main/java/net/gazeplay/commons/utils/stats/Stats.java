@@ -56,7 +56,7 @@ public class Stats implements GazeMotionListener {
     private final Scene gameContextScene;
     protected String gameName;
     @Getter
-    protected int nbGoals = 0;
+    protected int nbGoalsToReach = 0;
     long startTime;
     int sceneCounter = 0;
     private EventHandler<MouseEvent> recordMouseMovements;
@@ -71,14 +71,14 @@ public class Stats implements GazeMotionListener {
     private int previousY = 0;
     private File movieFolder;
     @Getter
-    public int nbShots = 0;
+    public int nbGoalsReached = 0;
     private boolean convexHULL = true;
     private ScreenRecorder screenRecorder;
     private ArrayList<TargetAOI> targetAOIList = null;
     @Setter
     private long accidentalShotPreventionPeriod = 0;
     @Getter
-    private int nbUnCountedShots;
+    private int nbUnCountedGoalsReached;
     private double[][] heatMap;
     @Getter
     @Setter
@@ -269,8 +269,8 @@ public class Stats implements GazeMotionListener {
     }
 
     public void reset() {
-        nbShots = 0;
-        nbGoals = 0;
+        nbGoalsReached = 0;
+        nbGoalsToReach = 0;
         accidentalShotPreventionPeriod = 0;
 
         roundsDurationReport = new RoundsDurationReport();
@@ -405,30 +405,30 @@ public class Stats implements GazeMotionListener {
         return roundsDurationReport.computeSD();
     }
 
-    public void incNbGoals() {
-        nbGoals++;
+    public void incrementNumberOfGoalsToReach() {
+        nbGoalsToReach++;
         currentRoundStartTime = System.currentTimeMillis();
-        log.debug("The number of goals is " + nbGoals + "and the number shots is " + nbShots);
+        log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
     }
 
-    public void incNbGoals(int i) {
-        nbGoals += i;
+    public void incrementNumberOfGoalsToReach(int i) {
+        nbGoalsToReach += i;
         currentRoundStartTime = System.currentTimeMillis();
-        log.debug("The number of goals is " + nbGoals + "and the number shots is " + nbShots);
+        log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
     }
 
 
-    public void incNbShots() {
+    public void incrementNumberOfGoalsReached() {
         final long currentRoundEndTime = System.currentTimeMillis();
         final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
         if (currentRoundDuration < accidentalShotPreventionPeriod) {
-            nbUnCountedShots++;
+            nbUnCountedGoalsReached++;
         } else {
-            nbShots++;
+            nbGoalsReached++;
             this.roundsDurationReport.addRoundDuration(currentRoundDuration);
         }
         currentRoundStartTime = currentRoundEndTime;
-        log.debug("The number of goals is " + nbGoals + "and the number shots is " + nbShots);
+        log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
     }
 
     public void addRoundDuration() {
@@ -436,10 +436,10 @@ public class Stats implements GazeMotionListener {
     }
 
     public int getShotRatio() {
-        if (this.nbGoals == this.nbShots || this.nbShots == 0) {
+        if (this.nbGoalsToReach == this.nbGoalsReached || this.nbGoalsReached == 0) {
             return 100;
         } else {
-            return (int) ((float) this.nbShots / (float) this.nbGoals * 100.0);
+            return (int) ((float) this.nbGoalsReached / (float) this.nbGoalsToReach * 100.0);
         }
     }
 

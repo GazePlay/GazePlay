@@ -445,7 +445,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         t.removeEventFilter(MouseEvent.ANY, enterEvent);
         t.removeEventFilter(GazeEvent.ANY, enterEvent);
         t.getTransition().stop();
-        stats.incNbShots();
+        stats.incrementNumberOfGoalsReached();
 
         final String cst;
         if (gameType.equals("biboule")) {
@@ -519,7 +519,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         sp.setLayoutY(y);
         sp.setCenterX(x);
         sp.setCenterY(y);
-        stats.incNbGoals();
+        stats.incrementNumberOfGoalsToReach();
         moveCircle(sp);
     }
 

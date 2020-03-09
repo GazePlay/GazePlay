@@ -115,7 +115,7 @@ public class Card extends Parent {
 
         final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        stats.incNbShots();
+        stats.incrementNumberOfGoalsReached();
 
         final int finalZoom = 2;
 

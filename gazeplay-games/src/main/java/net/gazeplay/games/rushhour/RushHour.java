@@ -2454,7 +2454,7 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     private void win () {
         endOfGame = true;
-        stats.incNbShots();
+        stats.incrementNumberOfGoalsReached();
         gameContext.playWinTransition(500, actionEvent -> {
             dispose();
             launch();

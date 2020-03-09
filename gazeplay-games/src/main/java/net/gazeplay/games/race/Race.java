@@ -132,7 +132,7 @@ public class Race extends Parent implements GameLifeCycle {
                     if (!((Target) e.getTarget()).done && !raceIsFinished) {
                         ((Target) e.getTarget()).done = true;
                         enter((Target) e.getTarget());
-                        stats.incNbShots();
+                        stats.incrementNumberOfGoalsReached();
                     }
                 }
             }
@@ -457,7 +457,7 @@ public class Race extends Parent implements GameLifeCycle {
         sp.setLayoutY(y);
         sp.centerX = x;
         sp.centerY = y;
-        stats.incNbGoals();
+        stats.incrementNumberOfGoalsToReach();
         moveCircle(sp);
     }
 

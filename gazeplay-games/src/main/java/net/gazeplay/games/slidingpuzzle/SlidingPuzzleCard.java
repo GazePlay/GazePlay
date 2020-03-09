@@ -156,7 +156,7 @@ class SlidingPuzzleCard extends Parent {
     }
 
     private void onGameOver() {
-        stats.incNbShots();
+        stats.incrementNumberOfGoalsReached();
 
         progressIndicator.setOpacity(0);
 

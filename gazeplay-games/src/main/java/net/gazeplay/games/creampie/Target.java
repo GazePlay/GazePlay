@@ -74,7 +74,7 @@ public class Target extends Portrait {
 
     private void enter() {
 
-        stats.incNbShots();
+        stats.incrementNumberOfGoalsReached();
 
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
@@ -119,7 +119,7 @@ public class Target extends Portrait {
         setRotate(0);
         setVisible(true);
 
-        stats.incNbGoals();
+        stats.incrementNumberOfGoalsToReach();
 
         final TargetAOI targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(), getInitialRadius(),
             System.currentTimeMillis());

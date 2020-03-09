@@ -217,7 +217,7 @@ public class Target extends Portrait {
 
     private void enter(final Event e) {
 
-        stats.incNbShots();
+        stats.incrementNumberOfGoalsReached();
 
         final Animation runningTranslation = currentTranslation;
         if (runningTranslation != null) {
@@ -280,7 +280,7 @@ public class Target extends Portrait {
 
         sequence.setOnFinished(actionEvent -> {
             animationStopped = true;
-            stats.incNbGoals();
+            stats.incrementNumberOfGoalsToReach();
             move();
         });
 

@@ -121,7 +121,7 @@ public class Horses implements GameLifeCycle {
         backgroundLayer.getChildren().add(dieContainer);
 
         rollButton = new ProgressButton();
-        rollButton.assignIndicator(event -> {roll(); stats.incNbShots();}, config.getFixationLength());
+        rollButton.assignIndicator(event -> {roll(); stats.incrementNumberOfGoalsReached();}, config.getFixationLength());
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 

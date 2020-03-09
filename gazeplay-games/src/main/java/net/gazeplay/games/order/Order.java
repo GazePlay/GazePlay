@@ -53,7 +53,7 @@ public class Order implements GameLifeCycle {
 
         Circle c = new Circle(t.getPos().getX(), t.getPos().getY(), t.getRadius());
         if (correct) {
-            stats.incNbShots();
+            stats.incrementNumberOfGoalsReached();
             c.setFill(new ImagePattern(new Image("data/order/images/success.png"), 0, 0, 1, 1, true));
         } else {
             c.setFill(new ImagePattern(new Image("data/order/images/fail.png"), 0, 0, 1, 1, true));
@@ -95,7 +95,7 @@ public class Order implements GameLifeCycle {
                     stats.notifyNewRoundReady();
                     for (int j = 0; j < nbTarget; j++) {
                         tabTarget[j].addEvent();
-                        stats.incNbGoals();
+                        stats.incrementNumberOfGoalsToReach();
                     }
                 }
             }

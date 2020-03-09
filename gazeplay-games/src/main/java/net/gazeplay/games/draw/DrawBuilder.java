@@ -83,7 +83,7 @@ public class DrawBuilder {
     }
 
     private void changeColor(GraphicsContext graphicsContext){
-        stats.incNbShots();
+        stats.incrementNumberOfGoalsReached();
         graphicsContext.setStroke(colorPicker.pickColor());
         graphicsContext.beginPath();
     }

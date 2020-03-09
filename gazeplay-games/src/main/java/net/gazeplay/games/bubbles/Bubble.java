@@ -202,7 +202,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         gameContext.getGazeDeviceManager().removeEventFilter(target);
         this.getChildren().remove(target);
 
-        stats.incNbShots();
+        stats.incrementNumberOfGoalsReached();
 
         explose(centerX, centerY); // instead of C to avoid wrong position of the explosion
 
@@ -215,7 +215,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         this.getChildren().add(circle);
         this.gameContext.resetBordersToFront();
-        stats.incNbGoals();
+        stats.incrementNumberOfGoalsToReach();
 
         gameContext.getGazeDeviceManager().addEventFilter(circle);
 

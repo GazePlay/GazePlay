@@ -24,8 +24,6 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
@@ -418,7 +416,7 @@ public class ColorsGame implements GameLifeCycle {
             rectangle.setFill(this.createImagePattern(writableImg, rectangle));
             rectangle.toBack();
 
-            stats.incNbShots();
+            stats.incrementNumberOfGoalsReached();
         }
     }
 

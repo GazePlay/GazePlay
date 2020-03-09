@@ -165,7 +165,7 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private void loadMusicStream(final InputStream inputStream) {
         midiReader = new MidiReader(inputStream, stats);
-        stats.incNbGoals(midiReader.getTrackSize());
+        stats.incrementNumberOfGoalsToReach(midiReader.getTrackSize());
         firstNote = midiReader.nextNote();
         for (final Tile tile : tilesTab) {
             tile.arc.setFill(tile.color1);
@@ -210,7 +210,7 @@ public class Piano extends Parent implements GameLifeCycle {
                     }
 
                     instru.noteOn(precKey);
-                    stats.incNbShots();
+                    stats.incrementNumberOfGoalsReached();
 
                     if (firstNote != -1) {
                         tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);
@@ -316,7 +316,7 @@ public class Piano extends Parent implements GameLifeCycle {
 
                 if (precNote != -1 && tilesTab.get(precNote).arc.getFill() == Color.YELLOW) {
                     instru.noteOn(precKey);
-                    stats.incNbShots();
+                    stats.incrementNumberOfGoalsReached();
                     double x;
                     double y;
 

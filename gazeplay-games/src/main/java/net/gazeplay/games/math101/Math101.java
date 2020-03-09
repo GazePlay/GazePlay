@@ -191,7 +191,7 @@ public class Math101 implements GameLifeCycle {
         cardList.get(winnerCardIndex).toFront();
 
         stats.notifyNewRoundReady();
-        stats.incNbGoals();
+        stats.incrementNumberOfGoalsToReach();
     }
 
     @Override

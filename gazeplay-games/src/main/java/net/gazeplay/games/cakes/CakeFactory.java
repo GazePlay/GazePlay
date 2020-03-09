@@ -232,7 +232,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             });
             ft.play();
         } else {
-            stats.incNbShots();
+            stats.incrementNumberOfGoalsReached();
             playWin();
         }
     }
@@ -241,12 +241,12 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (layers[i][j] == model[i][j]) {
-                    stats.incNbShots();
+                    stats.incrementNumberOfGoalsReached();
                 }
             }
         }
         if (layers[2][3] == model[2][3]) {
-            stats.incNbShots();
+            stats.incrementNumberOfGoalsReached();
         }
     }
 
