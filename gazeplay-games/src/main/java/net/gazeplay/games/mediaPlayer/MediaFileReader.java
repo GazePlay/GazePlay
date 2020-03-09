@@ -1,7 +1,6 @@
 package net.gazeplay.games.mediaPlayer;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.IntegerPropertyBase;
+import javafx.beans.property.SimpleIntegerProperty;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
@@ -11,7 +10,6 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,17 +27,17 @@ public class MediaFileReader {
     private final List<MediaFile> mediaList;
 
     @Getter
-    private IntegerProperty firstMediaDisplayedIndex;
+    private SimpleIntegerProperty firstMediaDisplayedIndex;
 
     @Getter
-    private IntegerProperty playingMediaIndex;
+    private SimpleIntegerProperty playingMediaIndex;
 
     MediaFileReader(IGameContext gameContext) {
         this.gameContext = gameContext;
         mediaList = new ArrayList<>();
-        firstMediaDisplayedIndex = newIntegerProperty();
+        firstMediaDisplayedIndex = new SimpleIntegerProperty();
         firstMediaDisplayedIndex.setValue(-1);
-        playingMediaIndex = newIntegerProperty();
+        playingMediaIndex = new SimpleIntegerProperty();
         playingMediaIndex.setValue(-1);
 
         final File mediaPlayerDirectory = getMediaPlayerDirectory();
@@ -53,12 +51,12 @@ public class MediaFileReader {
                 String readLine;
                 while ((readLine = b.readLine()) != null) {
                     String[] split = readLine.split(",");
-                    if (split.length == 3 || split[3] == null || split[3].equals("")) {
+                    if (split.length == 3 || split[3] == null || split[3].isEmpty()) {
                         mediaList.add(new MediaFile(split[0], split[1], split[2], null));
-                    } else if (split.length == 4){
+                    } else if (split.length == 4) {
                         mediaList.add(new MediaFile(split[0], split[1], split[2], split[3]));
                     }
-                    if (mediaList.size()>0) {
+                    if (mediaList.size() > 0) {
                         firstMediaDisplayedIndex.setValue(0);
                     }
                 }
@@ -66,30 +64,17 @@ public class MediaFileReader {
                 throw new RuntimeException(e);
             }
         } else {
-            if(mediaPlayerDirectory.mkdirs() || mediaPlayerDirectory.exists()){
+            if (mediaPlayerDirectory.exists() || mediaPlayerDirectory.mkdirs()) {
                 try {
-                    if(!playlistFile.createNewFile()){
+                    if (!playlistFile.createNewFile()) {
                         log.debug("Can't create file {}", playlistFile.getAbsoluteFile());
                     }
                 } catch (IOException ioe) {
                     log.debug("Can't create file {}", playlistFile.getAbsoluteFile());
+                    ioe.printStackTrace();
                 }
             }
         }
-    }
-
-    private IntegerProperty newIntegerProperty() {
-        return new IntegerPropertyBase() {
-            @Override
-            public Object getBean() {
-                return null;
-            }
-
-            @Override
-            public String getName() {
-                return null;
-            }
-        };
     }
 
     public void setPlayingMediaIndex(int newIndex) {
@@ -140,30 +125,28 @@ public class MediaFileReader {
 
         try {
             boolean fileIsUsable = playlistFile.exists();
-            if (!fileIsUsable){
+            if (!fileIsUsable) {
                 fileIsUsable = playlistFile.createNewFile();
             }
 
-            if ( fileIsUsable ){
-
-                OutputStream fileOutputStream = Files.newOutputStream(playlistFile.toPath(), StandardOpenOption.CREATE, APPEND);
-                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8));
-
-                if (mediaList.size() == 0) {
-                    bw.write("" + mf.getType() + "," + mf.getPath() + "," + mf.getName() + "," + mf.getImagepath());
-                } else {
-                    bw.write("\n" + mf.getType() + "," + mf.getPath() + "," + mf.getName() + "," + mf.getImagepath());
+            if (fileIsUsable) {
+                try (
+                    OutputStream fileOutputStream = Files.newOutputStream(playlistFile.toPath(), StandardOpenOption.CREATE, APPEND);
+                    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8))
+                ) {
+                    if (mediaList.size() == 0) {
+                        bw.write("" + mf.getType() + "," + mf.getPath() + "," + mf.getName() + "," + mf.getImagepath());
+                    } else {
+                        bw.write("\n" + mf.getType() + "," + mf.getPath() + "," + mf.getName() + "," + mf.getImagepath());
+                    }
                 }
-
-                bw.flush();
-                bw.close();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         mediaList.add(mf);
-        firstMediaDisplayedIndex.setValue(mediaList.size()-1);
+        firstMediaDisplayedIndex.setValue(mediaList.size() - 1);
     }
 
     public File getMediaPlayerDirectory() {
