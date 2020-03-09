@@ -96,7 +96,7 @@ public class Stats implements GazeMotionListener {
     private Long currentRoundStartTime;
 
     private ArrayList<String> coordinateData = new ArrayList<String>();
-    private JsonObject savedDataObj=new JsonObject();
+    private JsonObject savedDataObj = new JsonObject();
 
     public Stats(final Scene gameContextScene) {
         this(gameContextScene, null);
@@ -236,9 +236,7 @@ public class Stats implements GazeMotionListener {
             recordMouseMovements = e -> {
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
-                final String coordX=Integer.toString(getX);
-                final String coordY=Integer.toString(getY);
-                saveCoordinates("{" + coordX + "," + coordY + "}");
+                saveCoordinates("{" + getX + "," + getY + "}");
                 if (!config.isHeatMapDisabled()) {
                     incHeatMap(getX, getY);
                 }
@@ -327,7 +325,7 @@ public class Stats implements GazeMotionListener {
         final File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
         final File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
         final File colorBandsFile = new File(todayDirectory, colorBandsFilePrefix + "png");
-        File replayDataFile = new File(todayDirectory, replayDataFilePrefix + ".json");
+        final File replayDataFile = new File(todayDirectory, replayDataFilePrefix + ".json");
 
         final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
         saveImageAsPng(screenshotImage, screenShotFile);
@@ -590,7 +588,7 @@ public class Stats implements GazeMotionListener {
     }
 
     private JsonObject buildSavedDataJSON(ArrayList<String> data){
-       int id=randNumb(40);
+       int id= ranNumber(40);
         savedDataObj.addProperty("id",id);
         savedDataObj.addProperty("coordinates",data.toString());
         return savedDataObj;
@@ -601,7 +599,7 @@ public class Stats implements GazeMotionListener {
         return coordinateData;
     }
 
-    private int randNumb(int limit)
+    private int ranNumber(int limit)
     {
         /*
         We can change the logic if generating the random number to whatever we want its a temporary function to test
