@@ -170,8 +170,7 @@ public class Letters implements GameLifeCycle {
         // double height = dimension2D.getHeight() / nbLines;
         // Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
         // this.currentRoundDetails.remainingCount = correctCount;
-        // stats.notifyNewRoundReady();
-
+        stats.notifyNewRoundReady();
     }
 
     private String pickRandomLetter() {

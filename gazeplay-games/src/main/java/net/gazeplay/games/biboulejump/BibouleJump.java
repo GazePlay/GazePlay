@@ -234,7 +234,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     @Override
     public void dispose() {
-
+        stats.addRoundDuration();
     }
 
     /**
@@ -283,6 +283,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
      * Upon the end of a game, a menu is displayed with the highscore and a restart button
      */
     private void death() {
+        stats.addRoundDuration();
         this.stop();
         // Show end menu (restart, quit, score)
         interactionOverlay.setDisable(true);
@@ -299,7 +300,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         finalScoreText.setText(sb.toString());
         finalScoreText.setOpacity(1);
         restartButton.active();
-        stats.addRoundDuration();
     }
 
     /**

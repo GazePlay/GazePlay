@@ -81,6 +81,7 @@ public class WhereIsIt implements GameLifeCycle {
             }
         }
 
+        stats.notifyNewRoundReady();
     }
 
     private Transition createQuestionTransition(final String question, final List<Image> listOfPictos) {
