@@ -79,10 +79,9 @@ public class CustomFileChooser extends Stage {
     }
 
     private void buildCustomColorDialog() {
-        final BorderPane imageSelector = createImageSelectorPane();
+        final BorderPane imageSelector = new BorderPane();
         final Scene scene = new Scene(imageSelector, 500, 500, Color.TRANSPARENT);
-        imageSelector.prefWidthProperty().bind(scene.widthProperty());
-        imageSelector.prefHeightProperty().bind(scene.heightProperty());
+        initImageSelectorPane(imageSelector, scene);
         this.setScene(scene);
     }
 
@@ -180,8 +179,8 @@ public class CustomFileChooser extends Stage {
         choicePane.getChildren().addAll(yes, no);
 
         final ScrollPane choicePanelScroller = new ScrollPane(choicePane);
-        choicePanelScroller.setMinHeight(gazePlay.getPrimaryStage().getHeight() / 3);
-        choicePanelScroller.setMinWidth(gazePlay.getPrimaryStage().getWidth() / 3);
+        choicePanelScroller.setPrefHeight(gazePlay.getPrimaryStage().getHeight() / 3);
+        choicePanelScroller.setPrefWidth(gazePlay.getPrimaryStage().getWidth() / 3);
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
 
@@ -242,8 +241,7 @@ public class CustomFileChooser extends Stage {
         }
     }
 
-    private BorderPane createImageSelectorPane() {
-        BorderPane imageSelectorGridPane = new BorderPane();
+    private BorderPane initImageSelectorPane(BorderPane imageSelectorGridPane, Scene scene) {
 
         Group[] group = new Group[3];
         StackPane[] section = new StackPane[3];
@@ -268,8 +266,10 @@ public class CustomFileChooser extends Stage {
             BorderPane background = new BorderPane();
             background.layoutYProperty().bind(input.heightProperty().add(50));
             background.setLayoutX(0);
-            background.prefWidthProperty().bind(imageSelectorGridPane.widthProperty());
-            background.prefHeightProperty().bind(imageSelectorGridPane.heightProperty().subtract(50).subtract(input.heightProperty()));
+            background.minWidthProperty().bind(scene.widthProperty());
+            background.minHeightProperty().bind(scene.heightProperty().subtract(50).subtract(input.heightProperty()));
+            background.maxWidthProperty().bind(scene.widthProperty());
+            background.maxHeightProperty().bind(scene.heightProperty().subtract(50).subtract(input.heightProperty()));
             background.setBackground(new Background(new BackgroundFill(colors[i], CornerRadii.EMPTY, null)));
 
             flowPanes[i] = new FlowPane();
@@ -300,7 +300,7 @@ public class CustomFileChooser extends Stage {
             section[i].layoutYProperty().bind(input.heightProperty());
             Rectangle ongletBackground = new Rectangle();
             ongletBackground.setHeight(50);
-            ongletBackground.widthProperty().bind(background.widthProperty().divide(3));
+            ongletBackground.widthProperty().bind(background.maxWidthProperty().divide(3));
             ongletBackground.setFill(colors[i]);
             section[i].getChildren().add(ongletBackground);
             section[i].setOnMouseClicked(e -> {
