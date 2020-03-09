@@ -10,7 +10,4 @@ public class SpotTheDifferencesStats extends ShootGamesStats {
         this.gameName = "spotthedifferences";
     }
 
-    public void incNbGoals(int incr){
-        nbGoals+=incr;
-    }
 }

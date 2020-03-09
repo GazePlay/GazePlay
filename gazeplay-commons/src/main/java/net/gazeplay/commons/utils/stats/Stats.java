@@ -411,6 +411,12 @@ public class Stats implements GazeMotionListener {
         log.debug("The number of goals is " + nbGoals + "and the number shots is " + nbShots);
     }
 
+    public void incNbGoals(int i) {
+        nbGoals += i;
+        currentRoundStartTime = System.currentTimeMillis();
+        log.debug("The number of goals is " + nbGoals + "and the number shots is " + nbShots);
+    }
+
 
     public void incNbShots() {
         final long currentRoundEndTime = System.currentTimeMillis();

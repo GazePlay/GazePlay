@@ -71,7 +71,7 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
         for (int i = 0; i < canvasCount; i++) {
             Dimension2D canvasDimension = new Dimension2D(videoDimension.getWidth(),
                 videoDimension.getHeight() - 80);
-            Canvas canvas = drawBuilder.createCanvas(canvasDimension);
+            Canvas canvas = drawBuilder.createCanvas(canvasDimension, stats);
             canvas.widthProperty().bind(gameContext.getRoot().widthProperty());
             canvas.heightProperty().bind(gameContext.getRoot().heightProperty());
             canvasList.add(canvas);

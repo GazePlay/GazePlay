@@ -2441,23 +2441,23 @@ public class RushHour extends Parent implements GameLifeCycle {
     private void toWinListener() {
         toWin.xProperty().addListener((o) -> {
             if (!endOfGame && Shape.intersect(toWin, ground).getBoundsInLocal().getWidth() == -1) {
-                endOfGame = true;
-                gameContext.playWinTransition(500, actionEvent -> {
-
-                    log.debug("you won !");
-                    dispose();
-                    launch();
-                });
+                win();
             }
         });
 
         toWin.yProperty().addListener((o) -> {
             if (!endOfGame && Shape.intersect(toWin, ground).getBoundsInLocal().getWidth() == -1) {
-                endOfGame = true;
-                gameContext.playWinTransition(500, actionEvent -> {
-
-                });
+               win();
             }
+        });
+    }
+
+    private void win () {
+        endOfGame = true;
+        stats.incNbShots();
+        gameContext.playWinTransition(500, actionEvent -> {
+            dispose();
+            launch();
         });
     }
 

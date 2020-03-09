@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -24,14 +25,17 @@ public class DrawBuilder {
     @Setter
     private int drawLineWidth = 8;
 
-    public Canvas createCanvas(final Dimension2D canvasDimension, final double coefficient) {
-        final Canvas canvas = createCanvas(canvasDimension);
+    Stats stats;
+
+    public Canvas createCanvas(final Dimension2D canvasDimension, final double coefficient, Stats stats) {
+        final Canvas canvas = createCanvas(canvasDimension, stats);
         canvas.setLayoutX(canvasDimension.getWidth() * (coefficient - 1) / 2);
         canvas.setLayoutY(canvasDimension.getHeight() * (coefficient - 1) / 2);
         return canvas;
     }
 
-    public Canvas createCanvas(final Dimension2D canvasDimension) {
+    public Canvas createCanvas(final Dimension2D canvasDimension, Stats stats) {
+        this.stats = stats;
         final Canvas canvas = new Canvas(canvasDimension.getWidth(), canvasDimension.getHeight());
 
         final GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
@@ -44,8 +48,7 @@ public class DrawBuilder {
         });
 
         canvas.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
-            graphicsContext.setStroke(colorPicker.pickColor());
-            graphicsContext.beginPath();
+            changeColor(graphicsContext);
         });
 
         canvas.addEventHandler(MouseEvent.MOUSE_EXITED, event -> graphicsContext.closePath());
@@ -71,13 +74,18 @@ public class DrawBuilder {
         });
 
         canvas.addEventFilter(GazeEvent.GAZE_ENTERED, event -> {
-            graphicsContext.setStroke(colorPicker.pickColor());
-            graphicsContext.beginPath();
+            changeColor(graphicsContext);
         });
 
         canvas.addEventFilter(GazeEvent.GAZE_EXITED, event -> graphicsContext.closePath());
 
         return canvas;
+    }
+
+    private void changeColor(GraphicsContext graphicsContext){
+        stats.incNbShots();
+        graphicsContext.setStroke(colorPicker.pickColor());
+        graphicsContext.beginPath();
     }
 
     private void initDraw(final GraphicsContext gc) {
