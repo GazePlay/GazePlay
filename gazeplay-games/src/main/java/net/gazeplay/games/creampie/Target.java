@@ -28,7 +28,7 @@ public class Target extends Portrait {
 
     final EventHandler<Event> enterEvent;
 
-    private boolean anniOff = true;
+    private boolean animationEnded = true;
 
     private static final int radius = 100;
 
@@ -57,9 +57,9 @@ public class Target extends Portrait {
 
         enterEvent = e -> {
             if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
-                && anniOff) {
+                && animationEnded) {
 
-                anniOff = false;
+                animationEnded = false;
                 enter();
             }
         };
@@ -102,7 +102,7 @@ public class Target extends Portrait {
 
 
         timeline.setOnFinished(actionEvent -> {
-            anniOff = true;
+            animationEnded = true;
             newPosition();
         });
 
