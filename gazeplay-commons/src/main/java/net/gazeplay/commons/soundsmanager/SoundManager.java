@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Slf4j
-public class SoundsManager {
+public class SoundManager {
     @Getter
     private ExecutorService executorService;
 
@@ -29,7 +29,6 @@ public class SoundsManager {
 
     public void destroy() {
         soundPlayerRunnable.setStopRequested(true);
-        ExecutorService executorService = this.executorService;
         if (executorService != null) {
             executorService.shutdown();
         }
@@ -50,7 +49,7 @@ public class SoundsManager {
             listOfMusicToPlay.clear();
     }
 
-     public void add(String ressource) {
-            listOfMusicToPlay.add(ressource);
+     public void add(String resource) {
+            listOfMusicToPlay.add(resource);
     }
 }

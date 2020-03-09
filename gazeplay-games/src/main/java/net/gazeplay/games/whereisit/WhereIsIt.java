@@ -19,7 +19,6 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -187,7 +186,7 @@ public class WhereIsIt implements GameLifeCycle {
 
     void playQuestionSound() {
         String soundResource = currentRoundDetails.getQuestionSoundPath();
-        gameContext.getSoundsManager().add(soundResource);
+        gameContext.getSoundManager().add(soundResource);
     }
 
     /**

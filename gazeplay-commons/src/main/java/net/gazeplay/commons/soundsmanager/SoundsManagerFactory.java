@@ -9,31 +9,31 @@ import java.util.concurrent.atomic.AtomicReference;
 @Slf4j
 public class SoundsManagerFactory {
 
-    private final AtomicReference<SoundsManager> currentInstanceReference = new AtomicReference<>();
+    private final AtomicReference<SoundManager> currentInstanceReference = new AtomicReference<>();
 
 
     public SoundsManagerFactory() {
     }
 
-    public synchronized SoundsManager get() {
+    public synchronized SoundManager get() {
 
-        SoundsManager soundsManager = currentInstanceReference.get();
-        if (soundsManager != null) {
-            soundsManager.clear();
-            soundsManager.destroy();
+        SoundManager soundManager = currentInstanceReference.get();
+        if (soundManager != null) {
+            soundManager.clear();
+            soundManager.destroy();
         }
 
-        soundsManager = create();
-        currentInstanceReference.set(soundsManager);
-        return soundsManager;
+        soundManager = create();
+        currentInstanceReference.set(soundManager);
+        return soundManager;
     }
 
-    private SoundsManager create() {
+    private SoundManager create() {
 
-        final SoundsManager soundsManager = new SoundsManager();
+        final SoundManager soundManager = new SoundManager();
 
-        soundsManager.init();
-        return soundsManager;
+        soundManager.init();
+        return soundManager;
     }
 
 }

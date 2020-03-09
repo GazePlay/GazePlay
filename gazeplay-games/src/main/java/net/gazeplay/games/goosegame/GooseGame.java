@@ -24,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.DiceRoller;
 import net.gazeplay.components.Position;
@@ -373,6 +372,6 @@ public class GooseGame implements GameLifeCycle {
 
     public void playMovementSound() {
         String soundResource = String.format("data/goosegame/sounds/mvmt%d.wav", random.nextInt(6));
-        gameContext.getSoundsManager().add(soundResource);
+        gameContext.getSoundManager().add(soundResource);
     }
 }

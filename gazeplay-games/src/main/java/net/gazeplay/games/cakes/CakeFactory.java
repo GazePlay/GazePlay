@@ -26,8 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
-import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
 
@@ -388,7 +386,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         sq.getChildren().addAll(pt, pt2);
 
         final String soundResource = "data/cake/sounds/spray.mp3";
-        gameContext.getSoundsManager().add(soundResource);
+        gameContext.getSoundManager().add(soundResource);
 
         sq.setOnFinished(actionEvent -> {
             final TranslateTransition tt1 = new TranslateTransition(Duration.millis(500), aerograph);
@@ -537,7 +535,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         });
 
         final String soundResource = "data/cake/sounds/grabcoming.mp3";
-        gameContext.getSoundsManager().add(soundResource);
+        gameContext.getSoundManager().add(soundResource);
 
         sq.play();
     }

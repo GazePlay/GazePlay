@@ -169,7 +169,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
     private void bounce(final double intensity, final String soundName) {
         velocity = new Point2D(velocity.getX(), -terminalVelocity * intensity);
-        gameContext.getSoundsManager().add(DATA_PATH + "/sounds/" + soundName);
+        gameContext.getSoundManager().add(DATA_PATH + "/sounds/" + soundName);
     }
 
     void initBackground() {

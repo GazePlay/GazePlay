@@ -371,7 +371,7 @@ public class Race extends Parent implements GameLifeCycle {
         text.setText(cst);
 
         final String soundResource = "data/race/sounds/frog.WAV";
-        gameContext.getSoundsManager().add(soundResource);
+        gameContext.getSoundManager().add(soundResource);
 
         t.getChildren().get(0).setOpacity(1);
 

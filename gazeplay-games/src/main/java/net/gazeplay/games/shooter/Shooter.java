@@ -20,9 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.time.LocalDate;
@@ -463,7 +461,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         final int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
 
         final String soundResource = "data/" + gameType + "/sounds/hand_sound" + r + ".mp3";
-        gameContext.getSoundsManager().add(soundResource);
+        gameContext.getSoundManager().add(soundResource);
 
         t.getChildren().get(0).setOpacity(1);
 

@@ -20,7 +20,6 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
-import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
 
 import java.io.InputStreamReader;
@@ -133,7 +132,7 @@ public class SpotTheDifferences implements GameLifeCycle {
             gameContext.playWinTransition(200, actionEvent -> gameContext.showRoundStats(stats, this));
         }
         String soundResource = "data/spotthedifferences/ding.wav";
-        gameContext.getSoundsManager().add(soundResource);
+        gameContext.getSoundManager().add(soundResource);
     }
 
     @Override

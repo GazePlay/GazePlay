@@ -7,13 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SoundPlayerRunnable implements Runnable {
 
-    private final SoundsManager soundsManager;
+    private final SoundManager soundManager;
 
     @Setter
     private transient boolean stopRequested = false;
 
-    public SoundPlayerRunnable(final SoundsManager soundsManager) {
-        this.soundsManager = soundsManager;
+    public SoundPlayerRunnable(final SoundManager soundManager) {
+        this.soundManager = soundManager;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class SoundPlayerRunnable implements Runnable {
     }
 
     private void poll() {
-        Platform.runLater(soundsManager::playRequestedSounds);
+        Platform.runLater(soundManager::playRequestedSounds);
     }
 
 }

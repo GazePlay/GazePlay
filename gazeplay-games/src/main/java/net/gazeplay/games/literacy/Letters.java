@@ -22,7 +22,6 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -264,7 +263,7 @@ public class Letters implements GameLifeCycle {
     }
 
     private void playSound(String path) {
-        gameContext.getSoundsManager().add(path);
+        gameContext.getSoundManager().add(path);
     }
 
 }

@@ -12,7 +12,7 @@ import lombok.NonNull;
 import net.gazeplay.commons.configuration.AnimationSpeedRatioSource;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
-import net.gazeplay.commons.soundsmanager.SoundsManager;
+import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
@@ -36,7 +36,7 @@ public interface IGameContext {
     GazeDeviceManager getGazeDeviceManager();
 
     @NonNull
-    SoundsManager getSoundsManager();
+    SoundManager getSoundManager();
 
     @NonNull
     Translator getTranslator();

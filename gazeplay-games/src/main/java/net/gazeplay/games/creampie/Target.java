@@ -9,7 +9,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
@@ -84,7 +83,7 @@ public class Target extends Portrait {
 
         hand.onTargetHit(this);
 
-        gameContext.getSoundsManager().add(SOUNDS_MISSILE);
+        gameContext.getSoundManager().add(SOUNDS_MISSILE);
 
     }
 

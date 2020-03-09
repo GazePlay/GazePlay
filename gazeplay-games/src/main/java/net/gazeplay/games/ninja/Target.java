@@ -10,7 +10,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.Portrait;
@@ -286,7 +285,7 @@ public class Target extends Portrait {
         });
 
         sequence.play();
-        gameContext.getSoundsManager().add(audioClipResourceLocation);
+        gameContext.getSoundManager().add(audioClipResourceLocation);
     }
 
     private Transition createTransition1() {
