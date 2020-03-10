@@ -27,7 +27,7 @@ public class Utils {
      * but can be configured through option interface and/or GazePlay.properties file
      */
 
-    private static String getFilesFolder() {
+    public static String getFilesFolder() {
 
         final Configuration config = ActiveConfigurationContext.getInstance();
         final String filesFolder = config.getFileDir();
