@@ -14,7 +14,7 @@ import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
+import net.gazeplay.commons.soundsmanager.SoundManager;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -24,9 +24,11 @@ public class DiceRoller extends MeshView {
 
     private final Random random;
     private final ArrayList<Rotate> rotations;
+    private final SoundManager soundManager;
 
-    public DiceRoller(final float dieWidth) {
+    public DiceRoller(final float dieWidth, SoundManager soundManager) {
         super();
+        this.soundManager = soundManager;
         random = new Random();
         rotations = new ArrayList<>();
 
@@ -99,11 +101,7 @@ public class DiceRoller extends MeshView {
         final int finalY = angleY % 360;
 
         rollTimeline.play();
-        try {
-            ForegroundSoundsUtils.playSound("data/common/sounds/diceRollSound.wav");
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
+        soundManager.add("data/common/sounds/diceRollSound.wav");
 
         if (finalX == 90) {
             return 3;

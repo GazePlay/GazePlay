@@ -139,6 +139,13 @@ public class Stats implements GazeMotionListener {
         takeScreenShot();
     }
 
+    public void notifyNextRound() {
+        final long currentRoundEndTime = System.currentTimeMillis();
+        final long currentRoundDuration = currentRoundEndTime - this.currentRoundStartTime;
+        this.roundsDurationReport.addRoundDuration(currentRoundDuration);
+        currentRoundStartTime = currentRoundEndTime;
+    }
+
     public void startVideoRecording() {
         directoryOfVideo = getGameStatsOfTheDayDirectory().toString();
         this.movieFolder = new File(directoryOfVideo);
@@ -416,7 +423,6 @@ public class Stats implements GazeMotionListener {
         currentRoundStartTime = System.currentTimeMillis();
         log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
     }
-
 
     public void incrementNumberOfGoalsReached() {
         final long currentRoundEndTime = System.currentTimeMillis();

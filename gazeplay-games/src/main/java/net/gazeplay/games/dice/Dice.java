@@ -83,7 +83,7 @@ public class Dice implements GameLifeCycle {
             dieWidth = (float) (dimensions.getHeight() / 4);
         }
         for (int i = 0; i < nbDice; i++) {
-            final DiceRoller dr = new DiceRoller(dieWidth);
+            final DiceRoller dr = new DiceRoller(dieWidth, gameContext.getSoundManager());
             diceRollers.add(dr);
 
             // init rolls to 1s

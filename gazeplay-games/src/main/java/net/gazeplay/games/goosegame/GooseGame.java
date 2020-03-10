@@ -24,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.DiceRoller;
 import net.gazeplay.components.Position;
 import net.gazeplay.components.ProgressButton;
@@ -42,7 +41,7 @@ public class GooseGame implements GameLifeCycle {
     private static final String BIBOULEPATH = "data/biboulejump/biboules/%s.png";
 
     private final IGameContext gameContext;
-    private final Stats stats;
+    private final GooseGameStats stats;
     private final Dimension2D dimensions;
     private final int nbPlayers;
 
@@ -67,7 +66,7 @@ public class GooseGame implements GameLifeCycle {
 
     private final Random random;
 
-    public GooseGame(final IGameContext gameContext, final Stats stats, final int nbPlayers) {
+    public GooseGame(final IGameContext gameContext, final GooseGameStats stats, final int nbPlayers) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.nbPlayers = nbPlayers;
@@ -194,7 +193,7 @@ public class GooseGame implements GameLifeCycle {
         final float dieWidth = (float) (dimensions.getWidth() / 20);
 
         for (int i = 0; i < 2; i++) {
-            final DiceRoller dr = new DiceRoller(dieWidth);
+            final DiceRoller dr = new DiceRoller(dieWidth, gameContext.getSoundManager());
             diceRollers.add(dr);
             diceDisplay.add(dr, i, 0);
             // init rolls to 1s
@@ -258,6 +257,7 @@ public class GooseGame implements GameLifeCycle {
         moveDiceOut.play();
         final int rollResult = rolls[0] + rolls[1];
         pawns.get(currentPawn).move(rollResult);
+        stats.incrementNumberOfGoalsReached(rollResult);
     }
 
     /***

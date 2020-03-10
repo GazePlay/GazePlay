@@ -17,7 +17,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 
@@ -143,8 +142,6 @@ public class Egg extends Parent {
                             final PauseTransition t = new PauseTransition(Duration.seconds(2));
 
                             t.setOnFinished(actionEvent1 -> {
-
-                                ForegroundSoundsUtils.stopSound();
 
                                 gameContext.playWinTransition(0, event -> {
                                     gameInstance.dispose();

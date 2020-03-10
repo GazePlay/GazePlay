@@ -112,7 +112,7 @@ public class Horses implements GameLifeCycle {
         boardImage.setY(yOffset);
         backgroundLayer.getChildren().add(boardImage);
 
-        die = new DiceRoller((float) gridElementSize / 2);
+        die = new DiceRoller((float) gridElementSize / 2, gameContext.getSoundManager());
         final double diePositionInImage = imageSize / 2 - gridElementSize / 2;
         final StackPane dieContainer = new StackPane();
         dieContainer.getChildren().add(die);
