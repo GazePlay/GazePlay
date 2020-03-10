@@ -4,18 +4,17 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.utils.stats.Stats;
 
-public class SpotDifferencesGameLauncher implements GameSpec.GameLauncher {
+public class SpotDifferencesGameLauncher implements GameSpec.GameLauncher<SpotTheDifferencesStats, GameSpec.GameVariant> {
 
     @Override
-    public Stats createNewStats(Scene scene) {
-        return new Stats(scene, "spotthedifferences");
+    public SpotTheDifferencesStats createNewStats(Scene scene) {
+        return new SpotTheDifferencesStats(scene);
     }
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.GameVariant gameVariant,
-                                       Stats stats) {
+                                       SpotTheDifferencesStats stats) {
         return new SpotTheDifferences(gameContext, stats);
     }
 }

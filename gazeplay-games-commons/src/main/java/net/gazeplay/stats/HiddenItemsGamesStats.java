@@ -36,7 +36,7 @@ public class HiddenItemsGamesStats extends Stats {
             out.print(',');
             out.print("Standard Deviation");
             out.print(',');
-            for (int i = 0; i < getNbGoals(); i++) {
+            for (int i = 0; i < getNbGoalsToReach(); i++) {
                 out.print("shot ");
                 out.print(i);
                 out.print(",");
@@ -49,7 +49,7 @@ public class HiddenItemsGamesStats extends Stats {
             out.print(',');
             out.print(computeTotalElapsedDuration());
             out.print(',');
-            out.print(getNbGoals());
+            out.print(getNbGoalsToReach());
             out.print(',');
             out.print(getRoundsTotalAdditiveDuration());
             out.print(',');

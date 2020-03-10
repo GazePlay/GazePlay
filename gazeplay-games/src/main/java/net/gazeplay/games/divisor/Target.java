@@ -78,8 +78,6 @@ class Target extends Parent {
 
         move();
 
-        this.stats.notifyNewRoundReady();
-
         gameContext.getConfiguration().getAnimationSpeedRatioProperty().addListener((o) -> {
             timeline.stop();
             move();
@@ -121,7 +119,7 @@ class Target extends Parent {
     }
 
     public void enter() {
-        stats.incNbGoals();
+        stats.incrementNumberOfGoalsReached();
         if (currentTranslation != null) {
             currentTranslation.stop();
         }
@@ -201,9 +199,10 @@ class Target extends Parent {
             if (tempY + target.radius > (int) dimension.getHeight()) {
                 tempY = (int) dimension.getHeight() - (int) target.radius * 2;
             }
-
             gameContext.getChildren().add(target);
         }
+        stats.incrementNumberOfGoalsToReach();
+        stats.incrementNumberOfGoalsToReach();
     }
 
     private int randomDirection() {

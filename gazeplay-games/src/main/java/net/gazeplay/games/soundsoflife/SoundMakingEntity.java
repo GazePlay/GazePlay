@@ -12,7 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
+import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
@@ -26,12 +26,14 @@ public class SoundMakingEntity extends Parent {
     private final Timeline movetimeline;
     private int soundIter;
     private final Stats stats;
+    private final SoundManager soundManager;
 
     public SoundMakingEntity(final ImageView imageView, final Stats stats, final ArrayList<String> audioClips,
-                             final ProgressIndicator progressIndicator, final int fixationLength) {
+                             final ProgressIndicator progressIndicator, final int fixationLength, final SoundManager soundManager) {
         this.audioClips = audioClips;
         this.progressIndicator = progressIndicator;
         this.stats = stats;
+        this.soundManager = soundManager;
 
         final Random random = new Random();
         soundIter = random.nextInt(audioClips.size());
@@ -73,14 +75,10 @@ public class SoundMakingEntity extends Parent {
         progressIndicator.setProgress(0);
 
         movetimeline.playFromStart();
-        try {
-            ForegroundSoundsUtils.playSound(audioClips.get(soundIter));
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
+        soundManager.add(audioClips.get(soundIter));
 
         soundIter = (soundIter + 1) % audioClips.size();
 
-        stats.incNbGoals();
+        stats.incrementNumberOfGoalsReached();
     }
 }

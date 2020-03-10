@@ -2,6 +2,7 @@ package net.gazeplay.games.pianosight;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import javax.sound.midi.*;
 import java.io.IOException;
@@ -27,7 +28,10 @@ public class MidiReader {
 
     private final Instru instru = new Instru();
 
-    MidiReader(InputStream inputStream) {
+    private Stats stats;
+
+    MidiReader(InputStream inputStream, Stats stats) {
+        this.stats = stats;
         try {
             Sequence sequence = MidiSystem.getSequence(inputStream);
             int maxIndex = 0;
@@ -46,6 +50,27 @@ public class MidiReader {
             e.printStackTrace();
         }
 
+    }
+
+    public int getTrackSize(){
+        int nbOfNotes = 0;
+        int index = 0;
+        long previousTick = -1;
+        while (index + 1 < track.size()) {
+            MidiEvent event = track.get(index);
+            MidiMessage message = event.getMessage();
+            if (message instanceof ShortMessage) {
+                ShortMessage sm = (ShortMessage) message;
+                if (sm.getCommand() == NOTE_ON) {
+                    if ((sm.getChannel() == 0) && (previousTick != event.getTick())) {
+                        nbOfNotes++;
+                        previousTick = event.getTick();
+                    }
+                }
+            }
+            index++;
+        }
+        return nbOfNotes;
     }
 
     int nextNote() {

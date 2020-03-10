@@ -9,7 +9,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
@@ -29,7 +28,7 @@ public class Target extends Portrait {
 
     final EventHandler<Event> enterEvent;
 
-    private boolean anniOff = true;
+    private boolean animationEnded = true;
 
     private static final int radius = 100;
 
@@ -43,6 +42,8 @@ public class Target extends Portrait {
 
     private static final String SOUNDS_MISSILE = "data/creampie/sounds/missile.mp3";
 
+    private final IGameContext gameContext;
+
     public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
                   final ImageLibrary imageLibrary) {
 
@@ -51,15 +52,14 @@ public class Target extends Portrait {
         this.hand = hand;
         this.imageLibrary = imageLibrary;
         this.stats = stats;
+        this.gameContext = gameContext;
         targetAOIList = new ArrayList<>();
 
         enterEvent = e -> {
-            if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED
-                || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)
-                && anniOff) {
+            if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
+                && animationEnded) {
 
-                anniOff = false;
-                stats.incNbGoals();
+                animationEnded = false;
                 enter();
             }
         };
@@ -70,10 +70,11 @@ public class Target extends Portrait {
 
         this.addEventFilter(GazeEvent.ANY, enterEvent);
 
-        stats.notifyNewRoundReady();
     }
 
     private void enter() {
+
+        stats.incrementNumberOfGoalsReached();
 
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
@@ -82,11 +83,7 @@ public class Target extends Portrait {
 
         hand.onTargetHit(this);
 
-        try {
-            ForegroundSoundsUtils.playSound(SOUNDS_MISSILE);
-        } catch (final Exception e) {
-            log.warn("Can't play sound: no associated sound : " + e.toString());
-        }
+        gameContext.getSoundManager().add(SOUNDS_MISSILE);
 
     }
 
@@ -96,7 +93,6 @@ public class Target extends Portrait {
 
     private Animation createAnimation() {
         final Timeline timeline = new Timeline();
-        final Timeline timeline2 = new Timeline();
 
         timeline.getKeyFrames()
             .add(new KeyFrame(new Duration(2000), new KeyValue(radiusProperty(), getInitialRadius() * 1.6)));
@@ -104,29 +100,30 @@ public class Target extends Portrait {
             .add(new KeyFrame(new Duration(2000), new KeyValue(rotateProperty(), getRotate() + (360 * 3))));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(visibleProperty(), false)));
 
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(radiusProperty(), radius)));
 
+        timeline.setOnFinished(actionEvent -> {
+            animationEnded = true;
+            newPosition();
+        });
+
+        return timeline;
+    }
+
+    private void newPosition(){
         final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(getInitialRadius(), 0, 1, 0, 0.8);
+
+        setRadius(radius);
+        setCenterX(newPosition.getX());
+        setCenterY(newPosition.getY());
+        setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
+        setRotate(0);
+        setVisible(true);
+
+        stats.incrementNumberOfGoalsToReach();
+
         final TargetAOI targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(), getInitialRadius(),
             System.currentTimeMillis());
         targetAOIList.add(targetAOI);
-        timeline2.getKeyFrames()
-            .add(new KeyFrame(new Duration(1), new KeyValue(centerXProperty(), newPosition.getX())));
-        timeline2.getKeyFrames()
-            .add(new KeyFrame(new Duration(1), new KeyValue(centerYProperty(), newPosition.getY())));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1),
-            new KeyValue(fillProperty(), new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true))));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(rotateProperty(), 0)));
-        timeline2.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(visibleProperty(), true)));
 
-        final SequentialTransition sequence = new SequentialTransition(timeline, timeline2);
-
-        sequence.setOnFinished(actionEvent -> {
-
-            anniOff = true;
-            stats.notifyNewRoundReady();
-        });
-
-        return sequence;
     }
 }

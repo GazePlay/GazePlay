@@ -14,6 +14,7 @@ import javafx.scene.shape.Shape;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
 public class RushHour extends Parent implements GameLifeCycle {
 
     public final IGameContext gameContext;
+    private final Stats stats;
     public IntegerProperty size;
     private Rectangle ground;
     private boolean endOfGame = false;
@@ -42,8 +44,9 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     private int level;
 
-    public RushHour(final IGameContext gameContext) {
+    public RushHour(final IGameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
+        this.stats = stats;
         level = 0;
         size = new SimpleIntegerProperty();
         gameContext.getPrimaryStage().widthProperty().addListener((observable, oldValue, newValue) -> {
@@ -2427,6 +2430,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         toWin.setEffect(null);
         final int numberLevels = 33;
         level = (level + 1) % numberLevels;
+        stats.notifyNewRoundReady();
     }
 
     @Override
@@ -2437,23 +2441,23 @@ public class RushHour extends Parent implements GameLifeCycle {
     private void toWinListener() {
         toWin.xProperty().addListener((o) -> {
             if (!endOfGame && Shape.intersect(toWin, ground).getBoundsInLocal().getWidth() == -1) {
-                endOfGame = true;
-                gameContext.playWinTransition(500, actionEvent -> {
-
-                    log.debug("you won !");
-                    dispose();
-                    launch();
-                });
+                win();
             }
         });
 
         toWin.yProperty().addListener((o) -> {
             if (!endOfGame && Shape.intersect(toWin, ground).getBoundsInLocal().getWidth() == -1) {
-                endOfGame = true;
-                gameContext.playWinTransition(500, actionEvent -> {
-
-                });
+               win();
             }
+        });
+    }
+
+    private void win () {
+        endOfGame = true;
+        stats.incrementNumberOfGoalsReached();
+        gameContext.playWinTransition(500, actionEvent -> {
+            dispose();
+            launch();
         });
     }
 

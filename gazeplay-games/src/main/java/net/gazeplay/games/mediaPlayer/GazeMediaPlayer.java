@@ -36,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -70,7 +71,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     private final List<EventHandler<Event>> eventTitre;
 
-    GazeMediaPlayer(final IGameContext gameContext) {
+    GazeMediaPlayer(final IGameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -185,6 +186,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         window.setLayoutY(dimension2D.getHeight() / 12);
 
         this.gameContext.getChildren().add(window);
+        stats.notifyNewRoundReady();
     }
 
     @Override

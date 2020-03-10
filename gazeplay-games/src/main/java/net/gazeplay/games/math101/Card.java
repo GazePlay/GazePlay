@@ -142,7 +142,7 @@ public class Card extends Parent {
     }
 
     private void onCorrectCardSelected() {
-        stats.incNbGoals();
+        stats.incrementNumberOfGoalsReached();
 
         final double finalZoom = 1.15;
 
@@ -168,8 +168,6 @@ public class Card extends Parent {
             gameContext.clear();
 
             gameInstance.launch();
-
-            stats.notifyNewRoundReady();
 
             gameContext.onGameStarted();
         }));

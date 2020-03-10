@@ -140,7 +140,7 @@ public class Cup {
     }
 
     private void onCorrectCupSelected() {
-        stats.incNbGoals();
+        stats.incrementNumberOfGoalsReached();
 
         progressIndicator.setOpacity(0);
 
