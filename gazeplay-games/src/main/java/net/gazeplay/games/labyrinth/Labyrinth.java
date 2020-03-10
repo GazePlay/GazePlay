@@ -86,6 +86,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(cheese);
 
         stats.notifyNewRoundReady();
+        stats.incrementNumberOfGoalsToReach();
     }
 
     private Mouse createMouse() {
@@ -156,9 +157,9 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     void testIfCheese(final int i, final int j) {
         if (cheese.isTheCheese(i, j)) {
-            stats.incNbGoals();
-            stats.notifyNewRoundReady();
+            stats.incrementNumberOfGoalsReached();
             cheese.moveCheese();
+            stats.incrementNumberOfGoalsToReach();
             mouse.nbMove = 0;
         }
     }

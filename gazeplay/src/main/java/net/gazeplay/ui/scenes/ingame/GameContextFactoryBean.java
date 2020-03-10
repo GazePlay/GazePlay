@@ -20,6 +20,7 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
+import net.gazeplay.commons.soundsmanager.SoundsManagerFactory;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
@@ -79,6 +80,9 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
 
     @Autowired
     private GazeDeviceManagerFactory gazeDeviceManagerFactory;
+
+    @Autowired
+    private SoundsManagerFactory soundsManagerFactory;
 
     private boolean menuOpen = false;
 
@@ -192,7 +196,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
         root.getChildren().add(gamingRoot);
         root.getChildren().add(configPane);
 
-        return new GameContext(gazePlay, translator, root, gamingRoot, bravo, controlPanel, gazeDeviceManagerFactory.get(), configPane);
+        return new GameContext(gazePlay, translator, root, gamingRoot, bravo, controlPanel, gazeDeviceManagerFactory.get(), soundsManagerFactory.get(), configPane);
     }
 
     private void buttonTransparentHandler(Button bt) {
