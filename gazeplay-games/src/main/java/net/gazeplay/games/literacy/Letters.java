@@ -84,7 +84,7 @@ public class Letters implements GameLifeCycle {
 
         this.stats = stats;
 
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("blocs"));
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"));
         translator = gameContext.getTranslator();
 
         Locale locale = translator.currentLocale();

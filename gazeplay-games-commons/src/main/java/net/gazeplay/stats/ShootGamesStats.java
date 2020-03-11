@@ -1,6 +1,7 @@
 package net.gazeplay.stats;
 
 import javafx.scene.Scene;
+import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -46,9 +47,9 @@ public class ShootGamesStats extends Stats {
             }
             out.println();
 
-            out.print(Utils.todayCSV());
+            out.print(DateUtils.todayCSV());
             out.print(',');
-            out.print(Utils.time());
+            out.print(DateUtils.timeNow());
             out.print(',');
             out.print(computeTotalElapsedDuration());
             out.print(',');

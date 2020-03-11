@@ -65,7 +65,7 @@ public class Blocs implements GameLifeCycle {
         this.percents4Win = percents4Win;
         this.stats = stats;
 
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("blocs"));
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"));
 
         enterEvent = buildEvent(gameContext, stats, useTrail);
 

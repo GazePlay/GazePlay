@@ -44,7 +44,7 @@ public class Divisor implements GameLifeCycle {
                 this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
         } else {
 
-            final ImageLibrary imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("divisor/basic"));
+            final ImageLibrary imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("divisor/basic"));
             target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
                 this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
         }

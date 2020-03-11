@@ -98,7 +98,7 @@ public class CustomFileChooser extends Stage {
         flowPanes[flowPaneIndex].getChildren().clear();
 
         List<Image> allImagesList = new LinkedList<>();
-        ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory(folder[flowPaneIndex]));
+        ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory(folder[flowPaneIndex]));
         allImagesList.addAll(lib.pickAllImages());
 
         for (Image i : allImagesList) {
@@ -209,7 +209,7 @@ public class CustomFileChooser extends Stage {
         I18NButton add = new I18NButton(translator, "addNewImages");
         add.setPrefHeight(10);
         add.setOnAction(e -> {
-            String folderPath = Utils.getImagesSubDirectory(folder[flowPaneIndex]).getAbsolutePath();
+            String folderPath = Utils.getImagesSubdirectory(folder[flowPaneIndex]).getAbsolutePath();
             File dir = new File(folderPath);
             if (dir.mkdirs() || dir.exists()) {
                 final FileChooser fileChooser = new FileChooser();

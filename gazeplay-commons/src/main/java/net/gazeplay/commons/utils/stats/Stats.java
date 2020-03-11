@@ -16,6 +16,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HeatMap;
+import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
 import org.monte.media.Format;
@@ -320,10 +321,11 @@ public class Stats implements GazeMotionListener {
         final Configuration config = ActiveConfigurationContext.getInstance();
 
         final File todayDirectory = getGameStatsOfTheDayDirectory();
-        final String heatmapFilePrefix = Utils.now() + "-heatmap";
-        final String gazeMetricsFilePrefix = Utils.now() + "-metrics";
-        final String screenShotFilePrefix = Utils.now() + "-screenshot";
-        final String colorBandsFilePrefix = Utils.now() + "-colorBands";
+        final String now = DateUtils.dateTimeNow();
+        final String heatmapFilePrefix = now + "-heatmap";
+        final String gazeMetricsFilePrefix = now + "-metrics";
+        final String screenShotFilePrefix = now + "-screenshot";
+        final String colorBandsFilePrefix = now + "-colorBands";
 
         final File gazeMetricsFile = new File(todayDirectory, gazeMetricsFilePrefix + ".png");
         final File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
@@ -464,14 +466,14 @@ public class Stats implements GazeMotionListener {
     protected File createInfoStatsFile() {
         final File outputDirectory = getGameStatsOfTheDayDirectory();
 
-        final String fileName = Utils.now() + "-info-game.csv";
+        final String fileName = DateUtils.dateTimeNow() + "-info-game.csv";
         return new File(outputDirectory, fileName);
     }
 
     protected File getGameStatsOfTheDayDirectory() {
         final File statsDirectory = GazePlayDirectories.getUserStatsFolder(ActiveConfigurationContext.getInstance().getUserName());
         final File gameDirectory = new File(statsDirectory, gameName);
-        final File todayDirectory = new File(gameDirectory, Utils.today());
+        final File todayDirectory = new File(gameDirectory, DateUtils.today());
         final boolean outputDirectoryCreated = todayDirectory.mkdirs();
         log.info("outputDirectoryCreated = {}", outputDirectoryCreated);
 
