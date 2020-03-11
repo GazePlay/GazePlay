@@ -138,7 +138,7 @@ class DivisorTest {
         assertEquals(1, children.size());
 
         Target target = (Target) children.get(0);
-        assertTrue(target.getImgLib().pickRandomImage().getUrl().contains("divisor/basic"));
+        assertTrue(target.getImgLib().pickRandomImage().getUrl().contains("common/default/images"));
     }
 
     @Test
