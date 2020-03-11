@@ -26,6 +26,7 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
@@ -48,6 +49,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private final GazeDeviceManager gazeDeviceManager;
 
+    private final SoundManager soundManager;
+
     private final GameMenuFactory gameMenuFactory;
 
     private FlowPane choicePanel;
@@ -57,11 +60,13 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     public HomeMenuScreen(
         GazePlay gazePlay,
         GazeDeviceManager gazeDeviceManager,
+        SoundManager soundManager,
         GameMenuFactory gameMenuFactory,
         GamesLocator gamesLocator
     ) {
         super(gazePlay, new BorderPane());
         this.gazeDeviceManager = gazeDeviceManager;
+        this.soundManager = soundManager;
         this.gameMenuFactory = gameMenuFactory;
 
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();

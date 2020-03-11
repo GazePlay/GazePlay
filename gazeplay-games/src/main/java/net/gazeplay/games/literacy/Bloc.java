@@ -17,7 +17,6 @@ import javafx.util.Duration;
 import lombok.Getter;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.Random;
@@ -113,8 +112,6 @@ public class Bloc extends Parent {// Rectangle {
     }
 
     private void onCorrectBlocSelected() {
-        stats.incNbGoals();
-
         double finalZoom = 1.0;
 
         progressIndicator.setOpacity(0);
@@ -124,6 +121,7 @@ public class Bloc extends Parent {// Rectangle {
 
         if (gameInstance.currentRoundDetails.remainingCount == 1) {
             // REMOVE ALL CARDS AND REVEAL THE IMAGE
+            stats.incrementNumberOfGoalsReached();
             gameInstance.removeAllBlocs();
             gameInstance.currentRoundDetails.remainingCount = 0;
         } else {
@@ -153,8 +151,6 @@ public class Bloc extends Parent {// Rectangle {
 
                 gameInstance.launch();
 
-                stats.notifyNewRoundReady();
-
                 gameContext.onGameStarted();
             }));
         }
@@ -175,13 +171,7 @@ public class Bloc extends Parent {// Rectangle {
     }
 
     private void playSound(String path) {
-        try {
-            // log.debug("Letter sound path {}", path);
-            ForegroundSoundsUtils.playSound(path);
-        } catch (Exception e) {
-            // log.warn("Can't play sound: no associated sound : " + e.toString());
-        }
-
+        gameContext.getSoundManager().add(path);
     }
 
     private void onWrongBlocSelected() {

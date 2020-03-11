@@ -19,7 +19,6 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -82,6 +81,7 @@ public class WhereIsIt implements GameLifeCycle {
             }
         }
 
+        stats.notifyNewRoundReady();
     }
 
     private Transition createQuestionTransition(final String question, final List<Image> listOfPictos) {
@@ -186,12 +186,8 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     void playQuestionSound() {
-        try {
-            log.debug("currentRoundDetails.questionSoundPath: {}", currentRoundDetails.getQuestionSoundPath());
-            ForegroundSoundsUtils.playSound(currentRoundDetails.getQuestionSoundPath());
-        } catch (final Exception e) {
-            log.warn("Can't play sound: no associated sound : " + e.toString());
-        }
+        String soundResource = currentRoundDetails.getQuestionSoundPath();
+        gameContext.getSoundManager().add(soundResource);
     }
 
     /**

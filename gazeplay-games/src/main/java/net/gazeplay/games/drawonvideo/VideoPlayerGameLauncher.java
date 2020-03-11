@@ -5,16 +5,17 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.stats.ExplorationGamesStats;
 
-public class VideoPlayerGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.StringGameVariant> {
+public class VideoPlayerGameLauncher implements GameSpec.GameLauncher<ExplorationGamesStats, GameSpec.StringGameVariant> {
     @Override
-    public Stats createNewStats(Scene scene) {
-        return new Stats(scene, "Video Player with Feedback");
+    public ExplorationGamesStats createNewStats(Scene scene) {
+        return new ExplorationGamesStats(scene, "Video Player with Feedback");
     }
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.StringGameVariant gameVariant,
-                                       Stats stats) {
+                                       ExplorationGamesStats stats) {
         return new VideoPlayerWithLiveFeedbackApp(gameContext, stats, gameVariant.getValue());
     }
 }

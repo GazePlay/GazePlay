@@ -155,7 +155,7 @@ class StatsContextTest {
 
         GridPane grid = new GridPane();
         ShootGamesStats stats = mock(ShootGamesStats.class);
-        when(stats.getNbUnCountedShots()).thenReturn(3);
+        when(stats.getNbUnCountedGoalsReached()).thenReturn(3);
         context.addAllToGrid(stats, mockTranslator, grid, alignLeft);
 
         assertEquals(16, grid.getChildren().size());
