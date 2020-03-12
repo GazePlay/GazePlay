@@ -35,10 +35,8 @@ public class MediaFileReader {
     MediaFileReader(IGameContext gameContext) {
         this.gameContext = gameContext;
         mediaList = new ArrayList<>();
-        firstMediaDisplayedIndex = new SimpleIntegerProperty();
-        firstMediaDisplayedIndex.setValue(-1);
-        playingMediaIndex = new SimpleIntegerProperty();
-        playingMediaIndex.setValue(-1);
+        firstMediaDisplayedIndex = new SimpleIntegerProperty(-1);
+        playingMediaIndex = new SimpleIntegerProperty(-1);
 
         final File mediaPlayerDirectory = getMediaPlayerDirectory();
         final File playlistFile = new File(mediaPlayerDirectory, PLAYER_LIST_CSV);
