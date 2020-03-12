@@ -5,19 +5,20 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.shooter.ShooterGamesStats;
 
-public class PianoGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant> {
+public class PianoGameLauncher implements GameSpec.GameLauncher<ShooterGamesStats, GameSpec.DimensionGameVariant> {
 
     @Override
-    public Stats createNewStats(Scene scene) {
-        return new Stats(scene, "Piano");
+    public ShooterGamesStats createNewStats(Scene scene) {
+        return new ShooterGamesStats(scene, "Piano");
     }
 
     @Override
     public GameLifeCycle createNewGame(
         IGameContext gameContext,
         GameSpec.DimensionGameVariant gameVariant,
-        Stats stats
+        ShooterGamesStats stats
     ) {
         return new Piano(gameContext, stats);
     }

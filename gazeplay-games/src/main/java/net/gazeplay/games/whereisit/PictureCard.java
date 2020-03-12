@@ -129,7 +129,7 @@ class PictureCard extends Group {
     private void onCorrectCardSelected(WhereIsIt gameInstance) {
         log.debug("WINNER");
 
-        stats.incNbGoals();
+        stats.incrementNumberOfGoalsReached();
 
         customInputEventHandler.ignoreAnyInput = true;
         progressIndicator.setVisible(false);

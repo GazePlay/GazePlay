@@ -249,3 +249,7 @@ Dark,,,,,,Dark,,Sombre,,,,,,,,,,Oscuro,
 Light,,,,,,Light,,Clair,,,,,,,,,,Claro,
 BackgroundStyle,,,,,,Background style,,Style de fond,,,,,,,,,,,
 BackgroundEnabled,,,,,,Background images enabled,,Fonds d'écran activés,,,,,,,,,,,
+
+addNewImages,,,,,,Add new images ...,,Ajouter de nouvelles images ...,,,,,,,,,,Agregar nuevas imágenes ...,
+customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,,,
+

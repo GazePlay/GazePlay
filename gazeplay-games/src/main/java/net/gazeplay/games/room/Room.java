@@ -14,11 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import static net.gazeplay.games.room.MoveDirection.*;
 
 @Slf4j
 public class Room implements GameLifeCycle {
+
+    private final Stats stats;
 
     private final double xLength;
     private final double yLength;
@@ -43,9 +46,10 @@ public class Room implements GameLifeCycle {
     private final Image arrowImSouth;
     private final Rectangle rectangleArrowSouth;
 
-    public Room(final IGameContext gameContext) {
+    public Room(final IGameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
+        this.stats = stats;
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final double imageWidth = dimension2D.getWidth() / 12;
         final double imageHeight = dimension2D.getHeight() / 12;
@@ -164,6 +168,7 @@ public class Room implements GameLifeCycle {
 
         rectangleArrowEast.setOnMouseMoved((event) -> rotateY.setAngle(rotateY.getAngle() % 360 + 0.25));
         rectangleArrowEast.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> rotateY.setAngle(rotateY.getAngle() % 360 + 0.1));
+        stats.notifyNewRoundReady();
     }
 
     @Override
