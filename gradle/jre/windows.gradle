@@ -18,12 +18,13 @@ task extractWindowsJRE(dependsOn: downloadWindowsJRE, type: Copy, group: 'custom
     into "${jreFolder}/windows-x64"
 }
 
-task removeEnclosingFolderWindows(type: Delete, group: 'custom jre') {
-    delete "${jreFolder}/windows-x64/${x64filename}"
-}
+task downloadAndExtractWindowsJRE(dependsOn: extractWindowsJRE, group: 'custom jre') {
+    doLast {
+        copy {
+            from new File(extractWindowsJRE.getDestinationDir(), x64filename)
+            into "${jreFolder}/windows-x64"
+        }
 
-task downloadAndExtractWindowsJRE(dependsOn: extractWindowsJRE, type: Copy, group: 'custom jre') {
-    from new File(extractWindowsJRE.getDestinationDir(), x64filename)
-    into "${jreFolder}/windows-x64"
-    finalizedBy removeEnclosingFolderWindows
+        delete "${jreFolder}/windows-x64/${x64filename}"
+    }
 }

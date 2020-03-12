@@ -18,12 +18,13 @@ task extractMacosJRE(dependsOn: downloadMacosJRE, type: Copy, group: 'custom jre
     into "${jreFolder}/macos"
 }
 
-task removeEnclosingFolderMacos(type: Delete, group: 'custom jre') {
-    delete "${jreFolder}/macos/${filename}"
-}
+task downloadAndExtractMacosJRE(dependsOn: extractMacosJRE, group: 'custom jre') {
+    doLast {
+        copy {
+            from new File(extractMacosJRE.getDestinationDir(), filename)
+            into "${jreFolder}/macos"
+        }
 
-task downloadAndExtractMacosJRE(dependsOn: extractMacosJRE, type: Copy, group: 'custom jre') {
-    from new File(extractMacosJRE.getDestinationDir(), filename)
-    into "${jreFolder}/macos"
-    finalizedBy removeEnclosingFolderMacos
+        delete "${jreFolder}/macos/${filename}"
+    }
 }

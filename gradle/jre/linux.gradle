@@ -18,12 +18,15 @@ task extractLinuxJRE(dependsOn: downloadLinuxJRE, type: Copy, group: 'custom jre
     into "${jreFolder}/linux-x64"
 }
 
-task removeEnclosingFolderLinux(type: Delete, group: 'custom jre') {
-    delete "${jreFolder}/linux-x64/${filename}"
-}
+task downloadAndExtractLinuxJRE(dependsOn: extractLinuxJRE, group: 'custom jre') {
+    doLast {
+        copy {
+            from new File(extractLinuxJRE.getDestinationDir(), filename)
+            into "${jreFolder}/linux-x64"
+        }
 
-task downloadAndExtractLinuxJRE(dependsOn: extractLinuxJRE, type: Copy, group: 'custom jre') {
-    from new File(extractLinuxJRE.getDestinationDir(), filename)
-    into "${jreFolder}/linux-x64"
-    finalizedBy removeEnclosingFolderLinux
+        delete {
+            "${jreFolder}/linux-x64/${filename}"
+        }
+    }
 }
