@@ -1,4 +1,4 @@
-package net.gazeplay.games.colors;
+package net.gazeplay.components;
 
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
