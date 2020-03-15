@@ -22,6 +22,9 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.awt.Robot;
+import java.awt.AWTException;
+
 @Slf4j
 @ToString
 @Getter
@@ -117,11 +120,29 @@ class PictureCard extends Group {
             imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandler);
             gameContext.getGazeDeviceManager().removeEventFilter(imageRectangle);
 
+            final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
+            final double width = screenDimension.getWidth();
+            final double height = screenDimension.getHeight();
+
             if (winner) {
                 onCorrectCardSelected(gameInstance);
+                Robot robot = null;
+                try {
+                    robot = new Robot();
+                } catch (AWTException e) {
+                    e.printStackTrace();
+                }
+                robot.mouseMove((int)width/2, (int)height/2);
             } else {
                 // bad card
                 onWrongCardSelected(gameInstance);
+                Robot robot = null;
+                try {
+                    robot = new Robot();
+                } catch (AWTException e) {
+                    e.printStackTrace();
+                }
+                robot.mouseMove((int)width/2, (int)height/2);
             }
         };
     }

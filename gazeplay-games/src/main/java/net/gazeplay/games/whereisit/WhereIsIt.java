@@ -62,7 +62,9 @@ public class WhereIsIt implements GameLifeCycle {
     @Override
     public void launch() {
 
-        final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
+        int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
+        numberOfImagesToDisplayPerRound = (numberOfImagesToDisplayPerRound % 2 == 0) ? numberOfImagesToDisplayPerRound : numberOfImagesToDisplayPerRound - 1;
+
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
 
         final Random random = new Random();
@@ -104,7 +106,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         gameContext.getChildren().add(questionText);
 
-        final List<Rectangle> pictogramesList = new ArrayList<>(20); // storage of actual Pictogramm nodes in order to delete
+        final List<Rectangle> pictogramesList = new ArrayList<>(20); // storage of actual Pictogram nodes in order to delete
         // them
         // from the group later
 
@@ -113,9 +115,12 @@ public class WhereIsIt implements GameLifeCycle {
             final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
             final double screenWidth = screenDimension.getWidth();
 
+            //final double nbPicto = 9;
             final double nbPicto = Pictos.size();
 
             double pictoSize = screenWidth / (nbPicto + 1);
+
+            log.debug("nbPicto : {}", nbPicto);
 
             log.debug("screenWidth/(nbPicto) : {}", pictoSize);
 
@@ -123,11 +128,19 @@ public class WhereIsIt implements GameLifeCycle {
 
             log.debug("Picto Size: {}", pictoSize);
 
-            int i = 0;
             final double shift = screenWidth / 2 - ((nbPicto / 2) * pictoSize * 1.1);
 
             log.debug("shift Size: {}", shift);
+/*
+            for (int i = 0; i < 9; i++) {
 
+                final Rectangle R = new Rectangle(pictoSize, pictoSize);
+                R.setFill(new ImagePattern(Pictos.get(i)));
+                R.setY(positionY + 100);
+                R.setX(shift + (i++ * pictoSize * 1.1));
+                pictogramesList.add(R);
+            }
+*/
             for (final Image I : Pictos) {
 
                 final Rectangle R = new Rectangle(pictoSize, pictoSize);
