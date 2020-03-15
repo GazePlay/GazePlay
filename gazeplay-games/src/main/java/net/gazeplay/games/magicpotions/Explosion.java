@@ -7,7 +7,6 @@ import javafx.scene.shape.Rectangle;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 
 /**
  * @author Johana MARKU
@@ -50,13 +49,7 @@ class Explosion extends Rectangle {
 
         if (this.enableRewardSound) {
             log.debug("Playing sound animation ...");
-            try {
-                ForegroundSoundsUtils.playSound(defaultSoundResourceLocation);
-            } catch (final Exception e) {
-
-                log.warn("file doesn't exist : {}", defaultSoundResourceLocation);
-                log.warn(e.getMessage());
-            }
+            gameContext.getSoundManager().add(defaultSoundResourceLocation);
         }
     }
 }

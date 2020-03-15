@@ -112,7 +112,7 @@ public class Horses implements GameLifeCycle {
         boardImage.setY(yOffset);
         backgroundLayer.getChildren().add(boardImage);
 
-        die = new DiceRoller((float) gridElementSize / 2);
+        die = new DiceRoller((float) gridElementSize / 2, gameContext.getSoundManager());
         final double diePositionInImage = imageSize / 2 - gridElementSize / 2;
         final StackPane dieContainer = new StackPane();
         dieContainer.getChildren().add(die);
@@ -121,7 +121,10 @@ public class Horses implements GameLifeCycle {
         backgroundLayer.getChildren().add(dieContainer);
 
         rollButton = new ProgressButton();
-        rollButton.assignIndicator(event -> roll(), config.getFixationLength());
+        rollButton.assignIndicator(event -> {
+            roll();
+            stats.incrementNumberOfGoalsReached();
+        }, config.getFixationLength());
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 
@@ -235,6 +238,7 @@ public class Horses implements GameLifeCycle {
             rollImages.put(team, rollImage);
         }
         loopBack.setPreviousSquare(previousCommonSquare);
+        stats.notifyNewRoundReady();
     }
 
     /**

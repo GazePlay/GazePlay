@@ -10,8 +10,8 @@ public class SpaceGameStats extends Stats {
         this.gameName = "space-game";
     }
 
-    public void incNbGoals(int increment) {
-        nbGoals = increment;
+    public void incrementNumberOfGoalsReached(int increment) {
+        nbGoalsReached = increment;
     }
 
 }

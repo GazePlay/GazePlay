@@ -16,6 +16,10 @@ public class ExplorationGamesStats extends Stats {
         super(scene);
     }
 
+    public ExplorationGamesStats(final Scene scene, String name) {
+        super(scene,name);
+    }
+
     @Override
     public SavedStatsInfo saveStats() throws IOException {
         super.saveStats();

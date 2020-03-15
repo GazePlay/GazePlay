@@ -17,7 +17,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 
@@ -121,10 +120,10 @@ public class Egg extends Parent {
                         log.info("enter in the image 3");
 
                         if (turnNumber < totalNumberOfTurns - 1) {
-
+                            stats.incrementNumberOfGoalsReached();
                             turnNumber++;
                             cards.getChildren().get(2).setOpacity(1 - turnNumber / (float) (totalNumberOfTurns - 1));
-                            stats.incNbGoals();
+                            stats.incrementNumberOfGoalsToReach();
                             playSound(1);
 
                         } else if (turnNumber == totalNumberOfTurns - 1) {
@@ -137,14 +136,12 @@ public class Egg extends Parent {
                             cards.getChildren().get(1).setOpacity(0);
 
                             progressIndicator.setOpacity(0);
-                            stats.incNbGoals();
+                            stats.incrementNumberOfGoalsReached();
                             playSound(2);
 
                             final PauseTransition t = new PauseTransition(Duration.seconds(2));
 
                             t.setOnFinished(actionEvent1 -> {
-
-                                ForegroundSoundsUtils.stopSound();
 
                                 gameContext.playWinTransition(0, event -> {
                                     gameInstance.dispose();
@@ -175,7 +172,7 @@ public class Egg extends Parent {
 
     public void playSound(final int i) {
         final String soundResource = "data/egg/sounds/" + i + ".mp3";
-        ForegroundSoundsUtils.playSound(soundResource);
+        gameContext.getSoundManager().add(soundResource);
     }
 
 }

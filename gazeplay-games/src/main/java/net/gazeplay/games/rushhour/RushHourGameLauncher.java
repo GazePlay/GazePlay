@@ -16,7 +16,7 @@ public class RushHourGameLauncher implements GameSpec.GameLauncher<Stats, GameSp
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
                                        GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-        return new RushHour(gameContext);
+        return new RushHour(gameContext, stats);
     }
 
 }
