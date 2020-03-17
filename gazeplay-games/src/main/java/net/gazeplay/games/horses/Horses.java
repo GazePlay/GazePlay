@@ -45,41 +45,211 @@ public class Horses implements GameLifeCycle {
     }
 
     private final IGameContext gameContext;
-    private final Dimension2D dimensions;
-    private final Configuration config;
+    private final Stats stats;
+    private final int gameVersion;
     private final int nbPlayers;
+
+    private Dimension2D dimensions;
+    private Configuration config;
     @Getter
-    private final Multilinguism translate;
-    private final int nbPawns;
+    private Multilinguism translate;
+    private int nbPawns;
 
-    private final Group backgroundLayer;
-    private final Group foregroundLayer;
+    private Group backgroundLayer;
+    private Group foregroundLayer;
 
-    private final double gridElementSize;
+    private double gridElementSize;
 
-    private final DiceRoller die;
-    private final ProgressButton rollButton;
-    private final HashMap<TEAMS, ImageView> rollImages;
+    private DiceRoller die;
+    private ProgressButton rollButton;
+    private HashMap<TEAMS, ImageView> rollImages;
     private int diceOutcome;
 
-    private final ArrayList<ProgressButton> teamChoosers;
-    private final ArrayList<TEAMS> chosenTeams;
+    private ArrayList<ProgressButton> teamChoosers;
+    private ArrayList<TEAMS> chosenTeams;
     private int currentTeam;
     private int nbTeamsChosen;
-    private final HashMap<TEAMS, Square> startSquares;
-    private final HashMap<TEAMS, ArrayList<Pawn>> pawns;
-    private final HashMap<TEAMS, ArrayList<Position>> spawnPoints;
-    private final HashMap<TEAMS, Color> fontColors;
+    private HashMap<TEAMS, Square> startSquares;
+    private HashMap<TEAMS, ArrayList<Pawn>> pawns;
+    private HashMap<TEAMS, ArrayList<Position>> spawnPoints;
+    private HashMap<TEAMS, Color> fontColors;
 
-    private final VBox messages;
+    private VBox messages;
 
     public Horses(final IGameContext gameContext, final Stats stats, final int gameVersion, final int nbPlayers) {
         this.gameContext = gameContext;
+        this.stats = stats;
+        this.gameVersion = gameVersion;
         this.nbPlayers = nbPlayers;
+    }
 
+    /**
+     * When a team is selected (by gazing at a big round button) This adds the pawns to the game, in their initial
+     * position
+     */
+    private void selectTeam(final TEAMS team) {
+        chosenTeams.add(team);
+        final ArrayList<Pawn> pawnList = new ArrayList();
+        final ArrayList<Position> spawnPositions = spawnPoints.get(team);
+        for (int i = 0; i < nbPawns; i++) {
+
+            final ImageView bibouleImage = new ImageView(String.format(BIBOULEPATH, team.toString()));
+            bibouleImage.setFitHeight(gridElementSize);
+            bibouleImage.setFitWidth(gridElementSize);
+            bibouleImage.setLayoutX(spawnPositions.get(i).getX());
+            bibouleImage.setLayoutY(spawnPositions.get(i).getY());
+
+            final ProgressButton button = new ProgressButton();
+            final ImageView selector = new ImageView("data/horses/selector.png");
+            selector.setFitHeight(gridElementSize);
+            selector.setFitWidth(gridElementSize);
+            button.setImage(selector);
+            button.setLayoutX(spawnPositions.get(i).getX());
+            button.setLayoutY(spawnPositions.get(i).getY());
+            button.disable();
+            gameContext.getGazeDeviceManager().addEventFilter(button);
+
+            backgroundLayer.getChildren().add(bibouleImage);
+            foregroundLayer.getChildren().add(button);
+
+            final Pawn pawn = new Pawn(team, bibouleImage, button, spawnPositions.get(i), startSquares.get(team));
+            pawnList.add(pawn);
+        }
+        pawns.put(team, pawnList);
+        nbTeamsChosen++;
+        if (nbTeamsChosen >= nbPlayers) {
+            foregroundLayer.getChildren().removeAll(teamChoosers);
+            startGame();
+        } else {
+            showMessage(Color.WHITE, "%d more team(s) to select", nbPlayers - nbTeamsChosen);
+        }
+    }
+
+    /**
+     * Is called when teams have been selected
+     */
+    private void startGame() {
+        foregroundLayer.getChildren().add(rollButton);
+        currentTeam = -1;
+        endOfTurn();
+    }
+
+    /**
+     * Hides the roll button out of the way, and rolls the die
+     */
+    private void roll() {
+        rollButton.setLayoutX(-1000);
+        rollButton.setLayoutY(-1000);
+        diceOutcome = die.roll(e -> showMovablePawns());
+    }
+
+    /**
+     * Checks which pawns from the current team are allowed to move, if they are, their button is activated
+     */
+    private void showMovablePawns() {
+        final ArrayList<Pawn> currentPawns = pawns.get(chosenTeams.get(currentTeam));
+        int nbNonMovablePawns = 0;
+        for (final Pawn pawn : currentPawns) {
+            if (!pawn.isOnTrack() && diceOutcome == 6 && !startSquares.get(chosenTeams.get(currentTeam)).isOccupied()) {
+                pawn.activate(e -> {
+                    deactivatePawns();
+                    pawn.spawn();
+                }, config.getFixationLength());
+            } else if (pawn.isOnTrack() && pawn.canMove(diceOutcome)) {
+                pawn.activate(e -> {
+                    deactivatePawns();
+                    pawn.move(diceOutcome);
+                }, config.getFixationLength());
+            } else {
+                nbNonMovablePawns++;
+            }
+        }
+        if (nbNonMovablePawns == currentPawns.size()) {
+            showMessage(getCurrentFontColor(), "No moves available");
+            endOfTurn();
+        } else {
+            showMessage(getCurrentFontColor(), "Select the pawn you want to move");
+        }
+    }
+
+    /**
+     * When a pawn is selected, all other pawns need to be deactivated
+     */
+    private void deactivatePawns() {
+        final ArrayList<Pawn> currentPawns = pawns.get(chosenTeams.get(currentTeam));
+        for (final Pawn pawn : currentPawns) {
+            pawn.deactivate();
+        }
+    }
+
+    /**
+     * @return the color associated to the current team playing
+     */
+    private Color getCurrentFontColor() {
+        return fontColors.get(chosenTeams.get(currentTeam));
+    }
+
+    /**
+     * Displays a message in a vertical queue, which disappears after a short time
+     */
+    public void showMessage(final Color fontColor, final String message, final Object... values) {
+        final Text messageText = new Text(0, dimensions.getHeight() / 3,
+            String.format(translate.getTrad(message, config.getLanguage()), values));
+        messageText.setTextAlignment(TextAlignment.CENTER);
+        messageText.setFill(fontColor);
+        messageText.setFont(new Font(dimensions.getHeight() / 10));
+        messageText.setStyle("-fx-stroke: black; -fx-stroke-width: 3;");
+        messageText.setWrappingWidth(dimensions.getWidth());
+        messageText.setOpacity(0);
+
+        messages.getChildren().add(messageText);
+
+        final Timeline showMessage = new Timeline(
+            new KeyFrame(Duration.seconds(0.3), new KeyValue(messageText.opacityProperty(), 1)),
+            new KeyFrame(Duration.seconds(4), new KeyValue(messageText.opacityProperty(), 1)),
+            new KeyFrame(Duration.seconds(4.3), new KeyValue(messageText.opacityProperty(), 0)));
+
+        showMessage.setOnFinished(e -> messages.getChildren().remove(messageText));
+
+        showMessage.playFromStart();
+    }
+
+    /**
+     * Called at the end of a turn, it gives the turn to the next team, or leaves it to the current if a 6 was rolled It
+     * resets the roll button, with the appropriate color
+     */
+    public void endOfTurn() {
+        if (diceOutcome != 6) {
+            currentTeam = (currentTeam + 1) % nbPlayers;
+            showMessage(getCurrentFontColor(), "%s team's turn",
+                translate.getTrad(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
+        } else {
+            showMessage(getCurrentFontColor(), "Play again");
+        }
+        final ImageView rollImage = rollImages.get(chosenTeams.get(currentTeam));
+        rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
+        rollButton.setLayoutY(dimensions.getHeight() / 2 - rollImage.getFitHeight() / 2);
+        rollButton.setImage(rollImage);
+    }
+
+    /**
+     * Plays the win animation at the end of the game
+     */
+    public void win(final Pawn pawn) {
+        showMessage(getCurrentFontColor(), "%s team wins",
+            translate.getTrad(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
+        gameContext.playWinTransition(100, e -> {
+            dispose();
+            gameContext.showRoundStats(stats,this);
+        });
+    }
+
+    @Override
+    public void launch() {
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.config = gameContext.getConfiguration();
         this.translate = Multilinguism.getSingleton();
+        diceOutcome = 0;
 
         this.backgroundLayer = new Group();
         this.foregroundLayer = new Group();
@@ -239,175 +409,12 @@ public class Horses implements GameLifeCycle {
         }
         loopBack.setPreviousSquare(previousCommonSquare);
         stats.notifyNewRoundReady();
-    }
-
-    /**
-     * When a team is selected (by gazing at a big round button) This adds the pawns to the game, in their initial
-     * position
-     */
-    private void selectTeam(final TEAMS team) {
-        chosenTeams.add(team);
-        final ArrayList<Pawn> pawnList = new ArrayList();
-        final ArrayList<Position> spawnPositions = spawnPoints.get(team);
-        for (int i = 0; i < nbPawns; i++) {
-
-            final ImageView bibouleImage = new ImageView(String.format(BIBOULEPATH, team.toString()));
-            bibouleImage.setFitHeight(gridElementSize);
-            bibouleImage.setFitWidth(gridElementSize);
-            bibouleImage.setLayoutX(spawnPositions.get(i).getX());
-            bibouleImage.setLayoutY(spawnPositions.get(i).getY());
-
-            final ProgressButton button = new ProgressButton();
-            final ImageView selector = new ImageView("data/horses/selector.png");
-            selector.setFitHeight(gridElementSize);
-            selector.setFitWidth(gridElementSize);
-            button.setImage(selector);
-            button.setLayoutX(spawnPositions.get(i).getX());
-            button.setLayoutY(spawnPositions.get(i).getY());
-            button.disable();
-            gameContext.getGazeDeviceManager().addEventFilter(button);
-
-            backgroundLayer.getChildren().add(bibouleImage);
-            foregroundLayer.getChildren().add(button);
-
-            final Pawn pawn = new Pawn(team, bibouleImage, button, spawnPositions.get(i), startSquares.get(team));
-            pawnList.add(pawn);
-        }
-        pawns.put(team, pawnList);
-        nbTeamsChosen++;
-        if (nbTeamsChosen >= nbPlayers) {
-            foregroundLayer.getChildren().removeAll(teamChoosers);
-            startGame();
-        } else {
-            showMessage(Color.WHITE, "%d more team(s) to select", nbPlayers - nbTeamsChosen);
-        }
-    }
-
-    /**
-     * Is called when teams have been selected
-     */
-    private void startGame() {
-        foregroundLayer.getChildren().add(rollButton);
-        currentTeam = -1;
-        endOfTurn();
-    }
-
-    /**
-     * Hides the roll button out of the way, and rolls the die
-     */
-    private void roll() {
-        rollButton.setLayoutX(-1000);
-        rollButton.setLayoutY(-1000);
-        diceOutcome = die.roll(e -> showMovablePawns());
-    }
-
-    /**
-     * Checks which pawns from the current team are allowed to move, if they are, their button is activated
-     */
-    private void showMovablePawns() {
-        final ArrayList<Pawn> currentPawns = pawns.get(chosenTeams.get(currentTeam));
-        int nbNonMovablePawns = 0;
-        for (final Pawn pawn : currentPawns) {
-            if (!pawn.isOnTrack() && diceOutcome == 6 && !startSquares.get(chosenTeams.get(currentTeam)).isOccupied()) {
-                pawn.activate(e -> {
-                    deactivatePawns();
-                    pawn.spawn();
-                }, config.getFixationLength());
-            } else if (pawn.isOnTrack() && pawn.canMove(diceOutcome)) {
-                pawn.activate(e -> {
-                    deactivatePawns();
-                    pawn.move(diceOutcome);
-                }, config.getFixationLength());
-            } else {
-                nbNonMovablePawns++;
-            }
-        }
-        if (nbNonMovablePawns == currentPawns.size()) {
-            showMessage(getCurrentFontColor(), "No moves available");
-            endOfTurn();
-        } else {
-            showMessage(getCurrentFontColor(), "Select the pawn you want to move");
-        }
-    }
-
-    /**
-     * When a pawn is selected, all other pawns need to be deactivated
-     */
-    private void deactivatePawns() {
-        final ArrayList<Pawn> currentPawns = pawns.get(chosenTeams.get(currentTeam));
-        for (final Pawn pawn : currentPawns) {
-            pawn.deactivate();
-        }
-    }
-
-    /**
-     * @return the color associated to the current team playing
-     */
-    private Color getCurrentFontColor() {
-        return fontColors.get(chosenTeams.get(currentTeam));
-    }
-
-    /**
-     * Displays a message in a vertical queue, which disappears after a short time
-     */
-    public void showMessage(final Color fontColor, final String message, final Object... values) {
-        final Text messageText = new Text(0, dimensions.getHeight() / 3,
-            String.format(translate.getTrad(message, config.getLanguage()), values));
-        messageText.setTextAlignment(TextAlignment.CENTER);
-        messageText.setFill(fontColor);
-        messageText.setFont(new Font(dimensions.getHeight() / 10));
-        messageText.setStyle("-fx-stroke: black; -fx-stroke-width: 3;");
-        messageText.setWrappingWidth(dimensions.getWidth());
-        messageText.setOpacity(0);
-
-        messages.getChildren().add(messageText);
-
-        final Timeline showMessage = new Timeline(
-            new KeyFrame(Duration.seconds(0.3), new KeyValue(messageText.opacityProperty(), 1)),
-            new KeyFrame(Duration.seconds(4), new KeyValue(messageText.opacityProperty(), 1)),
-            new KeyFrame(Duration.seconds(4.3), new KeyValue(messageText.opacityProperty(), 0)));
-
-        showMessage.setOnFinished(e -> messages.getChildren().remove(messageText));
-
-        showMessage.playFromStart();
-    }
-
-    /**
-     * Called at the end of a turn, it gives the turn to the next team, or leaves it to the current if a 6 was rolled It
-     * resets the roll button, with the appropriate color
-     */
-    public void endOfTurn() {
-        if (diceOutcome != 6) {
-            currentTeam = (currentTeam + 1) % nbPlayers;
-            showMessage(getCurrentFontColor(), "%s team's turn",
-                translate.getTrad(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
-        } else {
-            showMessage(getCurrentFontColor(), "Play again");
-        }
-        final ImageView rollImage = rollImages.get(chosenTeams.get(currentTeam));
-        rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
-        rollButton.setLayoutY(dimensions.getHeight() / 2 - rollImage.getFitHeight() / 2);
-        rollButton.setImage(rollImage);
-    }
-
-    /**
-     * Plays the win animation at the end of the game
-     */
-    public void win(final Pawn pawn) {
-        showMessage(getCurrentFontColor(), "%s team wins",
-            translate.getTrad(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
-        gameContext.playWinTransition(100, e -> {
-
-        });
-    }
-
-    @Override
-    public void launch() {
         showMessage(Color.WHITE, "Select teams by looking at the big circles");
     }
 
     @Override
     public void dispose() {
-
+        this.gameContext.getChildren().clear();
+        this.gameContext.clear();
     }
 }

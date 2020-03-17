@@ -162,8 +162,7 @@ class Target extends Parent {
 
         timelineParticle.setOnFinished(actionEvent -> {
             Target.this.gameContext.getChildren().removeAll(particles);
-            if (((!isRabbit) && (gameContext.getChildren().isEmpty()))
-                || ((isRabbit) && (gameContext.getChildren().size() <= 1))) {
+            if (stats.getNbGoalsReached() == stats.getNbGoalsToReach()) {
                 final long totalTime = (System.currentTimeMillis() - startTime) / 1000;
                 final Label l = new Label("Score : " + totalTime + "s");
                 final Color color = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
