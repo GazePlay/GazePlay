@@ -13,6 +13,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
@@ -29,7 +30,7 @@ import java.util.Random;
  */
 @Slf4j
 class Target extends Parent {
-    private TranslateTransition currentTranslation;
+
     private final Stats stats;
     private final int difficulty;
     private final int level;
@@ -40,38 +41,40 @@ class Target extends Parent {
     private final Divisor gameInstance;
     private final long startTime;
     private final Dimension2D dimension;
-    private final boolean lapin;
+    private final boolean isRabbit;
+
+    @Getter
     private final ImageLibrary imgLib;
-    private final Circle cercle;
+    private final Circle circle;
     private Timeline timeline;
 
     public Target(final IGameContext gameContext, final Stats stats, final ImageLibrary imgLib, final int level, final long start,
-                  final Divisor gameInstance, final Position pos, final boolean lapin) {
+                  final Divisor gameInstance, final Position pos, final boolean isRabbit) {
         this.level = level;
         this.difficulty = 3;
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
         this.stats = stats;
         this.startTime = start;
-        this.lapin = lapin;
+        this.isRabbit = isRabbit;
         this.imgLib = imgLib;
         this.pos = pos;
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.radius = 200d / (level + 1);
         this.timeline = new Timeline();
 
-        this.cercle = new Circle(pos.getX(), pos.getY(), this.radius);
-        this.cercle.setFill(new ImagePattern(this.imgLib.pickRandomImage(), 0, 0, 1, 1, true));
-        this.getChildren().add(cercle);
+        this.circle = new Circle(pos.getX(), pos.getY(), this.radius);
+        this.circle.setFill(new ImagePattern(this.imgLib.pickRandomImage(), 0, 0, 1, 1, true));
+        this.getChildren().add(circle);
 
         enterEvent = e -> enter();
 
         if (level != 0) {
-            final Timeline waitbeforestart = new Timeline();
+            final Timeline waitBeforeStart = new Timeline();
 
-            waitbeforestart.getKeyFrames().add(new KeyFrame(Duration.seconds(0.6)));
-            waitbeforestart.setOnFinished(actionEvent -> addEvent());
-            waitbeforestart.play();
+            waitBeforeStart.getKeyFrames().add(new KeyFrame(Duration.seconds(0.6)));
+            waitBeforeStart.setOnFinished(actionEvent -> addEvent());
+            waitBeforeStart.play();
         } else {
             addEvent();
         }
@@ -100,8 +103,8 @@ class Target extends Parent {
 
                     Target.this.pos = new Position(newCenterX, newCenterY);
 
-                    Target.this.cercle.setCenterX(newCenterX);
-                    Target.this.cercle.setCenterY(newCenterY);
+                    Target.this.circle.setCenterX(newCenterX);
+                    Target.this.circle.setCenterY(newCenterY);
 
                     if (newCenterX <= (Target.this.radius) || newCenterX >= (width - Target.this.radius)) {
                         dx = -dx;
@@ -120,9 +123,6 @@ class Target extends Parent {
 
     public void enter() {
         stats.incrementNumberOfGoalsReached();
-        if (currentTranslation != null) {
-            currentTranslation.stop();
-        }
 
         this.removeEventFilter(MouseEvent.ANY, enterEvent);
         this.removeEventFilter(GazeEvent.ANY, enterEvent);
@@ -162,8 +162,8 @@ class Target extends Parent {
 
         timelineParticle.setOnFinished(actionEvent -> {
             Target.this.gameContext.getChildren().removeAll(particles);
-            if (((!lapin) && (gameContext.getChildren().isEmpty()))
-                || ((lapin) && (gameContext.getChildren().size() <= 1))) {
+            if (((!isRabbit) && (gameContext.getChildren().isEmpty()))
+                || ((isRabbit) && (gameContext.getChildren().size() <= 1))) {
                 final long totalTime = (System.currentTimeMillis() - startTime) / 1000;
                 final Label l = new Label("Score : " + totalTime + "s");
                 final Color color = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
@@ -194,7 +194,7 @@ class Target extends Parent {
         double tempY = y;
         for (int i = 0; i < 2; i++) {
             final Target target = new Target(gameContext, stats, this.imgLib, level + 1, startTime, gameInstance,
-                new Position(tempX, tempY), lapin);
+                new Position(tempX, tempY), isRabbit);
 
             if (tempY + target.radius > (int) dimension.getHeight()) {
                 tempY = (int) dimension.getHeight() - (int) target.radius * 2;
@@ -240,9 +240,5 @@ class Target extends Parent {
         this.addEventFilter(GazeEvent.ANY, enterEvent);
 
         gameContext.getGazeDeviceManager().addEventFilter(this);
-    }
-
-    private void setPos(final Position pos) {
-        this.pos = pos;
     }
 }
