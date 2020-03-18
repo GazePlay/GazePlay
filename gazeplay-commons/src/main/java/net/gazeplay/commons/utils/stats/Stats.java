@@ -34,6 +34,7 @@ import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.io.*;
+import java.lang.invoke.StringConcatException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -97,6 +98,10 @@ public class Stats implements GazeMotionListener {
 
     private ArrayList<String> coordinateData = new ArrayList<String>();
     private JsonObject savedDataObj = new JsonObject();
+    private int idForReplay = 0;
+    private int digits = 4;
+    private int seed = 123456325;
+
 
     public Stats(final Scene gameContextScene) {
         this(gameContextScene, null);
@@ -214,6 +219,7 @@ public class Stats implements GazeMotionListener {
             recordGazeMovements = e -> {
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
+                idForReplay= randNumber();
                 saveCoordinates("{" + getX + "," + getY + "}");
                 if (!config.isHeatMapDisabled()) {
                     incHeatMap(getX, getY);
@@ -236,6 +242,7 @@ public class Stats implements GazeMotionListener {
             recordMouseMovements = e -> {
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
+                idForReplay = randNumber();
                 saveCoordinates("{" + getX + "," + getY + "}");
                 if (!config.isHeatMapDisabled()) {
                     incHeatMap(getX, getY);
@@ -319,7 +326,7 @@ public class Stats implements GazeMotionListener {
         final String gazeMetricsFilePrefix = Utils.now() + "-metrics";
         final String screenShotFilePrefix = Utils.now() + "-screenshot";
         final String colorBandsFilePrefix = Utils.now() + "-colorBands";
-        final String replayDataFilePrefix= Utils.now() + "-replayData";
+        final String replayDataFilePrefix = Utils.now() + "-replayData";
 
         final File gazeMetricsFile = new File(todayDirectory, gazeMetricsFilePrefix + ".png");
         final File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
@@ -338,12 +345,12 @@ public class Stats implements GazeMotionListener {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, bImage.getWidth(), bImage.getHeight());
         g.drawImage(screenshotImage, 0, 0, null);
-        BufferedWriter bf = new BufferedWriter( new FileWriter(replayDataFile) );
+        BufferedWriter bf = new BufferedWriter(new FileWriter(replayDataFile));
         bf.write(buildSavedDataJSON(coordinateData).toString());
         bf.flush();
 
         final SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsFile, screenShotFile,
-            colorBandsFile,replayDataFile);
+            colorBandsFile, replayDataFile);
 
         this.savedStatsInfo = savedStatsInfo;
         if (this.heatMap != null) {
@@ -587,26 +594,36 @@ public class Stats implements GazeMotionListener {
         return this.gameScreenShot;
     }
 
-    private JsonObject buildSavedDataJSON(ArrayList<String> data){
-       int id= ranNumber(40);
-        savedDataObj.addProperty("id",id);
-        savedDataObj.addProperty("coordinates",data.toString());
+    private JsonObject buildSavedDataJSON(ArrayList<String> data) {
+        savedDataObj.addProperty("id", idForReplay);
+        savedDataObj.addProperty("rinates", data.toString());
         return savedDataObj;
     }
 
-    private ArrayList<String> saveCoordinates (String coordinates){
+    private ArrayList<String> saveCoordinates(String coordinates) {
         coordinateData.add(coordinates);
         return coordinateData;
     }
 
-    private int ranNumber(int limit)
-    {
-        /*
-        We can change the logic if generating the random number to whatever we want its a temporary function to test
-         */
-        int seed = 100000;
-        seed = (seed * 125) % 2796203;
-        return ((seed % limit) + 1);
+
+
+    int randNumber() {
+        int n = seed * seed;
+        StringBuilder number = new StringBuilder(String.valueOf(n));
+        //pad
+        while(number.length() < digits * 2){
+            number.insert(0, "0");
+        }
+
+        //Get middle 4 digits
+
+        int start = (int) Math.floor(digits /2);
+        int end = start + digits;
+        seed = Integer.parseInt(number.substring(start,end));
+        return seed;
+
     }
+
+
 
 }
