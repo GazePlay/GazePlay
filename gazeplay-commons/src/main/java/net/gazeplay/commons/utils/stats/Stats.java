@@ -444,7 +444,7 @@ public class Stats implements GazeMotionListener {
     }
 
     public int getShotRatio() {
-        if (this.nbGoalsToReach == this.nbGoalsReached || this.nbGoalsReached == 0) {
+        if (this.nbGoalsToReach == this.nbGoalsReached || this.nbGoalsToReach == 0) {
             return 100;
         } else {
             return (int) ((float) this.nbGoalsReached / (float) this.nbGoalsToReach * 100.0);

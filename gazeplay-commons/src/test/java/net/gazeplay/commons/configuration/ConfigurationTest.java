@@ -27,13 +27,15 @@ class ConfigurationTest {
             + "resources" + sep;
 
     private Configuration configuration;
-    private ApplicationConfig applicationConfig;
     private Properties properties;
     private File testProperties;
 
     @BeforeEach
-    void setup() {
-        testProperties = new File(localDataFolder, "GazePlay.properties");
+    void setup() throws IOException {
+        testProperties = new File(localDataFolder, "GazePlay-test.properties");
+        File originalFile = new File(localDataFolder, "GazePlay.properties");
+        Files.copy(originalFile.toPath(), testProperties.toPath());
+
         properties = new Properties();
 
         try(InputStream is = Files.newInputStream(testProperties.toPath())) {
@@ -42,13 +44,13 @@ class ConfigurationTest {
             log.debug("Error in loading test properties: ", ie);
         }
 
-        applicationConfig = ConfigFactory.create(ApplicationConfig.class, properties);
+        ApplicationConfig applicationConfig = ConfigFactory.create(ApplicationConfig.class, properties);
         configuration = new Configuration(testProperties, applicationConfig);
     }
 
     @AfterEach
-    void reset() throws IOException {
-        applicationConfig.store(Files.newOutputStream(testProperties.toPath()), "Test File");
+    void reset() {
+        testProperties.delete();
     }
 
     @Test

@@ -13,7 +13,18 @@ task downloadMacosJRE(type: Download, group: 'custom jre') {
     overwrite false
 }
 
-task downloadAndExtractMacosJRE(dependsOn: downloadMacosJRE, type: Copy, group: 'custom jre') {
+task extractMacosJRE(dependsOn: downloadMacosJRE, type: Copy, group: 'custom jre') {
     from tarTree(downloadMacosJRE.dest)
     into "${jreFolder}/macos"
+}
+
+task downloadAndExtractMacosJRE(dependsOn: extractMacosJRE, group: 'custom jre') {
+    doLast {
+        copy {
+            from new File(extractMacosJRE.getDestinationDir(), filename)
+            into "${jreFolder}/macos"
+        }
+
+        delete "${jreFolder}/macos/${filename}"
+    }
 }

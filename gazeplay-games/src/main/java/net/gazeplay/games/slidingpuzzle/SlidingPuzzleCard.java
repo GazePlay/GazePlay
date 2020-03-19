@@ -190,7 +190,6 @@ class SlidingPuzzleCard extends Parent {
         return e -> {
 
             if (!(currentTimeline.getStatus() == Animation.Status.RUNNING)
-                && (timelineProgressBar != null)
                 && (e.getEventType() == MouseEvent.MOUSE_ENTERED
                 || e.getEventType() == GazeEvent.GAZE_ENTERED) && checkIfNeighbor()) {
 
