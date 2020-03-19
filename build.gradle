@@ -26,6 +26,7 @@ ext.javafxVersion = "11.0.2"
 apply from: "${rootDir}/gradle/package.gradle"
 apply from: "${rootDir}/gradle/installer.gradle"
 apply from: "${rootDir}/gradle/jre.gradle"
+apply from: "${rootDir}/gradle/drivers.gradle"
 
 allprojects {
     group = 'com.github.gazeplay'
@@ -163,6 +164,7 @@ dependencies {
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
 }
 
+
 distributions {
     noJRE {
         setDistributionBaseName "${project.name}-no-jre"
@@ -200,6 +202,9 @@ distributions {
             from("build/jre/linux-x64") {
                 into 'lib/jre'
             }
+            from("build/tobiiDriversForLinux/linux-x64") {
+                into 'tobiiDriversForLinux'
+            }
         }
     }
 
@@ -217,9 +222,11 @@ distributions {
     }
 }
 
+task('downloadAndExtractLinuxDependecies').dependsOn('downloadAndExtractLinuxJRE', 'downloadAndExtractLinuxtobiiDriversForLinux')
+
 macosDistTar.dependsOn(downloadAndExtractMacosJRE)
-linuxDistTar.dependsOn(downloadAndExtractLinuxJRE)
 windowsDistZip.dependsOn(downloadAndExtractWindowsJRE)
+linuxDistTar.dependsOn(downloadAndExtractLinuxDependecies)
 
 tasks.withType(Tar){
     compression = Compression.GZIP

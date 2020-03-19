@@ -1,0 +1,28 @@
+def downloadLocation = new File(project.repositories.mavenLocal().url).getAbsolutePath();
+def tobiiDriverFilename = 'tobiiDriversForLinuxFolder'
+def tobiiDriversForLinuxFolder = "${buildDir}/${tobiiDriverFilename}"
+
+task downloadLinuxtobiiDriversForLinux(type: Download, group: 'custom tobiiDriversForLinux') {
+    src 'https://github.com/GazePlay/TobiiStreamEngineForJava/releases/download/4.0/TobiiDriversForLinux.tar.gz'
+    dest new File("${downloadLocation}/tobiiDriversForLinux", 'linux.tar.gz')
+    overwrite false
+}
+
+task extractLinuxtobiiDriversForLinux(dependsOn: downloadLinuxtobiiDriversForLinux, type: Copy, group: 'custom tobiiDriversForLinux') {
+    from zipTree(downloadLinuxtobiiDriversForLinux.dest)
+    into "${tobiiDriversForLinuxFolder}/linux-x64"
+}
+
+task downloadAndExtractLinuxtobiiDriversForLinux(dependsOn: extractLinuxtobiiDriversForLinux, group: 'custom tobiiDriversForLinux') {
+    doLast {
+        copy {
+            from new File(extractLinuxtobiiDriversForLinux.getDestinationDir(),tobiiDriverFilename)
+            into "${tobiiDriversForLinuxFolder}/linux-x64"
+        }
+
+        delete {
+            "${tobiiDriversForLinuxFolder}/linux-x64/${tobiiDriverFilename}"
+        }
+    }
+}
+
