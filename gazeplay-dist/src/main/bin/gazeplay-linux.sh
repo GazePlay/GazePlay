@@ -32,7 +32,11 @@ echo "JAVA_HOME = ${JAVA_HOME}"
 while true; do
     read -p "Do you wish to install tobii4C drivers?" yn
     case $yn in
-        [Yy]* ) ./$WORKING_DIR/tobiiDrivers/drivers/install_all; break;;
+        [Yy]* )
+          cd $WORKING_DIR/tobiiDrivers/drivers/
+          ./install_drivers.sh;
+          cd $WORKING_DIR;
+          break;;
         [Nn]* ) break;;
         * ) echo "Please answer yes or no.";;
     esac
