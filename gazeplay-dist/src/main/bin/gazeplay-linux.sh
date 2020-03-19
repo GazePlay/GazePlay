@@ -29,6 +29,15 @@ JAVA_HOME=${LIB_DIR}/jre/bin
 
 echo "JAVA_HOME = ${JAVA_HOME}"
 
+while true; do
+    read -p "Do you wish to install tobii4C drivers?" yn
+    case $yn in
+        [Yy]* ) ./$WORKING_DIR/tobiiDrivers/drivers/install_all; break;;
+        [Nn]* ) break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
 export JAVA_CMD="java -cp \"$CLASSPATH\" ${JAVA_OPTS} net.gazeplay.GazePlayLauncher"
 
 echo "Executing command line: $JAVA_CMD"
