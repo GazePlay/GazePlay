@@ -9,7 +9,7 @@ task downloadLinuxtobiiDriversForLinux(type: Download, group: 'custom tobiiDrive
 }
 
 task extractLinuxtobiiDriversForLinux(dependsOn: downloadLinuxtobiiDriversForLinux, type: Copy, group: 'custom tobiiDriversForLinux') {
-    from zipTree(downloadLinuxtobiiDriversForLinux.dest)
+    from tarTree(downloadLinuxtobiiDriversForLinux.dest)
     into "${tobiiDriversForLinuxFolder}/linux-x64"
 }
 
