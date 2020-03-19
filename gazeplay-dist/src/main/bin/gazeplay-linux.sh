@@ -30,11 +30,11 @@ JAVA_HOME=${LIB_DIR}/jre/bin
 echo "JAVA_HOME = ${JAVA_HOME}"
 
 while true; do
-    read -p "Do you wish to install tobii4C drivers?" yn
+    read -p "Do you wish to install tobii4C drivers?[y/n]" yn
     case $yn in
         [Yy]* )
           cd $WORKING_DIR/tobiiDrivers/drivers/
-          ./install_drivers.sh;
+          sh ./install_drivers.sh;
           cd $WORKING_DIR;
           break;;
         [Nn]* ) break;;
