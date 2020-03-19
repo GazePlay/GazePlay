@@ -64,4 +64,5 @@ task prepareInnoSetupFiles(group: 'distribution') {
 task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
     from zipTree("${buildDir}/distributions/gazeplay-project-windows-x64-${version}.zip")
     into buildDir
+    fileMode 0755
 }
