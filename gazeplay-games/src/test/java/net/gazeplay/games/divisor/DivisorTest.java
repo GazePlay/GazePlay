@@ -107,7 +107,7 @@ class DivisorTest {
     void shouldLaunchCustom() {
         new MockUp<Utils>() {
             @mockit.Mock
-            public File getImagesSubDirectory(String dir) {
+            public File getImagesSubdirectory(String dir) {
                 return new File(localDataFolder, "images/" + dir);
             }
         };
@@ -126,7 +126,7 @@ class DivisorTest {
     void shouldLaunchDefault() {
         new MockUp<Utils>() {
             @mockit.Mock
-            public File getImagesSubDirectory(String dir) {
+            public File getImagesSubdirectory(String dir) {
                 return new File("wrong/path");
             }
         };
