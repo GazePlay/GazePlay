@@ -12,4 +12,12 @@ class MultilinguismFactoryTest {
 
         assertNotNull(result);
     }
+
+    @Test
+    void shouldGetByResource() {
+        String path = "data/multilinguism/multilinguism.csv";
+        Multilinguism result = MultilinguismFactory.getForResource(path);
+
+        assertNotNull(result);
+    }
 }
