@@ -289,7 +289,7 @@ public class WhereIsIt implements GameLifeCycle {
                     // TODO for now the line under is commented to avoid freeze
                     //questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
 
-                    question = MultilinguismFactory.getSingleton().getTrad("findodd", config.getLanguage());
+                    question = MultilinguismFactory.getSingleton().getTranslation("findodd", config.getLanguage());
 
                     pictograms = getPictogramms(folderName);
 
