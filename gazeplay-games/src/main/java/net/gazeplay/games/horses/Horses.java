@@ -23,6 +23,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.DiceRoller;
 import net.gazeplay.components.Position;
@@ -194,7 +195,7 @@ public class Horses implements GameLifeCycle {
      */
     public void showMessage(final Color fontColor, final String message, final Object... values) {
         final Text messageText = new Text(0, dimensions.getHeight() / 3,
-            String.format(translate.getTrad(message, config.getLanguage()), values));
+            String.format(translate.getTranslation(message, config.getLanguage()), values));
         messageText.setTextAlignment(TextAlignment.CENTER);
         messageText.setFill(fontColor);
         messageText.setFont(new Font(dimensions.getHeight() / 10));
@@ -222,7 +223,7 @@ public class Horses implements GameLifeCycle {
         if (diceOutcome != 6) {
             currentTeam = (currentTeam + 1) % nbPlayers;
             showMessage(getCurrentFontColor(), "%s team's turn",
-                translate.getTrad(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
+                translate.getTranslation(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
         } else {
             showMessage(getCurrentFontColor(), "Play again");
         }
@@ -237,10 +238,10 @@ public class Horses implements GameLifeCycle {
      */
     public void win(final Pawn pawn) {
         showMessage(getCurrentFontColor(), "%s team wins",
-            translate.getTrad(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
+            translate.getTranslation(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
         gameContext.playWinTransition(100, e -> {
             dispose();
-            gameContext.showRoundStats(stats,this);
+            gameContext.showRoundStats(stats, this);
         });
     }
 
@@ -248,7 +249,7 @@ public class Horses implements GameLifeCycle {
     public void launch() {
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.config = gameContext.getConfiguration();
-        this.translate = Multilinguism.getSingleton();
+        this.translate = MultilinguismFactory.getSingleton();
         diceOutcome = 0;
 
         this.backgroundLayer = new Group();
