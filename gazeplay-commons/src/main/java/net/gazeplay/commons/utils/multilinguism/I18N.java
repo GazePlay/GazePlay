@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class I18N {
 
         if (new File(resourceLocation).isFile()) {
             try {
-                is = new FileInputStream(new File(resourceLocation));
+                is = Files.newInputStream(new File(resourceLocation).toPath());
             } catch (IOException ie) {
                 log.error("Exception while reading file {}", resourceLocation, ie);
                 throw new RuntimeException(ie);

@@ -109,17 +109,18 @@ public class Languages {
     }
 
     public static LanguageDetails getLocale(Locale locale) {
-        if (locale == null) {
-            locale = DEFAULT_CODE;
+        Locale result = locale;
+        if (result == null) {
+            result = DEFAULT_CODE;
         }
 
-        final LanguageDetails localeValue = languageMap.get(locale);
+        final LanguageDetails localeValue = languageMap.get(result);
 
         if (localeValue == null) {
-            locale = DEFAULT_CODE;
+            result = DEFAULT_CODE;
         }
 
-        return languageMap.get(locale);
+        return languageMap.get(result);
     }
 
     public static Collection<LanguageDetails> getAllLanguageDetails() {
