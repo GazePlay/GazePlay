@@ -63,7 +63,6 @@ public class WhereIsIt implements GameLifeCycle {
     public void launch() {
 
         int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
-        numberOfImagesToDisplayPerRound = (numberOfImagesToDisplayPerRound % 2 == 0) ? numberOfImagesToDisplayPerRound : numberOfImagesToDisplayPerRound - 1;
 
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
 
@@ -115,7 +114,6 @@ public class WhereIsIt implements GameLifeCycle {
             final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
             final double screenWidth = screenDimension.getWidth();
 
-            //final double nbPicto = 9;
             final double nbPicto = Pictos.size();
 
             double pictoSize = screenWidth / (nbPicto + 1);
@@ -128,23 +126,16 @@ public class WhereIsIt implements GameLifeCycle {
 
             log.debug("Picto Size: {}", pictoSize);
 
-            final double shift = screenWidth / 2 - ((nbPicto / 2) * pictoSize * 1.1);
+            double shift = screenWidth / 2 - ((nbPicto / 2) * pictoSize * 1.1);
 
             log.debug("shift Size: {}", shift);
-/*
-            for (int i = 0; i < 9; i++) {
 
-                final Rectangle R = new Rectangle(pictoSize, pictoSize);
-                R.setFill(new ImagePattern(Pictos.get(i)));
-                R.setY(positionY + 100);
-                R.setX(shift + (i++ * pictoSize * 1.1));
-                pictogramesList.add(R);
-            }
-*/
+            int i = 0;
+
             for (final Image I : Pictos) {
 
                 final Rectangle R = new Rectangle(pictoSize, pictoSize);
-                R.setFill(new ImagePattern(I));
+                //R.setFill(new ImagePattern(I));
                 R.setY(positionY + 100);
                 R.setX(shift + (i++ * pictoSize * 1.1));
                 pictogramesList.add(R);
@@ -379,12 +370,24 @@ public class WhereIsIt implements GameLifeCycle {
 
                 }
 
-                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                    winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
+                if(numberOfImagesToDisplayPerRound == 9 && posX == 1 && posY == 1)
+                {
+                    if ((i + 1) % nbColumns != 0) {
+                        posX++;
+                    } else {
+                        posY++;
+                        posX = 0;
+                    }
+                    continue;
+                }
+                else
+                {
+                    final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+                        gameSizing.height * posY, gameSizing.width - 50, gameSizing.height - 50, gameContext,
+                        winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
 
-                pictureCardList.add(pictureCard);
-
+                    pictureCardList.add(pictureCard);
+                }
 
                 if ((i + 1) % nbColumns != 0) {
                     posX++;
