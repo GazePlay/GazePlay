@@ -25,6 +25,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
 import org.apache.commons.io.FilenameUtils;
 
@@ -61,7 +62,7 @@ public class VideoGrid implements GameLifeCycle {
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.config = gameContext.getConfiguration();
         this.random = new Random();
-        this.translate = Multilinguism.getSingleton();
+        this.translate = MultilinguismFactory.getSingleton();
 
         grid = new GridPane();
         grid.setHgap(GAP);
@@ -143,7 +144,7 @@ public class VideoGrid implements GameLifeCycle {
                     // When a video is larger than 1920x1080, it won't work, and sends an error
                     mediaPlayer.setOnError(() -> {
                         final Text errorText = new Text((String.format(
-                            translate.getTrad("File %s is not supported", config.getLanguage()), file.getName())));
+                            translate.getTranslation("File %s is not supported", config.getLanguage()), file.getName())));
                         errorText.setFill(Color.WHITE);
                         errorText.setTextAlignment(TextAlignment.CENTER);
                         errorText.setWrappingWidth(dimensions.getWidth() / nbColumns);

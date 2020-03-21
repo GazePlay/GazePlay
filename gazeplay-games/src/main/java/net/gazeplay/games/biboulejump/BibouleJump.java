@@ -26,10 +26,13 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.components.ProgressButton;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
@@ -290,12 +293,12 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         shade.setOpacity(1);
         final int highscore = getsetHighscore(score);
         final StringBuilder sb = new StringBuilder();
-        sb.append(Multilinguism.getSingleton().getTrad("Score", config.getLanguage()) + Multilinguism.getSingleton().getTrad("Colon", config.getLanguage())
+        sb.append(MultilinguismFactory.getSingleton().getTranslation("Score", config.getLanguage()) + MultilinguismFactory.getSingleton().getTranslation("Colon", config.getLanguage())
             + " " + score + "\n");
-        sb.append(Multilinguism.getSingleton().getTrad("Highscore", config.getLanguage())
-            + Multilinguism.getSingleton().getTrad("Colon", config.getLanguage()) + " " + highscore + "\n");
+        sb.append(MultilinguismFactory.getSingleton().getTranslation("Highscore", config.getLanguage())
+            + MultilinguismFactory.getSingleton().getTranslation("Colon", config.getLanguage()) + " " + highscore + "\n");
         if (highscore <= score) {
-            sb.append(Multilinguism.getSingleton().getTrad("New highscore!", config.getLanguage()));
+            sb.append(MultilinguismFactory.getSingleton().getTranslation("New highscore!", config.getLanguage()));
         }
         finalScoreText.setText(sb.toString());
         finalScoreText.setOpacity(1);
