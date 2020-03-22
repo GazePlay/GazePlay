@@ -23,6 +23,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.DiceRoller;
 import net.gazeplay.components.Position;
@@ -45,196 +46,42 @@ public class Horses implements GameLifeCycle {
     }
 
     private final IGameContext gameContext;
-    private final Dimension2D dimensions;
-    private final Configuration config;
+    private final Stats stats;
+    private final int gameVersion;
     private final int nbPlayers;
+
+    private Dimension2D dimensions;
+    private Configuration config;
     @Getter
-    private final Multilinguism translate;
-    private final int nbPawns;
+    private Multilinguism translate;
+    private int nbPawns;
 
-    private final Group backgroundLayer;
-    private final Group foregroundLayer;
+    private Group backgroundLayer;
+    private Group foregroundLayer;
 
-    private final double gridElementSize;
+    private double gridElementSize;
 
-    private final DiceRoller die;
-    private final ProgressButton rollButton;
-    private final HashMap<TEAMS, ImageView> rollImages;
+    private DiceRoller die;
+    private ProgressButton rollButton;
+    private HashMap<TEAMS, ImageView> rollImages;
     private int diceOutcome;
 
-    private final ArrayList<ProgressButton> teamChoosers;
-    private final ArrayList<TEAMS> chosenTeams;
+    private ArrayList<ProgressButton> teamChoosers;
+    private ArrayList<TEAMS> chosenTeams;
     private int currentTeam;
     private int nbTeamsChosen;
-    private final HashMap<TEAMS, Square> startSquares;
-    private final HashMap<TEAMS, ArrayList<Pawn>> pawns;
-    private final HashMap<TEAMS, ArrayList<Position>> spawnPoints;
-    private final HashMap<TEAMS, Color> fontColors;
+    private HashMap<TEAMS, Square> startSquares;
+    private HashMap<TEAMS, ArrayList<Pawn>> pawns;
+    private HashMap<TEAMS, ArrayList<Position>> spawnPoints;
+    private HashMap<TEAMS, Color> fontColors;
 
-    private final VBox messages;
+    private VBox messages;
 
     public Horses(final IGameContext gameContext, final Stats stats, final int gameVersion, final int nbPlayers) {
         this.gameContext = gameContext;
+        this.stats = stats;
+        this.gameVersion = gameVersion;
         this.nbPlayers = nbPlayers;
-
-        this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.config = gameContext.getConfiguration();
-        this.translate = Multilinguism.getSingleton();
-
-        this.backgroundLayer = new Group();
-        this.foregroundLayer = new Group();
-        messages = new VBox();
-        messages.setAlignment(Pos.CENTER);
-        this.gameContext.getChildren().addAll(backgroundLayer, messages, foregroundLayer);
-
-        final String jsonPath;
-        if (gameVersion == 0) {
-            jsonPath = "data/horses/positions.json";
-        } else {
-            jsonPath = "data/horses/positionsSimplified.json";
-        }
-
-        final JsonParser parser = new JsonParser();
-        final JsonObject positions;
-        positions = (JsonObject) parser.parse(new InputStreamReader(
-            Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(jsonPath)), StandardCharsets.UTF_8));
-
-        nbPawns = positions.get("nbPawns").getAsInt();
-        final int nbElementsPerSide = positions.get("elementsPerSide").getAsInt();
-        final ImageView boardImage = new ImageView("data/horses/" + positions.get("imageName").getAsString());
-        final double imageSize = Math.min(dimensions.getHeight(), dimensions.getWidth());
-        gridElementSize = imageSize / nbElementsPerSide;
-        final double xOffset = (dimensions.getWidth() - imageSize) / 2;
-        final double yOffset = (dimensions.getHeight() - imageSize) / 2;
-        boardImage.setFitHeight(imageSize);
-        boardImage.setFitWidth(imageSize);
-        boardImage.setX(xOffset);
-        boardImage.setY(yOffset);
-        backgroundLayer.getChildren().add(boardImage);
-
-        die = new DiceRoller((float) gridElementSize / 2);
-        final double diePositionInImage = imageSize / 2 - gridElementSize / 2;
-        final StackPane dieContainer = new StackPane();
-        dieContainer.getChildren().add(die);
-        dieContainer.setLayoutX(xOffset + diePositionInImage);
-        dieContainer.setLayoutY(yOffset + diePositionInImage);
-        backgroundLayer.getChildren().add(dieContainer);
-
-        rollButton = new ProgressButton();
-        rollButton.assignIndicator(event -> roll(), config.getFixationLength());
-        this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
-        rollButton.active();
-
-        rollImages = new HashMap<>();
-        startSquares = new HashMap<>();
-        pawns = new HashMap<>();
-        spawnPoints = new HashMap<>();
-        teamChoosers = new ArrayList<>();
-        chosenTeams = new ArrayList<>();
-        fontColors = new HashMap<>();
-        nbTeamsChosen = 0;
-
-        fontColors.put(TEAMS.BLUE, Color.LIGHTBLUE);
-        fontColors.put(TEAMS.YELLOW, Color.GOLD);
-        fontColors.put(TEAMS.RED, Color.INDIANRED);
-        fontColors.put(TEAMS.GREEN, Color.LIGHTGREEN);
-
-        final HashMap<TEAMS, double[]> teamChooserPositions = new HashMap<>();
-        final int elementOffset = (nbElementsPerSide - 3) / 2 + 3;
-        teamChooserPositions.put(TEAMS.YELLOW, new double[]{xOffset, yOffset});
-        teamChooserPositions.put(TEAMS.BLUE, new double[]{xOffset + elementOffset * gridElementSize, yOffset});
-        teamChooserPositions.put(TEAMS.RED,
-            new double[]{xOffset + elementOffset * gridElementSize, yOffset + elementOffset * gridElementSize});
-        teamChooserPositions.put(TEAMS.GREEN, new double[]{xOffset, yOffset + elementOffset * gridElementSize});
-
-        final double scaleRatio = imageSize / boardImage.getImage().getHeight();
-        Square loopBack = null;
-        Square previousCommonSquare = null;
-        final Square centerSquare = new FinishSquare(new Position(xOffset + imageSize / 2, yOffset + imageSize / 2), this);
-        for (final TEAMS team : TEAMS.values()) {
-            final JsonObject teamObject = (JsonObject) positions.get(team.name());
-            final JsonArray finalPath = (JsonArray) teamObject.get("finalPath");
-            final JsonArray commonPath = (JsonArray) teamObject.get("commonPath");
-            final JsonArray spawnPointsArray = (JsonArray) teamObject.get("spawnPoints");
-
-            Square firstFromFinal = null;
-            Square previousSquare = null;
-            for (int i = 0; i < finalPath.size(); i++) {
-                final JsonObject object = (JsonObject) finalPath.get(i);
-                final Position position = new Position(xOffset + object.get("x").getAsDouble() * scaleRatio,
-                    yOffset + object.get("y").getAsDouble() * scaleRatio);
-                final FinalPathSquare square = new FinalPathSquare(position, this, i + 1);
-                square.setPreviousSquare(previousSquare);
-                if (previousSquare != null) {
-                    previousSquare.setNextSquare(square);
-                }
-                if (i == 0) {
-                    firstFromFinal = square;
-                }
-                previousSquare = square;
-            }
-            previousSquare.setNextSquare(centerSquare);
-
-            for (int i = 0; i < commonPath.size(); i++) {
-                final JsonObject object = (JsonObject) commonPath.get(i);
-                final Position position = new Position(xOffset + object.get("x").getAsDouble() * scaleRatio,
-                    yOffset + object.get("y").getAsDouble() * scaleRatio);
-                final Square square;
-                if (i == 0) {
-                    square = new FinalPathStart(position, this, team, firstFromFinal);
-                    firstFromFinal.setPreviousSquare(square);
-                } else if (i == 1) {
-                    square = new StartSquare(position, this, team);
-                } else {
-                    square = new Square(position, this);
-                }
-
-                if (previousCommonSquare == null) {
-                    loopBack = square;
-                } else {
-                    previousCommonSquare.setNextSquare(square);
-                    square.setPreviousSquare(previousCommonSquare);
-                }
-
-                if (i == 1) {
-                    startSquares.put(team, square);
-                }
-                if (team == TEAMS.values()[TEAMS.values().length - 1] && i == commonPath.size() - 1) {
-                    square.setNextSquare(loopBack);
-                }
-                previousCommonSquare = square;
-            }
-
-            final ArrayList<Position> spawnPositionsList = new ArrayList<>();
-            for (int i = 0; i < nbPawns; i++) {
-                final JsonObject object = (JsonObject) spawnPointsArray.get(i);
-                final Position position = new Position(
-                    xOffset + object.get("x").getAsDouble() * scaleRatio - gridElementSize / 2,
-                    yOffset + object.get("y").getAsDouble() * scaleRatio - gridElementSize / 2);
-                spawnPositionsList.add(position);
-            }
-            spawnPoints.put(team, spawnPositionsList);
-
-            final ProgressButton chooseButton = new ProgressButton();
-            chooseButton.setPrefWidth((nbElementsPerSide - 3d) / 2d * gridElementSize);
-            chooseButton.setPrefHeight((nbElementsPerSide - 3d) / 2d * gridElementSize);
-            chooseButton.setLayoutX(teamChooserPositions.get(team)[0]);
-            chooseButton.setLayoutY(teamChooserPositions.get(team)[1]);
-            chooseButton.assignIndicator(e -> {
-                foregroundLayer.getChildren().remove(chooseButton);
-                selectTeam(team);
-            }, config.getFixationLength());
-            gameContext.getGazeDeviceManager().addEventFilter(chooseButton);
-            chooseButton.active();
-            foregroundLayer.getChildren().add(chooseButton);
-            teamChoosers.add(chooseButton);
-
-            final ImageView rollImage = new ImageView(String.format(ROLLIMAGESPATH, team));
-            rollImage.setFitHeight(dimensions.getHeight() / 6);
-            rollImage.setFitWidth(dimensions.getHeight() / 6);
-            rollImages.put(team, rollImage);
-        }
-        loopBack.setPreviousSquare(previousCommonSquare);
     }
 
     /**
@@ -348,7 +195,7 @@ public class Horses implements GameLifeCycle {
      */
     public void showMessage(final Color fontColor, final String message, final Object... values) {
         final Text messageText = new Text(0, dimensions.getHeight() / 3,
-            String.format(translate.getTrad(message, config.getLanguage()), values));
+            String.format(translate.getTranslation(message, config.getLanguage()), values));
         messageText.setTextAlignment(TextAlignment.CENTER);
         messageText.setFill(fontColor);
         messageText.setFont(new Font(dimensions.getHeight() / 10));
@@ -376,7 +223,7 @@ public class Horses implements GameLifeCycle {
         if (diceOutcome != 6) {
             currentTeam = (currentTeam + 1) % nbPlayers;
             showMessage(getCurrentFontColor(), "%s team's turn",
-                translate.getTrad(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
+                translate.getTranslation(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
         } else {
             showMessage(getCurrentFontColor(), "Play again");
         }
@@ -391,19 +238,184 @@ public class Horses implements GameLifeCycle {
      */
     public void win(final Pawn pawn) {
         showMessage(getCurrentFontColor(), "%s team wins",
-            translate.getTrad(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
+            translate.getTranslation(chosenTeams.get(currentTeam).toString().toLowerCase(), config.getLanguage()));
         gameContext.playWinTransition(100, e -> {
-
+            dispose();
+            gameContext.showRoundStats(stats, this);
         });
     }
 
     @Override
     public void launch() {
+        this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.config = gameContext.getConfiguration();
+        this.translate = MultilinguismFactory.getSingleton();
+        diceOutcome = 0;
+
+        this.backgroundLayer = new Group();
+        this.foregroundLayer = new Group();
+        messages = new VBox();
+        messages.setAlignment(Pos.CENTER);
+        this.gameContext.getChildren().addAll(backgroundLayer, messages, foregroundLayer);
+
+        final String jsonPath;
+        if (gameVersion == 0) {
+            jsonPath = "data/horses/positions.json";
+        } else {
+            jsonPath = "data/horses/positionsSimplified.json";
+        }
+
+        final JsonParser parser = new JsonParser();
+        final JsonObject positions;
+        positions = (JsonObject) parser.parse(new InputStreamReader(
+            Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(jsonPath)), StandardCharsets.UTF_8));
+
+        nbPawns = positions.get("nbPawns").getAsInt();
+        final int nbElementsPerSide = positions.get("elementsPerSide").getAsInt();
+        final ImageView boardImage = new ImageView("data/horses/" + positions.get("imageName").getAsString());
+        final double imageSize = Math.min(dimensions.getHeight(), dimensions.getWidth());
+        gridElementSize = imageSize / nbElementsPerSide;
+        final double xOffset = (dimensions.getWidth() - imageSize) / 2;
+        final double yOffset = (dimensions.getHeight() - imageSize) / 2;
+        boardImage.setFitHeight(imageSize);
+        boardImage.setFitWidth(imageSize);
+        boardImage.setX(xOffset);
+        boardImage.setY(yOffset);
+        backgroundLayer.getChildren().add(boardImage);
+
+        die = new DiceRoller((float) gridElementSize / 2, gameContext.getSoundManager());
+        final double diePositionInImage = imageSize / 2 - gridElementSize / 2;
+        final StackPane dieContainer = new StackPane();
+        dieContainer.getChildren().add(die);
+        dieContainer.setLayoutX(xOffset + diePositionInImage);
+        dieContainer.setLayoutY(yOffset + diePositionInImage);
+        backgroundLayer.getChildren().add(dieContainer);
+
+        rollButton = new ProgressButton();
+        rollButton.assignIndicator(event -> {
+            roll();
+            stats.incrementNumberOfGoalsReached();
+        }, config.getFixationLength());
+        this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
+        rollButton.active();
+
+        rollImages = new HashMap<>();
+        startSquares = new HashMap<>();
+        pawns = new HashMap<>();
+        spawnPoints = new HashMap<>();
+        teamChoosers = new ArrayList<>();
+        chosenTeams = new ArrayList<>();
+        fontColors = new HashMap<>();
+        nbTeamsChosen = 0;
+
+        fontColors.put(TEAMS.BLUE, Color.LIGHTBLUE);
+        fontColors.put(TEAMS.YELLOW, Color.GOLD);
+        fontColors.put(TEAMS.RED, Color.INDIANRED);
+        fontColors.put(TEAMS.GREEN, Color.LIGHTGREEN);
+
+        final HashMap<TEAMS, double[]> teamChooserPositions = new HashMap<>();
+        final int elementOffset = (nbElementsPerSide - 3) / 2 + 3;
+        teamChooserPositions.put(TEAMS.YELLOW, new double[]{xOffset, yOffset});
+        teamChooserPositions.put(TEAMS.BLUE, new double[]{xOffset + elementOffset * gridElementSize, yOffset});
+        teamChooserPositions.put(TEAMS.RED,
+            new double[]{xOffset + elementOffset * gridElementSize, yOffset + elementOffset * gridElementSize});
+        teamChooserPositions.put(TEAMS.GREEN, new double[]{xOffset, yOffset + elementOffset * gridElementSize});
+
+        final double scaleRatio = imageSize / boardImage.getImage().getHeight();
+        Square loopBack = null;
+        Square previousCommonSquare = null;
+        final Square centerSquare = new FinishSquare(new Position(xOffset + imageSize / 2, yOffset + imageSize / 2), this);
+        for (final TEAMS team : TEAMS.values()) {
+            final JsonObject teamObject = (JsonObject) positions.get(team.name());
+            final JsonArray finalPath = (JsonArray) teamObject.get("finalPath");
+            final JsonArray commonPath = (JsonArray) teamObject.get("commonPath");
+            final JsonArray spawnPointsArray = (JsonArray) teamObject.get("spawnPoints");
+
+            Square firstFromFinal = null;
+            Square previousSquare = null;
+            for (int i = 0; i < finalPath.size(); i++) {
+                final JsonObject object = (JsonObject) finalPath.get(i);
+                final Position position = new Position(xOffset + object.get("x").getAsDouble() * scaleRatio,
+                    yOffset + object.get("y").getAsDouble() * scaleRatio);
+                final FinalPathSquare square = new FinalPathSquare(position, this, i + 1);
+                square.setPreviousSquare(previousSquare);
+                if (previousSquare != null) {
+                    previousSquare.setNextSquare(square);
+                }
+                if (i == 0) {
+                    firstFromFinal = square;
+                }
+                previousSquare = square;
+            }
+            previousSquare.setNextSquare(centerSquare);
+
+            for (int i = 0; i < commonPath.size(); i++) {
+                final JsonObject object = (JsonObject) commonPath.get(i);
+                final Position position = new Position(xOffset + object.get("x").getAsDouble() * scaleRatio,
+                    yOffset + object.get("y").getAsDouble() * scaleRatio);
+                final Square square;
+                if (i == 0) {
+                    square = new FinalPathStart(position, this, team, firstFromFinal);
+                    firstFromFinal.setPreviousSquare(square);
+                } else if (i == 1) {
+                    square = new StartSquare(position, this, team);
+                } else {
+                    square = new Square(position, this);
+                }
+
+                if (previousCommonSquare == null) {
+                    loopBack = square;
+                } else {
+                    previousCommonSquare.setNextSquare(square);
+                    square.setPreviousSquare(previousCommonSquare);
+                }
+
+                if (i == 1) {
+                    startSquares.put(team, square);
+                }
+                if (team == TEAMS.values()[TEAMS.values().length - 1] && i == commonPath.size() - 1) {
+                    square.setNextSquare(loopBack);
+                }
+                previousCommonSquare = square;
+            }
+
+            final ArrayList<Position> spawnPositionsList = new ArrayList<>();
+            for (int i = 0; i < nbPawns; i++) {
+                final JsonObject object = (JsonObject) spawnPointsArray.get(i);
+                final Position position = new Position(
+                    xOffset + object.get("x").getAsDouble() * scaleRatio - gridElementSize / 2,
+                    yOffset + object.get("y").getAsDouble() * scaleRatio - gridElementSize / 2);
+                spawnPositionsList.add(position);
+            }
+            spawnPoints.put(team, spawnPositionsList);
+
+            final ProgressButton chooseButton = new ProgressButton();
+            chooseButton.setPrefWidth((nbElementsPerSide - 3d) / 2d * gridElementSize);
+            chooseButton.setPrefHeight((nbElementsPerSide - 3d) / 2d * gridElementSize);
+            chooseButton.setLayoutX(teamChooserPositions.get(team)[0]);
+            chooseButton.setLayoutY(teamChooserPositions.get(team)[1]);
+            chooseButton.assignIndicator(e -> {
+                foregroundLayer.getChildren().remove(chooseButton);
+                selectTeam(team);
+            }, config.getFixationLength());
+            gameContext.getGazeDeviceManager().addEventFilter(chooseButton);
+            chooseButton.active();
+            foregroundLayer.getChildren().add(chooseButton);
+            teamChoosers.add(chooseButton);
+
+            final ImageView rollImage = new ImageView(String.format(ROLLIMAGESPATH, team));
+            rollImage.setFitHeight(dimensions.getHeight() / 6);
+            rollImage.setFitWidth(dimensions.getHeight() / 6);
+            rollImages.put(team, rollImage);
+        }
+        loopBack.setPreviousSquare(previousCommonSquare);
+        stats.notifyNewRoundReady();
         showMessage(Color.WHITE, "Select teams by looking at the big circles");
     }
 
     @Override
     public void dispose() {
-
+        this.gameContext.getChildren().clear();
+        this.gameContext.clear();
     }
 }

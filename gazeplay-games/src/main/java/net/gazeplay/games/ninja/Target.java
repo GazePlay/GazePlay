@@ -10,7 +10,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.Portrait;
@@ -75,8 +74,6 @@ public class Target extends Portrait {
         this.addEventHandler(GazeEvent.ANY, enterEvent);
 
         move();
-
-        stats.notifyNewRoundReady();
     }
 
     private List<Portrait> generateMiniBallsPortraits(final RandomPositionGenerator randomPositionGenerator,
@@ -220,7 +217,7 @@ public class Target extends Portrait {
 
     private void enter(final Event e) {
 
-        stats.incNbGoals();
+        stats.incrementNumberOfGoalsReached();
 
         final Animation runningTranslation = currentTranslation;
         if (runningTranslation != null) {
@@ -283,18 +280,12 @@ public class Target extends Portrait {
 
         sequence.setOnFinished(actionEvent -> {
             animationStopped = true;
-            stats.notifyNewRoundReady();
+            stats.incrementNumberOfGoalsToReach();
             move();
         });
 
         sequence.play();
-
-        try {
-            ForegroundSoundsUtils.playSound(audioClipResourceLocation);
-        } catch (final Exception exp) {
-            log.warn("file doesn't exist : {}", audioClipResourceLocation);
-            log.warn(exp.getMessage());
-        }
+        gameContext.getSoundManager().add(audioClipResourceLocation);
     }
 
     private Transition createTransition1() {

@@ -9,11 +9,15 @@ import java.util.Locale;
 @Builder
 public class LanguageDetails {
 
-    // the ISO 639 code of the language
+    /**
+     * The ISO 639 code of the language
+     */
     @Getter
     private final Locale locale;
 
-    // the language name
+    /**
+     * The language name
+     */
     @Getter
     private final String label;
 
@@ -23,7 +27,9 @@ public class LanguageDetails {
     @Getter
     private final boolean leftAligned;
 
-    // flags corresponding to this language
+    /**
+     * Flags corresponding to this language
+     */
     @Getter
     private final List<String> flags;
 

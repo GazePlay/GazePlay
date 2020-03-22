@@ -6,17 +6,18 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.pet.PetStats;
+import net.gazeplay.stats.ExplorationGamesStats;
 
-public class MediaPlayerGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant> {
+public class MediaPlayerGameLauncher implements GameSpec.GameLauncher<ExplorationGamesStats, GameSpec.DimensionGameVariant> {
     @Override
-    public Stats createNewStats(Scene scene) {
-        return new PetStats(scene);
+    public ExplorationGamesStats createNewStats(Scene scene) {
+        return new ExplorationGamesStats(scene,"mediaPlayer");
     }
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
-                                       GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-        return new GazeMediaPlayer(gameContext);
+                                       GameSpec.DimensionGameVariant gameVariant, ExplorationGamesStats stats) {
+        return new GazeMediaPlayer(gameContext, stats);
     }
 
 }

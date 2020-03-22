@@ -19,9 +19,9 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.File;
@@ -82,6 +82,7 @@ public class WhereIsIt implements GameLifeCycle {
             }
         }
 
+        stats.notifyNewRoundReady();
     }
 
     private Transition createQuestionTransition(final String question, final List<Image> listOfPictos) {
@@ -186,12 +187,8 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     void playQuestionSound() {
-        try {
-            log.debug("currentRoundDetails.questionSoundPath: {}", currentRoundDetails.getQuestionSoundPath());
-            ForegroundSoundsUtils.playSound(currentRoundDetails.getQuestionSoundPath());
-        } catch (final Exception e) {
-            log.warn("Can't play sound: no associated sound : " + e.toString());
-        }
+        String soundResource = currentRoundDetails.getQuestionSoundPath();
+        gameContext.getSoundManager().add(soundResource);
     }
 
     /**
@@ -292,7 +289,7 @@ public class WhereIsIt implements GameLifeCycle {
                     // TODO for now the line under is commented to avoid freeze
                     //questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
 
-                    question = Multilinguism.getSingleton().getTrad("findodd", config.getLanguage());
+                    question = MultilinguismFactory.getSingleton().getTranslation("findodd", config.getLanguage());
 
                     pictograms = getPictogramms(folderName);
 
@@ -409,9 +406,9 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.clear();
         // HomeUtils.home(scene, group, choiceBox, null);
 
-        final Multilinguism multilinguism = Multilinguism.getSingleton();
+        final Multilinguism multilinguism = MultilinguismFactory.getSingleton();
 
-        final Text error = new Text(multilinguism.getTrad("WII-error", language));
+        final Text error = new Text(multilinguism.getTranslation("WII-error", language));
         final Region root = gameContext.getRoot();
         error.setX(root.getWidth() / 2. - 100);
         error.setY(root.getHeight() / 2.);
@@ -445,13 +442,13 @@ public class WhereIsIt implements GameLifeCycle {
             return "";
         }
 
-        if (gameType == LETTERS || gameType == NUMBERS || gameType == FLAGS) {// no sound for now
+        if (gameType == FLAGS) {// no sound for now
             // erase when translation is complete
             return null;
         }
 
-        if (!(language.equals("fra") || language.equals("eng"))) {
-            // sound is only for English and French for animals and colors
+        if (!(language.equals("fra") || language.equals("eng") || language.equals("chn"))) {
+            // sound is only for English, French and Chinese
             // erase when translation is complete
             return null;
         }
@@ -480,14 +477,14 @@ public class WhereIsIt implements GameLifeCycle {
 
             final File questionFile = new File(config.getWhereIsItDir() + "/questions.csv");
 
-            final Multilinguism localMultilinguism = Multilinguism.getForResource(questionFile.toString());
+            final Multilinguism localMultilinguism = MultilinguismFactory.getForResource(questionFile.toString());
 
-            return localMultilinguism.getTrad(folder, language);
+            return localMultilinguism.getTranslation(folder, language);
         }
 
-        final Multilinguism localMultilinguism = Multilinguism.getForResource(gameType.getLanguageResourceLocation());
+        final Multilinguism localMultilinguism = MultilinguismFactory.getForResource(gameType.getLanguageResourceLocation());
 
-        return localMultilinguism.getTrad(folder, language);
+        return localMultilinguism.getTranslation(folder, language);
     }
 
     private List<Image> getPictogramms(final String folder) {
@@ -503,9 +500,9 @@ public class WhereIsIt implements GameLifeCycle {
 
         final File questionFile = new File(config.getWhereIsItDir(), "questions.csv");
 
-        final Multilinguism localMultilinguism = Multilinguism.getForResource(questionFile.toString());
+        final Multilinguism localMultilinguism = MultilinguismFactory.getForResource(questionFile.toString());
 
-        final String traduction = localMultilinguism.getTrad(folder, language);
+        final String traduction = localMultilinguism.getTranslation(folder, language);
 
         log.debug("traduction: {}", traduction);
 

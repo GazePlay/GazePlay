@@ -56,7 +56,7 @@ public class Stats implements GazeMotionListener {
     private final Scene gameContextScene;
     protected String gameName;
     @Getter
-    protected int nbGoals = 0;
+    protected int nbGoalsToReach = 0;
     long startTime;
     int sceneCounter = 0;
     private EventHandler<MouseEvent> recordMouseMovements;
@@ -70,14 +70,15 @@ public class Stats implements GazeMotionListener {
     private int previousX = 0;
     private int previousY = 0;
     private File movieFolder;
-    private int nbShots = 0;
+    @Getter
+    public int nbGoalsReached = 0;
     private boolean convexHULL = true;
     private ScreenRecorder screenRecorder;
     private ArrayList<TargetAOI> targetAOIList = null;
     @Setter
     private long accidentalShotPreventionPeriod = 0;
     @Getter
-    private int nbUnCountedShots;
+    private int nbUnCountedGoalsReached;
     private double[][] heatMap;
     @Getter
     @Setter
@@ -89,6 +90,7 @@ public class Stats implements GazeMotionListener {
     private LinkedList<FixationPoint> fixationSequence;
     @Getter
     private SavedStatsInfo savedStatsInfo;
+    @Getter
     private WritableImage gameScreenShot;
 
     private String directoryOfVideo;
@@ -135,6 +137,13 @@ public class Stats implements GazeMotionListener {
     public void notifyNewRoundReady() {
         currentRoundStartTime = System.currentTimeMillis();
         takeScreenShot();
+    }
+
+    public void notifyNextRound() {
+        final long currentRoundEndTime = System.currentTimeMillis();
+        final long currentRoundDuration = currentRoundEndTime - this.currentRoundStartTime;
+        this.roundsDurationReport.addRoundDuration(currentRoundDuration);
+        currentRoundStartTime = currentRoundEndTime;
     }
 
     public void startVideoRecording() {
@@ -256,7 +265,6 @@ public class Stats implements GazeMotionListener {
             };
             gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
             gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
-            takeScreenShot();
 
         });
         currentRoundStartTime = lifeCycle.getStartTime();
@@ -268,8 +276,8 @@ public class Stats implements GazeMotionListener {
     }
 
     public void reset() {
-        nbShots = 0;
-        nbGoals = 0;
+        nbGoalsReached = 0;
+        nbGoalsToReach = 0;
         accidentalShotPreventionPeriod = 0;
 
         roundsDurationReport = new RoundsDurationReport();
@@ -404,17 +412,29 @@ public class Stats implements GazeMotionListener {
         return roundsDurationReport.computeSD();
     }
 
-    public void incNbGoals() {
+    public void incrementNumberOfGoalsToReach() {
+        nbGoalsToReach++;
+        currentRoundStartTime = System.currentTimeMillis();
+        log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
+    }
+
+    public void incrementNumberOfGoalsToReach(int i) {
+        nbGoalsToReach += i;
+        currentRoundStartTime = System.currentTimeMillis();
+        log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
+    }
+
+    public void incrementNumberOfGoalsReached() {
         final long currentRoundEndTime = System.currentTimeMillis();
         final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
         if (currentRoundDuration < accidentalShotPreventionPeriod) {
-            nbUnCountedShots++;
+            nbUnCountedGoalsReached++;
         } else {
-            nbGoals++;
+            nbGoalsReached++;
             this.roundsDurationReport.addRoundDuration(currentRoundDuration);
         }
         currentRoundStartTime = currentRoundEndTime;
-        log.debug("The number of goals is " + nbGoals + "and the number shots is " + nbShots);
+        log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
     }
 
     public void addRoundDuration() {
@@ -422,15 +442,11 @@ public class Stats implements GazeMotionListener {
     }
 
     public int getShotRatio() {
-        if (this.nbGoals == this.nbShots || this.nbShots == 0) {
+        if (this.nbGoalsToReach == this.nbGoalsReached || this.nbGoalsToReach == 0) {
             return 100;
         } else {
-            return (int) ((float) this.nbGoals / (float) this.nbShots * 100.0);
+            return (int) ((float) this.nbGoalsReached / (float) this.nbGoalsToReach * 100.0);
         }
-    }
-
-    public void incNbShots() {
-        this.nbShots++;
     }
 
     public List<Long> getSortedDurationsBetweenGoals() {
@@ -571,11 +587,8 @@ public class Stats implements GazeMotionListener {
         return result;
     }
 
-    private void takeScreenShot() {
+    public void takeScreenShot() {
         gameScreenShot = gameContextScene.snapshot(null);
     }
 
-    public WritableImage getGameScreenShot() {
-        return this.gameScreenShot;
-    }
 }

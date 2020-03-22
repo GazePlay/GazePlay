@@ -26,8 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
-import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
 
@@ -230,27 +228,25 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             final FadeTransition ft = new FadeTransition(Duration.millis(500), randomCake);
             ft.setToValue(1);
             ft.setOnFinished(actionEvent -> {
-
-                for (int i = 0; i < 3; i++) {
-                    for (int j = 0; j < 3; j++) {
-                        if (layers[i][j] == model[i][j]) {
-                            stats.incNbGoals();
-                            stats.notifyNewRoundReady();
-                        }
-                    }
-                }
-                if (layers[2][3] == model[2][3]) {
-                    stats.incNbGoals();
-                    stats.notifyNewRoundReady();
-                }
                 playWin();
             });
-
             ft.play();
         } else {
-            stats.incNbGoals();
-            stats.notifyNewRoundReady();
+            stats.incrementNumberOfGoalsReached();
+            playWin();
+        }
+    }
 
+    private void checkGoodAnswer(){
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (layers[i][j] == model[i][j]) {
+                    stats.incrementNumberOfGoalsReached();
+                }
+            }
+        }
+        if (layers[2][3] == model[2][3]) {
+            stats.incrementNumberOfGoalsReached();
         }
     }
 
@@ -264,8 +260,6 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             gameContext.clear();
 
             launch();
-
-            stats.notifyNewRoundReady();
 
             gameContext.onGameStarted();
         });
@@ -392,14 +386,8 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         sq.getChildren().addAll(pt, pt2);
 
         final String soundResource = "data/cake/sounds/spray.mp3";
+        gameContext.getSoundManager().add(soundResource);
 
-        try {
-            ForegroundSoundsUtils.playSound(soundResource);
-        } catch (final Exception e) {
-
-            log.warn("file doesn't exist : {}", soundResource);
-            log.warn(e.getMessage());
-        }
         sq.setOnFinished(actionEvent -> {
             final TranslateTransition tt1 = new TranslateTransition(Duration.millis(500), aerograph);
             tt1.setToX(0);
@@ -547,14 +535,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         });
 
         final String soundResource = "data/cake/sounds/grabcoming.mp3";
-
-        try {
-            ForegroundSoundsUtils.playSound(soundResource);
-        } catch (final Exception e) {
-
-            log.warn("file doesn't exist : {}", soundResource);
-            log.warn(e.getMessage());
-        }
+        gameContext.getSoundManager().add(soundResource);
 
         sq.play();
     }
@@ -646,12 +627,13 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             winButton(false);
         }
 
-        stats.notifyNewRoundReady();
         this.gameContext.resetBordersToFront();
+        stats.notifyNewRoundReady();
     }
 
     @Override
     public void dispose() {
+        checkGoodAnswer();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2;

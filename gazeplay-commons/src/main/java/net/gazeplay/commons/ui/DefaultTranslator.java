@@ -25,7 +25,7 @@ public class DefaultTranslator implements Translator {
 
     @Override
     public String translate(final String key) {
-        return multilinguism.getTrad(key, config.getLanguage());
+        return multilinguism.getTranslation(key, config.getLanguage());
     }
 
     @Override

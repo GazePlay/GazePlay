@@ -33,14 +33,12 @@ public class CupsAndBalls implements GameLifeCycle {
     private final int ballRadius = 20;
 
     private final Random random = new Random();
-    Strategy strategy;
-    ArrayList<Action> actions;
+    private ArrayList<Action> actions;
 
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
-        this.stats.notifyNewRoundReady();
         this.nbCups = nbCups;
         this.cups = new Cup[nbCups];
         this.nbColumns = nbCups;
@@ -101,7 +99,7 @@ public class CupsAndBalls implements GameLifeCycle {
             }
         }
 
-        this.strategy = new Strategy(nbCups, nbExchanges, nbColumns, nbLines);
+        Strategy strategy = new Strategy(nbCups, nbExchanges, nbColumns, nbLines);
         this.actions = strategy.chooseStrategy();
 
         for (final Cup cup : cups) {

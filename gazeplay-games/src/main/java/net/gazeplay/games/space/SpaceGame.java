@@ -30,9 +30,13 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.components.ProgressButton;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -131,7 +135,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.bossWidth = dimension2D.getWidth() / 8;
         this.bossHeight = dimension2D.getHeight() / 4;
 
-        this.translate = Multilinguism.getSingleton();
+        this.translate = MultilinguismFactory.getSingleton();
 
         final Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         backgroundImage.widthProperty().bind(gameContext.getRoot().widthProperty());
@@ -590,10 +594,10 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         shade.setOpacity(1);
         final int highscore = getsetHighscore(score);
         final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(translate.getTrad("Score", configuration.getLanguage())).append(translate.getTrad("Colon", configuration.getLanguage())).append(" ").append(score).append("\n");
-        stringBuilder.append(translate.getTrad("Highscore", configuration.getLanguage())).append(translate.getTrad("Colon", configuration.getLanguage())).append(" ").append(highscore).append("\n");
+        stringBuilder.append(translate.getTranslation("Score", configuration.getLanguage())).append(translate.getTranslation("Colon", configuration.getLanguage())).append(" ").append(score).append("\n");
+        stringBuilder.append(translate.getTranslation("Highscore", configuration.getLanguage())).append(translate.getTranslation("Colon", configuration.getLanguage())).append(" ").append(highscore).append("\n");
         if (highscore <= score) {
-            stringBuilder.append(translate.getTrad("New highscore!", configuration.getLanguage()));
+            stringBuilder.append(translate.getTranslation("New highscore!", configuration.getLanguage()));
         }
         finalScoreText.setText(stringBuilder.toString());
         finalScoreText.setOpacity(1);
@@ -603,7 +607,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
     private void updateScore() {
         score = biboulesKilled.size() + +bossKilled.size() * 125;
-        spaceGameStats.incNbGoals(score);
+        spaceGameStats.incrementNumberOfGoalsReached(score);
         scoreText.setText(String.valueOf(biboulesKilled.size() + bossKilled.size() * 125));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
     }
