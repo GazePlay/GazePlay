@@ -10,6 +10,7 @@ import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +45,7 @@ public class LatestNewsPopupIntegrationTest extends IntegrationTestBase {
         @Override
         public void start(Stage primaryStage) {
             Configuration configuration = ActiveConfigurationContext.getInstance();
-            Translator translator = new DefaultTranslator(configuration, Multilinguism.getForResource("data/multilinguism/multilinguism.csv"));
+            Translator translator = new DefaultTranslator(configuration, MultilinguismFactory.getForResource("data/multilinguism/multilinguism.csv"));
 
             LatestNewsPopup popup = new LatestNewsPopup(
                 configuration,
