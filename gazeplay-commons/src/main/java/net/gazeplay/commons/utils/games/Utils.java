@@ -66,7 +66,7 @@ public class Utils {
      * @return true if the operating system is Windows
      */
     public static boolean isWindows() {
-        return System.getProperty("os.name").indexOf("win") > 0;
+        return System.getProperty("os.name").toLowerCase().indexOf("win") > 0;
     }
 
     public static void logSystemProperties() {
