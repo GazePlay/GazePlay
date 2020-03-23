@@ -20,6 +20,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.components.ProgressButton;
 
 import java.io.InputStreamReader;
@@ -56,7 +57,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         final Configuration config = gameContext.getConfiguration();
         this.currentInstance = 0;
 
-        final Multilinguism translate = Multilinguism.getSingleton();
+        final Multilinguism translate = MultilinguismFactory.getSingleton();
         final String language = config.getLanguage();
 
         borderPane = new BorderPane();
@@ -83,14 +84,14 @@ public class SpotTheDifferences implements GameLifeCycle {
         scoreText.setFont(new Font(70));
         scoreText.setWrappingWidth(dimensions.getWidth());
 
-        final Text findText = new Text(0, 50, translate.getTrad("Spot all the differences", language));
+        final Text findText = new Text(0, 50, translate.getTranslation("Spot all the differences", language));
         findText.setTextAlignment(TextAlignment.CENTER);
         findText.setFill(Color.WHITE);
         findText.setFont(new Font(50));
         findText.setWrappingWidth(dimensions.getWidth());
 
         final Text foundText = new Text(0, 50,
-            translate.getTrad("Differences found", language) + translate.getTrad("Colon", language));
+            translate.getTranslation("Differences found", language) + translate.getTranslation("Colon", language));
         foundText.setTextAlignment(TextAlignment.CENTER);
         foundText.setFill(Color.WHITE);
         foundText.setFont(new Font(50));

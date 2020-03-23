@@ -18,11 +18,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 @Slf4j
 public class FixationSequence {
 
     private static final Font sanSerifFont = new Font("SanSerif", 10);
+
     /**
      * Writable image used to create the fixation Sequence image
      */
@@ -31,12 +33,28 @@ public class FixationSequence {
     @Getter
     private LinkedList<FixationPoint> sequence;
 
-    public FixationSequence(final int width, final int height, LinkedList<FixationPoint> fixSeq) {
-
-        sequence = new LinkedList<>();
+    public FixationSequence(final int width, final int height, LinkedList<FixationPoint> fixationPoints) {
         this.image = new WritableImage(width, height);
         final Canvas canvas = new Canvas(width, height);
 
+        sequence = vertexReduction(fixationPoints, 15);
+
+        final GraphicsContext gc = drawFixationLines(canvas, sequence);
+        drawFixationCircles(gc, sequence);
+
+        final SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+
+        try {
+            canvas.snapshot(params, image);
+        } catch (final Exception e) {
+            log.error("Can't take snapshot of Fixation Sequence: ", e);
+        }
+
+        sequence.removeIf(fixationPoint -> fixationPoint.getGazeDuration() == -1);
+    }
+
+    private GraphicsContext drawFixationLines(Canvas canvas, LinkedList<FixationPoint> sequence) {
         final GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // draw the line of the sequence
@@ -46,12 +64,19 @@ public class FixationSequence {
         gc.setStroke(Color.rgb(255, 157, 6, 1));
         gc.setLineWidth(4);
 
-        fixSeq = vertexReduction(fixSeq, 15);
-
-        for (int i = 0; i < fixSeq.size() - 1; i++) {
-            gc.strokeLine(fixSeq.get(i).getY(), fixSeq.get(i).getX(), fixSeq.get(i + 1).getY(),
-                fixSeq.get(i + 1).getX());
+        for (int i = 0; i < sequence.size() - 1; i++) {
+            gc.strokeLine(
+                sequence.get(i).getY(),
+                sequence.get(i).getX(),
+                sequence.get(i + 1).getY(),
+                sequence.get(i + 1).getX()
+            );
         }
+
+        return gc;
+    }
+
+    private void drawFixationCircles(GraphicsContext gc, LinkedList<FixationPoint> sequence) {
         gc.setEffect(null);
         gc.setFont(sanSerifFont);
         gc.setTextAlign(TextAlignment.CENTER);
@@ -60,18 +85,14 @@ public class FixationSequence {
         // draw the circles with the labels on top
         gc.setLineWidth(1);
 
-        int label_count = 0;// for the labels of the fixation sequence
-        int x;
-        int y;
-
-        double radius;
+        int labelCount = 0;// for the labels of the fixation sequence
+        int x, y;
+        double radius, duration;
 
         gc.setFill(Color.BLACK);
         gc.setFont(Font.font("Verdana", 25));
 
-        double duration;
-
-        for (final FixationPoint point : fixSeq) {
+        for (final FixationPoint point : sequence) {
 
             gc.setStroke(Color.RED);
             x = point.getY();
@@ -80,31 +101,18 @@ public class FixationSequence {
 
             // modify this value in order to change the number of fixation points (Johanna put 20 ; Didier 100)
             if (duration > 100) {
-                label_count++;
+                labelCount++;
                 // fixation circle size
                 radius = 20d + Math.sqrt(duration);
                 gc.strokeOval(x - radius / 2d, y - radius / 2d, radius, radius);
                 gc.setFill(Color.rgb(255, 255, 0, 0.5));// yellow 50% transparency
                 gc.fillOval(x - radius / 2d, y - radius / 2d, radius, radius);
                 gc.setFill(Color.BLACK);
-                gc.fillText(Integer.toString(label_count), x, y, 80);
-
+                gc.fillText(Integer.toString(labelCount), x, y, 80);
             } else {
                 point.setGazeDuration(-1);
             }
         }
-
-        final SnapshotParameters params = new SnapshotParameters();
-        params.setFill(Color.TRANSPARENT);
-        try {
-            canvas.snapshot(params, image);
-        } catch (final Exception e) {
-
-            log.error("Can't make properly Snapshot in Fixation Sequence");
-        }
-
-        fixSeq.removeIf(fixationPoint -> fixationPoint.getGazeDuration() == -1);
-        sequence = fixSeq;
     }
 
     /**
@@ -112,7 +120,6 @@ public class FixationSequence {
      *
      * @param outputFile The output file (Must be open and writable)
      */
-    // creates a clear background image
     public void saveToFile(final File outputFile) {
         final BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
         try {
@@ -123,10 +130,8 @@ public class FixationSequence {
     }
 
     public static LinkedList<FixationPoint> vertexReduction(final LinkedList<FixationPoint> allPoints, final double tolerance) {
-
-        int accepted = 0;
         double distance;
-        FixationPoint pivotVertex = allPoints.get(accepted);
+        FixationPoint pivotVertex = allPoints.get(0);
 
         final LinkedList<FixationPoint> reducedPolyline = new LinkedList<>();
         reducedPolyline.add(pivotVertex);
@@ -138,13 +143,9 @@ public class FixationSequence {
             if (distance <= tolerance) {
                 // add to the accepted vertex the duration of the reduced vertices -- to adapt the radius
                 pivotVertex.setGazeDuration(pivotVertex.getGazeDuration() + allPoints.get(i).getGazeDuration());
-                // continue;
             } else {
                 reducedPolyline.add(allPoints.get(i));
-
-                accepted = i;
-
-                pivotVertex = allPoints.get(accepted);
+                pivotVertex = allPoints.get(i);
             }
         }
         return reducedPolyline;
