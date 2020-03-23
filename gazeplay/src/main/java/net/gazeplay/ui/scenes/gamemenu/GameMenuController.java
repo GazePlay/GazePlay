@@ -3,6 +3,8 @@ package net.gazeplay.ui.scenes.gamemenu;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.effect.BoxBlur;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
@@ -84,9 +86,15 @@ public class GameMenuController {
     }
 
     void playBackgroundMusic(GameContext gameContext, GameSpec selectedGameSpec, BackgroundMusicManager musicManager) {
-        boolean defaultMusicPlaying = musicManager.getCurrentMusic().getMedia().getSource().contains(Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC);
+        MediaPlayer currentMusic = musicManager.getCurrentMusic();
+        boolean defaultMusicPlaying = true;
+        if (currentMusic != null) {
+            Media currentMedia = currentMusic.getMedia();
+            if (currentMedia != null) {
+                defaultMusicPlaying = currentMedia.getSource().contains(Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC);
+            }
+        }
         log.info("is default music set : {}", defaultMusicPlaying);
-
         if (defaultMusicPlaying || musicManager.getPlaylist().isEmpty()) {
             musicManager.backupPlaylist();
             musicManager.emptyPlaylist();
