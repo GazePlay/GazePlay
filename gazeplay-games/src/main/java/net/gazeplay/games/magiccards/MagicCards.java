@@ -52,7 +52,7 @@ public class MagicCards implements GameLifeCycle {
         this.nbColumns = nbColumns;
         this.stats = stats;
 
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"));
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"));
     }
 
     @Override

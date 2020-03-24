@@ -40,7 +40,7 @@ public class Divisor implements GameLifeCycle {
             initBackground();
             gameContext.resetBordersToFront();
         } else {
-            imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("portraits"));
+            imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"));
         }
 
          target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,

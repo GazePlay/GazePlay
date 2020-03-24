@@ -17,114 +17,62 @@ import java.util.Enumeration;
 @Slf4j
 public class Utils {
 
-    public static InputStream getInputStream(final String ressource) {
-        log.debug("Try to play " + ressource);
-        return ClassLoader.getSystemResourceAsStream(ressource);
+    /**
+     * Gets an InputStream to the provided resource.
+     * @param resource Path to the resource
+     * @return The InputStream of the resource
+     */
+    public static InputStream getInputStream(final String resource) {
+        log.debug("Try to play " + resource);
+        return ClassLoader.getSystemResourceAsStream(resource);
     }
 
     /**
-     * @return images directory for GazePlay : by default in the default directory of GazePlay, in a folder called files
-     * but can be configured through option interface and/or GazePlay.properties file
+     * Provides the default GazePlay file directory. By default this will be {user.home}/GazePlay/files,
+     * but can be overridden by the user in the app or in the GazePlay.properties file.
+     * @return GazePlay files directory
      */
-
     public static String getFilesFolder() {
-
         final Configuration config = ActiveConfigurationContext.getInstance();
         final String filesFolder = config.getFileDir();
 
-        log.info("filesFolder : " + filesFolder);
+        log.info("filesFolder : {}", filesFolder);
         return filesFolder;
     }
 
     /**
-     * @return images directory for GazePlay : in the files directory another folder called images
+     * @return The image directory within the GazePlay files directory
      */
-
     public static File getBaseImagesDirectory() {
         final File filesDirectory = new File(getFilesFolder());
         return new File(filesDirectory, "images");
     }
 
-    public static File getImagesSubDirectory(final String subfolderName) {
+    public static File getImagesSubdirectory(final String subdirectoryName) {
         final File baseImagesDirectory = getBaseImagesDirectory();
-        log.info("baseImagesDirectory {}", baseImagesDirectory);
-        log.info("subfolderName {}", subfolderName);
-        return new File(baseImagesDirectory, subfolderName);
-    }
-
-    /**
-     * @return current date with respect to the format yyyy-MM-dd
-     */
-    public static String today() {
-        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        final Date date = new Date();
-        return dateFormat.format(date);
-    }
-
-    /**
-     * @return current date with respect to the format dd/MM/yyyy
-     */
-    public static String todayCSV() {
-        final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        final Date date = new Date();
-        return dateFormat.format(date);
-    }
-
-    /**
-     * @return current time with respect to the format HH:MM:ss
-     */
-    public static String time() {
-        final DateFormat dateFormat = new SimpleDateFormat("HH:MM:ss");
-        final Date date = new Date();
-        return dateFormat.format(date);
-    }
-
-    /**
-     * @return current time with respect to the format yyyy-MM-dd-HH-MM-ss
-     */
-    public static String now() {
-        final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-        final Date date = new Date();
-        return dateFormat.format(date);
-    }
-
-    public static boolean copyFromJar(final String filePath, final String destinationPath) {
-        InputStream sourceFile = null;
-        OutputStream destinationFile = null;
-        try {
-            sourceFile = ClassLoader.getSystemResourceAsStream(filePath);
-            if (sourceFile == null) {
-                throw new IOException("Resource not found " + filePath);
-            }
-            destinationFile = new FileOutputStream(destinationPath);
-            org.apache.commons.io.IOUtils.copy(sourceFile, destinationFile);
-        } catch (final IOException e) {
-            log.error("Exception", e);
-            return false; // Erreur
-        } finally {
-            IOUtils.closeQuietly(destinationFile);
-            IOUtils.closeQuietly(sourceFile);
-        }
-        return true; // Résultat OK
+        log.info("baseImagesDirectory : {}", baseImagesDirectory);
+        log.info("subdirectoryName : {}", subdirectoryName);
+        return new File(baseImagesDirectory, subdirectoryName);
     }
 
     public static String convertWindowsPath(String path) {
-        path = path.replace("\\", "/");
-        path = path.replaceAll("\\\\", "/");
-        return path;
+        String windowsPath = path;
+        windowsPath = windowsPath.replace("\\", "/");
+        windowsPath = windowsPath.replaceAll("\\\\", "/");
+        return windowsPath;
     }
 
     /**
-     * @return true if the operating system is a Windows
+     * @return true if the operating system is Windows
      */
     public static boolean isWindows() {
-        return System.getProperty("os.name").indexOf("indow") > 0;
+        return System.getProperty("os.name").toLowerCase().indexOf("win") > 0;
     }
 
     public static void logSystemProperties() {
-        final Enumeration<?> E = System.getProperties().propertyNames();
-        while (E.hasMoreElements()) {
-            final String element = (String) E.nextElement();
+        final Enumeration<?> propertyNames = System.getProperties().propertyNames();
+        while (propertyNames.hasMoreElements()) {
+            final String element = (String) propertyNames.nextElement();
             log.info(String.format("%s: %s", element, System.getProperty(element)));
         }
     }
