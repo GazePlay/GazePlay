@@ -176,7 +176,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final List<Node> gameCardsList = new ArrayList<>();
 
         for (GameSpec gameSpec : games) {
-            final GameButtonPane  gameCard = createGameCard(config, gameSpec, translator, gameButtonOrientation, indicator);
+            final GameButtonPane gameCard = createGameCard(config, gameSpec, translator, gameButtonOrientation, indicator);
             gameCardsList.add(gameCard);
         }
 
@@ -257,7 +257,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             gazeDeviceManager.addEventFilter(gameCard);
         }
 
-        return  gameCard;
+        return gameCard;
     }
 
     private void filterGames(FlowPane choicePanel, List<Node> completeGameCardsList, Configuration config, ProgressIndicator indicator, Predicate<Node> gameCardPredicate) {
@@ -269,7 +269,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         List<Node> filteredFavList = completeGameCardsList.stream()
             .filter(node -> {
                 GameButtonPane gameButtonPane = (GameButtonPane) node;
-                return (gameCardPredicate.test(node) && isFavorite(gameButtonPane.getGameSpec(),config));
+                return (gameCardPredicate.test(node) && isFavorite(gameButtonPane.getGameSpec(), config));
             })
             .collect(Collectors.toList());
 
@@ -284,7 +284,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         for (Node filteredFav : filteredFavList) {
             GameButtonPane gameButtonPane = (GameButtonPane) filteredFav;
-            choicePanel.getChildren().add(createGameCard( config,  gameButtonPane.getGameSpec(),   translator,  gameButtonOrientation,  indicator));
+            choicePanel.getChildren().add(createGameCard(config, gameButtonPane.getGameSpec(), translator, gameButtonOrientation, indicator));
         }
 
         choicePanel.getChildren().add(s);
