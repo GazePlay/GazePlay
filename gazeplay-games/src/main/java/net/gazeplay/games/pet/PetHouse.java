@@ -1,7 +1,5 @@
 package net.gazeplay.games.pet;
 
-import com.sun.glass.ui.Cursor;
-import com.sun.glass.ui.Screen;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -90,16 +88,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
     @Getter
     private Rectangle hand;
 
-    private final int screenWidth;
-    private final int screenHeight;
-
     PetHouse(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
-
-        final Screen mainScreen = Screen.getMainScreen();
-        screenWidth = mainScreen.getWidth();
-        screenHeight = mainScreen.getHeight();
 
         setMode(INIT_MODE);
 
@@ -146,7 +137,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
         pet.setLayoutY(zone.getY() + zone.getHeight() / 2 - pet.getBibouleh() / 2);
 
         final EventHandler<Event> handevent = e -> {
-            Cursor.setVisible(true);
             inside = true;
             onEvent(e);
         };
@@ -181,8 +171,10 @@ public class PetHouse extends Parent implements GameLifeCycle {
             final float xRatio = pointAsFloatArray[0];
             final float yRatio = pointAsFloatArray[1];
 
-            final double positionX = xRatio * screenWidth;
-            final double positionY = yRatio * screenHeight;
+            final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+            final double positionX = xRatio * dimension2D.getWidth();
+            final double positionY = yRatio * dimension2D.getHeight();
 
             hand.setX(offsetx + positionX - gameContext.getPrimaryStage().getX()
                 - hand.getWidth() / 2);
@@ -202,7 +194,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     private void createZoneEvents() {
         final EventHandler<Event> handevent = e -> {
-            Cursor.setVisible(true);
             double offsetx = 0;
             double offsety = 0;
             if (mode == EAT_MODE) {
@@ -226,7 +217,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
         zone.addEventFilter(GazeEvent.GAZE_MOVED, handevent);
 
         final EventHandler<Event> enterevent = e -> {
-            Cursor.setVisible(false);
             inside = true;
             hand.toFront();
             hand.setVisible(true);
@@ -254,7 +244,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
         final EventHandler<Event> outhandevent = event -> {
             inside = false;
-            Cursor.setVisible(true);
             hand.toBack();
             hand.setVisible(false);
         };
@@ -591,7 +580,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
         final EventHandler<Event> handenter = e -> {
             pet.setBasic();
             pet.setBlinkingEnabled(true);
-            Cursor.setVisible(true);
             inside = true;
             hand.setFill(new ImagePattern(new Image("data/pet/images/fullspoon.png")));
             setSpoonFull(true);
