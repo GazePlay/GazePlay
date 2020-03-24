@@ -107,8 +107,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topRightPane.setAlignment(Pos.TOP_CENTER);
         topRightPane.getChildren().addAll(logoutButton, exitButton);
 
-        ProgressIndicator indicator = new ProgressIndicator(0);
-        Node gamePickerChoicePane = createGamePickerChoicePane(games, config, indicator);
+        ProgressIndicator dwellTimeIndicator = new ProgressIndicator(0);
+        Node gamePickerChoicePane = createGamePickerChoicePane(games, config, dwellTimeIndicator);
 
         VBox centerPanel = new VBox();
         centerPanel.setSpacing(40);
@@ -121,7 +121,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topPane.setTop(menuBar);
         topPane.setRight(topRightPane);
         topPane.setCenter(topLogoPane);
-        topPane.setBottom(buildFilterByCategory(config, gazePlay.getTranslator(), indicator));
+        topPane.setBottom(buildFilterByCategory(config, gazePlay.getTranslator(), dwellTimeIndicator));
 
         //gamesStatisticsPane.refreshPreferredSize();
 
@@ -143,9 +143,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private ScrollPane createGamePickerChoicePane(
         List<GameSpec> games,
         final Configuration config,
-        final ProgressIndicator indicator
+        final ProgressIndicator dwellTimeIndicator
     ) {
-        gameCardsList = createGameCardsList(games, config, indicator);
+        gameCardsList = createGameCardsList(games, config, dwellTimeIndicator);
 
         final int flowpaneGap = 20;
         choicePanel = new FlowPane();
@@ -160,7 +160,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
 
-        filterGames(choicePanel, gameCardsList, config, indicator, new GameCardVisiblePredicate(config));
+        filterGames(choicePanel, gameCardsList, config, dwellTimeIndicator, new GameCardVisiblePredicate(config));
 
         return choicePanelScroller;
     }
@@ -168,7 +168,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private List<Node> createGameCardsList(
         List<GameSpec> games,
         final Configuration config,
-        final ProgressIndicator indicator
+        final ProgressIndicator dwellTimeIndicator
     ) {
         final Translator translator = getGazePlay().getTranslator();
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
@@ -176,14 +176,14 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final List<Node> gameCardsList = new ArrayList<>();
 
         for (GameSpec gameSpec : games) {
-            final GameButtonPane gameCard = createGameCard(config, gameSpec, translator, gameButtonOrientation, indicator);
+            final GameButtonPane gameCard = createGameCard(config, gameSpec, translator, gameButtonOrientation, dwellTimeIndicator);
             gameCardsList.add(gameCard);
         }
 
         return gameCardsList;
     }
 
-    private GameButtonPane createGameCard(final Configuration config, GameSpec gameSpec, final Translator translator, GameButtonOrientation gameButtonOrientation, final ProgressIndicator indicator) {
+    private GameButtonPane createGameCard(final Configuration config, GameSpec gameSpec, final Translator translator, GameButtonOrientation gameButtonOrientation, final ProgressIndicator dwellTimeIndicator) {
 
         GameButtonPane gameCard = gameMenuFactory.createGameButton(
             getGazePlay(),
@@ -196,15 +196,15 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         gameCard.setEnterhandler(e -> {
             if (config.isGazeMenuEnable()) {
                 if (e.getSource() == gameCard /* && !gameCard.isActive() */) {
-                    indicator.setProgress(0);
-                    indicator.setOpacity(1);
-                    indicator.toFront();
+                    dwellTimeIndicator.setProgress(0);
+                    dwellTimeIndicator.setOpacity(1);
+                    dwellTimeIndicator.toFront();
                     switch (gameButtonOrientation) {
                         case HORIZONTAL:
-                            ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(indicator);
+                            ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(dwellTimeIndicator);
                             break;
                         case VERTICAL:
-                            ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(indicator);
+                            ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(dwellTimeIndicator);
                             break;
                     }
                     final Timeline timelineProgressBar = new Timeline();
@@ -214,11 +214,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
                     timelineProgressBar.getKeyFrames()
                         .add(new KeyFrame(new Duration(config.getFixationLength()),
-                            new KeyValue(indicator.progressProperty(), 1)));
+                            new KeyValue(dwellTimeIndicator.progressProperty(), 1)));
 
                     timelineProgressBar.onFinishedProperty()
                         .set(actionEvent -> {
-                            indicator.setOpacity(0);
+                            dwellTimeIndicator.setOpacity(0);
                             for (Node n : choicePanel.getChildren()) {
                                 if (n instanceof GameButtonPane) {
                                     if (((GameButtonPane) n).getTimelineProgressBar() != null) {
@@ -236,9 +236,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         gameCard.setExithandler(e -> {
             if (config.isGazeMenuEnable()) {
                 if (e.getSource() == gameCard /* && gameCard.isActive() */) {
-                    indicator.setProgress(0);
+                    dwellTimeIndicator.setProgress(0);
                     ((GameButtonPane) e.getSource()).getTimelineProgressBar().stop();
-                    indicator.setOpacity(0);
+                    dwellTimeIndicator.setOpacity(0);
                     switch (gameButtonOrientation) {
                         case HORIZONTAL:
                             ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(null);
@@ -260,7 +260,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return gameCard;
     }
 
-    private void filterGames(FlowPane choicePanel, List<Node> completeGameCardsList, Configuration config, ProgressIndicator indicator, Predicate<Node> gameCardPredicate) {
+    private void filterGames(FlowPane choicePanel, List<Node> completeGameCardsList, Configuration config, ProgressIndicator dwellTimeIndicator, Predicate<Node> gameCardPredicate) {
         List<Node> filteredList = completeGameCardsList
             .stream()
             .filter(gameCardPredicate)
@@ -284,7 +284,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         for (Node filteredFav : filteredFavList) {
             GameButtonPane gameButtonPane = (GameButtonPane) filteredFav;
-            choicePanel.getChildren().add(createGameCard(config, gameButtonPane.getGameSpec(), translator, gameButtonOrientation, indicator));
+            choicePanel.getChildren().add(createGameCard(config, gameButtonPane.getGameSpec(), translator, gameButtonOrientation, dwellTimeIndicator));
         }
 
         choicePanel.getChildren().add(s);
@@ -293,12 +293,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     }
 
 
-    private TextField buildSearchBar(Configuration config, Translator translator, ProgressIndicator indicator) {
+    private TextField buildSearchBar(Configuration config, Translator translator, ProgressIndicator dwellTimeIndicator) {
         TextField gameSearchBar = new TextField();
 
         gameSearchBar.textProperty().addListener((obs, oldValue, newValue) -> {
             log.debug(newValue);
-            filterGames(choicePanel, gameCardsList, config, indicator, node -> {
+            filterGames(choicePanel, gameCardsList, config, dwellTimeIndicator, node -> {
                 GameButtonPane gameButtonPane = (GameButtonPane) node;
                 return (new GameCardVisiblePredicate(config)).test(node) &&
                     translator.translate(gameButtonPane.getGameSpec().getGameSummary().getNameCode()).toLowerCase().contains(newValue.toLowerCase());
@@ -308,17 +308,17 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return gameSearchBar;
     }
 
-    private HBox buildFilterByCategory(Configuration config, Translator translator, ProgressIndicator indicator) {
+    private HBox buildFilterByCategory(Configuration config, Translator translator, ProgressIndicator dwellTimeIndicator) {
 
 
-        TextField searchBar = buildSearchBar(config, translator, indicator);
+        TextField searchBar = buildSearchBar(config, translator, dwellTimeIndicator);
         searchBar.maxWidthProperty().bind(root.widthProperty().multiply(1d / 4d));
         searchBar.prefWidthProperty().bind(root.widthProperty().multiply(1d / 4d));
         searchBar.minWidthProperty().bind(root.widthProperty().multiply(1d / 4d));
 
         List<CheckBox> allCheckBoxes = new ArrayList<>();
         for (GameCategories.Category category : GameCategories.Category.values()) {
-            CheckBox checkBox = buildCategoryCheckBox(category, config, translator, choicePanel, gameCardsList, searchBar, indicator);
+            CheckBox checkBox = buildCategoryCheckBox(category, config, translator, choicePanel, gameCardsList, searchBar, dwellTimeIndicator);
             allCheckBoxes.add(checkBox);
         }
 
@@ -354,7 +354,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         FlowPane choicePanel,
         List<Node> gameCardsList,
         TextField searchBar,
-        ProgressIndicator indicator
+        ProgressIndicator dwellTimeIndicator
     ) {
         I18NText label = new I18NText(translator, category.getGameCategory());
         CheckBox categoryCheckbox = new CheckBox(label.getText());
@@ -367,7 +367,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             } else {
                 config.getHiddenCategoriesProperty().add(category.getGameCategory());
             }
-            filterGames(choicePanel, gameCardsList, config, indicator, node -> {
+            filterGames(choicePanel, gameCardsList, config, dwellTimeIndicator, node -> {
                 GameButtonPane gameButtonPane = (GameButtonPane) node;
                 return (new GameCardVisiblePredicate(config)).test(node) &&
                     translator.translate(gameButtonPane.getGameSpec().getGameSummary().getNameCode()).toLowerCase().contains(searchBar.getText().toLowerCase());
