@@ -25,9 +25,13 @@ echo "LIB_DIR_RELATIVE = ${LIB_DIR_RELATIVE}"
 
 CLASSPATH=$(find ./$LIB_DIR_RELATIVE -name "*.jar" | sort | tr '\n' ':')
 
-JAVA_HOME=${LIB_DIR}/jre/bin
+export JAVA_HOME=${LIB_DIR}/jre
 
 echo "JAVA_HOME = ${JAVA_HOME}"
+
+export PATH=${JAVA_HOME}/bin:${PATH}
+
+echo "PATH = ${PATH}"
 
 USB_PKG_OK=$(dpkg -s tobiiusbservice | grep "install ok installed")
 
