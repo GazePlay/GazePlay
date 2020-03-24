@@ -6,6 +6,7 @@ def jreVersion = project.ext.jreVersion
 def jreFolder = project.ext.jreFolder
 
 def filename = "zulu${zuluVersion}-ca-fx-jre${jreVersion}-linux_x64"
+def jfxfilename = "javafx-sdk-11.0.2"
 
 task downloadLinuxJRE(type: Download, group: 'custom jre') {
     src "${jreSource}/${filename}.tar.gz"
@@ -18,6 +19,28 @@ task extractLinuxJRE(dependsOn: downloadLinuxJRE, type: Copy, group: 'custom jre
     into "${jreFolder}/linux-x64"
 }
 
+task downloadOpenJFXForLibavPlugin(type: Download, group: 'custom jre') {
+    src "https://download2.gluonhq.com/openjfx/11.0.2/openjfx-11.0.2_linux-x64_bin-sdk.zip"
+    dest new File("${downloadLocation}/jre", 'linuxJFX.zip')
+    overwrite false
+}
+
+task extractOpenJFXForLibavPlugin(dependsOn: downloadOpenJFXForLibavPlugin, type: Copy, group: 'custom jre') {
+    from zipTree(downloadOpenJFXForLibavPlugin.dest)
+    into "${jreFolder}/linux-x64"
+}
+
+task downloadAndExtractOpenJFXForLibavPlugin(dependsOn: extractOpenJFXForLibavPlugin, group: 'custom jre') {
+    doLast {
+        copy {
+            from new File(extractOpenJFXForLibavPlugin.getDestinationDir(), jfxfilename)
+            into "${jreFolder}/linux-x64"
+        }
+
+        delete "${jreFolder}/linux-x64/${jfxfilename}"
+    }
+}
+
 task downloadAndExtractLinuxJRE(dependsOn: extractLinuxJRE, group: 'custom jre') {
     doLast {
         copy {
@@ -26,5 +49,19 @@ task downloadAndExtractLinuxJRE(dependsOn: extractLinuxJRE, group: 'custom jre')
         }
 
         delete "${jreFolder}/linux-x64/${filename}"
+    }
+}
+
+task downloadAndExtractLinuxJREwithLibavPlugin(dependsOn: [downloadAndExtractLinuxJRE, downloadAndExtractOpenJFXForLibavPlugin], group: 'custom jre') {
+    doLast {
+        copy {
+            from "${jreFolder}/linux-x64/${jfxfilename}/lib/"
+            include "*libavplugin*"
+            into "${jreFolder}/linux-x64/lib"
+        }
+
+        delete "${jreFolder}/linux-x64/lib/libavplugin.so"
+
+        delete "${jreFolder}/linux-x64/${jfxfilename}"
     }
 }

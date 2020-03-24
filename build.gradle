@@ -221,7 +221,7 @@ distributions {
     }
 }
 
-task('downloadAndExtractLinuxDependecies').dependsOn('downloadAndExtractLinuxJRE', 'downloadAndExtractTobiiDriversForLinux')
+task('downloadAndExtractLinuxDependecies').dependsOn('downloadAndExtractLinuxJREwithLibavPlugin', 'downloadAndExtractTobiiDriversForLinux')
 
 macosDistTar.dependsOn(downloadAndExtractMacosJRE)
 windowsDistZip.dependsOn(downloadAndExtractWindowsJRE)
