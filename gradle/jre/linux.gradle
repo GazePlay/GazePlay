@@ -33,8 +33,9 @@ task extractOpenJFXForLibavPlugin(dependsOn: downloadOpenJFXForLibavPlugin, type
 task downloadAndExtractOpenJFXForLibavPlugin(dependsOn: extractOpenJFXForLibavPlugin, group: 'custom jre') {
     doLast {
         copy {
-            from new File(extractOpenJFXForLibavPlugin.getDestinationDir(), jfxfilename)
-            into "${jreFolder}/linux-x64"
+            from "${jreFolder}/linux-x64/${jfxfilename}/lib/"
+            include "*libavplugin*"
+            into "${jreFolder}/linux-x64/lib"
         }
 
         delete "${jreFolder}/linux-x64/${jfxfilename}"
@@ -54,14 +55,6 @@ task downloadAndExtractLinuxJRE(dependsOn: extractLinuxJRE, group: 'custom jre')
 
 task downloadAndExtractLinuxJREwithLibavPlugin(dependsOn: [downloadAndExtractLinuxJRE, downloadAndExtractOpenJFXForLibavPlugin], group: 'custom jre') {
     doLast {
-        copy {
-            from "${jreFolder}/linux-x64/${jfxfilename}/lib/"
-            include "*libavplugin*"
-            into "${jreFolder}/linux-x64/lib"
-        }
-
         delete "${jreFolder}/linux-x64/lib/libavplugin.so"
-
-        delete "${jreFolder}/linux-x64/${jfxfilename}"
     }
 }
