@@ -14,6 +14,7 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.Random;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HeatMap;
@@ -34,7 +35,8 @@ import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.io.*;
-import java.lang.invoke.StringConcatException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -98,9 +100,9 @@ public class Stats implements GazeMotionListener {
 
     private ArrayList<String> coordinateData = new ArrayList<String>();
     private JsonObject savedDataObj = new JsonObject();
-    private int idForReplay = 0;
-    private int digits = 4;
-    private int seed = 123456325;
+    private Random randomId = new Random();
+    private BigInteger idForReplay;
+
 
 
     public Stats(final Scene gameContextScene) {
@@ -219,7 +221,7 @@ public class Stats implements GazeMotionListener {
             recordGazeMovements = e -> {
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
-                idForReplay= randNumber();
+                idForReplay = randomId.randNumber();
                 saveCoordinates("{" + getX + "," + getY + "}");
                 if (!config.isHeatMapDisabled()) {
                     incHeatMap(getX, getY);
@@ -227,7 +229,7 @@ public class Stats implements GazeMotionListener {
                 if (!config.isFixationSequenceDisabled()) {
                     incFixationSequence(getX, getY);
                 }
-                if (config.getAreaOfInterestDisabledProperty().getValue()) {
+                if (config.getAreaOfInterestDisabledProperty().getValue()) {;
                     if (getX != previousX || getY != previousY) {
                         final long timeToFixation = System.currentTimeMillis() - startTime;
                         previousX = getX;
@@ -242,7 +244,7 @@ public class Stats implements GazeMotionListener {
             recordMouseMovements = e -> {
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
-                idForReplay = randNumber();
+                idForReplay = randomId.randNumber();
                 saveCoordinates("{" + getX + "," + getY + "}");
                 if (!config.isHeatMapDisabled()) {
                     incHeatMap(getX, getY);
@@ -596,7 +598,7 @@ public class Stats implements GazeMotionListener {
 
     private JsonObject buildSavedDataJSON(ArrayList<String> data) {
         savedDataObj.addProperty("id", idForReplay);
-        savedDataObj.addProperty("rinates", data.toString());
+        savedDataObj.addProperty("coordinates", data.toString());
         return savedDataObj;
     }
 
@@ -604,26 +606,5 @@ public class Stats implements GazeMotionListener {
         coordinateData.add(coordinates);
         return coordinateData;
     }
-
-
-
-    int randNumber() {
-        int n = seed * seed;
-        StringBuilder number = new StringBuilder(String.valueOf(n));
-        //pad
-        while(number.length() < digits * 2){
-            number.insert(0, "0");
-        }
-
-        //Get middle 4 digits
-
-        int start = (int) Math.floor(digits /2);
-        int end = start + digits;
-        seed = Integer.parseInt(number.substring(start,end));
-        return seed;
-
-    }
-
-
 
 }
