@@ -29,6 +29,7 @@
 
 - GazePlay works on linux with Tobii 4C (_Sébastien Riou_)
 - Selection of customized images is easier (_Sébastien Riou_)
+- Linux version with Tobii4C drivers installation (_Sébastien Riou_)
 - Double screen now can be used (_Sébastien Riou_ & _Yann Robert_)
 - Updated JRE added for all Operating Systems (_Miles Bardon_)
 - Windows installation now removes previous version (_Miles Bardon_)
@@ -36,6 +37,7 @@
 ## Various translations and bug resolution
 - Memory Game issues with eye-tracker have been fixed (_Sébastien Riou_)
 - GazeMediaPlayer issue with eye-tracker have been fixed (_Sébastien Riou_)
+- Various sounds issues (_Sébastien Riou_ & _Miles Bardon_)
 - Many code bugs fixed in the core GazePlay module (_Miles Bardon_)
 
 ## Tests and Supervision
