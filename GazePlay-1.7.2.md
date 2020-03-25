@@ -1,4 +1,4 @@
-# GazePlay 1.7
+# GazePlay 1.7.2
 
 ## New games :
 
