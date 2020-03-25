@@ -18,6 +18,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
+import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -29,7 +30,7 @@ import java.util.List;
 @Slf4j
 public class ScanpathView extends GraphicalContext<BorderPane> {
 
-    public ScanpathView(GazePlay gazePlay, Stats stats) {
+    public ScanpathView(GazePlay gazePlay, Stats stats, CustomButton continueButton) {
         super(gazePlay, new BorderPane());
 
         final Pane center = buildCenterPane(stats);
@@ -38,7 +39,7 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
 
         HomeButton homeButton = new HomeButton(screenDimension);
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
-            StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
+            StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats, continueButton);
             this.clear();
             gazePlay.onDisplayStats(statsContext);
         });

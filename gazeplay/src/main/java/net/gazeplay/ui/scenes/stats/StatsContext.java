@@ -240,7 +240,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             e -> gazePlay.onDisplayAOI(stats));
 
         EventHandler<Event> viewScanPath = s -> {
-            ScanpathView scanPath = new ScanpathView(gazePlay, stats);
+            ScanpathView scanPath = new ScanpathView(gazePlay, stats, continueButton);
             gazePlay.onDisplayScanpath(scanPath);
         };
 
