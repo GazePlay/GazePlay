@@ -349,7 +349,7 @@ public class BackgroundMusicManager {
         executorService.execute(asyncTask);
     }
 
-    private File downloadAndGetFromCache(URL resourceURL, String resourceUrlExternalForm) {
+    File downloadAndGetFromCache(URL resourceURL, String resourceUrlExternalForm) {
         // the local cache filename is a Base64 encoding of the URL
         // so that we avoid name clash,
         // and so that we have the same local file for the same resource URL
@@ -357,7 +357,7 @@ public class BackgroundMusicManager {
         byte[] encodedUrl = Base64.getEncoder().encode(resourceUrlExternalForm.getBytes(utf8));
         final String localCacheFileName = new String(encodedUrl, utf8);
 
-        File musicCacheFolder = new File("cache/music");
+        File musicCacheFolder = new File(GazePlayDirectories.getGazePlayFolder(), "cache/music");
         File outputFile = new File(musicCacheFolder, localCacheFileName);
 
         if (!outputFile.exists()) {
@@ -384,10 +384,14 @@ public class BackgroundMusicManager {
         return outputFile;
     }
 
+    MediaPlayer makeMediaPlayer(Media media) {
+        return new MediaPlayer(media);
+    }
+
     MediaPlayer createMediaPlayer(String source) {
         try {
             final Media media = new Media(source);
-            final MediaPlayer player = new MediaPlayer(media);
+            final MediaPlayer player = makeMediaPlayer(media);
             player.setOnError(() -> log.error("error on audio media loading : " + player.getError()));
             player.volumeProperty().bindBidirectional(ActiveConfigurationContext.getInstance().getMusicVolumeProperty());
             player.setOnEndOfMedia(this::next);
