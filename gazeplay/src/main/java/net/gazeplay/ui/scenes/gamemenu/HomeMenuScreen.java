@@ -284,7 +284,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return gameCard;
     }
 
-    private void filterGames(FlowPane choicePanel, List<Node> completeGameCardsList,  List<Node> completeFavGameCardsList, Configuration config, ProgressIndicator dwellTimeIndicator, Predicate<Node> gameCardPredicate) {
+    private void filterGames(FlowPane choicePanel, List<Node> completeGameCardsList, List<Node> completeFavGameCardsList, Configuration config, ProgressIndicator dwellTimeIndicator, Predicate<Node> gameCardPredicate) {
         List<Node> filteredList = completeGameCardsList
             .stream()
             .filter(gameCardPredicate)
