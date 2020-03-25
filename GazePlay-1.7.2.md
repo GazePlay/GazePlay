@@ -42,4 +42,4 @@
 
 ## Tests and Supervision
 
-Consult GitHub for more information (XXXX commits - 2984 for gazePlay 1.7.1)
+Consult GitHub for more information (392 commits for this release - 3376 commits for gazePlay 1.7.1 - 2984 for gazePlay 1.7.1)
