@@ -18,4 +18,4 @@ jobs:
       - name: Set up xvfb for non headless tests
         run: sudo apt-get install xvfb
       - name: Run tests with Gradle
-        run: xvfb-run --auto-servernum ./gradlew --stacktrace --info test -PexcludeTests=**/*Music*
+        run: xvfb-run --auto-servernum ./gradlew --stacktrace --info test
