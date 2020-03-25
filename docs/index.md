@@ -8,10 +8,10 @@ header:
     overlay_image: /assets/images/gazeplayClassicLogo.png
     actions:
         - label: "<i class='fas fa-download'></i> Install now"
-          url: https://github.com/GazePlay/GazePlay/releases/download/1.7.1/GazePlayInstaller.exe
+          url: https://github.com/GazePlay/GazePlay/releases/download/1.7.2/GazePlayInstaller.exe
 excerpt: >
   Gazeplay is free and open-source software, gathering nearly 60 mini-games playable with an eye-tracker.<br />
-  <small><a href="https://github.com/GazePlay/GazePlay/releases/tag/1.7.1">Latest release v1.7.1</a></small>
+  <small><a href="https://github.com/GazePlay/GazePlay/releases/tag/1.7.2">Latest release v1.7.2</a></small>
 ---
 
 {% include video id="xGKCIiYNu2c" provider="youtube" %}
