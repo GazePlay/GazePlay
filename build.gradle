@@ -248,4 +248,4 @@ mainClassName = 'net.gazeplay.GazePlayLauncher'
 defaultTasks 'clean', 'build', 'checkPMDReport'
 startScripts.enabled = false
 
-afterReleaseBuild.dependsOn generateWindowsInstaller
+afterReleaseBuild.dependsOn generateWindowsInstallerInDocker
