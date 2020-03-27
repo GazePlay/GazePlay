@@ -22,7 +22,6 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -85,7 +84,7 @@ public class Letters implements GameLifeCycle {
 
         this.stats = stats;
 
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("blocs"));
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"));
         translator = gameContext.getTranslator();
 
         Locale locale = translator.currentLocale();
@@ -161,8 +160,6 @@ public class Letters implements GameLifeCycle {
 
             stats.notifyNewRoundReady();
 
-            stats.notifyNewRoundReady();
-
             gameContext.onGameStarted();
         });
 
@@ -173,8 +170,7 @@ public class Letters implements GameLifeCycle {
         // double height = dimension2D.getHeight() / nbLines;
         // Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
         // this.currentRoundDetails.remainingCount = correctCount;
-        // stats.notifyNewRoundReady();
-
+        stats.notifyNewRoundReady();
     }
 
     private String pickRandomLetter() {
@@ -266,13 +262,7 @@ public class Letters implements GameLifeCycle {
     }
 
     private void playSound(String path) {
-        try {
-            // log.debug("Letter sound path {}", path);
-            ForegroundSoundsUtils.playSound(path);
-        } catch (Exception e) {
-            // log.warn("Can't play sound: no associated sound : " + e.toString());
-        }
-
+        gameContext.getSoundManager().add(path);
     }
 
 }

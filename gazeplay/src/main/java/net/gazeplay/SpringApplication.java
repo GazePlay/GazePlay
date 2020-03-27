@@ -4,6 +4,7 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.ui.DefaultTranslator;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.gameslocator.CachingGamesLocator;
 import net.gazeplay.gameslocator.CatalogBasedGamesLocator;
 import net.gazeplay.gameslocator.GamesLocator;
@@ -21,7 +22,7 @@ public class SpringApplication {
     @Bean
     public Translator translator() {
         net.gazeplay.commons.configuration.Configuration config = ActiveConfigurationContext.getInstance();
-        final Multilinguism multilinguism = Multilinguism.getSingleton();
+        final Multilinguism multilinguism = MultilinguismFactory.getSingleton();
         return new DefaultTranslator(config, multilinguism);
     }
 

@@ -79,8 +79,8 @@ public class Memory implements GameLifeCycle {
             this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers");
 
         } else {
-            this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("magiccards"),
-                Utils.getImagesSubDirectory("default"));
+            this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"),
+                Utils.getImagesSubdirectory("default"));
         }
 
     }

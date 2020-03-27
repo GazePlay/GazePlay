@@ -10,5 +10,5 @@ apply from: "${rootDir}/gradle/jre/macos.gradle"
 apply from: "${rootDir}/gradle/jre/windows.gradle"
 
 task('downloadAndExtractJREs', group: 'custom jre') {
-    dependsOn downloadAndExtractLinuxJRE, downloadAndExtractWindowsJRE, downloadAndExtractMacosJRE
+    dependsOn downloadAndExtractLinuxJREwithLibavPlugin, downloadAndExtractWindowsJRE, downloadAndExtractMacosJRE
 }

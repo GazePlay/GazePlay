@@ -3,7 +3,6 @@ package net.gazeplay.games.blocs;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -14,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
@@ -67,7 +65,7 @@ public class Blocs implements GameLifeCycle {
         this.percents4Win = percents4Win;
         this.stats = stats;
 
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("blocs"));
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"));
 
         enterEvent = buildEvent(gameContext, stats, useTrail);
 
@@ -207,7 +205,7 @@ public class Blocs implements GameLifeCycle {
 
                     currentRoundDetails.finished = true;
 
-                    stats.incNbGoals();
+                    stats.incrementNumberOfGoalsReached();
 
                     removeAllBlocs();
 

@@ -156,7 +156,7 @@ class SlidingPuzzleCard extends Parent {
     }
 
     private void onGameOver() {
-        stats.incNbGoals();
+        stats.incrementNumberOfGoalsReached();
 
         progressIndicator.setOpacity(0);
 
@@ -164,11 +164,6 @@ class SlidingPuzzleCard extends Parent {
         // currentTimeline = new Timeline();
 
         currentTimeline.onFinishedProperty().set(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
-            gameInstance.dispose();
-
-            gameContext.clear();
-
-            gameInstance.launch();
 
             try {
                 stats.saveStats();
@@ -176,7 +171,11 @@ class SlidingPuzzleCard extends Parent {
                 Logger.getLogger(SlidingPuzzleCard.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            stats.notifyNewRoundReady();
+            gameInstance.dispose();
+
+            gameContext.clear();
+
+            gameInstance.launch();
 
             gameContext.onGameStarted();
         }));
@@ -227,7 +226,7 @@ class SlidingPuzzleCard extends Parent {
 
                 currentTimeline.play();
                 timelineProgressBar.play();
-            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+            } else if ((e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) && (timelineProgressBar != null)) {
                 timelineProgressBar.stop();
                 progressIndicator.setOpacity(0);
                 progressIndicator.setProgress(0);

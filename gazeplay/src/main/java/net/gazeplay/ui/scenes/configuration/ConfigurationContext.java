@@ -13,6 +13,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -24,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -269,7 +271,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "FileDir", COLON);
 
-            Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.FILE);
+            Node input = buildImageChooser(config, configurationContext, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -545,6 +547,23 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         FILE, WHERE_IS_IT, MUSIC, VIDEO
     }
 
+    private Node buildImageChooser(Configuration configuration,
+                                   ConfigurationContext configurationContext,
+                                   Translator translator)
+    {
+
+        final Button selectButton = new Button("select");
+        Stage dialog = new CustomFileChooser(configuration, configurationContext, translator, getGazePlay());
+
+        selectButton.setOnAction(e -> {
+            dialog.show();
+            dialog.sizeToScene();
+            getGazePlay().getPrimaryStage().getScene().getRoot().setEffect(new GaussianBlur());
+        });
+
+        return selectButton;
+    }
+
     Node buildDirectoryChooser(
         Configuration configuration,
         ConfigurationContext configurationContext,
@@ -817,13 +836,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         });
 
         lightButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if(newVal){
+            if (newVal) {
                 configuration.setBackgroundStyle(BackgroundStyle.LIGHT);
             }
         });
 
         darkButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if(newVal){
+            if (newVal) {
                 configuration.setBackgroundStyle(BackgroundStyle.DARK);
             }
         });

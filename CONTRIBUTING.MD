@@ -25,13 +25,16 @@ A good practice is to follow the following steps.
 
 You will find further information [here](https://openclassrooms.com/courses/gerer-son-code-avec-git-et-github/contribuer-a-des-projets-open-source)
 
-## Pull request
+## Git Flow
+We follow the [Git Flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) workflow practice
+to better handle releases and testing in an automated fashion.  
+
+### Pull requests
 You will be asked to do at least a *pull request* **daily** to avoid that your code deviates too far from the main branch. 
-
+Your branch should be named as a feature branch (not just `develop`) and all Pull Requests must be configured to merge
+into `develop`.
 Each request must be documented as well as possible. By making the link, among other things, with the corresponding outcome.
-
 In order to make a *pull request*, always run `gradlew` which will run all tests and ensure the code has not broken.
-
 Each request will be examined by one of the contributors.
 
 ### Updating your own fork
@@ -42,18 +45,18 @@ these steps:
 # Set your upstream repository if you haven't already
 git remote add upstream https://github.com/GazePlay/GazePlay.git
 
-# Pull the latest master into your master
-git checkout master
-git pull upstream master
-git push <myrepo> master
+# Pull the latest develop into your develop
+git checkout develop
+git pull upstream develop
+git push <myrepo> develop
 
 # Make your changes
 git checkout -b MyChange
 # - your commits go here -
 git push <myrepo> MyChange
 
-# Reset to master and repeat the process for the next PR
-git checkout master
+# Reset to develop and repeat the process for the next PR
+git checkout develop
 ```
 
 ## Gradle

@@ -13,10 +13,22 @@ public class ImageUtils {
     static final Set<String> supportedFilesExtensions = Collections
         .unmodifiableSet(Sets.newHashSet("jpg", "jpeg", "png", "gif", "bmp", "wbmp"));
 
+    /**
+     * Creates a new LazyImageLibrary for the given directory, and a fallback library containing
+     * the default images from resources.
+     * @param directoryFile The directory in which to search for images.
+     * @return LazyImageLibrary with a Default fallback.
+     */
     public static ImageLibrary createImageLibrary(final File directoryFile) {
         return new LazyImageLibrary(directoryFile, createDefaultImageLibrary(null));
     }
 
+    /**
+     * Creates a new LazyImageLibrary for the given directory, with a fallback directory provided as well.
+     * @param directoryFile Primary directory to search within.
+     * @param defaultDirectoryFile Default, or fallback, directory to search within.
+     * @return LazyImageLibrary with a fallback LazyImageLibrary.
+     */
     public static ImageLibrary createImageLibrary(final File directoryFile, final File defaultDirectoryFile) {
         return new LazyImageLibrary(directoryFile,
             createDefaultImageLibrary(new LazyImageLibrary(defaultDirectoryFile)));

@@ -5,7 +5,7 @@ layout: single
 ---
 
 ## Using the Windows Installer
-[Download the installer](https://github.com/GazePlay/GazePlay/releases/download/1.7.0/GazePlayInstaller.exe) and double click to open it. You will be guided through the installer, and you can then access GazePlay by the desktop icon or through the Start Menu.
+[Download the installer](https://github.com/GazePlay/GazePlay/releases/download/1.7.2/GazePlayInstaller.exe) and double click to open it. You will be guided through the installer, and you can then access GazePlay by the desktop icon or through the Start Menu.
 
 ## Advanced - Unpacking the .zip
 You can also install GazePlay by downloading [the zip file]({{ site.zip_url }}) and extracting the contents to a safe location on your computer. You can then launch GazePlay by running; 

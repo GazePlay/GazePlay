@@ -10,5 +10,6 @@ public class DivisorStats extends ShootGamesStats {
     public DivisorStats(final Scene scene) {
         super(scene);
         this.gameName = "divisor";
+        setAccidentalShotPreventionPeriod(0);
     }
 }

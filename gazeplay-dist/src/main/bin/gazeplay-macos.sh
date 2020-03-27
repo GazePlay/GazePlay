@@ -7,9 +7,13 @@ export JAVA_OPTS="$JAVA_OPTS -Dlogging.appender.console.level=WARN"
 
 CLASSPATH=$(find ../lib -name "*.jar" | sort | tr '\n' ':')
 
-JAVA_HOME=../lib/jre/bin
+export JAVA_HOME=../lib/jre
 
 echo "JAVA_HOME = ${JAVA_HOME}"
+
+export PATH=${JAVA_HOME}/bin:${PATH}
+
+echo "PATH = ${PATH}"
 
 export JAVA_CMD="java -cp \"$CLASSPATH\" ${JAVA_OPTS} net.gazeplay.GazePlayLauncher"
 

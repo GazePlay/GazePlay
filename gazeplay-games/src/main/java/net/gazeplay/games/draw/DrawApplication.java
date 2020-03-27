@@ -12,7 +12,11 @@ import net.gazeplay.commons.utils.stats.Stats;
  */
 public class DrawApplication implements GameLifeCycle {
 
+    Stats stats;
+
     public DrawApplication(IGameContext gameContext, Stats stats) {
+        this.stats  = stats;
+
         DrawBuilder drawBuilder = new DrawBuilder();
         drawBuilder.setColorPicker(new RainbowColorPicker());
 
@@ -23,7 +27,7 @@ public class DrawApplication implements GameLifeCycle {
         Dimension2D canvasDimension = new Dimension2D(screenDimension.getWidth() / coefficient,
             screenDimension.getHeight() / coefficient);
 
-        Canvas canvas = drawBuilder.createCanvas(canvasDimension, coefficient);
+        Canvas canvas = drawBuilder.createCanvas(canvasDimension, coefficient, this.stats);
 
         StackPane root = new StackPane();
         root.getChildren().add(canvas);
@@ -33,12 +37,11 @@ public class DrawApplication implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(canvas);
         gameContext.getChildren().add(canvas);
-
     }
 
     @Override
     public void launch() {
-
+        stats.notifyNewRoundReady();
     }
 
     @Override

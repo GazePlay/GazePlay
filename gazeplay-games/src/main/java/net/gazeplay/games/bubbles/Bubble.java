@@ -16,9 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -66,7 +64,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         this.stats = stats;
         this.direction = direction;
 
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("portraits"));
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"));
 
         initBackground(useBackgroundImage);
 
@@ -80,10 +78,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                // log.debug(e.getEventType());
                 enter((Circle) e.getTarget());
-                stats.incNbGoals();
-                stats.notifyNewRoundReady();
             }
         };
 
@@ -121,7 +116,6 @@ public class Bubble extends Parent implements GameLifeCycle {
         }
 
         stats.notifyNewRoundReady();
-
     }
 
     @Override
@@ -191,23 +185,12 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         if (Math.random() > 0.5) {
             final String soundResource = "data/bubble/sounds/Large-Bubble-SoundBible.com-1084083477.mp3";
-            try {
-                ForegroundSoundsUtils.playSound(soundResource);
-            } catch (final Exception e) {
-
-                log.warn("file doesn't exist : {}", soundResource);
-                log.warn(e.getMessage());
-            }
+            gameContext.getSoundManager().add(soundResource);
         } else {
             final String soundResource = "data/bubble/sounds/Blop-Mark_DiAngelo-79054334.mp3";
-            try {
-                ForegroundSoundsUtils.playSound(soundResource);
-            } catch (final Exception e) {
-
-                log.warn("file doesn't exist : {}", soundResource);
-                log.warn(e.getMessage());
-            }
+            gameContext.getSoundManager().add(soundResource);
         }
+
 
     }
 
@@ -219,10 +202,11 @@ public class Bubble extends Parent implements GameLifeCycle {
         gameContext.getGazeDeviceManager().removeEventFilter(target);
         this.getChildren().remove(target);
 
+        stats.incrementNumberOfGoalsReached();
+
         explose(centerX, centerY); // instead of C to avoid wrong position of the explosion
 
         this.newCircle();
-        stats.incNbGoals();
     }
 
     private void newCircle() {
@@ -231,6 +215,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         this.getChildren().add(circle);
         this.gameContext.resetBordersToFront();
+        stats.incrementNumberOfGoalsToReach();
 
         gameContext.getGazeDeviceManager().addEventFilter(circle);
 
@@ -243,7 +228,6 @@ public class Bubble extends Parent implements GameLifeCycle {
     private Circle buildCircle() {
 
         final Circle newCircle = new Circle();
-
         final double radius = (maxRadius - minRadius) * Math.random() + minRadius;
 
         newCircle.setRadius(radius);
@@ -253,8 +237,6 @@ public class Bubble extends Parent implements GameLifeCycle {
         } else {
             newCircle.setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
         }
-        stats.incNbShots();
-        stats.incNbShots();
 
         return newCircle;
     }

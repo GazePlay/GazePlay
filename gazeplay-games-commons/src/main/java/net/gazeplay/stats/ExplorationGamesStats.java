@@ -1,6 +1,7 @@
 package net.gazeplay.stats;
 
 import javafx.scene.Scene;
+import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -16,6 +17,10 @@ public class ExplorationGamesStats extends Stats {
         super(scene);
     }
 
+    public ExplorationGamesStats(final Scene scene, String name) {
+        super(scene,name);
+    }
+
     @Override
     public SavedStatsInfo saveStats() throws IOException {
         super.saveStats();
@@ -28,9 +33,9 @@ public class ExplorationGamesStats extends Stats {
             out.print("Total Time");
             out.print(',');
             out.println();
-            out.print(Utils.todayCSV());
+            out.print(DateUtils.todayCSV());
             out.print(',');
-            out.print(Utils.time());
+            out.print(DateUtils.timeNow());
             out.print(',');
             out.print(computeTotalElapsedDuration());
             out.flush();

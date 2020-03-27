@@ -43,7 +43,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "gazeplayicon.ico"; DestDir: "{app}\\bin"; Flags: ignoreversion
-Source: "..\\${unpackedDirectory}\\bin\\gazeplay-windows.bat"; DestDir: "{app}\\bin"; Flags: ignoreversion
+Source: "..\\${unpackedDirectory}\\bin\\*"; DestDir: "{app}\\bin"; Flags: ignoreversion
 Source: "..\\${unpackedDirectory}\\lib\\*"; DestDir: "{app}\\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\\${unpackedDirectory}\\license\\*"; DestDir: "{app}\\license"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files

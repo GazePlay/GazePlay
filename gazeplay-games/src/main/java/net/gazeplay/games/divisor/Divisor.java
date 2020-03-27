@@ -8,9 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
+import net.gazeplay.commons.utils.games.LazyImageLibrary;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -21,35 +21,35 @@ import net.gazeplay.commons.utils.stats.Stats;
 public class Divisor implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Stats stats;
-    private final boolean lapin;
+    private final boolean isRabbit;
 
-    public Divisor(final IGameContext gameContext, final Stats stats, final boolean lapin) {
+    public Divisor(final IGameContext gameContext, final Stats stats, final boolean isRabbit) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
-        this.lapin = lapin;
+        this.isRabbit = isRabbit;
     }
 
     @Override
     public void launch() {
         final Target target;
+        final ImageLibrary imageLibrary;
 
-        if (lapin) {
-            final ImageLibrary imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "divisor/rabbit/images");
-
+        if (isRabbit) {
+            imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "divisor/rabbit/images");
             initBackground();
-
-            this.gameContext.resetBordersToFront();
-
-            target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
-                this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
+            gameContext.resetBordersToFront();
         } else {
-
-            final ImageLibrary imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubDirectory("divisor/basic"));
-            target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
-                this.gameContext.getRandomPositionGenerator().newRandomPosition(100), lapin);
+            imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"));
         }
+
+         target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
+            this.gameContext.getRandomPositionGenerator().newRandomPosition(100), isRabbit);
+
         gameContext.getChildren().add(target);
+
+        this.stats.notifyNewRoundReady();
+        stats.incrementNumberOfGoalsToReach();
     }
 
     private void initBackground() {
@@ -57,16 +57,17 @@ public class Divisor implements GameLifeCycle {
             Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
             imageRectangle.setFill(new ImagePattern(new Image("data/divisor/images/Background.png")));
-            double imageRectangleOpacity = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Double>() {
-                @Override
-                public Double visitLight() {
-                    return 0.5;
-                }
+            double imageRectangleOpacity = gameContext.getConfiguration().getBackgroundStyle().accept(
+                new BackgroundStyleVisitor<>() {
+                    @Override
+                    public Double visitLight() {
+                        return 0.5;
+                    }
 
-                @Override
-                public Double visitDark() {
-                    return 1.d;
-                }
+                    @Override
+                    public Double visitDark() {
+                        return 1.d;
+                    }
             });
             imageRectangle.setOpacity(imageRectangleOpacity);
             gameContext.getChildren().add(imageRectangle);

@@ -1,6 +1,7 @@
 package net.gazeplay.stats;
 
 import javafx.scene.Scene;
+import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -36,20 +37,20 @@ public class HiddenItemsGamesStats extends Stats {
             out.print(',');
             out.print("Standard Deviation");
             out.print(',');
-            for (int i = 0; i < getNbGoals(); i++) {
+            for (int i = 0; i < getNbGoalsToReach(); i++) {
                 out.print("shot ");
                 out.print(i);
                 out.print(",");
             }
             out.println();
 
-            out.print(Utils.todayCSV());
+            out.print(DateUtils.todayCSV());
             out.print(',');
-            out.print(Utils.time());
+            out.print(DateUtils.timeNow());
             out.print(',');
             out.print(computeTotalElapsedDuration());
             out.print(',');
-            out.print(getNbGoals());
+            out.print(getNbGoalsToReach());
             out.print(',');
             out.print(getRoundsTotalAdditiveDuration());
             out.print(',');

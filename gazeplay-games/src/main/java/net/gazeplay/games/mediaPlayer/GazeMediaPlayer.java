@@ -1,11 +1,11 @@
 package net.gazeplay.games.mediaPlayer;
 
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -32,56 +32,48 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.components.GazeIndicator;
+import net.gazeplay.components.StackPaneButton;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     private final IGameContext gameContext;
 
-    private final Button[] titre;
-    private final Button left;
-    private final Button playPause;
-    private final Button right;
-    private final Button fullScreen;
-    private final Button addVideo;
-    private final Button upArrow;
-    private final Button downArrow;
+
+    private final MediaButton[] mediaButtons;
+    private final StackPaneButton left;
+    private final StackPaneButton playPause;
+    private final StackPaneButton right;
+    private final StackPaneButton fullScreen;
+    private final StackPaneButton addVideo;
+    private final StackPaneButton upArrow;
+    private final StackPaneButton downArrow;
     private final BorderPane videoRoot;
     private final HBox window;
     private final HBox tools;
     private final VBox scrollList;
     private final VBox videoSide;
     private final Text musicTitle;
+    private final MediaFileReader musicList;
     private boolean full = false;
     private boolean play = false;
-    private final MediaFileReader musicList;
 
-    private final List<EventHandler<Event>> eventTitre;
+    private GazeIndicator progressIndicator;
 
-    GazeMediaPlayer(final IGameContext gameContext) {
+    GazeMediaPlayer(final IGameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-        eventTitre = new ArrayList<>();
-
-        final EventHandler<Event> empty = e -> {
-
-        };
-        eventTitre.add(empty);
-        eventTitre.add(empty);
-        eventTitre.add(empty);
 
         musicList = new MediaFileReader(gameContext);
 
@@ -90,34 +82,26 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
         scrollList = new VBox();
 
-        titre = new Button[3];
+        mediaButtons = new MediaButton[3];
 
-        upArrow = new Button("^");
-        upArrow.setPrefWidth(dimension2D.getWidth() / 5);
-        upArrow.setPrefHeight(dimension2D.getHeight() / 7);
-        upArrow.setStyle("-fx-background-radius: 5em; ");
 
-        for (int i = 0; i <= 2; i++) {
-            titre[i] = new Button();
-            titre[i].setPrefWidth(dimension2D.getWidth() / 4);
-            titre[i].setPrefHeight(dimension2D.getHeight() / 7);
-            putMusic(i, true);
+        upArrow = createTextStackPaneButton("^", dimension2D.getWidth() / 5, dimension2D.getHeight() / 7);
+        upArrow.getButton().setStyle("-fx-background-radius: 5em; ");
+
+        for (int i = 0; i < 3; i++) {
+            mediaButtons[i] = new MediaButton(dimension2D.getWidth() / 4, dimension2D.getHeight() / 7);
         }
 
-        downArrow = new Button("v");
-        downArrow.setPrefWidth(dimension2D.getWidth() / 5);
-        downArrow.setPrefHeight(dimension2D.getHeight() / 7);
-        downArrow.setStyle("-fx-background-radius: 5em; ");
+        downArrow = createTextStackPaneButton("v", dimension2D.getWidth() / 5, dimension2D.getHeight() / 7);
+        downArrow.getButton().setStyle("-fx-background-radius: 5em; ");
 
         scrollList.setSpacing(dimension2D.getHeight() / 30);
         scrollList.setAlignment(Pos.CENTER);
-        scrollList.getChildren().addAll(upArrow, titre[0], titre[1], titre[2], downArrow);
+        scrollList.getChildren().addAll(upArrow, mediaButtons[0], mediaButtons[1], mediaButtons[2], downArrow);
 
         videoSide = new VBox();
 
-        addVideo = new Button("+");
-        addVideo.setPrefWidth(dimension2D.getWidth() / 6);
-        addVideo.setPrefHeight(dimension2D.getHeight() / 8);
+        addVideo = createTextStackPaneButton("+", dimension2D.getWidth() / 6, dimension2D.getHeight() / 8);
 
         videoRoot = new BorderPane();
 
@@ -140,34 +124,10 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
         tools = new HBox();
 
-        left = new Button();
-        left.setPrefWidth(dimension2D.getWidth() / 12);
-        left.setPrefHeight(dimension2D.getHeight() / 8);
-        final ImageView leftIv = new ImageView(new Image("data/gazeMediaPlayer/prev.png"));
-        leftIv.setPreserveRatio(true);
-        leftIv.setFitHeight((90 * left.getHeight()) / 100);
-        left.setGraphic(leftIv);
-        playPause = new Button();
-        playPause.setPrefWidth(dimension2D.getWidth() / 12);
-        playPause.setPrefHeight(dimension2D.getHeight() / 8);
-        final ImageView playPauseIv = new ImageView(new Image("data/gazeMediaPlayer/playPause.png"));
-        playPauseIv.setPreserveRatio(true);
-        playPauseIv.setFitHeight((90 * playPause.getHeight()) / 100);
-        playPause.setGraphic(playPauseIv);
-        right = new Button();
-        right.setPrefWidth(dimension2D.getWidth() / 12);
-        right.setPrefHeight(dimension2D.getHeight() / 8);
-        final ImageView rightIv = new ImageView(new Image("data/gazeMediaPlayer/next.png"));
-        rightIv.setPreserveRatio(true);
-        rightIv.setFitHeight((90 * right.getHeight()) / 100);
-        right.setGraphic(rightIv);
-        fullScreen = new Button();
-        fullScreen.setPrefWidth(dimension2D.getWidth() / 12);
-        fullScreen.setPrefHeight(dimension2D.getHeight() / 8);
-        final ImageView screenIv = new ImageView(new Image("data/gazeMediaPlayer/fullon.png"));
-        screenIv.setPreserveRatio(true);
-        screenIv.setFitHeight((90 * fullScreen.getHeight()) / 100);
-        fullScreen.setGraphic(screenIv);
+        left = createGraphicStackPaneButton(dimension2D.getWidth() / 12, dimension2D.getHeight() / 8, "data/gazeMediaPlayer/prev.png");
+        playPause = createGraphicStackPaneButton(dimension2D.getWidth() / 12, dimension2D.getHeight() / 8, "data/gazeMediaPlayer/playPause.png");
+        right = createGraphicStackPaneButton(dimension2D.getWidth() / 12, dimension2D.getHeight() / 8, "data/gazeMediaPlayer/next.png");
+        fullScreen = createGraphicStackPaneButton(dimension2D.getWidth() / 12, dimension2D.getHeight() / 8, "data/gazeMediaPlayer/fullon.png");
 
         tools.setSpacing(dimension2D.getWidth() / 20);
         tools.setAlignment(Pos.CENTER);
@@ -185,13 +145,45 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         window.setLayoutY(dimension2D.getHeight() / 12);
 
         this.gameContext.getChildren().add(window);
+      
+        progressIndicator = new GazeIndicator(gameContext);
+        progressIndicator.setMouseTransparent(true);
+
+        updateMusic();
+        stats.notifyNewRoundReady();
+    }
+
+    public static StackPaneButton createGraphicStackPaneButton(double width, double height, @NonNull String imageURL) {
+        StackPaneButton bwpi = GazeMediaPlayer.createSimpleStackPaneButton(width, height);
+        try {
+            final ImageView imageButton = new ImageView(new Image(imageURL));
+            imageButton.setPreserveRatio(true);
+            imageButton.setFitHeight((90 * bwpi.getButton().getHeight()) / 100);
+            bwpi.getButton().setGraphic(imageButton);
+        } catch (Exception e) {
+            log.debug(" Image with url {} can't be loaded into StackPaneButton.", imageURL);
+        }
+        return bwpi;
+    }
+
+    public static StackPaneButton createSimpleStackPaneButton(double width, double height) {
+        StackPaneButton bwpi = new StackPaneButton();
+        bwpi.getButton().setPrefWidth(width);
+        bwpi.getButton().setPrefHeight(height);
+        bwpi.getButton().setMinWidth(width);
+        bwpi.getButton().setMinHeight(height);
+        return bwpi;
+    }
+
+    public static StackPaneButton createTextStackPaneButton(String text, double width, double height) {
+        StackPaneButton bwpi = createSimpleStackPaneButton(width, height);
+        bwpi.getButton().setText(text);
+        return bwpi;
     }
 
     @Override
     public void launch() {
         createHandlers();
-        createUpDownHandlers();
-        createLeftRightHandlers();
     }
 
     @Override
@@ -199,12 +191,43 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         this.stopMedia();
     }
 
-    private void createHandlers() {
-        final EventHandler<Event> eventFull = e -> fullScreenCheck();
-        fullScreen.addEventFilter(MouseEvent.MOUSE_CLICKED, eventFull);
-        fullScreen.addEventFilter(GazeEvent.GAZE_ENTERED, eventFull);
+    private void setupHandlerWithProgressIndicator(StackPaneButton button, EventHandler<ActionEvent> handler) {
 
-        final EventHandler<Event> eventPlayPause = e -> {
+        button.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            handler.handle(null);
+        });
+
+        button.addEventFilter(MouseEvent.MOUSE_ENTERED, eventEntered -> {
+            button.getChildren().add(progressIndicator);
+            progressIndicator.setOnFinish(handler);
+            progressIndicator.start();
+        });
+
+        button.addEventFilter(MouseEvent.MOUSE_EXITED, eventExited -> {
+            progressIndicator.stop();
+            button.getChildren().remove(progressIndicator);
+        });
+
+        button.addEventFilter(GazeEvent.GAZE_ENTERED, eventEntered -> {
+            button.getChildren().add(progressIndicator);
+            progressIndicator.setOnFinish(handler);
+            progressIndicator.start();
+        });
+
+        button.addEventFilter(GazeEvent.GAZE_EXITED, eventExited -> {
+            progressIndicator.stop();
+            button.getChildren().remove(progressIndicator);
+        });
+    }
+
+    private void createFullScreenHandler() {
+
+        setupHandlerWithProgressIndicator(fullScreen, e -> fullScreenCheck());
+
+    }
+
+    private void createPlayPauseHandler() {
+        final EventHandler<ActionEvent> eventPlayPause = e -> {
             if (((StackPane) videoRoot.getCenter()).getChildren().get(1) instanceof MediaView) {
                 final MediaView mediaView = (MediaView) ((StackPane) videoRoot.getCenter()).getChildren().get(1);
                 if (play) {
@@ -216,9 +239,11 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             }
         };
 
-        playPause.addEventFilter(MouseEvent.MOUSE_CLICKED, eventPlayPause);
-        playPause.addEventFilter(GazeEvent.GAZE_ENTERED, eventPlayPause);
+        setupHandlerWithProgressIndicator(playPause, eventPlayPause);
 
+    }
+
+    private void createAddVideoHandler() {
         final EventHandler<Event> eventAddVideo = e -> {
             final Stage dialog = createDialog(gameContext.getPrimaryStage());
             dialog.setTitle("new Title");
@@ -226,9 +251,16 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             dialog.toFront();
             dialog.setAlwaysOnTop(true);
         };
-
         addVideo.addEventFilter(MouseEvent.MOUSE_CLICKED, eventAddVideo);
+    }
 
+    private void createHandlers() {
+        createFullScreenHandler();
+        createPlayPauseHandler();
+        createAddVideoHandler();
+        createUpDownHandlers();
+        createLeftRightHandlers();
+        setMusicListListener();
     }
 
     private void stopMedia() {
@@ -240,30 +272,28 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     }
 
     private void createLeftRightHandlers() {
-        final EventHandler<Event> eventLeft = e -> {
+        final EventHandler<ActionEvent> eventLeft = e -> {
             stopMedia();
             playMusic(true);
 
         };
-        left.addEventFilter(MouseEvent.MOUSE_CLICKED, eventLeft);
-        left.addEventFilter(GazeEvent.GAZE_ENTERED, eventLeft);
-
-        final EventHandler<Event> eventRight = e -> {
+        final EventHandler<ActionEvent> eventRight = e -> {
             stopMedia();
             playMusic(false);
 
         };
 
-        right.addEventFilter(MouseEvent.MOUSE_CLICKED, eventRight);
-        right.addEventFilter(GazeEvent.GAZE_ENTERED, eventRight);
+        setupHandlerWithProgressIndicator(left, eventLeft);
+        setupHandlerWithProgressIndicator(right, eventRight);
+
     }
 
     private void playMusic(final boolean next) {
         final MediaFile mf;
         if (next) {
-            mf = musicList.nextPlayed();
+            mf = musicList.mediaToPlayNext();
         } else {
-            mf = musicList.prevPlayed();
+            mf = musicList.mediaToPlayPrevious();
         }
 
         if (mf != null && mf.getType().equals("URL")) {
@@ -297,32 +327,15 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             final MediaView mediaView = new MediaView(player);
 
             if (full) {
-                mediaView.setFitWidth(dimension2D.getWidth());
-                mediaView.setFitHeight((7 * dimension2D.getHeight()) / 8);
 
-                final Rectangle r = new Rectangle(0, 0, (7 * dimension2D.getHeight()) / 8, (7 * dimension2D.getHeight()) / 8);
-                r.setFill(new ImagePattern(new Image("data/gazeMediaPlayer/gazeMediaPlayer.png")));
-                ((StackPane) videoRoot.getCenter()).getChildren().set(0, r);
+                updateMediaView(mediaView, dimension2D.getWidth(), (7 * dimension2D.getHeight()) / 8, (7 * dimension2D.getHeight()) / 8, (7 * dimension2D.getHeight()) / 8);
 
-                gameContext.getChildren().clear();
-                videoSide.setSpacing(0);
-                videoSide.getChildren().remove(addVideo);
-                final BorderPane bp = new BorderPane();
-                bp.setCenter(videoSide);
-                /*
-                 * double offset = (mediaView.getFitHeight() == 0) ? (7 * dimension2D.getHeight()) / 8 :
-                 * mediaView.getFitHeight();
-                 *
-                 * double x = (dimension2D.getHeight() - (offset + left.getHeight()));
-                 */
-                bp.setLayoutY(0);
-                gameContext.getChildren().add(bp);
+                updateVideoSideForFullScreenMedia();
+
             } else {
-                mediaView.setFitHeight(dimension2D.getHeight() / 2);
-                mediaView.setFitWidth(dimension2D.getWidth() / 3);
-                final Rectangle r = new Rectangle(0, 0, dimension2D.getWidth() / 3, dimension2D.getHeight() / 2);
-                r.setFill(new ImagePattern(new Image("data/gazeMediaPlayer/gazeMediaPlayer.png")));
-                ((StackPane) videoRoot.getCenter()).getChildren().set(0, r);
+
+                updateMediaView(mediaView, dimension2D.getHeight() / 2, dimension2D.getWidth() / 3, dimension2D.getWidth() / 3, dimension2D.getHeight() / 2);
+
             }
 
             BorderPane.setAlignment(mediaView, Pos.CENTER);
@@ -338,73 +351,41 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     }
 
+    private void updateVideoSideForFullScreenMedia() {
+        gameContext.getChildren().clear();
+        videoSide.setSpacing(0);
+        videoSide.getChildren().remove(addVideo);
+        final BorderPane bp = new BorderPane();
+        bp.setCenter(videoSide);
+        bp.setLayoutY(0);
+        gameContext.getChildren().add(bp);
+    }
+
+    private void updateMediaView(MediaView mediaView, double mediaViewWidth, double mediaViewHeight, double rectangleWidth, double rectangleHeight) {
+        mediaView.setFitWidth(mediaViewWidth);
+        mediaView.setFitHeight(mediaViewHeight);
+        final Rectangle r = new Rectangle(0, 0, rectangleWidth, rectangleHeight);
+        r.setFill(new ImagePattern(new Image("data/gazeMediaPlayer/gazeMediaPlayer.png")));
+        ((StackPane) videoRoot.getCenter()).getChildren().set(0, r);
+    }
+
+    private void setMusicListListener() {
+        musicList.getFirstMediaDisplayedIndex().addListener((o, oldValue, newValue) -> {
+
+            updateMusic();
+
+        });
+    }
+
     private void createUpDownHandlers() {
 
-        final EventHandler<Event> eventDownArrow = e -> {
-            final EventHandler<Event> temp0 = eventTitre.get(0);
-            final EventHandler<Event> temp1 = eventTitre.get(1);
-            final EventHandler<Event> temp2 = eventTitre.get(2);
+        setupHandlerWithProgressIndicator(downArrow, e -> {
+            musicList.next();
+        });
 
-            titre[0].removeEventFilter(MouseEvent.MOUSE_CLICKED, temp0);
-            titre[1].removeEventFilter(MouseEvent.MOUSE_CLICKED, temp1);
-            titre[0].removeEventFilter(GazeEvent.GAZE_ENTERED, temp0);
-            titre[1].removeEventFilter(GazeEvent.GAZE_ENTERED, temp1);
-            eventTitre.set(0, temp1);
-            eventTitre.set(1, temp2);
-
-            titre[0].setText(titre[1].getText());
-            final Node g1 = titre[1].getGraphic();
-            titre[1].setGraphic(null);
-            titre[0].setGraphic(g1);
-            titre[1].setText(titre[2].getText());
-            final Node g2 = titre[2].getGraphic();
-            titre[2].setGraphic(null);
-            titre[1].setGraphic(g2);
-
-            titre[0].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(0));
-            titre[1].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(1));
-            titre[0].addEventFilter(GazeEvent.GAZE_ENTERED, eventTitre.get(0));
-            titre[1].addEventFilter(GazeEvent.GAZE_ENTERED, eventTitre.get(1));
-
-            putMusic(2, true);
-
-        };
-
-        downArrow.addEventFilter(MouseEvent.MOUSE_CLICKED, eventDownArrow);
-        downArrow.addEventFilter(GazeEvent.GAZE_ENTERED, eventDownArrow);
-
-        final EventHandler<Event> eventUpArrow = e -> {
-            final EventHandler<Event> temp0 = eventTitre.get(0);
-            final EventHandler<Event> temp1 = eventTitre.get(1);
-            final EventHandler<Event> temp2 = eventTitre.get(2);
-
-            titre[1].removeEventFilter(MouseEvent.MOUSE_CLICKED, temp1);
-            titre[2].removeEventFilter(MouseEvent.MOUSE_CLICKED, temp2);
-            titre[1].removeEventFilter(GazeEvent.GAZE_ENTERED, temp1);
-            titre[2].removeEventFilter(GazeEvent.GAZE_ENTERED, temp2);
-            eventTitre.set(1, temp0);
-            eventTitre.set(2, temp1);
-
-            titre[2].setText(titre[1].getText());
-            final Node g1 = titre[1].getGraphic();
-            titre[1].setGraphic(null);
-            titre[2].setGraphic(g1);
-            titre[1].setText(titre[0].getText());
-            final Node g0 = titre[0].getGraphic();
-            titre[0].setGraphic(null);
-            titre[1].setGraphic(g0);
-
-            titre[2].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(2));
-            titre[1].addEventFilter(MouseEvent.MOUSE_CLICKED, eventTitre.get(1));
-            titre[2].addEventFilter(GazeEvent.GAZE_ENTERED, eventTitre.get(2));
-            titre[1].addEventFilter(GazeEvent.GAZE_ENTERED, eventTitre.get(1));
-            putMusic(0, false);
-
-        };
-
-        upArrow.addEventFilter(MouseEvent.MOUSE_CLICKED, eventUpArrow);
-        upArrow.addEventFilter(GazeEvent.GAZE_ENTERED, eventUpArrow);
-
+        setupHandlerWithProgressIndicator(upArrow, e -> {
+            musicList.previous();
+        });
     }
 
     private Stage createDialog(final Stage primaryStage) {
@@ -435,10 +416,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         title.setPromptText("enter the title of the media");
         title.setMaxWidth(primaryStage.getWidth() / 5);
 
-        final Button tfi = new Button(gameContext.getTranslator().translate("ChooseImage"));
-        tfi.getStyleClass().add("gameChooserButton");
-        tfi.getStyleClass().add("gameVariation");
-        tfi.getStyleClass().add("button");
+        final Button tfi = createMediaButton(gameContext.getTranslator().translate("ChooseImage"), primaryStage.getWidth() / 10, primaryStage.getHeight() / 10);
         tfi.setMinHeight(primaryStage.getHeight() / 20);
         tfi.setMinWidth(primaryStage.getWidth() / 10);
 
@@ -462,12 +440,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         tf.setMaxWidth(primaryStage.getWidth() / 10);
         urlField.getChildren().add(tf);
 
-        final Button buttonURL = new Button("Ok");
-        buttonURL.getStyleClass().add("gameChooserButton");
-        buttonURL.getStyleClass().add("gameVariation");
-        buttonURL.getStyleClass().add("button");
-        buttonURL.setMinHeight(primaryStage.getHeight() / 10);
-        buttonURL.setMinWidth(primaryStage.getWidth() / 10);
+        final Button buttonURL = createMediaButton("Ok", primaryStage.getWidth() / 10, primaryStage.getHeight() / 10);
 
         urlSide.getChildren().addAll(urlField, buttonURL);
         // ___ URL BLOCK
@@ -476,12 +449,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         final VBox pathSide = new VBox();
         pathSide.setSpacing(10);
 
-        final Button pathField = new Button("new media");
-        pathField.getStyleClass().add("gameChooserButton");
-        pathField.getStyleClass().add("gameVariation");
-        pathField.getStyleClass().add("button");
-        pathField.minHeightProperty().bind(tf.heightProperty());
-        pathField.setMinWidth(primaryStage.getWidth() / 10);
+        final Button pathField = createMediaButton("new Media", primaryStage.getWidth() / 10, primaryStage.getHeight() / 10);
 
         final EventHandler<Event> eventNew;
         eventNew = mouseEvent -> {
@@ -491,13 +459,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
         pathField.addEventHandler(MouseEvent.MOUSE_CLICKED, eventNew);
 
-        final Button buttonPath = new Button("Ok");
-        buttonPath.getStyleClass().add("gameChooserButton");
-        buttonPath.getStyleClass().add("gameVariation");
-        buttonPath.getStyleClass().add("button");
-        buttonPath.setMinHeight(primaryStage.getHeight() / 10);
-        buttonPath.setMinWidth(primaryStage.getWidth() / 10);
-
+        final Button buttonPath = createMediaButton("Ok", primaryStage.getWidth() / 10, primaryStage.getHeight() / 10);
         pathSide.getChildren().addAll(pathField, buttonPath);
         // ___ PATH BLOCK
 
@@ -507,7 +469,6 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         eventURL = mouseEvent -> {
             if (tf.getText() != null && !tf.getText().equals("")) {
                 dialog.close();
-                refresh();
                 String name = title.getText();
                 if (name == null || name.equals("")) {
                     name = "media" + musicList.getMediaList().size();
@@ -521,7 +482,6 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                 }
 
                 musicList.addMedia(mf);
-                refresh();
                 primaryStage.getScene().getRoot().setEffect(null);
             } else {
                 t.setText("Invalid URL !");
@@ -533,7 +493,6 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         eventPath = mouseEvent -> {
             if (pathField.getText() != null && !pathField.getText().equals("new media")) {
                 dialog.close();
-                refresh();
                 String name = title.getText();
                 if (name == null || name.equals("")) {
                     name = "media" + musicList.getMediaList().size();
@@ -545,7 +504,6 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
                     mf = new MediaFile("MEDIA", pathField.getText(), name, tfi.getText());
                 }
                 musicList.addMedia(mf);
-                refresh();
                 primaryStage.getScene().getRoot().setEffect(null);
             } else {
                 t.setText("Invalid File !");
@@ -569,6 +527,18 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         return dialog;
     }
 
+    public static Button createMediaButton(String text, double width, double height) {
+        Button button = new Button(text);
+        button.setMinWidth(width);
+        button.setMinHeight(height);
+        button.setPrefWidth(width);
+        button.setPrefHeight(height);
+        button.getStyleClass().add("gameChooserButton");
+        button.getStyleClass().add("gameVariation");
+        button.getStyleClass().add("button");
+        return button;
+    }
+
     private String getPath(final Stage primaryStage) {
         String s = null;
         final FileChooser fileChooser = new FileChooser();
@@ -581,83 +551,80 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         return s;
     }
 
-    private void putMusic(final int i, final boolean next) {
-        final MediaFile mf;
-        if (next) {
-            mf = musicList.next();
-        } else {
-            mf = musicList.previous();
+    private EventHandler<ActionEvent> handlerURL(MediaFile mf) {
+        return e -> {
+            stopMedia();
+
+            final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+            final String videoUrl = mf.getPath();
+            final WebView webview = new WebView();
+            webview.getEngine().load(videoUrl);
+            webview.setPrefSize(dimension2D.getWidth() / 3, dimension2D.getHeight() / 2); // 360p
+
+            BorderPane.setAlignment(webview, Pos.CENTER);
+            ((StackPane) videoRoot.getCenter()).getChildren().set(1, webview);
+            play = true;
+
+            musicList.setPlayingMediaIndex(musicList.getMediaList().indexOf(mf));
+
+            musicTitle.setText(mf.getName());
+        };
+    }
+
+    private EventHandler<ActionEvent> handlerMedia(MediaFile mf) {
+        return e -> {
+
+            stopMedia();
+
+            final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+            final File media = new File(mf.getPath());
+            final MediaPlayer player = new MediaPlayer(new Media(media.toURI().toString()));
+            final MediaView mediaView = new MediaView(player);
+            mediaView.setFitHeight(dimension2D.getHeight() / 2);
+            mediaView.setFitWidth(dimension2D.getWidth() / 3);
+
+            BorderPane.setAlignment(mediaView, Pos.CENTER);
+
+            ((StackPane) videoRoot.getCenter()).getChildren().set(1, mediaView);
+            player.play();
+            play = true;
+
+            musicList.setPlayingMediaIndex(musicList.getMediaList().indexOf(mf));
+            musicTitle.setText(mf.getName());
+        };
+    }
+
+    private void setupMedia(int i, MediaFile mediaFile) {
+        mediaButtons[i].getButton().setText(mediaFile.getName());
+        mediaButtons[i].setMediaFile(mediaFile);
+        switch (mediaFile.getType()) {
+            case "URL":
+                mediaButtons[i].setupEvent(handlerURL(mediaFile), progressIndicator);
+                break;
+            case "MEDIA":
+                mediaButtons[i].setupEvent(handlerMedia(mediaFile), progressIndicator);
+                break;
+            default:
+                break;
         }
+    }
 
-        final EventHandler<Event> event;
+    private void updateMusic() {
+        int index = musicList.getIndexOfFirstToDisplay();
+        if (index != -1) {
+            for (int i = 0; i < 3; i++) {
 
-        if (mf != null && mf.getType().equals("URL")) {
+                MediaFile mediaFile = musicList.getMediaList().get(index);
 
-            titre[i].setText(mf.getName());
+                if (mediaFile != null) {
+                    setupMedia(i, mediaFile);
+                    mediaButtons[i].setupImage();
+                }
 
-            event = e -> {
-                stopMedia();
-
-                final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-                final String videoUrl = mf.getPath();
-                final WebView webview = new WebView();
-                webview.getEngine().load(videoUrl);
-                webview.setPrefSize(dimension2D.getWidth() / 3, dimension2D.getHeight() / 2); // 360p
-
-                BorderPane.setAlignment(webview, Pos.CENTER);
-                ((StackPane) videoRoot.getCenter()).getChildren().set(1, webview);
-                play = true;
-
-                musicList.setPlaying(musicList.getMediaList().indexOf(mf));
-
-                musicTitle.setText(mf.getName());
-            };
-
-            titre[i].addEventFilter(MouseEvent.MOUSE_CLICKED, event);
-            titre[i].addEventFilter(GazeEvent.GAZE_ENTERED, event);
-            eventTitre.set(i, event);
-
-        } else if (mf != null && mf.getType().equals("MEDIA")) {
-
-            titre[i].setText(mf.getName());
-
-            event = e -> {
-
-                stopMedia();
-
-                final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-                final File media = new File(mf.getPath());
-                final MediaPlayer player = new MediaPlayer(new Media(media.toURI().toString()));
-                final MediaView mediaView = new MediaView(player);
-                mediaView.setFitHeight(dimension2D.getHeight() / 2);
-                mediaView.setFitWidth(dimension2D.getWidth() / 3);
-
-                BorderPane.setAlignment(mediaView, Pos.CENTER);
-
-                ((StackPane) videoRoot.getCenter()).getChildren().set(1, mediaView);
-                player.play();
-                play = true;
-
-                musicList.setPlaying(musicList.getMediaList().indexOf(mf));
-                musicTitle.setText(mf.getName());
-            };
-
-            titre[i].addEventFilter(MouseEvent.MOUSE_CLICKED, event);
-            titre[i].addEventFilter(GazeEvent.GAZE_ENTERED, event);
-            eventTitre.set(i, event);
-        }
-
-        if (mf != null && mf.getImagepath() != null) {
-            final File f = new File(mf.getImagepath());
-            final ImageView iv = new ImageView(new Image(f.toURI().toString()));
-            iv.setPreserveRatio(true);
-            iv.fitHeightProperty().bind(titre[i].heightProperty().multiply(9.0 / 10.0));
-            iv.fitWidthProperty().bind(titre[i].widthProperty().multiply(9.0 / 10.0));
-            titre[i].setGraphic(iv);
-        } else {
-            titre[i].setGraphic(null);
+                index = (index + 1) % musicList.getMediaList().size();
+            }
         }
 
     }
@@ -675,25 +642,15 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         if (((StackPane) videoRoot.getCenter()).getChildren().get(1) instanceof MediaView) {
             final MediaView mediaView = (MediaView) ((StackPane) videoRoot.getCenter()).getChildren().get(1);
+
             mediaView.setFitWidth(dimension2D.getWidth());
             if (mediaView.getMediaPlayer().getMedia().getWidth() != 0) {
-                mediaView.setFitHeight((7 * dimension2D.getHeight()) / 8);
+                updateMediaView(mediaView, dimension2D.getWidth(), (7 * dimension2D.getHeight()) / 8, (7 * dimension2D.getHeight()) / 8, (7 * dimension2D.getHeight()) / 8);
             } else {
-                mediaView.setFitHeight(0);
+                updateMediaView(mediaView, dimension2D.getWidth(), 0, (7 * dimension2D.getHeight()) / 8, (7 * dimension2D.getHeight()) / 8);
             }
-            final double size = (7 * dimension2D.getHeight()) / 8;
-            final Rectangle r = new Rectangle(0, 0, size, size);
-            r.setFill(new ImagePattern(new Image("data/gazeMediaPlayer/gazeMediaPlayer.png")));
-            ((StackPane) videoRoot.getCenter()).getChildren().set(0, r);
 
-            gameContext.getChildren().clear();
-            videoSide.setSpacing(0);
-            videoSide.getChildren().remove(addVideo);
-            final BorderPane bp = new BorderPane();
-            bp.setCenter(videoSide);
-            // double x = dimension2D.getHeight() - mediaView.getFitHeight() + left.getHeight();
-            bp.setLayoutY(0);
-            gameContext.getChildren().add(bp);
+            updateVideoSideForFullScreenMedia();
             BorderPane.setAlignment(mediaView, Pos.CENTER);
         } else if (((StackPane) videoRoot.getCenter()).getChildren().get(1) instanceof WebView) {
             final WebView webview = (WebView) ((StackPane) videoRoot.getCenter()).getChildren().get(1);
@@ -712,12 +669,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         if (((StackPane) videoRoot.getCenter()).getChildren().get(1) instanceof MediaView) {
             final MediaView mediaView = (MediaView) ((StackPane) videoRoot.getCenter()).getChildren().get(1);
-            mediaView.setFitHeight(dimension2D.getHeight() / 2);
-            mediaView.setFitWidth(dimension2D.getWidth() / 3);
-
-            final Rectangle r = new Rectangle(0, 0, dimension2D.getWidth() / 3, dimension2D.getHeight() / 2);
-            r.setFill(new ImagePattern(new Image("data/gazeMediaPlayer/gazeMediaPlayer.png")));
-            ((StackPane) videoRoot.getCenter()).getChildren().set(0, r);
+            updateMediaView(mediaView, dimension2D.getWidth() / 3, dimension2D.getHeight() / 2, dimension2D.getWidth() / 3, dimension2D.getHeight() / 2);
 
             gameContext.getChildren().clear();
             videoSide.getChildren().setAll(addVideo, videoRoot, musicTitle, tools);
@@ -735,16 +687,6 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             window.getChildren().addAll(scrollList, videoSide);
             gameContext.getChildren().add(window);
         }
-    }
-
-    private void refresh() {
-        putMusic(0, true);
-        putMusic(1, true);
-        putMusic(2, true);
-        putMusic(2, false);
-        putMusic(1, false);
-        putMusic(0, false);
-
     }
 
     private String getImage(final Button tfi, final Stage primaryStage) {
