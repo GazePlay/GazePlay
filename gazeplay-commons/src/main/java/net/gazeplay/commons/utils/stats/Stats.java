@@ -1,5 +1,6 @@
 package net.gazeplay.commons.utils.stats;
 
+import com.google.gson.JsonObject;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -33,9 +34,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -99,6 +98,13 @@ public class Stats implements GazeMotionListener {
     private String nameOfVideo;
 
     private Long currentRoundStartTime;
+
+    private ArrayList<String> coordinateData = new ArrayList<String>();
+    private JsonObject savedDataObj = new JsonObject();
+    private int idForReplay = 0;
+    private int digits = 4;
+    private int seed = 123456325;
+    String currentGameVariant;
 
     public Stats(final Scene gameContextScene) {
         this(gameContextScene, null);
@@ -221,8 +227,12 @@ public class Stats implements GazeMotionListener {
             }
             startTime = System.currentTimeMillis();
             recordGazeMovements = e -> {
+                final long timeToFixation = System.currentTimeMillis() - startTime;
+                final long timeInterval = (timeToFixation - previousTime);
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
+                idForReplay= randNumber();
+                saveCoordinates("{" + "{" + getX + "," + getY + "}, " + timeInterval + "}");
                 if (!config.isHeatMapDisabled()) {
                     incHeatMap(getX, getY);
                 }
@@ -231,10 +241,10 @@ public class Stats implements GazeMotionListener {
                 }
                 if (config.getAreaOfInterestDisabledProperty().getValue()) {
                     if (getX != previousX || getY != previousY) {
-                        final long timeToFixation = System.currentTimeMillis() - startTime;
+                        //final long timeToFixation = System.currentTimeMillis() - startTime;
                         previousX = getX;
                         previousY = getY;
-                        final long timeInterval = (timeToFixation - previousTime);
+                        //final long timeInterval = (timeToFixation - previousTime);
                         movementHistory
                             .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
                         previousTime = timeToFixation;
@@ -242,8 +252,12 @@ public class Stats implements GazeMotionListener {
                 }
             };
             recordMouseMovements = e -> {
+                final long timeElapsedMillis = System.currentTimeMillis() - startTime;
+                final long timeInterval = (timeElapsedMillis - previousTime);
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
+                idForReplay = randNumber();
+                saveCoordinates("{" + "{" + getX + "," + getY + "}, " + timeInterval + "}");
                 if (!config.isHeatMapDisabled()) {
                     incHeatMap(getX, getY);
                 }
@@ -252,10 +266,10 @@ public class Stats implements GazeMotionListener {
                 }
                 if (config.getAreaOfInterestDisabledProperty().getValue()) {
                     if (getX != previousX || getY != previousY && counter == 2) {
-                        final long timeElapsedMillis = System.currentTimeMillis() - startTime;
+                        //final long timeElapsedMillis = System.currentTimeMillis() - startTime;
                         previousX = getX;
                         previousY = getY;
-                        final long timeInterval = (timeElapsedMillis - previousTime);
+                        //final long timeInterval = (timeElapsedMillis - previousTime);
                         movementHistory
                             .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
                         previousTime = timeElapsedMillis;
@@ -326,11 +340,13 @@ public class Stats implements GazeMotionListener {
         final String gazeMetricsFilePrefix = now + "-metrics";
         final String screenShotFilePrefix = now + "-screenshot";
         final String colorBandsFilePrefix = now + "-colorBands";
+        final String replayDataFilePrefix = now + "-replayData";
 
         final File gazeMetricsFile = new File(todayDirectory, gazeMetricsFilePrefix + ".png");
         final File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
         final File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
         final File colorBandsFile = new File(todayDirectory, colorBandsFilePrefix + "png");
+        final File replayDataFile = new File(todayDirectory, replayDataFilePrefix + ".json");
 
         final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
         saveImageAsPng(screenshotImage, screenShotFile);
@@ -343,9 +359,12 @@ public class Stats implements GazeMotionListener {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, bImage.getWidth(), bImage.getHeight());
         g.drawImage(screenshotImage, 0, 0, null);
+        BufferedWriter bf = new BufferedWriter(new FileWriter(replayDataFile));
+        bf.write(buildSavedDataJSON(coordinateData).toString());
+        bf.flush();
 
         final SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsFile, screenShotFile,
-            colorBandsFile);
+            colorBandsFile, replayDataFile);
 
         this.savedStatsInfo = savedStatsInfo;
         if (this.heatMap != null) {
@@ -593,4 +612,57 @@ public class Stats implements GazeMotionListener {
         gameScreenShot = gameContextScene.snapshot(null);
     }
 
+    private JsonObject buildSavedDataJSON(ArrayList<String> data) {
+        String screenAspectRatio = getScreenRatio();
+
+        savedDataObj.addProperty("id", idForReplay);
+        savedDataObj.addProperty("GameName", gameName);
+        savedDataObj.addProperty("GameVariant", currentGameVariant);
+        savedDataObj.addProperty("StartTime", startTime);
+        savedDataObj.addProperty("ScreenAspectRatio", screenAspectRatio);
+        savedDataObj.addProperty("CoordinatesAndTimeStamp", data.toString());
+        return savedDataObj;
+    }
+
+    private ArrayList<String> saveCoordinates(String coordinates) {
+        coordinateData.add(coordinates);
+        return coordinateData;
+    }
+
+    int randNumber() {
+        int n = seed * seed;
+        StringBuilder number = new StringBuilder(String.valueOf(n));
+        //pad
+        while(number.length() < digits * 2){
+            number.insert(0, "0");
+        }
+
+        //Get middle 4 digits
+
+        int start = (int) Math.floor(digits /2);
+        int end = start + digits;
+        seed = Integer.parseInt(number.substring(start,end));
+        return seed;
+
+    }
+
+    public int greatestCommonFactor(int width, int height) {
+        return (height == 0) ? width : greatestCommonFactor(height, width % height);
+    }
+
+    String getScreenRatio() {
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int screenWidth = gd.getDisplayMode().getWidth();
+        int screenHeight = gd.getDisplayMode().getHeight();
+
+        int factor = greatestCommonFactor(screenWidth, screenHeight);
+
+        int widthRatio = screenWidth / factor;
+        int heightRatio = screenHeight / factor;
+        return widthRatio + ":" + heightRatio;
+    }
+
+    public void setGameVariant(String gameVariant){
+        currentGameVariant = gameVariant;
+    }
 }

@@ -82,6 +82,7 @@ public class GameMenuController {
         }
 
         stats.start();
+        stats.setGameVariant(gameVariant.getLabel(gazePlay.getTranslator()));
         currentGame.launch();
     }
 

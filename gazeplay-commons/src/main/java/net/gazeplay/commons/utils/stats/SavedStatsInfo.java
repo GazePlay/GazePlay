@@ -13,6 +13,7 @@ public class SavedStatsInfo extends Observable {
     private final File gazeMetricsFile;
     private final File screenshotFile;
     private final File colorBandsFile;
+    private final File replayDataFile;
 
     public void notifyFilesReady() {
         this.notifyObservers();
