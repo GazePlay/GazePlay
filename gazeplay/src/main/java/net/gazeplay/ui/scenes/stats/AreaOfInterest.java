@@ -144,10 +144,11 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                             final Shape intersect = Shape.intersect(targetAOIArrayList.get(targetAOIIterator).getPolygon(),
                                 areaOfInterestProps.getAreaOfInterest());
                             if (intersect.getBoundsInLocal().getWidth() != -1) {
-                                if ((areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1)
-                                    / intersect.getBoundsInLocal().getWidth() > max_score)
-                                    max_score = (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1)
-                                        / intersect.getBoundsInLocal().getWidth();
+                                if (intersect.getBoundsInLocal().getWidth()
+                                    / (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1)
+                                     > max_score)
+                                    max_score = intersect.getBoundsInLocal().getWidth()
+                                        / (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1);
                         }
                     }
 
