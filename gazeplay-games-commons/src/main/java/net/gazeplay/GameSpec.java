@@ -28,6 +28,7 @@ public class GameSpec {
     public interface GameVariant {
 
         String getLabel(Translator translator);
+        String getGameVariantClass();
 
     }
 
@@ -42,6 +43,9 @@ public class GameSpec {
         public String getLabel(final Translator translator) {
             return width + "x" + height;
         }
+
+        @Override
+        public String getGameVariantClass() { return "DimensionGameVariant"; };
     }
 
     @Data
@@ -53,6 +57,9 @@ public class GameSpec {
         public String getLabel(final Translator translator) {
             return Integer.toString(number);
         }
+
+        @Override
+        public String getGameVariantClass() { return "IntGameVariant"; };
     }
 
     @Data
@@ -66,6 +73,9 @@ public class GameSpec {
         public String getLabel(final Translator translator) {
             return translator.translate(label);
         }
+
+        @Override
+        public String getGameVariantClass() { return "StringGameVariant"; };
     }
 
     @Data
@@ -79,6 +89,9 @@ public class GameSpec {
         public String getLabel(final Translator translator) {
             return translator.translate(extractLabelCodeFunction.apply(enumValue));
         }
+
+        @Override
+        public String getGameVariantClass() { return "EnumGameVariant"; };
 
     }
 

@@ -14,4 +14,7 @@ public class MathGameVariant implements GameSpec.GameVariant {
         return translator.translate("From") + " " + variableRange.getMin() + " " + translator.translate("to") + " " + variableRange.getMax();
     }
 
+    @Override
+    public String getGameVariantClass() { return "MathGameVariant"; };
+
 }

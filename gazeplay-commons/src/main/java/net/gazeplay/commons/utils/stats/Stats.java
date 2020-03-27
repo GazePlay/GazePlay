@@ -105,6 +105,7 @@ public class Stats implements GazeMotionListener {
     private int digits = 4;
     private int seed = 123456325;
     String currentGameVariant;
+    String currentGameVariantClass;
 
     public Stats(final Scene gameContextScene) {
         this(gameContextScene, null);
@@ -231,7 +232,6 @@ public class Stats implements GazeMotionListener {
                 final long timeInterval = (timeToFixation - previousTime);
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
-                idForReplay= randNumber();
                 saveCoordinates("{" + "{" + getX + "," + getY + "}, " + timeInterval + "}");
                 if (!config.isHeatMapDisabled()) {
                     incHeatMap(getX, getY);
@@ -256,7 +256,6 @@ public class Stats implements GazeMotionListener {
                 final long timeInterval = (timeElapsedMillis - previousTime);
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
-                idForReplay = randNumber();
                 saveCoordinates("{" + "{" + getX + "," + getY + "}, " + timeInterval + "}");
                 if (!config.isHeatMapDisabled()) {
                     incHeatMap(getX, getY);
@@ -615,10 +614,11 @@ public class Stats implements GazeMotionListener {
     private JsonObject buildSavedDataJSON(ArrayList<String> data) {
         String screenAspectRatio = getScreenRatio();
 
-        savedDataObj.addProperty("id", idForReplay);
+        savedDataObj.addProperty("Seed", idForReplay);
         savedDataObj.addProperty("GameName", gameName);
+        savedDataObj.addProperty("GameVariantClass", currentGameVariantClass);
         savedDataObj.addProperty("GameVariant", currentGameVariant);
-        savedDataObj.addProperty("StartTime", startTime);
+        savedDataObj.addProperty("GameStartedTime", startTime);
         savedDataObj.addProperty("ScreenAspectRatio", screenAspectRatio);
         savedDataObj.addProperty("CoordinatesAndTimeStamp", data.toString());
         return savedDataObj;
@@ -627,23 +627,6 @@ public class Stats implements GazeMotionListener {
     private ArrayList<String> saveCoordinates(String coordinates) {
         coordinateData.add(coordinates);
         return coordinateData;
-    }
-
-    int randNumber() {
-        int n = seed * seed;
-        StringBuilder number = new StringBuilder(String.valueOf(n));
-        //pad
-        while(number.length() < digits * 2){
-            number.insert(0, "0");
-        }
-
-        //Get middle 4 digits
-
-        int start = (int) Math.floor(digits /2);
-        int end = start + digits;
-        seed = Integer.parseInt(number.substring(start,end));
-        return seed;
-
     }
 
     public int greatestCommonFactor(int width, int height) {
@@ -662,7 +645,9 @@ public class Stats implements GazeMotionListener {
         return widthRatio + ":" + heightRatio;
     }
 
-    public void setGameVariant(String gameVariant){
+    public void setGameVariant(String gameVariant, String gameVariantClass){
+
         currentGameVariant = gameVariant;
+        currentGameVariantClass = gameVariantClass;
     }
 }

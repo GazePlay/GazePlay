@@ -11,6 +11,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
@@ -82,7 +83,12 @@ public class GameMenuController {
         }
 
         stats.start();
-        stats.setGameVariant(gameVariant.getLabel(gazePlay.getTranslator()));
+
+        Translator translator = gazePlay.getTranslator();
+        String gameVariantLabel = gameVariant.getLabel(translator);
+        String gameVariantClass = gameVariant.getGameVariantClass();
+        stats.setGameVariant(gameVariantLabel, gameVariantClass);
+
         currentGame.launch();
     }
 
