@@ -21,6 +21,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 @Slf4j
@@ -133,6 +134,7 @@ public class Race extends Parent implements GameLifeCycle {
                         ((Target) e.getTarget()).done = true;
                         enter((Target) e.getTarget());
                         stats.incrementNumberOfGoalsReached();
+                        stats.notifyNewRoundReady();
                     }
                 }
             }
@@ -236,18 +238,17 @@ public class Race extends Parent implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         sc.setFont(Font.font(dimension2D.getHeight() / 20));
-        sc.setLayoutX(dimension2D.getWidth() * 0.8);
-        sc.setLayoutY(dimension2D.getHeight() * 0.5);
+        sc.setLayoutX(dimension2D.getWidth() * 0.08);
+        sc.setLayoutY(0.0);
 
-        // tc.setFont(Font.font(dimension2D.getHeight() / 20));
-        tc.setLayoutX(dimension2D.getWidth() * 0.8);
-        tc.setLayoutY(dimension2D.getHeight() * 0.4);
+        tc.setFont(Font.font(dimension2D.getHeight() / 20));
+        tc.setLayoutX(0.0);
+        tc.setLayoutY(0.0);
 
     }
 
     @Override
     public void launch() {
-        stats.notifyNewRoundReady();
 
         final Label sc = new Label();
         final Label tc = new Label();
@@ -285,8 +286,11 @@ public class Race extends Parent implements GameLifeCycle {
         tc.setFont(Font.font(dimension2D.getHeight() / 20));
         sc.setFont(Font.font(dimension2D.getHeight() / 20));
         tc.setLineSpacing(10);
-        tc.setLayoutX(15 * dimension2D.getWidth() / 29.7);
-        tc.setLayoutY(14 * dimension2D.getHeight() / 21);
+        tc.setLayoutX(0.0);
+        tc.setLayoutY(0.0);
+
+        sc.setLayoutX(dimension2D.getWidth() * 0.08);
+        sc.setLayoutY(0.0);
 
         this.getChildren().add(tc);
 
@@ -371,7 +375,11 @@ public class Race extends Parent implements GameLifeCycle {
         text.setText(cst);
 
         final String soundResource = "data/race/sounds/frog.WAV";
-        gameContext.getSoundManager().add(soundResource);
+        try {
+            ForegroundSoundsUtils.playSound(soundResource);
+        } catch (final Exception e) {
+            log.warn("Can't play sound: no associated sound : " + e.toString());
+        }
 
         t.getChildren().get(0).setOpacity(1);
 
@@ -457,7 +465,7 @@ public class Race extends Parent implements GameLifeCycle {
         sp.setLayoutY(y);
         sp.centerX = x;
         sp.centerY = y;
-        stats.incrementNumberOfGoalsToReach();
+        stats.incrementNumberOfGoalsReached();
         moveCircle(sp);
     }
 
@@ -646,5 +654,4 @@ public class Race extends Parent implements GameLifeCycle {
         });
         pt.play();
     }
-
 }
