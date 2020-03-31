@@ -134,7 +134,6 @@ public class Race extends Parent implements GameLifeCycle {
                         ((Target) e.getTarget()).done = true;
                         enter((Target) e.getTarget());
                         stats.incrementNumberOfGoalsReached();
-                        stats.notifyNewRoundReady();
                     }
                 }
             }
@@ -249,6 +248,7 @@ public class Race extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
+        stats.notifyNewRoundReady();
 
         final Label sc = new Label();
         final Label tc = new Label();
@@ -375,6 +375,7 @@ public class Race extends Parent implements GameLifeCycle {
         text.setText(cst);
 
         final String soundResource = "data/race/sounds/frog.WAV";
+        gameContext.getSoundManager().add(soundResource);
         try {
             ForegroundSoundsUtils.playSound(soundResource);
         } catch (final Exception e) {
