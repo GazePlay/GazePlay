@@ -28,7 +28,6 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
@@ -100,9 +99,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         allAOIListPolygonPt = stats.getAllAOIListPolygonPt();
 
         this.dataTreatment();
-        //for (int i = 1; i < movementHistory.size(); i++) {
-            calculateAreaOfInterest(0, stats.getStartTime());
-        //}
+        calculateAreaOfInterest(0, stats.getStartTime());
 
         areaMap = new int[allAOIList.size()];
         Arrays.fill(areaMap, -1);
@@ -133,51 +130,26 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
                 final long timeAreaStart = areaOfInterestProps.getAreaStartTime();
                 final long timeAreaEnd = areaOfInterestProps.getAreaEndTime();
-                    double max_score = 0;
-                    for (targetAOIIterator=0 ; targetAOIIterator < targetAOIArrayList.size() ; targetAOIIterator++){
+                double max_score = 0;
+                for (targetAOIIterator = 0; targetAOIIterator < targetAOIArrayList.size(); targetAOIIterator++) {
 
-                        timeTargetAreaStart = targetAOIArrayList.get(targetAOIIterator).getTimeStarted();
-                        timeTargetAreaEnd = targetAOIArrayList.get(targetAOIIterator).getTimeStarted()
-                            + targetAOIArrayList.get(targetAOIIterator).getDuration();
+                    timeTargetAreaStart = targetAOIArrayList.get(targetAOIIterator).getTimeStarted();
+                    timeTargetAreaEnd = targetAOIArrayList.get(targetAOIIterator).getTimeStarted()
+                        + targetAOIArrayList.get(targetAOIIterator).getDuration();
 
-                        if (timeTargetAreaStart <= timeAreaStart && timeAreaStart <= timeTargetAreaEnd) {
-                            final Shape intersect = Shape.intersect(targetAOIArrayList.get(targetAOIIterator).getPolygon(),
-                                areaOfInterestProps.getAreaOfInterest());
-                            if (intersect.getBoundsInLocal().getWidth() != -1) {
-                                if (intersect.getBoundsInLocal().getWidth()
-                                    / (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1)
-                                     > max_score)
-                                    max_score = intersect.getBoundsInLocal().getWidth()
-                                        / (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1);
+                    if (timeTargetAreaStart <= timeAreaStart && timeAreaStart <= timeTargetAreaEnd) {
+                        final Shape intersect = Shape.intersect(targetAOIArrayList.get(targetAOIIterator).getPolygon(),
+                            areaOfInterestProps.getAreaOfInterest());
+                        if (intersect.getBoundsInLocal().getWidth() != -1) {
+                            if (intersect.getBoundsInLocal().getWidth()
+                                / (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1)
+                                > max_score)
+                                max_score = intersect.getBoundsInLocal().getWidth()
+                                    / (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1);
                         }
                     }
-
-                    }
-
-                    score += max_score;
-
-
-//                if (targetAOIIterator < targetAOIArrayList.size()) {
-//                    timeTargetAreaStart = targetAOIArrayList.get(targetAOIIterator).getTimeStarted();
-//                    timeTargetAreaEnd = targetAOIArrayList.get(targetAOIIterator).getTimeStarted()
-//                        + targetAOIArrayList.get(targetAOIIterator).getDuration();
-//
-//                    final long timeAreaStart = areaOfInterestProps.getAreaStartTime();
-//                    final long timeAreaEnd = areaOfInterestProps.getAreaEndTime();
-//
-//                    if (timeTargetAreaStart <= timeAreaStart) {
-//                        final Shape intersect = Shape.intersect(targetAOIArrayList.get(targetAOIIterator).getPolygon(),
-//                            areaOfInterestProps.getAreaOfInterest());
-//                        if (intersect.getBoundsInLocal().getWidth() != -1) {
-//                            score += (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1)
-//                                / intersect.getBoundsInLocal().getWidth();
-//                        }
-//                    }
-//
-//                    if (timeAreaEnd > timeTargetAreaEnd) {
-//                        targetAOIIterator++;
-//                    }
-//                }
+                }
+                score += max_score;
             }
             score /= allAOIList.size();
         }
@@ -433,11 +405,11 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     }
 
     private void calculateAreaOfInterest(final int index, final double startTime) {
-        log.info("allAOIListTemp size:{}",allAOIListTemp.size());
+        log.info("allAOIListTemp size:{}", allAOIListTemp.size());
         //log.info("allAOIList size:{}",allAOIList.size());
         int i;
         for (i = 0; i < allAOIListTemp.size(); i++) {
-            log.info("i:{}",i);
+            log.info("i:{}", i);
             areaOfInterestList = allAOIListTemp.get(i);
             final double areaStartTime = areaOfInterestList.get(0).getTimeStarted();
             final double areaEndTime = areaOfInterestList.get(areaOfInterestList.size() - 1).getTimeStarted()
@@ -474,11 +446,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             allAOIList.add(areaOfInterestProps);
         }
     }
-
-
-
-
-
 
 
     /**

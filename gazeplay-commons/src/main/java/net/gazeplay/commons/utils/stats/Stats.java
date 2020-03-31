@@ -2,16 +2,11 @@ package net.gazeplay.commons.utils.stats;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
-import javafx.geometry.Dimension2D;
-import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
-import javafx.scene.text.Text;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,7 +20,6 @@ import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HeatMap;
 import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
-import net.gazeplay.commons.utils.games.Utils;
 import org.monte.media.Format;
 import org.monte.media.FormatKeys;
 import org.monte.media.VideoFormatKeys;
@@ -44,11 +38,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 
 /**
@@ -110,14 +103,14 @@ public class Stats implements GazeMotionListener {
 
     //peremeters for AOI
     private int movementHistoryidx = 0;
-    private final List<AreaOfInterestProps> allAOIList =  new ArrayList<>();
+    private final List<AreaOfInterestProps> allAOIList = new ArrayList<>();
     private List<CoordinatesTracker> areaOfInterestList = new ArrayList<>();
     @Getter
-    private final List<List> allAOIListTemp =  new ArrayList<>();
+    private final List<List> allAOIListTemp = new ArrayList<>();
     @Getter
-    private final List<Polygon> allAOIListPolygon =  new ArrayList<>();
+    private final List<Polygon> allAOIListPolygon = new ArrayList<>();
     @Getter
-    private final List<Double[]> allAOIListPolygonPt =  new ArrayList<>();
+    private final List<Double[]> allAOIListPolygonPt = new ArrayList<>();
     private double highestFixationTime = 0;
     private final Configuration config = ActiveConfigurationContext.getInstance();
     private int colorIterator;
@@ -130,7 +123,6 @@ public class Stats implements GazeMotionListener {
         javafx.scene.paint.Color.RED,
         javafx.scene.paint.Color.CHOCOLATE
     };
-
 
 
     public Stats(final Scene gameContextScene) {
@@ -245,7 +237,7 @@ public class Stats implements GazeMotionListener {
         final double y1 = movementHistory.get(index).getYValue();
         final double x2 = movementHistory.get(index - 1).getXValue();
         final double y2 = movementHistory.get(index - 1).getYValue();
-        log.info("x1:{},  y1:{},  x2:{},  y2:{}",x1,y1,x2,y2);
+        log.info("x1:{},  y1:{},  x2:{},  y2:{}", x1, y1, x2, y2);
         final double eDistance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 
         if (eDistance < 120 && movementHistory.get(index).getIntervalTime() > 10) {
@@ -397,8 +389,8 @@ public class Stats implements GazeMotionListener {
                         movementHistory
                             .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
                         movementHistoryidx++;
-                        if (movementHistoryidx>1){
-                            generateAOIList(movementHistoryidx-1,startTime);
+                        if (movementHistoryidx > 1) {
+                            generateAOIList(movementHistoryidx - 1, startTime);
                         }
                         previousTime = timeToFixation;
                     }
@@ -422,10 +414,10 @@ public class Stats implements GazeMotionListener {
                         movementHistory
                             .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
                         movementHistoryidx++;
-                        log.info("movementHistory length:{}",movementHistoryidx);
-                        if (movementHistoryidx>1){
-                            generateAOIList(movementHistoryidx-1,startTime);
-                            log.info("AOIlist length:{}",areaOfInterestList.size());
+                        log.info("movementHistory length:{}", movementHistoryidx);
+                        if (movementHistoryidx > 1) {
+                            generateAOIList(movementHistoryidx - 1, startTime);
+                            log.info("AOIlist length:{}", areaOfInterestList.size());
                         }
                         previousTime = timeElapsedMillis;
                         counter = 0;
