@@ -405,11 +405,8 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     }
 
     private void calculateAreaOfInterest(final int index, final double startTime) {
-        log.info("allAOIListTemp size:{}", allAOIListTemp.size());
-        //log.info("allAOIList size:{}",allAOIList.size());
         int i;
         for (i = 0; i < allAOIListTemp.size(); i++) {
-            log.info("i:{}", i);
             areaOfInterestList = allAOIListTemp.get(i);
             final double areaStartTime = areaOfInterestList.get(0).getTimeStarted();
             final double areaEndTime = areaOfInterestList.get(areaOfInterestList.size() - 1).getTimeStarted()
