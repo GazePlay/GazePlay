@@ -241,10 +241,8 @@ public class Stats implements GazeMotionListener {
                 }
                 if (config.getAreaOfInterestDisabledProperty().getValue()) {
                     if (getX != previousX || getY != previousY) {
-                        //final long timeToFixation = System.currentTimeMillis() - startTime;
                         previousX = getX;
                         previousY = getY;
-                        //final long timeInterval = (timeToFixation - previousTime);
                         movementHistory
                             .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
                         previousTime = timeToFixation;
@@ -265,10 +263,8 @@ public class Stats implements GazeMotionListener {
                 }
                 if (config.getAreaOfInterestDisabledProperty().getValue()) {
                     if (getX != previousX || getY != previousY && counter == 2) {
-                        //final long timeElapsedMillis = System.currentTimeMillis() - startTime;
                         previousX = getX;
                         previousY = getY;
-                        //final long timeInterval = (timeElapsedMillis - previousTime);
                         movementHistory
                             .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
                         previousTime = timeElapsedMillis;
@@ -358,9 +354,11 @@ public class Stats implements GazeMotionListener {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, bImage.getWidth(), bImage.getHeight());
         g.drawImage(screenshotImage, 0, 0, null);
-        BufferedWriter bf = new BufferedWriter(new FileWriter(replayDataFile));
-        bf.write(buildSavedDataJSON(coordinateData).toString());
-        bf.flush();
+        try (BufferedWriter bf =
+                 new BufferedWriter(new FileWriter(replayDataFile))) {
+            bf.write(buildSavedDataJSON(coordinateData).toString());
+            bf.flush();
+        }
 
         final SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsFile, screenShotFile,
             colorBandsFile, replayDataFile);
