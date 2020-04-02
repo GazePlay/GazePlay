@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 
+
 /**
  * Created by schwab on 17/08/2016.
  */

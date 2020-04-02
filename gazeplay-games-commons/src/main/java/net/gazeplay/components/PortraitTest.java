@@ -1,0 +1,56 @@
+package net.gazeplay.components;
+
+import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
+import lombok.Getter;
+import net.gazeplay.commons.utils.games.ImageLibrary;
+import net.gazeplay.commons.utils.games.ImageUtils;
+import net.gazeplay.commons.utils.games.Utils;
+
+import java.util.List;
+import java.util.Random;
+
+/**
+ * Created by chris on 2/4/2020.
+ */
+public class PortraitTest extends Circle {
+
+    public static ImageLibrary createImageLibrary() {
+        return ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"));
+    }
+
+    @Getter
+    private final int initialRadius;
+
+    public PortraitTest(final int initialRadius, final RandomPositionGeneratorGazePlayRandomLib randomPositionGenerator, final ImageLibrary imageLibrary) {
+        super(initialRadius);
+        this.initialRadius = initialRadius;
+
+        this.setPosition(randomPositionGenerator.newRandomPosition(initialRadius));
+
+        setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
+    }
+
+    public void setPosition(final Position position) {
+        this.setCenterX(position.getX());
+        this.setCenterY(position.getY());
+    }
+
+    public Position getPosition() {
+        return new Position((int) getCenterX(), (int) getCenterY());
+    }
+
+    public Position getCurrentPositionWithTranslation() {
+        return new Position((int) getCenterX() + (int) getTranslateX(), (int) getCenterY() + (int) getTranslateY());
+    }
+
+    protected Image pickRandomImage(final List<Image> availableImages) {
+        final int count = availableImages.size();
+        // int index = (int) (count * Math.random());
+        final Random r = new Random();
+        final int index = r.nextInt(count);
+        return availableImages.get(index);
+    }
+
+}

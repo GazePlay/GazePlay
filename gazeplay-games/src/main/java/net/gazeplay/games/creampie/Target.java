@@ -16,6 +16,7 @@ import net.gazeplay.components.Portrait;
 import net.gazeplay.components.Position;
 import net.gazeplay.components.RandomPositionGenerator;
 
+
 import java.util.ArrayList;
 
 /**

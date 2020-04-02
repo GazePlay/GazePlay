@@ -36,6 +36,7 @@ import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
+import net.gazeplay.components.RandomPositionGeneratorGazePlayRandomLib;
 import net.gazeplay.ui.AnimationSpeedRatioControl;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.MusicControl;
@@ -69,6 +70,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     @Getter
     private final RandomPositionGenerator randomPositionGenerator;
+
+    @Getter
+    private final RandomPositionGeneratorGazePlayRandomLib randomPositionGeneratorGazePlayLib;
 
     @Getter
     private final GamePanelDimensionProvider gamePanelDimensionProvider;
@@ -107,6 +111,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         this.gamePanelDimensionProvider = new GamePanelDimensionProvider(() -> root, gazePlay::getPrimaryScene);
         this.randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
+        this.randomPositionGeneratorGazePlayLib = new RandomPanePositionGeneratorTest(gamePanelDimensionProvider);
 
         if (this.getConfiguration().isVideoRecordingEnabled()) {
             videoRecordingContext = new VideoRecordingContext(root, this);

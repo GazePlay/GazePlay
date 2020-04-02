@@ -24,9 +24,8 @@ public class Random {
         return seedBig.toBigInteger();
     }
 
-    public int randNumberRange(int max, int min){
-        int randNum = this.randNumber().intValue()%(max-min + 1) + min;
-        return randNum;
+    public int randNumberRange(double max, double min){
+        return (int) (this.randNumber().intValue()%(max-min + 1) + min);
     }
 
 
