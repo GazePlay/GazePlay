@@ -1,20 +1,24 @@
 package net.gazeplay.commons.utils.stats;
 
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import mockit.MockUp;
+import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -26,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
+@ExtendWith(ApplicationExtension.class)
 class StatsTest {
 
     @Mock
@@ -41,6 +46,8 @@ class StatsTest {
 
     void initMocks() {
         MockitoAnnotations.initMocks(this);
+        when(mockScene.getWidth()).thenReturn(1080d);
+        when(mockScene.getHeight()).thenReturn(1920d);
     }
 
     @Test
@@ -177,9 +184,12 @@ class StatsTest {
     }
 
     @Test
-    void shouldSaveStats() throws IOException {
+    void shouldSaveStats() throws InterruptedException {
         File buildDir = new File(System.getProperty("user.dir"), "build");
         BufferedImage image = new BufferedImage(30, 40, BufferedImage.TYPE_INT_RGB);
+        Configuration mockConfig = mock(Configuration.class);
+        when(mockConfig.isHeatMapDisabled()).thenReturn(false);
+        when(mockConfig.isFixationSequenceDisabled()).thenReturn(false);
 
         new MockUp<GazePlayDirectories>() {
             @mockit.Mock
@@ -193,9 +203,96 @@ class StatsTest {
                 return image;
             }
         };
+        new MockUp<ActiveConfigurationContext>() {
+            public Configuration getInstance() {
+                return mockConfig;
+            }
+        };
 
-        stats.saveStats();
+        stats.start();
+        stats.gazeMoved(new Point2D(30, 40));
+        stats.gazeMoved(new Point2D(20, 50));
+
+        Platform.runLater(() -> {
+            try {
+                stats.saveStats();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        TestingUtils.waitForRunLater();
 
         assertNotEquals(0, buildDir.list().length);
+    }
+
+    @Test
+    void shouldIncrementNumberOfGoalsToReachByOne() {
+        int initial = stats.getNbGoalsToReach();
+
+        stats.incrementNumberOfGoalsToReach();
+
+        int result = stats.getNbGoalsToReach();
+
+        assertEquals(initial + 1, result);
+    }
+
+    @Test
+    void shouldIncrementNumberOfGoalsToReachByAmount() {
+        int initial = stats.getNbGoalsToReach();
+
+        stats.incrementNumberOfGoalsToReach(5);
+
+        int result = stats.getNbGoalsToReach();
+
+        assertEquals(initial + 5, result);
+    }
+
+    @Test
+    void shouldIncrementNumberOfGoalsReachedByOne() throws InterruptedException {
+        int initial = stats.getNbGoalsReached();
+
+        stats.setAccidentalShotPreventionPeriod(10L);
+        stats.incrementNumberOfGoalsToReach();
+        Thread.sleep(20);
+
+        stats.incrementNumberOfGoalsReached();
+        int result = stats.getNbGoalsReached();
+
+        assertEquals(initial + 1, result);
+    }
+
+    @Test
+    void shouldIncrementNumberOfUncountedGoalsReachedByOne() throws InterruptedException {
+        int initial = stats.getNbUnCountedGoalsReached();
+
+        stats.setAccidentalShotPreventionPeriod(50L);
+        stats.incrementNumberOfGoalsToReach();
+        Thread.sleep(20);
+
+        stats.incrementNumberOfGoalsReached();
+        int result = stats.getNbUnCountedGoalsReached();
+
+        assertEquals(initial + 1, result);
+    }
+
+    @Test
+    void shouldGetDefaultShotRatio() {
+        int result = stats.getShotRatio();
+
+        assertEquals(100, result);
+    }
+
+    @Test
+    void shouldGetShotRatio() throws InterruptedException {
+        stats.incrementNumberOfGoalsToReach(4);
+
+        stats.setAccidentalShotPreventionPeriod(10L);
+        Thread.sleep(20);
+
+        stats.incrementNumberOfGoalsReached();
+
+        int result = stats.getShotRatio();
+
+        assertEquals(25, result);
     }
 }
