@@ -134,8 +134,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 for (targetAOIIterator = 0; targetAOIIterator < targetAOIArrayList.size(); targetAOIIterator++) {
 
                     timeTargetAreaStart = targetAOIArrayList.get(targetAOIIterator).getTimeStarted();
-                    timeTargetAreaEnd = targetAOIArrayList.get(targetAOIIterator).getTimeStarted()
-                        + targetAOIArrayList.get(targetAOIIterator).getDuration();
+                    timeTargetAreaEnd = targetAOIArrayList.get(targetAOIIterator).getTimeEnded();
 
                     if (timeTargetAreaStart <= timeAreaStart && timeAreaStart <= timeTargetAreaEnd) {
                         final Shape intersect = Shape.intersect(targetAOIArrayList.get(targetAOIIterator).getPolygon(),

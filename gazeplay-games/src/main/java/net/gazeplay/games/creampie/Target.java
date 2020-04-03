@@ -103,6 +103,10 @@ public class Target extends Portrait {
 
         timeline.setOnFinished(actionEvent -> {
             animationEnded = true;
+            if(targetAOIList.size()>0){
+                targetAOIList.get(targetAOIList.size()-1).setTimeEnded(System.currentTimeMillis());
+                log.info("target end at {}",targetAOIList.get(targetAOIList.size()-1).getTimeEnded());
+            }
             newPosition();
         });
 
@@ -124,6 +128,7 @@ public class Target extends Portrait {
         final TargetAOI targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(), getInitialRadius(),
             System.currentTimeMillis());
         targetAOIList.add(targetAOI);
+        log.info("target satrt at {}",targetAOIList.get(targetAOIList.size()-1).getTimeStarted());
 
     }
 }

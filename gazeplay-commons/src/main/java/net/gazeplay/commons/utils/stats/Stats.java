@@ -151,7 +151,7 @@ public class Stats implements GazeMotionListener {
 
         this.targetAOIList = targetAOIList;
         for (int i = 0; i < targetAOIList.size() - 1; i++) {
-            final long duration = targetAOIList.get(i + 1).getTimeStarted() - targetAOIList.get(i).getTimeStarted();
+            final long duration = targetAOIList.get(i).getTimeEnded() - targetAOIList.get(i).getTimeStarted();
             this.targetAOIList.get(i).setDuration(duration);
         }
         if (targetAOIList.size() >= 1) {
@@ -237,7 +237,6 @@ public class Stats implements GazeMotionListener {
         final double y1 = movementHistory.get(index).getYValue();
         final double x2 = movementHistory.get(index - 1).getXValue();
         final double y2 = movementHistory.get(index - 1).getYValue();
-        log.info("x1:{},  y1:{},  x2:{},  y2:{}", x1, y1, x2, y2);
         final double eDistance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 
         if (eDistance < 120 && movementHistory.get(index).getIntervalTime() > 10) {
@@ -414,10 +413,8 @@ public class Stats implements GazeMotionListener {
                         movementHistory
                             .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
                         movementHistoryidx++;
-                        log.info("movementHistory length:{}", movementHistoryidx);
                         if (movementHistoryidx > 1) {
                             generateAOIList(movementHistoryidx - 1, startTime);
-                            log.info("AOIlist length:{}", areaOfInterestList.size());
                         }
                         previousTime = timeElapsedMillis;
                         counter = 0;

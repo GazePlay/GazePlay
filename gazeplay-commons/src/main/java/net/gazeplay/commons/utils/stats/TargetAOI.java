@@ -12,6 +12,7 @@ public class TargetAOI {
     private final int areaRadius;
     private final long timeStarted;
 
+    private long timeEnded;
     private long duration;
     private Polygon polygon;
 }
