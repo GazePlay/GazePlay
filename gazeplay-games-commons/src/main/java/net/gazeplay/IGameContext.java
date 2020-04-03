@@ -16,7 +16,6 @@ import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
-import net.gazeplay.components.RandomPositionGeneratorGazePlayRandomLib;
 
 import java.util.function.Supplier;
 
@@ -29,9 +28,6 @@ public interface IGameContext {
 
     @NonNull
     RandomPositionGenerator getRandomPositionGenerator();
-
-    @NonNull
-    RandomPositionGeneratorGazePlayRandomLib getRandomPositionGeneratorGazePlayLib();
 
     @NonNull
     GamePanelDimensionProvider getGamePanelDimensionProvider();
