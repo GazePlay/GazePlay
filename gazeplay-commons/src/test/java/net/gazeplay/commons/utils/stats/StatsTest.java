@@ -1,31 +1,28 @@
 package net.gazeplay.commons.utils.stats;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import mockit.MockUp;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -165,5 +162,40 @@ class StatsTest {
 
         verify(statsSpy).incrementHeatMap(20, 40);
         verify(statsSpy).incrementFixationSequence(20, 40);
+    }
+
+    @Test
+    void shouldSaveImageAsPNG() {
+        BufferedImage image = new BufferedImage(30, 40, BufferedImage.TYPE_INT_RGB);
+        File testFile = new File("testImage.png");
+
+        Stats.saveImageAsPng(image, testFile);
+
+        assertTrue(testFile.isFile());
+
+        testFile.delete();
+    }
+
+    @Test
+    void shouldSaveStats() throws IOException {
+        File buildDir = new File(System.getProperty("user.dir"), "build");
+        BufferedImage image = new BufferedImage(30, 40, BufferedImage.TYPE_INT_RGB);
+
+        new MockUp<GazePlayDirectories>() {
+            @mockit.Mock
+            public File getUserStatsFolder(String user) {
+                return buildDir;
+            }
+        };
+        new MockUp<SwingFXUtils>() {
+            @mockit.Mock
+            BufferedImage fromFXImage(Image wi, BufferedImage bi) {
+                return image;
+            }
+        };
+
+        stats.saveStats();
+
+        assertNotEquals(0, buildDir.list().length);
     }
 }
