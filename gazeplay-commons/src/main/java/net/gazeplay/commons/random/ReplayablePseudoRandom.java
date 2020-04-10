@@ -1,31 +1,27 @@
 package net.gazeplay.commons.random;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Random;
 
 public class ReplayablePseudoRandom {
-    private double seed;
-    private long multiplier;
-    private int increment;
-    private double modulus;
+    private BigInteger seed;
+    private BigInteger multiplier;
+    private BigInteger increment;
+    private BigInteger modulus;
 
     public ReplayablePseudoRandom() {
-        this.seed =  Math.random();
-        this.multiplier = 1103515245;
-        this.increment = 12345;
-        this. modulus = Math.pow(2,31);
+        this.seed = BigInteger.valueOf(System.currentTimeMillis());
+        this.multiplier = BigInteger.valueOf(25214903917L);
+        this.increment = BigInteger.valueOf(11);
+        this. modulus = BigInteger.ONE.shiftLeft(48);
     }
 
-
-   public BigInteger random() {
-        seed = (multiplier * seed + increment) % modulus;
-        BigDecimal seedBig= new BigDecimal(seed);
-        return seedBig.toBigInteger();
+   public double random() {
+       seed = seed.multiply(multiplier).add(increment).mod(modulus);
+       return seed.doubleValue();
     }
 
-    public int randIntRange(double max, double min){
-        return (int)(this.random().intValue()%(max-min + 1) + min);
+    public int randIntRange(double min, double max){
+        return (int)(this.random() % (max-min + 1) + min);
     }
 
     /*
@@ -33,7 +29,7 @@ public class ReplayablePseudoRandom {
      */
     public double nextDouble() {
         int RAND_MAX = Integer.MAX_VALUE;
-        return this.random().doubleValue() / (double)RAND_MAX ;
+        return this.random() / (double)RAND_MAX ;
     }
 
 }
