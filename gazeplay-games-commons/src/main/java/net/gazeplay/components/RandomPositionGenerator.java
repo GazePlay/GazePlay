@@ -49,8 +49,8 @@ public abstract class RandomPositionGenerator{
 
     public Position createPosition(final double minX, final double minY, final double maxX, final double maxY) {
         if (maxX > 0 && maxY > 0) {
-            final double positionX = random.randIntRange(minX, maxY);
-            final double positionY =  random.randIntRange(minY, maxY);
+            final double positionX = random.nextInt((int) ((maxX-minX + 1) + minX));
+            final double positionY =  random.nextInt((int) ((maxY-minY + 1) + minY));
             log.debug("the posX is ={}", positionX);
             log.debug("the posY is ={}", positionY);
 

@@ -19,9 +19,11 @@ public class ReplayablePseudoRandom {
        seed = seed.multiply(multiplier).add(increment).mod(modulus);
        return seed.doubleValue();
     }
-
-    public int randIntRange(double min, double max){
-        return (int)(this.random() % (max-min + 1) + min);
+    /*
+    Generate Random number within a limit
+     */
+    public int nextInt(int bound){
+        return (int) (this.random() % bound);
     }
 
     /*
