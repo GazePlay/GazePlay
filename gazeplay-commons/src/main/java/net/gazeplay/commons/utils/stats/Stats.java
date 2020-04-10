@@ -26,7 +26,6 @@ import org.monte.media.VideoFormatKeys;
 import org.monte.media.gui.Worker;
 import org.monte.media.math.Rational;
 import org.monte.screenrecorder.ScreenRecorder;
-import org.monte.screenrecorder.ScreenRecorderCompactMain;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -40,6 +39,9 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.*;
 
@@ -56,41 +58,53 @@ public class Stats implements GazeMotionListener {
     private final double heatMapPixelSize;
     private final Scene gameContextScene;
     protected String gameName;
-    @Getter
-    protected int nbGoalsToReach = 0;
+
     long startTime;
     int sceneCounter = 0;
     private EventHandler<MouseEvent> recordMouseMovements;
     private EventHandler<GazeEvent> recordGazeMovements;
     private LifeCycle lifeCycle = new LifeCycle();
     private RoundsDurationReport roundsDurationReport = new RoundsDurationReport();
-    private Instant starts;
     private int counter = 0;
     private final List<CoordinatesTracker> movementHistory = new ArrayList<>();
     private long previousTime = 0;
     private int previousX = 0;
     private int previousY = 0;
     private File movieFolder;
-    @Getter
-    public int nbGoalsReached = 0;
     private boolean convexHULL = true;
     private ScreenRecorder screenRecorder;
     private ArrayList<TargetAOI> targetAOIList = null;
+    private double[][] heatMap;
+    private String directoryOfVideo;
+    private String nameOfVideo;
+    private Long currentRoundStartTime;
+
+    @Getter
+    public int nbGoalsReached = 0;
+
+    @Getter
+    protected int nbGoalsToReach = 0;
+
     @Setter
     private long accidentalShotPreventionPeriod = 0;
+
     @Getter
     private int nbUnCountedGoalsReached;
-    private double[][] heatMap;
+
     @Getter
     @Setter
     private long currentGazeTime;
+
     @Getter
     @Setter
     private long lastGazeTime;
+
     @Getter
     private LinkedList<FixationPoint> fixationSequence;
+
     @Getter
     private SavedStatsInfo savedStatsInfo;
+
     @Getter
     private WritableImage gameScreenShot;
 
@@ -136,7 +150,7 @@ public class Stats implements GazeMotionListener {
         heatMapPixelSize = computeHeatMapPixelSize(gameContextScene);
     }
 
-    private static double[][] instanciateHeatMapData(final Scene gameContextScene, final double heatMapPixelSize) {
+    static double[][] instantiateHeatMapData(final Scene gameContextScene, final double heatMapPixelSize) {
         final int heatMapWidth = (int) (gameContextScene.getHeight() / heatMapPixelSize);
         final int heatMapHeight = (int) (gameContextScene.getWidth() / heatMapPixelSize);
         log.info("heatMapWidth = {}, heatMapHeight = {}", heatMapWidth, heatMapHeight);
@@ -148,7 +162,6 @@ public class Stats implements GazeMotionListener {
     }
 
     public void setTargetAOIList(final ArrayList<TargetAOI> targetAOIList) {
-
         this.targetAOIList = targetAOIList;
         for (int i = 0; i < targetAOIList.size() - 1; i++) {
             final long duration = targetAOIList.get(i).getTimeEnded() - targetAOIList.get(i).getTimeStarted();
@@ -157,7 +170,6 @@ public class Stats implements GazeMotionListener {
         if (targetAOIList.size() >= 1) {
             targetAOIList.get(targetAOIList.size() - 1).setDuration(0);
         }
-
     }
 
     public void notifyNewRoundReady() {
@@ -185,7 +197,6 @@ public class Stats implements GazeMotionListener {
         mimeType = "video/avi";
         videoFormatName = "tscc";
         compressorName = "Techsmith Screen Capture";
-        final ScreenRecorderCompactMain asi = null;
 
         System.setProperty("java.awt.headless", "false");
         final GraphicsConfiguration cfg = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
@@ -197,19 +208,39 @@ public class Stats implements GazeMotionListener {
         outputDimension = areaRect.getSize();
         final byte screenRate;
         screenRate = 30;
+
+        Format fileFormat = new Format(
+            VideoFormatKeys.MediaTypeKey,
+            FormatKeys.MediaType.FILE,
+            VideoFormatKeys.MimeTypeKey,
+            mimeType
+        );
+
+        Format screenFormat =  new Format(
+            VideoFormatKeys.MediaTypeKey,
+            FormatKeys.MediaType.VIDEO,
+            VideoFormatKeys.EncodingKey,
+            videoFormatName,
+            VideoFormatKeys.CompressorNameKey,
+            compressorName,
+            VideoFormatKeys.WidthKey,
+            outputDimension.width,
+            VideoFormatKeys.HeightKey,
+            outputDimension.height,
+            VideoFormatKeys.DepthKey,
+            (int) bitDepth,
+            VideoFormatKeys.FrameRateKey,
+            Rational.valueOf(screenRate),
+            VideoFormatKeys.QualityKey,
+            quality,
+            VideoFormatKeys.KeyFrameIntervalKey,
+            screenRate * 60
+        );
+
         try {
             final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 'at' HH.mm.ss");
             nameOfVideo = this.movieFolder + "/ScreenRecording " + dateFormat.format(new Date());
-            this.screenRecorder = new ScreenRecorder(cfg, areaRect,
-                new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.FILE, VideoFormatKeys.MimeTypeKey,
-                    mimeType),
-                new Format(VideoFormatKeys.MediaTypeKey, FormatKeys.MediaType.VIDEO, VideoFormatKeys.EncodingKey,
-                    videoFormatName, VideoFormatKeys.CompressorNameKey, compressorName,
-                    VideoFormatKeys.WidthKey, outputDimension.width, VideoFormatKeys.HeightKey,
-                    outputDimension.height, VideoFormatKeys.DepthKey, (int) bitDepth,
-                    VideoFormatKeys.FrameRateKey, Rational.valueOf(screenRate),
-                    VideoFormatKeys.QualityKey, quality, VideoFormatKeys.KeyFrameIntervalKey, screenRate * 60),
-                null, null, this.movieFolder);
+            this.screenRecorder = new ScreenRecorder(cfg, areaRect, fileFormat, screenFormat, null, null, this.movieFolder);
             this.screenRecorder.start();
         } catch (IOException | AWTException e) {
             e.printStackTrace();
@@ -218,11 +249,11 @@ public class Stats implements GazeMotionListener {
     }
 
     public void endVideoRecording() {
-        final ScreenRecorder r = this.screenRecorder;
-        (new Worker() {
+        final ScreenRecorder recorder = this.screenRecorder;
+        (new Worker<>() {
             @Override
             protected Object construct() throws Exception {
-                r.stop();
+                recorder.stop();
                 return null;
             }
 
@@ -364,20 +395,21 @@ public class Stats implements GazeMotionListener {
         }
         lifeCycle.start(() -> {
             if (!config.isHeatMapDisabled()) {
-                heatMap = instanciateHeatMapData(gameContextScene, heatMapPixelSize);
+                heatMap = instantiateHeatMapData(gameContextScene, heatMapPixelSize);
             }
             if (!config.isFixationSequenceDisabled()) {
                 fixationSequence = new LinkedList<>();
             }
             startTime = System.currentTimeMillis();
+
             recordGazeMovements = e -> {
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
                 if (!config.isHeatMapDisabled()) {
-                    incHeatMap(getX, getY);
+                    incrementHeatMap(getX, getY);
                 }
                 if (!config.isFixationSequenceDisabled()) {
-                    incFixationSequence(getX, getY);
+                    incrementFixationSequence(getX, getY);
                 }
                 if (config.getAreaOfInterestDisabledProperty().getValue()) {
                     if (getX != previousX || getY != previousY) {
@@ -395,14 +427,15 @@ public class Stats implements GazeMotionListener {
                     }
                 }
             };
+
             recordMouseMovements = e -> {
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
                 if (!config.isHeatMapDisabled()) {
-                    incHeatMap(getX, getY);
+                    incrementHeatMap(getX, getY);
                 }
                 if (!config.isFixationSequenceDisabled()) {
-                    incFixationSequence(getX, getY);
+                    incrementFixationSequence(getX, getY);
                 }
                 if (config.getAreaOfInterestDisabledProperty().getValue()) {
                     if (getX != previousX || getY != previousY && counter == 2) {
@@ -422,12 +455,12 @@ public class Stats implements GazeMotionListener {
                     counter++;
                 }
             };
+
             gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
             gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
 
         });
         currentRoundStartTime = lifeCycle.getStartTime();
-
     }
 
     public List<CoordinatesTracker> getMovementHistoryWithTime() {
@@ -463,11 +496,11 @@ public class Stats implements GazeMotionListener {
     public void gazeMoved(final javafx.geometry.Point2D position) {
         final int positionX = (int) position.getX();
         final int positionY = (int) position.getY();
-        incHeatMap(positionX, positionY);
-        incFixationSequence(positionX, positionY);
+        incrementHeatMap(positionX, positionY);
+        incrementFixationSequence(positionX, positionY);
     }
 
-    private void saveImageAsPng(final BufferedImage bufferedImage, final File outputFile) {
+    static void saveImageAsPng(final BufferedImage bufferedImage, final File outputFile) {
         try {
             ImageIO.write(bufferedImage, "png", outputFile);
         } catch (final IOException e) {
@@ -533,10 +566,6 @@ public class Stats implements GazeMotionListener {
             final BufferedImage seqImage = SwingFXUtils.fromFXImage(scanpath.getImage(), null);
             g.drawImage(seqImage, 0, 0, screenshotImage.getWidth(), screenshotImage.getHeight(), null);
         }
-        // for (FixationPoint p : fixationSequence) {
-        // log.info("x = {}, y = {}, fGaze= {}, gDuration={}",p.getY(), p.getX(), p.getFirstGaze(),
-        // p.getGazeDuration());
-        // }
 
         saveImageAsPng(bImage, gazeMetricsFile);
 
@@ -656,13 +685,6 @@ public class Stats implements GazeMotionListener {
     }
 
     private void saveFixationSequenceAsPng(final File outputPngFile) {
-
-        // log.info(String.format("Fixation-Sequence size: %3d X %3d",
-        // (int) (gameContextScene.getWidth() / heatMapPixelSize),
-        // (int) (gameContextScene.getHeight() / heatMapPixelSize)));
-
-        // FixationSequence sequence = new FixationSequence((int) (gameContextScene.getWidth() / heatMapPixelSize),
-        // (int) (gameContextScene.getHeight() / heatMapPixelSize), fixationSequence);
         final FixationSequence scanpath = new FixationSequence((int) gameContextScene.getWidth(),
             (int) gameContextScene.getHeight(), fixationSequence);
         try {
@@ -672,27 +694,16 @@ public class Stats implements GazeMotionListener {
         }
     }
 
-    private void incFixationSequence(final int X, final int Y) {
-
-        long previousGaze;
+    void incrementFixationSequence(final int x, final int y) {
         final long gazeDuration;
 
-        // int x = (int) (Y / heatMapPixelSize);
-        // int y = (int) (X / heatMapPixelSize);
-        final FixationPoint newGazePoint = new FixationPoint(System.currentTimeMillis(), 0, Y, X);
+        final FixationPoint newGazePoint = new FixationPoint(System.currentTimeMillis(), 0, y, x);
         if (fixationSequence.size() != 0) {
             gazeDuration = newGazePoint.getTimeGaze()
                 - (fixationSequence.get(fixationSequence.size() - 1)).getTimeGaze();
             newGazePoint.setGazeDuration(gazeDuration);
         }
 
-        /*
-         * if (fixationSequence.size() == 0) { newGazePoint = new FixationPoint(0, 0, x, y);
-         * fixationSequence.add(newGazePoint); } else { newGazePoint = new FixationPoint(System.currentTimeMillis() -
-         * startTime, 0, x, y); gazeDuration = newGazePoint.getTimeGaze() -
-         * (fixationSequence.get(fixationSequence.size() - 1)).getTimeGaze();
-         * (fixationSequence.get(fixationSequence.size() - 1)).setGazeDuration(gazeDuration); }
-         */
         // if the new points coordinates are the same as last one's in the list then update the last fixationPoint in
         // the list
         // same coordinate points are a result of the eyetracker's frequency of sampling
@@ -702,28 +713,27 @@ public class Stats implements GazeMotionListener {
             && (Math.abs(newGazePoint.getY()
             - fixationSequence.get(fixationSequence.size() - 1).getY()) <= fixationTrail)) {
             fixationSequence.get(fixationSequence.size() - 1)
-                .setGazeDuration(newGazePoint.getGazeDuration() + newGazePoint.getGazeDuration()); //
-
+                .setGazeDuration(newGazePoint.getGazeDuration() + newGazePoint.getGazeDuration());
         } else { // else add the new point in the list
             fixationSequence.add(newGazePoint);
         }
     }
 
-    private void incHeatMap(final int X, final int Y) {
+    void incrementHeatMap(final int x, final int y) {
         currentGazeTime = System.currentTimeMillis();
         // in heatChart, x and y are opposed
-        final int x = (int) (Y / heatMapPixelSize);
-        final int y = (int) (X / heatMapPixelSize);
+        final int newX = (int) (y / heatMapPixelSize);
+        final int newY = (int) (x / heatMapPixelSize);
         for (int i = -trail; i <= trail; i++) {
             for (int j = -trail; j <= trail; j++) {
                 if (Math.sqrt(i * i + j * j) < trail) {
-                    inc(x + i, y + j);
+                    increment(newX + i, newY + j);
                 }
             }
         }
     }
 
-    private void inc(final int x, final int y) {
+    private void increment(final int x, final int y) {
         if (heatMap != null && x >= 0 && y >= 0 && x < heatMap.length && y < heatMap[0].length) {
             heatMap[x][y]++;
         }
@@ -733,7 +743,7 @@ public class Stats implements GazeMotionListener {
      * @return the size of the HeatMap Pixel Size in order to avoid a too big heatmap (400 px) if maximum memory is more
      * than 1Gb, only 200
      */
-    private double computeHeatMapPixelSize(final Scene gameContextScene) {
+    double computeHeatMapPixelSize(final Scene gameContextScene) {
         final long maxMemory = Runtime.getRuntime().maxMemory();
         final double width = gameContextScene.getWidth();
         final double result;

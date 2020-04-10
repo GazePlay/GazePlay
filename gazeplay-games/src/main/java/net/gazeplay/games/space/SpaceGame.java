@@ -285,6 +285,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         for (int i = 0; i < 10; i++) {
             displayBiboule();
         }
+
         // displayBoss();
 
         updatePosition();
@@ -305,19 +306,17 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         double timeElapsed = ((double) now - (double) lastTickTime) / Math.pow(10, 6); // in ms
         lastTickTime = now;
 
-        // log.info("FPS: " + (int) (1000 / timeElapsed));
+
         if (1000 / timeElapsed < minFPS) {
             minFPS = 1000 / (int) timeElapsed;
         }
         timeElapsed /= getGameSpeed();
-        // log.info("Speed effect: " + configuration.getSpeedEffects());
-        // log.info("MinFPS: " + minFPS);
-        // log.info("Time elapsed: " + timeElapsed);
+
 
         // Movement
         /// Lateral movement: Mouse Moved
-        final double distance = Math.abs(gazeTarget.getX() - (spaceship.getX() + spaceship.getWidth() / 2));
-        final double direction = distance == 0 ? 1
+        final double distance = Math.floor(Math.abs(gazeTarget.getX() - (spaceship.getX() + spaceship.getWidth() / 2)));
+        final double direction = distance <= 5 ? 0
             : (gazeTarget.getX() - (spaceship.getX() + spaceship.getWidth() / 2)) / distance;
         final double maxSpeed = 0.7;
         if (distance > maxSpeed) {
@@ -327,17 +326,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         }
 
         spaceship.setX(spaceship.getX() + velocity.getX() * timeElapsed);
-        // log.info("velocity x: " + velocity.getX());
-        spaceship.setY(6 * dimension2D.getHeight() / 7);
-        // log.info("Number of bullets: " + bulletListRec.size());
-        // log.info("Number of biboules: " + biboules.size());
-        // log.info("Number of biboule bullets: " + bulletBibouleListRec.size());
-        // log.info("Number of timeline biboule bullets: " + timelineList.size());
-        // log.info("Number of bullet - transition pair: " + hashMap.size());
 
-        /// Lateral movement: Mouse Pressed
-        // spaceship.setX(gazeTarget.getX() - spaceship.getWidth() / 2);
-        // spaceship.setY(gazeTarget.getY() - spaceship.getHeight() / 2);
+        spaceship.setY(6 * dimension2D.getHeight() / 7);
+
 
         bibouleValue += 1;
         if (bibouleValue == 300) {
@@ -346,7 +337,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                 if (lower) {
                     b.moveToLower(biboulesPos.get(0).getX(), biboulesPos.get(0).getY());
                 } else {
-                    b.moveToUpper(biboulesPos.get(0).getX(), biboulesPos.get(0).getY());
+                    b.moveToUpper(biboulesPos.get(0).getX(), 50);
                     if (b.getY() <= 50) {
                         b.moveToLower(biboulesPos.get(0).getX(), biboulesPos.get(0).getY());
                     }
@@ -377,7 +368,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             bulletTransition.play();
             bulletValue = 0;
         }
-        // bulletValue = 0;
 
         for (final Rectangle r : bulletListRec) {
             // r.setY(r.getY() - 4);
@@ -432,7 +422,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                 });
                 // }
             }
-            // updateScore();
+            updateShipPosition();
         }
         // }
 
@@ -506,8 +496,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                             death();
                         }
 
-                    } else {
-                        log.info("Not die");
                     }
                 });
             }
@@ -515,9 +503,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
         // bibouleBulletValue = 0;
         // }
-
-        if (biboules.size() < 5) {
-            while (biboules.size() != 15) {
+        if (biboules.size() == 0) {
+            while (biboules.size() < 10) {
                 displayBiboule();
             }
         }
@@ -543,6 +530,11 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         // }
         // bossValue = 0;
         // }
+    }
+
+    private void updateShipPosition() {
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        spaceship.setY(6 * dimension2D.getHeight() / 7);
     }
 
     @Override
@@ -606,9 +598,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     }
 
     private void updateScore() {
-        score = biboulesKilled.size() + +bossKilled.size() * 125;
+        score = biboulesKilled.size() + bossKilled.size() * 125;
         spaceGameStats.incrementNumberOfGoalsReached(score);
-        scoreText.setText(String.valueOf(biboulesKilled.size() + bossKilled.size() * 125));
+        scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
     }
 
