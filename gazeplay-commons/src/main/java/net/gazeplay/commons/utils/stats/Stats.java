@@ -75,9 +75,6 @@ public class Stats implements GazeMotionListener {
     private ScreenRecorder screenRecorder;
     private ArrayList<TargetAOI> targetAOIList = null;
     private double[][] heatMap;
-    private String directoryOfVideo;
-    private String nameOfVideo;
-    private Long currentRoundStartTime;
 
     @Getter
     public int nbGoalsReached = 0;

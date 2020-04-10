@@ -130,7 +130,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
                 final long timeAreaStart = areaOfInterestProps.getAreaStartTime();
                 final long timeAreaEnd = areaOfInterestProps.getAreaEndTime();
-                double max_score = 0;
+                double maxScore = 0;
                 for (targetAOIIterator = 0; targetAOIIterator < targetAOIArrayList.size(); targetAOIIterator++) {
 
                     timeTargetAreaStart = targetAOIArrayList.get(targetAOIIterator).getTimeStarted();
@@ -142,13 +142,13 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                         if (intersect.getBoundsInLocal().getWidth() != -1) {
                             if (intersect.getBoundsInLocal().getWidth()
                                 / (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1)
-                                > max_score)
-                                max_score = intersect.getBoundsInLocal().getWidth()
+                                > maxScore)
+                                maxScore = intersect.getBoundsInLocal().getWidth()
                                     / (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1);
                         }
                     }
                 }
-                score += max_score;
+                score += maxScore;
             }
             score /= allAOIList.size();
         }
