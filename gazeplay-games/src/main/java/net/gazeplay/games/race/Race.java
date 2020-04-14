@@ -236,12 +236,12 @@ public class Race extends Parent implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         sc.setFont(Font.font(dimension2D.getHeight() / 20));
-        sc.setLayoutX(dimension2D.getWidth() * 0.8);
-        sc.setLayoutY(dimension2D.getHeight() * 0.5);
+        sc.setLayoutX(dimension2D.getWidth() * 0.08);
+        sc.setLayoutY(0.0);
 
-        // tc.setFont(Font.font(dimension2D.getHeight() / 20));
-        tc.setLayoutX(dimension2D.getWidth() * 0.8);
-        tc.setLayoutY(dimension2D.getHeight() * 0.4);
+        tc.setFont(Font.font(dimension2D.getHeight() / 20));
+        tc.setLayoutX(dimension2D.getWidth() * 0.0);
+        tc.setLayoutY(dimension2D.getHeight() * 0.0);
 
     }
 
@@ -285,8 +285,11 @@ public class Race extends Parent implements GameLifeCycle {
         tc.setFont(Font.font(dimension2D.getHeight() / 20));
         sc.setFont(Font.font(dimension2D.getHeight() / 20));
         tc.setLineSpacing(10);
-        tc.setLayoutX(15 * dimension2D.getWidth() / 29.7);
-        tc.setLayoutY(14 * dimension2D.getHeight() / 21);
+        tc.setLayoutX(0.0);
+        tc.setLayoutY(0.0);
+
+        sc.setLayoutX(dimension2D.getWidth() * 0.08);
+        sc.setLayoutY(0.0);
 
         this.getChildren().add(tc);
 
@@ -457,7 +460,7 @@ public class Race extends Parent implements GameLifeCycle {
         sp.setLayoutY(y);
         sp.centerX = x;
         sp.centerY = y;
-        stats.incrementNumberOfGoalsToReach();
+        stats.incrementNumberOfGoalsReached();
         moveCircle(sp);
     }
 

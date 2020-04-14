@@ -153,8 +153,7 @@ subprojects {
 }
 
 dependencies {
-    runtime project(':gazeplay')
-
+    runtime project(':gazeplay-core')
     runtime project(':gazeplay-games')
     runtime project(':gazeplay-games-commons')
     runtime project(':gazeplay-commons')
@@ -248,4 +247,4 @@ mainClassName = 'net.gazeplay.GazePlayLauncher'
 defaultTasks 'clean', 'build', 'checkPMDReport'
 startScripts.enabled = false
 
-afterReleaseBuild.dependsOn generateWindowsInstaller
+afterReleaseBuild.dependsOn generateWindowsInstallerInDocker
