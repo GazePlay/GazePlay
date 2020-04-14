@@ -14,7 +14,7 @@ excerpt: >
   <small><a href="https://github.com/GazePlay/GazePlay/releases/tag/1.7.2">Dernière version v1.7.2</a></small>
 ---
 
-{% include video id="Ml8Plf3sVvk" provider="youtube" %}
+{% include video id="U9_jotkmXDg" provider="youtube" %}
 
 ## Système Requis
 
