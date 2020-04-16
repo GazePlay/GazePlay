@@ -6,7 +6,7 @@ rootProject.name = 'gazeplay'
 include(':gazeplay-commons')
 include(':gazeplay-games-commons')
 include(':gazeplay-games')
-include(':gazeplay')
+include(':gazeplay-core')
 include(':gazeplay-side-projects')
 include(':gazeplay-picto-pick')
 include(':gazeplay-melordi')
