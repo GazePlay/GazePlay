@@ -14,7 +14,7 @@ excerpt: >
   <small><a href="https://github.com/GazePlay/GazePlay/releases/tag/1.7.2">Latest release v1.7.2</a></small>
 ---
 
-<iframe width="1212" height="682" src="https://www.youtube.com/embed/xGKCIiYNu2c" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{% include video id="xGKCIiYNu2c" provider="youtube" %}
 
 ## System Requirements
 GazePlay works on Windows, MacOS and Linux.  
