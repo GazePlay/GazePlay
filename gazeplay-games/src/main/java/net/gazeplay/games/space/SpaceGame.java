@@ -70,6 +70,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
     private long lastTickTime = 0;
     private long minFPS = 1000;
+    private long StartTime;
 
     private Rectangle spaceship;
     private Rectangle spaceshipCollider;
@@ -113,6 +114,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     private final ArrayList<Rectangle> spaceshipDestroyed;
 
     private int bossHit;
+
 
     public SpaceGame(final IGameContext gameContext, final SpaceGameStats stats) {
         this.spaceGameStats = stats;
@@ -316,6 +318,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         spaceGameStats.notifyNewRoundReady();
     }
 
+
     @Override
     public void handle(final long now) {
 
@@ -331,7 +334,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             minFPS = 1000 / (int) timeElapsed;
         }
         timeElapsed /= getGameSpeed();
-
 
         // Movement
         /// Lateral movement: Mouse Moved
@@ -367,8 +369,10 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             bibouleValue = 0;
         }
 
-        bulletValue += 1;
-        if (bulletValue == 20) {
+
+        long CurrentTime = System.currentTimeMillis();
+        if (CurrentTime - StartTime >= 500) {
+
             final Rectangle bulletRec = new Rectangle(spaceship.getX() + spaceship.getWidth() / 2,
                 spaceship.getY() - spaceship.getHeight() / 3, 10, 20);
             bulletRec.setFill(new ImagePattern(new Image("data/space/bullet/laserBlue01.png")));
@@ -382,10 +386,11 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             bulletTransition.setOnFinished(event -> {
                 bulletListRec.remove(bulletRec);
                 middleLayer.getChildren().remove(bulletRec);
+                System.gc();
             });
 
             bulletTransition.play();
-            bulletValue = 0;
+            StartTime = CurrentTime;
         }
 
         for (final Rectangle r : bulletListRec) {
@@ -398,7 +403,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
                 colliding.addListener((obs, oldValue, newValue) -> {
                     if (newValue) {
-                        // log.info("Colliding");
 
                         boolean bibouleBoolean = false;
 
@@ -430,22 +434,14 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                         }
 
                     }
-                    // else {
-                    // log.info("Not colliding");
-                    // }
+
                 });
-                // }
             }
             updateShipPosition();
         }
-        // }
-
-        // bibouleBulletValue += 1;
-        // if (bibouleBulletValue == 120) {
-
 
         for (final Rectangle b : biboules) {
-            final int bibouleShoot = random.nextInt(1200);
+            final int bibouleShoot = random.nextInt(1500);
 
             final Rectangle bulletBibouleRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), 10, 20);
             bulletBibouleRec.setFill(new ImagePattern(new Image("data/space/bullet/laserRed01.png")));
@@ -462,6 +458,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                 timeline.setOnFinished(event -> {
                     bulletBibouleListRec.remove(bulletBibouleRec);
                     backgroundLayer.getChildren().remove(bulletBibouleRec);
+                    System.gc();
                 });
                 timeline.play();
 
@@ -473,7 +470,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
                 collidingBulletBibSpaceship.addListener((obs, oldValue, newValue) -> {
                     if (newValue) {
-                        //log.info("die");
 
                         boolean deathBoolean = false;
 
@@ -512,8 +508,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             }
         }
 
-        // bibouleBulletValue = 0;
-        // }
         if (biboules.size() == 0) {
             while (biboules.size() < 10) {
                 displayBiboule();
