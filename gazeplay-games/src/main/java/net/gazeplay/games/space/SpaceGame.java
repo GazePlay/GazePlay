@@ -1,7 +1,6 @@
 package net.gazeplay.games.space;
 
 import javafx.animation.*;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableBooleanValue;
 import javafx.event.Event;
@@ -283,12 +282,12 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             spaceshipCollider = new Rectangle(spaceship.getX() + spaceship.getWidth() / 3,
                 spaceship.getY() + spaceship.getHeight() / 3, spaceship.getWidth() * 3 / 4, spaceship.getHeight() / 5);
             backgroundLayer.getChildren().add(spaceshipCollider);
-            spaceshipCollider.setFill(Color.TRANSPARENT);
+            spaceshipCollider.setFill(Color.RED);
         } else if (imageShip.getImage().getUrl().contains("spaceship.gif")) {
             spaceshipCollider = new Rectangle(spaceship.getX() - 500,
                 spaceship.getY() + spaceship.getHeight() / 3, spaceship.getWidth() * 4 / 5, spaceship.getHeight() / 5);
             backgroundLayer.getChildren().add(spaceshipCollider);
-            spaceshipCollider.setFill(Color.TRANSPARENT);
+            spaceshipCollider.setFill(Color.RED);
         } else {
             //case when the image is not detected
             spaceshipCollider = new Rectangle(spaceship.getX() + spaceship.getWidth() / 3,
@@ -305,8 +304,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         bossHit = 0;
 
         spawnBiboule();
-
-        // displayBoss();
 
         updatePosition();
         updateScore();
@@ -348,6 +345,10 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         if (biboules.size() == 0) {
             spawnBiboule();
         }
+        if (bosses.size() == 0 && biboulesKilled.size() % 25 == 24) {
+            displayBoss();
+        }
+        computeBulletBoss();
 
         // bossValue += 1;
         // if (bossValue == 3000) {
@@ -363,6 +364,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         bulletListRec.clear();
         bulletBibouleListRec.clear();
         biboules.clear();
+        bulletBossListRec.clear();
         middleLayer.getChildren().remove(spaceship);
     }
 
@@ -485,7 +487,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
         biboules.add(b);
         b.setFill(new ImagePattern(bibouleImage.pickRandomImage()));
-        // b.setFill(new ImagePattern(new Image("data/space/enemy/boss.gif")));
         backgroundLayer.getChildren().add(b);
         final FadeTransition bibouleAppear = new FadeTransition(Duration.seconds(1), b);
         bibouleAppear.setInterpolator(Interpolator.LINEAR);
@@ -557,11 +558,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         }
 
         for (final Rectangle r : bulletListRec) {
-            // r.setY(r.getY() - 4);
-            // Rectangle realBullet = new Rectangle(r.getX() + r.getWidth()/3, r.getY() + r.getHeight()/3,
-            // r.getWidth()/3,r.getHeight()/3);
             for (final Biboule b : biboules) {
-                // for (Rectangle r : bulletListRec) {
                 final ObservableBooleanValue colliding = Bindings.createBooleanBinding(() -> r.getBoundsInParent().intersects(b.getBoundsInParent()), r.boundsInParentProperty(), b.boundsInParentProperty());
 
                 colliding.addListener((obs, oldValue, newValue) -> {
@@ -600,8 +597,92 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
                 });
             }
-            updateShipPosition();
+            for (final Boss b : bosses) {
+                final ObservableBooleanValue colliding2 = Bindings.createBooleanBinding(() -> r.getBoundsInParent().intersects(b.getBoundsInParent()), r.boundsInParentProperty(), b.boundsInParentProperty());
+
+                colliding2.addListener((obs, oldValue, newValue) -> {
+                    if (newValue) {
+                        //log.info("Hit the boss");
+
+                        bulletListRec.remove(r);
+
+                        boolean bossHitBoolean = false;
+                        boolean bossKilledBoolean = false;
+
+                        if (bossHit < b.getHealthPoint()) {
+
+                            if (!bossKilled.contains(b)) {
+                                bossHitBoolean = true;
+                            }
+
+                            if (bossHitBoolean) {
+                                bossHit += 1;
+                                bossFade = new FadeTransition(Duration.millis(250), b);
+                                bossFade.setFromValue(1);
+                                bossFade.setToValue(0.5);
+                                bossFade.setCycleCount(1);
+                                bossFade.setInterpolator(Interpolator.LINEAR);
+
+                                bossFade2 = new FadeTransition(Duration.millis(250), b);
+                                bossFade2.setFromValue(0.5);
+                                bossFade2.setToValue(1);
+                                bossFade2.setCycleCount(1);
+                                bossFade.setInterpolator(Interpolator.LINEAR);
+
+                                sequentialTransition2 = new SequentialTransition(bossFade, bossFade2);
+
+                                bulletDisappear = new FadeTransition(Duration.millis(100), r);
+                                bulletDisappear.setFromValue(1);
+                                bulletDisappear.setToValue(0);
+                                bulletDisappear.setCycleCount(1);
+                                bulletDisappear.setInterpolator(Interpolator.LINEAR);
+
+                                parallelTransition4 = new ParallelTransition(sequentialTransition2,
+                                    bulletDisappear);
+                                parallelTransition4.play();
+                            }
+                        } else {
+                            if (!bossKilled.contains(b)) {
+                                bossKilled.add(b);
+                                bossKilledBoolean = true;
+                            }
+                            bosses.remove(b);
+
+                            if (bossKilledBoolean) {
+                                bossDisappear = new FadeTransition(Duration.millis(1000), b);
+                                bossDisappear.setFromValue(1);
+                                bossDisappear.setToValue(0);
+                                bossDisappear.setCycleCount(1);
+                                bossDisappear.setInterpolator(Interpolator.LINEAR);
+
+                                bulletDisappear = new FadeTransition(Duration.millis(100), r);
+                                bulletDisappear.setFromValue(1);
+                                bulletDisappear.setToValue(0);
+                                bulletDisappear.setCycleCount(1);
+                                bulletDisappear.setInterpolator(Interpolator.LINEAR);
+
+                                parallelTransition4 = new ParallelTransition(bossDisappear,
+                                    bulletDisappear);
+                                parallelTransition4.play();
+                                middleLayer.getChildren().remove(r);
+                                backgroundLayer.getChildren().remove(b);
+                                bossHit = 0;
+                                updateScore();
+                            }
+                        }
+
+                    } else {
+                        //log.info("Not hit the boss");
+                    }
+                });
+
+                if (r.getY() < 0) {
+                    bulletListRec.remove(r);
+                    backgroundLayer.getChildren().remove(r);
+                }
+            }
         }
+        updateShipPosition();
     }
 
     private void computeBulletBiboule() {
@@ -675,197 +756,82 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     }
 
     private void computeBulletBoss() {
-        Platform.runLater(() -> {
-            bossBulletValue += 1;
-            if (bossBulletValue == 120) {
-                final Rectangle spaceshipCollider = new Rectangle(spaceship.getX() + spaceship.getWidth() / 3,
-                    spaceship.getY() + spaceship.getHeight() * 2 / 3, spaceship.getWidth() / 3,
-                    spaceship.getHeight() / 3);
-                backgroundLayer.getChildren().add(spaceshipCollider);
-                spaceshipCollider.setFill(Color.TRANSPARENT);
+        for (final Rectangle b : bosses) {
+            final int bossShoot = random.nextInt(240);
 
-                for (final Rectangle b : bosses) {
-                    final int bossShoot = random.nextInt(2);
+            final Rectangle bulletBossRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), 15, 30);
+            bulletBossRec.setFill(new ImagePattern(new Image("data/space/bullet/laserRed01.png")));
 
-                    final Rectangle bulletBossRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), 15, 30);
-                    bulletBossRec.setFill(new ImagePattern(new Image("data/space/bullet/laserRed01.png")));
+            if (bossShoot == 1) {
+                backgroundLayer.getChildren().add(bulletBossRec);
+                bulletBossListRec.add(bulletBossRec);
 
-                    if (bossShoot == 1) {
-                        backgroundLayer.getChildren().add(bulletBossRec);
-                        bulletBossListRec.add(bulletBossRec);
+                final Timeline timeline = new Timeline();
+                timeline.setCycleCount(1);
+                timeline.getKeyFrames()
+                    .add(new KeyFrame(Duration.seconds(15), new KeyValue(bulletBossRec.translateYProperty(),
+                        dimension2D.getHeight(), Interpolator.LINEAR)));
+                timeline.setOnFinished(event -> {
+                    bulletBossListRec.remove(bulletBossRec);
+                    backgroundLayer.getChildren().remove(bulletBossRec);
+                    System.gc();
+                });
+                timeline.play();
 
-                        final Timeline timeline = new Timeline();
-                        timeline.setCycleCount(1);
-                        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(15), new KeyValue(
-                            bulletBossRec.translateYProperty(), dimension2D.getHeight(), Interpolator.LINEAR)));
-                        timeline.play();
+            }
 
-                    }
+            for (final Rectangle rboss : bulletBossListRec) {
+                final ObservableBooleanValue collidingBulletBossSpaceship = Bindings
+                    .createBooleanBinding(() -> rboss.getBoundsInParent().intersects(spaceshipCollider.getBoundsInParent()), rboss.boundsInParentProperty(), spaceshipCollider.boundsInParentProperty());
 
-                    for (final Rectangle rboss : bulletBossListRec) {
-                        final ObservableBooleanValue collidingBulletBibSpaceship = Bindings
-                            .createBooleanBinding(() -> rboss.getBoundsInParent()
-                                .intersects(spaceshipCollider.getBoundsInParent()), rboss.boundsInParentProperty(), spaceshipCollider.boundsInParentProperty());
+                collidingBulletBossSpaceship.addListener((obs, oldValue, newValue) -> {
+                    if (newValue) {
+                        log.info("die");
 
-                        collidingBulletBibSpaceship.addListener((obs, oldValue, newValue) -> {
-                            if (newValue) {
-                                log.info("die");
+                        boolean deathBoolean = false;
 
-                                boolean deathBoolean = false;
+                        if (!spaceshipDestroyed.contains(spaceship)) {
+                            spaceshipDestroyed.add(spaceship);
+                            deathBoolean = true;
+                        }
 
-                                if (!spaceshipDestroyed.contains(spaceship)) {
-                                    spaceshipDestroyed.add(spaceship);
-                                    deathBoolean = true;
-                                }
+                        if (deathBoolean) {
 
-                                if (deathBoolean) {
-                                    bulletBossListRec.remove(rboss);
+                            //spaceshipDisappear = new FadeTransition(Duration.millis(1000), spaceship);
+                            //spaceshipDisappear.setFromValue(1);
+                            //spaceshipDisappear.setToValue(0);
+                            //spaceshipDisappear.setCycleCount(1);
+                            //spaceshipDisappear.setInterpolator(Interpolator.LINEAR);
 
-                                    spaceshipDisappear = new FadeTransition(Duration.millis(1000), spaceship);
-                                    spaceshipDisappear.setFromValue(1);
-                                    spaceshipDisappear.setToValue(0);
-                                    spaceshipDisappear.setCycleCount(1);
-                                    spaceshipDisappear.setInterpolator(Interpolator.LINEAR);
+                            //bulletBossDisappear = new FadeTransition(Duration.millis(100), rboss);
+                            //bulletBossDisappear.setFromValue(1);
+                            //bulletBossDisappear.setToValue(0);
+                            //bulletBossDisappear.setCycleCount(1);
+                            //bulletBossDisappear.setInterpolator(Interpolator.LINEAR);
 
-                                    bulletBossDisappear = new FadeTransition(Duration.millis(100), rboss);
-                                    bulletBossDisappear.setFromValue(1);
-                                    bulletBossDisappear.setToValue(0);
-                                    bulletBossDisappear.setCycleCount(1);
-                                    bulletBossDisappear.setInterpolator(Interpolator.LINEAR);
+                            //parallelTransition3 = new ParallelTransition(spaceshipDisappear,
+                            //    bulletBossDisappear);
 
-                                    parallelTransition3 = new ParallelTransition(spaceshipDisappear,
-                                        bulletBossDisappear);
-
-                                    parallelTransition3.play();
-                                    backgroundLayer.getChildren().remove(rboss);
-
-                                    death();
-                                }
-                                // }
-
-                            } else {
-                                log.info("Not die");
-                            }
-                        });
-
-                        if (rboss.getY() >= dimension2D.getHeight()) {
-                            bulletBibouleListRec.remove(rboss);
+                            //parallelTransition3.play();
                             backgroundLayer.getChildren().remove(rboss);
+                            removeAll();
+                            death();
+                            spaceshipDestroyed.remove(spaceship);
                         }
+                        // }
+
+                    } else {
+                        log.info("Not die");
                     }
-                }
-                bossBulletValue = 0;
+                });
 
-            }
-        });
-    }
-
-    private void computeBulletPlayerBoss() {
-        Platform.runLater(() -> {
-            bulletValue += 1;
-            if (bulletValue == 30) {
-                final Rectangle bulletRec = new Rectangle(spaceship.getX() + spaceship.getWidth() / 2,
-                    spaceship.getY() - spaceship.getHeight() / 3, 10, 20);
-                bulletRec.setFill(new ImagePattern(new Image("data/space/bullet/laserBlue01.png")));
-
-                bulletTransition = new TranslateTransition(Duration.seconds(3), bulletRec);
-                bulletTransition.setToY(-1 * dimension2D.getHeight());
-                bulletTransition.setCycleCount(1);
-                bulletTransition.setInterpolator(Interpolator.LINEAR);
-
-                middleLayer.getChildren().add(bulletRec);
-                bulletListRec.add(bulletRec);
-
-                bulletTransition.play();
-                bulletValue = 0;
-
-                for (final Boss b : bosses) {
-                    for (final Rectangle r : bulletListRec) {
-                        final ObservableBooleanValue colliding2 = Bindings.createBooleanBinding(() -> r.getBoundsInParent().intersects(b.getBoundsInParent()), r.boundsInParentProperty(), b.boundsInParentProperty());
-
-                        colliding2.addListener((obs, oldValue, newValue) -> {
-                            if (newValue) {
-                                log.info("Hit the boss");
-
-                                bulletListRec.remove(r);
-
-                                boolean bossHitBoolean = false;
-                                boolean bossKilledBoolean = false;
-
-                                if (bossHit < b.getHealthPoint()) {
-
-                                    if (!bossKilled.contains(b)) {
-                                        bossHitBoolean = true;
-                                    }
-
-                                    if (bossHitBoolean) {
-                                        bossHit += 1;
-                                        bossFade = new FadeTransition(Duration.millis(250), b);
-                                        bossFade.setFromValue(1);
-                                        bossFade.setToValue(0.5);
-                                        bossFade.setCycleCount(1);
-                                        bossFade.setInterpolator(Interpolator.LINEAR);
-
-                                        bossFade2 = new FadeTransition(Duration.millis(250), b);
-                                        bossFade2.setFromValue(0.5);
-                                        bossFade2.setToValue(1);
-                                        bossFade2.setCycleCount(1);
-                                        bossFade.setInterpolator(Interpolator.LINEAR);
-
-                                        sequentialTransition2 = new SequentialTransition(bossFade, bossFade2);
-
-                                        bulletDisappear = new FadeTransition(Duration.millis(100), r);
-                                        bulletDisappear.setFromValue(1);
-                                        bulletDisappear.setToValue(0);
-                                        bulletDisappear.setCycleCount(1);
-                                        bulletDisappear.setInterpolator(Interpolator.LINEAR);
-
-                                        parallelTransition4 = new ParallelTransition(sequentialTransition2,
-                                            bulletDisappear);
-                                        parallelTransition4.play();
-                                    }
-                                } else {
-                                    if (!bossKilled.contains(b)) {
-                                        bossKilled.add(b);
-                                        bossKilledBoolean = true;
-                                    }
-                                    bosses.remove(b);
-
-                                    if (bossKilledBoolean) {
-                                        bossDisappear = new FadeTransition(Duration.millis(1000), b);
-                                        bossDisappear.setFromValue(1);
-                                        bossDisappear.setToValue(0);
-                                        bossDisappear.setCycleCount(1);
-                                        bossDisappear.setInterpolator(Interpolator.LINEAR);
-
-                                        bulletDisappear = new FadeTransition(Duration.millis(100), r);
-                                        bulletDisappear.setFromValue(1);
-                                        bulletDisappear.setToValue(0);
-                                        bulletDisappear.setCycleCount(1);
-                                        bulletDisappear.setInterpolator(Interpolator.LINEAR);
-
-                                        parallelTransition4 = new ParallelTransition(bossDisappear,
-                                            bulletDisappear);
-                                        parallelTransition4.play();
-                                        middleLayer.getChildren().remove(r);
-                                        backgroundLayer.getChildren().remove(b);
-                                        bossHit = 0;
-                                        updateScore();
-                                    }
-                                }
-
-                            } else {
-                                log.info("Not hit the boss");
-                            }
-                        });
-
-                        if (r.getY() < 0) {
-                            bulletListRec.remove(r);
-                            backgroundLayer.getChildren().remove(r);
-                        }
-                    }
+                if (rboss.getY() >= dimension2D.getHeight()) {
+                    bulletBibouleListRec.remove(rboss);
+                    backgroundLayer.getChildren().remove(rboss);
                 }
             }
-        });
+        }
+
+
     }
 }
