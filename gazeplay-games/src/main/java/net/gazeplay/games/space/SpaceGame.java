@@ -282,12 +282,12 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             spaceshipCollider = new Rectangle(spaceship.getX() + spaceship.getWidth() / 3,
                 spaceship.getY() + spaceship.getHeight() / 3, spaceship.getWidth() * 3 / 4, spaceship.getHeight() / 5);
             backgroundLayer.getChildren().add(spaceshipCollider);
-            spaceshipCollider.setFill(Color.RED);
+            spaceshipCollider.setFill(Color.TRANSPARENT);
         } else if (imageShip.getImage().getUrl().contains("spaceship.gif")) {
             spaceshipCollider = new Rectangle(spaceship.getX() - 500,
                 spaceship.getY() + spaceship.getHeight() / 3, spaceship.getWidth() * 4 / 5, spaceship.getHeight() / 5);
             backgroundLayer.getChildren().add(spaceshipCollider);
-            spaceshipCollider.setFill(Color.RED);
+            spaceshipCollider.setFill(Color.TRANSPARENT);
         } else {
             //case when the image is not detected
             spaceshipCollider = new Rectangle(spaceship.getX() + spaceship.getWidth() / 3,
@@ -646,7 +646,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                 bossKilled.add(b);
                                 bossKilledBoolean = true;
                             }
-                            bosses.remove(b);
 
                             if (bossKilledBoolean) {
                                 bossDisappear = new FadeTransition(Duration.millis(1000), b);
@@ -664,6 +663,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                                 parallelTransition4 = new ParallelTransition(bossDisappear,
                                     bulletDisappear);
                                 parallelTransition4.play();
+
+                                bosses.remove(b);
                                 middleLayer.getChildren().remove(r);
                                 backgroundLayer.getChildren().remove(b);
                                 bossHit = 0;
@@ -820,15 +821,14 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                         }
                         // }
 
-                    } else {
-                        log.info("Not die");
                     }
                 });
-
+                /*
                 if (rboss.getY() >= dimension2D.getHeight()) {
                     bulletBibouleListRec.remove(rboss);
                     backgroundLayer.getChildren().remove(rboss);
                 }
+                */
             }
         }
 
