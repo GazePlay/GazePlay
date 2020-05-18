@@ -1,7 +1,7 @@
 package net.gazeplay.commons.random;
 
 /**
- * @author christophe
+ * @author Christophe El Zeinaty
  */
 
 public class ReplayablePseudoRandom {
@@ -12,6 +12,13 @@ public class ReplayablePseudoRandom {
 
     public ReplayablePseudoRandom() {
         this.seed = System.currentTimeMillis();
+        this.multiplier = 1103515245;
+        this.increment = 12345;
+        this.modulus = Math.pow(2, 31);
+    }
+
+    public ReplayablePseudoRandom(double seed) {
+        this.seed = seed;
         this.multiplier = 1103515245;
         this.increment = 12345;
         this.modulus = Math.pow(2, 31);
@@ -37,5 +44,14 @@ public class ReplayablePseudoRandom {
         return this.random() / (double) RAND_MAX;
     }
 
+    public boolean nextBoolean() {
+        int result = this.nextInt(2);
+        return result != 0;
+    }
+
+    public float nextFloat() {
+        int RAND_MAX = Integer.MAX_VALUE;
+        return (float) (this.random() / (double) RAND_MAX);
+    }
 }
 

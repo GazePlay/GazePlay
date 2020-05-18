@@ -17,6 +17,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.*;
@@ -131,7 +132,7 @@ public class Moles extends Parent implements GameLifeCycle {
     private synchronized void play() {
 
         nbMolesOut = new AtomicInteger(0);
-        Random r = new Random();
+        ReplayablePseudoRandom r = new ReplayablePseudoRandom();
 
         Timer minuteur = new Timer();
         TimerTask tache = new TimerTask() {
@@ -172,7 +173,7 @@ public class Moles extends Parent implements GameLifeCycle {
     }
 
     /* Select a mole not out for the moment and call "getOut()" */
-    private void chooseMoleToOut(Random r) {
+    private void chooseMoleToOut(ReplayablePseudoRandom r) {
         if (this.currentRoundDetails == null) {
             return;
         }

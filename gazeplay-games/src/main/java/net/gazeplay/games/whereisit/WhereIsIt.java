@@ -19,6 +19,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
@@ -66,7 +67,7 @@ public class WhereIsIt implements GameLifeCycle {
         final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
 
-        final Random random = new Random();
+        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
         final int winnerImageIndexAmongDisplayedImages = random.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
@@ -222,7 +223,7 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.getChildren().removeAll(pictureCardsToHide);
     }
 
-    RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRound, final Random random,
+    RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRound, final ReplayablePseudoRandom random,
                                             final int winnerImageIndexAmongDisplayedImages) {
 
         final Configuration config = gameContext.getConfiguration();
