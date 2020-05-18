@@ -1,5 +1,9 @@
 package net.gazeplay.commons.random;
 
+/**
+ * @author christophe
+ */
+
 public class ReplayablePseudoRandom {
     private double seed;
     private long multiplier;

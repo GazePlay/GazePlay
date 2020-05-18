@@ -19,4 +19,8 @@ task scriptsForRelease(type: Copy, group: 'distribution') {
     outputs.upToDateWhen { false } // Forces the task to rerun every time, without requiring a clean.
 }
 
-beforeReleaseBuild.dependsOn packageApp
+task packageAppWithDistPermissions(dependsOn: packageApp, type: Exec, group: 'distribution') {
+    commandLine 'chmod', '-R', '777', "${rootDir}/build/distributions"
+}
+
+beforeReleaseBuild.dependsOn packageAppWithDistPermissions
