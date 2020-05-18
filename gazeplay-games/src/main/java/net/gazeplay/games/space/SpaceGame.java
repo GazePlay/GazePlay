@@ -705,7 +705,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                 timeline.setOnFinished(event -> {
                     bulletBibouleListRec.remove(bulletBibouleRec);
                     backgroundLayer.getChildren().remove(bulletBibouleRec);
-                    System.gc();
+                    //System.gc();
                 });
                 timeline.play();
 
@@ -775,7 +775,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                 timeline.setOnFinished(event -> {
                     bulletBossListRec.remove(bulletBossRec);
                     backgroundLayer.getChildren().remove(bulletBossRec);
-                    System.gc();
+                    //System.gc();
                 });
                 timeline.play();
 
