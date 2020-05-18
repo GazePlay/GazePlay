@@ -291,7 +291,7 @@ public class WhereIsIt implements GameLifeCycle {
                 }
 
                 final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, winnerImageIndexAmongDisplayedImages == i,
+                    gameSizing.height * posY, gameSizing.width - 50, gameSizing.height - 50, gameContext, winnerImageIndexAmongDisplayedImages == i,
                     randomImageFile + "", stats, this);
 
                 pictureCardList.add(pictureCard);
@@ -333,7 +333,7 @@ public class WhereIsIt implements GameLifeCycle {
 
                 // The image file needs 'file:' prepended as this will get images from a local source, not resources.
                 final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
+                    gameSizing.height * posY, gameSizing.width - 50, gameSizing.height - 50, gameContext,
                     winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats, this);
 
                 pictureCardList.add(pictureCard);
