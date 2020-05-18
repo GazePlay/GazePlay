@@ -1,28 +1,27 @@
 package net.gazeplay.commons.random;
 
-import java.math.BigInteger;
-
 public class ReplayablePseudoRandom {
-    private BigInteger seed;
-    private BigInteger multiplier;
-    private BigInteger increment;
-    private BigInteger modulus;
+    private double seed;
+    private long multiplier;
+    private long increment;
+    private double modulus;
 
     public ReplayablePseudoRandom() {
-        this.seed = BigInteger.valueOf(System.currentTimeMillis());
-        this.multiplier = BigInteger.valueOf(25214903917L);
-        this.increment = BigInteger.valueOf(11);
-        this. modulus = BigInteger.ONE.shiftLeft(48);
+        this.seed = System.currentTimeMillis();
+        this.multiplier = 1103515245;
+        this.increment = 12345;
+        this.modulus = Math.pow(2, 31);
     }
 
-   public double random() {
-       seed = seed.multiply(multiplier).add(increment).mod(modulus);
-       return seed.doubleValue();
+    public double random() {
+        seed = (seed * multiplier + increment) % modulus;
+        return seed;
     }
+
     /*
     Generate Random number within a limit
      */
-    public int nextInt(int bound){
+    public int nextInt(int bound) {
         return (int) (this.random() % bound);
     }
 
@@ -31,7 +30,8 @@ public class ReplayablePseudoRandom {
      */
     public double nextDouble() {
         int RAND_MAX = Integer.MAX_VALUE;
-        return this.random() / (double)RAND_MAX ;
+        return this.random() / (double) RAND_MAX;
     }
 
 }
+
