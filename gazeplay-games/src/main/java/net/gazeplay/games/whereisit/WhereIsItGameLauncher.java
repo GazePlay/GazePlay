@@ -6,7 +6,7 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
-public class WhereIsItGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant> {
+public class WhereIsItGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new WhereIsItStats(scene, WhereIsItGameType.CUSTOMIZED.getGameName());

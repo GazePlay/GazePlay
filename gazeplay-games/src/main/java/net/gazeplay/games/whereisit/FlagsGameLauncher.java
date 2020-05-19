@@ -15,6 +15,6 @@ public class FlagsGameLauncher implements GameSpec.GameLauncher {
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.GameVariant gameVariant,
                                        Stats stats) {
-        return new WhereIsIt(WhereIsItGameType.FLAGS, 2, 2, false, gameContext, stats);
+        return new WhereIsIt(WhereIsItGameType.FLAGS, 2, false, gameContext, stats);
     }
 }

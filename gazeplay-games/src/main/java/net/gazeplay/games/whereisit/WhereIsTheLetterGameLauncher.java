@@ -6,7 +6,7 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
-public class WhereIsTheLetterGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant> {
+public class WhereIsTheLetterGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new WhereIsItStats(scene, WhereIsItGameType.LETTERS.getGameName());
@@ -14,9 +14,8 @@ public class WhereIsTheLetterGameLauncher implements GameSpec.GameLauncher<Stats
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
-                                       GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-        return new WhereIsIt(WhereIsItGameType.LETTERS, gameVariant.getWidth(),
-            gameVariant.getHeight(), false, gameContext, stats);
+                                       GameSpec.IntGameVariant gameVariant, Stats stats) {
+        return new WhereIsIt(WhereIsItGameType.LETTERS, gameVariant.getNumber(), false, gameContext, stats);
     }
 
 }

@@ -6,7 +6,7 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
-public class FindOddGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant> {
+public class FindOddGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new WhereIsItStats(scene, WhereIsItGameType.FINDODD.getGameName());
@@ -14,8 +14,7 @@ public class FindOddGameLauncher implements GameSpec.GameLauncher<Stats, GameSpe
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
-                                       GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-        return new WhereIsIt(WhereIsItGameType.FINDODD, gameVariant.getWidth(),
-            gameVariant.getHeight(), false, gameContext, stats);
+                                       GameSpec.IntGameVariant gameVariant, Stats stats) {
+        return new WhereIsIt(WhereIsItGameType.FINDODD, gameVariant.getNumber(), false, gameContext, stats);
     }
 }
