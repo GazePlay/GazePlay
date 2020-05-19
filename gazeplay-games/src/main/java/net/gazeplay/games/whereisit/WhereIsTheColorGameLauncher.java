@@ -15,7 +15,6 @@ public class WhereIsTheColorGameLauncher implements GameSpec.GameLauncher<Stats,
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
                                        GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-        return new WhereIsIt(WhereIsItGameType.COLORNAME, gameVariant.getWidth(),
-            gameVariant.getHeight(), false, gameContext, stats);
+        return new WhereIsIt(WhereIsItGameType.COLORNAME, gameVariant.getNumber(), false, gameContext, stats);
     }
 }

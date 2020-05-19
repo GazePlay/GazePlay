@@ -14,8 +14,7 @@ public class WhereIsItGameLauncher implements GameSpec.GameLauncher<Stats, GameS
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
-                                       GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-        return new WhereIsIt(WhereIsItGameType.CUSTOMIZED, gameVariant.getWidth(),
-            gameVariant.getHeight(), false, gameContext, stats);
+                                       GameSpec.IntGameVariant gameVariant, Stats stats) {
+        return new WhereIsIt(WhereIsItGameType.CUSTOMIZED, gameVariant.getNumber(), false, gameContext, stats);
     }
 }

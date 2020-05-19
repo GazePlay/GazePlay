@@ -41,19 +41,17 @@ public class WhereIsIt implements GameLifeCycle {
 
     private final WhereIsItGameType gameType;
 
-    private final int nbLines;
-    private final int nbColumns;
+    private final int number;
     private final boolean fourThree;
 
     private final IGameContext gameContext;
     private final Stats stats;
     private RoundDetails currentRoundDetails;
 
-    public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
+    public WhereIsIt(final WhereIsItGameType gameType, final int number, final boolean fourThree,
                      final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
-        this.nbLines = nbLines;
-        this.nbColumns = nbColumns;
+        this.number = number;
         this.gameType = gameType;
         this.fourThree = fourThree;
         this.stats = stats;
@@ -62,7 +60,7 @@ public class WhereIsIt implements GameLifeCycle {
     @Override
     public void launch() {
 
-        int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
+        int numberOfImagesToDisplayPerRound = number;
 
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
 
@@ -252,6 +250,10 @@ public class WhereIsIt implements GameLifeCycle {
 
         int posX = 0;
         int posY = 0;
+
+        // get dimensions for sizing
+        int nbLines, nbColumns;
+        nbLines = nbColumns = (number == 4) ? 2 : 3;
 
         final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree)
             .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());

@@ -10,10 +10,10 @@ public class WhereIsItGameVariantGenerator implements GameSpec.GameVariantGenera
     @Override
     public Set<GameSpec.GameVariant> getVariants() {
         return Sets.newLinkedHashSet(Lists.newArrayList(
-            new GameSpec.DimensionGameVariant(2, 2),
-            new GameSpec.DimensionGameVariant(2, 3),
-            new GameSpec.DimensionGameVariant(3, 2),
-            new GameSpec.DimensionGameVariant(3, 3)
+            new GameSpec.IntGameVariant(4),
+            //new GameSpec.DimensionGameVariant(2, 3),
+            //new GameSpec.DimensionGameVariant(3, 2),
+            new GameSpec.IntGameVariant(8)
         ));
     }
 }

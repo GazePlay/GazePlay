@@ -14,9 +14,8 @@ public class WhereIsTheAnimalGameLauncher implements GameSpec.GameLauncher<Stats
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
-                                       GameSpec.DimensionGameVariant gameVariant, Stats stats) {
-        return new WhereIsIt(WhereIsItGameType.ANIMALNAME, gameVariant.getWidth(),
-            gameVariant.getHeight(), false, gameContext, stats);
+                                       GameSpec.IntGameVariant gameVariant, Stats stats) {
+        return new WhereIsIt(WhereIsItGameType.ANIMALNAME, gameVariant.getNumber(), false, gameContext, stats);
     }
 
 }
