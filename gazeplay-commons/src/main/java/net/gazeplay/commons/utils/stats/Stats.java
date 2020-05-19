@@ -45,6 +45,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.*;
 
+import static java.lang.Math.pow;
+
 
 /**
  * Created by schwab on 16/08/2017.
@@ -265,8 +267,7 @@ public class Stats implements GazeMotionListener {
         final double y1 = movementHistory.get(index).getYValue();
         final double x2 = movementHistory.get(index - 1).getXValue();
         final double y2 = movementHistory.get(index - 1).getYValue();
-        final double eDistance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-
+        final double eDistance = Math.sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
         if (eDistance < 120 && movementHistory.get(index).getIntervalTime() > 10) {
             if (index == 1) {
                 areaOfInterestList.add(movementHistory.get(0));
@@ -274,6 +275,7 @@ public class Stats implements GazeMotionListener {
             areaOfInterestList.add(movementHistory.get(index));
         } else if (!areaOfInterestList.isEmpty()) {
             if (areaOfInterestList.size() > 2) {
+
                 allAOIListTemp.add(new ArrayList<>(areaOfInterestList));
 
                 final Point2D[] points = new Point2D[areaOfInterestList.size()];
@@ -297,8 +299,33 @@ public class Stats implements GazeMotionListener {
                 colorIterator = index % 7;
                 areaOfInterest.setStroke(colors[colorIterator]);
                 allAOIListPolygon.add(areaOfInterest);
+            }else if(eDistance > 200){
+                allAOIListTemp.add(new ArrayList<>(areaOfInterestList));
+                final float radius = 15;
+                final Point2D[] points = new Point2D[8];
+
+                for (int i = 0; i < 8; i++) {
+                    CoordinatesTracker coordinate = areaOfInterestList.get(0);
+                    points[i] = new Point2D(coordinate.getXValue()+pow(-1,i)*radius, coordinate.getYValue()+pow(-1,i)*radius);
+                }
+
+                final Double[] polygonPoints;
+                if (config.getConvexHullDisabledProperty().getValue()) {
+                    polygonPoints = calculateConvexHull(points);
+                } else {
+                    polygonPoints = calculateRectangle(points);
+                }
+
+                final Polygon areaOfInterest = new Polygon();
+                areaOfInterest.getPoints().addAll(polygonPoints);
+                allAOIListPolygonPt.add(polygonPoints);
+
+                colorIterator = index % 7;
+                areaOfInterest.setStroke(colors[colorIterator]);
+                allAOIListPolygon.add(areaOfInterest);
             }
             areaOfInterestList = new ArrayList<>();
+            areaOfInterestList.add(movementHistory.get(index));
         }
     }
 
@@ -417,6 +444,7 @@ public class Stats implements GazeMotionListener {
                         movementHistory
                             .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
                         movementHistoryidx++;
+                        log.info("movementHistory length {}",movementHistory.size());
                         if (movementHistoryidx > 1) {
                             generateAOIList(movementHistoryidx - 1, startTime);
                         }
