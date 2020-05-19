@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -14,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
@@ -24,6 +26,7 @@ import net.gazeplay.components.CssUtil;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
+@Slf4j
 public class GameVariantDialog extends Stage {
 
     public GameVariantDialog(
@@ -90,6 +93,7 @@ public class GameVariantDialog extends Stage {
             //
             choicePane.getChildren().add(button);
 
+
             EventHandler<Event> event = mouseEvent -> {
                 close();
                 root.setDisable(false);
@@ -99,6 +103,14 @@ public class GameVariantDialog extends Stage {
 
         }
 
+        if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) {
+            CheckBox facile = new CheckBox("Facile");
+            facile.setIndeterminate(false);
+            VBox bottom = new VBox();
+            bottom.getChildren().add(facile);
+            sceneContentPane.setBottom(bottom);
+        }
+
         Scene scene = new Scene(sceneContentPane, Color.TRANSPARENT);
 
         CssUtil.setPreferredStylesheets(config, scene, gazePlay.getCurrentScreenDimensionSupplier());
@@ -106,6 +118,7 @@ public class GameVariantDialog extends Stage {
         setScene(scene);
         setWidth(primaryStage.getWidth() / 2);
         setHeight(primaryStage.getHeight() / 2);
+        log.info("un truc : " + gameSpec.getGameSummary().getNameCode());
         // scene.getStylesheets().add(getClass().getResource("modal-dialog.css").toExternalForm());
     }
 
