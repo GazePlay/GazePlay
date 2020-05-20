@@ -29,6 +29,8 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 @Slf4j
 public class GameVariantDialog extends Stage {
 
+    private boolean easymode = false;
+
     public GameVariantDialog(
         final GazePlay gazePlay,
         final GameMenuController gameMenuController,
@@ -93,7 +95,11 @@ public class GameVariantDialog extends Stage {
             //
             choicePane.getChildren().add(button);
 
-
+            /*
+            if(variant instanceof GameSpec.DimensionDifficultyGameVariant && isEasymode()){
+                button.setVisible(false);
+            }
+            */
             EventHandler<Event> event = mouseEvent -> {
                 close();
                 root.setDisable(false);
@@ -104,11 +110,20 @@ public class GameVariantDialog extends Stage {
         }
 
         if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) {
-            CheckBox facile = new CheckBox("Facile");
+            CheckBox facile = new CheckBox("easy");
             facile.setIndeterminate(false);
             VBox bottom = new VBox();
             bottom.getChildren().add(facile);
             sceneContentPane.setBottom(bottom);
+            facile.setOnAction(actionEvent -> {
+                if (easymode) {
+                    easymode = false;
+                    log.info("easymode : " + easymode);
+                } else {
+                    easymode = true;
+                    log.info("easymode : " + easymode);
+                }
+            });
         }
 
         Scene scene = new Scene(sceneContentPane, Color.TRANSPARENT);
@@ -118,8 +133,11 @@ public class GameVariantDialog extends Stage {
         setScene(scene);
         setWidth(primaryStage.getWidth() / 2);
         setHeight(primaryStage.getHeight() / 2);
-        log.info("un truc : " + gameSpec.getGameSummary().getNameCode());
         // scene.getStylesheets().add(getClass().getResource("modal-dialog.css").toExternalForm());
+    }
+
+    public boolean isEasymode() {
+        return easymode;
     }
 
 }

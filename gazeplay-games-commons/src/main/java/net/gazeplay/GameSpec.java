@@ -45,6 +45,21 @@ public class GameSpec {
     }
 
     @Data
+    public static class DimensionDifficultyGameVariant implements GameVariant {
+
+        private final int width;
+
+        private final int height;
+
+        private final String difficulty;
+
+        @Override
+        public String getLabel(final Translator translator) {
+            return width + "x" + height + " easy";
+        }
+    }
+
+    @Data
     public static class IntGameVariant implements GameVariant {
 
         private final int number;
