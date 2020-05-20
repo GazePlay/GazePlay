@@ -444,7 +444,6 @@ public class Stats implements GazeMotionListener {
                         movementHistory
                             .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
                         movementHistoryidx++;
-                        log.info("movementHistory length {}",movementHistory.size());
                         if (movementHistoryidx > 1) {
                             generateAOIList(movementHistoryidx - 1, startTime);
                         }
