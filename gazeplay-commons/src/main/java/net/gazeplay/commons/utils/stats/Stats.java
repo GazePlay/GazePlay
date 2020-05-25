@@ -273,7 +273,7 @@ public class Stats implements GazeMotionListener {
                 areaOfInterestList.add(movementHistory.get(0));
             }
             areaOfInterestList.add(movementHistory.get(index));
-        } else if (!areaOfInterestList.isEmpty()) {
+        } else {
             if (areaOfInterestList.size() > 2) {
 
                 allAOIListTemp.add(new ArrayList<>(areaOfInterestList));
@@ -299,7 +299,8 @@ public class Stats implements GazeMotionListener {
                 colorIterator = index % 7;
                 areaOfInterest.setStroke(colors[colorIterator]);
                 allAOIListPolygon.add(areaOfInterest);
-            }else if(eDistance > 200){
+            }else if(eDistance > 500 && movementHistory.get(index).getIntervalTime() > 500){
+                areaOfInterestList.add(movementHistory.get(index));
                 allAOIListTemp.add(new ArrayList<>(areaOfInterestList));
                 final float radius = 15;
                 final Point2D[] points = new Point2D[8];
@@ -325,7 +326,6 @@ public class Stats implements GazeMotionListener {
                 allAOIListPolygon.add(areaOfInterest);
             }
             areaOfInterestList = new ArrayList<>();
-            areaOfInterestList.add(movementHistory.get(index));
         }
     }
 

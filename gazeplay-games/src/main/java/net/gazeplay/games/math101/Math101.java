@@ -16,6 +16,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.TargetAOI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,8 @@ public class Math101 implements GameLifeCycle {
 
     private final Stats stats;
 
+    private final ArrayList<TargetAOI> targetAOIList;
+
     private final int nbLines;
 
     private final int nbColumns;
@@ -59,6 +62,7 @@ public class Math101 implements GameLifeCycle {
         this.nbLines = 2;
         this.nbColumns = 3;
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.targetAOIList = new ArrayList<>();
     }
 
     private static Formula generateRandomFormula(final MathGameType gameType, final int maxValue) {
@@ -169,6 +173,8 @@ public class Math101 implements GameLifeCycle {
         stack.setLayoutX(boardX);
         stack.setLayoutY(boardY);
         final Rectangle boardRectangle = new Rectangle(boardX, boardY, boardWidth, boardHeight);
+        final TargetAOI targetAOI = new TargetAOI(boardX, boardY, (int)boardHeight, System.currentTimeMillis());
+        targetAOIList.add(targetAOI);
         boardRectangle.setFill(new ImagePattern(new Image("data/math101/images/blackboard.png"), 0, 0, 1, 1, true));
 
         final Random r = new Random();
@@ -194,8 +200,19 @@ public class Math101 implements GameLifeCycle {
         stats.incrementNumberOfGoalsToReach();
     }
 
+    private ArrayList<TargetAOI> getTargetAOIList() {
+        return this.targetAOIList;
+    }
+
     @Override
     public void dispose() {
+
+        for (int i=0; i<targetAOIList.size(); i++){
+            targetAOIList.get(i).setTimeEnded(System.currentTimeMillis());
+        }
+
+        stats.setTargetAOIList(targetAOIList);
+
         if (currentRoundDetails != null) {
             if (currentRoundDetails.cardList != null) {
                 gameContext.getChildren().removeAll(currentRoundDetails.cardList);
@@ -294,6 +311,9 @@ public class Math101 implements GameLifeCycle {
 
                 final double positionX = computePositionX(boxWidth, cardWidth, currentColumnIndex);
                 final double positionY = computePositionY(boxHeight, cardHeight, currentLineIndex);
+
+                final TargetAOI targetAOI = new TargetAOI(positionX, positionY, (int)boxWidth, System.currentTimeMillis());
+                targetAOIList.add(targetAOI);
 
                 final Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, currentValue, gameContext, stats, this, fixationlength);
 
