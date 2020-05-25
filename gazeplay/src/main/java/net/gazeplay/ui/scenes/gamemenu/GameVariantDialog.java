@@ -6,10 +6,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -53,7 +55,13 @@ public class GameVariantDialog extends Stage {
         choicePane.setHgap(10);
         choicePane.setVgap(10);
 
-        ScrollPane choicePanelScroller = new ScrollPane(choicePane);
+        FlowPane choicePaneEasy = new FlowPane();
+        choicePaneEasy.setAlignment(Pos.CENTER);
+        choicePaneEasy.setHgap(10);
+        choicePaneEasy.setVgap(10);
+
+        ScrollPane choicePanelScroller = new ScrollPane();
+        choicePanelScroller.setContent(choicePane);
         //choicePanelScroller.setMinHeight(primaryStage.getHeight() / 5);
         //choicePanelScroller.setMinWidth(primaryStage.getWidth() / 5);
         choicePanelScroller.setFitToWidth(true);
@@ -93,38 +101,50 @@ public class GameVariantDialog extends Stage {
             button.setMaxWidth(primaryStage.getWidth() / 8);
             button.setMaxHeight(primaryStage.getHeight() / 8);
             //
-            choicePane.getChildren().add(button);
-
-            /*
-            if(variant instanceof GameSpec.DimensionDifficultyGameVariant && isEasymode()){
-                button.setVisible(false);
+            if (variant instanceof GameSpec.DimensionDifficultyGameVariant) {
+                choicePaneEasy.getChildren().add(button);
+            } else {
+                choicePane.getChildren().add(button);
             }
-            */
+
+            if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) {
+                if (variant instanceof GameSpec.DimensionGameVariant) {
+                    variant = new GameSpec.DimensionDifficultyGameVariant(((GameSpec.DimensionGameVariant) variant).getWidth(), ((GameSpec.DimensionGameVariant) variant).getHeight(), "normal");
+                }
+                ToggleGroup group = new ToggleGroup();
+                RadioButton normal = new RadioButton("normal");
+                normal.setToggleGroup(group);
+                normal.setSelected(true);
+                RadioButton facile = new RadioButton("easy");
+                facile.setToggleGroup(group);
+                HBox bottom = new HBox();
+                bottom.getChildren().add(facile);
+                bottom.getChildren().add(normal);
+                sceneContentPane.setBottom(bottom);
+                facile.setOnAction(actionEvent -> {
+                    if (!easymode) {
+                        easymode = true;
+                        choicePanelScroller.setContent(choicePaneEasy);
+                    }
+                });
+                normal.setOnAction(actionEvent -> {
+                    if (easymode) {
+                        easymode = false;
+                        choicePanelScroller.setContent(choicePane);
+                    }
+                });
+            }
+
+            GameSpec.GameVariant finalVariant = variant;
             EventHandler<Event> event = mouseEvent -> {
                 close();
                 root.setDisable(false);
-                gameMenuController.chooseGame(gazePlay, gameSpec, variant);
+                gameMenuController.chooseGame(gazePlay, gameSpec, finalVariant);
             };
             button.addEventHandler(MOUSE_CLICKED, event);
 
         }
 
-        if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) {
-            CheckBox facile = new CheckBox("easy");
-            facile.setIndeterminate(false);
-            VBox bottom = new VBox();
-            bottom.getChildren().add(facile);
-            sceneContentPane.setBottom(bottom);
-            facile.setOnAction(actionEvent -> {
-                if (easymode) {
-                    easymode = false;
-                    log.info("easymode : " + easymode);
-                } else {
-                    easymode = true;
-                    log.info("easymode : " + easymode);
-                }
-            });
-        }
 
         Scene scene = new Scene(sceneContentPane, Color.TRANSPARENT);
 

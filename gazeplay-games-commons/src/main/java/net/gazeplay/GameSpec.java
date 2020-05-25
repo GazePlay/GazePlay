@@ -55,7 +55,7 @@ public class GameSpec {
 
         @Override
         public String getLabel(final Translator translator) {
-            return width + "x" + height + " easy";
+            return width + "x" + height + " " + difficulty;
         }
     }
 
