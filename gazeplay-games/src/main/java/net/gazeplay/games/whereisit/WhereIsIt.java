@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.InteractionMode;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -49,6 +50,8 @@ public class WhereIsIt implements GameLifeCycle {
     private final Stats stats;
     private RoundDetails currentRoundDetails;
 
+    public boolean isCrossingInteraction;
+
     public WhereIsIt(final WhereIsItGameType gameType, final int number, final boolean fourThree,
                      final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
@@ -56,10 +59,27 @@ public class WhereIsIt implements GameLifeCycle {
         this.fourThree = fourThree;
         this.stats = stats;
 
+        // check if crossing interaction mode
+        this.isCrossingInteraction = gameContext.getConfiguration().getInteractionMode().equals(InteractionMode.crossing.toString());
+
         // Calculate rows and columns
 
         // get dimensions for sizing
-        nbLines = nbColumns = (number == 4) ? 2 : 3;
+        switch(number)
+        {
+            case 6:
+                nbLines = 2;
+                nbColumns = 3;
+                break;
+
+            case 8:
+                nbLines = nbColumns = 3;
+                break;
+
+            default:
+                nbLines = nbColumns = 2;
+                break;
+        }
     }
 
     @Override
@@ -73,8 +93,15 @@ public class WhereIsIt implements GameLifeCycle {
         final int winnerImageIndexAmongDisplayedImages = random.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
-        currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, random,
-            winnerImageIndexAmongDisplayedImages);
+        if(isCrossingInteraction)
+        {
+            currentRoundDetails = pickAndBuildRandomPicturesCrossing(numberOfImagesToDisplayPerRound, random, winnerImageIndexAmongDisplayedImages);
+        }
+        else
+        {
+            currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, random, winnerImageIndexAmongDisplayedImages);
+        }
+
 
         if (currentRoundDetails != null) {
 
@@ -221,6 +248,178 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRound, final Random random,
+                                            final int winnerImageIndexAmongDisplayedImages) {
+
+        final Configuration config = gameContext.getConfiguration();
+
+        final int filesCount;
+        final String directoryName;
+        File[] imagesFolders = new File[1];
+        Set<String> resourcesFolders = Collections.emptySet();
+
+        if (this.gameType == CUSTOMIZED) {
+            final File imagesDirectory = new File(config.getWhereIsItDir() + "/images/");
+            directoryName = imagesDirectory.getPath();
+            imagesFolders = imagesDirectory.listFiles();
+            filesCount = imagesFolders == null ? 0 : imagesFolders.length;
+        } else {
+            final String imagesDirectory = "data/" + this.gameType.getResourcesDirectoryName() + "/images/";
+            directoryName = imagesDirectory;
+            resourcesFolders = ResourceFileManager.getResourceFolders(imagesDirectory);
+            filesCount = resourcesFolders.size();
+        }
+
+        final String language = config.getLanguage();
+
+        if (filesCount == 0) {
+            log.warn("No images found in Directory " + directoryName);
+            error(language);
+            return null;
+        }
+        final int randomFolderIndex = random.nextInt(filesCount);
+
+        final int step = 1;
+
+        int posX = 0;
+        int posY = 0;
+
+        final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree)
+            .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
+
+        final List<PictureCard> pictureCardList = new ArrayList<>();
+        String questionSoundPath = null;
+        String question = null;
+        List<Image> pictograms = null;
+        if (this.gameType == FINDODD) {
+            int index = ((randomFolderIndex + step) % filesCount) + 1;
+            for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
+
+                if (i == winnerImageIndexAmongDisplayedImages) {
+                    index = (index + 1) % filesCount;
+                } else {
+                    index = ((randomFolderIndex + step) % filesCount) + 1;
+                }
+
+                final String folder = (String) resourcesFolders.toArray()[(index) % filesCount];
+                final String folderName = (new File(folder)).getName();
+
+                final Set<String> files = ResourceFileManager.getResourcePaths(folder);
+
+                final int numFile = random.nextInt(files.size());
+
+                final String randomImageFile = (String) files.toArray()[numFile];
+
+                if (winnerImageIndexAmongDisplayedImages == i) {
+
+                    // TODO for now the line under is commented to avoid freeze
+                    //questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
+
+                    question = Multilinguism.getSingleton().getTrad("findodd", config.getLanguage());
+
+                    pictograms = getPictogramms(folderName);
+
+                }
+
+                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, winnerImageIndexAmongDisplayedImages == i,
+                    randomImageFile + "", stats, this);
+
+                pictureCardList.add(pictureCard);
+
+                if ((i + 1) % nbColumns != 0) {
+                    posX++;
+                } else {
+                    posY++;
+                    posX = 0;
+                }
+            }
+
+        } else if (this.gameType == CUSTOMIZED) {
+            for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
+
+                final int index = (randomFolderIndex + step * i) % filesCount;
+
+                final File folder = imagesFolders[(index) % filesCount];
+
+                if (!folder.isDirectory()) {
+                    continue;
+                }
+
+                final File[] files = getFiles(folder);
+
+                final int numFile = random.nextInt(files.length);
+
+                final File randomImageFile = files[numFile];
+
+                if (winnerImageIndexAmongDisplayedImages == i) {
+
+                    questionSoundPath = getPathSound(folder.getName(), language);
+
+                    question = getQuestionText(folder.getName(), language);
+
+                    pictograms = getPictogramms(folder.getName());
+
+                }
+
+                // The image file needs 'file:' prepended as this will get images from a local source, not resources.
+                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
+                    winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats, this);
+
+                pictureCardList.add(pictureCard);
+
+
+                if ((i + 1) % nbColumns != 0) {
+                    posX++;
+                } else {
+                    posY++;
+                    posX = 0;
+                }
+            }
+        } else {
+            for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
+
+                final int index = (randomFolderIndex + step * i) % filesCount;
+
+                final String folder = (String) resourcesFolders.toArray()[(index) % filesCount];
+                final String folderName = (new File(folder)).getName();
+
+                final Set<String> files = ResourceFileManager.getResourcePaths(folder);
+
+                final int numFile = random.nextInt(files.size());
+
+                final String randomImageFile = (String) files.toArray()[numFile];
+
+                if (winnerImageIndexAmongDisplayedImages == i) {
+
+                    questionSoundPath = getPathSound(folderName, language);
+
+                    question = getQuestionText(folderName, language);
+
+                    pictograms = getPictogramms(folderName);
+
+                }
+
+                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
+                    winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
+
+                pictureCardList.add(pictureCard);
+
+
+                if ((i + 1) % nbColumns != 0) {
+                    posX++;
+                } else {
+                    posY++;
+                    posX = 0;
+                }
+            }
+        }
+        return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath, question,
+            pictograms);
+    }
+
+    RoundDetails pickAndBuildRandomPicturesCrossing(final int numberOfImagesToDisplayPerRound, final Random random,
                                             final int winnerImageIndexAmongDisplayedImages) {
 
         final Configuration config = gameContext.getConfiguration();

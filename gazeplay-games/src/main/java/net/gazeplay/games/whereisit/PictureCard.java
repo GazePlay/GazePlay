@@ -19,6 +19,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.InteractionMode;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -97,10 +98,13 @@ class PictureCard extends Group {
 
         this.addEventFilter(GazeEvent.ANY, customInputEventHandler);
 
-        try {
-            robot = new Robot();
-        } catch (AWTException e) {
-            e.printStackTrace();
+        if(gameInstance.isCrossingInteraction)
+        {
+            try {
+                robot = new Robot();
+            } catch (AWTException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -138,11 +142,13 @@ class PictureCard extends Group {
 
             if (winner) {
                 onCorrectCardSelected(gameInstance);
-                robot.mouseMove((int)(width/2 - offsetWidth), (int)(height/2 - offsetHeight));
+                if(gameInstance.isCrossingInteraction)
+                    robot.mouseMove((int)(width/2 - offsetWidth), (int)(height/2 - offsetHeight));
             } else {
                 // bad card
                 onWrongCardSelected(gameInstance);
-                robot.mouseMove((int)(width/2 - offsetWidth), (int)(height/2 - offsetHeight));
+                if(gameInstance.isCrossingInteraction)
+                    robot.mouseMove((int)(width/2 - offsetWidth), (int)(height/2 - offsetHeight));
             }
         };
     }
