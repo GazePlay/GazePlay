@@ -114,7 +114,7 @@ public class Stats implements GazeMotionListener {
     private Long currentRoundStartTime;
 
 
-    //peremeters for AOI
+    //parameters for AOI
     private int movementHistoryidx = 0;
     private final List<AreaOfInterestProps> allAOIList = new ArrayList<>();
     private List<CoordinatesTracker> areaOfInterestList = new ArrayList<>();
@@ -299,7 +299,7 @@ public class Stats implements GazeMotionListener {
                 colorIterator = index % 7;
                 areaOfInterest.setStroke(colors[colorIterator]);
                 allAOIListPolygon.add(areaOfInterest);
-            }else if(eDistance > 500 && movementHistory.get(index).getIntervalTime() > 500){
+            }else if(eDistance > 500){
                 areaOfInterestList.add(movementHistory.get(index));
                 allAOIListTemp.add(new ArrayList<>(areaOfInterestList));
                 final float radius = 15;
@@ -470,9 +470,9 @@ public class Stats implements GazeMotionListener {
                         movementHistory
                             .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
                         movementHistoryidx++;
-                        if (movementHistoryidx > 1) {
-                            generateAOIList(movementHistoryidx - 1, startTime);
-                        }
+                        //if (movementHistoryidx > 1) {
+                            //generateAOIList(movementHistoryidx - 1, startTime);
+                        //}
                         previousTime = timeElapsedMillis;
                         counter = 0;
                     }
