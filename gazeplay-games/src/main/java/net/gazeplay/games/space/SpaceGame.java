@@ -522,7 +522,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             bulletTransition.setOnFinished(event -> {
                 bulletListRec.remove(bulletRec);
                 middleLayer.getChildren().remove(bulletRec);
-                //System.gc();
+                //System.gc(); //this fonction is usefull to remove freezes from bullets. He is commented because of gradle dislike this fonction so we can't merge with this.
             });
 
             bulletTransition.play();
