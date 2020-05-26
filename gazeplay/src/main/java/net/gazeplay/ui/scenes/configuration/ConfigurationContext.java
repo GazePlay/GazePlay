@@ -31,6 +31,7 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
+import net.gazeplay.commons.gaze.InteractionMode;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
@@ -227,6 +228,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             Spinner<Double> input = buildSpinner(0.3, 10, (double) config.getFixationLength() / 1000,
                 0.1, config.getFixationlengthProperty());
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
+        // Interaction Mode choice
+        {
+            I18NText label = new I18NText(translator, "Interaction Mode", COLON);
+
+            ChoiceBox<InteractionMode> input = buildInteractionModeConfigChooser(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -743,10 +753,38 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return choiceBox;
     }
 
+    static ChoiceBox<InteractionMode> buildInteractionModeConfigChooser(Configuration configuration) {
+        ChoiceBox<InteractionMode> choiceBox = new ChoiceBox<>();
+
+        choiceBox.getItems().addAll(InteractionMode.values());
+
+        InteractionMode selectedInteractionMode = findSelectedInteractionMode(configuration);
+        choiceBox.getSelectionModel().select(selectedInteractionMode);
+
+        choiceBox.setPrefWidth(PREF_WIDTH);
+        choiceBox.setPrefHeight(PREF_HEIGHT);
+
+        choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            final String newPropertyValue = newValue.name();
+            configuration.getInteractionmodeProperty().setValue(newPropertyValue);
+        });
+
+        return choiceBox;
+    }
+
     private static EyeTracker findSelectedEyeTracker(Configuration configuration) {
         for (EyeTracker currentEyeTracker : EyeTracker.values()) {
             if (currentEyeTracker.name().equals(configuration.getEyeTracker())) {
                 return currentEyeTracker;
+            }
+        }
+        return null;
+    }
+
+    private static InteractionMode findSelectedInteractionMode(Configuration configuration) {
+        for (InteractionMode currentInteractionMode : InteractionMode.values()) {
+            if (currentInteractionMode.name().equals(configuration.getInteractionMode())) {
+                return currentInteractionMode;
             }
         }
         return null;

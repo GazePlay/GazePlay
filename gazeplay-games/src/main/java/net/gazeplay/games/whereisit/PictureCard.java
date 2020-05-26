@@ -24,6 +24,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.awt.Robot;
 import java.awt.AWTException;
+import java.awt.event.MouseMotionListener;
 
 @Slf4j
 @ToString
@@ -54,6 +55,8 @@ class PictureCard extends Group {
     private final PictureCard.CustomInputEventHandler customInputEventHandler;
 
     private final WhereIsIt gameInstance;
+
+    Robot robot;
 
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
                 boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsIt gameInstance) {
@@ -93,6 +96,12 @@ class PictureCard extends Group {
         this.addEventFilter(MouseEvent.ANY, customInputEventHandler);
 
         this.addEventFilter(GazeEvent.ANY, customInputEventHandler);
+
+        try {
+            robot = new Robot();
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
     }
 
     private Timeline createProgressIndicatorTimeLine(WhereIsIt gameInstance) {
@@ -124,25 +133,16 @@ class PictureCard extends Group {
             final double width = screenDimension.getWidth();
             final double height = screenDimension.getHeight();
 
+            double offsetWidth = width/50;
+            double offsetHeight = height/27;
+
             if (winner) {
                 onCorrectCardSelected(gameInstance);
-                Robot robot = null;
-                try {
-                    robot = new Robot();
-                } catch (AWTException e) {
-                    e.printStackTrace();
-                }
-                robot.mouseMove((int)width/2, (int)height/2);
+                robot.mouseMove((int)(width/2 - offsetWidth), (int)(height/2 - offsetHeight));
             } else {
                 // bad card
                 onWrongCardSelected(gameInstance);
-                Robot robot = null;
-                try {
-                    robot = new Robot();
-                } catch (AWTException e) {
-                    e.printStackTrace();
-                }
-                robot.mouseMove((int)width/2, (int)height/2);
+                robot.mouseMove((int)(width/2 - offsetWidth), (int)(height/2 - offsetHeight));
             }
         };
     }
@@ -316,7 +316,6 @@ class PictureCard extends Group {
             progressIndicator.setVisible(false);
             progressIndicator.setProgress(0);
         }
-
     }
 
 }

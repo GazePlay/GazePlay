@@ -23,6 +23,7 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
+import net.gazeplay.commons.gaze.InteractionMode;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
@@ -394,6 +395,22 @@ class ConfigurationContextTest {
         result.setValue(EyeTracker.eyetribe);
 
         assertEquals("eyetribe", eyeTrackerProperty.getValue());
+    }
+
+    @Test
+    void shouldBuildInteractionModeChooser() {
+        StringProperty interactionModeProperty = new SimpleStringProperty("dwell_time");
+
+        when(mockConfig.getInteractionMode()).thenReturn(interactionModeProperty.getValue());
+        when(mockConfig.getInteractionmodeProperty()).thenReturn(interactionModeProperty);
+
+        ChoiceBox<InteractionMode> result = ConfigurationContext.buildInteractionModeConfigChooser(mockConfig);
+
+        assertEquals(2, result.getItems().size());
+
+        result.setValue(InteractionMode.crossing);
+
+        assertEquals("crossing", interactionModeProperty.getValue());
     }
 
     @Test

@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.observableproperties.*;
 import net.gazeplay.commons.gaze.EyeTracker;
+import net.gazeplay.commons.gaze.InteractionMode;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
 import java.beans.PropertyChangeListener;
@@ -24,6 +25,7 @@ import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 public class Configuration {
 
     private static final String PROPERTY_NAME_EYETRACKER = "EYETRACKER";
+    private static final String PROPERTY_NAME_INTERACTION_MODE = "INTERACTION_MODE";
     private static final String PROPERTY_NAME_LANGUAGE = "LANGUAGE";
     private static final String PROPERTY_NAME_COUNTRY = "COUNTRY";
     private static final String PROPERTY_NAME_FILEDIR = "FILEDIR";
@@ -62,6 +64,8 @@ public class Configuration {
 
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
+    private static final String DEFAULT_VALUE_INTERACTION_MODE = InteractionMode.dwell_time.toString();
+
     private static final String DEFAULT_VALUE_LANGUAGE = "fra";
     private static final String DEFAULT_VALUE_COUNTRY = "FR";
     private static final int DEFAULT_VALUE_FIXATION_LENGTH = 500;
@@ -118,6 +122,9 @@ public class Configuration {
 
     @Getter
     private final StringProperty eyetrackerProperty;
+
+    @Getter
+    private final StringProperty interactionmodeProperty;
 
     @Getter
     private final StringProperty languageProperty;
@@ -215,6 +222,8 @@ public class Configuration {
 
         eyetrackerProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER, propertyChangeListener);
 
+        interactionmodeProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_INTERACTION_MODE, DEFAULT_VALUE_INTERACTION_MODE, propertyChangeListener);
+
         musicVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_MUSIC_VOLUME, DEFAULT_VALUE_MUSIC_VOLUME, propertyChangeListener);
         effectsVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_EFFECTS_VOLUME, DEFAULT_VALUE_EFFECTS_VOLUME, propertyChangeListener);
 
@@ -290,6 +299,10 @@ public class Configuration {
 
     public String getEyeTracker() {
         return eyetrackerProperty.getValue();
+    }
+
+    public String getInteractionMode() {
+        return interactionmodeProperty.getValue();
     }
 
     public String getQuitKey() {
