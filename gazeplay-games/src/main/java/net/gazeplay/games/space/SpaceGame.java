@@ -89,31 +89,19 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     private final Multilinguism translate;
 
     private TranslateTransition bulletTransition;
-    private ParallelTransition parallelTransition;
-    private ParallelTransition parallelTransition2;
-    private ParallelTransition parallelTransition3;
     private ParallelTransition parallelTransition4;
     private SequentialTransition sequentialTransition2;
-    private FadeTransition bibouleDisappear;
     private FadeTransition bulletDisappear;
-    private FadeTransition spaceshipDisappear;
-    private FadeTransition bulletBibouleDisappear;
     private FadeTransition bossDisappear;
     private FadeTransition bossFade;
     private FadeTransition bossFade2;
-    private FadeTransition bulletBossDisappear;
 
-    private int bulletValue;
     private int bibouleValue;
-    private int bibouleBulletValue;
-    private int bossBulletValue;
     private final ArrayList<Rectangle> bulletListRec;
     private final ArrayList<Rectangle> bulletBibouleListRec;
     private final ArrayList<Rectangle> bulletBossListRec;
     private final ArrayList<Rectangle> spaceshipDestroyed;
-
     private int bossHit;
-
 
     public SpaceGame(final IGameContext gameContext, final SpaceGameStats stats) {
         this.spaceGameStats = stats;
@@ -189,7 +177,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         scoreText.setWrappingWidth(dimension2D.getWidth());
         foregroundLayer.getChildren().add(scoreText);
 
-        // Menu
         final int fixationLength = configuration.getFixationLength();
 
         shade = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
@@ -214,7 +201,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
-        // Interaction
         gazeTarget = new Point2D(dimension2D.getWidth() / 2, dimension2D.getHeight() / 2);
 
         interactionOverlay = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
@@ -234,10 +220,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(interactionOverlay);
 
-        this.bulletValue = 0;
         this.bibouleValue = 0;
-        this.bossBulletValue = 0;
-        this.bibouleBulletValue = 0;
         this.bossHit = 0;
         this.bulletListRec = new ArrayList<>();
         this.biboulesKilled = new ArrayList<>();
@@ -251,7 +234,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
     @Override
     public void launch() {
-        // hide end game menu
         shade.setOpacity(0);
         restartButton.disable();
         finalScoreText.setOpacity(0);
@@ -268,9 +250,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         bulletBossListRec.clear();
         bosses.clear();
         bossKilled.clear();
-        // for (Timeline t : timelineList){
-        // t.stop();
-        // }
 
         spaceship = new Rectangle(dimension2D.getWidth() / 2, 6 * dimension2D.getHeight() / 7,
             dimension2D.getWidth() / 8, dimension2D.getHeight() / 7);
@@ -350,13 +329,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         }
         computeBulletBoss();
 
-        // bossValue += 1;
-        // if (bossValue == 3000) {
-        // if (bosses.size() < 1) {
-        // displayBoss();
-        // }
-        // bossValue = 0;
-        // }
     }
 
     private void removeAll() {
@@ -571,20 +543,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                             bibouleBoolean = true;
                         }
                         if (bibouleBoolean) {
-                            // bibouleDisappear = new FadeTransition(Duration.millis(1000), b);
-                            // bibouleDisappear.setFromValue(1);
-                            // bibouleDisappear.setToValue(0);
-                            // bibouleDisappear.setCycleCount(1);
-                            // bibouleDisappear.setInterpolator(Interpolator.LINEAR);
-                            //
-                            // bulletDisappear = new FadeTransition(Duration.millis(100), r);
-                            // bulletDisappear.setFromValue(1);
-                            // bulletDisappear.setToValue(0);
-                            // bulletDisappear.setCycleCount(1);
-                            // bulletDisappear.setInterpolator(Interpolator.LINEAR);
-                            //
-                            // parallelTransition = new ParallelTransition(bibouleDisappear, bulletDisappear);
-                            // parallelTransition.play();
 
                             bulletListRec.remove(r);
                             biboules.remove(b);
@@ -602,8 +560,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
                 colliding2.addListener((obs, oldValue, newValue) -> {
                     if (newValue) {
-                        //log.info("Hit the boss");
-
                         bulletListRec.remove(r);
 
                         boolean bossHitBoolean = false;
@@ -672,9 +628,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                             }
                         }
 
-                    } else {
-                        //log.info("Not hit the boss");
                     }
+
                 });
 
                 if (r.getY() < 0) {
@@ -726,25 +681,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                         }
 
                         if (deathBoolean) {
-
-
-                            // spaceshipDisappear = new FadeTransition(Duration.millis(1000), spaceship);
-                            // spaceshipDisappear.setFromValue(1);
-                            // spaceshipDisappear.setToValue(0);
-                            // spaceshipDisappear.setCycleCount(1);
-                            // spaceshipDisappear.setInterpolator(Interpolator.LINEAR);
-                            //
-                            // bulletBibouleDisappear = new FadeTransition(Duration.millis(100), rb);
-                            // bulletBibouleDisappear.setFromValue(1);
-                            // bulletBibouleDisappear.setToValue(0);
-                            // bulletBibouleDisappear.setCycleCount(1);
-                            // bulletBibouleDisappear.setInterpolator(Interpolator.LINEAR);
-                            //
-                            // parallelTransition2 = new ParallelTransition(spaceshipDisappear,
-                            // bulletBibouleDisappear);
-                            //
-                            // parallelTransition2.play();
-
                             removeAll();
                             death();
                             spaceshipDestroyed.remove(spaceship);
@@ -797,41 +733,14 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
                         }
 
                         if (deathBoolean) {
-
-                            //spaceshipDisappear = new FadeTransition(Duration.millis(1000), spaceship);
-                            //spaceshipDisappear.setFromValue(1);
-                            //spaceshipDisappear.setToValue(0);
-                            //spaceshipDisappear.setCycleCount(1);
-                            //spaceshipDisappear.setInterpolator(Interpolator.LINEAR);
-
-                            //bulletBossDisappear = new FadeTransition(Duration.millis(100), rboss);
-                            //bulletBossDisappear.setFromValue(1);
-                            //bulletBossDisappear.setToValue(0);
-                            //bulletBossDisappear.setCycleCount(1);
-                            //bulletBossDisappear.setInterpolator(Interpolator.LINEAR);
-
-                            //parallelTransition3 = new ParallelTransition(spaceshipDisappear,
-                            //    bulletBossDisappear);
-
-                            //parallelTransition3.play();
                             backgroundLayer.getChildren().remove(rboss);
                             removeAll();
                             death();
                             spaceshipDestroyed.remove(spaceship);
                         }
-                        // }
-
                     }
                 });
-                /*
-                if (rboss.getY() >= dimension2D.getHeight()) {
-                    bulletBibouleListRec.remove(rboss);
-                    backgroundLayer.getChildren().remove(rboss);
-                }
-                */
             }
         }
-
-
     }
 }
