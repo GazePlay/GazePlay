@@ -138,7 +138,7 @@ public class Moles extends Parent implements GameLifeCycle {
         TimerTask tache = new TimerTask() {
             public void run() {
 
-                int n = r.nextInt();
+                int n = (int) r.random();
                 if (nbMolesOut.get() <= 3) {
                     chooseMoleToOut(r);
                 } else if ((nbMolesOut.get() <= 4) && (n % 4 == 0)) {
