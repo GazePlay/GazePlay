@@ -56,6 +56,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private List<CoordinatesTracker> areaOfInterestList;
 
     private final List<List> allAOIListTemp;
+    private final List<int[]> startAndEndIdx;
     private final List<Polygon> allAOIListPolygon;
     private final List<Double[]> allAOIListPolygonPt;
 
@@ -95,6 +96,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         graphicsPane = new Pane();
         movementHistory = stats.getMovementHistoryWithTime();
         allAOIListTemp = stats.getAllAOIListTemp();
+        startAndEndIdx = stats.getStartAndEndIdx();
         allAOIListPolygon = stats.getAllAOIListPolygon();
         allAOIListPolygonPt = stats.getAllAOIListPolygonPt();
 
@@ -420,8 +422,10 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             int centerX = 0;
             int centerY = 0;
 
-            final int movementHistoryEndingIndex = index - 1;
-            final int movementHistoryStartingIndex = movementHistoryEndingIndex - areaOfInterestList.size();
+            final int movementHistoryEndingIndex = startAndEndIdx.get(i)[1];
+            final int movementHistoryStartingIndex = startAndEndIdx.get(i)[0];
+            log.info("areaOfInterestList size :{}",areaOfInterestList.size());
+            log.info("start: {} end: {}",movementHistoryStartingIndex,movementHistoryEndingIndex);
             final Point2D[] points = new Point2D[areaOfInterestList.size()];
             int j;
             for (j = 0; j < areaOfInterestList.size(); j++) {
@@ -440,6 +444,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
                 centerY, allAOIListPolygonPt.get(i), points, movementHistoryStartingIndex, movementHistoryEndingIndex,
                 allAOIListPolygon.get(i), infoBox, (long) areaStartTime, (long) areaEndTime);
             allAOIList.add(areaOfInterestProps);
+
         }
     }
 

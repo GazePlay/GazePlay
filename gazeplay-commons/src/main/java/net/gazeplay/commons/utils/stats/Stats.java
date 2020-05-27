@@ -121,6 +121,8 @@ public class Stats implements GazeMotionListener {
     @Getter
     private final List<List> allAOIListTemp = new ArrayList<>();
     @Getter
+    private final List<int[]> startAndEndIdx = new ArrayList<>();
+    @Getter
     private final List<Polygon> allAOIListPolygon = new ArrayList<>();
     @Getter
     private final List<Double[]> allAOIListPolygonPt = new ArrayList<>();
@@ -268,7 +270,7 @@ public class Stats implements GazeMotionListener {
         final double x2 = movementHistory.get(index - 1).getXValue();
         final double y2 = movementHistory.get(index - 1).getYValue();
         final double eDistance = Math.sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
-        if (eDistance < 120 && movementHistory.get(index).getIntervalTime() > 10) {
+        if (eDistance < 180 && movementHistory.get(index).getIntervalTime() > 5) {
             if (index == 1) {
                 areaOfInterestList.add(movementHistory.get(0));
             }
@@ -277,6 +279,8 @@ public class Stats implements GazeMotionListener {
             if (areaOfInterestList.size() > 2) {
 
                 allAOIListTemp.add(new ArrayList<>(areaOfInterestList));
+                int[] startEnd = new int[]{index - areaOfInterestList.size(), index};
+                startAndEndIdx.add(startEnd);
 
                 final Point2D[] points = new Point2D[areaOfInterestList.size()];
 
@@ -299,9 +303,11 @@ public class Stats implements GazeMotionListener {
                 colorIterator = index % 7;
                 areaOfInterest.setStroke(colors[colorIterator]);
                 allAOIListPolygon.add(areaOfInterest);
-            }else if(eDistance > 500){
+            }else if(eDistance > 700){
                 areaOfInterestList.add(movementHistory.get(index));
                 allAOIListTemp.add(new ArrayList<>(areaOfInterestList));
+                int[] startEnd = new int[]{index - areaOfInterestList.size(), index};
+                startAndEndIdx.add(startEnd);
                 final float radius = 15;
                 final Point2D[] points = new Point2D[8];
 
