@@ -9,9 +9,7 @@ public class OpinionsGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("OpinionsGame").gameThumbnail("data/Thumbnails/space.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            GameSummary.builder().nameCode("Opinions").gameThumbnail("data/Thumbnails/opinions.jpg").category(GameCategories.Category.SELECTION).build(),
             new OpinionsGameLauncher());
-
-
     }
 }
