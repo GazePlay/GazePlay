@@ -52,6 +52,7 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
 
     private ProgressButton thumbUp;
     private ProgressButton thumbDown;
+    private ProgressButton noCare;
 
     public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats) {
         this.stats = stats;
@@ -150,8 +151,9 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
         thumbDown = new ProgressButton();
         thumbDown.setLayoutX(dimension2D.getWidth() * 18 / 20);
         thumbDown.setLayoutY(dimension2D.getHeight() * 2 / 5);
-        ImageView thumbDo = new ImageView(new Image("data/opinions/thumbs/thumbs_down.png"));
-        thumbDo.setFitWidth(dimension2D.getWidth() * 2 / 20);
+        thumbDown.getButton().setRadius(70);
+        ImageView thumbDo = new ImageView(new Image("data/opinions/thumbs/pas_content.png"));
+        thumbDo.setFitWidth(dimension2D.getWidth() / 10);
         thumbDo.setFitHeight(dimension2D.getHeight() / 5);
         thumbDown.setImage(thumbDo);
 
@@ -159,14 +161,31 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
             background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
             stats.incrementNumberOfGoalsReached();
         }, configuration.getFixationLength());
-        gameContext.getGazeDeviceManager().addEventFilter(thumbUp);
+        gameContext.getGazeDeviceManager().addEventFilter(thumbDown);
         thumbDown.active();
+
+        noCare = new ProgressButton();
+        noCare.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20);
+        noCare.setLayoutY(0);
+        noCare.getButton().setRadius(70);
+        ImageView noCar = new ImageView(new Image("data/opinions/thumbs/nocare.png"));
+        noCar.setFitWidth(dimension2D.getWidth() / 10);
+        noCar.setFitHeight(dimension2D.getHeight() / 5);
+        noCare.setImage(noCar);
+
+        noCare.assignIndicator(event -> {
+            background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+            stats.incrementNumberOfGoalsReached();
+        }, configuration.getFixationLength());
+        gameContext.getGazeDeviceManager().addEventFilter(noCare);
+        noCare.active();
 
         thumbUp = new ProgressButton();
         thumbUp.setLayoutX(0);
         thumbUp.setLayoutY(dimension2D.getHeight() * 2 / 5);
-        ImageView thumbU = new ImageView(new Image("data/opinions/thumbs/thumbs_up.png"));
-        thumbU.setFitWidth(dimension2D.getWidth() * 2 / 20);
+        thumbUp.getButton().setRadius(70);
+        ImageView thumbU = new ImageView(new Image("data/opinions/thumbs/content.png"));
+        thumbU.setFitWidth(dimension2D.getWidth() / 10);
         thumbU.setFitHeight(dimension2D.getHeight() / 5);
         thumbUp.setImage(thumbU);
 
@@ -177,9 +196,9 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(thumbUp);
         thumbUp.active();
 
-        middleLayer.getChildren().addAll(thumbUp, thumbDown);
+        middleLayer.getChildren().addAll(thumbUp, thumbDown, noCare);
 
-        gameContext.getChildren().addAll(thumbUp, thumbDown);
+        gameContext.getChildren().addAll(thumbUp, thumbDown, noCare);
 
         this.start();
 
