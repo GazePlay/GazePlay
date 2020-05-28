@@ -20,6 +20,8 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.ImageLibrary;
+import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.components.ProgressButton;
@@ -35,7 +37,10 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
     private final Rectangle interactionOverlay;
     private final Multilinguism translate;
 
+    private final ImageLibrary backgroundImage;
+
     private final Rectangle shade;
+    private Rectangle background;
     private final ProgressButton restartButton;
     private final Text finalScoreText;
 
@@ -58,10 +63,12 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
 
         this.translate = MultilinguismFactory.getSingleton();
 
-        final Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        backgroundImage = ImageUtils.createCustomizedImageLibrary(null, "opinions/images");
+
+        Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         backgroundImage.widthProperty().bind(gameContext.getRoot().widthProperty());
         backgroundImage.heightProperty().bind(gameContext.getRoot().heightProperty());
-        backgroundImage.setFill(new ImagePattern(new Image("data/space/background/space_img.png")));
+        /*backgroundImage.setFill(new ImagePattern(new Image("data/space/background/space_img.png")));*/
 
         backgroundImage.setOpacity(0.08);
 
@@ -128,6 +135,23 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
 
         gazeTarget = new Point2D(dimension2D.getWidth() / 2, 0);
 
+        background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        background.widthProperty().bind(gameContext.getRoot().widthProperty());
+        background.heightProperty().bind(gameContext.getRoot().heightProperty());
+
+        backgroundLayer.getChildren().add(background);
+        background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+
+        Rectangle thumbUp = new Rectangle(0, dimension2D.getHeight() * 2 / 5, dimension2D.getWidth() * 2 / 20,
+            dimension2D.getHeight() / 5);
+        thumbUp.setFill(new ImagePattern(new Image("data/opinions/thumbs/thumbs_up.png")));
+
+        Rectangle thumbDown = new Rectangle(dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5, dimension2D.getWidth() * 2 / 20,
+            dimension2D.getHeight() / 5);
+        thumbDown.setFill(new ImagePattern(new Image("data/opinions/thumbs/thumbs_down.png")));
+
+        middleLayer.getChildren().addAll(thumbUp, thumbDown);
+
         this.start();
 
         opinionGameStats.notifyNewRoundReady();
@@ -158,4 +182,5 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
         final double speed = gameContext.getAnimationSpeedRatioSource().getDurationRatio();
         return Math.max(speed, 1.0);
     }
+
 }
