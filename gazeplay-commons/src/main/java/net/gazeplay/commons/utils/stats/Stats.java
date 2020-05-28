@@ -270,7 +270,7 @@ public class Stats implements GazeMotionListener {
         final double x2 = movementHistory.get(index - 1).getXValue();
         final double y2 = movementHistory.get(index - 1).getYValue();
         final double eDistance = Math.sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
-        if (eDistance < 180 && movementHistory.get(index).getIntervalTime() > 5) {
+        if (eDistance < 150 && movementHistory.get(index).getIntervalTime() > 10) {
             if (index == 1) {
                 areaOfInterestList.add(movementHistory.get(0));
             }
