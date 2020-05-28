@@ -36,6 +36,7 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
     private final Group middleLayer;
     private final Rectangle interactionOverlay;
     private final Multilinguism translate;
+    private final OpinionsGameStats stats;
 
     private final ImageLibrary backgroundImage;
 
@@ -49,8 +50,12 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
     private long lastTickTime = 0;
     private long minFPS = 1000;
 
+    private ProgressButton thumbUp;
+    private ProgressButton thumbDown;
+
     public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats) {
-        this.opinionGameStats = stats;
+        this.stats = stats;
+        this.opinionGameStats = this.stats;
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
@@ -142,15 +147,39 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
         backgroundLayer.getChildren().add(background);
         background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
 
-        Rectangle thumbUp = new Rectangle(0, dimension2D.getHeight() * 2 / 5, dimension2D.getWidth() * 2 / 20,
-            dimension2D.getHeight() / 5);
-        thumbUp.setFill(new ImagePattern(new Image("data/opinions/thumbs/thumbs_up.png")));
+        thumbDown = new ProgressButton();
+        thumbDown.setLayoutX(dimension2D.getWidth() * 18 / 20);
+        thumbDown.setLayoutY(dimension2D.getHeight() * 2 / 5);
+        ImageView thumbDo = new ImageView(new Image("data/opinions/thumbs/thumbs_down.png"));
+        thumbDo.setFitWidth(dimension2D.getWidth() * 2 / 20);
+        thumbDo.setFitHeight(dimension2D.getHeight() / 5);
+        thumbDown.setImage(thumbDo);
 
-        Rectangle thumbDown = new Rectangle(dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5, dimension2D.getWidth() * 2 / 20,
-            dimension2D.getHeight() / 5);
-        thumbDown.setFill(new ImagePattern(new Image("data/opinions/thumbs/thumbs_down.png")));
+        thumbDown.assignIndicator(event -> {
+            background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+            stats.incrementNumberOfGoalsReached();
+        }, configuration.getFixationLength());
+        gameContext.getGazeDeviceManager().addEventFilter(thumbUp);
+        thumbDown.active();
+
+        thumbUp = new ProgressButton();
+        thumbUp.setLayoutX(0);
+        thumbUp.setLayoutY(dimension2D.getHeight() * 2 / 5);
+        ImageView thumbU = new ImageView(new Image("data/opinions/thumbs/thumbs_up.png"));
+        thumbU.setFitWidth(dimension2D.getWidth() * 2 / 20);
+        thumbU.setFitHeight(dimension2D.getHeight() / 5);
+        thumbUp.setImage(thumbU);
+
+        thumbUp.assignIndicator(event -> {
+            background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+            stats.incrementNumberOfGoalsReached();
+        }, configuration.getFixationLength());
+        gameContext.getGazeDeviceManager().addEventFilter(thumbUp);
+        thumbUp.active();
 
         middleLayer.getChildren().addAll(thumbUp, thumbDown);
+
+        gameContext.getChildren().addAll(thumbUp, thumbDown);
 
         this.start();
 
@@ -160,27 +189,10 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
     @Override
     public void handle(final long now) {
 
-        if (lastTickTime == 0) {
-            lastTickTime = now;
-        }
-        double timeElapsed = ((double) now - (double) lastTickTime) / Math.pow(10, 6); // in ms
-        lastTickTime = now;
-
-        if (1000 / timeElapsed < minFPS) {
-            minFPS = 1000 / (int) timeElapsed;
-        }
-        timeElapsed /= getGameSpeed();
-
     }
 
     @Override
     public void dispose() {
 
     }
-
-    private double getGameSpeed() {
-        final double speed = gameContext.getAnimationSpeedRatioSource().getDurationRatio();
-        return Math.max(speed, 1.0);
-    }
-
 }
