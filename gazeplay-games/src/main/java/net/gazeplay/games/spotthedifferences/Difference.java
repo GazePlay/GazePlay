@@ -10,10 +10,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.commons.utils.stats.TargetAOI;
-
-import java.util.ArrayList;
 
 @Slf4j
 public class Difference extends Circle {
@@ -27,16 +23,10 @@ public class Difference extends Circle {
     @Setter
     private int targetIdx;
 
-    private final ArrayList<TargetAOI> targetAOIList = new ArrayList<>();
 
     public Difference(final IGameContext gameContext, final SpotTheDifferences mainGame, final double centerX, final double centerY,
                       final double radius) {
         super(centerX, centerY, radius, Color.TRANSPARENT);
-        //final TargetAOI targetAOI = new TargetAOI(centerX, centerY, (int)radius, System.currentTimeMillis());
-        //log.info("targetAOI:{}",targetAOI.toString());
-        //targetAOIList.add(targetAOI);
-        //mainGame.getStats().getTargetAOIList().add(targetAOI);
-        //targetIdx = mainGame.getStats().getTargetAOIList().size()-1;
         setStrokeWidth(5);
         setStroke(Color.RED);
         timer = 0;
