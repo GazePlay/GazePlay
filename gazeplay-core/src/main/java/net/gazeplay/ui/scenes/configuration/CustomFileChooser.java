@@ -49,8 +49,8 @@ public class CustomFileChooser extends Stage {
     private Translator translator;
     private GazePlay gazePlay;
 
-    private FlowPane[] flowPanes = new FlowPane[3];
-    private String[] folder = {"magiccards", "portraits", "blocs"};
+    private FlowPane[] flowPanes = new FlowPane[4];
+    private String[] folder = {"magiccards", "portraits", "blocs", "opinions"};
 
 
     CustomFileChooser(Configuration configuration,
@@ -243,13 +243,14 @@ public class CustomFileChooser extends Stage {
 
     private BorderPane initImageSelectorPane(BorderPane imageSelectorGridPane, Scene scene) {
 
-        Group[] group = new Group[3];
-        StackPane[] section = new StackPane[3];
-        Color[] colors = {Color.PALEGOLDENROD, Color.LIGHTSEAGREEN, Color.PALEVIOLETRED};
+        Group[] group = new Group[4];
+        StackPane[] section = new StackPane[4];
+        Color[] colors = {Color.PALEGOLDENROD, Color.LIGHTSEAGREEN, Color.PALEVIOLETRED, Color.PALETURQUOISE};
         String[] imagePath = {
             "data/common/images/cards.png",
             "data/common/images/small.png",
-            "data/common/images/large.png"
+            "data/common/images/large.png",
+            "data/common/images/opinions.png"
         };
 
         HBox input = buildFileChooser();
@@ -259,7 +260,7 @@ public class CustomFileChooser extends Stage {
 
         DropShadow dropShadow = createNewDropShadow();
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             int index = i;
             group[i] = new Group();
 
@@ -300,7 +301,7 @@ public class CustomFileChooser extends Stage {
             section[i].layoutYProperty().bind(input.heightProperty());
             Rectangle ongletBackground = new Rectangle();
             ongletBackground.setHeight(50);
-            ongletBackground.widthProperty().bind(background.maxWidthProperty().divide(3));
+            ongletBackground.widthProperty().bind(background.maxWidthProperty().divide(4));
             ongletBackground.setFill(colors[i]);
             section[i].getChildren().add(ongletBackground);
             section[i].setOnMouseClicked(e -> {
@@ -330,6 +331,7 @@ public class CustomFileChooser extends Stage {
         section[0].setLayoutX(0);
         section[1].layoutXProperty().bind(section[0].widthProperty());
         section[2].layoutXProperty().bind(section[0].widthProperty().add(section[1].widthProperty()));
+        section[3].layoutXProperty().bind(section[0].widthProperty().add(section[1].widthProperty().add(section[2].widthProperty())));
 
         imageSelectorGridPane.getChildren().addAll(group);
         return imageSelectorGridPane;
@@ -339,6 +341,7 @@ public class CustomFileChooser extends Stage {
         updateFlow(0);
         updateFlow(1);
         updateFlow(2);
+        updateFlow(3);
     }
 
     private HBox buildFileChooser() {

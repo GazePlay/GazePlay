@@ -22,6 +22,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.components.ProgressButton;
@@ -69,12 +70,12 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
 
         this.translate = MultilinguismFactory.getSingleton();
 
-        backgroundImage = ImageUtils.createCustomizedImageLibrary(null, "opinions/images");
+        //backgroundImage = ImageUtils.createCustomizedImageLibrary(null, "opinions/images");
+        backgroundImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions"));
 
         Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         backgroundImage.widthProperty().bind(gameContext.getRoot().widthProperty());
         backgroundImage.heightProperty().bind(gameContext.getRoot().heightProperty());
-        /*backgroundImage.setFill(new ImagePattern(new Image("data/space/background/space_img.png")));*/
 
         backgroundImage.setOpacity(0.08);
 
