@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.TargetAOI;
 import net.gazeplay.games.cups.utils.Action;
 import net.gazeplay.games.cups.utils.PositionCup;
 import net.gazeplay.games.cups.utils.Strategy;
@@ -34,6 +35,9 @@ public class CupsAndBalls implements GameLifeCycle {
 
     private final Random random = new Random();
     private ArrayList<Action> actions;
+    private final ArrayList<TargetAOI> targetAOIList;
+
+
 
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups) {
         super();
@@ -44,6 +48,7 @@ public class CupsAndBalls implements GameLifeCycle {
         this.nbColumns = nbCups;
         this.nbLines = nbCups;
         this.nbExchanges = nbCups * nbCups;
+        this.targetAOIList = new ArrayList<>();
     }
 
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups, final int nbExchanges) {
@@ -71,6 +76,8 @@ public class CupsAndBalls implements GameLifeCycle {
             cupRectangle.setFitHeight(imageHeight);
             cups[indexCup] = new Cup(cupRectangle, position, gameContext, stats, this, openCupSpeed);
             if (indexCup == ballInCup) {
+                final TargetAOI targetAOI = new TargetAOI(posCup.getX(), posCup.getY(), (int)((imageWidth+imageHeight)/2), System.currentTimeMillis());
+                targetAOIList.add(targetAOI);
                 cups[indexCup].setWinner(true);
                 cups[indexCup].giveBall(true);
                 ball = new Ball(ballRadius, Color.RED, cups[indexCup]);
@@ -84,6 +91,7 @@ public class CupsAndBalls implements GameLifeCycle {
             gameContext.getChildren().add(cupRectangle);
             cups[indexCup].getProgressIndicator().toFront();
         }
+
     }
 
     @Override
@@ -117,7 +125,7 @@ public class CupsAndBalls implements GameLifeCycle {
 
     @Override
     public void dispose() {
-
+        stats.setTargetAOIList(targetAOIList);
     }
 
     private void createNewTransition(final ArrayList<Action> actions) {
@@ -140,6 +148,8 @@ public class CupsAndBalls implements GameLifeCycle {
                 currentCup.getPositionCup().setCellY(finalCellY);
                 currentCup.progressBarUpdatePosition(newPos.getX(), newPos.getY());
                 if (currentCup.containsBall()) {
+                    final TargetAOI targetAOI = new TargetAOI(newPos.getX(), newPos.getX(), (int)((currentCup.getItem().getFitWidth()+currentCup.getItem().getFitHeight())/2), System.currentTimeMillis());
+                    targetAOIList.add(targetAOI);
                     currentCup.getBall().updatePosition(newPos.getX(), newPos.getY());
                 }
             }
@@ -160,6 +170,7 @@ public class CupsAndBalls implements GameLifeCycle {
             if (actions.size() > 0) {
                 for (final Cup cup : cups) {
                     cup.increaseActionsDone();
+
                 }
 
                 createNewTransition(actions);
@@ -167,7 +178,7 @@ public class CupsAndBalls implements GameLifeCycle {
         });
 
         movementTransition.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
-
+        targetAOIList.get(targetAOIList.size()-1).setTimeEnded(System.currentTimeMillis());
         movementTransition.play();
     }
 
