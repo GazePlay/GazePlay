@@ -131,7 +131,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         d1.setTargetIdx(targetAOIList.size()-1);
         final Difference d2 = new Difference(gameContext, this, rightGap + x, y, radius);
         final TargetAOI targetAOI2 = new TargetAOI(rightGap + x, y, (int)radius, System.currentTimeMillis());
-        targetAOIList.add(targetAOI1);
+        targetAOIList.add(targetAOI2);
         d2.setTargetIdx(targetAOIList.size()-1);
         d1.setPair(d2);
         d2.setPair(d1);
