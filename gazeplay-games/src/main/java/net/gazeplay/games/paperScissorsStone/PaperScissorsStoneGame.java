@@ -6,7 +6,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -25,13 +24,10 @@ import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.components.ProgressButton;
 
-import java.util.Random;
-
 public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCycle {
 
     private final PaperScissorsStoneStats paperScissorsStoneStats;
     private final Dimension2D dimension2D;
-    private final Random random;
     private final Configuration configuration;
     private final Multilinguism translate;
 
@@ -47,10 +43,6 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
     private final ProgressButton restartButton;
     private final Text finalScoreText;
 
-    private Rectangle background;
-
-    private ImageView ennemyI;
-
     private ProgressButton stone;
     private ProgressButton paper;
     private ProgressButton scissors;
@@ -65,7 +57,6 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         this.paperScissorsStoneStats = stats;
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.random = new Random();
         this.configuration = gameContext.getConfiguration();
 
         this.backgroundLayer = new Group();
@@ -76,17 +67,6 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
 
         this.translate = MultilinguismFactory.getSingleton();
 
-        final Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        backgroundImage.widthProperty().bind(gameContext.getRoot().widthProperty());
-        backgroundImage.heightProperty().bind(gameContext.getRoot().heightProperty());
-
-        sp.getChildren().add(backgroundImage);
-        backgroundImage.toBack();
-
-        final Label onScreenText = new Label();
-        foregroundLayer.getChildren().add(onScreenText);
-
-        // Menu
         final int fixationLength = configuration.getFixationLength();
 
         shade = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
@@ -111,7 +91,6 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
 
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
-        // Interaction
         gazeTarget = new Point2D(dimension2D.getWidth() / 2, dimension2D.getHeight() / 2);
 
         interactionOverlay = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
@@ -134,7 +113,6 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
 
     @Override
     public void launch() {
-        // hide end game menu
         shade.setOpacity(0);
         restartButton.disable();
         finalScoreText.setOpacity(0);
@@ -146,17 +124,16 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
 
         gazeTarget = new Point2D(dimension2D.getWidth() / 2, 0);
 
-        background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        Rectangle background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         background.widthProperty().bind(gameContext.getRoot().widthProperty());
         background.heightProperty().bind(gameContext.getRoot().heightProperty());
-        background.setFill(new ImagePattern(new Image("data/paperScissorsStone/park.png")));
-
-        backgroundLayer.getChildren().add(background);
+        ImagePattern backgroundI = new ImagePattern(new Image("data/paperScissorsStone/park.png"));
+        background.setFill(backgroundI);
 
         stone = new ProgressButton();
         stone.setLayoutX(dimension2D.getWidth() / 6 - dimension2D.getWidth() / 12);
         stone.setLayoutY(dimension2D.getHeight() * 2 / 3);
-        stone.getButton().setRadius(140);
+        stone.getButton().setRadius(100);
         ImageView stoneI = new ImageView(new Image("data/paperScissorsStone/Stone.png"));
         stone.setImage(stoneI);
 
@@ -165,8 +142,6 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
                 gameContext.playWinTransition(0, event1 -> {
                     gameContext.clear();
                     launch();
-                    background.setFill(new ImagePattern(new Image("data/paperScissorsStone/park.png")));
-                    backgroundLayer.getChildren().add(background);
                 });
             } else {
                 stone.disable();
@@ -180,7 +155,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         paper = new ProgressButton();
         paper.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getWidth() / 12);
         paper.setLayoutY(dimension2D.getHeight() * 2 / 3);
-        paper.getButton().setRadius(140);
+        paper.getButton().setRadius(100);
         ImageView paperI = new ImageView(new Image("data/paperScissorsStone/Paper.png"));
         paper.setImage(paperI);
 
@@ -189,8 +164,6 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
                 gameContext.playWinTransition(0, event1 -> {
                     gameContext.clear();
                     launch();
-                    background.setFill(new ImagePattern(new Image("data/paperScissorsStone/park.png")));
-                    backgroundLayer.getChildren().add(background);
                 });
             } else {
                 paper.disable();
@@ -203,7 +176,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         scissors = new ProgressButton();
         scissors.setLayoutX(dimension2D.getWidth() * 5 / 6 - dimension2D.getWidth() / 12);
         scissors.setLayoutY(dimension2D.getHeight() * 2 / 3);
-        scissors.getButton().setRadius(140);
+        scissors.getButton().setRadius(100);
         ImageView scissorsI = new ImageView(new Image("data/paperScissorsStone/Scissors.png"));
         scissors.setImage(scissorsI);
 
@@ -224,8 +197,8 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         ennemy = new ProgressButton();
         ennemy.setLayoutX(dimension2D.getWidth() * 1 / 2 - dimension2D.getWidth() / 12);
         ennemy.setLayoutY(dimension2D.getHeight() / 5);
-        ennemy.getButton().setRadius(140);
-        ennemyI = new ImageView(new Image("data/paperScissorsStone/Scissors.png"));
+        ennemy.getButton().setRadius(100);
+        ImageView ennemyI = new ImageView(new Image("data/paperScissorsStone/Scissors.png"));
         int i = (int) (Math.random() * (2));
         switch (i) {
             case 0:
@@ -243,15 +216,15 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         }
         ennemy.setImage(ennemyI);
 
+        backgroundLayer.getChildren().add(background);
         middleLayer.getChildren().addAll(stone, paper, scissors, ennemy);
 
-        gameContext.getChildren().addAll(stone, paper, scissors, ennemy);
+        gameContext.getChildren().addAll(background, stone, paper, scissors, ennemy);
 
         this.start();
 
         paperScissorsStoneStats.notifyNewRoundReady();
     }
-
 
     @Override
     public void handle(final long now) {
