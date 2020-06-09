@@ -252,5 +252,8 @@ BackgroundStyle,,,,,,Background style,,Style de fond,,,,,,,,,,,
 BackgroundEnabled,,,,,,Background images enabled,,Fonds d'écran activés,,,,,,,,,,,
 
 addNewImages,,,,,,Add new images ...,,Ajouter de nouvelles images ...,,,,,,,,,,Agregar nuevas imágenes ...,
+addNewImagethumbdown,,,,,,Add new image happy ...,,Ajouter de nouvelles image content ...,,,,,,,,,,Añadir nuevo contenido de la imagen ...,
+addNewImagethumbup,,,,,,Add new image unhappy...,,Ajouter une nouvelle image pas content ...,,,,,,,,,,Añade nuevas imágenes que no son felices ...,
+addNewImagenocare,,,,,,Add new image don't care...,,Ajouter une nouvelle image s'en fiche ...,,,,,,,,,,Añadir una nueva imagen no importa ...,
 customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,,,
 

@@ -16,6 +16,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -27,6 +28,9 @@ import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.components.ProgressButton;
 
+import java.util.List;
+
+@Slf4j
 public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
 
     private final OpinionsGameStats opinionGameStats;
@@ -40,6 +44,7 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
     private final OpinionsGameStats stats;
 
     private final ImageLibrary backgroundImage;
+    private final ImageLibrary thumbImage;
 
     private final Rectangle shade;
     private Rectangle background;
@@ -62,6 +67,8 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
 
+        thumbImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions/thumbs"));
+
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
         final Group foregroundLayer = new Group();
@@ -70,7 +77,6 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
 
         this.translate = MultilinguismFactory.getSingleton();
 
-        //backgroundImage = ImageUtils.createCustomizedImageLibrary(null, "opinions/images");
         backgroundImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions"));
 
         Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
@@ -153,7 +159,8 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
         thumbDown.setLayoutX(dimension2D.getWidth() * 18 / 20);
         thumbDown.setLayoutY(dimension2D.getHeight() * 2 / 5);
         thumbDown.getButton().setRadius(70);
-        ImageView thumbDo = new ImageView(new Image("data/opinions/thumbs/pas_content.png"));
+
+        ImageView thumbDo = new ImageView(new Image("data/opinions/thumbs/thumbdown.png"));
         thumbDo.setFitWidth(dimension2D.getWidth() / 10);
         thumbDo.setFitHeight(dimension2D.getHeight() / 5);
         thumbDown.setImage(thumbDo);
@@ -185,7 +192,7 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
         thumbUp.setLayoutX(0);
         thumbUp.setLayoutY(dimension2D.getHeight() * 2 / 5);
         thumbUp.getButton().setRadius(70);
-        ImageView thumbU = new ImageView(new Image("data/opinions/thumbs/content.png"));
+        ImageView thumbU = new ImageView(new Image("data/opinions/thumbs/thumbup.png"));
         thumbU.setFitWidth(dimension2D.getWidth() / 10);
         thumbU.setFitHeight(dimension2D.getHeight() / 5);
         thumbUp.setImage(thumbU);
@@ -196,6 +203,29 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
         }, configuration.getFixationLength());
         gameContext.getGazeDeviceManager().addEventFilter(thumbUp);
         thumbUp.active();
+
+        List<Image> Picture = thumbImage.pickAllImages();
+        for (Image I : Picture) {
+            log.info("coucou: " + I.getUrl());
+            if (I.getUrl().equals("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbdown.png")) {
+                thumbDo = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbdown.png")).getImage());
+                thumbDown.setImage(thumbDo);
+                thumbDo.setFitWidth(dimension2D.getWidth() / 10);
+                thumbDo.setFitHeight(dimension2D.getHeight() / 5);
+            }
+            if (I.getUrl().equals("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbup.png")) {
+                thumbU = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbup.png")).getImage());
+                thumbUp.setImage(thumbU);
+                thumbU.setFitWidth(dimension2D.getWidth() / 10);
+                thumbU.setFitHeight(dimension2D.getHeight() / 5);
+            }
+            if (I.getUrl().equals("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/nocare.png")) {
+                noCar = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/nocare.png")).getImage());
+                noCare.setImage(noCar);
+                noCar.setFitWidth(dimension2D.getWidth() / 10);
+                noCar.setFitHeight(dimension2D.getHeight() / 5);
+            }
+        }
 
         middleLayer.getChildren().addAll(thumbUp, thumbDown, noCare);
 

@@ -231,6 +231,34 @@ public class CustomFileChooser extends Stage {
         return add;
     }
 
+    private I18NButton createAddButtonOpinions(int flowPaneIndex, String opinions) {
+        I18NButton add = new I18NButton(translator, "addNewImage" + opinions);
+        add.setPrefHeight(10);
+        add.setOnAction(e -> {
+            String folderPath = Utils.getImagesSubdirectory(folder[flowPaneIndex]).getAbsolutePath();
+            File dir = new File(folderPath + "/thumbs/");
+            if (dir.mkdirs() || dir.exists()) {
+                final FileChooser fileChooser = new FileChooser();
+                fileChooser.setInitialDirectory(
+                    new File(folderPath + "/thumbs/")
+                );
+                List<File> files =
+                    fileChooser.showOpenMultipleDialog(this);
+                if (files != null) {
+                    for (File f : files) {
+                        f.renameTo(new File(dir + "/" + opinions + ".png"));
+                        copyFile(dir, f, flowPaneIndex);
+                    }
+                }
+            } else {
+                log.debug("File {} doesn't exist and can't be created", dir.getAbsolutePath());
+            }
+            updateFlow(flowPaneIndex);
+        });
+
+        return add;
+    }
+
     private void copyFile(File dir, File f, int flowPaneIndex) {
         File dest = new File(dir, f.getName());
         try {
@@ -259,6 +287,7 @@ public class CustomFileChooser extends Stage {
         imageSelectorGridPane.setTop(input);
 
         DropShadow dropShadow = createNewDropShadow();
+
 
         for (int i = 0; i < 4; i++) {
             int index = i;
@@ -291,8 +320,25 @@ public class CustomFileChooser extends Stage {
             backgroundAddButton.widthProperty().bind(background.widthProperty());
             backgroundAddButton.setHeight(50);
             backgroundAddButton.setFill(colors[i]);
+            VBox choice = new VBox();
+            choice.setAlignment(Pos.CENTER);
+            choice.setPadding(new Insets(20, 20, 20, 20));
+            choice.setSpacing(5);
             I18NButton add = createAddButton(i);
-            addButtonStackPane.getChildren().addAll(backgroundAddButton, add);
+            add.setMinWidth(300);
+
+            if (i == 3) {
+                I18NButton addOpinionsThumbUp = createAddButtonOpinions(3, "thumbup");
+                I18NButton addOpinionsThumbDown = createAddButtonOpinions(3, "thumbdown");
+                I18NButton addOpinionsNoCare = createAddButtonOpinions(3, "nocare");
+                addOpinionsNoCare.setMinWidth(300);
+                addOpinionsThumbDown.setMinWidth(300);
+                addOpinionsThumbUp.setMinWidth(300);
+                choice.getChildren().addAll(add, addOpinionsThumbDown, addOpinionsThumbUp, addOpinionsNoCare);
+                addButtonStackPane.getChildren().addAll(backgroundAddButton, choice);
+            } else {
+                addButtonStackPane.getChildren().addAll(backgroundAddButton, add);
+            }
             BorderPane.setAlignment(addButtonStackPane, Pos.CENTER);
             background.setTop(addButtonStackPane);
             background.setCenter(scrollPane);
