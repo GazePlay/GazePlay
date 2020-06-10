@@ -246,8 +246,13 @@ public class CustomFileChooser extends Stage {
                     fileChooser.showOpenMultipleDialog(this);
                 if (files != null) {
                     for (File f : files) {
-                        f.renameTo(new File(dir + "/" + opinions + ".png"));
                         copyFile(dir, f, flowPaneIndex);
+                        File test = new File(folderPath + "/thumbs/" + opinions + ".png");
+                        if (test.exists()) {
+                            test.delete();
+                        }
+                        File newfile = new File(folderPath + "/thumbs/" + f.getName());
+                        newfile.renameTo(new File(dir + "/" + opinions + ".png"));
                     }
                 }
             } else {
@@ -264,8 +269,9 @@ public class CustomFileChooser extends Stage {
         try {
             Files.copy(f.toPath(), dest.toPath(),
                 StandardCopyOption.REPLACE_EXISTING);
+            log.info("peut etre par la");
         } catch (IOException ex) {
-            log.debug("Can't copy file {} to {}", f.getName(), dir.getAbsolutePath());
+            log.info("Can't copy file {} to {}", f.getName(), dir.getAbsolutePath());
         }
     }
 
@@ -334,7 +340,7 @@ public class CustomFileChooser extends Stage {
                 addOpinionsNoCare.setMinWidth(300);
                 addOpinionsThumbDown.setMinWidth(300);
                 addOpinionsThumbUp.setMinWidth(300);
-                choice.getChildren().addAll(add, addOpinionsThumbDown, addOpinionsThumbUp, addOpinionsNoCare);
+                choice.getChildren().addAll(add, addOpinionsThumbUp, addOpinionsThumbDown, addOpinionsNoCare);
                 addButtonStackPane.getChildren().addAll(backgroundAddButton, choice);
             } else {
                 addButtonStackPane.getChildren().addAll(backgroundAddButton, add);
