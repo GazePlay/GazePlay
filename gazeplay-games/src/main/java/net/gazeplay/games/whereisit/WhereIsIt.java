@@ -421,7 +421,7 @@ public class WhereIsIt implements GameLifeCycle {
             final Configuration config = gameContext.getConfiguration();
             try {
                 log.debug("CUSTOMIZED");
-                final String path = config.getWhereIsItDir() + "sounds/";
+                final String path = config.getWhereIsItDir() + "/sounds/";
                 final File soundsDirectory = new File(path);
                 final String[] soundsDirectoryFiles = soundsDirectory.list();
                 if (soundsDirectoryFiles != null) {
