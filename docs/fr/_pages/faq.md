@@ -57,7 +57,7 @@ Enregistrez votre feuille de calcul en tant que `questions.csv` et de la placer 
 
 {% include figure image_path="/assets/images/tutorial/imagesSounds.png" alt="Mon PC" caption ="De même, si vous voulez jouer un son lors de l'affichage de la question, revenez en arrière et cliquez sur 'sounds'" %}
 
-{% include figure image_path="/assets/images/tutorial/foldersSounds.png" alt="Mon PC" caption="Placez tous vos sons (par exemple des fichiers .mp3) dans ce dossier et donner leur le même nom que celui du dossier des images qui leur est associé." %}
+{% include figure image_path="/assets/images/tutorial/foldersSounds.png" alt="Mon PC" caption="Placez tous vos sons (par exemple des fichiers .mp3) dans ce dossier et donnez leur le même nom que celui du dossier des images qui leur est associé." %}
 
 
 ## Comment créer un raccourci sous Windows?
