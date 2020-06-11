@@ -58,7 +58,6 @@ Remember to save your spreadsheet as `questions.csv` and place it in the `where-
 
 {% include figure image_path="/assets/images/tutorial/foldersSounds.png" alt="Mon PC" caption="Place all your sounds (for example .mp3 files) in this folder and give them the same name as the one you gave to the associated images folder." %}
 
-
 ## How can I create a shortcut on Windows?
 1. Locate `gazeplay-windows.bat` in the `/bin` folder in your GazePlay installation folder.
 1. Right-click on `gazeplay-windows.bat` and select create a shortcut.
