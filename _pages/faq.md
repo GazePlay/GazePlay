@@ -54,7 +54,9 @@ Remember to save your spreadsheet as `questions.csv` and place it in the `where-
 
 {% include figure image_path="/assets/images/tutorial/folders.png" alt="My PC" caption="Here, place all your images in categorised folders. One folder per type of image you wish to add." %}
 
+{% include figure image_path="/assets/images/tutorial/imagesSounds.png" alt="Mon PC" caption ="Then, if you want to play a sound when a question is displayed, go back and click on 'sounds'" %}
 
+{% include figure image_path="/assets/images/tutorial/foldersSounds.png" alt="Mon PC" caption="Place all your sounds (for example .mp3 files) in this folder and give them the same name as the one you gave to the associated images folder." %}
 
 ## How can I create a shortcut on Windows?
 1. Locate `gazeplay-windows.bat` in the `/bin` folder in your GazePlay installation folder.
