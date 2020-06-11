@@ -59,7 +59,6 @@ Enregistrez votre feuille de calcul en tant que `questions.csv` et de la placer 
 
 {% include figure image_path="/assets/images/tutorial/foldersSounds.png" alt="Mon PC" caption="Placez tous vos sons (par exemple des fichiers .mp3) dans ce dossier et donnez leur le même nom que celui du dossier des images qui leur est associé." %}
 
-
 ## Comment créer un raccourci sous Windows?
 1. Localisez `gazeplay-windows.bat` dans le dossier` / bin` de votre dossier d'installation de GazePlay.
 1. Faites un clic droit sur «gazeplay-windows.bat» et sélectionnez créer un raccourci.
