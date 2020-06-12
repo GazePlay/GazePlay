@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingNode;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
@@ -132,7 +134,20 @@ public class ReplayingGameFromJson {
         //Drawing in canvas
         final javafx.scene.canvas.Canvas canvas = new Canvas(screenDimension.getWidth(), screenDimension.getHeight());
         gameContext.getChildren().add(canvas);
-        drawFixationLines(canvas, coordinatesAndTimeStamp);
+        //drawFixationLines(canvas, coordinatesAndTimeStamp);
+        Service<Void> loadingService = new Service<Void>(){
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        drawFixationLines(canvas, coordinatesAndTimeStamp);
+                        return null;
+                    }
+                };
+            };
+        };
+        loadingService.start();
 
         //Drawing in swingNode
         /*BasicAnim anim  = new BasicAnim(coordinatesAndTimeStamp);
