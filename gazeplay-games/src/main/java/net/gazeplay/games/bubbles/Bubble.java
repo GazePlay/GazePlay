@@ -69,7 +69,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         initBackground(useBackgroundImage);
 
         gameContext.getChildren().add(this);
-
+        System.out.println("currentGameClassIndex: " + gameContext.getChildren().indexOf(this));
         this.fragments = buildFragments(type);
 
         this.getChildren().addAll(fragments);

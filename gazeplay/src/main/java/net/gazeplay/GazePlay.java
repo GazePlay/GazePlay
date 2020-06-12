@@ -26,6 +26,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.function.Supplier;
 
 @Slf4j
@@ -119,6 +124,33 @@ public class GazePlay {
 
     public ReadOnlyBooleanProperty getFullScreenProperty() {
         return primaryStage.fullScreenProperty();
+    }
+
+
+    public void pickJSONFile(){
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+        }
+
+//        final JFrame frame = new JFrame("Open File Example");
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.setLayout(new BorderLayout());
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+            "JSON files", "json");
+        fileChooser.setFileFilter(filter);
+        int result = fileChooser.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+        }
+//        frame.pack();
+//        frame.setLocationByPlatform(true);
+//        frame.setVisible(true);
+
+
     }
 
 }

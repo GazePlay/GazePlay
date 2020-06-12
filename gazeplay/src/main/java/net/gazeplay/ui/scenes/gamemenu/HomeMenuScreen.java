@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
+import net.gazeplay.ReplayingGameFromJson;
 import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -30,14 +31,12 @@ import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.ConfigurationButton;
-import net.gazeplay.commons.utils.ConfigurationButtonFactory;
-import net.gazeplay.commons.utils.ControlPanelConfigurator;
-import net.gazeplay.commons.utils.CustomButton;
+import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.LicenseUtils;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
@@ -74,6 +73,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         CustomButton exitButton = createExitButton(screenDimension);
         CustomButton logoutButton = createLogoutButton(gazePlay, screenDimension);
+        CustomButton replayGameButton = createReplayGameButton(gazePlay, screenDimension);
 
         ConfigurationButton configurationButton = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
 
@@ -89,6 +89,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         rightControlPane.getChildren().add(toggleFullScreenButton);
 
         final List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
+
+        ReplayingGameFromJson.setGameList(games);
 
         GamesStatisticsPane gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games);
 
@@ -106,7 +108,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         HBox topRightPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(topRightPane);
         topRightPane.setAlignment(Pos.TOP_CENTER);
-        topRightPane.getChildren().addAll(logoutButton, exitButton);
+        topRightPane.getChildren().addAll(replayGameButton, logoutButton, exitButton);
 
         ProgressIndicator dwellTimeIndicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, dwellTimeIndicator);
@@ -357,6 +359,19 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private CustomButton createLogoutButton(GazePlay gazePlay, Dimension2D screenDimension) {
         CustomButton logoutButton = new CustomButton("data/common/images/logout.png", screenDimension);
         logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> gazePlay.goToUserPage());
+        return logoutButton;
+    }
+
+    private CustomButton createReplayGameButton(GazePlay gazePlay, Dimension2D screenDimension) {
+        CustomButton logoutButton = new CustomButton("data/common/images/logout.png", screenDimension);
+        logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
+            try {
+                ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getApplicationContext());
+                replayingGame.pickJSONFile();
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            }
+        });
         return logoutButton;
     }
 
