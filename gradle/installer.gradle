@@ -34,14 +34,14 @@ task prepareInnoSetupFiles(group: 'distribution') {
             rename("setup.iss.skel", "setup.iss")
             expand([
                     applicationVersion: "${version}",
-                    unpackedDirectory : "gazeplay-project-windows-x64-${version}"
+                    unpackedDirectory : "${project.name}-windows-x64-${version}"
             ])
             into(innoSetupDir)
         }
 
 
         copy {
-            from("${rootDir}/gazeplay/src/main/resources/data/common/licence.txt")
+            from("${rootDir}/gazeplay-core/src/main/resources/data/common/licence.txt")
             expand([
                     "version": version,
                     "date"   : new Date().format('yyyy-MM-dd')
@@ -62,7 +62,7 @@ task prepareInnoSetupFiles(group: 'distribution') {
 }
 
 task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
-    from zipTree("${buildDir}/distributions/gazeplay-project-windows-x64-${version}.zip")
+    from zipTree("${buildDir}/distributions/${project.name}-windows-x64-${version}.zip")
     into buildDir
     fileMode 0777
     dirMode 0777
