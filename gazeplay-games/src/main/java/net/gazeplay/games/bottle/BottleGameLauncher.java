@@ -1,7 +1,6 @@
 package net.gazeplay.games.bottle;
 
 import javafx.scene.Scene;
-import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 
@@ -13,7 +12,8 @@ public class BottleGameLauncher implements GameSpec.GameLauncher<BottleGameStats
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.DimensionGameVariant gameVariant, BottleGameStats stats) {
+    public BottleGame createNewGame(IGameContext gameContext, GameSpec.DimensionGameVariant gameVariant, BottleGameStats stats) {
+        BottleGame gameInstance;
         return new BottleGame(gameContext, stats);
     }
 }

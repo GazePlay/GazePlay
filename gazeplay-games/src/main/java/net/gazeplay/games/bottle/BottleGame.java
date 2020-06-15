@@ -47,6 +47,7 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
     private Rectangle ball;
     private final Text scoreText;
     private int score;
+    private int nbBottle = 16;
 
     private Point2D gazeTarget;
 
@@ -58,6 +59,7 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
+        //this.gameInstance = gameInstance;
 
         this.bottle = new ArrayList<>();
 
@@ -144,7 +146,7 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
 
         initBall();
 
-        createBottle(15);
+        createBottle(nbBottle);
 
         middleLayer.getChildren().add(ball);
         gameContext.getChildren().add(ball);
@@ -241,6 +243,14 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
         score = score + 1;
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
+        if (score == nbBottle) {
+            gameContext.playWinTransition(0, event1 -> {
+
+                gameContext.clear();
+
+                gameContext.showRoundStats(bottleGameStats, this);
+            });
+        }
     }
 
     @Override
