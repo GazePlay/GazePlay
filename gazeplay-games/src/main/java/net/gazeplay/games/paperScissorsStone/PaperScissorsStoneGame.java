@@ -48,6 +48,8 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
     private ProgressButton scissors;
     private ProgressButton ennemy;
 
+    private int score = 0;
+
     private enum type {paper, stone, scissors}
 
     private type ennemyT;
@@ -140,6 +142,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         stone.assignIndicator(event -> {
             if (ennemyT == type.scissors) {
                 gameContext.playWinTransition(0, event1 -> {
+                    score = score + 1;
                     gameContext.clear();
                     launch();
                 });
@@ -162,6 +165,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         paper.assignIndicator(event -> {
             if (ennemyT == type.stone) {
                 gameContext.playWinTransition(0, event1 -> {
+                    score = score + 1;
                     gameContext.clear();
                     launch();
                 });
@@ -183,6 +187,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         scissors.assignIndicator(event -> {
             if (ennemyT == type.paper) {
                 gameContext.playWinTransition(0, event1 -> {
+                    score = score + 1;
                     gameContext.clear();
                     launch();
                 });
@@ -220,6 +225,12 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         middleLayer.getChildren().addAll(stone, paper, scissors, ennemy);
 
         gameContext.getChildren().addAll(background, stone, paper, scissors, ennemy);
+
+        if (score == 3) {
+            gameContext.playWinTransition(0, event1 -> {
+                gameContext.showRoundStats(stats, this);
+            });
+        }
 
         this.start();
 
