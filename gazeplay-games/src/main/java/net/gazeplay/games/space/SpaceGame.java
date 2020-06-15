@@ -451,6 +451,11 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         spaceGameStats.incrementNumberOfGoalsReached(score);
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
+        if (score >= 500) {
+            gameContext.playWinTransition(0, event1 -> {
+                gameContext.showRoundStats(spaceGameStats, this);
+            });
+        }
     }
 
     private void createBiboule(final double x, final double y) {
