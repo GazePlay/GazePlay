@@ -35,6 +35,10 @@ public class Instru {
      */
     void noteOn(final int note) {
         final int volume = 100;
+        this.noteOn(note, volume);
+    }
+
+    void noteOn(final int note, int volume) {
         canal.noteOn(note, volume);
     }
 

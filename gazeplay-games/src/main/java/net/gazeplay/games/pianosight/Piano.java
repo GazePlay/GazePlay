@@ -19,6 +19,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import javax.sound.midi.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -143,7 +144,8 @@ public class Piano extends Parent implements GameLifeCycle {
 
     }
 
-    private void loadMusic(final boolean b) throws IOException {
+    private void loadMusic(final boolean b) throws IOException, InvalidMidiDataException, MidiUnavailableException {
+
         if (b) {
             final String fileName = jukebox.getS();
             if (fileName == null) {
@@ -163,14 +165,13 @@ public class Piano extends Parent implements GameLifeCycle {
         }
     }
 
-    private void loadMusicStream(final InputStream inputStream) {
+    private void loadMusicStream(final InputStream inputStream) throws MidiUnavailableException, IOException, InvalidMidiDataException {
         midiReader = new MidiReader(inputStream, stats);
         stats.incrementNumberOfGoalsToReach(midiReader.getTrackSize());
         firstNote = midiReader.nextNote();
         for (final Tile tile : tilesTab) {
             tile.arc.setFill(tile.color1);
         }
-
         if (firstNote != -1) {
             tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
         }
@@ -200,7 +201,7 @@ public class Piano extends Parent implements GameLifeCycle {
             if (circleTemp.getFill() == Color.YELLOW) {
                 if (firstNote != -1) {
                     final int precNote = firstNote;
-                    final int precKey = midiReader.getKey();
+                    //final int precKey = midiReader.getKey();
 
                     final int index = midiReader.nextNote();
                     if (index > -1) {
@@ -208,8 +209,6 @@ public class Piano extends Parent implements GameLifeCycle {
                     } else {
                         firstNote = index;
                     }
-
-                    instru.noteOn(precKey);
                     stats.incrementNumberOfGoalsReached();
 
                     if (firstNote != -1) {
@@ -267,7 +266,7 @@ public class Piano extends Parent implements GameLifeCycle {
         b.setOnMousePressed(evt -> {
             try {
                 loadMusic(true);
-            } catch (final IOException e) {
+            } catch (final IOException | MidiUnavailableException | InvalidMidiDataException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
@@ -275,10 +274,8 @@ public class Piano extends Parent implements GameLifeCycle {
         this.getChildren().add(b);
 
         try {
-
             loadMusic(false);
-
-        } catch (final IOException e) {
+        } catch (final IOException | InvalidMidiDataException | MidiUnavailableException e) {
             e.printStackTrace();
         }
         stats.notifyNewRoundReady();
@@ -315,7 +312,6 @@ public class Piano extends Parent implements GameLifeCycle {
                 }
 
                 if (precNote != -1 && tilesTab.get(precNote).arc.getFill() == Color.YELLOW) {
-                    instru.noteOn(precKey);
                     stats.incrementNumberOfGoalsReached();
                     double x;
                     double y;
