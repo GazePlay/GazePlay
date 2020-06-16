@@ -56,9 +56,13 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
     private long lastTickTime = 0;
     private long minFPS = 1000;
 
+    private int score = 0;
+
     private ProgressButton thumbUp;
     private ProgressButton thumbDown;
     private ProgressButton noCare;
+
+    private double time;
 
     public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats) {
         this.stats = stats;
@@ -168,6 +172,7 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
         thumbDown.assignIndicator(event -> {
             background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
             stats.incrementNumberOfGoalsReached();
+            updateScore();
         }, configuration.getFixationLength());
         gameContext.getGazeDeviceManager().addEventFilter(thumbDown);
         thumbDown.active();
@@ -184,6 +189,7 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
         noCare.assignIndicator(event -> {
             background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
             stats.incrementNumberOfGoalsReached();
+            updateScore();
         }, configuration.getFixationLength());
         gameContext.getGazeDeviceManager().addEventFilter(noCare);
         noCare.active();
@@ -200,6 +206,7 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
         thumbUp.assignIndicator(event -> {
             background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
             stats.incrementNumberOfGoalsReached();
+            updateScore();
         }, configuration.getFixationLength());
         gameContext.getGazeDeviceManager().addEventFilter(thumbUp);
         thumbUp.active();
@@ -231,9 +238,19 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
 
         gameContext.getChildren().addAll(thumbUp, thumbDown, noCare);
 
+
         this.start();
 
         opinionGameStats.notifyNewRoundReady();
+    }
+
+    private void updateScore() {
+        score = score + 1;
+        if (score == 10) {
+            gameContext.playWinTransition(0, event1 -> {
+                gameContext.showRoundStats(opinionGameStats, this);
+            });
+        }
     }
 
     @Override
