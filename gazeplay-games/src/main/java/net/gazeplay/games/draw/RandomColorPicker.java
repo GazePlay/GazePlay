@@ -1,12 +1,11 @@
 package net.gazeplay.games.draw;
 
 import javafx.scene.paint.Color;
-
-import java.util.Random;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 public class RandomColorPicker implements ColorPicker {
 
-    private final Random randomColorPicker = new Random();
+    private final ReplayablePseudoRandom randomColorPicker = new ReplayablePseudoRandom();
 
     @Override
     public Color pickColor() {

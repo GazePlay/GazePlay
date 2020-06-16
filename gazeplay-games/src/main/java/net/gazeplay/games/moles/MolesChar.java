@@ -16,8 +16,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-
-import java.util.Random;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 @Slf4j
 public class MolesChar extends Parent {
@@ -152,7 +151,7 @@ public class MolesChar extends Parent {
             out = true;
 
             timeMoleOut = new Timeline(); // New time this mole go out
-            final Random r = new Random();
+            final ReplayablePseudoRandom r = new ReplayablePseudoRandom();
             final int time = r.nextInt(timeMoleStayOut) + 2000;
 
             timeMoleOut.getKeyFrames()

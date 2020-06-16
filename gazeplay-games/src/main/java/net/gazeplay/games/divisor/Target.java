@@ -18,12 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.Position;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * @author vincent
@@ -205,7 +205,7 @@ class Target extends Parent {
     }
 
     private int randomDirection() {
-        final Random r = new Random();
+        final ReplayablePseudoRandom r = new ReplayablePseudoRandom();
         int x = r.nextInt(3) + 4;
         if (r.nextInt(2) >= 1) {
             x = -x;
@@ -214,7 +214,7 @@ class Target extends Parent {
     }
 
     private Position randomPosWithRange(final Position start, final double range, final double radius) {
-        final Random random = new Random();
+        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
 
         final double minX = (start.getX() - range);
         final double minY = (start.getY() - range);

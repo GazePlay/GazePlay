@@ -3,14 +3,13 @@ package net.gazeplay.components;
 import javafx.geometry.Dimension2D;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Random;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 @Slf4j
 @AllArgsConstructor
-public abstract class RandomPositionGenerator {
+public abstract class RandomPositionGenerator{
 
-    private final Random random = new Random();
+    private final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
 
     public abstract Dimension2D getDimension2D();
 
@@ -50,8 +49,8 @@ public abstract class RandomPositionGenerator {
 
     public Position createPosition(final double minX, final double minY, final double maxX, final double maxY) {
         if (maxX > 0 && maxY > 0) {
-            final double positionX = random.nextInt((int) (maxX - minX)) + minX;
-            final double positionY = random.nextInt((int) (maxY - minY)) + minY;
+            final double positionX = random.nextInt((int) ((maxX-minX + 1) + minX));
+            final double positionY =  random.nextInt((int) ((maxY-minY + 1) + minY));
             log.debug("the posX is ={}", positionX);
             log.debug("the posY is ={}", positionY);
 

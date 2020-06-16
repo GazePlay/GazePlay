@@ -2,8 +2,7 @@ package net.gazeplay.ui.scenes.gamemenu;
 
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
-
-import java.util.Random;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 @Slf4j
 public enum GameButtonOrientation {
@@ -15,7 +14,7 @@ public enum GameButtonOrientation {
 
     public static GameButtonOrientation random() {
         GameButtonOrientation[] values = values();
-        int randomIndex = new Random().nextInt(values.length);
+        int randomIndex = new ReplayablePseudoRandom().nextInt(values.length);
         return values[randomIndex];
     }
 
