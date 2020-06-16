@@ -52,6 +52,8 @@ class PictureCard extends Group {
 
     private final WhereIsIt gameInstance;
 
+    private int end;
+
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
                 boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsIt gameInstance) {
 
@@ -157,9 +159,10 @@ class PictureCard extends Group {
         fullAnimation.getChildren().add(scaleToFullScreenTransition);
 
         fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
+            updateScore();
             gameInstance.dispose();
             gameContext.clear();
-            gameInstance.launch();
+            //gameInstance.launch();
             // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
             // gameInstance.stats);
 
@@ -169,6 +172,15 @@ class PictureCard extends Group {
 
         fullAnimation.play();
     }
+
+    private void updateScore() {
+        end = end + 1;
+        log.info("end :" + end);
+        if (end >= 1) {
+            gameContext.showRoundStats(stats, gameInstance);
+        }
+    }
+
 
     private void onWrongCardSelected(WhereIsIt gameInstance) {
         customInputEventHandler.ignoreAnyInput = true;
