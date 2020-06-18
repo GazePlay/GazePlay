@@ -13,7 +13,6 @@ public class BottleGameLauncher implements GameSpec.GameLauncher<BottleGameStats
 
     @Override
     public BottleGame createNewGame(IGameContext gameContext, GameSpec.DimensionGameVariant gameVariant, BottleGameStats stats) {
-        BottleGame gameInstance;
         return new BottleGame(gameContext, stats);
     }
 }
