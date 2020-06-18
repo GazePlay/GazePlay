@@ -33,6 +33,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_WHEREISIT_DIR = "WHEREISITDIR";
     private static final String PROPERTY_NAME_QUESTION_LENGTH = "QUESTIONLENGTH";
     private static final String PROPERTY_NAME_ENABLE_REWARD_SOUND = "ENABLE_REWARD_SOUND";
+    private static final String PROPERTY_NAME_LIMITER = "LIMITER";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
     private static final String PROPERTY_NAME_HEATMAP_DISABLED = "HEATMAP_DISABLED";
     private static final String PROPERTY_NAME_HEATMAP_OPACITY = "HEATMAP_OPACITY";
@@ -68,6 +69,7 @@ public class Configuration {
     public static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
     private static final long DEFAULT_VALUE_QUESTION_LENGTH = 5000;
     private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
+    private static final boolean DEFAULT_VALUE_LIMITER = false;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
     private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
     private static final double DEFAULT_VALUE_HEATMAP_OPACITY = 0.7;
@@ -139,6 +141,9 @@ public class Configuration {
 
     @Getter
     private final BooleanProperty enableRewardSoundProperty;
+
+    @Getter
+    private final BooleanProperty limiterProperty;
 
     @Getter
     private final StringProperty menuButtonsOrientationProperty;
@@ -228,6 +233,7 @@ public class Configuration {
         heatMapDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED, propertyChangeListener);
 
         enableRewardSoundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND, propertyChangeListener);
+        limiterProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITER, DEFAULT_VALUE_LIMITER, propertyChangeListener);
 
         areaOfInterestDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED, propertyChangeListener);
         convexHullDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED, propertyChangeListener);
@@ -328,6 +334,10 @@ public class Configuration {
 
     public Boolean isEnableRewardSound() {
         return enableRewardSoundProperty.getValue();
+    }
+
+    public boolean isLimiter() {
+        return limiterProperty.getValue();
     }
 
     public String getMenuButtonsOrientation() {

@@ -35,10 +35,15 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     private Cheese cheese;
     private Mouse mouse;
 
+    private int end;
+
     private final LabyrinthGameVariant variant;
+
+    private boolean limiter;
 
     public Labyrinth(final IGameContext gameContext, final Stats stats, final LabyrinthGameVariant variant) {
         super();
+        this.limiter = gameContext.getConfiguration().isLimiter();
 
         this.gameContext = gameContext;
         this.stats = stats;
@@ -157,10 +162,22 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     void testIfCheese(final int i, final int j) {
         if (cheese.isTheCheese(i, j)) {
+            if (limiter) {
+                updateScore();
+            }
             stats.incrementNumberOfGoalsReached();
             cheese.moveCheese();
             stats.incrementNumberOfGoalsToReach();
             mouse.nbMove = 0;
+        }
+    }
+
+    private void updateScore() {
+        end = end + 1;
+        if (end == 5) {
+            gameContext.playWinTransition(0, event1 -> {
+                gameContext.showRoundStats(stats, this);
+            });
         }
     }
 

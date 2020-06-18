@@ -35,10 +35,12 @@ public class Dice implements GameLifeCycle {
     private final int[] rolls;
     private final ProgressButton rollButton;
     private int end = 0;
+    private boolean limiter;
 
     public Dice(final IGameContext gameContext, final Stats stats, final int nbDice) {
         this.gameContext = gameContext;
         this.stats = stats;
+        this.limiter = gameContext.getConfiguration().isLimiter();
         final Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         active = true;
 
@@ -61,7 +63,9 @@ public class Dice implements GameLifeCycle {
                 for (int i = 0; i < diceRollers.size(); i++) {
                     rolls[i] = diceRollers.get(i).roll(i == 0 ? action -> addUp() : null);
                 }
-                updateScore();
+                if (limiter) {
+                    updateScore();
+                }
                 stats.incrementNumberOfGoalsReached();
             }
         }, config.getFixationLength());

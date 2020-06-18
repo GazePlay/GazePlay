@@ -77,6 +77,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private final ArrayList<Platform> platforms;
 
     private int score;
+    private boolean limiter;
 
     private final Rectangle shade;
     private final ProgressButton restartButton;
@@ -89,6 +90,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         this.randomGenerator = new Random();
         this.config = gameContext.getConfiguration();
         this.variant = variant;
+        this.limiter = gameContext.getConfiguration().isLimiter();
 
         bibouleImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/biboules");
         cloudImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/clouds");
@@ -481,6 +483,13 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private void updateScore(final double difference) {
         final int inc = (int) (difference / dimensions.getHeight() * 100);
         score += inc;
+        if (limiter) {
+            if (score > 500) {
+                gameContext.playWinTransition(0, event1 -> {
+                    gameContext.showRoundStats(stats, this);
+                });
+            }
+        }
         stats.incrementNumberOfGoalsReached(inc);
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimensions.getWidth() / 2 - scoreText.getWrappingWidth() / 2);

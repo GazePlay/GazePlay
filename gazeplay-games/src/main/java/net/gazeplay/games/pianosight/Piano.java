@@ -52,9 +52,13 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private final List<ImageView> fragments;
 
+    private int end = 0;
+    private boolean limiter;
+
     public Piano(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
+        this.limiter = gameContext.getConfiguration().isLimiter();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2.2;
@@ -143,6 +147,15 @@ public class Piano extends Parent implements GameLifeCycle {
 
     }
 
+    private void updateScore() {
+        end = end + 1;
+        if (end == 10) {
+            gameContext.playWinTransition(0, event1 -> {
+                gameContext.showRoundStats(stats, this);
+            });
+        }
+    }
+
     private void loadMusic(final boolean b) throws IOException {
         if (b) {
             final String fileName = jukebox.getS();
@@ -198,6 +211,9 @@ public class Piano extends Parent implements GameLifeCycle {
 
         final EventHandler<Event> circleEvent = e -> {
             if (circleTemp.getFill() == Color.YELLOW) {
+                if (limiter) {
+                    updateScore();
+                }
                 if (firstNote != -1) {
                     final int precNote = firstNote;
                     final int precKey = midiReader.getKey();

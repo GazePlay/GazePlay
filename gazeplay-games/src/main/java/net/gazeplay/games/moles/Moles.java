@@ -45,10 +45,13 @@ public class Moles extends Parent implements GameLifeCycle {
 
     private RoundDetails currentRoundDetails;
 
+    private boolean limiter;
+
     Moles(IGameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
+        this.limiter = gameContext.getConfiguration().isLimiter();
     }
 
     @Override
@@ -251,7 +254,14 @@ public class Moles extends Parent implements GameLifeCycle {
         nbMolesWhacked++;
         String s = "Score:" + nbMolesWhacked;
         stats.incrementNumberOfGoalsReached();
-        lab.setText(s);
+        if (limiter) {
+            if (nbMolesWhacked == 20) {
+                gameContext.playWinTransition(0, event1 -> {
+                    gameContext.showRoundStats(stats, this);
+                });
+            }
+            lab.setText(s);
+        }
     }
 
 }

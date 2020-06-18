@@ -50,6 +50,8 @@ public class Target extends Portrait {
 
     private final Random randomGen;
 
+    private int end = 0;
+
     public Animation currentTranslation;
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
@@ -219,6 +221,8 @@ public class Target extends Portrait {
 
         stats.incrementNumberOfGoalsReached();
 
+        end = end++;
+
         final Animation runningTranslation = currentTranslation;
         if (runningTranslation != null) {
             runningTranslation.stop();
@@ -307,5 +311,9 @@ public class Target extends Portrait {
         final FadeTransition fadeTransition = new FadeTransition(new Duration(1), this);
         fadeTransition.setToValue(1);
         return fadeTransition;
+    }
+
+    public int getEnd() {
+        return end;
     }
 }

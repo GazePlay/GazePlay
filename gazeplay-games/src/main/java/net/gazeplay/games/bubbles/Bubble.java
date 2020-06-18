@@ -58,11 +58,15 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final BubblesGameVariant direction;
 
+    private int end = 0;
+    private boolean limiter;
+
     public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final boolean useBackgroundImage, final BubblesGameVariant direction) {
         this.gameContext = gameContext;
         this.type = type;
         this.stats = stats;
         this.direction = direction;
+        this.limiter = gameContext.getConfiguration().isLimiter();
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"));
 
@@ -194,6 +198,15 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     }
 
+    private void updateScore() {
+        end = end + 1;
+        if (end == 100) {
+            gameContext.playWinTransition(0, event1 -> {
+                gameContext.showRoundStats(stats, this);
+            });
+        }
+    }
+
     private void enter(final Circle target) {
 
         final double centerX = target.getCenterX();
@@ -201,8 +214,11 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().removeEventFilter(target);
         this.getChildren().remove(target);
-
+        if (limiter) {
+            updateScore();
+        }
         stats.incrementNumberOfGoalsReached();
+
 
         explose(centerX, centerY); // instead of C to avoid wrong position of the explosion
 

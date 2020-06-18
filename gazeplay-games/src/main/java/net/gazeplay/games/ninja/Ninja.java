@@ -31,6 +31,11 @@ public class Ninja implements GameLifeCycle {
             Portrait.createImageLibrary(), gameVariant);
 
         gameContext.getChildren().add(portrait);
+        if (stats.getNbGoalsReached() > 3) {
+            gameContext.playWinTransition(0, event1 -> {
+                gameContext.showRoundStats(stats, this);
+            });
+        }
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
     }

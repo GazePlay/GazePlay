@@ -217,6 +217,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
+        {
+            I18NText label = new I18NText(translator, "Limiter", COLON);
+
+            CheckBox input = buildCheckBox(config.getLimiterProperty());
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
 
 
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "EyeTrackerSettings", COLON));
