@@ -2,7 +2,6 @@ package net.gazeplay.games.bottle;
 
 import javafx.animation.*;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -96,8 +95,6 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
-        new Point2D(dimension2D.getWidth() / 2, dimension2D.getHeight() / 2);
-
         interactionOverlay = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
 
         interactionOverlay.setFill(Color.TRANSPARENT);
@@ -116,8 +113,6 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
 
         this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
-
-        //new Point2D(dimension2D.getWidth() / 2, 0);
 
         initBall();
 
