@@ -59,7 +59,6 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
-        //this.gameInstance = gameInstance;
 
         this.bottle = new ArrayList<>();
 
@@ -78,7 +77,6 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
 
         sp.getChildren().add(backgroundImage);
 
-        // Menu
         final int fixationLength = configuration.getFixationLength();
 
         scoreText = new Text(0, 50, "0");
@@ -110,7 +108,6 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
-        // Interaction
         gazeTarget = new Point2D(dimension2D.getWidth() / 2, dimension2D.getHeight() / 2);
 
         interactionOverlay = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
@@ -245,9 +242,7 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
         if (score == nbBottle) {
             gameContext.playWinTransition(0, event1 -> {
-
                 gameContext.clear();
-
                 gameContext.showRoundStats(bottleGameStats, this);
             });
         }
