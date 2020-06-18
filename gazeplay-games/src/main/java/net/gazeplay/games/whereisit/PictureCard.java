@@ -66,7 +66,17 @@ class PictureCard extends Group {
 
         final Configuration config = gameContext.getConfiguration();
 
-        this.minTime = config.getFixationLength();
+        // Interaction mode
+        boolean isCrossingInteraction = config.getInteractionMode().equals(InteractionMode.crossing.toString());
+
+        if(isCrossingInteraction)
+        {
+            this.minTime = 0;
+        }
+        else {
+            this.minTime = config.getFixationLength();
+        }
+
         this.initialPositionX = posX;
         this.initialPositionY = posY;
         this.initialWidth = width;
