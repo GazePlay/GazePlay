@@ -49,8 +49,6 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
     private int score;
     private int nbBottle = 16;
 
-    private Point2D gazeTarget;
-
     private final Multilinguism translate;
 
     public BottleGame(IGameContext gameContext, BottleGameStats stats) {
@@ -108,15 +106,15 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
-        gazeTarget = new Point2D(dimension2D.getWidth() / 2, dimension2D.getHeight() / 2);
+        new Point2D(dimension2D.getWidth() / 2, dimension2D.getHeight() / 2);
 
         interactionOverlay = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
 
         final EventHandler<Event> movementEvent = (Event event) -> {
             if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
-                gazeTarget = new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
+                new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
             } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
-                gazeTarget = new Point2D(((GazeEvent) event).getX(), ((GazeEvent) event).getY());
+                new Point2D(((GazeEvent) event).getX(), ((GazeEvent) event).getY());
             }
         };
 
@@ -139,7 +137,7 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
         this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
 
-        gazeTarget = new Point2D(dimension2D.getWidth() / 2, 0);
+        new Point2D(dimension2D.getWidth() / 2, 0);
 
         initBall();
 
@@ -231,9 +229,7 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
         bottleDisappear.setCycleCount(1);
         bottleDisappear.setInterpolator(Interpolator.LINEAR);
         bottleDisappear.play();
-        bottleDisappear.setOnFinished(event -> {
-            bottle.disable();
-        });
+        bottleDisappear.setOnFinished(event -> bottle.disable());
     }
 
     private void updateScore() {
