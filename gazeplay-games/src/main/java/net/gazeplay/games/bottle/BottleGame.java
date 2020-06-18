@@ -21,8 +21,6 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
-import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.components.ProgressButton;
 
 import java.util.ArrayList;
@@ -49,8 +47,6 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
     private int score;
     private int nbBottle = 16;
 
-    private final Multilinguism translate;
-
     public BottleGame(IGameContext gameContext, BottleGameStats stats) {
 
         this.bottleGameStats = stats;
@@ -65,8 +61,6 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
         final Group foregroundLayer = new Group();
         final StackPane sp = new StackPane();
         gameContext.getChildren().addAll(sp, backgroundLayer, middleLayer, foregroundLayer);
-
-        this.translate = MultilinguismFactory.getSingleton();
 
         final Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         backgroundImage.widthProperty().bind(gameContext.getRoot().widthProperty());
