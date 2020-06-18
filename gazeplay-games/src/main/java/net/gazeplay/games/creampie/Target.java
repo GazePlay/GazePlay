@@ -1,6 +1,9 @@
 package net.gazeplay.games.creampie;
 
-import javafx.animation.*;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
@@ -28,6 +31,8 @@ public class Target extends Portrait {
 
     final EventHandler<Event> enterEvent;
 
+    private final CreamPie gameInstance;
+
     private boolean animationEnded = true;
 
     private static final int radius = 100;
@@ -45,7 +50,7 @@ public class Target extends Portrait {
     private final IGameContext gameContext;
 
     public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
-                  final ImageLibrary imageLibrary) {
+                  final ImageLibrary imageLibrary, CreamPie gameInstance) {
 
         super(radius, randomPositionGenerator, imageLibrary);
         this.randomPositionGenerator = randomPositionGenerator;
@@ -53,6 +58,7 @@ public class Target extends Portrait {
         this.imageLibrary = imageLibrary;
         this.stats = stats;
         this.gameContext = gameContext;
+        this.gameInstance = gameInstance;
         targetAOIList = new ArrayList<>();
 
         enterEvent = e -> {
@@ -75,6 +81,10 @@ public class Target extends Portrait {
     private void enter() {
 
         stats.incrementNumberOfGoalsReached();
+
+        if (stats.getNbGoalsReached() > 9) {
+            gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
+        }
 
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 

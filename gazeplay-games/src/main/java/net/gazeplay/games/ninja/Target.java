@@ -44,20 +44,21 @@ public class Target extends Portrait {
 
     private static final String audioClipResourceLocation = "data/ninja/sounds/2009.wav";
 
+    private final Ninja gameInstance;
+
     private boolean animationStopped = true;
 
     private final NinjaGameVariant gameVariant;
 
     private final Random randomGen;
 
-    private int end = 0;
-
     public Animation currentTranslation;
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
-                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant) {
+                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance) {
         super(radius, randomPositionGenerator, imageLibrary);
 
+        this.gameInstance = gameInstance;
         this.gameContext = gameContext;
         this.randomPositionGenerator = randomPositionGenerator;
         this.stats = stats;
@@ -221,7 +222,9 @@ public class Target extends Portrait {
 
         stats.incrementNumberOfGoalsReached();
 
-        end = end++;
+        if (stats.getNbGoalsReached() > 9) {
+            gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
+        }
 
         final Animation runningTranslation = currentTranslation;
         if (runningTranslation != null) {
@@ -311,9 +314,5 @@ public class Target extends Portrait {
         final FadeTransition fadeTransition = new FadeTransition(new Duration(1), this);
         fadeTransition.setToValue(1);
         return fadeTransition;
-    }
-
-    public int getEnd() {
-        return end;
     }
 }

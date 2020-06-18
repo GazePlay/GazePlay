@@ -29,7 +29,7 @@ public class CreamPie implements GameLifeCycle {
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
 
         hand = new Hand();
-        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary);
+        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this);
         gameContext.getChildren().add(target);
         gameContext.getChildren().add(hand);
     }
