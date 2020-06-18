@@ -117,7 +117,7 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
         this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
 
-        new Point2D(dimension2D.getWidth() / 2, 0);
+        //new Point2D(dimension2D.getWidth() / 2, 0);
 
         initBall();
 
