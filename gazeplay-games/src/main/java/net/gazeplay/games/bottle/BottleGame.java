@@ -1,14 +1,11 @@
 package net.gazeplay.games.bottle;
 
 import javafx.animation.*;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -20,7 +17,6 @@ import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.components.ProgressButton;
 
 import java.util.ArrayList;
@@ -104,16 +100,6 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
 
         interactionOverlay = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
 
-        final EventHandler<Event> movementEvent = (Event event) -> {
-            if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
-                new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
-            } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
-                new Point2D(((GazeEvent) event).getX(), ((GazeEvent) event).getY());
-            }
-        };
-
-        interactionOverlay.addEventFilter(MouseEvent.MOUSE_MOVED, movementEvent);
-        interactionOverlay.addEventFilter(GazeEvent.GAZE_MOVED, movementEvent);
         interactionOverlay.setFill(Color.TRANSPARENT);
         foregroundLayer.getChildren().add(interactionOverlay);
 
