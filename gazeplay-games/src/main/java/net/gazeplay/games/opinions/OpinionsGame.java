@@ -1,14 +1,10 @@
 package net.gazeplay.games.opinions;
 
 import javafx.animation.AnimationTimer;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -20,12 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
-import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.components.ProgressButton;
 
 import java.util.List;
@@ -40,7 +33,6 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
     private final Group backgroundLayer;
     private final Group middleLayer;
     private final Rectangle interactionOverlay;
-    private final Multilinguism translate;
     private final OpinionsGameStats stats;
 
     private final ImageLibrary backgroundImage;
@@ -51,18 +43,11 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
     private final ProgressButton restartButton;
     private final Text finalScoreText;
 
-    private Point2D gazeTarget;
-
-    private long lastTickTime = 0;
-    private long minFPS = 1000;
-
     private int score = 0;
 
     private ProgressButton thumbUp;
     private ProgressButton thumbDown;
     private ProgressButton noCare;
-
-    private double time;
 
     public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats) {
         this.stats = stats;
@@ -78,8 +63,6 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
         final Group foregroundLayer = new Group();
         final StackPane sp = new StackPane();
         gameContext.getChildren().addAll(sp, backgroundLayer, middleLayer, foregroundLayer);
-
-        this.translate = MultilinguismFactory.getSingleton();
 
         backgroundImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions"));
 
@@ -118,20 +101,9 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
         // Interaction
-        gazeTarget = new Point2D(dimension2D.getWidth() / 2, dimension2D.getHeight() / 2);
 
         interactionOverlay = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
 
-        final EventHandler<Event> movementEvent = (Event event) -> {
-            if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
-                gazeTarget = new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
-            } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
-                gazeTarget = new Point2D(((GazeEvent) event).getX(), ((GazeEvent) event).getY());
-            }
-        };
-
-        interactionOverlay.addEventFilter(MouseEvent.MOUSE_MOVED, movementEvent);
-        interactionOverlay.addEventFilter(GazeEvent.GAZE_MOVED, movementEvent);
         interactionOverlay.setFill(Color.TRANSPARENT);
         foregroundLayer.getChildren().add(interactionOverlay);
 
@@ -149,8 +121,6 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
 
         this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
-
-        gazeTarget = new Point2D(dimension2D.getWidth() / 2, 0);
 
         background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         background.widthProperty().bind(gameContext.getRoot().widthProperty());
@@ -247,9 +217,7 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
     private void updateScore() {
         score = score + 1;
         if (score == 10) {
-            gameContext.playWinTransition(0, event1 -> {
-                gameContext.showRoundStats(opinionGameStats, this);
-            });
+            gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(opinionGameStats, this));
         }
     }
 
