@@ -193,7 +193,7 @@ public class Moles extends Parent implements GameLifeCycle {
             indice = r.nextInt(nbHoles);
         } while (!currentRoundDetails.molesList.get(indice).canGoOut);
         MolesChar m = currentRoundDetails.molesList.get(indice);
-        final TargetAOI targetAOI = new TargetAOI(m.getPositionX(), m.getPositionY(), (int)moleRadius,
+        final TargetAOI targetAOI = new TargetAOI(m.getPositionX(), m.getPositionY(), (int)moleRadius/3,
             System.currentTimeMillis());
         targetAOIList.add(targetAOI);
         m.setTargetAOIListIndex(targetAOIList.size()-1);
@@ -234,8 +234,9 @@ public class Moles extends Parent implements GameLifeCycle {
         ArrayList<MolesChar> result = new ArrayList<>();
 
         double moleHeight = computeMoleHeight(gameDimension2D);
-        this.moleRadius = moleHeight;
+
         double moleWidth = computeMoleWidth(gameDimension2D);
+        this.moleRadius = moleWidth;
         double height = gameDimension2D.getHeight();
         double width = gameDimension2D.getWidth();
         double distTrans = computeDistTransMole(gameDimension2D);
