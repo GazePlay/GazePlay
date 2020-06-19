@@ -27,7 +27,7 @@ public class Instru {
         canal = synthetiseur.getChannels()[0];
 
         // On initialise l'instrument 0 (le piano) pour le canal
-        canal.programChange(0);
+        canal.programChange(10);
     }
 
     /**
@@ -40,6 +40,14 @@ public class Instru {
 
     void noteOn(final int note, int volume) {
         canal.noteOn(note, volume);
+    }
+
+
+    /**
+     * Arrête de jouer la note dont le numéro est en paramètre
+     */
+    public void allNoteOff() {
+        canal.allNotesOff();
     }
 
     /**

@@ -1,11 +1,19 @@
 package net.gazeplay.games.pianosight;
 
 import javafx.animation.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -36,8 +44,6 @@ public class Piano extends Parent implements GameLifeCycle {
     private final double centerX;
     private final double centerY;
 
-    private int firstNote;
-
     private Circle circ;
     private Circle circleTemp;
     private final List<Tile> tilesTab;
@@ -49,9 +55,13 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private final Instru instru;
 
-    private MidiReader midiReader;
-
     private final List<ImageView> fragments;
+
+   // long lastTickPosition = 0;
+    long lastKey = 0;
+    MidiSequencerPlayer player;
+    private Sequence sequence;
+    ObjectProperty<Note> ip;
 
     public Piano(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
@@ -154,27 +164,16 @@ public class Piano extends Parent implements GameLifeCycle {
             log.info("you loaded the song : " + fileName);
             final File f = new File(fileName);
             try (InputStream inputStream = new FileInputStream(f)) {
-                loadMusicStream(inputStream);
+                sequence = MidiSystem.getSequence(inputStream);
             }
         } else {
             final String fileName = "RIVER.mid";
             log.info("you loaded the song : " + fileName);
             try (InputStream inputStream = Utils.getInputStream("data/pianosight/songs/" + fileName)) {
-                loadMusicStream(inputStream);
+                sequence = MidiSystem.getSequence(inputStream);
             }
         }
-    }
 
-    private void loadMusicStream(final InputStream inputStream) throws MidiUnavailableException, IOException, InvalidMidiDataException {
-        midiReader = new MidiReader(inputStream, stats);
-        stats.incrementNumberOfGoalsToReach(midiReader.getTrackSize());
-        firstNote = midiReader.nextNote();
-        for (final Tile tile : tilesTab) {
-            tile.arc.setFill(tile.color1);
-        }
-        if (firstNote != -1) {
-            tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
-        }
     }
 
     @Override
@@ -183,7 +182,7 @@ public class Piano extends Parent implements GameLifeCycle {
 
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         circ = new Circle(centerX, centerY, dimension2D.getHeight() / 4);
-        circ.setFill(Color.BLACK);
+        circ.setFill(Color.RED);
         this.getChildren().add(circ);
 
         circleTemp = new Circle(centerX, centerY, dimension2D.getHeight() / 5);
@@ -195,38 +194,41 @@ public class Piano extends Parent implements GameLifeCycle {
 
         createArcs();
 
+        ip = new SimpleObjectProperty<Note>();
+        ip.setValue(new Note(-1, -1, -1));
+        ip.addListener((o, n, old) -> {
+            if (!n.equals(new Note(-1, -1, -1)) ){
+            //&& (n.tick - lastTickPosition > 10)) {
+             //   lastTickPosition = n.tick;
+                lastKey = n.key;
+                int firstNote = (int) (lastKey % 12);
+                boolean isCircle =  tilesTab.get(firstNote).arc.getFill() == Color.YELLOW;
+
+                for (final Tile tile : tilesTab) {
+                    tile.arc.setFill(tile.color1);
+                }
+                if(isCircle) {
+                    circleTemp.setFill(Color.YELLOW);
+                } else {
+                    tilesTab.get(NOTE_NAMES[(int) (lastKey%12)]).arc.setFill(Color.YELLOW);
+                }
+                //sequencer.setTempoInBPM(0);
+                //sequencer.close();
+                //player.stop();
+
+            }
+        });
+
+        circleTemp.setFill(Color.YELLOW);
+
         this.getChildren().remove(circ);
 
         final EventHandler<Event> circleEvent = e -> {
             if (circleTemp.getFill() == Color.YELLOW) {
-                if (firstNote != -1) {
-                    final int precNote = firstNote;
-                    //final int precKey = midiReader.getKey();
-
-                    final int index = midiReader.nextNote();
-                    if (index > -1) {
-                        firstNote = NOTE_NAMES[index];
-                    } else {
-                        firstNote = index;
-                    }
-                    stats.incrementNumberOfGoalsReached();
-
-                    if (firstNote != -1) {
-                        tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);
-                        circleTemp.setFill(Color.BLACK);
-                        circleTemp.setOpacity(0);
-                        if (firstNote != -1) {
-                            tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
-                        } else {
-                            tilesTab.get(firstNote).arc.setFill(tilesTab.get(precNote).color1);
-                        }
-
-                    } else {
-                        tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);
-                        circleTemp.setFill(Color.BLACK);
-                        circleTemp.setOpacity(0);
-                    }
-
+                try {
+                    player.playPause();
+                } catch (MidiUnavailableException ex) {
+                    ex.printStackTrace();
                 }
             }
         };
@@ -273,12 +275,35 @@ public class Piano extends Parent implements GameLifeCycle {
         });
         this.getChildren().add(b);
 
+        ObservableList<Integer> integers = FXCollections.observableArrayList();
+        for(int i = 0; i<68; i++){
+            integers.add(i);
+        }
+        ChoiceBox<Integer> choiceBox = new ChoiceBox<Integer>(integers);
+        choiceBox.setLayoutY(dimension2D.getHeight() / 7);
+        choiceBox.setPrefWidth(dimension2D.getWidth() / 7);
+        choiceBox.setPrefHeight(dimension2D.getHeight() / 7);
+        //
+        ChangeListener<Integer> changeListener = (observable, oldValue, newValue) -> {
+            instru.setInstrument(newValue);
+        };
+        choiceBox.getSelectionModel().selectedItemProperty().addListener(changeListener);
+        this.getChildren().add(choiceBox);
+
+
+
         try {
             loadMusic(false);
         } catch (final IOException | InvalidMidiDataException | MidiUnavailableException e) {
             e.printStackTrace();
         }
         stats.notifyNewRoundReady();
+        circleTemp.setFill(Color.YELLOW);
+        circ.setFill(Color.YELLOW);
+        circleTemp.toFront();
+        circleTemp.setOpacity(1);
+
+        player = new MidiSequencerPlayer(sequence, ip);
     }
 
     @Override
@@ -298,61 +323,13 @@ public class Piano extends Parent implements GameLifeCycle {
         a3.setVisible(true);
 
         final EventHandler<Event> tileEventEnter = e -> {
-
-            if (((Tile) e.getTarget()).note == firstNote) {
-
-                final int precNote = firstNote;
-                final int precKey = midiReader.getKey();
-
-                final int index1 = midiReader.nextNote();
-                if (index1 > -1) {
-                    firstNote = NOTE_NAMES[index1];
-                } else {
-                    firstNote = index1;
-                }
-
-                if (precNote != -1 && tilesTab.get(precNote).arc.getFill() == Color.YELLOW) {
-                    stats.incrementNumberOfGoalsReached();
-                    double x;
-                    double y;
-
-                    if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                        final MouseEvent me = (MouseEvent) e;
-                        x = me.getX();
-                        y = me.getY();
-                    } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                        final GazeEvent ge = (GazeEvent) e;
-                        x = ge.getX();
-                        y = ge.getY();
-                    } else {
-                        x = centerX + size * Math.cos(Math.toRadians(-theta));
-                        y = centerY + size * Math.sin(Math.toRadians(-theta));
-                        explose(x, y);
-                        final double theta1 = (((index1 + 1) * 360d) / 7d - origin);
-                        x = centerX + size * Math.cos(Math.toRadians(-theta1));
-                        y = centerY + size * Math.sin(Math.toRadians(-theta1));
-                    }
-                    explose(x, y);
-                    if (firstNote != -1) {
-                        if (tilesTab.get(firstNote).arc.getFill() == Color.YELLOW) {
-                            tilesTab.get(precNote).arc.setFill(color2);
-                            circleTemp.setFill(Color.YELLOW);
-                            circleTemp.setOpacity(1);
-                        } else {
-                            tilesTab.get(precNote).arc.setFill(color2);
-                            tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
-                        }
-
-                    } else {
-                        tilesTab.get(precNote).arc.setFill(color2);
-                    }
-                }
-
-            } else {
+            if (tilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == color1) {
                 tilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color2);
-
+            } else
+            if (tilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == Color.YELLOW) {
+                    tilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color1);
+                    player.start();
             }
-
         };
 
         final EventHandler<Event> tileEventExited = e -> {
