@@ -52,6 +52,9 @@ public class CustomFileChooser extends Stage {
     private FlowPane[] flowPanes = new FlowPane[4];
     private String[] folder = {"magiccards", "portraits", "blocs", "opinions"};
 
+    private boolean deleted;
+    private boolean renamed;
+
 
     CustomFileChooser(Configuration configuration,
                       ConfigurationContext configurationContext,
@@ -249,10 +252,16 @@ public class CustomFileChooser extends Stage {
                         copyFile(dir, f, flowPaneIndex);
                         File test = new File(folderPath + "/thumbs/" + opinions + ".png");
                         if (test.exists()) {
-                            test.delete();
+                            deleted = test.delete();
+                            if (deleted) {
+                                log.debug("the file" + folderPath + "/thumbs/" + opinions + ".png" + " has been deleted");
+                            }
                         }
                         File newfile = new File(folderPath + "/thumbs/" + f.getName());
-                        newfile.renameTo(new File(dir + "/" + opinions + ".png"));
+                        renamed = newfile.renameTo(new File(dir + "/" + opinions + ".png"));
+                        if (renamed) {
+                            log.debug("the file" + dir + "/" + opinions + ".png" + "has been renamed");
+                        }
                     }
                 }
             } else {
