@@ -173,7 +173,7 @@ public class Math101 implements GameLifeCycle {
         stack.setLayoutX(boardX);
         stack.setLayoutY(boardY);
         final Rectangle boardRectangle = new Rectangle(boardX, boardY, boardWidth, boardHeight);
-        final TargetAOI targetAOI = new TargetAOI(boardX, boardY, (int)boardHeight, System.currentTimeMillis());
+        final TargetAOI targetAOI = new TargetAOI(boardX+boardWidth/2, boardY+boardHeight/2, (int)boardHeight/2, System.currentTimeMillis());
         targetAOIList.add(targetAOI);
         boardRectangle.setFill(new ImagePattern(new Image("data/math101/images/blackboard.png"), 0, 0, 1, 1, true));
 
@@ -312,7 +312,7 @@ public class Math101 implements GameLifeCycle {
                 final double positionX = computePositionX(boxWidth, cardWidth, currentColumnIndex);
                 final double positionY = computePositionY(boxHeight, cardHeight, currentLineIndex);
 
-                final TargetAOI targetAOI = new TargetAOI(positionX, positionY, (int)boxWidth, System.currentTimeMillis());
+                final TargetAOI targetAOI = new TargetAOI(positionX+cardWidth/2.5, positionY+boxWidth/3, (int)cardWidth/3, System.currentTimeMillis());
                 targetAOIList.add(targetAOI);
 
                 final Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, currentValue, gameContext, stats, this, fixationlength);
