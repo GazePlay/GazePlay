@@ -5,7 +5,6 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -20,7 +19,7 @@ import net.gazeplay.components.ProgressButton;
 
 import java.util.ArrayList;
 
-public class BottleGame extends AnimationTimer implements GameLifeCycle {
+public class BottleGame implements GameLifeCycle {
 
     private final BottleGameStats bottleGameStats;
     private final Dimension2D dimension2D;
@@ -28,6 +27,7 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
 
     private final Group backgroundLayer;
     private final Group middleLayer;
+    private final Group foregroundLayer;
     private final IGameContext gameContext;
 
     private final Rectangle shade;
@@ -39,7 +39,7 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
     private Rectangle ball;
     private final Text scoreText;
     private int score;
-    private int nbBottle = 16;
+    private int nbBottle = 2;
 
     public BottleGame(IGameContext gameContext, BottleGameStats stats) {
 
@@ -52,16 +52,15 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
 
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
-        final Group foregroundLayer = new Group();
-        final StackPane sp = new StackPane();
-        gameContext.getChildren().addAll(sp, backgroundLayer, middleLayer, foregroundLayer);
+        this.foregroundLayer = new Group();
+        gameContext.getChildren().addAll(backgroundLayer, middleLayer, foregroundLayer);
 
         final Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         backgroundImage.widthProperty().bind(gameContext.getRoot().widthProperty());
         backgroundImage.heightProperty().bind(gameContext.getRoot().heightProperty());
         backgroundImage.setFill(new ImagePattern(new Image("data/bottle/supermarket.png")));
 
-        sp.getChildren().add(backgroundImage);
+        backgroundLayer.getChildren().add(backgroundImage);
 
         final int fixationLength = configuration.getFixationLength();
 
@@ -102,8 +101,13 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
         restartButton.disable();
         finalScoreText.setOpacity(0);
 
-        this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
+        gameContext.getChildren().clear();
+        score = -1;
+        updateScore();
+        bottle.clear();
+
+        gameContext.getChildren().addAll(backgroundLayer, middleLayer, foregroundLayer);
 
         initBall();
 
@@ -112,14 +116,7 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
         middleLayer.getChildren().add(ball);
         gameContext.getChildren().add(ball);
 
-        score = 0;
-
         bottleGameStats.notifyNewRoundReady();
-    }
-
-    @Override
-    public void handle(long l) {
-
     }
 
     private void initBall() {
@@ -178,8 +175,8 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
             gameContext.getSoundManager().add("data/bottle/sounds/verre.wav");
             bottleBreaker(bottle);
         });
-        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(ball.translateYProperty(), bottle.getLayoutY() - bottle.getHeight() / 2 + ball.getY(), Interpolator.LINEAR)));
-        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(ball.translateXProperty(), bottle.getLayoutX() - bottle.getWidth() / 2 + ball.getX(), Interpolator.LINEAR)));
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(ball.translateYProperty(), -bottle.getLayoutY() - bottle.getHeight() / 2 + ball.getY(), Interpolator.LINEAR)));
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(ball.translateXProperty(), -bottle.getLayoutX() - bottle.getWidth() / 2 + ball.getX(), Interpolator.LINEAR)));
         timeline.play();
     }
 
@@ -203,7 +200,7 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
         if (score == nbBottle) {
-            gameContext.playWinTransition(0, event1 -> {
+            gameContext.playWinTransition(2500, event1 -> {
                 gameContext.clear();
                 gameContext.showRoundStats(bottleGameStats, this);
             });
@@ -217,5 +214,3 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
 
 
 }
-
-
