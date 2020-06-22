@@ -220,7 +220,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "Limiter", COLON);
 
-            CheckBox input = buildCheckBox(config.getLimiterProperty());
+            HBox input = buildLimiter(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -1040,6 +1040,32 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         } else if (hbox.getChildren().size() <= 5) {
             minusButton.setDisable(true);
         }
+
+        return hbox;
+    }
+
+    private HBox buildLimiter(Configuration config) {
+        HBox hbox = new HBox();
+        hbox.setSpacing(5);
+
+        CheckBox limit = buildCheckBox(config.getLimiterProperty());
+
+        Label time = new Label("Time");
+        time.setTextFill(Color.WHITE);
+        TextField limiterTime = new TextField();
+        Label score = new Label("Time");
+        score.setTextFill(Color.WHITE);
+        TextField limiterScore = new TextField();
+
+        hbox.getChildren().addAll(limit, time, limiterTime, score, limiterScore);
+
+        limiterTime.setOnAction(e -> {
+
+        });
+
+        limiterScore.setOnAction(e -> {
+
+        });
 
         return hbox;
     }
