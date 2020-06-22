@@ -12,7 +12,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -56,6 +55,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
     private final Group backgroundLayer;
     private final Group middleLayer;
+    private final Group foregroundLayer;
     private final Rectangle interactionOverlay;
     private final IGameContext gameContext;
 
@@ -115,9 +115,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
-        final Group foregroundLayer = new Group();
-        final StackPane sp = new StackPane();
-        gameContext.getChildren().addAll(sp, backgroundLayer, middleLayer, foregroundLayer);
+        this.foregroundLayer = new Group();
+        gameContext.getChildren().addAll(backgroundLayer, middleLayer, foregroundLayer);
 
         this.biboules = new ArrayList<>();
         this.bibouleWidth = dimension2D.getWidth() / 20;
@@ -146,9 +145,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         backgroundImage2.setOpacity(0.08);
         backgroundImage3.setOpacity(0.4);
 
-        sp.getChildren().add(backgroundImage);
-        sp.getChildren().add(backgroundImage2);
-        sp.getChildren().add(backgroundImage3);
+        backgroundLayer.getChildren().add(backgroundImage);
+        backgroundLayer.getChildren().add(backgroundImage2);
+        backgroundLayer.getChildren().add(backgroundImage3);
         backgroundImage.toFront();
         backgroundImage2.toBack();
         backgroundImage3.toBack();
@@ -240,8 +239,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
         interactionOverlay.setDisable(false);
 
-        this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
+        gameContext.getChildren().clear();
         bulletListRec.clear();
         biboulesKilled.clear();
         biboulesPos.clear();
@@ -250,6 +249,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         bulletBossListRec.clear();
         bosses.clear();
         bossKilled.clear();
+
+        gameContext.getChildren().addAll(backgroundLayer, middleLayer, foregroundLayer);
 
         spaceship = new Rectangle(dimension2D.getWidth() / 2, 6 * dimension2D.getHeight() / 7,
             dimension2D.getWidth() / 8, dimension2D.getHeight() / 7);
@@ -275,12 +276,12 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             spaceshipCollider.setFill(Color.YELLOW);
         }
 
-
         velocity = Point2D.ZERO;
         score = 0;
         lastTickTime = 0;
         gazeTarget = new Point2D(dimension2D.getWidth() / 2, 0);
         bossHit = 0;
+
 
         spawnBiboule();
 
@@ -452,9 +453,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
         if (score >= 500) {
-            gameContext.playWinTransition(0, event1 -> {
-                gameContext.showRoundStats(spaceGameStats, this);
-            });
+            gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(spaceGameStats, this));
         }
     }
 
