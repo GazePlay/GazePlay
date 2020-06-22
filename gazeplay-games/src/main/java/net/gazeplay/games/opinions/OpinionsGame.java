@@ -32,7 +32,6 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
     private final Configuration configuration;
     private final Group backgroundLayer;
     private final Group middleLayer;
-    private final Rectangle interactionOverlay;
     private final OpinionsGameStats stats;
 
     private final ImageLibrary backgroundImage;
@@ -100,14 +99,6 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
-        // Interaction
-
-        interactionOverlay = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-
-        interactionOverlay.setFill(Color.TRANSPARENT);
-        foregroundLayer.getChildren().add(interactionOverlay);
-
-        gameContext.getGazeDeviceManager().addEventFilter(interactionOverlay);
     }
 
     @Override
@@ -117,7 +108,6 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
         restartButton.disable();
         finalScoreText.setOpacity(0);
 
-        interactionOverlay.setDisable(false);
 
         this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
