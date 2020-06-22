@@ -28,7 +28,6 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
 
     private final Group backgroundLayer;
     private final Group middleLayer;
-    private final Rectangle interactionOverlay;
     private final IGameContext gameContext;
 
     private final Rectangle shade;
@@ -95,12 +94,6 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
-        interactionOverlay = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-
-        interactionOverlay.setFill(Color.TRANSPARENT);
-        foregroundLayer.getChildren().add(interactionOverlay);
-
-        gameContext.getGazeDeviceManager().addEventFilter(interactionOverlay);
     }
 
     @Override
@@ -108,8 +101,6 @@ public class BottleGame extends AnimationTimer implements GameLifeCycle {
         shade.setOpacity(0);
         restartButton.disable();
         finalScoreText.setOpacity(0);
-
-        interactionOverlay.setDisable(false);
 
         this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
