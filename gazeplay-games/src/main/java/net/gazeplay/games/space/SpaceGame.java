@@ -126,46 +126,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
         this.translate = MultilinguismFactory.getSingleton();
 
-        final Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        backgroundImage.widthProperty().bind(gameContext.getRoot().widthProperty());
-        backgroundImage.heightProperty().bind(gameContext.getRoot().heightProperty());
-        backgroundImage.setFill(new ImagePattern(new Image("data/space/background/space_img.png")));
-
-        final Rectangle backgroundImage2 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        backgroundImage2.widthProperty().bind(gameContext.getRoot().widthProperty());
-        backgroundImage2.heightProperty().bind(gameContext.getRoot().heightProperty());
-        backgroundImage2.setFill(new ImagePattern(new Image("data/space/background/space_img.png")));
-
-        final Rectangle backgroundImage3 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        backgroundImage3.widthProperty().bind(gameContext.getRoot().widthProperty());
-        backgroundImage3.heightProperty().bind(gameContext.getRoot().heightProperty());
-        backgroundImage3.setFill(new ImagePattern(new Image("data/space/background/space_img.png")));
-
-        backgroundImage.setOpacity(0.08);
-        backgroundImage2.setOpacity(0.08);
-        backgroundImage3.setOpacity(0.4);
-
-        backgroundLayer.getChildren().add(backgroundImage);
-        backgroundLayer.getChildren().add(backgroundImage2);
-        backgroundLayer.getChildren().add(backgroundImage3);
-        backgroundImage.toFront();
-        backgroundImage2.toBack();
-        backgroundImage3.toBack();
-
-        final TranslateTransition translateTransition = new TranslateTransition(Duration.millis(10000), backgroundImage);
-        translateTransition.setFromY(0);
-        translateTransition.setToY(dimension2D.getHeight());
-        translateTransition.setInterpolator(Interpolator.LINEAR);
-
-        final TranslateTransition translateTransition2 = new TranslateTransition(Duration.millis(10000), backgroundImage2);
-        translateTransition2.setFromY(0);
-        translateTransition2.setToY(dimension2D.getHeight());
-        translateTransition2.setInterpolator(Interpolator.LINEAR);
-
-        final SequentialTransition sequentialTransition = new SequentialTransition(translateTransition, translateTransition2);
-        sequentialTransition.setCycleCount(Animation.INDEFINITE);
-        sequentialTransition.play();
-
         final Label onScreenText = new Label();
         foregroundLayer.getChildren().add(onScreenText);
 
@@ -239,6 +199,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
         interactionOverlay.setDisable(false);
 
+        this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
         gameContext.getChildren().clear();
         bulletListRec.clear();
@@ -251,6 +212,48 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         bossKilled.clear();
 
         gameContext.getChildren().addAll(backgroundLayer, middleLayer, foregroundLayer);
+
+        final Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        backgroundImage.widthProperty().bind(gameContext.getRoot().widthProperty());
+        backgroundImage.heightProperty().bind(gameContext.getRoot().heightProperty());
+        backgroundImage.setFill(new ImagePattern(new Image("data/space/background/space_img.png")));
+
+        final Rectangle backgroundImage2 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        backgroundImage2.widthProperty().bind(gameContext.getRoot().widthProperty());
+        backgroundImage2.heightProperty().bind(gameContext.getRoot().heightProperty());
+        backgroundImage2.setFill(new ImagePattern(new Image("data/space/background/space_img.png")));
+
+        final Rectangle backgroundImage3 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        backgroundImage3.widthProperty().bind(gameContext.getRoot().widthProperty());
+        backgroundImage3.heightProperty().bind(gameContext.getRoot().heightProperty());
+        backgroundImage3.setFill(new ImagePattern(new Image("data/space/background/space_img.png")));
+
+        backgroundImage.setOpacity(0.08);
+        backgroundImage2.setOpacity(0.08);
+        backgroundImage3.setOpacity(0.4);
+
+        backgroundLayer.getChildren().add(backgroundImage);
+        backgroundLayer.getChildren().add(backgroundImage2);
+        backgroundLayer.getChildren().add(backgroundImage3);
+        backgroundImage.toFront();
+        backgroundImage2.toBack();
+        backgroundImage3.toBack();
+
+        final TranslateTransition translateTransition = new TranslateTransition(Duration.millis(10000), backgroundImage);
+        translateTransition.setFromY(0);
+        translateTransition.setToY(dimension2D.getHeight());
+        translateTransition.setInterpolator(Interpolator.LINEAR);
+        translateTransition.play();
+
+        final TranslateTransition translateTransition2 = new TranslateTransition(Duration.millis(10000), backgroundImage2);
+        translateTransition2.setFromY(0);
+        translateTransition2.setToY(dimension2D.getHeight());
+        translateTransition2.setInterpolator(Interpolator.LINEAR);
+        translateTransition2.play();
+
+        final SequentialTransition sequentialTransition = new SequentialTransition(translateTransition, translateTransition2);
+        sequentialTransition.setCycleCount(Animation.INDEFINITE);
+        sequentialTransition.play();
 
         spaceship = new Rectangle(dimension2D.getWidth() / 2, 6 * dimension2D.getHeight() / 7,
             dimension2D.getWidth() / 8, dimension2D.getHeight() / 7);
@@ -452,7 +455,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         spaceGameStats.incrementNumberOfGoalsReached(score);
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
-        if (score >= 500) {
+        if (biboulesKilled.size() == 30) {
             gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(spaceGameStats, this));
         }
     }
@@ -464,12 +467,15 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         biboules.add(b);
         b.setFill(new ImagePattern(bibouleImage.pickRandomImage()));
         backgroundLayer.getChildren().add(b);
+        //code for transition when biboule appear, bug sometimes when the game restart
+        /*
         final FadeTransition bibouleAppear = new FadeTransition(Duration.seconds(1), b);
         bibouleAppear.setInterpolator(Interpolator.LINEAR);
         bibouleAppear.setCycleCount(1);
         bibouleAppear.setFromValue(0);
         bibouleAppear.setToValue(1);
         bibouleAppear.play();
+        */
     }
 
     private void createBoss(final double x, final double y) {
