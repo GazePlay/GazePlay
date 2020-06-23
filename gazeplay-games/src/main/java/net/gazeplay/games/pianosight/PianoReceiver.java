@@ -13,6 +13,7 @@ public class PianoReceiver implements Receiver {
     ObjectProperty<Note> ip;
     long prevTick = 0;
     int trackIndex = 0;
+    int chanel = 0;
 
     public PianoReceiver(Sequencer sequencer, ObjectProperty<Note> ip ) {
         super();
@@ -47,7 +48,7 @@ public class PianoReceiver implements Receiver {
             int velocity = sm.getData2();
             if (sm.getCommand() == NOTE_ON) {
                 long newTick = sequencer.getTickPosition();
-                if(prevTick != newTick && prevTick != -1) {
+                if(prevTick != newTick && prevTick != -1 && (sm.getChannel() == chanel || chanel == -1)) {
                     prevTick = newTick;
                     Note n = new Note(key, velocity, newTick);
                     ip.setValue(new Note(-1, -1, -1));
@@ -61,5 +62,9 @@ public class PianoReceiver implements Receiver {
 
     @Override
     public void close() {
+    }
+
+    public void setChanel(int c){
+        chanel = c;
     }
 }

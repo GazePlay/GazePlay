@@ -9,41 +9,61 @@ import javax.sound.midi.*;
 
 public class MidiSequencerPlayer {
 
-    private Sequencer sequencer;
+    Sequencer sequencer;
     PianoReceiver pianoReceiver;
+    Sequence sequence;
+    ObjectProperty<Note> ip;
 
     public MidiSequencerPlayer(Sequence sequence, ObjectProperty<Note> ip) {
+       this.sequence = sequence;
+       this.ip = ip;
+       this.init();
+    }
+
+    public void initSequencer() throws InvalidMidiDataException, MidiUnavailableException {
+        if(sequencer !=null && sequencer.isOpen()){
+            sequencer.close();
+        }
+        sequencer = MidiSystem.getSequencer();
+        sequencer.setSequence(sequence);
+        sequencer.open();
+    }
+
+    public void initReceiver() throws MidiUnavailableException {
+        Transmitter transmitter = sequencer.getTransmitter();
+        pianoReceiver = new PianoReceiver(sequencer, ip);
+        transmitter.setReceiver(pianoReceiver);
+    }
+
+    public void init(){
         try {
-            sequencer = MidiSystem.getSequencer();
-            sequencer.setSequence(sequence);
-            sequencer.open();
-              Transmitter transmitter = sequencer.getTransmitter();
-              pianoReceiver = new PianoReceiver(sequencer, ip);
-              transmitter.setReceiver(pianoReceiver);
+           initSequencer();
+           initReceiver();
         } catch (InvalidMidiDataException | MidiUnavailableException ignored) {
-
-
         }
     }
 
-    public void start(){
+    public void start() {
         if(!sequencer.isRunning()) {
             sequencer.start();
         }
+        sequencer.setTempoInBPM(120);
     }
 
-    public void stop() throws MidiUnavailableException {
-        if (sequencer.isRunning()) {
-            //sequencer.stop();
-        }
+    public void stop() {
+        sequencer.setTempoInBPM(0);
     }
 
-    public void playPause() throws MidiUnavailableException {
-        if(!sequencer.isRunning()) {
+    public void playPause() {
+        if(sequencer.getTempoInMPQ() != 0) {
             start();
         } else {
             stop();
         }
+    }
+
+    public void setChanel(int c){
+        pianoReceiver.setChanel(c);
     }
 
 }
