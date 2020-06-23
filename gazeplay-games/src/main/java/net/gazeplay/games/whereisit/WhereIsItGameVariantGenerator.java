@@ -16,8 +16,7 @@ public class WhereIsItGameVariantGenerator implements GameSpec.GameVariantGenera
             new GameSpec.DimensionGameVariant(3, 3),
             new GameSpec.DimensionDifficultyGameVariant(2, 2, "easy"),
             new GameSpec.DimensionDifficultyGameVariant(2, 3, "easy"),
-            new GameSpec.DimensionDifficultyGameVariant(3, 2, "easy"),
-            new GameSpec.DimensionDifficultyGameVariant(3, 3, "easy")
+            new GameSpec.DimensionDifficultyGameVariant(3, 2, "easy")
         ));
     }
 }
