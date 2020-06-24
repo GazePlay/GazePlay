@@ -48,10 +48,14 @@ public class MidiSequencerPlayer {
             sequencer.start();
         }
         sequencer.setTempoInBPM(120);
+        sequencer.setTrackMute(0,false);
+        sequencer.setTrackSolo(0,false);
     }
 
     public void stop() {
         sequencer.setTempoInBPM(0);
+        sequencer.setTrackSolo(0,true);
+        sequencer.setTrackMute(0,true);
     }
 
     public void playPause() {
@@ -62,8 +66,8 @@ public class MidiSequencerPlayer {
         }
     }
 
-    public void setChanel(int c){
-        pianoReceiver.setChanel(c);
+    public void setChanel(int c, boolean b){
+        pianoReceiver.setChanel(c,b);
     }
 
 }

@@ -10,8 +10,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -27,6 +26,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import javax.sound.midi.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -39,7 +39,9 @@ class CustomPair {
     @Override
     public String toString() {
         if(key == -1) {
-            return "all channels" + " (" + value + ")";
+            return "select all";
+        } else if (key == -2) {
+            return "autoplay";
         }
         return "channel " + key + " (" + value + ")";
     }
@@ -64,7 +66,7 @@ public class Piano extends Parent implements GameLifeCycle {
     private final Stats stats;
 
     private final IGameContext gameContext;
-    private ChoiceBox<CustomPair> choiceBox;
+    private LinkedList<CheckBox> choiceBox = new LinkedList<>(); ;
 
     private final Instru instru;
 
@@ -180,6 +182,7 @@ public class Piano extends Parent implements GameLifeCycle {
             try (InputStream inputStream = new FileInputStream(f)) {
                 sequence = MidiSystem.getSequence(inputStream);
                 updateChoiceBox();
+                player.pianoReceiver.initChanel();
                 player.sequencer.setSequence(sequence);
             }
         } else {
@@ -193,6 +196,13 @@ public class Piano extends Parent implements GameLifeCycle {
     }
 
     public void updateChoiceBox(){
+
+        for(CheckBox checkBox : choiceBox){
+            this.getChildren().remove(checkBox);
+            log.info("remove the checkBox "+ checkBox.getText());
+        }
+        choiceBox.clear();
+
         int[] count = new int[16];
         int sum = 0;
         for(int i = 0; i< sequence.getTracks().length; i++){
@@ -203,20 +213,51 @@ public class Piano extends Parent implements GameLifeCycle {
                 }
             }
         }
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-
-        ObservableList<CustomPair> integers = FXCollections.observableArrayList();
         CustomPair defautPair = new CustomPair(-1,  sum );
-        integers.add(defautPair);
+        CustomPair autoPair = new CustomPair(-2,  sum );
+        CheckBox selectAllButton = new CheckBox(defautPair.toString());
+        CheckBox autoPlayButton = new CheckBox(autoPair.toString());
+
+        choiceBox.add(selectAllButton);
+        selectAllButton.layoutYProperty().bind(selectAllButton.heightProperty().multiply(1).add(dimension2D.getHeight() / 7));
+        this.getChildren().add(selectAllButton);
+        selectAllButton.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
+            if(newvalue){
+                for(int i = 2 ; i< choiceBox.size(); i++){
+                    choiceBox.get(i).setSelected(true);
+                }
+                autoPlayButton.setSelected(false);
+            }
+        });
+
+        choiceBox.add(autoPlayButton);
+        autoPlayButton.layoutYProperty().bind(autoPlayButton.heightProperty().multiply(1).add(dimension2D.getHeight() / 7));
+        autoPlayButton.layoutXProperty().bind(selectAllButton.layoutXProperty().add(selectAllButton.widthProperty()));
+        this.getChildren().add(autoPlayButton);
+        autoPlayButton.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
+            if(newvalue){
+                for(int i = 2 ; i< choiceBox.size(); i++){
+                    choiceBox.get(i).setSelected(false);
+                }
+                selectAllButton.setSelected(false);
+            }
+        });
+
         for(int i = 0; i<16; i++){
             if(count[i]!=0) {
-                log.info("VOICI LE COUNT POUR LA TRACK {} : {}",i,count[i]);
-                integers.add(new CustomPair(i,  count[i] ));
+                CustomPair cp = new CustomPair(i,  count[i] );
+                CheckBox button = new CheckBox(cp.toString());
+                choiceBox.add(button);
+                button.layoutYProperty().bind(button.heightProperty().multiply(choiceBox.size()-1).add(dimension2D.getHeight() / 7));
+                int finalI = i;
+                button.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
+                    player.setChanel(finalI,newvalue);
+                });
+                this.getChildren().add(button);
             }
         }
-
-        choiceBox.setItems(integers);
-        choiceBox.setValue(defautPair);
     }
 
     @Override
@@ -241,7 +282,6 @@ public class Piano extends Parent implements GameLifeCycle {
         noteProperty.addListener((o, n, old) -> {
             if (!n.equals(new Note(-1, -1, -1)) ){
                 int firstNote = (int) (n.key % 12);
-                boolean isCircle =  tilesTab.get(firstNote).arc.getFill() == Color.YELLOW;
 
                 for (final Tile tile : tilesTab) {
                     tile.arc.setFill(tile.color1);
@@ -329,12 +369,6 @@ public class Piano extends Parent implements GameLifeCycle {
         });
         this.getChildren().add(b);
 
-
-        choiceBox = new ChoiceBox<CustomPair>();
-        choiceBox.setLayoutY(dimension2D.getHeight() / 7);
-        choiceBox.setPrefWidth(dimension2D.getWidth() / 7);
-        choiceBox.setPrefHeight(dimension2D.getHeight() / 7);
-
         try {
             loadMusic(false);
         } catch (final IOException | InvalidMidiDataException | MidiUnavailableException e) {
@@ -347,23 +381,19 @@ public class Piano extends Parent implements GameLifeCycle {
         circleTemp.setOpacity(1);
 
         player = new MidiSequencerPlayer(sequence, noteProperty);
-
-        ChangeListener<CustomPair> changeListener = (observable, oldValue, newValue) -> {
-            if (newValue == null){
-                player.setChanel(-1);
-            } else {
-                player.setChanel(newValue.key);
-            }
-        };
-        choiceBox.getSelectionModel().selectedItemProperty().addListener(changeListener);
-
-        this.getChildren().add(choiceBox);
-
     }
 
     @Override
     public void dispose() {
-
+        if (player != null){
+            player.stop();
+            player.pianoReceiver = null;
+            for(Transmitter t : player.sequencer.getTransmitters()){
+                t.getReceiver().close();
+                t.close();
+            }
+            player.sequencer.stop();
+        }
     }
 
     private void createArc(final int index, final double angle, final Color color1, final Color color2, final double l, final double origin) {

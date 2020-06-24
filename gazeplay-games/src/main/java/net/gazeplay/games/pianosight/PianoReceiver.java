@@ -5,6 +5,8 @@ import javafx.beans.property.ObjectProperty;
 
 import javax.sound.midi.*;
 
+import java.util.LinkedList;
+
 import static javax.sound.midi.ShortMessage.*;
 
 public class PianoReceiver implements Receiver {
@@ -13,13 +15,13 @@ public class PianoReceiver implements Receiver {
     ObjectProperty<Note> ip;
     long prevTick = 0;
     int trackIndex = 0;
-    int chanel = 0;
+    boolean[] chanel = new boolean[16];
 
     public PianoReceiver(Sequencer sequencer, ObjectProperty<Note> ip ) {
         super();
         this.ip = ip;
         this.sequencer = sequencer;
-
+        this.initChanel();
         Track[] ts = sequencer.getSequence().getTracks();
         int minLength = 0;
         int maxLength = 0;
@@ -41,6 +43,12 @@ public class PianoReceiver implements Receiver {
         //this.sequencer.setTrackSolo(trackIndex,true);
     }
 
+    public void initChanel(){
+        for(int i = 0; i <16; i++){
+            chanel[i] = false;
+        }
+    }
+
     public void send(MidiMessage message, long timeStamp) {
         if(message instanceof ShortMessage) {
             ShortMessage sm = (ShortMessage) message;
@@ -48,7 +56,7 @@ public class PianoReceiver implements Receiver {
             int velocity = sm.getData2();
             if (sm.getCommand() == NOTE_ON) {
                 long newTick = sequencer.getTickPosition();
-                if(prevTick != newTick && prevTick != -1 && (sm.getChannel() == chanel || chanel == -1)) {
+                if(prevTick != newTick && prevTick != -1 && chanelHaveToBePlayed(sm.getChannel())) {
                     prevTick = newTick;
                     Note n = new Note(key, velocity, newTick);
                     ip.setValue(new Note(-1, -1, -1));
@@ -60,11 +68,15 @@ public class PianoReceiver implements Receiver {
         }
     }
 
+    private boolean chanelHaveToBePlayed(int chanelIndex){
+        return chanel[chanelIndex];
+    }
+
     @Override
     public void close() {
     }
 
-    public void setChanel(int c){
-        chanel = c;
+    public void setChanel(int c, boolean b){
+        chanel[c]=b;
     }
 }
