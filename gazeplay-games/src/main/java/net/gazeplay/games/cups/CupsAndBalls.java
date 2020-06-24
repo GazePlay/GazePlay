@@ -76,7 +76,9 @@ public class CupsAndBalls implements GameLifeCycle {
             cupRectangle.setFitHeight(imageHeight);
             cups[indexCup] = new Cup(cupRectangle, position, gameContext, stats, this, openCupSpeed);
             if (indexCup == ballInCup) {
-                final TargetAOI targetAOI = new TargetAOI(posCup.getX(), posCup.getY(), (int)((imageWidth+imageHeight)/2), System.currentTimeMillis());
+                final long startTime = System.currentTimeMillis();
+                final TargetAOI targetAOI = new TargetAOI(posCup.getX(), posCup.getY()+imageHeight/2, (int)((imageWidth+imageHeight)/3), startTime);
+                targetAOI.setTimeEnded(startTime+openCupSpeed);
                 targetAOIList.add(targetAOI);
                 cups[indexCup].setWinner(true);
                 cups[indexCup].giveBall(true);
@@ -148,7 +150,7 @@ public class CupsAndBalls implements GameLifeCycle {
                 currentCup.getPositionCup().setCellY(finalCellY);
                 currentCup.progressBarUpdatePosition(newPos.getX(), newPos.getY());
                 if (currentCup.containsBall()) {
-                    final TargetAOI targetAOI = new TargetAOI(newPos.getX(), newPos.getX(), (int)((currentCup.getItem().getFitWidth()+currentCup.getItem().getFitHeight())/2), System.currentTimeMillis());
+                    final TargetAOI targetAOI = new TargetAOI(newPos.getX(), newPos.getY()+currentCup.getItem().getFitHeight()/2, (int)((currentCup.getItem().getFitWidth()+currentCup.getItem().getFitHeight())/3), System.currentTimeMillis());
                     targetAOIList.add(targetAOI);
                     currentCup.getBall().updatePosition(newPos.getX(), newPos.getY());
                 }
