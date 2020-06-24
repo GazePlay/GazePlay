@@ -1045,27 +1045,39 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     private HBox buildLimiter(Configuration config) {
+
         HBox hbox = new HBox();
         hbox.setSpacing(5);
 
         CheckBox limit = buildCheckBox(config.getLimiterProperty());
 
-        Label time = new Label("Time");
+        Label time = new Label("time(seconds)");
         time.setTextFill(Color.WHITE);
-        TextField limiterTime = new TextField();
-        Label score = new Label("Time");
+
+        Spinner<Integer> spinnerT = new Spinner<>(30, 180, 90, 1);
+        spinnerT.setEditable(true);
+        spinnerT.setPrefWidth(PREF_WIDTH);
+        spinnerT.setPrefHeight(PREF_HEIGHT);
+
+        spinnerT.valueProperty().addListener((observable, oldValue, newValue) -> {
+            final int newPropertyValue = spinnerT.getValue();
+            config.getLimiterTimeProperty().setValue(newPropertyValue);
+        });
+
+        Label score = new Label("score");
         score.setTextFill(Color.WHITE);
-        TextField limiterScore = new TextField();
 
-        hbox.getChildren().addAll(limit, time, limiterTime, score, limiterScore);
+        Spinner<Integer> spinnerS = new Spinner<>(3, 180, 90, 1);
+        spinnerS.setEditable(true);
+        spinnerS.setPrefWidth(PREF_WIDTH);
+        spinnerS.setPrefHeight(PREF_HEIGHT);
 
-        limiterTime.setOnAction(e -> {
-
+        spinnerS.valueProperty().addListener((observable, oldValue, newValue) -> {
+            final int newPropertyValue = spinnerS.getValue();
+            config.getLimiterScoreProperty().setValue(newPropertyValue);
         });
 
-        limiterScore.setOnAction(e -> {
-
-        });
+        hbox.getChildren().addAll(limit, time, spinnerT, score, spinnerS);
 
         return hbox;
     }

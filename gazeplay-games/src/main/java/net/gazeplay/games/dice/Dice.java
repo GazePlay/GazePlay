@@ -34,7 +34,6 @@ public class Dice implements GameLifeCycle {
     private boolean active;
     private final int[] rolls;
     private final ProgressButton rollButton;
-    private int end = 0;
     private boolean limiter;
 
     public Dice(final IGameContext gameContext, final Stats stats, final int nbDice) {
@@ -105,8 +104,7 @@ public class Dice implements GameLifeCycle {
     }
 
     private void updateScore() {
-        end = end + 1;
-        if (end >= 11) {
+        if (stats.getNbGoalsReached() >= gameContext.getConfiguration().getLimiterScore()) {
             gameContext.showRoundStats(stats, this);
         }
     }

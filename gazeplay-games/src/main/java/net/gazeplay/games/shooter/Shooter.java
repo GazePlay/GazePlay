@@ -456,10 +456,8 @@ public class Shooter extends Parent implements GameLifeCycle {
             cst = "" + score++;
         }
         if (limiter) {
-            if (score > 5) {
-                gameContext.playWinTransition(0, event1 -> {
-                    gameContext.showRoundStats(stats, this);
-                });
+            if (score > gameContext.getConfiguration().getLimiterScore()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
             }
         }
 

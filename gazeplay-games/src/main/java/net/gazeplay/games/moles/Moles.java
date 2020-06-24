@@ -255,10 +255,8 @@ public class Moles extends Parent implements GameLifeCycle {
         String s = "Score:" + nbMolesWhacked;
         stats.incrementNumberOfGoalsReached();
         if (limiter) {
-            if (nbMolesWhacked == 20) {
-                gameContext.playWinTransition(0, event1 -> {
-                    gameContext.showRoundStats(stats, this);
-                });
+            if (nbMolesWhacked == gameContext.getConfiguration().getLimiterScore()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
             }
             lab.setText(s);
         }

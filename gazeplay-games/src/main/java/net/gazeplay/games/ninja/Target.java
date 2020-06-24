@@ -222,7 +222,7 @@ public class Target extends Portrait {
 
         stats.incrementNumberOfGoalsReached();
 
-        if (stats.getNbGoalsReached() > 9) {
+        if (stats.getNbGoalsReached() > gameContext.getConfiguration().getLimiterScore()) {
             gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
         }
 

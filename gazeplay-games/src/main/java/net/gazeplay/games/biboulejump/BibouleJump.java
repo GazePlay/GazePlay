@@ -484,7 +484,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         final int inc = (int) (difference / dimensions.getHeight() * 100);
         score += inc;
         if (limiter) {
-            if (score > 500) {
+            if (score >= gameContext.getConfiguration().getLimiterScore() * 100) {
                 gameContext.playWinTransition(0, event1 -> {
                     gameContext.showRoundStats(stats, this);
                 });
