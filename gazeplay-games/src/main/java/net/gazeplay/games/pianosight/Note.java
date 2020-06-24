@@ -11,7 +11,7 @@ public class Note {
 
     public Note(int key, int velocity, long tick) {
         this.key = key;
-        this.octave = (key / 12)-1;
+        this.octave = (key / 12) - 1;
         int note = key % 12;
         this.velocity = velocity;
         this.tick = tick;
