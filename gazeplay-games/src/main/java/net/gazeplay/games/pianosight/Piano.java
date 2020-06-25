@@ -16,11 +16,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import javax.sound.midi.*;
@@ -69,11 +71,11 @@ public class Piano extends Parent implements GameLifeCycle {
     private final Stats stats;
 
     private final IGameContext gameContext;
-    private LinkedList<CheckBox> choiceBox = new LinkedList<>();
 
     private final Instru instru;
 
     private final List<ImageView> fragments;
+    private float bpm = 120;
 
     long lastNote = -1;
     MidiSequencerPlayer player;
@@ -189,20 +191,34 @@ public class Piano extends Parent implements GameLifeCycle {
                 updateChoiceBox();
                 player.pianoReceiver.initChanel();
                 player.sequencer.setSequence(sequence);
+                player.setTempo(bpm);
+                player.start();
             }
         } else {
-            final String fileName = "RIVER.mid";
+            final String fileName = "Pirates.mid";
             log.info("you loaded the song : " + fileName);
-            try (InputStream inputStream = /*Utils.getInputStream*/new FileInputStream("C:/Users/Sebastien/Downloads/alanwalker.mid")) {//;"data/pianosight/songs/" + fileName)) {
+            try (InputStream inputStream = new FileInputStream("C:/Users/Sebastien/Downloads/fronzen.mid")){ //Utils.getInputStream("data/pianosight/songs/" +fileName)) {
                 sequence = MidiSystem.getSequence(inputStream);
                 updateChoiceBox();
             }
         }
     }
 
+    public void updateSelectedChoiceBox(){
+        int i = 2;
+        boolean allSelected = true;
+        boolean noneSelected = true;
+        while ( i < choiceBoxes.getChildren().size()){
+            allSelected = allSelected && ((CheckBox)choiceBoxes.getChildren().get(i)).isSelected();
+            noneSelected = noneSelected && !((CheckBox)choiceBoxes.getChildren().get(i)).isSelected();
+            i++;
+        }
+        ((CheckBox)choiceBoxes.getChildren().get(0)).setSelected(allSelected);
+        ((CheckBox)choiceBoxes.getChildren().get(1)).setSelected(noneSelected);
+    }
+
     public void updateChoiceBox() {
         choiceBoxes.getChildren().clear();
-        choiceBox.clear();
 
         int[] count = new int[16];
         int sum = 0;
@@ -211,36 +227,40 @@ public class Piano extends Parent implements GameLifeCycle {
                 if (sequence.getTracks()[i].get(j).getMessage() instanceof ShortMessage) {
                     count[((ShortMessage) sequence.getTracks()[i].get(j).getMessage()).getChannel()]++;
                     sum++;
+                } else if (sequence.getTracks()[i].get(j).getMessage() instanceof MetaMessage) {
+                    MetaMessage mm = (MetaMessage) sequence.getTracks()[i].get(j).getMessage();
+                    if(mm.getType() == 0x51) {
+                        byte[] data = mm.getData();
+                        int tempo = (data[0] & 0xff) << 16 | (data[1] & 0xff) << 8 | (data[2] & 0xff);
+                        bpm = 60000000 / tempo;
+                    }
                 }
             }
         }
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         CustomPair defautPair = new CustomPair(-1, sum);
         CustomPair autoPair = new CustomPair(-2, sum);
         CheckBox selectAllButton = new CheckBox(defautPair.toString());
         CheckBox autoPlayButton = new CheckBox(autoPair.toString());
 
-        choiceBox.add(selectAllButton);
         choiceBoxes.addRow(0);
         choiceBoxes.add(selectAllButton, 0, 0);
         selectAllButton.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
             if (newvalue) {
-                for (int i = 2; i < choiceBox.size(); i++) {
-                    choiceBox.get(i).setSelected(true);
-                }
                 autoPlayButton.setSelected(false);
+                for (int i = 2; i < choiceBoxes.getChildren().size(); i++) {
+                    ((CheckBox)choiceBoxes.getChildren().get(i)).setSelected(true);
+                }
             }
         });
 
-        choiceBox.add(autoPlayButton);
         choiceBoxes.add(autoPlayButton, 1, 0);
         autoPlayButton.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
             if (newvalue) {
-                for (int i = 2; i < choiceBox.size(); i++) {
-                    choiceBox.get(i).setSelected(false);
-                }
                 selectAllButton.setSelected(false);
+                for (int i = 2; i < choiceBoxes.getChildren().size(); i++) {
+                    ((CheckBox)choiceBoxes.getChildren().get(i)).setSelected(false);
+                }
             }
         });
 
@@ -248,12 +268,12 @@ public class Piano extends Parent implements GameLifeCycle {
             if (count[i] != 0) {
                 CustomPair cp = new CustomPair(i, count[i]);
                 CheckBox button = new CheckBox(cp.toString());
-                choiceBox.add(button);
                 int finalI = i;
                 button.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
                     player.setChanel(finalI, newvalue);
+                    updateSelectedChoiceBox();
                 });
-                choiceBoxes.addRow(choiceBox.size() - 1, button);
+                choiceBoxes.addRow(choiceBoxes.getChildren().size() - 1, button);
             }
         }
     }
@@ -336,15 +356,19 @@ public class Piano extends Parent implements GameLifeCycle {
         openButton.setOpacity(1);
 
         choiceBoxes = new GridPane();
-        choiceBoxes.getStyleClass().add("button");
+
+        BorderPane choiceBorderPane = new BorderPane();
 
         Button menuButton = new Button("Menu");
-        menuButton.prefWidthProperty().bind(choiceBoxes.widthProperty());
+        menuButton.prefWidthProperty().bind(choiceBorderPane.widthProperty());
         menuButton.setPrefHeight(50);
 
         topBar.setTop(menuButton);
         topBar.setCenter(openButton);
-        topBar.setBottom(choiceBoxes);
+        choiceBorderPane.setTop(new Text("Select channel(s) to play"));
+        choiceBorderPane.setCenter(choiceBoxes);
+        choiceBorderPane.getStyleClass().add("button");
+        topBar.setBottom(choiceBorderPane);
 
         final Timeline buttonOpacityTimeline = new Timeline();
         buttonOpacityTimeline.getKeyFrames().add(
@@ -357,7 +381,7 @@ public class Piano extends Parent implements GameLifeCycle {
         buttonOpacityTimeline.setDelay(Duration.seconds(2));
         buttonOpacityTimeline.play();
 
-        topBar.getTop().setOnMouseEntered(evt -> {
+        topBar.setOnMouseEntered(evt -> {
             topBar.getTop().setOpacity(1);
             topBar.getCenter().setOpacity(1);
             topBar.getBottom().setOpacity(1);
@@ -369,7 +393,7 @@ public class Piano extends Parent implements GameLifeCycle {
             topBar.getBottom().setOpacity(0);
         });
 
-        openButton.prefWidthProperty().bind(choiceBoxes.widthProperty());
+        openButton.prefWidthProperty().bind(choiceBorderPane.widthProperty());
         openButton.setPrefHeight(20);
         iv.setPreserveRatio(true);
         iv.setFitHeight(openButton.getPrefHeight());
@@ -395,6 +419,7 @@ public class Piano extends Parent implements GameLifeCycle {
         circleTemp.setOpacity(1);
 
         player = new MidiSequencerPlayer(sequence, noteProperty);
+        player.setTempo(bpm);
     }
 
     @Override
