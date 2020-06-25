@@ -1054,7 +1054,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         Label time = new Label("time(seconds)");
         time.setTextFill(Color.WHITE);
 
-        Spinner<Integer> spinnerT = new Spinner<>(30, 180, 90, 1);
+        Spinner<Integer> spinnerT = new Spinner<>(3, 180, 90, 1);
         spinnerT.setEditable(true);
         spinnerT.setPrefWidth(PREF_WIDTH);
         spinnerT.setPrefHeight(PREF_HEIGHT);
@@ -1076,6 +1076,22 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             final int newPropertyValue = spinnerS.getValue();
             config.getLimiterScoreProperty().setValue(newPropertyValue);
         });
+
+        limit.setOnAction(e -> {
+            if (!config.isLimiter()) {
+                score.setVisible(false);
+                spinnerS.setVisible(false);
+                time.setVisible(false);
+                spinnerT.setVisible(false);
+
+            } else {
+                score.setVisible(true);
+                spinnerS.setVisible(true);
+                time.setVisible(true);
+                spinnerT.setVisible(true);
+            }
+        });
+
 
         hbox.getChildren().addAll(limit, time, spinnerT, score, spinnerS);
 

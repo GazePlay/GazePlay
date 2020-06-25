@@ -38,6 +38,8 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     private final LabyrinthGameVariant variant;
 
     private boolean limiter;
+    private long startTime = 0;
+    private long endTime = 0;
 
     public Labyrinth(final IGameContext gameContext, final Stats stats, final LabyrinthGameVariant variant) {
         super();
@@ -88,6 +90,8 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         cheese.beginCheese();
         gameContext.getChildren().add(cheese);
 
+        start();
+
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
     }
@@ -107,6 +111,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
                 throw new IllegalArgumentException("Unsupported variant ID");
         }
     }
+
 
     @Override
     public void dispose() {
@@ -170,9 +175,24 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         }
     }
 
+    private void start() {
+        startTime = System.currentTimeMillis();
+    }
+
+    private void stop() {
+        endTime = System.currentTimeMillis();
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
+    }
+
     private void updateScore() {
-        if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
-            gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+        if (limiter) {
+            stop();
+            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore() || time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+            }
         }
     }
 

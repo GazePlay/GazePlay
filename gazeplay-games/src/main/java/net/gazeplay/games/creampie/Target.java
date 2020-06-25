@@ -49,6 +49,10 @@ public class Target extends Portrait {
 
     private final IGameContext gameContext;
 
+    private boolean limiter;
+    private long startTime = 0;
+    private long endTime = 0;
+
     public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
                   final ImageLibrary imageLibrary, CreamPie gameInstance) {
 
@@ -59,6 +63,7 @@ public class Target extends Portrait {
         this.stats = stats;
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
+        this.limiter = gameContext.getConfiguration().isLimiter();
         targetAOIList = new ArrayList<>();
 
         enterEvent = e -> {
@@ -69,6 +74,8 @@ public class Target extends Portrait {
                 enter();
             }
         };
+
+        start();
 
         gameContext.getGazeDeviceManager().addEventFilter(this);
 
@@ -81,11 +88,7 @@ public class Target extends Portrait {
     private void enter() {
 
         stats.incrementNumberOfGoalsReached();
-
-        if (stats.getNbGoalsReached() > gameContext.getConfiguration().getLimiterScore()) {
-            gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
-        }
-
+        updateScore();
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
         final Animation animation = createAnimation();
@@ -95,6 +98,27 @@ public class Target extends Portrait {
 
         gameContext.getSoundManager().add(SOUNDS_MISSILE);
 
+    }
+
+    private void updateScore() {
+        if (limiter) {
+            stop();
+            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore() || time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
+            }
+        }
+    }
+
+    private void start() {
+        startTime = System.currentTimeMillis();
+    }
+
+    private void stop() {
+        endTime = System.currentTimeMillis();
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
     }
 
     public ArrayList<TargetAOI> getTargetAOIList() {

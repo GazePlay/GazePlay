@@ -35,6 +35,8 @@ public class Dice implements GameLifeCycle {
     private final int[] rolls;
     private final ProgressButton rollButton;
     private boolean limiter;
+    private long startTime = 0;
+    private long endTime = 0;
 
     public Dice(final IGameContext gameContext, final Stats stats, final int nbDice) {
         this.gameContext = gameContext;
@@ -103,9 +105,24 @@ public class Dice implements GameLifeCycle {
         }
     }
 
+    private void start() {
+        startTime = System.currentTimeMillis();
+    }
+
+    private void stop() {
+        endTime = System.currentTimeMillis();
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
+    }
+
     private void updateScore() {
-        if (stats.getNbGoalsReached() >= gameContext.getConfiguration().getLimiterScore()) {
-            gameContext.showRoundStats(stats, this);
+        if (limiter) {
+            stop();
+            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore() || time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+            }
         }
     }
 
@@ -124,6 +141,7 @@ public class Dice implements GameLifeCycle {
 
     @Override
     public void launch() {
+        start();
         gameContext.getChildren().addAll(gridpane, totalText, rollButton);
         stats.notifyNewRoundReady();
     }

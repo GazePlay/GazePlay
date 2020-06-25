@@ -59,6 +59,8 @@ public class Bubble extends Parent implements GameLifeCycle {
     private final BubblesGameVariant direction;
 
     private boolean limiter;
+    private long startTime = 0;
+    private long endTime = 0;
 
     public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final boolean useBackgroundImage, final BubblesGameVariant direction) {
         this.gameContext = gameContext;
@@ -111,6 +113,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
+        start();
 
         for (int i = 0; i < 10; i++) {
 
@@ -192,13 +195,14 @@ public class Bubble extends Parent implements GameLifeCycle {
             final String soundResource = "data/bubble/sounds/Blop-Mark_DiAngelo-79054334.mp3";
             gameContext.getSoundManager().add(soundResource);
         }
-
-
     }
 
     private void updateScore() {
-        if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
-            gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+        if (limiter) {
+            stop();
+            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore() || time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+            }
         }
     }
 
@@ -303,6 +307,18 @@ public class Bubble extends Parent implements GameLifeCycle {
         timeline.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
 
         timeline.play();
+    }
+
+    private void start() {
+        startTime = System.currentTimeMillis();
+    }
+
+    private void stop() {
+        endTime = System.currentTimeMillis();
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
     }
 
 }
