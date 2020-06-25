@@ -188,8 +188,10 @@ public class Piano extends Parent implements GameLifeCycle {
             player.stop();
             try (InputStream inputStream = new FileInputStream(f)) {
                 sequence = MidiSystem.getSequence(inputStream);
+                bpm = 120;
                 updateChoiceBox();
                 player.pianoReceiver.initChanel();
+                ((CheckBox)choiceBoxes.getChildren().get(0)).setSelected(true);
                 player.sequencer.setSequence(sequence);
                 player.setTempo(bpm);
                 player.start();
@@ -197,8 +199,8 @@ public class Piano extends Parent implements GameLifeCycle {
         } else {
             final String fileName = "RIVER.mid";
             log.info("you loaded the song : " + fileName);
-           // try (InputStream inputStream = new FileInputStream("C:/Users/Sebastien/Downloads/frozen.mid")){ //Utils.getInputStream("data/pianosight/songs/" +fileName)) {
-            try (InputStream inputStream = Utils.getInputStream("data/pianosight/songs/" +fileName)) {
+            try (InputStream inputStream = new FileInputStream("C:/Users/Sebastien/Downloads/HarryPotter.mid")){ //Utils.getInputStream("data/pianosight/songs/" +fileName)) {
+            //try (InputStream inputStream = Utils.getInputStream("data/pianosight/songs/" +fileName)) {
                     sequence = MidiSystem.getSequence(inputStream);
                 updateChoiceBox();
             }
@@ -298,9 +300,10 @@ public class Piano extends Parent implements GameLifeCycle {
 
         noteProperty = new SimpleObjectProperty<Note>();
         noteProperty.setValue(new Note(-1, -1, -1));
-        noteProperty.addListener((o, n, old) -> {
-            if (!n.equals(new Note(-1, -1, -1))) {
-                int firstNote = n.key % 12;
+        noteProperty.addListener((o, oldVal, newVal) -> {
+            if (!newVal.equals(new Note(-1, -1, -1))) {
+                player.stop();
+                int firstNote = newVal.key % 12;
 
                 for (final Tile tile : tilesTab) {
                     tile.arc.setFill(tile.color1);
@@ -314,7 +317,6 @@ public class Piano extends Parent implements GameLifeCycle {
                     tilesTab.get(NOTE_NAMES[firstNote]).arc.setFill(Color.YELLOW);
                     lastNote = firstNote;
                 }
-                player.stop();
 
             }
         });
@@ -421,6 +423,8 @@ public class Piano extends Parent implements GameLifeCycle {
 
         player = new MidiSequencerPlayer(sequence, noteProperty);
         player.setTempo(bpm);
+        player.pianoReceiver.initChanel();
+        ((CheckBox)choiceBoxes.getChildren().get(0)).setSelected(true);
     }
 
     @Override

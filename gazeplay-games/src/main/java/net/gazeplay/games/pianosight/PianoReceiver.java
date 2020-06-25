@@ -22,7 +22,7 @@ public class PianoReceiver implements Receiver {
 
     public void initChanel() {
         for (int i = 0; i < 16; i++) {
-            chanel[i] = false;
+            chanel[i] = true;
         }
         prevTick = 0;
     }
@@ -39,8 +39,6 @@ public class PianoReceiver implements Receiver {
                     Note n = new Note(key, velocity, newTick);
                     ip.setValue(new Note(-1, -1, -1));
                     ip.setValue(n);
-                } else {
-                    Note n = new Note(key, velocity, newTick);
                 }
             }
         }
@@ -58,9 +56,4 @@ public class PianoReceiver implements Receiver {
         chanel[c] = b;
     }
 
-    public void setAllChanelOn() {
-        for (int i = 0; i < 16; i++) {
-            chanel[i] = true;
-        }
-    }
 }
