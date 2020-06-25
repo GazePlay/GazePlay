@@ -195,10 +195,11 @@ public class Piano extends Parent implements GameLifeCycle {
                 player.start();
             }
         } else {
-            final String fileName = "Pirates.mid";
+            final String fileName = "RIVER.mid";
             log.info("you loaded the song : " + fileName);
-            try (InputStream inputStream = new FileInputStream("C:/Users/Sebastien/Downloads/fronzen.mid")){ //Utils.getInputStream("data/pianosight/songs/" +fileName)) {
-                sequence = MidiSystem.getSequence(inputStream);
+           // try (InputStream inputStream = new FileInputStream("C:/Users/Sebastien/Downloads/frozen.mid")){ //Utils.getInputStream("data/pianosight/songs/" +fileName)) {
+            try (InputStream inputStream = Utils.getInputStream("data/pianosight/songs/" +fileName)) {
+                    sequence = MidiSystem.getSequence(inputStream);
                 updateChoiceBox();
             }
         }

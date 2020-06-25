@@ -37,14 +37,14 @@ public class MidiSequencerPlayer {
             sequencer.start();
         }
         sequencer.setTempoInBPM(currentBPM);
-        sequencer.setTrackMute(0, false);
-        sequencer.setTrackSolo(0, false);
+        /*sequencer.setTrackMute(0, false);
+        sequencer.setTrackSolo(0, false);*/
     }
 
     public void stop() {
         sequencer.setTempoInBPM(0);
-        sequencer.setTrackSolo(0, true);
-        sequencer.setTrackMute(0, true);
+        /*.setTrackSolo(0, true);
+        sequencer.setTrackMute(0, true);*/
     }
 
     public void setChanel(int c, boolean b) {
