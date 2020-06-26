@@ -5,13 +5,8 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -37,10 +32,7 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
     private final ImageLibrary backgroundImage;
     private final ImageLibrary thumbImage;
 
-    private final Rectangle shade;
     private Rectangle background;
-    private final ProgressButton restartButton;
-    private final Text finalScoreText;
 
     private int score = 0;
 
@@ -56,58 +48,16 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
         this.configuration = gameContext.getConfiguration();
 
         thumbImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions/thumbs"));
-
+        this.backgroundImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions"));
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
         final Group foregroundLayer = new Group();
-        final StackPane sp = new StackPane();
-        gameContext.getChildren().addAll(sp, backgroundLayer, middleLayer, foregroundLayer);
-
-        backgroundImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions"));
-
-        Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        backgroundImage.widthProperty().bind(gameContext.getRoot().widthProperty());
-        backgroundImage.heightProperty().bind(gameContext.getRoot().heightProperty());
-
-        backgroundImage.setOpacity(0.08);
-
-        sp.getChildren().add(backgroundImage);
-        backgroundImage.toFront();
-
-        // Menu
-        final int fixationLength = configuration.getFixationLength();
-
-        shade = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        shade.setFill(new Color(0, 0, 0, 0.75));
-
-        restartButton = new ProgressButton();
-        final String dataPath = "data/space";
-        final ImageView restartImage = new ImageView(dataPath + "/menu/restart.png");
-        restartImage.setFitHeight(dimension2D.getHeight() / 6);
-        restartImage.setFitWidth(dimension2D.getHeight() / 6);
-        restartButton.setImage(restartImage);
-        restartButton.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getHeight() / 12);
-        restartButton.setLayoutY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 12);
-        restartButton.assignIndicator(event -> launch(), fixationLength);
-
-        finalScoreText = new Text(0, dimension2D.getHeight() / 4, "");
-        finalScoreText.setFill(Color.WHITE);
-        finalScoreText.setTextAlignment(TextAlignment.CENTER);
-        finalScoreText.setFont(new Font(50));
-        finalScoreText.setWrappingWidth(dimension2D.getWidth());
-        foregroundLayer.getChildren().addAll(shade, finalScoreText, restartButton);
-
-        gameContext.getGazeDeviceManager().addEventFilter(restartButton);
+        gameContext.getChildren().add(foregroundLayer);
 
     }
 
     @Override
     public void launch() {
-        // hide end game menu
-        shade.setOpacity(0);
-        restartButton.disable();
-        finalScoreText.setOpacity(0);
-
 
         this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
@@ -196,7 +146,7 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
 
         middleLayer.getChildren().addAll(thumbUp, thumbDown, noCare);
 
-        gameContext.getChildren().addAll(thumbUp, thumbDown, noCare);
+        gameContext.getChildren().addAll(backgroundLayer, middleLayer);
 
 
         this.start();
