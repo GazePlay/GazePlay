@@ -1,6 +1,5 @@
 package net.gazeplay.games.opinions;
 
-import javafx.animation.AnimationTimer;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -19,7 +18,7 @@ import net.gazeplay.components.ProgressButton;
 import java.util.List;
 
 @Slf4j
-public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
+public class OpinionsGame implements GameLifeCycle {
 
     private final OpinionsGameStats opinionGameStats;
     private final IGameContext gameContext;
@@ -148,9 +147,6 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
 
         gameContext.getChildren().addAll(backgroundLayer, middleLayer);
 
-
-        this.start();
-
         opinionGameStats.notifyNewRoundReady();
     }
 
@@ -159,11 +155,6 @@ public class OpinionsGame extends AnimationTimer implements GameLifeCycle {
         if (score == 10) {
             gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(opinionGameStats, this));
         }
-    }
-
-    @Override
-    public void handle(final long now) {
-
     }
 
     @Override
