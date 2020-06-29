@@ -47,7 +47,7 @@ public class Shooter extends Parent implements GameLifeCycle {
     private final String date;
     private Label text;
     private int score;
-    private boolean limiter;
+    private boolean limiterS;
 
     private StackPane hand;
     private final ImageView cage;
@@ -67,7 +67,7 @@ public class Shooter extends Parent implements GameLifeCycle {
     public Shooter(final IGameContext gameContext, final Stats stats, final String type) {
         this.gameContext = gameContext;
         this.stats = stats;
-        this.limiter = gameContext.getConfiguration().isLimiter();
+        this.limiterS = gameContext.getConfiguration().isLimiterS();
         final LocalDate localDate = LocalDate.now();
         date = DateTimeFormatter.ofPattern("d MMMM uuuu ").format(localDate);
         score = 0;
@@ -455,7 +455,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         } else {// equals robot
             cst = "" + score++;
         }
-        if (limiter) {
+        if (limiterS) {
             if (score > gameContext.getConfiguration().getLimiterScore()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
             }

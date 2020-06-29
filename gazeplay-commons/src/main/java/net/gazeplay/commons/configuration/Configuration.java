@@ -33,7 +33,8 @@ public class Configuration {
     private static final String PROPERTY_NAME_WHEREISIT_DIR = "WHEREISITDIR";
     private static final String PROPERTY_NAME_QUESTION_LENGTH = "QUESTIONLENGTH";
     private static final String PROPERTY_NAME_ENABLE_REWARD_SOUND = "ENABLE_REWARD_SOUND";
-    private static final String PROPERTY_NAME_LIMITER = "LIMITER";
+    private static final String PROPERTY_NAME_LIMITERT = "LIMITER";
+    private static final String PROPERTY_NAME_LIMITERS = "LIMITER";
     private static final String PROPERTY_NAME_LIMITER_TIME = "LIMITER_TIME";
     private static final String PROPERTY_NAME_LIMITER_SCORE = "LIMITER_SCORE";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
@@ -71,7 +72,8 @@ public class Configuration {
     public static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
     private static final long DEFAULT_VALUE_QUESTION_LENGTH = 5000;
     private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
-    private static final boolean DEFAULT_VALUE_LIMITER = false;
+    private static final boolean DEFAULT_VALUE_LIMITERTIME = false;
+    private static final boolean DEFAULT_VALUE_LIMITERSCORE = false;
     private static final int DEFAULT_VALUE_LIMITER_TIME = 90;
     private static final int DEFAULT_VALUE_LIMITER_SCORE = 90;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
@@ -147,7 +149,10 @@ public class Configuration {
     private final BooleanProperty enableRewardSoundProperty;
 
     @Getter
-    private final BooleanProperty limiterProperty;
+    private final BooleanProperty limiterSProperty;
+
+    @Getter
+    private final BooleanProperty limiterTProperty;
 
     @Getter
     private final IntegerProperty limiterTimeProperty;
@@ -244,7 +249,8 @@ public class Configuration {
 
         enableRewardSoundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND, propertyChangeListener);
 
-        limiterProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITER, DEFAULT_VALUE_LIMITER, propertyChangeListener);
+        limiterSProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERS, DEFAULT_VALUE_LIMITERSCORE, propertyChangeListener);
+        limiterTProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERT, DEFAULT_VALUE_LIMITERTIME, propertyChangeListener);
         limiterTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_TIME, DEFAULT_VALUE_LIMITER_TIME, propertyChangeListener);
         limiterScoreProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_SCORE, DEFAULT_VALUE_LIMITER_SCORE, propertyChangeListener);
 
@@ -349,8 +355,12 @@ public class Configuration {
         return enableRewardSoundProperty.getValue();
     }
 
-    public boolean isLimiter() {
-        return limiterProperty.getValue();
+    public boolean isLimiterS() {
+        return limiterSProperty.getValue();
+    }
+
+    public boolean isLimiterT() {
+        return limiterTProperty.getValue();
     }
 
     public int getLimiterTime() {

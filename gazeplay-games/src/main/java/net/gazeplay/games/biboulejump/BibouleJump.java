@@ -77,7 +77,8 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private final ArrayList<Platform> platforms;
 
     private int score;
-    private boolean limiter;
+    private boolean limiterT;
+    private boolean limiterS;
 
     private final Rectangle shade;
     private final ProgressButton restartButton;
@@ -90,7 +91,8 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         this.randomGenerator = new Random();
         this.config = gameContext.getConfiguration();
         this.variant = variant;
-        this.limiter = gameContext.getConfiguration().isLimiter();
+        this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiterS = gameContext.getConfiguration().isLimiterS();
 
         bibouleImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/biboules");
         cloudImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/clouds");
@@ -483,7 +485,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private void updateScore(final double difference) {
         final int inc = (int) (difference / dimensions.getHeight() * 100);
         score += inc;
-        if (limiter) {
+        if (limiterS) {
             if (score >= gameContext.getConfiguration().getLimiterScore() * 100) {
                 gameContext.playWinTransition(0, event1 -> {
                     gameContext.showRoundStats(stats, this);

@@ -58,7 +58,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final BubblesGameVariant direction;
 
-    private boolean limiter;
+    private boolean limiterS;
     private long startTime = 0;
     private long endTime = 0;
 
@@ -67,7 +67,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         this.type = type;
         this.stats = stats;
         this.direction = direction;
-        this.limiter = gameContext.getConfiguration().isLimiter();
+        this.limiterS = gameContext.getConfiguration().isLimiterS();
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"));
 
@@ -198,7 +198,7 @@ public class Bubble extends Parent implements GameLifeCycle {
     }
 
     private void updateScore() {
-        if (limiter) {
+        if (limiterS) {
             stop();
             if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore() || time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
@@ -213,7 +213,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().removeEventFilter(target);
         this.getChildren().remove(target);
-        if (limiter) {
+        if (limiterS) {
             updateScore();
         }
         stats.incrementNumberOfGoalsReached();

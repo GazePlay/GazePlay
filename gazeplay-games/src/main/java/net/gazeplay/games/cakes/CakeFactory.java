@@ -96,14 +96,14 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     @Setter
     private ProgressButton[] buttons;
 
-    private boolean limiter;
+    private boolean limiterS;
 
     CakeFactory(final IGameContext gameContext, final Stats stats, final CakeGameVariant variant) {
         this.gameContext = gameContext;
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.debug("dimension2D = {}", dimension2D);
         this.stats = stats;
-        this.limiter = gameContext.getConfiguration().isLimiter();
+        this.limiterS = gameContext.getConfiguration().isLimiterS();
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2;
         buttonSize = dimension2D.getWidth() / 8;
@@ -261,7 +261,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             gameContext.getGazeDeviceManager().clear();
 
             gameContext.clear();
-            if (limiter) {
+            if (limiterS) {
                 gameContext.showRoundStats(stats, this);
             } else {
                 launch();

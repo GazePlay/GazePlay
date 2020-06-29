@@ -220,7 +220,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "Limiter", COLON);
 
-            HBox input = buildLimiter(config);
+            HBox input = buildLimiterTime(config);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "Limiter", COLON);
+
+            HBox input = buildLimiterScore(config);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -1044,12 +1051,12 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return hbox;
     }
 
-    private HBox buildLimiter(Configuration config) {
+    private HBox buildLimiterTime(Configuration config) {
 
         HBox hbox = new HBox();
         hbox.setSpacing(5);
 
-        CheckBox limit = buildCheckBox(config.getLimiterProperty());
+        CheckBox limitTime = buildCheckBox(config.getLimiterTProperty());
 
         Label time = new Label("time(seconds)");
         time.setTextFill(Color.WHITE);
@@ -1064,6 +1071,28 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             config.getLimiterTimeProperty().setValue(newPropertyValue);
         });
 
+        limitTime.setOnAction(e -> {
+            if (!config.isLimiterT()) {
+                time.setVisible(false);
+                spinnerT.setVisible(false);
+            } else {
+                time.setVisible(true);
+                spinnerT.setVisible(true);
+            }
+        });
+
+        hbox.getChildren().addAll(limitTime, time, spinnerT);
+
+        return hbox;
+    }
+
+    private HBox buildLimiterScore(Configuration config) {
+
+        HBox hbox = new HBox();
+        hbox.setSpacing(5);
+
+        CheckBox limitTime = buildCheckBox(config.getLimiterSProperty());
+
         Label score = new Label("score");
         score.setTextFill(Color.WHITE);
 
@@ -1077,23 +1106,17 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             config.getLimiterScoreProperty().setValue(newPropertyValue);
         });
 
-        limit.setOnAction(e -> {
-            if (!config.isLimiter()) {
+        limitTime.setOnAction(e -> {
+            if (!config.isLimiterS()) {
                 score.setVisible(false);
                 spinnerS.setVisible(false);
-                time.setVisible(false);
-                spinnerT.setVisible(false);
-
             } else {
                 score.setVisible(true);
                 spinnerS.setVisible(true);
-                time.setVisible(true);
-                spinnerT.setVisible(true);
             }
         });
 
-
-        hbox.getChildren().addAll(limit, time, spinnerT, score, spinnerS);
+        hbox.getChildren().addAll(limitTime, score, spinnerS);
 
         return hbox;
     }

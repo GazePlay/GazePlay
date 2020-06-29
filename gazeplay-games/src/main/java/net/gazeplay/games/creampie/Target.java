@@ -49,7 +49,7 @@ public class Target extends Portrait {
 
     private final IGameContext gameContext;
 
-    private boolean limiter;
+    private boolean limiterS;
     private long startTime = 0;
     private long endTime = 0;
 
@@ -63,7 +63,7 @@ public class Target extends Portrait {
         this.stats = stats;
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
-        this.limiter = gameContext.getConfiguration().isLimiter();
+        this.limiterS = gameContext.getConfiguration().isLimiterS();
         targetAOIList = new ArrayList<>();
 
         enterEvent = e -> {
@@ -101,7 +101,7 @@ public class Target extends Portrait {
     }
 
     private void updateScore() {
-        if (limiter) {
+        if (limiterS) {
             stop();
             if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore() || time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
