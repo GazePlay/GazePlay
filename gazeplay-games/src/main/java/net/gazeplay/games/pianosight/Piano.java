@@ -537,9 +537,16 @@ public class Piano extends Parent implements GameLifeCycle {
         this.getChildren().add(slider);
 
         slider.valueProperty().addListener((obj, oldval, newval)-> {
+            if (slider.isHover())
+           { player.pianoReceiver.beforeAfter = true;
+            log.info("****************1");
             player.sequencer.setTickPosition(newval.longValue());
+            log.info("****************11");
             player.pianoReceiver.prevTick = newval.longValue() - 1;
+            log.info("****************111");
             player.pianoReceiver.currentTick.setValue(newval.longValue());
+            log.info("****************1111");
+            player.pianoReceiver.beforeAfter = false;}
         });
 
     }

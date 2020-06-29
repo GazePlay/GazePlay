@@ -15,6 +15,7 @@ public class PianoReceiver implements Receiver {
     ObjectProperty<Long> currentTick = new SimpleObjectProperty<Long>(0L);
     long prevTick = 0;
     boolean[] chanel = new boolean[16];
+    boolean beforeAfter= false;
 
     public PianoReceiver(Sequencer sequencer, ObjectProperty<Note> ip) {
         super();
@@ -32,7 +33,8 @@ public class PianoReceiver implements Receiver {
     }
 
     public void send(MidiMessage message, long timeStamp) {
-        long newTick = sequencer.getTickPosition();
+        if (!beforeAfter)
+        {long newTick = sequencer.getTickPosition();
         if (message instanceof ShortMessage) {
             ShortMessage sm = (ShortMessage) message;
             int key = sm.getData1();
@@ -46,7 +48,7 @@ public class PianoReceiver implements Receiver {
                 }
             }
         }
-        currentTick.setValue(newTick);
+        currentTick.setValue(newTick);}
     }
 
     private boolean chanelHaveToBePlayed(int chanelIndex) {
