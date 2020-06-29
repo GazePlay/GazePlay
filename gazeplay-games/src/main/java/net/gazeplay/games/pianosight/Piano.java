@@ -9,6 +9,8 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -21,6 +23,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -84,6 +87,7 @@ public class Piano extends Parent implements GameLifeCycle {
 
     GridPane choiceBoxes;
     BorderPane topBar = new BorderPane();
+    Slider slider;
 
     public Piano(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
@@ -195,6 +199,7 @@ public class Piano extends Parent implements GameLifeCycle {
                 player.sequencer.setSequence(sequence);
                 player.setTempo(bpm);
                 player.start();
+                resetSlider(slider, player.sequencer.getTickLength());
             }
         } else {
             final String fileName = "RIVER.mid";
@@ -372,6 +377,7 @@ public class Piano extends Parent implements GameLifeCycle {
         choiceBorderPane.setCenter(choiceBoxes);
         choiceBorderPane.getStyleClass().add("button");
         topBar.setBottom(choiceBorderPane);
+        playTimeSlider(circleTemp);
 
         final Timeline buttonOpacityTimeline = new Timeline();
         buttonOpacityTimeline.getKeyFrames().add(
@@ -425,6 +431,7 @@ public class Piano extends Parent implements GameLifeCycle {
         player.setTempo(bpm);
         player.pianoReceiver.initChanel();
         ((CheckBox)choiceBoxes.getChildren().get(0)).setSelected(true);
+        resetSlider(slider, player.sequencer.getTickLength());
     }
 
     @Override
@@ -510,6 +517,40 @@ public class Piano extends Parent implements GameLifeCycle {
             createArc(i, angle, Color.BLACK, Color.DIMGREY.darker(), 2.7, -90 + (720d / 7d) + 2 * angle + angle / 2);
         }
 
+    }
+
+    public void playTimeSlider(Circle circleTemp) {
+        slider = new Slider();
+
+        slider.setMajorTickUnit(1);
+        slider.setMinorTickCount(1);
+        slider.setShowTickMarks(true);
+        slider.setSnapToTicks(true);
+        slider.setBlockIncrement(1d);
+
+        double width = circleTemp.getRadius();
+        slider.setPrefWidth(width);
+        slider.setLayoutX(centerX - width/2);
+
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        slider.setLayoutY(dimension2D.getHeight() - 50);
+        this.getChildren().add(slider);
+
+        slider.valueProperty().addListener((obj, oldval, newval)-> {
+            player.sequencer.setTickPosition(newval.longValue());
+            player.pianoReceiver.prevTick = newval.longValue() - 1;
+            player.pianoReceiver.currentTick.setValue(newval.longValue());
+        });
+
+    }
+
+    public void resetSlider(Slider slider, long max){
+        slider.setMin(0);
+        slider.setMax(max);
+        slider.setValue(0);
+        player.pianoReceiver.currentTick.addListener((obj, oldval,newval)-> {
+            slider.setValue(newval);
+        });
     }
 
 }

@@ -1,6 +1,7 @@
 package net.gazeplay.games.pianosight;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 import javax.sound.midi.*;
 
@@ -10,6 +11,8 @@ public class PianoReceiver implements Receiver {
 
     Sequencer sequencer;
     ObjectProperty<Note> ip;
+
+    ObjectProperty<Long> currentTick = new SimpleObjectProperty<Long>(0L);
     long prevTick = 0;
     boolean[] chanel = new boolean[16];
 
@@ -25,15 +28,16 @@ public class PianoReceiver implements Receiver {
             chanel[i] = true;
         }
         prevTick = 0;
+        currentTick.setValue(0L);
     }
 
     public void send(MidiMessage message, long timeStamp) {
+        long newTick = sequencer.getTickPosition();
         if (message instanceof ShortMessage) {
             ShortMessage sm = (ShortMessage) message;
             int key = sm.getData1();
             int velocity = sm.getData2();
             if (sm.getCommand() == NOTE_ON) {
-                long newTick = sequencer.getTickPosition();
                 if (prevTick + 10 < newTick && prevTick != -1 && chanelHaveToBePlayed(sm.getChannel())) {
                     prevTick = newTick;
                     Note n = new Note(key, velocity, newTick);
@@ -42,6 +46,7 @@ public class PianoReceiver implements Receiver {
                 }
             }
         }
+        currentTick.setValue(newTick);
     }
 
     private boolean chanelHaveToBePlayed(int chanelIndex) {
