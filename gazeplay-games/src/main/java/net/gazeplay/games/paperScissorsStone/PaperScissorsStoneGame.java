@@ -104,71 +104,13 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         background.setFill(backgroundI);
 
         stone = new ProgressButton();
-        stone.setLayoutX(dimension2D.getWidth() / 6 - dimension2D.getWidth() / 12);
-        stone.setLayoutY(dimension2D.getHeight() * 2 / 3);
-        stone.getButton().setRadius(100);
-        ImageView stoneI = new ImageView(new Image("data/paperScissorsStone/Stone.png"));
-        stone.setImage(stoneI);
-
-        stone.assignIndicator(event -> {
-            if (ennemyT == type.scissors) {
-                gameContext.playWinTransition(0, event1 -> {
-                    score = score + 1;
-                    gameContext.clear();
-                    launch();
-                });
-            } else {
-                stone.disable();
-            }
-            stats.incrementNumberOfGoalsReached();
-        }, configuration.getFixationLength());
-        gameContext.getGazeDeviceManager().addEventFilter(stone);
-        stone.active();
-
+        setUpStonePaperScissorsProgressButton(stone, "data/paperScissorsStone/Stone.png");
 
         paper = new ProgressButton();
-        paper.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getWidth() / 12);
-        paper.setLayoutY(dimension2D.getHeight() * 2 / 3);
-        paper.getButton().setRadius(100);
-        ImageView paperI = new ImageView(new Image("data/paperScissorsStone/Paper.png"));
-        paper.setImage(paperI);
-
-        paper.assignIndicator(event -> {
-            if (ennemyT == type.stone) {
-                gameContext.playWinTransition(0, event1 -> {
-                    score = score + 1;
-                    gameContext.clear();
-                    launch();
-                });
-            } else {
-                paper.disable();
-            }
-            stats.incrementNumberOfGoalsReached();
-        }, configuration.getFixationLength());
-        gameContext.getGazeDeviceManager().addEventFilter(paper);
-        paper.active();
+        setUpStonePaperScissorsProgressButton(paper, "data/paperScissorsStone/Paper.png");
 
         scissors = new ProgressButton();
-        scissors.setLayoutX(dimension2D.getWidth() * 5 / 6 - dimension2D.getWidth() / 12);
-        scissors.setLayoutY(dimension2D.getHeight() * 2 / 3);
-        scissors.getButton().setRadius(100);
-        ImageView scissorsI = new ImageView(new Image("data/paperScissorsStone/Scissors.png"));
-        scissors.setImage(scissorsI);
-
-        scissors.assignIndicator(event -> {
-            if (ennemyT == type.paper) {
-                gameContext.playWinTransition(0, event1 -> {
-                    score = score + 1;
-                    gameContext.clear();
-                    launch();
-                });
-            } else {
-                scissors.disable();
-            }
-            stats.incrementNumberOfGoalsReached();
-        }, configuration.getFixationLength());
-        gameContext.getGazeDeviceManager().addEventFilter(scissors);
-        scissors.active();
+        setUpStonePaperScissorsProgressButton(scissors, "data/paperScissorsStone/Scissors.png");
 
         ennemy = new ProgressButton();
         ennemy.setLayoutX(dimension2D.getWidth() * 1 / 2 - dimension2D.getWidth() / 12);
@@ -201,11 +143,37 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
 
         if (score == 3) {
             gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+            score = 0;
         }
 
         this.start();
 
         paperScissorsStoneStats.notifyNewRoundReady();
+    }
+
+    public void setUpStonePaperScissorsProgressButton(ProgressButton button, String imageLink) {
+        button.setLayoutX(dimension2D.getWidth() / 6 - dimension2D.getWidth() / 12);
+        button.setLayoutX(dimension2D.getWidth() / 6 - dimension2D.getWidth() / 12);
+        button.setLayoutY(dimension2D.getHeight() * 2 / 3);
+        button.getButton().setRadius(100);
+        ImageView stoneI = new ImageView(new Image(imageLink));
+        button.setImage(stoneI);
+
+        button.assignIndicator(event -> {
+            if (ennemyT == type.scissors) {
+                gameContext.playWinTransition(0, event1 -> {
+                    button.disable();
+                    score = score + 1;
+                    gameContext.clear();
+                    launch();
+                });
+            } else {
+                button.disable();
+            }
+            stats.incrementNumberOfGoalsReached();
+        }, configuration.getFixationLength());
+        gameContext.getGazeDeviceManager().addEventFilter(stone);
+        button.active();
     }
 
     @Override
