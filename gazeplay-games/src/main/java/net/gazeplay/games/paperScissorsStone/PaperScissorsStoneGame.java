@@ -104,13 +104,13 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         background.setFill(backgroundI);
 
         stone = new ProgressButton();
-        setUpStonePaperScissorsProgressButton(stone, "data/paperScissorsStone/Stone.png");
+        setUpStonePaperScissorsProgressButton(stone, "data/paperScissorsStone/Stone.png", dimension2D.getWidth() / 6 - dimension2D.getWidth() / 12);
 
         paper = new ProgressButton();
-        setUpStonePaperScissorsProgressButton(paper, "data/paperScissorsStone/Paper.png");
+        setUpStonePaperScissorsProgressButton(paper, "data/paperScissorsStone/Paper.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 12);
 
         scissors = new ProgressButton();
-        setUpStonePaperScissorsProgressButton(scissors, "data/paperScissorsStone/Scissors.png");
+        setUpStonePaperScissorsProgressButton(scissors, "data/paperScissorsStone/Scissors.png", dimension2D.getWidth() * 5 / 6 - dimension2D.getWidth() / 12);
 
         ennemy = new ProgressButton();
         ennemy.setLayoutX(dimension2D.getWidth() * 1 / 2 - dimension2D.getWidth() / 12);
@@ -151,29 +151,65 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         paperScissorsStoneStats.notifyNewRoundReady();
     }
 
-    public void setUpStonePaperScissorsProgressButton(ProgressButton button, String imageLink) {
-        button.setLayoutX(dimension2D.getWidth() / 6 - dimension2D.getWidth() / 12);
-        button.setLayoutX(dimension2D.getWidth() / 6 - dimension2D.getWidth() / 12);
+    public void setUpStonePaperScissorsProgressButton(ProgressButton button, String imageLink, double posX) {
+        button.setLayoutX(posX);
         button.setLayoutY(dimension2D.getHeight() * 2 / 3);
         button.getButton().setRadius(100);
         ImageView stoneI = new ImageView(new Image(imageLink));
         button.setImage(stoneI);
 
-        button.assignIndicator(event -> {
-            if (ennemyT == type.scissors) {
-                gameContext.playWinTransition(0, event1 -> {
+        if (button == paper) {
+            button.assignIndicator(event -> {
+                if (ennemyT == type.stone) {
+                    gameContext.playWinTransition(0, event1 -> {
+                        button.disable();
+                        score = score + 1;
+                        gameContext.clear();
+                        launch();
+                    });
+                } else {
                     button.disable();
-                    score = score + 1;
-                    gameContext.clear();
-                    launch();
-                });
-            } else {
-                button.disable();
-            }
-            stats.incrementNumberOfGoalsReached();
-        }, configuration.getFixationLength());
-        gameContext.getGazeDeviceManager().addEventFilter(stone);
-        button.active();
+                }
+                stats.incrementNumberOfGoalsReached();
+            }, configuration.getFixationLength());
+            gameContext.getGazeDeviceManager().addEventFilter(paper);
+            button.active();
+        }
+        if (button == stone) {
+            button.assignIndicator(event -> {
+                if (ennemyT == type.scissors) {
+                    gameContext.playWinTransition(0, event1 -> {
+                        button.disable();
+                        score = score + 1;
+                        gameContext.clear();
+                        launch();
+                    });
+                } else {
+                    button.disable();
+                }
+                stats.incrementNumberOfGoalsReached();
+            }, configuration.getFixationLength());
+            gameContext.getGazeDeviceManager().addEventFilter(stone);
+            button.active();
+        }
+        if (button == scissors) {
+            button.assignIndicator(event -> {
+                if (ennemyT == type.paper) {
+                    gameContext.playWinTransition(0, event1 -> {
+                        button.disable();
+                        score = score + 1;
+                        gameContext.clear();
+                        launch();
+                    });
+                } else {
+                    button.disable();
+                }
+                stats.incrementNumberOfGoalsReached();
+            }, configuration.getFixationLength());
+            gameContext.getGazeDeviceManager().addEventFilter(scissors);
+            button.active();
+        }
+
     }
 
     @Override
