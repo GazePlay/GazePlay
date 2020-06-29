@@ -35,10 +35,6 @@ public class OpinionsGame implements GameLifeCycle {
 
     private int score = 0;
 
-    private ProgressButton thumbUp;
-    private ProgressButton thumbDown;
-    private ProgressButton noCare;
-
     public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats) {
         this.stats = stats;
         this.opinionGameStats = this.stats;
@@ -68,7 +64,7 @@ public class OpinionsGame implements GameLifeCycle {
         backgroundLayer.getChildren().add(background);
         background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
 
-        thumbDown = new ProgressButton();
+        ProgressButton thumbDown = new ProgressButton();
         thumbDown.setLayoutX(dimension2D.getWidth() * 18 / 20);
         thumbDown.setLayoutY(dimension2D.getHeight() * 2 / 5);
         thumbDown.getButton().setRadius(70);
@@ -86,7 +82,7 @@ public class OpinionsGame implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(thumbDown);
         thumbDown.active();
 
-        noCare = new ProgressButton();
+        ProgressButton noCare = new ProgressButton();
         noCare.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20);
         noCare.setLayoutY(0);
         noCare.getButton().setRadius(70);
@@ -103,7 +99,7 @@ public class OpinionsGame implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(noCare);
         noCare.active();
 
-        thumbUp = new ProgressButton();
+        ProgressButton thumbUp = new ProgressButton();
         thumbUp.setLayoutX(0);
         thumbUp.setLayoutY(dimension2D.getHeight() * 2 / 5);
         thumbUp.getButton().setRadius(70);
@@ -154,6 +150,7 @@ public class OpinionsGame implements GameLifeCycle {
         score = score + 1;
         if (score == 10) {
             gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(opinionGameStats, this));
+            score = 0;
         }
     }
 
