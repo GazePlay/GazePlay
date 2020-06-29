@@ -41,6 +41,8 @@ public class BottleGame implements GameLifeCycle {
     private int score;
     private int nbBottle = 2;
 
+    private boolean isBroken;
+
     public BottleGame(IGameContext gameContext, BottleGameStats stats) {
 
         this.bottleGameStats = stats;
@@ -50,6 +52,7 @@ public class BottleGame implements GameLifeCycle {
 
         this.bottle = new ArrayList<>();
 
+        this.isBroken = false;
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
         this.foregroundLayer = new Group();
@@ -153,14 +156,19 @@ public class BottleGame implements GameLifeCycle {
             middleLayer.getChildren().add(bo);
             gameContext.getChildren().add(bo);
 
+
             bo.assignIndicator(event -> {
-                bottleGameStats.incrementNumberOfGoalsReached();
-                ball.setVisible(true);
-                ballMovement(bo);
-                updateScore();
+                if (!isBroken) {
+                    isBroken = true;
+                    bottleGameStats.incrementNumberOfGoalsReached();
+                    ball.setVisible(true);
+                    ballMovement(bo);
+                    updateScore();
+                }
             }, configuration.getFixationLength());
             gameContext.getGazeDeviceManager().addEventFilter(bo);
             bo.active();
+
         }
     }
 
@@ -193,6 +201,7 @@ public class BottleGame implements GameLifeCycle {
         bottleDisappear.setInterpolator(Interpolator.LINEAR);
         bottleDisappear.play();
         bottleDisappear.setOnFinished(event -> bottle.disable());
+        isBroken = false;
     }
 
     private void updateScore() {
