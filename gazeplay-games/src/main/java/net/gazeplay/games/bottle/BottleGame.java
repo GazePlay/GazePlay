@@ -39,11 +39,11 @@ public class BottleGame implements GameLifeCycle {
     private Rectangle ball;
     private final Text scoreText;
     private int score;
-    private int nbBottle = 2;
+    private int nbBottle;
 
     private boolean isBroken;
 
-    public BottleGame(IGameContext gameContext, BottleGameStats stats) {
+    public BottleGame(IGameContext gameContext, BottleGameStats stats, int number) {
 
         this.bottleGameStats = stats;
         this.gameContext = gameContext;
@@ -51,6 +51,7 @@ public class BottleGame implements GameLifeCycle {
         this.configuration = gameContext.getConfiguration();
 
         this.bottle = new ArrayList<>();
+        this.nbBottle = number;
 
         this.isBroken = false;
         this.backgroundLayer = new Group();

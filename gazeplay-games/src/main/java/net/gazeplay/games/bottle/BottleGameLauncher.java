@@ -4,7 +4,7 @@ import javafx.scene.Scene;
 import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 
-public class BottleGameLauncher implements GameSpec.GameLauncher<BottleGameStats, GameSpec.DimensionGameVariant> {
+public class BottleGameLauncher implements GameSpec.GameLauncher<BottleGameStats, GameSpec.IntGameVariant> {
 
     @Override
     public BottleGameStats createNewStats(Scene scene) {
@@ -12,7 +12,7 @@ public class BottleGameLauncher implements GameSpec.GameLauncher<BottleGameStats
     }
 
     @Override
-    public BottleGame createNewGame(IGameContext gameContext, GameSpec.DimensionGameVariant gameVariant, BottleGameStats stats) {
-        return new BottleGame(gameContext, stats);
+    public BottleGame createNewGame(IGameContext gameContext, GameSpec.IntGameVariant gameVariant, BottleGameStats stats) {
+        return new BottleGame(gameContext, stats, gameVariant.getNumber());
     }
 }

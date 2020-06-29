@@ -10,6 +10,6 @@ public class BottleGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("bottle").gameThumbnail("data/Thumbnails/supermarket.png").category(GameCategories.Category.SELECTION).build(),
-            new BottleGameLauncher());
+            new BottleGameVariantGenerator(), new BottleGameLauncher());
     }
 }
