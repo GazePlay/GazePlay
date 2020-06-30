@@ -124,8 +124,6 @@ public class WhereIsIt implements GameLifeCycle {
 
         gameContext.getChildren().add(questionText);
         final long timeStarted = System.currentTimeMillis();
-//        final TargetAOI targetAOI = new TargetAOI(gamePaneDimension2D.getWidth() / 2, gamePaneDimension2D.getHeight() / 2, (int)(questionText.getBoundsInParent().getWidth() / 2),
-//            timeStarted);
         final TargetAOI targetAOI = new TargetAOI(gamePaneDimension2D.getWidth() / 2, gamePaneDimension2D.getHeight() / 2, (int)questionText.getBoundsInParent().getWidth(),
             timeStarted);
         targetAOI.setTimeEnded(timeStarted+gameContext.getConfiguration().getQuestionLength());
