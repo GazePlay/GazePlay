@@ -218,16 +218,16 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            I18NText label = new I18NText(translator, "Limiter", COLON);
+            I18NText label = new I18NText(translator, "Limiter Time", COLON);
 
-            HBox input = buildLimiterTime(config);
+            HBox input = buildLimiterTime(config, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            I18NText label = new I18NText(translator, "Limiter", COLON);
+            I18NText label = new I18NText(translator, "Limiter Score", COLON);
 
-            HBox input = buildLimiterScore(config);
+            HBox input = buildLimiterScore(config, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -1051,15 +1051,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return hbox;
     }
 
-    private HBox buildLimiterTime(Configuration config) {
+    private HBox buildLimiterTime(Configuration config, Translator translator) {
 
         HBox hbox = new HBox();
         hbox.setSpacing(5);
 
         CheckBox limitTime = buildCheckBox(config.getLimiterTProperty());
 
-        Label time = new Label("time(seconds)");
-        time.setTextFill(Color.WHITE);
+        I18NText time = new I18NText(translator, "Time(seconds)");
+        time.setFill(Color.WHITE);
 
         Spinner<Integer> spinnerT = new Spinner<>(3, 180, 90, 1);
         spinnerT.setEditable(true);
@@ -1086,15 +1086,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return hbox;
     }
 
-    private HBox buildLimiterScore(Configuration config) {
+    private HBox buildLimiterScore(Configuration config, Translator translator) {
 
         HBox hbox = new HBox();
         hbox.setSpacing(5);
 
         CheckBox limitTime = buildCheckBox(config.getLimiterSProperty());
 
-        Label score = new Label("score");
-        score.setTextFill(Color.WHITE);
+        I18NText score = new I18NText(translator, "score");
+        score.setFill(Color.WHITE);
 
         Spinner<Integer> spinnerS = new Spinner<>(3, 180, 90, 1);
         spinnerS.setEditable(true);

@@ -240,6 +240,10 @@ HeatMapSettings,,,眼动追踪地图设置,,,HeatMap Settings,,Paramètres de la
 AOISettings,,,关键注视区设置,,,A.O.I Settings,,Paramètres des Zones d'Interet,,,,,,,,,,,
 MoreStatsSettings,,,更多统计设置,,,More Stats Settings,,Plus de Paramètres de Statistiques,,,,,,,,,,,
 BetaSettings,,,测试设置,,,Beta Settings,,Paramètres en Beta,,,,,,,,,,,
+score,,,分数,,,score,,score,,,,,,,,,,,
+Time(seconds),,,时间(秒),,,Time(seconds),,Temps(secondes),,,,,,,,,,,
+Limiter Time,,,限制器时间,,,Limiter Time,,Limiteur de Temps,,,,,,,,,,,
+Limiter Score,,,限制器得分,,,Limiter Score,,Limiteur de Score,,,,,,,,,,,
 
 toTop,,,从下到上,,,from bottom to top,,du bas vers le haut,,,,,,,,,,de abajo hacia arriba,
 toBottom,,,从上到下,,,from top to bottom,,du haut vers le bas,,,,,,,,,,de arriba hacia abajo,
