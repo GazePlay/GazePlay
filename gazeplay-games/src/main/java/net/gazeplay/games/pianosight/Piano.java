@@ -3,6 +3,7 @@ package net.gazeplay.games.pianosight;
 import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
@@ -88,6 +89,19 @@ public class Piano extends Parent implements GameLifeCycle {
     GridPane choiceBoxes;
     BorderPane topBar = new BorderPane();
     Slider slider;
+
+    ChangeListener<Number> sliderListener = (obj, oldval, newval)-> {
+        if (slider.isHover())
+        { player.pianoReceiver.beforeAfter = true;
+            log.info("****************1");
+            player.sequencer.setTickPosition(newval.longValue());
+            log.info("****************11");
+            player.pianoReceiver.prevTick = newval.longValue() - 1;
+            log.info("****************111");
+            player.pianoReceiver.currentTick.setValue(newval.longValue());
+            log.info("****************1111");
+            player.pianoReceiver.beforeAfter = false;}
+    };
 
     public Piano(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
@@ -535,29 +549,18 @@ public class Piano extends Parent implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         slider.setLayoutY(dimension2D.getHeight() - 50);
         this.getChildren().add(slider);
-
-        slider.valueProperty().addListener((obj, oldval, newval)-> {
-            if (slider.isHover())
-           { player.pianoReceiver.beforeAfter = true;
-            log.info("****************1");
-            player.sequencer.setTickPosition(newval.longValue());
-            log.info("****************11");
-            player.pianoReceiver.prevTick = newval.longValue() - 1;
-            log.info("****************111");
-            player.pianoReceiver.currentTick.setValue(newval.longValue());
-            log.info("****************1111");
-            player.pianoReceiver.beforeAfter = false;}
-        });
-
     }
 
     public void resetSlider(Slider slider, long max){
+        slider.valueProperty().removeListener(sliderListener);
         slider.setMin(0);
         slider.setMax(max);
         slider.setValue(0);
         player.pianoReceiver.currentTick.addListener((obj, oldval,newval)-> {
             slider.setValue(newval);
         });
+
+        slider.valueProperty().addListener(sliderListener);
     }
 
 }
