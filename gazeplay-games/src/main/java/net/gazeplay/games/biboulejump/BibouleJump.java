@@ -77,8 +77,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private final ArrayList<Platform> platforms;
 
     private int score;
-    private boolean limiterT;
-    private boolean limiterS;
 
     private final Rectangle shade;
     private final ProgressButton restartButton;
@@ -91,8 +89,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         this.randomGenerator = new Random();
         this.config = gameContext.getConfiguration();
         this.variant = variant;
-        this.limiterT = gameContext.getConfiguration().isLimiterT();
-        this.limiterS = gameContext.getConfiguration().isLimiterS();
 
         bibouleImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/biboules");
         cloudImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/clouds");
@@ -118,12 +114,12 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         Color textColor = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
             @Override
             public Color visitLight() {
-               return Color.BLACK;
+                return Color.BLACK;
             }
 
             @Override
             public Color visitDark() {
-              return Color.WHITE;
+                return Color.WHITE;
             }
         });
         scoreText.setFill(textColor);
@@ -485,13 +481,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private void updateScore(final double difference) {
         final int inc = (int) (difference / dimensions.getHeight() * 100);
         score += inc;
-        if (limiterS) {
-            if (score >= gameContext.getConfiguration().getLimiterScore() * 100) {
-                gameContext.playWinTransition(0, event1 -> {
-                    gameContext.showRoundStats(stats, this);
-                });
-            }
-        }
         stats.incrementNumberOfGoalsReached(inc);
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimensions.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
