@@ -48,7 +48,7 @@ public class MidiSequencerPlayer {
     }
 
     public void setChanel(int c, boolean b) {
-        pianoReceiver.setChanel(c, b);
+        pianoReceiver.channelHasToBePlayed[c] = b;
     }
 
     public void setTempo(float tempo) {

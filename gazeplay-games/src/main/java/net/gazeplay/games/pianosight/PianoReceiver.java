@@ -12,59 +12,53 @@ import static javax.sound.midi.ShortMessage.NOTE_ON;
 
 public class PianoReceiver implements Receiver {
 
+    ObjectProperty<Note> currentNoteProperty;
+    ObjectProperty<Long> currentTickProperty;
+
     Sequencer sequencer;
-    ObjectProperty<Note> ip;
+    long previousTick = 0;
+    boolean[] channelHasToBePlayed = new boolean[16];
+    boolean isSliderInUse = false;
 
-    ObjectProperty<Long> currentTick = new SimpleObjectProperty<Long>(0L);
-    long prevTick = 0;
-    boolean[] chanel = new boolean[16];
-    boolean beforeAfter = false;
-
-    public PianoReceiver(Sequencer sequencer, ObjectProperty<Note> ip) {
+    public PianoReceiver(Sequencer sequencer, ObjectProperty<Note> currentNoteProperty) {
         super();
-        this.ip = ip;
+
+        this.currentNoteProperty = currentNoteProperty;
+        this.currentTickProperty = new SimpleObjectProperty<Long>(0L);
+
         this.sequencer = sequencer;
-        this.initChanel();
+        this.initPianorReceiverParameters();
     }
 
-    public void initChanel() {
+    public void initPianorReceiverParameters() {
         for (int i = 0; i < 16; i++) {
-            chanel[i] = true;
+            channelHasToBePlayed[i] = true;
         }
-        prevTick = 0;
-        currentTick.setValue(0L);
+
+        previousTick = 0;
+        currentTickProperty.setValue(0L);
     }
 
     public void send(MidiMessage message, long timeStamp) {
-        if (!beforeAfter) {
+        if (!isSliderInUse) {
             long newTick = sequencer.getTickPosition();
             if (message instanceof ShortMessage) {
                 ShortMessage sm = (ShortMessage) message;
-                int key = sm.getData1();
-                int velocity = sm.getData2();
                 if (sm.getCommand() == NOTE_ON) {
-                    if (prevTick + 10 < newTick && prevTick != -1 && chanelHaveToBePlayed(sm.getChannel())) {
-                        prevTick = newTick;
-                        Note n = new Note(key, velocity, newTick);
-                        ip.setValue(new Note(-1, -1, -1));
-                        ip.setValue(n);
+                    if (previousTick + 10 < newTick && previousTick != -1 && channelHasToBePlayed[sm.getChannel()]) {
+                        previousTick = newTick;
+                        Note noteToPlay = new Note(/*key*/sm.getData1(),/*velocity*/sm.getData2(), newTick);
+                        currentNoteProperty.setValue(new Note(-1, -1, -1));
+                        currentNoteProperty.setValue(noteToPlay);
                     }
                 }
             }
-            currentTick.setValue(newTick);
+            currentTickProperty.setValue(newTick);
         }
-    }
-
-    private boolean chanelHaveToBePlayed(int chanelIndex) {
-        return chanel[chanelIndex];
     }
 
     @Override
     public void close() {
-    }
-
-    public void setChanel(int c, boolean b) {
-        chanel[c] = b;
     }
 
 }

@@ -72,8 +72,6 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private final IGameContext gameContext;
 
-    private final Instru instru;
-
     private final List<ImageView> fragments;
     private float bpm = 120;
 
@@ -88,15 +86,15 @@ public class Piano extends Parent implements GameLifeCycle {
 
     ChangeListener<Number> sliderListener = (obj, oldval, newval) -> {
         if (slider.isHover()) {
-            player.pianoReceiver.beforeAfter = true;
+            player.pianoReceiver.isSliderInUse = true;
             log.info("****************1");
             player.sequencer.setTickPosition(newval.longValue());
             log.info("****************11");
-            player.pianoReceiver.prevTick = newval.longValue() - 1;
+            player.pianoReceiver.previousTick = newval.longValue() - 1;
             log.info("****************111");
-            player.pianoReceiver.currentTick.setValue(newval.longValue());
+            player.pianoReceiver.currentTickProperty.setValue(newval.longValue());
             log.info("****************1111");
-            player.pianoReceiver.beforeAfter = false;
+            player.pianoReceiver.isSliderInUse = false;
         }
     };
 
@@ -109,7 +107,7 @@ public class Piano extends Parent implements GameLifeCycle {
         this.fragments = buildFragments();
         this.getChildren().addAll(fragments);
         tilesTab = new ArrayList<>();
-        instru = new Instru();
+        Instru instru = new Instru();
         gameContext.getChildren().add(this);
         jukebox = new Jukebox(gameContext);
     }
@@ -205,7 +203,7 @@ public class Piano extends Parent implements GameLifeCycle {
                 sequence = MidiSystem.getSequence(inputStream);
                 bpm = 120;
                 updateChoiceBox();
-                player.pianoReceiver.initChanel();
+                player.pianoReceiver.initPianorReceiverParameters();
                 ((CheckBox) choiceBoxes.getChildren().get(0)).setSelected(true);
                 player.sequencer.setSequence(sequence);
                 player.setTempo(bpm);
@@ -287,9 +285,9 @@ public class Piano extends Parent implements GameLifeCycle {
             if (count[i] != 0) {
                 CustomPair cp = new CustomPair(i, count[i]);
                 CheckBox button = new CheckBox(cp.toString());
-                int finalI = i;
+                int channelIndex = i;
                 button.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
-                    player.setChanel(finalI, newvalue);
+                    player.setChanel(channelIndex, newvalue);
                     updateSelectedChoiceBox();
                 });
                 choiceBoxes.addRow(choiceBoxes.getChildren().size() - 1, button);
@@ -322,7 +320,7 @@ public class Piano extends Parent implements GameLifeCycle {
                 int firstNote = newVal.key % 12;
 
                 for (final Tile tile : tilesTab) {
-                    tile.arc.setFill(tile.color1);
+                    tile.arc.setFill(tile.mainColor);
                 }
                 if (firstNote == lastNote) {
                     circleTemp.setFill(Color.YELLOW);
@@ -345,19 +343,7 @@ public class Piano extends Parent implements GameLifeCycle {
         final EventHandler<Event> circleEvent = e -> {
             Color color2 = Color.BLACK;
             if (circleTemp.getFill() == Color.YELLOW) {
-                player.start();
-                double x = 0;
-                double y = 0;
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                    final MouseEvent me = (MouseEvent) e;
-                    x = me.getX();
-                    y = me.getY();
-                } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    final GazeEvent ge = (GazeEvent) e;
-                    x = ge.getX();
-                    y = ge.getY();
-                }
-                explose(x, y);
+                triggerEvent(e);
                 circleTemp.setFill(color2);
                 circleTemp.setOpacity(0);
             }
@@ -440,9 +426,25 @@ public class Piano extends Parent implements GameLifeCycle {
 
         player = new MidiSequencerPlayer(sequence, noteProperty);
         player.setTempo(bpm);
-        player.pianoReceiver.initChanel();
+        player.pianoReceiver.initPianorReceiverParameters();
         ((CheckBox) choiceBoxes.getChildren().get(0)).setSelected(true);
         resetSlider(slider, player.sequencer.getTickLength());
+    }
+
+    private void triggerEvent(Event e) {
+        player.start();
+        double x = 0;
+        double y = 0;
+        if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+            final MouseEvent me = (MouseEvent) e;
+            x = me.getX();
+            y = me.getY();
+        } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+            final GazeEvent ge = (GazeEvent) e;
+            x = ge.getX();
+            y = ge.getY();
+        }
+        explose(x, y);
     }
 
     @Override
@@ -463,7 +465,7 @@ public class Piano extends Parent implements GameLifeCycle {
         final double size = dimension2D.getHeight() / l;
         final double theta = ((index * 360d) / 7d - origin);
         final Tile createdTile = new Tile(centerX, centerY, size, size, theta, angle, circ);
-        createdTile.color1 = color1;
+        createdTile.mainColor = color1;
         createdTile.arc.setFill(color1);
         createdTile.arc.setStrokeWidth(10);
         createdTile.setVisible(true);
@@ -473,20 +475,7 @@ public class Piano extends Parent implements GameLifeCycle {
                 tilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color2);
             } else if (tilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == Color.YELLOW) {
                 tilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color1);
-                player.start();
-
-                double x = 0;
-                double y = 0;
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                    final MouseEvent me = (MouseEvent) e;
-                    x = me.getX();
-                    y = me.getY();
-                } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    final GazeEvent ge = (GazeEvent) e;
-                    x = ge.getX();
-                    y = ge.getY();
-                }
-                explose(x, y);
+                triggerEvent(e);
 
             }
         };
@@ -553,7 +542,7 @@ public class Piano extends Parent implements GameLifeCycle {
         slider.setMin(0);
         slider.setMax(max);
         slider.setValue(0);
-        player.pianoReceiver.currentTick.addListener((obj, oldval, newval) -> {
+        player.pianoReceiver.currentTickProperty.addListener((obj, oldval, newval) -> {
             slider.setValue(newval);
         });
 
