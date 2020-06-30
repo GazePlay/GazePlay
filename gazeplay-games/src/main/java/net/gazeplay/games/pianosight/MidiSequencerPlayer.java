@@ -51,7 +51,7 @@ public class MidiSequencerPlayer {
         pianoReceiver.setChanel(c, b);
     }
 
-    public void setTempo(float tempo){
+    public void setTempo(float tempo) {
         currentBPM = tempo;
     }
 }

@@ -3,7 +3,10 @@ package net.gazeplay.games.pianosight;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-import javax.sound.midi.*;
+import javax.sound.midi.MidiMessage;
+import javax.sound.midi.Receiver;
+import javax.sound.midi.Sequencer;
+import javax.sound.midi.ShortMessage;
 
 import static javax.sound.midi.ShortMessage.NOTE_ON;
 
@@ -15,7 +18,7 @@ public class PianoReceiver implements Receiver {
     ObjectProperty<Long> currentTick = new SimpleObjectProperty<Long>(0L);
     long prevTick = 0;
     boolean[] chanel = new boolean[16];
-    boolean beforeAfter= false;
+    boolean beforeAfter = false;
 
     public PianoReceiver(Sequencer sequencer, ObjectProperty<Note> ip) {
         super();
@@ -33,22 +36,23 @@ public class PianoReceiver implements Receiver {
     }
 
     public void send(MidiMessage message, long timeStamp) {
-        if (!beforeAfter)
-        {long newTick = sequencer.getTickPosition();
-        if (message instanceof ShortMessage) {
-            ShortMessage sm = (ShortMessage) message;
-            int key = sm.getData1();
-            int velocity = sm.getData2();
-            if (sm.getCommand() == NOTE_ON) {
-                if (prevTick + 10 < newTick && prevTick != -1 && chanelHaveToBePlayed(sm.getChannel())) {
-                    prevTick = newTick;
-                    Note n = new Note(key, velocity, newTick);
-                    ip.setValue(new Note(-1, -1, -1));
-                    ip.setValue(n);
+        if (!beforeAfter) {
+            long newTick = sequencer.getTickPosition();
+            if (message instanceof ShortMessage) {
+                ShortMessage sm = (ShortMessage) message;
+                int key = sm.getData1();
+                int velocity = sm.getData2();
+                if (sm.getCommand() == NOTE_ON) {
+                    if (prevTick + 10 < newTick && prevTick != -1 && chanelHaveToBePlayed(sm.getChannel())) {
+                        prevTick = newTick;
+                        Note n = new Note(key, velocity, newTick);
+                        ip.setValue(new Note(-1, -1, -1));
+                        ip.setValue(n);
+                    }
                 }
             }
+            currentTick.setValue(newTick);
         }
-        currentTick.setValue(newTick);}
     }
 
     private boolean chanelHaveToBePlayed(int chanelIndex) {
