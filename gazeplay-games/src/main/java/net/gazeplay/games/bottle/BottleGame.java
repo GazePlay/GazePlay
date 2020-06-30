@@ -62,7 +62,7 @@ public class BottleGame implements GameLifeCycle {
         final Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         backgroundImage.widthProperty().bind(gameContext.getRoot().widthProperty());
         backgroundImage.heightProperty().bind(gameContext.getRoot().heightProperty());
-        backgroundImage.setFill(new ImagePattern(new Image("data/bottle/supermarket.png")));
+        backgroundImage.setFill(new ImagePattern(new Image("data/bottle/supermarket.jpg")));
 
         backgroundLayer.getChildren().add(backgroundImage);
 
@@ -136,10 +136,10 @@ public class BottleGame implements GameLifeCycle {
         for (int i = 1; i <= nb; i++) {
             if (i < 9) {
                 x = dimension2D.getWidth() * i / 10;
-                y = dimension2D.getHeight() / 3;
+                y = dimension2D.getHeight() / 8;
             } else {
                 x = dimension2D.getWidth() * (i % 9 + 1) / 10;
-                y = dimension2D.getHeight() * 2 / 3;
+                y = dimension2D.getHeight() / 8 + dimension2D.getHeight() / 3.5;
             }
             b = new ProgressButton();
             b.setLayoutX(x);
@@ -150,8 +150,8 @@ public class BottleGame implements GameLifeCycle {
 
         for (final ProgressButton bo : bottle) {
             ImageView bottleI = new ImageView(new Image("data/bottle/bottle.png"));
-            bottleI.setFitWidth(dimension2D.getWidth() / 10);
-            bottleI.setFitHeight(dimension2D.getHeight() / 5);
+            bottleI.setFitWidth(dimension2D.getWidth() / 12);
+            bottleI.setFitHeight(dimension2D.getHeight() / 6);
             bo.setImage(bottleI);
 
             middleLayer.getChildren().add(bo);
