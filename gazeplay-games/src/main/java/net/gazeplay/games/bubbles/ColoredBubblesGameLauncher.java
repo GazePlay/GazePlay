@@ -14,6 +14,6 @@ public class ColoredBubblesGameLauncher implements GameSpec.GameLauncher<Stats, 
 
     @Override
     public GameLifeCycle createNewGame(final IGameContext gameContext, final GameSpec.EnumGameVariant<BubblesGameVariant> gameVariant, final Stats stats) {
-        return new Bubble(gameContext, BubbleType.COLOR, stats, true, gameVariant.getEnumValue());
+        return new Bubble(gameContext, BubbleType.COLOR, stats, gameVariant.getEnumValue());
     }
 }

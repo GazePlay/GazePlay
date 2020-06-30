@@ -52,40 +52,26 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final ImageLibrary imageLibrary;
 
-    private final List<Circle> fragments;
+    private List<Circle> fragments;
 
     private EventHandler<Event> enterEvent;
 
     private final BubblesGameVariant direction;
 
     private boolean limiterS;
+    private boolean limiterT;
     private long startTime = 0;
     private long endTime = 0;
 
-    public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final boolean useBackgroundImage, final BubblesGameVariant direction) {
+    public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final BubblesGameVariant direction) {
         this.gameContext = gameContext;
         this.type = type;
         this.stats = stats;
         this.direction = direction;
         this.limiterS = gameContext.getConfiguration().isLimiterS();
+        this.limiterT = gameContext.getConfiguration().isLimiterT();
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"));
-
-        initBackground(useBackgroundImage);
-
-        gameContext.getChildren().add(this);
-
-        this.fragments = buildFragments(type);
-
-        this.getChildren().addAll(fragments);
-
-        enterEvent = e -> {
-
-            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-
-                enter((Circle) e.getTarget());
-            }
-        };
     }
 
     void initBackground(boolean useBackgroundImage) {
@@ -113,12 +99,41 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
-        start();
+        this.getChildren().clear();
+        initBackground(true);
+        gameContext.getChildren().add(this);
 
+        this.fragments = buildFragments(type);
+
+        this.getChildren().addAll(fragments);
+
+        enterEvent = e -> {
+
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+
+                enter((Circle) e.getTarget());
+            }
+        };
+
+        start();
         for (int i = 0; i < 10; i++) {
 
             newCircle();
         }
+
+
+        this.fragments = buildFragments(type);
+
+        this.getChildren().addAll(fragments);
+
+        enterEvent = e -> {
+
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+
+                enter((Circle) e.getTarget());
+            }
+        };
+
 
         stats.notifyNewRoundReady();
     }
@@ -200,7 +215,13 @@ public class Bubble extends Parent implements GameLifeCycle {
     private void updateScore() {
         if (limiterS) {
             stop();
-            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore() || time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+            }
+        }
+        if (limiterT) {
+            stop();
+            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
             }
         }
