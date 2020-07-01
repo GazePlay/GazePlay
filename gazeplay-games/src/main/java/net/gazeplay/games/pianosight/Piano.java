@@ -32,6 +32,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -198,9 +200,8 @@ public class Piano extends Parent implements GameLifeCycle {
                 return;
             }
             log.info("you loaded the song : " + fileName);
-            final File f = new File(fileName);
             player.stop();
-            try (InputStream inputStream = new FileInputStream(f)) {
+            try (InputStream inputStream = Files.newInputStream(Paths.get(fileName))) {
                 slider.valueProperty().removeListener(sliderListener);
                 sequence = MidiSystem.getSequence(inputStream);
                 bpm = 120;
@@ -218,7 +219,6 @@ public class Piano extends Parent implements GameLifeCycle {
             final String fileName = "RIVER.mid";
             log.info("you loaded the song : " + fileName);
             try (InputStream inputStream = Utils.getInputStream("data/pianosight/songs/" +fileName)) {
-                //try (InputStream inputStream = Utils.getInputStream("data/pianosight/songs/" +fileName)) {
                 sequence = MidiSystem.getSequence(inputStream);
                 updateChoiceBox();
             }
