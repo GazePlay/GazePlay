@@ -110,7 +110,6 @@ public class Piano extends Parent implements GameLifeCycle {
         this.fragments = buildFragments();
         this.getChildren().addAll(fragments);
         tilesTab = new ArrayList<>();
-        Instru instru = new Instru();
         gameContext.getChildren().add(this);
         jukebox = new Jukebox(gameContext);
     }
@@ -253,7 +252,7 @@ public class Piano extends Parent implements GameLifeCycle {
                     if (mm.getType() == 0x51) {
                         byte[] data = mm.getData();
                         int tempo = (data[0] & 0xff) << 16 | (data[1] & 0xff) << 8 | (data[2] & 0xff);
-                        bpm = 60000000 / tempo;
+                        bpm = 60000000f / tempo;
                     }
                 }
             }

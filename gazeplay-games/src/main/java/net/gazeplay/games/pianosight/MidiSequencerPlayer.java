@@ -18,9 +18,6 @@ public class MidiSequencerPlayer {
         this.sequence = sequence;
         this.ip = ip;
         try {
-            if (sequencer != null && sequencer.isOpen()) {
-                sequencer.close();
-            }
             sequencer = MidiSystem.getSequencer();
             sequencer.setSequence(sequence);
             sequencer.open();
