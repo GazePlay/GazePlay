@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import javax.sound.midi.*;
@@ -200,12 +201,15 @@ public class Piano extends Parent implements GameLifeCycle {
             final File f = new File(fileName);
             player.stop();
             try (InputStream inputStream = new FileInputStream(f)) {
+                slider.valueProperty().removeListener(sliderListener);
                 sequence = MidiSystem.getSequence(inputStream);
                 bpm = 120;
                 updateChoiceBox();
                 player.pianoReceiver.initPianorReceiverParameters();
                 ((CheckBox) choiceBoxes.getChildren().get(0)).setSelected(true);
+                player.pianoReceiver.isChangingSequence = true;
                 player.sequencer.setSequence(sequence);
+                player.pianoReceiver.isChangingSequence = false;
                 player.setTempo(bpm);
                 player.start();
                 resetSlider(slider, player.sequencer.getTickLength());
@@ -213,7 +217,7 @@ public class Piano extends Parent implements GameLifeCycle {
         } else {
             final String fileName = "RIVER.mid";
             log.info("you loaded the song : " + fileName);
-            try (InputStream inputStream = new FileInputStream("C:/Users/Sebastien/Downloads/HarryPotter.mid")) { //Utils.getInputStream("data/pianosight/songs/" +fileName)) {
+            try (InputStream inputStream = Utils.getInputStream("data/pianosight/songs/" +fileName)) {
                 //try (InputStream inputStream = Utils.getInputStream("data/pianosight/songs/" +fileName)) {
                 sequence = MidiSystem.getSequence(inputStream);
                 updateChoiceBox();
@@ -538,7 +542,6 @@ public class Piano extends Parent implements GameLifeCycle {
     }
 
     public void resetSlider(Slider slider, long max) {
-        slider.valueProperty().removeListener(sliderListener);
         slider.setMin(0);
         slider.setMax(max);
         slider.setValue(0);

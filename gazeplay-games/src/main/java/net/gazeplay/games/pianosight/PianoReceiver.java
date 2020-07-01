@@ -19,6 +19,7 @@ public class PianoReceiver implements Receiver {
     long previousTick = 0;
     boolean[] channelHasToBePlayed = new boolean[16];
     boolean isSliderInUse = false;
+    public boolean isChangingSequence = false;
 
     public PianoReceiver(Sequencer sequencer, ObjectProperty<Note> currentNoteProperty) {
         super();
@@ -40,7 +41,7 @@ public class PianoReceiver implements Receiver {
     }
 
     public void send(MidiMessage message, long timeStamp) {
-        if (!isSliderInUse) {
+        if (!isSliderInUse && !isChangingSequence) {
             long newTick = sequencer.getTickPosition();
             if (message instanceof ShortMessage) {
                 ShortMessage sm = (ShortMessage) message;
