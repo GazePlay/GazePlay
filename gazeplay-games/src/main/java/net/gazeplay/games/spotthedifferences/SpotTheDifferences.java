@@ -50,12 +50,17 @@ public class SpotTheDifferences implements GameLifeCycle {
 
     private int currentInstance;
 
+    private boolean limiterT;
+    private long startTime = 0;
+    private long endTime = 0;
+
     public SpotTheDifferences(final IGameContext gameContext, final SpotTheDifferencesStats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final Configuration config = gameContext.getConfiguration();
         this.currentInstance = 0;
+        this.limiterT = gameContext.getConfiguration().isLimiterT();
 
         final Multilinguism translate = MultilinguismFactory.getSingleton();
         final String language = config.getLanguage();
@@ -116,6 +121,7 @@ public class SpotTheDifferences implements GameLifeCycle {
                 Objects.requireNonNull(
                     ClassLoader.getSystemResourceAsStream("data/spotthedifferences/instances.json")),
                 StandardCharsets.UTF_8));
+        start();
     }
 
     private void createDifference(final double x, final double y, final double radius) {
@@ -131,6 +137,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         stats.incrementNumberOfGoalsReached();
         if (numberDiffFound == totalNumberDiff) {
             gameContext.playWinTransition(200, actionEvent -> gameContext.showRoundStats(stats, this));
+            updateScore();
         }
         String soundResource = "data/spotthedifferences/ding.wav";
         gameContext.getSoundManager().add(soundResource);
@@ -176,5 +183,26 @@ public class SpotTheDifferences implements GameLifeCycle {
     @Override
     public void dispose() {
 
+    }
+
+    private void updateScore() {
+        if (limiterT) {
+            stop();
+            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+            }
+        }
+    }
+
+    private void start() {
+        startTime = System.currentTimeMillis();
+    }
+
+    private void stop() {
+        endTime = System.currentTimeMillis();
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
     }
 }

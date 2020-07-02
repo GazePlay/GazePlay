@@ -44,9 +44,14 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     private int level;
 
+    private boolean limiterT;
+    private long startTime = 0;
+    private long endTime = 0;
+
     public RushHour(final IGameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
+        this.limiterT = gameContext.getConfiguration().isLimiterT();
         level = 0;
         size = new SimpleIntegerProperty();
         gameContext.getPrimaryStage().widthProperty().addListener((observable, oldValue, newValue) -> {
@@ -64,8 +69,9 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         });
 
-        ground = new Rectangle(); // to avoid NullPointerException
 
+        ground = new Rectangle(); // to avoid NullPointerException
+        start();
     }
 
     private void setLevel(final int i) {
@@ -2456,8 +2462,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         endOfGame = true;
         stats.incrementNumberOfGoalsReached();
         gameContext.playWinTransition(500, actionEvent -> {
-            dispose();
-            launch();
+            updateScore();
         });
     }
 
@@ -2530,6 +2535,33 @@ public class RushHour extends Parent implements GameLifeCycle {
         ground.toBack();
 
         p.getChildren().addAll(up, down, left, right, door);
+    }
+
+    private void updateScore() {
+        if (limiterT) {
+            stop();
+            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+                gameContext.showRoundStats(stats, this);
+            } else {
+                dispose();
+                launch();
+            }
+        } else {
+            dispose();
+            launch();
+        }
+    }
+
+    private void start() {
+        startTime = System.currentTimeMillis();
+    }
+
+    private void stop() {
+        endTime = System.currentTimeMillis();
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
     }
 
 }

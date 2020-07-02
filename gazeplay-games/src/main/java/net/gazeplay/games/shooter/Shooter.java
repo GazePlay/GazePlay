@@ -47,7 +47,6 @@ public class Shooter extends Parent implements GameLifeCycle {
     private final String date;
     private Label text;
     private int score;
-    private boolean limiterS;
 
     private StackPane hand;
     private final ImageView cage;
@@ -63,11 +62,17 @@ public class Shooter extends Parent implements GameLifeCycle {
     private final EventHandler<Event> enterEvent;
     private final EventHandler<GazeEvent> handEventGaze;
 
+    private boolean limiterS;
+    private boolean limiterT;
+    private long startTime = 0;
+    private long endTime = 0;
+
     // done
     public Shooter(final IGameContext gameContext, final Stats stats, final String type) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.limiterS = gameContext.getConfiguration().isLimiterS();
+        this.limiterT = gameContext.getConfiguration().isLimiterT();
         final LocalDate localDate = LocalDate.now();
         date = DateTimeFormatter.ofPattern("d MMMM uuuu ").format(localDate);
         score = 0;
@@ -316,6 +321,7 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
+        start();
 
         final Label sc = new Label();
         final Label tc = new Label();
@@ -455,11 +461,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         } else {// equals robot
             cst = "" + score++;
         }
-        if (limiterS) {
-            if (score > gameContext.getConfiguration().getLimiterScore()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-            }
-        }
+        updateScore();
 
         text.setText(cst);
 
@@ -639,5 +641,31 @@ public class Shooter extends Parent implements GameLifeCycle {
         });
         pt.play();
 
+    }
+
+    private void updateScore() {
+        if (limiterS) {
+            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+            }
+        }
+        if (limiterT) {
+            stop();
+            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+            }
+        }
+    }
+
+    private void start() {
+        startTime = System.currentTimeMillis();
+    }
+
+    private void stop() {
+        endTime = System.currentTimeMillis();
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
     }
 }

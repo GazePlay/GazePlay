@@ -46,6 +46,7 @@ public class Order implements GameLifeCycle {
 
     @Override
     public void launch() {
+        start();
         spawn();
     }
 
@@ -55,6 +56,7 @@ public class Order implements GameLifeCycle {
         if (this.currentNum == nbTarget) {
             gameContext.playWinTransition(20, actionEvent -> Order.this.restart());
         }
+        updateScore();
     }
 
     private void handleAnswer(Target t, boolean correct) {
