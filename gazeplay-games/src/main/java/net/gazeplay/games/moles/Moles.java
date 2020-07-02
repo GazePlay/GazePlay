@@ -46,16 +46,30 @@ public class Moles extends Parent implements GameLifeCycle {
     private RoundDetails currentRoundDetails;
 
     private boolean limiterS;
+    private boolean limiterT;
+    private long startTime = 0;
+    private long endTime = 0;
 
     Moles(IGameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
         this.limiterS = gameContext.getConfiguration().isLimiterS();
+        this.limiterT = gameContext.getConfiguration().isLimiterT();
+        start();
     }
 
     @Override
     public void launch() {
+
+        if (currentRoundDetails != null) {
+            if (currentRoundDetails.molesList != null) {
+                gameContext.getChildren().removeAll(currentRoundDetails.molesList);
+                currentRoundDetails.molesList.clear();
+            }
+            currentRoundDetails = null;
+        }
+        gameContext.clear();
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final Configuration config = gameContext.getConfiguration();
@@ -254,12 +268,35 @@ public class Moles extends Parent implements GameLifeCycle {
         nbMolesWhacked++;
         String s = "Score:" + nbMolesWhacked;
         stats.incrementNumberOfGoalsReached();
+        updateScore();
+        lab.setText(s);
+
+    }
+
+    private void updateScore() {
         if (limiterS) {
             if (nbMolesWhacked == gameContext.getConfiguration().getLimiterScore()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
             }
-            lab.setText(s);
         }
+        if (limiterT) {
+            stop();
+            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+            }
+        }
+    }
+
+    private void start() {
+        startTime = System.currentTimeMillis();
+    }
+
+    private void stop() {
+        endTime = System.currentTimeMillis();
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
     }
 
 }

@@ -39,6 +39,8 @@ public class Egg extends Parent {
     private Timeline timelineProgressBar;
     private final Stats stats;
 
+    private EggGame eggGame;
+
     private final EventHandler<Event> enterEvent;
 
     public Egg(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext, final Stats stats,
@@ -73,6 +75,8 @@ public class Egg extends Parent {
 
         this.gameInstance = gameInstance;
 
+        this.eggGame = gameInstance;
+
         this.getChildren().add(cards);
 
         this.progressIndicator = createProgressIndicator(width / 2, height / 2);
@@ -106,6 +110,8 @@ public class Egg extends Parent {
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
                 if (turnNumber < totalNumberOfTurns) {
+
+                    eggGame.updateScore();
 
                     progressIndicator.setOpacity(0.5);
                     progressIndicator.setProgress(0);

@@ -33,8 +33,8 @@ public class Configuration {
     private static final String PROPERTY_NAME_WHEREISIT_DIR = "WHEREISITDIR";
     private static final String PROPERTY_NAME_QUESTION_LENGTH = "QUESTIONLENGTH";
     private static final String PROPERTY_NAME_ENABLE_REWARD_SOUND = "ENABLE_REWARD_SOUND";
-    private static final String PROPERTY_NAME_LIMITERT = "LIMITER";
-    private static final String PROPERTY_NAME_LIMITERS = "LIMITER";
+    private static final String PROPERTY_NAME_LIMITERT = "LIMITERT";
+    private static final String PROPERTY_NAME_LIMITERS = "LIMITERS";
     private static final String PROPERTY_NAME_LIMITER_TIME = "LIMITER_TIME";
     private static final String PROPERTY_NAME_LIMITER_SCORE = "LIMITER_SCORE";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";

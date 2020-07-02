@@ -28,12 +28,20 @@ public class Order implements GameLifeCycle {
     private int currentNum;
     private final int nbTarget;
 
+    private boolean limiterS;
+    private boolean limiterT;
+    private long startTime = 0;
+    private long endTime = 0;
+
     public Order(IGameContext gameContext, int nbTarget, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
         this.currentNum = 0;
         this.nbTarget = nbTarget;
+        this.limiterS = gameContext.getConfiguration().isLimiterS();
+        this.limiterT = gameContext.getConfiguration().isLimiterT();
+        start();
     }
 
     @Override
@@ -113,5 +121,31 @@ public class Order implements GameLifeCycle {
     public void dispose() {
         this.currentNum = 0;
         gameContext.clear();
+    }
+
+    private void updateScore() {
+        if (limiterS) {
+            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+            }
+        }
+        if (limiterT) {
+            stop();
+            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+            }
+        }
+    }
+
+    private void start() {
+        startTime = System.currentTimeMillis();
+    }
+
+    private void stop() {
+        endTime = System.currentTimeMillis();
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
     }
 }

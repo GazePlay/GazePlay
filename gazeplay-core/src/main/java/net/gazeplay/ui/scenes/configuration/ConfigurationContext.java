@@ -1091,7 +1091,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HBox hbox = new HBox();
         hbox.setSpacing(5);
 
-        CheckBox limitTime = buildCheckBox(config.getLimiterSProperty());
+        CheckBox limitScore = buildCheckBox(config.getLimiterSProperty());
 
         I18NText score = new I18NText(translator, "score");
         score.setFill(Color.WHITE);
@@ -1106,7 +1106,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             config.getLimiterScoreProperty().setValue(newPropertyValue);
         });
 
-        limitTime.setOnAction(e -> {
+        limitScore.setOnAction(e -> {
             if (!config.isLimiterS()) {
                 score.setVisible(false);
                 spinnerS.setVisible(false);
@@ -1116,7 +1116,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             }
         });
 
-        hbox.getChildren().addAll(limitTime, score, spinnerS);
+        hbox.getChildren().addAll(limitScore, score, spinnerS);
 
         return hbox;
     }

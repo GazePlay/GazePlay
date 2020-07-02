@@ -37,6 +37,10 @@ public class Blocs implements GameLifeCycle {
     private final int trail = 10;
     private final ImageLibrary imageLibrary;
 
+    private boolean limiterT;
+    private long startTime = 0;
+    private long endTime = 0;
+
     @Data
     public static class CurrentRoundDetails {
 
@@ -45,6 +49,7 @@ public class Blocs implements GameLifeCycle {
         private boolean finished;
 
         private final Bloc[][] blocs;
+
 
         CurrentRoundDetails(final int initCount, final int nbLines, final int nbColumns) {
             this.remainingCount = initCount;
@@ -58,12 +63,15 @@ public class Blocs implements GameLifeCycle {
 
     public Blocs(final IGameContext gameContext, final int nbLines, final int nbColumns, final boolean colors, final float percents4Win,
                  final boolean useTrail, final Stats stats) {
+        this.limiterT = gameContext.getConfiguration().isLimiterT();
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColomns = nbColumns;
         this.colors = colors;
         this.percents4Win = percents4Win;
         this.stats = stats;
+
+        start();
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"));
 
@@ -88,6 +96,7 @@ public class Blocs implements GameLifeCycle {
 
     @Override
     public void launch() {
+        //start();
         this.currentRoundDetails = new CurrentRoundDetails(initCount, nbLines, nbColomns);
 
         final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -171,10 +180,12 @@ public class Blocs implements GameLifeCycle {
             if (e.getEventType().equals(MouseEvent.MOUSE_ENTERED)
                 || e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
 
+                updateScore();
                 if (!useTrail) {
 
                     final Bloc bloc = (Bloc) e.getTarget();
                     removeBloc(bloc);
+
                 } else {
 
                     final Bloc bloc = (Bloc) e.getTarget();
@@ -230,6 +241,27 @@ public class Blocs implements GameLifeCycle {
             this.posY = posY;
         }
 
+    }
+
+    private void start() {
+        startTime = System.currentTimeMillis();
+    }
+
+    private void stop() {
+        endTime = System.currentTimeMillis();
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
+    }
+
+    private void updateScore() {
+        if (limiterT) {
+            stop();
+            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+            }
+        }
     }
 
 }

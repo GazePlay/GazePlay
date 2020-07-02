@@ -135,7 +135,10 @@ public class Card extends Parent {
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
             new KeyValue(card.yProperty(), (dimension2D.getHeight() - card.getHeight() * finalZoom) / 2)));
 
+        gameInstance.updateScore();
+
         currentTimeline.onFinishedProperty().set(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
+
             gameInstance.dispose();
 
             gameContext.clear();

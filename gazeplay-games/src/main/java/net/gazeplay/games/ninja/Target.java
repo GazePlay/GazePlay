@@ -54,6 +54,11 @@ public class Target extends Portrait {
 
     public Animation currentTranslation;
 
+    private boolean limiterS;
+    private boolean limiterT;
+    private long startTime = 0;
+    private long endTime = 0;
+
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
                   final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance) {
         super(radius, randomPositionGenerator, imageLibrary);
@@ -65,6 +70,8 @@ public class Target extends Portrait {
         this.imageLibrary = imageLibrary;
         this.gameVariant = gameVariant;
         this.randomGen = new Random();
+        this.limiterS = gameContext.getConfiguration().isLimiterS();
+        this.limiterT = gameContext.getConfiguration().isLimiterT();
 
         this.miniBallsPortraits = generateMiniBallsPortraits(randomPositionGenerator, imageLibrary, nbBall);
         gameContext.getChildren().addAll(miniBallsPortraits);
@@ -77,6 +84,7 @@ public class Target extends Portrait {
         this.addEventHandler(GazeEvent.ANY, enterEvent);
 
         move();
+        start();
     }
 
     private List<Portrait> generateMiniBallsPortraits(final RandomPositionGenerator randomPositionGenerator,
@@ -222,9 +230,7 @@ public class Target extends Portrait {
 
         stats.incrementNumberOfGoalsReached();
 
-        if (stats.getNbGoalsReached() > gameContext.getConfiguration().getLimiterScore()) {
-            gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
-        }
+        updateScore();
 
         final Animation runningTranslation = currentTranslation;
         if (runningTranslation != null) {
@@ -314,5 +320,31 @@ public class Target extends Portrait {
         final FadeTransition fadeTransition = new FadeTransition(new Duration(1), this);
         fadeTransition.setToValue(1);
         return fadeTransition;
+    }
+
+    private void updateScore() {
+        if (limiterS) {
+            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
+            }
+        }
+        if (limiterT) {
+            stop();
+            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
+            }
+        }
+    }
+
+    private void start() {
+        startTime = System.currentTimeMillis();
+    }
+
+    private void stop() {
+        endTime = System.currentTimeMillis();
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
     }
 }

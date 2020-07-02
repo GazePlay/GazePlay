@@ -35,6 +35,10 @@ public class CupsAndBalls implements GameLifeCycle {
     private final Random random = new Random();
     private ArrayList<Action> actions;
 
+    private boolean limiterT;
+    private long startTime = 0;
+    private long endTime = 0;
+
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups) {
         super();
         this.gameContext = gameContext;
@@ -44,6 +48,8 @@ public class CupsAndBalls implements GameLifeCycle {
         this.nbColumns = nbCups;
         this.nbLines = nbCups;
         this.nbExchanges = nbCups * nbCups;
+        this.limiterT = gameContext.getConfiguration().isLimiterT();
+        start();
     }
 
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups, final int nbExchanges) {
@@ -164,6 +170,7 @@ public class CupsAndBalls implements GameLifeCycle {
 
                 createNewTransition(actions);
             }
+            updateScore();
         });
 
         movementTransition.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
@@ -181,6 +188,28 @@ public class CupsAndBalls implements GameLifeCycle {
                 cup.setRevealed(true);
             }
         }
+    }
+
+    private void updateScore() {
+        if (limiterT) {
+            stop();
+            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                start();
+            }
+        }
+    }
+
+    private void start() {
+        startTime = System.currentTimeMillis();
+    }
+
+    private void stop() {
+        endTime = System.currentTimeMillis();
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
     }
 
 }

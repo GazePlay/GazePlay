@@ -50,6 +50,11 @@ public class Math101 implements GameLifeCycle {
 
     private RoundDetails currentRoundDetails;
 
+    private boolean limiterS;
+    private boolean limiterT;
+    private long startTime = 0;
+    private long endTime = 0;
+
     public Math101(final MathGameType gameType, final IGameContext gameContext, final MathGameVariant gameVariant, final Stats stats) {
         super();
         this.gameType = gameType;
@@ -59,6 +64,8 @@ public class Math101 implements GameLifeCycle {
         this.nbLines = 2;
         this.nbColumns = 3;
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.limiterS = gameContext.getConfiguration().isLimiterS();
+        this.limiterT = gameContext.getConfiguration().isLimiterT();
     }
 
     private static Formula generateRandomFormula(final MathGameType gameType, final int maxValue) {
@@ -331,6 +338,32 @@ public class Math101 implements GameLifeCycle {
 
     private static double computePositionY(final double cardboxHeight, final double cardHeight, final int rowIndex) {
         return (cardboxHeight - cardHeight) / 2 + (rowIndex * cardboxHeight) / zoom_factor;
+    }
+
+    void updateScore() {
+        if (limiterS) {
+            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+            }
+        }
+        if (limiterT) {
+            stop();
+            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+            }
+        }
+    }
+
+    private void start() {
+        startTime = System.currentTimeMillis();
+    }
+
+    private void stop() {
+        endTime = System.currentTimeMillis();
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
     }
 
 }

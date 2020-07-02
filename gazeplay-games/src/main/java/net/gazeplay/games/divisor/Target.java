@@ -1,6 +1,9 @@
 package net.gazeplay.games.divisor;
 
-import javafx.animation.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -40,6 +43,8 @@ class Target extends Parent {
     private final IGameContext gameContext;
     private final Divisor gameInstance;
     private final long startTime;
+    private long endTime;
+    private boolean limiterT;
     private final Dimension2D dimension;
     private final boolean isRabbit;
 
@@ -62,6 +67,7 @@ class Target extends Parent {
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.radius = 200d / (level + 1);
         this.timeline = new Timeline();
+        this.limiterT = gameContext.getConfiguration().isLimiterT();
 
         this.circle = new Circle(pos.getX(), pos.getY(), this.radius);
         this.circle.setFill(new ImagePattern(this.imgLib.pickRandomImage(), 0, 0, 1, 1, true));
@@ -137,6 +143,7 @@ class Target extends Parent {
         if (level < difficulty) {
             createChildren(x, y);
         }
+        updateScore();
     }
 
     private void explodeAnimation(final double x, final double y) {
@@ -239,5 +246,28 @@ class Target extends Parent {
         this.addEventFilter(GazeEvent.ANY, enterEvent);
 
         gameContext.getGazeDeviceManager().addEventFilter(this);
+    }
+
+    private void updateScore() {
+        if (limiterT) {
+            stop();
+            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
+            }
+        }
+    }
+
+    /*private void start() {
+        startTime = System.currentTimeMillis();
+    }
+
+     */
+
+    private void stop() {
+        endTime = System.currentTimeMillis();
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
     }
 }
