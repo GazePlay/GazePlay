@@ -40,8 +40,8 @@ public class ReplayablePseudoRandom {
     Returns the next pseudorandom, uniformly distributed double value between 0.0 and 1.0 from this random number generator's sequence.
      */
     public double nextDouble() {
-        int RAND_MAX = Integer.MAX_VALUE;
-        return this.random() / (double) RAND_MAX;
+        int randMax = Integer.MAX_VALUE;
+        return this.random() / (double) randMax;
     }
 
     public boolean nextBoolean() {
@@ -50,8 +50,8 @@ public class ReplayablePseudoRandom {
     }
 
     public float nextFloat() {
-        int RAND_MAX = Integer.MAX_VALUE;
-        return (float) (this.random() / (double) RAND_MAX);
+        int randMax = Integer.MAX_VALUE;
+        return (float) (this.random() / (double) randMax);
     }
 }
 
