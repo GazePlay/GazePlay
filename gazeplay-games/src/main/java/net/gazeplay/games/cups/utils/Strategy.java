@@ -2,9 +2,9 @@ package net.gazeplay.games.cups.utils;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 @Slf4j
 public class Strategy {
@@ -28,7 +28,7 @@ public class Strategy {
     public ArrayList<Action> chooseStrategy() {
         for (int iteration = 0; iteration < nbExchanges; iteration++) {
 
-            final Random randomGenerator = new Random();
+            final ReplayablePseudoRandom randomGenerator = new ReplayablePseudoRandom();
             final int strategyChoice = randomGenerator.nextInt(Strategies.values().length);
 
             switch (Strategies.values()[strategyChoice]) {
@@ -93,7 +93,7 @@ public class Strategy {
             }
             numbersToChooseFrom.add(index);
         }
-        final Random randomGenerator = new Random();
+        final ReplayablePseudoRandom randomGenerator = new ReplayablePseudoRandom();
         final int cupChoice;
         cupChoice = randomGenerator.nextInt(numbersToChooseFrom.size());
         return numbersToChooseFrom.get(cupChoice);
@@ -108,7 +108,7 @@ public class Strategy {
             numbersToChooseFrom.add(index);
         }
         final ArrayList<Integer> choices = new ArrayList();
-        final Random randomGenerator = new Random();
+        final ReplayablePseudoRandom randomGenerator = new ReplayablePseudoRandom();
         for (int index = 0; index < 2; index++) {
             final int cupChoice = randomGenerator.nextInt(numbersToChooseFrom.size());
             choices.add(numbersToChooseFrom.get(cupChoice));

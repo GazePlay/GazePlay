@@ -15,14 +15,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Random;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 @Slf4j
 public class LightningSimulator extends Application {
     private static final int FIELD_SIZE = 10;
 
-    private static final Random random = new Random(42);
+    private static final ReplayablePseudoRandom random = new ReplayablePseudoRandom(42);
 
     @Override
     public void start(final Stage stage) {

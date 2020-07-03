@@ -23,6 +23,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
@@ -50,7 +51,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     private final IGameContext gameContext;
     private final BibouleJumpStats stats;
     private final Dimension2D dimensions;
-    private final Random randomGenerator;
+    private final ReplayablePseudoRandom randomGenerator;
     private final Configuration config;
     private final BibouleJumpVariant variant;
 
@@ -86,7 +87,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.randomGenerator = new Random();
+        this.randomGenerator = new ReplayablePseudoRandom();
         this.config = gameContext.getConfiguration();
         this.variant = variant;
 

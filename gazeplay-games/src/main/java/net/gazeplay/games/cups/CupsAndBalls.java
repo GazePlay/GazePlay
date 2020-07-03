@@ -8,6 +8,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.cups.utils.Action;
 import net.gazeplay.games.cups.utils.PositionCup;
@@ -15,7 +16,6 @@ import net.gazeplay.games.cups.utils.Strategy;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
 
 @Slf4j
 public class CupsAndBalls implements GameLifeCycle {
@@ -32,7 +32,7 @@ public class CupsAndBalls implements GameLifeCycle {
     private final int openCupSpeed = 1000;
     private final int ballRadius = 20;
 
-    private final Random random = new Random();
+    private final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
     private ArrayList<Action> actions;
 
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups) {
