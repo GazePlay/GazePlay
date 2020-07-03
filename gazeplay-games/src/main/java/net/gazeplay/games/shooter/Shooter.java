@@ -57,10 +57,10 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     private final Stats stats;
 
-    private final Point[] endPoints;
+    private Point[] endPoints;
 
-    private final EventHandler<Event> enterEvent;
-    private final EventHandler<GazeEvent> handEventGaze;
+    private EventHandler<Event> enterEvent;
+    private EventHandler<GazeEvent> handEventGaze;
 
     private boolean limiterS;
     private boolean limiterT;
@@ -79,25 +79,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         gameType = type;
         hand = new StackPane();
 
-        Rectangle imageRectangle = createBackground();
-        gameContext.getChildren().add(this);
-
-        final EventHandler<Event> handEvent = e -> {
-            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
-                final double x = ((MouseEvent) e).getX();
-                final double y = ((MouseEvent) e).getY();
-                hand.setRotate(getAngle(new Point(x, y)));
-            }
-        };
-
-        handEventGaze = e -> {
-            final double x = e.getX();
-            final double y = e.getY();
-            hand.setRotate(getAngle(new Point(x, y)));
-        };
-        imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
-        this.addEventFilter(GazeEvent.ANY, handEventGaze);
-
         blue = new Image("data/" + gameType + "/images/Blue.png");
         green = new Image("data/" + gameType + "/images/Green.png");
         yellow = new Image("data/" + gameType + "/images/Yellow.png");
@@ -106,31 +87,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         flash = new Image("data/" + gameType + "/images/Flash.png");
 
         cage = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
-
-        final Point[] points = new Point[8];
-        // init all points
-        for (int i = 0; i < points.length; ++i) {
-            points[i] = new Point(0, 0);
-        }
-
-        this.endPoints = points;
-        // then update them
-        updatePoints(imageRectangle);
-
-        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> updatePoints(imageRectangle));
-        gameContext.getRoot().heightProperty().addListener((observable, oldValue, newValue) -> updatePoints(imageRectangle));
-
-        enterEvent = e -> {
-            if (e.getTarget() instanceof Target) {
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    final Target target = (Target) e.getTarget();
-                    if (!target.isDone()) {
-                        target.setDone(true);
-                        enter(target);
-                    }
-                }
-            }
-        };
 
     }
 
@@ -321,6 +277,55 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
+
+        score = 0;
+        this.getChildren().clear();
+
+        Rectangle imageRectangle = createBackground();
+        gameContext.getChildren().add(this);
+
+        final EventHandler<Event> handEvent = e -> {
+            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+                final double x = ((MouseEvent) e).getX();
+                final double y = ((MouseEvent) e).getY();
+                hand.setRotate(getAngle(new Point(x, y)));
+            }
+        };
+
+        handEventGaze = e -> {
+            final double x = e.getX();
+            final double y = e.getY();
+            hand.setRotate(getAngle(new Point(x, y)));
+        };
+
+        imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
+        this.addEventFilter(GazeEvent.ANY, handEventGaze);
+
+        final Point[] points = new Point[8];
+        // init all points
+        for (int i = 0; i < points.length; ++i) {
+            points[i] = new Point(0, 0);
+        }
+
+        this.endPoints = points;
+        // then update them
+        updatePoints(imageRectangle);
+
+        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> updatePoints(imageRectangle));
+        gameContext.getRoot().heightProperty().addListener((observable, oldValue, newValue) -> updatePoints(imageRectangle));
+
+        enterEvent = e -> {
+            if (e.getTarget() instanceof Target) {
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    final Target target = (Target) e.getTarget();
+                    if (!target.isDone()) {
+                        target.setDone(true);
+                        enter(target);
+                    }
+                }
+            }
+        };
+
         start();
 
         final Label sc = new Label();
