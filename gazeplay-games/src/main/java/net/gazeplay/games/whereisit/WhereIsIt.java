@@ -265,7 +265,7 @@ public class WhereIsIt implements GameLifeCycle {
         String questionSoundPath = null;
         String question = null;
         List<Image> pictograms = null;
-        if (this.gameType == FINDODD) {
+        if (this.gameType == FIND_ODD) {
             int index = ((randomFolderIndex + step) % filesCount) + 1;
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
