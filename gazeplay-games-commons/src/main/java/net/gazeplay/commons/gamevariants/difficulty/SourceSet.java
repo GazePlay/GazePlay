@@ -6,11 +6,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SourceSet {
 
@@ -19,11 +19,11 @@ public class SourceSet {
     public SourceSet(String resourceFile) throws FileNotFoundException {
         JsonParser parser = new JsonParser();
 
-        try {
-            String path = getClass().getClassLoader().getResource(resourceFile).getPath();
-            FileReader reader = new FileReader(path);
-            difficulties = (JsonObject) parser.parse(reader);
-        } catch (NullPointerException ne) {
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(resourceFile)) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            String contents = reader.lines().collect(Collectors.joining());
+            difficulties = (JsonObject) parser.parse(contents);
+        } catch (NullPointerException | IOException e) {
             throw new FileNotFoundException(resourceFile);
         }
     }

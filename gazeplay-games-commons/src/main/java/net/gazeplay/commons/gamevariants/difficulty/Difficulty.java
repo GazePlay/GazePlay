@@ -9,7 +9,6 @@ public enum Difficulty {
         this.key = key;
     }
 
-
     @Override
     public String toString() {
         return key;
