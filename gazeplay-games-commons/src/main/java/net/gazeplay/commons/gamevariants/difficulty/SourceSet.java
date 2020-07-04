@@ -5,9 +5,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import lombok.NonNull;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,8 +21,10 @@ public class SourceSet {
     public SourceSet(String resourceFile) throws FileNotFoundException {
         JsonParser parser = new JsonParser();
 
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream(resourceFile)) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        try (
+            InputStream is = getClass().getClassLoader().getResourceAsStream(resourceFile);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))
+        ) {
             String contents = reader.lines().collect(Collectors.joining());
             difficulties = (JsonObject) parser.parse(contents);
         } catch (NullPointerException | IOException e) {
