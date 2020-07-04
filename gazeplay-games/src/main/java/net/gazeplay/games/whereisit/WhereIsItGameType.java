@@ -1,6 +1,7 @@
 package net.gazeplay.games.whereisit;
 
 import lombok.Getter;
+import net.gazeplay.commons.gamevariants.difficulty.Difficulty;
 
 public enum WhereIsItGameType {
     ANIMAL_NAME("where-is-the-animal", "where-is-the-animal"),

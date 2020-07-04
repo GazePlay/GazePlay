@@ -17,7 +17,6 @@ public class WhereIsTheColorGameLauncher implements GameSpec.GameLauncher<Stats,
     }
 
     @Override
-
     public GameLifeCycle createNewGame(IGameContext gameContext,
                                        GameSpec.DimensionDifficultyGameVariant gameVariant, Stats stats) {
         if (gameVariant.getDifficulty().equals("easy")) {
