@@ -12,16 +12,16 @@ public class ReplayablePseudoRandom {
 
     public ReplayablePseudoRandom() {
         this.seed = System.currentTimeMillis();
-        this.multiplier = 1103515245;
-        this.increment = 12345;
-        this.modulus = Math.pow(2, 31);
+        this.multiplier = 1664525;
+        this.increment = 1013904223;
+        this.modulus = Math.pow(2, 32);
     }
 
     public ReplayablePseudoRandom(double seed) {
         this.seed = seed;
-        this.multiplier = 1103515245;
-        this.increment = 12345;
-        this.modulus = Math.pow(2, 31);
+        this.multiplier = 1664525;
+        this.increment = 1013904223;
+        this.modulus = Math.pow(2, 32);
     }
 
     public double random() {
