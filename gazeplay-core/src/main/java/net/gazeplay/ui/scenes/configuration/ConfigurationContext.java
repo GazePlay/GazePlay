@@ -1071,6 +1071,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             config.getLimiterTimeProperty().setValue(newPropertyValue);
         });
 
+        if (limitTime.isSelected()) {
+            time.setVisible(true);
+            spinnerT.setVisible(true);
+        } else {
+            time.setVisible(false);
+            spinnerT.setVisible(false);
+        }
+
         limitTime.setOnAction(e -> {
             if (!config.isLimiterT()) {
                 time.setVisible(false);
@@ -1105,6 +1113,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             final int newPropertyValue = spinnerS.getValue();
             config.getLimiterScoreProperty().setValue(newPropertyValue);
         });
+
+        if (limitScore.isSelected()) {
+            score.setVisible(true);
+            spinnerS.setVisible(true);
+        } else {
+            score.setVisible(false);
+            spinnerS.setVisible(false);
+        }
 
         limitScore.setOnAction(e -> {
             if (!config.isLimiterS()) {
