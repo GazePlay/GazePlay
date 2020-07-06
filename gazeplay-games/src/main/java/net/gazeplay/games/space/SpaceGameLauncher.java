@@ -17,4 +17,9 @@ public class SpaceGameLauncher implements GameSpec.GameLauncher<SpaceGameStats, 
         return new SpaceGame(gameContext, stats);
     }
 
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.GameVariant gameVariant, SpaceGameStats stats, double gameSeed) {
+        return new SpaceGame(gameContext, stats, gameSeed);
+    }
+
 }

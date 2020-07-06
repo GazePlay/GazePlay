@@ -22,4 +22,13 @@ public class PuzzleGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec
         return new SlidingPuzzle(stats, gameContext, 3, 3, gameVariant);
     }
 
+    @Override
+    public GameLifeCycle replayGame(
+        final IGameContext gameContext,
+        final GameSpec.EnumGameVariant<PuzzleGameVariantGenerator.PuzzleGameVariant> gameVariant,
+        final Stats stats, double gameSeed
+    ) {
+        return new SlidingPuzzle(stats, gameContext, 3, 3, gameVariant, gameSeed);
+    }
+
 }

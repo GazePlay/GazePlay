@@ -16,4 +16,9 @@ public class CakesGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.
     public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.EnumGameVariant<CakeGameVariant> gameVariant, Stats stats) {
         return new CakeFactory(gameContext, stats, gameVariant.getEnumValue());
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.EnumGameVariant<CakeGameVariant> gameVariant, Stats stats, double gameSeed) {
+        return new CakeFactory(gameContext, stats, gameVariant.getEnumValue(), gameSeed);
+    }
 }

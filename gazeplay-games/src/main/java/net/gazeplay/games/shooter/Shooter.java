@@ -21,6 +21,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.time.LocalDate;
@@ -62,6 +63,8 @@ public class Shooter extends Parent implements GameLifeCycle {
     private final EventHandler<Event> enterEvent;
     private final EventHandler<GazeEvent> handEventGaze;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     // done
     public Shooter(final IGameContext gameContext, final Stats stats, final String type) {
         this.gameContext = gameContext;
@@ -71,6 +74,73 @@ public class Shooter extends Parent implements GameLifeCycle {
         score = 0;
         gameType = type;
         hand = new StackPane();
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+
+        Rectangle imageRectangle = createBackground();
+        gameContext.getChildren().add(this);
+
+        final EventHandler<Event> handEvent = e -> {
+            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+                final double x = ((MouseEvent) e).getX();
+                final double y = ((MouseEvent) e).getY();
+                hand.setRotate(getAngle(new Point(x, y)));
+            }
+        };
+
+        handEventGaze = e -> {
+            final double x = e.getX();
+            final double y = e.getY();
+            hand.setRotate(getAngle(new Point(x, y)));
+        };
+        imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
+        this.addEventFilter(GazeEvent.ANY, handEventGaze);
+
+        blue = new Image("data/" + gameType + "/images/Blue.png");
+        green = new Image("data/" + gameType + "/images/Green.png");
+        yellow = new Image("data/" + gameType + "/images/Yellow.png");
+        orange = new Image("data/" + gameType + "/images/Orange.png");
+        red = new Image("data/" + gameType + "/images/Red.png");
+        flash = new Image("data/" + gameType + "/images/Flash.png");
+
+        cage = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
+
+        final Point[] points = new Point[8];
+        // init all points
+        for (int i = 0; i < points.length; ++i) {
+            points[i] = new Point(0, 0);
+        }
+
+        this.endPoints = points;
+        // then update them
+        updatePoints(imageRectangle);
+
+        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> updatePoints(imageRectangle));
+        gameContext.getRoot().heightProperty().addListener((observable, oldValue, newValue) -> updatePoints(imageRectangle));
+
+        enterEvent = e -> {
+            if (e.getTarget() instanceof Target) {
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    final Target target = (Target) e.getTarget();
+                    if (!target.isDone()) {
+                        target.setDone(true);
+                        enter(target);
+                    }
+                }
+            }
+        };
+
+    }
+
+    public Shooter(final IGameContext gameContext, final Stats stats, final String type, double gameSeed) {
+        this.gameContext = gameContext;
+        this.stats = stats;
+        final LocalDate localDate = LocalDate.now();
+        date = DateTimeFormatter.ofPattern("d MMMM uuuu ").format(localDate);
+        score = 0;
+        gameType = type;
+        hand = new StackPane();
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
         Rectangle imageRectangle = createBackground();
         gameContext.getChildren().add(this);
@@ -203,7 +273,7 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         final double min = Math.ceil(0);
         final double max = Math.floor(2);
-        final int rd = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
+        final int rd = (int) (Math.floor(randomGenerator.nextDouble() * (max - min + 1)) + min);
 
         boolean leftorright = false;
 
@@ -458,7 +528,7 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         final double min = Math.ceil(1);
         final double max = Math.floor(3);
-        final int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
+        final int r = (int) (Math.floor(randomGenerator.nextDouble() * (max - min + 1)) + min);
 
         final String soundResource = "data/" + gameType + "/sounds/hand_sound" + r + ".mp3";
         gameContext.getSoundManager().add(soundResource);
@@ -559,11 +629,11 @@ public class Shooter extends Parent implements GameLifeCycle {
     }
 
     private void moveCircle(final Target sp) {
-        final double timebasic = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * Math.random() + MIN_TIME_LENGTH) * 1000;
+        final double timebasic = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * randomGenerator.nextDouble() + MIN_TIME_LENGTH) * 1000;
 
         final double min = Math.ceil(0);
         final double max = Math.floor(endPoints.length - 1);
-        final int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
+        final int r = (int) (Math.floor(randomGenerator.nextDouble() * (max - min + 1)) + min);
         final Point randomPoint = endPoints[r];
 
         final TranslateTransition tt1 = new TranslateTransition(new Duration(timebasic), sp);

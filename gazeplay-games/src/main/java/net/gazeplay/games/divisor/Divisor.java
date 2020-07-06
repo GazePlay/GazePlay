@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.LazyImageLibrary;
@@ -22,11 +23,22 @@ public class Divisor implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Stats stats;
     private final boolean isRabbit;
+    private final ReplayablePseudoRandom randomGenerator;
 
     public Divisor(final IGameContext gameContext, final Stats stats, final boolean isRabbit) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.isRabbit = isRabbit;
+    }
+
+    public Divisor(final IGameContext gameContext, final Stats stats, final boolean isRabbit, double gameSeed) {
+        super();
+        this.gameContext = gameContext;
+        this.stats = stats;
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
         this.isRabbit = isRabbit;
     }
 
@@ -36,15 +48,15 @@ public class Divisor implements GameLifeCycle {
         final ImageLibrary imageLibrary;
 
         if (isRabbit) {
-            imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "divisor/rabbit/images");
+            imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "divisor/rabbit/images", randomGenerator);
             initBackground();
             gameContext.resetBordersToFront();
         } else {
-            imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"));
+            imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"), randomGenerator);
         }
 
          target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
-            this.gameContext.getRandomPositionGenerator().newRandomPosition(100), isRabbit);
+            this.gameContext.getRandomPositionGenerator().newRandomPosition(100), isRabbit, randomGenerator);
 
         gameContext.getChildren().add(target);
 

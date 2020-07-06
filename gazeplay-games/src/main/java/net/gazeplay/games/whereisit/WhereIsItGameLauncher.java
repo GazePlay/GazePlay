@@ -18,4 +18,11 @@ public class WhereIsItGameLauncher implements GameSpec.GameLauncher<Stats, GameS
         return new WhereIsIt(WhereIsItGameType.CUSTOMIZED, gameVariant.getWidth(),
             gameVariant.getHeight(), false, gameContext, stats);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext,
+                                       GameSpec.DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+        return new WhereIsIt(WhereIsItGameType.CUSTOMIZED, gameVariant.getWidth(),
+            gameVariant.getHeight(), false, gameContext, stats, gameSeed);
+    }
 }

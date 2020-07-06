@@ -45,14 +45,29 @@ public class MagicCards implements GameLifeCycle {
 
     private RoundDetails currentRoundDetails;
 
+    private final ReplayablePseudoRandom random;
+
     public MagicCards(final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats) {
         super();
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.stats = stats;
+        this.random = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(random.getSeed());
 
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"));
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"), random);
+    }
+
+    public MagicCards(final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats, double gameSeed) {
+        super();
+        this.gameContext = gameContext;
+        this.nbLines = nbLines;
+        this.nbColumns = nbColumns;
+        this.stats = stats;
+        this.random = new ReplayablePseudoRandom(gameSeed);
+
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"), random);
     }
 
     @Override
@@ -61,8 +76,7 @@ public class MagicCards implements GameLifeCycle {
 
         final int cardsCount = nbColumns * nbLines;
         // final int winnerCardIndex = (int) (cardsCount * Math.random());
-        final ReplayablePseudoRandom r = new ReplayablePseudoRandom();
-        final int winnerCardIndex = r.nextInt(cardsCount);
+        final int winnerCardIndex = random.nextInt(cardsCount);
         final List<Card> cardList = createCards(winnerCardIndex, config);
 
         currentRoundDetails = new RoundDetails(cardList, winnerCardIndex);

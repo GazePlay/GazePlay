@@ -17,4 +17,9 @@ public class PotionsGameLauncher implements GameSpec.GameLauncher<MagicPotionsSt
         return new MagicPotions(gameContext, stats);
     }
 
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.GameVariant gameVariant, MagicPotionsStats stats, double gameSeed) {
+        return new MagicPotions(gameContext, stats, gameSeed);
+    }
+
 }

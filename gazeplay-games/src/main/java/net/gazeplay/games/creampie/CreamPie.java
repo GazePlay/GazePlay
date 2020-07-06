@@ -2,6 +2,7 @@ package net.gazeplay.games.creampie;
 
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.Portrait;
@@ -20,13 +21,34 @@ public class CreamPie implements GameLifeCycle {
 
     private final Target target;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     public CreamPie(IGameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
 
-        final ImageLibrary imageLibrary = Portrait.createImageLibrary();
+        final ImageLibrary imageLibrary = Portrait.createImageLibrary(randomGenerator);
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
+        randomPositionGenerator.setRandomGenerator(randomGenerator);
+
+        hand = new Hand();
+        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary);
+        gameContext.getChildren().add(target);
+        gameContext.getChildren().add(hand);
+    }
+
+    public CreamPie(IGameContext gameContext, Stats stats, double gameSeed) {
+        super();
+        this.gameContext = gameContext;
+        this.stats = stats;
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+
+        final ImageLibrary imageLibrary = Portrait.createImageLibrary(randomGenerator);
+        final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
+        randomPositionGenerator.setRandomGenerator(randomGenerator);
 
         hand = new Hand();
         target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary);

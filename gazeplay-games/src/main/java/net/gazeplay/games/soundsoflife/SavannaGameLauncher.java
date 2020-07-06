@@ -17,4 +17,10 @@ public class SavannaGameLauncher implements GameSpec.GameLauncher {
                                        Stats stats) {
         return new SoundsOfLife(gameContext, stats, 2);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.GameVariant gameVariant,
+                                       Stats stats, double gameSeed) {
+        return new SoundsOfLife(gameContext, stats, 2, gameSeed);
+    }
 }

@@ -17,4 +17,10 @@ public class ScribbleGameLauncher implements GameSpec.GameLauncher<Stats, GameSp
                                        GameSpec.DimensionGameVariant gameVariant, Stats stats) {
         return new DrawApplication(gameContext, stats);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext,
+                                       GameSpec.DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+        return new DrawApplication(gameContext, stats, gameSeed);
+    }
 }

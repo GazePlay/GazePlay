@@ -17,4 +17,10 @@ public class MagicCardsGameLauncher implements GameSpec.GameLauncher<Stats, Game
                                        GameSpec.DimensionGameVariant gameVariant, Stats stats) {
         return new MagicCards(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext,
+                                       GameSpec.DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+        return new MagicCards(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats, gameSeed);
+    }
 }

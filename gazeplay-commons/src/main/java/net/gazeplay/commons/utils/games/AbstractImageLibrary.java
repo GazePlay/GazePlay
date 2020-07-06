@@ -18,8 +18,8 @@ public abstract class AbstractImageLibrary implements ImageLibrary {
     @Nullable
     @Setter
     private ImageLibrary fallbackImageLibrary;
-
-    private final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
+    @Setter
+    private ReplayablePseudoRandom randomGenerator;
 
     @Override
     public abstract int getImagesCount();
@@ -64,7 +64,7 @@ public abstract class AbstractImageLibrary implements ImageLibrary {
     }
 
     private Set<Image> collectRandom(final int limit, final int distinctImagesCount) {
-        return IntStream.generate(() -> random.nextInt(distinctImagesCount)).distinct().limit(limit).boxed()
+        return IntStream.generate(() -> randomGenerator.nextInt(distinctImagesCount)).distinct().limit(limit).boxed()
             .peek(i -> log.debug("Picking Image at random index {} in ImageLibrary", i)).map(this::loadImageAtIndex)
             .collect(Collectors.toSet());
     }

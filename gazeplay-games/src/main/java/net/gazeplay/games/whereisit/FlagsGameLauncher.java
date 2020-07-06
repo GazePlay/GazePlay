@@ -17,4 +17,10 @@ public class FlagsGameLauncher implements GameSpec.GameLauncher {
                                        Stats stats) {
         return new WhereIsIt(WhereIsItGameType.FLAGS, 2, 2, false, gameContext, stats);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.GameVariant gameVariant,
+                                       Stats stats, double gameSeed) {
+        return new WhereIsIt(WhereIsItGameType.FLAGS, 2, 2, false, gameContext, stats, gameSeed);
+    }
 }

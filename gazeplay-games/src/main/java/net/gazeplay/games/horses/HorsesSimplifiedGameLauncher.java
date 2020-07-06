@@ -18,4 +18,10 @@ public class HorsesSimplifiedGameLauncher implements GameSpec.GameLauncher<Stats
         return new Horses(gameContext, stats, 1, gameVariant.getNumber());
     }
 
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                                       Stats stats, double gameSeed) {
+        return new Horses(gameContext, stats, 1, gameVariant.getNumber(), gameSeed);
+    }
+
 }

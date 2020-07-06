@@ -22,4 +22,13 @@ public class PetGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.Di
         return new PetHouse(gameContext, stats);
     }
 
+    @Override
+    public GameLifeCycle replayGame(
+        IGameContext gameContext,
+        GameSpec.DimensionGameVariant gameVariant,
+        Stats stats, double gameSeed
+    ) {
+        return new PetHouse(gameContext, stats, gameSeed);
+    }
+
 }

@@ -17,4 +17,10 @@ public class DivisorGameLauncher implements GameSpec.GameLauncher {
                                        Stats stats) {
         return new Divisor(gameContext, stats, false);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.GameVariant gameVariant,
+                                       Stats stats, double gameSeed) {
+        return new Divisor(gameContext, stats, false, gameSeed);
+    }
 }

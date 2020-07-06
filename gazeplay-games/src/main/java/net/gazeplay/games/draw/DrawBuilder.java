@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,12 +21,16 @@ public class DrawBuilder {
     private Color borderRectangleColor = Color.WHITE;
 
     @Setter
-    private ColorPicker colorPicker = new RandomColorPicker();
+    private ColorPicker colorPicker;
 
     @Setter
     private int drawLineWidth = 8;
 
     Stats stats;
+
+    public DrawBuilder(ReplayablePseudoRandom randomGenerator) {
+        colorPicker = new RandomColorPicker(randomGenerator);
+    }
 
     public Canvas createCanvas(final Dimension2D canvasDimension, final double coefficient, Stats stats) {
         final Canvas canvas = createCanvas(canvasDimension, stats);

@@ -17,4 +17,10 @@ public class ShooterGameLauncher implements GameSpec.GameLauncher {
                                        Stats stats) {
         return new Shooter(gameContext, stats, "biboule");
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.GameVariant gameVariant,
+                                       Stats stats, double gameSeed) {
+        return new Shooter(gameContext, stats, "biboule", gameSeed);
+    }
 }

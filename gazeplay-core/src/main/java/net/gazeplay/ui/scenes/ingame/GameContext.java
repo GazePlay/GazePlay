@@ -29,6 +29,7 @@ import net.gazeplay.commons.configuration.AnimationSpeedRatioSource;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.DefaultAnimationSpeedRatioSource;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
@@ -106,7 +107,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         this.configPane = configPane;
 
         this.gamePanelDimensionProvider = new GamePanelDimensionProvider(() -> root, gazePlay::getPrimaryScene);
-        this.randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
+        this.randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider, new ReplayablePseudoRandom());
 
         if (this.getConfiguration().isVideoRecordingEnabled()) {
             videoRecordingContext = new VideoRecordingContext(root, this);

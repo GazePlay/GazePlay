@@ -18,4 +18,10 @@ public class RoomGameLauncher implements GameSpec.GameLauncher {
                                        Stats stats) {
         return new Room(gameContext, stats);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.GameVariant gameVariant,
+                                       Stats stats, double gameSeed) {
+        return new Room(gameContext, stats);
+    }
 }

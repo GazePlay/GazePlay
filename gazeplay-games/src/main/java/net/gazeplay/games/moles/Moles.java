@@ -46,10 +46,21 @@ public class Moles extends Parent implements GameLifeCycle {
 
     private RoundDetails currentRoundDetails;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     Moles(IGameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+    }
+
+    Moles(IGameContext gameContext, Stats stats, double gameSeed) {
+        super();
+        this.gameContext = gameContext;
+        this.stats = stats;
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
     @Override
@@ -132,27 +143,26 @@ public class Moles extends Parent implements GameLifeCycle {
     private synchronized void play() {
 
         nbMolesOut = new AtomicInteger(0);
-        ReplayablePseudoRandom r = new ReplayablePseudoRandom();
 
         Timer minuteur = new Timer();
         TimerTask tache = new TimerTask() {
             public void run() {
 
-                int n = (int) r.random();
+                int n = (int) randomGenerator.random();
                 if (nbMolesOut.get() <= 3) {
-                    chooseMoleToOut(r);
+                    chooseMoleToOut(randomGenerator);
                 } else if ((nbMolesOut.get() <= 4) && (n % 4 == 0)) {
-                    chooseMoleToOut(r);
+                    chooseMoleToOut(randomGenerator);
                 } else if ((nbMolesOut.get() <= 5) && (n % 8 == 0)) {
-                    chooseMoleToOut(r);
+                    chooseMoleToOut(randomGenerator);
                 } else if ((nbMolesOut.get() <= 6) && (n % 12 == 0)) {
-                    chooseMoleToOut(r);
+                    chooseMoleToOut(randomGenerator);
                 } else if ((nbMolesOut.get() <= 7) && (n % 16 == 0)) {
-                    chooseMoleToOut(r);
+                    chooseMoleToOut(randomGenerator);
                 } else if ((nbMolesOut.get() <= 8) && (n % 20 == 0)) {
-                    chooseMoleToOut(r);
+                    chooseMoleToOut(randomGenerator);
                 } else if ((nbMolesOut.get() <= 9) && (n % 24 == 0)) {
-                    chooseMoleToOut(r);
+                    chooseMoleToOut(randomGenerator);
                 }
             }
         };
@@ -173,17 +183,17 @@ public class Moles extends Parent implements GameLifeCycle {
     }
 
     /* Select a mole not out for the moment and call "getOut()" */
-    private void chooseMoleToOut(ReplayablePseudoRandom r) {
+    private void chooseMoleToOut(ReplayablePseudoRandom random) {
         if (this.currentRoundDetails == null) {
             return;
         }
         int indice;
         do {
             int nbHoles = 10;
-            indice = r.nextInt(nbHoles);
+            indice = random.nextInt(nbHoles);
         } while (!currentRoundDetails.molesList.get(indice).canGoOut);
         MolesChar m = currentRoundDetails.molesList.get(indice);
-        m.getOut();
+        m.getOut(random);
         stats.incrementNumberOfGoalsToReach();
     }
 

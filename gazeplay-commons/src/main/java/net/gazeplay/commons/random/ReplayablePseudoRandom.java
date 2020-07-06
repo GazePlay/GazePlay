@@ -1,10 +1,13 @@
 package net.gazeplay.commons.random;
 
+import lombok.Getter;
+
 /**
  * @author Christophe El Zeinaty
  */
 
 public class ReplayablePseudoRandom {
+    @Getter
     private double seed;
     private long multiplier;
     private long increment;
@@ -15,6 +18,7 @@ public class ReplayablePseudoRandom {
         this.multiplier = 1103515245;
         this.increment = 12345;
         this.modulus = Math.pow(2, 31);
+        System.out.println("GameSeedFromRG: " + seed);
     }
 
     public ReplayablePseudoRandom(double seed) {

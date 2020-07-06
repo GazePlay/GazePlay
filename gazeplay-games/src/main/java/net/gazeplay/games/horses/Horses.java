@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -77,9 +78,21 @@ public class Horses implements GameLifeCycle {
 
     private VBox messages;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     public Horses(final IGameContext gameContext, final Stats stats, final int gameVersion, final int nbPlayers) {
         this.gameContext = gameContext;
         this.stats = stats;
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.gameVersion = gameVersion;
+        this.nbPlayers = nbPlayers;
+    }
+
+    public Horses(final IGameContext gameContext, final Stats stats, final int gameVersion, final int nbPlayers, double gameSeed) {
+        this.gameContext = gameContext;
+        this.stats = stats;
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
         this.gameVersion = gameVersion;
         this.nbPlayers = nbPlayers;
     }
@@ -283,7 +296,7 @@ public class Horses implements GameLifeCycle {
         boardImage.setY(yOffset);
         backgroundLayer.getChildren().add(boardImage);
 
-        die = new DiceRoller((float) gridElementSize / 2, gameContext.getSoundManager());
+        die = new DiceRoller((float) gridElementSize / 2, gameContext.getSoundManager(), randomGenerator);
         final double diePositionInImage = imageSize / 2 - gridElementSize / 2;
         final StackPane dieContainer = new StackPane();
         dieContainer.getChildren().add(die);

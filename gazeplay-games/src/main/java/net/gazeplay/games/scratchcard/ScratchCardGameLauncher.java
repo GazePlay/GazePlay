@@ -18,4 +18,10 @@ public class ScratchCardGameLauncher implements GameSpec.GameLauncher {
                                        Stats stats) {
         return new Blocs(gameContext, 100, 100, false, 0.6f, true, stats);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.GameVariant gameVariant,
+                                       Stats stats, double gameSeed) {
+        return new Blocs(gameContext, 100, 100, false, 0.6f, true, stats, gameSeed);
+    }
 }

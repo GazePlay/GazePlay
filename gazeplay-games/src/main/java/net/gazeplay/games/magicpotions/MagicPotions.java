@@ -14,6 +14,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.LinkedList;
@@ -58,6 +59,8 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
     private final Dimension2D gameDimension2D;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
 
     @Getter
     @Setter
@@ -76,6 +79,18 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = (MagicPotionsStats) stats;
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+    }
+
+    MagicPotions(final IGameContext gameContext, final Stats stats, double gameSeed) {
+        super();
+        this.gameContext = gameContext;
+        this.stats = (MagicPotionsStats) stats;
+        this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
     @Override
@@ -92,7 +107,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         final double bibY = 50;//
 
         // make random potion request
-        final PotionMix request = PotionMix.getRandomPotionRequest();
+        final PotionMix request = PotionMix.getRandomPotionRequest(randomGenerator);
 
         final Client client = new Client(bibX, bibY, bibouleClient.getWidth(), bibouleClient.getHeight(), bibouleClient, request);
 

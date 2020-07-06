@@ -112,6 +112,7 @@ public class Stats implements GazeMotionListener {
     String currentGameVariant;
     String currentGameVariantClass;
     String currentGameNameCode;
+    double currentGameSeed = 0.;
 
     public Stats(final Scene gameContextScene) {
         this(gameContextScene, null);
@@ -625,7 +626,7 @@ public class Stats implements GazeMotionListener {
     private JsonObject buildSavedDataJSON(JsonArray data) {
         String screenAspectRatio = getScreenRatio();
 
-        savedDataObj.addProperty("Seed", idForReplay);
+        savedDataObj.addProperty("Seed", currentGameSeed);
         savedDataObj.addProperty("GameName", currentGameNameCode);
         savedDataObj.addProperty("GameVariantClass", currentGameVariantClass);
         savedDataObj.addProperty("GameVariant", currentGameVariant);
@@ -661,5 +662,10 @@ public class Stats implements GazeMotionListener {
         currentGameVariant = gameVariant;
         currentGameVariantClass = gameVariantClass;
         currentGameNameCode = gameNameCode;
+    }
+
+    public void setGameSeed(double gameSeed){
+
+        currentGameSeed = gameSeed;
     }
 }

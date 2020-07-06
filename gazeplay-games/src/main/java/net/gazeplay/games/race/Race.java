@@ -21,6 +21,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
 @Slf4j
@@ -68,12 +69,88 @@ public class Race extends Parent implements GameLifeCycle {
     private Dimension2D dimension2D;
     private final Target[] racers;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     // done
     public Race(final IGameContext gameContext, final Stats stats, final String type) {
         this.gameContext = gameContext;
         this.stats = stats;
         score = 0;
         gameType = type;
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+
+        dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        hand = new StackPane();
+
+        Rectangle imageRectangle = createBackground();
+
+        gameContext.getChildren().add(this);
+
+        final EventHandler<MouseEvent> handEvent = e -> {
+            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+                final double x = e.getX();
+                final double y = e.getY();
+                hand.setRotate(getAngle(new Point(x, y)));
+            }
+        };
+
+        racers = new Target[3];
+
+        handEventGaze = e -> {
+            final double x = e.getX();
+            final double y = e.getY();
+            hand.setRotate(getAngle(new Point(x, y)));
+        };
+        imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
+        this.addEventFilter(GazeEvent.ANY, handEventGaze);
+
+        blue = new Image("data/" + gameType + "/images/Blue.png");
+        green = new Image("data/" + gameType + "/images/Green.png");
+        yellow = new Image("data/" + gameType + "/images/Yellow.png");
+        orange = new Image("data/" + gameType + "/images/Orange.png");
+        red = new Image("data/" + gameType + "/images/Red.png");
+        racer = new Image("data/" + gameType + "/images/frogJump.gif");
+        flash = new Image("data/" + gameType + "/images/Flash.png");
+        cage = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
+
+        final Point[] points = new Point[8];
+        // init all points
+        for (int i = 0; i < points.length; ++i) {
+            points[i] = new Point(0, 0);
+        }
+
+        this.endPoints = points;
+        // then update them
+        updatePoints(imageRectangle);
+
+        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> {
+            updatePoints(imageRectangle);
+        });
+        gameContext.getRoot().heightProperty().addListener((observable, oldValue, newValue) -> {
+            updatePoints(imageRectangle);
+        });
+
+        enterEvent = e -> {
+            if (e.getTarget() instanceof Target) {
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    if (!((Target) e.getTarget()).done && !raceIsFinished) {
+                        ((Target) e.getTarget()).done = true;
+                        enter((Target) e.getTarget());
+                        stats.incrementNumberOfGoalsReached();
+                    }
+                }
+            }
+        };
+
+    }
+
+    public Race(final IGameContext gameContext, final Stats stats, final String type, double gameSeed) {
+        this.gameContext = gameContext;
+        this.stats = stats;
+        score = 0;
+        gameType = type;
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         hand = new StackPane();
@@ -454,9 +531,9 @@ public class Race extends Parent implements GameLifeCycle {
         final double yMinRange = dimension2D.getHeight() * 0.1;
         final double yMaxRange = dimension2D.getHeight() * 0.25;
 
-        final double x = (Math.random() * (dimension2D.getWidth() * 0.9));
+        final double x = (randomGenerator.nextDouble() * (dimension2D.getWidth() * 0.9));
         sp.setLayoutX(x);
-        final double y = Math.random() * yMaxRange + yMinRange;
+        final double y = randomGenerator.nextDouble() * yMaxRange + yMinRange;
         sp.setLayoutY(y);
         sp.centerX = x;
         sp.centerY = y;
@@ -521,10 +598,10 @@ public class Race extends Parent implements GameLifeCycle {
         frogRacer.centerX = 0;
         frogRacer.centerY = y;
 
-        final TranslateTransition tt1 = new TranslateTransition(new Duration(((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * Math.random() + MIN_RACE_TIME_LENGTH)
+        final TranslateTransition tt1 = new TranslateTransition(new Duration(((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * randomGenerator.nextDouble() + MIN_RACE_TIME_LENGTH)
             * 1000), frogRacer);
         tt1.setToX(dimension2D.getWidth() - dimension2D.getWidth() * 0.1);
-        final ScaleTransition st = new ScaleTransition(new Duration(((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * Math.random() + MIN_RACE_TIME_LENGTH)
+        final ScaleTransition st = new ScaleTransition(new Duration(((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * randomGenerator.nextDouble() + MIN_RACE_TIME_LENGTH)
             * 1000), frogRacer);
         st.setByX(1);
         st.setByY(1);
@@ -594,12 +671,12 @@ public class Race extends Parent implements GameLifeCycle {
     }
 
     private void moveCircle(final Target sp) {
-        final double timelength = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * Math.random() + MIN_TIME_LENGTH) * 1000;
+        final double timelength = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * randomGenerator.nextDouble() + MIN_TIME_LENGTH) * 1000;
 
         final TranslateTransition tt1 = new TranslateTransition(new Duration(timelength), sp);
         final double min = Math.ceil(0);
         final double max = Math.floor(endPoints.length - 1);
-        final int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
+        final int r = (int) (Math.floor(randomGenerator.nextDouble() * (max - min + 1)) + min);
         final Point randomPoint = endPoints[r];
         tt1.setToY((-sp.centerY + randomPoint.y) / 4);
         tt1.setToX(-sp.centerX + randomPoint.x);

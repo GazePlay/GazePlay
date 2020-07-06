@@ -32,7 +32,7 @@ public class CupsAndBalls implements GameLifeCycle {
     private final int openCupSpeed = 1000;
     private final int ballRadius = 20;
 
-    private final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
+    private final ReplayablePseudoRandom randomGenerator;
     private ArrayList<Action> actions;
 
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups) {
@@ -44,10 +44,29 @@ public class CupsAndBalls implements GameLifeCycle {
         this.nbColumns = nbCups;
         this.nbLines = nbCups;
         this.nbExchanges = nbCups * nbCups;
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+    }
+
+    public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups, double gameSeed, String parameter) {
+        super();
+        this.gameContext = gameContext;
+        this.stats = stats;
+        this.nbCups = nbCups;
+        this.cups = new Cup[nbCups];
+        this.nbColumns = nbCups;
+        this.nbLines = nbCups;
+        this.nbExchanges = nbCups * nbCups;
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups, final int nbExchanges) {
         this(gameContext, stats, nbCups);
+        this.nbExchanges = nbExchanges;
+    }
+
+    public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups, final int nbExchanges, double gameSeed, String parameter) {
+        this(gameContext, stats, nbCups, gameSeed, parameter);
         this.nbExchanges = nbExchanges;
     }
 
@@ -58,7 +77,7 @@ public class CupsAndBalls implements GameLifeCycle {
         final double imageWidth = dimension2D.getHeight() / (nbColumns * 1.5);
         final double imageHeight = dimension2D.getHeight() / nbColumns;
 
-        final int ballInCup = random.nextInt(nbCups);
+        final int ballInCup = randomGenerator.nextInt(nbCups);
         Point posCup;
         for (int indexCup = 0; indexCup < cups.length; indexCup++) {
             final PositionCup position = new PositionCup(indexCup, nbColumns / 2, nbColumns, nbLines, dimension2D.getHeight(),
@@ -99,7 +118,7 @@ public class CupsAndBalls implements GameLifeCycle {
             }
         }
 
-        Strategy strategy = new Strategy(nbCups, nbExchanges, nbColumns, nbLines);
+        Strategy strategy = new Strategy(nbCups, nbExchanges, nbColumns, nbLines, randomGenerator);
         this.actions = strategy.chooseStrategy();
 
         for (final Cup cup : cups) {

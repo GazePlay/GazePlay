@@ -17,4 +17,10 @@ public class RabbitsGameLauncher implements GameSpec.GameLauncher {
                                        Stats stats) {
         return new Divisor(gameContext, stats, true);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.GameVariant gameVariant,
+                                       Stats stats, double gameSeed) {
+        return new Divisor(gameContext, stats, true, gameSeed);
+    }
 }

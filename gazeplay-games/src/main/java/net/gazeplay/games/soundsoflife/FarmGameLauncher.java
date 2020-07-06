@@ -17,4 +17,10 @@ public class FarmGameLauncher implements GameSpec.GameLauncher {
                                        Stats stats) {
         return new SoundsOfLife(gameContext, stats, 0);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.GameVariant gameVariant,
+                                       Stats stats, double gameSeed) {
+        return new SoundsOfLife(gameContext, stats, 0, gameSeed);
+    }
 }

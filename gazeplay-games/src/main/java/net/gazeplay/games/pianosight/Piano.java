@@ -52,6 +52,8 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private final List<ImageView> fragments;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     public Piano(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
@@ -64,6 +66,23 @@ public class Piano extends Parent implements GameLifeCycle {
         instru = new Instru();
         gameContext.getChildren().add(this);
         jukebox = new Jukebox(gameContext);
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+    }
+
+    public Piano(final IGameContext gameContext, final Stats stats, double gameSeed) {
+        this.gameContext = gameContext;
+        this.stats = stats;
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        centerX = dimension2D.getWidth() / 2;
+        centerY = dimension2D.getHeight() / 2.2;
+        this.fragments = buildFragments();
+        this.getChildren().addAll(fragments);
+        tilesTab = new ArrayList<>();
+        instru = new Instru();
+        gameContext.getChildren().add(this);
+        jukebox = new Jukebox(gameContext);
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
     private List<ImageView> buildFragments() {
@@ -93,8 +112,6 @@ public class Piano extends Parent implements GameLifeCycle {
         final Timeline timeline1 = new Timeline();
         final Timeline timeline2 = new Timeline();
 
-        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
-
         for (final ImageView fragment : fragments) {
 
             timeline1.getKeyFrames().add(
@@ -103,7 +120,7 @@ public class Piano extends Parent implements GameLifeCycle {
                 new KeyFrame(new Duration(1), new KeyValue(fragment.yProperty(), ycenter, Interpolator.EASE_OUT)));
             timeline1.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.opacityProperty(), 1)));
 
-            final int worh = random.nextInt(4);
+            final int worh = randomGenerator.nextInt(4);
 
             final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
 
@@ -112,18 +129,18 @@ public class Piano extends Parent implements GameLifeCycle {
             switch (worh) {
                 case 0:
                     xEndValue = 0;
-                    yEndValue = random.nextDouble() * screenDimension.getHeight();
+                    yEndValue = randomGenerator.nextDouble() * screenDimension.getHeight();
                     break;
                 case 1:
-                    xEndValue = random.nextDouble() * screenDimension.getWidth();
+                    xEndValue = randomGenerator.nextDouble() * screenDimension.getWidth();
                     yEndValue = 0;
                     break;
                 case 2:
                     xEndValue = screenDimension.getWidth();
-                    yEndValue = random.nextDouble() * screenDimension.getHeight();
+                    yEndValue = randomGenerator.nextDouble() * screenDimension.getHeight();
                     break;
                 case 3:
-                    xEndValue = random.nextDouble() * screenDimension.getWidth();
+                    xEndValue = randomGenerator.nextDouble() * screenDimension.getWidth();
                     yEndValue = screenDimension.getHeight();
                     break;
                 default:

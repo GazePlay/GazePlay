@@ -17,4 +17,10 @@ public class JungleGameLauncher implements GameSpec.GameLauncher {
                                        Stats stats) {
         return new SoundsOfLife(gameContext, stats, 1);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.GameVariant gameVariant,
+                                       Stats stats, double gameSeed) {
+        return new SoundsOfLife(gameContext, stats, 1, gameSeed);
+    }
 }

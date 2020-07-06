@@ -64,8 +64,12 @@ class Mypet extends Pane {
     @Getter
     private boolean eyesAreOpen = true;
 
-    Mypet(final double height, final double width, final PetHouse ph) {
+    private final ReplayablePseudoRandom random;
+
+    Mypet(final double height, final double width, final PetHouse ph, ReplayablePseudoRandom randomGenerator) {
         final Image tmp = new Image("data/pet/images/body.png");
+
+        this.random = randomGenerator;
 
         hRatio = height / 4d / tmp.getHeight();
         wRatio = width / 4d / tmp.getWidth();
@@ -230,7 +234,7 @@ class Mypet extends Pane {
             new KeyValue(getRightEye().fillProperty(), new ImagePattern(new Image("data/pet/images/eye.png")))));
 
         t.setOnFinished(e -> {
-            final double time = Math.random() * 10000;
+            final double time = random.nextDouble() * 10000;
             t.getKeyFrames().clear();
             if (eyesAreOpen) {
                 t.getKeyFrames().add(new KeyFrame(Duration.millis(time), new KeyValue(getLeftEye().fillProperty(),
@@ -315,7 +319,6 @@ class Mypet extends Pane {
                     baloon.setX(0);
 
                     final TranslateTransition tt = new TranslateTransition(Duration.millis(1000), baloon);
-                    final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
                     int nombreAleatoire = random.nextInt(4);
                     switch (nombreAleatoire) {
                         case 0:

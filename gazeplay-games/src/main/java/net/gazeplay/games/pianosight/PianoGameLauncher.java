@@ -22,4 +22,13 @@ public class PianoGameLauncher implements GameSpec.GameLauncher<ShooterGamesStat
     ) {
         return new Piano(gameContext, stats);
     }
+
+    @Override
+    public GameLifeCycle replayGame(
+        IGameContext gameContext,
+        GameSpec.DimensionGameVariant gameVariant,
+        ShooterGamesStats stats, double gameSeed
+    ) {
+        return new Piano(gameContext, stats, gameSeed);
+    }
 }

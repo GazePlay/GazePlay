@@ -42,6 +42,7 @@ class Target extends Parent {
     private final long startTime;
     private final Dimension2D dimension;
     private final boolean isRabbit;
+    private final ReplayablePseudoRandom randomGenerator;
 
     @Getter
     private final ImageLibrary imgLib;
@@ -49,7 +50,7 @@ class Target extends Parent {
     private Timeline timeline;
 
     public Target(final IGameContext gameContext, final Stats stats, final ImageLibrary imgLib, final int level, final long start,
-                  final Divisor gameInstance, final Position pos, final boolean isRabbit) {
+                  final Divisor gameInstance, final Position pos, final boolean isRabbit, ReplayablePseudoRandom random) {
         this.level = level;
         this.difficulty = 3;
         this.gameContext = gameContext;
@@ -62,8 +63,9 @@ class Target extends Parent {
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.radius = 200d / (level + 1);
         this.timeline = new Timeline();
+        this.randomGenerator = random;
 
-        this.circle = new Circle(pos.getX(), pos.getY(), this.radius);
+            this.circle = new Circle(pos.getX(), pos.getY(), this.radius);
         this.circle.setFill(new ImagePattern(this.imgLib.pickRandomImage(), 0, 0, 1, 1, true));
         this.getChildren().add(circle);
 
@@ -193,7 +195,7 @@ class Target extends Parent {
         double tempY = y;
         for (int i = 0; i < 2; i++) {
             final Target target = new Target(gameContext, stats, this.imgLib, level + 1, startTime, gameInstance,
-                new Position(tempX, tempY), isRabbit);
+                new Position(tempX, tempY), isRabbit, randomGenerator);
 
             if (tempY + target.radius > (int) dimension.getHeight()) {
                 tempY = (int) dimension.getHeight() - (int) target.radius * 2;
@@ -205,24 +207,21 @@ class Target extends Parent {
     }
 
     private int randomDirection() {
-        final ReplayablePseudoRandom r = new ReplayablePseudoRandom();
-        int x = r.nextInt(3) + 4;
-        if (r.nextInt(2) >= 1) {
+        int x = randomGenerator.nextInt(3) + 4;
+        if (randomGenerator.nextInt(2) >= 1) {
             x = -x;
         }
         return x;
     }
 
     private Position randomPosWithRange(final Position start, final double range, final double radius) {
-        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
-
         final double minX = (start.getX() - range);
         final double minY = (start.getY() - range);
         final double maxX = (start.getX() + range);
         final double maxY = (start.getY() + range);
 
-        double positionX = random.nextInt((int) (maxX - minX)) + minX;
-        double positionY = random.nextInt((int) (maxY - minY)) + minY;
+        double positionX = randomGenerator.nextInt((int) (maxX - minX)) + minX;
+        double positionY = randomGenerator.nextInt((int) (maxY - minY)) + minY;
 
         if (positionX > this.dimension.getWidth()) {
             positionX = this.dimension.getWidth() - radius;

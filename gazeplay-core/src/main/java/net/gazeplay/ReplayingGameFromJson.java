@@ -41,6 +41,7 @@ public class ReplayingGameFromJson {
     private static ApplicationContext applicationContext;
     private static GameContext gameContext;
     private static GazePlay gazePlay;
+    private static double currentGameSeed;
     private static String currentGameNameCode;
     private static String currentGameVariant;
     private static GameSpec selectedGameSpec;
@@ -72,6 +73,7 @@ public class ReplayingGameFromJson {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(selectedFile));
         Gson gson = new Gson();
         JsonFile json = gson.fromJson(bufferedReader, JsonFile.class);
+        currentGameSeed = json.getSeed();
         currentGameNameCode = json.getGameName();
         currentGameVariant = json.getGameVariant();
         coordinatesAndTimeStamp = json.getCoordinatesAndTimeStamp();
@@ -120,14 +122,15 @@ public class ReplayingGameFromJson {
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats stats = gameLauncher.createNewStats(scene);
 
-        GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
+        GameLifeCycle currentGame = gameLauncher.replayGame(gameContext, gameVariant, stats, currentGameSeed);
+        //GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
         currentGame.launch();
 
         /*var game = gameContext.getChildren().get(gameContext.getChildren().indexOf(currentGame));
         gameContext.getRoot().getChildren().get(gameContext.getRoot().getChildren().indexOf(swingNode)).toFront();*/
 
-        /*gameContext.createControlPanel(gazePlay, stats, currentGame);
-        gameContext.createQuitShortcut(gazePlay, stats, currentGame);*/
+        gameContext.createControlPanel(gazePlay, stats, currentGame);
+        gameContext.createQuitShortcut(gazePlay, stats, currentGame);
 
         final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
 
@@ -207,7 +210,7 @@ public class ReplayingGameFromJson {
 }
 class JsonFile {
 
-    int Seed;
+    double Seed;
     String GameName;
     String GameVariantClass;
     String GameVariant;
@@ -215,7 +218,7 @@ class JsonFile {
     String ScreenAspectRatio;
     JsonArray CoordinatesAndTimeStamp;
 
-    public int getSeed() {
+    public double getSeed() {
         return Seed;
     }
 

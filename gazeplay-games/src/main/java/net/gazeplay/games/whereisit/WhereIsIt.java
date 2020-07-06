@@ -50,6 +50,7 @@ public class WhereIsIt implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Stats stats;
     private RoundDetails currentRoundDetails;
+    private final ReplayablePseudoRandom randomGenerator;
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
                      final IGameContext gameContext, final Stats stats) {
@@ -59,6 +60,19 @@ public class WhereIsIt implements GameLifeCycle {
         this.gameType = gameType;
         this.fourThree = fourThree;
         this.stats = stats;
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+    }
+
+    public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
+                     final IGameContext gameContext, final Stats stats, double gameSeed) {
+        this.gameContext = gameContext;
+        this.nbLines = nbLines;
+        this.nbColumns = nbColumns;
+        this.gameType = gameType;
+        this.fourThree = fourThree;
+        this.stats = stats;
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
     @Override
@@ -67,11 +81,10 @@ public class WhereIsIt implements GameLifeCycle {
         final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
 
-        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
-        final int winnerImageIndexAmongDisplayedImages = random.nextInt(numberOfImagesToDisplayPerRound);
+        final int winnerImageIndexAmongDisplayedImages = randomGenerator.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
-        currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, random,
+        currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, randomGenerator,
             winnerImageIndexAmongDisplayedImages);
 
         if (currentRoundDetails != null) {
@@ -457,7 +470,7 @@ public class WhereIsIt implements GameLifeCycle {
         log.debug("language is " + language);
 
         final String voice;
-        if (Math.random() > 0.5) {
+        if (randomGenerator.nextDouble() > 0.5) {
             voice = "m";
         } else {
             voice = "w";

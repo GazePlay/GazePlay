@@ -17,4 +17,10 @@ public class FrogsRaceGameLauncher implements GameSpec.GameLauncher {
                                        Stats stats) {
         return new Race(gameContext, stats, "race");
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.GameVariant gameVariant,
+                                       Stats stats, double gameSeed) {
+        return new Race(gameContext, stats, "race", gameSeed);
+    }
 }

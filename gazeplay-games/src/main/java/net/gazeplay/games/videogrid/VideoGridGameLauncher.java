@@ -17,4 +17,10 @@ public class VideoGridGameLauncher implements GameSpec.GameLauncher<Stats, GameS
                                        GameSpec.DimensionGameVariant gameVariant, Stats stats) {
         return new VideoGrid(gameContext, stats, gameVariant.getWidth(), gameVariant.getHeight());
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext,
+                                       GameSpec.DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+        return new VideoGrid(gameContext, stats, gameVariant.getWidth(), gameVariant.getHeight(), gameSeed);
+    }
 }

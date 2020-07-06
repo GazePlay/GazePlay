@@ -17,4 +17,10 @@ public class GooseGameLauncher implements GameSpec.GameLauncher<GooseGameStats, 
         return new GooseGame(gameContext, stats, gameVariant.getNumber());
     }
 
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                                       GooseGameStats stats, double gameSeed) {
+        return new GooseGame(gameContext, stats, gameVariant.getNumber(), gameSeed);
+    }
+
 }

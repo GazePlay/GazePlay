@@ -5,7 +5,11 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 public class RandomColorPicker implements ColorPicker {
 
-    private final ReplayablePseudoRandom randomColorPicker = new ReplayablePseudoRandom();
+    private final ReplayablePseudoRandom randomColorPicker;
+
+    public RandomColorPicker(ReplayablePseudoRandom randomGenerator) {
+        randomColorPicker = randomGenerator;
+    }
 
     @Override
     public Color pickColor() {

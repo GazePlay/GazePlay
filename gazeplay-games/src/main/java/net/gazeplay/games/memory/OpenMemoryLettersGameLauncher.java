@@ -19,4 +19,11 @@ public class OpenMemoryLettersGameLauncher implements GameSpec.GameLauncher<Stat
         return new Memory(Memory.MemoryGameType.LETTERS, gameContext, gameVariant.getWidth(),
             gameVariant.getHeight(), stats, true);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext,
+                                       GameSpec.DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+        return new Memory(Memory.MemoryGameType.LETTERS, gameContext, gameVariant.getWidth(),
+            gameVariant.getHeight(), stats, true, gameSeed);
+    }
 }

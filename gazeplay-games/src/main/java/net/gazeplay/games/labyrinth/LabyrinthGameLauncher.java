@@ -17,4 +17,9 @@ public class LabyrinthGameLauncher implements GameSpec.GameLauncher<Stats, GameS
         return new Labyrinth(gameContext, stats, gameVariant.getEnumValue());
     }
 
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.EnumGameVariant<LabyrinthGameVariant> gameVariant, Stats stats, double gameSeed) {
+        return new Labyrinth(gameContext, stats, gameVariant.getEnumValue(), gameSeed);
+    }
+
 }

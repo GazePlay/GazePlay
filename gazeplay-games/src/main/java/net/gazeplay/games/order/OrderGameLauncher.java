@@ -17,4 +17,10 @@ public class OrderGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.
                                        Stats stats) {
         return new Order(gameContext, gameVariant.getNumber(), stats);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                                       Stats stats, double gameSeed) {
+        return new Order(gameContext, gameVariant.getNumber(), stats, gameSeed);
+    }
 }

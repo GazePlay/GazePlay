@@ -14,7 +14,9 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.components.Position;
+import net.gazeplay.components.RandomPositionGenerator;
 
 
 /**
@@ -31,13 +33,16 @@ public class Target extends Parent {
     private Timeline timelineProgressBar;
     private final double fixationLength;
 
-    public Target(final Order gameInstance, final IGameContext gameContext, final int num, final double fixLength) {
+    public Target(final Order gameInstance, final IGameContext gameContext, final int num, final double fixLength, ReplayablePseudoRandom randomGenerator) {
         this.num = num;
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
-        this.pos = this.gameContext.getRandomPositionGenerator().newRandomPosition(100);
         this.radius = 75;
         this.fixationLength = fixLength;
+
+        final RandomPositionGenerator randomPositionGenerator = this.gameContext.getRandomPositionGenerator();
+        randomPositionGenerator.setRandomGenerator(randomGenerator);
+        this.pos = randomPositionGenerator.newRandomPosition(100);
 
         final Circle cercle = new Circle(pos.getX(), pos.getY(), this.radius);
         cercle.setFill(new ImagePattern(new Image("data/order/images/target.png"), 0, 0, 1, 1, true));

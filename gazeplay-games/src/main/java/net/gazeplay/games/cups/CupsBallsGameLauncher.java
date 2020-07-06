@@ -17,4 +17,10 @@ public class CupsBallsGameLauncher implements GameSpec.GameLauncher<Stats, GameS
                                        Stats stats) {
         return new CupsAndBalls(gameContext, stats, gameVariant.getNumber(), 3);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                                       Stats stats, double gameSeed) {
+        return new CupsAndBalls(gameContext, stats, gameVariant.getNumber(), 3, gameSeed, "newGame");
+    }
 }

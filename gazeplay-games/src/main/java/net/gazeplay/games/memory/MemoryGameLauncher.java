@@ -19,4 +19,11 @@ public class MemoryGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec
         return new Memory(Memory.MemoryGameType.DEFAULT, gameContext, gameVariant.getWidth(),
             gameVariant.getHeight(), stats, false);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext,
+                                       GameSpec.DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+        return new Memory(Memory.MemoryGameType.DEFAULT, gameContext, gameVariant.getWidth(),
+            gameVariant.getHeight(), stats, false, gameSeed);
+    }
 }

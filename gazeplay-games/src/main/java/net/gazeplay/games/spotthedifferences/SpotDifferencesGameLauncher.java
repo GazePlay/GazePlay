@@ -17,4 +17,10 @@ public class SpotDifferencesGameLauncher implements GameSpec.GameLauncher<SpotTh
                                        SpotTheDifferencesStats stats) {
         return new SpotTheDifferences(gameContext, stats);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.GameVariant gameVariant,
+                                       SpotTheDifferencesStats stats, double gameSeed) {
+        return new SpotTheDifferences(gameContext, stats);
+    }
 }

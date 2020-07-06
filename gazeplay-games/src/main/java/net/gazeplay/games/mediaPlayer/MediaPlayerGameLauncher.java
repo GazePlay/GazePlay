@@ -20,4 +20,10 @@ public class MediaPlayerGameLauncher implements GameSpec.GameLauncher<Exploratio
         return new GazeMediaPlayer(gameContext, stats);
     }
 
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext,
+                                       GameSpec.DimensionGameVariant gameVariant, ExplorationGamesStats stats, double gameSeed) {
+        return new GazeMediaPlayer(gameContext, stats);
+    }
+
 }

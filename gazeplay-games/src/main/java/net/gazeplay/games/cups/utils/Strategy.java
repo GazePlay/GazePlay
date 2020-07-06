@@ -13,22 +13,23 @@ public class Strategy {
     private final ArrayList<Action> actions;
     private final int maxCellsX;
     private final int maxCellsY;
+    private final ReplayablePseudoRandom randomGenerator;
 
     private enum Strategies {
         rotationUpDown, rotationMoveClosestInPlace
     }
 
-    public Strategy(final int nbCups, final int nbExchanges, final int maxCellsX, final int maxCellsY) {
+    public Strategy(final int nbCups, final int nbExchanges, final int maxCellsX, final int maxCellsY, ReplayablePseudoRandom random) {
         this.nbExchanges = nbExchanges;
         this.actions = new ArrayList<>();
         this.maxCellsX = maxCellsX;
         this.maxCellsY = maxCellsY;
+        this.randomGenerator = random;
     }
 
     public ArrayList<Action> chooseStrategy() {
         for (int iteration = 0; iteration < nbExchanges; iteration++) {
 
-            final ReplayablePseudoRandom randomGenerator = new ReplayablePseudoRandom();
             final int strategyChoice = randomGenerator.nextInt(Strategies.values().length);
 
             switch (Strategies.values()[strategyChoice]) {
@@ -93,7 +94,6 @@ public class Strategy {
             }
             numbersToChooseFrom.add(index);
         }
-        final ReplayablePseudoRandom randomGenerator = new ReplayablePseudoRandom();
         final int cupChoice;
         cupChoice = randomGenerator.nextInt(numbersToChooseFrom.size());
         return numbersToChooseFrom.get(cupChoice);
@@ -108,7 +108,6 @@ public class Strategy {
             numbersToChooseFrom.add(index);
         }
         final ArrayList<Integer> choices = new ArrayList();
-        final ReplayablePseudoRandom randomGenerator = new ReplayablePseudoRandom();
         for (int index = 0; index < 2; index++) {
             final int cupChoice = randomGenerator.nextInt(numbersToChooseFrom.size());
             choices.add(numbersToChooseFrom.get(cupChoice));

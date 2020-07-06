@@ -24,8 +24,7 @@ public enum PotionMix {
         this.color = color;
     }
 
-    public static PotionMix getRandomPotionRequest() {
-        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
-        return values()[random.nextInt(values().length)];
+    public static PotionMix getRandomPotionRequest(ReplayablePseudoRandom randomGenerator) {
+        return values()[randomGenerator.nextInt(values().length)];
     }
 }

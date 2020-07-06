@@ -23,6 +23,13 @@ public class EggGame implements GameLifeCycle {
         this.numberOfTurns = numOfTurns;
     }
 
+    public EggGame(final IGameContext gameContext, final Stats stats, final int numOfTurns, double gameSeed) {
+        super();
+        this.gameContext = gameContext;
+        this.stats = stats;
+        this.numberOfTurns = numOfTurns;
+    }
+
     @Override
     public void launch() {
         final Configuration config = gameContext.getConfiguration();

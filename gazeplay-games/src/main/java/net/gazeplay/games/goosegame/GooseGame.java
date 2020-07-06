@@ -75,6 +75,7 @@ public class GooseGame implements GameLifeCycle {
         final Configuration config = gameContext.getConfiguration();
 
         this.random = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(random.getSeed());
 
         // JSON file used to store the position of each square, later used for pawn movement
         final JsonParser parser = new JsonParser();
@@ -193,7 +194,178 @@ public class GooseGame implements GameLifeCycle {
         final float dieWidth = (float) (dimensions.getWidth() / 20);
 
         for (int i = 0; i < 2; i++) {
-            final DiceRoller dr = new DiceRoller(dieWidth, gameContext.getSoundManager());
+            final DiceRoller dr = new DiceRoller(dieWidth, gameContext.getSoundManager(), random);
+            diceRollers.add(dr);
+            diceDisplay.add(dr, i, 0);
+            // init rolls to 1s
+            rolls[i] = 1;
+        }
+
+        // Animation to move the dice in and out of the center if the window
+        moveDiceIn = new Timeline(new KeyFrame(Duration.seconds(1),
+            new KeyValue(diceDisplay.layoutXProperty(), dimensions.getWidth() / 2 - 3 * dieWidth,
+                Interpolator.EASE_OUT),
+            new KeyValue(diceDisplay.layoutYProperty(), dimensions.getHeight() / 2 - dieWidth,
+                Interpolator.EASE_OUT),
+            new KeyValue(diceDisplay.scaleXProperty(), 1), new KeyValue(diceDisplay.scaleYProperty(), 1)));
+        moveDiceOut = new Timeline(new KeyFrame(Duration.seconds(1),
+            new KeyValue(diceDisplay.layoutXProperty(), -dieWidth, Interpolator.EASE_OUT),
+            new KeyValue(diceDisplay.layoutYProperty(), 0, Interpolator.EASE_OUT),
+            new KeyValue(diceDisplay.scaleXProperty(), 0.5), new KeyValue(diceDisplay.scaleYProperty(), 0.5)));
+
+        moveDiceIn.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
+        moveDiceOut.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
+
+        // Dice are put in their default location, smaller, in the upper left corner
+        diceDisplay.setScaleX(0.5);
+        diceDisplay.setScaleY(0.5);
+        diceDisplay.setLayoutX(-dieWidth);
+
+        // Button which starts the beginning of a turn by rolling the dice
+        rollButton = new ProgressButton();
+        final ImageView rollImage = new ImageView("data/dice/roll.png");
+        rollImage.setFitHeight(dimensions.getHeight() / 6);
+        rollImage.setFitWidth(dimensions.getHeight() / 6);
+        rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
+        rollButton.setLayoutY(dimensions.getHeight() - 1.2 * rollImage.getFitHeight());
+        rollButton.setImage(rollImage);
+        rollButton.assignIndicator(event -> roll(), config.getFixationLength());
+        this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
+        rollButton.active();
+
+        // The message queue
+        messages = new VBox();
+        messages.setAlignment(Pos.CENTER);
+    }
+
+    public GooseGame(final IGameContext gameContext, final GooseGameStats stats, final int nbPlayers, double gameSeed) {
+        this.gameContext = gameContext;
+        this.stats = stats;
+        this.nbPlayers = nbPlayers;
+
+        this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Configuration config = gameContext.getConfiguration();
+
+        this.random = new ReplayablePseudoRandom(gameSeed);
+
+        // JSON file used to store the position of each square, later used for pawn movement
+        final JsonParser parser = new JsonParser();
+        final JsonArray positions = (JsonArray) parser.parse(new InputStreamReader(
+            Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("data/goosegame/positions.json")),
+            StandardCharsets.UTF_8));
+
+        boardImage = new ImageView("data/goosegame/gooseboard.png");
+        if (!gameContext.getConfiguration().isBackgroundEnabled()) {
+            ColorAdjust grayscale = new ColorAdjust();
+            grayscale.setSaturation(-0.7);
+            boardImage.setEffect(grayscale);
+        }
+        // The board is scaled according to the window size, this influences the position we got above, so we need to
+        // scale those too
+        final double scaleRatio = Math.min((dimensions.getHeight() * 0.9) / boardImage.getImage().getHeight(),
+            (dimensions.getWidth() * 0.9) / boardImage.getImage().getWidth());
+        final double boardWidth = boardImage.getImage().getWidth() * scaleRatio;
+        final double boardHeight = boardImage.getImage().getHeight() * scaleRatio;
+        boardImage.setFitHeight(boardHeight);
+        boardImage.setFitWidth(boardWidth);
+        // Board is centered
+        final double xOffset = (dimensions.getWidth() - boardWidth) / 2;
+        final double yOffset = (dimensions.getHeight() - boardHeight) / 2;
+        boardImage.setX(xOffset);
+        boardImage.setY(yOffset);
+
+        // Creating the squares
+        final ArrayList<Integer> repeatSquares = new ArrayList<>(Arrays.asList(5, 9, 13, 18, 24, 28, 34, 36, 40, 45, 49, 54));
+        Square previousSquare = null;
+        BridgeSquare beginBridge = null;
+        for (int i = 0; i < 64; i++) {
+            final JsonObject jsonPos = (JsonObject) positions.get(i);
+            final Position position = new Position(xOffset + jsonPos.get("x").getAsDouble() * scaleRatio,
+                yOffset + jsonPos.get("y").getAsDouble() * scaleRatio);
+
+            final Square newSquare;
+            if (repeatSquares.contains(i)) {
+                newSquare = new RepeatSquare(i, position, previousSquare, this);
+            } else if (i == 31 || i == 52) {
+                newSquare = new PrisonSquare(i, position, previousSquare, this,
+                    i == 31 ? "Player %d fell into a well" : "Player %d got locked up in prison");
+            } else if (i == 19) {
+                newSquare = new SkipSquare(i, position, previousSquare, this, 2);
+            } else if (i == 58) {
+                newSquare = new RestartSquare(i, position, previousSquare, this, firstSquare);
+            } else if (i == 7) {
+                beginBridge = new BridgeSquare(i, position, previousSquare, this);
+                newSquare = beginBridge;
+            } else if (i == 63) {
+                newSquare = new EndSquare(i, position, previousSquare, this);
+            } else {
+                newSquare = new Square(i, position, previousSquare, this);
+            }
+
+            if (i == 32) {
+                beginBridge.setDestinationSquare(newSquare);
+            }
+
+            if (previousSquare != null) {
+                previousSquare.setNextSquare(newSquare);
+            } else {
+                firstSquare = newSquare;
+            }
+            previousSquare = newSquare;
+        }
+
+        // Creating the pawns
+        pawns = new ArrayList<>();
+        bibouleColors = new ArrayList<>(Arrays.asList("Blue", "Orange", "green", "Yellow", "Red"));
+        for (int i = 0; i < nbPlayers; i++) {
+            final ImageView imagePawn = new ImageView(String.format(BIBOULEPATH, bibouleColors.get(i)));
+            imagePawn.setFitHeight(dimensions.getWidth() / 20);
+            imagePawn.setFitWidth(dimensions.getWidth() / 20);
+            pawns.add(new Pawn(imagePawn, firstSquare, i + 1, gameContext.getAnimationSpeedRatioSource()));
+        }
+
+        // Creating the turn indicator, it shows which biboule's turn it is
+        turnIndicator = new ImageView(String.format(BIBOULEPATH, bibouleColors.get(0)));
+        turnIndicator.setFitHeight(dimensions.getWidth() / 12);
+        turnIndicator.setFitWidth(dimensions.getWidth() / 12);
+
+        showPlayingBiboule = new Timeline(
+            new KeyFrame(Duration.ZERO,
+                new KeyValue(turnIndicator.layoutXProperty(),
+                    (dimensions.getWidth() / 2) - turnIndicator.getFitWidth() / 2),
+                new KeyValue(turnIndicator.layoutYProperty(),
+                    (dimensions.getHeight() / 2) - turnIndicator.getFitHeight() / 2),
+                new KeyValue(turnIndicator.scaleXProperty(), 2),
+                new KeyValue(turnIndicator.scaleYProperty(), 2),
+                new KeyValue(turnIndicator.opacityProperty(), 0)),
+            new KeyFrame(Duration.seconds(2),
+                new KeyValue(turnIndicator.opacityProperty(), 1, Interpolator.EASE_OUT),
+                new KeyValue(turnIndicator.layoutXProperty(),
+                    (dimensions.getWidth() / 2) - turnIndicator.getFitWidth() / 2),
+                new KeyValue(turnIndicator.layoutYProperty(),
+                    (dimensions.getHeight() / 2) - turnIndicator.getFitHeight() / 2),
+                new KeyValue(turnIndicator.scaleXProperty(), 2),
+                new KeyValue(turnIndicator.scaleYProperty(), 2)),
+            new KeyFrame(Duration.seconds(3),
+                new KeyValue(turnIndicator.layoutXProperty(),
+                    11 * dimensions.getWidth() / 12 - dimensions.getWidth() / 25),
+                new KeyValue(turnIndicator.layoutYProperty(), dimensions.getWidth() / 25),
+                new KeyValue(turnIndicator.scaleXProperty(), 1),
+                new KeyValue(turnIndicator.scaleYProperty(), 1)));
+
+        showPlayingBiboule.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
+        showPlayingBiboule.setOnFinished(
+            e -> rollButton.setLayoutY(dimensions.getHeight() - 1.2 * rollButton.getImage().getFitHeight()));
+
+        // The dice are set in a grid pane, one next to the other
+        diceDisplay = new GridPane();
+        diceDisplay.setHgap(dimensions.getWidth() / 20);
+        rolls = new int[2];
+        diceRollers = new ArrayList<>();
+        final float dieWidth = (float) (dimensions.getWidth() / 20);
+
+        for (int i = 0; i < 2; i++) {
+            final DiceRoller dr = new DiceRoller(dieWidth, gameContext.getSoundManager(), random);
             diceRollers.add(dr);
             diceDisplay.add(dr, i, 0);
             // init rolls to 1s

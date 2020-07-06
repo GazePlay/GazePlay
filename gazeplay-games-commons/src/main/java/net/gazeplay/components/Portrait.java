@@ -16,8 +16,8 @@ import java.util.List;
  */
 public class Portrait extends Circle {
 
-    public static ImageLibrary createImageLibrary() {
-        return ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"));
+    public static ImageLibrary createImageLibrary(ReplayablePseudoRandom randomGenerator) {
+        return ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"), randomGenerator);
     }
 
     @Getter

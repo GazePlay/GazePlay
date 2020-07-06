@@ -19,4 +19,10 @@ public class RushHourGameLauncher implements GameSpec.GameLauncher<Stats, GameSp
         return new RushHour(gameContext, stats);
     }
 
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext,
+                                       GameSpec.DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+        return new RushHour(gameContext, stats);
+    }
+
 }

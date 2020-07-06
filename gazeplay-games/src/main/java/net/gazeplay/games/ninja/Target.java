@@ -53,7 +53,7 @@ public class Target extends Portrait {
     public Animation currentTranslation;
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
-                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant) {
+                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final ReplayablePseudoRandom randomGenerator) {
         super(radius, randomPositionGenerator, imageLibrary);
 
         this.gameContext = gameContext;
@@ -61,7 +61,7 @@ public class Target extends Portrait {
         this.stats = stats;
         this.imageLibrary = imageLibrary;
         this.gameVariant = gameVariant;
-        this.randomGen = new ReplayablePseudoRandom();
+        this.randomGen = randomGenerator;
 
         this.miniBallsPortraits = generateMiniBallsPortraits(randomPositionGenerator, imageLibrary, nbBall);
         gameContext.getChildren().addAll(miniBallsPortraits);

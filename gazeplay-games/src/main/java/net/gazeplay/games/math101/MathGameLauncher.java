@@ -21,4 +21,9 @@ public final class MathGameLauncher implements GameSpec.GameLauncher<Stats, Math
     public GameLifeCycle createNewGame(final IGameContext gameContext, final MathGameVariant gameVariant, final Stats stats) {
         return new Math101(mathGameType, gameContext, gameVariant, stats);
     }
+
+    @Override
+    public GameLifeCycle replayGame(final IGameContext gameContext, final MathGameVariant gameVariant, final Stats stats, double gameSeed) {
+        return new Math101(mathGameType, gameContext, gameVariant, stats, gameSeed);
+    }
 }

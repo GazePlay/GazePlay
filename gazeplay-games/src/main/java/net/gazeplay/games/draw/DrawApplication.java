@@ -5,6 +5,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**
@@ -13,11 +14,40 @@ import net.gazeplay.commons.utils.stats.Stats;
 public class DrawApplication implements GameLifeCycle {
 
     Stats stats;
+    private final ReplayablePseudoRandom randomGenerator;
 
     public DrawApplication(IGameContext gameContext, Stats stats) {
         this.stats  = stats;
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
 
-        DrawBuilder drawBuilder = new DrawBuilder();
+        DrawBuilder drawBuilder = new DrawBuilder(randomGenerator);
+        drawBuilder.setColorPicker(new RainbowColorPicker());
+
+        final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
+
+        double coefficient = 1.5;
+
+        Dimension2D canvasDimension = new Dimension2D(screenDimension.getWidth() / coefficient,
+            screenDimension.getHeight() / coefficient);
+
+        Canvas canvas = drawBuilder.createCanvas(canvasDimension, coefficient, this.stats);
+
+        StackPane root = new StackPane();
+        root.getChildren().add(canvas);
+
+        root.prefWidthProperty().bind(gameContext.getRoot().widthProperty());
+        root.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
+
+        gameContext.getGazeDeviceManager().addEventFilter(canvas);
+        gameContext.getChildren().add(canvas);
+    }
+
+    public DrawApplication(IGameContext gameContext, Stats stats, double gameSeed) {
+        this.stats  = stats;
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+
+        DrawBuilder drawBuilder = new DrawBuilder(randomGenerator);
         drawBuilder.setColorPicker(new RainbowColorPicker());
 
         final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();

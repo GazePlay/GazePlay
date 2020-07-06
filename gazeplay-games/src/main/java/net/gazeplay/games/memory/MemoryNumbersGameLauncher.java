@@ -19,4 +19,11 @@ public class MemoryNumbersGameLauncher implements GameSpec.GameLauncher<Stats, G
         return new Memory(Memory.MemoryGameType.NUMBERS, gameContext, gameVariant.getWidth(),
             gameVariant.getHeight(), stats, false);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext,
+                                       GameSpec.DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+        return new Memory(Memory.MemoryGameType.NUMBERS, gameContext, gameVariant.getWidth(),
+            gameVariant.getHeight(), stats, false, gameSeed);
+    }
 }

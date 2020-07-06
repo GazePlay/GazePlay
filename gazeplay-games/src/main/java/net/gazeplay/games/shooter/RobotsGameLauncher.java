@@ -17,4 +17,10 @@ public class RobotsGameLauncher implements GameSpec.GameLauncher {
                                        Stats stats) {
         return new Shooter(gameContext, stats, "robot");
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.GameVariant gameVariant,
+                                       Stats stats, double gameSeed) {
+        return new Shooter(gameContext, stats, "robot", gameSeed);
+    }
 }

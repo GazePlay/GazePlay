@@ -22,4 +22,10 @@ public class ColorsGameLauncher implements GameSpec.GameLauncher {
                                        Stats stats) {
         return new ColorsGame(gameContext, gameStat, gameContext.getTranslator());
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.GameVariant gameVariant,
+                                       Stats stats, double gameSeed) {
+        return new ColorsGame(gameContext, gameStat, gameContext.getTranslator());
+    }
 }

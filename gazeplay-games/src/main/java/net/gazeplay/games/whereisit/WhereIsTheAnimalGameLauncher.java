@@ -19,4 +19,11 @@ public class WhereIsTheAnimalGameLauncher implements GameSpec.GameLauncher<Stats
             gameVariant.getHeight(), false, gameContext, stats);
     }
 
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext,
+                                       GameSpec.DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+        return new WhereIsIt(WhereIsItGameType.ANIMALNAME, gameVariant.getWidth(),
+            gameVariant.getHeight(), false, gameContext, stats, gameSeed);
+    }
+
 }

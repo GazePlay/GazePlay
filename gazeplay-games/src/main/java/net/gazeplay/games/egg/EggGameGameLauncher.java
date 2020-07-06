@@ -17,4 +17,10 @@ public class EggGameGameLauncher implements GameSpec.GameLauncher<Stats, GameSpe
                                        Stats stats) {
         return new EggGame(gameContext, stats, gameVariant.getNumber());
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.IntGameVariant gameVariant,
+                                       Stats stats, double gameSeed) {
+        return new EggGame(gameContext, stats, gameVariant.getNumber(), gameSeed);
+    }
 }

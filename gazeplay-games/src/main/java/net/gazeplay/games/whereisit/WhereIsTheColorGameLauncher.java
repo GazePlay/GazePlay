@@ -18,4 +18,11 @@ public class WhereIsTheColorGameLauncher implements GameSpec.GameLauncher<Stats,
         return new WhereIsIt(WhereIsItGameType.COLORNAME, gameVariant.getWidth(),
             gameVariant.getHeight(), false, gameContext, stats);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext,
+                                       GameSpec.DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+        return new WhereIsIt(WhereIsItGameType.COLORNAME, gameVariant.getWidth(),
+            gameVariant.getHeight(), false, gameContext, stats, gameSeed);
+    }
 }

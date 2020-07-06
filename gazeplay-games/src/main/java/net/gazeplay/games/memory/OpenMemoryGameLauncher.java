@@ -19,4 +19,11 @@ public class OpenMemoryGameLauncher implements GameSpec.GameLauncher<Stats, Game
         return new Memory(Memory.MemoryGameType.DEFAULT, gameContext, gameVariant.getWidth(),
             gameVariant.getHeight(), stats, true);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext,
+                                       GameSpec.DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+        return new Memory(Memory.MemoryGameType.DEFAULT, gameContext, gameVariant.getWidth(),
+            gameVariant.getHeight(), stats, true, gameSeed);
+    }
 }

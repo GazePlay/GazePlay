@@ -18,4 +18,10 @@ public class VideoPlayerGameLauncher implements GameSpec.GameLauncher<Exploratio
                                        ExplorationGamesStats stats) {
         return new VideoPlayerWithLiveFeedbackApp(gameContext, stats, gameVariant.getValue());
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.StringGameVariant gameVariant,
+                                       ExplorationGamesStats stats, double gameSeed) {
+        return new VideoPlayerWithLiveFeedbackApp(gameContext, stats, gameVariant.getValue(), gameSeed);
+    }
 }

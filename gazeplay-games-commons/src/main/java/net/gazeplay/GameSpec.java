@@ -19,6 +19,7 @@ public class GameSpec {
         T createNewStats(Scene scene);
 
         GameLifeCycle createNewGame(IGameContext gameContext, V gameVariant, T stats);
+        GameLifeCycle replayGame(IGameContext gameContext, V gameVariant, T stats, double gameSeed);
 
     }
 

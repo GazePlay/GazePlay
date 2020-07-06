@@ -18,4 +18,9 @@ public class NinjaGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.
         return new Ninja(gameContext, stats, gameVariant.getEnumValue());
     }
 
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.EnumGameVariant<NinjaGameVariant> gameVariant, Stats stats, double gameSeed) {
+        return new Ninja(gameContext, stats, gameVariant.getEnumValue(), gameSeed);
+    }
+
 }

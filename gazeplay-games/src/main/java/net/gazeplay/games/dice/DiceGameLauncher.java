@@ -18,4 +18,10 @@ public class DiceGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.I
         return new Dice(gameContext, stats, gameVariant.getNumber());
     }
 
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext,
+                                       GameSpec.IntGameVariant gameVariant, Stats stats, double gameSeed) {
+        return new Dice(gameContext, stats, gameVariant.getNumber(), gameSeed);
+    }
+
 }

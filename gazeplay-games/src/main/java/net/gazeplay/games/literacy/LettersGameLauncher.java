@@ -17,4 +17,10 @@ public class LettersGameLauncher implements GameSpec.GameLauncher<Stats, GameSpe
                                        GameSpec.DimensionGameVariant gameVariant, Stats stats) {
         return new Letters(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats);
     }
+
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext,
+                                       GameSpec.DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+        return new Letters(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats, gameSeed);
+    }
 }

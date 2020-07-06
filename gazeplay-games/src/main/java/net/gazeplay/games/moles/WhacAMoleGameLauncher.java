@@ -22,4 +22,13 @@ public class WhacAMoleGameLauncher implements GameSpec.GameLauncher<Stats, GameS
         return new Moles(gameContext, stats);
     }
 
+    @Override
+    public GameLifeCycle replayGame(
+        IGameContext gameContext,
+        GameSpec.DimensionGameVariant gameVariant,
+        Stats stats, double gameSeed
+    ) {
+        return new Moles(gameContext, stats, gameSeed);
+    }
+
 }

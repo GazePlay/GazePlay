@@ -16,5 +16,9 @@ public class BibouleJumpGameLauncher implements GameSpec.GameLauncher<BibouleJum
     public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.EnumGameVariant<BibouleJumpVariant> gameVariant, BibouleJumpStats stats) {
         return new BibouleJump(gameContext, stats, gameVariant.getEnumValue());
     }
+    @Override
+    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.EnumGameVariant<BibouleJumpVariant> gameVariant, BibouleJumpStats stats, double gameSeed) {
+        return new BibouleJump(gameContext, stats, gameVariant.getEnumValue(), gameSeed);
+    }
 
 }

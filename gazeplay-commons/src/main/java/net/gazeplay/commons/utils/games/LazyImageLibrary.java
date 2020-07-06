@@ -3,6 +3,7 @@ package net.gazeplay.commons.utils.games;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import javafx.scene.image.Image;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.RuntimeExecutionException;
 
 import java.io.File;
@@ -15,12 +16,12 @@ public class LazyImageLibrary extends AbstractImageLibrary {
 
     private final List<File> allFiles;
 
-    public LazyImageLibrary(File directoryFile) {
-        this(ImageUtils.listImageFiles(directoryFile), null);
+    public LazyImageLibrary(File directoryFile, ReplayablePseudoRandom randomGenerator) {
+        this(ImageUtils.listImageFiles(directoryFile), null, randomGenerator);
     }
 
-    public LazyImageLibrary(File directoryFile, ImageLibrary defaultImageLibrary) {
-        this(ImageUtils.listImageFiles(directoryFile), defaultImageLibrary);
+    public LazyImageLibrary(File directoryFile, ImageLibrary defaultImageLibrary, ReplayablePseudoRandom randomGenerator) {
+        this(ImageUtils.listImageFiles(directoryFile), defaultImageLibrary, randomGenerator);
     }
 
     public LazyImageLibrary(List<File> allFiles) {
@@ -28,9 +29,10 @@ public class LazyImageLibrary extends AbstractImageLibrary {
         setFallbackImageLibrary(null);
     }
 
-    public LazyImageLibrary(List<File> allFiles, ImageLibrary defaultImageLibrary) {
+    public LazyImageLibrary(List<File> allFiles, ImageLibrary defaultImageLibrary, ReplayablePseudoRandom randomGenerator) {
         this.allFiles = allFiles;
         setFallbackImageLibrary(defaultImageLibrary);
+        setRandomGenerator(randomGenerator);
     }
 
     @Override
