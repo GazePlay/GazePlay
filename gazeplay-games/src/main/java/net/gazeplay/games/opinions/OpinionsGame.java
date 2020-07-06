@@ -33,6 +33,10 @@ public class OpinionsGame implements GameLifeCycle {
 
     private Rectangle background;
 
+    private ProgressButton thumbDown;
+    private ProgressButton noCare;
+    private ProgressButton thumbUp;
+
     private int score = 0;
 
     public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats) {
@@ -64,7 +68,7 @@ public class OpinionsGame implements GameLifeCycle {
         backgroundLayer.getChildren().add(background);
         background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
 
-        ProgressButton thumbDown = new ProgressButton();
+        thumbDown = new ProgressButton();
         thumbDown.setLayoutX(dimension2D.getWidth() * 18 / 20);
         thumbDown.setLayoutY(dimension2D.getHeight() * 2 / 5);
         thumbDown.getButton().setRadius(70);
@@ -82,7 +86,7 @@ public class OpinionsGame implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(thumbDown);
         thumbDown.active();
 
-        ProgressButton noCare = new ProgressButton();
+        noCare = new ProgressButton();
         noCare.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20);
         noCare.setLayoutY(0);
         noCare.getButton().setRadius(70);
@@ -99,7 +103,7 @@ public class OpinionsGame implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(noCare);
         noCare.active();
 
-        ProgressButton thumbUp = new ProgressButton();
+        thumbUp = new ProgressButton();
         thumbUp.setLayoutX(0);
         thumbUp.setLayoutY(dimension2D.getHeight() * 2 / 5);
         thumbUp.getButton().setRadius(70);
@@ -150,6 +154,9 @@ public class OpinionsGame implements GameLifeCycle {
         score = score + 1;
         if (score == 10) {
             gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(opinionGameStats, this));
+            thumbUp.setDisable(true);
+            thumbDown.setDisable(true);
+            noCare.setDisable(true);
             score = 0;
         }
     }
