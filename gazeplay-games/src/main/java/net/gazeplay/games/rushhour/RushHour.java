@@ -47,11 +47,13 @@ public class RushHour extends Parent implements GameLifeCycle {
     private boolean limiterT;
     private long startTime = 0;
     private long endTime = 0;
+    private boolean limiteUsed;
 
     public RushHour(final IGameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiteUsed = false;
         level = 0;
         size = new SimpleIntegerProperty();
         gameContext.getPrimaryStage().widthProperty().addListener((observable, oldValue, newValue) -> {
@@ -2427,6 +2429,7 @@ public class RushHour extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
         endOfGame = false;
+        limiteUsed = false;
         setLevel(level);
         if (toWin.isDirection()) {
             toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiH.png")));
@@ -2538,10 +2541,11 @@ public class RushHour extends Parent implements GameLifeCycle {
     }
 
     private void updateScore() {
-        if (limiterT) {
+        if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.showRoundStats(stats, this);
+                limiteUsed = false;
             } else {
                 dispose();
                 launch();

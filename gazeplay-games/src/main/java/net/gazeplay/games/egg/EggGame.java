@@ -19,6 +19,7 @@ public class EggGame implements GameLifeCycle {
     private boolean limiterT;
     private long startTime = 0;
     private long endTime = 0;
+    private boolean limiteUsed;
 
     public EggGame(final IGameContext gameContext, final Stats stats, final int numOfTurns) {
         super();
@@ -26,11 +27,13 @@ public class EggGame implements GameLifeCycle {
         this.stats = stats;
         this.numberOfTurns = numOfTurns;
         this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiteUsed = false;
     }
 
     @Override
     public void launch() {
         start();
+        this.limiteUsed = false;
         final Configuration config = gameContext.getConfiguration();
 
         final Egg egg = createEgg(config);
@@ -61,10 +64,11 @@ public class EggGame implements GameLifeCycle {
     }
 
     void updateScore() {
-        if (limiterT) {
+        if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
             }
         }
     }

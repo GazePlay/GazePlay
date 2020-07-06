@@ -45,6 +45,7 @@ class Target extends Parent {
     private final long startTime;
     private long endTime;
     private boolean limiterT;
+    private boolean limiteUsed;
     private final Dimension2D dimension;
     private final boolean isRabbit;
 
@@ -68,6 +69,7 @@ class Target extends Parent {
         this.radius = 200d / (level + 1);
         this.timeline = new Timeline();
         this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiteUsed = false;
 
         this.circle = new Circle(pos.getX(), pos.getY(), this.radius);
         this.circle.setFill(new ImagePattern(this.imgLib.pickRandomImage(), 0, 0, 1, 1, true));
@@ -249,19 +251,14 @@ class Target extends Parent {
     }
 
     private void updateScore() {
-        if (limiterT) {
+        if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
+                limiteUsed = true;
             }
         }
     }
-
-    /*private void start() {
-        startTime = System.currentTimeMillis();
-    }
-
-     */
 
     private void stop() {
         endTime = System.currentTimeMillis();
@@ -269,5 +266,9 @@ class Target extends Parent {
 
     private double time(double start, double end) {
         return (end - start) / 1000;
+    }
+
+    public void setLimiteUsed(boolean limit) {
+        limiteUsed = limit;
     }
 }

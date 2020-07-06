@@ -34,14 +34,10 @@ public class Dice implements GameLifeCycle {
     private boolean active;
     private final int[] rolls;
     private final ProgressButton rollButton;
-    private boolean limiterS;
-    private long startTime = 0;
-    private long endTime = 0;
 
     public Dice(final IGameContext gameContext, final Stats stats, final int nbDice) {
         this.gameContext = gameContext;
         this.stats = stats;
-        this.limiterS = gameContext.getConfiguration().isLimiterS();
         final Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         active = true;
 
@@ -63,9 +59,6 @@ public class Dice implements GameLifeCycle {
                 totalText.setOpacity(0);
                 for (int i = 0; i < diceRollers.size(); i++) {
                     rolls[i] = diceRollers.get(i).roll(i == 0 ? action -> addUp() : null);
-                }
-                if (limiterS) {
-                    updateScore();
                 }
                 stats.incrementNumberOfGoalsReached();
             }
@@ -105,27 +98,6 @@ public class Dice implements GameLifeCycle {
         }
     }
 
-    private void start() {
-        startTime = System.currentTimeMillis();
-    }
-
-    private void stop() {
-        endTime = System.currentTimeMillis();
-    }
-
-    private double time(double start, double end) {
-        return (end - start) / 1000;
-    }
-
-    private void updateScore() {
-        if (limiterS) {
-            stop();
-            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore() || time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-            }
-        }
-    }
-
     private void addUp() {
         int total = 0;
         for (final int roll : rolls) {
@@ -141,7 +113,6 @@ public class Dice implements GameLifeCycle {
 
     @Override
     public void launch() {
-        start();
         gameContext.getChildren().addAll(gridpane, totalText, rollButton);
         stats.notifyNewRoundReady();
     }

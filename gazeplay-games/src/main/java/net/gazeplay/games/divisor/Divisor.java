@@ -10,7 +10,6 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
-import net.gazeplay.commons.utils.games.LazyImageLibrary;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -35,6 +34,7 @@ public class Divisor implements GameLifeCycle {
         final Target target;
         final ImageLibrary imageLibrary;
 
+
         if (isRabbit) {
             imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "divisor/rabbit/images");
             initBackground();
@@ -47,7 +47,7 @@ public class Divisor implements GameLifeCycle {
             this.gameContext.getRandomPositionGenerator().newRandomPosition(100), isRabbit);
 
         gameContext.getChildren().add(target);
-
+        target.setLimiteUsed(false);
         this.stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
     }

@@ -54,6 +54,7 @@ public class Math101 implements GameLifeCycle {
     private boolean limiterT;
     private long startTime = 0;
     private long endTime = 0;
+    private boolean limiteUsed;
 
     public Math101(final MathGameType gameType, final IGameContext gameContext, final MathGameVariant gameVariant, final Stats stats) {
         super();
@@ -66,6 +67,7 @@ public class Math101 implements GameLifeCycle {
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.limiterS = gameContext.getConfiguration().isLimiterS();
         this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiteUsed = false;
     }
 
     private static Formula generateRandomFormula(final MathGameType gameType, final int maxValue) {
@@ -148,6 +150,7 @@ public class Math101 implements GameLifeCycle {
 
     @Override
     public void launch() {
+        limiteUsed = false;
         final Formula formula = generateRandomFormula(gameType, maxValue);
 
         final Text question = createQuestionText(formula);
@@ -341,15 +344,17 @@ public class Math101 implements GameLifeCycle {
     }
 
     void updateScore() {
-        if (limiterS) {
+        if (limiterS && !limiteUsed) {
             if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
             }
         }
-        if (limiterT) {
+        if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
             }
         }
     }

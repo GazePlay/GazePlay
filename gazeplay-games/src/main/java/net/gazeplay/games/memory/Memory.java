@@ -31,6 +31,7 @@ public class Memory implements GameLifeCycle {
     private boolean limiterT;
     private long startTime = 0;
     private long endTime = 0;
+    private boolean limiteUsed;
 
     @Data
     @AllArgsConstructor
@@ -76,6 +77,7 @@ public class Memory implements GameLifeCycle {
         this.stats = stats;
         this.limiterS = gameContext.getConfiguration().isLimiterS();
         this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiteUsed = false;
 
         if (gameType == MemoryGameType.LETTERS) {
 
@@ -110,6 +112,7 @@ public class Memory implements GameLifeCycle {
 
     @Override
     public void launch() {
+        limiteUsed = false;
         final Configuration config = gameContext.getConfiguration();
         final int cardsCount = nbColumns * nbLines;
 
@@ -223,17 +226,20 @@ public class Memory implements GameLifeCycle {
     }
 
     void updateScore() {
-        if (limiterS) {
+        if (limiterS && !limiteUsed) {
             if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
             }
         }
-        if (limiterT) {
+        if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
             }
         }
+
     }
 
     private void start() {

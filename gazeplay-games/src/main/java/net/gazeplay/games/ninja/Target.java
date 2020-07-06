@@ -58,6 +58,7 @@ public class Target extends Portrait {
     private boolean limiterT;
     private long startTime = 0;
     private long endTime = 0;
+    private boolean limiteUsed;
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
                   final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance) {
@@ -72,6 +73,7 @@ public class Target extends Portrait {
         this.randomGen = new Random();
         this.limiterS = gameContext.getConfiguration().isLimiterS();
         this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiteUsed = false;
 
         this.miniBallsPortraits = generateMiniBallsPortraits(randomPositionGenerator, imageLibrary, nbBall);
         gameContext.getChildren().addAll(miniBallsPortraits);
@@ -323,16 +325,20 @@ public class Target extends Portrait {
     }
 
     private void updateScore() {
-        if (limiterS) {
+
+        if (limiterS && !limiteUsed) {
             if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
+                limiteUsed = true;
             }
         }
-        if (limiterT) {
+        if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
+                limiteUsed = true;
             }
+
         }
     }
 
@@ -346,5 +352,9 @@ public class Target extends Portrait {
 
     private double time(double start, double end) {
         return (end - start) / 1000;
+    }
+
+    public void setLimiteUsed(boolean limit) {
+        limiteUsed = limit;
     }
 }

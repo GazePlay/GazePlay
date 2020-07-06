@@ -53,6 +53,7 @@ public class Target extends Portrait {
     private boolean limiterT;
     private long startTime = 0;
     private long endTime = 0;
+    private boolean limiteUsed;
 
     public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
                   final ImageLibrary imageLibrary, CreamPie gameInstance) {
@@ -66,6 +67,7 @@ public class Target extends Portrait {
         this.gameInstance = gameInstance;
         this.limiterS = gameContext.getConfiguration().isLimiterS();
         this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiteUsed = false;
         targetAOIList = new ArrayList<>();
 
         enterEvent = e -> {
@@ -103,17 +105,21 @@ public class Target extends Portrait {
     }
 
     private void updateScore() {
-        if (limiterS) {
+
+        if (limiterS && !limiteUsed) {
             if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
+                limiteUsed = true;
             }
         }
-        if (limiterT) {
+        if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
+                limiteUsed = true;
             }
         }
+
     }
 
     private void start() {
@@ -126,6 +132,10 @@ public class Target extends Portrait {
 
     private double time(double start, double end) {
         return (end - start) / 1000;
+    }
+
+    public void setLimiteUsed(boolean limit) {
+        limiteUsed = limit;
     }
 
     public ArrayList<TargetAOI> getTargetAOIList() {

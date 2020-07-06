@@ -53,6 +53,7 @@ public class SpotTheDifferences implements GameLifeCycle {
     private boolean limiterT;
     private long startTime = 0;
     private long endTime = 0;
+    private boolean limiteUsed;
 
     public SpotTheDifferences(final IGameContext gameContext, final SpotTheDifferencesStats stats) {
         this.gameContext = gameContext;
@@ -61,6 +62,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         final Configuration config = gameContext.getConfiguration();
         this.currentInstance = 0;
         this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiteUsed = false;
 
         final Multilinguism translate = MultilinguismFactory.getSingleton();
         final String language = config.getLanguage();
@@ -148,6 +150,8 @@ public class SpotTheDifferences implements GameLifeCycle {
         gameContext.clear();
         gameContext.getChildren().addAll(borderPane, nextButton);
 
+        limiteUsed = false;
+
         final JsonObject instance = (JsonObject) instances.get(currentInstance);// random.nextInt(instances.size()));
         currentInstance = (currentInstance + 1) % instances.size();
 
@@ -186,10 +190,11 @@ public class SpotTheDifferences implements GameLifeCycle {
     }
 
     private void updateScore() {
-        if (limiterT) {
+        if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
             }
         }
     }

@@ -49,6 +49,7 @@ public class MagicCards implements GameLifeCycle {
     private boolean limiterT;
     private long startTime = 0;
     private long endTime = 0;
+    private boolean limiteUsed;
 
     public MagicCards(final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats) {
         super();
@@ -59,6 +60,7 @@ public class MagicCards implements GameLifeCycle {
 
         this.limiterS = gameContext.getConfiguration().isLimiterS();
         this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiteUsed = false;
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"));
 
@@ -67,6 +69,7 @@ public class MagicCards implements GameLifeCycle {
 
     @Override
     public void launch() {
+        limiteUsed = false;
         final Configuration config = gameContext.getConfiguration();
 
         final int cardsCount = nbColumns * nbLines;
@@ -170,17 +173,20 @@ public class MagicCards implements GameLifeCycle {
     }
 
     void updateScore() {
-        if (limiterS) {
+        if (limiterS && !limiteUsed) {
             if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
             }
         }
-        if (limiterT) {
+        if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
             }
         }
+
     }
 
     private void start() {

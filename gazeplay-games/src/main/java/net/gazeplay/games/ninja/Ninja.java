@@ -29,7 +29,7 @@ public class Ninja implements GameLifeCycle {
     public void launch() {
         portrait = new Target(gameContext, gameContext.getRandomPositionGenerator(), stats,
             Portrait.createImageLibrary(), gameVariant, this);
-
+        portrait.setLimiteUsed(false);
         gameContext.getChildren().add(portrait);
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();

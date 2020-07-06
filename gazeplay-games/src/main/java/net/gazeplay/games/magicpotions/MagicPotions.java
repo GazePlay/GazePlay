@@ -62,6 +62,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
     private boolean limiterT;
     private long startTime = 0;
     private long endTime = 0;
+    private boolean limiteUsed;
 
     @Getter
     @Setter
@@ -82,6 +83,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.limiterS = gameContext.getConfiguration().isLimiterS();
         this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiteUsed = false;
 
         start();
     }
@@ -89,6 +91,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
 
+        limiteUsed = false;
         final String imagePATH = "data/potions/images/";
 
         initBackground(imagePATH);
@@ -173,15 +176,17 @@ public class MagicPotions extends Parent implements GameLifeCycle {
     }
 
     void updateScore() {
-        if (limiterS) {
+        if (limiterS && !limiteUsed) {
             if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
             }
         }
-        if (limiterT) {
+        if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
             }
         }
     }

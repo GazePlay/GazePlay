@@ -71,12 +71,14 @@ public class Race extends Parent implements GameLifeCycle {
     private boolean limiterT;
     private long startTime = 0;
     private long endTime = 0;
+    private boolean limiteUsed;
 
     // done
     public Race(final IGameContext gameContext, final Stats stats, final String type) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiteUsed = false;
         score = 0;
         gameType = type;
 
@@ -206,6 +208,7 @@ public class Race extends Parent implements GameLifeCycle {
     public void launch() {
         stats.notifyNewRoundReady();
 
+        limiteUsed = false;
         score = 0;
         this.getChildren().clear();
 
@@ -664,10 +667,11 @@ public class Race extends Parent implements GameLifeCycle {
     }
 
     private void updateScore() {
-        if (limiterT) {
+        if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
             }
         }
     }

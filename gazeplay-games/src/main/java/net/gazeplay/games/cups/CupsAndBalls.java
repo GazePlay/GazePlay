@@ -38,6 +38,7 @@ public class CupsAndBalls implements GameLifeCycle {
     private boolean limiterT;
     private long startTime = 0;
     private long endTime = 0;
+    private boolean limiteUsed;
 
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups) {
         super();
@@ -49,6 +50,7 @@ public class CupsAndBalls implements GameLifeCycle {
         this.nbLines = nbCups;
         this.nbExchanges = nbCups * nbCups;
         this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiteUsed = false;
         start();
     }
 
@@ -94,6 +96,7 @@ public class CupsAndBalls implements GameLifeCycle {
 
     @Override
     public void launch() {
+        limiteUsed = false;
         init();
         TranslateTransition revealBallTransition = null;
         for (final Cup cup : cups) {
@@ -191,11 +194,12 @@ public class CupsAndBalls implements GameLifeCycle {
     }
 
     private void updateScore() {
-        if (limiterT) {
+        if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
                 start();
+                limiteUsed = true;
             }
         }
     }

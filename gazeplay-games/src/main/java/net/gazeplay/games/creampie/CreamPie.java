@@ -36,6 +36,7 @@ public class CreamPie implements GameLifeCycle {
 
     @Override
     public void launch() {
+        target.setLimiteUsed(false);
         hand.recomputePosition();
 
         gameContext.getRoot().widthProperty().addListener((obs, oldVal, newVal) -> hand.recomputePosition());

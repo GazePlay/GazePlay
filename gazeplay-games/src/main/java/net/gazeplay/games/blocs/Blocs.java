@@ -40,6 +40,7 @@ public class Blocs implements GameLifeCycle {
     private boolean limiterT;
     private long startTime = 0;
     private long endTime = 0;
+    private boolean limiteUsed;
 
     @Data
     public static class CurrentRoundDetails {
@@ -64,6 +65,7 @@ public class Blocs implements GameLifeCycle {
     public Blocs(final IGameContext gameContext, final int nbLines, final int nbColumns, final boolean colors, final float percents4Win,
                  final boolean useTrail, final Stats stats) {
         this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiteUsed = false;
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColomns = nbColumns;
@@ -256,7 +258,7 @@ public class Blocs implements GameLifeCycle {
     }
 
     private void updateScore() {
-        if (limiterT) {
+        if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));

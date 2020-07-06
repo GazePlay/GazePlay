@@ -41,11 +41,13 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     private boolean limiterT;
     private long startTime = 0;
     private long endTime = 0;
+    private boolean limiteUsed;
 
     public Labyrinth(final IGameContext gameContext, final Stats stats, final LabyrinthGameVariant variant) {
         super();
         this.limiterS = gameContext.getConfiguration().isLimiterS();
         this.limiterT = gameContext.getConfiguration().isLimiterS();
+        this.limiteUsed = false;
 
         this.gameContext = gameContext;
         this.stats = stats;
@@ -74,6 +76,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
+        limiteUsed = false;
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         final Rectangle recJeu = new Rectangle(entiereRecX, entiereRecY, entiereRecWidth, entiereRecHeight);
@@ -188,17 +191,21 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     }
 
     private void updateScore() {
-        if (limiterS) {
+
+        if (limiterS && !limiteUsed) {
             if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
             }
         }
-        if (limiterT) {
+        if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
             }
         }
+
     }
 
 }
