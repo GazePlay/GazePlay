@@ -24,6 +24,7 @@ import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.TargetAOI;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,6 +54,8 @@ public class WhereIsIt implements GameLifeCycle {
     private final Stats stats;
     private RoundDetails currentRoundDetails;
 
+    private final ArrayList<TargetAOI> targetAOIList;
+
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
                      final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
@@ -61,6 +64,7 @@ public class WhereIsIt implements GameLifeCycle {
         this.gameType = gameType;
         this.fourThree = fourThree;
         this.stats = stats;
+        this.targetAOIList = new ArrayList<>();
     }
 
     @Override
@@ -113,12 +117,21 @@ public class WhereIsIt implements GameLifeCycle {
         final double positionX = gamePaneDimension2D.getWidth() / 2 - questionText.getBoundsInParent().getWidth() * 2;
         final double positionY = gamePaneDimension2D.getHeight() / 2 - questionText.getBoundsInParent().getHeight() / 2;
 
+
+
+
         questionText.setX(positionX);
         questionText.setY(positionY);
         questionText.setTextAlignment(TextAlignment.CENTER);
         StackPane.setAlignment(questionText, Pos.CENTER);
 
         gameContext.getChildren().add(questionText);
+        final long timeStarted = System.currentTimeMillis();
+        final TargetAOI targetAOI = new TargetAOI(gamePaneDimension2D.getWidth() / 2, gamePaneDimension2D.getHeight() / 2, (int)questionText.getBoundsInParent().getWidth(),
+            timeStarted);
+        targetAOI.setTimeEnded(timeStarted+gameContext.getConfiguration().getQuestionLength());
+        targetAOIList.add(targetAOI);
+
 
         final List<Rectangle> pictogramesList = new ArrayList<>(20); // storage of actual Pictogramm nodes in order to delete
         // them
@@ -206,9 +219,19 @@ public class WhereIsIt implements GameLifeCycle {
             }
             currentRoundDetails = null;
         }
+        stats.setTargetAOIList(targetAOIList);
     }
 
     void removeAllIncorrectPictureCards() {
+        //set the target AOI end time for this round
+
+        final long endTime = System.currentTimeMillis();
+        final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
+
+        for (int i = 1; i<=numberOfImagesToDisplayPerRound; i++) {
+            targetAOIList.get(targetAOIList.size() - i).setTimeEnded(endTime);
+        }
+
         if (this.currentRoundDetails == null) {
             return;
         }
@@ -220,7 +243,6 @@ public class WhereIsIt implements GameLifeCycle {
                 pictureCardsToHide.add(pictureCard);
             }
         }
-
         // remove all at once, in order to update the UserInterface only once
         gameContext.getChildren().removeAll(pictureCardsToHide);
     }
@@ -326,6 +348,10 @@ public class WhereIsIt implements GameLifeCycle {
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, winnerImageIndexAmongDisplayedImages == i,
                     randomImageFile + "", stats, this);
 
+                final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY+1), (int)gameSizing.height,
+                    System.currentTimeMillis());
+                targetAOIList.add(targetAOI);
+
                 pictureCardList.add(pictureCard);
 
                 if ((i + 1) % nbColumns != 0) {
@@ -368,6 +394,10 @@ public class WhereIsIt implements GameLifeCycle {
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
                     winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats, this);
 
+                final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY+1), (int)gameSizing.height,
+                    System.currentTimeMillis());
+                targetAOIList.add(targetAOI);
+
                 pictureCardList.add(pictureCard);
 
 
@@ -407,6 +437,10 @@ public class WhereIsIt implements GameLifeCycle {
                     winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
 
                 pictureCardList.add(pictureCard);
+
+                final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY+1), (int)gameSizing.height,
+                    System.currentTimeMillis());
+                targetAOIList.add(targetAOI);
 
 
                 if ((i + 1) % nbColumns != 0) {

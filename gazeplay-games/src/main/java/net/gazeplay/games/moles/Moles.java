@@ -12,12 +12,14 @@ import javafx.scene.text.Font;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.TargetAOI;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -45,10 +47,18 @@ public class Moles extends Parent implements GameLifeCycle {
 
     private RoundDetails currentRoundDetails;
 
+    @Getter
+    @Setter
+    private ArrayList<TargetAOI> targetAOIList;
+
+    private double moleRadius;
+
     Moles(IGameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
+        targetAOIList = new ArrayList<>();
+        moleRadius = 0;
     }
 
     @Override
@@ -162,6 +172,7 @@ public class Moles extends Parent implements GameLifeCycle {
 
     @Override
     public void dispose() {
+        stats.setTargetAOIList(targetAOIList);
         if (currentRoundDetails != null) {
             if (currentRoundDetails.molesList != null) {
                 gameContext.getChildren().removeAll(currentRoundDetails.molesList);
@@ -182,6 +193,10 @@ public class Moles extends Parent implements GameLifeCycle {
             indice = r.nextInt(nbHoles);
         } while (!currentRoundDetails.molesList.get(indice).canGoOut);
         MolesChar m = currentRoundDetails.molesList.get(indice);
+        final TargetAOI targetAOI = new TargetAOI(m.getPositionX(), m.getPositionY(), (int)moleRadius/3,
+            System.currentTimeMillis());
+        targetAOIList.add(targetAOI);
+        m.setTargetAOIListIndex(targetAOIList.size()-1);
         m.getOut();
         stats.incrementNumberOfGoalsToReach();
     }
@@ -219,7 +234,9 @@ public class Moles extends Parent implements GameLifeCycle {
         ArrayList<MolesChar> result = new ArrayList<>();
 
         double moleHeight = computeMoleHeight(gameDimension2D);
+
         double moleWidth = computeMoleWidth(gameDimension2D);
+        this.moleRadius = moleWidth;
         double height = gameDimension2D.getHeight();
         double width = gameDimension2D.getWidth();
         double distTrans = computeDistTransMole(gameDimension2D);
@@ -248,6 +265,7 @@ public class Moles extends Parent implements GameLifeCycle {
     }
 
     void oneMoleWhacked() {
+
         nbMolesWhacked++;
         String s = "Score:" + nbMolesWhacked;
         stats.incrementNumberOfGoalsReached();
