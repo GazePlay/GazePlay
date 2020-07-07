@@ -80,7 +80,6 @@ public class Memory implements GameLifeCycle {
         this.limiteUsed = false;
 
         if (gameType == MemoryGameType.LETTERS) {
-
             this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters");
 
         } else if (gameType == MemoryGameType.NUMBERS) {
@@ -226,8 +225,9 @@ public class Memory implements GameLifeCycle {
     }
 
     void updateScore() {
+
         if (limiterS && !limiteUsed) {
-            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
+            if (stats.getNbGoalsReached() / ((nbLines * nbColumns) / 2) == gameContext.getConfiguration().getLimiterScore()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
                 limiteUsed = true;
             }
