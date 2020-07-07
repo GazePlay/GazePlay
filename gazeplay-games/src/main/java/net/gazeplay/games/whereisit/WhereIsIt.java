@@ -19,13 +19,16 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.difficulty.SourceSet;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static net.gazeplay.games.whereisit.WhereIsItGameType.*;
 
@@ -238,9 +241,33 @@ public class WhereIsIt implements GameLifeCycle {
             imagesFolders = imagesDirectory.listFiles();
             filesCount = imagesFolders == null ? 0 : imagesFolders.length;
         } else {
-            final String imagesDirectory = "data/" + this.gameType.getResourcesDirectoryName() + "/images/";
+            final String resourcesDirectory = "data/" + this.gameType.getResourcesDirectoryName();
+            final String imagesDirectory = resourcesDirectory + "/images/";
             directoryName = imagesDirectory;
+
+            // Here we filter out any unwanted resource folders, based on the difficulty JSON file
+            Set<String> difficultySet;
+            try {
+                SourceSet sourceSet = new SourceSet(resourcesDirectory + "/difficulties.json");
+                difficultySet = (sourceSet.getResources(this.gameType.getDifficulty()));
+            } catch (FileNotFoundException fe) {
+                log.info("No difficulty file found; Reading from all directories");
+                difficultySet = Collections.emptySet();
+            }
+
             resourcesFolders = ResourceFileManager.getResourceFolders(imagesDirectory);
+
+            // If nothing can be found we take the entire folder contents.
+            if (!difficultySet.isEmpty()) {
+                Set<String> finalDifficultySet = difficultySet;
+                resourcesFolders = resourcesFolders
+                    .parallelStream()
+                    .filter(s ->
+                        finalDifficultySet.parallelStream().anyMatch(s::contains)
+                    )
+                    .collect(Collectors.toSet());
+            }
+
             filesCount = resourcesFolders.size();
         }
 
@@ -265,7 +292,7 @@ public class WhereIsIt implements GameLifeCycle {
         String questionSoundPath = null;
         String question = null;
         List<Image> pictograms = null;
-        if (this.gameType == FINDODD) {
+        if (this.gameType == FIND_ODD) {
             int index = ((randomFolderIndex + step) % filesCount) + 1;
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
