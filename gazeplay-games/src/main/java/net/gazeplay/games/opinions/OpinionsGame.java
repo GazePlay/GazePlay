@@ -154,9 +154,9 @@ public class OpinionsGame implements GameLifeCycle {
         score = score + 1;
         if (score == 10) {
             gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(opinionGameStats, this));
-            thumbUp.setDisable(true);
-            thumbDown.setDisable(true);
-            noCare.setDisable(true);
+            thumbUp.disable(true);
+            thumbDown.disable(true);
+            noCare.disable(true);
             score = 0;
         }
     }
