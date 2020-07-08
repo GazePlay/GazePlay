@@ -1,6 +1,6 @@
 package net.gazeplay.commons.gamevariants.generators;
 
-import net.gazeplay.GameSpec;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 
 import java.util.Set;
 
@@ -10,5 +10,5 @@ public interface IGameVariantGenerator {
         return "Choose Game Variant";
     }
 
-    Set<GameSpec.GameVariant> getVariants();
+    Set<IGameVariant> getVariants();
 }

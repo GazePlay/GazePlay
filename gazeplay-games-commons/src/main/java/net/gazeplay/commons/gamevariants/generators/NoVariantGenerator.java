@@ -1,6 +1,6 @@
 package net.gazeplay.commons.gamevariants.generators;
 
-import net.gazeplay.GameSpec;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -8,7 +8,7 @@ import java.util.Set;
 public class NoVariantGenerator implements IGameVariantGenerator {
 
     @Override
-    public Set<GameSpec.GameVariant> getVariants() {
+    public Set<IGameVariant> getVariants() {
         return new LinkedHashSet<>();
     }
 }

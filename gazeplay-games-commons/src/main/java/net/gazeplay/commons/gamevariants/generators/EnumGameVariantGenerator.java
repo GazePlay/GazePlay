@@ -3,7 +3,8 @@ package net.gazeplay.commons.gamevariants.generators;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import net.gazeplay.GameSpec;
+import net.gazeplay.commons.gamevariants.EnumGameVariant;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -21,10 +22,10 @@ public class EnumGameVariantGenerator<K extends Enum<K>> implements IGameVariant
     private String variantChooseText = "Choose Game Variant";
 
     @Override
-    public Set<GameSpec.GameVariant> getVariants() {
-        final LinkedHashSet<GameSpec.GameVariant> result = new LinkedHashSet<>();
+    public Set<IGameVariant> getVariants() {
+        final LinkedHashSet<IGameVariant> result = new LinkedHashSet<>();
         for (final K value : enumValues) {
-            result.add(new GameSpec.EnumGameVariant<>(value, extractLabelCodeFunction));
+            result.add(new EnumGameVariant<>(value, extractLabelCodeFunction));
         }
         return result;
     }

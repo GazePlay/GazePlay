@@ -1,7 +1,8 @@
 package net.gazeplay.commons.gamevariants.generators;
 
 import lombok.Data;
-import net.gazeplay.GameSpec;
+import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.IntGameVariant;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -16,10 +17,10 @@ public class IntRangeVariantGenerator implements IGameVariantGenerator {
     private final int max;
 
     @Override
-    public Set<GameSpec.GameVariant> getVariants() {
-        final LinkedHashSet<GameSpec.GameVariant> result = new LinkedHashSet<>();
+    public Set<IGameVariant> getVariants() {
+        final LinkedHashSet<IGameVariant> result = new LinkedHashSet<>();
         for (int i = min; i <= max; i++) {
-            result.add(new GameSpec.IntGameVariant(i));
+            result.add(new IntGameVariant(i));
         }
         return result;
     }

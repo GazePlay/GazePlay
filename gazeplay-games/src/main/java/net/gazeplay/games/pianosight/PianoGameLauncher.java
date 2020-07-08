@@ -4,10 +4,10 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.games.shooter.ShooterGamesStats;
 
-public class PianoGameLauncher implements GameSpec.GameLauncher<ShooterGamesStats, GameSpec.DimensionGameVariant> {
+public class PianoGameLauncher implements GameSpec.GameLauncher<ShooterGamesStats, DimensionGameVariant> {
 
     @Override
     public ShooterGamesStats createNewStats(Scene scene) {
@@ -17,7 +17,7 @@ public class PianoGameLauncher implements GameSpec.GameLauncher<ShooterGamesStat
     @Override
     public GameLifeCycle createNewGame(
         IGameContext gameContext,
-        GameSpec.DimensionGameVariant gameVariant,
+        DimensionGameVariant gameVariant,
         ShooterGamesStats stats
     ) {
         return new Piano(gameContext, stats);
