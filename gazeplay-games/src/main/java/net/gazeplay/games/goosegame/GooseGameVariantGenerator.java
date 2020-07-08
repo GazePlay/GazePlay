@@ -1,6 +1,8 @@
 package net.gazeplay.games.goosegame;
 
-public class GooseGameVariantGenerator extends net.gazeplay.GameSpec.IntRangeVariantGenerator {
+import net.gazeplay.commons.gamevariants.generators.IntRangeVariantGenerator;
+
+public class GooseGameVariantGenerator extends IntRangeVariantGenerator {
 
     public GooseGameVariantGenerator() {
         super("Choose number of players", 2, 5);
