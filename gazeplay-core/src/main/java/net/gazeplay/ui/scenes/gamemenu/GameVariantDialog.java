@@ -138,7 +138,7 @@ public class GameVariantDialog extends Stage {
                 });
             }
 
-            GameSpec.GameVariant finalVariant = variant;
+            IGameVariant finalVariant = variant;
             EventHandler<Event> event = mouseEvent -> {
                 close();
                 root.setDisable(false);
