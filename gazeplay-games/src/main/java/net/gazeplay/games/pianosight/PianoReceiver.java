@@ -21,6 +21,8 @@ public class PianoReceiver implements Receiver {
     boolean isSliderInUse = false;
     public boolean isChangingSequence = false;
 
+    boolean autoPlay = false;
+
     public PianoReceiver(Sequencer sequencer, ObjectProperty<Note> currentNoteProperty) {
         super();
 
@@ -46,7 +48,7 @@ public class PianoReceiver implements Receiver {
             if (message instanceof ShortMessage) {
                 ShortMessage sm = (ShortMessage) message;
                 if (sm.getCommand() == NOTE_ON) {
-                    if (previousTick + 10 < newTick && previousTick != -1 && channelHasToBePlayed[sm.getChannel()]) {
+                    if (previousTick + 10 < newTick && previousTick != -1 && channelHasToBePlayed[sm.getChannel()] || autoPlay) {
                         previousTick = newTick;
                         Note noteToPlay = new Note(/*key*/sm.getData1(),/*velocity*/sm.getData2(), newTick);
                         currentNoteProperty.setValue(new Note(-1, -1, -1));

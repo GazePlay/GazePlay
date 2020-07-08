@@ -46,8 +46,6 @@ class CustomPair {
     public String toString() {
         if (key == -1) {
             return "select all";
-        } else if (key == -2) {
-            return "autoplay";
         }
         return "channel " + key + " (" + value + ")";
     }
@@ -228,14 +226,11 @@ public class Piano extends Parent implements GameLifeCycle {
     public void updateSelectedChoiceBox() {
         int i = 2;
         boolean allSelected = true;
-        boolean noneSelected = true;
         while (i < choiceBoxes.getChildren().size()) {
             allSelected = allSelected && ((CheckBox) choiceBoxes.getChildren().get(i)).isSelected();
-            noneSelected = noneSelected && !((CheckBox) choiceBoxes.getChildren().get(i)).isSelected();
             i++;
         }
         ((CheckBox) choiceBoxes.getChildren().get(0)).setSelected(allSelected);
-        ((CheckBox) choiceBoxes.getChildren().get(1)).setSelected(noneSelected);
     }
 
     public void updateChoiceBox() {
@@ -253,34 +248,21 @@ public class Piano extends Parent implements GameLifeCycle {
                     if (mm.getType() == 0x51) {
                         byte[] data = mm.getData();
                         int tempo = (data[0] & 0xff) << 16 | (data[1] & 0xff) << 8 | (data[2] & 0xff);
-                        bpm = 60000000 / tempo;
+                        bpm = 60000000.f / tempo;
                     }
                 }
             }
         }
 
         CustomPair defautPair = new CustomPair(-1, sum);
-        CustomPair autoPair = new CustomPair(-2, sum);
         CheckBox selectAllButton = new CheckBox(defautPair.toString());
-        CheckBox autoPlayButton = new CheckBox(autoPair.toString());
 
         choiceBoxes.addRow(0);
         choiceBoxes.add(selectAllButton, 0, 0);
         selectAllButton.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
             if (newvalue) {
-                autoPlayButton.setSelected(false);
-                for (int i = 2; i < choiceBoxes.getChildren().size(); i++) {
+                for (int i = 1; i < choiceBoxes.getChildren().size(); i++) {
                     ((CheckBox) choiceBoxes.getChildren().get(i)).setSelected(true);
-                }
-            }
-        });
-
-        choiceBoxes.add(autoPlayButton, 1, 0);
-        autoPlayButton.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
-            if (newvalue) {
-                selectAllButton.setSelected(false);
-                for (int i = 2; i < choiceBoxes.getChildren().size(); i++) {
-                    ((CheckBox) choiceBoxes.getChildren().get(i)).setSelected(false);
                 }
             }
         });
@@ -294,7 +276,7 @@ public class Piano extends Parent implements GameLifeCycle {
                     player.setChanel(channelIndex, newvalue);
                     updateSelectedChoiceBox();
                 });
-                choiceBoxes.addRow(choiceBoxes.getChildren().size() - 1, button);
+                choiceBoxes.addRow(choiceBoxes.getChildren().size(), button);
             }
         }
     }
@@ -320,12 +302,16 @@ public class Piano extends Parent implements GameLifeCycle {
         noteProperty.setValue(new Note(-1, -1, -1));
         noteProperty.addListener((o, oldVal, newVal) -> {
             if (!newVal.equals(new Note(-1, -1, -1))) {
-                player.stop();
+                if(!player.pianoReceiver.autoPlay){
+                    player.stop();
+                }
                 int firstNote = newVal.key % 12;
 
                 for (final Tile tile : tilesTab) {
                     tile.arc.setFill(tile.mainColor);
                 }
+                    circleTemp.setFill(Color.BLACK);
+                    circleTemp.setOpacity(0);
                 if (firstNote == lastNote) {
                     circleTemp.setFill(Color.YELLOW);
                     circleTemp.setOpacity(1);
@@ -539,6 +525,17 @@ public class Piano extends Parent implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         slider.setLayoutY(dimension2D.getHeight() - 50);
         this.getChildren().add(slider);
+
+        Button autoPlayButton = new Button("AUTO");
+        autoPlayButton.setPrefWidth(width/2);
+        autoPlayButton.setLayoutX(centerX - width / 2 + width);
+        autoPlayButton.setLayoutY(dimension2D.getHeight() - 50);
+        autoPlayButton.setOnMouseClicked(e-> {
+                player.pianoReceiver.autoPlay = !player.pianoReceiver.autoPlay;
+                log.info("WE CLICKED");
+        });
+        this.getChildren().add(autoPlayButton);
+
     }
 
     public void resetSlider(Slider slider, long max) {
