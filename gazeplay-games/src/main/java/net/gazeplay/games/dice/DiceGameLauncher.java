@@ -4,9 +4,10 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gamevariants.IntGameVariant;
 import net.gazeplay.commons.utils.stats.Stats;
 
-public class DiceGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.IntGameVariant> {
+public class DiceGameLauncher implements GameSpec.GameLauncher<Stats, IntGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new Stats(scene, "dice");
@@ -14,7 +15,7 @@ public class DiceGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.I
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
-                                       GameSpec.IntGameVariant gameVariant, Stats stats) {
+                                       IntGameVariant gameVariant, Stats stats) {
         return new Dice(gameContext, stats, gameVariant.getNumber());
     }
 

@@ -4,15 +4,16 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gamevariants.IntGameVariant;
 
-public class GooseGameLauncher implements GameSpec.GameLauncher<GooseGameStats, GameSpec.IntGameVariant> {
+public class GooseGameLauncher implements GameSpec.GameLauncher<GooseGameStats, IntGameVariant> {
     @Override
     public GooseGameStats createNewStats(Scene scene) {
         return new GooseGameStats(scene, "goosegame");
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.IntGameVariant gameVariant,
+    public GameLifeCycle createNewGame(IGameContext gameContext, IntGameVariant gameVariant,
                                        GooseGameStats stats) {
         return new GooseGame(gameContext, stats, gameVariant.getNumber());
     }
