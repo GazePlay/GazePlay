@@ -12,21 +12,18 @@ public class MidiSequencerPlayer {
     Sequencer sequencer;
     PianoReceiver pianoReceiver;
     Sequence sequence;
-    ObjectProperty<Note> ip;
+    ObjectProperty<Note> noteProperty;
     float currentBPM;
 
-    public MidiSequencerPlayer(Sequence sequence, ObjectProperty<Note> ip) {
+    public MidiSequencerPlayer(Sequence sequence, ObjectProperty<Note> noteProperty) {
         this.sequence = sequence;
-        this.ip = ip;
+        this.noteProperty = noteProperty;
         try {
-            if (sequencer != null && sequencer.isOpen()) {
-                sequencer.close();
-            }
             sequencer = MidiSystem.getSequencer();
             sequencer.setSequence(sequence);
             sequencer.open();
             Transmitter transmitter = sequencer.getTransmitter();
-            pianoReceiver = new PianoReceiver(sequencer, ip);
+            pianoReceiver = new PianoReceiver(sequencer, noteProperty);
             transmitter.setReceiver(pianoReceiver);
         } catch (InvalidMidiDataException | MidiUnavailableException ignored) {
         }

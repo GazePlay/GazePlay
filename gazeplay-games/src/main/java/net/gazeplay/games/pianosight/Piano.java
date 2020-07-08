@@ -33,6 +33,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,13 +88,9 @@ public class Piano extends Parent implements GameLifeCycle {
     ChangeListener<Number> sliderListener = (obj, oldval, newval) -> {
         if (slider.isHover()) {
             player.pianoReceiver.isSliderInUse = true;
-            log.info("****************1");
             player.sequencer.setTickPosition(newval.longValue());
-            log.info("****************11");
             player.pianoReceiver.previousTick = newval.longValue() - 1;
-            log.info("****************111");
             player.pianoReceiver.currentTickProperty.setValue(newval.longValue());
-            log.info("****************1111");
             player.pianoReceiver.isSliderInUse = false;
         }
     };
@@ -106,7 +104,6 @@ public class Piano extends Parent implements GameLifeCycle {
         this.fragments = buildFragments();
         this.getChildren().addAll(fragments);
         tilesTab = new ArrayList<>();
-        Instru instru = new Instru();
         gameContext.getChildren().add(this);
         jukebox = new Jukebox(gameContext);
     }
@@ -196,9 +193,8 @@ public class Piano extends Parent implements GameLifeCycle {
                 return;
             }
             log.info("you loaded the song : " + fileName);
-            final File f = new File(fileName);
             player.stop();
-            try (InputStream inputStream = new FileInputStream(f)) {
+            try (InputStream inputStream = Files.newInputStream(Paths.get(fileName))) {
                 slider.valueProperty().removeListener(sliderListener);
                 sequence = MidiSystem.getSequence(inputStream);
                 bpm = 120;
@@ -216,7 +212,6 @@ public class Piano extends Parent implements GameLifeCycle {
             final String fileName = "RIVER.mid";
             log.info("you loaded the song : " + fileName);
             try (InputStream inputStream = Utils.getInputStream("data/pianosight/songs/" +fileName)) {
-                //try (InputStream inputStream = Utils.getInputStream("data/pianosight/songs/" +fileName)) {
                 sequence = MidiSystem.getSequence(inputStream);
                 updateChoiceBox();
             }
@@ -549,4 +544,3 @@ public class Piano extends Parent implements GameLifeCycle {
     }
 
 }
-

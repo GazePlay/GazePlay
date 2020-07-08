@@ -12,7 +12,6 @@ public class Note {
     public Note(int key, int velocity, long tick) {
         this.key = key;
         this.octave = (key / 12) - 1;
-        int note = key % 12;
         this.velocity = velocity;
         this.tick = tick;
     }
@@ -20,6 +19,11 @@ public class Note {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof Note && this.key == ((Note) obj).key;
+    }
+
+    @Override
+    public int hashCode(){
+        return super.hashCode();
     }
 
     @Override
