@@ -2,9 +2,9 @@ package net.gazeplay.games.slidingpuzzle;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.gazeplay.GameSpec;
+import net.gazeplay.commons.gamevariants.generators.EnumGameVariantGenerator;
 
-public class PuzzleGameVariantGenerator extends GameSpec.EnumGameVariantGenerator<PuzzleGameVariantGenerator.PuzzleGameVariant> {
+public class PuzzleGameVariantGenerator extends EnumGameVariantGenerator<PuzzleGameVariantGenerator.PuzzleGameVariant> {
 
     public PuzzleGameVariantGenerator() {
         super(PuzzleGameVariant.values(), PuzzleGameVariant::getLabel);
@@ -24,5 +24,4 @@ public class PuzzleGameVariantGenerator extends GameSpec.EnumGameVariantGenerato
         private final String resourcesPath;
 
     }
-
 }

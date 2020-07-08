@@ -4,7 +4,6 @@ import javafx.scene.Scene;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -111,27 +110,6 @@ public class GameSpec {
         @Override
         public Set<GameVariant> getVariants() {
             return new LinkedHashSet<>();
-        }
-    }
-
-    @Data
-    public static class EnumGameVariantGenerator<K extends Enum<K>> implements GameVariantGenerator {
-
-        private final K[] enumValues;
-
-        private final Function<K, String> extractLabelCodeFunction;
-
-        @Getter
-        @Setter
-        private String variantChooseText = "Choose Game Variant";
-
-        @Override
-        public Set<GameVariant> getVariants() {
-            final LinkedHashSet<GameVariant> result = new LinkedHashSet<>();
-            for (final K value : enumValues) {
-                result.add(new EnumGameVariant<>(value, extractLabelCodeFunction));
-            }
-            return result;
         }
     }
 
