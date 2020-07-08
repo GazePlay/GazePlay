@@ -22,6 +22,7 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
 import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.I18NLabel;
@@ -103,7 +104,7 @@ public class GameVariantDialog extends Stage {
             button.setMaxWidth(primaryStage.getWidth() / 8);
             button.setMaxHeight(primaryStage.getHeight() / 8);
             //
-            if (variant instanceof GameSpec.DimensionDifficultyGameVariant) {
+            if (variant instanceof DimensionDifficultyGameVariant) {
                 choicePaneEasy.getChildren().add(button);
             } else {
                 choicePane.getChildren().add(button);
@@ -111,7 +112,7 @@ public class GameVariantDialog extends Stage {
 
             if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) {
                 if (variant instanceof DimensionGameVariant) {
-                    variant = new GameSpec.DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "normal");
+                    variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "normal");
                 }
                 ToggleGroup group = new ToggleGroup();
                 RadioButton normal = new RadioButton("normal");
