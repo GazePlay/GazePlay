@@ -310,8 +310,8 @@ public class Piano extends Parent implements GameLifeCycle {
                 for (final Tile tile : tilesTab) {
                     tile.arc.setFill(tile.mainColor);
                 }
-                    circleTemp.setFill(Color.BLACK);
-                    circleTemp.setOpacity(0);
+                circleTemp.setFill(Color.BLACK);
+                circleTemp.setOpacity(0);
                 if (firstNote == lastNote) {
                     circleTemp.setFill(Color.YELLOW);
                     circleTemp.setOpacity(1);
@@ -531,8 +531,7 @@ public class Piano extends Parent implements GameLifeCycle {
         autoPlayButton.setLayoutX(centerX - width / 2 + width);
         autoPlayButton.setLayoutY(dimension2D.getHeight() - 50);
         autoPlayButton.setOnMouseClicked(e-> {
-                player.pianoReceiver.autoPlay = !player.pianoReceiver.autoPlay;
-                log.info("WE CLICKED");
+            player.pianoReceiver.autoPlay = !player.pianoReceiver.autoPlay;
         });
         this.getChildren().add(autoPlayButton);
 
