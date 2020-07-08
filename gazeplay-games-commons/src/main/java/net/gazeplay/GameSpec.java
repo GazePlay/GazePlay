@@ -4,11 +4,11 @@ import javafx.scene.Scene;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
+import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 import net.gazeplay.commons.gamevariants.generators.NoVariantGenerator;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.util.Set;
 import java.util.function.Function;
 
 public class GameSpec {
@@ -96,23 +96,13 @@ public class GameSpec {
 
     }
 
-    public interface GameVariantGenerator {
-
-        default String getVariantChooseText() {
-            return "Choose Game Variant";
-        }
-
-        Set<GameVariant> getVariants();
-
-    }
-
     @Getter
     @NonNull
     private final GameSummary gameSummary;
 
     @Getter
     @NonNull
-    private final GameVariantGenerator gameVariantGenerator;
+    private final IGameVariantGenerator gameVariantGenerator;
 
     @Getter
     @NonNull
@@ -120,7 +110,7 @@ public class GameSpec {
 
     public GameSpec(
         final GameSummary gameSummary,
-        final GameVariantGenerator gameVariantGenerator,
+        final IGameVariantGenerator gameVariantGenerator,
         final GameLauncher gameLauncher
     ) {
         this.gameSummary = gameSummary;

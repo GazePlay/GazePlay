@@ -5,10 +5,11 @@ import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.Setter;
 import net.gazeplay.GameSpec;
+import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
 import java.util.Set;
 
-public class VideoPlayerGameVariantGenerator implements GameSpec.GameVariantGenerator {
+public class VideoPlayerGameVariantGenerator implements IGameVariantGenerator {
 
     @Getter
     @Setter
