@@ -155,29 +155,6 @@ public class GameSpec {
 
     }
 
-    @Data
-    public static class IntListVariantGenerator implements GameVariantGenerator {
-
-        private final String variantChooseText;
-
-        private final int[] values;
-
-        public IntListVariantGenerator(final String variantChooseText, final int... values) {
-            this.variantChooseText = variantChooseText;
-            this.values = values;
-        }
-
-        @Override
-        public Set<GameVariant> getVariants() {
-            final LinkedHashSet<GameVariant> result = new LinkedHashSet<>();
-            for (final int i : values) {
-                result.add(new IntGameVariant(i));
-            }
-            return result;
-        }
-
-    }
-
     @Getter
     @NonNull
     private final GameSummary gameSummary;
