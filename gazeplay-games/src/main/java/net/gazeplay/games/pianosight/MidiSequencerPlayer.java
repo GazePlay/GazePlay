@@ -1,3 +1,4 @@
+
 package net.gazeplay.games.pianosight;
 
 import javafx.beans.property.ObjectProperty;

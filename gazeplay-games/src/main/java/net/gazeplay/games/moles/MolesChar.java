@@ -13,6 +13,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
@@ -20,6 +22,11 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 @Slf4j
 public class MolesChar extends Parent {
+
+    @Getter
+    private final double positionX;
+    @Getter
+    private final double positionY;
 
     private final Rectangle mole;
 
@@ -46,6 +53,9 @@ public class MolesChar extends Parent {
 
     public final EventHandler<Event> enterEvent;
 
+    @Setter
+    private int TargetAOIListIndex;
+
     MolesChar(
         final double positionX, final double positionY,
         final double width, final double height,
@@ -53,6 +63,8 @@ public class MolesChar extends Parent {
         final IGameContext gameContext,
         final Moles gameInstance
     ) {
+        this.positionX=positionX;
+        this.positionY=positionY;
         this.gameContext = gameContext;
 
         this.out = false;
@@ -174,6 +186,7 @@ public class MolesChar extends Parent {
     private void goIn() {
         canTouched = false;
         out = false;
+        gameInstance.getTargetAOIList().get(TargetAOIListIndex).setTimeEnded(System.currentTimeMillis());
 
         this.mole.opacityProperty().set(1);
         gameInstance.getGameContext().getChildren().remove(moleMoved);

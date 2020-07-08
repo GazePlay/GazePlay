@@ -1,9 +1,11 @@
-package net.gazeplay.games.whereisit;
+package net.gazeplay.games.whereisit.spec;
 
 import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
+import net.gazeplay.games.whereisit.WhereIsItGameVariantGenerator;
+import net.gazeplay.games.whereisit.launcher.WhereIsTheNumberGameLauncher;
 
 public class WhereIsTheNumberGameSpecSource implements GameSpecSource {
     @Override
