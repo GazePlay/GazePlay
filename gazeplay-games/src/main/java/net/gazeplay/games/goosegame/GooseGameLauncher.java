@@ -2,11 +2,11 @@ package net.gazeplay.games.goosegame;
 
 import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
-import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
+import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.IntGameVariant;
 
-public class GooseGameLauncher implements GameSpec.GameLauncher<GooseGameStats, IntGameVariant> {
+public class GooseGameLauncher implements IGameLauncher<GooseGameStats, IntGameVariant> {
     @Override
     public GooseGameStats createNewStats(Scene scene) {
         return new GooseGameStats(scene, "goosegame");

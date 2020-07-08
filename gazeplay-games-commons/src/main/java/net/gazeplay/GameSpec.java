@@ -1,100 +1,11 @@
 package net.gazeplay;
 
-import javafx.scene.Scene;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 import net.gazeplay.commons.gamevariants.generators.NoVariantGenerator;
-import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.stats.Stats;
-
-import java.util.function.Function;
 
 public class GameSpec {
-
-    public interface GameLauncher<T extends Stats, V extends GameVariant> {
-
-        T createNewStats(Scene scene);
-
-        GameLifeCycle createNewGame(IGameContext gameContext, V gameVariant, T stats);
-
-    }
-
-    /**
-     * this is a basically marker interface, but it comes also with a label in order to recognise it by a text label
-     */
-    public interface GameVariant {
-
-        String getLabel(Translator translator);
-
-    }
-
-    @Data
-    public static class DimensionGameVariant implements GameVariant {
-
-        private final int width;
-
-        private final int height;
-
-        @Override
-        public String getLabel(final Translator translator) {
-            return width + "x" + height;
-        }
-    }
-
-    @Data
-    public static class DimensionDifficultyGameVariant implements GameVariant {
-
-        private final int width;
-
-        private final int height;
-
-        private final String difficulty;
-
-        @Override
-        public String getLabel(final Translator translator) {
-            return width + "x" + height + " " + difficulty;
-        }
-    }
-
-    @Data
-    public static class IntGameVariant implements GameVariant {
-
-        private final int number;
-
-        @Override
-        public String getLabel(final Translator translator) {
-            return Integer.toString(number);
-        }
-    }
-
-    @Data
-    public static class StringGameVariant implements GameVariant {
-
-        private final String label;
-
-        private final String value;
-
-        @Override
-        public String getLabel(final Translator translator) {
-            return translator.translate(label);
-        }
-    }
-
-    @Data
-    public static class EnumGameVariant<K extends Enum<K>> implements GameVariant {
-
-        private final K enumValue;
-
-        private final Function<K, String> extractLabelCodeFunction;
-
-        @Override
-        public String getLabel(final Translator translator) {
-            return translator.translate(extractLabelCodeFunction.apply(enumValue));
-        }
-
-    }
 
     @Getter
     @NonNull
@@ -106,19 +17,19 @@ public class GameSpec {
 
     @Getter
     @NonNull
-    private final GameLauncher gameLauncher;
+    private final IGameLauncher gameLauncher;
 
     public GameSpec(
         final GameSummary gameSummary,
         final IGameVariantGenerator gameVariantGenerator,
-        final GameLauncher gameLauncher
+        final IGameLauncher gameLauncher
     ) {
         this.gameSummary = gameSummary;
         this.gameVariantGenerator = gameVariantGenerator;
         this.gameLauncher = gameLauncher;
     }
 
-    public GameSpec(final GameSummary gameSummary, final GameLauncher gameLauncher) {
+    public GameSpec(final GameSummary gameSummary, final IGameLauncher gameLauncher) {
         this(gameSummary, new NoVariantGenerator(), gameLauncher);
     }
 }
