@@ -4,10 +4,10 @@ import javafx.scene.Scene;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
+import net.gazeplay.commons.gamevariants.generators.NoVariantGenerator;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -106,13 +106,6 @@ public class GameSpec {
 
     }
 
-    public static class NoVariantGenerator implements GameVariantGenerator {
-        @Override
-        public Set<GameVariant> getVariants() {
-            return new LinkedHashSet<>();
-        }
-    }
-
     @Getter
     @NonNull
     private final GameSummary gameSummary;
@@ -138,5 +131,4 @@ public class GameSpec {
     public GameSpec(final GameSummary gameSummary, final GameLauncher gameLauncher) {
         this(gameSummary, new NoVariantGenerator(), gameLauncher);
     }
-
 }
