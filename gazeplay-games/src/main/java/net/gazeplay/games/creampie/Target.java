@@ -68,7 +68,6 @@ public class Target extends Portrait {
         this.limiterS = gameContext.getConfiguration().isLimiterS();
         this.limiterT = gameContext.getConfiguration().isLimiterT();
         this.limiteUsed = false;
-        targetAOIList = new ArrayList<>();
         this.targetAOIList = new ArrayList<>();
 
         enterEvent = e -> {
