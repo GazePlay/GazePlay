@@ -69,6 +69,7 @@ public class Target extends Portrait {
         this.limiterT = gameContext.getConfiguration().isLimiterT();
         this.limiteUsed = false;
         targetAOIList = new ArrayList<>();
+        this.targetAOIList = new ArrayList<>();
 
         enterEvent = e -> {
             if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
@@ -154,6 +155,9 @@ public class Target extends Portrait {
 
         timeline.setOnFinished(actionEvent -> {
             animationEnded = true;
+            if(targetAOIList.size()>0){
+                targetAOIList.get(targetAOIList.size()-1).setTimeEnded(System.currentTimeMillis());
+            }
             newPosition();
         });
 

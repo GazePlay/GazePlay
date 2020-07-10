@@ -200,7 +200,7 @@ public class Card extends Parent {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                progressIndicator.setOpacity(1);
+                progressIndicator.setOpacity(0.4);
                 progressIndicator.setProgress(0);
 
                 currentTimeline.stop();

@@ -15,21 +15,25 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
+import net.gazeplay.commons.utils.stats.TargetAOI;
 import net.gazeplay.components.ProgressButton;
 
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Objects;
 
 @Slf4j
 public class SpotTheDifferences implements GameLifeCycle {
 
+    @Getter
     private final SpotTheDifferencesStats stats;
     private final IGameContext gameContext;
     private final Dimension2D dimensions;
@@ -49,6 +53,7 @@ public class SpotTheDifferences implements GameLifeCycle {
     private final JsonArray instances;
 
     private int currentInstance;
+    final ArrayList<TargetAOI> targetAOIList;
 
     private boolean limiterT;
     private long startTime = 0;
@@ -61,6 +66,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final Configuration config = gameContext.getConfiguration();
         this.currentInstance = 0;
+        this.targetAOIList = new ArrayList<>();
         this.limiterT = gameContext.getConfiguration().isLimiterT();
         this.limiteUsed = false;
 
@@ -128,7 +134,13 @@ public class SpotTheDifferences implements GameLifeCycle {
 
     private void createDifference(final double x, final double y, final double radius) {
         final Difference d1 = new Difference(gameContext, this, leftGap + x, y, radius);
+        final TargetAOI targetAOI1 = new TargetAOI(leftGap + x, y, (int)radius, System.currentTimeMillis());
+        targetAOIList.add(targetAOI1);
+        d1.setTargetIdx(targetAOIList.size()-1);
         final Difference d2 = new Difference(gameContext, this, rightGap + x, y, radius);
+        final TargetAOI targetAOI2 = new TargetAOI(rightGap + x, y, (int)radius, System.currentTimeMillis());
+        targetAOIList.add(targetAOI2);
+        d2.setTargetIdx(targetAOIList.size()-1);
         d1.setPair(d2);
         d2.setPair(d1);
     }
@@ -186,7 +198,7 @@ public class SpotTheDifferences implements GameLifeCycle {
 
     @Override
     public void dispose() {
-
+        stats.setTargetAOIList(targetAOIList);
     }
 
     private void updateScore() {

@@ -2,9 +2,11 @@ package net.gazeplay.commons.utils.stats;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Polygon;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -36,10 +38,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.*;
+
+import static java.lang.Math.pow;
+
 
 /**
  * Created by schwab on 16/08/2017.
@@ -70,9 +77,6 @@ public class Stats implements GazeMotionListener {
     private ScreenRecorder screenRecorder;
     private ArrayList<TargetAOI> targetAOIList = null;
     private double[][] heatMap;
-    private String directoryOfVideo;
-    private String nameOfVideo;
-    private Long currentRoundStartTime;
 
     @Getter
     public int nbGoalsReached = 0;
@@ -103,6 +107,39 @@ public class Stats implements GazeMotionListener {
     @Getter
     private WritableImage gameScreenShot;
 
+    private String directoryOfVideo;
+
+    private String nameOfVideo;
+
+    private Long currentRoundStartTime;
+
+
+    //parameters for AOI
+    private int movementHistoryidx = 0;
+    private final List<AreaOfInterestProps> allAOIList = new ArrayList<>();
+    private List<CoordinatesTracker> areaOfInterestList = new ArrayList<>();
+    @Getter
+    private final List<List> allAOIListTemp = new ArrayList<>();
+    @Getter
+    private final List<int[]> startAndEndIdx = new ArrayList<>();
+    @Getter
+    private final List<Polygon> allAOIListPolygon = new ArrayList<>();
+    @Getter
+    private final List<Double[]> allAOIListPolygonPt = new ArrayList<>();
+    private double highestFixationTime = 0;
+    private final Configuration config = ActiveConfigurationContext.getInstance();
+    private int colorIterator;
+    private final javafx.scene.paint.Color[] colors = new javafx.scene.paint.Color[]{
+        javafx.scene.paint.Color.PURPLE,
+        javafx.scene.paint.Color.WHITE,
+        javafx.scene.paint.Color.PINK,
+        javafx.scene.paint.Color.ORANGE,
+        javafx.scene.paint.Color.BLUE,
+        javafx.scene.paint.Color.RED,
+        javafx.scene.paint.Color.CHOCOLATE
+    };
+
+
     public Stats(final Scene gameContextScene) {
         this(gameContextScene, null);
     }
@@ -128,7 +165,7 @@ public class Stats implements GazeMotionListener {
     public void setTargetAOIList(final ArrayList<TargetAOI> targetAOIList) {
         this.targetAOIList = targetAOIList;
         for (int i = 0; i < targetAOIList.size() - 1; i++) {
-            final long duration = targetAOIList.get(i + 1).getTimeStarted() - targetAOIList.get(i).getTimeStarted();
+            final long duration = targetAOIList.get(i).getTimeEnded() - targetAOIList.get(i).getTimeStarted();
             this.targetAOIList.get(i).setDuration(duration);
         }
         if (targetAOIList.size() >= 1) {
@@ -227,6 +264,160 @@ public class Stats implements GazeMotionListener {
         }).start();
     }
 
+    private void generateAOIList(final int index, final double startTime) {
+        final double x1 = movementHistory.get(index).getXValue();
+        final double y1 = movementHistory.get(index).getYValue();
+        final double x2 = movementHistory.get(index - 1).getXValue();
+        final double y2 = movementHistory.get(index - 1).getYValue();
+        final double eDistance = Math.sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+        if (eDistance < 150 && movementHistory.get(index).getIntervalTime() > 10) {
+            if (index == 1) {
+                areaOfInterestList.add(movementHistory.get(0));
+            }
+            areaOfInterestList.add(movementHistory.get(index));
+        } else {
+            if (areaOfInterestList.size() > 2) {
+
+                allAOIListTemp.add(new ArrayList<>(areaOfInterestList));
+                int[] startEnd = new int[]{index - areaOfInterestList.size(), index};
+                startAndEndIdx.add(startEnd);
+
+                final Point2D[] points = new Point2D[areaOfInterestList.size()];
+
+                for (int i = 0; i < areaOfInterestList.size(); i++) {
+                    CoordinatesTracker coordinate = areaOfInterestList.get(i);
+                    points[i] = new Point2D(coordinate.getXValue(), coordinate.getYValue());
+                }
+
+                final Double[] polygonPoints;
+                if (config.getConvexHullDisabledProperty().getValue()) {
+                    polygonPoints = calculateConvexHull(points);
+                } else {
+                    polygonPoints = calculateRectangle(points);
+                }
+
+                final Polygon areaOfInterest = new Polygon();
+                areaOfInterest.getPoints().addAll(polygonPoints);
+                allAOIListPolygonPt.add(polygonPoints);
+
+                colorIterator = index % 7;
+                areaOfInterest.setStroke(colors[colorIterator]);
+                allAOIListPolygon.add(areaOfInterest);
+            }else if(eDistance > 700){
+                areaOfInterestList.add(movementHistory.get(index));
+                allAOIListTemp.add(new ArrayList<>(areaOfInterestList));
+                int[] startEnd = new int[]{index - areaOfInterestList.size(), index};
+                startAndEndIdx.add(startEnd);
+                final float radius = 15;
+                final Point2D[] points = new Point2D[8];
+
+                for (int i = 0; i < 8; i++) {
+                    CoordinatesTracker coordinate = areaOfInterestList.get(0);
+                    points[i] = new Point2D(coordinate.getXValue()+pow(-1,i)*radius, coordinate.getYValue()+pow(-1,i)*radius);
+                }
+
+                final Double[] polygonPoints;
+                if (config.getConvexHullDisabledProperty().getValue()) {
+                    polygonPoints = calculateConvexHull(points);
+                } else {
+                    polygonPoints = calculateRectangle(points);
+                }
+
+                final Polygon areaOfInterest = new Polygon();
+                areaOfInterest.getPoints().addAll(polygonPoints);
+                allAOIListPolygonPt.add(polygonPoints);
+
+                colorIterator = index % 7;
+                areaOfInterest.setStroke(colors[colorIterator]);
+                allAOIListPolygon.add(areaOfInterest);
+            }
+            areaOfInterestList = new ArrayList<>();
+        }
+    }
+
+    static Double[] calculateRectangle(final Point2D[] point2D) {
+        double leftPoint = point2D[0].getX();
+        double rightPoint = point2D[0].getX();
+        double topPoint = point2D[0].getY();
+        double bottomPoint = point2D[0].getY();
+
+        for (int i = 1; i < point2D.length; i++) {
+            if (point2D[i].getX() < leftPoint) {
+                leftPoint = point2D[i].getX();
+            }
+            if (point2D[i].getX() > rightPoint) {
+                rightPoint = point2D[i].getX();
+            }
+            if (point2D[i].getY() > topPoint) {
+                topPoint = point2D[i].getY();
+            }
+            if (point2D[i].getY() < bottomPoint) {
+                bottomPoint = point2D[i].getY();
+            }
+        }
+
+        final Double[] squarePoints = new Double[8];
+        final int bias = 15;
+
+        squarePoints[0] = leftPoint - bias;
+        squarePoints[1] = topPoint + bias;
+        squarePoints[2] = rightPoint + bias;
+        squarePoints[3] = topPoint + bias;
+        squarePoints[4] = rightPoint + bias;
+        squarePoints[5] = bottomPoint - bias;
+        squarePoints[6] = leftPoint - bias;
+        squarePoints[7] = bottomPoint - bias;
+        return squarePoints;
+    }
+
+    static Double[] calculateConvexHull(final Point2D[] points) {
+        final int numberOfPoints = points.length;
+        final ArrayList<Double> convexHullPoints = new ArrayList<>();
+        final Vector<Point2D> hull = new Vector<>();
+
+        // Finding the index of the lowest X value, or left-most point, in all points.
+        int lowestValueIndex = 0;
+        for (int i = 1; i < numberOfPoints; i++) {
+            if (points[i].getX() < points[lowestValueIndex].getX()) {
+                lowestValueIndex = i;
+            }
+        }
+
+        int point = lowestValueIndex, q;
+        do {
+            hull.add(points[point]);
+            q = (point + 1) % numberOfPoints;
+            for (int i = 0; i < numberOfPoints; i++) {
+                if (orientation(points[point], points[i], points[q]) < 0) { // Checking if the points are convex.
+                    q = i;
+                }
+            }
+            point = q;
+        } while (point != lowestValueIndex);
+
+        for (final Point2D temp : hull) {
+            convexHullPoints.add(temp.getX());
+            convexHullPoints.add(temp.getY());
+        }
+
+        Double[] hullPointsArray = new Double[convexHullPoints.size()];
+        convexHullPoints.toArray(hullPointsArray);
+
+        return hullPointsArray;
+    }
+
+    static int orientation(final Point2D p1, final Point2D p2, final Point2D p3) {
+
+        final int val = (int) ((p2.getY() - p1.getY()) * (p3.getX() - p2.getX())
+            - (p2.getX() - p1.getX()) * (p3.getY() - p2.getY()));
+
+        if (val == 0) {
+            return 0;
+        }
+
+        return (val > 0) ? 1 : -1;
+    }
+
     public void start() {
         final Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isVideoRecordingEnabled()) {
@@ -258,6 +449,10 @@ public class Stats implements GazeMotionListener {
                         final long timeInterval = (timeToFixation - previousTime);
                         movementHistory
                             .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
+                        movementHistoryidx++;
+                        if (movementHistoryidx > 1) {
+                            generateAOIList(movementHistoryidx - 1, startTime);
+                        }
                         previousTime = timeToFixation;
                     }
                 }
@@ -280,6 +475,10 @@ public class Stats implements GazeMotionListener {
                         final long timeInterval = (timeElapsedMillis - previousTime);
                         movementHistory
                             .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
+                        movementHistoryidx++;
+                        if (movementHistoryidx > 1) {
+                            generateAOIList(movementHistoryidx - 1, startTime);
+                        }
                         previousTime = timeElapsedMillis;
                         counter = 0;
                     }
