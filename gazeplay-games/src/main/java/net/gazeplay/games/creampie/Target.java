@@ -53,7 +53,7 @@ public class Target extends Portrait {
         this.imageLibrary = imageLibrary;
         this.stats = stats;
         this.gameContext = gameContext;
-        targetAOIList = new ArrayList<>();
+        this.targetAOIList = new ArrayList<>();
 
         enterEvent = e -> {
             if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
@@ -103,6 +103,9 @@ public class Target extends Portrait {
 
         timeline.setOnFinished(actionEvent -> {
             animationEnded = true;
+            if(targetAOIList.size()>0){
+                targetAOIList.get(targetAOIList.size()-1).setTimeEnded(System.currentTimeMillis());
+            }
             newPosition();
         });
 
