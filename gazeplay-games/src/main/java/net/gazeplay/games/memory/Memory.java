@@ -228,14 +228,14 @@ public class Memory implements GameLifeCycle {
 
         if (limiterS && !limiteUsed) {
             if (stats.getNbGoalsReached() / ((nbLines * nbColumns) / 2) == gameContext.getConfiguration().getLimiterScore()) {
-                gameContext.showRoundStats(stats, this);
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
                 limiteUsed = true;
             }
         }
         if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.showRoundStats(stats, this);
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
                 limiteUsed = true;
             }
         }

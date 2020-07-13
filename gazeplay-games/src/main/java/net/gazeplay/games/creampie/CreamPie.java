@@ -30,12 +30,15 @@ public class CreamPie implements GameLifeCycle {
 
         hand = new Hand();
         target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this);
-        gameContext.getChildren().add(target);
-        gameContext.getChildren().add(hand);
+
     }
 
     @Override
     public void launch() {
+        gameContext.getChildren().clear();
+
+        gameContext.getChildren().add(target);
+        gameContext.getChildren().add(hand);
         target.setLimiteUsed(false);
         hand.recomputePosition();
 

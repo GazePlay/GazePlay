@@ -1061,7 +1061,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         I18NText time = new I18NText(translator, "Time(seconds)");
         time.setFill(Color.WHITE);
 
-        Spinner<Integer> spinnerT = new Spinner<>(3, 180, 90, 1);
+        Spinner<Integer> spinnerT = new Spinner<>(3, 180, config.getLimiterTime(), 1);
         spinnerT.setEditable(true);
         spinnerT.setPrefWidth(PREF_WIDTH);
         spinnerT.setPrefHeight(PREF_HEIGHT);
@@ -1104,7 +1104,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         I18NText score = new I18NText(translator, "score");
         score.setFill(Color.WHITE);
 
-        Spinner<Integer> spinnerS = new Spinner<>(3, 180, 90, 1);
+        Spinner<Integer> spinnerS = new Spinner<>(3, 180, config.getLimiterScore(), 1);
         spinnerS.setEditable(true);
         spinnerS.setPrefWidth(PREF_WIDTH);
         spinnerS.setPrefHeight(PREF_HEIGHT);
