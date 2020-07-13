@@ -165,7 +165,7 @@ class UserProfileContextTest {
         ScrollPane result = context.createUserPickerChoicePane(mockGazePlay);
         FlowPane panel = (FlowPane) result.getContent();
 
-        assertEquals(4, panel.getChildren().size()); // Should render Default, New User and test1
+        assertEquals(3, panel.getChildren().size()); // Should render Default, New User and test1
     }
 
     @Test
