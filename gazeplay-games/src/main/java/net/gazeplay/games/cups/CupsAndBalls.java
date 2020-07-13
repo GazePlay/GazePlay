@@ -210,7 +210,7 @@ public class CupsAndBalls implements GameLifeCycle {
         if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                gameContext.playWinTransition(20000, event1 -> gameContext.showRoundStats(stats, this));
                 start();
                 limiteUsed = true;
             }

@@ -54,6 +54,7 @@ public class Moles extends Parent implements GameLifeCycle {
   
     private boolean limiterS;
     private boolean limiterT;
+    private boolean limiteUsed;
     private long startTime = 0;
     private long endTime = 0;
 
@@ -65,6 +66,7 @@ public class Moles extends Parent implements GameLifeCycle {
         moleRadius = 0;
         this.limiterS = gameContext.getConfiguration().isLimiterS();
         this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiteUsed = false;
         start();
     }
 
@@ -78,7 +80,11 @@ public class Moles extends Parent implements GameLifeCycle {
             }
             currentRoundDetails = null;
         }
-        gameContext.clear();
+        targetAOIList.clear();
+        gameContext.getChildren().clear();
+
+        limiteUsed = false;
+        start();
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final Configuration config = gameContext.getConfiguration();
@@ -291,15 +297,18 @@ public class Moles extends Parent implements GameLifeCycle {
     }
 
     private void updateScore() {
-        if (limiterS) {
-            if (nbMolesWhacked == gameContext.getConfiguration().getLimiterScore()) {
+        if (limiterS && !limiteUsed) {
+            stop();
+            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
             }
         }
-        if (limiterT) {
+        if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
             }
         }
     }

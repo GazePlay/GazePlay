@@ -38,6 +38,7 @@ public class Blocs implements GameLifeCycle {
     private final ImageLibrary imageLibrary;
 
     private boolean limiterT;
+    private boolean limiterS;
     private long startTime = 0;
     private long endTime = 0;
     private boolean limiteUsed;
@@ -65,6 +66,7 @@ public class Blocs implements GameLifeCycle {
     public Blocs(final IGameContext gameContext, final int nbLines, final int nbColumns, final boolean colors, final float percents4Win,
                  final boolean useTrail, final Stats stats) {
         this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiterS = gameContext.getConfiguration().isLimiterS();
         this.limiteUsed = false;
         this.gameContext = gameContext;
         this.nbLines = nbLines;
@@ -99,6 +101,7 @@ public class Blocs implements GameLifeCycle {
     @Override
     public void launch() {
         //start();
+        limiteUsed = false;
         this.currentRoundDetails = new CurrentRoundDetails(initCount, nbLines, nbColomns);
 
         final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -258,10 +261,18 @@ public class Blocs implements GameLifeCycle {
     }
 
     private void updateScore() {
+        if (limiterS && !limiteUsed) {
+            stop();
+            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
+            }
+        }
         if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
             }
         }
     }
