@@ -30,14 +30,14 @@ public class PianoReceiver implements Receiver {
         this.currentTickProperty = new SimpleObjectProperty<Long>(0L);
 
         this.sequencer = sequencer;
-        this.initPianorReceiverParameters();
+        this.initPianoReceiverParameters();
     }
 
-    public void initPianorReceiverParameters() {
+    public void initPianoReceiverParameters() {
         for (int i = 0; i < 16; i++) {
             channelHasToBePlayed[i] = true;
         }
-
+        autoPlay = false;
         previousTick = 0;
         currentTickProperty.setValue(0L);
     }

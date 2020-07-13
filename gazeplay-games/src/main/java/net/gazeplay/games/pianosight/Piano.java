@@ -29,8 +29,6 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import javax.sound.midi.*;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -199,7 +197,7 @@ public class Piano extends Parent implements GameLifeCycle {
                 sequence = MidiSystem.getSequence(inputStream);
                 bpm = 120;
                 updateChoiceBox();
-                player.pianoReceiver.initPianorReceiverParameters();
+                player.pianoReceiver.initPianoReceiverParameters();
                 ((CheckBox) choiceBoxes.getChildren().get(0)).setSelected(true);
                 player.pianoReceiver.isChangingSequence = true;
                 player.sequencer.setSequence(sequence);
@@ -268,7 +266,7 @@ public class Piano extends Parent implements GameLifeCycle {
                 CheckBox button = new CheckBox(cp.toString());
                 int channelIndex = i;
                 button.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
-                    player.setChanel(channelIndex, newvalue);
+                    player.setChannel(channelIndex, newvalue);
                     updateSelectedChoiceBox();
                 });
                 choiceBoxes.addRow(choiceBoxes.getChildren().size(), button);
@@ -411,7 +409,7 @@ public class Piano extends Parent implements GameLifeCycle {
 
         player = new MidiSequencerPlayer(sequence, noteProperty);
         player.setTempo(bpm);
-        player.pianoReceiver.initPianorReceiverParameters();
+        player.pianoReceiver.initPianoReceiverParameters();
         ((CheckBox) choiceBoxes.getChildren().get(0)).setSelected(true);
         resetSlider(slider, player.sequencer.getTickLength());
     }
@@ -421,14 +419,22 @@ public class Piano extends Parent implements GameLifeCycle {
         double x = 0;
         double y = 0;
         if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+            log.info("MOUSE");
             final MouseEvent me = (MouseEvent) e;
             x = me.getX();
             y = me.getY();
         } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+            log.info("GAZE");
             final GazeEvent ge = (GazeEvent) e;
             x = ge.getX();
             y = ge.getY();
+        } else if (e.getEventType() == MouseEvent.MOUSE_CLICKED){
+            final MouseEvent me = (MouseEvent) e;
+            x = ((Button )me.getSource()).getLayoutX() + ((Button )me.getSource()).getPrefWidth()/2;
+            y = ((Button )me.getSource()).getLayoutY();
+
         }
+        log.info("THIS IS {};{}", x, y);
         explose(x, y);
     }
 
@@ -509,8 +515,8 @@ public class Piano extends Parent implements GameLifeCycle {
 
         slider.setMajorTickUnit(1);
         slider.setMinorTickCount(1);
-        slider.setShowTickMarks(true);
-        slider.setSnapToTicks(true);
+        slider.setShowTickMarks(false);
+        slider.setSnapToTicks(false);
         slider.setBlockIncrement(1d);
 
         double width = circleTemp.getRadius();
@@ -527,6 +533,12 @@ public class Piano extends Parent implements GameLifeCycle {
         autoPlayButton.setLayoutY(dimension2D.getHeight() - 50);
         autoPlayButton.setOnMouseClicked(e-> {
             player.pianoReceiver.autoPlay = !player.pianoReceiver.autoPlay;
+            if(player.pianoReceiver.autoPlay){
+                triggerEvent(e);
+                autoPlayButton.setText("PAUSE");
+            } else {
+                autoPlayButton.setText("AUTO");
+            }
         });
         this.getChildren().add(autoPlayButton);
 
