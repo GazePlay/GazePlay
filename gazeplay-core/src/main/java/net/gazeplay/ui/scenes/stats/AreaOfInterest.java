@@ -55,6 +55,11 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     private final List<AreaOfInterestProps> allAOIList;
     private List<CoordinatesTracker> areaOfInterestList;
 
+    private final List<List> allAOIListTemp;
+    private final List<int[]> startAndEndIdx;
+    private final List<Polygon> allAOIListPolygon;
+    private final List<Double[]> allAOIListPolygonPt;
+
     private final Color[] colors = new Color[]{
         Color.PURPLE,
         Color.WHITE,
@@ -90,11 +95,13 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         areaOfInterestList = new ArrayList<>();
         graphicsPane = new Pane();
         movementHistory = stats.getMovementHistoryWithTime();
+        allAOIListTemp = stats.getAllAOIListTemp();
+        startAndEndIdx = stats.getStartAndEndIdx();
+        allAOIListPolygon = stats.getAllAOIListPolygon();
+        allAOIListPolygonPt = stats.getAllAOIListPolygonPt();
 
         this.dataTreatment();
-        for (int i = 1; i < movementHistory.size(); i++) {
-            calculateAreaOfInterest(i, stats.getStartTime());
-        }
+        calculateAreaOfInterest(0, stats.getStartTime());
 
         areaMap = new int[allAOIList.size()];
         Arrays.fill(areaMap, -1);
@@ -122,27 +129,28 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             int targetAOIIterator = 0;
 
             for (final AreaOfInterestProps areaOfInterestProps : allAOIList) {
-                if (targetAOIIterator < targetAOIArrayList.size()) {
+
+                final long timeAreaStart = areaOfInterestProps.getAreaStartTime();
+                final long timeAreaEnd = areaOfInterestProps.getAreaEndTime();
+                double maxScore = 0;
+                for (targetAOIIterator = 0; targetAOIIterator < targetAOIArrayList.size(); targetAOIIterator++) {
+
                     timeTargetAreaStart = targetAOIArrayList.get(targetAOIIterator).getTimeStarted();
-                    timeTargetAreaEnd = targetAOIArrayList.get(targetAOIIterator).getTimeStarted()
-                        + targetAOIArrayList.get(targetAOIIterator).getDuration();
+                    timeTargetAreaEnd = targetAOIArrayList.get(targetAOIIterator).getTimeEnded();
 
-                    final long timeAreaStart = areaOfInterestProps.getAreaStartTime();
-                    final long timeAreaEnd = areaOfInterestProps.getAreaEndTime();
-
-                    if (timeTargetAreaStart <= timeAreaStart) {
+                    if (timeTargetAreaStart <= timeAreaStart && timeAreaStart <= timeTargetAreaEnd) {
                         final Shape intersect = Shape.intersect(targetAOIArrayList.get(targetAOIIterator).getPolygon(),
                             areaOfInterestProps.getAreaOfInterest());
                         if (intersect.getBoundsInLocal().getWidth() != -1) {
-                            score += (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1)
-                                / intersect.getBoundsInLocal().getWidth();
+                            if (intersect.getBoundsInLocal().getWidth()
+                                / (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1)
+                                > maxScore)
+                                maxScore = intersect.getBoundsInLocal().getWidth()
+                                    / (areaOfInterestProps.getAreaOfInterest().getBoundsInLocal().getWidth() - 1);
                         }
                     }
-
-                    if (timeAreaEnd > timeTargetAreaEnd) {
-                        targetAOIIterator++;
-                    }
                 }
+                score += maxScore;
             }
             score /= allAOIList.size();
         }
@@ -398,67 +406,48 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
     }
 
     private void calculateAreaOfInterest(final int index, final double startTime) {
-        final double x1 = movementHistory.get(index).getXValue();
-        final double y1 = movementHistory.get(index).getYValue();
-        final double x2 = movementHistory.get(index - 1).getXValue();
-        final double y2 = movementHistory.get(index - 1).getYValue();
-        final double eDistance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        int i;
+        for (i = 0; i < allAOIListTemp.size(); i++) {
+            areaOfInterestList = allAOIListTemp.get(i);
+            final double areaStartTime = areaOfInterestList.get(0).getTimeStarted();
+            final double areaEndTime = areaOfInterestList.get(areaOfInterestList.size() - 1).getTimeStarted()
+                + areaOfInterestList.get(areaOfInterestList.size() - 1).getIntervalTime();
+            final double ttff = (areaStartTime - startTime) / 1000.0;
+            final double timeSpent = (areaEndTime - areaStartTime) / 1000.0;
 
-        if (eDistance < 120 && movementHistory.get(index).getIntervalTime() > 10) {
-            if (index == 1) {
-                areaOfInterestList.add(movementHistory.get(0));
+            if (timeSpent > highestFixationTime) {
+                highestFixationTime = timeSpent;
             }
-            areaOfInterestList.add(movementHistory.get(index));
-        } else if (!areaOfInterestList.isEmpty()) {
-            if (areaOfInterestList.size() > 2) {
-                final double areaStartTime = areaOfInterestList.get(0).getTimeStarted();
-                final double areaEndTime = areaOfInterestList.get(areaOfInterestList.size() - 1).getTimeStarted()
-                    + areaOfInterestList.get(areaOfInterestList.size() - 1).getIntervalTime();
-                final double ttff = (areaStartTime - startTime) / 1000.0;
-                final double timeSpent = (areaEndTime - areaStartTime) / 1000.0;
 
-                if (timeSpent > highestFixationTime) {
-                    highestFixationTime = timeSpent;
-                }
+            int centerX = 0;
+            int centerY = 0;
 
-                int centerX = 0;
-                int centerY = 0;
-                final int movementHistoryEndingIndex = index - 1;
-                final int movementHistoryStartingIndex = movementHistoryEndingIndex - areaOfInterestList.size();
-                final Point2D[] points = new Point2D[areaOfInterestList.size()];
-
-                for (int i = 0; i < areaOfInterestList.size(); i++) {
-                    CoordinatesTracker coordinate = areaOfInterestList.get(i);
-                    centerX += coordinate.getXValue();
-                    centerY += coordinate.getYValue();
-                    points[i] = new Point2D(coordinate.getXValue(), coordinate.getYValue());
-                }
-
-                final Double[] polygonPoints;
-                if (config.getConvexHullDisabledProperty().getValue()) {
-                    polygonPoints = calculateConvexHull(points);
-                } else {
-                    polygonPoints = calculateRectangle(points);
-                }
-
-                final Polygon areaOfInterest = new Polygon();
-                areaOfInterest.getPoints().addAll(polygonPoints);
-
-                colorIterator = index % 7;
-                areaOfInterest.setStroke(colors[colorIterator]);
-                centerX /= areaOfInterestList.size();
-                centerY /= areaOfInterestList.size();
-
-                final InfoBoxProps infoBox = calculateInfoBox("AOI number " + (allAOIList.size() + 1), ttff, timeSpent,
-                    areaOfInterestList.size(), centerX, centerY, areaOfInterest);
-                final AreaOfInterestProps areaOfInterestProps = new AreaOfInterestProps(areaOfInterestList, centerX,
-                    centerY, polygonPoints, points, movementHistoryStartingIndex, movementHistoryEndingIndex,
-                    areaOfInterest, infoBox, (long) areaStartTime, (long) areaEndTime);
-                allAOIList.add(areaOfInterestProps);
+            final int movementHistoryEndingIndex = startAndEndIdx.get(i)[1];
+            final int movementHistoryStartingIndex = startAndEndIdx.get(i)[0];
+            log.info("areaOfInterestList size :{}",areaOfInterestList.size());
+            log.info("start: {} end: {}",movementHistoryStartingIndex,movementHistoryEndingIndex);
+            final Point2D[] points = new Point2D[areaOfInterestList.size()];
+            int j;
+            for (j = 0; j < areaOfInterestList.size(); j++) {
+                CoordinatesTracker coordinate = areaOfInterestList.get(j);
+                centerX += coordinate.getXValue();
+                centerY += coordinate.getYValue();
+                points[j] = new Point2D(coordinate.getXValue(), coordinate.getYValue());
             }
-            areaOfInterestList = new ArrayList<>();
+
+            centerX /= areaOfInterestList.size();
+            centerY /= areaOfInterestList.size();
+
+            final InfoBoxProps infoBox = calculateInfoBox("AOI number " + (allAOIList.size() + 1), ttff, timeSpent,
+                areaOfInterestList.size(), centerX, centerY, allAOIListPolygon.get(i));
+            final AreaOfInterestProps areaOfInterestProps = new AreaOfInterestProps(areaOfInterestList, centerX,
+                centerY, allAOIListPolygonPt.get(i), points, movementHistoryStartingIndex, movementHistoryEndingIndex,
+                allAOIListPolygon.get(i), infoBox, (long) areaStartTime, (long) areaEndTime);
+            allAOIList.add(areaOfInterestProps);
+
         }
     }
+
 
     /**
      * Determines how the Info Box will be shown for a particular area of interest.

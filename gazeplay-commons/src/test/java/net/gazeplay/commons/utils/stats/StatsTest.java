@@ -69,11 +69,15 @@ class StatsTest {
             new TargetAOI(3, 3, 2, 6000)
         ));
 
+        testList.get(0).setTimeEnded(2500);
+        testList.get(1).setTimeEnded(5500);
+        testList.get(2).setTimeEnded(6000);
+
         stats.setTargetAOIList(testList);
         ArrayList<TargetAOI> resultList = stats.getTargetAOIList();
 
-        assertEquals(2000, resultList.get(0).getDuration());
-        assertEquals(3000, resultList.get(1).getDuration());
+        assertEquals(1500, resultList.get(0).getDuration());
+        assertEquals(2500, resultList.get(1).getDuration());
         assertEquals(0, resultList.get(2).getDuration());
     }
 
