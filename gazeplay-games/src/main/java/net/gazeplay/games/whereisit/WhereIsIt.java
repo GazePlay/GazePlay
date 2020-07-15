@@ -56,6 +56,12 @@ public class WhereIsIt implements GameLifeCycle {
 
     private final ArrayList<TargetAOI> targetAOIList;
 
+    private boolean limiterS;
+    private boolean limiterT;
+    private boolean limiteUsed;
+    private long startTi = 0;
+    private long endTi = 0;
+
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
                      final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
@@ -65,10 +71,15 @@ public class WhereIsIt implements GameLifeCycle {
         this.fourThree = fourThree;
         this.stats = stats;
         this.targetAOIList = new ArrayList<>();
+        this.limiterS = gameContext.getConfiguration().isLimiterS();
+        this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiteUsed = false;
     }
 
     @Override
     public void launch() {
+        limiteUsed = false;
+        start();
 
         final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
@@ -583,5 +594,34 @@ public class WhereIsIt implements GameLifeCycle {
 
         log.debug("imageList: {}", imageList);
         return imageList;
+    }
+
+    protected void updateScore() {
+        if (limiterS && !limiteUsed) {
+            stop();
+            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
+            }
+        }
+        if (limiterT && !limiteUsed) {
+            stop();
+            if (time(startTi, endTi) >= gameContext.getConfiguration().getLimiterTime()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                limiteUsed = true;
+            }
+        }
+    }
+
+    private void start() {
+        startTi = System.currentTimeMillis();
+    }
+
+    private void stop() {
+        endTi = System.currentTimeMillis();
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
     }
 }
