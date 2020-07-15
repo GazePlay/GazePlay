@@ -177,9 +177,7 @@ public class BottleGame implements GameLifeCycle {
             bo.assignIndicator(event -> {
                 if (!isBroken) {
                     isBroken = true;
-                    bottleGameStats.incrementNumberOfGoalsReached();
                     ballMovement(bo);
-                    updateScore();
                 }
             }, configuration.getFixationLength());
             gameContext.getGazeDeviceManager().addEventFilter(bo);
@@ -205,6 +203,8 @@ public class BottleGame implements GameLifeCycle {
             bottleBreaker(bottle);
             ball.setVisible(false);
             gameContext.getSoundManager().add("data/bottle/sounds/verre.wav");
+            bottleGameStats.incrementNumberOfGoalsReached();
+            updateScore();
         });
         timeline.play();
     }
@@ -230,7 +230,7 @@ public class BottleGame implements GameLifeCycle {
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
         if (score == nbBottle) {
-            gameContext.playWinTransition(2500, event1 -> {
+            gameContext.playWinTransition(0, event1 -> {
                 gameContext.clear();
                 gameContext.showRoundStats(bottleGameStats, this);
             });
