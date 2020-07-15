@@ -430,7 +430,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
         /// Lateral mouvement
         final double distance = Math.abs(gazeTarget.getX() - (biboule.getX() + biboule.getWidth() / 2));
-        final double direction = distance == 0 ? 1
+        final double direction = distance <= 5 ? 0
             : (gazeTarget.getX() - (biboule.getX() + biboule.getWidth() / 2)) / distance;
         final double maxSpeed = 0.7;
         if (distance > maxSpeed) {
