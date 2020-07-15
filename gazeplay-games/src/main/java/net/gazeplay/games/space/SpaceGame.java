@@ -82,6 +82,12 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
     private int score;
 
+    private boolean limiterS;
+    private boolean limiterT;
+    private boolean limiteUsed;
+    private long startTi = 0;
+    private long endTime = 0;
+
     private final Rectangle shade;
     private final ProgressButton restartButton;
     private final Text finalScoreText;
@@ -109,6 +115,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.random = new Random();
         this.configuration = gameContext.getConfiguration();
+        this.limiterS = gameContext.getConfiguration().isLimiterS();
+        this.limiterT = gameContext.getConfiguration().isLimiterT();
+        this.limiteUsed = false;
 
         spaceshipImage = ImageUtils.createCustomizedImageLibrary(null, "space/spaceship");
         bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/biboule");
@@ -198,6 +207,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         finalScoreText.setOpacity(0);
 
         interactionOverlay.setDisable(false);
+
+        limiteUsed = false;
+        startT();
 
         this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
@@ -455,9 +467,32 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         spaceGameStats.incrementNumberOfGoalsReached(score);
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
-        if (biboulesKilled.size() == 30) {
-            gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(spaceGameStats, this));
+        if (limiterS && !limiteUsed) {
+            stopT();
+            if (spaceGameStats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(spaceGameStats, this));
+                limiteUsed = true;
+            }
         }
+        if (limiterT && !limiteUsed) {
+            stopT();
+            if (time(startTi, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(spaceGameStats, this));
+                limiteUsed = true;
+            }
+        }
+    }
+
+    private void startT() {
+        startTi = System.currentTimeMillis();
+    }
+
+    private void stopT() {
+        endTime = System.currentTimeMillis();
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
     }
 
     private void createBiboule(final double x, final double y) {
