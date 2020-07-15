@@ -252,16 +252,24 @@ public class WhereIsIt implements GameLifeCycle {
 
         final Configuration config = gameContext.getConfiguration();
 
-        final int filesCount;
+        int filesCount;
         final String directoryName;
-        File[] imagesFolders = new File[1];
+        List<File> imagesFolders = new LinkedList<>();
         Set<String> resourcesFolders = Collections.emptySet();
 
         if (this.gameType == CUSTOMIZED) {
             final File imagesDirectory = new File(config.getWhereIsItDir() + "/images/");
             directoryName = imagesDirectory.getPath();
-            imagesFolders = imagesDirectory.listFiles();
-            filesCount = imagesFolders == null ? 0 : imagesFolders.length;
+            filesCount = 0;
+            File[] listOfTheFiles = imagesDirectory.listFiles();
+            if(listOfTheFiles!=null) {
+                for (File f : listOfTheFiles) {
+                    if (f.isDirectory()) {
+                        imagesFolders.add(f);
+                        filesCount++;
+                    }
+                }
+            }
         } else {
             final String resourcesDirectory = "data/" + this.gameType.getResourcesDirectoryName();
             final String imagesDirectory = resourcesDirectory + "/images/";
@@ -363,15 +371,16 @@ public class WhereIsIt implements GameLifeCycle {
             }
 
         } else if (this.gameType == CUSTOMIZED) {
+
+            List<Integer> pickedIndexes = new LinkedList<>();
+
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
-                final int index = (randomFolderIndex + step * i) % filesCount;
+                int index = random.nextInt(imagesFolders.size());
 
-                final File folder = imagesFolders[(index) % filesCount];
+                pickedIndexes.add(index);
 
-                if (!folder.isDirectory()) {
-                    continue;
-                }
+                final File folder = imagesFolders.remove((index) % filesCount);
 
                 final File[] files = getFiles(folder);
 
