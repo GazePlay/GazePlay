@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -36,7 +37,7 @@ public class BottleGame implements GameLifeCycle {
 
     private ArrayList<ProgressButton> bottle;
 
-    private Rectangle ball;
+    private Circle ball;
     private Rectangle bar;
     private Rectangle bar2;
     private final Text scoreText;
@@ -129,8 +130,8 @@ public class BottleGame implements GameLifeCycle {
     }
 
     private void initBall() {
-        ball = new Rectangle(dimension2D.getWidth() * 39 / 40, dimension2D.getHeight() * 19 / 20, dimension2D.getWidth() / 40, dimension2D.getHeight() / 20);
-        ball.setFill(new ImagePattern(new Image("data/bottle/ball.jpg")));
+        ball = new Circle(Math.min(dimension2D.getWidth() / 40, dimension2D.getHeight() / 20)/2);
+        ball.setFill(new ImagePattern(new Image("data/bottle/ball.png")));
         ball.setVisible(false);
     }
 
@@ -159,6 +160,7 @@ public class BottleGame implements GameLifeCycle {
             b.setLayoutX(x);
             b.setLayoutY(y);
             b.getButton().setRadius(35);
+            b.getButton().setVisible(false);
             bottle.add(b);
         }
 
@@ -176,7 +178,6 @@ public class BottleGame implements GameLifeCycle {
                 if (!isBroken) {
                     isBroken = true;
                     bottleGameStats.incrementNumberOfGoalsReached();
-                    ball.setVisible(true);
                     ballMovement(bo);
                     updateScore();
                 }
@@ -189,17 +190,22 @@ public class BottleGame implements GameLifeCycle {
 
 
     private void ballMovement(ProgressButton bottle) {
+        ball.toFront();
+        ball.setTranslateX(dimension2D.getWidth()/2 );
+        ball.setTranslateY(dimension2D.getHeight());
+        ball.setVisible(true);
+
         final Timeline timeline = new Timeline();
         timeline.setCycleCount(1);
-        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1.5), new KeyValue(ball.translateYProperty(), bottle.getLayoutY() + bottle.getHeight() / 2 - ball.getY(), Interpolator.LINEAR)));
-        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1.5), new KeyValue(ball.translateXProperty(), bottle.getLayoutX() + bottle.getWidth() / 2 - ball.getX(), Interpolator.LINEAR)));
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(ball.rotateProperty(),0)));
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.5), new KeyValue(ball.rotateProperty(),360)));
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.5), new KeyValue(ball.translateYProperty(), bottle.getLayoutY() + bottle.getHeight() / 2 , Interpolator.EASE_OUT)));
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0.5), new KeyValue(ball.translateXProperty(), bottle.getLayoutX() + bottle.getWidth() / 2 , Interpolator.LINEAR)));
         timeline.setOnFinished(event -> {
+            bottleBreaker(bottle);
             ball.setVisible(false);
             gameContext.getSoundManager().add("data/bottle/sounds/verre.wav");
-            bottleBreaker(bottle);
         });
-        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(ball.translateYProperty(), -bottle.getLayoutY() - bottle.getHeight() / 2 + ball.getY(), Interpolator.LINEAR)));
-        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(ball.translateXProperty(), -bottle.getLayoutX() - bottle.getWidth() / 2 + ball.getX(), Interpolator.LINEAR)));
         timeline.play();
     }
 
