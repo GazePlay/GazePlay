@@ -69,14 +69,7 @@ public class OpinionsGame implements GameLifeCycle {
         background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
 
         thumbDown = new ProgressButton();
-        thumbDown.setLayoutX(dimension2D.getWidth() * 18 / 20);
-        thumbDown.setLayoutY(dimension2D.getHeight() * 2 / 5);
-        thumbDown.getButton().setRadius(70);
-
-        ImageView thumbDo = new ImageView(new Image("data/opinions/thumbs/thumbdown.png"));
-        thumbDo.setFitWidth(dimension2D.getWidth() / 10);
-        thumbDo.setFitHeight(dimension2D.getHeight() / 5);
-        thumbDown.setImage(thumbDo);
+        createAddButtonOpinions(thumbDown, "data/opinions/thumbs/thumbdown.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
 
         thumbDown.assignIndicator(event -> {
             background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
@@ -87,13 +80,7 @@ public class OpinionsGame implements GameLifeCycle {
         thumbDown.active();
 
         noCare = new ProgressButton();
-        noCare.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20);
-        noCare.setLayoutY(0);
-        noCare.getButton().setRadius(70);
-        ImageView noCar = new ImageView(new Image("data/opinions/thumbs/nocare.png"));
-        noCar.setFitWidth(dimension2D.getWidth() / 10);
-        noCar.setFitHeight(dimension2D.getHeight() / 5);
-        noCare.setImage(noCar);
+        createAddButtonOpinions(noCare, "data/opinions/thumbs/nocare.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
 
         noCare.assignIndicator(event -> {
             background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
@@ -104,13 +91,7 @@ public class OpinionsGame implements GameLifeCycle {
         noCare.active();
 
         thumbUp = new ProgressButton();
-        thumbUp.setLayoutX(0);
-        thumbUp.setLayoutY(dimension2D.getHeight() * 2 / 5);
-        thumbUp.getButton().setRadius(70);
-        ImageView thumbU = new ImageView(new Image("data/opinions/thumbs/thumbup.png"));
-        thumbU.setFitWidth(dimension2D.getWidth() / 10);
-        thumbU.setFitHeight(dimension2D.getHeight() / 5);
-        thumbUp.setImage(thumbU);
+        createAddButtonOpinions(thumbUp, "data/opinions/thumbs/thumbup.png", 0, dimension2D.getHeight() * 2 / 5);
 
         thumbUp.assignIndicator(event -> {
             background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
@@ -124,19 +105,19 @@ public class OpinionsGame implements GameLifeCycle {
         for (Image I : Picture) {
             log.info("coucou: " + I.getUrl());
             if (I.getUrl().equals("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbdown.png")) {
-                thumbDo = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbdown.png")).getImage());
+                ImageView thumbDo = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbdown.png")).getImage());
                 thumbDown.setImage(thumbDo);
                 thumbDo.setFitWidth(dimension2D.getWidth() / 10);
                 thumbDo.setFitHeight(dimension2D.getHeight() / 5);
             }
             if (I.getUrl().equals("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbup.png")) {
-                thumbU = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbup.png")).getImage());
+                ImageView thumbU = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbup.png")).getImage());
                 thumbUp.setImage(thumbU);
                 thumbU.setFitWidth(dimension2D.getWidth() / 10);
                 thumbU.setFitHeight(dimension2D.getHeight() / 5);
             }
             if (I.getUrl().equals("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/nocare.png")) {
-                noCar = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/nocare.png")).getImage());
+                ImageView noCar = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/nocare.png")).getImage());
                 noCare.setImage(noCar);
                 noCar.setFitWidth(dimension2D.getWidth() / 10);
                 noCar.setFitHeight(dimension2D.getHeight() / 5);
@@ -159,6 +140,17 @@ public class OpinionsGame implements GameLifeCycle {
             noCare.disable(true);
             score = 0;
         }
+    }
+
+    private void createAddButtonOpinions(ProgressButton button, String link, double setLayoutX, double setLayoutY) {
+        button.setLayoutX(setLayoutX);
+        button.setLayoutY(setLayoutY);
+        button.getButton().setRadius(70);
+
+        ImageView buttonI = new ImageView(new Image(link));
+        buttonI.setFitWidth(dimension2D.getWidth() / 10);
+        buttonI.setFitHeight(dimension2D.getHeight() / 5);
+        button.setImage(buttonI);
     }
 
     @Override
