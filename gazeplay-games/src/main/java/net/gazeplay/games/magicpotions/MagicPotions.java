@@ -84,8 +84,6 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         this.limiterS = gameContext.getConfiguration().isLimiterS();
         this.limiterT = gameContext.getConfiguration().isLimiterT();
         this.limiteUsed = false;
-
-        start();
     }
 
     @Override
@@ -157,6 +155,10 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
 
+        if( startTime == 0 ) {
+            start();
+        }
+
     }
 
     void initBackground(final String imagePATH) {
@@ -186,6 +188,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                startTime = 0;
                 limiteUsed = true;
             }
         }
