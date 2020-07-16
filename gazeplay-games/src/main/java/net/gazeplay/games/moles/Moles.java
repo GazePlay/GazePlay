@@ -57,6 +57,7 @@ public class Moles extends Parent implements GameLifeCycle {
     private boolean limiteUsed;
     private long startTime = 0;
     private long endTime = 0;
+    private Timer minuteur;
 
     Moles(IGameContext gameContext, Stats stats) {
         super();
@@ -165,7 +166,7 @@ public class Moles extends Parent implements GameLifeCycle {
         nbMolesOut = new AtomicInteger(0);
         Random r = new Random();
 
-        Timer minuteur = new Timer();
+        minuteur = new Timer();
         TimerTask tache = new TimerTask() {
             public void run() {
 
@@ -298,8 +299,9 @@ public class Moles extends Parent implements GameLifeCycle {
 
     private void updateScore() {
         if (limiterS && !limiteUsed) {
-            stop();
             if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
+                minuteur.cancel();
+                minuteur.purge();
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
                 limiteUsed = true;
             }
@@ -307,6 +309,8 @@ public class Moles extends Parent implements GameLifeCycle {
         if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
+                minuteur.cancel();
+                minuteur.purge();
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
                 limiteUsed = true;
             }
