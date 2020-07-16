@@ -310,9 +310,6 @@ public class WhereIsIt implements GameLifeCycle {
             error(language);
             return null;
         }
-        final int randomFolderIndex = random.nextInt(filesCount);
-
-        final int step = 1;
 
         int posX = 0;
         int posY = 0;
