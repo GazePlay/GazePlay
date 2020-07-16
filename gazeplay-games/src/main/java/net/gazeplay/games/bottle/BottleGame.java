@@ -193,6 +193,9 @@ public class BottleGame implements GameLifeCycle {
         ball.setTranslateY(dimension2D.getHeight());
         ball.setVisible(true);
 
+        bottle.setDisable(true);
+        bottle.getButton().setDisable(true);
+
         final Timeline timeline = new Timeline();
         timeline.setCycleCount(1);
         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(0), new KeyValue(ball.rotateProperty(),0)));
