@@ -141,11 +141,6 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
 
         gameContext.getChildren().addAll(background, stone, paper, scissors, ennemy);
 
-        if (score == 3) {
-            gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-            score = 0;
-        }
-
         this.start();
 
         paperScissorsStoneStats.notifyNewRoundReady();
@@ -161,14 +156,9 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         if (button == paper) {
             button.assignIndicator(event -> {
                 if (ennemyT == type.stone) {
-                    gameContext.playWinTransition(0, event1 -> {
-                        button.disable();
-                        score = score + 1;
-                        gameContext.clear();
-                        launch();
-                    });
+                    gameWin();
                 } else {
-                    button.disable();
+                    button.disable(true);
                 }
                 stats.incrementNumberOfGoalsReached();
             }, configuration.getFixationLength());
@@ -178,14 +168,9 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         if (button == stone) {
             button.assignIndicator(event -> {
                 if (ennemyT == type.scissors) {
-                    gameContext.playWinTransition(0, event1 -> {
-                        button.disable();
-                        score = score + 1;
-                        gameContext.clear();
-                        launch();
-                    });
+                    gameWin();
                 } else {
-                    button.disable();
+                    button.disable(true);
                 }
                 stats.incrementNumberOfGoalsReached();
             }, configuration.getFixationLength());
@@ -195,14 +180,9 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         if (button == scissors) {
             button.assignIndicator(event -> {
                 if (ennemyT == type.paper) {
-                    gameContext.playWinTransition(0, event1 -> {
-                        button.disable();
-                        score = score + 1;
-                        gameContext.clear();
-                        launch();
-                    });
+                    gameWin();
                 } else {
-                    button.disable();
+                    button.disable(true);
                 }
                 stats.incrementNumberOfGoalsReached();
             }, configuration.getFixationLength());
@@ -210,6 +190,22 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
             button.active();
         }
 
+    }
+
+    private void gameWin() {
+        score = score + 1;
+        stone.disable(true);
+        paper.disable(true);
+        scissors.disable(true);
+        if (score == 3) {
+            gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+            score = 0;
+        } else {
+            gameContext.playWinTransition(0, event1 -> {
+                gameContext.clear();
+                launch();
+            });
+        }
     }
 
     @Override
