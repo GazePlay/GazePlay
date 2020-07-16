@@ -46,7 +46,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     public Labyrinth(final IGameContext gameContext, final Stats stats, final LabyrinthGameVariant variant) {
         super();
         this.limiterS = gameContext.getConfiguration().isLimiterS();
-        this.limiterT = gameContext.getConfiguration().isLimiterS();
+        this.limiterT = gameContext.getConfiguration().isLimiterT();
         this.limiteUsed = false;
 
         this.gameContext = gameContext;
