@@ -56,7 +56,6 @@ public class CupsAndBalls implements GameLifeCycle {
         this.targetAOIList = new ArrayList<>();
         this.limiterT = gameContext.getConfiguration().isLimiterT();
         this.limiteUsed = false;
-        start();
     }
 
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups, final int nbExchanges) {
@@ -126,6 +125,9 @@ public class CupsAndBalls implements GameLifeCycle {
         }
         if (revealBallTransition != null) {
             revealBallTransition.setOnFinished(e -> {
+                if (startTime==0) {
+                    start();
+                }
                 ball.getItem().setVisible(false);
                 createNewTransition(actions);
             });
@@ -186,7 +188,6 @@ public class CupsAndBalls implements GameLifeCycle {
 
                 createNewTransition(actions);
             }
-            updateScore();
         });
 
         movementTransition.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
@@ -206,12 +207,14 @@ public class CupsAndBalls implements GameLifeCycle {
         }
     }
 
-    private void updateScore() {
+    public void updateScore() {
         if (limiterT && !limiteUsed) {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.playWinTransition(20000, event1 -> gameContext.showRoundStats(stats, this));
-                start();
+                log.info("start is {} end is {}", startTime,endTime);
+                openAllIncorrectCups();
+                gameContext.playWinTransition(2000, event1 -> gameContext.showRoundStats(stats, this));
+                startTime = 0;
                 limiteUsed = true;
             }
         }
