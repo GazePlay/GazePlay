@@ -255,7 +255,7 @@ public class WhereIsIt implements GameLifeCycle {
         int filesCount;
         final String directoryName;
         List<File> imagesFolders = new LinkedList<>();
-        Set<String> resourcesFolders = Collections.emptySet();
+        List<String> resourcesFolders = new LinkedList<>();
 
         if (this.gameType == CUSTOMIZED) {
             final File imagesDirectory = new File(config.getWhereIsItDir() + "/images/");
@@ -285,18 +285,20 @@ public class WhereIsIt implements GameLifeCycle {
                 difficultySet = Collections.emptySet();
             }
 
-            resourcesFolders = ResourceFileManager.getResourceFolders(imagesDirectory);
+            Set<String> tempResourcesFolders = ResourceFileManager.getResourceFolders(imagesDirectory);
 
             // If nothing can be found we take the entire folder contents.
             if (!difficultySet.isEmpty()) {
                 Set<String> finalDifficultySet = difficultySet;
-                resourcesFolders = resourcesFolders
+                tempResourcesFolders = tempResourcesFolders
                     .parallelStream()
                     .filter(s ->
                         finalDifficultySet.parallelStream().anyMatch(s::contains)
                     )
                     .collect(Collectors.toSet());
             }
+
+            resourcesFolders.addAll(tempResourcesFolders);
 
             filesCount = resourcesFolders.size();
         }
@@ -323,19 +325,21 @@ public class WhereIsIt implements GameLifeCycle {
         String question = null;
         List<Image> pictograms = null;
         if (this.gameType == FIND_ODD) {
-            int index = ((randomFolderIndex + step) % filesCount) + 1;
+
+            int index = random.nextInt(resourcesFolders.size());
+            final String folder = resourcesFolders.remove((index) % filesCount);
+
+            index = random.nextInt(resourcesFolders.size());
+            final String winnerFolder = resourcesFolders.remove((index) % filesCount);
+            final String folderName = (new File(winnerFolder)).getName();
+
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
-
+                final Set<String> files;
                 if (i == winnerImageIndexAmongDisplayedImages) {
-                    index = (index + 1) % filesCount;
+                    files = ResourceFileManager.getResourcePaths(winnerFolder);
                 } else {
-                    index = ((randomFolderIndex + step) % filesCount) + 1;
+                    files = ResourceFileManager.getResourcePaths(folder);
                 }
-
-                final String folder = (String) resourcesFolders.toArray()[(index) % filesCount];
-                final String folderName = (new File(folder)).getName();
-
-                final Set<String> files = ResourceFileManager.getResourcePaths(folder);
 
                 final int numFile = random.nextInt(files.size());
 
@@ -372,13 +376,9 @@ public class WhereIsIt implements GameLifeCycle {
 
         } else if (this.gameType == CUSTOMIZED) {
 
-            List<Integer> pickedIndexes = new LinkedList<>();
-
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
                 int index = random.nextInt(imagesFolders.size());
-
-                pickedIndexes.add(index);
 
                 final File folder = imagesFolders.remove((index) % filesCount);
 
@@ -419,10 +419,9 @@ public class WhereIsIt implements GameLifeCycle {
             }
         } else {
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
+                int index = random.nextInt(resourcesFolders.size());
 
-                final int index = (randomFolderIndex + step * i) % filesCount;
-
-                final String folder = (String) resourcesFolders.toArray()[(index) % filesCount];
+                final String folder = resourcesFolders.remove((index) % filesCount);
                 final String folderName = (new File(folder)).getName();
 
                 final Set<String> files = ResourceFileManager.getResourcePaths(folder);
