@@ -208,6 +208,9 @@ public class Math101 implements GameLifeCycle {
 
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
+        if(startTime==0){
+            start();
+        }
     }
 
     private ArrayList<TargetAOI> getTargetAOIList() {
@@ -374,6 +377,7 @@ public class Math101 implements GameLifeCycle {
             stop();
             if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
                 gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
+                startTime=0;
                 limiteUsed = true;
             }
         }
