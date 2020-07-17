@@ -1,6 +1,8 @@
 package net.gazeplay.games.cups;
 
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -37,13 +39,6 @@ public class CupsAndBalls implements GameLifeCycle {
     private ArrayList<Action> actions;
     private final ArrayList<TargetAOI> targetAOIList;
 
-
-
-    private boolean limiterT;
-    private long startTime = 0;
-    private long endTime = 0;
-    private boolean limiteUsed;
-
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups) {
         super();
         this.gameContext = gameContext;
@@ -54,8 +49,7 @@ public class CupsAndBalls implements GameLifeCycle {
         this.nbLines = nbCups;
         this.nbExchanges = nbCups * nbCups;
         this.targetAOIList = new ArrayList<>();
-        this.limiterT = gameContext.getConfiguration().isLimiterT();
-        this.limiteUsed = false;
+        gameContext.startTimeLimiter();
     }
 
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups, final int nbExchanges) {
@@ -105,7 +99,7 @@ public class CupsAndBalls implements GameLifeCycle {
 
     @Override
     public void launch() {
-        limiteUsed = false;
+        gameContext.restartTimeLimiter();
         init();
         TranslateTransition revealBallTransition = null;
         for (final Cup cup : cups) {
@@ -125,9 +119,6 @@ public class CupsAndBalls implements GameLifeCycle {
         }
         if (revealBallTransition != null) {
             revealBallTransition.setOnFinished(e -> {
-                if (startTime==0) {
-                    start();
-                }
                 ball.getItem().setVisible(false);
                 createNewTransition(actions);
             });
@@ -187,6 +178,8 @@ public class CupsAndBalls implements GameLifeCycle {
                 }
 
                 createNewTransition(actions);
+            } else {
+                gameContext.firstStart();
             }
         });
 
@@ -206,30 +199,4 @@ public class CupsAndBalls implements GameLifeCycle {
             }
         }
     }
-
-    public void updateScore() {
-        if (limiterT && !limiteUsed) {
-            stop();
-            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                log.info("start is {} end is {}", startTime,endTime);
-                openAllIncorrectCups();
-                gameContext.playWinTransition(2000, event1 -> gameContext.showRoundStats(stats, this));
-                startTime = 0;
-                limiteUsed = true;
-            }
-        }
-    }
-
-    private void start() {
-        startTime = System.currentTimeMillis();
-    }
-
-    private void stop() {
-        endTime = System.currentTimeMillis();
-    }
-
-    private double time(double start, double end) {
-        return (end - start) / 1000;
-    }
-
 }

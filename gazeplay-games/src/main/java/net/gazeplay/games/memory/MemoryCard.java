@@ -141,7 +141,7 @@ public class MemoryCard extends Parent {
         /* No more cards to play : End of this game : Begin a new Game */
         if (gameInstance.getnbRemainingPeers() == 0) {
 
-            gameInstance.updateScore();
+            gameContext.updateScore(stats,gameInstance);
 
             gameContext.playWinTransition(500, actionEvent -> {
 

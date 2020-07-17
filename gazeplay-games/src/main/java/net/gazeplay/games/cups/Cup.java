@@ -195,7 +195,7 @@ public class Cup {
                     item.removeEventFilter(MouseEvent.ANY, enterEvent);
                     item.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-                    gameInstance.updateScore();
+                    gameContext.updateScore(stats, gameInstance, event -> gameInstance.openAllIncorrectCups(), null);
                     if (winner) {
                         onCorrectCupSelected();
                     } else {

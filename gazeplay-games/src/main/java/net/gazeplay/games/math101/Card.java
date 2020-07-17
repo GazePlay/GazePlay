@@ -227,7 +227,7 @@ public class Card extends Parent {
                     card.removeEventFilter(MouseEvent.ANY, enterEvent);
                     card.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-                    gameInstance.updateScore();
+                    gameContext.updateScore(stats,gameInstance);
 
                     if (winner) {
                         onCorrectCardSelected();

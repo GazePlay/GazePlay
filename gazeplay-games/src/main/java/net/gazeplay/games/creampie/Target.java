@@ -49,12 +49,6 @@ public class Target extends Portrait {
 
     private final IGameContext gameContext;
 
-    private boolean limiterS;
-    private boolean limiterT;
-    private long startTime = 0;
-    private long endTime = 0;
-    private boolean limiteUsed;
-
     public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
                   final ImageLibrary imageLibrary, CreamPie gameInstance) {
 
@@ -65,9 +59,8 @@ public class Target extends Portrait {
         this.stats = stats;
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
-        this.limiterS = gameContext.getConfiguration().isLimiterS();
-        this.limiterT = gameContext.getConfiguration().isLimiterT();
-        this.limiteUsed = false;
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
         this.targetAOIList = new ArrayList<>();
 
         enterEvent = e -> {
@@ -79,7 +72,7 @@ public class Target extends Portrait {
             }
         };
 
-        start();
+        gameContext.start();
 
         gameContext.getGazeDeviceManager().addEventFilter(this);
 
@@ -92,7 +85,7 @@ public class Target extends Portrait {
     private void enter() {
 
         stats.incrementNumberOfGoalsReached();
-        updateScore();
+        gameContext.updateScore(stats,gameInstance);
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
         final Animation animation = createAnimation();
@@ -102,40 +95,6 @@ public class Target extends Portrait {
 
         gameContext.getSoundManager().add(SOUNDS_MISSILE);
 
-    }
-
-    private void updateScore() {
-
-        if (limiterS && !limiteUsed) {
-            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
-                limiteUsed = true;
-            }
-        }
-        if (limiterT && !limiteUsed) {
-            stop();
-            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
-                limiteUsed = true;
-            }
-        }
-
-    }
-
-    private void start() {
-        startTime = System.currentTimeMillis();
-    }
-
-    private void stop() {
-        endTime = System.currentTimeMillis();
-    }
-
-    private double time(double start, double end) {
-        return (end - start) / 1000;
-    }
-
-    public void setLimiteUsed(boolean limit) {
-        limiteUsed = limit;
     }
 
     public ArrayList<TargetAOI> getTargetAOIList() {

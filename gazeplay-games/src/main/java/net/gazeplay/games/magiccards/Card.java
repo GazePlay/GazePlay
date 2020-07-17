@@ -135,8 +135,6 @@ public class Card extends Parent {
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
             new KeyValue(card.yProperty(), (dimension2D.getHeight() - card.getHeight() * finalZoom) / 2)));
 
-        gameInstance.updateScore();
-
         currentTimeline.onFinishedProperty().set(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
 
             gameInstance.dispose();
@@ -204,6 +202,7 @@ public class Card extends Parent {
                     card.removeEventFilter(MouseEvent.ANY, enterEvent);
                     card.removeEventFilter(GazeEvent.ANY, enterEvent);
 
+                    gameContext.updateScore(stats,gameInstance);
                     if (winner) {
                         onCorrectCardSelected();
                     } else {// bad card

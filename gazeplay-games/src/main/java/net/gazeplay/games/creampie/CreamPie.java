@@ -39,7 +39,7 @@ public class CreamPie implements GameLifeCycle {
 
         gameContext.getChildren().add(target);
         gameContext.getChildren().add(hand);
-        target.setLimiteUsed(false);
+        gameContext.restartTimeLimiter();
         hand.recomputePosition();
 
         gameContext.getRoot().widthProperty().addListener((obs, oldVal, newVal) -> hand.recomputePosition());

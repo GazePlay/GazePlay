@@ -16,24 +16,18 @@ public class EggGame implements GameLifeCycle {
 
     private final int numberOfTurns;
 
-    private boolean limiterT;
-    private long startTime = 0;
-    private long endTime = 0;
-    private boolean limiteUsed;
-
     public EggGame(final IGameContext gameContext, final Stats stats, final int numOfTurns) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
         this.numberOfTurns = numOfTurns;
-        this.limiterT = gameContext.getConfiguration().isLimiterT();
-        this.limiteUsed = false;
+        gameContext.startTimeLimiter();
     }
 
     @Override
     public void launch() {
-        start();
-        this.limiteUsed = false;
+        gameContext.start();
+        gameContext.restartTimeLimiter();
         final Configuration config = gameContext.getConfiguration();
 
         final Egg egg = createEgg(config);
@@ -61,28 +55,6 @@ public class EggGame implements GameLifeCycle {
         final double positionY = gameDimension2D.getHeight() / 2 - eggHeight / 2;
 
         return new Egg(positionX, positionY, eggWidth, eggHeight, gameContext, stats, this, fixationlength, numberOfTurns);
-    }
-
-    void updateScore() {
-        if (limiterT && !limiteUsed) {
-            stop();
-            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                limiteUsed = true;
-            }
-        }
-    }
-
-    private void start() {
-        startTime = System.currentTimeMillis();
-    }
-
-    private void stop() {
-        endTime = System.currentTimeMillis();
-    }
-
-    public double time(double start, double end) {
-        return (end - start) / 1000;
     }
 
 }

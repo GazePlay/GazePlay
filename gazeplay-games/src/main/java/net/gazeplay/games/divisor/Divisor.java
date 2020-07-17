@@ -43,11 +43,11 @@ public class Divisor implements GameLifeCycle {
             imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"));
         }
 
-         target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
+         target = new Target(gameContext, stats, imageLibrary, 0,System.currentTimeMillis(), this,
             this.gameContext.getRandomPositionGenerator().newRandomPosition(100), isRabbit);
 
         gameContext.getChildren().add(target);
-        target.setLimiteUsed(false);
+        gameContext.restartTimeLimiter();
         this.stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
     }

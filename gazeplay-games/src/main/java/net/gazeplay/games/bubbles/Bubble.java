@@ -58,20 +58,13 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final BubblesGameVariant direction;
 
-    private boolean limiterS;
-    private boolean limiterT;
-    private boolean limiteUsed;
-    private long startTime = 0;
-    private long endTime = 0;
-
     public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final BubblesGameVariant direction) {
         this.gameContext = gameContext;
         this.type = type;
         this.stats = stats;
         this.direction = direction;
-        this.limiterS = gameContext.getConfiguration().isLimiterS();
-        this.limiterT = gameContext.getConfiguration().isLimiterT();
-        this.limiteUsed = false;
+        gameContext.startTimeLimiter();
+        gameContext.startScoreLimiter();
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"));
     }
@@ -104,7 +97,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         this.getChildren().clear();
         initBackground(true);
         gameContext.getChildren().add(this);
-        limiteUsed = false;
+        gameContext.restartTimeLimiter();
 
         this.fragments = buildFragments(type);
 
@@ -118,7 +111,7 @@ public class Bubble extends Parent implements GameLifeCycle {
             }
         };
 
-        start();
+        gameContext.start();
         for (int i = 0; i < 10; i++) {
 
             newCircle();
@@ -215,23 +208,6 @@ public class Bubble extends Parent implements GameLifeCycle {
         }
     }
 
-    private void updateScore() {
-        if (limiterS && !limiteUsed) {
-            stop();
-            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                limiteUsed = true;
-            }
-        }
-        if (limiterT && !limiteUsed) {
-            stop();
-            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                limiteUsed = true;
-            }
-        }
-    }
-
     private void enter(final Circle target) {
 
         final double centerX = target.getCenterX();
@@ -240,9 +216,9 @@ public class Bubble extends Parent implements GameLifeCycle {
         gameContext.getGazeDeviceManager().removeEventFilter(target);
         this.getChildren().remove(target);
 
-        updateScore();
-
         stats.incrementNumberOfGoalsReached();
+
+        gameContext.updateScore(stats,this);
 
         explose(centerX, centerY); // instead of C to avoid wrong position of the explosion
 
@@ -333,18 +309,6 @@ public class Bubble extends Parent implements GameLifeCycle {
         timeline.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
 
         timeline.play();
-    }
-
-    private void start() {
-        startTime = System.currentTimeMillis();
-    }
-
-    private void stop() {
-        endTime = System.currentTimeMillis();
-    }
-
-    private double time(double start, double end) {
-        return (end - start) / 1000;
     }
 
 }

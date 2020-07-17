@@ -37,19 +37,13 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     private final LabyrinthGameVariant variant;
 
-    private boolean limiterS;
-    private boolean limiterT;
-    private long startTime = 0;
-    private long endTime = 0;
-    private boolean limiteUsed;
 
     public Labyrinth(final IGameContext gameContext, final Stats stats, final LabyrinthGameVariant variant) {
         super();
-        this.limiterS = gameContext.getConfiguration().isLimiterS();
-        this.limiterT = gameContext.getConfiguration().isLimiterT();
-        this.limiteUsed = false;
 
         this.gameContext = gameContext;
+        this.gameContext.startScoreLimiter();
+        this.gameContext.startTimeLimiter();
         this.stats = stats;
         this.variant = variant;
         final Configuration config = gameContext.getConfiguration();
@@ -76,7 +70,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
-        limiteUsed = false;
+        gameContext.restartTimeLimiter();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         final Rectangle recJeu = new Rectangle(entiereRecX, entiereRecY, entiereRecWidth, entiereRecHeight);
@@ -95,7 +89,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         cheese.beginCheese();
         gameContext.getChildren().add(cheese);
 
-        start();
+        gameContext.start();
 
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
@@ -170,42 +164,12 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     void testIfCheese(final int i, final int j) {
         if (cheese.isTheCheese(i, j)) {
-            updateScore();
             stats.incrementNumberOfGoalsReached();
+            gameContext.updateScore(stats, this);
             cheese.moveCheese();
             stats.incrementNumberOfGoalsToReach();
             mouse.nbMove = 0;
         }
-    }
-
-    private void start() {
-        startTime = System.currentTimeMillis();
-    }
-
-    private void stop() {
-        endTime = System.currentTimeMillis();
-    }
-
-    private double time(double start, double end) {
-        return (end - start) / 1000;
-    }
-
-    private void updateScore() {
-
-        if (limiterS && !limiteUsed) {
-            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                limiteUsed = true;
-            }
-        }
-        if (limiterT && !limiteUsed) {
-            stop();
-            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                limiteUsed = true;
-            }
-        }
-
     }
 
 }

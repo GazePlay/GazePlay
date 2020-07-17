@@ -67,4 +67,20 @@ public interface IGameContext {
 
     Supplier<Dimension2D> getCurrentScreenDimensionSupplier();
 
+    void startScoreLimiter();
+
+    void startTimeLimiter();
+
+    void restartTimeLimiter();
+
+    void start();
+
+    void firstStart();
+
+    void stop();
+
+    void updateScore(Stats stats, GameLifeCycle currentGame, EventHandler<ActionEvent> onTimeLimiterEndEventHandler, EventHandler<ActionEvent> onScoreLimiterEndEventHandler);
+
+    void updateScore(Stats stats, GameLifeCycle currentGame);
+
 }

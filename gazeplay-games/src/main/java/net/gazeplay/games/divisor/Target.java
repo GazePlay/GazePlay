@@ -42,12 +42,9 @@ class Target extends Parent {
     private final EventHandler<Event> enterEvent;
     private final IGameContext gameContext;
     private final Divisor gameInstance;
-    private final long startTime;
-    private long endTime;
-    private boolean limiterT;
-    private boolean limiteUsed;
     private final Dimension2D dimension;
     private final boolean isRabbit;
+    private final long startTime;
 
     @Getter
     private final ImageLibrary imgLib;
@@ -68,8 +65,7 @@ class Target extends Parent {
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.radius = 200d / (level + 1);
         this.timeline = new Timeline();
-        this.limiterT = gameContext.getConfiguration().isLimiterT();
-        this.limiteUsed = false;
+        gameContext.startTimeLimiter();
 
         this.circle = new Circle(pos.getX(), pos.getY(), this.radius);
         this.circle.setFill(new ImagePattern(this.imgLib.pickRandomImage(), 0, 0, 1, 1, true));
@@ -145,7 +141,7 @@ class Target extends Parent {
         if (level < difficulty) {
             createChildren(x, y);
         }
-        updateScore();
+        gameContext.updateScore(stats,gameInstance);
     }
 
     private void explodeAnimation(final double x, final double y) {
@@ -250,25 +246,4 @@ class Target extends Parent {
         gameContext.getGazeDeviceManager().addEventFilter(this);
     }
 
-    private void updateScore() {
-        if (limiterT && !limiteUsed) {
-            stop();
-            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
-                limiteUsed = true;
-            }
-        }
-    }
-
-    private void stop() {
-        endTime = System.currentTimeMillis();
-    }
-
-    private double time(double start, double end) {
-        return (end - start) / 1000;
-    }
-
-    public void setLimiteUsed(boolean limit) {
-        limiteUsed = limit;
-    }
 }
