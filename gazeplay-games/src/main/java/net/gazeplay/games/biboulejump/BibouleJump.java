@@ -321,7 +321,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     }
 
     /**
-     * Creates a platform (cloud)
+     * Creates a cloud platform
      *
      * @param centerX The center position of the platform, the new X position must be calculated accordingly
      * @param centerY Same as X
