@@ -97,7 +97,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         this.getChildren().clear();
         initBackground(true);
         gameContext.getChildren().add(this);
-        gameContext.restartTimeLimiter();
+        gameContext.setLimiterAvailable();
 
         this.fragments = buildFragments(type);
 

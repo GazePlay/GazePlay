@@ -62,20 +62,13 @@ public class Shooter extends Parent implements GameLifeCycle {
     private EventHandler<Event> enterEvent;
     private EventHandler<GazeEvent> handEventGaze;
 
-    private boolean limiterS;
-    private boolean limiterT;
-    private long startTime = 0;
-    private long endTime = 0;
-    private boolean limiteUsed;
-
     // done
     public Shooter(final IGameContext gameContext, final Stats stats, final String type) {
         this.gameContext = gameContext;
         this.stats = stats;
-        this.limiterS = gameContext.getConfiguration().isLimiterS();
-        this.limiterT = gameContext.getConfiguration().isLimiterT();
         final LocalDate localDate = LocalDate.now();
-        this.limiteUsed = false;
+        this.gameContext.startScoreLimiter();
+        this.gameContext.startTimeLimiter();
         date = DateTimeFormatter.ofPattern("d MMMM uuuu ").format(localDate);
         score = 0;
         gameType = type;
@@ -280,7 +273,7 @@ public class Shooter extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
 
-        limiteUsed = false;
+        this.gameContext.setLimiterAvailable();
         score = 0;
         this.getChildren().clear();
 
@@ -328,8 +321,6 @@ public class Shooter extends Parent implements GameLifeCycle {
                 }
             }
         };
-
-        start();
 
         final Label sc = new Label();
         final Label tc = new Label();
@@ -427,7 +418,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         waitbeforestart.play();
 
         stats.notifyNewRoundReady();
-
+        this.gameContext.start();
     }
 
     // done
@@ -469,7 +460,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         } else {// equals robot
             cst = "" + score++;
         }
-        updateScore();
+        gameContext.updateScore(stats,this);
 
         text.setText(cst);
 
@@ -651,32 +642,4 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     }
 
-    private void updateScore() {
-        if (limiterS && !limiteUsed) {
-            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                limiteUsed = true;
-            }
-        }
-        if (limiterT && !limiteUsed) {
-            stop();
-            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                limiteUsed = true;
-            }
-        }
-
-    }
-
-    private void start() {
-        startTime = System.currentTimeMillis();
-    }
-
-    private void stop() {
-        endTime = System.currentTimeMillis();
-    }
-
-    private double time(double start, double end) {
-        return (end - start) / 1000;
-    }
 }

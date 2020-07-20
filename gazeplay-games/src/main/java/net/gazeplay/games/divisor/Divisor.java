@@ -47,7 +47,7 @@ public class Divisor implements GameLifeCycle {
             this.gameContext.getRandomPositionGenerator().newRandomPosition(100), isRabbit);
 
         gameContext.getChildren().add(target);
-        gameContext.restartTimeLimiter();
+        gameContext.setLimiterAvailable();
         this.stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
     }

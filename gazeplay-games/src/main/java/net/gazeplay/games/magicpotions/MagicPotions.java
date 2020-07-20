@@ -82,7 +82,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
 
-        gameContext.restartTimeLimiter();
+        gameContext.setLimiterAvailable();
         final String imagePATH = "data/potions/images/";
 
         initBackground(imagePATH);

@@ -1,8 +1,6 @@
 package net.gazeplay.games.cups;
 
 import javafx.animation.TranslateTransition;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -99,7 +97,7 @@ public class CupsAndBalls implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.restartTimeLimiter();
+        gameContext.setLimiterAvailable();
         init();
         TranslateTransition revealBallTransition = null;
         for (final Cup cup : cups) {

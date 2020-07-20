@@ -27,7 +27,7 @@ public class EggGame implements GameLifeCycle {
     @Override
     public void launch() {
         gameContext.start();
-        gameContext.restartTimeLimiter();
+        gameContext.setLimiterAvailable();
         final Configuration config = gameContext.getConfiguration();
 
         final Egg egg = createEgg(config);

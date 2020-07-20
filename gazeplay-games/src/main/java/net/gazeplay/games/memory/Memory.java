@@ -104,7 +104,7 @@ public class Memory implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.restartTimeLimiter();
+        gameContext.setLimiterAvailable();
         final Configuration config = gameContext.getConfiguration();
         final int cardsCount = nbColumns * nbLines;
 

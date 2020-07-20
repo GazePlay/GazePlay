@@ -79,7 +79,7 @@ public class Moles extends Parent implements GameLifeCycle {
         targetAOIList.clear();
         gameContext.getChildren().clear();
 
-        gameContext.restartTimeLimiter();
+        gameContext.setLimiterAvailable();
         gameContext.start();
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();

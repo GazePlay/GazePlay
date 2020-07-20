@@ -93,7 +93,7 @@ public class Blocs implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.restartTimeLimiter();
+        gameContext.setLimiterAvailable();
         this.currentRoundDetails = new CurrentRoundDetails(initCount, nbLines, nbColomns);
 
         final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();

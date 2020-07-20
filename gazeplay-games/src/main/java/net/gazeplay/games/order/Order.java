@@ -41,7 +41,7 @@ public class Order implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.restartTimeLimiter();
+        gameContext.setLimiterAvailable();
         gameContext.start();
         spawn();
     }

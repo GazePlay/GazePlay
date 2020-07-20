@@ -63,7 +63,7 @@ public class MagicCards implements GameLifeCycle {
     @Override
     public void launch() {
         gameContext.firstStart();
-        gameContext.restartTimeLimiter();
+        gameContext.setLimiterAvailable();
         final Configuration config = gameContext.getConfiguration();
 
         final int cardsCount = nbColumns * nbLines;

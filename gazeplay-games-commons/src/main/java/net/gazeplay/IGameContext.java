@@ -71,7 +71,7 @@ public interface IGameContext {
 
     void startTimeLimiter();
 
-    void restartTimeLimiter();
+    void setLimiterAvailable();
 
     void start();
 

@@ -70,7 +70,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.restartTimeLimiter();
+        gameContext.setLimiterAvailable();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         final Rectangle recJeu = new Rectangle(entiereRecX, entiereRecY, entiereRecWidth, entiereRecHeight);

@@ -147,7 +147,7 @@ public class Math101 implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.restartTimeLimiter();
+        gameContext.setLimiterAvailable();
         final Formula formula = generateRandomFormula(gameType, maxValue);
 
         final Text question = createQuestionText(formula);

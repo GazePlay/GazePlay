@@ -147,11 +147,11 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     @Override
     public void startTimeLimiter() {
         limiterT = getConfiguration().isLimiterT();
-        restartTimeLimiter();
+        setLimiterAvailable();
     }
 
     @Override
-    public void restartTimeLimiter(){
+    public void setLimiterAvailable(){
         limiteUsed = false;
     }
     @Override

@@ -45,7 +45,7 @@ import java.util.Scanner;
 @Slf4j
 public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
-    private final SpaceGameStats spaceGameStats;
+    private final SpaceGameStats stats;
     private final Dimension2D dimension2D;
     private final Random random;
     private final Configuration configuration;
@@ -82,12 +82,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
     private int score;
 
-    private boolean limiterS;
-    private boolean limiterT;
-    private boolean limiteUsed;
-    private long startTi = 0;
-    private long endTime = 0;
-
     private final Rectangle shade;
     private final ProgressButton restartButton;
     private final Text finalScoreText;
@@ -110,14 +104,13 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     private int bossHit;
 
     public SpaceGame(final IGameContext gameContext, final SpaceGameStats stats) {
-        this.spaceGameStats = stats;
+        this.stats = stats;
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.random = new Random();
         this.configuration = gameContext.getConfiguration();
-        this.limiterS = gameContext.getConfiguration().isLimiterS();
-        this.limiterT = gameContext.getConfiguration().isLimiterT();
-        this.limiteUsed = false;
+        this.gameContext.startTimeLimiter();
+        this.gameContext.startScoreLimiter();
 
         spaceshipImage = ImageUtils.createCustomizedImageLibrary(null, "space/spaceship");
         bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/biboule");
@@ -208,8 +201,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
         interactionOverlay.setDisable(false);
 
-        limiteUsed = false;
-        startT();
+        gameContext.setLimiterAvailable();
 
         this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
@@ -301,11 +293,17 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         spawnBiboule();
 
         updatePosition();
-        updateScore();
+
+
+        score = biboulesKilled.size() + bossKilled.size() * 125;
+        stats.incrementNumberOfGoalsReached(score);
+        scoreText.setText(String.valueOf(score));
+        scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
 
         this.start();
 
-        spaceGameStats.notifyNewRoundReady();
+        stats.notifyNewRoundReady();
+        gameContext.start();
     }
 
 
@@ -459,40 +457,15 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         finalScoreText.setText(stringBuilder.toString());
         finalScoreText.setOpacity(1);
         restartButton.active();
-        spaceGameStats.addRoundDuration();
+        stats.addRoundDuration();
     }
 
     private void updateScore() {
         score = biboulesKilled.size() + bossKilled.size() * 125;
-        spaceGameStats.incrementNumberOfGoalsReached(score);
+        stats.incrementNumberOfGoalsReached(score);
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
-        if (limiterS && !limiteUsed) {
-            stopT();
-            if (spaceGameStats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(spaceGameStats, this));
-                limiteUsed = true;
-            }
-        }
-        if (limiterT && !limiteUsed) {
-            stopT();
-            if (time(startTi, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(spaceGameStats, this));
-                limiteUsed = true;
-            }
-        }
-    }
-
-    private void startT() {
-        startTi = System.currentTimeMillis();
-    }
-
-    private void stopT() {
-        endTime = System.currentTimeMillis();
-    }
-
-    private double time(double start, double end) {
-        return (end - start) / 1000;
+        gameContext.updateScore(stats,this);
     }
 
     private void createBiboule(final double x, final double y) {

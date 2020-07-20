@@ -202,7 +202,7 @@ public class Race extends Parent implements GameLifeCycle {
     public void launch() {
         stats.notifyNewRoundReady();
 
-        gameContext.restartTimeLimiter();
+        gameContext.setLimiterAvailable();
         score = 0;
         this.getChildren().clear();
 
