@@ -68,11 +68,9 @@ public class Blocs implements GameLifeCycle {
         this.percents4Win = percents4Win;
         this.stats = stats;
 
-        gameContext.start();
-
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"));
 
-        enterEvent = buildEvent(gameContext, stats, useTrail);
+        enterEvent = buildEvent(gameContext, this.stats, useTrail);
 
         initCount = nbColumns * nbLines;
     }
@@ -139,6 +137,8 @@ public class Blocs implements GameLifeCycle {
             }
         }
         stats.notifyNewRoundReady();
+
+        gameContext.firstStart();
     }
 
     @Override
@@ -177,8 +177,6 @@ public class Blocs implements GameLifeCycle {
             if (e.getEventType().equals(MouseEvent.MOUSE_ENTERED)
                 || e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
 
-                gameContext.updateScore(stats,this);
-
                 if (!useTrail) {
 
                     final Bloc bloc = (Bloc) e.getTarget();
@@ -216,9 +214,9 @@ public class Blocs implements GameLifeCycle {
 
                     stats.incrementNumberOfGoalsReached();
 
-                    gameContext.updateScore(stats,this);
-
                     removeAllBlocs();
+
+                    gameContext.updateScore(stats,this);
 
                     gameContext.playWinTransition(0, event -> {
                         gameContext.clear();

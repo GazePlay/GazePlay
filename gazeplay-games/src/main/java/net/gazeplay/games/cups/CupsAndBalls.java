@@ -47,6 +47,7 @@ public class CupsAndBalls implements GameLifeCycle {
         this.nbLines = nbCups;
         this.nbExchanges = nbCups * nbCups;
         this.targetAOIList = new ArrayList<>();
+        gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
     }
 
