@@ -117,8 +117,6 @@ public class Egg extends Parent {
 
                     timelineProgressBar.setOnFinished(actionEvent -> {
 
-                        gameContext.updateScore(stats,gameInstance);
-
                         if (turnNumber < totalNumberOfTurns - 1) {
                             stats.incrementNumberOfGoalsReached();
                             turnNumber++;
@@ -142,6 +140,8 @@ public class Egg extends Parent {
                             final PauseTransition t = new PauseTransition(Duration.seconds(2));
 
                             t.setOnFinished(actionEvent1 -> {
+
+                                gameContext.updateScore(stats,gameInstance);
 
                                 gameContext.playWinTransition(0, event -> {
                                     gameInstance.dispose();

@@ -123,7 +123,6 @@ public class SpotTheDifferences implements GameLifeCycle {
                 Objects.requireNonNull(
                     ClassLoader.getSystemResourceAsStream("data/spotthedifferences/instances.json")),
                 StandardCharsets.UTF_8));
-        gameContext.firstStart();
     }
 
     private void createDifference(final double x, final double y, final double radius) {
@@ -143,8 +142,8 @@ public class SpotTheDifferences implements GameLifeCycle {
         numberDiffFound++;
         scoreText.setText(numberDiffFound + "/" + totalNumberDiff);
         stats.incrementNumberOfGoalsReached();
-        gameContext.updateScore(stats,this);
         if (numberDiffFound == totalNumberDiff) {
+            gameContext.updateScore(stats,this);
             gameContext.playWinTransition(200, actionEvent -> gameContext.showRoundStats(stats, this));
         }
         String soundResource = "data/spotthedifferences/ding.wav";
@@ -188,6 +187,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         scoreText.setText(numberDiffFound + "/" + totalNumberDiff);
         stats.incrementNumberOfGoalsToReach(totalNumberDiff);
         stats.notifyNewRoundReady();
+        gameContext.firstStart();
     }
 
     @Override

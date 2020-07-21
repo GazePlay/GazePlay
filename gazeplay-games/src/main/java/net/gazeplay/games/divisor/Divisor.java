@@ -79,9 +79,9 @@ public class Divisor implements GameLifeCycle {
 
     public void restart() {
         this.dispose();
-        this.launch();
-        gameContext.onGameStarted();
-       // gameContext.showRoundStats(stats, this);
+        //this.launch();
+        //gameContext.onGameStarted();
+        gameContext.showRoundStats(stats, this);
     }
 
     @Override

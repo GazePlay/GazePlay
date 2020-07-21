@@ -135,16 +135,21 @@ public class Card extends Parent {
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
             new KeyValue(card.yProperty(), (dimension2D.getHeight() - card.getHeight() * finalZoom) / 2)));
 
-        currentTimeline.onFinishedProperty().set(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
+        currentTimeline.onFinishedProperty().set(actionEvent ->
+        {
 
-            gameInstance.dispose();
+            gameContext.updateScore(stats,gameInstance);
+            gameContext.playWinTransition(500, actionEvent1 -> {
 
-            gameContext.clear();
+                gameInstance.dispose();
 
-            gameInstance.launch();
+                gameContext.clear();
 
-            gameContext.onGameStarted();
-        }));
+                gameInstance.launch();
+
+                gameContext.onGameStarted();
+            });
+        });
 
         currentTimeline.play();
     }
@@ -202,7 +207,6 @@ public class Card extends Parent {
                     card.removeEventFilter(MouseEvent.ANY, enterEvent);
                     card.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-                    gameContext.updateScore(stats,gameInstance);
                     if (winner) {
                         onCorrectCardSelected();
                     } else {// bad card

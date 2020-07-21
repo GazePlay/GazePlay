@@ -35,7 +35,7 @@ public class Order implements GameLifeCycle {
         this.stats = stats;
         this.currentNum = 0;
         this.nbTarget = nbTarget;
-        this.gameContext.startScoreLimiter();
+        //this.gameContext.startScoreLimiter();
         this.gameContext.startTimeLimiter();
     }
 
@@ -50,9 +50,9 @@ public class Order implements GameLifeCycle {
         handleAnswer(t, this.currentNum == t.getNum() - 1);
 
         if (this.currentNum == nbTarget) {
+            gameContext.updateScore(stats,this);
             gameContext.playWinTransition(20, actionEvent -> Order.this.restart());
         }
-        gameContext.updateScore(stats,this);
     }
 
     private void handleAnswer(Target t, boolean correct) {

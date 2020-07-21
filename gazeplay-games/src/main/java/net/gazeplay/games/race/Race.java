@@ -48,7 +48,6 @@ public class Race extends Parent implements GameLifeCycle {
     private int movementPerBug = 2;
 
     private Target playerRacer;
-    private boolean raceIsFinished = false;
     private int racerMovement = 0;
 
     private Label text;
@@ -78,8 +77,6 @@ public class Race extends Parent implements GameLifeCycle {
 
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         hand = new StackPane();
-
-
 
         blue = new Image("data/" + gameType + "/images/Blue.png");
         green = new Image("data/" + gameType + "/images/Green.png");
@@ -201,6 +198,7 @@ public class Race extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
         stats.notifyNewRoundReady();
+        racerMovement = 0;
 
         gameContext.setLimiterAvailable();
         score = 0;
@@ -247,13 +245,12 @@ public class Race extends Parent implements GameLifeCycle {
         enterEvent = e -> {
             if (e.getTarget() instanceof Target) {
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    if (!((Target) e.getTarget()).done && !raceIsFinished) {
+                    if (!((Target) e.getTarget()).done) {
                         ((Target) e.getTarget()).done = true;
                         enter((Target) e.getTarget());
                         stats.incrementNumberOfGoalsReached();
                     }
                 }
-                this.gameContext.updateScore(stats,this);
             }
         };
 
@@ -326,21 +323,14 @@ public class Race extends Parent implements GameLifeCycle {
         cage.toBack();
         this.getChildren().add(cage);
 
-        final Timeline waitbeforestart = new Timeline();
-        waitbeforestart.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
-        waitbeforestart.setOnFinished(actionEvent -> {
-            if (!raceIsFinished) {
-                for (int i = 0; i < bugsAmount; i++) {
-                    newCircle();
-                }
-            }
+        for (int i = 0; i < bugsAmount; i++) {
+            newCircle();
+        }
 
-            makePlayer(0.6);
-            racers[0] = makeRacers(0.7);
-            racers[1] = makeRacers(0.8);
-            racers[2] = makeRacers(0.9);
-        });
-        waitbeforestart.play();
+        makePlayer(0.6);
+        racers[0] = makeRacers(0.7);
+        racers[1] = makeRacers(0.8);
+        racers[2] = makeRacers(0.9);
 
         stats.notifyNewRoundReady();
 
@@ -421,9 +411,7 @@ public class Race extends Parent implements GameLifeCycle {
             if (i != -1) {
                 getChildren().remove(i);
             }
-            if (!raceIsFinished) {
-                newCircle();
-            }
+            newCircle();
         });
         pt.play();
         if (score % movementPerBug == 0) {
@@ -431,22 +419,11 @@ public class Race extends Parent implements GameLifeCycle {
             movePlayer(playerRacer, racerMovement);
         }
         if (racerMovement == 18) {
-            racerMovement = 0;
-            raceIsFinished = true;
-
+            this.gameContext.updateScore(stats,this);
             gameContext.playWinTransition(500, actionEvent -> {
-
-                movementPerBug++;
-                raceFinished();
-                gameContext.endWinTransition();
-                raceIsFinished = false;
-                makePlayer(0.6);
-                racers[0] = makeRacers(0.7);
-                racers[1] = makeRacers(0.8);
-                racers[2] = makeRacers(0.9);
-                for (int i = 0; i < bugsAmount; i++) {
-                    newCircle();
-                }
+                dispose();
+                gameContext.clear();
+                launch();
             });
         }
 
@@ -652,9 +629,7 @@ public class Race extends Parent implements GameLifeCycle {
             final int index = (getChildren().indexOf(sp));
             if (index != -1) {
                 getChildren().remove(index);
-                if (!raceIsFinished) {
-                    newCircle();
-                }
+                newCircle();
             }
         });
         pt.play();

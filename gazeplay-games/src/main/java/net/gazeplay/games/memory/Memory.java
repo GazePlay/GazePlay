@@ -69,7 +69,6 @@ public class Memory implements GameLifeCycle {
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.stats = stats;
-        this.gameContext.startScoreLimiter();
         this.gameContext.startTimeLimiter();
 
         if (gameType == MemoryGameType.LETTERS) {
