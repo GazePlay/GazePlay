@@ -11,21 +11,21 @@ public class ReplayablePseudoRandom {
     private double modulus;
 
     public ReplayablePseudoRandom() {
-        this.seed = System.currentTimeMillis();
+        this.setSeed(System.currentTimeMillis() % 100000000);
         this.multiplier = 1664525;
         this.increment = 1013904223;
         this.modulus = Math.pow(2, 32);
     }
 
     public ReplayablePseudoRandom(double seed) {
-        this.seed = seed;
+        this.setSeed(seed);
         this.multiplier = 1664525;
         this.increment = 1013904223;
         this.modulus = Math.pow(2, 32);
     }
 
     public double random() {
-        seed = (seed * multiplier + increment) % modulus;
+        seed = (this.getSeed() * multiplier + increment) % modulus;
         return seed;
     }
 
@@ -53,5 +53,14 @@ public class ReplayablePseudoRandom {
         int randMax = Integer.MAX_VALUE;
         return (float) (this.random() / (double) randMax);
     }
+
+    public double getSeed() {
+        return seed;
+    }
+
+    public void setSeed(double seed) {
+        this.seed = seed;
+    }
+
 }
 
