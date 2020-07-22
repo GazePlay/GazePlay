@@ -76,9 +76,9 @@ public class Order implements GameLifeCycle {
         Timeline pause = new Timeline();
         pause.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
         pause.setOnFinished(actionEvent -> {
-            Order.this.gameContext.getChildren().remove(c);
+            gameContext.getChildren().remove(c);
             if (!correct) {
-                Order.this.restart();
+                restart();
             }
         });
 
