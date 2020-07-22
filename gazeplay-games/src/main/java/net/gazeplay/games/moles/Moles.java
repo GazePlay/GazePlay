@@ -1,5 +1,7 @@
 package net.gazeplay.games.moles;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -51,12 +53,7 @@ public class Moles extends Parent implements GameLifeCycle {
     @Setter
     private ArrayList<TargetAOI> targetAOIList;
     private double moleRadius;
-  
-    private boolean limiterS;
-    private boolean limiterT;
-    private boolean limiteUsed;
-    private long startTime = 0;
-    private long endTime = 0;
+
     private Timer minuteur;
 
     Moles(IGameContext gameContext, Stats stats) {
@@ -65,10 +62,8 @@ public class Moles extends Parent implements GameLifeCycle {
         this.stats = stats;
         targetAOIList = new ArrayList<>();
         moleRadius = 0;
-        this.limiterS = gameContext.getConfiguration().isLimiterS();
-        this.limiterT = gameContext.getConfiguration().isLimiterT();
-        this.limiteUsed = false;
-        start();
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
     }
 
     @Override
@@ -84,8 +79,8 @@ public class Moles extends Parent implements GameLifeCycle {
         targetAOIList.clear();
         gameContext.getChildren().clear();
 
-        limiteUsed = false;
-        start();
+        gameContext.setLimiterAvailable();
+        gameContext.start();
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final Configuration config = gameContext.getConfiguration();
@@ -292,41 +287,12 @@ public class Moles extends Parent implements GameLifeCycle {
         nbMolesWhacked++;
         String s = "Score:" + nbMolesWhacked;
         stats.incrementNumberOfGoalsReached();
-        updateScore();
+        EventHandler<ActionEvent> limiterEndEventHandler = e -> {
+            minuteur.cancel();
+            minuteur.purge();
+        };
+        gameContext.updateScore(stats,this, limiterEndEventHandler, limiterEndEventHandler);
         lab.setText(s);
 
     }
-
-    private void updateScore() {
-        if (limiterS && !limiteUsed) {
-            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
-                minuteur.cancel();
-                minuteur.purge();
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                limiteUsed = true;
-            }
-        }
-        if (limiterT && !limiteUsed) {
-            stop();
-            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                minuteur.cancel();
-                minuteur.purge();
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                limiteUsed = true;
-            }
-        }
-    }
-
-    private void start() {
-        startTime = System.currentTimeMillis();
-    }
-
-    private void stop() {
-        endTime = System.currentTimeMillis();
-    }
-
-    private double time(double start, double end) {
-        return (end - start) / 1000;
-    }
-
 }

@@ -58,12 +58,6 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
     private final Dimension2D gameDimension2D;
 
-    private boolean limiterS;
-    private boolean limiterT;
-    private long startTime = 0;
-    private long endTime = 0;
-    private boolean limiteUsed;
-
     @Getter
     @Setter
     private Potion potionRed;
@@ -81,15 +75,14 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = (MagicPotionsStats) stats;
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.limiterS = gameContext.getConfiguration().isLimiterS();
-        this.limiterT = gameContext.getConfiguration().isLimiterT();
-        this.limiteUsed = false;
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
     }
 
     @Override
     public void launch() {
 
-        limiteUsed = false;
+        gameContext.setLimiterAvailable();
         final String imagePATH = "data/potions/images/";
 
         initBackground(imagePATH);
@@ -155,9 +148,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
 
-        if( startTime == 0 ) {
-            start();
-        }
+        gameContext.firstStart();
 
     }
 
@@ -175,34 +166,5 @@ public class MagicPotions extends Parent implements GameLifeCycle {
     public void dispose() {
         currentRoundDetails.getPotionsToMix().clear();
         currentRoundDetails = null;
-    }
-
-    void updateScore() {
-        if (limiterS && !limiteUsed) {
-            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                limiteUsed = true;
-            }
-        }
-        if (limiterT && !limiteUsed) {
-            stop();
-            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                startTime = 0;
-                limiteUsed = true;
-            }
-        }
-    }
-
-    private void start() {
-        startTime = System.currentTimeMillis();
-    }
-
-    private void stop() {
-        endTime = System.currentTimeMillis();
-    }
-
-    private double time(double start, double end) {
-        return (end - start) / 1000;
     }
 }

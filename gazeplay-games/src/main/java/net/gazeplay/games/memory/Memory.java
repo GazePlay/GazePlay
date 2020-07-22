@@ -27,12 +27,6 @@ public class Memory implements GameLifeCycle {
         LETTERS, NUMBERS, DEFAULT
     }
 
-    private boolean limiterS;
-    private boolean limiterT;
-    private long startTime = 0;
-    private long endTime = 0;
-    private boolean limiteUsed;
-
     @Data
     @AllArgsConstructor
     public static class RoundDetails {
@@ -75,9 +69,7 @@ public class Memory implements GameLifeCycle {
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.stats = stats;
-        this.limiterS = gameContext.getConfiguration().isLimiterS();
-        this.limiterT = gameContext.getConfiguration().isLimiterT();
-        this.limiteUsed = false;
+        this.gameContext.startTimeLimiter();
 
         if (gameType == MemoryGameType.LETTERS) {
             this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters");
@@ -91,7 +83,7 @@ public class Memory implements GameLifeCycle {
                 Utils.getImagesSubdirectory("default"));
         }
 
-        start();
+        gameContext.start();
 
     }
 
@@ -111,7 +103,7 @@ public class Memory implements GameLifeCycle {
 
     @Override
     public void launch() {
-        limiteUsed = false;
+        gameContext.setLimiterAvailable();
         final Configuration config = gameContext.getConfiguration();
         final int cardsCount = nbColumns * nbLines;
 
@@ -224,33 +216,4 @@ public class Memory implements GameLifeCycle {
         return nbRemainingPeers;
     }
 
-    void updateScore() {
-
-        if (limiterS && !limiteUsed) {
-            if (stats.getNbGoalsReached() / ((nbLines * nbColumns) / 2) == gameContext.getConfiguration().getLimiterScore()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                limiteUsed = true;
-            }
-        }
-        if (limiterT && !limiteUsed) {
-            stop();
-            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                limiteUsed = true;
-            }
-        }
-
-    }
-
-    private void start() {
-        startTime = System.currentTimeMillis();
-    }
-
-    private void stop() {
-        endTime = System.currentTimeMillis();
-    }
-
-    private double time(double start, double end) {
-        return (end - start) / 1000;
-    }
 }

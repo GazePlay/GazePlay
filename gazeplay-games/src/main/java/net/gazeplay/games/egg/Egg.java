@@ -39,8 +39,6 @@ public class Egg extends Parent {
     private Timeline timelineProgressBar;
     private final Stats stats;
 
-    private EggGame eggGame;
-
     private final EventHandler<Event> enterEvent;
 
     public Egg(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext, final Stats stats,
@@ -74,8 +72,6 @@ public class Egg extends Parent {
         this.fixationlength = fixationlength;
 
         this.gameInstance = gameInstance;
-
-        this.eggGame = gameInstance;
 
         this.getChildren().add(cards);
 
@@ -111,8 +107,6 @@ public class Egg extends Parent {
 
                 if (turnNumber < totalNumberOfTurns) {
 
-                    eggGame.updateScore();
-
                     progressIndicator.setOpacity(0.5);
                     progressIndicator.setProgress(0);
 
@@ -122,8 +116,6 @@ public class Egg extends Parent {
                         new KeyValue(progressIndicator.progressProperty(), 1)));
 
                     timelineProgressBar.setOnFinished(actionEvent -> {
-
-                        log.info("enter in the image 3");
 
                         if (turnNumber < totalNumberOfTurns - 1) {
                             stats.incrementNumberOfGoalsReached();
@@ -148,6 +140,8 @@ public class Egg extends Parent {
                             final PauseTransition t = new PauseTransition(Duration.seconds(2));
 
                             t.setOnFinished(actionEvent1 -> {
+
+                                gameContext.updateScore(stats,gameInstance);
 
                                 gameContext.playWinTransition(0, event -> {
                                     gameInstance.dispose();

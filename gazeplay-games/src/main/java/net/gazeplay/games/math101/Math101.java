@@ -53,12 +53,6 @@ public class Math101 implements GameLifeCycle {
 
     private RoundDetails currentRoundDetails;
 
-    private boolean limiterS;
-    private boolean limiterT;
-    private long startTime = 0;
-    private long endTime = 0;
-    private boolean limiteUsed;
-
     public Math101(final MathGameType gameType, final IGameContext gameContext, final MathGameVariant gameVariant, final Stats stats) {
         super();
         this.gameType = gameType;
@@ -69,9 +63,8 @@ public class Math101 implements GameLifeCycle {
         this.nbColumns = 3;
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.targetAOIList = new ArrayList<>();
-        this.limiterS = gameContext.getConfiguration().isLimiterS();
-        this.limiterT = gameContext.getConfiguration().isLimiterT();
-        this.limiteUsed = false;
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
     }
 
     private static Formula generateRandomFormula(final MathGameType gameType, final int maxValue) {
@@ -154,7 +147,7 @@ public class Math101 implements GameLifeCycle {
 
     @Override
     public void launch() {
-        limiteUsed = false;
+        gameContext.setLimiterAvailable();
         final Formula formula = generateRandomFormula(gameType, maxValue);
 
         final Text question = createQuestionText(formula);
@@ -208,9 +201,7 @@ public class Math101 implements GameLifeCycle {
 
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
-        if(startTime==0){
-            start();
-        }
+        gameContext.firstStart();
     }
 
     private ArrayList<TargetAOI> getTargetAOIList() {
@@ -365,34 +356,4 @@ public class Math101 implements GameLifeCycle {
     private static double computePositionY(final double cardboxHeight, final double cardHeight, final int rowIndex) {
         return (cardboxHeight - cardHeight) / 2 + (rowIndex * cardboxHeight) / zoom_factor;
     }
-
-    void updateScore() {
-        if (limiterS && !limiteUsed) {
-            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                limiteUsed = true;
-            }
-        }
-        if (limiterT && !limiteUsed) {
-            stop();
-            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                startTime=0;
-                limiteUsed = true;
-            }
-        }
-    }
-
-    private void start() {
-        startTime = System.currentTimeMillis();
-    }
-
-    private void stop() {
-        endTime = System.currentTimeMillis();
-    }
-
-    private double time(double start, double end) {
-        return (end - start) / 1000;
-    }
-
 }

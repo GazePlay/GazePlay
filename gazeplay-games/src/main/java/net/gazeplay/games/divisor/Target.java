@@ -42,12 +42,9 @@ class Target extends Parent {
     private final EventHandler<Event> enterEvent;
     private final IGameContext gameContext;
     private final Divisor gameInstance;
-    private final long startTime;
-    private long endTime;
-    private boolean limiterT;
-    private boolean limiteUsed;
     private final Dimension2D dimension;
     private final boolean isRabbit;
+    private final long startTime;
 
     @Getter
     private final ImageLibrary imgLib;
@@ -68,8 +65,6 @@ class Target extends Parent {
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.radius = 200d / (level + 1);
         this.timeline = new Timeline();
-        this.limiterT = gameContext.getConfiguration().isLimiterT();
-        this.limiteUsed = false;
 
         this.circle = new Circle(pos.getX(), pos.getY(), this.radius);
         this.circle.setFill(new ImagePattern(this.imgLib.pickRandomImage(), 0, 0, 1, 1, true));
@@ -145,7 +140,6 @@ class Target extends Parent {
         if (level < difficulty) {
             createChildren(x, y);
         }
-        updateScore();
     }
 
     private void explodeAnimation(final double x, final double y) {
@@ -171,30 +165,34 @@ class Target extends Parent {
 
         timelineParticle.setOnFinished(actionEvent -> {
             Target.this.gameContext.getChildren().removeAll(particles);
-            if (stats.getNbGoalsReached() == stats.getNbGoalsToReach()) {
-                final long totalTime = (System.currentTimeMillis() - startTime) / 1000;
-                final Label l = new Label("Score : " + totalTime + "s");
-                final Color color = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
-                    @Override
-                    public Color visitLight() {
-                        return Color.BLACK;
-                    }
 
-                    @Override
-                    public Color visitDark() {
-                        return Color.WHITE;
-                    }
-                });
-                l.setTextFill(color);
-                l.setFont(Font.font(50));
-                l.setLineSpacing(10);
-                l.setLayoutX(15);
-                l.setLayoutY(14);
-                gameContext.getChildren().add(l);
-                gameContext.playWinTransition(30, actionEvent1 -> gameInstance.restart());
-            }
         });
         timelineParticle.play();
+
+        if (stats.getNbGoalsReached() == stats.getNbGoalsToReach()) {
+            final long totalTime = (System.currentTimeMillis() - startTime) / 1000;
+            final Label l = new Label("Score : " + totalTime + "s");
+            final Color color = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+                @Override
+                public Color visitLight() {
+                    return Color.BLACK;
+                }
+
+                @Override
+                public Color visitDark() {
+                    return Color.WHITE;
+                }
+            });
+            l.setTextFill(color);
+            l.setFont(Font.font(50));
+            l.setLineSpacing(10);
+            l.setLayoutX(15);
+            l.setLayoutY(14);
+            gameContext.getChildren().add(l);
+
+            gameContext.updateScore(stats,gameInstance);
+            gameContext.playWinTransition(0, actionEvent1 -> gameInstance.restart());
+        }
     }
 
     private void createChildren(final double x, double y) {
@@ -209,8 +207,6 @@ class Target extends Parent {
             }
             gameContext.getChildren().add(target);
         }
-        stats.incrementNumberOfGoalsToReach();
-        stats.incrementNumberOfGoalsToReach();
     }
 
     private int randomDirection() {
@@ -250,25 +246,4 @@ class Target extends Parent {
         gameContext.getGazeDeviceManager().addEventFilter(this);
     }
 
-    private void updateScore() {
-        if (limiterT && !limiteUsed) {
-            stop();
-            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, gameInstance));
-                limiteUsed = true;
-            }
-        }
-    }
-
-    private void stop() {
-        endTime = System.currentTimeMillis();
-    }
-
-    private double time(double start, double end) {
-        return (end - start) / 1000;
-    }
-
-    public void setLimiteUsed(boolean limit) {
-        limiteUsed = limit;
-    }
 }

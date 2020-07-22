@@ -96,14 +96,12 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     @Setter
     private ProgressButton[] buttons;
 
-    private boolean limiterS;
-
     CakeFactory(final IGameContext gameContext, final Stats stats, final CakeGameVariant variant) {
         this.gameContext = gameContext;
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.debug("dimension2D = {}", dimension2D);
         this.stats = stats;
-        this.limiterS = gameContext.getConfiguration().isLimiterS();
+        this.gameContext.startTimeLimiter();
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2;
         buttonSize = dimension2D.getWidth() / 8;
@@ -231,11 +229,13 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             final FadeTransition ft = new FadeTransition(Duration.millis(500), randomCake);
             ft.setToValue(1);
             ft.setOnFinished(actionEvent -> {
+                gameContext.updateScore(stats,this);
                 playWin();
             });
             ft.play();
         } else {
             stats.incrementNumberOfGoalsReached();
+            gameContext.updateScore(stats,this);
             playWin();
         }
     }
@@ -261,13 +261,11 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             gameContext.getGazeDeviceManager().clear();
 
             gameContext.clear();
-            if (limiterS) {
-                gameContext.showRoundStats(stats, this);
-            } else {
-                launch();
 
-                gameContext.onGameStarted();
-            }
+            launch();
+
+            gameContext.onGameStarted();
+
         });
     }
 
@@ -612,6 +610,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
         gameContext.getChildren().add(this);
 
         for (int i = 0; i < 3; i++) {
@@ -635,6 +634,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
         this.gameContext.resetBordersToFront();
         stats.notifyNewRoundReady();
+        this.gameContext.firstStart();
     }
 
     @Override

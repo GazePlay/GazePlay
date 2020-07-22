@@ -27,10 +27,12 @@ public class Divisor implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         this.isRabbit = isRabbit;
+        this.gameContext.startTimeLimiter();
     }
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
         final Target target;
         final ImageLibrary imageLibrary;
 
@@ -43,13 +45,14 @@ public class Divisor implements GameLifeCycle {
             imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"));
         }
 
-         target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
+        this.stats.notifyNewRoundReady();
+        stats.incrementNumberOfGoalsToReach(15);
+
+         target = new Target(gameContext, stats, imageLibrary, 0,System.currentTimeMillis(), this,
             this.gameContext.getRandomPositionGenerator().newRandomPosition(100), isRabbit);
 
         gameContext.getChildren().add(target);
-        target.setLimiteUsed(false);
-        this.stats.notifyNewRoundReady();
-        stats.incrementNumberOfGoalsToReach();
+        gameContext.firstStart();
     }
 
     private void initBackground() {
@@ -76,6 +79,8 @@ public class Divisor implements GameLifeCycle {
 
     public void restart() {
         this.dispose();
+        //this.launch();
+        //gameContext.onGameStarted();
         gameContext.showRoundStats(stats, this);
     }
 

@@ -44,16 +44,10 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     private int level;
 
-    private boolean limiterT;
-    private long startTime = 0;
-    private long endTime = 0;
-    private boolean limiteUsed;
-
     public RushHour(final IGameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
-        this.limiterT = gameContext.getConfiguration().isLimiterT();
-        this.limiteUsed = false;
+        this.gameContext.startTimeLimiter();
         level = 0;
         size = new SimpleIntegerProperty();
         gameContext.getPrimaryStage().widthProperty().addListener((observable, oldValue, newValue) -> {
@@ -73,7 +67,6 @@ public class RushHour extends Parent implements GameLifeCycle {
 
 
         ground = new Rectangle(); // to avoid NullPointerException
-        start();
     }
 
     private void setLevel(final int i) {
@@ -2429,7 +2422,7 @@ public class RushHour extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
         endOfGame = false;
-        limiteUsed = false;
+        gameContext.setLimiterAvailable();
         setLevel(level);
         if (toWin.isDirection()) {
             toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiH.png")));
@@ -2440,6 +2433,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         final int numberLevels = 33;
         level = (level + 1) % numberLevels;
         stats.notifyNewRoundReady();
+        gameContext.firstStart();
     }
 
     @Override
@@ -2464,8 +2458,11 @@ public class RushHour extends Parent implements GameLifeCycle {
     private void win () {
         endOfGame = true;
         stats.incrementNumberOfGoalsReached();
+
+        gameContext.updateScore(stats, this);
         gameContext.playWinTransition(500, actionEvent -> {
-            updateScore();
+            dispose();
+            launch();
         });
     }
 
@@ -2539,33 +2536,4 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         p.getChildren().addAll(up, down, left, right, door);
     }
-
-    private void updateScore() {
-        if (limiterT && !limiteUsed) {
-            stop();
-            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                limiteUsed = false;
-            } else {
-                dispose();
-                launch();
-            }
-        } else {
-            dispose();
-            launch();
-        }
-    }
-
-    private void start() {
-        startTime = System.currentTimeMillis();
-    }
-
-    private void stop() {
-        endTime = System.currentTimeMillis();
-    }
-
-    private double time(double start, double end) {
-        return (end - start) / 1000;
-    }
-
 }

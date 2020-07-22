@@ -135,18 +135,21 @@ public class Card extends Parent {
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
             new KeyValue(card.yProperty(), (dimension2D.getHeight() - card.getHeight() * finalZoom) / 2)));
 
-        gameInstance.updateScore();
+        currentTimeline.onFinishedProperty().set(actionEvent ->
+        {
 
-        currentTimeline.onFinishedProperty().set(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
+            gameContext.updateScore(stats,gameInstance);
+            gameContext.playWinTransition(500, actionEvent1 -> {
 
-            gameInstance.dispose();
+                gameInstance.dispose();
 
-            gameContext.clear();
+                gameContext.clear();
 
-            gameInstance.launch();
+                gameInstance.launch();
 
-            gameContext.onGameStarted();
-        }));
+                gameContext.onGameStarted();
+            });
+        });
 
         currentTimeline.play();
     }

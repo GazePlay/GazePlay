@@ -62,20 +62,15 @@ public class Shooter extends Parent implements GameLifeCycle {
     private EventHandler<Event> enterEvent;
     private EventHandler<GazeEvent> handEventGaze;
 
-    private boolean limiterS;
-    private boolean limiterT;
-    private long startTime = 0;
-    private long endTime = 0;
-    private boolean limiteUsed;
+    final SequentialTransition st = new SequentialTransition();
 
     // done
     public Shooter(final IGameContext gameContext, final Stats stats, final String type) {
         this.gameContext = gameContext;
         this.stats = stats;
-        this.limiterS = gameContext.getConfiguration().isLimiterS();
-        this.limiterT = gameContext.getConfiguration().isLimiterT();
         final LocalDate localDate = LocalDate.now();
-        this.limiteUsed = false;
+        this.gameContext.startScoreLimiter();
+        this.gameContext.startTimeLimiter();
         date = DateTimeFormatter.ofPattern("d MMMM uuuu ").format(localDate);
         score = 0;
         gameType = type;
@@ -166,15 +161,11 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     public boolean moveCage(final Boolean leftside) {
 
-        final double min = Math.ceil(0);
-        final double max = Math.floor(2);
-        final int rd = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
+        final int rd = (int) (Math.floor(Math.random() * 3));
 
         boolean leftorright = false;
 
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final double x = cage.getBoundsInParent().getMinY();
-        final double y = cage.getBoundsInParent().getMinX();
 
         final Timeline timeline = new Timeline();
         final Timeline timeline2 = new Timeline();
@@ -183,12 +174,11 @@ public class Shooter extends Parent implements GameLifeCycle {
         if ((rd == 2) || (rd == 0)) {
             // Move UP
             timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),
-                new KeyValue(cage.layoutYProperty(), x - (dimension2D.getHeight() / 5), Interpolator.EASE_OUT)));
+                new KeyValue(cage.translateYProperty(),  -(dimension2D.getHeight() / 5), Interpolator.EASE_OUT)));
         }
 
         if ((rd == 1) || (rd == 2)) {
             // Move Left or Right
-            final double val;
 
             final double cst;
             if (gameType.equals("biboule")) {
@@ -197,33 +187,33 @@ public class Shooter extends Parent implements GameLifeCycle {
                 cst = 3;
             }
 
-            if (leftside) {
-                val = y + (dimension2D.getWidth() / cst);
-            } else {
-                val = y - (dimension2D.getWidth() / cst);
+            double val = (dimension2D.getWidth() / cst);
+
+            if (!leftside) {
+                val = 0;
             }
 
             timeline3.getKeyFrames().add(
-                new KeyFrame(new Duration(3000), new KeyValue(cage.layoutXProperty(), val, Interpolator.EASE_OUT)));
+                new KeyFrame(new Duration(3000), new KeyValue(cage.translateXProperty(), val, Interpolator.EASE_OUT)));
             leftorright = true;
         }
 
         if ((rd == 2) || (rd == 0)) {
             // Move DOWN
             timeline2.getKeyFrames().add(
-                new KeyFrame(new Duration(500), new KeyValue(cage.layoutYProperty(), x, Interpolator.EASE_OUT)));
+                new KeyFrame(new Duration(500), new KeyValue(cage.translateYProperty(), 0, Interpolator.EASE_OUT)));
         }
-        final SequentialTransition st = new SequentialTransition();
         st.getChildren().addAll(timeline, timeline3, timeline2);
         st.play();
 
-        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> {
-            st.stop();
-            updateCage();
-            left = true;
-        });
-
         return leftorright;
+    }
+
+    public void clearTransition(){
+        st.stop();
+        st.getChildren().clear();
+        cage.setTranslateX(0);
+        cage.setTranslateY(0);
     }
 
     public void updateHand() {
@@ -280,7 +270,7 @@ public class Shooter extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
 
-        limiteUsed = false;
+        this.gameContext.setLimiterAvailable();
         score = 0;
         this.getChildren().clear();
 
@@ -328,8 +318,6 @@ public class Shooter extends Parent implements GameLifeCycle {
                 }
             }
         };
-
-        start();
 
         final Label sc = new Label();
         final Label tc = new Label();
@@ -401,12 +389,16 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> {
             updateScore(sc, tc);
+            clearTransition();
             updateCage();
+            left = true;
             updateHand();
         });
         gameContext.getRoot().heightProperty().addListener((observable, oldValue, newValue) -> {
             updateScore(sc, tc);
+            clearTransition();
             updateCage();
+            left = true;
             updateHand();
         });
 
@@ -427,7 +419,8 @@ public class Shooter extends Parent implements GameLifeCycle {
         waitbeforestart.play();
 
         stats.notifyNewRoundReady();
-
+        this.gameContext.start();
+        clearTransition();
     }
 
     // done
@@ -469,7 +462,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         } else {// equals robot
             cst = "" + score++;
         }
-        updateScore();
+        gameContext.updateScore(stats,this);
 
         text.setText(cst);
 
@@ -651,32 +644,4 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     }
 
-    private void updateScore() {
-        if (limiterS && !limiteUsed) {
-            if (stats.getNbGoalsReached() == gameContext.getConfiguration().getLimiterScore()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                limiteUsed = true;
-            }
-        }
-        if (limiterT && !limiteUsed) {
-            stop();
-            if (time(startTime, endTime) >= gameContext.getConfiguration().getLimiterTime()) {
-                gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-                limiteUsed = true;
-            }
-        }
-
-    }
-
-    private void start() {
-        startTime = System.currentTimeMillis();
-    }
-
-    private void stop() {
-        endTime = System.currentTimeMillis();
-    }
-
-    private double time(double start, double end) {
-        return (end - start) / 1000;
-    }
 }
