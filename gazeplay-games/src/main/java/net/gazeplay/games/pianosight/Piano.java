@@ -1,6 +1,7 @@
 package net.gazeplay.games.pianosight;
 
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -59,19 +60,19 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private static final int[] NOTE_NAMES = {0, 7, 1, 9, 2, 3, 10, 4, 11, 5, 13, 6};
 
-    private final double centerX;
-    private final double centerY;
+    private double centerX;
+    private double centerY;
 
     private Circle circ;
     private Circle circleTemp;
-    private final List<Tile> tilesTab;
-    private final Jukebox jukebox;
+    private List<Tile> tilesTab;
+    private Jukebox jukebox;
 
     private final Stats stats;
 
     private final IGameContext gameContext;
 
-    private final List<ImageView> fragments;
+    private List<ImageView> fragments;
     private float bpm = 120;
 
     long lastNote = -1;
@@ -96,14 +97,6 @@ public class Piano extends Parent implements GameLifeCycle {
     public Piano(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        centerX = dimension2D.getWidth() / 2;
-        centerY = dimension2D.getHeight() / 2.2;
-        this.fragments = buildFragments();
-        this.getChildren().addAll(fragments);
-        tilesTab = new ArrayList<>();
-        gameContext.getChildren().add(this);
-        jukebox = new Jukebox(gameContext);
     }
 
     private List<ImageView> buildFragments() {
@@ -279,6 +272,15 @@ public class Piano extends Parent implements GameLifeCycle {
         this.gameContext.resetBordersToFront();
 
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        centerX = dimension2D.getWidth() / 2;
+        centerY = dimension2D.getHeight() / 2.2;
+        this.fragments = buildFragments();
+        jukebox = new Jukebox(gameContext);
+
+        tilesTab = new ArrayList<>();
+        this.getChildren().addAll(fragments);
+        gameContext.getChildren().add(this);
+
         circ = new Circle(centerX, centerY, dimension2D.getHeight() / 4);
         circ.setFill(Color.RED);
         this.getChildren().add(circ);
@@ -449,6 +451,9 @@ public class Piano extends Parent implements GameLifeCycle {
             }
             player.sequencer.stop();
         }
+        gameContext.getChildren().clear();
+        gameContext.clear();
+        this.getChildren().clear();
     }
 
     private void createArc(final int index, final double angle, final Color color1, final Color color2, final double l, final double origin) {
@@ -512,6 +517,17 @@ public class Piano extends Parent implements GameLifeCycle {
 
     public void playTimeSlider(Circle circleTemp) {
         slider = new Slider();
+
+        slider.valueProperty().addListener((obj, oldval, newval) -> {
+            if(newval.doubleValue() == slider.getMax()) {
+                Platform.runLater(() ->
+                    gameContext.playWinTransition(0, e -> {
+                    dispose();
+
+                    gameContext.showRoundStats(stats, this);
+                }));
+            }
+        });
 
         slider.setMajorTickUnit(1);
         slider.setMinorTickCount(1);
