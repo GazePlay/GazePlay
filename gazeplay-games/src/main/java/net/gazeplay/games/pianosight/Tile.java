@@ -11,26 +11,17 @@ class Tile extends Parent {
     int note;
     EventHandler<Event> tileEventEnter;
     EventHandler<Event> tileEventExited;
-    Color color1;
-    //Color color2;
+    Color mainColor;
 
     final Shape arc;
 
-    Tile(
-        double centerX,
-        double centerY,
-        double radiusX,
-        double radiusY,
-        double startAngle,
-        double length,
-        Circle c
-    ) {
+    Tile( double centerX, double centerY, double radiusX, double radiusY, double startAngle, double length, Circle c ) {
         super();
-        //
-        Arc arcTemp = new Arc(centerX, centerY, radiusX, radiusY, startAngle, length);
-        arcTemp.setType(ArcType.ROUND);
-        //
-        arc = Shape.subtract(arcTemp, c);
+
+        Arc arcToSubtract = new Arc(centerX, centerY, radiusX, radiusY, startAngle, length);
+        arcToSubtract.setType(ArcType.ROUND);
+
+        arc = Shape.subtract(arcToSubtract, c);
         arc.setStroke(Color.BLACK);
         arc.setStrokeLineJoin(StrokeLineJoin.ROUND);
         arc.setStrokeType(StrokeType.CENTERED);

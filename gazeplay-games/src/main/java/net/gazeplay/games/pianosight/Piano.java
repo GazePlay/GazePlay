@@ -1,16 +1,25 @@
 package net.gazeplay.games.pianosight;
 
 import javafx.animation.*;
+import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
@@ -19,51 +28,75 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.io.File;
-import java.io.FileInputStream;
+import javax.sound.midi.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+class CustomPair {
+    public CustomPair(int key, int value) {
+        this.key = key;
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        if (key == -1) {
+            return "select all";
+        }
+        return "channel " + key + " (" + value + ")";
+    }
+
+    public int key;
+    public int value;
+}
+
 @Slf4j
 public class Piano extends Parent implements GameLifeCycle {
 
-    private static final int[] NOTE_NAMES = {0, 7, 1, 8, 2, 3, 9, 4, 10, 5, 11, 6};
+    private static final int[] NOTE_NAMES = {0, 7, 1, 9, 2, 3, 10, 4, 11, 5, 13, 6};
 
-    private final double centerX;
-    private final double centerY;
-
-    private int firstNote;
+    private double centerX;
+    private double centerY;
 
     private Circle circ;
     private Circle circleTemp;
-    private final List<Tile> tilesTab;
-    private final Jukebox jukebox;
+    private List<Tile> tilesTab;
+    private Jukebox jukebox;
 
     private final Stats stats;
 
     private final IGameContext gameContext;
 
-    private final Instru instru;
+    private List<ImageView> fragments;
+    private float bpm = 120;
 
-    private MidiReader midiReader;
+    long lastNote = -1;
+    MidiSequencerPlayer player;
+    private Sequence sequence;
+    ObjectProperty<Note> noteProperty;
 
-    private final List<ImageView> fragments;
+    GridPane choiceBoxes;
+    BorderPane topBar = new BorderPane();
+    Slider slider;
+
+    ChangeListener<Number> sliderListener = (obj, oldval, newval) -> {
+        if (slider.isHover()) {
+            player.pianoReceiver.isSliderInUse = true;
+            player.sequencer.setTickPosition(newval.longValue());
+            player.pianoReceiver.previousTick = newval.longValue() - 1;
+            player.pianoReceiver.currentTickProperty.setValue(newval.longValue());
+            player.pianoReceiver.isSliderInUse = false;
+        }
+    };
 
     public Piano(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        centerX = dimension2D.getWidth() / 2;
-        centerY = dimension2D.getHeight() / 2.2;
-        this.fragments = buildFragments();
-        this.getChildren().addAll(fragments);
-        tilesTab = new ArrayList<>();
-        instru = new Instru();
-        gameContext.getChildren().add(this);
-        jukebox = new Jukebox(gameContext);
     }
 
     private List<ImageView> buildFragments() {
@@ -143,36 +176,94 @@ public class Piano extends Parent implements GameLifeCycle {
 
     }
 
-    private void loadMusic(final boolean b) throws IOException {
+    private void loadMusic(final boolean b) throws IOException, InvalidMidiDataException {
+
         if (b) {
             final String fileName = jukebox.getS();
             if (fileName == null) {
                 return;
             }
             log.info("you loaded the song : " + fileName);
-            final File f = new File(fileName);
-            try (InputStream inputStream = new FileInputStream(f)) {
-                loadMusicStream(inputStream);
+            player.stop();
+            try (InputStream inputStream = Files.newInputStream(Paths.get(fileName))) {
+                slider.valueProperty().removeListener(sliderListener);
+                sequence = MidiSystem.getSequence(inputStream);
+                bpm = 120;
+                updateChoiceBox();
+                player.pianoReceiver.initPianoReceiverParameters();
+                ((CheckBox) choiceBoxes.getChildren().get(0)).setSelected(true);
+                player.pianoReceiver.isChangingSequence = true;
+                player.sequencer.setSequence(sequence);
+                player.pianoReceiver.isChangingSequence = false;
+                player.setTempo(bpm);
+                player.start();
+                resetSlider(slider, player.sequencer.getTickLength());
             }
         } else {
             final String fileName = "RIVER.mid";
             log.info("you loaded the song : " + fileName);
-            try (InputStream inputStream = Utils.getInputStream("data/pianosight/songs/" + fileName)) {
-                loadMusicStream(inputStream);
+            try (InputStream inputStream = Utils.getInputStream("data/pianosight/songs/" +fileName)) {
+                sequence = MidiSystem.getSequence(inputStream);
+                updateChoiceBox();
             }
         }
     }
 
-    private void loadMusicStream(final InputStream inputStream) {
-        midiReader = new MidiReader(inputStream, stats);
-        stats.incrementNumberOfGoalsToReach(midiReader.getTrackSize());
-        firstNote = midiReader.nextNote();
-        for (final Tile tile : tilesTab) {
-            tile.arc.setFill(tile.color1);
+    public void updateSelectedChoiceBox() {
+        int i = 2;
+        boolean allSelected = true;
+        while (i < choiceBoxes.getChildren().size()) {
+            allSelected = allSelected && ((CheckBox) choiceBoxes.getChildren().get(i)).isSelected();
+            i++;
+        }
+        ((CheckBox) choiceBoxes.getChildren().get(0)).setSelected(allSelected);
+    }
+
+    public void updateChoiceBox() {
+        choiceBoxes.getChildren().clear();
+
+        int[] count = new int[16];
+        int sum = 0;
+        for (int i = 0; i < sequence.getTracks().length; i++) {
+            for (int j = 0; j < sequence.getTracks()[i].size(); j++) {
+                if (sequence.getTracks()[i].get(j).getMessage() instanceof ShortMessage) {
+                    count[((ShortMessage) sequence.getTracks()[i].get(j).getMessage()).getChannel()]++;
+                    sum++;
+                } else if (sequence.getTracks()[i].get(j).getMessage() instanceof MetaMessage) {
+                    MetaMessage mm = (MetaMessage) sequence.getTracks()[i].get(j).getMessage();
+                    if (mm.getType() == 0x51) {
+                        byte[] data = mm.getData();
+                        int tempo = (data[0] & 0xff) << 16 | (data[1] & 0xff) << 8 | (data[2] & 0xff);
+                        bpm = 60000000.f / tempo;
+                    }
+                }
+            }
         }
 
-        if (firstNote != -1) {
-            tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
+        CustomPair defautPair = new CustomPair(-1, sum);
+        CheckBox selectAllButton = new CheckBox(defautPair.toString());
+
+        choiceBoxes.addRow(0);
+        choiceBoxes.add(selectAllButton, 0, 0);
+        selectAllButton.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
+            if (newvalue) {
+                for (int i = 1; i < choiceBoxes.getChildren().size(); i++) {
+                    ((CheckBox) choiceBoxes.getChildren().get(i)).setSelected(true);
+                }
+            }
+        });
+
+        for (int i = 0; i < 16; i++) {
+            if (count[i] != 0) {
+                CustomPair cp = new CustomPair(i, count[i]);
+                CheckBox button = new CheckBox(cp.toString());
+                int channelIndex = i;
+                button.selectedProperty().addListener((observable, oldvalue, newvalue) -> {
+                    player.setChannel(channelIndex, newvalue);
+                    updateSelectedChoiceBox();
+                });
+                choiceBoxes.addRow(choiceBoxes.getChildren().size(), button);
+            }
         }
     }
 
@@ -181,12 +272,20 @@ public class Piano extends Parent implements GameLifeCycle {
         this.gameContext.resetBordersToFront();
 
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        centerX = dimension2D.getWidth() / 2;
+        centerY = dimension2D.getHeight() / 2.2;
+        this.fragments = buildFragments();
+        jukebox = new Jukebox(gameContext);
+
+        tilesTab = new ArrayList<>();
+        this.getChildren().addAll(fragments);
+        gameContext.getChildren().add(this);
+
         circ = new Circle(centerX, centerY, dimension2D.getHeight() / 4);
-        circ.setFill(Color.BLACK);
+        circ.setFill(Color.RED);
         this.getChildren().add(circ);
 
         circleTemp = new Circle(centerX, centerY, dimension2D.getHeight() / 5);
-        circleTemp.setFill(Color.BLACK);
         circleTemp.setStroke(Color.BLACK);
         circleTemp.setStrokeWidth(10);
         circleTemp.setOpacity(0);
@@ -194,43 +293,47 @@ public class Piano extends Parent implements GameLifeCycle {
 
         createArcs();
 
+        noteProperty = new SimpleObjectProperty<Note>();
+        noteProperty.setValue(new Note(-1, -1, -1));
+        noteProperty.addListener((o, oldVal, newVal) -> {
+            if (!newVal.equals(new Note(-1, -1, -1))) {
+                if(!player.pianoReceiver.autoPlay){
+                    player.stop();
+                }
+                int firstNote = newVal.key % 12;
+
+                for (final Tile tile : tilesTab) {
+                    tile.arc.setFill(tile.mainColor);
+                }
+                circleTemp.setFill(Color.BLACK);
+                circleTemp.setOpacity(0);
+                if (firstNote == lastNote) {
+                    circleTemp.setFill(Color.YELLOW);
+                    circleTemp.setOpacity(1);
+                    lastNote = -1;
+                } else {
+                    log.info("The note was {} and the name is {}", firstNote, NOTE_NAMES[firstNote]);
+                    tilesTab.get(NOTE_NAMES[firstNote]).arc.setFill(Color.YELLOW);
+                    lastNote = firstNote;
+                }
+
+            }
+        });
+
+        circleTemp.setFill(Color.YELLOW);
+        circleTemp.setOpacity(1);
+
         this.getChildren().remove(circ);
 
         final EventHandler<Event> circleEvent = e -> {
+            Color color2 = Color.BLACK;
             if (circleTemp.getFill() == Color.YELLOW) {
-                if (firstNote != -1) {
-                    final int precNote = firstNote;
-                    final int precKey = midiReader.getKey();
-
-                    final int index = midiReader.nextNote();
-                    if (index > -1) {
-                        firstNote = NOTE_NAMES[index];
-                    } else {
-                        firstNote = index;
-                    }
-
-                    instru.noteOn(precKey);
-                    stats.incrementNumberOfGoalsReached();
-
-                    if (firstNote != -1) {
-                        tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);
-                        circleTemp.setFill(Color.BLACK);
-                        circleTemp.setOpacity(0);
-                        if (firstNote != -1) {
-                            tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
-                        } else {
-                            tilesTab.get(firstNote).arc.setFill(tilesTab.get(precNote).color1);
-                        }
-
-                    } else {
-                        tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);
-                        circleTemp.setFill(Color.BLACK);
-                        circleTemp.setOpacity(0);
-                    }
-
-                }
+                triggerEvent(e);
+                circleTemp.setFill(color2);
+                circleTemp.setOpacity(0);
             }
         };
+
 
         circleTemp.addEventFilter(MouseEvent.MOUSE_ENTERED, circleEvent);
         circleTemp.addEventFilter(GazeEvent.GAZE_ENTERED, circleEvent);
@@ -239,124 +342,138 @@ public class Piano extends Parent implements GameLifeCycle {
         this.getChildren().addAll(this.tilesTab);
         this.getChildren().get(this.getChildren().indexOf(circleTemp)).toFront();
         final ImageView iv = new ImageView(new Image("data/pianosight/images/1.png"));
-        final Button b = new Button("Open", iv);
+        final Button openButton = new Button("Open", iv);
+        openButton.setOpacity(1);
 
-        b.setOpacity(1);
+        choiceBoxes = new GridPane();
+
+        BorderPane choiceBorderPane = new BorderPane();
+
+        Button menuButton = new Button("Menu");
+        menuButton.prefWidthProperty().bind(choiceBorderPane.widthProperty());
+        menuButton.setPrefHeight(50);
+
+        topBar.setTop(menuButton);
+        topBar.setCenter(openButton);
+        choiceBorderPane.setTop(new Text("Select channel(s) to play"));
+        choiceBorderPane.setCenter(choiceBoxes);
+        choiceBorderPane.getStyleClass().add("button");
+        topBar.setBottom(choiceBorderPane);
+        playTimeSlider(circleTemp);
 
         final Timeline buttonOpacityTimeline = new Timeline();
         buttonOpacityTimeline.getKeyFrames().add(
-            new KeyFrame(Duration.seconds(1), new KeyValue(b.opacityProperty(), 0.1, Interpolator.LINEAR)));
+            new KeyFrame(Duration.seconds(1), new KeyValue(topBar.getTop().opacityProperty(), 0.1, Interpolator.LINEAR)));
+        buttonOpacityTimeline.getKeyFrames().add(
+            new KeyFrame(Duration.seconds(1), new KeyValue(topBar.getCenter().opacityProperty(), 0, Interpolator.LINEAR)));
+        buttonOpacityTimeline.getKeyFrames().add(
+            new KeyFrame(Duration.seconds(1), new KeyValue(topBar.getBottom().opacityProperty(), 0, Interpolator.LINEAR)));
 
         buttonOpacityTimeline.setDelay(Duration.seconds(2));
         buttonOpacityTimeline.play();
 
-        b.setOnMouseEntered(evt -> {
-            b.setOpacity(1);
+        topBar.setOnMouseEntered(evt -> {
+            topBar.getTop().setOpacity(1);
+            topBar.getCenter().setOpacity(1);
+            topBar.getBottom().setOpacity(1);
         });
 
-        b.setOnMouseExited(evt -> {
-            b.setOpacity(0.1);
+        topBar.setOnMouseExited(evt -> {
+            topBar.getTop().setOpacity(0.1);
+            topBar.getCenter().setOpacity(0);
+            topBar.getBottom().setOpacity(0);
         });
 
-
-        b.setPrefWidth(dimension2D.getWidth() / 7);
-        b.setPrefHeight(dimension2D.getHeight() / 7);
+        openButton.prefWidthProperty().bind(choiceBorderPane.widthProperty());
+        openButton.setPrefHeight(20);
         iv.setPreserveRatio(true);
-        iv.setFitHeight(b.getPrefHeight());
-        // TODO add a replay button
-        b.setOnMousePressed(evt -> {
+        iv.setFitHeight(openButton.getPrefHeight());
+        openButton.setOnMousePressed(evt -> {
             try {
                 loadMusic(true);
-            } catch (final IOException e) {
-                // TODO Auto-generated catch block
+            } catch (final IOException | InvalidMidiDataException e) {
                 e.printStackTrace();
             }
         });
-        this.getChildren().add(b);
+
+        this.getChildren().add(topBar);
 
         try {
-
             loadMusic(false);
-
-        } catch (final IOException e) {
+        } catch (final IOException | InvalidMidiDataException e) {
             e.printStackTrace();
         }
         stats.notifyNewRoundReady();
+        circleTemp.setFill(Color.YELLOW);
+        circ.setFill(Color.YELLOW);
+        circleTemp.toFront();
+        circleTemp.setOpacity(1);
+
+        player = new MidiSequencerPlayer(sequence, noteProperty);
+        player.setTempo(bpm);
+        player.pianoReceiver.initPianoReceiverParameters();
+        ((CheckBox) choiceBoxes.getChildren().get(0)).setSelected(true);
+        resetSlider(slider, player.sequencer.getTickLength());
+    }
+
+    private void triggerEvent(Event e) {
+        player.start();
+        double x = 0;
+        double y = 0;
+        if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+            log.info("MOUSE");
+            final MouseEvent me = (MouseEvent) e;
+            x = me.getX();
+            y = me.getY();
+        } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+            log.info("GAZE");
+            final GazeEvent ge = (GazeEvent) e;
+            x = ge.getX();
+            y = ge.getY();
+        } else if (e.getEventType() == MouseEvent.MOUSE_CLICKED){
+            final MouseEvent me = (MouseEvent) e;
+            x = ((Button )me.getSource()).getLayoutX() + ((Button )me.getSource()).getPrefWidth()/2;
+            y = ((Button )me.getSource()).getLayoutY();
+
+        }
+        log.info("THIS IS {};{}", x, y);
+        explose(x, y);
     }
 
     @Override
     public void dispose() {
-
+        if (player != null) {
+            player.stop();
+            player.pianoReceiver = null;
+            for (Transmitter t : player.sequencer.getTransmitters()) {
+                t.getReceiver().close();
+                t.close();
+            }
+            player.sequencer.stop();
+        }
+        gameContext.getChildren().clear();
+        gameContext.clear();
+        this.getChildren().clear();
     }
 
     private void createArc(final int index, final double angle, final Color color1, final Color color2, final double l, final double origin) {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final double size = dimension2D.getHeight() / l;
         final double theta = ((index * 360d) / 7d - origin);
-        final Tile a3 = new Tile(centerX, centerY, size, size, theta, angle, circ);
-        a3.color1 = color1;
-        //a3.color2 = color2;
-        a3.arc.setFill(color1);
-        a3.arc.setStrokeWidth(10);
-        a3.setVisible(true);
+        final Tile createdTile = new Tile(centerX, centerY, size, size, theta, angle, circ);
+        createdTile.mainColor = color1;
+        createdTile.arc.setFill(color1);
+        createdTile.arc.setStrokeWidth(10);
+        createdTile.setVisible(true);
 
         final EventHandler<Event> tileEventEnter = e -> {
-
-            if (((Tile) e.getTarget()).note == firstNote) {
-
-                final int precNote = firstNote;
-                final int precKey = midiReader.getKey();
-
-                final int index1 = midiReader.nextNote();
-                if (index1 > -1) {
-                    firstNote = NOTE_NAMES[index1];
-                } else {
-                    firstNote = index1;
-                }
-
-                if (precNote != -1 && tilesTab.get(precNote).arc.getFill() == Color.YELLOW) {
-                    instru.noteOn(precKey);
-                    stats.incrementNumberOfGoalsReached();
-                    double x;
-                    double y;
-
-                    if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                        final MouseEvent me = (MouseEvent) e;
-                        x = me.getX();
-                        y = me.getY();
-                    } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                        final GazeEvent ge = (GazeEvent) e;
-                        x = ge.getX();
-                        y = ge.getY();
-                    } else {
-                        x = centerX + size * Math.cos(Math.toRadians(-theta));
-                        y = centerY + size * Math.sin(Math.toRadians(-theta));
-                        explose(x, y);
-                        final double theta1 = (((index1 + 1) * 360d) / 7d - origin);
-                        x = centerX + size * Math.cos(Math.toRadians(-theta1));
-                        y = centerY + size * Math.sin(Math.toRadians(-theta1));
-                    }
-                    explose(x, y);
-                    if (firstNote != -1) {
-                        if (tilesTab.get(firstNote).arc.getFill() == Color.YELLOW) {
-                            tilesTab.get(precNote).arc.setFill(color2);
-                            circleTemp.setFill(Color.YELLOW);
-                            circleTemp.setOpacity(1);
-                        } else {
-                            tilesTab.get(precNote).arc.setFill(color2);
-                            tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
-                        }
-
-                    } else {
-                        tilesTab.get(precNote).arc.setFill(color2);
-                    }
-                }
-
-            } else {
+            if (tilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == color1) {
                 tilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color2);
+            } else if (tilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == Color.YELLOW) {
+                tilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color1);
+                triggerEvent(e);
 
             }
-
         };
 
         final EventHandler<Event> tileEventExited = e -> {
@@ -364,26 +481,25 @@ public class Piano extends Parent implements GameLifeCycle {
             if (tilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == color2) {
                 tilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color1);
             }
-
         };
 
         if ((origin != 0) && (index == 8 || index == 12)) {
-            a3.setOpacity(0);
-            a3.setDisable(true);
+            createdTile.setOpacity(0);
+            createdTile.setDisable(true);
         }
 
-        a3.tileEventEnter = tileEventEnter;
-        a3.tileEventExited = tileEventExited;
+        createdTile.tileEventEnter = tileEventEnter;
+        createdTile.tileEventExited = tileEventExited;
 
-        a3.addEventFilter(MouseEvent.MOUSE_ENTERED, a3.tileEventEnter);
-        a3.addEventFilter(MouseEvent.MOUSE_EXITED, a3.tileEventExited);
-        a3.addEventFilter(GazeEvent.GAZE_ENTERED, a3.tileEventEnter);
-        a3.addEventFilter(GazeEvent.GAZE_EXITED, a3.tileEventExited);
-        a3.note = index;
+        createdTile.addEventFilter(MouseEvent.MOUSE_ENTERED, createdTile.tileEventEnter);
+        createdTile.addEventFilter(MouseEvent.MOUSE_EXITED, createdTile.tileEventExited);
+        createdTile.addEventFilter(GazeEvent.GAZE_ENTERED, createdTile.tileEventEnter);
+        createdTile.addEventFilter(GazeEvent.GAZE_EXITED, createdTile.tileEventExited);
+        createdTile.note = index;
 
-        gameContext.getGazeDeviceManager().addEventFilter(a3);
+        gameContext.getGazeDeviceManager().addEventFilter(createdTile);
 
-        tilesTab.add(index, a3);
+        tilesTab.add(index, createdTile);
     }
 
     private void createArcs() {
@@ -397,6 +513,62 @@ public class Piano extends Parent implements GameLifeCycle {
             createArc(i, angle, Color.BLACK, Color.DIMGREY.darker(), 2.7, -90 + (720d / 7d) + 2 * angle + angle / 2);
         }
 
+    }
+
+    public void playTimeSlider(Circle circleTemp) {
+        slider = new Slider();
+
+        slider.valueProperty().addListener((obj, oldval, newval) -> {
+            if(newval.doubleValue() == slider.getMax()) {
+                Platform.runLater(() ->
+                    gameContext.playWinTransition(0, e -> {
+                    dispose();
+
+                    gameContext.showRoundStats(stats, this);
+                }));
+            }
+        });
+
+        slider.setMajorTickUnit(1);
+        slider.setMinorTickCount(1);
+        slider.setShowTickMarks(false);
+        slider.setSnapToTicks(false);
+        slider.setBlockIncrement(1d);
+
+        double width = circleTemp.getRadius();
+        slider.setPrefWidth(width);
+        slider.setLayoutX(centerX - width / 2);
+
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        slider.setLayoutY(dimension2D.getHeight() - 50);
+        this.getChildren().add(slider);
+
+        Button autoPlayButton = new Button("AUTO");
+        autoPlayButton.setPrefWidth(width/2);
+        autoPlayButton.setLayoutX(centerX - width / 2 + width);
+        autoPlayButton.setLayoutY(dimension2D.getHeight() - 50);
+        autoPlayButton.setOnMouseClicked(e-> {
+            player.pianoReceiver.autoPlay = !player.pianoReceiver.autoPlay;
+            if(player.pianoReceiver.autoPlay){
+                triggerEvent(e);
+                autoPlayButton.setText("PAUSE");
+            } else {
+                autoPlayButton.setText("AUTO");
+            }
+        });
+        this.getChildren().add(autoPlayButton);
+
+    }
+
+    public void resetSlider(Slider slider, long max) {
+        slider.setMin(0);
+        slider.setMax(max);
+        slider.setValue(0);
+        player.pianoReceiver.currentTickProperty.addListener((obj, oldval, newval) -> {
+            slider.setValue(newval);
+        });
+
+        slider.valueProperty().addListener(sliderListener);
     }
 
 }
