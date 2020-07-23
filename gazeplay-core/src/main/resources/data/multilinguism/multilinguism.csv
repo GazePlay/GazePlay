@@ -242,8 +242,8 @@ MoreStatsSettings,,,更多统计设置,,,More Stats Settings,,Plus de Paramètre
 BetaSettings,,,测试设置,,,Beta Settings,,Paramètres en Beta,,,,,,,,,,,
 score,,,分数,,,score,,score,,,,,,,,,,,
 Time(seconds),,,时间(秒),,,Time(seconds),,Temps(secondes),,,,,,,,,,,
-Limiter Time,,,限制器时间,,,Limiter Time,,Limiteur de Temps,,,,,,,,,,,
-Limiter Score,,,限制器得分,,,Limiter Score,,Limiteur de Score,,,,,,,,,,,
+Limiter Time,,,时间限制器,,,Time Limiter,,Limiteur de Temps,,,,,,,,,,,
+Limiter Score,,,分数限制器,,,Score Limiter,,Limiteur de Score,,,,,,,,,,,
 
 toTop,,,从下到上,,,from bottom to top,,du bas vers le haut,,,,,,,,,,de abajo hacia arriba,
 toBottom,,,从上到下,,,from top to bottom,,du haut vers le bas,,,,,,,,,,de arriba hacia abajo,
