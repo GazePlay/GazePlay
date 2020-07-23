@@ -25,47 +25,46 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Slf4j
 public class Shooter extends Parent implements GameLifeCycle {
 
-    private static final int MAX_RADIUS = 70;
-    private static final int MIN_RADIUS = 30;
+
+    private static final Random random = new Random();
+
+    private static final double MIN_RADIUS = 30.d;
 
     private static final int MAX_TIME_LENGTH = 7;
     private static final int MIN_TIME_LENGTH = 4;
 
     private final IGameContext gameContext;
 
-    private final Image blue;
-    private final Image green;
-    private final Image yellow;
-    private final Image orange;
-    private final Image red;
-    private final Image flash;
+    private final Image[] targetFrames;
 
     private final String date;
     private Label text;
     private int score;
 
     private StackPane hand;
-    private final ImageView cage;
+    private final ImageView box;
 
-    private Boolean left;
+    private Boolean isOnLeftSide;
 
     private final String gameType;
 
     private final Stats stats;
 
-    private Point[] endPoints;
-
     private EventHandler<Event> enterEvent;
     private EventHandler<GazeEvent> handEventGaze;
 
-    final SequentialTransition st = new SequentialTransition();
+    private final SequentialTransition st = new SequentialTransition();
 
-    // done
-    public Shooter(final IGameContext gameContext, final Stats stats, final String type) {
+    private Timer minuteur;
+
+    Shooter(final IGameContext gameContext, final Stats stats, final String type) {
         this.gameContext = gameContext;
         this.stats = stats;
         final LocalDate localDate = LocalDate.now();
@@ -76,14 +75,15 @@ public class Shooter extends Parent implements GameLifeCycle {
         gameType = type;
         hand = new StackPane();
 
-        blue = new Image("data/" + gameType + "/images/Blue.png");
-        green = new Image("data/" + gameType + "/images/Green.png");
-        yellow = new Image("data/" + gameType + "/images/Yellow.png");
-        orange = new Image("data/" + gameType + "/images/Orange.png");
-        red = new Image("data/" + gameType + "/images/Red.png");
-        flash = new Image("data/" + gameType + "/images/Flash.png");
+        targetFrames = new Image[6];
+        targetFrames[0] = new Image("data/" + gameType + "/images/Blue.png");
+        targetFrames[1] = new Image("data/" + gameType + "/images/Green.png");
+        targetFrames[2] = new Image("data/" + gameType + "/images/Yellow.png");
+        targetFrames[3] = new Image("data/" + gameType + "/images/Orange.png");
+        targetFrames[4] = new Image("data/" + gameType + "/images/Red.png");
+        targetFrames[5] = new Image("data/" + gameType + "/images/Flash.png");
 
-        cage = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
+        box = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
 
     }
 
@@ -94,7 +94,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
         imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
 
-        double backgroundStyleCoef = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Double>() {
+        double backgroundDefaultOpacity = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<>() {
             @Override
             public Double visitLight() {
                 return 0.5;
@@ -105,115 +105,84 @@ public class Shooter extends Parent implements GameLifeCycle {
                 return 1.d;
             }
         });
-        int isBackgroundEnabled = (gameContext.getConfiguration().isBackgroundEnabled()) ? 1 : 0;
-        imageRectangle.setOpacity(isBackgroundEnabled * backgroundStyleCoef);
+        double finalOpacity = (gameContext.getConfiguration().isBackgroundEnabled()) ? backgroundDefaultOpacity : 0.d;
+        imageRectangle.setOpacity(finalOpacity);
 
         gameContext.getChildren().add(imageRectangle);
 
         return imageRectangle;
     }
 
-    private void updatePoints(final Rectangle rectangle) {
-
-        endPoints[1].y = rectangle.getHeight();
-
-        endPoints[2].x = rectangle.getWidth() / 2;
-        endPoints[2].y = rectangle.getHeight();
-
-        endPoints[3].x = rectangle.getWidth();
-
-        endPoints[4].x = rectangle.getWidth();
-        endPoints[4].y = rectangle.getHeight() / 2;
-
-        endPoints[5].y = rectangle.getHeight() / 2;
-
-        endPoints[6].x = rectangle.getWidth() / 2;
-
-        endPoints[7].x = rectangle.getWidth();
-        endPoints[7].y = rectangle.getHeight();
-    }
-
-    public float getAngle(final Point target) {
+    private float getAngle(final Point target) {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         float angle = (float) Math
             .toDegrees(Math.atan2(target.x - (dimension2D.getWidth() / 2), -target.y + (dimension2D.getHeight())));
-
-        if (angle < 0) {
-            angle += 360;
-        }
-
-        return angle;
+        return (angle < 0) ?  angle : angle + 360;
     }
 
-    public void magicCage() {
-        final Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(8000)));
-
-        timeline.setOnFinished(actionEvent -> {
-            if (moveCage(left)) {
-                left = !left;
+    private void initBoxTimeline() {
+        minuteur = new Timer();
+        TimerTask tache = new TimerTask() {
+            public void run() {
+                if (moveBox(isOnLeftSide)) {
+                    isOnLeftSide = !isOnLeftSide;
+                }
             }
-            magicCage();
-        });
-        timeline.play();
+        };
 
+        minuteur.schedule(tache, 0, 8000);
     }
 
-    public boolean moveCage(final Boolean leftside) {
 
-        final int rd = (int) (Math.floor(Math.random() * 3));
+    private boolean moveBox(final boolean isOnLeftSide) {
 
-        boolean leftorright = false;
+        clearTransition();
+
+        final int randomValue = random.nextInt(3);
+
+        boolean goesFromLeftToRight = false;
 
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        final Timeline timeline = new Timeline();
-        final Timeline timeline2 = new Timeline();
-        final Timeline timeline3 = new Timeline();
+        final Timeline firstMove = new Timeline();
+        final Timeline thirdMove = new Timeline();
+        final Timeline secondMove = new Timeline();
 
-        if ((rd == 2) || (rd == 0)) {
+        if ((randomValue == 2) || (randomValue == 0)) {
             // Move UP
-            timeline.getKeyFrames().add(new KeyFrame(new Duration(2000),
-                new KeyValue(cage.translateYProperty(),  -(dimension2D.getHeight() / 5), Interpolator.EASE_OUT)));
+            firstMove.getKeyFrames().add(new KeyFrame(new Duration(2000),
+                new KeyValue(box.translateYProperty(),  -(dimension2D.getHeight() / 5) , Interpolator.LINEAR)));
         }
 
-        if ((rd == 1) || (rd == 2)) {
+        if ((randomValue == 1) || (randomValue == 2)) {
             // Move Left or Right
 
-            final double cst;
-            if (gameType.equals("biboule")) {
-                cst = 2.5;
-            } else {// equals robot
-                cst = 3;
-            }
+            double val = (dimension2D.getWidth() / (gameType.equals("biboule") ? 2.5 : 3) );
 
-            double val = (dimension2D.getWidth() / cst);
-
-            if (!leftside) {
+            if (!isOnLeftSide) {
                 val = 0;
             }
 
-            timeline3.getKeyFrames().add(
-                new KeyFrame(new Duration(3000), new KeyValue(cage.translateXProperty(), val, Interpolator.EASE_OUT)));
-            leftorright = true;
+            secondMove.getKeyFrames().add(
+                new KeyFrame(new Duration(3000), new KeyValue(box.translateXProperty(), val, Interpolator.LINEAR)));
+            goesFromLeftToRight = true;
         }
 
-        if ((rd == 2) || (rd == 0)) {
+        if ((randomValue == 2) || (randomValue == 0)) {
             // Move DOWN
-            timeline2.getKeyFrames().add(
-                new KeyFrame(new Duration(500), new KeyValue(cage.translateYProperty(), 0, Interpolator.EASE_OUT)));
+            thirdMove.getKeyFrames().add(
+                new KeyFrame(new Duration(500), new KeyValue(box.translateYProperty(), 0, Interpolator.EASE_OUT)));
         }
-        st.getChildren().addAll(timeline, timeline3, timeline2);
+
+        st.getChildren().addAll(firstMove, secondMove, thirdMove);
         st.play();
 
-        return leftorright;
+        return goesFromLeftToRight;
     }
 
     public void clearTransition(){
         st.stop();
         st.getChildren().clear();
-        cage.setTranslateX(0);
-        cage.setTranslateY(0);
     }
 
     public void updateHand() {
@@ -232,22 +201,6 @@ public class Shooter extends Parent implements GameLifeCycle {
             cst2 = 1.7;
         }
         hand.setLayoutY(dimension2D.getHeight() / cst2);
-    }
-
-    public void updateCage() {
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        cage.setLayoutX(8.5 * dimension2D.getWidth() / 29.7);
-
-        final double y;
-        if (gameType.equals("biboule")) {
-            cage.setLayoutY(8.5 * dimension2D.getHeight() / 21);
-            y = dimension2D.getHeight() / 6.5;
-        } else {// equals robot
-            cage.setLayoutY(3.5 * dimension2D.getHeight() / 21);
-            y = dimension2D.getHeight() / 8.5;
-        }
-        cage.setFitHeight(y);
-        cage.setPreserveRatio(true);
     }
 
     public void updateScore(final Label sc, final Label tc) {
@@ -270,11 +223,14 @@ public class Shooter extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
 
+        closeTimer();
+
         this.gameContext.setLimiterAvailable();
         score = 0;
         this.getChildren().clear();
 
         Rectangle imageRectangle = createBackground();
+
         gameContext.getChildren().add(this);
 
         final EventHandler<Event> handEvent = e -> {
@@ -293,19 +249,6 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
         this.addEventFilter(GazeEvent.ANY, handEventGaze);
-
-        final Point[] points = new Point[8];
-        // init all points
-        for (int i = 0; i < points.length; ++i) {
-            points[i] = new Point(0, 0);
-        }
-
-        this.endPoints = points;
-        // then update them
-        updatePoints(imageRectangle);
-
-        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> updatePoints(imageRectangle));
-        gameContext.getRoot().heightProperty().addListener((observable, oldValue, newValue) -> updatePoints(imageRectangle));
 
         enterEvent = e -> {
             if (e.getTarget() instanceof Target) {
@@ -385,26 +328,28 @@ public class Shooter extends Parent implements GameLifeCycle {
         this.gameContext.resetBordersToFront();
         iv.setMouseTransparent(true);
 
-        updateCage();
+        box.layoutXProperty().bind(imageRectangle.widthProperty().multiply(8.5/29.7).subtract(box.fitWidthProperty().divide(2)));
+
+        if (gameType.equals("biboule")) {
+            box.layoutYProperty().bind(imageRectangle.heightProperty().multiply(8.5/ 21));
+            box.fitHeightProperty().bind(imageRectangle.heightProperty().divide(6.5));
+        } else {// equals robot
+            box.fitHeightProperty().bind(imageRectangle.heightProperty().divide(8.5));
+        }
+        box.setPreserveRatio(true);
 
         gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> {
             updateScore(sc, tc);
-            clearTransition();
-            updateCage();
-            left = true;
             updateHand();
         });
         gameContext.getRoot().heightProperty().addListener((observable, oldValue, newValue) -> {
             updateScore(sc, tc);
-            clearTransition();
-            updateCage();
-            left = true;
             updateHand();
         });
 
-        cage.toBack();
-        left = true;
-        this.getChildren().add(cage);
+        box.toBack();
+        isOnLeftSide = true;
+        this.getChildren().add(box);
 
         final Timeline waitbeforestart = new Timeline();
         waitbeforestart.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
@@ -414,18 +359,28 @@ public class Shooter extends Parent implements GameLifeCycle {
                 newCircle();
             }
 
-            magicCage();
+            initBoxTimeline();
         });
         waitbeforestart.play();
 
         stats.notifyNewRoundReady();
         this.gameContext.start();
         clearTransition();
+        box.setTranslateX(0);
+        box.setTranslateY(0);
+    }
+
+    private void closeTimer(){
+        if(minuteur != null) {
+            minuteur.cancel();
+            minuteur.purge();
+        }
     }
 
     // done
     @Override
     public void dispose() {
+        this.closeTimer();
         this.removeEventFilter(GazeEvent.ANY, handEventGaze);
         this.getChildren().clear();
     }
@@ -466,14 +421,12 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         text.setText(cst);
 
-        final double min = Math.ceil(1);
-        final double max = Math.floor(3);
-        final int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
+        final int r = 1 + random.nextInt(3);
 
         final String soundResource = "data/" + gameType + "/sounds/hand_sound" + r + ".mp3";
         gameContext.getSoundManager().add(soundResource);
 
-        t.getChildren().get(0).setOpacity(1);
+        t.getChildren().get(5).setOpacity(1);
 
         hand.getChildren().get(1).setOpacity(1);
         final FadeTransition ft = new FadeTransition(Duration.millis(500), t);
@@ -515,7 +468,7 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     private void newCircle() {
 
-        final Target sp = buildCircle();
+        final Target sp = buildTarget();
         sp.toBack();
         this.getChildren().add(sp);
         gameContext.getGazeDeviceManager().addEventFilter(sp);
@@ -523,88 +476,86 @@ public class Shooter extends Parent implements GameLifeCycle {
         sp.addEventFilter(MouseEvent.ANY, enterEvent);
         sp.addEventHandler(GazeEvent.ANY, enterEvent);
 
-        final double x = (cage.getBoundsInParent().getMinX());
+        final double x = (box.getBoundsInParent().getMinX());
         sp.setLayoutX(x);
-        final double y = (cage.getBoundsInParent().getMinY() + cage.getBoundsInParent().getMaxY()) / 2;
+        final double y = (box.getBoundsInParent().getMinY() + box.getBoundsInParent().getMaxY()) / 2;
         sp.setLayoutY(y);
         sp.setCenterX(x);
         sp.setCenterY(y);
         stats.incrementNumberOfGoalsToReach();
-        moveCircle(sp);
+        moveTarget(sp);
     }
 
-    private void resize(final ImageView i) {
-        final double d = MIN_RADIUS;
-        i.setFitHeight(d);
-        i.setFitWidth(d * 5 / 4);
+    private void setInitialSize(final ImageView targetFramesView) {
+        targetFramesView.setFitHeight(MIN_RADIUS);
+        targetFramesView.setFitWidth(MIN_RADIUS * 5.d / 4.d);
     }
 
-    private Target buildCircle() {
+    private Target buildTarget() {
 
-        final Target sp = new Target();
+        final Target target = new Target();
 
-        final ImageView b1 = new ImageView(blue);
-        final ImageView b2 = new ImageView(green);
-        final ImageView b3 = new ImageView(yellow);
-        final ImageView b4 = new ImageView(orange);
-        final ImageView b5 = new ImageView(red);
-        final ImageView f = new ImageView(flash);
+        final ImageView[] targetFramesViews = new ImageView[6];
 
-        resize(b1);
-        resize(b2);
-        resize(b3);
-        resize(b4);
-        resize(b5);
+        for(int i = 0; i <6 ; i++){
+            targetFramesViews[i] = new ImageView(targetFrames[i]);
+            setInitialSize(targetFramesViews[i]);
+            target.getChildren().add(targetFramesViews[i]);
+            if(i != 0){
+                targetFramesViews[i].setOpacity(0);
+            }
+        }
 
-        resize(f);
-
-        sp.getChildren().addAll(f, b1, b2, b3, b4, b5);
-        sp.getChildren().get(0).setOpacity(0);
-        sp.getChildren().get(5).setOpacity(0);
-        sp.getChildren().get(2).setOpacity(0);
-        sp.getChildren().get(3).setOpacity(0);
-        sp.getChildren().get(4).setOpacity(0);
-
-        return sp;
+        return target;
     }
 
-    private void moveCircle(final Target sp) {
+    private Point getRandomPoint(int random) {
+
+        switch(random){
+            case 1:
+                return new Point(0, gameContext.getRoot().heightProperty().getValue()/2);
+            case 2:
+                return new Point(0, gameContext.getRoot().heightProperty().getValue());
+            case 3:
+                return new Point(gameContext.getRoot().widthProperty().getValue()/2, 0);
+            case 4:
+                return new Point(gameContext.getRoot().widthProperty().getValue()/2, gameContext.getRoot().heightProperty().getValue());
+            case 5:
+                return new Point(gameContext.getRoot().widthProperty().getValue(), 0);
+            case 6:
+                return new Point(gameContext.getRoot().widthProperty().getValue(), gameContext.getRoot().heightProperty().getValue()/2);
+            case 7:
+                return new Point(gameContext.getRoot().widthProperty().getValue(), gameContext.getRoot().heightProperty().getValue());
+            default:
+                return new Point(0,0);
+        }
+    }
+
+    private void moveTarget(final Target sp) {
         final double timebasic = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * Math.random() + MIN_TIME_LENGTH) * 1000;
 
-        final double min = Math.ceil(0);
-        final double max = Math.floor(endPoints.length - 1);
-        final int r = (int) (Math.floor(Math.random() * (max - min + 1)) + min);
-        final Point randomPoint = endPoints[r];
+        Point randomPoint = getRandomPoint(random.nextInt(8));
 
         final TranslateTransition tt1 = new TranslateTransition(new Duration(timebasic), sp);
         tt1.setToY(-sp.getCenterY() + randomPoint.y);
         tt1.setToX(-sp.getCenterX() + randomPoint.x);
         sp.setDestination(randomPoint);
 
-        if (r == 2) {
-            this.getChildren().get(this.getChildren().indexOf(sp)).toFront();
-        } else {
             this.getChildren().get(this.getChildren().indexOf(sp)).toBack();
             text.toBack();
-            cage.toBack();
+            box.toBack();
+
+
+        final SequentialTransition seqt = new SequentialTransition();
+
+        for(int i = 1; i <5 ; i++){
+            final FadeTransition toNextFrame = new FadeTransition(new Duration(timebasic / 4), sp.getChildren().get(i));
+            toNextFrame.setFromValue(0);
+            toNextFrame.setToValue(1);
+            seqt.getChildren().add(toNextFrame);
         }
 
-        final FadeTransition btog = new FadeTransition(new Duration(timebasic / 4), sp.getChildren().get(2));
-        final FadeTransition gtoy = new FadeTransition(new Duration(timebasic / 4), sp.getChildren().get(3));
-        final FadeTransition ytoo = new FadeTransition(new Duration(timebasic / 4), sp.getChildren().get(4));
-        final FadeTransition otor = new FadeTransition(new Duration(timebasic / 4), sp.getChildren().get(5));
 
-        btog.setFromValue(0);
-        gtoy.setFromValue(0);
-        ytoo.setFromValue(0);
-        otor.setFromValue(0);
-
-        btog.setToValue(1);
-        gtoy.setToValue(1);
-        ytoo.setToValue(1);
-        otor.setToValue(1);
-
-        final SequentialTransition seqt = new SequentialTransition(btog, gtoy, ytoo, otor);
 
         final ScaleTransition st = new ScaleTransition(new Duration(timebasic), sp);
         st.setByX(10);
@@ -632,13 +583,12 @@ public class Shooter extends Parent implements GameLifeCycle {
         sp.addEventFilter(MouseEvent.ANY, enterEvent);
         sp.addEventHandler(GazeEvent.ANY, enterEvent);
         pt.setOnFinished(actionEvent -> {
+            sp.getChildren().get(1).setOpacity(0);
             sp.getChildren().get(2).setOpacity(0);
             sp.getChildren().get(3).setOpacity(0);
             sp.getChildren().get(4).setOpacity(0);
             sp.getChildren().get(5).setOpacity(0);
-
-            sp.getChildren().get(0).setOpacity(0);
-            moveCircle(sp);
+            moveTarget(sp);
         });
         pt.play();
 
