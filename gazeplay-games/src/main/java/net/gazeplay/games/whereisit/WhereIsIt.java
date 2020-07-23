@@ -28,6 +28,8 @@ import net.gazeplay.commons.utils.stats.TargetAOI;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -247,6 +249,18 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.getChildren().removeAll(pictureCardsToHide);
     }
 
+    static boolean fileIsImageFile(File file){
+        try {
+            String mimetype = Files.probeContentType(file.toPath());
+            if (mimetype != null && mimetype.split("/")[0].equals("image")) {
+                return true;
+            }
+        } catch (IOException ignored) {
+
+        }
+        return false;
+    }
+
     RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRound, final Random random,
                                             final int winnerImageIndexAmongDisplayedImages) {
 
@@ -264,9 +278,21 @@ public class WhereIsIt implements GameLifeCycle {
             File[] listOfTheFiles = imagesDirectory.listFiles();
             if(listOfTheFiles!=null) {
                 for (File f : listOfTheFiles) {
-                    if (f.isDirectory()) {
-                        imagesFolders.add(f);
-                        filesCount++;
+                    File[] filesInf = f.listFiles();
+                    if(filesInf != null) {
+                        if (f.isDirectory() && filesInf.length > 0){
+                            boolean containsImage = false;
+                            int i = 0;
+                            while( !containsImage && i < filesInf.length) {
+                                File file = filesInf[i];
+                                containsImage = fileIsImageFile(file);
+                                i++;
+                            }
+                            if(containsImage) {
+                                imagesFolders.add(f);
+                                filesCount++;
+                            }
+                        }
                     }
                 }
             }
@@ -381,9 +407,17 @@ public class WhereIsIt implements GameLifeCycle {
 
                 final File[] files = getFiles(folder);
 
-                final int numFile = random.nextInt(files.length);
+                List<File> validImageFiles = new ArrayList<>();
 
-                final File randomImageFile = files[numFile];
+                for ( File file: files){
+                    if(fileIsImageFile(file)){
+                        validImageFiles.add(file);
+                    }
+                }
+
+                final int numFile = random.nextInt(validImageFiles.size());
+
+                final File randomImageFile = validImageFiles.get(numFile);
 
                 if (winnerImageIndexAmongDisplayedImages == i) {
 
