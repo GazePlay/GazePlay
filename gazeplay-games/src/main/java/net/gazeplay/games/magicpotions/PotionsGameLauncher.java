@@ -2,10 +2,11 @@ package net.gazeplay.games.magicpotions;
 
 import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
-import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
+import net.gazeplay.IGameLauncher;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 
-public class PotionsGameLauncher implements GameSpec.GameLauncher<MagicPotionsStats, GameSpec.GameVariant> {
+public class PotionsGameLauncher implements IGameLauncher<MagicPotionsStats, IGameVariant> {
 
     @Override
     public MagicPotionsStats createNewStats(Scene scene) {
@@ -13,7 +14,7 @@ public class PotionsGameLauncher implements GameSpec.GameLauncher<MagicPotionsSt
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.GameVariant gameVariant, MagicPotionsStats stats) {
+    public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant, MagicPotionsStats stats) {
         return new MagicPotions(gameContext, stats);
     }
 
