@@ -22,6 +22,9 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
+import net.gazeplay.commons.gamevariants.DimensionGameVariant;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
@@ -84,7 +87,7 @@ public class GameVariantDialog extends Stage {
 
         final Translator translator = gazePlay.getTranslator();
 
-        for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
+        for (IGameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
             Button button = new Button(variant.getLabel(translator));
             button.getStyleClass().add("gameChooserButton");
             button.getStyleClass().add("gameVariation");
@@ -101,15 +104,15 @@ public class GameVariantDialog extends Stage {
             button.setMaxWidth(primaryStage.getWidth() / 8);
             button.setMaxHeight(primaryStage.getHeight() / 8);
             //
-            if (variant instanceof GameSpec.DimensionDifficultyGameVariant) {
+            if (variant instanceof DimensionDifficultyGameVariant) {
                 choicePaneEasy.getChildren().add(button);
             } else {
                 choicePane.getChildren().add(button);
             }
 
             if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) {
-                if (variant instanceof GameSpec.DimensionGameVariant) {
-                    variant = new GameSpec.DimensionDifficultyGameVariant(((GameSpec.DimensionGameVariant) variant).getWidth(), ((GameSpec.DimensionGameVariant) variant).getHeight(), "normal");
+                if (variant instanceof DimensionGameVariant) {
+                    variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "normal");
                 }
                 ToggleGroup group = new ToggleGroup();
                 RadioButton normal = new RadioButton("normal");
@@ -135,7 +138,7 @@ public class GameVariantDialog extends Stage {
                 });
             }
 
-            GameSpec.GameVariant finalVariant = variant;
+            IGameVariant finalVariant = variant;
             EventHandler<Event> event = mouseEvent -> {
                 close();
                 root.setDisable(false);

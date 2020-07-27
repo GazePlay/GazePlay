@@ -1,13 +1,14 @@
-package net.gazeplay.commons.gamevariants;
+package net.gazeplay.commons.gamevariants.generators;
 
 import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.Setter;
-import net.gazeplay.GameSpec;
+import net.gazeplay.commons.gamevariants.DimensionGameVariant;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 
 import java.util.Set;
 
-public class SquareDimensionVariantGenerator implements GameSpec.GameVariantGenerator {
+public class SquareDimensionVariantGenerator implements IGameVariantGenerator {
 
     private final int minSize;
 
@@ -24,10 +25,10 @@ public class SquareDimensionVariantGenerator implements GameSpec.GameVariantGene
     }
 
     @Override
-    public Set<GameSpec.GameVariant> getVariants() {
-        final Set<GameSpec.GameVariant> result = Sets.newLinkedHashSet();
+    public Set<IGameVariant> getVariants() {
+        final Set<IGameVariant> result = Sets.newLinkedHashSet();
         for (int i = minSize; i <= maxSize; i++) {
-            result.add(new GameSpec.DimensionGameVariant(i, i));
+            result.add(new DimensionGameVariant(i, i));
         }
         return result;
     }

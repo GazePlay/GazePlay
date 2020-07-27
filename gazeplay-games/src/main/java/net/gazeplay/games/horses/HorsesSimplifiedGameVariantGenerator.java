@@ -1,6 +1,8 @@
 package net.gazeplay.games.horses;
 
-public class HorsesSimplifiedGameVariantGenerator extends net.gazeplay.GameSpec.IntRangeVariantGenerator {
+import net.gazeplay.commons.gamevariants.generators.IntRangeVariantGenerator;
+
+public class HorsesSimplifiedGameVariantGenerator extends IntRangeVariantGenerator {
 
     public HorsesSimplifiedGameVariantGenerator() {
         super("Choose number of players", 2, 4);

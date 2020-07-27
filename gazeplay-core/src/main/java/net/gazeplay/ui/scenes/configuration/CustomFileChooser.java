@@ -49,8 +49,11 @@ public class CustomFileChooser extends Stage {
     private Translator translator;
     private GazePlay gazePlay;
 
-    private FlowPane[] flowPanes = new FlowPane[3];
-    private String[] folder = {"magiccards", "portraits", "blocs"};
+    private FlowPane[] flowPanes = new FlowPane[4];
+    private String[] folder = {"magiccards", "portraits", "blocs", "opinions"};
+
+    private boolean deleted;
+    private boolean renamed;
 
 
     CustomFileChooser(Configuration configuration,
@@ -231,25 +234,66 @@ public class CustomFileChooser extends Stage {
         return add;
     }
 
+    private I18NButton createAddButtonOpinions(int flowPaneIndex, String opinions) {
+        I18NButton add = new I18NButton(translator, "addNewImage" + opinions);
+        add.setPrefHeight(10);
+        add.setOnAction(e -> {
+            String folderPath = Utils.getImagesSubdirectory(folder[flowPaneIndex]).getAbsolutePath();
+            File dir = new File(folderPath + "/thumbs/");
+            if (dir.mkdirs() || dir.exists()) {
+                final FileChooser fileChooser = new FileChooser();
+                fileChooser.setInitialDirectory(
+                    new File(folderPath + "/thumbs/")
+                );
+                List<File> files =
+                    fileChooser.showOpenMultipleDialog(this);
+                if (files != null) {
+                    for (File f : files) {
+                        copyFile(dir, f, flowPaneIndex);
+                        File test = new File(folderPath + "/thumbs/" + opinions + ".png");
+                        if (test.exists()) {
+                            deleted = test.delete();
+                            if (deleted) {
+                                log.debug("the file" + folderPath + "/thumbs/" + opinions + ".png" + " has been deleted");
+                            }
+                        }
+                        File newfile = new File(folderPath + "/thumbs/" + f.getName());
+                        renamed = newfile.renameTo(new File(dir + "/" + opinions + ".png"));
+                        if (renamed) {
+                            log.debug("the file" + dir + "/" + opinions + ".png" + "has been renamed");
+                        }
+                    }
+                }
+            } else {
+                log.debug("File {} doesn't exist and can't be created", dir.getAbsolutePath());
+            }
+            updateFlow(flowPaneIndex);
+        });
+
+        return add;
+    }
+
     private void copyFile(File dir, File f, int flowPaneIndex) {
         File dest = new File(dir, f.getName());
         try {
             Files.copy(f.toPath(), dest.toPath(),
                 StandardCopyOption.REPLACE_EXISTING);
+            log.info("peut etre par la");
         } catch (IOException ex) {
-            log.debug("Can't copy file {} to {}", f.getName(), dir.getAbsolutePath());
+            log.info("Can't copy file {} to {}", f.getName(), dir.getAbsolutePath());
         }
     }
 
     private BorderPane initImageSelectorPane(BorderPane imageSelectorGridPane, Scene scene) {
 
-        Group[] group = new Group[3];
-        StackPane[] section = new StackPane[3];
-        Color[] colors = {Color.PALEGOLDENROD, Color.LIGHTSEAGREEN, Color.PALEVIOLETRED};
+        Group[] group = new Group[4];
+        StackPane[] section = new StackPane[4];
+        Color[] colors = {Color.PALEGOLDENROD, Color.LIGHTSEAGREEN, Color.PALEVIOLETRED, Color.PALETURQUOISE};
         String[] imagePath = {
             "data/common/images/cards.png",
             "data/common/images/small.png",
-            "data/common/images/large.png"
+            "data/common/images/large.png",
+            "data/common/images/opinions.png"
         };
 
         HBox input = buildFileChooser();
@@ -259,7 +303,8 @@ public class CustomFileChooser extends Stage {
 
         DropShadow dropShadow = createNewDropShadow();
 
-        for (int i = 0; i < 3; i++) {
+
+        for (int i = 0; i < 4; i++) {
             int index = i;
             group[i] = new Group();
 
@@ -290,8 +335,25 @@ public class CustomFileChooser extends Stage {
             backgroundAddButton.widthProperty().bind(background.widthProperty());
             backgroundAddButton.setHeight(50);
             backgroundAddButton.setFill(colors[i]);
+            VBox choice = new VBox();
+            choice.setAlignment(Pos.CENTER);
+            choice.setPadding(new Insets(20, 20, 20, 20));
+            choice.setSpacing(5);
             I18NButton add = createAddButton(i);
-            addButtonStackPane.getChildren().addAll(backgroundAddButton, add);
+            add.setMinWidth(300);
+
+            if (i == 3) {
+                I18NButton addOpinionsThumbUp = createAddButtonOpinions(3, "thumbup");
+                I18NButton addOpinionsThumbDown = createAddButtonOpinions(3, "thumbdown");
+                I18NButton addOpinionsNoCare = createAddButtonOpinions(3, "nocare");
+                addOpinionsNoCare.setMinWidth(300);
+                addOpinionsThumbDown.setMinWidth(300);
+                addOpinionsThumbUp.setMinWidth(300);
+                choice.getChildren().addAll(add, addOpinionsThumbUp, addOpinionsThumbDown, addOpinionsNoCare);
+                addButtonStackPane.getChildren().addAll(backgroundAddButton, choice);
+            } else {
+                addButtonStackPane.getChildren().addAll(backgroundAddButton, add);
+            }
             BorderPane.setAlignment(addButtonStackPane, Pos.CENTER);
             background.setTop(addButtonStackPane);
             background.setCenter(scrollPane);
@@ -300,7 +362,7 @@ public class CustomFileChooser extends Stage {
             section[i].layoutYProperty().bind(input.heightProperty());
             Rectangle ongletBackground = new Rectangle();
             ongletBackground.setHeight(50);
-            ongletBackground.widthProperty().bind(background.maxWidthProperty().divide(3));
+            ongletBackground.widthProperty().bind(background.maxWidthProperty().divide(4));
             ongletBackground.setFill(colors[i]);
             section[i].getChildren().add(ongletBackground);
             section[i].setOnMouseClicked(e -> {
@@ -330,6 +392,7 @@ public class CustomFileChooser extends Stage {
         section[0].setLayoutX(0);
         section[1].layoutXProperty().bind(section[0].widthProperty());
         section[2].layoutXProperty().bind(section[0].widthProperty().add(section[1].widthProperty()));
+        section[3].layoutXProperty().bind(section[0].widthProperty().add(section[1].widthProperty().add(section[2].widthProperty())));
 
         imageSelectorGridPane.getChildren().addAll(group);
         return imageSelectorGridPane;
@@ -339,6 +402,7 @@ public class CustomFileChooser extends Stage {
         updateFlow(0);
         updateFlow(1);
         updateFlow(2);
+        updateFlow(3);
     }
 
     private HBox buildFileChooser() {

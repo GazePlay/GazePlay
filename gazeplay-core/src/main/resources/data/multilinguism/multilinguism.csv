@@ -1,4 +1,5 @@
 ,alb,ara,chn,deu,ell,eng,fin,fra,hrv,ind,ita,jpn,pol,por,zsm,nld,rus,spa,vnm
+bottle,,,瓶子,,,bottle,,bouteille,,,,,,,,,,,
 closeWindowToContinueToGazePlay,,,关闭窗口以继续GazePlay,,,Close this window to continue to GazePlay,,Fermez cette fenêtre pour continuer vers GazePlay,,,,,,,,,,,
 close,,,关闭,,,Close,,Fermer,,,,,,,,,,,
 Colon,:,:,:,:,:,:,:,:,:,:,:,:,:,:,:,:,:,:,:
@@ -9,8 +10,10 @@ EnableAreaOfInterest,Aktivizo Zonën e Interesit,Enable The Area Of Interest,开
 EnableConvexHull,Use Convex Hulls for AOI,Use Convex Hulls for AOI,对关键注视区应用多边形,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Gebogen lijnen bij registratie blikrichting,Use Convex Hulls for AOI,Use Convex Hulls for AOI,Use Convex Hulls for AOI
 EnableVideoRecording,Aktivizo Video Regjistrimin për Lojën,Enable Game Video Recording,开启游戏视频录制,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording,Activeer video-opname van spelletjes,Enable Game Video Recording,Enable Game Video Recording,Enable Game Video Recording
 FrogsRace,Vrapo bretkosë!,سباق الضفادع!,兔子赛跑!,Ribbit Run!,Ribbit Run!,Ribbit Run!,La course des grenouilles,La course des grenouilles!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Ribbit Run!,Frog Runner!,Kikker Loop!,Ribbit Run!,Ribbit Run!,Ribbit Run!
+Opinions,,意见,Meinungen,Opinions,,Opinions,Opinions,,,Opinioni,ご意見・ご感想,Opinie,,Meningen,Мнения,Opiniones,
 AreaOfInterest,Zona e Interesit,Area Of Interest,关键注视区,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Area Of Interest,Rustpunt blikrichting,Area Of Interest,Area Of Interest,
 Ninja,Ninxha,النينجا,忍者 ！,Ninja !,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Ninja !,Ninja,Ninja !,Ninja,Ninja!,Ninja!,にんじゃ !,Ninja!,Ninja,Ninja!,Ninja !,Ниндзя,Ninja,Ninja !
+Paper-Scissors-Stone,,,岩纸剪刀 ,,,Rock-Paper-Scissors,,Pierre-Papier-Ciseaux,,,,,,,,,,,
 MagicCards,Karta magjike,اوراق سحرية,魔幻卡,Zauberkarten,Επιτυχημένες αποκαλύψεις,Magic cards,Taikakortit,Cartes magiques,Čarobne kartice,Kad sihir,Carte magiche,マジックカード,Magiczne karty,Cartas mágicas,Kad sihir,Magische kaarten,Магические карты,Tarjetas mágicas,Những quân bài ma thuật
 Blocks,Blloqe,مكعبات,色块,,Επιτυχημένες αποκαλύψεις,Blocks,kappaleet,Blocs,Blokovi,Blok,Blocchi,ブロック,Bloki,Bloco,Blok,Blokken,Блоки,Bloques,Các hình khối
 ScratchCard,Karta gërvishtëse,بطاقات للخدش,刮刮乐,Rubbellose,Επιτυχημένες αποκαλύψεις,ScratchCards,raaputuskortti,Cartes à gratter,Zagrebi i osvoji,ScratchCards,Gratta e vinci,スクラッチカード,Zdrapki,Raspadinhas,ScratchCards,Kraskaart,Лотерейка,Tarjetas para raspar,Thẻ cào
@@ -256,5 +259,8 @@ BackgroundStyle,,,,,,Background style,,Style de fond,,,,,,,,,,,
 BackgroundEnabled,,,,,,Background images enabled,,Fonds d'écran activés,,,,,,,,,,,
 
 addNewImages,,,,,,Add new images ...,,Ajouter de nouvelles images ...,,,,,,,,,,Agregar nuevas imágenes ...,
+addNewImagethumbup,,,,,,Add new image happy ...,,Ajouter de nouvelles image content ...,,,,,,,,,,Añadir nuevo contenido de la imagen ...,
+addNewImagethumbdown,,,,,,Add new image unhappy...,,Ajouter une nouvelle image pas content ...,,,,,,,,,,Añade nuevas imágenes que no son felices ...,
+addNewImagenocare,,,,,,Add new image don't care...,,Ajouter une nouvelle image s'en fiche ...,,,,,,,,,,Añadir una nueva imagen no importa ...,
 customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,,,
 
