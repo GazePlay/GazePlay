@@ -34,6 +34,12 @@ class MenuUtilsTest {
 
     @Test
     void givenVersionIsUnknown_givenProfileIsDefault_shouldBuildMenuBar() {
+        new MockUp<VersionInfo>() {
+            @mockit.Mock
+            public Optional<String> findVersionInfo(String id, boolean time) {
+                return Optional.empty();
+            }
+        };
         MenuBar menuBar = MenuUtils.buildMenuBar();
         assertEquals("GazePlay unreleased version", menuBar.getMenus().get(0).getText());
         assertEquals("Current Profile: Default", menuBar.getMenus().get(1).getText());
