@@ -18,6 +18,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 
@@ -61,8 +62,6 @@ public class Configuration {
 
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
-    private static final String DEFAULT_VALUE_LANGUAGE = "fra";
-    private static final String DEFAULT_VALUE_COUNTRY = "FR";
     private static final int DEFAULT_VALUE_FIXATION_LENGTH = 500;
     private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
     public static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
@@ -210,8 +209,8 @@ public class Configuration {
 
         final PropertyChangeListener propertyChangeListener = evt -> saveConfigIgnoringExceptions();
 
-        languageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_LANGUAGE, DEFAULT_VALUE_LANGUAGE, propertyChangeListener);
-        countryProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_COUNTRY, DEFAULT_VALUE_COUNTRY, propertyChangeListener);
+        languageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_LANGUAGE, Locale.getDefault().getISO3Language(), propertyChangeListener);
+        countryProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_COUNTRY, Locale.getDefault().getCountry(), propertyChangeListener);
 
         eyetrackerProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER, propertyChangeListener);
 

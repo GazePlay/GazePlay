@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,6 +27,7 @@ class ConfigurationTest {
             + "test" + sep
             + "resources" + sep;
 
+    private ApplicationConfig applicationConfig;
     private Configuration configuration;
     private Properties properties;
     private File testProperties;
@@ -44,7 +46,7 @@ class ConfigurationTest {
             log.debug("Error in loading test properties: ", ie);
         }
 
-        ApplicationConfig applicationConfig = ConfigFactory.create(ApplicationConfig.class, properties);
+        applicationConfig = ConfigFactory.create(ApplicationConfig.class, properties);
         configuration = new Configuration(testProperties, applicationConfig);
     }
 
@@ -61,7 +63,7 @@ class ConfigurationTest {
         configuration.getWhereIsItDirProperty().set(newPath);
         configuration.saveConfigIgnoringExceptions();
 
-        try(InputStream is = Files.newInputStream(testProperties.toPath())) {
+        try (InputStream is = Files.newInputStream(testProperties.toPath())) {
             properties.load(is);
         } catch (IOException ie) {
             log.debug("Error in loading test properties: ", ie);
@@ -70,6 +72,18 @@ class ConfigurationTest {
         assertEquals(newPath, properties.getProperty("WHEREISITDIR"));
 
         configuration.getWhereIsItDirProperty().set(oldPath);
+    }
+
+    @Test
+    void givenLocaleIsSet_shouldSetDefaultLanguage() {
+        Locale original = Locale.getDefault();
+
+        Locale.setDefault(Locale.CHINA);
+        Configuration testConfig = new Configuration(testProperties, applicationConfig);
+
+        assertEquals(Locale.CHINA.getISO3Language(), testConfig.getLanguage());
+
+        Locale.setDefault(original);
     }
 
     @Test
