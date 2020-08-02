@@ -32,6 +32,8 @@ class ConfigurationTest {
     private Properties properties;
     private File testProperties;
 
+    private Locale original;
+
     @BeforeEach
     void setup() throws IOException {
         testProperties = new File(localDataFolder, "GazePlay-test.properties");
@@ -40,12 +42,14 @@ class ConfigurationTest {
 
         properties = new Properties();
 
-        try(InputStream is = Files.newInputStream(testProperties.toPath())) {
+        try (InputStream is = Files.newInputStream(testProperties.toPath())) {
             properties.load(is);
         } catch (IOException ie) {
             log.debug("Error in loading test properties: ", ie);
         }
 
+        original = Locale.getDefault();
+        Locale.setDefault(Locale.CHINA);
         applicationConfig = ConfigFactory.create(ApplicationConfig.class, properties);
         configuration = new Configuration(testProperties, applicationConfig);
     }
@@ -53,6 +57,7 @@ class ConfigurationTest {
     @AfterEach
     void reset() {
         testProperties.delete();
+        Locale.setDefault(original);
     }
 
     @Test
@@ -76,14 +81,12 @@ class ConfigurationTest {
 
     @Test
     void givenLocaleIsSet_shouldSetDefaultLanguage() {
-        Locale original = Locale.getDefault();
+        assertEquals(Locale.CHINA.getISO3Language(), configuration.getLanguage());
+    }
 
-        Locale.setDefault(Locale.CHINA);
-        Configuration testConfig = new Configuration(testProperties, applicationConfig);
-
-        assertEquals(Locale.CHINA.getISO3Language(), testConfig.getLanguage());
-
-        Locale.setDefault(original);
+    @Test
+    void givenLocaleIsSet_shouldSetDefaultCountry() {
+        assertEquals(Locale.CHINA.getCountry(), configuration.getCountry());
     }
 
     @Test
@@ -94,16 +97,6 @@ class ConfigurationTest {
     @Test
     void shouldGetQuitKey() {
         assertEquals(properties.get("QUIT_KEY"), configuration.getQuitKey());
-    }
-
-    @Test
-    void shouldGetLanguage() {
-        assertEquals(properties.get("LANGUAGE"), configuration.getLanguage());
-    }
-
-    @Test
-    void shouldGetCountry() {
-        assertEquals(properties.get("COUNTRY"), configuration.getCountry());
     }
 
     @Test

@@ -1,6 +1,5 @@
 package net.gazeplay.commons.configuration;
 
-import lombok.extern.slf4j.Slf4j;
 import mockit.Mock;
 import mockit.MockUp;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
@@ -8,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ConfigurationSourceTest {
 
@@ -29,10 +28,10 @@ class ConfigurationSourceTest {
     }
 
     @Test
-    void shouldCreateDefaultPropertiesIfFileNotFound() {
+    void givenPropertiesFileNotFound_shouldCreateDefaultProperties() {
         Configuration result = ConfigurationSource.createFromPropertiesResource(new File(localDataFolder, "wrong.properties"));
 
-        assertEquals("fra", result.getLanguage());
+        assertEquals(500, result.getFixationLength());
     }
 
     @Test
@@ -46,6 +45,6 @@ class ConfigurationSourceTest {
 
         Configuration result = ConfigurationSource.createFromProfile("test");
 
-        assertEquals("eng", result.getLanguage());
+        assertEquals(900, result.getFixationLength());
     }
 }
