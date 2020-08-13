@@ -45,7 +45,7 @@ import java.util.Scanner;
 @Slf4j
 public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
-    private final SpaceGameStats spaceGameStats;
+    private final SpaceGameStats stats;
     private final Dimension2D dimension2D;
     private final Random random;
     private final Configuration configuration;
@@ -104,11 +104,13 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     private int bossHit;
 
     public SpaceGame(final IGameContext gameContext, final SpaceGameStats stats) {
-        this.spaceGameStats = stats;
+        this.stats = stats;
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.random = new Random();
         this.configuration = gameContext.getConfiguration();
+        this.gameContext.startTimeLimiter();
+        this.gameContext.startScoreLimiter();
 
         spaceshipImage = ImageUtils.createCustomizedImageLibrary(null, "space/spaceship");
         bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/biboule");
@@ -198,6 +200,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         finalScoreText.setOpacity(0);
 
         interactionOverlay.setDisable(false);
+
+        gameContext.setLimiterAvailable();
 
         this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
@@ -289,11 +293,17 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         spawnBiboule();
 
         updatePosition();
-        updateScore();
+
+
+        score = biboulesKilled.size() + bossKilled.size() * 125;
+        stats.incrementNumberOfGoalsReached(score);
+        scoreText.setText(String.valueOf(score));
+        scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
 
         this.start();
 
-        spaceGameStats.notifyNewRoundReady();
+        stats.notifyNewRoundReady();
+        gameContext.start();
     }
 
 
@@ -447,17 +457,15 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         finalScoreText.setText(stringBuilder.toString());
         finalScoreText.setOpacity(1);
         restartButton.active();
-        spaceGameStats.addRoundDuration();
+        stats.addRoundDuration();
     }
 
     private void updateScore() {
         score = biboulesKilled.size() + bossKilled.size() * 125;
-        spaceGameStats.incrementNumberOfGoalsReached(score);
+        stats.incrementNumberOfGoalsReached(score);
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
-        if (biboulesKilled.size() == 30) {
-            gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(spaceGameStats, this));
-        }
+        gameContext.updateScore(stats,this);
     }
 
     private void createBiboule(final double x, final double y) {

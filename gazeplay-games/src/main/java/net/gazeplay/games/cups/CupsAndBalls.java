@@ -37,8 +37,6 @@ public class CupsAndBalls implements GameLifeCycle {
     private ArrayList<Action> actions;
     private final ArrayList<TargetAOI> targetAOIList;
 
-
-
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups) {
         super();
         this.gameContext = gameContext;
@@ -49,6 +47,8 @@ public class CupsAndBalls implements GameLifeCycle {
         this.nbLines = nbCups;
         this.nbExchanges = nbCups * nbCups;
         this.targetAOIList = new ArrayList<>();
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
     }
 
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups, final int nbExchanges) {
@@ -98,6 +98,7 @@ public class CupsAndBalls implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
         init();
         TranslateTransition revealBallTransition = null;
         for (final Cup cup : cups) {
@@ -176,6 +177,8 @@ public class CupsAndBalls implements GameLifeCycle {
                 }
 
                 createNewTransition(actions);
+            } else {
+                gameContext.firstStart();
             }
         });
 
@@ -195,5 +198,4 @@ public class CupsAndBalls implements GameLifeCycle {
             }
         }
     }
-
 }

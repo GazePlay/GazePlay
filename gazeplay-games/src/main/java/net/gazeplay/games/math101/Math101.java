@@ -63,6 +63,8 @@ public class Math101 implements GameLifeCycle {
         this.nbColumns = 3;
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.targetAOIList = new ArrayList<>();
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
     }
 
     private static Formula generateRandomFormula(final MathGameType gameType, final int maxValue) {
@@ -145,6 +147,7 @@ public class Math101 implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
         final Formula formula = generateRandomFormula(gameType, maxValue);
 
         final Text question = createQuestionText(formula);
@@ -198,6 +201,7 @@ public class Math101 implements GameLifeCycle {
 
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
+        gameContext.firstStart();
     }
 
     private ArrayList<TargetAOI> getTargetAOIList() {
@@ -352,5 +356,4 @@ public class Math101 implements GameLifeCycle {
     private static double computePositionY(final double cardboxHeight, final double cardHeight, final int rowIndex) {
         return (cardboxHeight - cardHeight) / 2 + (rowIndex * cardboxHeight) / zoom_factor;
     }
-
 }

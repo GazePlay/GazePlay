@@ -48,7 +48,6 @@ public class Race extends Parent implements GameLifeCycle {
     private int movementPerBug = 2;
 
     private Target playerRacer;
-    private boolean raceIsFinished = false;
     private int racerMovement = 0;
 
     private Label text;
@@ -61,44 +60,23 @@ public class Race extends Parent implements GameLifeCycle {
 
     private final Stats stats;
 
-    private final Point[] endPoints;
+    private Point[] endPoints;
 
-    private final EventHandler<Event> enterEvent;
-    private final EventHandler<GazeEvent> handEventGaze;
+    private EventHandler<Event> enterEvent;
+    private EventHandler<GazeEvent> handEventGaze;
     private Dimension2D dimension2D;
-    private final Target[] racers;
+    private Target[] racers;
 
     // done
     public Race(final IGameContext gameContext, final Stats stats, final String type) {
         this.gameContext = gameContext;
         this.stats = stats;
+        this.gameContext.startTimeLimiter();
         score = 0;
         gameType = type;
 
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         hand = new StackPane();
-
-        Rectangle imageRectangle = createBackground();
-
-        gameContext.getChildren().add(this);
-
-        final EventHandler<MouseEvent> handEvent = e -> {
-            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
-                final double x = e.getX();
-                final double y = e.getY();
-                hand.setRotate(getAngle(new Point(x, y)));
-            }
-        };
-
-        racers = new Target[3];
-
-        handEventGaze = e -> {
-            final double x = e.getX();
-            final double y = e.getY();
-            hand.setRotate(getAngle(new Point(x, y)));
-        };
-        imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
-        this.addEventFilter(GazeEvent.ANY, handEventGaze);
 
         blue = new Image("data/" + gameType + "/images/Blue.png");
         green = new Image("data/" + gameType + "/images/Green.png");
@@ -109,34 +87,6 @@ public class Race extends Parent implements GameLifeCycle {
         flash = new Image("data/" + gameType + "/images/Flash.png");
         cage = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
 
-        final Point[] points = new Point[8];
-        // init all points
-        for (int i = 0; i < points.length; ++i) {
-            points[i] = new Point(0, 0);
-        }
-
-        this.endPoints = points;
-        // then update them
-        updatePoints(imageRectangle);
-
-        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> {
-            updatePoints(imageRectangle);
-        });
-        gameContext.getRoot().heightProperty().addListener((observable, oldValue, newValue) -> {
-            updatePoints(imageRectangle);
-        });
-
-        enterEvent = e -> {
-            if (e.getTarget() instanceof Target) {
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                    if (!((Target) e.getTarget()).done && !raceIsFinished) {
-                        ((Target) e.getTarget()).done = true;
-                        enter((Target) e.getTarget());
-                        stats.incrementNumberOfGoalsReached();
-                    }
-                }
-            }
-        };
 
     }
 
@@ -248,6 +198,63 @@ public class Race extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
         stats.notifyNewRoundReady();
+        racerMovement = 0;
+
+        gameContext.setLimiterAvailable();
+        score = 0;
+        this.getChildren().clear();
+
+        Rectangle imageRectangle = createBackground();
+        gameContext.getChildren().add(this);
+
+        final EventHandler<MouseEvent> handEvent = e -> {
+            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+                final double x = e.getX();
+                final double y = e.getY();
+                hand.setRotate(getAngle(new Point(x, y)));
+            }
+        };
+
+        racers = new Target[3];
+
+        handEventGaze = e -> {
+            final double x = e.getX();
+            final double y = e.getY();
+            hand.setRotate(getAngle(new Point(x, y)));
+        };
+        imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
+        this.addEventFilter(GazeEvent.ANY, handEventGaze);
+
+        final Point[] points = new Point[8];
+        // init all points
+        for (int i = 0; i < points.length; ++i) {
+            points[i] = new Point(0, 0);
+        }
+
+        this.endPoints = points;
+        // then update them
+        updatePoints(imageRectangle);
+
+        gameContext.getRoot().widthProperty().addListener((observable, oldValue, newValue) -> {
+            updatePoints(imageRectangle);
+        });
+        gameContext.getRoot().heightProperty().addListener((observable, oldValue, newValue) -> {
+            updatePoints(imageRectangle);
+        });
+
+        enterEvent = e -> {
+            if (e.getTarget() instanceof Target) {
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    if (!((Target) e.getTarget()).done) {
+                        ((Target) e.getTarget()).done = true;
+                        enter((Target) e.getTarget());
+                        stats.incrementNumberOfGoalsReached();
+                    }
+                }
+            }
+        };
+
+        gameContext.start();
 
         final Label sc = new Label();
         final Label tc = new Label();
@@ -316,21 +323,14 @@ public class Race extends Parent implements GameLifeCycle {
         cage.toBack();
         this.getChildren().add(cage);
 
-        final Timeline waitbeforestart = new Timeline();
-        waitbeforestart.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
-        waitbeforestart.setOnFinished(actionEvent -> {
-            if (!raceIsFinished) {
-                for (int i = 0; i < bugsAmount; i++) {
-                    newCircle();
-                }
-            }
+        for (int i = 0; i < bugsAmount; i++) {
+            newCircle();
+        }
 
-            makePlayer(0.6);
-            racers[0] = makeRacers(0.7);
-            racers[1] = makeRacers(0.8);
-            racers[2] = makeRacers(0.9);
-        });
-        waitbeforestart.play();
+        makePlayer(0.6);
+        racers[0] = makeRacers(0.7);
+        racers[1] = makeRacers(0.8);
+        racers[2] = makeRacers(0.9);
 
         stats.notifyNewRoundReady();
 
@@ -411,9 +411,7 @@ public class Race extends Parent implements GameLifeCycle {
             if (i != -1) {
                 getChildren().remove(i);
             }
-            if (!raceIsFinished) {
-                newCircle();
-            }
+            newCircle();
         });
         pt.play();
         if (score % movementPerBug == 0) {
@@ -421,22 +419,11 @@ public class Race extends Parent implements GameLifeCycle {
             movePlayer(playerRacer, racerMovement);
         }
         if (racerMovement == 18) {
-            racerMovement = 0;
-            raceIsFinished = true;
-
+            this.gameContext.updateScore(stats,this);
             gameContext.playWinTransition(500, actionEvent -> {
-
-                movementPerBug++;
-                raceFinished();
-                gameContext.endWinTransition();
-                raceIsFinished = false;
-                makePlayer(0.6);
-                racers[0] = makeRacers(0.7);
-                racers[1] = makeRacers(0.8);
-                racers[2] = makeRacers(0.9);
-                for (int i = 0; i < bugsAmount; i++) {
-                    newCircle();
-                }
+                dispose();
+                gameContext.clear();
+                launch();
             });
         }
 
@@ -642,12 +629,9 @@ public class Race extends Parent implements GameLifeCycle {
             final int index = (getChildren().indexOf(sp));
             if (index != -1) {
                 getChildren().remove(index);
-                if (!raceIsFinished) {
-                    newCircle();
-                }
+                newCircle();
             }
         });
         pt.play();
     }
-
 }

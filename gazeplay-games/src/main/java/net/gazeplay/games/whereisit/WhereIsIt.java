@@ -67,10 +67,13 @@ public class WhereIsIt implements GameLifeCycle {
         this.fourThree = fourThree;
         this.stats = stats;
         this.targetAOIList = new ArrayList<>();
+        this.gameContext.startScoreLimiter();
+        this.gameContext.startTimeLimiter();
     }
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
 
         final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
@@ -92,6 +95,7 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         stats.notifyNewRoundReady();
+        gameContext.firstStart();
     }
 
     private Transition createQuestionTransition(final String question, final List<Image> listOfPictos) {
@@ -623,4 +627,5 @@ public class WhereIsIt implements GameLifeCycle {
         log.debug("imageList: {}", imageList);
         return imageList;
     }
+
 }

@@ -114,12 +114,12 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         Color textColor = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
             @Override
             public Color visitLight() {
-               return Color.BLACK;
+                return Color.BLACK;
             }
 
             @Override
             public Color visitDark() {
-              return Color.WHITE;
+                return Color.WHITE;
             }
         });
         scoreText.setFill(textColor);

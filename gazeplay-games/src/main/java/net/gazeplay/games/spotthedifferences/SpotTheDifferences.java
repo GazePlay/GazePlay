@@ -62,6 +62,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         final Configuration config = gameContext.getConfiguration();
         this.currentInstance = 0;
         this.targetAOIList = new ArrayList<>();
+        this.gameContext.startTimeLimiter();
 
         final Multilinguism translate = MultilinguismFactory.getSingleton();
         final String language = config.getLanguage();
@@ -142,6 +143,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         scoreText.setText(numberDiffFound + "/" + totalNumberDiff);
         stats.incrementNumberOfGoalsReached();
         if (numberDiffFound == totalNumberDiff) {
+            gameContext.updateScore(stats,this);
             gameContext.playWinTransition(200, actionEvent -> gameContext.showRoundStats(stats, this));
         }
         String soundResource = "data/spotthedifferences/ding.wav";
@@ -152,6 +154,8 @@ public class SpotTheDifferences implements GameLifeCycle {
     public void launch() {
         gameContext.clear();
         gameContext.getChildren().addAll(borderPane, nextButton);
+
+        gameContext.setLimiterAvailable();
 
         final JsonObject instance = (JsonObject) instances.get(currentInstance);// random.nextInt(instances.size()));
         currentInstance = (currentInstance + 1) % instances.size();
@@ -183,10 +187,12 @@ public class SpotTheDifferences implements GameLifeCycle {
         scoreText.setText(numberDiffFound + "/" + totalNumberDiff);
         stats.incrementNumberOfGoalsToReach(totalNumberDiff);
         stats.notifyNewRoundReady();
+        gameContext.firstStart();
     }
 
     @Override
     public void dispose() {
         stats.setTargetAOIList(targetAOIList);
     }
+
 }

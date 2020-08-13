@@ -33,6 +33,10 @@ public class Configuration {
     private static final String PROPERTY_NAME_WHEREISIT_DIR = "WHEREISITDIR";
     private static final String PROPERTY_NAME_QUESTION_LENGTH = "QUESTIONLENGTH";
     private static final String PROPERTY_NAME_ENABLE_REWARD_SOUND = "ENABLE_REWARD_SOUND";
+    private static final String PROPERTY_NAME_LIMITERT = "LIMITERT";
+    private static final String PROPERTY_NAME_LIMITERS = "LIMITERS";
+    private static final String PROPERTY_NAME_LIMITER_TIME = "LIMITER_TIME";
+    private static final String PROPERTY_NAME_LIMITER_SCORE = "LIMITER_SCORE";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
     private static final String PROPERTY_NAME_HEATMAP_DISABLED = "HEATMAP_DISABLED";
     private static final String PROPERTY_NAME_HEATMAP_OPACITY = "HEATMAP_OPACITY";
@@ -68,6 +72,10 @@ public class Configuration {
     public static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
     private static final long DEFAULT_VALUE_QUESTION_LENGTH = 5000;
     private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
+    private static final boolean DEFAULT_VALUE_LIMITERTIME = false;
+    private static final boolean DEFAULT_VALUE_LIMITERSCORE = false;
+    private static final int DEFAULT_VALUE_LIMITER_TIME = 90;
+    private static final int DEFAULT_VALUE_LIMITER_SCORE = 90;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
     private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
     private static final double DEFAULT_VALUE_HEATMAP_OPACITY = 0.7;
@@ -139,6 +147,18 @@ public class Configuration {
 
     @Getter
     private final BooleanProperty enableRewardSoundProperty;
+
+    @Getter
+    private final BooleanProperty limiterSProperty;
+
+    @Getter
+    private final BooleanProperty limiterTProperty;
+
+    @Getter
+    private final IntegerProperty limiterTimeProperty;
+
+    @Getter
+    private final IntegerProperty limiterScoreProperty;
 
     @Getter
     private final StringProperty menuButtonsOrientationProperty;
@@ -228,6 +248,11 @@ public class Configuration {
         heatMapDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED, propertyChangeListener);
 
         enableRewardSoundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND, propertyChangeListener);
+
+        limiterSProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERS, DEFAULT_VALUE_LIMITERSCORE, propertyChangeListener);
+        limiterTProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERT, DEFAULT_VALUE_LIMITERTIME, propertyChangeListener);
+        limiterTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_TIME, DEFAULT_VALUE_LIMITER_TIME, propertyChangeListener);
+        limiterScoreProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_SCORE, DEFAULT_VALUE_LIMITER_SCORE, propertyChangeListener);
 
         areaOfInterestDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED, propertyChangeListener);
         convexHullDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED, propertyChangeListener);
@@ -328,6 +353,22 @@ public class Configuration {
 
     public Boolean isEnableRewardSound() {
         return enableRewardSoundProperty.getValue();
+    }
+
+    public boolean isLimiterS() {
+        return limiterSProperty.getValue();
+    }
+
+    public boolean isLimiterT() {
+        return limiterTProperty.getValue();
+    }
+
+    public int getLimiterTime() {
+        return limiterTimeProperty.getValue();
+    }
+
+    public int getLimiterScore() {
+        return limiterScoreProperty.getValue();
     }
 
     public String getMenuButtonsOrientation() {

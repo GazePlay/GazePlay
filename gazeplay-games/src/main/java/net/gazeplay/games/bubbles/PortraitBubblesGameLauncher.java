@@ -16,6 +16,6 @@ public class PortraitBubblesGameLauncher implements IGameLauncher<Stats, EnumGam
     @Override
     public GameLifeCycle createNewGame(final IGameContext gameContext, final EnumGameVariant<BubblesGameVariant> gameVariant,
                                        final Stats stats) {
-        return new Bubble(gameContext, BubbleType.PORTRAIT, stats, false, gameVariant.getEnumValue());
+        return new Bubble(gameContext, BubbleType.PORTRAIT, stats, gameVariant.getEnumValue());
     }
 }

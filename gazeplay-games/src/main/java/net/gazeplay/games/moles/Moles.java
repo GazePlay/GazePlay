@@ -1,5 +1,7 @@
 package net.gazeplay.games.moles;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -46,12 +48,13 @@ public class Moles extends Parent implements GameLifeCycle {
     private Label lab;
 
     private RoundDetails currentRoundDetails;
-
+  
     @Getter
     @Setter
     private ArrayList<TargetAOI> targetAOIList;
-
     private double moleRadius;
+
+    private Timer minuteur;
 
     Moles(IGameContext gameContext, Stats stats) {
         super();
@@ -59,10 +62,25 @@ public class Moles extends Parent implements GameLifeCycle {
         this.stats = stats;
         targetAOIList = new ArrayList<>();
         moleRadius = 0;
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
     }
 
     @Override
     public void launch() {
+
+        if (currentRoundDetails != null) {
+            if (currentRoundDetails.molesList != null) {
+                gameContext.getChildren().removeAll(currentRoundDetails.molesList);
+                currentRoundDetails.molesList.clear();
+            }
+            currentRoundDetails = null;
+        }
+        targetAOIList.clear();
+        gameContext.getChildren().clear();
+
+        gameContext.setLimiterAvailable();
+        gameContext.start();
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final Configuration config = gameContext.getConfiguration();
@@ -143,7 +161,7 @@ public class Moles extends Parent implements GameLifeCycle {
         nbMolesOut = new AtomicInteger(0);
         Random r = new Random();
 
-        Timer minuteur = new Timer();
+        minuteur = new Timer();
         TimerTask tache = new TimerTask() {
             public void run() {
 
@@ -269,7 +287,12 @@ public class Moles extends Parent implements GameLifeCycle {
         nbMolesWhacked++;
         String s = "Score:" + nbMolesWhacked;
         stats.incrementNumberOfGoalsReached();
+        EventHandler<ActionEvent> limiterEndEventHandler = e -> {
+            minuteur.cancel();
+            minuteur.purge();
+        };
+        gameContext.updateScore(stats,this, limiterEndEventHandler, limiterEndEventHandler);
         lab.setText(s);
-    }
 
+    }
 }
