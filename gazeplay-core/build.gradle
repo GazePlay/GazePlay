@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 dependencies {
     compile 'com.github.agomezmoron:screen-recorder:0.0.3'
     compile project(':gazeplay-commons')
@@ -39,6 +41,17 @@ jar {
                 "Built-By": System.properties['user.name']
         )
     }
+}
+
+tasks.jar.dependsOn('createLicence')
+
+task createLicence(dependsOn: ['processResources'], type: Copy, group: 'license') {
+    from("${rootDir}/gradle/templates/licence.txt")
+    expand([
+            "version": version,
+            "date"   : new Date().format('yyyy-MM-dd')
+    ])
+    into("${processResources.destinationDir}/data/common")
 }
 
 def generatedResources = "${buildDir}/generated-resources/main"
