@@ -29,7 +29,7 @@ WizardStyle=modern
 WizardImageFile=gazeplayicon.bmp
 WizardSmallImageFile=gazeplayicon.bmp
 
-DefaultDirName={pf}\\GazePlay
+DefaultDirName={commonpf}\\GazePlay
 DefaultGroupName=GazePlay
 LicenseFile=licence.txt
 

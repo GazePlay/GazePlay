@@ -41,7 +41,7 @@ task prepareInnoSetupFiles(group: 'distribution') {
 
 
         copy {
-            from("${rootDir}/gazeplay-core/src/main/resources/data/common/licence.txt")
+            from("${rootDir}/gradle/templates/licence.txt")
             expand([
                     "version": version,
                     "date"   : new Date().format('yyyy-MM-dd')
