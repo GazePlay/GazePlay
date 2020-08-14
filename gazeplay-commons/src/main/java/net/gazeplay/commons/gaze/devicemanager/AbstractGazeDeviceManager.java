@@ -170,6 +170,39 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
         }
     }
+    @Override
+    public void onSavedMovementsUpdate(Point2D gazePositionOnScreen) {
+
+        // notifyAllGazeMotionListeners(gazePositionOnScreen);
+        final double positionX = gazePositionOnScreen.getX();
+        final double positionY = gazePositionOnScreen.getY();
+
+        Configuration config = ActiveConfigurationContext.getInstance();
+
+        if (config.isGazeMouseEnable() && !config.isMouseFree()) {
+            Platform.runLater(
+                () -> robotSupplier.get().mouseMove((int) positionX, (int) positionY)
+            );
+        }
+
+        add();
+        delete();
+
+        Collection<GazeInfos> c = shapesEventFilter.values();
+
+        synchronized (shapesEventFilter) {
+
+            for (GazeInfos gi : c) {
+                final Node node = gi.getNode();
+
+                eventFire(positionX, positionY, gi, node);
+                // log.info("Fire : "+node+" then recursion !");
+                recursiveEventFire(positionX, positionY, node);
+
+            }
+
+        }
+    }
 
     public void recursiveEventFire(double positionX, double positionY, Node node) {
         if (node instanceof Pane) {

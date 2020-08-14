@@ -1,5 +1,7 @@
 package net.gazeplay.commons.utils.stats;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import javafx.embed.swing.SwingFXUtils;
@@ -118,9 +120,27 @@ public class Stats implements GazeMotionListener {
         this(gameContextScene, null);
     }
 
+    public Stats(final Scene gameContextScene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+        this(gameContextScene, null, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+    }
+
     public Stats(final Scene gameContextScene, final String gameName) {
         this.gameContextScene = gameContextScene;
         this.gameName = gameName;
+
+        heatMapPixelSize = computeHeatMapPixelSize(gameContextScene);
+    }
+
+    public Stats(final Scene gameContextScene, final String gameName, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+        this.gameContextScene = gameContextScene;
+        this.gameName = gameName;
+        this.nbGoalsReached = nbGoalsReached;
+        this.nbGoalsToReach = nbGoalsToReach;
+        this.nbUnCountedGoalsReached = nbUnCountedGoalsReached;
+        this.fixationSequence = fixationSequence;
+        this.lifeCycle = lifeCycle;
+        this.roundsDurationReport = roundsDurationReport;
+        this.savedStatsInfo = savedStatsInfo;
 
         heatMapPixelSize = computeHeatMapPixelSize(gameContextScene);
     }
@@ -624,15 +644,33 @@ public class Stats implements GazeMotionListener {
     }
 
     private JsonObject buildSavedDataJSON(JsonArray data) {
+        Gson gson = new GsonBuilder().create();
+        JsonArray fixationSequenceArray = gson.toJsonTree(fixationSequence).getAsJsonArray();
+        JsonArray durationBetweenGoalsArray = gson.toJsonTree(roundsDurationReport.getDurationBetweenGoals()).getAsJsonArray();
         String screenAspectRatio = getScreenRatio();
 
-        savedDataObj.addProperty("Seed", currentGameSeed);
-        savedDataObj.addProperty("GameName", currentGameNameCode);
-        savedDataObj.addProperty("GameVariantClass", currentGameVariantClass);
-        savedDataObj.addProperty("GameVariant", currentGameVariant);
-        savedDataObj.addProperty("GameStartedTime", startTime);
-        savedDataObj.addProperty("ScreenAspectRatio", screenAspectRatio);
-        savedDataObj.add("CoordinatesAndTimeStamp", data);
+        savedDataObj.addProperty("gameSeed", currentGameSeed);
+        savedDataObj.addProperty("gameName", currentGameNameCode);
+        savedDataObj.addProperty("gameVariantClass", currentGameVariantClass);
+        savedDataObj.addProperty("gameVariant", currentGameVariant);
+        savedDataObj.addProperty("gameStartedTime", startTime);
+        savedDataObj.addProperty("screenAspectRatio", screenAspectRatio);
+        savedDataObj.addProperty("statsNbGoalsReached", nbGoalsReached);
+        savedDataObj.addProperty("statsNbGoalsToReach", nbGoalsToReach);
+        savedDataObj.addProperty("statsNbUnCountedGoalsReached", nbUnCountedGoalsReached);
+
+        JsonObject lifeCycleObject = new JsonObject();
+        lifeCycleObject.addProperty("startTime", lifeCycle.getStartTime());
+        lifeCycleObject.addProperty("stopTime", lifeCycle.getStopTime());
+        savedDataObj.add("lifeCycle", lifeCycleObject);
+
+        JsonObject roundsDurationReportObject = new JsonObject();
+        roundsDurationReportObject.addProperty("totalAdditiveDuration", roundsDurationReport.getTotalAdditiveDuration());
+        roundsDurationReportObject.add("durationBetweenGoals", durationBetweenGoalsArray);
+        savedDataObj.add("roundsDurationReport", roundsDurationReportObject);
+
+        savedDataObj.add("fixationSequence", fixationSequenceArray);
+        savedDataObj.add("coordinatesAndTimeStamp", data);
         return savedDataObj;
     }
 

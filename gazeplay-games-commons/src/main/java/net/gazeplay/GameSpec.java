@@ -6,9 +6,14 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.FixationPoint;
+import net.gazeplay.commons.utils.stats.LifeCycle;
+import net.gazeplay.commons.utils.stats.RoundsDurationReport;
+import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -17,6 +22,8 @@ public class GameSpec {
     public interface GameLauncher<T extends Stats, V extends GameVariant> {
 
         T createNewStats(Scene scene);
+
+        T createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo);
 
         GameLifeCycle createNewGame(IGameContext gameContext, V gameVariant, T stats);
         GameLifeCycle replayGame(IGameContext gameContext, V gameVariant, T stats, double gameSeed);

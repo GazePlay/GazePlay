@@ -8,15 +8,22 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingNode;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.FixationPoint;
+import net.gazeplay.commons.utils.stats.LifeCycle;
+import net.gazeplay.commons.utils.stats.RoundsDurationReport;
+import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
 import net.gazeplay.ui.scenes.ingame.GameContext;
@@ -37,7 +44,6 @@ import java.util.List;
 
 public class ReplayingGameFromJson {
     static List<GameSpec> gamesList;
-
     private static ApplicationContext applicationContext;
     private static GameContext gameContext;
     private static GazePlay gazePlay;
@@ -47,11 +53,16 @@ public class ReplayingGameFromJson {
     private static GameSpec selectedGameSpec;
     private static GameSpec.GameVariant gameVariant;
     private static JsonArray coordinatesAndTimeStamp;
-    // location
+    private static LinkedList<FixationPoint> fixationSequence;
+    private static  int nbGoalsReached;
+    private static  int nbGoalsToReach;
+    private static  int nbUnCountedGoalsReached;
+    private static LifeCycle lifeCycle;
+    private static RoundsDurationReport roundsDurationReport;
+    private static SavedStatsInfo savedStatsInfo;
     private static int x0, y0;
     private static int nextX, nextY, nextTime, prevTime;
-    // refresh rate
-    private static int delay = 0;
+    private static int delay = 0; // refresh rate
     private static boolean first = true;
 
     public ReplayingGameFromJson(GazePlay gazePlay, ApplicationContext applicationContext) {
@@ -65,19 +76,32 @@ public class ReplayingGameFromJson {
     }
 
     public static void pickJSONFile() throws FileNotFoundException {
-        final String fileName = getS();
+        final String fileName = getFileName();
         if (fileName == null) {
             return;
         }
-        final File selectedFile = new File(fileName);
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(selectedFile));
+        final File replayDataFile = new File(fileName);
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(replayDataFile));
         Gson gson = new Gson();
         JsonFile json = gson.fromJson(bufferedReader, JsonFile.class);
-        currentGameSeed = json.getSeed();
+        currentGameSeed = json.getGameSeed();
         currentGameNameCode = json.getGameName();
         currentGameVariant = json.getGameVariant();
         coordinatesAndTimeStamp = json.getCoordinatesAndTimeStamp();
-        System.out.println("Seed: " + json.getSeed());
+        fixationSequence = json.getFixationSequence();
+        nbGoalsReached = json.getStatsNbGoalsReached();
+        nbGoalsToReach = json.getStatsNbGoalsToReach();
+        nbUnCountedGoalsReached = json.getStatsNbUnCountedGoalsReached();
+        lifeCycle = json.getLifeCycle();
+        roundsDurationReport = json.getRoundsDurationReport();
+        String filePrefix = fileName.substring(0, fileName.lastIndexOf("-"));
+        final File gazeMetricsFile = new File(filePrefix + "-metrics.png");
+        final File heatMapCsvFile = new File(filePrefix + "-heatmap.csv");
+        final File screenShotFile = new File(filePrefix + "-screenshot.png");
+        final File colorBandsFile = new File(filePrefix + "-colorBands.png");
+        savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsFile, screenShotFile,
+            colorBandsFile, replayDataFile);
+        System.out.println("Seed: " + json.getGameSeed());
         System.out.println("gameName: " + json.getGameName());
         System.out.println("gameVariantClass: " + json.getGameVariant());
         System.out.println("gameVariant: " + json.getGameVariantClass());
@@ -85,7 +109,8 @@ public class ReplayingGameFromJson {
         System.out.println("gameStartedTime: " + json.getGameStartedTime());
         replayGame();
     }
-    public static String getS() {
+
+    public static String getFileName() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
@@ -93,18 +118,17 @@ public class ReplayingGameFromJson {
             new FileChooser.ExtensionFilter("JSON files", "*.json")
         );
         File selectedFile = fileChooser.showOpenDialog(gameContext.getPrimaryStage());
-        String s = null;
+        String selectedFileName = null;
         if (selectedFile != null) {
-            s = selectedFile.getAbsolutePath();
+            selectedFileName = selectedFile.getAbsolutePath();
         }
-        return s;
+        return selectedFileName;
     }
+
     public static void replayGame(){
         ConfigurationContext configContext = applicationContext.getBean(ConfigurationContext.class);
         gameContext = applicationContext.getBean(GameContext.class);
-
         gazePlay.onGameLaunch(gameContext);
-
         for (GameSpec gameSpec : gamesList) {
             if (currentGameNameCode.equals(gameSpec.getGameSummary().getNameCode())){
                 selectedGameSpec = gameSpec;
@@ -116,24 +140,20 @@ public class ReplayingGameFromJson {
                 gameVariant = variant;
             }
         }
-
         GameSpec.GameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
-
         final Scene scene = gazePlay.getPrimaryScene();
-        final Stats stats = gameLauncher.createNewStats(scene);
-
-        GameLifeCycle currentGame = gameLauncher.replayGame(gameContext, gameVariant, stats, currentGameSeed);
+        //final Stats stats = gameLauncher.createNewStats(scene);
+        final Stats statsSaved = gameLauncher.createSavedStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+        GameLifeCycle currentGame = gameLauncher.replayGame(gameContext, gameVariant, statsSaved, currentGameSeed);
         //GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
+        gameContext.createControlPanel(gazePlay, statsSaved, currentGame, "replay");
+        gameContext.createQuitShortcut(gazePlay, statsSaved, currentGame);
         currentGame.launch();
 
         /*var game = gameContext.getChildren().get(gameContext.getChildren().indexOf(currentGame));
         gameContext.getRoot().getChildren().get(gameContext.getRoot().getChildren().indexOf(swingNode)).toFront();*/
 
-        gameContext.createControlPanel(gazePlay, stats, currentGame);
-        gameContext.createQuitShortcut(gazePlay, stats, currentGame);
-
         final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
-
         //Drawing in canvas
         final javafx.scene.canvas.Canvas canvas = new Canvas(screenDimension.getWidth(), screenDimension.getHeight());
         gameContext.getChildren().add(canvas);
@@ -150,7 +170,15 @@ public class ReplayingGameFromJson {
                 };
             };
         };
+
+        loadingService.setOnSucceeded( e -> {
+
+            gameContext.exitGame(statsSaved, gazePlay, currentGame, "replay");
+        });
+
         loadingService.start();
+
+
 
         //Drawing in swingNode
         /*BasicAnim anim  = new BasicAnim(coordinatesAndTimeStamp);
@@ -164,28 +192,27 @@ public class ReplayingGameFromJson {
     }
 
     private static void drawFixationLines(Canvas canvas, JsonArray coordinatesAndTimeStamp) {
-        final GraphicsContext gc = canvas.getGraphicsContext2D();
+        final GraphicsContext graphics = canvas.getGraphicsContext2D();
 
         JsonObject  startingCoordinates = (JsonObject) coordinatesAndTimeStamp.get(0);
         x0 = Integer.parseInt(String.valueOf(startingCoordinates.get("X")));
         y0 = Integer.parseInt(String.valueOf(startingCoordinates.get("Y")));
-        gc.setStroke(javafx.scene.paint.Color.rgb(255, 157, 6, 1));
-        gc.setLineWidth(4);
+        graphics.setStroke(javafx.scene.paint.Color.rgb(255, 157, 6, 1));
+        graphics.setLineWidth(4);
 
-        for (JsonElement pa : coordinatesAndTimeStamp) {
+        for (JsonElement coordinateAndTimeStamp : coordinatesAndTimeStamp) {
             if (!first) {
                 x0 = nextX;
                 y0 = nextY;
                 prevTime = nextTime;
             }
-            JsonObject paymentObj = pa.getAsJsonObject();
-            nextX = Integer.parseInt(paymentObj.get("X").getAsString());
-            nextY = Integer.parseInt(paymentObj.get("Y").getAsString());
-            nextTime = Integer.parseInt(paymentObj.get("time").getAsString());
+            JsonObject coordinateAndTimeObj = coordinateAndTimeStamp.getAsJsonObject();
+            nextX = Integer.parseInt(coordinateAndTimeObj.get("X").getAsString());
+            nextY = Integer.parseInt(coordinateAndTimeObj.get("Y").getAsString());
+            nextTime = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
             delay = nextTime - prevTime;
-            //System.out.println("x0: " + x0 + ". y0: " + y0 + ". nextX: " + nextX + ". nextY: " + nextY);
             if (!first)
-                repaint(gc);
+                repaint(graphics, canvas);
             else
                 first = false;
             try {
@@ -193,56 +220,76 @@ public class ReplayingGameFromJson {
             } catch (InterruptedException e) {
             }
         }
-        //return gc;
     }
 
-    public static void repaint(GraphicsContext g) {
-        paint(g);
+    public static void repaint(GraphicsContext graphics, Canvas canvas) {
+        paint(graphics, canvas);
     }
 
-    public static void paint(GraphicsContext g) {
+    public static void paint(GraphicsContext graphics, Canvas canvas) {
 
         //g.strokeLine(x0, y0, nextX, nextY);
-        g.lineTo(nextX, nextY);
-        g.stroke();
+        //graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        graphics.lineTo(nextX, nextY);
+        graphics.stroke();
+        Point2D point = new Point2D(nextX, nextY);
+        gameContext.getGazeDeviceManager().onSavedMovementsUpdate(point);
     }
 
 }
 class JsonFile {
+    @Getter
+    private double gameSeed;
+    @Getter
+    private String gameName;
+    @Getter
+    private String gameVariantClass;
+    @Getter
+    private String gameVariant;
+    @Getter
+    private double gameStartedTime;
+    @Getter
+    private String screenAspectRatio;
+    @Getter
+    private JsonArray coordinatesAndTimeStamp;
+    @Getter
+    private LifeCycle lifeCycle;
+    @Getter
+    private int statsNbGoalsReached;
+    @Getter
+    private int statsNbGoalsToReach;
+    @Getter
+    private int statsNbUnCountedGoalsReached;
+    @Getter
+    private RoundsDurationReport roundsDurationReport;
+    @Getter
+    private LinkedList<FixationPoint> fixationSequence;
 
-    double Seed;
-    String GameName;
-    String GameVariantClass;
-    String GameVariant;
-    double GameStartedTime;
-    String ScreenAspectRatio;
-    JsonArray CoordinatesAndTimeStamp;
-
-    public double getSeed() {
-        return Seed;
+/*    public double getGameSeed() {
+        return gameSeed;
     }
 
     public String getGameName() {
-        return GameName;
+        return gameName;
     }
 
     public String getGameVariantClass() {
-        return GameVariantClass;
+        return gameVariantClass;
     }
 
     public String getGameVariant() {
-        return GameVariant;
+        return gameVariant;
     }
 
     public double getGameStartedTime() {
-        return GameStartedTime;
+        return gameStartedTime;
     }
 
     public String getScreenAspectRatio() {
-        return ScreenAspectRatio;
+        return screenAspectRatio;
     }
 
-    public JsonArray getCoordinatesAndTimeStamp() {return CoordinatesAndTimeStamp;}
+    public JsonArray getCoordinatesAndTimeStamp() {return coordinatesAndTimeStamp;}*/
 
 }
 

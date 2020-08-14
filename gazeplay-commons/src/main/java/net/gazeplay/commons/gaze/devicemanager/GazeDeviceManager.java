@@ -26,4 +26,6 @@ public interface GazeDeviceManager {
     void removeEventHandler(Node gs);
 
     void clear();
+
+    void onSavedMovementsUpdate(Point2D gazePositionOnScreen);
 }

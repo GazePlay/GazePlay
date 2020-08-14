@@ -182,6 +182,33 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         menuHBox.getChildren().add(homeButton);
     }
 
+    public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame, String replayMode) {
+        Configuration config = ActiveConfigurationContext.getInstance();
+        MusicControl musicControl = getMusicControl();
+        AnimationSpeedRatioControl animationSpeedRatioControl = AnimationSpeedRatioControl.getInstance();
+
+        GridPane leftControlPane = new GridPane();
+        leftControlPane.setHgap(5);
+        leftControlPane.setVgap(5);
+        leftControlPane.setAlignment(Pos.TOP_CENTER);
+        leftControlPane.add(musicControl.createMusicControlPane(), 0, 0);
+        leftControlPane.add(musicControl.createVolumeLevelControlPane(config, gazePlay.getTranslator()), 1, 0);
+        leftControlPane.add(animationSpeedRatioControl.createSpeedEffectsPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 2, 0);
+        leftControlPane.getChildren().forEach(node -> {
+            GridPane.setVgrow(node, Priority.ALWAYS);
+            GridPane.setHgrow(node, Priority.ALWAYS);
+        });
+
+
+        menuHBox.getChildren().add(leftControlPane);
+
+        I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
+        menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
+
+        HomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame, replayMode);
+        menuHBox.getChildren().add(homeButton);
+    }
+
     public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
                                                    @NonNull GameLifeCycle currentGame) {
 
@@ -226,6 +253,58 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         } else {
             asynchronousStatsPersistTask.run();
         }
+
+        StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
+
+        this.clear();
+
+        gazePlay.onDisplayStats(statsContext);
+    }
+
+    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
+                                                   @NonNull GameLifeCycle currentGame, String replayMode) {
+
+        EventHandler<Event> homeEvent = e -> {
+            root.setCursor(Cursor.WAIT); // Change cursor to wait style
+            exitGame(stats, gazePlay, currentGame, replayMode);
+            root.setCursor(Cursor.DEFAULT); // Change cursor to default style
+        };
+
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+
+        HomeButton homeButton = new HomeButton(screenDimension);
+        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+        return homeButton;
+    }
+
+    public void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame, String replayMode) {
+
+        if (videoRecordingContext != null) {
+            videoRecordingContext.pointersClear();
+        }
+
+        currentGame.dispose();
+        ForegroundSoundsUtils.stopSound(); // to stop playing the sound of Bravo
+        //stats.stop();
+        gazeDeviceManager.clear();
+        gazeDeviceManager.destroy();
+
+        soundManager.clear();
+        soundManager.destroy();
+
+        /*Runnable asynchronousStatsPersistTask = () -> {
+            try {
+                stats.saveStats();
+            } catch (IOException e) {
+                log.error("Failed to save stats file", e);
+            }
+        };
+
+        if (runAsynchronousStatsPersist) {
+            AsyncUiTaskExecutor.getInstance().getExecutorService().execute(asynchronousStatsPersistTask);
+        } else {
+            asynchronousStatsPersistTask.run();
+        }*/
 
         StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
 
