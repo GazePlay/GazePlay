@@ -101,12 +101,7 @@ public class ReplayingGameFromJson {
         final File colorBandsFile = new File(filePrefix + "-colorBands.png");
         savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsFile, screenShotFile,
             colorBandsFile, replayDataFile);
-        System.out.println("Seed: " + json.getGameSeed());
-        System.out.println("gameName: " + json.getGameName());
-        System.out.println("gameVariantClass: " + json.getGameVariant());
-        System.out.println("gameVariant: " + json.getGameVariantClass());
-        System.out.println("screenAspectRatio: " + json.getScreenAspectRatio());
-        System.out.println("gameStartedTime: " + json.getGameStartedTime());
+
         replayGame();
     }
 
@@ -158,6 +153,7 @@ public class ReplayingGameFromJson {
         final javafx.scene.canvas.Canvas canvas = new Canvas(screenDimension.getWidth(), screenDimension.getHeight());
         gameContext.getChildren().add(canvas);
         //drawFixationLines(canvas, coordinatesAndTimeStamp);
+        Stats statsSaved2 = gameLauncher.createSavedStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
         Service<Void> loadingService = new Service<Void>(){
             @Override
             protected Task<Void> createTask() {
@@ -173,7 +169,7 @@ public class ReplayingGameFromJson {
 
         loadingService.setOnSucceeded( e -> {
 
-            gameContext.exitGame(statsSaved, gazePlay, currentGame, "replay");
+            gameContext.exitGame(statsSaved2, gazePlay, currentGame, "replay");
         });
 
         loadingService.start();
@@ -194,27 +190,29 @@ public class ReplayingGameFromJson {
     private static void drawFixationLines(Canvas canvas, JsonArray coordinatesAndTimeStamp) {
         final GraphicsContext graphics = canvas.getGraphicsContext2D();
 
-        JsonObject  startingCoordinates = (JsonObject) coordinatesAndTimeStamp.get(0);
+        /*JsonObject  startingCoordinates = (JsonObject) coordinatesAndTimeStamp.get(0);
         x0 = Integer.parseInt(String.valueOf(startingCoordinates.get("X")));
-        y0 = Integer.parseInt(String.valueOf(startingCoordinates.get("Y")));
+        y0 = Integer.parseInt(String.valueOf(startingCoordinates.get("Y")));*/
         graphics.setStroke(javafx.scene.paint.Color.rgb(255, 157, 6, 1));
         graphics.setLineWidth(4);
 
         for (JsonElement coordinateAndTimeStamp : coordinatesAndTimeStamp) {
-            if (!first) {
+            /*if (!first) {
                 x0 = nextX;
                 y0 = nextY;
                 prevTime = nextTime;
-            }
+            }*/
+            prevTime = nextTime;
             JsonObject coordinateAndTimeObj = coordinateAndTimeStamp.getAsJsonObject();
             nextX = Integer.parseInt(coordinateAndTimeObj.get("X").getAsString());
             nextY = Integer.parseInt(coordinateAndTimeObj.get("Y").getAsString());
             nextTime = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
             delay = nextTime - prevTime;
-            if (!first)
+            paint(graphics, canvas);
+            /*if (!first)
                 repaint(graphics, canvas);
             else
-                first = false;
+                first = false;*/
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException e) {

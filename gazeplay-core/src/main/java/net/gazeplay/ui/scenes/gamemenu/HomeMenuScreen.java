@@ -363,8 +363,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     }
 
     private CustomButton createReplayGameButton(GazePlay gazePlay, Dimension2D screenDimension) {
-        CustomButton logoutButton = new CustomButton("data/common/images/logout.png", screenDimension);
-        logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
+        CustomButton replayButton = new CustomButton("data/common/images/logout.png", screenDimension);
+        replayButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
             try {
                 ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getApplicationContext());
                 replayingGame.pickJSONFile();
@@ -372,7 +372,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 ex.printStackTrace();
             }
         });
-        return logoutButton;
+        return replayButton;
     }
 
     private CheckBox buildCategoryCheckBox(
