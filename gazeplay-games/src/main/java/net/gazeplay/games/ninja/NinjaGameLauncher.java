@@ -2,17 +2,17 @@ package net.gazeplay.games.ninja;
 
 import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
-import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
+import net.gazeplay.IGameLauncher;
+import net.gazeplay.commons.gamevariants.EnumGameVariant;
+import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
-import net.gazeplay.commons.utils.stats.Stats;
-
 import java.util.LinkedList;
 
-public class NinjaGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.EnumGameVariant<NinjaGameVariant>> {
+public class NinjaGameLauncher implements IGameLauncher<Stats, EnumGameVariant<NinjaGameVariant>> {
 
     @Override
     public Stats createNewStats(Scene scene) {
@@ -25,12 +25,12 @@ public class NinjaGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.EnumGameVariant<NinjaGameVariant> gameVariant, Stats stats) {
+    public GameLifeCycle createNewGame(IGameContext gameContext, EnumGameVariant<NinjaGameVariant> gameVariant, Stats stats) {
         return new Ninja(gameContext, stats, gameVariant.getEnumValue());
     }
 
     @Override
-    public GameLifeCycle replayGame(IGameContext gameContext, GameSpec.EnumGameVariant<NinjaGameVariant> gameVariant, Stats stats, double gameSeed) {
+    public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<NinjaGameVariant> gameVariant, Stats stats, double gameSeed) {
         return new Ninja(gameContext, stats, gameVariant.getEnumValue(), gameSeed);
     }
 

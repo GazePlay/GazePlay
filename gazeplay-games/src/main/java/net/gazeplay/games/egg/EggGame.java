@@ -21,6 +21,7 @@ public class EggGame implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         this.numberOfTurns = numOfTurns;
+        gameContext.startTimeLimiter();
     }
 
     public EggGame(final IGameContext gameContext, final Stats stats, final int numOfTurns, double gameSeed) {
@@ -32,6 +33,8 @@ public class EggGame implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.start();
+        gameContext.setLimiterAvailable();
         final Configuration config = gameContext.getConfiguration();
 
         final Egg egg = createEgg(config);

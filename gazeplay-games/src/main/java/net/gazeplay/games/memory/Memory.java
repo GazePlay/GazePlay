@@ -72,6 +72,7 @@ public class Memory implements GameLifeCycle {
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.stats = stats;
+        this.gameContext.startTimeLimiter();
 
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
@@ -105,6 +106,7 @@ public class Memory implements GameLifeCycle {
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.stats = stats;
+        this.gameContext.startTimeLimiter();
 
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
@@ -120,6 +122,8 @@ public class Memory implements GameLifeCycle {
             this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"),
                 Utils.getImagesSubdirectory("default"), randomGenerator);
         }
+
+        gameContext.start();
 
     }
 
@@ -139,6 +143,7 @@ public class Memory implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
         final Configuration config = gameContext.getConfiguration();
         final int cardsCount = nbColumns * nbLines;
 
@@ -249,4 +254,5 @@ public class Memory implements GameLifeCycle {
     public int getnbRemainingPeers() {
         return nbRemainingPeers;
     }
+
 }

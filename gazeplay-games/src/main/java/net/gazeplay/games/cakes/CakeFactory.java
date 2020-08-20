@@ -103,6 +103,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.debug("dimension2D = {}", dimension2D);
         this.stats = stats;
+        this.gameContext.startTimeLimiter();
         this.random = new ReplayablePseudoRandom();
         this.stats.setGameSeed(random.getSeed());
         centerX = dimension2D.getWidth() / 2;
@@ -124,6 +125,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.debug("dimension2D = {}", dimension2D);
         this.stats = stats;
+        this.gameContext.startTimeLimiter();
         this.random = new ReplayablePseudoRandom(gameSeed);
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2;
@@ -252,11 +254,13 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             final FadeTransition ft = new FadeTransition(Duration.millis(500), randomCake);
             ft.setToValue(1);
             ft.setOnFinished(actionEvent -> {
+                gameContext.updateScore(stats,this);
                 playWin();
             });
             ft.play();
         } else {
             stats.incrementNumberOfGoalsReached();
+            gameContext.updateScore(stats,this);
             playWin();
         }
     }
@@ -286,6 +290,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             launch();
 
             gameContext.onGameStarted();
+
         });
     }
 
@@ -629,6 +634,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
         gameContext.getChildren().add(this);
 
         for (int i = 0; i < 3; i++) {
@@ -652,6 +658,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
         this.gameContext.resetBordersToFront();
         stats.notifyNewRoundReady();
+        this.gameContext.firstStart();
     }
 
     @Override

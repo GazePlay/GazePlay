@@ -30,12 +30,15 @@ public class Order implements GameLifeCycle {
     private final int nbTarget;
     private final ReplayablePseudoRandom randomGenerator;
 
+
     public Order(IGameContext gameContext, int nbTarget, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
         this.currentNum = 0;
         this.nbTarget = nbTarget;
+        //this.gameContext.startScoreLimiter();
+        this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
     }
@@ -46,11 +49,15 @@ public class Order implements GameLifeCycle {
         this.stats = stats;
         this.currentNum = 0;
         this.nbTarget = nbTarget;
+        //this.gameContext.startScoreLimiter();
+        this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
+        gameContext.start();
         spawn();
     }
 
@@ -58,6 +65,7 @@ public class Order implements GameLifeCycle {
         handleAnswer(t, this.currentNum == t.getNum() - 1);
 
         if (this.currentNum == nbTarget) {
+            gameContext.updateScore(stats,this);
             gameContext.playWinTransition(20, actionEvent -> Order.this.restart());
         }
     }
@@ -76,9 +84,9 @@ public class Order implements GameLifeCycle {
         Timeline pause = new Timeline();
         pause.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
         pause.setOnFinished(actionEvent -> {
-            Order.this.gameContext.getChildren().remove(c);
+            gameContext.getChildren().remove(c);
             if (!correct) {
-                Order.this.restart();
+                restart();
             }
         });
 
@@ -127,4 +135,5 @@ public class Order implements GameLifeCycle {
         this.currentNum = 0;
         gameContext.clear();
     }
+
 }

@@ -18,6 +18,7 @@ import javafx.stage.FileChooser;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.FixationPoint;
@@ -51,7 +52,7 @@ public class ReplayingGameFromJson {
     private static String currentGameNameCode;
     private static String currentGameVariant;
     private static GameSpec selectedGameSpec;
-    private static GameSpec.GameVariant gameVariant;
+    private static IGameVariant gameVariant;
     private static JsonArray coordinatesAndTimeStamp;
     private static LinkedList<FixationPoint> fixationSequence;
     private static  int nbGoalsReached;
@@ -130,12 +131,12 @@ public class ReplayingGameFromJson {
             }
         }
         final Translator translator = gazePlay.getTranslator();
-        for (GameSpec.GameVariant variant : selectedGameSpec.getGameVariantGenerator().getVariants()){
+        for (IGameVariant variant : selectedGameSpec.getGameVariantGenerator().getVariants()){
             if (currentGameVariant.equals(variant.getLabel(translator))){
                 gameVariant = variant;
             }
         }
-        GameSpec.GameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
+        IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
         final Scene scene = gazePlay.getPrimaryScene();
         //final Stats stats = gameLauncher.createNewStats(scene);
         final Stats statsSaved = gameLauncher.createSavedStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);

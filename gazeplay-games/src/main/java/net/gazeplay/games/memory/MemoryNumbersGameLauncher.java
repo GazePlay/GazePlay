@@ -2,18 +2,18 @@ package net.gazeplay.games.memory;
 
 import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
-import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
+import net.gazeplay.IGameLauncher;
+import net.gazeplay.commons.gamevariants.DimensionGameVariant;
+import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
-import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.magiccards.MagicCardsGamesStats;
-
 import java.util.LinkedList;
 
-public class MemoryNumbersGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant> {
+public class MemoryNumbersGameLauncher implements IGameLauncher<Stats, DimensionGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new MagicCardsGamesStats(scene);
@@ -26,14 +26,14 @@ public class MemoryNumbersGameLauncher implements GameSpec.GameLauncher<Stats, G
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
-                                       GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                                       DimensionGameVariant gameVariant, Stats stats) {
         return new Memory(Memory.MemoryGameType.NUMBERS, gameContext, gameVariant.getWidth(),
             gameVariant.getHeight(), stats, false);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
-                                       GameSpec.DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+                                       DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
         return new Memory(Memory.MemoryGameType.NUMBERS, gameContext, gameVariant.getWidth(),
             gameVariant.getHeight(), stats, false, gameSeed);
     }

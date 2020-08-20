@@ -61,7 +61,6 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
     private final ReplayablePseudoRandom randomGenerator;
 
-
     @Getter
     @Setter
     private Potion potionRed;
@@ -79,7 +78,8 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = (MagicPotionsStats) stats;
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
     }
@@ -89,13 +89,15 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = (MagicPotionsStats) stats;
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
     @Override
     public void launch() {
 
+        gameContext.setLimiterAvailable();
         final String imagePATH = "data/potions/images/";
 
         initBackground(imagePATH);
@@ -160,6 +162,8 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
+
+        gameContext.firstStart();
 
     }
 

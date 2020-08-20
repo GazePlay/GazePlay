@@ -44,6 +44,8 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         super();
 
         this.gameContext = gameContext;
+        this.gameContext.startScoreLimiter();
+        this.gameContext.startTimeLimiter();
         this.stats = stats;
 
         this.randomGenerator = new ReplayablePseudoRandom();
@@ -101,6 +103,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         final Rectangle recJeu = new Rectangle(entiereRecX, entiereRecY, entiereRecWidth, entiereRecHeight);
@@ -118,6 +121,8 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         // launch of cheese
         cheese.beginCheese();
         gameContext.getChildren().add(cheese);
+
+        gameContext.start();
 
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
@@ -138,6 +143,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
                 throw new IllegalArgumentException("Unsupported variant ID");
         }
     }
+
 
     @Override
     public void dispose() {
@@ -192,6 +198,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     void testIfCheese(final int i, final int j) {
         if (cheese.isTheCheese(i, j)) {
             stats.incrementNumberOfGoalsReached();
+            gameContext.updateScore(stats, this);
             cheese.moveCheese();
             stats.incrementNumberOfGoalsToReach();
             mouse.nbMove = 0;

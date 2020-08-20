@@ -44,6 +44,8 @@ public class Target extends Portrait {
 
     private static final String audioClipResourceLocation = "data/ninja/sounds/2009.wav";
 
+    private final Ninja gameInstance;
+
     private boolean animationStopped = true;
 
     private final NinjaGameVariant gameVariant;
@@ -52,16 +54,20 @@ public class Target extends Portrait {
 
     public Animation currentTranslation;
 
+
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
-                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final ReplayablePseudoRandom randomGenerator) {
+                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance, final ReplayablePseudoRandom randomGenerator) {
         super(radius, randomPositionGenerator, imageLibrary);
 
+        this.gameInstance = gameInstance;
         this.gameContext = gameContext;
         this.randomPositionGenerator = randomPositionGenerator;
         this.stats = stats;
         this.imageLibrary = imageLibrary;
         this.gameVariant = gameVariant;
         this.randomGen = randomGenerator;
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
 
         this.miniBallsPortraits = generateMiniBallsPortraits(randomPositionGenerator, imageLibrary, nbBall);
         gameContext.getChildren().addAll(miniBallsPortraits);
@@ -74,6 +80,7 @@ public class Target extends Portrait {
         this.addEventHandler(GazeEvent.ANY, enterEvent);
 
         move();
+        gameContext.start();
     }
 
     private List<Portrait> generateMiniBallsPortraits(final RandomPositionGenerator randomPositionGenerator,
@@ -218,6 +225,8 @@ public class Target extends Portrait {
     private void enter(final Event e) {
 
         stats.incrementNumberOfGoalsReached();
+
+        gameContext.updateScore(stats,gameInstance);
 
         final Animation runningTranslation = currentTranslation;
         if (runningTranslation != null) {

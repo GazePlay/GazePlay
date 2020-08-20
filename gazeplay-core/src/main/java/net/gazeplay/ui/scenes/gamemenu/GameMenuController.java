@@ -10,8 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
+import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
@@ -34,7 +36,7 @@ public class GameMenuController {
         @NonNull GameSpec gameSpec,
         String gameName
     ) {
-        Collection<GameSpec.GameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
+        Collection<IGameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
 
         if (variants.size() > 1) {
             root.setEffect(new BoxBlur());
@@ -49,7 +51,7 @@ public class GameMenuController {
 
         } else {
             if (variants.size() == 1) {
-                GameSpec.GameVariant onlyGameVariant = variants.iterator().next();
+                IGameVariant onlyGameVariant = variants.iterator().next();
                 chooseGame(gazePlay, gameSpec, onlyGameVariant);
             } else {
                 chooseGame(gazePlay, gameSpec, null);
@@ -60,13 +62,13 @@ public class GameMenuController {
     public void chooseGame(
         GazePlay gazePlay,
         GameSpec selectedGameSpec,
-        GameSpec.GameVariant gameVariant
+        IGameVariant gameVariant
     ) {
         GameContext gameContext = applicationContext.getBean(GameContext.class);
 
         gazePlay.onGameLaunch(gameContext);
 
-        GameSpec.GameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
+        IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
 
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats stats = gameLauncher.createNewStats(scene);
@@ -86,9 +88,9 @@ public class GameMenuController {
 
         Translator translator = gazePlay.getTranslator();
         String gameVariantLabel = gameVariant.getLabel(translator);
-        String gameVariantClass = gameVariant.getGameVariantClass();
+        //String gameVariantClass = gameVariant.getGameVariantClass();
         String gameNameCode = selectedGameSpec.getGameSummary().getNameCode();
-        stats.setGameVariant(gameVariantLabel, gameVariantClass, gameNameCode);
+        stats.setGameVariant(gameVariantLabel, gameNameCode);
 
         currentGame.launch();
     }

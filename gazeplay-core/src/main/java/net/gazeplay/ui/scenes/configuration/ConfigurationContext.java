@@ -217,6 +217,20 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
+        {
+            I18NText label = new I18NText(translator, "Limiter Time", COLON);
+
+            HBox input = buildLimiterTime(config, translator);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "Limiter Score", COLON);
+
+            HBox input = buildLimiterScore(config, translator);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
 
 
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "EyeTrackerSettings", COLON));
@@ -1033,6 +1047,92 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         } else if (hbox.getChildren().size() <= 5) {
             minusButton.setDisable(true);
         }
+
+        return hbox;
+    }
+
+    private HBox buildLimiterTime(Configuration config, Translator translator) {
+
+        HBox hbox = new HBox();
+        hbox.setSpacing(5);
+
+        CheckBox limitTime = buildCheckBox(config.getLimiterTProperty());
+
+        I18NText time = new I18NText(translator, "Time(seconds)");
+        time.setFill(Color.WHITE);
+
+        Spinner<Integer> spinnerT = new Spinner<>(3, 180, config.getLimiterTime(), 1);
+        spinnerT.setEditable(true);
+        spinnerT.setPrefWidth(PREF_WIDTH);
+        spinnerT.setPrefHeight(PREF_HEIGHT);
+
+        spinnerT.valueProperty().addListener((observable, oldValue, newValue) -> {
+            final int newPropertyValue = spinnerT.getValue();
+            config.getLimiterTimeProperty().setValue(newPropertyValue);
+        });
+
+        if (limitTime.isSelected()) {
+            time.setVisible(true);
+            spinnerT.setVisible(true);
+        } else {
+            time.setVisible(false);
+            spinnerT.setVisible(false);
+        }
+
+        limitTime.setOnAction(e -> {
+            if (!config.isLimiterT()) {
+                time.setVisible(false);
+                spinnerT.setVisible(false);
+            } else {
+                time.setVisible(true);
+                spinnerT.setVisible(true);
+            }
+        });
+
+        hbox.getChildren().addAll(limitTime, time, spinnerT);
+
+        return hbox;
+    }
+
+    private HBox buildLimiterScore(Configuration config, Translator translator) {
+
+        HBox hbox = new HBox();
+        hbox.setSpacing(5);
+
+        CheckBox limitScore = buildCheckBox(config.getLimiterSProperty());
+
+        I18NText score = new I18NText(translator, "score");
+        score.setFill(Color.WHITE);
+
+        Spinner<Integer> spinnerS = new Spinner<>(3, 180, config.getLimiterScore(), 1);
+        spinnerS.setEditable(true);
+        spinnerS.setPrefWidth(PREF_WIDTH);
+        spinnerS.setPrefHeight(PREF_HEIGHT);
+
+        spinnerS.valueProperty().addListener((observable, oldValue, newValue) -> {
+            final int newPropertyValue = spinnerS.getValue();
+            config.getLimiterScoreProperty().setValue(newPropertyValue);
+        });
+
+        if (limitScore.isSelected()) {
+            score.setVisible(true);
+            spinnerS.setVisible(true);
+        } else {
+            score.setVisible(false);
+            spinnerS.setVisible(false);
+        }
+
+        limitScore.setOnAction(e -> {
+            if (!config.isLimiterS()) {
+                score.setVisible(false);
+                spinnerS.setVisible(false);
+            } else {
+                score.setVisible(true);
+                spinnerS.setVisible(true);
+            }
+        });
+
+        hbox.getChildren().addAll(limitScore, score, spinnerS);
 
         return hbox;
     }

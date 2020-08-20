@@ -14,6 +14,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.TargetAOI;
 
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -26,10 +27,13 @@ public class SoundsOfLife implements GameLifeCycle {
     private final Stats stats;
     private final ReplayablePseudoRandom randomGenerator;
 
+    private final ArrayList<TargetAOI> targetAOIList;
+
     public SoundsOfLife(IGameContext gameContext, Stats stats, int gameVariant) {
         Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Configuration config = gameContext.getConfiguration();
         this.stats = stats;
+        this.targetAOIList = new ArrayList<>();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
 
@@ -79,6 +83,9 @@ public class SoundsOfLife implements GameLifeCycle {
             double y = coordinates.get("y").getAsDouble() * scaleRatio + background.getY();
             imageView.setX(x - imageView.getFitWidth() / 2);
             imageView.setY(y - imageView.getFitHeight() / 2);
+            final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int)((imageView.getFitWidth() + imageView.getFitHeight())/3),
+                System.currentTimeMillis());
+            targetAOIList.add(targetAOI);
             // Creating progress indicator
             ProgressIndicator progressIndicator = new ProgressIndicator(0);
             double progIndicSize = Math.min(imageView.getFitWidth(), imageView.getFitHeight()) / 2;
@@ -106,8 +113,8 @@ public class SoundsOfLife implements GameLifeCycle {
         Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Configuration config = gameContext.getConfiguration();
         this.stats = stats;
+        this.targetAOIList = new ArrayList<>();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-
         String path = "data/soundsoflife/";
         switch (gameVariant) {
             case 0:
@@ -154,6 +161,9 @@ public class SoundsOfLife implements GameLifeCycle {
             double y = coordinates.get("y").getAsDouble() * scaleRatio + background.getY();
             imageView.setX(x - imageView.getFitWidth() / 2);
             imageView.setY(y - imageView.getFitHeight() / 2);
+            final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int)((imageView.getFitWidth() + imageView.getFitHeight())/3),
+                System.currentTimeMillis());
+            targetAOIList.add(targetAOI);
             // Creating progress indicator
             ProgressIndicator progressIndicator = new ProgressIndicator(0);
             double progIndicSize = Math.min(imageView.getFitWidth(), imageView.getFitHeight()) / 2;
@@ -198,6 +208,9 @@ public class SoundsOfLife implements GameLifeCycle {
 
     @Override
     public void dispose() {
-
+        for(TargetAOI aoi : targetAOIList){
+            aoi.setTimeEnded(System.currentTimeMillis());
+        }
+        this.stats.setTargetAOIList(targetAOIList);
     }
 }

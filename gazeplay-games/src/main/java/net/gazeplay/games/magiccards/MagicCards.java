@@ -53,6 +53,10 @@ public class MagicCards implements GameLifeCycle {
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.stats = stats;
+
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
+
         this.random = new ReplayablePseudoRandom();
         this.stats.setGameSeed(random.getSeed());
 
@@ -65,6 +69,10 @@ public class MagicCards implements GameLifeCycle {
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.stats = stats;
+
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
+
         this.random = new ReplayablePseudoRandom(gameSeed);
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"), random);
@@ -72,6 +80,8 @@ public class MagicCards implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.firstStart();
+        gameContext.setLimiterAvailable();
         final Configuration config = gameContext.getConfiguration();
 
         final int cardsCount = nbColumns * nbLines;

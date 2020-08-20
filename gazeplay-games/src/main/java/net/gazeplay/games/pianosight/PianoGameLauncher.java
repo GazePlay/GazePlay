@@ -2,18 +2,17 @@ package net.gazeplay.games.pianosight;
 
 import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
-import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
+import net.gazeplay.IGameLauncher;
+import net.gazeplay.commons.gamevariants.DimensionGameVariant;
+import net.gazeplay.games.shooter.ShooterGamesStats;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
-import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.shooter.ShooterGamesStats;
-
 import java.util.LinkedList;
 
-public class PianoGameLauncher implements GameSpec.GameLauncher<ShooterGamesStats, GameSpec.DimensionGameVariant> {
+public class PianoGameLauncher implements IGameLauncher<ShooterGamesStats, DimensionGameVariant> {
 
     @Override
     public ShooterGamesStats createNewStats(Scene scene) {
@@ -28,7 +27,7 @@ public class PianoGameLauncher implements GameSpec.GameLauncher<ShooterGamesStat
     @Override
     public GameLifeCycle createNewGame(
         IGameContext gameContext,
-        GameSpec.DimensionGameVariant gameVariant,
+        DimensionGameVariant gameVariant,
         ShooterGamesStats stats
     ) {
         return new Piano(gameContext, stats);
@@ -37,7 +36,7 @@ public class PianoGameLauncher implements GameSpec.GameLauncher<ShooterGamesStat
     @Override
     public GameLifeCycle replayGame(
         IGameContext gameContext,
-        GameSpec.DimensionGameVariant gameVariant,
+        DimensionGameVariant gameVariant,
         ShooterGamesStats stats, double gameSeed
     ) {
         return new Piano(gameContext, stats, gameSeed);

@@ -44,8 +44,8 @@ public class Ninja implements GameLifeCycle {
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
         randomPositionGenerator.setRandomGenerator(randomGenerator);
         portrait = new Target(gameContext, randomPositionGenerator, stats,
-            Portrait.createImageLibrary(randomGenerator), gameVariant, randomGenerator);
-
+            Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator);
+        gameContext.setLimiterAvailable();
         gameContext.getChildren().add(portrait);
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();

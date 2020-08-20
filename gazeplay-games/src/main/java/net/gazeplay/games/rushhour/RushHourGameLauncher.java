@@ -2,18 +2,18 @@ package net.gazeplay.games.rushhour;
 
 import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
-import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
+import net.gazeplay.IGameLauncher;
+import net.gazeplay.commons.gamevariants.DimensionGameVariant;
+import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.pet.PetStats;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
-import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.pet.PetStats;
-
 import java.util.LinkedList;
 
-public class RushHourGameLauncher implements GameSpec.GameLauncher<Stats, GameSpec.DimensionGameVariant> {
+public class RushHourGameLauncher implements IGameLauncher<Stats, DimensionGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new PetStats(scene);
@@ -26,13 +26,13 @@ public class RushHourGameLauncher implements GameSpec.GameLauncher<Stats, GameSp
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
-                                       GameSpec.DimensionGameVariant gameVariant, Stats stats) {
+                                       DimensionGameVariant gameVariant, Stats stats) {
         return new RushHour(gameContext, stats);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
-                                       GameSpec.DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+                                       DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
         return new RushHour(gameContext, stats);
     }
 

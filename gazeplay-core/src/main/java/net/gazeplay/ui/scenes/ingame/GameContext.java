@@ -57,6 +57,12 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         configPane.setTranslateY(newY);
     }
 
+    boolean limiterS = false;
+    boolean limiterT = false;
+    long startTime = 0;
+    long endTime = 0;
+    boolean limiteUsed =false;
+
     @Setter
     private static boolean runAsynchronousStatsPersist = false;
 
@@ -132,6 +138,68 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     @Override
     public Supplier<Dimension2D> getCurrentScreenDimensionSupplier() {
         return getGazePlay().getCurrentScreenDimensionSupplier();
+    }
+
+    @Override
+    public void startScoreLimiter() {
+        limiterS = getConfiguration().isLimiterS();
+    }
+
+    @Override
+    public void startTimeLimiter() {
+        limiterT = getConfiguration().isLimiterT();
+        setLimiterAvailable();
+    }
+
+    @Override
+    public void setLimiterAvailable(){
+        limiteUsed = false;
+    }
+    @Override
+    public void start() {
+        startTime = System.currentTimeMillis();
+    }
+
+    @Override
+    public void firstStart() {
+        if(startTime == 0){
+            start();
+        }
+    }
+
+    @Override
+    public void stop() {
+        endTime = System.currentTimeMillis();
+    }
+
+    @Override
+    public void updateScore(Stats stats, GameLifeCycle currentGame) {
+        updateScore(stats, currentGame, e->{}, e->{});
+    }
+
+        @Override
+    public void updateScore(Stats stats, GameLifeCycle currentGame,  EventHandler<ActionEvent> onTimeLimiterEndEventHandler, EventHandler<ActionEvent> onScoreLimiterEndEventHandler) {
+        if (limiterS && !limiteUsed) {
+            if (stats.getNbGoalsReached() == getConfiguration().getLimiterScore()) {
+                onScoreLimiterEndEventHandler.handle(null);
+                playWinTransition(0, event -> showRoundStats(stats, currentGame));
+                limiteUsed = true;
+            }
+        }
+        if (limiterT && !limiteUsed) {
+            stop();
+            if (time(startTime, endTime) >= getConfiguration().getLimiterTime()) {
+                onTimeLimiterEndEventHandler.handle(null);
+                playWinTransition(0, event -> showRoundStats(stats, currentGame));
+                startTime = 0;
+                limiteUsed = true;
+            }
+        }
+
+    }
+
+    private double time(double start, double end) {
+        return (end - start) / 1000;
     }
 
     public void createQuitShortcut(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
@@ -371,10 +439,12 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     @Override
     public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
-        getChildren().add(bravo);
-        bravo.toFront();
-        bravo.setConfettiOnStart(this);
-        bravo.playWinTransition(root, delay, onFinishedEventHandler);
+        if (!getChildren().contains(bravo)) {
+            getChildren().add(bravo);
+            bravo.toFront();
+            bravo.setConfettiOnStart(this);
+            bravo.playWinTransition(root, delay, onFinishedEventHandler);
+        }
     }
 
     @Override

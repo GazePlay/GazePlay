@@ -35,7 +35,7 @@ public class CreamPie implements GameLifeCycle {
         randomPositionGenerator.setRandomGenerator(randomGenerator);
 
         hand = new Hand();
-        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary);
+        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this);
         gameContext.getChildren().add(target);
         gameContext.getChildren().add(hand);
     }
@@ -51,13 +51,17 @@ public class CreamPie implements GameLifeCycle {
         randomPositionGenerator.setRandomGenerator(randomGenerator);
 
         hand = new Hand();
-        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary);
-        gameContext.getChildren().add(target);
-        gameContext.getChildren().add(hand);
+        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this);
+
     }
 
     @Override
     public void launch() {
+        gameContext.getChildren().clear();
+
+        gameContext.getChildren().add(target);
+        gameContext.getChildren().add(hand);
+        gameContext.setLimiterAvailable();
         hand.recomputePosition();
 
         gameContext.getRoot().widthProperty().addListener((obs, oldVal, newVal) -> hand.recomputePosition());

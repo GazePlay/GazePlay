@@ -10,6 +10,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.TargetAOI;
 import net.gazeplay.games.cups.utils.Action;
 import net.gazeplay.games.cups.utils.PositionCup;
 import net.gazeplay.games.cups.utils.Strategy;
@@ -34,6 +35,7 @@ public class CupsAndBalls implements GameLifeCycle {
 
     private final ReplayablePseudoRandom randomGenerator;
     private ArrayList<Action> actions;
+    private final ArrayList<TargetAOI> targetAOIList;
 
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups) {
         super();
@@ -44,6 +46,9 @@ public class CupsAndBalls implements GameLifeCycle {
         this.nbColumns = nbCups;
         this.nbLines = nbCups;
         this.nbExchanges = nbCups * nbCups;
+        this.targetAOIList = new ArrayList<>();
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
     }
@@ -57,6 +62,9 @@ public class CupsAndBalls implements GameLifeCycle {
         this.nbColumns = nbCups;
         this.nbLines = nbCups;
         this.nbExchanges = nbCups * nbCups;
+        this.targetAOIList = new ArrayList<>();
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
@@ -90,6 +98,10 @@ public class CupsAndBalls implements GameLifeCycle {
             cupRectangle.setFitHeight(imageHeight);
             cups[indexCup] = new Cup(cupRectangle, position, gameContext, stats, this, openCupSpeed);
             if (indexCup == ballInCup) {
+                final long startTime = System.currentTimeMillis();
+                final TargetAOI targetAOI = new TargetAOI(posCup.getX(), posCup.getY()+imageHeight/2, (int)((imageWidth+imageHeight)/3), startTime);
+                targetAOI.setTimeEnded(startTime+openCupSpeed);
+                targetAOIList.add(targetAOI);
                 cups[indexCup].setWinner(true);
                 cups[indexCup].giveBall(true);
                 ball = new Ball(ballRadius, Color.RED, cups[indexCup]);
@@ -103,10 +115,12 @@ public class CupsAndBalls implements GameLifeCycle {
             gameContext.getChildren().add(cupRectangle);
             cups[indexCup].getProgressIndicator().toFront();
         }
+
     }
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
         init();
         TranslateTransition revealBallTransition = null;
         for (final Cup cup : cups) {
@@ -136,7 +150,7 @@ public class CupsAndBalls implements GameLifeCycle {
 
     @Override
     public void dispose() {
-
+        stats.setTargetAOIList(targetAOIList);
     }
 
     private void createNewTransition(final ArrayList<Action> actions) {
@@ -159,6 +173,8 @@ public class CupsAndBalls implements GameLifeCycle {
                 currentCup.getPositionCup().setCellY(finalCellY);
                 currentCup.progressBarUpdatePosition(newPos.getX(), newPos.getY());
                 if (currentCup.containsBall()) {
+                    final TargetAOI targetAOI = new TargetAOI(newPos.getX(), newPos.getY()+currentCup.getItem().getFitHeight()/2, (int)((currentCup.getItem().getFitWidth()+currentCup.getItem().getFitHeight())/3), System.currentTimeMillis());
+                    targetAOIList.add(targetAOI);
                     currentCup.getBall().updatePosition(newPos.getX(), newPos.getY());
                 }
             }
@@ -179,14 +195,17 @@ public class CupsAndBalls implements GameLifeCycle {
             if (actions.size() > 0) {
                 for (final Cup cup : cups) {
                     cup.increaseActionsDone();
+
                 }
 
                 createNewTransition(actions);
+            } else {
+                gameContext.firstStart();
             }
         });
 
         movementTransition.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
-
+        targetAOIList.get(targetAOIList.size()-1).setTimeEnded(System.currentTimeMillis());
         movementTransition.play();
     }
 
@@ -201,5 +220,4 @@ public class CupsAndBalls implements GameLifeCycle {
             }
         }
     }
-
 }
