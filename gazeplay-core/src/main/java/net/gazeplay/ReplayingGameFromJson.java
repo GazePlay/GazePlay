@@ -169,11 +169,21 @@ public class ReplayingGameFromJson {
         };
 
         loadingService.setOnSucceeded( e -> {
-
+            loadingService.reset();
             gameContext.exitGame(statsSaved2, gazePlay, currentGame, "replay");
         });
 
-        loadingService.start();
+        loadingService.setOnFailed(e -> {
+            loadingService.restart();
+        });
+
+        // cancelled?
+        loadingService.setOnCancelled(e -> {
+        });
+
+        if (!loadingService.isRunning()) {
+            loadingService.start();
+        }
 
 
 
@@ -194,8 +204,8 @@ public class ReplayingGameFromJson {
         /*JsonObject  startingCoordinates = (JsonObject) coordinatesAndTimeStamp.get(0);
         x0 = Integer.parseInt(String.valueOf(startingCoordinates.get("X")));
         y0 = Integer.parseInt(String.valueOf(startingCoordinates.get("Y")));*/
-        graphics.setStroke(javafx.scene.paint.Color.rgb(255, 157, 6, 1));
-        graphics.setLineWidth(4);
+        //graphics.setStroke(javafx.scene.paint.Color.rgb(255, 157, 6, 1));
+        //graphics.setLineWidth(4);
 
         for (JsonElement coordinateAndTimeStamp : coordinatesAndTimeStamp) {
             /*if (!first) {
@@ -228,9 +238,13 @@ public class ReplayingGameFromJson {
     public static void paint(GraphicsContext graphics, Canvas canvas) {
 
         //g.strokeLine(x0, y0, nextX, nextY);
-        //graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        graphics.lineTo(nextX, nextY);
-        graphics.stroke();
+        graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        graphics.setStroke(javafx.scene.paint.Color.RED);
+        graphics.strokeOval(nextX, nextY, 50, 50);
+        graphics.setFill(javafx.scene.paint.Color.rgb(255, 255, 0, 0.5));
+        graphics.fillOval(nextX, nextY, 50, 50);
+        //graphics.lineTo(nextX, nextY);
+        //graphics.stroke();
         Point2D point = new Point2D(nextX, nextY);
         gameContext.getGazeDeviceManager().onSavedMovementsUpdate(point);
     }
