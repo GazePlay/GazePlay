@@ -182,8 +182,8 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                         eventFire(localPosition.getX(), localPosition.getY(), gi, node);
                     }
                 }else {
-                    //Point2D localPosition = node.screenToLocal(positionX, positionY);
-                    //eventFire(localPosition.getX(), localPosition.getY(), gi, node);
+                    Point2D localPosition = node.screenToLocal(positionX, positionY);
+                    eventFire(localPosition.getX(), localPosition.getY(), gi, node);
                 }
                 // log.info("Fire : "+node+" then recursion !");
                 recursiveEventFire(positionX, positionY, node);
