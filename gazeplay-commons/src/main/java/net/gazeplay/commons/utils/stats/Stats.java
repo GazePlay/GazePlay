@@ -58,7 +58,7 @@ public class Stats implements GazeMotionListener {
     private static final int trail = 10;
     private static final int fixationTrail = 50;
     private final double heatMapPixelSize;
-    private final Scene gameContextScene;
+    public final Scene gameContextScene;
     protected String gameName;
 
     long startTime;
@@ -264,7 +264,7 @@ public class Stats implements GazeMotionListener {
         }).start();
     }
 
-    private void generateAOIList(final int index, final double startTime) {
+    private void generateAOIList(final int index) {
         final double x1 = movementHistory.get(index).getXValue();
         final double y1 = movementHistory.get(index).getYValue();
         final double x2 = movementHistory.get(index - 1).getXValue();
@@ -435,6 +435,8 @@ public class Stats implements GazeMotionListener {
             recordGazeMovements = e -> {
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
+                log.info("FixationSequence size:" + fixationSequence.size());
+                log.info("coord recived x = " + getX + "  y = "+getY);
                 if (!config.isHeatMapDisabled()) {
                     incrementHeatMap(getX, getY);
                 }
@@ -451,7 +453,7 @@ public class Stats implements GazeMotionListener {
                             .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
                         movementHistoryidx++;
                         if (movementHistoryidx > 1) {
-                            generateAOIList(movementHistoryidx - 1, startTime);
+                            generateAOIList(movementHistoryidx - 1);
                         }
                         previousTime = timeToFixation;
                     }
@@ -461,11 +463,13 @@ public class Stats implements GazeMotionListener {
             recordMouseMovements = e -> {
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
+                //log.info("coord recived x = " + getX + "  y = "+getY);
                 if (!config.isHeatMapDisabled()) {
                     incrementHeatMap(getX, getY);
                 }
                 if (!config.isFixationSequenceDisabled()) {
                     incrementFixationSequence(getX, getY);
+                    log.info("FixationSequence length = " + fixationSequence.size());
                 }
                 if (config.getAreaOfInterestDisabledProperty().getValue()) {
                     if (getX != previousX || getY != previousY && counter == 2) {
@@ -477,7 +481,7 @@ public class Stats implements GazeMotionListener {
                             .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
                         movementHistoryidx++;
                         if (movementHistoryidx > 1) {
-                            generateAOIList(movementHistoryidx - 1, startTime);
+                            generateAOIList(movementHistoryidx - 1);
                         }
                         previousTime = timeElapsedMillis;
                         counter = 0;
@@ -486,8 +490,8 @@ public class Stats implements GazeMotionListener {
                 }
             };
 
-            gameContextScene.addEventFilter(GazeEvent.ANY, recordGazeMovements);
-            gameContextScene.addEventFilter(MouseEvent.ANY, recordMouseMovements);
+            gameContextScene.getRoot().addEventFilter(GazeEvent.ANY, recordGazeMovements);
+            gameContextScene.getRoot().addEventFilter(MouseEvent.ANY, recordMouseMovements);
 
         });
         currentRoundStartTime = lifeCycle.getStartTime();

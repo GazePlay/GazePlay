@@ -132,6 +132,8 @@ public class Bubble extends Parent implements GameLifeCycle {
 
 
         stats.notifyNewRoundReady();
+
+        gameContext.getGazeDeviceManager().addEventFilter(stats.gameContextScene.getRoot());
     }
 
     @Override
