@@ -88,7 +88,6 @@ public class GameMenuController {
 
         Translator translator = gazePlay.getTranslator();
         String gameVariantLabel = gameVariant.getLabel(translator);
-        //String gameVariantClass = gameVariant.getGameVariantClass();
         String gameNameCode = selectedGameSpec.getGameSummary().getNameCode();
         stats.setGameVariant(gameVariantLabel, gameNameCode);
 

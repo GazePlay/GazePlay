@@ -122,7 +122,6 @@ public class ReplayingGameFromJson {
     }
 
     public static void replayGame(){
-        ConfigurationContext configContext = applicationContext.getBean(ConfigurationContext.class);
         gameContext = applicationContext.getBean(GameContext.class);
         gazePlay.onGameLaunch(gameContext);
         for (GameSpec gameSpec : gamesList) {

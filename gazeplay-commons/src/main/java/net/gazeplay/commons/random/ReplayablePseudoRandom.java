@@ -18,7 +18,6 @@ public class ReplayablePseudoRandom {
         this.multiplier = 1103515245;
         this.increment = 12345;
         this.modulus = Math.pow(2, 31);
-        System.out.println("GameSeedFromRG: " + seed);
     }
 
     public ReplayablePseudoRandom(double seed) {

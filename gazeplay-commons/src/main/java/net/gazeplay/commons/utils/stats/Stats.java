@@ -37,10 +37,13 @@ import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
-import java.io.*;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -109,14 +112,9 @@ public class Stats implements GazeMotionListener {
     @Getter
     private WritableImage gameScreenShot;
 
-    //private ArrayList<JsonArray> coordinateData = new ArrayList<JsonArray>();
     JsonArray coordinateData = new JsonArray();
     private JsonObject savedDataObj = new JsonObject();
-    private int idForReplay = 0;
-    private int digits = 4;
-    private int seed = 123456325;
     String currentGameVariant;
-    //String currentGameVariantClass;
     String currentGameNameCode;
     double currentGameSeed = 0.;
 
@@ -467,13 +465,11 @@ public class Stats implements GazeMotionListener {
                 final long timeInterval = (timeToFixation - previousTime);
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
-                JsonObject savedDataObj2 = new JsonObject();
-                savedDataObj2.addProperty("X", getX);
-                savedDataObj2.addProperty("Y", getY);
-                savedDataObj2.addProperty("time", timeInterval);
-                //saveCoordinates("{\"X\":" + getX + ", \"Y\":" + getY + ", \"time\":" + timeInterval + "}");
-                saveCoordinates(savedDataObj2);
-                //saveCoordinates("{" + "{" + getX + "," + getY + "}, " + timeInterval + "}");
+                JsonObject coordinates = new JsonObject();
+                coordinates.addProperty("X", getX);
+                coordinates.addProperty("Y", getY);
+                coordinates.addProperty("time", timeInterval);
+                saveCoordinates(coordinates);
                 if (!config.isHeatMapDisabled()) {
                     incrementHeatMap(getX, getY);
                 }
@@ -500,12 +496,11 @@ public class Stats implements GazeMotionListener {
                 final long timeInterval = (timeElapsedMillis - previousTime);
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
-                JsonObject savedDataObj2 = new JsonObject();
-                savedDataObj2.addProperty("X", getX);
-                savedDataObj2.addProperty("Y", getY);
-                savedDataObj2.addProperty("time", timeInterval);
-                //saveCoordinates("{\"X\":" + getX + ", \"Y\":" + getY + ", \"time\":" + timeInterval + "}");
-                saveCoordinates(savedDataObj2);
+                JsonObject coordinates = new JsonObject();
+                coordinates.addProperty("X", getX);
+                coordinates.addProperty("Y", getY);
+                coordinates.addProperty("time", timeInterval);
+                saveCoordinates(coordinates);
                 if (!config.isHeatMapDisabled()) {
                     incrementHeatMap(getX, getY);
                 }
@@ -849,7 +844,6 @@ public class Stats implements GazeMotionListener {
 
         savedDataObj.addProperty("gameSeed", currentGameSeed);
         savedDataObj.addProperty("gameName", currentGameNameCode);
-        //savedDataObj.addProperty("gameVariantClass", currentGameVariantClass);
         savedDataObj.addProperty("gameVariant", currentGameVariant);
         savedDataObj.addProperty("gameStartedTime", startTime);
         savedDataObj.addProperty("screenAspectRatio", screenAspectRatio);
@@ -896,7 +890,6 @@ public class Stats implements GazeMotionListener {
     public void setGameVariant(String gameVariant, String gameNameCode){
 
         currentGameVariant = gameVariant;
-        //currentGameVariantClass = gameVariantClass;
         currentGameNameCode = gameNameCode;
     }
 

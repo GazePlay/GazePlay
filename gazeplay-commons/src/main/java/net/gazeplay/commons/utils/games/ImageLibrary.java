@@ -1,7 +1,6 @@
 package net.gazeplay.commons.utils.games;
 
 import javafx.scene.image.Image;
-import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 import java.util.List;
 import java.util.Set;
