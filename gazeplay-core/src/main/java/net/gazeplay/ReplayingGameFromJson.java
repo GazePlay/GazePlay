@@ -23,7 +23,11 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import org.springframework.context.ApplicationContext;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,15 +50,13 @@ public class ReplayingGameFromJson {
     private static LifeCycle lifeCycle;
     private static RoundsDurationReport roundsDurationReport;
     private static SavedStatsInfo savedStatsInfo;
-    private static int x0, y0;
     private static int nextX, nextY, nextTime, prevTime;
     private static int delay = 0; // refresh rate
-    private static boolean first = true;
 
     public ReplayingGameFromJson(GazePlay gazePlay, ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-        this.gazePlay = gazePlay;
-        gameContext = applicationContext.getBean(GameContext.class);
+        ReplayingGameFromJson.applicationContext = applicationContext;
+        ReplayingGameFromJson.gazePlay = gazePlay;
+        ReplayingGameFromJson.gameContext = applicationContext.getBean(GameContext.class);
     }
 
     public static void setGameList(List<GameSpec> games){
