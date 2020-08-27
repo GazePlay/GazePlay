@@ -5,26 +5,21 @@ package net.gazeplay.commons.random;
  */
 
 public class ReplayablePseudoRandom {
+
     private double seed;
-    private long multiplier;
-    private long increment;
-    private double modulus;
 
     public ReplayablePseudoRandom() {
         this.setSeed(System.currentTimeMillis() % 100000000);
-        this.multiplier = 1664525;
-        this.increment = 1013904223;
-        this.modulus = Math.pow(2, 32);
     }
 
     public ReplayablePseudoRandom(double seed) {
         this.setSeed(seed);
-        this.multiplier = 1664525;
-        this.increment = 1013904223;
-        this.modulus = Math.pow(2, 32);
     }
 
     public double random() {
+        long increment = 1013904223;
+        long multiplier = 1664525;
+        double modulus = Math.pow(2, 32);
         seed = (this.getSeed() * multiplier + increment) % modulus;
         return seed;
     }
