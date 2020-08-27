@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Random;
 
 @ExtendWith(ApplicationExtension.class)
@@ -21,33 +24,33 @@ public class ReplayablePseudoRandomTest {
     }
 
     @Test
-    public void nextIntTest()
+    public void nextIntTestDistribution()
     {
-        int[] res = new int[7];
+        int[] res = new int[6];
         int number;
-        for(int i = 0 ; i <100 ; i++){
-            number = random.nextInt(7);
+        for(int i = 0 ; i <1000 ; i++){
+            number = random.nextInt(6);
             res[number]++;
-            System.out.println("number : " + number);
         }
-        System.out.println("random 0 : " + res[0]);
-        System.out.println("random 1 : " + res[1]);
-        System.out.println("random 2 : " + res[2]);
-        System.out.println("random 3 : " + res[3]);
-        System.out.println("random 4 : " + res[4]);
-        System.out.println("random 5 : " + res[5]);
-        System.out.println("random 6 : " + res[6]);
+
+        // each possibility should at least appear half of the perfect distribution ( =(1/6)/2 = 0.08... )
+        assertTrue(res[0]/1000d > 0.08);
+        assertTrue(res[1]/1000d > 0.08);
+        assertTrue(res[2]/1000d > 0.08);
+        assertTrue(res[3]/1000d > 0.08);
+        assertTrue(res[4]/1000d > 0.08);
+        assertTrue(res[5]/1000d > 0.08);
     }
 
     /*
    Returns the next pseudorandom, uniformly distributed double value between 0.0 and 1.0 from this random number generator's sequence.
     */
     @Test
-    public void nextDoubleTest()
+    public void nextDoubleTestDistribution()
     {
         int[] res = new int[10];
         int error = 0;
-            for(int i = 0 ; i <100 ; i++) {
+            for(int i = 0 ; i <1000 ; i++) {
             double number = random.nextDouble();
             if(number>1.0d) {
                 error++;
@@ -73,25 +76,28 @@ public class ReplayablePseudoRandomTest {
                 res[9]++;
             }
         }
-        System.out.println("below 0.1 : " + res[0]);
-        System.out.println("below 0.2 : " + res[1]);
-        System.out.println("below 0.3 : " + res[2]);
-        System.out.println("below 0.4 : " + res[3]);
-        System.out.println("below 0.5 : " + res[4]);
-        System.out.println("below 0.6 : " + res[5]);
-        System.out.println("below 0.7 : " + res[6]);
-        System.out.println("below 0.8 : " + res[7]);
-        System.out.println("below 0.9 : " + res[8]);
-        System.out.println("below 1.0 : " + res[9]);
-        System.out.println("error : " + error);
+
+
+        // each possibility should at least appear half of the perfect distribution ( =(1/10)/2 = 0.05)
+        assertTrue(res[0]/1000d > 0.05);
+        assertTrue(res[1]/1000d > 0.05);
+        assertTrue(res[2]/1000d > 0.05);
+        assertTrue(res[3]/1000d > 0.05);
+        assertTrue(res[4]/1000d > 0.05);
+        assertTrue(res[5]/1000d > 0.05);
+        assertTrue(res[6]/1000d > 0.05);
+        assertTrue(res[7]/1000d > 0.05);
+        assertTrue(res[8]/1000d > 0.05);
+        assertTrue(res[9]/1000d > 0.05);
+        assertEquals(0,error);
     }
 
     @Test
-    public void nextBooleanTest()
+    public void nextBooleanTestDistribution()
     {
         int[] res = new int[2];
         boolean value;
-        for(int i = 0 ; i <10 ; i++){
+        for(int i = 0 ; i <100 ; i++){
             value = random.nextBoolean();
             if(value){
                 res[0]++;
@@ -102,14 +108,18 @@ public class ReplayablePseudoRandomTest {
         System.out.println("random true : " + res[0]);
         System.out.println("random false : " + res[1]);
 
+        // each possibility should at least appear half of the perfect distribution ( =(1/2)/2 = 0.25)
+        assertTrue(res[0]/100d > 0.25);
+        assertTrue(res[1]/100d > 0.25);
+
     }
 
     @Test
-    public void nextFloatTest()
+    public void nextFloatTestDistribution()
     {
         int[] res = new int[10];
         int error = 0;
-        for(int i = 0 ; i <1000000 ; i++) {
+        for(int i = 0 ; i <1000 ; i++) {
             float number = random.nextFloat();
             if(number>1.0f) {
                 error++;
@@ -135,49 +145,20 @@ public class ReplayablePseudoRandomTest {
                 res[9]++;
             }
         }
-        System.out.println("below 0.1 : " + res[0]);
-        System.out.println("below 0.2 : " + res[1]);
-        System.out.println("below 0.3 : " + res[2]);
-        System.out.println("below 0.4 : " + res[3]);
-        System.out.println("below 0.5 : " + res[4]);
-        System.out.println("below 0.6 : " + res[5]);
-        System.out.println("below 0.7 : " + res[6]);
-        System.out.println("below 0.8 : " + res[7]);
-        System.out.println("below 0.9 : " + res[8]);
-        System.out.println("below 1.0 : " + res[9]);
-        System.out.println("error : " + error);
+        // each possibility should at least appear half of the perfect distribution ( =(1/10)/2 = 0.05)
+        assertTrue(res[0]/1000d > 0.05);
+        assertTrue(res[1]/1000d > 0.05);
+        assertTrue(res[2]/1000d > 0.05);
+        assertTrue(res[3]/1000d > 0.05);
+        assertTrue(res[4]/1000d > 0.05);
+        assertTrue(res[5]/1000d > 0.05);
+        assertTrue(res[6]/1000d > 0.05);
+        assertTrue(res[7]/1000d > 0.05);
+        assertTrue(res[8]/1000d > 0.05);
+        assertTrue(res[9]/1000d > 0.05);
+        assertEquals(0,error);
     }
 
 
-    @Test
-    public void compareNextIntTest()
-    {
-        int number = 0;
-        int javaNumb = 0;
-        for(int i = 1; i < 4; i++){
-            number = random.nextInt(i);
-            javaNumb = randomJava.nextInt(i);
-            System.out.println("Java Random generator: " + javaNumb + " Ours random number: " + number);
-        }
-
-    }
-
-    @Test
-    public void compareNextIntTestWithDifferentSeedValueTest()
-    {
-        int numberDefaultSeed = 0;
-        int numberManualSeed = 0;
-        int javaNumb = 0;
-
-        for(int i = 1; i <4 ; i++){
-            numberDefaultSeed = random.nextInt(i);
-            numberManualSeed = randomManualSeed.nextInt(i);
-            javaNumb = randomJava.nextInt(i);
-            System.out.println("Manual seed random number: " + numberManualSeed + " D" +
-                "" +
-                "efault seed random number: " + numberDefaultSeed + " Java seed random number: " + javaNumb);
-        }
-
-    }
 
 }
