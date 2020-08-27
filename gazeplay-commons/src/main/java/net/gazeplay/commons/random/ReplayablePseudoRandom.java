@@ -41,7 +41,7 @@ public class ReplayablePseudoRandom {
      */
     public double nextDouble() {
         int randMax = Integer.MAX_VALUE;
-        return this.random() / (double) randMax;
+        return (this.random() / (double) randMax) / 2;
     }
 
     public boolean nextBoolean() {
@@ -51,7 +51,7 @@ public class ReplayablePseudoRandom {
 
     public float nextFloat() {
         int randMax = Integer.MAX_VALUE;
-        return (float) (this.random() / (double) randMax);
+        return (float) (this.random() / (double) randMax) / 2;
     }
 
     public double getSeed() {
