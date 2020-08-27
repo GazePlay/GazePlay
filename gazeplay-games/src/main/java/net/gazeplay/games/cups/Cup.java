@@ -150,15 +150,20 @@ public class Cup {
         revealBallTransition.setByY(-ballRadius * 8);
         ball.getItem().setVisible(true);
 
-        revealBallTransition.setOnFinished((ActionEvent actionEvent) -> gameContext.playWinTransition(2000, (ActionEvent actionEvent1) -> {
-            gameInstance.dispose();
+        revealBallTransition.setOnFinished((ActionEvent actionEvent) -> {
+            gameContext.updateScore(stats, gameInstance, event -> {gameInstance.openAllIncorrectCups();}, event -> {});
 
-            gameContext.clear();
+            gameContext.playWinTransition(0, (ActionEvent actionEvent1) -> {
 
-            gameInstance.launch();
+                gameInstance.dispose();
 
-            gameContext.onGameStarted();
-        }));
+                gameContext.clear();
+
+                gameInstance.launch();
+
+                gameContext.onGameStarted();
+            });
+        });
 
         revealBallTransition.play();
     }

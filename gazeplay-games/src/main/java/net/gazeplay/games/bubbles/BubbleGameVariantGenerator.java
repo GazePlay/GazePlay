@@ -1,8 +1,9 @@
 package net.gazeplay.games.bubbles;
 
-import net.gazeplay.GameSpec;
+import net.gazeplay.commons.gamevariants.generators.EnumGameVariantGenerator;
 
-public class BubbleGameVariantGenerator extends GameSpec.EnumGameVariantGenerator<BubblesGameVariant> {
+public class BubbleGameVariantGenerator extends EnumGameVariantGenerator<BubblesGameVariant> {
+
     public BubbleGameVariantGenerator() {
         super(BubblesGameVariant.values(), BubblesGameVariant::getDirection);
     }

@@ -13,6 +13,8 @@ dependencies {
     compile 'ws.schild:jave-core:2.5.0'
     runtime 'org.slf4j:jcl-over-slf4j:1.7.25'
     runtime 'org.slf4j:log4j-over-slf4j:1.7.25'
+
+    testImplementation "junit:junit:4.12"
 }
 
 jar {

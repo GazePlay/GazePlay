@@ -1,6 +1,9 @@
 package net.gazeplay.games.divisor;
 
-import javafx.animation.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -39,9 +42,9 @@ class Target extends Parent {
     private final EventHandler<Event> enterEvent;
     private final IGameContext gameContext;
     private final Divisor gameInstance;
-    private final long startTime;
     private final Dimension2D dimension;
     private final boolean isRabbit;
+    private final long startTime;
 
     @Getter
     private final ImageLibrary imgLib;
@@ -162,30 +165,34 @@ class Target extends Parent {
 
         timelineParticle.setOnFinished(actionEvent -> {
             Target.this.gameContext.getChildren().removeAll(particles);
-            if (stats.getNbGoalsReached() == stats.getNbGoalsToReach()) {
-                final long totalTime = (System.currentTimeMillis() - startTime) / 1000;
-                final Label l = new Label("Score : " + totalTime + "s");
-                final Color color = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
-                    @Override
-                    public Color visitLight() {
-                        return Color.BLACK;
-                    }
 
-                    @Override
-                    public Color visitDark() {
-                        return Color.WHITE;
-                    }
-                });
-                l.setTextFill(color);
-                l.setFont(Font.font(50));
-                l.setLineSpacing(10);
-                l.setLayoutX(15);
-                l.setLayoutY(14);
-                gameContext.getChildren().add(l);
-                gameContext.playWinTransition(30, actionEvent1 -> gameInstance.restart());
-            }
         });
         timelineParticle.play();
+
+        if (stats.getNbGoalsReached() == stats.getNbGoalsToReach()) {
+            final long totalTime = (System.currentTimeMillis() - startTime) / 1000;
+            final Label l = new Label("Score : " + totalTime + "s");
+            final Color color = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+                @Override
+                public Color visitLight() {
+                    return Color.BLACK;
+                }
+
+                @Override
+                public Color visitDark() {
+                    return Color.WHITE;
+                }
+            });
+            l.setTextFill(color);
+            l.setFont(Font.font(50));
+            l.setLineSpacing(10);
+            l.setLayoutX(15);
+            l.setLayoutY(14);
+            gameContext.getChildren().add(l);
+
+            gameContext.updateScore(stats,gameInstance);
+            gameContext.playWinTransition(0, actionEvent1 -> gameInstance.restart());
+        }
     }
 
     private void createChildren(final double x, double y) {
@@ -200,8 +207,6 @@ class Target extends Parent {
             }
             gameContext.getChildren().add(target);
         }
-        stats.incrementNumberOfGoalsToReach();
-        stats.incrementNumberOfGoalsToReach();
     }
 
     private int randomDirection() {
@@ -240,4 +245,5 @@ class Target extends Parent {
 
         gameContext.getGazeDeviceManager().addEventFilter(this);
     }
+
 }

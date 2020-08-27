@@ -45,6 +45,7 @@ public class MagicCards implements GameLifeCycle {
 
     private RoundDetails currentRoundDetails;
 
+
     public MagicCards(final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats) {
         super();
         this.gameContext = gameContext;
@@ -52,11 +53,17 @@ public class MagicCards implements GameLifeCycle {
         this.nbColumns = nbColumns;
         this.stats = stats;
 
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
+
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"));
+
     }
 
     @Override
     public void launch() {
+        gameContext.firstStart();
+        gameContext.setLimiterAvailable();
         final Configuration config = gameContext.getConfiguration();
 
         final int cardsCount = nbColumns * nbLines;

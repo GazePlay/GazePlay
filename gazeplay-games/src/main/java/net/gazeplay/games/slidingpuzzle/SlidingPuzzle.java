@@ -12,10 +12,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
-import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class SlidingPuzzle implements GameLifeCycle {
         private final int y;
     }
 
-    SlidingPuzzle(final Stats stats, final IGameContext gameContext, final int nbLines, final int nbColumns, final GameSpec.EnumGameVariant<PuzzleGameVariantGenerator.PuzzleGameVariant> gameVariant) {
+    SlidingPuzzle(final Stats stats, final IGameContext gameContext, final int nbLines, final int nbColumns, final EnumGameVariant<PuzzleGameVariantGenerator.PuzzleGameVariant> gameVariant) {
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.boxWidth = computeCardBoxWidth(gameDimension2D, nbColumns);
         this.boxHeight = computeCardBoxHeight(gameDimension2D, nbLines);

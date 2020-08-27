@@ -46,6 +46,7 @@ public class Blocs implements GameLifeCycle {
 
         private final Bloc[][] blocs;
 
+
         CurrentRoundDetails(final int initCount, final int nbLines, final int nbColumns) {
             this.remainingCount = initCount;
             this.finished = false;
@@ -58,6 +59,8 @@ public class Blocs implements GameLifeCycle {
 
     public Blocs(final IGameContext gameContext, final int nbLines, final int nbColumns, final boolean colors, final float percents4Win,
                  final boolean useTrail, final Stats stats) {
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColomns = nbColumns;
@@ -67,7 +70,7 @@ public class Blocs implements GameLifeCycle {
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"));
 
-        enterEvent = buildEvent(gameContext, stats, useTrail);
+        enterEvent = buildEvent(gameContext, this.stats, useTrail);
 
         initCount = nbColumns * nbLines;
     }
@@ -88,6 +91,7 @@ public class Blocs implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
         this.currentRoundDetails = new CurrentRoundDetails(initCount, nbLines, nbColomns);
 
         final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -133,6 +137,8 @@ public class Blocs implements GameLifeCycle {
             }
         }
         stats.notifyNewRoundReady();
+
+        gameContext.firstStart();
     }
 
     @Override
@@ -175,6 +181,7 @@ public class Blocs implements GameLifeCycle {
 
                     final Bloc bloc = (Bloc) e.getTarget();
                     removeBloc(bloc);
+
                 } else {
 
                     final Bloc bloc = (Bloc) e.getTarget();
@@ -208,6 +215,8 @@ public class Blocs implements GameLifeCycle {
                     stats.incrementNumberOfGoalsReached();
 
                     removeAllBlocs();
+
+                    gameContext.updateScore(stats,this);
 
                     gameContext.playWinTransition(0, event -> {
                         gameContext.clear();

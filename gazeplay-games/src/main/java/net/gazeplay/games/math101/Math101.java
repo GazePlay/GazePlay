@@ -17,6 +17,7 @@ import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.TargetAOI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,8 @@ public class Math101 implements GameLifeCycle {
 
     private final Stats stats;
 
+    private final ArrayList<TargetAOI> targetAOIList;
+
     private final int nbLines;
 
     private final int nbColumns;
@@ -59,6 +62,9 @@ public class Math101 implements GameLifeCycle {
         this.nbLines = 2;
         this.nbColumns = 3;
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.targetAOIList = new ArrayList<>();
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
     }
 
     private static Formula generateRandomFormula(final MathGameType gameType, final int maxValue) {
@@ -141,6 +147,7 @@ public class Math101 implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
         final Formula formula = generateRandomFormula(gameType, maxValue);
 
         final Text question = createQuestionText(formula);
@@ -169,6 +176,8 @@ public class Math101 implements GameLifeCycle {
         stack.setLayoutX(boardX);
         stack.setLayoutY(boardY);
         final Rectangle boardRectangle = new Rectangle(boardX, boardY, boardWidth, boardHeight);
+        final TargetAOI targetAOI = new TargetAOI(boardX+boardWidth/2, boardY+boardHeight/2, (int)boardHeight/2, System.currentTimeMillis());
+        targetAOIList.add(targetAOI);
         boardRectangle.setFill(new ImagePattern(new Image("data/math101/images/blackboard.png"), 0, 0, 1, 1, true));
 
         final ReplayablePseudoRandom r = new ReplayablePseudoRandom();
@@ -192,10 +201,22 @@ public class Math101 implements GameLifeCycle {
 
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
+        gameContext.firstStart();
+    }
+
+    private ArrayList<TargetAOI> getTargetAOIList() {
+        return this.targetAOIList;
     }
 
     @Override
     public void dispose() {
+
+        for (int i=0; i<targetAOIList.size(); i++){
+            targetAOIList.get(i).setTimeEnded(System.currentTimeMillis());
+        }
+
+        stats.setTargetAOIList(targetAOIList);
+
         if (currentRoundDetails != null) {
             if (currentRoundDetails.cardList != null) {
                 gameContext.getChildren().removeAll(currentRoundDetails.cardList);
@@ -295,6 +316,9 @@ public class Math101 implements GameLifeCycle {
                 final double positionX = computePositionX(boxWidth, cardWidth, currentColumnIndex);
                 final double positionY = computePositionY(boxHeight, cardHeight, currentLineIndex);
 
+                final TargetAOI targetAOI = new TargetAOI(positionX+cardWidth/2.5, positionY+boxWidth/3, (int)cardWidth/3, System.currentTimeMillis());
+                targetAOIList.add(targetAOI);
+
                 final Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, currentValue, gameContext, stats, this, fixationlength);
 
                 result.add(card);
@@ -332,5 +356,4 @@ public class Math101 implements GameLifeCycle {
     private static double computePositionY(final double cardboxHeight, final double cardHeight, final int rowIndex) {
         return (cardboxHeight - cardHeight) / 2 + (rowIndex * cardboxHeight) / zoom_factor;
     }
-
 }

@@ -1,6 +1,9 @@
 package net.gazeplay.games.creampie;
 
-import javafx.animation.*;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
@@ -28,6 +31,8 @@ public class Target extends Portrait {
 
     final EventHandler<Event> enterEvent;
 
+    private final CreamPie gameInstance;
+
     private boolean animationEnded = true;
 
     private static final int radius = 100;
@@ -45,7 +50,7 @@ public class Target extends Portrait {
     private final IGameContext gameContext;
 
     public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
-                  final ImageLibrary imageLibrary) {
+                  final ImageLibrary imageLibrary, CreamPie gameInstance) {
 
         super(radius, randomPositionGenerator, imageLibrary);
         this.randomPositionGenerator = randomPositionGenerator;
@@ -53,7 +58,10 @@ public class Target extends Portrait {
         this.imageLibrary = imageLibrary;
         this.stats = stats;
         this.gameContext = gameContext;
-        targetAOIList = new ArrayList<>();
+        this.gameInstance = gameInstance;
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
+        this.targetAOIList = new ArrayList<>();
 
         enterEvent = e -> {
             if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
@@ -63,6 +71,8 @@ public class Target extends Portrait {
                 enter();
             }
         };
+
+        gameContext.start();
 
         gameContext.getGazeDeviceManager().addEventFilter(this);
 
@@ -75,7 +85,7 @@ public class Target extends Portrait {
     private void enter() {
 
         stats.incrementNumberOfGoalsReached();
-
+        gameContext.updateScore(stats,gameInstance);
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
         final Animation animation = createAnimation();
@@ -103,6 +113,9 @@ public class Target extends Portrait {
 
         timeline.setOnFinished(actionEvent -> {
             animationEnded = true;
+            if(targetAOIList.size()>0){
+                targetAOIList.get(targetAOIList.size()-1).setTimeEnded(System.currentTimeMillis());
+            }
             newPosition();
         });
 
