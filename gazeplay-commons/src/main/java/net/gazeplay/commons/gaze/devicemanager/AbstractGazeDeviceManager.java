@@ -170,7 +170,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         Collection<GazeInfos> c = shapesEventFilter.values();
 
         synchronized (shapesEventFilter) {
-
+            boolean firedToRoot = false;
             for (GazeInfos gi : c) {
                 final Node node = gi.getNode();
 
@@ -181,6 +181,10 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                         Point2D localPosition = node.screenToLocal(positionX, positionY);
                         eventFire(localPosition.getX(), localPosition.getY(), gi, node);
                     }
+                    if (!firedToRoot) {
+                        eventFire(positionX, positionY, gameScene, gameScene.getNode());
+                        firedToRoot = true;
+                    }
                 }else {
                     Point2D localPosition = node.screenToLocal(positionX, positionY);
                     eventFire(localPosition.getX(), localPosition.getY(), gi, node);
@@ -190,19 +194,6 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
             }
 
-        }
-
-        if (gameScene != null){
-            //Point2D localPosition = gameScene.getNode().screenToLocal(positionX, positionY);
-            //eventFireNoScreenToLocal(localPosition.getX(), localPosition.getY(),gameScene,gameScene.getNode());
-            eventFire(positionX, positionY, gameScene,gameScene.getNode());
-            //Point2D localPosition = gameScene.getNode().screenToLocal(positionX, positionY);
-            //gameScene.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gameScene.getTime(), localPosition.getX(), localPosition.getY()));
-            //gameScene.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gameScene.getTime(), positionX, positionY));
-            fireCount++;
-            //log.info("coord fired x = " + localPosition.getX() + "  y = "+localPosition.getY());
-            log.info("coord fired x = " + positionX + "  y = "+positionY);
-            log.info("fireCount = " + fireCount);
         }
     }
 
@@ -219,62 +210,13 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                 if (gi != null) {
                     eventFire(localPosition.getX(), localPosition.getY(), gi, child);
                 }
-                recursiveEventFire(localPosition.getX(), localPosition.getY(), child);
+                recursiveEventFire(positionX, positionY, child);
 
             }
         }
     }
 
     public void eventFire(double positionX, double positionY, GazeInfos gi, Node node) {
-        if (!node.isDisable()) {
-
-//            if (gameScene != null) {
-//                if (node.equals(gameScene.getNode())) {
-//                    Point2D localPosition = new Point2D(positionX,positionY);
-//                }
-//            }Point2D localPosition = node.screenToLocal(positionX, positionY);
-            //Point2D localPosition = node.screenToLocal(positionX, positionY);
-
-            Point2D localPosition = new Point2D(positionX,positionY);
-
-            if (localPosition != null && node.contains(localPosition)) {
-                if (gi.isOn()) {
-                    Platform.runLater(
-                        () ->
-                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-                    );
-                } else {
-
-                    gi.setOn(true);
-                    gi.setTime(System.currentTimeMillis());
-                    Platform.runLater(
-                        () ->
-                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-                    );
-                }
-            } else {// gaze is not on the shape
-
-                if (gi.isOn()) {// gaze was on the shape previously
-                    gi.setOn(false);
-                    gi.setTime(-1);
-                    if (localPosition != null) {
-                        Platform.runLater(
-                            () ->
-                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-                        );
-                    } else {
-                        // nothing to do
-                    }
-                } else {// gaze was not on the shape previously
-                    // nothing to do
-
-                }
-
-            }
-        }
-    }
-
-    public void eventFireNoScreenToLocal(double positionX, double positionY, GazeInfos gi, Node node) {
         if (!node.isDisable()) {
 
             Point2D localPosition = new Point2D(positionX,positionY);

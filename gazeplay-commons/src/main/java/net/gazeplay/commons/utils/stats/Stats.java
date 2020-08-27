@@ -463,13 +463,12 @@ public class Stats implements GazeMotionListener {
             recordMouseMovements = e -> {
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
-                //log.info("coord recived x = " + getX + "  y = "+getY);
                 if (!config.isHeatMapDisabled()) {
                     incrementHeatMap(getX, getY);
                 }
                 if (!config.isFixationSequenceDisabled()) {
                     incrementFixationSequence(getX, getY);
-                    log.info("FixationSequence length = " + fixationSequence.size());
+                    //log.info("FixationSequence length = " + fixationSequence.size());
                 }
                 if (config.getAreaOfInterestDisabledProperty().getValue()) {
                     if (getX != previousX || getY != previousY && counter == 2) {
