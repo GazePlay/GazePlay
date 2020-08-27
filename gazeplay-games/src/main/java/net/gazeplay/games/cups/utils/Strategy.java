@@ -94,7 +94,6 @@ public class Strategy {
             }
             numbersToChooseFrom.add(index);
         }
-        final ReplayablePseudoRandom randomGenerator = new ReplayablePseudoRandom();
         final int cupChoice;
         cupChoice = randomGenerator.nextInt(numbersToChooseFrom.size());
         return numbersToChooseFrom.get(cupChoice);

@@ -47,7 +47,6 @@ public class Portrait extends Circle {
 
     protected Image pickRandomImage(final List<Image> availableImages) {
         final int count = availableImages.size();
-        // int index = (int) (count * Math.random());
         final ReplayablePseudoRandom r = new ReplayablePseudoRandom();
         final int index = r.nextInt(count);
         return availableImages.get(index);
