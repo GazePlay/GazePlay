@@ -42,6 +42,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -605,7 +606,7 @@ public class Stats implements GazeMotionListener {
         g.fillRect(0, 0, bImage.getWidth(), bImage.getHeight());
         g.drawImage(screenshotImage, 0, 0, null);
         try (BufferedWriter bf =
-                 new BufferedWriter(new FileWriter(replayDataFile))) {
+                 new BufferedWriter(new FileWriter(replayDataFile, Charset.defaultCharset()))) {
             bf.write(buildSavedDataJSON(coordinateData).toString());
             bf.flush();
         }
