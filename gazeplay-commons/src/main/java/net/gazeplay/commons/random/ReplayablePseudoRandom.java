@@ -28,7 +28,7 @@ public class ReplayablePseudoRandom {
     Generate Random number within a limit
      */
     public int nextInt(int bound) {
-        return (int) (this.random() % bound);
+        return (int) (this.nextDouble() * bound);
     }
 
     /*

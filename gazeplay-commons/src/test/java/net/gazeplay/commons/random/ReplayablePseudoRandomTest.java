@@ -25,9 +25,10 @@ public class ReplayablePseudoRandomTest {
     {
         int[] res = new int[7];
         int number;
-        for(int i = 0 ; i <10 ; i++){
+        for(int i = 0 ; i <100 ; i++){
             number = random.nextInt(7);
             res[number]++;
+            System.out.println("number : " + number);
         }
         System.out.println("random 0 : " + res[0]);
         System.out.println("random 1 : " + res[1]);

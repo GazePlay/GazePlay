@@ -9,6 +9,7 @@ import java.util.ArrayList;
 @Slf4j
 public class Strategy {
     private final int nbExchanges;
+    ReplayablePseudoRandom randomGenerator;
     @Getter
     private final ArrayList<Action> actions;
     private final int maxCellsX;
@@ -18,17 +19,17 @@ public class Strategy {
         rotationUpDown, rotationMoveClosestInPlace
     }
 
-    public Strategy(final int nbCups, final int nbExchanges, final int maxCellsX, final int maxCellsY) {
+    public Strategy(final int nbCups, final int nbExchanges, final int maxCellsX, final int maxCellsY, ReplayablePseudoRandom randomGenerator) {
         this.nbExchanges = nbExchanges;
         this.actions = new ArrayList<>();
         this.maxCellsX = maxCellsX;
         this.maxCellsY = maxCellsY;
+        this.randomGenerator = randomGenerator;
     }
 
     public ArrayList<Action> chooseStrategy() {
         for (int iteration = 0; iteration < nbExchanges; iteration++) {
 
-            final ReplayablePseudoRandom randomGenerator = new ReplayablePseudoRandom();
             final int strategyChoice = randomGenerator.nextInt(Strategies.values().length);
 
             switch (Strategies.values()[strategyChoice]) {
@@ -108,7 +109,6 @@ public class Strategy {
             numbersToChooseFrom.add(index);
         }
         final ArrayList<Integer> choices = new ArrayList();
-        final ReplayablePseudoRandom randomGenerator = new ReplayablePseudoRandom();
         for (int index = 0; index < 2; index++) {
             final int cupChoice = randomGenerator.nextInt(numbersToChooseFrom.size());
             choices.add(numbersToChooseFrom.get(cupChoice));

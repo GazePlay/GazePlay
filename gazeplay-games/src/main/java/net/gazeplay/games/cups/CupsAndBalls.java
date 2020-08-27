@@ -110,7 +110,7 @@ public class CupsAndBalls implements GameLifeCycle {
             }
         }
 
-        Strategy strategy = new Strategy(nbCups, nbExchanges, nbColumns, nbLines);
+        Strategy strategy = new Strategy(nbCups, nbExchanges, nbColumns, nbLines, random);
         this.actions = strategy.chooseStrategy();
 
         for (final Cup cup : cups) {
