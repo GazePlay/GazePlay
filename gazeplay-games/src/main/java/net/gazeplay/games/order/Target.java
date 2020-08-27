@@ -68,7 +68,7 @@ public class Target extends Parent {
             .add(new KeyFrame(Duration.millis(fixationLength), new KeyValue(progressIndicator.progressProperty(), 1)));
         timelineProgressBar.setOnFinished(actionEvent -> {
             progressIndicator.setOpacity(0);
-            Target.this.gameInstance.enter(Target.this);
+            gameInstance.enter(Target.this);
         });
         timelineProgressBar.play();
     }

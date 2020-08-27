@@ -52,36 +52,21 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final ImageLibrary imageLibrary;
 
-    private final List<Circle> fragments;
+    private List<Circle> fragments;
 
     private EventHandler<Event> enterEvent;
 
     private final BubblesGameVariant direction;
 
-    public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final boolean useBackgroundImage, final BubblesGameVariant direction) {
+    public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final BubblesGameVariant direction) {
         this.gameContext = gameContext;
         this.type = type;
         this.stats = stats;
         this.direction = direction;
+        gameContext.startTimeLimiter();
+        gameContext.startScoreLimiter();
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"));
-
-        initBackground(useBackgroundImage);
-
-        gameContext.getChildren().add(this);
-
-        this.fragments = buildFragments(type);
-
-        this.getChildren().addAll(fragments);
-
-        enterEvent = e -> {
-
-            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-
-                enter((Circle) e.getTarget());
-            }
-        };
-
     }
 
     void initBackground(boolean useBackgroundImage) {
@@ -109,11 +94,42 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
+        this.getChildren().clear();
+        initBackground(true);
+        gameContext.getChildren().add(this);
+        gameContext.setLimiterAvailable();
 
+        this.fragments = buildFragments(type);
+
+        this.getChildren().addAll(fragments);
+
+        enterEvent = e -> {
+
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+
+                enter((Circle) e.getTarget());
+            }
+        };
+
+        gameContext.start();
         for (int i = 0; i < 10; i++) {
 
             newCircle();
         }
+
+
+        this.fragments = buildFragments(type);
+
+        this.getChildren().addAll(fragments);
+
+        enterEvent = e -> {
+
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+
+                enter((Circle) e.getTarget());
+            }
+        };
+
 
         stats.notifyNewRoundReady();
     }
@@ -190,8 +206,6 @@ public class Bubble extends Parent implements GameLifeCycle {
             final String soundResource = "data/bubble/sounds/Blop-Mark_DiAngelo-79054334.mp3";
             gameContext.getSoundManager().add(soundResource);
         }
-
-
     }
 
     private void enter(final Circle target) {
@@ -203,6 +217,8 @@ public class Bubble extends Parent implements GameLifeCycle {
         this.getChildren().remove(target);
 
         stats.incrementNumberOfGoalsReached();
+
+        gameContext.updateScore(stats,this);
 
         explose(centerX, centerY); // instead of C to avoid wrong position of the explosion
 

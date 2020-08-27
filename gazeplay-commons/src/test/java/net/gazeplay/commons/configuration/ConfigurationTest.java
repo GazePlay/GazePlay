@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,9 +27,12 @@ class ConfigurationTest {
             + "test" + sep
             + "resources" + sep;
 
+    private ApplicationConfig applicationConfig;
     private Configuration configuration;
     private Properties properties;
     private File testProperties;
+
+    private Locale original;
 
     @BeforeEach
     void setup() throws IOException {
@@ -38,19 +42,22 @@ class ConfigurationTest {
 
         properties = new Properties();
 
-        try(InputStream is = Files.newInputStream(testProperties.toPath())) {
+        try (InputStream is = Files.newInputStream(testProperties.toPath())) {
             properties.load(is);
         } catch (IOException ie) {
             log.debug("Error in loading test properties: ", ie);
         }
 
-        ApplicationConfig applicationConfig = ConfigFactory.create(ApplicationConfig.class, properties);
+        original = Locale.getDefault();
+        Locale.setDefault(Locale.CHINA);
+        applicationConfig = ConfigFactory.create(ApplicationConfig.class, properties);
         configuration = new Configuration(testProperties, applicationConfig);
     }
 
     @AfterEach
     void reset() {
         testProperties.delete();
+        Locale.setDefault(original);
     }
 
     @Test
@@ -61,7 +68,7 @@ class ConfigurationTest {
         configuration.getWhereIsItDirProperty().set(newPath);
         configuration.saveConfigIgnoringExceptions();
 
-        try(InputStream is = Files.newInputStream(testProperties.toPath())) {
+        try (InputStream is = Files.newInputStream(testProperties.toPath())) {
             properties.load(is);
         } catch (IOException ie) {
             log.debug("Error in loading test properties: ", ie);
@@ -73,6 +80,16 @@ class ConfigurationTest {
     }
 
     @Test
+    void givenLocaleIsSet_shouldSetDefaultLanguage() {
+        assertEquals(Locale.CHINA.getISO3Language(), configuration.getLanguage());
+    }
+
+    @Test
+    void givenLocaleIsSet_shouldSetDefaultCountry() {
+        assertEquals(Locale.CHINA.getCountry(), configuration.getCountry());
+    }
+
+    @Test
     void shouldGetEyeTracker() {
         assertEquals(properties.get("EYETRACKER"), configuration.getEyeTracker());
     }
@@ -80,16 +97,6 @@ class ConfigurationTest {
     @Test
     void shouldGetQuitKey() {
         assertEquals(properties.get("QUIT_KEY"), configuration.getQuitKey());
-    }
-
-    @Test
-    void shouldGetLanguage() {
-        assertEquals(properties.get("LANGUAGE"), configuration.getLanguage());
-    }
-
-    @Test
-    void shouldGetCountry() {
-        assertEquals(properties.get("COUNTRY"), configuration.getCountry());
     }
 
     @Test

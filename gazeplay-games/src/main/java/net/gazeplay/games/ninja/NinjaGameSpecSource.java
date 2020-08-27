@@ -9,7 +9,13 @@ public class NinjaGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Ninja").gameThumbnail("data/Thumbnails/ninja.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            GameSummary
+                .builder()
+                .nameCode("Ninja")
+                .gameThumbnail("data/Thumbnails/ninja.png")
+                .category(GameCategories.Category.ACTION_REACTION)
+                .absolutePriority(1)
+                .build(),
             new NinjaGameVariantGenerator(), new NinjaGameLauncher());
     }
 }

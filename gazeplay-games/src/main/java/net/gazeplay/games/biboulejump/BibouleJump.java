@@ -114,12 +114,12 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         Color textColor = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
             @Override
             public Color visitLight() {
-               return Color.BLACK;
+                return Color.BLACK;
             }
 
             @Override
             public Color visitDark() {
-              return Color.WHITE;
+                return Color.WHITE;
             }
         });
         scoreText.setFill(textColor);
@@ -321,7 +321,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
     }
 
     /**
-     * Creates a platform (cloud)
+     * Creates a cloud platform
      *
      * @param centerX The center position of the platform, the new X position must be calculated accordingly
      * @param centerY Same as X
@@ -430,7 +430,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
 
         /// Lateral mouvement
         final double distance = Math.abs(gazeTarget.getX() - (biboule.getX() + biboule.getWidth() / 2));
-        final double direction = distance == 0 ? 1
+        final double direction = distance <= 5 ? 0
             : (gazeTarget.getX() - (biboule.getX() + biboule.getWidth() / 2)) / distance;
         final double maxSpeed = 0.7;
         if (distance > maxSpeed) {

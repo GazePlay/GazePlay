@@ -156,6 +156,8 @@ class PictureCard extends Group {
         fullAnimation.getChildren().add(translateToCenterTransition);
         fullAnimation.getChildren().add(scaleToFullScreenTransition);
 
+        gameContext.updateScore(stats,gameInstance);
+
         fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
             gameInstance.dispose();
             gameContext.clear();

@@ -122,6 +122,8 @@ class Potion extends Parent {
         currentTimeline.stop();
         currentTimeline = new Timeline();
 
+        gameContext.updateScore(stats,gameInstance);
+
         currentTimeline.onFinishedProperty().set(event -> gameContext.playWinTransition(0, event1 -> {
             gameInstance.dispose();
             gameContext.clear();
