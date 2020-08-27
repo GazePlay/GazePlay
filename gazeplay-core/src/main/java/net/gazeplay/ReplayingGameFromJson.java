@@ -6,40 +6,25 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.embed.swing.SwingNode;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.GaussianBlur;
-import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gamevariants.IGameVariant;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
 import net.gazeplay.ui.scenes.ingame.GameContext;
-import net.gazeplay.ui.scenes.ingame.GameContextFactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -82,7 +67,13 @@ public class ReplayingGameFromJson {
             return;
         }
         final File replayDataFile = new File(fileName);
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(replayDataFile));
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(replayDataFile, Charset.defaultCharset()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assert bufferedReader != null;
         Gson gson = new Gson();
         JsonFile json = gson.fromJson(bufferedReader, JsonFile.class);
         currentGameSeed = json.getGameSeed();
