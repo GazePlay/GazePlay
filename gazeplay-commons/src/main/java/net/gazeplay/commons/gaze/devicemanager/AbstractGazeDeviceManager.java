@@ -241,17 +241,10 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                 if (gi.isOn()) {// gaze was on the shape previously
                     gi.setOn(false);
                     gi.setTime(-1);
-                    if (localPosition != null) {
-                        Platform.runLater(
-                            () ->
-                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-                        );
-                    } else {
-                        // nothing to do
-                    }
-                } else {// gaze was not on the shape previously
-                    // nothing to do
-
+                    Platform.runLater(
+                        () ->
+                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                    );
                 }
 
             }
