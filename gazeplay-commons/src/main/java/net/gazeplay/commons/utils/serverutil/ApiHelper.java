@@ -15,6 +15,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class ApiHelper {
+
     public HttpURLConnection createHttpRequest(URL uri, String requestType) throws IOException {
         HttpURLConnection con = (HttpURLConnection) uri.openConnection();
         con.setRequestMethod(requestType);
@@ -24,15 +25,17 @@ public class ApiHelper {
         return con;
     }
 
-    public void postRequest(HttpURLConnection connection,String urlParameters) throws IOException {
+    public void postRequest(HttpURLConnection connection, String urlParameters) throws IOException {
         byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
         try (var wr = new DataOutputStream(connection.getOutputStream())) {
             wr.write(postData);
         }
         StringBuilder content;
 
-        try (var br = new BufferedReader(
-            new InputStreamReader(connection.getInputStream()))) {
+        try (
+            InputStream is = connection.getInputStream();
+            Reader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+            var br = new BufferedReader(isr)) {
 
             String line;
             content = new StringBuilder();
@@ -42,11 +45,10 @@ public class ApiHelper {
                 content.append(System.lineSeparator());
             }
         }
-
         System.out.println(content.toString());
     }
 
-    public void postFileToServer(File file,String fileName) throws IOException {
+    public void postFileToServer(File file, String fileName) throws IOException {
         String postEndpoint = "http://localhost:8080/uploadFile?name=" + fileName;
         HttpClient httpclient = HttpClientBuilder.create().build();
         HttpPost httppost = new HttpPost(postEndpoint);
@@ -60,19 +62,25 @@ public class ApiHelper {
 
         HttpResponse response = httpclient.execute(httppost);
 
-        BufferedReader br = new BufferedReader( new InputStreamReader((response.getEntity().getContent())));
-        if (response.getStatusLine().getStatusCode() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+        try (
+            InputStream is = response.getEntity().getContent();
+            Reader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+            BufferedReader br = new BufferedReader(isr)
+        ) {
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+            }
+
+            StringBuilder result = new StringBuilder();
+
+            String line = "";
+
+            while ((line = br.readLine()) != null) {
+                result.append(line);
+            }
+
+            br.close();
+            System.out.println("Response : \n" + result);
         }
-
-        StringBuffer result = new StringBuffer();
-
-        String line = "";
-
-        while ((line = br.readLine()) != null) {
-            result.append(line);
-        }
-
-        System.out.println("Response : \n" + result);
     }
 }
