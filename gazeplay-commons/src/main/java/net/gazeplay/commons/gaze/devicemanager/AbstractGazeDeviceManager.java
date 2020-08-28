@@ -99,10 +99,8 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
 
     public GazeInfos gameScene = null;
-    public int fireCount;
 
     public void addStats(Stats stats){
-        fireCount = 0;
         gameScene = new GazeInfos(stats.gameContextScene.getRoot());
     }
 
@@ -170,28 +168,24 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         Collection<GazeInfos> c = shapesEventFilter.values();
 
         synchronized (shapesEventFilter) {
-            boolean firedToRoot = false;
             for (GazeInfos gi : c) {
                 final Node node = gi.getNode();
 
                 if (gameScene != null) {
                     if (!node.equals(gameScene.getNode())) {
-                        eventFire(positionX, positionY, gi, node);
+                        eventFireNoScreenToLocal(positionX, positionY, gi, node);
                     }else {
-                        Point2D localPosition = node.screenToLocal(positionX, positionY);
-                        eventFire(localPosition.getX(), localPosition.getY(), gi, node);
-                    }
-                    if (!firedToRoot) {
-                        eventFire(positionX, positionY, gameScene, gameScene.getNode());
-                        firedToRoot = true;
+                        eventFire(positionX, positionY, gi, node);
                     }
                 }else {
-                    Point2D localPosition = node.screenToLocal(positionX, positionY);
-                    eventFire(localPosition.getX(), localPosition.getY(), gi, node);
+                    eventFire(positionX, positionY, gi, node);
                 }
                 // log.info("Fire : "+node+" then recursion !");
                 recursiveEventFire(positionX, positionY, node);
+            }
 
+            if (gameScene != null) {
+                eventFire(positionX, positionY, gameScene, gameScene.getNode());
             }
 
         }
@@ -241,9 +235,50 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                 if (gi.isOn()) {// gaze was on the shape previously
                     gi.setOn(false);
                     gi.setTime(-1);
+                    if (localPosition != null) {
+                        Platform.runLater(
+                            () ->
+                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                        );
+                    } else {
+                        // nothing to do
+                    }
+                } else {// gaze was not on the shape previously
+                    // nothing to do
+
+                }
+
+            }
+        }
+    }
+
+    public void eventFireNoScreenToLocal(double positionX, double positionY, GazeInfos gi, Node node) {
+        if (!node.isDisable()) {
+
+
+            if (node.contains(new Point2D(positionX,positionY))) {
+                if (gi.isOn()) {
                     Platform.runLater(
                         () ->
-                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), positionX, positionY))
+                    );
+                } else {
+
+                    gi.setOn(true);
+                    gi.setTime(System.currentTimeMillis());
+                    Platform.runLater(
+                        () ->
+                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), positionX, positionY))
+                    );
+                }
+            } else {// gaze is not on the shape
+
+                if (gi.isOn()) {// gaze was on the shape previously
+                    gi.setOn(false);
+                    gi.setTime(-1);
+                    Platform.runLater(
+                        () ->
+                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), positionX, positionY))
                     );
                 }
 
