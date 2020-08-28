@@ -118,6 +118,8 @@ public class Memory implements GameLifeCycle {
         gameContext.getChildren().addAll(cardList);
 
         stats.notifyNewRoundReady();
+
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override

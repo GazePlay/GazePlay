@@ -95,6 +95,7 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         stats.notifyNewRoundReady();
+
         gameContext.firstStart();
     }
 
