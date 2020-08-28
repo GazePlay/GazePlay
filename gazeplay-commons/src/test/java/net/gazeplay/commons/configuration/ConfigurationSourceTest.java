@@ -6,6 +6,7 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -24,7 +25,7 @@ class ConfigurationSourceTest {
     void shouldCreateFromPropertiesResource() {
         Configuration result = ConfigurationSource.createFromPropertiesResource(new File(resourcesFolder, "GazePlay.properties"));
 
-        assertEquals("eng", result.getLanguage());
+        assertEquals(Locale.getDefault().getISO3Language(), result.getLanguage());
     }
 
     @Test
