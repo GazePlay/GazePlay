@@ -5,15 +5,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(ApplicationExtension.class)
 public class ReplayablePseudoRandomTest {
 
-    private ReplayablePseudoRandom random, randomManualSeed;
-    private Random randomJava;
+    private ReplayablePseudoRandom random;
+
+    public ReplayablePseudoRandomTest() {
+    }
 
     @BeforeEach
     void setUp() {
@@ -99,8 +99,6 @@ public class ReplayablePseudoRandomTest {
                 res[1]++;
             }
         }
-        System.out.println("random true : " + res[0]);
-        System.out.println("random false : " + res[1]);
 
         // each possibility should at least appear half of the perfect distribution ( =(1/2)/2 = 0.25)
         assertTrue(res[0] / 100d > 0.25);
