@@ -191,9 +191,9 @@ public class ReplayingGameFromJson {
     public static void paint(GraphicsContext graphics, Canvas canvas) {
         graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         graphics.setStroke(javafx.scene.paint.Color.RED);
-        graphics.strokeOval(nextX, nextY, 50, 50);
+        graphics.strokeOval(nextX - 50, nextY - 50, 50, 50);
         graphics.setFill(javafx.scene.paint.Color.rgb(255, 255, 0, 0.5));
-        graphics.fillOval(nextX, nextY, 50, 50);
+        graphics.fillOval(nextX - 50, nextY - 50, 50, 50);
 
         Point2D point = new Point2D(nextX, nextY);
         gameContext.getGazeDeviceManager().onSavedMovementsUpdate(point);
