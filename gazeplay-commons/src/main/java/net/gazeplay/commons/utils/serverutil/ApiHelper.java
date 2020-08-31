@@ -44,7 +44,6 @@ public class ApiHelper {
                 content.append(System.lineSeparator());
             }
         }
-        System.out.println(content.toString());
     }
 
     public void postFileToServer(File file, String fileName) throws IOException {
@@ -78,7 +77,6 @@ public class ApiHelper {
             }
 
             br.close();
-            System.out.println("Response : \n" + result);
         }
     }
 }
