@@ -22,6 +22,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
+
 @Slf4j
 @ToString
 @Getter
@@ -206,13 +207,36 @@ class PictureCard extends Group {
         final Image image = new Image(imagePath);
 
         ImageView result = new ImageView(image);
-        result.setX(posX);
-        result.setY(posY);
+
+        double w = 0;
+        double h = 0;
+
+        double ratioX;
+        double ratioY;
+
+        double reducCoeff = 0;
+
         result.setFitWidth(width);
         result.setFitHeight(height);
-        result.setPreserveRatio(false);
+
+        ratioX = result.getFitWidth() / image.getWidth();
+        ratioY = result.getFitHeight() / image.getHeight();
+
+
+        reducCoeff = Math.min(ratioX, ratioY);
+
+        w = image.getWidth() * reducCoeff;
+        h = image.getHeight() * reducCoeff;
+
+        result.setX(posX);
+        result.setY(posY);
+        result.setTranslateX((result.getFitWidth() - w) / 2);
+        result.setTranslateY((result.getFitHeight() - h) / 2);
+        result.setPreserveRatio(true);
+
         return result;
     }
+
 
     private Rectangle createErrorImageRectangle() {
         final Image image = new Image("data/common/images/error.png");
