@@ -1,6 +1,7 @@
 package net.gazeplay.commons.utils.serverutil;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -14,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+@Slf4j
 public class ApiHelper {
 
     public HttpURLConnection createHttpRequest(URL uri, String requestType) throws IOException {
@@ -43,6 +45,8 @@ public class ApiHelper {
                 content.append(line);
                 content.append(System.lineSeparator());
             }
+
+            log.info(content.toString());
         }
     }
 
@@ -77,6 +81,8 @@ public class ApiHelper {
             }
 
             br.close();
+
+            log.info(result.toString());
         }
     }
 }
