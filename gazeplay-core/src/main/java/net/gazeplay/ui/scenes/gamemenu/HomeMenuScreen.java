@@ -76,7 +76,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         CustomButton exitButton = createExitButton(screenDimension);
         CustomButton logoutButton = createLogoutButton(gazePlay, screenDimension);
-        CustomButton replayGameButton = createReplayGameButton(gazePlay, screenDimension);
 
         ConfigurationButton configurationButton = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
 
@@ -93,7 +92,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         final List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
 
-        ReplayingGameFromJson.setGameList(games);
+        CustomButton replayGameButton = createReplayGameButton(gazePlay, screenDimension, games);
 
         GamesStatisticsPane gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games);
 
@@ -365,11 +364,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return logoutButton;
     }
 
-    private CustomButton createReplayGameButton(GazePlay gazePlay, Dimension2D screenDimension) {
+    private CustomButton createReplayGameButton(GazePlay gazePlay, Dimension2D screenDimension, List<GameSpec> games) {
         CustomButton replayButton = new CustomButton("data/common/images/logout.png", screenDimension);
         replayButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
             try {
-                ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getApplicationContext());
+                ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getApplicationContext(), games);
                 replayingGame.pickJSONFile();
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();

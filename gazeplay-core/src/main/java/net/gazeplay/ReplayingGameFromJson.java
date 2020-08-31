@@ -33,37 +33,38 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ReplayingGameFromJson {
-    static List<GameSpec> gamesList;
-    private static ApplicationContext applicationContext;
-    private static GameContext gameContext;
-    private static GazePlay gazePlay;
-    private static double currentGameSeed;
-    private static String currentGameNameCode;
-    private static String currentGameVariant;
-    private static GameSpec selectedGameSpec;
-    private static IGameVariant gameVariant;
-    private static JsonArray coordinatesAndTimeStamp;
-    private static LinkedList<FixationPoint> fixationSequence;
-    private static  int nbGoalsReached;
-    private static  int nbGoalsToReach;
-    private static  int nbUnCountedGoalsReached;
-    private static LifeCycle lifeCycle;
-    private static RoundsDurationReport roundsDurationReport;
-    private static SavedStatsInfo savedStatsInfo;
-    private static int nextX, nextY, nextTime, prevTime;
-    private static int delay = 0; // refresh rate
+    List<GameSpec> gamesList;
+    private ApplicationContext applicationContext;
+    private GameContext gameContext;
+    private GazePlay gazePlay;
+    private double currentGameSeed;
+    private String currentGameNameCode;
+    private String currentGameVariant;
+    private GameSpec selectedGameSpec;
+    private IGameVariant gameVariant;
+    private JsonArray coordinatesAndTimeStamp;
+    private LinkedList<FixationPoint> fixationSequence;
+    private int nbGoalsReached;
+    private int nbGoalsToReach;
+    private int nbUnCountedGoalsReached;
+    private LifeCycle lifeCycle;
+    private RoundsDurationReport roundsDurationReport;
+    private SavedStatsInfo savedStatsInfo;
+    private int nextX, nextY, nextTime, prevTime;
+    private int delay = 0; // refresh rate
 
-    public ReplayingGameFromJson(GazePlay gazePlay, ApplicationContext applicationContext) {
-        ReplayingGameFromJson.applicationContext = applicationContext;
-        ReplayingGameFromJson.gazePlay = gazePlay;
-        ReplayingGameFromJson.gameContext = applicationContext.getBean(GameContext.class);
+    public ReplayingGameFromJson(GazePlay gazePlay, ApplicationContext applicationContext, List<GameSpec> games) {
+        this.applicationContext = applicationContext;
+        this.gazePlay = gazePlay;
+        this.gameContext = applicationContext.getBean(GameContext.class);
+        this.gamesList = games;
     }
 
-    public static void setGameList(List<GameSpec> games){
+    public void setGameList(List<GameSpec> games){
         gamesList = games;
     }
 
-    public static void pickJSONFile() throws FileNotFoundException {
+    public void pickJSONFile() throws FileNotFoundException {
         final String fileName = getFileName();
         if (fileName == null) {
             return;
@@ -99,7 +100,7 @@ public class ReplayingGameFromJson {
         replayGame();
     }
 
-    public static String getFileName() {
+    public String getFileName() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
@@ -114,7 +115,7 @@ public class ReplayingGameFromJson {
         return selectedFileName;
     }
 
-    public static void replayGame(){
+    public void replayGame(){
         gameContext = applicationContext.getBean(GameContext.class);
         gazePlay.onGameLaunch(gameContext);
         for (GameSpec gameSpec : gamesList) {
@@ -171,7 +172,7 @@ public class ReplayingGameFromJson {
         }
     }
 
-    private static void drawFixationLines(Canvas canvas, JsonArray coordinatesAndTimeStamp) {
+    private void drawFixationLines(Canvas canvas, JsonArray coordinatesAndTimeStamp) {
         final GraphicsContext graphics = canvas.getGraphicsContext2D();
         for (JsonElement coordinateAndTimeStamp : coordinatesAndTimeStamp) {
             prevTime = nextTime;
@@ -188,7 +189,7 @@ public class ReplayingGameFromJson {
         }
     }
 
-    public static void paint(GraphicsContext graphics, Canvas canvas) {
+    public void paint(GraphicsContext graphics, Canvas canvas) {
         graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         graphics.setStroke(javafx.scene.paint.Color.RED);
         graphics.strokeOval(nextX - 50, nextY - 50, 50, 50);
