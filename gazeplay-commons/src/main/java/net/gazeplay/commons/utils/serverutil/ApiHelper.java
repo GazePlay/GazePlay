@@ -33,8 +33,7 @@ public class ApiHelper {
         StringBuilder content;
 
         try (
-            InputStream is = connection.getInputStream();
-            Reader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+            Reader isr = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8);
             var br = new BufferedReader(isr)) {
 
             String line;
@@ -63,8 +62,7 @@ public class ApiHelper {
         HttpResponse response = httpclient.execute(httppost);
 
         try (
-            InputStream is = response.getEntity().getContent();
-            Reader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+            Reader isr = new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8);
             BufferedReader br = new BufferedReader(isr)
         ) {
             if (response.getStatusLine().getStatusCode() != 200) {
