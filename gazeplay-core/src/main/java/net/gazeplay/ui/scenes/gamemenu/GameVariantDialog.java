@@ -6,25 +6,35 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
+import net.gazeplay.commons.gamevariants.DimensionGameVariant;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
+@Slf4j
 public class GameVariantDialog extends Stage {
+
+    private boolean easymode = false;
 
     public GameVariantDialog(
         final GazePlay gazePlay,
@@ -48,7 +58,13 @@ public class GameVariantDialog extends Stage {
         choicePane.setHgap(10);
         choicePane.setVgap(10);
 
-        ScrollPane choicePanelScroller = new ScrollPane(choicePane);
+        FlowPane choicePaneEasy = new FlowPane();
+        choicePaneEasy.setAlignment(Pos.CENTER);
+        choicePaneEasy.setHgap(10);
+        choicePaneEasy.setVgap(10);
+
+        ScrollPane choicePanelScroller = new ScrollPane();
+        choicePanelScroller.setContent(choicePane);
         //choicePanelScroller.setMinHeight(primaryStage.getHeight() / 5);
         //choicePanelScroller.setMinWidth(primaryStage.getWidth() / 5);
         choicePanelScroller.setFitToWidth(true);
@@ -71,7 +87,7 @@ public class GameVariantDialog extends Stage {
 
         final Translator translator = gazePlay.getTranslator();
 
-        for (GameSpec.GameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
+        for (IGameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
             Button button = new Button(variant.getLabel(translator));
             button.getStyleClass().add("gameChooserButton");
             button.getStyleClass().add("gameVariation");
@@ -88,16 +104,50 @@ public class GameVariantDialog extends Stage {
             button.setMaxWidth(primaryStage.getWidth() / 8);
             button.setMaxHeight(primaryStage.getHeight() / 8);
             //
-            choicePane.getChildren().add(button);
+            if (variant instanceof DimensionDifficultyGameVariant) {
+                choicePaneEasy.getChildren().add(button);
+            } else {
+                choicePane.getChildren().add(button);
+            }
 
+            if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) {
+                if (variant instanceof DimensionGameVariant) {
+                    variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "normal");
+                }
+                ToggleGroup group = new ToggleGroup();
+                RadioButton normal = new RadioButton("normal");
+                normal.setToggleGroup(group);
+                normal.setSelected(true);
+                RadioButton facile = new RadioButton("easy");
+                facile.setToggleGroup(group);
+                HBox bottom = new HBox();
+                bottom.getChildren().add(facile);
+                bottom.getChildren().add(normal);
+                sceneContentPane.setBottom(bottom);
+                facile.setOnAction(actionEvent -> {
+                    if (!easymode) {
+                        easymode = true;
+                        choicePanelScroller.setContent(choicePaneEasy);
+                    }
+                });
+                normal.setOnAction(actionEvent -> {
+                    if (easymode) {
+                        easymode = false;
+                        choicePanelScroller.setContent(choicePane);
+                    }
+                });
+            }
+
+            IGameVariant finalVariant = variant;
             EventHandler<Event> event = mouseEvent -> {
                 close();
                 root.setDisable(false);
-                gameMenuController.chooseGame(gazePlay, gameSpec, variant);
+                gameMenuController.chooseGame(gazePlay, gameSpec, finalVariant);
             };
             button.addEventHandler(MOUSE_CLICKED, event);
 
         }
+
 
         Scene scene = new Scene(sceneContentPane, Color.TRANSPARENT);
 
@@ -107,6 +157,10 @@ public class GameVariantDialog extends Stage {
         setWidth(primaryStage.getWidth() / 2);
         setHeight(primaryStage.getHeight() / 2);
         // scene.getStylesheets().add(getClass().getResource("modal-dialog.css").toExternalForm());
+    }
+
+    public boolean isEasymode() {
+        return easymode;
     }
 
 }

@@ -2,10 +2,11 @@ package net.gazeplay.games.space;
 
 import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
-import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
+import net.gazeplay.IGameLauncher;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 
-public class SpaceGameLauncher implements GameSpec.GameLauncher<SpaceGameStats, GameSpec.GameVariant> {
+public class SpaceGameLauncher implements IGameLauncher<SpaceGameStats, IGameVariant> {
 
     @Override
     public SpaceGameStats createNewStats(Scene scene) {
@@ -13,7 +14,7 @@ public class SpaceGameLauncher implements GameSpec.GameLauncher<SpaceGameStats, 
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, GameSpec.GameVariant gameVariant, SpaceGameStats stats) {
+    public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant, SpaceGameStats stats) {
         return new SpaceGame(gameContext, stats);
     }
 

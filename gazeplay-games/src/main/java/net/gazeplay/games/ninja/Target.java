@@ -10,6 +10,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.Portrait;
@@ -18,7 +19,6 @@ import net.gazeplay.components.RandomPositionGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by schwab on 26/12/2016.
@@ -44,24 +44,30 @@ public class Target extends Portrait {
 
     private static final String audioClipResourceLocation = "data/ninja/sounds/2009.wav";
 
+    private final Ninja gameInstance;
+
     private boolean animationStopped = true;
 
     private final NinjaGameVariant gameVariant;
 
-    private final Random randomGen;
+    private final ReplayablePseudoRandom randomGen;
 
     public Animation currentTranslation;
 
+
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
-                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant) {
+                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance) {
         super(radius, randomPositionGenerator, imageLibrary);
 
+        this.gameInstance = gameInstance;
         this.gameContext = gameContext;
         this.randomPositionGenerator = randomPositionGenerator;
         this.stats = stats;
         this.imageLibrary = imageLibrary;
         this.gameVariant = gameVariant;
-        this.randomGen = new Random();
+        this.randomGen = new ReplayablePseudoRandom();
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
 
         this.miniBallsPortraits = generateMiniBallsPortraits(randomPositionGenerator, imageLibrary, nbBall);
         gameContext.getChildren().addAll(miniBallsPortraits);
@@ -74,6 +80,7 @@ public class Target extends Portrait {
         this.addEventHandler(GazeEvent.ANY, enterEvent);
 
         move();
+        gameContext.start();
     }
 
     private List<Portrait> generateMiniBallsPortraits(final RandomPositionGenerator randomPositionGenerator,
@@ -218,6 +225,8 @@ public class Target extends Portrait {
     private void enter(final Event e) {
 
         stats.incrementNumberOfGoalsReached();
+
+        gameContext.updateScore(stats,gameInstance);
 
         final Animation runningTranslation = currentTranslation;
         if (runningTranslation != null) {

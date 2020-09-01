@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.components.DiceRoller;
 import net.gazeplay.components.Position;
 import net.gazeplay.components.ProgressButton;
@@ -33,7 +34,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Random;
 
 @Slf4j
 public class GooseGame implements GameLifeCycle {
@@ -64,7 +64,7 @@ public class GooseGame implements GameLifeCycle {
     private final ImageView turnIndicator;
     private final Timeline showPlayingBiboule;
 
-    private final Random random;
+    private final ReplayablePseudoRandom random;
 
     public GooseGame(final IGameContext gameContext, final GooseGameStats stats, final int nbPlayers) {
         this.gameContext = gameContext;
@@ -74,7 +74,7 @@ public class GooseGame implements GameLifeCycle {
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final Configuration config = gameContext.getConfiguration();
 
-        this.random = new Random();
+        this.random = new ReplayablePseudoRandom();
 
         // JSON file used to store the position of each square, later used for pawn movement
         final JsonParser parser = new JsonParser();

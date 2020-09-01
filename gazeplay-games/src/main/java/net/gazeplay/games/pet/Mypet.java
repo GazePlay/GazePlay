@@ -13,8 +13,7 @@ import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Random;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 @Slf4j
 class Mypet extends Pane {
@@ -316,7 +315,7 @@ class Mypet extends Pane {
                     baloon.setX(0);
 
                     final TranslateTransition tt = new TranslateTransition(Duration.millis(1000), baloon);
-                    final Random random = new Random();
+                    final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
                     int nombreAleatoire = random.nextInt(4);
                     switch (nombreAleatoire) {
                         case 0:

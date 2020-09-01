@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -15,7 +16,6 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by schwab on 17/09/2016.
@@ -45,6 +45,7 @@ public class MagicCards implements GameLifeCycle {
 
     private RoundDetails currentRoundDetails;
 
+
     public MagicCards(final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats) {
         super();
         this.gameContext = gameContext;
@@ -52,16 +53,22 @@ public class MagicCards implements GameLifeCycle {
         this.nbColumns = nbColumns;
         this.stats = stats;
 
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
+
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"));
+
     }
 
     @Override
     public void launch() {
+        gameContext.firstStart();
+        gameContext.setLimiterAvailable();
         final Configuration config = gameContext.getConfiguration();
 
         final int cardsCount = nbColumns * nbLines;
         // final int winnerCardIndex = (int) (cardsCount * Math.random());
-        final Random r = new Random();
+        final ReplayablePseudoRandom r = new ReplayablePseudoRandom();
         final int winnerCardIndex = r.nextInt(cardsCount);
         final List<Card> cardList = createCards(winnerCardIndex, config);
 

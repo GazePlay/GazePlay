@@ -34,7 +34,7 @@ import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ConfigurationButtonFactory;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
-import net.gazeplay.commons.utils.games.LicenseUtils;
+import net.gazeplay.commons.utils.games.MenuUtils;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 
@@ -116,7 +116,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         centerPanel.setAlignment(Pos.TOP_CENTER);
         centerPanel.getChildren().add(gamePickerChoicePane);
 
-        final MenuBar menuBar = LicenseUtils.buildLicenceMenuBar();
+        final MenuBar menuBar = MenuUtils.buildMenuBar();
 
         BorderPane topPane = new BorderPane();
         topPane.setTop(menuBar);

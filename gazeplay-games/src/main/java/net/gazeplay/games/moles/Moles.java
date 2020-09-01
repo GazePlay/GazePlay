@@ -1,5 +1,7 @@
 package net.gazeplay.games.moles;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -12,12 +14,15 @@ import javafx.scene.text.Font;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.TargetAOI;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -44,15 +49,39 @@ public class Moles extends Parent implements GameLifeCycle {
     private Label lab;
 
     private RoundDetails currentRoundDetails;
+  
+    @Getter
+    @Setter
+    private ArrayList<TargetAOI> targetAOIList;
+    private double moleRadius;
+
+    private Timer minuteur;
 
     Moles(IGameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
+        targetAOIList = new ArrayList<>();
+        moleRadius = 0;
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
     }
 
     @Override
     public void launch() {
+
+        if (currentRoundDetails != null) {
+            if (currentRoundDetails.molesList != null) {
+                gameContext.getChildren().removeAll(currentRoundDetails.molesList);
+                currentRoundDetails.molesList.clear();
+            }
+            currentRoundDetails = null;
+        }
+        targetAOIList.clear();
+        gameContext.getChildren().clear();
+
+        gameContext.setLimiterAvailable();
+        gameContext.start();
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final Configuration config = gameContext.getConfiguration();
@@ -131,13 +160,13 @@ public class Moles extends Parent implements GameLifeCycle {
     private synchronized void play() {
 
         nbMolesOut = new AtomicInteger(0);
-        Random r = new Random();
+        ReplayablePseudoRandom r = new ReplayablePseudoRandom();
 
-        Timer minuteur = new Timer();
+        minuteur = new Timer();
         TimerTask tache = new TimerTask() {
             public void run() {
 
-                int n = r.nextInt();
+                int n = (int) r.random();
                 if (nbMolesOut.get() <= 3) {
                     chooseMoleToOut(r);
                 } else if ((nbMolesOut.get() <= 4) && (n % 4 == 0)) {
@@ -162,6 +191,7 @@ public class Moles extends Parent implements GameLifeCycle {
 
     @Override
     public void dispose() {
+        stats.setTargetAOIList(targetAOIList);
         if (currentRoundDetails != null) {
             if (currentRoundDetails.molesList != null) {
                 gameContext.getChildren().removeAll(currentRoundDetails.molesList);
@@ -172,7 +202,7 @@ public class Moles extends Parent implements GameLifeCycle {
     }
 
     /* Select a mole not out for the moment and call "getOut()" */
-    private void chooseMoleToOut(Random r) {
+    private void chooseMoleToOut(ReplayablePseudoRandom r) {
         if (this.currentRoundDetails == null) {
             return;
         }
@@ -182,6 +212,10 @@ public class Moles extends Parent implements GameLifeCycle {
             indice = r.nextInt(nbHoles);
         } while (!currentRoundDetails.molesList.get(indice).canGoOut);
         MolesChar m = currentRoundDetails.molesList.get(indice);
+        final TargetAOI targetAOI = new TargetAOI(m.getPositionX(), m.getPositionY(), (int)moleRadius/3,
+            System.currentTimeMillis());
+        targetAOIList.add(targetAOI);
+        m.setTargetAOIListIndex(targetAOIList.size()-1);
         m.getOut();
         stats.incrementNumberOfGoalsToReach();
     }
@@ -219,7 +253,9 @@ public class Moles extends Parent implements GameLifeCycle {
         ArrayList<MolesChar> result = new ArrayList<>();
 
         double moleHeight = computeMoleHeight(gameDimension2D);
+
         double moleWidth = computeMoleWidth(gameDimension2D);
+        this.moleRadius = moleWidth;
         double height = gameDimension2D.getHeight();
         double width = gameDimension2D.getWidth();
         double distTrans = computeDistTransMole(gameDimension2D);
@@ -248,10 +284,16 @@ public class Moles extends Parent implements GameLifeCycle {
     }
 
     void oneMoleWhacked() {
+
         nbMolesWhacked++;
         String s = "Score:" + nbMolesWhacked;
         stats.incrementNumberOfGoalsReached();
+        EventHandler<ActionEvent> limiterEndEventHandler = e -> {
+            minuteur.cancel();
+            minuteur.purge();
+        };
+        gameContext.updateScore(stats,this, limiterEndEventHandler, limiterEndEventHandler);
         lab.setText(s);
-    }
 
+    }
 }
