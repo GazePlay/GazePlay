@@ -28,16 +28,21 @@ public class Order implements GameLifeCycle {
     private int currentNum;
     private final int nbTarget;
 
+
     public Order(IGameContext gameContext, int nbTarget, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
         this.currentNum = 0;
         this.nbTarget = nbTarget;
+        //this.gameContext.startScoreLimiter();
+        this.gameContext.startTimeLimiter();
     }
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
+        gameContext.start();
         spawn();
     }
 
@@ -45,6 +50,7 @@ public class Order implements GameLifeCycle {
         handleAnswer(t, this.currentNum == t.getNum() - 1);
 
         if (this.currentNum == nbTarget) {
+            gameContext.updateScore(stats,this);
             gameContext.playWinTransition(20, actionEvent -> Order.this.restart());
         }
     }
@@ -63,9 +69,9 @@ public class Order implements GameLifeCycle {
         Timeline pause = new Timeline();
         pause.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
         pause.setOnFinished(actionEvent -> {
-            Order.this.gameContext.getChildren().remove(c);
+            gameContext.getChildren().remove(c);
             if (!correct) {
-                Order.this.restart();
+                restart();
             }
         });
 
@@ -114,4 +120,5 @@ public class Order implements GameLifeCycle {
         this.currentNum = 0;
         gameContext.clear();
     }
+
 }

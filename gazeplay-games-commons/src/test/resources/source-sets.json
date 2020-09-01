@@ -1,0 +1,23 @@
+{
+  "easy": [
+    "black",
+    "blue",
+    "green",
+    "red",
+    "white",
+    "yellow"
+  ],
+  "normal": [
+    "black",
+    "blue",
+    "brown",
+    "green",
+    "grey",
+    "orange",
+    "pink",
+    "purple",
+    "red",
+    "white",
+    "yellow"
+  ]
+}

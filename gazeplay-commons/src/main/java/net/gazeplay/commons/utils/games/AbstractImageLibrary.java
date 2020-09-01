@@ -3,11 +3,11 @@ package net.gazeplay.commons.utils.games;
 import javafx.scene.image.Image;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -19,7 +19,7 @@ public abstract class AbstractImageLibrary implements ImageLibrary {
     @Setter
     private ImageLibrary fallbackImageLibrary;
 
-    private final Random random = new Random();
+    private final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
 
     @Override
     public abstract int getImagesCount();

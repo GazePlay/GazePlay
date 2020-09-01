@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -25,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Slf4j
 public class Piano extends Parent implements GameLifeCycle {
@@ -93,7 +93,7 @@ public class Piano extends Parent implements GameLifeCycle {
         final Timeline timeline1 = new Timeline();
         final Timeline timeline2 = new Timeline();
 
-        final Random random = new Random();
+        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
 
         for (final ImageView fragment : fragments) {
 

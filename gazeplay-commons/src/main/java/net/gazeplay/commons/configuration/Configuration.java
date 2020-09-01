@@ -18,6 +18,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static net.gazeplay.commons.themes.BuiltInUiTheme.DEFAULT_THEME;
 
@@ -33,6 +34,10 @@ public class Configuration {
     private static final String PROPERTY_NAME_WHEREISIT_DIR = "WHEREISITDIR";
     private static final String PROPERTY_NAME_QUESTION_LENGTH = "QUESTIONLENGTH";
     private static final String PROPERTY_NAME_ENABLE_REWARD_SOUND = "ENABLE_REWARD_SOUND";
+    private static final String PROPERTY_NAME_LIMITERT = "LIMITERT";
+    private static final String PROPERTY_NAME_LIMITERS = "LIMITERS";
+    private static final String PROPERTY_NAME_LIMITER_TIME = "LIMITER_TIME";
+    private static final String PROPERTY_NAME_LIMITER_SCORE = "LIMITER_SCORE";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
     private static final String PROPERTY_NAME_HEATMAP_DISABLED = "HEATMAP_DISABLED";
     private static final String PROPERTY_NAME_HEATMAP_OPACITY = "HEATMAP_OPACITY";
@@ -61,13 +66,15 @@ public class Configuration {
 
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
-    private static final String DEFAULT_VALUE_LANGUAGE = "fra";
-    private static final String DEFAULT_VALUE_COUNTRY = "FR";
     private static final int DEFAULT_VALUE_FIXATION_LENGTH = 500;
     private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
     public static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
     private static final long DEFAULT_VALUE_QUESTION_LENGTH = 5000;
     private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
+    private static final boolean DEFAULT_VALUE_LIMITERTIME = false;
+    private static final boolean DEFAULT_VALUE_LIMITERSCORE = false;
+    private static final int DEFAULT_VALUE_LIMITER_TIME = 90;
+    private static final int DEFAULT_VALUE_LIMITER_SCORE = 90;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
     private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
     private static final double DEFAULT_VALUE_HEATMAP_OPACITY = 0.7;
@@ -141,6 +148,18 @@ public class Configuration {
     private final BooleanProperty enableRewardSoundProperty;
 
     @Getter
+    private final BooleanProperty limiterSProperty;
+
+    @Getter
+    private final BooleanProperty limiterTProperty;
+
+    @Getter
+    private final IntegerProperty limiterTimeProperty;
+
+    @Getter
+    private final IntegerProperty limiterScoreProperty;
+
+    @Getter
     private final StringProperty menuButtonsOrientationProperty;
 
     @Getter
@@ -210,8 +229,8 @@ public class Configuration {
 
         final PropertyChangeListener propertyChangeListener = evt -> saveConfigIgnoringExceptions();
 
-        languageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_LANGUAGE, DEFAULT_VALUE_LANGUAGE, propertyChangeListener);
-        countryProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_COUNTRY, DEFAULT_VALUE_COUNTRY, propertyChangeListener);
+        languageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_LANGUAGE, Locale.getDefault().getISO3Language(), propertyChangeListener);
+        countryProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_COUNTRY, Locale.getDefault().getCountry(), propertyChangeListener);
 
         eyetrackerProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER, propertyChangeListener);
 
@@ -228,6 +247,11 @@ public class Configuration {
         heatMapDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED, propertyChangeListener);
 
         enableRewardSoundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND, propertyChangeListener);
+
+        limiterSProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERS, DEFAULT_VALUE_LIMITERSCORE, propertyChangeListener);
+        limiterTProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERT, DEFAULT_VALUE_LIMITERTIME, propertyChangeListener);
+        limiterTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_TIME, DEFAULT_VALUE_LIMITER_TIME, propertyChangeListener);
+        limiterScoreProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_SCORE, DEFAULT_VALUE_LIMITER_SCORE, propertyChangeListener);
 
         areaOfInterestDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED, propertyChangeListener);
         convexHullDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED, propertyChangeListener);
@@ -328,6 +352,22 @@ public class Configuration {
 
     public Boolean isEnableRewardSound() {
         return enableRewardSoundProperty.getValue();
+    }
+
+    public boolean isLimiterS() {
+        return limiterSProperty.getValue();
+    }
+
+    public boolean isLimiterT() {
+        return limiterTProperty.getValue();
+    }
+
+    public int getLimiterTime() {
+        return limiterTimeProperty.getValue();
+    }
+
+    public int getLimiterScore() {
+        return limiterScoreProperty.getValue();
     }
 
     public String getMenuButtonsOrientation() {

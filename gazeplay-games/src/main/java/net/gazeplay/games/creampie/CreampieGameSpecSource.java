@@ -9,7 +9,13 @@ public class CreampieGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Creampie").gameThumbnail("data/Thumbnails/creamPie.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            GameSummary
+                .builder()
+                .nameCode("Creampie")
+                .gameThumbnail("data/Thumbnails/creamPie.png")
+                .category(GameCategories.Category.ACTION_REACTION)
+                .absolutePriority(2)
+                .build(),
             new CreampieGameLauncher());
     }
 }

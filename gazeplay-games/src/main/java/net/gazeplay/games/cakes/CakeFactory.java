@@ -26,12 +26,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 @Slf4j
 public class CakeFactory extends Parent implements GameLifeCycle {
@@ -101,6 +101,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.debug("dimension2D = {}", dimension2D);
         this.stats = stats;
+        this.gameContext.startTimeLimiter();
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2;
         buttonSize = dimension2D.getWidth() / 8;
@@ -228,11 +229,13 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             final FadeTransition ft = new FadeTransition(Duration.millis(500), randomCake);
             ft.setToValue(1);
             ft.setOnFinished(actionEvent -> {
+                gameContext.updateScore(stats,this);
                 playWin();
             });
             ft.play();
         } else {
             stats.incrementNumberOfGoalsReached();
+            gameContext.updateScore(stats,this);
             playWin();
         }
     }
@@ -262,6 +265,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             launch();
 
             gameContext.onGameStarted();
+
         });
     }
 
@@ -541,7 +545,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     }
 
     private void generateRandomCake() {
-        final Random random = new Random();
+        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
         for (int i = 0; i < 3; i++) {
             model[i][0] = 1 + random.nextInt(4);
             model[i][1] = 1 + random.nextInt(5);
@@ -606,6 +610,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
         gameContext.getChildren().add(this);
 
         for (int i = 0; i < 3; i++) {
@@ -629,6 +634,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
         this.gameContext.resetBordersToFront();
         stats.notifyNewRoundReady();
+        this.gameContext.firstStart();
     }
 
     @Override

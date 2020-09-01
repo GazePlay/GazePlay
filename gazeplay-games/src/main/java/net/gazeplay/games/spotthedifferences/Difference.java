@@ -20,6 +20,9 @@ public class Difference extends Circle {
     @Setter
     private Difference pair;
     private long timer;
+    @Setter
+    private int targetIdx;
+
 
     public Difference(final IGameContext gameContext, final SpotTheDifferences mainGame, final double centerX, final double centerY,
                       final double radius) {
@@ -40,7 +43,9 @@ public class Difference extends Circle {
                     if (timer > 0 && timeElapsed > GAZE_TIME) {
                         timer = 0;
                         this.setOpacity(1);
+                        mainGame.targetAOIList.get(this.targetIdx).setTimeEnded(System.currentTimeMillis());
                         pair.setOpacity(1);
+                        mainGame.targetAOIList.get(pair.targetIdx).setTimeEnded(System.currentTimeMillis());
                         mainGame.differenceFound();
                     }
                 }

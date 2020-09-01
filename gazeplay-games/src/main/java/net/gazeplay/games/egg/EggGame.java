@@ -21,10 +21,13 @@ public class EggGame implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         this.numberOfTurns = numOfTurns;
+        gameContext.startTimeLimiter();
     }
 
     @Override
     public void launch() {
+        gameContext.start();
+        gameContext.setLimiterAvailable();
         final Configuration config = gameContext.getConfiguration();
 
         final Egg egg = createEgg(config);

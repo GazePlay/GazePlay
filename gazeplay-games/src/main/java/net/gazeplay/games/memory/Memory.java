@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -69,9 +70,9 @@ public class Memory implements GameLifeCycle {
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.stats = stats;
+        this.gameContext.startTimeLimiter();
 
         if (gameType == MemoryGameType.LETTERS) {
-
             this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters");
 
         } else if (gameType == MemoryGameType.NUMBERS) {
@@ -82,6 +83,8 @@ public class Memory implements GameLifeCycle {
             this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"),
                 Utils.getImagesSubdirectory("default"));
         }
+
+        gameContext.start();
 
     }
 
@@ -101,6 +104,7 @@ public class Memory implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
         final Configuration config = gameContext.getConfiguration();
         final int cardsCount = nbColumns * nbLines;
 
@@ -201,7 +205,7 @@ public class Memory implements GameLifeCycle {
 
     private int getRandomValue(final HashMap<Integer, Integer> indUsed) {
         int value;
-        final Random rdm = new Random();
+        final ReplayablePseudoRandom rdm = new ReplayablePseudoRandom();
         do {
             value = rdm.nextInt(images.size());
         } while ((!images.containsKey(value)) || (indUsed.containsKey(value) && (indUsed.get(value) == 2)));
@@ -212,4 +216,5 @@ public class Memory implements GameLifeCycle {
     public int getnbRemainingPeers() {
         return nbRemainingPeers;
     }
+
 }

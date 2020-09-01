@@ -3,4 +3,9 @@
         <Package name="~.*"/>
         <Bug pattern="EI_EXPOSE_REP, EI_EXPOSE_REP2"/>
     </Match>
+    <!-- https://github.com/spotbugs/spotbugs/issues/756 -->
+    <Match>
+        <Package name="~.*"/>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+    </Match>
 </FindBugsFilter>
