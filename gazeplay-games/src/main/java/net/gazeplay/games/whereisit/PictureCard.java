@@ -22,7 +22,6 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
-
 @Slf4j
 @ToString
 @Getter
@@ -157,7 +156,7 @@ class PictureCard extends Group {
         fullAnimation.getChildren().add(translateToCenterTransition);
         fullAnimation.getChildren().add(scaleToFullScreenTransition);
 
-        gameContext.updateScore(stats,gameInstance);
+        gameContext.updateScore(stats, gameInstance);
 
         fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
             gameInstance.dispose();
@@ -208,25 +207,16 @@ class PictureCard extends Group {
 
         ImageView result = new ImageView(image);
 
-        double w = 0;
-        double h = 0;
-
-        double ratioX;
-        double ratioY;
-
-        double reducCoeff = 0;
-
         result.setFitWidth(width);
         result.setFitHeight(height);
 
-        ratioX = result.getFitWidth() / image.getWidth();
-        ratioY = result.getFitHeight() / image.getHeight();
+        double ratioX = result.getFitWidth() / image.getWidth();
+        double ratioY = result.getFitHeight() / image.getHeight();
 
+        double reducCoeff = Math.min(ratioX, ratioY);
 
-        reducCoeff = Math.min(ratioX, ratioY);
-
-        w = image.getWidth() * reducCoeff;
-        h = image.getHeight() * reducCoeff;
+        double w = image.getWidth() * reducCoeff;
+        double h = image.getHeight() * reducCoeff;
 
         result.setX(posX);
         result.setY(posY);
@@ -236,7 +226,6 @@ class PictureCard extends Group {
 
         return result;
     }
-
 
     private Rectangle createErrorImageRectangle() {
         final Image image = new Image("data/common/images/error.png");
