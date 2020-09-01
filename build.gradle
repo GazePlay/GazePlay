@@ -161,7 +161,6 @@ dependencies {
     runtime project(':gazeplay-picto-pick')
 
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
-
 }
 
 distributions {
