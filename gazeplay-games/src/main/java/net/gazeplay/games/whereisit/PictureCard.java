@@ -22,6 +22,8 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import static net.gazeplay.games.whereisit.WhereIsItGameType.*;
+
 @Slf4j
 @ToString
 @Getter
@@ -72,7 +74,11 @@ class PictureCard extends Group {
 
         this.imagePath = imagePath;
 
-        this.imageRectangle = createImageView(posX, posY, width, height, imagePath);
+        if (gameInstance.getGameType() == COLOR_NAME || gameInstance.getGameType() == COLOR_NAME_EASY || gameInstance.getGameType() == FLAGS) {
+            this.imageRectangle = createStretchedImageView(posX, posY, width, height, imagePath);
+        } else {
+            this.imageRectangle = createImageView(posX, posY, width, height, imagePath);
+        }
         this.progressIndicator = buildProgressIndicator(width, height);
 
         this.progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
@@ -223,6 +229,22 @@ class PictureCard extends Group {
         result.setTranslateX((result.getFitWidth() - w) / 2);
         result.setTranslateY((result.getFitHeight() - h) / 2);
         result.setPreserveRatio(true);
+
+        return result;
+    }
+
+    private ImageView createStretchedImageView(double posX, double posY, double width, double height,
+                                               @NonNull String imagePath) {
+        final Image image = new Image(imagePath);
+
+        ImageView result = new ImageView(image);
+
+        result.setFitWidth(width);
+        result.setFitHeight(height);
+
+        result.setX(posX);
+        result.setY(posY);
+        result.setPreserveRatio(false);
 
         return result;
     }

@@ -14,6 +14,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -46,6 +47,7 @@ public class WhereIsIt implements GameLifeCycle {
 
     private Text questionText;
 
+    @Getter
     private final WhereIsItGameType gameType;
 
     private final int nbLines;
