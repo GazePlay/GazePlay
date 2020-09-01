@@ -2,8 +2,7 @@ package net.gazeplay.games.magicpotions;
 
 import javafx.scene.paint.Color;
 import lombok.Getter;
-
-import java.util.Random;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 public enum PotionMix {
     RED_Potion("Red", Color.RED),
@@ -26,7 +25,7 @@ public enum PotionMix {
     }
 
     public static PotionMix getRandomPotionRequest() {
-        final Random random = new Random();
+        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
         return values()[random.nextInt(values().length)];
     }
 }

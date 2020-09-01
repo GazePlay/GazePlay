@@ -3,6 +3,7 @@ package net.gazeplay.games.whereisit;
 import javafx.geometry.Dimension2D;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
-import java.util.Random;
 
 import static org.mockito.Mockito.when;
 
@@ -51,7 +51,7 @@ class WhereIsItTest {
         when(mockGameContext.getGamePanelDimensionProvider().getDimension2D()).thenReturn(mockDimension);
         when(mockGameContext.getConfiguration()).thenReturn(mockConfig);
 
-        final Random random = new Random();
+        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
         final RoundDetails randomPictures = whereIsIt.pickAndBuildRandomPictures(4, random, 0);
         assert randomPictures.getPictureCardList().size() == 4;
     }
@@ -70,7 +70,7 @@ class WhereIsItTest {
         when(mockGameContext.getGamePanelDimensionProvider().getDimension2D()).thenReturn(mockDimension);
         when(mockGameContext.getConfiguration()).thenReturn(mockConfig);
 
-        final Random random = new Random();
+        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
         final RoundDetails randomPictures = whereIsIt.pickAndBuildRandomPictures(4, random, 0);
         assert randomPictures.getPictureCardList().size() == 4;
     }

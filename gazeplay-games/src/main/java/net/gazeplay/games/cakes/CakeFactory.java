@@ -26,12 +26,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 @Slf4j
 public class CakeFactory extends Parent implements GameLifeCycle {
@@ -545,7 +545,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     }
 
     private void generateRandomCake() {
-        final Random random = new Random();
+        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
         for (int i = 0; i < 3; i++) {
             model[i][0] = 1 + random.nextInt(4);
             model[i][1] = 1 + random.nextInt(5);

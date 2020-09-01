@@ -17,9 +17,8 @@ import javafx.util.Duration;
 import lombok.Getter;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
-
-import java.util.Random;
 
 public class Bloc extends Parent {// Rectangle {
 
@@ -159,7 +158,7 @@ public class Bloc extends Parent {// Rectangle {
     }
 
     private String createLetterSoundPath(String currentLanguage, String currentLetter) {
-        Random r = new Random();
+        ReplayablePseudoRandom r = new ReplayablePseudoRandom();
         if (r.nextBoolean()) {
             return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/f/letter/" + currentLetter.toUpperCase()
                 + ".mp3";
