@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.RadioButton;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -20,11 +21,14 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
+import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HomeButton;
+import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.StatDisplayUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.stats.ExplorationGamesStats;
@@ -76,12 +80,34 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         centerPane.getChildren().add(gazeMetrics);
 
+        I18NButton displayMouseButton = new I18NButton(getGazePlay().getTranslator(), "Mouse");
+        displayMouseButton.setOnMouseClicked((e) -> {
+            SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+            gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouse().toURI().toString()));
+        });
+
+        I18NButton displayGazeButton = new I18NButton(getGazePlay().getTranslator(), "Gaze");
+        displayGazeButton.setOnMouseClicked((e) -> {
+            SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+            gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileGaze().toURI().toString()));
+        });
+
+        I18NButton displayMouseAndGazeButton = new I18NButton(getGazePlay().getTranslator(), "MouseAndGaze");
+        displayMouseAndGazeButton.setOnMouseClicked((e) -> {
+            SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+            gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouseAndGaze().toURI().toString()));
+        });
+
+        HBox buttonSwitchMetrics = new HBox(displayMouseButton, displayGazeButton, displayMouseAndGazeButton);
+        buttonSwitchMetrics.setAlignment(Pos.CENTER);
+        centerPane.getChildren().add(buttonSwitchMetrics);
+
         LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(stats, root);
         centerPane.getChildren().add(lineChart);
         RadioButton colorBands = new RadioButton("Color Bands");
 
         if (!config.isFixationSequenceDisabled()) {
-            AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(stats.getFixationSequence(), root);
+            AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(stats.getFixationSequence().get(FixationSequence.MOUSE_FIXATION_SEQUENCE), root);
 
             colorBands.setTextFill(Color.WHITE);
             colorBands.getStylesheets().add("data/common/radio.css");
@@ -153,7 +179,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         if (stats instanceof ShootGamesStats) {
             labelValue = "HitRate";
-            value = new Text(stats.getShotRatio() + "% ("+ stats.getNbGoalsReached()+ "/" + stats.getNbGoalsToReach()+")");
+            value = new Text(stats.getShotRatio() + "% (" + stats.getNbGoalsReached() + "/" + stats.getNbGoalsToReach() + ")");
             addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
         }
 

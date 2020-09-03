@@ -9,6 +9,7 @@ import mockit.MockUp;
 import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import org.junit.jupiter.api.BeforeEach;
@@ -172,7 +173,7 @@ class StatsTest {
         statsSpy.gazeMoved(new Point2D(20.0, 40.0));
 
         verify(statsSpy).incrementHeatMap(20, 40);
-        verify(statsSpy).incrementFixationSequence(20, 40);
+        verify(statsSpy).incrementFixationSequence(20, 40, statsSpy.getFixationSequence().get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
     }
 
     @Test

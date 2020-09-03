@@ -34,6 +34,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -55,6 +56,8 @@ class StatsContextTest {
     private Stats mockStats;
 
     private SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(
+        new File("file.csv"),
+        new File("file.csv"),
         new File("file.csv"),
         new File("file.csv"),
         new File("file.csv"),
@@ -112,10 +115,17 @@ class StatsContextTest {
 
     @Test
     void shouldAddAreaChartOnColorBandSelected() {
-        LinkedList<FixationPoint> fixationPoints = new LinkedList<>(List.of(
-            new FixationPoint(1234, 2345, 30, 40),
-            new FixationPoint(4567, 1234, 40, 60)
-        ));
+        ArrayList<LinkedList<FixationPoint>> fixationPoints = new ArrayList<>(List.of(
+            new LinkedList<>(List.of(
+                new FixationPoint(1234, 2345, 30, 40),
+                new FixationPoint(4567, 1234, 40, 60)
+            )),
+            new LinkedList<>(List.of(
+                new FixationPoint(1234, 2345, 30, 40),
+                new FixationPoint(4567, 1234, 40, 60)
+            ))
+        )
+        );
         when(mockStats.getFixationSequence()).thenReturn(fixationPoints);
 
         Configuration mockConfig = mock(Configuration.class);
