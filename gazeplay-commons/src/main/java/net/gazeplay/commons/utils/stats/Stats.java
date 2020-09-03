@@ -432,28 +432,27 @@ public class Stats implements GazeMotionListener {
                 if (e.getSource() == gameContextScene.getRoot() && e.getTarget() == gameContextScene.getRoot()) {
                     final int getX = (int) e.getX();
                     final int getY = (int) e.getY();
-
-                    if (!config.isHeatMapDisabled()) {
-                        incrementHeatMap(getX, getY);
-                    }
-                    if (!config.isFixationSequenceDisabled()) {
-                        if (getX > 0 && getY > 0) {
+                    if (getX > 0 && getY > 0) {
+                        if (!config.isHeatMapDisabled()) {
+                            incrementHeatMap(getX, getY);
+                        }
+                        if (!config.isFixationSequenceDisabled()) {
                             incrementFixationSequence(getX, getY, fixationSequence.get(FixationSequence.GAZE_FIXATION_SEQUENCE));
                         }
-                    }
-                    if (config.getAreaOfInterestDisabledProperty().getValue()) {
-                        if (getX != previousX || getY != previousY) {
-                            final long timeToFixation = System.currentTimeMillis() - startTime;
-                            previousX = getX;
-                            previousY = getY;
-                            final long timeInterval = (timeToFixation - previousTime);
-                            movementHistory
-                                .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
-                            movementHistoryidx++;
-                            if (movementHistoryidx > 1) {
-                                generateAOIList(movementHistoryidx - 1);
+                        if (config.getAreaOfInterestDisabledProperty().getValue()) {
+                            if (getX != previousX || getY != previousY) {
+                                final long timeToFixation = System.currentTimeMillis() - startTime;
+                                previousX = getX;
+                                previousY = getY;
+                                final long timeInterval = (timeToFixation - previousTime);
+                                movementHistory
+                                    .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
+                                movementHistoryidx++;
+                                if (movementHistoryidx > 1) {
+                                    generateAOIList(movementHistoryidx - 1);
+                                }
+                                previousTime = timeToFixation;
                             }
-                            previousTime = timeToFixation;
                         }
                     }
                 }
@@ -462,30 +461,30 @@ public class Stats implements GazeMotionListener {
             recordMouseMovements = e -> {
                 final int getX = (int) e.getSceneX();
                 final int getY = (int) e.getSceneY();
-                if (!config.isHeatMapDisabled()) {
-                    incrementHeatMap(getX, getY);
-                }
-                if (!config.isFixationSequenceDisabled()) {
-                    if (getX > 0 || getY > 0) {
+                if (getX > 0 || getY > 0) {
+                    if (!config.isHeatMapDisabled()) {
+                        incrementHeatMap(getX, getY);
+                    }
+                    if (!config.isFixationSequenceDisabled()) {
                         incrementFixationSequence(getX, getY, fixationSequence.get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
                     }
-                }
-                if (config.getAreaOfInterestDisabledProperty().getValue()) {
-                    if (getX != previousX || getY != previousY && counter == 2) {
-                        final long timeElapsedMillis = System.currentTimeMillis() - startTime;
-                        previousX = getX;
-                        previousY = getY;
-                        final long timeInterval = (timeElapsedMillis - previousTime);
-                        movementHistory
-                            .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
-                        movementHistoryidx++;
-                        if (movementHistoryidx > 1) {
-                            generateAOIList(movementHistoryidx - 1);
+                    if (config.getAreaOfInterestDisabledProperty().getValue()) {
+                        if (getX != previousX || getY != previousY && counter == 2) {
+                            final long timeElapsedMillis = System.currentTimeMillis() - startTime;
+                            previousX = getX;
+                            previousY = getY;
+                            final long timeInterval = (timeElapsedMillis - previousTime);
+                            movementHistory
+                                .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
+                            movementHistoryidx++;
+                            if (movementHistoryidx > 1) {
+                                generateAOIList(movementHistoryidx - 1);
+                            }
+                            previousTime = timeElapsedMillis;
+                            counter = 0;
                         }
-                        previousTime = timeElapsedMillis;
-                        counter = 0;
+                        counter++;
                     }
-                    counter++;
                 }
             };
 
