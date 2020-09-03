@@ -488,8 +488,8 @@ public class Stats implements GazeMotionListener {
                 }
             };
 
-            gameContextScene.getRoot().addEventFilter(GazeEvent.ANY, recordGazeMovements);
-            gameContextScene.getRoot().addEventFilter(MouseEvent.ANY, recordMouseMovements);
+                gameContextScene.getRoot().addEventFilter(GazeEvent.ANY, recordGazeMovements);
+                gameContextScene.getRoot().addEventFilter(MouseEvent.ANY, recordMouseMovements);
 
         });
         currentRoundStartTime = lifeCycle.getStartTime();
@@ -778,7 +778,7 @@ public class Stats implements GazeMotionListener {
             && (Math.abs(newGazePoint.getY()
             - fixationSequence.get(fixationSequence.size() - 1).getY()) <= fixationTrail)) {
             fixationSequence.get(fixationSequence.size() - 1)
-                .setGazeDuration(fixationSequence.get(fixationSequence.size() - 1).getGazeDuration() + newGazePoint.getGazeDuration());
+                .setGazeDuration(newGazePoint.getGazeDuration() + newGazePoint.getGazeDuration());
         } else { // else add the new point in the list
             fixationSequence.add(newGazePoint);
         }

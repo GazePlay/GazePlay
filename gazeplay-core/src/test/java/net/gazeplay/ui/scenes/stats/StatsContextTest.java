@@ -71,6 +71,7 @@ class StatsContextTest {
         when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(() -> new Dimension2D(1920, 1080));
         when(mockTranslator.currentLocale()).thenReturn(Locale.ENGLISH);
         when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
+        when(mockStats.getFixationSequence()).thenReturn(new ArrayList<>(List.of(new LinkedList<>(), new LinkedList<>())));
     }
 
     @Test
@@ -147,7 +148,7 @@ class StatsContextTest {
         HBox controlPane = (HBox) sidePane.getBottom();
         RadioButton colorBands = (RadioButton) controlPane.getChildren().get(1);
 
-        LineChart<String, Number> lineChart = (LineChart<String, Number>) centerPane.getChildren().get(1);
+        LineChart<String, Number> lineChart = (LineChart<String, Number>) centerPane.getChildren().get(2);
         assertTrue(centerPane.getChildren().contains(lineChart));
 
         colorBands.fire();
