@@ -150,6 +150,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         createButtons();
 
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
 
     }
 

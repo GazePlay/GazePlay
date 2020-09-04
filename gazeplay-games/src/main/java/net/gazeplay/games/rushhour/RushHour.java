@@ -2433,6 +2433,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         final int numberLevels = 33;
         level = (level + 1) % numberLevels;
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
     }
 

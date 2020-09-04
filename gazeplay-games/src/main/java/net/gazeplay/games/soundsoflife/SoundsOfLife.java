@@ -124,7 +124,7 @@ public class SoundsOfLife implements GameLifeCycle {
     @Override
     public void launch() {
         stats.notifyNewRoundReady();
-        //gameContext.getGazeDeviceManager().addStats(stats);
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override

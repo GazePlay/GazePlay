@@ -369,6 +369,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         clearTransition();
         box.setTranslateX(0);
         box.setTranslateY(0);
+
     }
 
     private void closeTimer(){

@@ -278,6 +278,7 @@ public class GooseGame implements GameLifeCycle {
 
         gameContext.getChildren().addAll(diceDisplay, rollButton, turnIndicator, messages);
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
         endOfTurn();
     }
 

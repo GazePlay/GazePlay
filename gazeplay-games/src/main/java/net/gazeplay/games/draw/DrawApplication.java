@@ -12,10 +12,12 @@ import net.gazeplay.commons.utils.stats.Stats;
  */
 public class DrawApplication implements GameLifeCycle {
 
-    Stats stats;
+    private final Stats stats;
+    private final IGameContext gameContext;
 
     public DrawApplication(IGameContext gameContext, Stats stats) {
         this.stats  = stats;
+        this.gameContext = gameContext;
 
         DrawBuilder drawBuilder = new DrawBuilder();
         drawBuilder.setColorPicker(new RainbowColorPicker());
@@ -42,6 +44,7 @@ public class DrawApplication implements GameLifeCycle {
     @Override
     public void launch() {
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override

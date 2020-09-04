@@ -154,6 +154,7 @@ public class VideoGrid implements GameLifeCycle {
             }
             gameContext.getChildren().add(grid);
             stats.notifyNewRoundReady();
+            gameContext.getGazeDeviceManager().addStats(stats);
         } else {
             noVideoFound();
             stats.notifyNewRoundReady();
