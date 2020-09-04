@@ -152,20 +152,39 @@ public class ReplayablePseudoRandomTest {
 
     @Test
     public void randomShouldBeDifferentWithDifferentSeeds() {
+
+        double time = System.currentTimeMillis();
+
+        double seed1 = time % 100000000;
+        ReplayablePseudoRandom random1 = new ReplayablePseudoRandom(seed1);
+
         String firstRandom = "";
         for (int i = 0; i < 10; i++) {
-            float number = random.nextInt(2);
+            float number = random1.nextInt(2);
             firstRandom = firstRandom + number;
         }
 
-        ReplayablePseudoRandom random2 = new ReplayablePseudoRandom();
+        double seed2 = (time + 1) % 100000000;
+        ReplayablePseudoRandom random2 = new ReplayablePseudoRandom(seed2);
+
         String secondRandom = "";
         for (int i = 0; i < 10; i++) {
             float number = random2.nextInt(2);
             secondRandom = secondRandom + number;
         }
 
+        double seed3 = (time + 2) % 100000000;
+        ReplayablePseudoRandom random3 = new ReplayablePseudoRandom(seed3);
+
+        String thirdRandom = "";
+        for (int i = 0; i < 10; i++) {
+            float number = random3.nextInt(2);
+            thirdRandom = thirdRandom + number;
+        }
+
         assertNotEquals(firstRandom, secondRandom);
+        assertNotEquals(firstRandom, thirdRandom);
+        assertNotEquals(thirdRandom, secondRandom);
     }
 
     @Test
