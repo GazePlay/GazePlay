@@ -171,7 +171,7 @@ public class ReplayablePseudoRandomTest {
     @Test
     public void randomShouldBeSameWithDifferentSeeds() {
 
-        double seed = (System.currentTimeMillis()+1) % 100000000;
+        double seed = System.currentTimeMillis() % 100000000;
 
         ReplayablePseudoRandom random1 = new ReplayablePseudoRandom(seed);
         ReplayablePseudoRandom random2 = new ReplayablePseudoRandom(seed);
