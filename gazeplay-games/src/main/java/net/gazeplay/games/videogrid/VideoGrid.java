@@ -23,6 +23,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
@@ -33,7 +34,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 @Slf4j
 public class VideoGrid implements GameLifeCycle {
@@ -49,7 +49,7 @@ public class VideoGrid implements GameLifeCycle {
     private final int nbColumns;
     private final GridPane grid;
     private final File videoFolder;
-    private final Random random;
+    private final ReplayablePseudoRandom random;
     private final List<String> compatibleFileTypes;
 
     private final ColorAdjust greyscale;
@@ -61,7 +61,7 @@ public class VideoGrid implements GameLifeCycle {
         this.nbColumns = nbColumns;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.config = gameContext.getConfiguration();
-        this.random = new Random();
+        this.random = new ReplayablePseudoRandom();
         this.translate = MultilinguismFactory.getSingleton();
 
         grid = new GridPane();

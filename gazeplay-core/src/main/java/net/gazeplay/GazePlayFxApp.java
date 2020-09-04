@@ -18,6 +18,7 @@ import net.gazeplay.cli.ReusableOptions;
 import net.gazeplay.cli.UserSelectionOptions;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
@@ -28,7 +29,6 @@ import org.springframework.context.ApplicationContext;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.List;
-import java.util.Random;
 
 @Slf4j
 public class GazePlayFxApp extends Application {
@@ -103,7 +103,7 @@ public class GazePlayFxApp extends Application {
                 String selectedGameNameCode = gameSelectionOptions.getGameNameCode();
                 if (selectedGameNameCode == null) {
                     if (gameSelectionOptions.isRandomGame()) {
-                        final Random random = new Random();
+                        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
                         final int randomGameIndex = random.nextInt(gameSpecs.size());
                         final GameSpec selectedGameSpec = gameSpecs.get(randomGameIndex);
                         selectedGameNameCode = selectedGameSpec.getGameSummary().getNameCode();

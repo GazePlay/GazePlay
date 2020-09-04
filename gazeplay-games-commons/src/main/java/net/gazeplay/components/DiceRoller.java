@@ -14,22 +14,21 @@ import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.soundsmanager.SoundManager;
-
 import java.util.ArrayList;
-import java.util.Random;
 
 @Slf4j
 public class DiceRoller extends MeshView {
 
-    private final Random random;
+    private final ReplayablePseudoRandom random;
     private final ArrayList<Rotate> rotations;
     private final SoundManager soundManager;
 
     public DiceRoller(final float dieWidth, SoundManager soundManager) {
         super();
         this.soundManager = soundManager;
-        random = new Random();
+        random = new ReplayablePseudoRandom();
         rotations = new ArrayList<>();
 
         final TriangleMesh mesh = new TriangleMesh();

@@ -2,9 +2,7 @@ package net.gazeplay.games.math101;
 
 import javafx.scene.paint.Color;
 import lombok.Getter;
-
-import java.util.Random;
-
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 public enum MathGameType {
 
     ADDITION("math-101-addition", Colors.pastelBlue, MathOperation.PLUS),
@@ -29,7 +27,7 @@ public enum MathGameType {
 
     private final MathOperation[] operators;
 
-    private final Random random = new Random();
+    private final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
 
     MathGameType(String gameName, Color coulour, MathOperation... operators) {
         this.gameName = gameName;

@@ -24,6 +24,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
@@ -39,7 +40,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 import java.util.Scanner;
 
 @Slf4j
@@ -47,7 +47,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
     private final SpaceGameStats stats;
     private final Dimension2D dimension2D;
-    private final Random random;
+    private final ReplayablePseudoRandom random;
     private final Configuration configuration;
 
     private final ImageLibrary spaceshipImage;
@@ -107,7 +107,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.stats = stats;
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.random = new Random();
+        this.random = new ReplayablePseudoRandom();
         this.configuration = gameContext.getConfiguration();
         this.gameContext.startTimeLimiter();
         this.gameContext.startScoreLimiter();
