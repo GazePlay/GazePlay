@@ -54,6 +54,14 @@ class FixationSequenceTest {
             assertEquals(1920, sequence.getImage().widthProperty().get());
         });
         TestingUtils.waitForRunLater();
+
+        Platform.runLater(() -> {
+            FixationSequence sequence = new FixationSequence(1920, 1080, fixationPoints, FixationSequence.GAZE_FIXATION_SEQUENCE);
+            assertEquals(3, sequence.getSequence().size());
+            assertEquals(1080, sequence.getImage().heightProperty().get());
+            assertEquals(1920, sequence.getImage().widthProperty().get());
+        });
+        TestingUtils.waitForRunLater();
     }
 
     @Test
@@ -61,6 +69,16 @@ class FixationSequenceTest {
         Platform.runLater(() -> {
             File testFile = new File("image.png");
             FixationSequence sequence = new FixationSequence(1920, 1080, fixationPoints, FixationSequence.MOUSE_FIXATION_SEQUENCE);
+            sequence.saveToFile(testFile);
+
+            assertTrue(testFile.isFile());
+            testFile.delete();
+        });
+        TestingUtils.waitForRunLater();
+
+        Platform.runLater(() -> {
+            File testFile = new File("image.png");
+            FixationSequence sequence = new FixationSequence(1920, 1080, fixationPoints, FixationSequence.GAZE_FIXATION_SEQUENCE);
             sequence.saveToFile(testFile);
 
             assertTrue(testFile.isFile());

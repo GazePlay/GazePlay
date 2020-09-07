@@ -31,7 +31,6 @@ public class FixationSequence {
     private final Color[][] colors = {
         {Color.INDIANRED, Color.DARKRED},
         {Color.LIGHTBLUE, Color.DARKBLUE}
-
     };
 
     /**
@@ -127,9 +126,8 @@ public class FixationSequence {
                         Math.sqrt(duration) / maxDuration * colors[sequenceIndex][1].getRed(),
                         Math.sqrt(duration) / maxDuration * colors[sequenceIndex][1].getGreen(),
                         Math.sqrt(duration) / maxDuration * colors[sequenceIndex][1].getBlue(),
-                        1));// yellow 50% transparency
+                        1));
                 gc.fillOval(x - radius / 2d, y - radius / 2d, radius, radius);
-                log.info(" max = {}, val = {} , opacity = {}", Math.sqrt(duration), maxDuration, Math.sqrt(duration) / maxDuration);
                 gc.setFill(colors[sequenceIndex][0]);
                 gc.fillText(Integer.toString(labelCount), x, y, 80);
             } else {

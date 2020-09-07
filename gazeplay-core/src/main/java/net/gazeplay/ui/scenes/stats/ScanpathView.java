@@ -118,7 +118,6 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
             newPoint.setOpacity(0);
             newPoint.setCenterX(p.getY());
             newPoint.setCenterY(p.getX());
-
             newPoint.setRadius((40d + 50d * (Math.sqrt(p.getGazeDuration()) / finalMaxDuration)) / 2);
 
             points.add(newPoint);

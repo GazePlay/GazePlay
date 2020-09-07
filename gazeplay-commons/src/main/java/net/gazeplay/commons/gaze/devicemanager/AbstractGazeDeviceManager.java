@@ -152,7 +152,6 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         final double positionX = gazePositionOnScreen.getX();
         final double positionY = gazePositionOnScreen.getY();
 
-
         Configuration config = ActiveConfigurationContext.getInstance();
 
         if (config.isGazeMouseEnable() && !config.isMouseFree()) {
@@ -172,32 +171,12 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                 if (gameScene != null && node != gameScene.getNode()) {
                     eventFire(positionX, positionY, gi, node);
                 }
-                //recursiveEventFire(positionX, positionY, node);
             }
 
             if (gameScene != null) {
                 eventFire(positionX, positionY, gameScene, gameScene.getNode());
             }
 
-        }
-    }
-
-    public void recursiveEventFire(double positionX, double positionY, Node node) {
-        if (node instanceof Pane) {
-            for (Node child : ((Pane) node).getChildren()) {
-                if (!shapesEventFilter.containsKey(new IdentityKey<>(child))) {
-                    // log.info("child : "+child+" added !");
-                    addEventFilter(child);
-                }
-                // log.info("child : "+child+" fired !");
-                GazeInfos gi = shapesEventFilter.get(new IdentityKey<>(child));
-                Point2D localPosition = child.screenToLocal(positionX, positionY);
-                if (gi != null) {
-                    eventFire(localPosition.getX(), localPosition.getY(), gi, child);
-                }
-                recursiveEventFire(positionX, positionY, child);
-
-            }
         }
     }
 

@@ -219,6 +219,7 @@ class StatsTest {
         };
 
         when(stats.gameContextScene.getRoot()).thenReturn(new Pane());
+
         stats.start();
         stats.gazeMoved(new Point2D(30, 40));
         stats.gazeMoved(new Point2D(20, 50));

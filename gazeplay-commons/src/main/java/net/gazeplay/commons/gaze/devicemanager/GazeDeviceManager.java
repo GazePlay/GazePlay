@@ -24,7 +24,7 @@ public interface GazeDeviceManager {
 
     void removeEventFilter(Node gs);
 
-    public void addStats(Stats stats);
+    void addStats(Stats stats);
 
     void removeEventHandler(Node gs);
 
