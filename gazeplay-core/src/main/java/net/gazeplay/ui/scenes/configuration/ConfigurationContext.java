@@ -35,6 +35,7 @@ import net.gazeplay.commons.configuration.BackgroundStyle;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
+import net.gazeplay.commons.gaze.InteractionMode;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
@@ -251,6 +252,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
+        // Interaction Mode choice
+        {
+            I18NText label = new I18NText(translator, "InteractionMode", COLON);
+
+            ChoiceBox<InteractionMode> input = buildInteractionModeConfigChooser(config);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
 
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GraphicsSettings", COLON));
         // Graphics settings
@@ -791,10 +800,38 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return choiceBox;
     }
 
+    static ChoiceBox<InteractionMode> buildInteractionModeConfigChooser(Configuration configuration) {
+        ChoiceBox<InteractionMode> choiceBox = new ChoiceBox<>();
+
+        choiceBox.getItems().addAll(InteractionMode.values());
+
+        InteractionMode selectedInteractionMode = findSelectedInteractionMode(configuration);
+        choiceBox.getSelectionModel().select(selectedInteractionMode);
+
+        choiceBox.setPrefWidth(PREF_WIDTH);
+        choiceBox.setPrefHeight(PREF_HEIGHT);
+
+        choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            final String newPropertyValue = newValue.name();
+            configuration.getInteractionmodeProperty().setValue(newPropertyValue);
+        });
+
+        return choiceBox;
+    }
+
     private static EyeTracker findSelectedEyeTracker(Configuration configuration) {
         for (EyeTracker currentEyeTracker : EyeTracker.values()) {
             if (currentEyeTracker.name().equals(configuration.getEyeTracker())) {
                 return currentEyeTracker;
+            }
+        }
+        return null;
+    }
+
+    private static InteractionMode findSelectedInteractionMode(Configuration configuration) {
+        for (InteractionMode currentInteractionMode : InteractionMode.values()) {
+            if (currentInteractionMode.name().equals(configuration.getInteractionMode())) {
+                return currentInteractionMode;
             }
         }
         return null;

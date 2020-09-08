@@ -51,8 +51,11 @@ public class WhereIsIt implements GameLifeCycle {
     @Getter
     private final WhereIsItGameType gameType;
 
+    @Getter
     private final int nbLines;
+    @Getter
     private final int nbColumns;
+
     private final boolean fourThree;
 
     private final IGameContext gameContext;
@@ -386,7 +389,7 @@ RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRoun
 
                 }
 
-                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+                final PictureCard pictureCard = new PictureCard((short) i, gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, winnerImageIndexAmongDisplayedImages == i,
                     randomImageFile + "", stats, this);
 
@@ -437,7 +440,7 @@ RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRoun
                 }
 
                 // The image file needs 'file:' prepended as this will get images from a local source, not resources.
-                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+                final PictureCard pictureCard = new PictureCard((short)i, gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
                     winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats, this);
 
@@ -478,7 +481,7 @@ RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRoun
 
                 }
 
-                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+                final PictureCard pictureCard = new PictureCard((short) i, gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
                     winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
 

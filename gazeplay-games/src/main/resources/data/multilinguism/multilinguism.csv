@@ -242,8 +242,10 @@ HeatMapSettings,,,眼动追踪地图设置,,,HeatMap Settings,,Paramètres de la
 AOISettings,,,关键注视区设置,,,A.O.I Settings,,Paramètres des Zones d'Interet,,,,,,,,,,,
 MoreStatsSettings,,,更多统计设置,,,More Stats Settings,,Plus de Paramètres de Statistiques,,,,,,,,,,,
 BetaSettings,,,测试设置,,,Beta Settings,,Paramètres en Beta,,,,,,,,,,,
+InteractionMode,,,,Interaktionsmodus,,Interaction Mode,Vuorovaikutustila,Mode d'interaction,,,Modalità di interazione,,Tryb interakcji,Modo de interação,,,,Modo de interacción,
 
 toTop,,,从下到上,,,from bottom to top,,du bas vers le haut,,,,,,,,,,de abajo hacia arriba,
 toBottom,,,从上到下,,,from top to bottom,,du haut vers le bas,,,,,,,,,,de arriba hacia abajo,
 toRight,,,从左到you,,,from left to right,,de gauche à droite,,,,,,,,,,de la izquierda hacia la derecha,
 toLeft,,,从右到左,,,from right to left,,de droite à gauche,,,,,,,,,,de la derecha hacia la izquierda,
+

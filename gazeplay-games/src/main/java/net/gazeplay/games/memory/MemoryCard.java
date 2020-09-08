@@ -16,6 +16,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.InteractionMode;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -51,8 +53,11 @@ public class MemoryCard extends Parent {
 
     final boolean isOpen;
 
+    private boolean isCrossingInteraction;
 
-    public MemoryCard(final double positionX, final double positionY, final double width, final double height, final Image image, final int idc,
+    private int lineIndex, columnIndex;
+
+    public MemoryCard(int lineIndex, int columnIndex, final double positionX, final double positionY, final double width, final double height, final Image image, final int idc,
                       final IGameContext gameContext, final Stats stats, final Memory gameInstance, final int fixationlength, final boolean isOpen) {
 
         this.isOpen = isOpen;
@@ -78,7 +83,21 @@ public class MemoryCard extends Parent {
 
         this.cardAlreadyTurned = -1;
 
-        this.fixationlength = fixationlength;
+        final Configuration config = gameContext.getConfiguration();
+
+        this.lineIndex = lineIndex;
+        this.columnIndex = columnIndex;
+
+        isCrossingInteraction = config.getInteractionMode().equals(InteractionMode.crossing.toString());
+
+        if(isCrossingInteraction)
+        {
+            this.fixationlength = 0.0;
+        }
+        else
+        {
+            this.fixationlength = fixationlength;
+        }
 
         this.gameInstance = gameInstance;
 
@@ -195,6 +214,15 @@ public class MemoryCard extends Parent {
                     timelineProgressBar.stop();
                 }
 
+                final double x = ((GazeEvent) e).getX();
+                final double y = ((GazeEvent) e).getY();
+                boolean crossingCondition = isCorner(x, y);
+
+                if(isCrossingInteraction && !crossingCondition)
+                {
+                    return;
+                }
+
                 progressIndicator.setOpacity(1);
                 progressIndicator.setProgress(0);
 
@@ -270,6 +298,77 @@ public class MemoryCard extends Parent {
         };
     }
 
+    private boolean isCorner(double x, double y)
+    {
+        boolean condition = false;
+
+
+        log.info(this.columnIndex+" "+this.lineIndex);
+        log.info(this.card.getX()+" "+this.card.getY());
+        log.info(this.card.getWidth()+" "+this.card.getHeight());
+        log.info(x+" "+y);
+
+
+        double initialWidth, initialHeight, initialPositionX, initialPositionY;
+
+        initialHeight = this.card.getHeight();
+        initialWidth = this.card.getWidth();
+        initialPositionX = this.card.getX();
+        initialPositionY = this.card.getY();
+
+        switch(this.columnIndex)
+        {
+            case 0:
+                switch(this.lineIndex)
+                {
+                    case 0:
+                        condition = x < (this.card.getX() + 20) || y < (this.card.getY() + 20);
+                        break;
+                    case 1:
+                        condition = x < (this.card.getX() + 20);
+                        break;
+                    case 2:
+                        condition = x < (this.card.getX() + 20) || y > (this.card.getY() + this.card.getHeight() - 20);
+                        break;
+                }
+                break;
+            case 1:
+                switch(this.lineIndex)
+                {
+                    case 0:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y < (initialPositionY + 20);
+                        break;
+                    case 1:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5);
+                        break;
+                    case 2:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y >= (initialPositionY + initialHeight);
+                        break;
+                }
+                break;
+            case 2:
+                switch(this.lineIndex)
+                {
+                    case 0:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y < (initialPositionY + 20);
+                        break;
+                    case 1:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5);
+                        break;
+                    case 2:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y < (initialPositionY + initialHeight);
+                        break;
+                }
+                break;
+        }
+
+        if(condition)
+        {
+            return true;
+        }
+
+        return false;
+    }
 
     public boolean isTurned() {
         return turned;
