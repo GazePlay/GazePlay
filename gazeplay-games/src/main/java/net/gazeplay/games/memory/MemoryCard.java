@@ -302,12 +302,10 @@ public class MemoryCard extends Parent {
     {
         boolean condition = false;
 
-
-        log.info(this.columnIndex+" "+this.lineIndex);
-        log.info(this.card.getX()+" "+this.card.getY());
-        log.info(this.card.getWidth()+" "+this.card.getHeight());
-        log.info(x+" "+y);
-
+        //log.info(this.columnIndex+" "+this.lineIndex);
+        //log.info(this.card.getX()+" "+this.card.getY());
+        //log.info(this.card.getWidth()+" "+this.card.getHeight());
+        //log.info(x+" "+y);
 
         double initialWidth, initialHeight, initialPositionX, initialPositionY;
 
@@ -322,13 +320,13 @@ public class MemoryCard extends Parent {
                 switch(this.lineIndex)
                 {
                     case 0:
-                        condition = x < (this.card.getX() + 20) || y < (this.card.getY() + 20);
+                        condition = x < (initialPositionX + 20) || y < (initialPositionY + 20);
                         break;
                     case 1:
-                        condition = x < (this.card.getX() + 20);
+                        condition = x < (initialPositionX + 20);
                         break;
                     case 2:
-                        condition = x < (this.card.getX() + 20) || y > (this.card.getY() + this.card.getHeight() - 20);
+                        condition = x < (initialPositionX + 20) || y > (initialPositionY + initialHeight - 20);
                         break;
                 }
                 break;

@@ -281,7 +281,7 @@ public class Math101 implements GameLifeCycle {
 
         final int fixationlength = config.getFixationLength();
 
-        for (int currentLineIndex = 1; currentLineIndex < nbLines; currentLineIndex++) {
+        for (int currentLineIndex = 0; currentLineIndex < nbLines; currentLineIndex++) {
             for (int currentColumnIndex = 0; currentColumnIndex < nbColumns; currentColumnIndex++) {
 
                 final boolean isWinnerCard;
@@ -319,7 +319,7 @@ public class Math101 implements GameLifeCycle {
                 final TargetAOI targetAOI = new TargetAOI(positionX+cardWidth/2.5, positionY+boxWidth/3, (int)cardWidth/3, System.currentTimeMillis());
                 targetAOIList.add(targetAOI);
 
-                final Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, currentValue, gameContext, stats, this, fixationlength);
+                final Card card = new Card(currentLineIndex, currentColumnIndex, positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, currentValue, gameContext, stats, this, fixationlength);
 
                 result.add(card);
                 currentCardIndex++;

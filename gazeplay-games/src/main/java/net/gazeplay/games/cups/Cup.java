@@ -15,6 +15,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.InteractionMode;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.cups.utils.PositionCup;
@@ -69,12 +71,31 @@ public class Cup {
     @Setter
     private int actionsToDo;
 
-    public Cup(final ImageView item, final PositionCup positionCup, final IGameContext gameContext, final Stats stats, final CupsAndBalls gameInstance,
+    private int index;
+
+    private boolean isCrossingInteraction;
+
+    public Cup(int index, final ImageView item, final PositionCup positionCup, final IGameContext gameContext, final Stats stats, final CupsAndBalls gameInstance,
                final int openCupSpeed) {
         this.actionsDone = 0;
         this.actionsToDo = 0;
         this.openCupSpeed = openCupSpeed;
-        this.fixationDurationNeeded = gameContext.getConfiguration().getFixationLength();
+
+        final Configuration config = gameContext.getConfiguration();
+
+        this.index = index;
+
+        isCrossingInteraction = config.getInteractionMode().equals(InteractionMode.crossing.toString());
+
+        if(isCrossingInteraction)
+        {
+            this.fixationDurationNeeded = 0;
+        }
+        else
+        {
+            this.fixationDurationNeeded = config.getFixationLength();
+        }
+
         this.item = item;
         this.widthItem = item.getFitWidth();
         this.heightItem = item.getFitHeight();
@@ -186,6 +207,15 @@ public class Cup {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
+                final double x = ((GazeEvent) e).getX();
+                final double y = ((GazeEvent) e).getY();
+                boolean crossingCondition = isCorner(x, y);
+
+                if(isCrossingInteraction && !crossingCondition)
+                {
+                    return;
+                }
+
                 progressIndicator.setOpacity(1);
                 progressIndicator.setProgress(0);
 
@@ -218,6 +248,80 @@ public class Cup {
                 progressIndicator.setProgress(0);
             }
         };
+    }
+
+    private boolean isCorner(double x, double y)
+    {
+        boolean condition = false;
+        int pos[] = new int[2];
+        pos[0] = (index)%gameInstance.getNbColumns();
+        pos[1] = (index)/gameInstance.getNbColumns();
+
+        //log.info(this.columnIndex+" "+this.lineIndex);
+        //log.info(this.card.getX()+" "+this.card.getY());
+        //log.info(this.card.getWidth()+" "+this.card.getHeight());
+        //log.info(x+" "+y);
+
+
+        double initialWidth, initialHeight, initialPositionX, initialPositionY;
+
+        initialHeight = this.heightItem;
+        initialWidth = this.widthItem;
+        initialPositionX = this.positionCup.getCellX();
+        initialPositionY = this.positionCup.getCellY();
+
+        switch(pos[0])
+        {
+            case 0:
+                switch(pos[1])
+                {
+                    case 0:
+                        condition = x < (initialPositionX + 20) || y < (initialPositionY + 20);
+                        break;
+                    case 1:
+                        condition = x < (initialPositionX + 20);
+                        break;
+                    case 2:
+                        condition = x < (initialPositionX + 20) || y > (initialPositionY + initialHeight - 20);
+                        break;
+                }
+                break;
+            case 1:
+                switch(pos[1])
+                {
+                    case 0:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y < (initialPositionY + 20);
+                        break;
+                    case 1:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5);
+                        break;
+                    case 2:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y >= (initialPositionY + initialHeight);
+                        break;
+                }
+                break;
+            case 2:
+                switch(pos[1])
+                {
+                    case 0:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y < (initialPositionY + 20);
+                        break;
+                    case 1:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5);
+                        break;
+                    case 2:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y < (initialPositionY + initialHeight);
+                        break;
+                }
+                break;
+        }
+
+        if(condition)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public void increaseActionsDone() {
