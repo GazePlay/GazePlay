@@ -524,12 +524,13 @@ public class Stats implements GazeMotionListener {
         });
     }
 
+    // function used for testing purposes
     @Override
     public void gazeMoved(final javafx.geometry.Point2D position) {
         final int positionX = (int) position.getX();
         final int positionY = (int) position.getY();
         incrementHeatMap(positionX, positionY);
-        //  incrementFixationSequence(positionX, positionY);
+        incrementFixationSequence(positionX, positionY, fixationSequence.get(FixationSequence.GAZE_FIXATION_SEQUENCE));
     }
 
     static void saveImageAsPng(final BufferedImage bufferedImage, final File outputFile) {
@@ -745,16 +746,6 @@ public class Stats implements GazeMotionListener {
                 out.print((int) doubles[doubles.length - 1]);
                 out.println("");
             }
-        }
-    }
-
-    private void saveFixationSequenceAsPng(final File outputPngFile) {
-        final FixationSequence scanpath = new FixationSequence((int) gameContextScene.getWidth(),
-            (int) gameContextScene.getHeight(), fixationSequence, FixationSequence.MOUSE_FIXATION_SEQUENCE);
-        try {
-            scanpath.saveToFile(outputPngFile);
-        } catch (final Exception e) {
-            log.error("Exception", e);
         }
     }
 
