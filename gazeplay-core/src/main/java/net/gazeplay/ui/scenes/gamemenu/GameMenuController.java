@@ -15,12 +15,17 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
+import net.gazeplay.ui.scenes.errorhandlingui.GameVariantErrorDialog;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -36,7 +41,6 @@ public class GameMenuController {
         String gameName
     ) {
         Collection<IGameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
-
         if (variants.size() > 1) {
             root.setEffect(new BoxBlur());
             root.setDisable(true);
@@ -64,14 +68,13 @@ public class GameMenuController {
         IGameVariant gameVariant
     ) {
         GameContext gameContext = applicationContext.getBean(GameContext.class);
-
         gazePlay.onGameLaunch(gameContext);
 
         IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
 
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats stats = gameLauncher.createNewStats(scene);
-
+        final Configuration config = gameContext.getConfiguration();
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
 
         gameContext.createControlPanel(gazePlay, stats, currentGame);

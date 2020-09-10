@@ -9,6 +9,6 @@ public interface IGameVariantGenerator {
     default String getVariantChooseText() {
         return "Choose Game Variant";
     }
-
+    
     Set<IGameVariant> getVariants();
 }
