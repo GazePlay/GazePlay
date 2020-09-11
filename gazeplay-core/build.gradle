@@ -16,6 +16,8 @@ dependencies {
     compile 'ws.schild:jave-core:2.5.0'
     runtime 'org.slf4j:jcl-over-slf4j:1.7.25'
     runtime 'org.slf4j:log4j-over-slf4j:1.7.25'
+    compile 'org.json:json:20200518'
+    compile 'com.github.everit-org.json-schema:org.everit.json.schema:1.12.1'
 
     compile "info.picocli:picocli-spring-boot-starter:4.0.4"
 

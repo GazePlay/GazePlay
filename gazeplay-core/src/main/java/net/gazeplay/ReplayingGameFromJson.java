@@ -4,6 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+import org.json.*;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Dimension2D;
@@ -28,6 +33,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileInputStream;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
@@ -64,12 +71,28 @@ public class ReplayingGameFromJson {
         gamesList = games;
     }
 
-    public void pickJSONFile() throws FileNotFoundException {
+    public void pickJSONFile() throws IOException {
         final String fileName = getFileName();
         if (fileName == null) {
             return;
         }
+
         final File replayDataFile = new File(fileName);
+
+        InputStream in = new FileInputStream(fileName);
+        if (in == null) {
+            throw new NullPointerException("Cannot find resource file " + fileName);
+        }
+
+        JSONTokener tokener = new JSONTokener(in);
+        JSONObject object = new JSONObject(tokener);
+
+        try (InputStream inputStream = ReplayingGameFromJson.class.getResourceAsStream("JSON-schema-replayData.json")) {
+            JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
+            Schema schema = SchemaLoader.load(rawSchema);
+            schema.validate(object); // throws a ValidationException if this object is invalid
+        }
+
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new FileReader(replayDataFile, Charset.defaultCharset()));
