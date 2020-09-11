@@ -209,7 +209,7 @@ public class Cup {
 
                 final double x = ((GazeEvent) e).getX();
                 final double y = ((GazeEvent) e).getY();
-                boolean crossingCondition = isCorner(x, y);
+                boolean crossingCondition = isCrossed(x, y);
 
                 if(isCrossingInteraction && !crossingCondition)
                 {
@@ -250,78 +250,17 @@ public class Cup {
         };
     }
 
-    private boolean isCorner(double x, double y)
+    private boolean isCrossed(double x, double y)
     {
         boolean condition = false;
-        int pos[] = new int[2];
-        pos[0] = (index)%gameInstance.getNbColumns();
-        pos[1] = (index)/gameInstance.getNbColumns();
 
-        //log.info(this.columnIndex+" "+this.lineIndex);
-        //log.info(this.card.getX()+" "+this.card.getY());
-        //log.info(this.card.getWidth()+" "+this.card.getHeight());
-        //log.info(x+" "+y);
+        double posX, posY;
+        posX = this.positionCup.calculateXY(this.positionCup.getCellX(), this.positionCup.getCellY()).x;
+        posY = this.positionCup.calculateXY(this.positionCup.getCellX(), this.positionCup.getCellY()).y;
 
+        condition = y < (posY + 20) || y > (posY + this.heightItem - 20);
 
-        double initialWidth, initialHeight, initialPositionX, initialPositionY;
-
-        initialHeight = this.heightItem;
-        initialWidth = this.widthItem;
-        initialPositionX = this.positionCup.getCellX();
-        initialPositionY = this.positionCup.getCellY();
-
-        switch(pos[0])
-        {
-            case 0:
-                switch(pos[1])
-                {
-                    case 0:
-                        condition = x < (initialPositionX + 20) || y < (initialPositionY + 20);
-                        break;
-                    case 1:
-                        condition = x < (initialPositionX + 20);
-                        break;
-                    case 2:
-                        condition = x < (initialPositionX + 20) || y > (initialPositionY + initialHeight - 20);
-                        break;
-                }
-                break;
-            case 1:
-                switch(pos[1])
-                {
-                    case 0:
-                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y < (initialPositionY + 20);
-                        break;
-                    case 1:
-                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5);
-                        break;
-                    case 2:
-                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y >= (initialPositionY + initialHeight);
-                        break;
-                }
-                break;
-            case 2:
-                switch(pos[1])
-                {
-                    case 0:
-                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y < (initialPositionY + 20);
-                        break;
-                    case 1:
-                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5);
-                        break;
-                    case 2:
-                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y < (initialPositionY + initialHeight);
-                        break;
-                }
-                break;
-        }
-
-        if(condition)
-        {
-            return true;
-        }
-
-        return false;
+        return condition;
     }
 
     public void increaseActionsDone() {
