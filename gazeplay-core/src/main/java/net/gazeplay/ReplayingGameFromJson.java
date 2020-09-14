@@ -28,6 +28,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import org.springframework.context.ApplicationContext;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -196,12 +197,15 @@ public class ReplayingGameFromJson {
     }
 
     private void drawFixationLines(Canvas canvas, JsonArray coordinatesAndTimeStamp) {
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int screenWidth = gd.getDisplayMode().getWidth();
+        int screenHeight = gd.getDisplayMode().getHeight();
         final GraphicsContext graphics = canvas.getGraphicsContext2D();
         for (JsonElement coordinateAndTimeStamp : coordinatesAndTimeStamp) {
             prevTime = nextTime;
             JsonObject coordinateAndTimeObj = coordinateAndTimeStamp.getAsJsonObject();
-            nextX = Integer.parseInt(coordinateAndTimeObj.get("X").getAsString());
-            nextY = Integer.parseInt(coordinateAndTimeObj.get("Y").getAsString());
+            nextX = (int)(Float.parseFloat(coordinateAndTimeObj.get("X").getAsString()) * screenWidth);
+            nextY = (int)(Float.parseFloat(coordinateAndTimeObj.get("Y").getAsString()) * screenHeight);
             nextTime = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
             delay = nextTime - prevTime;
             paint(graphics, canvas);

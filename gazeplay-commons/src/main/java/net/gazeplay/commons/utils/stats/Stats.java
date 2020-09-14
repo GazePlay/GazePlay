@@ -448,6 +448,10 @@ public class Stats implements GazeMotionListener {
     }
 
     public void start() {
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        float screenWidth = gd.getDisplayMode().getWidth();
+        float screenHeight = gd.getDisplayMode().getHeight();
+
         final Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isVideoRecordingEnabled()) {
             startVideoRecording();
@@ -467,8 +471,8 @@ public class Stats implements GazeMotionListener {
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
                 JsonObject coordinates = new JsonObject();
-                coordinates.addProperty("X", getX);
-                coordinates.addProperty("Y", getY);
+                coordinates.addProperty("X", e.getX()/screenWidth);
+                coordinates.addProperty("Y", e.getY()/screenHeight);
                 coordinates.addProperty("time", timeInterval);
                 saveCoordinates(coordinates);
                 if (!config.isHeatMapDisabled()) {
@@ -498,8 +502,8 @@ public class Stats implements GazeMotionListener {
                 final int getX = (int) e.getX();
                 final int getY = (int) e.getY();
                 JsonObject coordinates = new JsonObject();
-                coordinates.addProperty("X", getX);
-                coordinates.addProperty("Y", getY);
+                coordinates.addProperty("X", e.getX()/screenWidth);
+                coordinates.addProperty("Y", e.getY()/screenHeight);
                 coordinates.addProperty("time", timeInterval);
                 saveCoordinates(coordinates);
                 if (!config.isHeatMapDisabled()) {
@@ -880,6 +884,7 @@ public class Stats implements GazeMotionListener {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         int screenWidth = gd.getDisplayMode().getWidth();
         int screenHeight = gd.getDisplayMode().getHeight();
+        System.out.println("Screen " + screenWidth + " x " + screenHeight);
 
         int factor = greatestCommonFactor(screenWidth, screenHeight);
 
