@@ -24,10 +24,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.ControlPanelConfigurator;
-import net.gazeplay.commons.utils.CustomButton;
-import net.gazeplay.commons.utils.FixationSequence;
-import net.gazeplay.commons.utils.HomeButton;
+import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.StatDisplayUtils;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -36,6 +33,7 @@ import net.gazeplay.stats.HiddenItemsGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
 import net.gazeplay.ui.GraphicalContext;
 
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -107,7 +105,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         RadioButton colorBands = new RadioButton("Color Bands");
 
         if (!config.isFixationSequenceDisabled()) {
-            AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(stats.getFixationSequence().get(FixationSequence.MOUSE_FIXATION_SEQUENCE), root);
+            LinkedList<FixationPoint> tempSequenceList = new LinkedList<FixationPoint>();
+            tempSequenceList.addAll(stats.getFixationSequence().get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
+            tempSequenceList.addAll(stats.getFixationSequence().get(FixationSequence.GAZE_FIXATION_SEQUENCE));
+            AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(tempSequenceList, root);
 
             colorBands.setTextFill(Color.WHITE);
             colorBands.getStylesheets().add("data/common/radio.css");
