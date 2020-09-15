@@ -473,7 +473,7 @@ public class Stats implements GazeMotionListener {
                 JsonObject coordinates = new JsonObject();
                 coordinates.addProperty("X", e.getX()/screenWidth);
                 coordinates.addProperty("Y", e.getY()/screenHeight);
-                coordinates.addProperty("time", timeInterval);
+                coordinates.addProperty("time", timeToFixation);
                 saveCoordinates(coordinates);
                 if (!config.isHeatMapDisabled()) {
                     incrementHeatMap(getX, getY);
@@ -504,7 +504,7 @@ public class Stats implements GazeMotionListener {
                 JsonObject coordinates = new JsonObject();
                 coordinates.addProperty("X", e.getX()/screenWidth);
                 coordinates.addProperty("Y", e.getY()/screenHeight);
-                coordinates.addProperty("time", timeInterval);
+                coordinates.addProperty("time", timeElapsedMillis);
                 saveCoordinates(coordinates);
                 if (!config.isHeatMapDisabled()) {
                     incrementHeatMap(getX, getY);
