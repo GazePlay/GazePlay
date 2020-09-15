@@ -29,7 +29,7 @@ import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
-import net.gazeplay.ui.scenes.errorhandlingui.GameVariantErrorDialog;
+import net.gazeplay.ui.scenes.errorhandlingui.GameErrorDialog;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
@@ -37,7 +37,7 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 public class GameVariantDialog extends Stage {
 
     private boolean easymode = false;
-    private GameVariantErrorDialog errorDialog;
+    private GameErrorDialog errorDialog;
     private ConfigurationContext configurationContext;
 
     public GameVariantDialog(
@@ -170,7 +170,7 @@ public class GameVariantDialog extends Stage {
     private void whereIsItErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root, IGameVariant finalVariant) {
         String whereIsItPromptLabel = "Where is it directory not configured";
         configurationContext = new ConfigurationContext(gazePlay);
-        this.errorDialog = new GameVariantErrorDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel, configurationContext, finalVariant);
+        this.errorDialog = new GameErrorDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel, configurationContext, finalVariant);
         this.errorDialog.setTitle("error");
         this.errorDialog.show();
         this.errorDialog.toFront();

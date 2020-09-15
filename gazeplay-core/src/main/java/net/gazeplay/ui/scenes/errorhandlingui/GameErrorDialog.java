@@ -36,8 +36,8 @@ import java.io.File;
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
 
-public class GameVariantErrorDialog extends Stage {
-    public GameVariantErrorDialog(
+public class GameErrorDialog extends Stage {
+    public GameErrorDialog(
         final GazePlay gazePlay,
         final GameMenuController gameMenuController,
         final Stage primaryStage,
@@ -46,7 +46,7 @@ public class GameVariantErrorDialog extends Stage {
         final String whereIsItPromptLabelTextKey,
         final ConfigurationContext configurationContext,
         final IGameVariant finalVariant
-    ){
+    ) {
         initModality(Modality.WINDOW_MODAL);
         initOwner(primaryStage);
         initStyle(StageStyle.UTILITY);
@@ -67,12 +67,12 @@ public class GameVariantErrorDialog extends Stage {
         choicePanelScroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
         final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
-        I18NLabel chooseVariantPromptLabel = new I18NLabel(gazePlay.getTranslator(), whereIsItPromptLabelTextKey);
-        chooseVariantPromptLabel.setStyle(labelStyle);
+        I18NLabel promptLabel = new I18NLabel(gazePlay.getTranslator(), whereIsItPromptLabelTextKey);
+        promptLabel.setStyle(labelStyle);
 
         VBox topPane = new VBox();
         topPane.setAlignment(Pos.CENTER);
-        topPane.getChildren().add(chooseVariantPromptLabel);
+        topPane.getChildren().add(promptLabel);
 
         BorderPane sceneContentPane = new BorderPane();
         sceneContentPane.setTop(topPane);
@@ -85,25 +85,27 @@ public class GameVariantErrorDialog extends Stage {
         final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;";
         I18NLabel label = new I18NLabel(translator, "WhereIsItDirectory");
         label.setStyle(whereIsItLabelStyle);
+        Button doneButton = new Button(translator.translate("Done"));
+        doneButton.getStyleClass().add("gameChooserButton");
+        doneButton.getStyleClass().add("gameVariation");
+        doneButton.getStyleClass().add("button");
+        doneButton.wrapTextProperty().setValue(true);
+        doneButton.setAlignment(Pos.CENTER_RIGHT);
+        choicePane.getChildren().add(doneButton);
+        doneButton.setDisable(true);
 
-        Node input = buildDirectoryChooser(config, configurationContext, translator, ConfigurationContext.DirectoryType.WHERE_IS_IT);
+        Node input = buildDirectoryChooser(config, configurationContext, translator, ConfigurationContext.DirectoryType.WHERE_IS_IT, doneButton, promptLabel);
 
         choicePane.getChildren().add(label);
         choicePane.getChildren().add(input);
 
-        Button button = new Button(translator.translate("Done"));
-        button.getStyleClass().add("gameChooserButton");
-        button.getStyleClass().add("gameVariation");
-        button.getStyleClass().add("button");
-        button.wrapTextProperty().setValue(true);
-        choicePane.getChildren().add(button);
 
         EventHandler<Event> event = mouseEvent -> {
             close();
             root.setDisable(false);
             gameMenuController.chooseGame(gazePlay, gameSpec, finalVariant);
         };
-        button.addEventHandler(MOUSE_CLICKED, event);
+        doneButton.addEventHandler(MOUSE_CLICKED, event);
 
         Scene scene = new Scene(sceneContentPane, Color.TRANSPARENT);
 
@@ -118,7 +120,10 @@ public class GameVariantErrorDialog extends Stage {
         Configuration configuration,
         ConfigurationContext configurationContext,
         Translator translator,
-        ConfigurationContext.DirectoryType type
+        ConfigurationContext.DirectoryType type,
+        Button doneButton,
+        I18NLabel whereIsItPromptLabel
+
     ) {
         final HBox pane = new HBox(5);
         final String fileDir;
@@ -135,45 +140,52 @@ public class GameVariantErrorDialog extends Stage {
         buttonLoad = new Button(fileDir);
 
         buttonLoad.setOnAction(arg0 -> {
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            final File currentFolder;
+                DirectoryChooser directoryChooser = new DirectoryChooser();
+                final File currentFolder;
 
-            switch (type) {
-                case WHERE_IS_IT:
-                    currentFolder = new File(configuration.getWhereIsItDir());
-                    break;
-                default:
-                    currentFolder = new File(configuration.getFileDir());
+                switch (type) {
+                    case WHERE_IS_IT:
+                        currentFolder = new File(configuration.getWhereIsItDir());
+                        break;
+                    default:
+                        currentFolder = new File(configuration.getFileDir());
+                }
+
+                if (currentFolder.isDirectory()) {
+                    directoryChooser.setInitialDirectory(currentFolder);
+                }
+                final GazePlay gazePlay = configurationContext.getGazePlay();
+                final Scene scene = gazePlay.getPrimaryScene();
+                File file = directoryChooser.showDialog(scene.getWindow());
+                if (file == null) {
+                    return;
+                }
+
+                String newPropertyValue = file.getAbsolutePath();
+
+                if (Utils.isWindows()) {
+                    newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
+                }
+
+                buttonLoad.textProperty().setValue(newPropertyValue);
+
+                if (newPropertyValue.contains("where-is-it")) {
+                    doneButton.setDisable(false);
+                    switch (type) {
+                        case WHERE_IS_IT:
+                            configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
+                            break;
+                        default:
+                            configuration.getFiledirProperty().setValue(newPropertyValue);
+                    }
+                } else {
+                    final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
+                    whereIsItPromptLabel.setText(translator.translate("You picked the wrong directory"));
+                    whereIsItPromptLabel.setStyle(labelStyle);
+                }
             }
-
-            if (currentFolder.isDirectory()) {
-                directoryChooser.setInitialDirectory(currentFolder);
-            }
-            final GazePlay gazePlay = configurationContext.getGazePlay();
-            final Scene scene = gazePlay.getPrimaryScene();
-            File file = directoryChooser.showDialog(scene.getWindow());
-            if (file == null) {
-                return;
-            }
-
-            String newPropertyValue = file.getAbsolutePath();
-
-            if (Utils.isWindows()) {
-                newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
-            }
-
-            buttonLoad.textProperty().setValue(newPropertyValue);
-
-            switch (type) {
-                case WHERE_IS_IT:
-                    configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
-                    break;
-                default:
-                    configuration.getFiledirProperty().setValue(newPropertyValue);
-            }
-
-        });
-
+        );
+        
         final I18NButton resetButton = new I18NButton(translator, "reset");
 
         switch (type) {

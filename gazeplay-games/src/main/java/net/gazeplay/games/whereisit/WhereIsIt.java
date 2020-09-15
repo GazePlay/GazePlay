@@ -498,7 +498,6 @@ public class WhereIsIt implements GameLifeCycle {
             pictograms);
     }
 
-
     /**
      * Return all files which don't start with a point
      */

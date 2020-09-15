@@ -15,17 +15,12 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
-import net.gazeplay.ui.scenes.errorhandlingui.GameVariantErrorDialog;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 
 @Slf4j
 @Component
@@ -47,8 +42,6 @@ public class GameMenuController {
             GameVariantDialog dialog = new GameVariantDialog(gazePlay, this, gazePlay.getPrimaryStage(), gameSpec, root, gameSpec.getGameVariantGenerator().getVariantChooseText());
             dialog.setTitle(gameName);
             dialog.show();
-
-
             dialog.toFront();
             dialog.setAlwaysOnTop(true);
 
