@@ -22,6 +22,8 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.io.IOException;
+
 import static net.gazeplay.games.whereisitparam.WhereIsItParamGameType.*;
 
 @Slf4j
@@ -165,6 +167,12 @@ class PictureCard extends Group {
         fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
             gameInstance.dispose();
             gameContext.clear();
+            try {
+                stats.saveStats();
+                stats.reset();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             gameInstance.launch();
             // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
             // gameInstance.stats);

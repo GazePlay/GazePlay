@@ -103,7 +103,7 @@ public class WhereIsItParam implements GameLifeCycle {
         final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
         int indexAnswered = 0;
 
-        File questionOrderFile = new File(config.getWhereIsItDir() + "/questionOrder.csv");
+        File questionOrderFile = new File(config.getWhereIsItParamDir() + "/questionOrder.csv");
         log.info("THE PATH IS: {}", questionOrderFile.getAbsoluteFile());
         try (
             InputStream fileInputStream = Files.newInputStream(questionOrderFile.toPath());
@@ -326,7 +326,7 @@ RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, fin
     List<File> imagesFolders = new LinkedList<>();
     List<String> resourcesFolders = new LinkedList<>();
 
-    final File imagesDirectory = new File(config.getWhereIsItDir() + "/images/");
+    final File imagesDirectory = new File(config.getWhereIsItParamDir() + "/images/");
     directoryName = imagesDirectory.getPath();
     filesCount = 0;
     File[] listOfTheFiles = imagesDirectory.listFiles();
@@ -464,7 +464,7 @@ RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, fin
             final Configuration config = gameContext.getConfiguration();
             try {
                 log.debug("CUSTOMIZED");
-                final String path = config.getWhereIsItDir() + "/sounds/"+ language + "/";
+                final String path = config.getWhereIsItParamDir() + "/sounds/"+ language + "/";
                 final File soundsDirectory = new File(path);
                 final String[] soundsDirectoryFiles = soundsDirectory.list();
                 if (soundsDirectoryFiles != null) {
@@ -495,7 +495,7 @@ RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, fin
 
             final Configuration config = gameContext.getConfiguration();
 
-            final File questionFile = new File(config.getWhereIsItDir() + "/questions.csv");
+            final File questionFile = new File(config.getWhereIsItParamDir() + "/questions.csv");
 
             final Multilinguism localMultilinguism = MultilinguismFactory.getForResource(questionFile.toString());
 
@@ -518,7 +518,7 @@ RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, fin
 
         final Configuration config = gameContext.getConfiguration();
 
-        final File questionFile = new File(config.getWhereIsItDir(), "questions.csv");
+        final File questionFile = new File(config.getWhereIsItParamDir(), "questions.csv");
 
         final Multilinguism localMultilinguism = MultilinguismFactory.getForResource(questionFile.toString());
 
@@ -531,7 +531,7 @@ RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, fin
         final List<Image> imageList = new ArrayList<>(20);
 
         while (st.hasMoreTokens()) {
-            final String token = config.getWhereIsItDir() + "/pictos/" + st.nextToken().replace('\u00A0', ' ').trim();
+            final String token = config.getWhereIsItParamDir() + "/pictos/" + st.nextToken().replace('\u00A0', ' ').trim();
             log.debug("token \"{}\"", token);
             final File tokenFile = new File(token);
             log.debug("Exists {}", tokenFile.exists());
