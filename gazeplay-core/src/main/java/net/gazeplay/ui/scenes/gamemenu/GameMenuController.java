@@ -36,15 +36,12 @@ public class GameMenuController {
         String gameName
     ) {
         Collection<IGameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
-
         if (variants.size() > 1) {
             root.setEffect(new BoxBlur());
             root.setDisable(true);
             GameVariantDialog dialog = new GameVariantDialog(gazePlay, this, gazePlay.getPrimaryStage(), gameSpec, root, gameSpec.getGameVariantGenerator().getVariantChooseText());
             dialog.setTitle(gameName);
             dialog.show();
-
-
             dialog.toFront();
             dialog.setAlwaysOnTop(true);
 
@@ -64,14 +61,13 @@ public class GameMenuController {
         IGameVariant gameVariant
     ) {
         GameContext gameContext = applicationContext.getBean(GameContext.class);
-
         gazePlay.onGameLaunch(gameContext);
 
         IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
 
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats stats = gameLauncher.createNewStats(scene);
-
+        final Configuration config = gameContext.getConfiguration();
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
 
         gameContext.createControlPanel(gazePlay, stats, currentGame);

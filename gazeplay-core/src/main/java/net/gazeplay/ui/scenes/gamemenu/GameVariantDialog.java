@@ -28,6 +28,8 @@ import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
+import net.gazeplay.ui.scenes.errorhandlingui.GameErrorDialog;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
@@ -35,6 +37,8 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 public class GameVariantDialog extends Stage {
 
     private boolean easymode = false;
+    private GameErrorDialog errorDialog;
+    private ConfigurationContext configurationContext;
 
     public GameVariantDialog(
         final GazePlay gazePlay,
@@ -142,7 +146,11 @@ public class GameVariantDialog extends Stage {
             EventHandler<Event> event = mouseEvent -> {
                 close();
                 root.setDisable(false);
-                gameMenuController.chooseGame(gazePlay, gameSpec, finalVariant);
+                if(config.getWhereIsItDir().equals("")) {
+                    whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, finalVariant);
+                }else{
+                    gameMenuController.chooseGame(gazePlay, gameSpec, finalVariant);
+                }
             };
             button.addEventHandler(MOUSE_CLICKED, event);
 
@@ -157,6 +165,15 @@ public class GameVariantDialog extends Stage {
         setWidth(primaryStage.getWidth() / 2);
         setHeight(primaryStage.getHeight() / 2);
         // scene.getStylesheets().add(getClass().getResource("modal-dialog.css").toExternalForm());
+    }
+
+    private void whereIsItErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root, IGameVariant finalVariant) {
+        String whereIsItPromptLabel = "Where is it directory not configured";
+        configurationContext = new ConfigurationContext(gazePlay);
+        this.errorDialog = new GameErrorDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel, configurationContext, finalVariant);
+        this.errorDialog.setTitle("error");
+        this.errorDialog.show();
+        this.errorDialog.toFront();
     }
 
     public boolean isEasymode() {

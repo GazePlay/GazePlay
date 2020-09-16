@@ -73,7 +73,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private final boolean currentLanguageAlignmentIsLeftAligned;
 
-    ConfigurationContext(GazePlay gazePlay) {
+    public ConfigurationContext(GazePlay gazePlay) {
         super(gazePlay, new BorderPane());
 
         Translator translator = gazePlay.getTranslator();
@@ -565,7 +565,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return buttonLoad;
     }
 
-    enum DirectoryType {
+    public enum DirectoryType {
         FILE, WHERE_IS_IT, WHERE_IS_IT_PARAM, MUSIC, VIDEO
     }
 
