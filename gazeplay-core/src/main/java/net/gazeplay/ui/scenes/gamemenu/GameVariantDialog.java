@@ -146,7 +146,7 @@ public class GameVariantDialog extends Stage {
             EventHandler<Event> event = mouseEvent -> {
                 close();
                 root.setDisable(false);
-                if(config.getWhereIsItDir().equals("")) {
+                if(config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
                     whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, finalVariant);
                 }else{
                     gameMenuController.chooseGame(gazePlay, gameSpec, finalVariant);

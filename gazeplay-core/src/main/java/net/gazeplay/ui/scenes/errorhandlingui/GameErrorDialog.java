@@ -32,6 +32,10 @@ import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.LinkedList;
+import java.util.List;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
@@ -127,6 +131,7 @@ public class GameErrorDialog extends Stage {
     ) {
         final HBox pane = new HBox(5);
         final String fileDir;
+        List<File> imagesFolders = new LinkedList<>();
         Button buttonLoad;
 
         switch (type) {
@@ -142,7 +147,6 @@ public class GameErrorDialog extends Stage {
         buttonLoad.setOnAction(arg0 -> {
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 final File currentFolder;
-
                 switch (type) {
                     case WHERE_IS_IT:
                         currentFolder = new File(configuration.getWhereIsItDir());
@@ -156,12 +160,12 @@ public class GameErrorDialog extends Stage {
                 }
                 final GazePlay gazePlay = configurationContext.getGazePlay();
                 final Scene scene = gazePlay.getPrimaryScene();
-                File file = directoryChooser.showDialog(scene.getWindow());
-                if (file == null) {
+                File dirFile = directoryChooser.showDialog(scene.getWindow());
+                if (dirFile == null) {
                     return;
                 }
 
-                String newPropertyValue = file.getAbsolutePath();
+                String newPropertyValue = dirFile.getAbsolutePath();
 
                 if (Utils.isWindows()) {
                     newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
@@ -169,7 +173,7 @@ public class GameErrorDialog extends Stage {
 
                 buttonLoad.textProperty().setValue(newPropertyValue);
 
-                if (newPropertyValue.contains("where-is-it")) {
+                if (checkIfDirIsValid(newPropertyValue, imagesFolders) != 0) {
                     doneButton.setDisable(false);
                     switch (type) {
                         case WHERE_IS_IT:
@@ -210,6 +214,45 @@ public class GameErrorDialog extends Stage {
         pane.getChildren().addAll(buttonLoad, resetButton);
 
         return pane;
+    }
+
+    private int checkIfDirIsValid(String selectedPath , List<File> imagesFolders) {
+        final File imagesDirectory = new File( selectedPath + "/images/");
+        int filesCount = 0;
+        File[] listOfTheFiles = imagesDirectory.listFiles();
+        if(listOfTheFiles!=null) {
+            for (File f : listOfTheFiles) {
+                File[] filesInf = f.listFiles();
+                if(filesInf != null) {
+                    if (f.isDirectory() && filesInf.length > 0){
+                        boolean containsImage = false;
+                        int i = 0;
+                        while( !containsImage && i < filesInf.length) {
+                            File file = filesInf[i];
+                            containsImage = fileIsImageFile(file);
+                            i++;
+                        }
+                        if(containsImage) {
+                            imagesFolders.add(f);
+                            filesCount++;
+                        }
+                    }
+                }
+            }
+        }
+        return filesCount;
+    }
+
+    static boolean fileIsImageFile(File file){
+        try {
+            String mimetype = Files.probeContentType(file.toPath());
+            if (mimetype != null && mimetype.split("/")[0].equals("image")) {
+                return true;
+            }
+        } catch (IOException ignored) {
+
+        }
+        return false;
     }
 
 }
