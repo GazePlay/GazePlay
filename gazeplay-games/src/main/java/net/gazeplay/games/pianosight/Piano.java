@@ -75,16 +75,15 @@ public class Piano extends Parent implements GameLifeCycle {
     private List<ImageView> fragments;
     private float bpm = 120;
 
-    long lastNote = -1;
-    MidiSequencerPlayer player;
+    private long lastNote = -1;
+    private MidiSequencerPlayer player;
     private Sequence sequence;
-    ObjectProperty<Note> noteProperty;
 
-    GridPane choiceBoxes;
-    BorderPane topBar = new BorderPane();
-    Slider slider;
+    private GridPane choiceBoxes;
+    private BorderPane topBar = new BorderPane();
+    private Slider slider;
 
-    ChangeListener<Number> sliderListener = (obj, oldval, newval) -> {
+    private ChangeListener<Number> sliderListener = (obj, oldval, newval) -> {
         if (slider.isHover()) {
             player.pianoReceiver.isSliderInUse = true;
             player.sequencer.setTickPosition(newval.longValue());
@@ -293,7 +292,7 @@ public class Piano extends Parent implements GameLifeCycle {
 
         createArcs();
 
-        noteProperty = new SimpleObjectProperty<Note>();
+        ObjectProperty<Note> noteProperty = new SimpleObjectProperty<Note>();
         noteProperty.setValue(new Note(-1, -1, -1));
         noteProperty.addListener((o, oldVal, newVal) -> {
             if (!newVal.equals(new Note(-1, -1, -1))) {
@@ -421,22 +420,14 @@ public class Piano extends Parent implements GameLifeCycle {
         double x = 0;
         double y = 0;
         if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-            log.info("MOUSE");
             final MouseEvent me = (MouseEvent) e;
             x = me.getX();
             y = me.getY();
         } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-            log.info("GAZE");
             final GazeEvent ge = (GazeEvent) e;
             x = ge.getX();
             y = ge.getY();
-        } else if (e.getEventType() == MouseEvent.MOUSE_CLICKED){
-            final MouseEvent me = (MouseEvent) e;
-            x = ((Button )me.getSource()).getLayoutX() + ((Button )me.getSource()).getPrefWidth()/2;
-            y = ((Button )me.getSource()).getLayoutY();
-
         }
-        log.info("THIS IS {};{}", x, y);
         explose(x, y);
     }
 

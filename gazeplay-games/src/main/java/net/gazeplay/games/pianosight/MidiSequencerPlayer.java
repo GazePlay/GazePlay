@@ -25,6 +25,10 @@ public class MidiSequencerPlayer {
             Transmitter transmitter = sequencer.getTransmitter();
             pianoReceiver = new PianoReceiver(sequencer, noteProperty);
             transmitter.setReceiver(pianoReceiver);
+            /*
+            on parcours toute la sequence une première fois pour trouver tous les ticks où on va stop, en créant un objet qui contient le tick et la track du truc qu'on veux jouer
+            sequencer.getSequence().getTracks()[0].get(0).getTick()
+             */
         } catch (InvalidMidiDataException | MidiUnavailableException ignored) {
         }
     }
