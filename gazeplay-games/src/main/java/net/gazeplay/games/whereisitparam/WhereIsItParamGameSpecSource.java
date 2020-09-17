@@ -9,7 +9,7 @@ public class WhereIsItParamGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("WhereIsItWithParam").gameThumbnail("data/Thumbnails/whereisit.png")
+            GameSummary.builder().nameCode("WhereIsItParam").gameThumbnail("data/Thumbnails/whereisit.png")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LITERACY)
                 .category(GameCategories.Category.MEMORIZATION).build(),
