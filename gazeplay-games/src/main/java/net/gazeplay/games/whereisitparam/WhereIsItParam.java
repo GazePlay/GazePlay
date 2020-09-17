@@ -282,10 +282,9 @@ public class WhereIsItParam implements GameLifeCycle {
         //set the target AOI end time for this round
 
         final long endTime = System.currentTimeMillis();
-        final int numberOfImagesToDisplayPerRound = questions.get(questionIndex).row * questions.get(questionIndex).col;
 
-        for (int i = 1; i<=numberOfImagesToDisplayPerRound; i++) {
-            // TODO targetAOIList.get(targetAOIList.size() - i).setTimeEnded(endTime);
+        for (TargetAOI taoi: targetAOIList) {
+           taoi.setTimeEnded(endTime);
         }
 
         if (this.currentRoundDetails == null) {
