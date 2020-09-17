@@ -6,8 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -17,11 +16,14 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.StringConverter;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.IntGameVariant;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
@@ -31,12 +33,17 @@ import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 
-import java.io.File;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Optional;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
-
+@Slf4j
 public class GameWhereIsItParamDialog extends Stage {
+    private int currentLevelItem = 0;
+
     public GameWhereIsItParamDialog(
         final GazePlay gazePlay,
         final GameMenuController gameMenuController,
@@ -44,8 +51,7 @@ public class GameWhereIsItParamDialog extends Stage {
         final GameSpec gameSpec,
         final Parent root,
         final String whereIsItPromptLabelTextKey,
-        final ConfigurationContext configurationContext,
-        final IGameVariant finalVariant
+        final ConfigurationContext configurationContext
     ) {
         initModality(Modality.WINDOW_MODAL);
         initOwner(primaryStage);
@@ -54,6 +60,8 @@ public class GameWhereIsItParamDialog extends Stage {
             primaryStage.getScene().getRoot().setEffect(null);
             root.setDisable(false);
         });
+
+        final Translator translator = gazePlay.getTranslator();
 
         FlowPane choicePane = new FlowPane();
         choicePane.setAlignment(Pos.CENTER);
@@ -67,7 +75,7 @@ public class GameWhereIsItParamDialog extends Stage {
         choicePanelScroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
         final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24;";
-        I18NLabel promptLabel = new I18NLabel(gazePlay.getTranslator(), whereIsItPromptLabelTextKey);
+        I18NLabel promptLabel = new I18NLabel(translator, whereIsItPromptLabelTextKey);
         promptLabel.setStyle(labelStyle);
 
         VBox topPane = new VBox();
@@ -80,8 +88,6 @@ public class GameWhereIsItParamDialog extends Stage {
 
         final Configuration config = ActiveConfigurationContext.getInstance();
 
-        final Translator translator = gazePlay.getTranslator();
-
         final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;";
         I18NLabel label = new I18NLabel(translator, "WhereIsItParamDirectory");
         label.setStyle(whereIsItLabelStyle);
@@ -91,10 +97,9 @@ public class GameWhereIsItParamDialog extends Stage {
         doneButton.getStyleClass().add("button");
         doneButton.wrapTextProperty().setValue(true);
         doneButton.setAlignment(Pos.CENTER_RIGHT);
-        choicePane.getChildren().add(doneButton);
-        doneButton.setDisable(true);
 
         Node input = buildDirectoryChooser(config, configurationContext, translator, ConfigurationContext.DirectoryType.WHERE_IS_IT, doneButton, promptLabel);
+
 
         choicePane.getChildren().add(label);
         choicePane.getChildren().add(input);
@@ -103,7 +108,7 @@ public class GameWhereIsItParamDialog extends Stage {
         EventHandler<Event> event = mouseEvent -> {
             close();
             root.setDisable(false);
-            gameMenuController.chooseGame(gazePlay, gameSpec, finalVariant);
+            gameMenuController.chooseGame(gazePlay, gameSpec, new IntGameVariant(currentLevelItem));
         };
         doneButton.addEventHandler(MOUSE_CLICKED, event);
 
@@ -116,7 +121,7 @@ public class GameWhereIsItParamDialog extends Stage {
         setHeight(primaryStage.getHeight() / 2);
     }
 
-    Node buildDirectoryChooser(
+    VBox buildDirectoryChooser(
         Configuration configuration,
         ConfigurationContext configurationContext,
         Translator translator,
@@ -187,6 +192,11 @@ public class GameWhereIsItParamDialog extends Stage {
         );
         
         final I18NButton resetButton = new I18NButton(translator, "reset");
+        resetButton.getStyleClass().add("gameChooserButton");
+        resetButton.getStyleClass().add("gameVariation");
+        resetButton.getStyleClass().add("button");
+        resetButton.wrapTextProperty().setValue(true);
+        resetButton.setAlignment(Pos.CENTER);
 
         switch (type) {
             case WHERE_IS_IT:
@@ -206,10 +216,72 @@ public class GameWhereIsItParamDialog extends Stage {
                         buttonLoad.textProperty().setValue(defaultValue);
                     });
         }
-
+        I18NLabel loadLabel = new I18NLabel(translator, "chooseDirectoryToLoad:");
+        final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 14; -fx-text-fill: white;";
+        loadLabel.setStyle(whereIsItLabelStyle);
         pane.getChildren().addAll(buttonLoad, resetButton);
 
-        return pane;
+
+        ChoiceBox<Integer> levelChooser = new ChoiceBox<>();
+        levelChooser.setConverter(new StringConverter<Integer>() {
+
+            @Override
+            public String toString(Integer object) {
+                return "Level " + (object+1);
+            }
+
+            @Override
+            public Integer fromString(String string) {
+               return Integer.getInteger(string.split(" ")[1]);
+            }
+        });
+
+        File questionOrderFile = new File(configuration.getWhereIsItParamDir() + "/questionOrder.csv");
+        try (
+            InputStream fileInputStream = Files.newInputStream(questionOrderFile.toPath());
+            BufferedReader b = new BufferedReader(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))
+        ) {
+            String readLine;
+            int levelIndex = 0;
+            while ((readLine = b.readLine()) != null) {
+                levelChooser.getItems().add(levelIndex);
+                levelIndex++;
+            }
+
+            levelChooser.getSelectionModel().select(0);
+
+            final double PREF_WIDTH = 200;
+            final double PREF_HEIGHT = 25;
+            levelChooser.setPrefWidth(PREF_WIDTH);
+            levelChooser.setPrefHeight(PREF_HEIGHT);
+
+            levelChooser.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                levelChooser.getSelectionModel().select(newValue);
+                setCurrentLevel(newValue);
+            });
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        I18NLabel levelChooserLabel = new I18NLabel(translator, "chooseLevel:");
+        levelChooserLabel.setStyle(whereIsItLabelStyle);
+        HBox levelselector = new HBox(levelChooser);
+
+
+        HBox doneButtonBox =new HBox(doneButton);
+        doneButton.setAlignment(Pos.CENTER);
+        doneButtonBox.setAlignment(Pos.CENTER);
+
+        VBox finalPane = new VBox(loadLabel,pane,levelChooserLabel, levelselector,doneButtonBox);
+        finalPane.setSpacing(20);
+        finalPane.setTranslateY(20);
+        return finalPane;
+    }
+
+    public void setCurrentLevel(int level){
+        this.currentLevelItem = level;
+        log.info(" LEVEL CHOSE : {}", level);
     }
 
 }

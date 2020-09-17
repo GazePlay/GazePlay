@@ -151,8 +151,6 @@ public class GameVariantDialog extends Stage {
                 root.setDisable(false);
                 if(config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
                     whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, finalVariant);
-                } else if(gameSpec.getGameSummary().getNameCode().equals("WhereIsItParam")) {
-                    whereIsItParamErrorHandling(gazePlay, gameMenuController, gameSpec, root, finalVariant);
                 }else{
                     gameMenuController.chooseGame(gazePlay, gameSpec, finalVariant);
                 }
@@ -179,15 +177,6 @@ public class GameVariantDialog extends Stage {
         this.errorDialog.setTitle("error");
         this.errorDialog.show();
         this.errorDialog.toFront();
-    }
-
-    private void whereIsItParamErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root, IGameVariant finalVariant) {
-        String whereIsItPromptLabel = "Choose the param. where is it directory";
-        configurationContext = new ConfigurationContext(gazePlay);
-        this.whereisitparamDialog = new GameWhereIsItParamDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel, configurationContext, finalVariant);
-        //this.whereisitparamDialog.setTitle("error");
-        this.whereisitparamDialog.show();
-        this.whereisitparamDialog.toFront();
     }
 
     public boolean isEasymode() {

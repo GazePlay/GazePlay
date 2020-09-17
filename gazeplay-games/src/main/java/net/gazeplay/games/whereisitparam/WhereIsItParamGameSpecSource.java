@@ -12,7 +12,6 @@ public class WhereIsItParamGameSpecSource implements GameSpecSource {
             GameSummary.builder().nameCode("WhereIsItParam").gameThumbnail("data/Thumbnails/whereisit.png")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LITERACY)
-                .category(GameCategories.Category.MEMORIZATION).build(),
-            new WhereIsItParamGameVariantGenerator(), new WhereIsItParamGameLauncher());
+                .category(GameCategories.Category.MEMORIZATION).build(), new WhereIsItParamGameLauncher());
     }
 }

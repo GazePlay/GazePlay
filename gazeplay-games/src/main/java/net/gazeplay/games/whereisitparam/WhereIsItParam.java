@@ -40,10 +40,14 @@ import static net.gazeplay.games.whereisitparam.WhereIsItParamGameType.*;
 class QuestionAnswer {
     String answer;
     LinkedList<String> imagesorder;
+    int col;
+    int row;
 
-    public QuestionAnswer(String answer){
+    public QuestionAnswer(String answer, int col, int row){
         this.answer = answer;
         imagesorder = new LinkedList<String>();
+        this.col = col;
+        this.row = row;
     }
 
     public void add (String image){
@@ -67,9 +71,6 @@ public class WhereIsItParam implements GameLifeCycle {
 
     @Getter
     private final WhereIsItParamGameType gameType;
-
-    private final int nbLines;
-    private final int nbColumns;
     private final boolean fourThree;
 
     private final IGameContext gameContext;
@@ -78,14 +79,13 @@ public class WhereIsItParam implements GameLifeCycle {
 
     private final ArrayList<TargetAOI> targetAOIList;
 
-    public WhereIsItParam(final WhereIsItParamGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
+    public WhereIsItParam(final WhereIsItParamGameType gameType, int level, final boolean fourThree,
                      final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
-        this.nbLines = nbLines;
-        this.nbColumns = nbColumns;
         this.gameType = gameType;
         this.fourThree = fourThree;
         this.stats = stats;
+        questionIndex = level;
         this.targetAOIList = new ArrayList<>();
         this.gameContext.startScoreLimiter();
         this.gameContext.startTimeLimiter();
@@ -96,9 +96,6 @@ public class WhereIsItParam implements GameLifeCycle {
 
         final Configuration config = gameContext.getConfiguration();
         gameContext.setLimiterAvailable();
-
-        final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
-        log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
 
         final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
         int indexAnswered = 0;
@@ -112,7 +109,7 @@ public class WhereIsItParam implements GameLifeCycle {
             String readLine;
             while ((readLine = b.readLine()) != null) {
                 String[] split = readLine.split(",");
-               QuestionAnswer tempquestionAnswer = new QuestionAnswer(split[0]);
+               QuestionAnswer tempquestionAnswer = new QuestionAnswer(split[0],Integer.parseInt(split[split.length-1]),Integer.parseInt(split[split.length-2]));
                for(int i = 1; i< split.length; i++){
                    tempquestionAnswer.add(split[i]);
                }
@@ -126,12 +123,14 @@ public class WhereIsItParam implements GameLifeCycle {
             throw new RuntimeException(e);
         }
 
-        while(indexAnswered < this.questions.get(questionIndex).imagesorder.size() && !this.questions.get(questionIndex).imagesorder.get(indexAnswered).equals(this.questions.get(questionIndex).answer)){
+        while(indexAnswered < this.questions.get(questionIndex).imagesorder.size() &&
+            !this.questions.get(questionIndex).imagesorder.get(indexAnswered).equals(this.questions.get(questionIndex).answer)){
             indexAnswered++;
         }
         final int winnerImageIndexAmongDisplayedImages = indexAnswered;
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
+        int numberOfImagesToDisplayPerRound = questions.get(questionIndex).col*questions.get(questionIndex).row;
         currentRoundDetails = pickAndBuildPictures(numberOfImagesToDisplayPerRound, random,
             winnerImageIndexAmongDisplayedImages);
 
@@ -283,10 +282,10 @@ public class WhereIsItParam implements GameLifeCycle {
         //set the target AOI end time for this round
 
         final long endTime = System.currentTimeMillis();
-        final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
+        final int numberOfImagesToDisplayPerRound = questions.get(questionIndex).row * questions.get(questionIndex).col;
 
         for (int i = 1; i<=numberOfImagesToDisplayPerRound; i++) {
-            targetAOIList.get(targetAOIList.size() - i).setTimeEnded(endTime);
+            // TODO targetAOIList.get(targetAOIList.size() - i).setTimeEnded(endTime);
         }
 
         if (this.currentRoundDetails == null) {
@@ -377,8 +376,7 @@ RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, fin
 
     int posX = 0;
     int posY = 0;
-
-    final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree)
+    final GameSizing gameSizing = new GameSizingComputer(questions.get(questionIndex).row, questions.get(questionIndex).col, fourThree)
         .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
 
     final List<PictureCard> pictureCardList = new ArrayList<>();
@@ -426,7 +424,7 @@ RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, fin
             pictureCardList.add(pictureCard);
 
 
-            if ((i + 1) % nbColumns != 0) {
+            if ((i + 1) % questions.get(questionIndex).col != 0) {
                 posX++;
             } else {
                 posY++;
