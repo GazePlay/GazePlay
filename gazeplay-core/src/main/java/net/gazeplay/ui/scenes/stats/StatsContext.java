@@ -153,7 +153,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 case "Gaze":
                     metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileGaze().toURI().toString()));
                     break;
-                case "MouseAndGaze":
+                default: // "MouseAndGaze"
                     metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouseAndGaze().toURI().toString()));
                     break;
             }
