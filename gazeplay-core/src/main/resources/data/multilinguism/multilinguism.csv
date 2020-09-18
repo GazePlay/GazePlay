@@ -267,5 +267,5 @@ customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisé
 Done,,,,,,Done,,Valider,,,,,,,,,,,
 chooseLevel:,,,,,,Choose level:,,Choisir le niveau:,,,,,,,,,,,
 chooseDirectoryToLoad:,,,,,,Choose directory to load:,,Choisir le dossier à charger:,,,,,,,,,,,
-WhereIsItParamDirectory,,,,,,'Where is it ?' Configuration ,,Configuration de 'Où est-ce ?',,,,,,,,,,,
+WhereIsItParamDirectory,,,,,,Choose the repository for configurable game 'Where is it ?'  ,,Choisissez le répertoire du jeu paramétrable 'Où est-ce ?',,,,,,,,,,,
 
