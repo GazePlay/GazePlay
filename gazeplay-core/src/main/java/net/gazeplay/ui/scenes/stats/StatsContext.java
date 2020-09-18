@@ -67,34 +67,21 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         VBox centerPane = new VBox();
         centerPane.setAlignment(Pos.CENTER);
 
-        ImageView gazeMetrics = StatDisplayUtils.buildGazeMetrics(stats, root);
+        ImageView displayedMetrics = StatDisplayUtils.buildGazeMetrics(stats, root);
         root.widthProperty().addListener(
-            (observable, oldValue, newValue) -> gazeMetrics.setFitWidth(newValue.doubleValue() * RATIO));
+            (observable, oldValue, newValue) -> displayedMetrics.setFitWidth(newValue.doubleValue() * RATIO));
         root.heightProperty().addListener(
-            (observable, oldValue, newValue) -> gazeMetrics.setFitHeight(newValue.doubleValue() * RATIO));
+            (observable, oldValue, newValue) -> displayedMetrics.setFitHeight(newValue.doubleValue() * RATIO));
 
-        gazeMetrics.setFitWidth(root.getWidth() * RATIO);
-        gazeMetrics.setFitHeight(root.getHeight() * RATIO);
+        displayedMetrics.setFitWidth(root.getWidth() * RATIO);
+        displayedMetrics.setFitHeight(root.getHeight() * RATIO);
 
-        centerPane.getChildren().add(gazeMetrics);
+        centerPane.getChildren().add(displayedMetrics);
 
-        I18NButton displayMouseButton = new I18NButton(getGazePlay().getTranslator(), "Mouse");
-        displayMouseButton.setOnMouseClicked((e) -> {
-            SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
-            gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouse().toURI().toString()));
-        });
+        I18NButton displayMouseButton = createDisplayButton("Mouse", stats, displayedMetrics);
+        I18NButton displayGazeButton = createDisplayButton("Gaze", stats, displayedMetrics);
+        I18NButton displayMouseAndGazeButton = createDisplayButton("MouseAndGaze", stats, displayedMetrics);
 
-        I18NButton displayGazeButton = new I18NButton(getGazePlay().getTranslator(), "Gaze");
-        displayGazeButton.setOnMouseClicked((e) -> {
-            SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
-            gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileGaze().toURI().toString()));
-        });
-
-        I18NButton displayMouseAndGazeButton = new I18NButton(getGazePlay().getTranslator(), "MouseAndGaze");
-        displayMouseAndGazeButton.setOnMouseClicked((e) -> {
-            SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
-            gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouseAndGaze().toURI().toString()));
-        });
 
         HBox buttonSwitchMetrics = new HBox(displayMouseButton, displayGazeButton, displayMouseAndGazeButton);
         buttonSwitchMetrics.setAlignment(Pos.CENTER);
@@ -153,6 +140,25 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         root.setStyle(
             "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+    }
+
+    I18NButton createDisplayButton(String buttonName, Stats stats, ImageView metrics) {
+        I18NButton displayButton = new I18NButton(getGazePlay().getTranslator(), buttonName);
+        displayButton.setOnMouseClicked((e) -> {
+            SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+            switch (buttonName) {
+                case "Mouse":
+                    metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouse().toURI().toString()));
+                    break;
+                case "Gaze":
+                    metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileGaze().toURI().toString()));
+                    break;
+                case "MouseAndGaze":
+                    metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouseAndGaze().toURI().toString()));
+                    break;
+            }
+        });
+        return displayButton;
     }
 
     void addAllToGrid(Stats stats, Translator translator, GridPane grid, boolean alignLeft) {
