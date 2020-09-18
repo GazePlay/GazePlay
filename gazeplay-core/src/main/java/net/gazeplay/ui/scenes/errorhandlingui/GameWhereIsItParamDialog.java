@@ -28,7 +28,6 @@ import net.gazeplay.commons.gamevariants.IntGameVariant;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
@@ -37,6 +36,8 @@ import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.LinkedList;
+import java.util.List;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
@@ -98,7 +99,7 @@ public class GameWhereIsItParamDialog extends Stage {
         doneButton.wrapTextProperty().setValue(true);
         doneButton.setAlignment(Pos.CENTER_RIGHT);
 
-        Node input = buildDirectoryChooser(config, configurationContext, translator, ConfigurationContext.DirectoryType.WHERE_IS_IT, doneButton, label);
+        Node input = buildDirectoryChooser(config, configurationContext, translator, doneButton, label);
 
 
         choicePane.getChildren().add(label);
@@ -125,7 +126,6 @@ public class GameWhereIsItParamDialog extends Stage {
         Configuration configuration,
         ConfigurationContext configurationContext,
         Translator translator,
-        ConfigurationContext.DirectoryType type,
         Button doneButton,
         I18NLabel label
 
@@ -134,13 +134,7 @@ public class GameWhereIsItParamDialog extends Stage {
         final String fileDir;
         Button buttonLoad;
 
-        switch (type) {
-            case WHERE_IS_IT:
-                fileDir = configuration.getWhereIsItParamDir();
-                break;
-            default:
-                fileDir = configuration.getFileDir();
-        }
+        fileDir = configuration.getWhereIsItParamDir();
 
         buttonLoad = new Button(fileDir);
 
@@ -151,24 +145,14 @@ public class GameWhereIsItParamDialog extends Stage {
         resetButton.wrapTextProperty().setValue(true);
         resetButton.setAlignment(Pos.CENTER);
 
-        switch (type) {
-            case WHERE_IS_IT:
-                resetButton.setOnAction(
-                    e -> {
-                        String defaultValue = Configuration.DEFAULT_VALUE_WHEREISIT_DIR;
-                        configuration.getWhereIsItParamDirProperty()
-                            .setValue(defaultValue);
-                        buttonLoad.textProperty().setValue(defaultValue);
-                    });
-                break;
-            default:
-                resetButton.setOnAction(
-                    e -> {
-                        String defaultValue = GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath();
-                        configuration.getFiledirProperty().setValue(defaultValue);
-                        buttonLoad.textProperty().setValue(defaultValue);
-                    });
-        }
+        resetButton.setOnAction(
+            e -> {
+                String defaultValue = Configuration.DEFAULT_VALUE_WHEREISIT_DIR;
+                configuration.getWhereIsItParamDirProperty()
+                    .setValue(defaultValue);
+                buttonLoad.textProperty().setValue(defaultValue);
+            });
+
         I18NLabel loadLabel = new I18NLabel(translator, "chooseDirectoryToLoad:");
         final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 14; -fx-text-fill: white;";
         loadLabel.setStyle(whereIsItLabelStyle);
@@ -189,22 +173,12 @@ public class GameWhereIsItParamDialog extends Stage {
             }
         });
 
-        File questionOrderFile = new File(configuration.getWhereIsItParamDir() + "/questionOrder.csv");
-        if (questionOrderFile.exists()) {
-            updateLevelSelector(questionOrderFile, levelChooser);
-        }
 
         buttonLoad.setOnAction(arg0 -> {
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 final File currentFolder;
 
-                switch (type) {
-                    case WHERE_IS_IT:
-                        currentFolder = new File(configuration.getWhereIsItParamDir());
-                        break;
-                    default:
-                        currentFolder = new File(configuration.getFileDir());
-                }
+                currentFolder = new File(configuration.getWhereIsItParamDir());
 
                 if (currentFolder.isDirectory()) {
                     directoryChooser.setInitialDirectory(currentFolder);
@@ -225,32 +199,13 @@ public class GameWhereIsItParamDialog extends Stage {
                 buttonLoad.textProperty().setValue(newPropertyValue);
 
                 File newQuestionOrderFile = new File(newPropertyValue + "/questionOrder.csv");
-
-                if (getNumberOfValideDirectories(newPropertyValue) == 0) {
-                    changeTextLabel(label, translator, "You picked the wrong directory", "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: red;");
-                    doneButton.setDisable(true);
-                } else if (!(new File(newPropertyValue + "/questions.csv")).exists()) {
-                    changeTextLabel(label, translator, "questions.csv is missing", "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: red;");
-                    doneButton.setDisable(true);
-                } else if (!(newQuestionOrderFile).exists()) {
-                    changeTextLabel(label, translator, "questionOrder.csv is missing", "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: red;");
-                    doneButton.setDisable(true);
-                } else {
-                    changeTextLabel(label, translator, "WhereIsItParamDirectory", "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;");
-                    doneButton.setDisable(false);
-                    if (newQuestionOrderFile.exists()) {
-                        updateLevelSelector(newQuestionOrderFile, levelChooser);
-                    }
-                    switch (type) {
-                        case WHERE_IS_IT:
-                            configuration.getWhereIsItParamDirProperty().setValue(newPropertyValue);
-                            break;
-                        default:
-                            configuration.getFiledirProperty().setValue(newPropertyValue);
-                    }
-                }
+                updateErrorMessage(newPropertyValue, newQuestionOrderFile, levelChooser, configuration, translator, label, doneButton);
             }
         );
+
+        File questionOrderFile = new File(configuration.getWhereIsItParamDir() + "/questionOrder.csv");
+        updateErrorMessage(configuration.getWhereIsItParamDir(), questionOrderFile, levelChooser, configuration, translator, label, doneButton);
+
 
         I18NLabel levelChooserLabel = new I18NLabel(translator, "chooseLevel:");
         levelChooserLabel.setStyle(whereIsItLabelStyle);
@@ -265,6 +220,27 @@ public class GameWhereIsItParamDialog extends Stage {
         finalPane.setSpacing(20);
         finalPane.setTranslateY(20);
         return finalPane;
+    }
+
+    private void updateErrorMessage(String newPropertyValue, File newQuestionOrderFile, ChoiceBox<Integer> levelChooser, Configuration configuration, Translator translator, I18NLabel label, Button doneButton) {
+        String errorMessage = getNumberOfValideDirectories(newPropertyValue, configuration, translator);
+        if (!(new File(newPropertyValue + "/questions.csv")).exists()) {
+            changeTextLabel(label, "questions.csv " + translator.translate("ismissing"), "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: red;");
+            doneButton.setDisable(true);
+        } else if (!(newQuestionOrderFile).exists()) {
+            changeTextLabel(label, "questionOrder.csv " + translator.translate("ismissing"), "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: red;");
+            doneButton.setDisable(true);
+        } else if (!(errorMessage).equals("")) {
+            changeTextLabel(label, errorMessage, "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: red;");
+            doneButton.setDisable(true);
+        } else {
+            changeTextLabel(label, translator.translate("WhereIsItParamDirectory"), "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;");
+            doneButton.setDisable(false);
+            if (newQuestionOrderFile.exists()) {
+                updateLevelSelector(newQuestionOrderFile, levelChooser);
+            }
+            configuration.getWhereIsItParamDirProperty().setValue(newPropertyValue);
+        }
     }
 
     public void updateLevelSelector(File questionOrderFile, ChoiceBox<Integer> levelChooser) {
@@ -304,9 +280,10 @@ public class GameWhereIsItParamDialog extends Stage {
         log.info(" LEVEL CHOSE : {}", level);
     }
 
-    private int getNumberOfValideDirectories(String selectedPath) {
+    private String getNumberOfValideDirectories(String selectedPath, Configuration configuration, Translator translator) {
         final File imagesDirectory = new File(selectedPath + "/images/");
         int validDirectoriesNumber = 0;
+        List<String> imagesFolders = new LinkedList<>();
         File[] listOfTheFiles = imagesDirectory.listFiles();
         if (listOfTheFiles != null) {
             for (File f : listOfTheFiles) {
@@ -322,12 +299,63 @@ public class GameWhereIsItParamDialog extends Stage {
                         }
                         if (containsImage) {
                             validDirectoriesNumber++;
+                            imagesFolders.add(f.getName());
                         }
                     }
                 }
             }
         }
-        return validDirectoriesNumber;
+
+        if (validDirectoriesNumber == 0) {
+            return translator.translate("NoImageFound");
+        }
+
+        File questionOrderFile = new File(configuration.getWhereIsItParamDir() + "/questionOrder.csv");
+        try (
+            InputStream fileInputStream = Files.newInputStream(questionOrderFile.toPath());
+            BufferedReader b = new BufferedReader(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))
+        ) {
+            String readLine;
+            int line = 1;
+            while ((readLine = b.readLine()) != null) {
+                String[] split = readLine.split(",");
+                if (split.length <= 3) {
+                    return translator.translate("Line") + " " + line + ": " + translator.translate("LineIsEmpty");
+                }
+                String answer = split[0];
+                try {
+                    int numberOfImages = Integer.parseInt(split[split.length - 1]) * Integer.parseInt(split[split.length - 2]);
+                    if (numberOfImages != split.length - 3) {
+                        return translator.translate("Line") + " " + line + ": " + getFinalSentence(translator, "LineNeedEltButGot", numberOfImages, (split.length - 3));
+                    }
+                    boolean correctImageFound = false;
+                    for (int i = 1; i < split.length - 2; i++) {
+                        if (split[i].equals(split[0])) {
+                            correctImageFound = true;
+                        }
+                        if (!split[i].equals("")) {
+                            int j = 0;
+                            while (j < imagesFolders.size() && !imagesFolders.get(j).equals(split[i])) {
+                                j++;
+                            }
+                            if (j >= imagesFolders.size()) {
+                                return translator.translate("Line") + " " + line + ": " + getFinalSentence(translator, "ImageDirectoryIsMissing", split[i]);
+                            }
+                        }
+                    }
+                    if (!correctImageFound) {
+                        return translator.translate("Line") + " " + line + ": " + getFinalSentence(translator, "CorrectAnswerIsMissingInList", split[0]);
+                    }
+                } catch (NumberFormatException e) {
+                    return translator.translate("Line") + " " + line + ": " + translator.translate("TheLastElementsShouldBeLineAndCol");
+                }
+                line++;
+            }
+        } catch (IOException e) {
+            return "";
+        }
+
+        return "";
     }
 
     static boolean fileIsImageFile(File file) {
@@ -342,9 +370,18 @@ public class GameWhereIsItParamDialog extends Stage {
         return false;
     }
 
-    private void changeTextLabel(I18NLabel label, Translator translator, String text, String style) {
-        label.setText(translator.translate(text));
+    private void changeTextLabel(I18NLabel label, String text, String style) {
+        label.setText(text);
         label.setStyle(style);
+    }
+
+
+    private String getFinalSentence(Translator translator, String var1, Object... var2) {
+        String tempVar1 = translator.translate(var1);
+        for (int i = 0; i < var2.length; i++) {
+            tempVar1 = tempVar1.replaceFirst("\\{}", var2[i].toString());
+        }
+        return tempVar1;
     }
 
 }

@@ -21,8 +21,6 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
-import net.gazeplay.commons.gamevariants.difficulty.SourceSet;
-import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -31,10 +29,12 @@ import net.gazeplay.commons.utils.stats.TargetAOI;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
 
-import static net.gazeplay.games.whereisitparam.WhereIsItParamGameType.*;
+import static net.gazeplay.games.whereisitparam.WhereIsItParamGameType.CUSTOMIZED;
 
 
 class QuestionAnswer {
@@ -43,14 +43,14 @@ class QuestionAnswer {
     int col;
     int row;
 
-    public QuestionAnswer(String answer, int col, int row){
+    public QuestionAnswer(String answer, int col, int row) {
         this.answer = answer;
         imagesorder = new LinkedList<String>();
         this.col = col;
         this.row = row;
     }
 
-    public void add (String image){
+    public void add(String image) {
         imagesorder.add(image);
     }
 }
@@ -80,7 +80,7 @@ public class WhereIsItParam implements GameLifeCycle {
     private final ArrayList<TargetAOI> targetAOIList;
 
     public WhereIsItParam(final WhereIsItParamGameType gameType, int level, final boolean fourThree,
-                     final IGameContext gameContext, final Stats stats) {
+                          final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.gameType = gameType;
         this.fourThree = fourThree;
@@ -108,25 +108,25 @@ public class WhereIsItParam implements GameLifeCycle {
             String readLine;
             while ((readLine = b.readLine()) != null) {
                 String[] split = readLine.split(",");
-               QuestionAnswer tempquestionAnswer = new QuestionAnswer(split[0],Integer.parseInt(split[split.length-1]),Integer.parseInt(split[split.length-2]));
-               for(int i = 1; i< split.length; i++){
-                   tempquestionAnswer.add(split[i]);
-               }
-               questions.add(tempquestionAnswer);
+                QuestionAnswer tempquestionAnswer = new QuestionAnswer(split[0], Integer.parseInt(split[split.length - 1]), Integer.parseInt(split[split.length - 2]));
+                for (int i = 1; i < split.length - 2; i++) {
+                    tempquestionAnswer.add(split[i]);
+                }
+                questions.add(tempquestionAnswer);
             }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        while(indexAnswered < this.questions.get(questionIndex).imagesorder.size() &&
-            !this.questions.get(questionIndex).imagesorder.get(indexAnswered).equals(this.questions.get(questionIndex).answer)){
+        while (indexAnswered < this.questions.get(questionIndex).imagesorder.size() &&
+            !this.questions.get(questionIndex).imagesorder.get(indexAnswered).equals(this.questions.get(questionIndex).answer)) {
             indexAnswered++;
         }
         final int winnerImageIndexAmongDisplayedImages = indexAnswered;
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
-        int numberOfImagesToDisplayPerRound = questions.get(questionIndex).col*questions.get(questionIndex).row;
+        int numberOfImagesToDisplayPerRound = questions.get(questionIndex).col * questions.get(questionIndex).row;
         currentRoundDetails = pickAndBuildPictures(numberOfImagesToDisplayPerRound, random,
             winnerImageIndexAmongDisplayedImages);
 
@@ -170,8 +170,6 @@ public class WhereIsItParam implements GameLifeCycle {
         final double positionY = gamePaneDimension2D.getHeight() / 2 - questionText.getBoundsInParent().getHeight() / 2;
 
 
-
-
         questionText.setX(positionX);
         questionText.setY(positionY);
         questionText.setTextAlignment(TextAlignment.CENTER);
@@ -179,9 +177,9 @@ public class WhereIsItParam implements GameLifeCycle {
 
         gameContext.getChildren().add(questionText);
         final long timeStarted = System.currentTimeMillis();
-        final TargetAOI targetAOI = new TargetAOI(gamePaneDimension2D.getWidth() / 2, gamePaneDimension2D.getHeight() / 2, (int)questionText.getBoundsInParent().getWidth(),
+        final TargetAOI targetAOI = new TargetAOI(gamePaneDimension2D.getWidth() / 2, gamePaneDimension2D.getHeight() / 2, (int) questionText.getBoundsInParent().getWidth(),
             timeStarted);
-        targetAOI.setTimeEnded(timeStarted+gameContext.getConfiguration().getQuestionLength());
+        targetAOI.setTimeEnded(timeStarted + gameContext.getConfiguration().getQuestionLength());
         targetAOIList.add(targetAOI);
 
 
@@ -279,8 +277,8 @@ public class WhereIsItParam implements GameLifeCycle {
 
         final long endTime = System.currentTimeMillis();
 
-        for (TargetAOI taoi: targetAOIList) {
-           taoi.setTimeEnded(endTime);
+        for (TargetAOI taoi : targetAOIList) {
+            taoi.setTimeEnded(endTime);
         }
 
         if (this.currentRoundDetails == null) {
@@ -298,7 +296,7 @@ public class WhereIsItParam implements GameLifeCycle {
         gameContext.getChildren().removeAll(pictureCardsToHide);
     }
 
-    static boolean fileIsImageFile(File file){
+    static boolean fileIsImageFile(File file) {
         try {
             String mimetype = Files.probeContentType(file.toPath());
             if (mimetype != null && mimetype.split("/")[0].equals("image")) {
@@ -310,75 +308,75 @@ public class WhereIsItParam implements GameLifeCycle {
         return false;
     }
 
-RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, final ReplayablePseudoRandom random,
-                                            final int winnerImageIndexAmongDisplayedImages) {
+    RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, final ReplayablePseudoRandom random,
+                                      final int winnerImageIndexAmongDisplayedImages) {
 
-    final Configuration config = gameContext.getConfiguration();
+        final Configuration config = gameContext.getConfiguration();
 
-    int filesCount;
-    final String directoryName;
-    List<File> imagesFolders = new LinkedList<>();
-    List<String> resourcesFolders = new LinkedList<>();
+        int filesCount;
+        final String directoryName;
+        List<File> imagesFolders = new LinkedList<>();
+        List<String> resourcesFolders = new LinkedList<>();
 
-    final File imagesDirectory = new File(config.getWhereIsItParamDir() + "/images/");
-    directoryName = imagesDirectory.getPath();
-    filesCount = 0;
-    File[] listOfTheFiles = imagesDirectory.listFiles();
-    if (listOfTheFiles != null) {
-        for (File f : listOfTheFiles) {
-            File[] filesInf = f.listFiles();
-            if (filesInf != null) {
-                if (f.isDirectory() && filesInf.length > 0) {
-                    boolean containsImage = false;
-                    int i = 0;
-                    while (!containsImage && i < filesInf.length) {
-                        File file = filesInf[i];
-                        containsImage = fileIsImageFile(file);
-                        i++;
-                    }
-                    if (containsImage) {
-                        imagesFolders.add(f);
-                        filesCount++;
+        final File imagesDirectory = new File(config.getWhereIsItParamDir() + "/images/");
+        directoryName = imagesDirectory.getPath();
+        filesCount = 0;
+        File[] listOfTheFiles = imagesDirectory.listFiles();
+        if (listOfTheFiles != null) {
+            for (File f : listOfTheFiles) {
+                File[] filesInf = f.listFiles();
+                if (filesInf != null) {
+                    if (f.isDirectory() && filesInf.length > 0) {
+                        boolean containsImage = false;
+                        int i = 0;
+                        while (!containsImage && i < filesInf.length) {
+                            File file = filesInf[i];
+                            containsImage = fileIsImageFile(file);
+                            i++;
+                        }
+                        if (containsImage) {
+                            imagesFolders.add(f);
+                            filesCount++;
+                        }
                     }
                 }
             }
         }
-    }
 
-    imagesFolders.sort((a, b) -> {
-        int xa = 0, xb = 0;
-        while (xa < this.questions.get(questionIndex).imagesorder.size() && !this.questions.get(questionIndex).imagesorder.get(xa).equals(a.getName())) {
-            xa++;
+        imagesFolders.sort((a, b) -> {
+            int xa = 0, xb = 0;
+            while (xa < this.questions.get(questionIndex).imagesorder.size() && !this.questions.get(questionIndex).imagesorder.get(xa).equals(a.getName())) {
+                xa++;
+            }
+            while (xb < this.questions.get(questionIndex).imagesorder.size() && !this.questions.get(questionIndex).imagesorder.get(xb).equals(b.getName())) {
+                xb++;
+            }
+            return xa - xb;
+        });
+
+        final String language = config.getLanguage();
+
+        if (filesCount == 0) {
+            log.warn("No images found in Directory " + directoryName);
+            error(language);
+            return null;
         }
-        while (xb < this.questions.get(questionIndex).imagesorder.size() && !this.questions.get(questionIndex).imagesorder.get(xb).equals(b.getName())) {
-            xb++;
-        }
-        return xa - xb;
-    });
 
-    final String language = config.getLanguage();
+        int posX = 0;
+        int posY = 0;
+        final GameSizing gameSizing = new GameSizingComputer(questions.get(questionIndex).row, questions.get(questionIndex).col, fourThree)
+            .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
 
-    if (filesCount == 0) {
-        log.warn("No images found in Directory " + directoryName);
-        error(language);
-        return null;
-    }
-
-    int posX = 0;
-    int posY = 0;
-    final GameSizing gameSizing = new GameSizingComputer(questions.get(questionIndex).row, questions.get(questionIndex).col, fourThree)
-        .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
-
-    final List<PictureCard> pictureCardList = new ArrayList<>();
-    String questionSoundPath = null;
-    String question = null;
-    List<Image> pictograms = null;
+        final List<PictureCard> pictureCardList = new ArrayList<>();
+        String questionSoundPath = null;
+        String question = null;
+        List<Image> pictograms = null;
         int index = 0;
         for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
-             File folder = imagesFolders.get((index) % filesCount);
+            File folder = imagesFolders.get((index) % filesCount);
 
-            if (this.questions.get(questionIndex).imagesorder.get(i).equals(folder.getName())){
+            if (this.questions.get(questionIndex).imagesorder.get(i).equals(folder.getName())) {
                 index = (index + 1) % imagesFolders.size();
 
                 final File[] files = getFiles(folder);
@@ -419,15 +417,15 @@ RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, fin
 
             }
 
-                if ((i + 1) % questions.get(questionIndex).col != 0) {
-                    posX++;
-                } else {
-                    posY++;
-                    posX = 0;
-                }
+            if ((i + 1) % questions.get(questionIndex).col != 0) {
+                posX++;
+            } else {
+                posY++;
+                posX = 0;
+            }
         }
-    return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath, question,
-        pictograms);
+        return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath, question,
+            pictograms);
     }
 
     /**
@@ -453,28 +451,28 @@ RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, fin
     }
 
     private String getPathSound(final String folder, final String language) {
-            final Configuration config = gameContext.getConfiguration();
-            try {
-                log.debug("CUSTOMIZED");
-                final String path = config.getWhereIsItParamDir() + "/sounds/"+ language + "/";
-                final File soundsDirectory = new File(path);
-                final String[] soundsDirectoryFiles = soundsDirectory.list();
-                if (soundsDirectoryFiles != null) {
-                    for (final String file : soundsDirectoryFiles) {
-                        log.debug("file " + file);
-                        log.debug("folder " + folder);
-                        if (file.contains(folder)) {
-                            final File f = new File(path + file);
-                            log.debug("file " + f.getAbsolutePath());
-                            return f.getAbsolutePath();
-                        }
+        final Configuration config = gameContext.getConfiguration();
+        try {
+            log.debug("CUSTOMIZED");
+            final String path = config.getWhereIsItParamDir() + "/sounds/" + language + "/";
+            final File soundsDirectory = new File(path);
+            final String[] soundsDirectoryFiles = soundsDirectory.list();
+            if (soundsDirectoryFiles != null) {
+                for (final String file : soundsDirectoryFiles) {
+                    log.debug("file " + file);
+                    log.debug("folder " + folder);
+                    if (file.contains(folder)) {
+                        final File f = new File(path + file);
+                        log.debug("file " + f.getAbsolutePath());
+                        return f.getAbsolutePath();
                     }
                 }
-            } catch (final Exception e) {
-                log.debug("Problem with customized folder");
-                error(config.getLanguage());
             }
-            return "";
+        } catch (final Exception e) {
+            log.debug("Problem with customized folder");
+            error(config.getLanguage());
+        }
+        return "";
     }
 
     private String getQuestionText(final String folder, final String language) {

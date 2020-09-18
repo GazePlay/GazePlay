@@ -264,8 +264,19 @@ addNewImagethumbup,,,,,,Add new image happy ...,,Ajouter de nouvelles image cont
 addNewImagethumbdown,,,,,,Add new image unhappy...,,Ajouter une nouvelle image pas content ...,,,,,,,,,,Añade nuevas imágenes que no son felices ...,
 addNewImagenocare,,,,,,Add new image don't care...,,Ajouter une nouvelle image s'en fiche ...,,,,,,,,,,Añadir una nueva imagen no importa ...,
 customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,,,
+
 Done,,,,,,Done,,Valider,,,,,,,,,,,
 chooseLevel:,,,,,,Choose level:,,Choisir le niveau:,,,,,,,,,,,
 chooseDirectoryToLoad:,,,,,,Choose directory to load:,,Choisir le dossier à charger:,,,,,,,,,,,
-WhereIsItParamDirectory,,,,,,Choose the repository for configurable game 'Where is it ?'  ,,Choisissez le répertoire du jeu paramétrable 'Où est-ce ?',,,,,,,,,,,
+WhereIsItParamDirectory,,,,,,Choose the repository for configurable game 'Where is it ?',,Choisissez le répertoire du jeu paramétrable 'Où est-ce ?',,,,,,,,,,,
+NoImageFound,,,,,,No image found,,Aucune image trouvée,,,,,,,,,,,
+Line,,,,,,Line,,Ligne,,,,,,,,,,,
+LineIsEmpty,,,,,,Line is empty,,La ligne est vide,,,,,,,,,,,
+ismissing,,,,,,is missing,,est manquant,,,,,,,,,,,
+TheLastElementsShouldBeLineAndCol,,,,,,The last 2 elements of the line should be number of lines and columns,,Les deux derniers éléments de la ligne doivent être le nombre de lignes et de colonnes,,,,,,,,,,,
+CorrectAnswerIsMissingInList,,,,,,The correct answer '{}' is missing in the list of possible answers,,La bonne réponse '{}' n'est pas contenue dans la liste de réponses possibles,,,,,,,,,,,
+ImageDirectoryIsMissing,,,,,,The image directory '{}' is missing,,La dossier image '' est manquant,,,,,,,,,,,
+LineNeedEltButGot,,,,,,Line needs {} elements but got {},,La ligne a besoin de {} éléments mais elle en contient {},,,,,,,,,,,
+
+x,,,,,,xx,,x,,,,,,,,,,,
 
