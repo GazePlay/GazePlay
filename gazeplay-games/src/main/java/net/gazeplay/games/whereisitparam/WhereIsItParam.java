@@ -101,7 +101,6 @@ public class WhereIsItParam implements GameLifeCycle {
         int indexAnswered = 0;
 
         File questionOrderFile = new File(config.getWhereIsItParamDir() + "/questionOrder.csv");
-        log.info("THE PATH IS: {}", questionOrderFile.getAbsoluteFile());
         try (
             InputStream fileInputStream = Files.newInputStream(questionOrderFile.toPath());
             BufferedReader b = new BufferedReader(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))
@@ -114,9 +113,6 @@ public class WhereIsItParam implements GameLifeCycle {
                    tempquestionAnswer.add(split[i]);
                }
                questions.add(tempquestionAnswer);
-                log.info("here are the question answere ");
-                log.info("A {}", tempquestionAnswer.answer);
-                log.info("MOT {}", tempquestionAnswer.imagesorder);
             }
 
         } catch (IOException e) {
@@ -349,9 +345,6 @@ RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, fin
         }
     }
 
-
-    log.info("la liste est pas encore triée: {}", imagesFolders);
-
     imagesFolders.sort((a, b) -> {
         int xa = 0, xb = 0;
         while (xa < this.questions.get(questionIndex).imagesorder.size() && !this.questions.get(questionIndex).imagesorder.get(xa).equals(a.getName())) {
@@ -362,8 +355,6 @@ RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, fin
         }
         return xa - xb;
     });
-
-    log.info("la liste est triée: {}", imagesFolders);
 
     final String language = config.getLanguage();
 
@@ -385,51 +376,55 @@ RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, fin
         int index = 0;
         for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
-            final File folder = imagesFolders.get((index) % filesCount);
+             File folder = imagesFolders.get((index) % filesCount);
 
-            final File[] files = getFiles(folder);
+            if (this.questions.get(questionIndex).imagesorder.get(i).equals(folder.getName())){
+                index = (index + 1) % imagesFolders.size();
 
-            List<File> validImageFiles = new ArrayList<>();
+                final File[] files = getFiles(folder);
 
-            for (File file : files) {
-                if (fileIsImageFile(file)) {
-                    validImageFiles.add(file);
+                List<File> validImageFiles = new ArrayList<>();
+
+                for (File file : files) {
+                    if (fileIsImageFile(file)) {
+                        validImageFiles.add(file);
+                    }
                 }
+
+                final int numFile = random.nextInt(validImageFiles.size());
+
+                final File randomImageFile = validImageFiles.get(numFile);
+
+                if (winnerImageIndexAmongDisplayedImages == i) {
+
+                    questionSoundPath = getPathSound(folder.getName(), language);
+
+                    question = getQuestionText(folder.getName(), language);
+
+                    pictograms = getPictogramms(folder.getName());
+
+                }
+
+                // The image file needs 'file:' prepended as this will get images from a local source, not resources.
+                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
+                    winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats, this);
+
+                final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY + 1), (int) gameSizing.height,
+                    System.currentTimeMillis());
+                targetAOIList.add(targetAOI);
+
+
+                pictureCardList.add(pictureCard);
+
             }
 
-            final int numFile = random.nextInt(validImageFiles.size());
-
-            final File randomImageFile = validImageFiles.get(numFile);
-
-            if (winnerImageIndexAmongDisplayedImages == i) {
-
-                questionSoundPath = getPathSound(folder.getName(), language);
-
-                question = getQuestionText(folder.getName(), language);
-
-                pictograms = getPictogramms(folder.getName());
-
-            }
-
-            // The image file needs 'file:' prepended as this will get images from a local source, not resources.
-            final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats, this);
-
-            final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY + 1), (int) gameSizing.height,
-                System.currentTimeMillis());
-            targetAOIList.add(targetAOI);
-
-            pictureCardList.add(pictureCard);
-
-
-            if ((i + 1) % questions.get(questionIndex).col != 0) {
-                posX++;
-            } else {
-                posY++;
-                posX = 0;
-            }
-            index = (index + 1) % imagesFolders.size();
+                if ((i + 1) % questions.get(questionIndex).col != 0) {
+                    posX++;
+                } else {
+                    posY++;
+                    posX = 0;
+                }
         }
     return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath, question,
         pictograms);
@@ -471,7 +466,6 @@ RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, fin
                         if (file.contains(folder)) {
                             final File f = new File(path + file);
                             log.debug("file " + f.getAbsolutePath());
-                            log.info("LE SON C'EST: " + f.getAbsolutePath());
                             return f.getAbsolutePath();
                         }
                     }
