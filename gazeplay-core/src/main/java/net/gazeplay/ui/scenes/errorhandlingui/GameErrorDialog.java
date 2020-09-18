@@ -2,6 +2,7 @@ package net.gazeplay.ui.scenes.errorhandlingui;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -87,22 +88,26 @@ public class GameErrorDialog extends Stage {
         final Translator translator = gazePlay.getTranslator();
 
         final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;";
-        I18NLabel label = new I18NLabel(translator, "WhereIsItDirectory");
+        I18NLabel label = new I18NLabel(translator, "WhereIsItParamDirectory");
         label.setStyle(whereIsItLabelStyle);
         Button doneButton = new Button(translator.translate("Done"));
         doneButton.getStyleClass().add("gameChooserButton");
         doneButton.getStyleClass().add("gameVariation");
         doneButton.getStyleClass().add("button");
         doneButton.wrapTextProperty().setValue(true);
-        doneButton.setAlignment(Pos.CENTER_RIGHT);
-        choicePane.getChildren().add(doneButton);
         doneButton.setDisable(true);
 
         Node input = buildDirectoryChooser(config, configurationContext, translator, ConfigurationContext.DirectoryType.WHERE_IS_IT, doneButton, promptLabel);
-
         choicePane.getChildren().add(label);
         choicePane.getChildren().add(input);
-
+        HBox doneButtonBox = new HBox(doneButton);
+        doneButton.setAlignment(Pos.CENTER);
+        doneButtonBox.setAlignment(Pos.CENTER);
+        VBox finalPane = new VBox(doneButtonBox);
+        finalPane.setSpacing(20);
+        finalPane.setTranslateY(35);
+        finalPane.setTranslateX(-76);
+        choicePane.getChildren().add(finalPane);
 
         EventHandler<Event> event = mouseEvent -> {
             close();
@@ -184,7 +189,7 @@ public class GameErrorDialog extends Stage {
                     }
                 } else {
                     final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
-                    whereIsItPromptLabel.setText(translator.translate("You picked the wrong directory"));
+                    whereIsItPromptLabel.setText(translator.translate("PickedWrongDir"));
                     whereIsItPromptLabel.setStyle(labelStyle);
                 }
             }
@@ -199,6 +204,10 @@ public class GameErrorDialog extends Stage {
                         String defaultValue = Configuration.DEFAULT_VALUE_WHEREISIT_DIR;
                         configuration.getWhereIsItDirProperty()
                             .setValue(defaultValue);
+                        final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
+                        whereIsItPromptLabel.setText(translator.translate("WhereIsItNotConfigParamDirectory"));
+                        whereIsItPromptLabel.setStyle(labelStyle);
+                        doneButton.setDisable(true);
                         buttonLoad.textProperty().setValue(defaultValue);
                     });
                 break;

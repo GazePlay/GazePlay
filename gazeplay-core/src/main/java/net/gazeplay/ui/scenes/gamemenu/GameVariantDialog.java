@@ -168,7 +168,7 @@ public class GameVariantDialog extends Stage {
     }
 
     private void whereIsItErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root, IGameVariant finalVariant) {
-        String whereIsItPromptLabel = "Where is it directory not configured";
+        String whereIsItPromptLabel = "WhereIsItNotConfigParamDirectory";
         configurationContext = new ConfigurationContext(gazePlay);
         this.errorDialog = new GameErrorDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel, configurationContext, finalVariant);
         this.errorDialog.setTitle("error");
