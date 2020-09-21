@@ -28,8 +28,7 @@ import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
-import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
-import net.gazeplay.ui.scenes.errorhandlingui.GameErrorDialog;
+import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItErrorPathDialog;
 import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItParamDialog;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
@@ -38,9 +37,8 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 public class GameVariantDialog extends Stage {
 
     private boolean easymode = false;
-    private GameErrorDialog errorDialog;
+    private GameWhereIsItErrorPathDialog errorDialog;
     private GameWhereIsItParamDialog whereisitparamDialog;
-    private ConfigurationContext configurationContext;
 
     public GameVariantDialog(
         final GazePlay gazePlay,
@@ -98,18 +96,18 @@ public class GameVariantDialog extends Stage {
             button.getStyleClass().add("gameChooserButton");
             button.getStyleClass().add("gameVariation");
             button.getStyleClass().add("button");
-            //
+
             button.wrapTextProperty().setValue(true);
-            //
+
             button.setMinWidth(primaryStage.getWidth() / 15);
             button.setMinHeight(primaryStage.getHeight() / 15);
-            //
+
             button.setPrefWidth(primaryStage.getWidth() / 10);
             button.setPrefHeight(primaryStage.getHeight() / 10);
-            //
+
             button.setMaxWidth(primaryStage.getWidth() / 8);
             button.setMaxHeight(primaryStage.getHeight() / 8);
-            //
+
             if (variant instanceof DimensionDifficultyGameVariant) {
                 choicePaneEasy.getChildren().add(button);
             } else {
@@ -144,14 +142,13 @@ public class GameVariantDialog extends Stage {
                 });
             }
 
-
             IGameVariant finalVariant = variant;
             EventHandler<Event> event = mouseEvent -> {
                 close();
                 root.setDisable(false);
-                if(config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
+                if (config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
                     whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, finalVariant);
-                }else{
+                } else {
                     gameMenuController.chooseGame(gazePlay, gameSpec, finalVariant);
                 }
             };
@@ -167,13 +164,11 @@ public class GameVariantDialog extends Stage {
         setScene(scene);
         setWidth(primaryStage.getWidth() / 2);
         setHeight(primaryStage.getHeight() / 2);
-        // scene.getStylesheets().add(getClass().getResource("modal-dialog.css").toExternalForm());
     }
 
     private void whereIsItErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root, IGameVariant finalVariant) {
-        String whereIsItPromptLabel = "Where is it directory not configured";
-        configurationContext = new ConfigurationContext(gazePlay);
-        this.errorDialog = new GameErrorDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel, configurationContext, finalVariant);
+        String whereIsItPromptLabel = "WhereIsItNotConfigDirectory";
+        this.errorDialog = new GameWhereIsItErrorPathDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel, finalVariant);
         this.errorDialog.setTitle("error");
         this.errorDialog.show();
         this.errorDialog.toFront();

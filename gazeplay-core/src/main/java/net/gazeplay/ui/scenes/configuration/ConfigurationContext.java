@@ -73,7 +73,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private final boolean currentLanguageAlignmentIsLeftAligned;
 
-    public ConfigurationContext(GazePlay gazePlay) {
+    ConfigurationContext(GazePlay gazePlay) {
         super(gazePlay, new BorderPane());
 
         Translator translator = gazePlay.getTranslator();
@@ -565,14 +565,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return buttonLoad;
     }
 
-    public enum DirectoryType {
+    enum DirectoryType {
         FILE, WHERE_IS_IT, WHERE_IS_IT_PARAM, MUSIC, VIDEO
     }
 
     private Node buildImageChooser(Configuration configuration,
                                    ConfigurationContext configurationContext,
-                                   Translator translator)
-    {
+                                   Translator translator) {
 
         final Button selectButton = new Button("select");
         Stage dialog = new CustomFileChooser(configuration, configurationContext, translator, getGazePlay());

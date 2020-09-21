@@ -83,7 +83,6 @@ public class GameMenuController {
 
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats stats = gameLauncher.createNewStats(scene);
-        final Configuration config = gameContext.getConfiguration();
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
 
         gameContext.createControlPanel(gazePlay, stats, currentGame);
