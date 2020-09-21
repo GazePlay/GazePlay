@@ -48,7 +48,7 @@ public class GameMenuController {
 
         } else {
             if(gameSpec.getGameSummary().getNameCode().equals("WhereIsItConfigurable")) {
-                WhereIsItConfigurableErrorHandling(gazePlay, this, gameSpec, root);
+                whereIsItConfigurableErrorHandling(gazePlay, this, gameSpec, root);
             }else {
                 if (variants.size() == 1) {
                     IGameVariant onlyGameVariant = variants.iterator().next();
@@ -61,12 +61,12 @@ public class GameMenuController {
     }
 
 
-    private void WhereIsItConfigurableErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root) {
+    private void whereIsItConfigurableErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root) {
         String whereIsItPromptLabel = "WhereIsItConfigurableDirectory";
-        GameWhereIsItConfigurableDialog WhereIsItConfigurableDialog = new GameWhereIsItConfigurableDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel);
-        //this.WhereIsItConfigurableDialog.setTitle("error");
-        WhereIsItConfigurableDialog.show();
-        WhereIsItConfigurableDialog.toFront();
+        GameWhereIsItConfigurableDialog whereIsItConfigurableDialog = new GameWhereIsItConfigurableDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel);
+        //this.whereIsItConfigurableDialog.setTitle("error");
+        whereIsItConfigurableDialog.show();
+        whereIsItConfigurableDialog.toFront();
     }
 
     public void chooseGame(
