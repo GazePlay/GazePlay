@@ -358,8 +358,10 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     @Override
-    public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
+    public void playWinTransition(long delay, String pictureLocation, String soundLocation, EventHandler<ActionEvent> onFinishedEventHandler) {
         if (!getChildren().contains(bravo)) {
+            bravo.setPictureResourceLocation(pictureLocation);
+            bravo.setSoundResource(soundLocation);
             getChildren().add(bravo);
             bravo.toFront();
             bravo.setConfettiOnStart(this);
@@ -383,6 +385,16 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public void onGameStarted() {
+    }
+
+    @Override
+    public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
+        if (!getChildren().contains(bravo)) {
+            getChildren().add(bravo);
+            bravo.toFront();
+            bravo.setConfettiOnStart(this);
+            bravo.playWinTransition(root, delay, onFinishedEventHandler);
+        }
     }
 
 }

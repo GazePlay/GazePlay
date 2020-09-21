@@ -22,6 +22,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.io.File;
 import java.io.IOException;
 
 import static net.gazeplay.games.whereisitparam.WhereIsItParamGameType.*;
@@ -55,13 +56,14 @@ class PictureCard extends Group {
     private final PictureCard.CustomInputEventHandler customInputEventHandler;
 
     private final WhereIsItParam gameInstance;
+    private final Configuration config;
 
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
                 boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsItParam gameInstance) {
 
         log.info("imagePath = {}", imagePath);
 
-        final Configuration config = gameContext.getConfiguration();
+        this.config = gameContext.getConfiguration();
 
         this.minTime = config.getFixationLength();
         this.initialPositionX = posX;
@@ -164,23 +166,43 @@ class PictureCard extends Group {
 
         gameContext.updateScore(stats, gameInstance);
 
-        fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
-            gameInstance.dispose();
-            gameContext.clear();
-            try {
-                stats.saveStats();
-                stats.reset();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            gameInstance.launch();
-            // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
-            // gameInstance.stats);
+        File soundFile = new File(config.getWhereIsItParamDir() + "/sounds/win_fail/win.mp3");
+        File imageFile = new File(config.getWhereIsItParamDir() + "/sounds/win_fail/win.png");
+        if(!soundFile.exists() || !imageFile.exists()){
+            fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(
+                500,
+                 actionEvent1 -> {
+                    gameInstance.dispose();
+                    gameContext.clear();
+                    try {
+                        stats.saveStats();
+                        stats.reset();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    gameInstance.launch();
+                    gameContext.onGameStarted();
 
-            gameContext.onGameStarted();
+                }));
+        }else {
+            fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(
+                500,
+                config.getWhereIsItParamDir() + "/sounds/win_fail/win.png",
+                config.getWhereIsItParamDir() + "/sounds/win_fail/win.mp3",
+                actionEvent1 -> {
+                    gameInstance.dispose();
+                    gameContext.clear();
+                    try {
+                        stats.saveStats();
+                        stats.reset();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    gameInstance.launch();
+                    gameContext.onGameStarted();
 
-        }));
-
+                }));
+        }
         fullAnimation.play();
     }
 

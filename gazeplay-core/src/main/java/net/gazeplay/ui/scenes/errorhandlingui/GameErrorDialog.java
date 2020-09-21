@@ -21,6 +21,7 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NLabel;
@@ -98,7 +99,7 @@ public class GameErrorDialog extends Stage {
         choicePane.getChildren().add(doneButton);
         doneButton.setDisable(true);
 
-        Node input = buildDirectoryChooser(config, configurationContext, translator, ConfigurationContext.DirectoryType.WHERE_IS_IT, doneButton, promptLabel);
+        Node input = buildDirectoryChooser(config, configurationContext, translator, ConfigurationContext.DirectoryType.WHERE_IS_IT, doneButton, promptLabel, finalVariant);
 
         choicePane.getChildren().add(label);
         choicePane.getChildren().add(input);
@@ -126,12 +127,12 @@ public class GameErrorDialog extends Stage {
         Translator translator,
         ConfigurationContext.DirectoryType type,
         Button doneButton,
-        I18NLabel whereIsItPromptLabel
+        I18NLabel whereIsItPromptLabel,
+        IGameVariant finalVariant
 
     ) {
         final HBox pane = new HBox(5);
         final String fileDir;
-        List<File> imagesFolders = new LinkedList<>();
         Button buttonLoad;
 
         switch (type) {
@@ -172,8 +173,9 @@ public class GameErrorDialog extends Stage {
                 }
 
                 buttonLoad.textProperty().setValue(newPropertyValue);
-
-                if (checkIfDirIsValid(newPropertyValue, imagesFolders) != 0) {
+                int numberOfImagesNeeded = ((DimensionGameVariant) finalVariant).getHeight() * ((DimensionGameVariant) finalVariant).getWidth();
+                int numberOfImagesValid = checkIfDirIsValid(newPropertyValue);
+                if (numberOfImagesValid >= numberOfImagesNeeded) {
                     doneButton.setDisable(false);
                     switch (type) {
                         case WHERE_IS_IT:
@@ -184,12 +186,13 @@ public class GameErrorDialog extends Stage {
                     }
                 } else {
                     final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
-                    whereIsItPromptLabel.setText(translator.translate("You picked the wrong directory"));
+                    whereIsItPromptLabel.setText(translator.translate("You picked the wrong directory, " + numberOfImagesNeeded + " expected but only " + numberOfImagesValid + " available"));
                     whereIsItPromptLabel.setStyle(labelStyle);
+                    doneButton.setDisable(true);
                 }
             }
         );
-        
+
         final I18NButton resetButton = new I18NButton(translator, "reset");
 
         switch (type) {
@@ -216,23 +219,24 @@ public class GameErrorDialog extends Stage {
         return pane;
     }
 
-    private int checkIfDirIsValid(String selectedPath , List<File> imagesFolders) {
-        final File imagesDirectory = new File( selectedPath + "/images/");
+    private int checkIfDirIsValid(String selectedPath) {
+        List<File> imagesFolders = new LinkedList<>();
+        final File imagesDirectory = new File(selectedPath + "/images/");
         int filesCount = 0;
         File[] listOfTheFiles = imagesDirectory.listFiles();
-        if(listOfTheFiles!=null) {
+        if (listOfTheFiles != null) {
             for (File f : listOfTheFiles) {
                 File[] filesInf = f.listFiles();
-                if(filesInf != null) {
-                    if (f.isDirectory() && filesInf.length > 0){
+                if (filesInf != null) {
+                    if (f.isDirectory() && filesInf.length > 0) {
                         boolean containsImage = false;
                         int i = 0;
-                        while( !containsImage && i < filesInf.length) {
+                        while (!containsImage && i < filesInf.length) {
                             File file = filesInf[i];
                             containsImage = fileIsImageFile(file);
                             i++;
                         }
-                        if(containsImage) {
+                        if (containsImage) {
                             imagesFolders.add(f);
                             filesCount++;
                         }
@@ -243,7 +247,7 @@ public class GameErrorDialog extends Stage {
         return filesCount;
     }
 
-    static boolean fileIsImageFile(File file){
+    static boolean fileIsImageFile(File file) {
         try {
             String mimetype = Files.probeContentType(file.toPath());
             if (mimetype != null && mimetype.split("/")[0].equals("image")) {

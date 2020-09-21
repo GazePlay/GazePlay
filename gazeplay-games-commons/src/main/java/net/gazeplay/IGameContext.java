@@ -61,6 +61,8 @@ public interface IGameContext {
 
     void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler);
 
+    void playWinTransition(long delay, String pictureLocation, String soundLocation, EventHandler<ActionEvent> onFinishedEventHandler);
+
     void endWinTransition();
 
     void resetBordersToFront();
