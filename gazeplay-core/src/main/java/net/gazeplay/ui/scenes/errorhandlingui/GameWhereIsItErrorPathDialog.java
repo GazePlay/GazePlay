@@ -2,7 +2,6 @@ package net.gazeplay.ui.scenes.errorhandlingui;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -26,10 +25,8 @@ import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.components.CssUtil;
-import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 
 import java.io.File;
@@ -41,15 +38,14 @@ import java.util.List;
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
 
-public class GameErrorDialog extends Stage {
-    public GameErrorDialog(
+public class GameWhereIsItErrorPathDialog extends Stage {
+    public GameWhereIsItErrorPathDialog(
         final GazePlay gazePlay,
         final GameMenuController gameMenuController,
         final Stage primaryStage,
         final GameSpec gameSpec,
         final Parent root,
         final String whereIsItPromptLabelTextKey,
-        final ConfigurationContext configurationContext,
         final IGameVariant finalVariant
     ) {
         initModality(Modality.WINDOW_MODAL);
@@ -97,7 +93,7 @@ public class GameErrorDialog extends Stage {
         doneButton.wrapTextProperty().setValue(true);
         doneButton.setDisable(true);
 
-        Node input = buildDirectoryChooser(config, configurationContext, translator, ConfigurationContext.DirectoryType.WHERE_IS_IT, doneButton, promptLabel);
+        Node input = buildDirectoryChooser(config, gazePlay, translator, doneButton, promptLabel);
         choicePane.getChildren().add(label);
         choicePane.getChildren().add(input);
         HBox doneButtonBox = new HBox(doneButton);
@@ -127,9 +123,8 @@ public class GameErrorDialog extends Stage {
 
     Node buildDirectoryChooser(
         Configuration configuration,
-        ConfigurationContext configurationContext,
+        GazePlay gazePlay,
         Translator translator,
-        ConfigurationContext.DirectoryType type,
         Button doneButton,
         I18NLabel whereIsItPromptLabel
 
@@ -139,31 +134,20 @@ public class GameErrorDialog extends Stage {
         List<File> imagesFolders = new LinkedList<>();
         Button buttonLoad;
 
-        switch (type) {
-            case WHERE_IS_IT:
-                fileDir = configuration.getWhereIsItDir();
-                break;
-            default:
-                fileDir = configuration.getFileDir();
-        }
+        fileDir = configuration.getWhereIsItDir();
+
 
         buttonLoad = new Button(fileDir);
 
         buttonLoad.setOnAction(arg0 -> {
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 final File currentFolder;
-                switch (type) {
-                    case WHERE_IS_IT:
-                        currentFolder = new File(configuration.getWhereIsItDir());
-                        break;
-                    default:
-                        currentFolder = new File(configuration.getFileDir());
-                }
+                currentFolder = new File(configuration.getWhereIsItDir());
+
 
                 if (currentFolder.isDirectory()) {
                     directoryChooser.setInitialDirectory(currentFolder);
                 }
-                final GazePlay gazePlay = configurationContext.getGazePlay();
                 final Scene scene = gazePlay.getPrimaryScene();
                 File dirFile = directoryChooser.showDialog(scene.getWindow());
                 if (dirFile == null) {
@@ -180,13 +164,7 @@ public class GameErrorDialog extends Stage {
 
                 if (checkIfDirIsValid(newPropertyValue, imagesFolders) != 0) {
                     doneButton.setDisable(false);
-                    switch (type) {
-                        case WHERE_IS_IT:
-                            configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
-                            break;
-                        default:
-                            configuration.getFiledirProperty().setValue(newPropertyValue);
-                    }
+                    configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
                 } else {
                     final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
                     whereIsItPromptLabel.setText(translator.translate("PickedWrongDir"));
@@ -194,54 +172,43 @@ public class GameErrorDialog extends Stage {
                 }
             }
         );
-        
+
         final I18NButton resetButton = new I18NButton(translator, "reset");
 
-        switch (type) {
-            case WHERE_IS_IT:
-                resetButton.setOnAction(
-                    e -> {
-                        String defaultValue = Configuration.DEFAULT_VALUE_WHEREISIT_DIR;
-                        configuration.getWhereIsItDirProperty()
-                            .setValue(defaultValue);
-                        final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
-                        whereIsItPromptLabel.setText(translator.translate("WhereIsItNotConfigParamDirectory"));
-                        whereIsItPromptLabel.setStyle(labelStyle);
-                        doneButton.setDisable(true);
-                        buttonLoad.textProperty().setValue(defaultValue);
-                    });
-                break;
-            default:
-                resetButton.setOnAction(
-                    e -> {
-                        String defaultValue = GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath();
-                        configuration.getFiledirProperty().setValue(defaultValue);
-                        buttonLoad.textProperty().setValue(defaultValue);
-                    });
-        }
+        resetButton.setOnAction(
+            e -> {
+                String defaultValue = Configuration.DEFAULT_VALUE_WHEREISIT_DIR;
+                configuration.getWhereIsItDirProperty()
+                    .setValue(defaultValue);
+                final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
+                whereIsItPromptLabel.setText(translator.translate("WhereIsItNotConfigParamDirectory"));
+                whereIsItPromptLabel.setStyle(labelStyle);
+                doneButton.setDisable(true);
+                buttonLoad.textProperty().setValue(defaultValue);
+            });
 
         pane.getChildren().addAll(buttonLoad, resetButton);
 
         return pane;
     }
 
-    private int checkIfDirIsValid(String selectedPath , List<File> imagesFolders) {
-        final File imagesDirectory = new File( selectedPath + "/images/");
+    private int checkIfDirIsValid(String selectedPath, List<File> imagesFolders) {
+        final File imagesDirectory = new File(selectedPath + "/images/");
         int filesCount = 0;
         File[] listOfTheFiles = imagesDirectory.listFiles();
-        if(listOfTheFiles!=null) {
+        if (listOfTheFiles != null) {
             for (File f : listOfTheFiles) {
                 File[] filesInf = f.listFiles();
-                if(filesInf != null) {
-                    if (f.isDirectory() && filesInf.length > 0){
+                if (filesInf != null) {
+                    if (f.isDirectory() && filesInf.length > 0) {
                         boolean containsImage = false;
                         int i = 0;
-                        while( !containsImage && i < filesInf.length) {
+                        while (!containsImage && i < filesInf.length) {
                             File file = filesInf[i];
                             containsImage = fileIsImageFile(file);
                             i++;
                         }
-                        if(containsImage) {
+                        if (containsImage) {
                             imagesFolders.add(f);
                             filesCount++;
                         }
@@ -252,7 +219,7 @@ public class GameErrorDialog extends Stage {
         return filesCount;
     }
 
-    static boolean fileIsImageFile(File file){
+    private static boolean fileIsImageFile(File file) {
         try {
             String mimetype = Files.probeContentType(file.toPath());
             if (mimetype != null && mimetype.split("/")[0].equals("image")) {
