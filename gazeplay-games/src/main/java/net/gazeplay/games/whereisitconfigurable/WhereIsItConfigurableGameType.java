@@ -1,9 +1,9 @@
-package net.gazeplay.games.whereisitparam;
+package net.gazeplay.games.whereisitconfigurable;
 
 import lombok.Getter;
 import net.gazeplay.commons.gamevariants.difficulty.Difficulty;
 
-public enum WhereIsItParamGameType {
+public enum WhereIsItConfigurableGameType {
     CUSTOMIZED("customized", "customized");
 
     @Getter
@@ -18,11 +18,11 @@ public enum WhereIsItParamGameType {
     @Getter
     private final Difficulty difficulty;
 
-    WhereIsItParamGameType(String gameName, String resourcesDirectoryName) {
+    WhereIsItConfigurableGameType(String gameName, String resourcesDirectoryName) {
         this(gameName, resourcesDirectoryName, Difficulty.NORMAL);
     }
 
-    WhereIsItParamGameType(String gameName, String resourcesDirectoryName, Difficulty difficulty) {
+    WhereIsItConfigurableGameType(String gameName, String resourcesDirectoryName, Difficulty difficulty) {
         this.gameName = gameName;
         this.resourcesDirectoryName = resourcesDirectoryName;
         this.languageResourceLocation = "data/" + resourcesDirectoryName + "/" + resourcesDirectoryName + ".csv";

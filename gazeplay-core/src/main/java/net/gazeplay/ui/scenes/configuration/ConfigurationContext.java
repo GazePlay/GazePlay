@@ -310,7 +310,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         {
-            I18NText label = new I18NText(translator, "WhereIsItParamDirectory", COLON);
+            I18NText label = new I18NText(translator, "WhereIsItConfigurableDirectory", COLON);
 
             Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.WHERE_IS_IT_PARAM);
 
@@ -605,7 +605,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 fileDir = configuration.getWhereIsItDir();
                 break;
             case WHERE_IS_IT_PARAM:
-                fileDir = configuration.getWhereIsItParamDir();
+                fileDir = configuration.getWhereIsItConfigurableDir();
                 break;
             case MUSIC:
                 changeMusicFolder(configuration.getMusicFolder(), configuration);
@@ -661,7 +661,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
                     break;
                 case WHERE_IS_IT_PARAM:
-                    configuration.getWhereIsItParamDirProperty().setValue(newPropertyValue);
+                    configuration.getWhereIsItConfigurableDirProperty().setValue(newPropertyValue);
                     break;
                 case MUSIC:
                     changeMusicFolder(newPropertyValue, configuration);
@@ -690,8 +690,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             case WHERE_IS_IT_PARAM:
                 resetButton.setOnAction(
                     e -> {
-                        String defaultValue = Configuration.DEFAULT_VALUE_WHEREISITPARAM_DIR;
-                        configuration.getWhereIsItParamDirProperty()
+                        String defaultValue = Configuration.DEFAULT_VALUE_WHEREISITCONFIGURABLE_DIR;
+                        configuration.getWhereIsItConfigurableDirProperty()
                             .setValue(defaultValue);
                         buttonLoad.textProperty().setValue(defaultValue);
                     });

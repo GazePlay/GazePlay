@@ -1,4 +1,4 @@
-package net.gazeplay.games.whereisitparam;
+package net.gazeplay.games.whereisitconfigurable;
 
 //It is repeated always, it works like a charm :)
 
@@ -34,7 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import static net.gazeplay.games.whereisitparam.WhereIsItParamGameType.CUSTOMIZED;
+import static net.gazeplay.games.whereisitconfigurable.WhereIsItConfigurableGameType.CUSTOMIZED;
 
 
 class QuestionAnswer {
@@ -59,7 +59,7 @@ class QuestionAnswer {
  * Created by Didier Schwab on the 18/11/2017
  */
 @Slf4j
-public class WhereIsItParam implements GameLifeCycle {
+public class WhereIsItConfigurable implements GameLifeCycle {
 
     private LinkedList<QuestionAnswer> questions = new LinkedList<>();
     private int questionIndex = 0;
@@ -70,7 +70,7 @@ public class WhereIsItParam implements GameLifeCycle {
     private Text questionText;
 
     @Getter
-    private final WhereIsItParamGameType gameType;
+    private final WhereIsItConfigurableGameType gameType;
     private final boolean fourThree;
 
     private final IGameContext gameContext;
@@ -79,7 +79,7 @@ public class WhereIsItParam implements GameLifeCycle {
 
     private final ArrayList<TargetAOI> targetAOIList;
 
-    public WhereIsItParam(final WhereIsItParamGameType gameType, int level, final boolean fourThree,
+    public WhereIsItConfigurable(final WhereIsItConfigurableGameType gameType, int level, final boolean fourThree,
                           final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.gameType = gameType;
@@ -100,7 +100,7 @@ public class WhereIsItParam implements GameLifeCycle {
         final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
         int indexAnswered = 0;
 
-        File questionOrderFile = new File(config.getWhereIsItParamDir() + "/questionOrder.csv");
+        File questionOrderFile = new File(config.getWhereIsItConfigurableDir() + "/questionOrder.csv");
         try (
             InputStream fileInputStream = Files.newInputStream(questionOrderFile.toPath());
             BufferedReader b = new BufferedReader(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))
@@ -318,7 +318,7 @@ public class WhereIsItParam implements GameLifeCycle {
         List<File> imagesFolders = new LinkedList<>();
         List<String> resourcesFolders = new LinkedList<>();
 
-        final File imagesDirectory = new File(config.getWhereIsItParamDir() + "/images/");
+        final File imagesDirectory = new File(config.getWhereIsItConfigurableDir() + "/images/");
         directoryName = imagesDirectory.getPath();
         filesCount = 0;
         File[] listOfTheFiles = imagesDirectory.listFiles();
@@ -454,7 +454,7 @@ public class WhereIsItParam implements GameLifeCycle {
         final Configuration config = gameContext.getConfiguration();
         try {
             log.debug("CUSTOMIZED");
-            final String path = config.getWhereIsItParamDir() + "/sounds/" + language + "/";
+            final String path = config.getWhereIsItConfigurableDir() + "/sounds/" + language + "/";
             final File soundsDirectory = new File(path);
             final String[] soundsDirectoryFiles = soundsDirectory.list();
             if (soundsDirectoryFiles != null) {
@@ -484,7 +484,7 @@ public class WhereIsItParam implements GameLifeCycle {
 
             final Configuration config = gameContext.getConfiguration();
 
-            final File questionFile = new File(config.getWhereIsItParamDir() + "/questions.csv");
+            final File questionFile = new File(config.getWhereIsItConfigurableDir() + "/questions.csv");
 
             final Multilinguism localMultilinguism = MultilinguismFactory.getForResource(questionFile.toString());
 
@@ -507,7 +507,7 @@ public class WhereIsItParam implements GameLifeCycle {
 
         final Configuration config = gameContext.getConfiguration();
 
-        final File questionFile = new File(config.getWhereIsItParamDir(), "questions.csv");
+        final File questionFile = new File(config.getWhereIsItConfigurableDir(), "questions.csv");
 
         final Multilinguism localMultilinguism = MultilinguismFactory.getForResource(questionFile.toString());
 
@@ -520,7 +520,7 @@ public class WhereIsItParam implements GameLifeCycle {
         final List<Image> imageList = new ArrayList<>(20);
 
         while (st.hasMoreTokens()) {
-            final String token = config.getWhereIsItParamDir() + "/pictos/" + st.nextToken().replace('\u00A0', ' ').trim();
+            final String token = config.getWhereIsItConfigurableDir() + "/pictos/" + st.nextToken().replace('\u00A0', ' ').trim();
             log.debug("token \"{}\"", token);
             final File tokenFile = new File(token);
             log.debug("Exists {}", tokenFile.exists());

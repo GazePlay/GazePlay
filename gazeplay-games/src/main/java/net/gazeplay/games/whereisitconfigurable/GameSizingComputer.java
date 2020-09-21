@@ -1,4 +1,4 @@
-package net.gazeplay.games.whereisitparam;
+package net.gazeplay.games.whereisitconfigurable;
 
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;

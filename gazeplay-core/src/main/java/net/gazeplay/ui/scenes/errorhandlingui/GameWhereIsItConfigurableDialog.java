@@ -43,10 +43,10 @@ import java.util.List;
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
 @Slf4j
-public class GameWhereIsItParamDialog extends Stage {
+public class GameWhereIsItConfigurableDialog extends Stage {
     private int currentLevelItem = 0;
 
-    public GameWhereIsItParamDialog(
+    public GameWhereIsItConfigurableDialog(
         final GazePlay gazePlay,
         final GameMenuController gameMenuController,
         final Stage primaryStage,
@@ -134,7 +134,7 @@ public class GameWhereIsItParamDialog extends Stage {
         final String fileDir;
         Button buttonLoad;
 
-        fileDir = configuration.getWhereIsItParamDir();
+        fileDir = configuration.getWhereIsItConfigurableDir();
 
         buttonLoad = new Button(fileDir);
 
@@ -171,7 +171,7 @@ public class GameWhereIsItParamDialog extends Stage {
         resetButton.setOnAction(
             e -> {
                 String defaultValue = Configuration.DEFAULT_VALUE_WHEREISIT_DIR;
-                configuration.getWhereIsItParamDirProperty()
+                configuration.getWhereIsItConfigurableDirProperty()
                     .setValue(defaultValue);
                 buttonLoad.textProperty().setValue(defaultValue);
 
@@ -183,7 +183,7 @@ public class GameWhereIsItParamDialog extends Stage {
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 final File currentFolder;
 
-                currentFolder = new File(configuration.getWhereIsItParamDir());
+                currentFolder = new File(configuration.getWhereIsItConfigurableDir());
 
                 if (currentFolder.isDirectory()) {
                     directoryChooser.setInitialDirectory(currentFolder);
@@ -207,8 +207,8 @@ public class GameWhereIsItParamDialog extends Stage {
             }
         );
 
-        File questionOrderFile = new File(configuration.getWhereIsItParamDir() + "/questionOrder.csv");
-        updateErrorMessage(configuration.getWhereIsItParamDir(), questionOrderFile, levelChooser, configuration, translator, label, doneButton);
+        File questionOrderFile = new File(configuration.getWhereIsItConfigurableDir() + "/questionOrder.csv");
+        updateErrorMessage(configuration.getWhereIsItConfigurableDir(), questionOrderFile, levelChooser, configuration, translator, label, doneButton);
 
 
         I18NLabel levelChooserLabel = new I18NLabel(translator, "chooseLevel:");
@@ -246,7 +246,7 @@ public class GameWhereIsItParamDialog extends Stage {
             if (newQuestionOrderFile.exists()) {
                 updateLevelSelector(newQuestionOrderFile, levelChooser);
             }
-            configuration.getWhereIsItParamDirProperty().setValue(newPropertyValue);
+            configuration.getWhereIsItConfigurableDirProperty().setValue(newPropertyValue);
         }
     }
 
@@ -317,7 +317,7 @@ public class GameWhereIsItParamDialog extends Stage {
             return translator.translate("NoImageFound");
         }
 
-        File questionOrderFile = new File(configuration.getWhereIsItParamDir() + "/questionOrder.csv");
+        File questionOrderFile = new File(configuration.getWhereIsItConfigurableDir() + "/questionOrder.csv");
         try (
             InputStream fileInputStream = Files.newInputStream(questionOrderFile.toPath());
             BufferedReader b = new BufferedReader(new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))

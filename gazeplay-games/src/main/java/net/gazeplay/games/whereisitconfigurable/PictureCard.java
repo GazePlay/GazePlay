@@ -1,4 +1,4 @@
-package net.gazeplay.games.whereisitparam;
+package net.gazeplay.games.whereisitconfigurable;
 
 import javafx.animation.*;
 import javafx.event.ActionEvent;
@@ -24,8 +24,6 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.File;
 import java.io.IOException;
-
-import static net.gazeplay.games.whereisitparam.WhereIsItParamGameType.*;
 
 @Slf4j
 @ToString
@@ -55,11 +53,11 @@ class PictureCard extends Group {
 
     private final PictureCard.CustomInputEventHandler customInputEventHandler;
 
-    private final WhereIsItParam gameInstance;
+    private final WhereIsItConfigurable gameInstance;
     private final Configuration config;
 
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
-                boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsItParam gameInstance) {
+                boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsItConfigurable gameInstance) {
 
         log.info("imagePath = {}", imagePath);
 
@@ -100,7 +98,7 @@ class PictureCard extends Group {
         this.addEventFilter(GazeEvent.ANY, customInputEventHandler);
     }
 
-    private Timeline createProgressIndicatorTimeLine(WhereIsItParam gameInstance) {
+    private Timeline createProgressIndicatorTimeLine(WhereIsItConfigurable gameInstance) {
         Timeline result = new Timeline();
 
         result.getKeyFrames()
@@ -114,7 +112,7 @@ class PictureCard extends Group {
         return result;
     }
 
-    private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(WhereIsItParam gameInstance) {
+    private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(WhereIsItConfigurable gameInstance) {
         return actionEvent -> {
 
             log.debug("FINISHED");
@@ -134,7 +132,7 @@ class PictureCard extends Group {
         };
     }
 
-    private void onCorrectCardSelected(WhereIsItParam gameInstance) {
+    private void onCorrectCardSelected(WhereIsItConfigurable gameInstance) {
         log.debug("WINNER");
 
         stats.incrementNumberOfGoalsReached();
@@ -166,8 +164,8 @@ class PictureCard extends Group {
 
         gameContext.updateScore(stats, gameInstance);
 
-        File soundFile = new File(config.getWhereIsItParamDir() + "/sounds/win_fail/win.mp3");
-        File imageFile = new File(config.getWhereIsItParamDir() + "/sounds/win_fail/win.png");
+        File soundFile = new File(config.getWhereIsItConfigurableDir() + "/sounds/win_fail/win.mp3");
+        File imageFile = new File(config.getWhereIsItConfigurableDir() + "/sounds/win_fail/win.png");
         if(!soundFile.exists() || !imageFile.exists()){
             fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(
                 500,
@@ -187,8 +185,8 @@ class PictureCard extends Group {
         }else {
             fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(
                 500,
-                config.getWhereIsItParamDir() + "/sounds/win_fail/win.png",
-                config.getWhereIsItParamDir() + "/sounds/win_fail/win.mp3",
+                config.getWhereIsItConfigurableDir() + "/sounds/win_fail/win.png",
+                config.getWhereIsItConfigurableDir() + "/sounds/win_fail/win.mp3",
                 actionEvent1 -> {
                     gameInstance.dispose();
                     gameContext.clear();
@@ -206,7 +204,7 @@ class PictureCard extends Group {
         fullAnimation.play();
     }
 
-    private void onWrongCardSelected(WhereIsItParam gameInstance) {
+    private void onWrongCardSelected(WhereIsItConfigurable gameInstance) {
         customInputEventHandler.ignoreAnyInput = true;
         progressIndicator.setVisible(false);
 

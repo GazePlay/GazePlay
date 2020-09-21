@@ -1,4 +1,4 @@
-package net.gazeplay.games.whereisitparam;
+package net.gazeplay.games.whereisitconfigurable;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

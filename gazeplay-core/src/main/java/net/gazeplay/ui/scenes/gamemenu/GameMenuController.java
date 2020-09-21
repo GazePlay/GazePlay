@@ -15,8 +15,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
-import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItParamDialog;
+import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItConfigurableDialog;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -48,8 +47,8 @@ public class GameMenuController {
             dialog.setAlwaysOnTop(true);
 
         } else {
-            if(gameSpec.getGameSummary().getNameCode().equals("WhereIsItParam")) {
-                whereIsItParamErrorHandling(gazePlay, this, gameSpec, root);
+            if(gameSpec.getGameSummary().getNameCode().equals("WhereIsItConfigurable")) {
+                WhereIsItConfigurableErrorHandling(gazePlay, this, gameSpec, root);
             }else {
                 if (variants.size() == 1) {
                     IGameVariant onlyGameVariant = variants.iterator().next();
@@ -62,12 +61,12 @@ public class GameMenuController {
     }
 
 
-    private void whereIsItParamErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root) {
-        String whereIsItPromptLabel = "WhereIsItParamDirectory";
-        GameWhereIsItParamDialog whereisitparamDialog = new GameWhereIsItParamDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel);
-        //this.whereisitparamDialog.setTitle("error");
-        whereisitparamDialog.show();
-        whereisitparamDialog.toFront();
+    private void WhereIsItConfigurableErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root) {
+        String whereIsItPromptLabel = "WhereIsItConfigurableDirectory";
+        GameWhereIsItConfigurableDialog WhereIsItConfigurableDialog = new GameWhereIsItConfigurableDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel);
+        //this.WhereIsItConfigurableDialog.setTitle("error");
+        WhereIsItConfigurableDialog.show();
+        WhereIsItConfigurableDialog.toFront();
     }
 
     public void chooseGame(

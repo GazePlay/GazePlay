@@ -1,4 +1,4 @@
-package net.gazeplay.games.whereisitparam;
+package net.gazeplay.games.whereisitconfigurable;
 
 import javafx.scene.image.Image;
 import lombok.AllArgsConstructor;
