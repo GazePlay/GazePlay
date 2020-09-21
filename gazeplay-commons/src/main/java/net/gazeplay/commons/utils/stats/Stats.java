@@ -20,6 +20,7 @@ import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HeatMap;
 import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
+import net.gazeplay.commons.utils.serverutil.ApiHelper;
 import org.monte.media.Format;
 import org.monte.media.FormatKeys;
 import org.monte.media.VideoFormatKeys;
@@ -36,6 +37,8 @@ import java.awt.image.Kernel;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -569,6 +572,7 @@ public class Stats implements GazeMotionListener {
             colorBandsFile);
 
         this.savedStatsInfo = savedStatsInfo;
+
         if (this.heatMap != null) {
             final HeatMap hm = new HeatMap(heatMap, config.getHeatMapOpacity(), config.getHeatMapColors());
             BufferedImage heatmapImage = SwingFXUtils.fromFXImage(hm.getImage(), null);
@@ -791,4 +795,8 @@ public class Stats implements GazeMotionListener {
         gameScreenShot = gameContextScene.snapshot(null);
     }
 
+   /* example how to upload a file
+        ApiHelper apiHelper = new ApiHelper();
+        File testUploadFile = new File("gazeplay/gazeplay-commons/src/main/java/net/gazeplay/commons/utils/serverutil/test.json");
+        apiHelper.postFileToServer(testUploadFile,"test");*/
 }
