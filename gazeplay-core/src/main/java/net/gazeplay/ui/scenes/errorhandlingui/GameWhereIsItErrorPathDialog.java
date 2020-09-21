@@ -122,7 +122,6 @@ public class GameWhereIsItErrorPathDialog extends Stage {
     ) {
         final HBox pane = new HBox(5);
         final String fileDir;
-        List<File> imagesFolders = new LinkedList<>();
         Button buttonLoad;
 
         fileDir = configuration.getWhereIsItDir();
