@@ -316,7 +316,6 @@ public class WhereIsItConfigurable implements GameLifeCycle {
         int filesCount;
         final String directoryName;
         List<File> imagesFolders = new LinkedList<>();
-        List<String> resourcesFolders = new LinkedList<>();
 
         final File imagesDirectory = new File(config.getWhereIsItConfigurableDir() + "/images/");
         directoryName = imagesDirectory.getPath();
