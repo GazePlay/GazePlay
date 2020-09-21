@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -51,8 +52,7 @@ public class GameWhereIsItParamDialog extends Stage {
         final Stage primaryStage,
         final GameSpec gameSpec,
         final Parent root,
-        final String whereIsItPromptLabelTextKey,
-        final ConfigurationContext configurationContext
+        final String whereIsItPromptLabelTextKey
     ) {
         initModality(Modality.WINDOW_MODAL);
         initOwner(primaryStage);
@@ -90,8 +90,10 @@ public class GameWhereIsItParamDialog extends Stage {
         final Configuration config = ActiveConfigurationContext.getInstance();
 
         final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;";
-        I18NLabel label = new I18NLabel(translator, "WhereIsItParamDirectory");
+        Label label = new Label( "");
         label.setStyle(whereIsItLabelStyle);
+        label.setAlignment(Pos.CENTER);
+
         Button doneButton = new Button(translator.translate("Done"));
         doneButton.getStyleClass().add("gameChooserButton");
         doneButton.getStyleClass().add("gameVariation");
@@ -99,10 +101,8 @@ public class GameWhereIsItParamDialog extends Stage {
         doneButton.wrapTextProperty().setValue(true);
         doneButton.setAlignment(Pos.CENTER_RIGHT);
 
-        Node input = buildDirectoryChooser(config, configurationContext, translator, doneButton, label);
+        Node input = buildDirectoryChooser(config, translator, doneButton, label, gazePlay);
 
-
-        choicePane.getChildren().add(label);
         choicePane.getChildren().add(input);
 
 
@@ -124,10 +124,10 @@ public class GameWhereIsItParamDialog extends Stage {
 
     VBox buildDirectoryChooser(
         Configuration configuration,
-        ConfigurationContext configurationContext,
         Translator translator,
         Button doneButton,
-        I18NLabel label
+        Label label,
+        GazePlay gazePlay
 
     ) {
         final HBox pane = new HBox(5);
@@ -145,21 +145,16 @@ public class GameWhereIsItParamDialog extends Stage {
         resetButton.wrapTextProperty().setValue(true);
         resetButton.setAlignment(Pos.CENTER);
 
-        resetButton.setOnAction(
-            e -> {
-                String defaultValue = Configuration.DEFAULT_VALUE_WHEREISIT_DIR;
-                configuration.getWhereIsItParamDirProperty()
-                    .setValue(defaultValue);
-                buttonLoad.textProperty().setValue(defaultValue);
-            });
-
         I18NLabel loadLabel = new I18NLabel(translator, "chooseDirectoryToLoad:");
         final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 14; -fx-text-fill: white;";
         loadLabel.setStyle(whereIsItLabelStyle);
+        buttonLoad.minWidthProperty().bind(loadLabel.widthProperty());
         pane.getChildren().addAll(buttonLoad, resetButton);
 
 
         ChoiceBox<Integer> levelChooser = new ChoiceBox<>();
+        levelChooser.minWidthProperty().bind(loadLabel.widthProperty());
+        levelChooser.disableProperty().bind(doneButton.disabledProperty());
         levelChooser.setConverter(new StringConverter<Integer>() {
 
             @Override
@@ -173,6 +168,16 @@ public class GameWhereIsItParamDialog extends Stage {
             }
         });
 
+        resetButton.setOnAction(
+            e -> {
+                String defaultValue = Configuration.DEFAULT_VALUE_WHEREISIT_DIR;
+                configuration.getWhereIsItParamDirProperty()
+                    .setValue(defaultValue);
+                buttonLoad.textProperty().setValue(defaultValue);
+
+                File newQuestionOrderFile = new File("");
+                updateErrorMessage("", newQuestionOrderFile, levelChooser, configuration, translator, label, doneButton);
+            });
 
         buttonLoad.setOnAction(arg0 -> {
                 DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -183,7 +188,6 @@ public class GameWhereIsItParamDialog extends Stage {
                 if (currentFolder.isDirectory()) {
                     directoryChooser.setInitialDirectory(currentFolder);
                 }
-                final GazePlay gazePlay = configurationContext.getGazePlay();
                 final Scene scene = gazePlay.getPrimaryScene();
                 File file = directoryChooser.showDialog(scene.getWindow());
                 if (file == null) {
@@ -216,15 +220,18 @@ public class GameWhereIsItParamDialog extends Stage {
         doneButton.setAlignment(Pos.CENTER);
         doneButtonBox.setAlignment(Pos.CENTER);
 
-        VBox finalPane = new VBox(loadLabel, pane, levelChooserLabel, levelselector, doneButtonBox);
+        VBox finalPane = new VBox(label, loadLabel, pane, levelChooserLabel, levelselector, doneButtonBox);
         finalPane.setSpacing(20);
         finalPane.setTranslateY(20);
         return finalPane;
     }
 
-    private void updateErrorMessage(String newPropertyValue, File newQuestionOrderFile, ChoiceBox<Integer> levelChooser, Configuration configuration, Translator translator, I18NLabel label, Button doneButton) {
+    private void updateErrorMessage(String newPropertyValue, File newQuestionOrderFile, ChoiceBox<Integer> levelChooser, Configuration configuration, Translator translator, Label label, Button doneButton) {
         String errorMessage = getNumberOfValideDirectories(newPropertyValue, configuration, translator);
-        if (!(new File(newPropertyValue + "/questions.csv")).exists()) {
+        if(newPropertyValue.equals("")){
+            changeTextLabel(label, translator.translate("WhereIsItParamDirectory"), "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;");
+            doneButton.setDisable(true);
+        } else if (!(new File(newPropertyValue + "/questions.csv")).exists()) {
             changeTextLabel(label, "questions.csv " + translator.translate("ismissing"), "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: red;");
             doneButton.setDisable(true);
         } else if (!(newQuestionOrderFile).exists()) {
@@ -370,7 +377,7 @@ public class GameWhereIsItParamDialog extends Stage {
         return false;
     }
 
-    private void changeTextLabel(I18NLabel label, String text, String style) {
+    private void changeTextLabel(Label label, String text, String style) {
         label.setText(text);
         label.setStyle(style);
     }

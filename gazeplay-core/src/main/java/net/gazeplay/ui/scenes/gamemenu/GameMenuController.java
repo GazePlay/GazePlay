@@ -64,8 +64,7 @@ public class GameMenuController {
 
     private void whereIsItParamErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root) {
         String whereIsItPromptLabel = "WhereIsItParamDirectory";
-        ConfigurationContext configurationContext = new ConfigurationContext(gazePlay);
-        GameWhereIsItParamDialog whereisitparamDialog = new GameWhereIsItParamDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel, configurationContext);
+        GameWhereIsItParamDialog whereisitparamDialog = new GameWhereIsItParamDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel);
         //this.whereisitparamDialog.setTitle("error");
         whereisitparamDialog.show();
         whereisitparamDialog.toFront();

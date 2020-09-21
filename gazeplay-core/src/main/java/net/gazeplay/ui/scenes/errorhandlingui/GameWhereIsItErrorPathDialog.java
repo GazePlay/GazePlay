@@ -199,7 +199,7 @@ public class GameWhereIsItErrorPathDialog extends Stage {
         return finalPane;
     }
 
-    private int checkIfDirIsValid(String selectedPath, List<File> imagesFolders) {
+    private int checkIfDirIsValid(String selectedPath) {
         final File imagesDirectory = new File(selectedPath + "/images/");
         int filesCount = 0;
         File[] listOfTheFiles = imagesDirectory.listFiles();
@@ -216,7 +216,6 @@ public class GameWhereIsItErrorPathDialog extends Stage {
                             i++;
                         }
                         if (containsImage) {
-                            imagesFolders.add(f);
                             filesCount++;
                         }
                     }

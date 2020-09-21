@@ -282,5 +282,3 @@ CorrectAnswerIsMissingInList,,,,,,The correct answer '{}' is missing in the list
 ImageDirectoryIsMissing,,,,,,The image directory '{}' is missing,,La dossier image '' est manquant,,,,,,,,,,,
 LineNeedEltButGot,,,,,,Line needs {} elements but got {},,La ligne a besoin de {} éléments mais elle en contient {},,,,,,,,,,,
 
-x,,,,,,xx,,x,,,,,,,,,,,
-
