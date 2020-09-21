@@ -83,27 +83,16 @@ public class GameWhereIsItErrorPathDialog extends Stage {
 
         final Translator translator = gazePlay.getTranslator();
 
-        final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;";
-        I18NLabel label = new I18NLabel(translator, "WhereIsItParamDirectory");
-        label.setStyle(whereIsItLabelStyle);
         Button doneButton = new Button(translator.translate("Done"));
         doneButton.getStyleClass().add("gameChooserButton");
         doneButton.getStyleClass().add("gameVariation");
         doneButton.getStyleClass().add("button");
         doneButton.wrapTextProperty().setValue(true);
+        doneButton.setAlignment(Pos.CENTER_RIGHT);
         doneButton.setDisable(true);
 
         Node input = buildDirectoryChooser(config, gazePlay, translator, doneButton, promptLabel);
-        choicePane.getChildren().add(label);
         choicePane.getChildren().add(input);
-        HBox doneButtonBox = new HBox(doneButton);
-        doneButton.setAlignment(Pos.CENTER);
-        doneButtonBox.setAlignment(Pos.CENTER);
-        VBox finalPane = new VBox(doneButtonBox);
-        finalPane.setSpacing(20);
-        finalPane.setTranslateY(35);
-        finalPane.setTranslateX(-76);
-        choicePane.getChildren().add(finalPane);
 
         EventHandler<Event> event = mouseEvent -> {
             close();
@@ -181,15 +170,29 @@ public class GameWhereIsItErrorPathDialog extends Stage {
                 configuration.getWhereIsItDirProperty()
                     .setValue(defaultValue);
                 final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
-                whereIsItPromptLabel.setText(translator.translate("WhereIsItNotConfigParamDirectory"));
+                whereIsItPromptLabel.setText(translator.translate("WhereIsItNotConfigDirectory"));
                 whereIsItPromptLabel.setStyle(labelStyle);
                 doneButton.setDisable(true);
                 buttonLoad.textProperty().setValue(defaultValue);
             });
 
-        pane.getChildren().addAll(buttonLoad, resetButton);
 
-        return pane;
+        final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;";
+        I18NLabel label = new I18NLabel(translator, "WhereIsItDirectory:");
+        label.setStyle(whereIsItLabelStyle);
+
+
+        buttonLoad.minWidthProperty().bind(label.widthProperty());
+
+        pane.getChildren().addAll(buttonLoad, resetButton);
+        HBox doneButtonBox = new HBox(doneButton);
+        doneButton.setAlignment(Pos.CENTER);
+        doneButtonBox.setAlignment(Pos.CENTER);
+
+        VBox finalPane = new VBox(label, pane, doneButtonBox);
+        finalPane.setSpacing(20);
+        finalPane.setTranslateY(20);
+        return finalPane;
     }
 
     private int checkIfDirIsValid(String selectedPath, List<File> imagesFolders) {

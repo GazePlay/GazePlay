@@ -144,9 +144,9 @@ public class GameVariantDialog extends Stage {
             EventHandler<Event> event = mouseEvent -> {
                 close();
                 root.setDisable(false);
-                if(config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
+                if (config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
                     whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, finalVariant);
-                }else{
+                } else {
                     gameMenuController.chooseGame(gazePlay, gameSpec, finalVariant);
                 }
             };
@@ -165,7 +165,7 @@ public class GameVariantDialog extends Stage {
     }
 
     private void whereIsItErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root, IGameVariant finalVariant) {
-        String whereIsItPromptLabel = "WhereIsItNotConfigParamDirectory";
+        String whereIsItPromptLabel = "WhereIsItNotConfigDirectory";
         this.errorDialog = new GameWhereIsItErrorPathDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel, finalVariant);
         this.errorDialog.setTitle("error");
         this.errorDialog.show();
