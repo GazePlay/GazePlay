@@ -89,7 +89,7 @@ public class GameWhereIsItParamDialog extends Stage {
 
         final Configuration config = ActiveConfigurationContext.getInstance();
 
-        final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;";
+        final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: white;";
         Label label = new Label( "");
         label.setStyle(whereIsItLabelStyle);
         label.setAlignment(Pos.CENTER);
@@ -146,7 +146,7 @@ public class GameWhereIsItParamDialog extends Stage {
         resetButton.setAlignment(Pos.CENTER);
 
         I18NLabel loadLabel = new I18NLabel(translator, "chooseDirectoryToLoad:");
-        final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 14; -fx-text-fill: white;";
+        final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;";
         loadLabel.setStyle(whereIsItLabelStyle);
         buttonLoad.minWidthProperty().bind(loadLabel.widthProperty());
         pane.getChildren().addAll(buttonLoad, resetButton);
@@ -229,19 +229,19 @@ public class GameWhereIsItParamDialog extends Stage {
     private void updateErrorMessage(String newPropertyValue, File newQuestionOrderFile, ChoiceBox<Integer> levelChooser, Configuration configuration, Translator translator, Label label, Button doneButton) {
         String errorMessage = getNumberOfValideDirectories(newPropertyValue, configuration, translator);
         if(newPropertyValue.equals("")){
-            changeTextLabel(label, translator.translate("WhereIsItParamDirectory"), "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;");
+            changeTextLabel(label, "", "-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: white;");
             doneButton.setDisable(true);
         } else if (!(new File(newPropertyValue + "/questions.csv")).exists()) {
-            changeTextLabel(label, "questions.csv " + translator.translate("ismissing"), "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: red;");
+            changeTextLabel(label, "questions.csv " + translator.translate("ismissing"), "-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: red;");
             doneButton.setDisable(true);
         } else if (!(newQuestionOrderFile).exists()) {
-            changeTextLabel(label, "questionOrder.csv " + translator.translate("ismissing"), "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: red;");
+            changeTextLabel(label, "questionOrder.csv " + translator.translate("ismissing"), "-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: red;");
             doneButton.setDisable(true);
         } else if (!(errorMessage).equals("")) {
-            changeTextLabel(label, errorMessage, "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: red;");
+            changeTextLabel(label, errorMessage, "-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: red;");
             doneButton.setDisable(true);
         } else {
-            changeTextLabel(label, translator.translate("WhereIsItParamDirectory"), "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;");
+            changeTextLabel(label, "", "-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: white;");
             doneButton.setDisable(false);
             if (newQuestionOrderFile.exists()) {
                 updateLevelSelector(newQuestionOrderFile, levelChooser);
@@ -327,13 +327,13 @@ public class GameWhereIsItParamDialog extends Stage {
             while ((readLine = b.readLine()) != null) {
                 String[] split = readLine.split(",");
                 if (split.length <= 3) {
-                    return translator.translate("Line") + " " + line + ": " + translator.translate("LineIsEmpty");
+                    return "'questionOrder.csv' " + translator.translate("Line") + " " + line + ": " + translator.translate("LineIsEmpty");
                 }
                 String answer = split[0];
                 try {
                     int numberOfImages = Integer.parseInt(split[split.length - 1]) * Integer.parseInt(split[split.length - 2]);
                     if (numberOfImages != split.length - 3) {
-                        return translator.translate("Line") + " " + line + ": " + getFinalSentence(translator, "LineNeedEltButGot", numberOfImages, (split.length - 3));
+                        return "'questionOrder.csv' " + translator.translate("Line") + " " + line + ": " + getFinalSentence(translator, "LineNeedEltButGot", numberOfImages, (split.length - 3));
                     }
                     boolean correctImageFound = false;
                     for (int i = 1; i < split.length - 2; i++) {
@@ -346,15 +346,15 @@ public class GameWhereIsItParamDialog extends Stage {
                                 j++;
                             }
                             if (j >= imagesFolders.size()) {
-                                return translator.translate("Line") + " " + line + ": " + getFinalSentence(translator, "ImageDirectoryIsMissing", split[i]);
+                                return "'questionOrder.csv' " + translator.translate("Line") + " " + line + ": " + getFinalSentence(translator, "ImageDirectoryIsMissing", split[i]);
                             }
                         }
                     }
                     if (!correctImageFound) {
-                        return translator.translate("Line") + " " + line + ": " + getFinalSentence(translator, "CorrectAnswerIsMissingInList", split[0]);
+                        return "'questionOrder.csv' " + translator.translate("Line") + " " + line + ": " + getFinalSentence(translator, "CorrectAnswerIsMissingInList", split[0]);
                     }
                 } catch (NumberFormatException e) {
-                    return translator.translate("Line") + " " + line + ": " + translator.translate("TheLastElementsShouldBeLineAndCol");
+                    return "'questionOrder.csv' " + translator.translate("Line") + " " + line + ": " + translator.translate("TheLastElementsShouldBeLineAndCol");
                 }
                 line++;
             }
