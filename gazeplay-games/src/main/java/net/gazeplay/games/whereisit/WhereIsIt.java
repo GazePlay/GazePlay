@@ -14,11 +14,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.gamevariants.difficulty.SourceSet;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.games.WhereIsItVaildator;
@@ -45,6 +47,7 @@ public class WhereIsIt implements GameLifeCycle {
 
     private Text questionText;
 
+    @Getter
     private final WhereIsItGameType gameType;
 
     private final int nbLines;
@@ -77,7 +80,7 @@ public class WhereIsIt implements GameLifeCycle {
         final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
 
-        final Random random = new Random();
+        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
         final int winnerImageIndexAmongDisplayedImages = random.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
@@ -94,6 +97,7 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
     }
 
@@ -252,7 +256,7 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.getChildren().removeAll(pictureCardsToHide);
     }
 
-    RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRound, final Random random,
+    RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRound, final ReplayablePseudoRandom random,
                                             final int winnerImageIndexAmongDisplayedImages) {
 
         final Configuration config = gameContext.getConfiguration();

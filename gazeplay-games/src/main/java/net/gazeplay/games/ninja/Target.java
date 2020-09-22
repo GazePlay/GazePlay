@@ -10,6 +10,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.Portrait;
@@ -18,7 +19,6 @@ import net.gazeplay.components.RandomPositionGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by schwab on 26/12/2016.
@@ -50,7 +50,7 @@ public class Target extends Portrait {
 
     private final NinjaGameVariant gameVariant;
 
-    private final Random randomGen;
+    private final ReplayablePseudoRandom randomGen;
 
     public Animation currentTranslation;
 
@@ -65,7 +65,7 @@ public class Target extends Portrait {
         this.stats = stats;
         this.imageLibrary = imageLibrary;
         this.gameVariant = gameVariant;
-        this.randomGen = new Random();
+        this.randomGen = new ReplayablePseudoRandom();
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
 

@@ -169,6 +169,7 @@ public class Room implements GameLifeCycle {
         rectangleArrowEast.setOnMouseMoved((event) -> rotateY.setAngle(rotateY.getAngle() % 360 + 0.25));
         rectangleArrowEast.addEventHandler(GazeEvent.GAZE_MOVED, (GazeEvent ge) -> rotateY.setAngle(rotateY.getAngle() % 360 + 0.1));
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override

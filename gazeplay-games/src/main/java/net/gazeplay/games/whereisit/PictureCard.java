@@ -22,6 +22,8 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import static net.gazeplay.games.whereisit.WhereIsItGameType.*;
+
 @Slf4j
 @ToString
 @Getter
@@ -72,7 +74,11 @@ class PictureCard extends Group {
 
         this.imagePath = imagePath;
 
-        this.imageRectangle = createImageView(posX, posY, width, height, imagePath);
+        if (gameInstance.getGameType() == COLOR_NAME || gameInstance.getGameType() == COLOR_NAME_EASY || gameInstance.getGameType() == FLAGS) {
+            this.imageRectangle = createStretchedImageView(posX, posY, width, height, imagePath);
+        } else {
+            this.imageRectangle = createImageView(posX, posY, width, height, imagePath);
+        }
         this.progressIndicator = buildProgressIndicator(width, height);
 
         this.progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
@@ -156,7 +162,7 @@ class PictureCard extends Group {
         fullAnimation.getChildren().add(translateToCenterTransition);
         fullAnimation.getChildren().add(scaleToFullScreenTransition);
 
-        gameContext.updateScore(stats,gameInstance);
+        gameContext.updateScore(stats, gameInstance);
 
         fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
             gameInstance.dispose();
@@ -206,11 +212,40 @@ class PictureCard extends Group {
         final Image image = new Image(imagePath);
 
         ImageView result = new ImageView(image);
-        result.setX(posX);
-        result.setY(posY);
+
         result.setFitWidth(width);
         result.setFitHeight(height);
+
+        double ratioX = result.getFitWidth() / image.getWidth();
+        double ratioY = result.getFitHeight() / image.getHeight();
+
+        double reducCoeff = Math.min(ratioX, ratioY);
+
+        double w = image.getWidth() * reducCoeff;
+        double h = image.getHeight() * reducCoeff;
+
+        result.setX(posX);
+        result.setY(posY);
+        result.setTranslateX((result.getFitWidth() - w) / 2);
+        result.setTranslateY((result.getFitHeight() - h) / 2);
+        result.setPreserveRatio(true);
+
+        return result;
+    }
+
+    private ImageView createStretchedImageView(double posX, double posY, double width, double height,
+                                               @NonNull String imagePath) {
+        final Image image = new Image(imagePath);
+
+        ImageView result = new ImageView(image);
+
+        result.setFitWidth(width);
+        result.setFitHeight(height);
+
+        result.setX(posX);
+        result.setY(posY);
         result.setPreserveRatio(false);
+
         return result;
     }
 

@@ -15,12 +15,12 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by EL HUSSEINI Wafaa on 14/03/2019.
@@ -68,7 +68,7 @@ public class Math101 implements GameLifeCycle {
     }
 
     private static Formula generateRandomFormula(final MathGameType gameType, final int maxValue) {
-        final Random r = new Random();
+        final ReplayablePseudoRandom r = new ReplayablePseudoRandom();
 
         // choose numbers
         int number1 = r.nextInt(maxValue + 1);
@@ -180,7 +180,7 @@ public class Math101 implements GameLifeCycle {
         targetAOIList.add(targetAOI);
         boardRectangle.setFill(new ImagePattern(new Image("data/math101/images/blackboard.png"), 0, 0, 1, 1, true));
 
-        final Random r = new Random();
+        final ReplayablePseudoRandom r = new ReplayablePseudoRandom();
         // Setup the question parameters
         final int cardsCount = 3;
         final int winnerCardIndex = r.nextInt(cardsCount); // index in the list between 0 and 2
@@ -200,6 +200,7 @@ public class Math101 implements GameLifeCycle {
         cardList.get(winnerCardIndex).toFront();
 
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
         stats.incrementNumberOfGoalsToReach();
         gameContext.firstStart();
     }
@@ -294,7 +295,7 @@ public class Math101 implements GameLifeCycle {
                     image = new Image("data/math101/images/correct2.png");
 
                 } else {
-                    final Random r = new Random();
+                    final ReplayablePseudoRandom r = new ReplayablePseudoRandom();
 
                     int tempCurrent = correctAnswer;
 

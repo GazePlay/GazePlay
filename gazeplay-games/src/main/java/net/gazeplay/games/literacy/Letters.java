@@ -20,6 +20,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.ImageLibrary;
@@ -30,7 +31,6 @@ import net.gazeplay.components.AspectRatioImageRectangleUtil;
 
 import java.util.Collections;
 import java.util.Locale;
-import java.util.Random;
 
 public class Letters implements GameLifeCycle {
 
@@ -71,7 +71,7 @@ public class Letters implements GameLifeCycle {
     @NonNull
     private final Translator translator;
 
-    private final Random random = new Random();
+    private final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
 
     protected CurrentRoundDetails currentRoundDetails;
 
@@ -171,6 +171,7 @@ public class Letters implements GameLifeCycle {
         // Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
         // this.currentRoundDetails.remainingCount = correctCount;
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     private String pickRandomLetter() {
