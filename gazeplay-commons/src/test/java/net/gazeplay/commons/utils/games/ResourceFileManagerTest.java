@@ -18,13 +18,13 @@ class ResourceFileManagerTest {
     @Test
     void canGetAllFilesInResourcePackage() {
         Set<String> set = ResourceFileManager.getResourcePaths("data/biboule/images");
-        assertEquals (1, set.size());
+        assertEquals(1, set.size());
         set = ResourceFileManager.getResourcePaths("data/common/default/images");
-        assertEquals (2, set.size());
+        assertEquals(2, set.size());
         set = ResourceFileManager.getResourcePaths("data/whereisit");
-        assertEquals (35, set.size());
+        assertEquals(35, set.size());
         set = ResourceFileManager.getResourcePaths("data");
-        assertEquals (38, set.size());
+        assertEquals(38, set.size());
     }
 
     @Test

@@ -35,7 +35,7 @@ public class WhereIsItVaildator {
     }
 
     public static boolean fileIsImageFile(File file) {
-        if(file.exists()) {
+        if (file.exists()) {
             try {
                 String mimetype = Files.probeContentType(file.toPath());
                 if (mimetype != null && mimetype.split("/")[0].equals("image")) {
