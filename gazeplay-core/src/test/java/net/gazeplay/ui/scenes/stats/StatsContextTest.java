@@ -34,6 +34,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -58,6 +59,8 @@ class StatsContextTest {
         new File("file.csv"),
         new File("file.csv"),
         new File("file.csv"),
+        new File("file.csv"),
+        new File("file.csv"),
         new File("file.csv")
     );
 
@@ -68,6 +71,7 @@ class StatsContextTest {
         when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(() -> new Dimension2D(1920, 1080));
         when(mockTranslator.currentLocale()).thenReturn(Locale.ENGLISH);
         when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
+        when(mockStats.getFixationSequence()).thenReturn(new ArrayList<>(List.of(new LinkedList<>(), new LinkedList<>())));
     }
 
     @Test
@@ -112,10 +116,17 @@ class StatsContextTest {
 
     @Test
     void shouldAddAreaChartOnColorBandSelected() {
-        LinkedList<FixationPoint> fixationPoints = new LinkedList<>(List.of(
-            new FixationPoint(1234, 2345, 30, 40),
-            new FixationPoint(4567, 1234, 40, 60)
-        ));
+        ArrayList<LinkedList<FixationPoint>> fixationPoints = new ArrayList<>(List.of(
+            new LinkedList<>(List.of(
+                new FixationPoint(1234, 2345, 30, 40),
+                new FixationPoint(4567, 1234, 40, 60)
+            )),
+            new LinkedList<>(List.of(
+                new FixationPoint(1234, 2345, 30, 40),
+                new FixationPoint(4567, 1234, 40, 60)
+            ))
+        )
+        );
         when(mockStats.getFixationSequence()).thenReturn(fixationPoints);
 
         Configuration mockConfig = mock(Configuration.class);
@@ -137,7 +148,7 @@ class StatsContextTest {
         HBox controlPane = (HBox) sidePane.getBottom();
         RadioButton colorBands = (RadioButton) controlPane.getChildren().get(1);
 
-        LineChart<String, Number> lineChart = (LineChart<String, Number>) centerPane.getChildren().get(1);
+        LineChart<String, Number> lineChart = (LineChart<String, Number>) centerPane.getChildren().get(2);
         assertTrue(centerPane.getChildren().contains(lineChart));
 
         colorBands.fire();

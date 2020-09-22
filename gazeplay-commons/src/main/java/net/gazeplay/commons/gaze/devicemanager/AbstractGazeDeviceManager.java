@@ -12,6 +12,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.utils.ImmutableCachingSupplier;
 import net.gazeplay.commons.utils.RobotSupplier;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import java.awt.*;
 import java.util.List;
@@ -96,6 +97,13 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         }
     }
 
+
+    public GazeInfos gameScene = null;
+
+    public void addStats(Stats stats) {
+        gameScene = new GazeInfos(stats.gameContextScene.getRoot());
+    }
+
     public void delete() {
         synchronized (shapesEventFilter) {
             List<Node> temp = new LinkedList<>(toRemove);
@@ -158,34 +166,17 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         Collection<GazeInfos> c = shapesEventFilter.values();
 
         synchronized (shapesEventFilter) {
-
             for (GazeInfos gi : c) {
                 final Node node = gi.getNode();
-
-                eventFire(positionX, positionY, gi, node);
-                // log.info("Fire : "+node+" then recursion !");
-                recursiveEventFire(positionX, positionY, node);
-
+                if (gameScene != null && node != gameScene.getNode()) {
+                    eventFire(positionX, positionY, gi, node);
+                }
             }
 
-        }
-    }
-
-    public void recursiveEventFire(double positionX, double positionY, Node node) {
-        if (node instanceof Pane) {
-            for (Node child : ((Pane) node).getChildren()) {
-                if (!shapesEventFilter.containsKey(new IdentityKey<>(child))) {
-                    // log.info("child : "+child+" added !");
-                    addEventFilter(child);
-                }
-                // log.info("child : "+child+" fired !");
-                GazeInfos gi = shapesEventFilter.get(new IdentityKey<>(child));
-                if (gi != null) {
-                    eventFire(positionX, positionY, gi, child);
-                }
-                recursiveEventFire(positionX, positionY, child);
-
+            if (gameScene != null) {
+                eventFire(positionX, positionY, gameScene, gameScene.getNode());
             }
+
         }
     }
 

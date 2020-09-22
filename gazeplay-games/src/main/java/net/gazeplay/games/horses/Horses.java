@@ -410,6 +410,7 @@ public class Horses implements GameLifeCycle {
         }
         loopBack.setPreviousSquare(previousCommonSquare);
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
         showMessage(Color.WHITE, "Select teams by looking at the big circles");
     }
 

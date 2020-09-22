@@ -115,6 +115,7 @@ public class Dice implements GameLifeCycle {
     public void launch() {
         gameContext.getChildren().addAll(gridpane, totalText, rollButton);
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override

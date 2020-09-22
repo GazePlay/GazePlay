@@ -39,7 +39,9 @@ class AreaOfInterestTest {
 
     SavedStatsInfo statsInfo = new SavedStatsInfo(
         new File("file1.csv"),
-        new File("metrics.csv"),
+        new File("metricsMouse.csv"),
+        new File("metricsGaze.csv"),
+        new File("metricsBoth.csv"),
         new File("screenshot.png"),
         new File("colors.txt")
     );

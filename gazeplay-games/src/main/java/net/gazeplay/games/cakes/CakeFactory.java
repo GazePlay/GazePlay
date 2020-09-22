@@ -634,6 +634,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
         this.gameContext.resetBordersToFront();
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
         this.gameContext.firstStart();
     }
 

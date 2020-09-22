@@ -98,6 +98,7 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
     }
 

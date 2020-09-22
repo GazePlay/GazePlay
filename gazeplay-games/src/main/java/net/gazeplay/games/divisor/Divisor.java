@@ -46,6 +46,7 @@ public class Divisor implements GameLifeCycle {
         }
 
         this.stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
         stats.incrementNumberOfGoalsToReach(15);
 
          target = new Target(gameContext, stats, imageLibrary, 0,System.currentTimeMillis(), this,
