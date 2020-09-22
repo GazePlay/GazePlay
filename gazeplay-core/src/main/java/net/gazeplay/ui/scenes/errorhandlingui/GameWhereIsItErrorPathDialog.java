@@ -26,12 +26,11 @@ import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.games.WhereIsItVaildator;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,6 +38,7 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
 
 public class GameWhereIsItErrorPathDialog extends Stage {
+
     public GameWhereIsItErrorPathDialog(
         final GazePlay gazePlay,
         final GameMenuController gameMenuController,
@@ -151,7 +151,7 @@ public class GameWhereIsItErrorPathDialog extends Stage {
 
                 buttonLoad.textProperty().setValue(newPropertyValue);
 
-                if (checkIfDirIsValid(newPropertyValue, imagesFolders) != 0) {
+                if (WhereIsItVaildator.getNumberOfValidDirectories(newPropertyValue, imagesFolders) != 0) {
                     doneButton.setDisable(false);
                     configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
                 } else {
@@ -193,45 +193,6 @@ public class GameWhereIsItErrorPathDialog extends Stage {
         finalPane.setSpacing(20);
         finalPane.setTranslateY(20);
         return finalPane;
-    }
-
-    private int checkIfDirIsValid(String selectedPath, List<File> imagesFolders) {
-        final File imagesDirectory = new File(selectedPath + "/images/");
-        int filesCount = 0;
-        File[] listOfTheFiles = imagesDirectory.listFiles();
-        if (listOfTheFiles != null) {
-            for (File f : listOfTheFiles) {
-                File[] filesInf = f.listFiles();
-                if (filesInf != null) {
-                    if (f.isDirectory() && filesInf.length > 0) {
-                        boolean containsImage = false;
-                        int i = 0;
-                        while (!containsImage && i < filesInf.length) {
-                            File file = filesInf[i];
-                            containsImage = fileIsImageFile(file);
-                            i++;
-                        }
-                        if (containsImage) {
-                            imagesFolders.add(f);
-                            filesCount++;
-                        }
-                    }
-                }
-            }
-        }
-        return filesCount;
-    }
-
-    private static boolean fileIsImageFile(File file) {
-        try {
-            String mimetype = Files.probeContentType(file.toPath());
-            if (mimetype != null && mimetype.split("/")[0].equals("image")) {
-                return true;
-            }
-        } catch (IOException ignored) {
-
-        }
-        return false;
     }
 
 }

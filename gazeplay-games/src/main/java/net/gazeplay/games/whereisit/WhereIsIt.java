@@ -21,6 +21,7 @@ import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.difficulty.SourceSet;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
+import net.gazeplay.commons.utils.games.WhereIsItVaildator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -28,8 +29,6 @@ import net.gazeplay.commons.utils.stats.TargetAOI;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -253,24 +252,12 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.getChildren().removeAll(pictureCardsToHide);
     }
 
-    static boolean fileIsImageFile(File file){
-        try {
-            String mimetype = Files.probeContentType(file.toPath());
-            if (mimetype != null && mimetype.split("/")[0].equals("image")) {
-                return true;
-            }
-        } catch (IOException ignored) {
-
-        }
-        return false;
-    }
-
     RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRound, final Random random,
                                             final int winnerImageIndexAmongDisplayedImages) {
 
         final Configuration config = gameContext.getConfiguration();
 
-        int filesCount;
+        int directoriesCount;
         final String directoryName;
         List<File> imagesFolders = new LinkedList<>();
         List<String> resourcesFolders = new LinkedList<>();
@@ -278,28 +265,7 @@ public class WhereIsIt implements GameLifeCycle {
         if (this.gameType == CUSTOMIZED) {
             final File imagesDirectory = new File(config.getWhereIsItDir() + "/images/");
             directoryName = imagesDirectory.getPath();
-            filesCount = 0;
-            File[] listOfTheFiles = imagesDirectory.listFiles();
-            if(listOfTheFiles!=null) {
-                for (File f : listOfTheFiles) {
-                    File[] filesInf = f.listFiles();
-                    if(filesInf != null) {
-                        if (f.isDirectory() && filesInf.length > 0){
-                            boolean containsImage = false;
-                            int i = 0;
-                            while( !containsImage && i < filesInf.length) {
-                                File file = filesInf[i];
-                                containsImage = fileIsImageFile(file);
-                                i++;
-                            }
-                            if(containsImage) {
-                                imagesFolders.add(f);
-                                filesCount++;
-                            }
-                        }
-                    }
-                }
-            }
+            directoriesCount = WhereIsItVaildator.getNumberOfValidDirectories(config.getWhereIsItDir() ,imagesFolders);
         } else {
             final String resourcesDirectory = "data/" + this.gameType.getResourcesDirectoryName();
             final String imagesDirectory = resourcesDirectory + "/images/";
@@ -330,12 +296,12 @@ public class WhereIsIt implements GameLifeCycle {
 
             resourcesFolders.addAll(tempResourcesFolders);
 
-            filesCount = resourcesFolders.size();
+            directoriesCount = resourcesFolders.size();
         }
 
         final String language = config.getLanguage();
 
-        if (filesCount == 0) {
+        if (directoriesCount == 0) {
             log.warn("No images found in Directory " + directoryName);
             error(language);
             return null;
@@ -354,10 +320,10 @@ public class WhereIsIt implements GameLifeCycle {
         if (this.gameType == FIND_ODD) {
 
             int index = random.nextInt(resourcesFolders.size());
-            final String folder = resourcesFolders.remove((index) % filesCount);
+            final String folder = resourcesFolders.remove((index) % directoriesCount);
 
             index = random.nextInt(resourcesFolders.size());
-            final String winnerFolder = resourcesFolders.remove((index) % filesCount);
+            final String winnerFolder = resourcesFolders.remove((index) % directoriesCount);
             final String folderName = (new File(winnerFolder)).getName();
 
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
@@ -407,14 +373,14 @@ public class WhereIsIt implements GameLifeCycle {
 
                 int index = random.nextInt(imagesFolders.size());
 
-                final File folder = imagesFolders.remove((index) % filesCount);
+                final File folder = imagesFolders.remove((index) % directoriesCount);
 
                 final File[] files = getFiles(folder);
 
                 List<File> validImageFiles = new ArrayList<>();
 
                 for ( File file: files){
-                    if(fileIsImageFile(file)){
+                    if(WhereIsItVaildator.fileIsImageFile(file)){
                         validImageFiles.add(file);
                     }
                 }
@@ -456,7 +422,7 @@ public class WhereIsIt implements GameLifeCycle {
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
                 int index = random.nextInt(resourcesFolders.size());
 
-                final String folder = resourcesFolders.remove((index) % filesCount);
+                final String folder = resourcesFolders.remove((index) % directoriesCount);
                 final String folderName = (new File(folder)).getName();
 
                 final Set<String> files = ResourceFileManager.getResourcePaths(folder);
