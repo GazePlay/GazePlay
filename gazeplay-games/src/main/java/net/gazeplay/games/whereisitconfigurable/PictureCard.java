@@ -153,20 +153,20 @@ class PictureCard extends Group {
         Dimension2D gamePanelDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.info("gamePanelDimension2D = {}", gamePanelDimension2D);
 
-        ScaleTransition scaleToFullScreenTransition = new ScaleTransition(new Duration(1000), imageRectangle);
-        scaleToFullScreenTransition.setByX((gamePanelDimension2D.getWidth() / initialWidth) - 1);
-        scaleToFullScreenTransition.setByY((gamePanelDimension2D.getHeight() / initialHeight) - 1);
-
-        TranslateTransition translateToCenterTransition = new TranslateTransition(new Duration(1000),
-            imageRectangle);
-        translateToCenterTransition
-            .setByX(-initialPositionX + (gamePanelDimension2D.getWidth() - initialWidth) / 2);
-        translateToCenterTransition
-            .setByY(-initialPositionY + (gamePanelDimension2D.getHeight() - initialHeight) / 2);
-
-        ParallelTransition fullAnimation = new ParallelTransition();
-        fullAnimation.getChildren().add(translateToCenterTransition);
-        fullAnimation.getChildren().add(scaleToFullScreenTransition);
+//        ScaleTransition scaleToFullScreenTransition = new ScaleTransition(new Duration(1000), imageRectangle);
+//        scaleToFullScreenTransition.setByX((gamePanelDimension2D.getWidth() / initialWidth) - 1);
+//        scaleToFullScreenTransition.setByY((gamePanelDimension2D.getHeight() / initialHeight) - 1);
+//
+//        TranslateTransition translateToCenterTransition = new TranslateTransition(new Duration(1000),
+//            imageRectangle);
+//        translateToCenterTransition
+//            .setByX(-initialPositionX + (gamePanelDimension2D.getWidth() - initialWidth) / 2);
+//        translateToCenterTransition
+//            .setByY(-initialPositionY + (gamePanelDimension2D.getHeight() - initialHeight) / 2);
+//
+//        ParallelTransition fullAnimation = new ParallelTransition();
+//        fullAnimation.getChildren().add(translateToCenterTransition);
+//        fullAnimation.getChildren().add(scaleToFullScreenTransition);
 
         gameContext.updateScore(stats, gameInstance);
 
@@ -192,27 +192,33 @@ class PictureCard extends Group {
         log.info(" image = {} && {}", gameInstance.getCurrentQuestionAsnwer().imageBravo, imageFile);
         log.info(" sound = {} && {}", gameInstance.getCurrentQuestionAsnwer().soundBravo, soundFile);
         if (gameInstance.getCurrentQuestionAsnwer().videoBravo != null && videoFile.exists()) {
-            fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(
+            //fullAnimation.setOnFinished(actionEvent ->
+            gameContext.playWinTransition(
                 500,
                 videoFile.getAbsolutePath(),
                 action
-            ));
+                //        )
+            );
         } else if (
             gameInstance.getCurrentQuestionAsnwer().soundBravo != null && soundFile.exists() &&
                 gameInstance.getCurrentQuestionAsnwer().imageBravo != null && imageFile.exists()) {
-            fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(
+            // fullAnimation.setOnFinished(actionEvent ->
+            gameContext.playWinTransition(
                 500,
                 imageFile.getAbsolutePath(),
                 soundFile.getAbsolutePath(),
                 action
-            ));
+                // )
+            );
         } else {
-            fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(
+            // fullAnimation.setOnFinished(actionEvent ->
+            gameContext.playWinTransition(
                 500,
                 action
-            ));
+                // )
+            );
         }
-        fullAnimation.play();
+        // fullAnimation.play();
     }
 
     private void onWrongCardSelected(WhereIsItConfigurable gameInstance) {

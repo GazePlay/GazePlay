@@ -11,10 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -395,14 +392,19 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     @Override
     public void playWinTransition(long delay, String videoLocation, EventHandler<ActionEvent> onFinishedEventHandler) {
         if (!getChildren().contains(bravo)) {
+            Dimension2D dimensions = getGamePanelDimensionProvider().getDimension2D();
+            BorderPane p = new BorderPane();
+            p.setPrefWidth(dimensions.getWidth());
+            p.setPrefHeight(dimensions.getHeight());
             MediaPlayer player = new MediaPlayer( new Media(new File(videoLocation).toURI().toString()));
             MediaView mediaView = new MediaView(player);
-            getChildren().add(mediaView);
-            mediaView.toFront();
-
-            Dimension2D dimensions = getGamePanelDimensionProvider().getDimension2D();
             mediaView.setFitHeight(dimensions.getHeight());
             mediaView.setFitWidth(dimensions.getWidth());
+            BorderPane.setAlignment(mediaView,Pos.CENTER);
+            p.setCenter(mediaView);
+            getChildren().add(p);
+            p.toFront();
+            mediaView.toFront();
 
             player.setOnEndOfMedia(() -> onFinishedEventHandler.handle(null));
             player.play();
