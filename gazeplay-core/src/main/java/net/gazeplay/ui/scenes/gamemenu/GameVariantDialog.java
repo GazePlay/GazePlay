@@ -142,7 +142,7 @@ public class GameVariantDialog extends Stage {
             EventHandler<Event> event = mouseEvent -> {
                 close();
                 root.setDisable(false);
-                gameMenuController.chooseGame(gazePlay, gameSpec, finalVariant);
+                gameMenuController.chooseGame1(gazePlay, gameSpec, finalVariant);
             };
             button.addEventHandler(MOUSE_CLICKED, event);
 

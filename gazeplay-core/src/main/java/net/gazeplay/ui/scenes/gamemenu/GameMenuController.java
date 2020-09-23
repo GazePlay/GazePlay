@@ -7,20 +7,24 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.GameLifeCycle;
-import net.gazeplay.GameSpec;
-import net.gazeplay.GazePlay;
-import net.gazeplay.IGameLauncher;
+import net.gazeplay.*;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+
+import static java.lang.System.getProperty;
 
 @Slf4j
 @Component
@@ -51,10 +55,31 @@ public class GameMenuController {
         } else {
             if (variants.size() == 1) {
                 IGameVariant onlyGameVariant = variants.iterator().next();
-                chooseGame(gazePlay, gameSpec, onlyGameVariant);
+                chooseGame1(gazePlay, gameSpec, onlyGameVariant);
             } else {
-                chooseGame(gazePlay, gameSpec, null);
+                chooseGame1(gazePlay, gameSpec, null);
             }
+        }
+    }
+
+    public void chooseGame1(
+        GazePlay gazePlay,
+        GameSpec selectedGameSpec,
+        IGameVariant gameVariant
+    ) {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        String javaHome = System.getProperty("java.home");
+        String javaBin = javaHome +
+            File.separator + "bin" +
+            File.separator + "java";
+        String classpath = System.getProperty("java.class.path");
+        ProcessBuilder builder = new ProcessBuilder(javaBin,"-cp",classpath,GazePlayLauncher.class.getName(), "--user", "Seb", "--game", "Scribble");
+        try {
+            Process process = builder.inheritIO().start();
+            process.waitFor(10, TimeUnit.SECONDS);
+            System.exit(0);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
