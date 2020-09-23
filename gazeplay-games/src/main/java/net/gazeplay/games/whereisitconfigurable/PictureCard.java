@@ -20,10 +20,16 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.WhereIsItVaildator;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.whereisit.WhereIsIt;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static net.gazeplay.commons.utils.games.WhereIsItVaildator.getValidSoundFiles;
 
 @Slf4j
 @ToString
@@ -35,7 +41,7 @@ class PictureCard extends Group {
     private final boolean winner;
 
     private final ImageView imageRectangle;
-    private final Rectangle errorImageRectangle;
+    private final ImageView errorImageRectangle;
 
     private final double initialWidth;
     private final double initialHeight;
@@ -56,8 +62,10 @@ class PictureCard extends Group {
     private final WhereIsItConfigurable gameInstance;
     private final Configuration config;
 
+    private final File folder;
+
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
-                boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsItConfigurable gameInstance) {
+                boolean winner, File folder, @NonNull String imagePath, @NonNull Stats stats, WhereIsItConfigurable gameInstance) {
 
         log.info("imagePath = {}", imagePath);
 
@@ -73,6 +81,7 @@ class PictureCard extends Group {
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameInstance = gameInstance;
+        this.folder = folder;
 
         this.imagePath = imagePath;
 
@@ -83,7 +92,7 @@ class PictureCard extends Group {
 
         this.progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
 
-        this.errorImageRectangle = createErrorImageRectangle();
+        this.errorImageRectangle = createErrorImageRectangle(posX, posY, width, height);
 
         this.getChildren().add(imageRectangle);
         this.getChildren().add(progressIndicator);
@@ -164,9 +173,27 @@ class PictureCard extends Group {
 
         gameContext.updateScore(stats, gameInstance);
 
-        File soundFile = new File(config.getWhereIsItConfigurableDir() + "/sounds/win_fail/win.mp3");
-        File imageFile = new File(config.getWhereIsItConfigurableDir() + "/sounds/win_fail/win.png");
-        if(!soundFile.exists() || !imageFile.exists()){
+        File soundFile = new File(config.getWhereIsItConfigurableDir() + "/common/win/sounds/win.mp3");
+        File imageFile = new File(config.getWhereIsItConfigurableDir() + "/common/win/images/win.png");
+        File videoFile = new File(config.getWhereIsItConfigurableDir() + "/common/win/video/3s.mp4");
+        if(videoFile.exists()){
+            fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(
+                500,
+                videoFile.getAbsolutePath(),
+                actionEvent1 -> {
+                    gameInstance.dispose();
+                    gameContext.clear();
+                    try {
+                        stats.saveStats();
+                        stats.reset();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    gameInstance.launch();
+                    gameContext.onGameStarted();
+
+                }));
+        } else if(!soundFile.exists() || !imageFile.exists()){
             fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(
                 500,
                  actionEvent1 -> {
@@ -185,8 +212,8 @@ class PictureCard extends Group {
         }else {
             fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(
                 500,
-                config.getWhereIsItConfigurableDir() + "/sounds/win_fail/win.png",
-                config.getWhereIsItConfigurableDir() + "/sounds/win_fail/win.mp3",
+                imageFile.getAbsolutePath(),
+                soundFile.getAbsolutePath(),
                 actionEvent1 -> {
                     gameInstance.dispose();
                     gameContext.clear();
@@ -212,7 +239,7 @@ class PictureCard extends Group {
         imageFadeOutTransition.setFromValue(1);
         // the final opacity is not zero so that we can see what was the image, even after it is marked as an
         // erroneous pick
-        imageFadeOutTransition.setToValue(0.2);
+        imageFadeOutTransition.setToValue(0);
 
         errorImageRectangle.toFront();
         errorImageRectangle.setOpacity(0);
@@ -226,7 +253,23 @@ class PictureCard extends Group {
         fullAnimation.getChildren().addAll(imageFadeOutTransition, errorFadeInTransition);
 
         fullAnimation.setOnFinished(actionEvent -> {
-            gameInstance.playQuestionSound();
+            File soundResource = new File(folder,"/fail/sounds");
+            if(!soundResource.exists()){
+                soundResource = new File(folder.getParentFile().getParentFile(),"/common/fail/sounds");
+            }
+            File[] files = WhereIsItConfigurable.getFiles(soundResource);
+            List<File> validSoundFiles = getValidSoundFiles(files);
+            if(validSoundFiles.size() == 0) {
+                soundResource = new File(folder.getParentFile().getParentFile(),"/common/fail/sounds");
+                files = WhereIsItConfigurable.getFiles(soundResource);
+                validSoundFiles = getValidSoundFiles(files);
+            }
+
+            final File randomImageFile = validSoundFiles.get(0);
+            gameContext.getSoundManager().add(randomImageFile.getAbsolutePath());
+
+            log.info("WERE CHOOSING THE FILE {}",soundResource);
+
             customInputEventHandler.ignoreAnyInput = false;
         });
 
@@ -275,26 +318,51 @@ class PictureCard extends Group {
         return result;
     }
 
-    private Rectangle createErrorImageRectangle() {
-        final Image image = new Image("data/common/images/error.png");
+    private ImageView createErrorImageRectangle(double posX, double posY, double width, double height) {
 
-        double imageWidth = image.getWidth();
-        double imageHeight = image.getHeight();
-        double imageHeightToWidthRatio = imageHeight / imageWidth;
+        File localFail = new File(folder,"/fail/images");
+        if(!localFail.exists()){
+            localFail = new File(folder.getParentFile().getParentFile(),"/common/fail/images");
+        }
 
-        double rectangleWidth = imageRectangle.getFitWidth() / 3;
-        double rectangleHeight = imageHeightToWidthRatio * rectangleWidth;
+        final File[] files = WhereIsItConfigurable.getFiles(localFail);
 
-        double positionX = imageRectangle.getX() + (imageRectangle.getFitWidth() - rectangleWidth) / 2;
-        double positionY = imageRectangle.getY() + (imageRectangle.getFitHeight() - rectangleHeight) / 2;
+        List<File> validImageFiles = new ArrayList<>();
 
-        Rectangle errorImageRectangle = new Rectangle(rectangleWidth, rectangleHeight);
-        errorImageRectangle.setFill(new ImagePattern(image));
-        errorImageRectangle.setX(positionX);
-        errorImageRectangle.setY(positionY);
-        errorImageRectangle.setOpacity(0);
-        errorImageRectangle.setVisible(false);
-        return errorImageRectangle;
+        for (File file : files) {
+            if (WhereIsItVaildator.fileIsImageFile(file)) {
+                validImageFiles.add(file);
+            }
+        }
+        final File randomImageFile = validImageFiles.get(0);
+
+        final Image image = new Image("file:" + randomImageFile.getAbsolutePath());
+
+
+        ImageView result = new ImageView(image);
+
+        result.setFitWidth(width);
+        result.setFitHeight(height);
+
+        double ratioX = result.getFitWidth() / image.getWidth();
+        double ratioY = result.getFitHeight() / image.getHeight();
+
+        double reducCoeff = Math.min(ratioX, ratioY);
+
+        double w = image.getWidth() * reducCoeff;
+        double h = image.getHeight() * reducCoeff;
+
+        result.setX(posX);
+        result.setY(posY);
+        result.setTranslateX((result.getFitWidth() - w) / 2);
+        result.setTranslateY((result.getFitHeight() - h) / 2);
+        result.setPreserveRatio(true);
+
+
+        result.setOpacity(0);
+        result.setVisible(false);
+
+        return result;
     }
 
     private ProgressIndicator buildProgressIndicator(double parentWidth, double parentHeight) {

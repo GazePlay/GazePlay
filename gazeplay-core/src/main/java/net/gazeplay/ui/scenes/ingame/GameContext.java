@@ -15,7 +15,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -28,6 +32,7 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.AnimationSpeedRatioSource;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.DefaultAnimationSpeedRatioSource;
+import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.I18NButton;
@@ -42,6 +47,7 @@ import net.gazeplay.ui.MusicControl;
 import net.gazeplay.ui.scenes.stats.StatsContext;
 import net.gazeplay.ui.scenes.stats.StatsContextFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.function.Supplier;
 
@@ -357,17 +363,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     }
 
-    @Override
-    public void playWinTransition(long delay, String pictureLocation, String soundLocation, EventHandler<ActionEvent> onFinishedEventHandler) {
-        if (!getChildren().contains(bravo)) {
-            bravo.setPictureResourceLocation(pictureLocation);
-            bravo.setSoundResource(soundLocation);
-            getChildren().add(bravo);
-            bravo.toFront();
-            bravo.setConfettiOnStart(this);
-            bravo.playWinTransition(root, delay, onFinishedEventHandler);
-        }
-    }
 
     @Override
     public void endWinTransition() {
@@ -397,4 +392,37 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         }
     }
 
+    @Override
+    public void playWinTransition(long delay, String videoLocation, EventHandler<ActionEvent> onFinishedEventHandler) {
+        if (!getChildren().contains(bravo)) {
+            MediaPlayer player = new MediaPlayer( new Media(new File(videoLocation).toURI().toString()));
+            MediaView mediaView = new MediaView(player);
+            getChildren().add(mediaView);
+            mediaView.toFront();
+
+            player.setOnEndOfMedia(() -> player.seek(Duration.ZERO));
+
+            Dimension2D dimensions = getGamePanelDimensionProvider().getDimension2D();
+            mediaView.setFitHeight(dimensions.getHeight());
+            mediaView.setFitWidth(dimensions.getWidth());
+
+
+            player.setOnEndOfMedia(() -> onFinishedEventHandler.handle(null));
+
+            player.play();
+        }
+    }
+
+
+    @Override
+    public void playWinTransition(long delay, String pictureLocation, String soundLocation, EventHandler<ActionEvent> onFinishedEventHandler) {
+        if (!getChildren().contains(bravo)) {
+            bravo.setPictureResourceLocation(pictureLocation);
+            bravo.setSoundResource(soundLocation);
+            getChildren().add(bravo);
+            bravo.toFront();
+            bravo.setConfettiOnStart(this);
+            bravo.playWinTransition(root, delay, onFinishedEventHandler);
+        }
+    }
 }

@@ -21,6 +21,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.WhereIsItVaildator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -405,7 +406,7 @@ public class WhereIsItConfigurable implements GameLifeCycle {
                 // The image file needs 'file:' prepended as this will get images from a local source, not resources.
                 final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                    winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats, this);
+                    winnerImageIndexAmongDisplayedImages == i,folder, "file:" + randomImageFile, stats, this);
 
                 final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY + 1), (int) gameSizing.height,
                     System.currentTimeMillis());
@@ -430,7 +431,7 @@ public class WhereIsItConfigurable implements GameLifeCycle {
     /**
      * Return all files which don't start with a point
      */
-    private File[] getFiles(final File folder) {
+    static public File[] getFiles(final File folder) {
         return folder.listFiles(file -> !file.getName().startsWith("."));
     }
 
@@ -453,19 +454,12 @@ public class WhereIsItConfigurable implements GameLifeCycle {
         final Configuration config = gameContext.getConfiguration();
         try {
             log.debug("CUSTOMIZED");
-            final String path = config.getWhereIsItConfigurableDir() + "/sounds/" + language + "/";
+            final String path = config.getWhereIsItConfigurableDir() + "/sounds/" + language + "/" + folder + "/";
             final File soundsDirectory = new File(path);
-            final String[] soundsDirectoryFiles = soundsDirectory.list();
+            File[] soundsDirectoryFiles = WhereIsItConfigurable.getFiles(soundsDirectory);
             if (soundsDirectoryFiles != null) {
-                for (final String file : soundsDirectoryFiles) {
-                    log.debug("file " + file);
-                    log.debug("folder " + folder);
-                    if (file.contains(folder)) {
-                        final File f = new File(path + file);
-                        log.debug("file " + f.getAbsolutePath());
-                        return f.getAbsolutePath();
-                    }
-                }
+                List<File> soundsDirectoryValidSoundFiles = WhereIsItVaildator.getValidSoundFiles(soundsDirectoryFiles);
+                return soundsDirectoryValidSoundFiles.get(0).getAbsolutePath();
             }
         } catch (final Exception e) {
             log.debug("Problem with customized folder");

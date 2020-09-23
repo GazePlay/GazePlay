@@ -159,7 +159,7 @@ public class GameWhereIsItConfigurableDialog extends Stage {
 
             @Override
             public String toString(Integer object) {
-                return "Level " + (object + 1);
+                return "Trial " + (object + 1);
             }
 
             @Override
