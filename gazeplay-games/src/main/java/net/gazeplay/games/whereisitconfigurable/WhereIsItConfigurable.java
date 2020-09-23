@@ -43,6 +43,9 @@ class QuestionAnswer {
     LinkedList<String> imagesorder;
     int col;
     int row;
+    String videoBravo;
+    String imageBravo;
+    String soundBravo;
 
     public QuestionAnswer(String answer, int col, int row) {
         this.answer = answer;
@@ -54,6 +57,15 @@ class QuestionAnswer {
     public void add(String image) {
         imagesorder.add(image);
     }
+
+    public void setBravo(String videoPath) {
+        this.videoBravo = videoPath;
+    }
+
+    public void setBravo(String imagePath, String soundPath) {
+        this.imageBravo = imagePath;
+        this.soundBravo = soundPath;
+    }
 }
 
 /**
@@ -63,7 +75,7 @@ class QuestionAnswer {
 public class WhereIsItConfigurable implements GameLifeCycle {
 
     private LinkedList<QuestionAnswer> questions = new LinkedList<>();
-    private int questionIndex = 0;
+    int questionIndex = 0;
 
     private static final int NBMAXPICTO = 10;
     private static final double MAXSIZEPICTO = 250;
@@ -109,10 +121,23 @@ public class WhereIsItConfigurable implements GameLifeCycle {
             String readLine;
             while ((readLine = b.readLine()) != null) {
                 String[] split = readLine.split(",");
-                QuestionAnswer tempquestionAnswer = new QuestionAnswer(split[0], Integer.parseInt(split[split.length - 1]), Integer.parseInt(split[split.length - 2]));
-                for (int i = 1; i < split.length - 2; i++) {
-                    tempquestionAnswer.add(split[i]);
+                int col = Integer.parseInt(split[1]);
+                int row = Integer.parseInt(split[2]);
+                int i = 0;
+
+                QuestionAnswer tempquestionAnswer = new QuestionAnswer(split[0], col, row);
+
+                String[] splitanswer = split[3].split(";");
+                for ( i = 0;  i < splitanswer.length; i++) {
+                    tempquestionAnswer.add(splitanswer[i]);
                 }
+
+                if(split.length  == 5){
+                    tempquestionAnswer.setBravo(split[4]);
+                } else if (split.length  == 6){
+                    tempquestionAnswer.setBravo(split[4],split[5]);
+                }
+
                 questions.add(tempquestionAnswer);
             }
 
@@ -142,7 +167,6 @@ public class WhereIsItConfigurable implements GameLifeCycle {
 
         stats.notifyNewRoundReady();
         gameContext.firstStart();
-        questionIndex++;
     }
 
     private Transition createQuestionTransition(final String question, final List<Image> listOfPictos) {
@@ -524,6 +548,10 @@ public class WhereIsItConfigurable implements GameLifeCycle {
 
         log.debug("imageList: {}", imageList);
         return imageList;
+    }
+
+    public QuestionAnswer getCurrentQuestionAsnwer(){
+        return questions.get(questionIndex);
     }
 
 }

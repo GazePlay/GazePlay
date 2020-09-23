@@ -227,7 +227,7 @@ public class GameWhereIsItConfigurableDialog extends Stage {
     }
 
     private void updateErrorMessage(String newPropertyValue, File newQuestionOrderFile, ChoiceBox<Integer> levelChooser, Configuration configuration, Translator translator, Label label, Button doneButton) {
-        String errorMessage = getNumberOfValideDirectories(newPropertyValue, configuration, translator);
+        String errorMessage = "";//getNumberOfValideDirectories(newPropertyValue, configuration, translator);
         if(newPropertyValue.equals("")){
             changeTextLabel(label, "", "-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: white;");
             doneButton.setDisable(true);
@@ -331,16 +331,16 @@ public class GameWhereIsItConfigurableDialog extends Stage {
                 }
                 String answer = split[0];
                 try {
-                    int numberOfImages = Integer.parseInt(split[split.length - 1]) * Integer.parseInt(split[split.length - 2]);
-                    if (numberOfImages != split.length - 3) {
+                    int numberOfImages = Integer.parseInt(split[ 1]) * Integer.parseInt( split[2]);
+                    if (numberOfImages <= split.length - 5) {
                         return "'questionOrder.csv' " + translator.translate("Line") + " " + line + ": " + getFinalSentence(translator, "LineNeedEltButGot", numberOfImages, (split.length - 3));
                     }
                     boolean correctImageFound = false;
-                    for (int i = 1; i < split.length - 2; i++) {
+                    for (int i = 2; i < split.length && i < numberOfImages + 3; i++) {
                         if (split[i].equals(split[0])) {
                             correctImageFound = true;
                         }
-                        if (!split[i].equals("")) {
+                        if (!(split[i] == null) && !split[i].equals("") && split[i].toString().length()!=0 ) {
                             int j = 0;
                             while (j < imagesFolders.size() && !imagesFolders.get(j).equals(split[i])) {
                                 j++;

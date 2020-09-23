@@ -10,8 +10,6 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.NonNull;
@@ -22,7 +20,6 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.WhereIsItVaildator;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.whereisit.WhereIsIt;
 
 import java.io.File;
 import java.io.IOException;
@@ -173,60 +170,47 @@ class PictureCard extends Group {
 
         gameContext.updateScore(stats, gameInstance);
 
-        File soundFile = new File(config.getWhereIsItConfigurableDir() + "/common/win/sounds/win.mp3");
-        File imageFile = new File(config.getWhereIsItConfigurableDir() + "/common/win/images/win.png");
-        File videoFile = new File(config.getWhereIsItConfigurableDir() + "/common/win/video/3s.mp4");
-        if(videoFile.exists()){
+        EventHandler<ActionEvent> action = actionEvent1 -> {
+            gameInstance.questionIndex++;
+            gameInstance.dispose();
+            gameContext.clear();
+            try {
+                stats.saveStats();
+                stats.reset();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            gameInstance.launch();
+            gameContext.onGameStarted();
+
+        };
+
+        File soundFile = new File(config.getWhereIsItConfigurableDir() + "/common/win/sounds/" + gameInstance.getCurrentQuestionAsnwer().soundBravo);
+        File imageFile = new File(config.getWhereIsItConfigurableDir() + "/common/win/images/" + gameInstance.getCurrentQuestionAsnwer().imageBravo);
+        File videoFile = new File(config.getWhereIsItConfigurableDir() + "/common/win/videos/" + gameInstance.getCurrentQuestionAsnwer().videoBravo);
+        log.info(" vid = {} && {}", gameInstance.getCurrentQuestionAsnwer().videoBravo, videoFile);
+        log.info(" image = {} && {}", gameInstance.getCurrentQuestionAsnwer().imageBravo, imageFile);
+        log.info(" sound = {} && {}", gameInstance.getCurrentQuestionAsnwer().soundBravo, soundFile);
+        if (gameInstance.getCurrentQuestionAsnwer().videoBravo != null && videoFile.exists()) {
             fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(
                 500,
                 videoFile.getAbsolutePath(),
-                actionEvent1 -> {
-                    gameInstance.dispose();
-                    gameContext.clear();
-                    try {
-                        stats.saveStats();
-                        stats.reset();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    gameInstance.launch();
-                    gameContext.onGameStarted();
-
-                }));
-        } else if(!soundFile.exists() || !imageFile.exists()){
-            fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(
-                500,
-                 actionEvent1 -> {
-                    gameInstance.dispose();
-                    gameContext.clear();
-                    try {
-                        stats.saveStats();
-                        stats.reset();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    gameInstance.launch();
-                    gameContext.onGameStarted();
-
-                }));
-        }else {
+                action
+            ));
+        } else if (
+            gameInstance.getCurrentQuestionAsnwer().soundBravo != null && soundFile.exists() &&
+                gameInstance.getCurrentQuestionAsnwer().imageBravo != null && imageFile.exists()) {
             fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(
                 500,
                 imageFile.getAbsolutePath(),
                 soundFile.getAbsolutePath(),
-                actionEvent1 -> {
-                    gameInstance.dispose();
-                    gameContext.clear();
-                    try {
-                        stats.saveStats();
-                        stats.reset();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    gameInstance.launch();
-                    gameContext.onGameStarted();
-
-                }));
+                action
+            ));
+        } else {
+            fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(
+                500,
+                action
+            ));
         }
         fullAnimation.play();
     }
@@ -253,14 +237,14 @@ class PictureCard extends Group {
         fullAnimation.getChildren().addAll(imageFadeOutTransition, errorFadeInTransition);
 
         fullAnimation.setOnFinished(actionEvent -> {
-            File soundResource = new File(folder,"/fail/sounds");
-            if(!soundResource.exists()){
-                soundResource = new File(folder.getParentFile().getParentFile(),"/common/fail/sounds");
+            File soundResource = new File(folder, "/fail/sounds");
+            if (!soundResource.exists()) {
+                soundResource = new File(folder.getParentFile().getParentFile(), "/common/fail/sounds");
             }
             File[] files = WhereIsItConfigurable.getFiles(soundResource);
             List<File> validSoundFiles = getValidSoundFiles(files);
-            if(validSoundFiles.size() == 0) {
-                soundResource = new File(folder.getParentFile().getParentFile(),"/common/fail/sounds");
+            if (validSoundFiles.size() == 0) {
+                soundResource = new File(folder.getParentFile().getParentFile(), "/common/fail/sounds");
                 files = WhereIsItConfigurable.getFiles(soundResource);
                 validSoundFiles = getValidSoundFiles(files);
             }
@@ -268,7 +252,7 @@ class PictureCard extends Group {
             final File randomImageFile = validSoundFiles.get(0);
             gameContext.getSoundManager().add(randomImageFile.getAbsolutePath());
 
-            log.info("WERE CHOOSING THE FILE {}",soundResource);
+            log.info("WERE CHOOSING THE FILE {}", soundResource);
 
             customInputEventHandler.ignoreAnyInput = false;
         });
@@ -320,9 +304,9 @@ class PictureCard extends Group {
 
     private ImageView createErrorImageRectangle(double posX, double posY, double width, double height) {
 
-        File localFail = new File(folder,"/fail/images");
-        if(!localFail.exists()){
-            localFail = new File(folder.getParentFile().getParentFile(),"/common/fail/images");
+        File localFail = new File(folder, "/fail/images");
+        if (!localFail.exists()) {
+            localFail = new File(folder.getParentFile().getParentFile(), "/common/fail/images");
         }
 
         final File[] files = WhereIsItConfigurable.getFiles(localFail);

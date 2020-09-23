@@ -400,15 +400,11 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             getChildren().add(mediaView);
             mediaView.toFront();
 
-            player.setOnEndOfMedia(() -> player.seek(Duration.ZERO));
-
             Dimension2D dimensions = getGamePanelDimensionProvider().getDimension2D();
             mediaView.setFitHeight(dimensions.getHeight());
             mediaView.setFitWidth(dimensions.getWidth());
 
-
             player.setOnEndOfMedia(() -> onFinishedEventHandler.handle(null));
-
             player.play();
         }
     }

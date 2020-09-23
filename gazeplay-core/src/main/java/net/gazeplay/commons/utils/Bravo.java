@@ -16,8 +16,6 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 
-import java.io.File;
-
 /**
  * Created by schwab on 30/10/2016.
  */
@@ -148,7 +146,7 @@ public class Bravo extends Rectangle {
             if (this.enableRewardSound) {
                 log.debug("Playing sound animation ...");
                 try {
-                    ForegroundSoundsUtils.playSound(soundResource,soundClipDuration);
+                    ForegroundSoundsUtils.playSound(soundResource, soundClipDuration);
                 } catch (final Exception e) {
 
                     log.warn("file doesn't exist : {}", soundResource);
@@ -201,8 +199,12 @@ public class Bravo extends Rectangle {
     }
 
     private void resetState(final Region root) {
-        log.info("THE LOCTATION IS {}", pictureResourceLocation);
-        final Image image = new Image("file:"+pictureResourceLocation);
+        Image image;
+        if (pictureResourceLocation.equals(defaultPictureResourceLocation)) {
+            image = new Image(pictureResourceLocation);
+        } else {
+            image = new Image("file:" + pictureResourceLocation);
+        }
 
         final double imageWidth = image.getWidth();
         final double imageHeight = image.getHeight();
