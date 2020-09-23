@@ -43,18 +43,50 @@ public class WhereIsItValidatorTest {
     void shouldReturnTheGoodNumberOfValidDirectoriesWhenAllValid() {
         LinkedList<File> tempDirList = new LinkedList<File>();
         assertEquals(3, WhereIsItVaildator.getNumberOfValidDirectories(localDataFolder + "/whereisit/all_valid", tempDirList));
-        assertEquals(tempDirList.get(0).getName(), "bears");
-        assertEquals(tempDirList.get(1).getName(), "cats");
-        assertEquals(tempDirList.get(2).getName(), "dogs");
+        boolean containsBears = false;
+        boolean containsCats = false;
+        boolean containsDogs = false;
+        for (int i = 0; i < 3; i++) {
+            switch (tempDirList.get(i).getName()) {
+                case "bears":
+                    containsBears = true;
+                    break;
+                case "cats":
+                    containsCats = true;
+                    break;
+                case "dogs":
+                    containsDogs = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+        assertTrue(containsBears && containsCats && containsDogs);
     }
 
     @Test
     void shouldReturnTheGoodNumberOfValidDirectoriesWhenAllValidWithUselessFiles() {
         LinkedList<File> tempDirList = new LinkedList<File>();
         assertEquals(3, WhereIsItVaildator.getNumberOfValidDirectories(localDataFolder + "/whereisit/all_valid_with_useless_files", tempDirList));
-        assertEquals(tempDirList.get(0).getName(), "bears");
-        assertEquals(tempDirList.get(1).getName(), "cats");
-        assertEquals(tempDirList.get(2).getName(), "dogs");
+        boolean containsBears = false;
+        boolean containsCats = false;
+        boolean containsDogs = false;
+        for (int i = 0; i < 3; i++) {
+            switch (tempDirList.get(i).getName()) {
+                case "bears":
+                    containsBears = true;
+                    break;
+                case "cats":
+                    containsCats = true;
+                    break;
+                case "dogs":
+                    containsDogs = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+        assertTrue(containsBears && containsCats && containsDogs);
     }
 
     @Test
