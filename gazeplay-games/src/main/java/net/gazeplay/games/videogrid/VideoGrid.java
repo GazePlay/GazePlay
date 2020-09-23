@@ -33,6 +33,7 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
@@ -91,7 +92,7 @@ public class VideoGrid implements GameLifeCycle {
             }
 
             // Separate list where we will pick files from randomly. To reduce the number of duplicates
-            final List<File> filesChooseFrom = Arrays.asList(files);
+            final List<File> filesChooseFrom = new LinkedList<>(Arrays.asList(files));
 
             for (int i = 0; i < nbColumns; i++) {
                 for (int j = 0; j < nbLines; j++) {
@@ -154,6 +155,7 @@ public class VideoGrid implements GameLifeCycle {
             }
             gameContext.getChildren().add(grid);
             stats.notifyNewRoundReady();
+            gameContext.getGazeDeviceManager().addStats(stats);
         } else {
             noVideoFound();
             stats.notifyNewRoundReady();

@@ -333,6 +333,7 @@ public class Race extends Parent implements GameLifeCycle {
         racers[2] = makeRacers(0.9);
 
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
 
     }
 

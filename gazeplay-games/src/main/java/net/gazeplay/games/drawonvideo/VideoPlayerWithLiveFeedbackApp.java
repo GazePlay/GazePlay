@@ -36,8 +36,14 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
 
     private final WebView webview;
 
+    private final Stats stats;
+    private final IGameContext gameContext;
+
     VideoPlayerWithLiveFeedbackApp(IGameContext gameContext, Stats stats, String youtubeVideoId) {
         super();
+
+        this.stats = stats;
+        this.gameContext = gameContext;
 
         String videoUrl = "http://www.youtube.com/embed/" + youtubeVideoId + "?autoplay=1";
 
@@ -158,12 +164,12 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
         ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3, TimeUnit.MINUTES,
             new LinkedBlockingQueue<>(), new GroupingThreadFactory(this.getClass().getSimpleName()));
         executorService.execute(canvasSwitchingTask);
-        stats.notifyNewRoundReady();
     }
 
     @Override
     public void launch() {
-
+        stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override

@@ -124,6 +124,7 @@ public class CupsAndBalls implements GameLifeCycle {
             revealBallTransition.play();
         }
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override

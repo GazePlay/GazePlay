@@ -4,6 +4,7 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import net.gazeplay.commons.gaze.GazeMotionListener;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.function.Supplier;
 
@@ -22,6 +23,8 @@ public interface GazeDeviceManager {
     void addEventHandler(Node gs);
 
     void removeEventFilter(Node gs);
+
+    void addStats(Stats stats);
 
     void removeEventHandler(Node gs);
 

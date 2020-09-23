@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.RadioButton;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -20,11 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.ControlPanelConfigurator;
-import net.gazeplay.commons.utils.CustomButton;
-import net.gazeplay.commons.utils.HomeButton;
+import net.gazeplay.commons.utils.*;
+import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.StatDisplayUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.stats.ExplorationGamesStats;
@@ -32,6 +33,7 @@ import net.gazeplay.stats.HiddenItemsGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
 import net.gazeplay.ui.GraphicalContext;
 
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -65,23 +67,35 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         VBox centerPane = new VBox();
         centerPane.setAlignment(Pos.CENTER);
 
-        ImageView gazeMetrics = StatDisplayUtils.buildGazeMetrics(stats, root);
+        ImageView displayedMetrics = StatDisplayUtils.buildGazeMetrics(stats, root);
         root.widthProperty().addListener(
-            (observable, oldValue, newValue) -> gazeMetrics.setFitWidth(newValue.doubleValue() * RATIO));
+            (observable, oldValue, newValue) -> displayedMetrics.setFitWidth(newValue.doubleValue() * RATIO));
         root.heightProperty().addListener(
-            (observable, oldValue, newValue) -> gazeMetrics.setFitHeight(newValue.doubleValue() * RATIO));
+            (observable, oldValue, newValue) -> displayedMetrics.setFitHeight(newValue.doubleValue() * RATIO));
 
-        gazeMetrics.setFitWidth(root.getWidth() * RATIO);
-        gazeMetrics.setFitHeight(root.getHeight() * RATIO);
+        displayedMetrics.setFitWidth(root.getWidth() * RATIO);
+        displayedMetrics.setFitHeight(root.getHeight() * RATIO);
 
-        centerPane.getChildren().add(gazeMetrics);
+        centerPane.getChildren().add(displayedMetrics);
+
+        I18NButton displayMouseButton = createDisplayButton("Mouse", stats, displayedMetrics);
+        I18NButton displayGazeButton = createDisplayButton("Gaze", stats, displayedMetrics);
+        I18NButton displayMouseAndGazeButton = createDisplayButton("MouseAndGaze", stats, displayedMetrics);
+
+
+        HBox buttonSwitchMetrics = new HBox(displayMouseButton, displayGazeButton, displayMouseAndGazeButton);
+        buttonSwitchMetrics.setAlignment(Pos.CENTER);
+        centerPane.getChildren().add(buttonSwitchMetrics);
 
         LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(stats, root);
         centerPane.getChildren().add(lineChart);
         RadioButton colorBands = new RadioButton("Color Bands");
 
         if (!config.isFixationSequenceDisabled()) {
-            AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(stats.getFixationSequence(), root);
+            LinkedList<FixationPoint> tempSequenceList = new LinkedList<FixationPoint>();
+            tempSequenceList.addAll(stats.getFixationSequence().get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
+            tempSequenceList.addAll(stats.getFixationSequence().get(FixationSequence.GAZE_FIXATION_SEQUENCE));
+            AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(tempSequenceList, root);
 
             colorBands.setTextFill(Color.WHITE);
             colorBands.getStylesheets().add("data/common/radio.css");
@@ -128,6 +142,25 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
 
+    I18NButton createDisplayButton(String buttonName, Stats stats, ImageView metrics) {
+        I18NButton displayButton = new I18NButton(getGazePlay().getTranslator(), buttonName);
+        displayButton.setOnMouseClicked((e) -> {
+            SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
+            switch (buttonName) {
+                case "Mouse":
+                    metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouse().toURI().toString()));
+                    break;
+                case "Gaze":
+                    metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileGaze().toURI().toString()));
+                    break;
+                default: // "MouseAndGaze"
+                    metrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouseAndGaze().toURI().toString()));
+                    break;
+            }
+        });
+        return displayButton;
+    }
+
     void addAllToGrid(Stats stats, Translator translator, GridPane grid, boolean alignLeft) {
         AtomicInteger currentFormRow = new AtomicInteger(1);
 
@@ -153,7 +186,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         if (stats instanceof ShootGamesStats) {
             labelValue = "HitRate";
-            value = new Text(stats.getShotRatio() + "% ("+ stats.getNbGoalsReached()+ "/" + stats.getNbGoalsToReach()+")");
+            value = new Text(stats.getShotRatio() + "% (" + stats.getNbGoalsReached() + "/" + stats.getNbGoalsToReach() + ")");
             addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
         }
 

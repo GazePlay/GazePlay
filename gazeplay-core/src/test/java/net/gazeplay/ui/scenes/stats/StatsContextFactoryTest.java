@@ -22,6 +22,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,6 +50,8 @@ class StatsContextFactoryTest {
         new File("file.csv"),
         new File("file.csv"),
         new File("file.csv"),
+        new File("file.csv"),
+        new File("file.csv"),
         new File("file.csv")
     );
 
@@ -58,6 +63,7 @@ class StatsContextFactoryTest {
         when(mockTranslator.currentLocale()).thenReturn(Locale.ENGLISH);
         when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
         when(mockConfig.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));
+        when(mockStats.getFixationSequence()).thenReturn(new ArrayList<>(List.of(new LinkedList<>(), new LinkedList<>())));
 
         new MockUp<ActiveConfigurationContext>() {
             @mockit.Mock

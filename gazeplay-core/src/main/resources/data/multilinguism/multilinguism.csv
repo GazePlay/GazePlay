@@ -269,6 +269,10 @@ WhereIsItDirectory:,,,,,,'Where is it ?' Configuration:,,Configuration de 'Où e
 WhereIsItNotConfigDirectory,,,,,,'Where is it directory' not configured,,'Où est-ce' répertoire non configuré',,,,,,,,,,,
 PickedWrongDir,,,,,,You picked the wrong directory,,Vous avez choisi le mauvais répertoire,,,,,,,,,,,
 
+Mouse,,,,,,Mouse,,Souris,,,,,,,,,,,
+Gaze,,,,,,Gaze,,Regard,,,,,,,,,,,
+MouseAndGaze,,,,,,Mouse and Gaze,,Souris et Regard,,,,,,,,,,,
+
 Done,,,,,,Done,,Valider,,,,,,,,,,,
 chooseLevel:,,,,,,Choose level:,,Choisir le niveau:,,,,,,,,,,,
 chooseDirectoryToLoad:,,,,,,Choose directory to load:,,Choisir le dossier à charger:,,,,,,,,,,,
