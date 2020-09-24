@@ -97,7 +97,7 @@ class ConfigurationContextTest {
 
             ObservableList<Node> children = pane.getChildren();
 
-            assertEquals(70, children.size());
+            assertEquals(72, children.size());
             assertTrue(children.get(3) instanceof MenuButton);
             assertTrue(children.get(7) instanceof ChoiceBox);
             assertTrue(children.get(9) instanceof Spinner);
@@ -110,15 +110,15 @@ class ConfigurationContextTest {
             assertTrue(children.get(27) instanceof HBox);
             assertTrue(children.get(29) instanceof CheckBox);
             assertTrue(children.get(31) instanceof ChoiceBox);
-            assertTrue(children.get(47) instanceof CheckBox);
-            assertTrue(children.get(49) instanceof ChoiceBox);
-            assertTrue(children.get(51) instanceof HBox);
-            assertTrue(children.get(55) instanceof CheckBox);
+            assertTrue(children.get(49) instanceof CheckBox);
+            assertTrue(children.get(51) instanceof ChoiceBox);
+            assertTrue(children.get(53) instanceof HBox);
             assertTrue(children.get(57) instanceof CheckBox);
-            assertTrue(children.get(61) instanceof CheckBox);
+            assertTrue(children.get(59) instanceof CheckBox);
             assertTrue(children.get(63) instanceof CheckBox);
-            assertTrue(children.get(67) instanceof CheckBox);
+            assertTrue(children.get(65) instanceof CheckBox);
             assertTrue(children.get(69) instanceof CheckBox);
+            assertTrue(children.get(71) instanceof CheckBox);
 
         });
         TestingUtils.waitForRunLater();
@@ -356,6 +356,7 @@ class ConfigurationContextTest {
         Map<ConfigurationContext.DirectoryType, String> answers = Map.of(
             ConfigurationContext.DirectoryType.FILE, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(),
             ConfigurationContext.DirectoryType.WHERE_IS_IT, Configuration.DEFAULT_VALUE_WHEREISIT_DIR,
+            ConfigurationContext.DirectoryType.WHERE_IS_IT_CONFIGURABLE, Configuration.DEFAULT_VALUE_WHEREISITCONFIGURABLE_DIR,
             ConfigurationContext.DirectoryType.MUSIC, new File(System.getProperty("user.home") + "/GazePlay/", "music").getAbsolutePath(),
             ConfigurationContext.DirectoryType.VIDEO, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath()
         );
@@ -364,6 +365,8 @@ class ConfigurationContextTest {
         when(mockConfig.getVideoFolderProperty()).thenReturn(fileDirProperty);
         when(mockConfig.getWhereIsItDir()).thenReturn(fileDirProperty.getValue());
         when(mockConfig.getWhereIsItDirProperty()).thenReturn(fileDirProperty);
+        when(mockConfig.getWhereIsItConfigurableDir()).thenReturn(fileDirProperty.getValue());
+        when(mockConfig.getWhereIsItConfigurableDirProperty()).thenReturn(fileDirProperty);
         when(mockConfig.getFileDir()).thenReturn(fileDirProperty.getValue());
         when(mockConfig.getFiledirProperty()).thenReturn(fileDirProperty);
         when(mockConfig.getMusicFolder()).thenReturn(fileDirProperty.getValue());
@@ -375,6 +378,7 @@ class ConfigurationContextTest {
 
         Platform.runLater(() -> {
             ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+            System.out.println("TYPE IS ACTUALLY " + type);
             HBox result = (HBox) context.buildDirectoryChooser(mockConfig, mockContext, mockTranslator, type);
             Button loadButton = (Button) result.getChildren().get(0);
             Button resetButton = (Button) result.getChildren().get(1);

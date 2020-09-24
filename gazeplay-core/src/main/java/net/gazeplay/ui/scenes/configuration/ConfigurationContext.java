@@ -312,7 +312,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "WhereIsItConfigurableDirectory", COLON);
 
-            Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.WHERE_IS_IT_PARAM);
+            Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.WHERE_IS_IT_CONFIGURABLE);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -566,7 +566,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     enum DirectoryType {
-        FILE, WHERE_IS_IT, WHERE_IS_IT_PARAM, MUSIC, VIDEO
+        FILE, WHERE_IS_IT, WHERE_IS_IT_CONFIGURABLE, MUSIC, VIDEO
     }
 
     private Node buildImageChooser(Configuration configuration,
@@ -604,7 +604,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             case WHERE_IS_IT:
                 fileDir = configuration.getWhereIsItDir();
                 break;
-            case WHERE_IS_IT_PARAM:
+            case WHERE_IS_IT_CONFIGURABLE:
                 fileDir = configuration.getWhereIsItConfigurableDir();
                 break;
             case MUSIC:
@@ -660,7 +660,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 case WHERE_IS_IT:
                     configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
                     break;
-                case WHERE_IS_IT_PARAM:
+                case WHERE_IS_IT_CONFIGURABLE:
                     configuration.getWhereIsItConfigurableDirProperty().setValue(newPropertyValue);
                     break;
                 case MUSIC:
@@ -687,7 +687,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                         buttonLoad.textProperty().setValue(defaultValue);
                     });
                 break;
-            case WHERE_IS_IT_PARAM:
+            case WHERE_IS_IT_CONFIGURABLE:
                 resetButton.setOnAction(
                     e -> {
                         String defaultValue = Configuration.DEFAULT_VALUE_WHEREISITCONFIGURABLE_DIR;
