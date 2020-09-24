@@ -43,7 +43,6 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
 
     VideoPlayerWithLiveFeedbackApp(IGameContext gameContext, Stats stats, String youtubeVideoId) {
         super();
-
         this.stats = stats;
         this.gameContext = gameContext;
 
@@ -174,6 +173,8 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
 
     VideoPlayerWithLiveFeedbackApp(IGameContext gameContext, Stats stats, String youtubeVideoId, double gameSeed) {
         super();
+        this.stats = stats;
+        this.gameContext = gameContext;
 
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 

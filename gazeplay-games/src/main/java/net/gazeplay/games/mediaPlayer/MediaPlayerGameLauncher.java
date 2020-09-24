@@ -12,6 +12,8 @@ import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.pet.PetStats;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class MediaPlayerGameLauncher implements IGameLauncher<ExplorationGamesStats, DimensionGameVariant> {
@@ -21,7 +23,7 @@ public class MediaPlayerGameLauncher implements IGameLauncher<ExplorationGamesSt
     }
 
     @Override
-    public ExplorationGamesStats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    public ExplorationGamesStats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         return new ExplorationGamesStats(scene,"mediaPlayer", nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 

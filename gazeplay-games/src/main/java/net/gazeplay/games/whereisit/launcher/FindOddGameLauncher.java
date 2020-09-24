@@ -15,6 +15,7 @@ import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.whereisit.WhereIsItGameType;
 import net.gazeplay.games.whereisit.WhereIsItStats;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class FindOddGameLauncher implements IGameLauncher<Stats, DimensionGameVariant> {
@@ -24,7 +25,7 @@ public class FindOddGameLauncher implements IGameLauncher<Stats, DimensionGameVa
     }
 
     @Override
-    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         return new WhereIsItStats(scene, WhereIsItGameType.FIND_ODD.getGameName(), nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 

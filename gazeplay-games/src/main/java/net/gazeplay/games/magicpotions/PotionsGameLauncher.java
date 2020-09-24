@@ -9,6 +9,8 @@ import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class PotionsGameLauncher implements IGameLauncher<MagicPotionsStats, IGameVariant> {
@@ -19,7 +21,7 @@ public class PotionsGameLauncher implements IGameLauncher<MagicPotionsStats, IGa
     }
 
     @Override
-    public MagicPotionsStats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    public MagicPotionsStats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         return new MagicPotionsStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 

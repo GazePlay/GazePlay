@@ -15,6 +15,7 @@ import net.gazeplay.games.biboulejump.BibouleJump;
 import net.gazeplay.games.biboulejump.BibouleJumpStats;
 import net.gazeplay.games.biboulejump.BibouleJumpVariant;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class BottleGameLauncher implements IGameLauncher<BottleGameStats, IntGameVariant> {
@@ -30,7 +31,7 @@ public class BottleGameLauncher implements IGameLauncher<BottleGameStats, IntGam
     }
 
     @Override
-    public BottleGameStats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    public BottleGameStats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         return new BottleGameStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 

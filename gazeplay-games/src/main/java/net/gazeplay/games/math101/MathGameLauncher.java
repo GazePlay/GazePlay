@@ -10,6 +10,8 @@ import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public final class MathGameLauncher implements IGameLauncher<Stats, MathGameVari
     }// Need to make customized stats
 
     @Override
-    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         return new MathGamesStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 

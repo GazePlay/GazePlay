@@ -116,6 +116,7 @@ public class SoundsOfLife implements GameLifeCycle {
         Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Configuration config = gameContext.getConfiguration();
         this.stats = stats;
+        this.gameContext = gameContext;
         this.targetAOIList = new ArrayList<>();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
         String path = "data/soundsoflife/";

@@ -10,9 +10,11 @@ import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class ColorsGameLauncher implements IGameLauncher {
+public class ColorsGameLauncher implements IGameLauncher<Stats,IGameVariant> {
 
     private ColorsGamesStats gameStat;
 
@@ -24,8 +26,7 @@ public class ColorsGameLauncher implements IGameLauncher {
     }
 
     @Override
-    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
-
+    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         gameStat = new ColorsGamesStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
         return gameStat;
     }

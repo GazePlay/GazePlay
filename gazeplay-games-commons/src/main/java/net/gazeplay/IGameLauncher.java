@@ -8,6 +8,7 @@ import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public interface IGameLauncher<T extends Stats, V extends IGameVariant> {
@@ -16,7 +17,7 @@ public interface IGameLauncher<T extends Stats, V extends IGameVariant> {
 
     GameLifeCycle createNewGame(IGameContext gameContext, V gameVariant, T stats);
 
-    T createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo);
+    T createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo);
 
     GameLifeCycle replayGame(IGameContext gameContext, V gameVariant, T stats, double gameSeed);
 }

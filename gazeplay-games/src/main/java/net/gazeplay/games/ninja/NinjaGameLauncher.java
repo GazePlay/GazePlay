@@ -10,6 +10,8 @@ import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class NinjaGameLauncher implements IGameLauncher<Stats, EnumGameVariant<NinjaGameVariant>> {
@@ -20,7 +22,7 @@ public class NinjaGameLauncher implements IGameLauncher<Stats, EnumGameVariant<N
     }
 
     @Override
-    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         return new NinjaStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 

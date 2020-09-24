@@ -11,6 +11,7 @@ import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class OpinionsGameLauncher implements IGameLauncher<OpinionsGameStats, IGameVariant> {
@@ -26,7 +27,7 @@ public class OpinionsGameLauncher implements IGameLauncher<OpinionsGameStats, IG
     }
 
     @Override
-    public OpinionsGameStats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    public OpinionsGameStats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         return new OpinionsGameStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 

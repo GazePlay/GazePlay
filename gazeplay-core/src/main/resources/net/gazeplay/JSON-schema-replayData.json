@@ -60,22 +60,30 @@
         "fixationSequence": {
             "type": "array",
             "items": {
-            	"type": "object",
-            	"properties": {
-	            	"timeGaze": {
-			            "type": "number"
-			        },
-			        "gazeDuration": {
-			            "type": "number"
-			        },
-			        "x": {
-			            "type": "number"
-			        },
-			        "y": {
-			            "type": "number"
-			        }
-            	},
-            	"required": ["timeGaze", "gazeDuration", "x", "y"]
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "timeGaze": {
+                    "type": "number"
+                  },
+                  "gazeDuration": {
+                    "type": "number"
+                  },
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "timeGaze",
+                  "gazeDuration",
+                  "x",
+                  "y"
+                ]
+              }
             }         
         },
         "coordinatesAndTimeStamp": {

@@ -9,6 +9,7 @@ import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.stats.SelectionGamesStats;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 @Slf4j
@@ -19,7 +20,7 @@ public class MagicPotionsStats extends SelectionGamesStats {
         this.gameName = "Magic Potions";
     }
 
-    MagicPotionsStats(Scene gameContextScene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    MagicPotionsStats(Scene gameContextScene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         super(gameContextScene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
         this.gameName = "Magic Potions";
     }

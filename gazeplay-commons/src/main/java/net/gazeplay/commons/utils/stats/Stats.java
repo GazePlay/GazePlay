@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.image.WritableImage;
@@ -155,7 +156,7 @@ public class Stats implements GazeMotionListener {
         this(gameContextScene, null);
     }
 
-    public Stats(final Scene gameContextScene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    public Stats(final Scene gameContextScene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         this(gameContextScene, null, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 
@@ -166,7 +167,7 @@ public class Stats implements GazeMotionListener {
         heatMapPixelSize = computeHeatMapPixelSize(gameContextScene);
     }
 
-    public Stats(final Scene gameContextScene, final String gameName, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    public Stats(final Scene gameContextScene, final String gameName, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         this.gameContextScene = gameContextScene;
         this.gameName = gameName;
         this.nbGoalsReached = nbGoalsReached;
@@ -448,9 +449,8 @@ public class Stats implements GazeMotionListener {
     }
 
     public void start() {
-        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        float screenWidth = gd.getDisplayMode().getWidth();
-        float screenHeight = gd.getDisplayMode().getHeight();
+        double screenWidth = gameContextScene.getWidth();
+        double screenHeight = gameContextScene.getHeight();
 
         final Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isVideoRecordingEnabled()) {

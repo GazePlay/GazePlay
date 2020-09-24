@@ -7,6 +7,7 @@ import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.stats.ShootGamesStats;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class EggGameStats extends ShootGamesStats {
@@ -17,7 +18,7 @@ public class EggGameStats extends ShootGamesStats {
         gameName = "Egg";
     }
 
-    public EggGameStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    public EggGameStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
 
         super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
         gameName = "Egg";

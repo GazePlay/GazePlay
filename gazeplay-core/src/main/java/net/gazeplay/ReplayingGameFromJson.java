@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.everit.json.schema.Schema;
+import org.everit.json.schema.ValidationException;
 import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -37,6 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileInputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -51,7 +53,7 @@ public class ReplayingGameFromJson {
     private GameSpec selectedGameSpec;
     private IGameVariant gameVariant;
     private JsonArray coordinatesAndTimeStamp;
-    private LinkedList<FixationPoint> fixationSequence;
+    private ArrayList<LinkedList<FixationPoint>> fixationSequence;
     private int nbGoalsReached;
     private int nbGoalsToReach;
     private int nbUnCountedGoalsReached;
@@ -92,6 +94,8 @@ public class ReplayingGameFromJson {
             JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
             Schema schema = SchemaLoader.load(rawSchema);
             schema.validate(object); // throws a ValidationException if this object is invalid
+        } catch (ValidationException e){
+            e.printStackTrace();
         }
 
         BufferedReader bufferedReader = null;
@@ -114,11 +118,13 @@ public class ReplayingGameFromJson {
         lifeCycle = json.getLifeCycle();
         roundsDurationReport = json.getRoundsDurationReport();
         String filePrefix = fileName.substring(0, fileName.lastIndexOf("-"));
-        final File gazeMetricsFile = new File(filePrefix + "-metrics.png");
+        final File gazeMetricsMouseFile = new File(filePrefix + "-metricsMouse.png");
+        final File gazeMetricsGazeFile = new File(filePrefix + "-metricsGaze.png");
+        final File gazeMetricsMouseAndGazeFile = new File(filePrefix + "-metricsMouseAndGaze.png");
         final File heatMapCsvFile = new File(filePrefix + "-heatmap.csv");
         final File screenShotFile = new File(filePrefix + "-screenshot.png");
         final File colorBandsFile = new File(filePrefix + "-colorBands.png");
-        savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsFile, screenShotFile,
+        savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsMouseFile, gazeMetricsGazeFile, gazeMetricsMouseAndGazeFile, screenShotFile,
             colorBandsFile, replayDataFile);
 
         replayGame();
@@ -197,15 +203,15 @@ public class ReplayingGameFromJson {
     }
 
     private void drawFixationLines(Canvas canvas, JsonArray coordinatesAndTimeStamp) {
-        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        int screenWidth = gd.getDisplayMode().getWidth();
-        int screenHeight = gd.getDisplayMode().getHeight();
+        Dimension2D dimensions = gameContext.getCurrentScreenDimensionSupplier().get();
+        int screenWidth = (int) dimensions.getWidth();
+        int screenHeight = (int) dimensions.getHeight();
         final GraphicsContext graphics = canvas.getGraphicsContext2D();
         for (JsonElement coordinateAndTimeStamp : coordinatesAndTimeStamp) {
             prevTime = nextTime;
             JsonObject coordinateAndTimeObj = coordinateAndTimeStamp.getAsJsonObject();
-            nextX = (int)(Float.parseFloat(coordinateAndTimeObj.get("X").getAsString()) * screenWidth);
-            nextY = (int)(Float.parseFloat(coordinateAndTimeObj.get("Y").getAsString()) * screenHeight);
+            nextX =  (int)(Float.parseFloat(coordinateAndTimeObj.get("X").getAsString()) * screenWidth);
+            nextY =  (int)(Float.parseFloat(coordinateAndTimeObj.get("Y").getAsString()) * screenHeight);
             nextTime = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
             delay = nextTime - prevTime;
             paint(graphics, canvas);
@@ -219,11 +225,11 @@ public class ReplayingGameFromJson {
     public void paint(GraphicsContext graphics, Canvas canvas) {
         graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         graphics.setStroke(javafx.scene.paint.Color.RED);
-        graphics.strokeOval(nextX - 50, nextY - 50, 50, 50);
+        graphics.strokeOval(nextX - 25, nextY - 25, 50, 50);
         graphics.setFill(javafx.scene.paint.Color.rgb(255, 255, 0, 0.5));
-        graphics.fillOval(nextX - 50, nextY - 50, 50, 50);
+        graphics.fillOval(nextX - 25, nextY - 25, 50, 50);
 
-        Point2D point = new Point2D(nextX, nextY);
+        Point2D point = new Point2D((int) gameContext.getPrimaryStage().getX() + nextX, (int) gameContext.getPrimaryStage().getY() + nextY);
         gameContext.getGazeDeviceManager().onSavedMovementsUpdate(point);
     }
 
@@ -254,5 +260,5 @@ class JsonFile {
     @Getter
     private RoundsDurationReport roundsDurationReport;
     @Getter
-    private LinkedList<FixationPoint> fixationSequence;
+    private ArrayList<LinkedList<FixationPoint>> fixationSequence;
 }

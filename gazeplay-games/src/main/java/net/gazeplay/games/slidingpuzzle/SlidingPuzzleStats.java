@@ -13,6 +13,7 @@ import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.stats.SelectionGamesStats;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 @Slf4j
@@ -23,7 +24,7 @@ class SlidingPuzzleStats extends SelectionGamesStats {
         this.gameName = "Sliding Puzzle";
     }
 
-    SlidingPuzzleStats(Scene gameContextScene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    SlidingPuzzleStats(Scene gameContextScene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         super(gameContextScene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
         this.gameName = "Sliding Puzzle";
     }

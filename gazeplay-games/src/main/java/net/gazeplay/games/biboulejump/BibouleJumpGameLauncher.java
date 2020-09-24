@@ -10,6 +10,7 @@ import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class BibouleJumpGameLauncher implements IGameLauncher<BibouleJumpStats, EnumGameVariant<BibouleJumpVariant>> {
@@ -20,7 +21,7 @@ public class BibouleJumpGameLauncher implements IGameLauncher<BibouleJumpStats, 
     }
 
     @Override
-    public BibouleJumpStats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, LinkedList<FixationPoint> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    public BibouleJumpStats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         return new BibouleJumpStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 
