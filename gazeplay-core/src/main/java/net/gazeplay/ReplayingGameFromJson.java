@@ -38,6 +38,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileInputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -82,11 +84,7 @@ public class ReplayingGameFromJson {
 
         final File replayDataFile = new File(fileName);
 
-        InputStream in = new FileInputStream(fileName);
-        if (in == null) {
-            throw new NullPointerException("Cannot find resource file " + fileName);
-        }
-
+        InputStream in = Files.newInputStream(Paths.get(fileName));
         JSONTokener tokener = new JSONTokener(in);
         JSONObject object = new JSONObject(tokener);
 
@@ -100,7 +98,7 @@ public class ReplayingGameFromJson {
 
         BufferedReader bufferedReader = null;
         try {
-            bufferedReader = new BufferedReader(new FileReader(replayDataFile, Charset.defaultCharset()));
+            bufferedReader = Files.newBufferedReader(replayDataFile.toPath(), Charset.defaultCharset());
         } catch (IOException e) {
             e.printStackTrace();
         }
