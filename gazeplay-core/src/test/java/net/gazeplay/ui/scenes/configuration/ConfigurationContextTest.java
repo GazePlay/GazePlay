@@ -378,7 +378,6 @@ class ConfigurationContextTest {
 
         Platform.runLater(() -> {
             ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-            System.out.println("TYPE IS ACTUALLY " + type);
             HBox result = (HBox) context.buildDirectoryChooser(mockConfig, mockContext, mockTranslator, type);
             Button loadButton = (Button) result.getChildren().get(0);
             Button resetButton = (Button) result.getChildren().get(1);
