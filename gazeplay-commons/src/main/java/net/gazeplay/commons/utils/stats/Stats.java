@@ -6,7 +6,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
-import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.image.WritableImage;
@@ -38,17 +37,14 @@ import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
-import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.*;
 
@@ -473,8 +469,8 @@ public class Stats implements GazeMotionListener {
                     final int getY = (int) e.getY();
                     if (getX > 0 && getY > 0) {
                         JsonObject coordinates = new JsonObject();
-                        coordinates.addProperty("X", getX/screenWidth);
-                        coordinates.addProperty("Y", getY/screenHeight);
+                        coordinates.addProperty("X", getX / screenWidth);
+                        coordinates.addProperty("Y", getY / screenHeight);
                         coordinates.addProperty("time", timeToFixation);
                         saveCoordinates(coordinates);
 
@@ -510,8 +506,8 @@ public class Stats implements GazeMotionListener {
                 final int getY = (int) e.getSceneY();
                 if (getX > 0 || getY > 0) {
                     JsonObject coordinates = new JsonObject();
-                    coordinates.addProperty("X", getX/screenWidth);
-                    coordinates.addProperty("Y", getY/screenHeight);
+                    coordinates.addProperty("X", getX / screenWidth);
+                    coordinates.addProperty("Y", getY / screenHeight);
                     coordinates.addProperty("time", timeElapsedMillis);
                     saveCoordinates(coordinates);
 
@@ -541,8 +537,8 @@ public class Stats implements GazeMotionListener {
                 }
             };
 
-                gameContextScene.getRoot().addEventFilter(GazeEvent.ANY, recordGazeMovements);
-                gameContextScene.getRoot().addEventFilter(MouseEvent.ANY, recordMouseMovements);
+            gameContextScene.getRoot().addEventFilter(GazeEvent.ANY, recordGazeMovements);
+            gameContextScene.getRoot().addEventFilter(MouseEvent.ANY, recordMouseMovements);
 
         });
         currentRoundStartTime = lifeCycle.getStartTime();
@@ -668,8 +664,7 @@ public class Stats implements GazeMotionListener {
         Graphics gGaze = initGazeMetricsImage(bImageGaze, screenshotImage);
         Graphics gMouseAndGaze = initGazeMetricsImage(bImageMouseAndGaze, screenshotImage);
 
-        try (BufferedWriter bf =
-                 new BufferedWriter(new FileWriter(replayDataFile, Charset.defaultCharset()))) {
+        try (BufferedWriter bf = Files.newBufferedWriter(replayDataFile.toPath(), Charset.defaultCharset())) {
             bf.write(buildSavedDataJSON(coordinateData).toString());
             bf.flush();
         }
@@ -921,7 +916,6 @@ public class Stats implements GazeMotionListener {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         int screenWidth = gd.getDisplayMode().getWidth();
         int screenHeight = gd.getDisplayMode().getHeight();
-        System.out.println("Screen " + screenWidth + " x " + screenHeight);
 
         int factor = greatestCommonFactor(screenWidth, screenHeight);
 
@@ -930,13 +924,13 @@ public class Stats implements GazeMotionListener {
         return widthRatio + ":" + heightRatio;
     }
 
-    public void setGameVariant(String gameVariant, String gameNameCode){
+    public void setGameVariant(String gameVariant, String gameNameCode) {
 
         currentGameVariant = gameVariant;
         currentGameNameCode = gameNameCode;
     }
 
-    public void setGameSeed(double gameSeed){
+    public void setGameSeed(double gameSeed) {
 
         currentGameSeed = gameSeed;
     }
