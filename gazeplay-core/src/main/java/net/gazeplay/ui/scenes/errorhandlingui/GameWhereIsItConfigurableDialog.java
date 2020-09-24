@@ -265,10 +265,8 @@ public class GameWhereIsItConfigurableDialog extends Stage {
 
             levelChooser.getSelectionModel().select(0);
 
-            final double PREF_WIDTH = 200;
-            final double PREF_HEIGHT = 25;
-            levelChooser.setPrefWidth(PREF_WIDTH);
-            levelChooser.setPrefHeight(PREF_HEIGHT);
+            levelChooser.setPrefWidth(200);
+            levelChooser.setPrefHeight(25);
 
             levelChooser.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue != null) {
