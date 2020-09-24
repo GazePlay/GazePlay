@@ -424,8 +424,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
 
             final int movementHistoryEndingIndex = startAndEndIdx.get(i)[1];
             final int movementHistoryStartingIndex = startAndEndIdx.get(i)[0];
-            log.info("areaOfInterestList size :{}",areaOfInterestList.size());
-            log.info("start: {} end: {}",movementHistoryStartingIndex,movementHistoryEndingIndex);
             final Point2D[] points = new Point2D[areaOfInterestList.size()];
             int j;
             for (j = 0; j < areaOfInterestList.size(); j++) {

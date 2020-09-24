@@ -299,6 +299,7 @@ public class Piano extends Parent implements GameLifeCycle {
             e.printStackTrace();
         }
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override

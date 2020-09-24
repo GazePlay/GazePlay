@@ -96,6 +96,7 @@ public class MagicCards implements GameLifeCycle {
         cardList.get(winnerCardIndex).toFront();
 
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override

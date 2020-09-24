@@ -264,3 +264,6 @@ addNewImagethumbdown,,,,,,Add new image unhappy...,,Ajouter une nouvelle image p
 addNewImagenocare,,,,,,Add new image don't care...,,Ajouter une nouvelle image s'en fiche ...,,,,,,,,,,Añadir una nueva imagen no importa ...,
 customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,,,
 
+Mouse,,,,,,Mouse,,Souris,,,,,,,,,,,
+Gaze,,,,,,Gaze,,Regard,,,,,,,,,,,
+MouseAndGaze,,,,,,Mouse and Gaze,,Souris et Regard,,,,,,,,,,,

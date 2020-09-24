@@ -172,6 +172,7 @@ public class ColorsGame implements GameLifeCycle {
         colorToolBox.getColorBoxes().forEach(ColorBox::updateHeight);
 
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override

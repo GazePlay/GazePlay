@@ -57,6 +57,7 @@ public class Order implements GameLifeCycle {
     @Override
     public void launch() {
         gameContext.setLimiterAvailable();
+        gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.start();
         spawn();
     }

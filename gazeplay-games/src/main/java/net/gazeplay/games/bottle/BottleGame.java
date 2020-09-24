@@ -191,6 +191,7 @@ public class BottleGame implements GameLifeCycle {
 
 
         bottleGameStats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(bottleGameStats);
     }
 
     private void initBall() {

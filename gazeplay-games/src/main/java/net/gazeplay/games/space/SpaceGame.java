@@ -394,6 +394,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.start();
 
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.start();
     }
 

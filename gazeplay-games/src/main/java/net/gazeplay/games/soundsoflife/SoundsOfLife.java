@@ -27,12 +27,15 @@ public class SoundsOfLife implements GameLifeCycle {
     private final Stats stats;
     private final ReplayablePseudoRandom randomGenerator;
 
+    private final IGameContext gameContext;
+
     private final ArrayList<TargetAOI> targetAOIList;
 
     public SoundsOfLife(IGameContext gameContext, Stats stats, int gameVariant) {
         Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Configuration config = gameContext.getConfiguration();
         this.stats = stats;
+        this.gameContext = gameContext;
         this.targetAOIList = new ArrayList<>();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
@@ -204,6 +207,7 @@ public class SoundsOfLife implements GameLifeCycle {
     @Override
     public void launch() {
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override

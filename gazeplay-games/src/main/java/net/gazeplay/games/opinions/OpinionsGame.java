@@ -153,6 +153,7 @@ public class OpinionsGame implements GameLifeCycle {
         gameContext.getChildren().addAll(backgroundLayer, middleLayer);
 
         opinionGameStats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(opinionGameStats);
     }
 
     private void updateScore() {

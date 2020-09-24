@@ -5,10 +5,12 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import mockit.MockUp;
 import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +26,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -153,6 +156,8 @@ class StatsTest {
             }
         };
 
+        when(statsSpy.gameContextScene.getRoot()).thenReturn(new Pane());
+
         statsSpy.start();
         statsSpy.stop();
 
@@ -167,12 +172,12 @@ class StatsTest {
     @Test
     void shouldIncrementHeatMapOnGazeMoved() {
         Stats statsSpy = spy(stats);
+        when(statsSpy.gameContextScene.getRoot()).thenReturn(new Pane());
 
         statsSpy.start();
         statsSpy.gazeMoved(new Point2D(20.0, 40.0));
 
         verify(statsSpy).incrementHeatMap(20, 40);
-        verify(statsSpy).incrementFixationSequence(20, 40);
     }
 
     @Test
@@ -212,6 +217,8 @@ class StatsTest {
                 return mockConfig;
             }
         };
+
+        when(stats.gameContextScene.getRoot()).thenReturn(new Pane());
 
         stats.start();
         stats.gazeMoved(new Point2D(30, 40));

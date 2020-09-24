@@ -13,11 +13,13 @@ import net.gazeplay.commons.utils.stats.Stats;
  */
 public class DrawApplication implements GameLifeCycle {
 
-    Stats stats;
+    private final Stats stats;
+    private final IGameContext gameContext;
     private final ReplayablePseudoRandom randomGenerator;
 
     public DrawApplication(IGameContext gameContext, Stats stats) {
         this.stats  = stats;
+        this.gameContext = gameContext;
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
 
@@ -45,6 +47,7 @@ public class DrawApplication implements GameLifeCycle {
 
     public DrawApplication(IGameContext gameContext, Stats stats, double gameSeed) {
         this.stats  = stats;
+        this.gameContext = gameContext;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
         DrawBuilder drawBuilder = new DrawBuilder(randomGenerator);
@@ -72,6 +75,7 @@ public class DrawApplication implements GameLifeCycle {
     @Override
     public void launch() {
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override

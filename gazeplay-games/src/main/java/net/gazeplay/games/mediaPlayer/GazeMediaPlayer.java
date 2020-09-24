@@ -49,6 +49,7 @@ import java.nio.file.Files;
 public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     private final IGameContext gameContext;
+    private final Stats stats;
 
 
     private final MediaButton[] mediaButtons;
@@ -73,6 +74,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     GazeMediaPlayer(final IGameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
+        this.stats = stats;
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         musicList = new MediaFileReader(gameContext);
@@ -150,7 +152,6 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         progressIndicator.setMouseTransparent(true);
 
         updateMusic();
-        stats.notifyNewRoundReady();
     }
 
     public static StackPaneButton createGraphicStackPaneButton(double width, double height, @NonNull String imageURL) {
@@ -183,6 +184,8 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
+        stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
         createHandlers();
     }
 

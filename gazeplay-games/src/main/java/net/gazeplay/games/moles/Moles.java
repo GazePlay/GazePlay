@@ -142,7 +142,7 @@ public class Moles extends Parent implements GameLifeCycle {
 
         this.gameContext.resetBordersToFront();
         stats.notifyNewRoundReady();
-
+        gameContext.getGazeDeviceManager().addStats(stats);
         play();
 
     }
