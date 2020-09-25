@@ -31,7 +31,6 @@ import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.components.CssUtil;
-import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 
 import java.io.*;
@@ -87,10 +86,10 @@ public class GameWhereIsItConfigurableDialog extends Stage {
         sceneContentPane.setTop(topPane);
         sceneContentPane.setCenter(choicePanelScroller);
 
-        final Configuration config = ActiveConfigurationContext.getInstance();
+        final Configuration configuration = ActiveConfigurationContext.getInstance();
 
         final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: white;";
-        Label label = new Label( "");
+        Label label = new Label("");
         label.setStyle(whereIsItLabelStyle);
         label.setAlignment(Pos.CENTER);
 
@@ -101,7 +100,7 @@ public class GameWhereIsItConfigurableDialog extends Stage {
         doneButton.wrapTextProperty().setValue(true);
         doneButton.setAlignment(Pos.CENTER_RIGHT);
 
-        Node input = buildDirectoryChooser(config, translator, doneButton, label, gazePlay);
+        Node input = buildDirectoryChooser(configuration, translator, doneButton, label, gazePlay);
 
         choicePane.getChildren().add(input);
 
@@ -115,7 +114,7 @@ public class GameWhereIsItConfigurableDialog extends Stage {
 
         Scene scene = new Scene(sceneContentPane, Color.TRANSPARENT);
 
-        CssUtil.setPreferredStylesheets(config, scene, gazePlay.getCurrentScreenDimensionSupplier());
+        CssUtil.setPreferredStylesheets(configuration, scene, gazePlay.getCurrentScreenDimensionSupplier());
 
         setScene(scene);
         setWidth(primaryStage.getWidth() / 2);
@@ -179,7 +178,7 @@ public class GameWhereIsItConfigurableDialog extends Stage {
                 updateErrorMessage("", newQuestionOrderFile, levelChooser, configuration, translator, label, doneButton);
             });
 
-        buttonLoad.setOnAction(arg0 -> {
+        buttonLoad.setOnAction(event -> {
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 final File currentFolder;
 
@@ -227,8 +226,9 @@ public class GameWhereIsItConfigurableDialog extends Stage {
     }
 
     private void updateErrorMessage(String newPropertyValue, File newQuestionOrderFile, ChoiceBox<Integer> levelChooser, Configuration configuration, Translator translator, Label label, Button doneButton) {
-        String errorMessage = "";//getNumberOfValideDirectories(newPropertyValue, configuration, translator);
-        if(newPropertyValue.equals("")){
+        configuration.getWhereIsItConfigurableDirProperty().setValue(newPropertyValue);
+        String errorMessage = getNumberOfValidDirectories(newPropertyValue, configuration, translator);
+        if (newPropertyValue.equals("")) {
             changeTextLabel(label, "", "-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: white;");
             doneButton.setDisable(true);
         } else if (!(new File(newPropertyValue + "/questions.csv")).exists()) {
@@ -237,7 +237,7 @@ public class GameWhereIsItConfigurableDialog extends Stage {
         } else if (!(newQuestionOrderFile).exists()) {
             changeTextLabel(label, "questionOrder.csv " + translator.translate("ismissing"), "-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: red;");
             doneButton.setDisable(true);
-        } else if (!(errorMessage).equals("")) {
+        } else if (!errorMessage.equals("")) {
             changeTextLabel(label, errorMessage, "-fx-font-weight: bold; -fx-font-size: 20; -fx-text-fill: red;");
             doneButton.setDisable(true);
         } else {
@@ -246,7 +246,6 @@ public class GameWhereIsItConfigurableDialog extends Stage {
             if (newQuestionOrderFile.exists()) {
                 updateLevelSelector(newQuestionOrderFile, levelChooser);
             }
-            configuration.getWhereIsItConfigurableDirProperty().setValue(newPropertyValue);
         }
     }
 
@@ -282,10 +281,9 @@ public class GameWhereIsItConfigurableDialog extends Stage {
 
     private void setCurrentLevel(int level) {
         this.currentLevelItem = level;
-        log.info(" LEVEL CHOSE : {}", level);
     }
 
-    private String getNumberOfValideDirectories(String selectedPath, Configuration configuration, Translator translator) {
+    private String getNumberOfValidDirectories(String selectedPath, Configuration configuration, Translator translator) {
         final File imagesDirectory = new File(selectedPath + "/images/");
         int validDirectoriesNumber = 0;
         List<String> imagesFolders = new LinkedList<>();
@@ -323,36 +321,37 @@ public class GameWhereIsItConfigurableDialog extends Stage {
             String readLine;
             int line = 1;
             while ((readLine = b.readLine()) != null) {
-                String[] split = readLine.split(",");
-                if (split.length <= 3) {
+                if (readLine.length() == 0) {
                     return "'questionOrder.csv' " + translator.translate("Line") + " " + line + ": " + translator.translate("LineIsEmpty");
                 }
-                String answer = split[0];
+                String[] split = readLine.split(",");
                 try {
-                    int numberOfImages = Integer.parseInt(split[ 1]) * Integer.parseInt( split[2]);
-                    if (numberOfImages <= split.length - 5) {
-                        return "'questionOrder.csv' " + translator.translate("Line") + " " + line + ": " + getFinalSentence(translator, "LineNeedEltButGot", numberOfImages, (split.length - 3));
+                    int numberOfImages = Integer.parseInt(split[1]) * Integer.parseInt(split[2]);
+                    String[] splittedElement = split[3].split(";");
+                    if (numberOfImages != splittedElement.length) {
+                        return "'questionOrder.csv' " + translator.translate("Line") + " " + line + ": " + getFinalSentence(translator, "LineNeedEltButGot", numberOfImages, splittedElement.length);
                     }
-                    boolean correctImageFound = false;
-                    for (int i = 2; i < split.length && i < numberOfImages + 3; i++) {
-                        if (split[i].equals(split[0])) {
-                            correctImageFound = true;
+                    boolean correctAnwerFound = false;
+                    String answer = split[0];
+                    for (int i = 0; i < splittedElement.length; i++) {
+                        if (splittedElement[i].equals(answer)) {
+                            correctAnwerFound = true;
                         }
-                        if (!(split[i] == null) && !split[i].equals("") && split[i].toString().length()!=0 ) {
+                        if (!(splittedElement[i] == null) && !splittedElement[i].equals("") && splittedElement[i].length() != 0) {
                             int j = 0;
-                            while (j < imagesFolders.size() && !imagesFolders.get(j).equals(split[i])) {
+                            while (j < imagesFolders.size() && !imagesFolders.get(j).equals(splittedElement[i])) {
                                 j++;
                             }
                             if (j >= imagesFolders.size()) {
-                                return "'questionOrder.csv' " + translator.translate("Line") + " " + line + ": " + getFinalSentence(translator, "ImageDirectoryIsMissing", split[i]);
+                                return "'questionOrder.csv' " + translator.translate("Line") + " " + line + ": " + getFinalSentence(translator, "ImageDirectoryIsMissing", splittedElement[i]);
                             }
                         }
                     }
-                    if (!correctImageFound) {
+                    if (!correctAnwerFound) {
                         return "'questionOrder.csv' " + translator.translate("Line") + " " + line + ": " + getFinalSentence(translator, "CorrectAnswerIsMissingInList", split[0]);
                     }
                 } catch (NumberFormatException e) {
-                    return "'questionOrder.csv' " + translator.translate("Line") + " " + line + ": " + translator.translate("TheLastElementsShouldBeLineAndCol");
+                    return "'questionOrder.csv' " + translator.translate("Line") + " " + line + ": " + translator.translate("TheSecondElementsShouldBeLineAndCol");
                 }
                 line++;
             }
