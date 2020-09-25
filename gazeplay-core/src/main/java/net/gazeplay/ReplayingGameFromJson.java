@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import javafx.scene.paint.Color;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
 import org.everit.json.schema.loader.SchemaLoader;
@@ -62,8 +63,7 @@ public class ReplayingGameFromJson {
     private LifeCycle lifeCycle;
     private RoundsDurationReport roundsDurationReport;
     private SavedStatsInfo savedStatsInfo;
-    private int nextX, nextY, nextTime, prevTime;
-    private int delay = 0; // refresh rate
+    private int nextTimeMouse, nextTimeGaze, prevTimeMouse, prevTimeGaze;
 
     public ReplayingGameFromJson(GazePlay gazePlay, ApplicationContext applicationContext, List<GameSpec> games) {
         this.applicationContext = applicationContext;
@@ -182,7 +182,6 @@ public class ReplayingGameFromJson {
                 };
             };
         };
-
         loadingService.setOnSucceeded( e -> {
             loadingService.reset();
             gameContext.exitGame(statsSaved, gazePlay, currentGame, "replay");
@@ -198,6 +197,7 @@ public class ReplayingGameFromJson {
         if (!loadingService.isRunning()) {
             loadingService.start();
         }
+
     }
 
     private void drawFixationLines(Canvas canvas, JsonArray coordinatesAndTimeStamp) {
@@ -206,13 +206,22 @@ public class ReplayingGameFromJson {
         int screenHeight = (int) dimensions.getHeight();
         final GraphicsContext graphics = canvas.getGraphicsContext2D();
         for (JsonElement coordinateAndTimeStamp : coordinatesAndTimeStamp) {
-            prevTime = nextTime;
             JsonObject coordinateAndTimeObj = coordinateAndTimeStamp.getAsJsonObject();
-            nextX =  (int)(Float.parseFloat(coordinateAndTimeObj.get("X").getAsString()) * screenWidth);
-            nextY =  (int)(Float.parseFloat(coordinateAndTimeObj.get("Y").getAsString()) * screenHeight);
-            nextTime = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
-            delay = nextTime - prevTime;
-            paint(graphics, canvas);
+            String nextEvent = coordinateAndTimeObj.get("event").getAsString();
+            int nextX = (int) (Float.parseFloat(coordinateAndTimeObj.get("X").getAsString()) * screenWidth);
+            int nextY = (int) (Float.parseFloat(coordinateAndTimeObj.get("Y").getAsString()) * screenHeight);
+            int delay = 0;
+            if (nextEvent.equals("gaze")) {
+                prevTimeGaze = nextTimeGaze;
+                nextTimeGaze = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
+                delay = nextTimeGaze - prevTimeGaze;
+                paint(graphics, canvas, nextX, nextY, "gaze");
+            } else {
+                prevTimeMouse = nextTimeMouse;
+                nextTimeMouse = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
+                delay = nextTimeMouse - prevTimeMouse;
+                paint(graphics, canvas, nextX, nextY, "mouse");
+            }
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException e) {
@@ -220,15 +229,23 @@ public class ReplayingGameFromJson {
         }
     }
 
-    public void paint(GraphicsContext graphics, Canvas canvas) {
-        graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        graphics.setStroke(javafx.scene.paint.Color.RED);
-        graphics.strokeOval(nextX - 25, nextY - 25, 50, 50);
-        graphics.setFill(javafx.scene.paint.Color.rgb(255, 255, 0, 0.5));
-        graphics.fillOval(nextX - 25, nextY - 25, 50, 50);
+    public void paint(GraphicsContext graphics, Canvas canvas, int nextX, int nextY,  String event) {
+        javafx.scene.paint.Color strokeColor, fillColor;
+        if(event.equals("gaze")) {
+            strokeColor = Color.BLUE;
+            fillColor = Color.rgb(255, 255, 0, 0.5);
+        } else { // if (event.equals("mouse")) {
+            strokeColor = Color.RED;
+            fillColor = Color.rgb(0, 255, 255, 0.5);
+        }
+         //   graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            graphics.setStroke(strokeColor);
+            graphics.strokeOval(nextX - 25, nextY - 25, 50, 50);
+            graphics.setFill(fillColor);
+            graphics.fillOval(nextX - 25, nextY - 25, 50, 50);
 
-        Point2D point = new Point2D((int) gameContext.getPrimaryStage().getX() + nextX, (int) gameContext.getPrimaryStage().getY() + nextY);
-        gameContext.getGazeDeviceManager().onSavedMovementsUpdate(point);
+            Point2D point = new Point2D((int) gameContext.getPrimaryStage().getX() + nextX, (int) gameContext.getPrimaryStage().getY() + nextY);
+            gameContext.getGazeDeviceManager().onSavedMovementsUpdate(point,event);
     }
 
 }

@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -112,7 +113,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                 if (removed == null) {
                     log.warn("EventFilter to remove not found");
                 } else {
-                    if (removed.isOn()) {
+                    if (removed.isOnGaze() || removed.isOnMouse()) {
                         Platform.runLater(
                             () ->
                                 removed.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, System.currentTimeMillis(), 0, 0))
@@ -146,7 +147,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         }
     }
 
-    synchronized void onGazeUpdate(Point2D gazePositionOnScreen) {
+    synchronized void onGazeUpdate(Point2D gazePositionOnScreen, String event) {
 
         // notifyAllGazeMotionListeners(gazePositionOnScreen);
         final double positionX = gazePositionOnScreen.getX();
@@ -169,58 +170,92 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
             for (GazeInfos gi : c) {
                 final Node node = gi.getNode();
                 if (gameScene != null && node != gameScene.getNode()) {
-                    eventFire(positionX, positionY, gi, node);
+                    eventFire(positionX, positionY, gi, node, event);
                 }
             }
 
             if (gameScene != null) {
-                eventFire(positionX, positionY, gameScene, gameScene.getNode());
+                eventFire(positionX, positionY, gameScene, gameScene.getNode(), event);
             }
 
         }
     }
 
     @Override
-    public void onSavedMovementsUpdate(Point2D gazePositionOnScreen) {
-        onGazeUpdate(gazePositionOnScreen);
+    public void onSavedMovementsUpdate(Point2D gazePositionOnScreen, String event) {
+        onGazeUpdate(gazePositionOnScreen, event);
     }
 
-    public void eventFire(double positionX, double positionY, GazeInfos gi, Node node) {
+    public void eventFire(double positionX, double positionY, GazeInfos gi, Node node, String event) {
         if (!node.isDisable()) {
 
             Point2D localPosition = node.screenToLocal(positionX, positionY);
 
             if (localPosition != null && node.contains(localPosition)) {
-                if (gi.isOn()) {
-                    Platform.runLater(
-                        () ->
-                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-                    );
-                } else {
-
-                    gi.setOn(true);
-                    gi.setTime(System.currentTimeMillis());
-                    Platform.runLater(
-                        () ->
-                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-                    );
-                }
-            } else {// gaze is not on the shape
-
-                if (gi.isOn()) {// gaze was on the shape previously
-                    gi.setOn(false);
-                    gi.setTime(-1);
-                    if (localPosition != null) {
+                if(event.equals("gaze")) {
+                    if (gi.isOnGaze()) {
                         Platform.runLater(
                             () ->
-                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), localPosition.getX(), localPosition.getY()))
                         );
                     } else {
-                        // nothing to do
-                    }
-                } else {// gaze was not on the shape previously
-                    // nothing to do
 
+                        gi.setOnGaze(true);
+                        gi.setTime(System.currentTimeMillis());
+                        Platform.runLater(
+                            () ->
+                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                        );
+                    }
+                } else {
+                    if (gi.isOnMouse()) {
+                        Platform.runLater(
+                            () ->
+                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                        );
+                    } else {
+
+                        gi.setOnMouse(true);
+                        gi.setTime(System.currentTimeMillis());
+                        Platform.runLater(
+                            () ->
+                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                        );
+                    }
+                }
+            } else {// gaze is not on the shape
+                if(event.equals("gaze")) {
+                    if (gi.isOnGaze()) {// gaze was on the shape previously
+                        gi.setOnGaze(false);
+                        gi.setTime(-1);
+                        if (localPosition != null) {
+                            Platform.runLater(
+                                () ->
+                                    node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                            );
+                        } else {
+                            // nothing to do
+                        }
+                    } else {// gaze was not on the shape previously
+                        // nothing to do
+
+                    }
+                } else {
+                    if (gi.isOnMouse()) {// gaze was on the shape previously
+                        gi.setOnMouse(false);
+                        gi.setTime(-1);
+                        if (localPosition != null) {
+                            Platform.runLater(
+                                () ->
+                                    node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                            );
+                        } else {
+                            // nothing to do
+                        }
+                    } else {// gaze was not on the shape previously
+                        // nothing to do
+
+                    }
                 }
 
             }

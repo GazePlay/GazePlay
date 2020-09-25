@@ -68,7 +68,7 @@ public class PositionPollerRunnable implements Runnable {
 
         final Point2D point = new Point2D(positionX + offsetX, positionY + offsetY);
 
-        Platform.runLater(() -> tobiiGazeDeviceManager.onGazeUpdate(point));
+        Platform.runLater(() -> tobiiGazeDeviceManager.onGazeUpdate(point, "gaze"));
     }
 
 }

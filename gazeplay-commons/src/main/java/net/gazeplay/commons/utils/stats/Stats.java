@@ -472,6 +472,7 @@ public class Stats implements GazeMotionListener {
                         coordinates.addProperty("X", getX / screenWidth);
                         coordinates.addProperty("Y", getY / screenHeight);
                         coordinates.addProperty("time", timeToFixation);
+                        coordinates.addProperty("event", "gaze");
                         saveCoordinates(coordinates);
 
                         if (!config.isHeatMapDisabled()) {
@@ -509,6 +510,7 @@ public class Stats implements GazeMotionListener {
                     coordinates.addProperty("X", getX / screenWidth);
                     coordinates.addProperty("Y", getY / screenHeight);
                     coordinates.addProperty("time", timeElapsedMillis);
+                    coordinates.addProperty("event", "mouse");
                     saveCoordinates(coordinates);
 
                     if (!config.isHeatMapDisabled()) {
