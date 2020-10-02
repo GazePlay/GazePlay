@@ -14,7 +14,7 @@ public class IntGameVariant implements IGameVariant {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "IntGameVariant:" + number;
     }
 }

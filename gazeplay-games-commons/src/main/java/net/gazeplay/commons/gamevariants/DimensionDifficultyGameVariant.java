@@ -16,7 +16,7 @@ public class DimensionDifficultyGameVariant implements IGameVariant {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "DimensionDifficultyGameVariant:" + width + ":" + height + ":" + difficulty;
     }
 }

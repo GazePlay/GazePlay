@@ -15,7 +15,7 @@ public class DimensionGameVariant implements IGameVariant {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "DimensionGameVariant:" + width + ":" + height;
     }
 }

@@ -15,7 +15,7 @@ public class StringGameVariant implements IGameVariant {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "StringGameVariant:" + label + ":" + value;
     }
 
