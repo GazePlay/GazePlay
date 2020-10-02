@@ -13,4 +13,10 @@ public class StringGameVariant implements IGameVariant {
     public String getLabel(final Translator translator) {
         return translator.translate(label);
     }
+
+    @Override
+    public String toString(){
+        return "StringGameVariant:" + label + ":" + value;
+    }
+
 }

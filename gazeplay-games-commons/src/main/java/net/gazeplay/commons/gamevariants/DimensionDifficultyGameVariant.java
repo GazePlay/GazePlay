@@ -14,4 +14,9 @@ public class DimensionDifficultyGameVariant implements IGameVariant {
     public String getLabel(final Translator translator) {
         return width + "x" + height + " " + difficulty;
     }
+
+    @Override
+    public String toString(){
+        return "DimensionDifficultyGameVariant:" + width + ":" + height + ":" + difficulty;
+    }
 }

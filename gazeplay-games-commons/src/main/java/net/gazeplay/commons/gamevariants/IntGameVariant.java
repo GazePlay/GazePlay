@@ -12,4 +12,9 @@ public class IntGameVariant implements IGameVariant {
     public String getLabel(final Translator translator) {
         return Integer.toString(number);
     }
+
+    @Override
+    public String toString(){
+        return "IntGameVariant:" + number;
+    }
 }

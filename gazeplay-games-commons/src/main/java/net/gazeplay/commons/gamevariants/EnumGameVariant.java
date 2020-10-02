@@ -15,4 +15,7 @@ public class EnumGameVariant<K extends Enum<K>> implements IGameVariant {
     public String getLabel(final Translator translator) {
         return translator.translate(extractLabelCodeFunction.apply(enumValue));
     }
+
+
+
 }

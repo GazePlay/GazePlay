@@ -73,11 +73,15 @@ public class GameMenuController {
             File.separator + "bin" +
             File.separator + "java";
         String classpath = System.getProperty("java.class.path");
-        ProcessBuilder builder = new ProcessBuilder(javaBin,"-cp",classpath,GazePlayLauncher.class.getName(), "--user", "Seb", "--game", "Scribble");
+        ProcessBuilder builder = new ProcessBuilder(
+            javaBin,"-cp",classpath,GazePlayLauncher.class.getName(),
+            "--user", "Seb",
+            "--game", selectedGameSpec.getGameSummary().getNameCode(),
+            "--variant", gameVariant.toString());
         try {
             Process process = builder.inheritIO().start();
-            process.waitFor(10, TimeUnit.SECONDS);
-            System.exit(0);
+            //process.waitFor(10, TimeUnit.SECONDS);
+           // System.exit(0);
         }catch (Exception e){
             e.printStackTrace();
         }

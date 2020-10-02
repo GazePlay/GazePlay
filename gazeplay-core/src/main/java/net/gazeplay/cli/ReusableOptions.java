@@ -12,5 +12,8 @@ public class ReusableOptions {
     @CommandLine.ArgGroup(exclusive = true)
     private GameSelectionOptions gameSelectionOptions = new GameSelectionOptions();
 
+    @CommandLine.ArgGroup(exclusive = true)
+    private VariantSelectionOptions variantSelectionOptions = new VariantSelectionOptions();
+
 
 }

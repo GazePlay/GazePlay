@@ -18,6 +18,7 @@ import net.gazeplay.cli.ReusableOptions;
 import net.gazeplay.cli.UserSelectionOptions;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
@@ -109,18 +110,29 @@ public class GazePlayFxApp extends Application {
                         selectedGameNameCode = selectedGameSpec.getGameSummary().getNameCode();
                     }
                 }
-                if (selectedGameNameCode != null) {
-                    final String searchGameNameCode = selectedGameNameCode;
-                    final GameSpec selectedGameSpec = gameSpecs.stream()
-                        .filter(gameSpec -> gameSpec.getGameSummary().getNameCode().equals(searchGameNameCode))
-                        .findFirst()
-                        .orElseThrow(() -> new IllegalArgumentException(searchGameNameCode));
 
-                    log.info("gameSpecs = {}", gameSpecs);
-                    gameMenuController.onGameSelection(gazePlay, gazePlay.getPrimaryScene().getRoot(), selectedGameSpec, selectedGameSpec.getGameSummary().getNameCode());
-                } else {
-                    gazePlay.onReturnToMenu();
-                }
+
+                String selectedVariantCode = options.getVariantSelectionOptions().getGameVariant();
+                    if (selectedGameNameCode != null) {
+                        final String searchGameNameCode = selectedGameNameCode;
+                        final GameSpec selectedGameSpec = gameSpecs.stream()
+                            .filter(gameSpec -> gameSpec.getGameSummary().getNameCode().equals(searchGameNameCode))
+                            .findFirst()
+                            .orElseThrow(() -> new IllegalArgumentException(searchGameNameCode));
+
+                        log.info("gameSpecs = {}", gameSpecs);
+
+                        if(selectedVariantCode != null) {
+                            IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
+                            log.info("THE VARIANT IS : {}", variant);
+                            gameMenuController.chooseGame(gazePlay, selectedGameSpec, variant);
+                        } else {
+                            gameMenuController.chooseGame(gazePlay, selectedGameSpec, null);
+                        }
+                    } else {
+                        gazePlay.onReturnToMenu();
+                    }
+
             } else {
                 gazePlay.onReturnToMenu();
             }

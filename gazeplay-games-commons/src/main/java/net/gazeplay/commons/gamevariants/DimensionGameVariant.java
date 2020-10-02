@@ -13,4 +13,9 @@ public class DimensionGameVariant implements IGameVariant {
     public String getLabel(final Translator translator) {
         return width + "x" + height;
     }
+
+    @Override
+    public String toString(){
+        return "DimensionGameVariant:" + width + ":" + height;
+    }
 }
