@@ -63,7 +63,7 @@ public class GazePlay {
     public GazePlay() {
     }
 
-    public void setLoading() {
+    void setLoading() {
         loading = new LoadingContext(this);
     }
 

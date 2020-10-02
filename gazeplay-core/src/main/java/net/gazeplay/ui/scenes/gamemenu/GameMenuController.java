@@ -1,5 +1,6 @@
 package net.gazeplay.ui.scenes.gamemenu;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
@@ -97,10 +98,10 @@ public class GameMenuController {
             executor.schedule(new Runnable() {
                 @Override
                 public void run() {
+                    Platform.exit();
                     System.exit(0);
                 }
             }, 5, TimeUnit.SECONDS);
-            executor.shutdown();
         } catch (Exception e) {
             e.printStackTrace();
         }
