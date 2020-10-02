@@ -1,5 +1,7 @@
 package net.gazeplay.ui.scenes.gamemenu;
 
+import javafx.concurrent.Task;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.effect.BoxBlur;
@@ -14,17 +16,14 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
-import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import static java.lang.System.getProperty;
 
 @Slf4j
 @Component
@@ -47,8 +46,6 @@ public class GameMenuController {
             GameVariantDialog dialog = new GameVariantDialog(gazePlay, this, gazePlay.getPrimaryStage(), gameSpec, root, gameSpec.getGameVariantGenerator().getVariantChooseText());
             dialog.setTitle(gameName);
             dialog.show();
-
-
             dialog.toFront();
             dialog.setAlwaysOnTop(true);
 
@@ -67,22 +64,44 @@ public class GameMenuController {
         GameSpec selectedGameSpec,
         IGameVariant gameVariant
     ) {
-        ProcessBuilder processBuilder = new ProcessBuilder();
+        Task task = new Task<Void>() {
+            @Override
+            public Void call() {
+                gazePlay.getPrimaryScene().setCursor(Cursor.WAIT);
+                gazePlay.getPrimaryScene().setRoot(gazePlay.getLoading());
+                return null;
+            }
+        };
+        new Thread(task).start();
         String javaHome = System.getProperty("java.home");
         String javaBin = javaHome +
             File.separator + "bin" +
             File.separator + "java";
         String classpath = System.getProperty("java.class.path");
-        ProcessBuilder builder = new ProcessBuilder(
-            javaBin,"-cp",classpath,GazePlayLauncher.class.getName(),
-            "--user", "Seb",
-            "--game", selectedGameSpec.getGameSummary().getNameCode(),
-            "--variant", gameVariant.toString());
+        ProcessBuilder builder;
+        if (gameVariant != null) {
+            builder = new ProcessBuilder(
+                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
+                "--user", "Seb",
+                "--game", selectedGameSpec.getGameSummary().getNameCode(),
+                "--variant", gameVariant.toString());
+        } else {
+            builder = new ProcessBuilder(
+                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
+                "--user", "Seb",
+                "--game", selectedGameSpec.getGameSummary().getNameCode());
+        }
         try {
-            Process process = builder.inheritIO().start();
-            //process.waitFor(10, TimeUnit.SECONDS);
-           // System.exit(0);
-        }catch (Exception e){
+            builder.inheritIO().start();
+            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+            executor.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    System.exit(0);
+                }
+            }, 5, TimeUnit.SECONDS);
+            executor.shutdown();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

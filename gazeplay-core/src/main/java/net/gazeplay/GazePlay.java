@@ -17,6 +17,7 @@ import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
 import net.gazeplay.ui.scenes.gamemenu.HomeMenuScreen;
 import net.gazeplay.ui.scenes.ingame.GameContext;
+import net.gazeplay.ui.scenes.loading.LoadingContext;
 import net.gazeplay.ui.scenes.stats.AreaOfInterest;
 import net.gazeplay.ui.scenes.stats.ScanpathView;
 import net.gazeplay.ui.scenes.stats.StatsContext;
@@ -56,7 +57,14 @@ public class GazePlay {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Getter
+    LoadingContext loading;
+
     public GazePlay() {
+    }
+
+    public void setLoading() {
+        loading = new LoadingContext(this);
     }
 
     public void onGameLaunch(GameContext gameContext) {
