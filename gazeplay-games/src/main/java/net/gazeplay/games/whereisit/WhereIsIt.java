@@ -20,6 +20,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.InteractionMode;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.gamevariants.difficulty.SourceSet;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
@@ -51,8 +52,11 @@ public class WhereIsIt implements GameLifeCycle {
     @Getter
     private final WhereIsItGameType gameType;
 
+    @Getter
     private final int nbLines;
+    @Getter
     private final int nbColumns;
+
     private final boolean fourThree;
 
     private final IGameContext gameContext;
@@ -60,6 +64,8 @@ public class WhereIsIt implements GameLifeCycle {
     private RoundDetails currentRoundDetails;
 
     private final ArrayList<TargetAOI> targetAOIList;
+
+    private boolean isCrossingInteraction;
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
                      final IGameContext gameContext, final Stats stats) {
@@ -72,6 +78,10 @@ public class WhereIsIt implements GameLifeCycle {
         this.targetAOIList = new ArrayList<>();
         this.gameContext.startScoreLimiter();
         this.gameContext.startTimeLimiter();
+
+        final Configuration config = gameContext.getConfiguration();
+
+        isCrossingInteraction = config.getInteractionMode().equals(InteractionMode.crossing.toString());
     }
 
     @Override
@@ -269,7 +279,7 @@ public class WhereIsIt implements GameLifeCycle {
         return false;
     }
 
-RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRound, final ReplayablePseudoRandom random,
+    RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRound, final ReplayablePseudoRandom random,
                                             final int winnerImageIndexAmongDisplayedImages) {
 
         final Configuration config = gameContext.getConfiguration();
@@ -387,15 +397,29 @@ RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRoun
 
                 }
 
-                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, winnerImageIndexAmongDisplayedImages == i,
-                    randomImageFile + "", stats, this);
+                if(isCrossingInteraction && numberOfImagesToDisplayPerRound == 9 && posX == 1 && posY == 1)
+                {
+                    if ((i + 1) % nbColumns != 0) {
+                        posX++;
+                    } else {
+                        posY++;
+                        posX = 0;
+                    }
+                    continue;
+                }
+                else
+                {
+                    final PictureCard pictureCard = new PictureCard((short) i, gameSizing.width * posX + gameSizing.shift,
+                        gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, winnerImageIndexAmongDisplayedImages == i,
+                        randomImageFile + "", stats, this);
 
-                final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY+1), (int)gameSizing.height,
-                    System.currentTimeMillis());
-                targetAOIList.add(targetAOI);
+                    final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY+1), (int)gameSizing.height,
+                        System.currentTimeMillis());
+                    targetAOIList.add(targetAOI);
 
-                pictureCardList.add(pictureCard);
+                    pictureCardList.add(pictureCard);
+                }
+
 
                 if ((i + 1) % nbColumns != 0) {
                     posX++;
@@ -437,17 +461,29 @@ RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRoun
 
                 }
 
-                // The image file needs 'file:' prepended as this will get images from a local source, not resources.
-                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                    winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats, this);
+                if(isCrossingInteraction && numberOfImagesToDisplayPerRound == 9 && posX == 1 && posY == 1)
+                {
+                    if ((i + 1) % nbColumns != 0) {
+                        posX++;
+                    } else {
+                        posY++;
+                        posX = 0;
+                    }
+                    continue;
+                }
+                else
+                {
+                    // The image file needs 'file:' prepended as this will get images from a local source, not resources.
+                    final PictureCard pictureCard = new PictureCard((short)i, gameSizing.width * posX + gameSizing.shift,
+                        gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
+                        winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats, this);
 
-                final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY+1), (int)gameSizing.height,
-                    System.currentTimeMillis());
-                targetAOIList.add(targetAOI);
+                    final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY+1), (int)gameSizing.height,
+                        System.currentTimeMillis());
+                    targetAOIList.add(targetAOI);
 
-                pictureCardList.add(pictureCard);
-
+                    pictureCardList.add(pictureCard);
+                }
 
                 if ((i + 1) % nbColumns != 0) {
                     posX++;
@@ -479,15 +515,28 @@ RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRoun
 
                 }
 
-                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                    winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
+                if(isCrossingInteraction && numberOfImagesToDisplayPerRound == 9 && posX == 1 && posY == 1)
+                {
+                    if ((i + 1) % nbColumns != 0) {
+                        posX++;
+                    } else {
+                        posY++;
+                        posX = 0;
+                    }
+                    continue;
+                }
+                else
+                {
+                    final PictureCard pictureCard = new PictureCard((short) i, gameSizing.width * posX + gameSizing.shift,
+                        gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
+                        winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
 
-                pictureCardList.add(pictureCard);
+                    pictureCardList.add(pictureCard);
 
-                final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY+1), (int)gameSizing.height,
-                    System.currentTimeMillis());
-                targetAOIList.add(targetAOI);
+                    final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY+1), (int)gameSizing.height,
+                        System.currentTimeMillis());
+                    targetAOIList.add(targetAOI);
+                }
 
 
                 if ((i + 1) % nbColumns != 0) {

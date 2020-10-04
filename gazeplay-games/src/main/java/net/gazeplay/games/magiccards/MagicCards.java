@@ -148,7 +148,7 @@ public class MagicCards implements GameLifeCycle {
 
                 log.debug("positionX : {} ; positionY : {}", positionX, positionY);
 
-                final Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, gameContext,
+                final Card card = new Card(currentLineIndex, currentColumnIndex, positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, gameContext,
                     stats, this, fixationlength);
 
                 result.add(card);

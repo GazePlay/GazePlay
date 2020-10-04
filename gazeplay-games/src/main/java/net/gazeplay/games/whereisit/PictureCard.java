@@ -19,8 +19,12 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.InteractionMode;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.shooter.Point;
+
+import java.awt.*;
 
 import static net.gazeplay.games.whereisit.WhereIsItGameType.*;
 
@@ -54,14 +58,32 @@ class PictureCard extends Group {
 
     private final WhereIsIt gameInstance;
 
-    PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
+    private boolean isCrossingInteraction;
+
+    private Robot robot;
+
+    private final short index;
+
+    PictureCard(short index, double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
                 boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsIt gameInstance) {
 
         log.info("imagePath = {}", imagePath);
 
         final Configuration config = gameContext.getConfiguration();
 
-        this.minTime = config.getFixationLength();
+        this.index = index;
+
+        isCrossingInteraction = config.getInteractionMode().equals(InteractionMode.crossing.toString());
+
+        if(isCrossingInteraction)
+        {
+            this.minTime = 0.0;
+        }
+        else
+        {
+            this.minTime = config.getFixationLength();
+        }
+
         this.initialPositionX = posX;
         this.initialPositionY = posY;
         this.initialWidth = width;
@@ -96,6 +118,16 @@ class PictureCard extends Group {
         this.addEventFilter(MouseEvent.ANY, customInputEventHandler);
 
         this.addEventFilter(GazeEvent.ANY, customInputEventHandler);
+
+        // Reset Mouse
+        if(isCrossingInteraction)
+        {
+            try{
+                robot = new Robot();
+            } catch(AWTException e){
+                e.printStackTrace();
+            }
+        }
     }
 
     private Timeline createProgressIndicatorTimeLine(WhereIsIt gameInstance) {
@@ -128,6 +160,19 @@ class PictureCard extends Group {
             } else {
                 // bad card
                 onWrongCardSelected(gameInstance);
+            }
+
+            final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
+            final double width = screenDimension.getWidth();
+            final double height = screenDimension.getHeight();
+
+            double offsetWidth = width/50;
+            double offsetHeight = height/27;
+
+            if(isCrossingInteraction)
+            {
+                robot.mouseMove((int)(width/2 - offsetWidth), (int)(height/2 - offsetHeight));
+                //robot.mouseMove(0, 0);
             }
         };
     }
@@ -308,11 +353,96 @@ class PictureCard extends Group {
             }
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                onEntered();
+                final double x = ((GazeEvent) e).getX();
+                final double y = ((GazeEvent) e).getY();
+                boolean crossingCondition = isCorner(x, y);
+                if(isCrossingInteraction)
+                {
+                    if(crossingCondition)
+                    {
+                        onEntered();
+                    }
+                }
+                else
+                {
+                    onEntered();
+                }
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
                 onExited();
             }
+        }
 
+        private boolean isCorner(double x, double y)
+        {
+            boolean condition = false;
+            int pos[] = new int[2];
+            pos[0] = (index)%gameInstance.getNbColumns();
+            pos[1] = (index)/gameInstance.getNbColumns();
+
+            if(gameInstance.getNbColumns() == 3 && gameInstance.getNbLines() == 3 && pos[0] == 1 && pos[1] == 1)
+            {
+                return false;
+            }
+
+            /*
+            log.info(pos[0]+" "+pos[1]);
+            log.info(initialPositionX+" "+initialPositionY);
+            log.info(initialWidth+" "+initialHeight);
+            log.info(x+" "+y);
+            */
+
+            switch(pos[0])
+            {
+                case 0:
+                    switch(pos[1])
+                    {
+                        case 0:
+                            condition = x < initialWidth/4 || y < (initialPositionY + 20);
+                            break;
+                        case 1:
+                            condition = x < initialWidth/4;
+                            break;
+                        case 2:
+                            condition = x < initialWidth/4 || y < (initialPositionY);
+                            break;
+                    }
+                    break;
+                case 1:
+                    switch(pos[1])
+                    {
+                        case 0:
+                            condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y < (initialPositionY + 20);
+                            break;
+                        case 1:
+                            condition = x > (initialPositionX + initialWidth - initialWidth/1.5);
+                            break;
+                        case 2:
+                            condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y >= (initialPositionY + initialHeight);
+                            break;
+                    }
+                    break;
+                case 2:
+                    switch(pos[1])
+                    {
+                        case 0:
+                            condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y < (initialPositionY + 20);
+                            break;
+                        case 1:
+                            condition = x > (initialPositionX + initialWidth - initialWidth/1.5);
+                            break;
+                        case 2:
+                            condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y < (initialPositionY + initialHeight);
+                            break;
+                    }
+                    break;
+            }
+
+            if(condition)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private void onEntered() {

@@ -188,7 +188,7 @@ public class Memory implements GameLifeCycle {
 
                 final Image image = images.get(id);
 
-                final MemoryCard card = new MemoryCard(positionX, positionY, cardWidth, cardHeight, image, id, gameContext,
+                final MemoryCard card = new MemoryCard(currentLineIndex, currentColumnIndex, positionX, positionY, cardWidth, cardHeight, image, id, gameContext,
                     stats, this, fixationlength, isOpen);
 
                 result.add(card);

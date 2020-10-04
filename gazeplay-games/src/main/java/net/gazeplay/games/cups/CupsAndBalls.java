@@ -14,6 +14,7 @@ import net.gazeplay.commons.utils.stats.TargetAOI;
 import net.gazeplay.games.cups.utils.Action;
 import net.gazeplay.games.cups.utils.PositionCup;
 import net.gazeplay.games.cups.utils.Strategy;
+import lombok.Getter;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public class CupsAndBalls implements GameLifeCycle {
     private final Cup[] cups;
     private final int nbCups;
     private final int nbLines;
+
+    @Getter
     private final int nbColumns;
     private int nbExchanges;
 
@@ -74,7 +77,7 @@ public class CupsAndBalls implements GameLifeCycle {
             cupRectangle.setY(posCup.getY());
             cupRectangle.setFitWidth(imageWidth);
             cupRectangle.setFitHeight(imageHeight);
-            cups[indexCup] = new Cup(cupRectangle, position, gameContext, stats, this, openCupSpeed);
+            cups[indexCup] = new Cup(indexCup, cupRectangle, position, gameContext, stats, this, openCupSpeed);
             if (indexCup == ballInCup) {
                 final long startTime = System.currentTimeMillis();
                 final TargetAOI targetAOI = new TargetAOI(posCup.getX(), posCup.getY()+imageHeight/2, (int)((imageWidth+imageHeight)/3), startTime);

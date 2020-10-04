@@ -15,6 +15,8 @@ import javafx.util.Duration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.InteractionMode;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -62,7 +64,11 @@ public class Card extends Parent {
      */
     private Timeline currentTimeline;
 
-    public Card(final double positionX, final double positionY, final double width, final double height, final Image image, final boolean winner,
+    private int lineIndex, columnIndex;
+
+    private boolean isCrossingInteraction;
+
+    public Card(int lineIndex, int columnIndex, final double positionX, final double positionY, final double width, final double height, final Image image, final boolean winner,
                 final IGameContext gameContext, final Stats stats, final MagicCards gameInstance, final int fixationlength) {
 
         this.card = new Rectangle(positionX, positionY, width, height);
@@ -75,7 +81,21 @@ public class Card extends Parent {
 
         this.stats = stats;
 
-        this.fixationlength = fixationlength;
+        final Configuration config = gameContext.getConfiguration();
+
+        this.lineIndex = lineIndex;
+        this.columnIndex = columnIndex;
+
+        isCrossingInteraction = config.getInteractionMode().equals(InteractionMode.crossing.toString());
+
+        if(isCrossingInteraction)
+        {
+            this.fixationlength = 0.0;
+        }
+        else
+        {
+            this.fixationlength = config.getFixationLength();
+        }
 
         this.gameInstance = gameInstance;
 
@@ -176,6 +196,15 @@ public class Card extends Parent {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
+                final double x = ((GazeEvent) e).getX();
+                final double y = ((GazeEvent) e).getY();
+                boolean crossingCondition = isCorner(x, y);
+
+                if(isCrossingInteraction && !crossingCondition)
+                {
+                    return;
+                }
+
                 progressIndicator.setOpacity(1);
                 progressIndicator.setProgress(0);
 
@@ -243,6 +272,77 @@ public class Card extends Parent {
                 progressIndicator.setProgress(0);
             }
         };
+    }
+
+    private boolean isCorner(double x, double y)
+    {
+        boolean condition = false;
+
+        log.info(this.columnIndex+" "+this.lineIndex);
+        log.info(this.card.getX()+" "+this.card.getY());
+        log.info(this.card.getWidth()+" "+this.card.getHeight());
+        log.info(x+" "+y);
+
+
+        double initialWidth, initialHeight, initialPositionX, initialPositionY;
+
+        initialHeight = this.card.getHeight();
+        initialWidth = this.card.getWidth();
+        initialPositionX = this.card.getX();
+        initialPositionY = this.card.getY();
+
+        switch(this.columnIndex)
+        {
+            case 0:
+                switch(this.lineIndex)
+                {
+                    case 0:
+                        condition = x < (this.card.getX() + 20) || y < (this.card.getY() + 20);
+                        break;
+                    case 1:
+                        condition = x < (this.card.getX() + 20);
+                        break;
+                    case 2:
+                        condition = x < (this.card.getX() + 20) || y > (this.card.getY() + this.card.getHeight() - 20);
+                        break;
+                }
+                break;
+            case 1:
+                switch(this.lineIndex)
+                {
+                    case 0:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y < (initialPositionY + 20);
+                        break;
+                    case 1:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5);
+                        break;
+                    case 2:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y >= (initialPositionY + initialHeight);
+                        break;
+                }
+                break;
+            case 2:
+                switch(this.lineIndex)
+                {
+                    case 0:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y < (initialPositionY + 20);
+                        break;
+                    case 1:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5);
+                        break;
+                    case 2:
+                        condition = x > (initialPositionX + initialWidth - initialWidth/1.5) || y < (initialPositionY + initialHeight);
+                        break;
+                }
+                break;
+        }
+
+        if(condition)
+        {
+            return true;
+        }
+
+        return false;
     }
 
 }

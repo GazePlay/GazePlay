@@ -15,6 +15,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.InteractionMode;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.cups.utils.PositionCup;
@@ -69,12 +71,31 @@ public class Cup {
     @Setter
     private int actionsToDo;
 
-    public Cup(final ImageView item, final PositionCup positionCup, final IGameContext gameContext, final Stats stats, final CupsAndBalls gameInstance,
+    private int index;
+
+    private boolean isCrossingInteraction;
+
+    public Cup(int index, final ImageView item, final PositionCup positionCup, final IGameContext gameContext, final Stats stats, final CupsAndBalls gameInstance,
                final int openCupSpeed) {
         this.actionsDone = 0;
         this.actionsToDo = 0;
         this.openCupSpeed = openCupSpeed;
-        this.fixationDurationNeeded = gameContext.getConfiguration().getFixationLength();
+
+        final Configuration config = gameContext.getConfiguration();
+
+        this.index = index;
+
+        isCrossingInteraction = config.getInteractionMode().equals(InteractionMode.crossing.toString());
+
+        if(isCrossingInteraction)
+        {
+            this.fixationDurationNeeded = 0;
+        }
+        else
+        {
+            this.fixationDurationNeeded = config.getFixationLength();
+        }
+
         this.item = item;
         this.widthItem = item.getFitWidth();
         this.heightItem = item.getFitHeight();
@@ -186,6 +207,15 @@ public class Cup {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
+                final double x = ((GazeEvent) e).getX();
+                final double y = ((GazeEvent) e).getY();
+                boolean crossingCondition = isCrossed(x, y);
+
+                if(isCrossingInteraction && !crossingCondition)
+                {
+                    return;
+                }
+
                 progressIndicator.setOpacity(1);
                 progressIndicator.setProgress(0);
 
@@ -218,6 +248,19 @@ public class Cup {
                 progressIndicator.setProgress(0);
             }
         };
+    }
+
+    private boolean isCrossed(double x, double y)
+    {
+        boolean condition = false;
+
+        double posX, posY;
+        posX = this.positionCup.calculateXY(this.positionCup.getCellX(), this.positionCup.getCellY()).x;
+        posY = this.positionCup.calculateXY(this.positionCup.getCellX(), this.positionCup.getCellY()).y;
+
+        condition = y < (posY + 20) || y > (posY + this.heightItem - 20);
+
+        return condition;
     }
 
     public void increaseActionsDone() {
