@@ -465,12 +465,13 @@ public class Stats implements GazeMotionListener {
                 if (e.getSource() == gameContextScene.getRoot() && e.getTarget() == gameContextScene.getRoot()) {
                     final long timeToFixation = System.currentTimeMillis() - startTime;
                     final long timeInterval = (timeToFixation - previousTime);
-                    final int getX = (int) e.getX();
-                    final int getY = (int) e.getY();
+                    Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
+                    final int getX = (int) toSceneCoordinate.getX();
+                    final int getY = (int) toSceneCoordinate.getY();
                     if (getX > 0 && getY > 0) {
                         JsonObject coordinates = new JsonObject();
-                        coordinates.addProperty("X", getX / screenWidth);
-                        coordinates.addProperty("Y", getY / screenHeight);
+                        coordinates.addProperty("X", getX / gameContextScene.getWidth());
+                        coordinates.addProperty("Y", getY / gameContextScene.getHeight());
                         coordinates.addProperty("time", timeToFixation);
                         coordinates.addProperty("event", "gaze");
                         saveCoordinates(coordinates);
@@ -507,12 +508,11 @@ public class Stats implements GazeMotionListener {
                 final int getY = (int) e.getSceneY();
                 if (getX > 0 || getY > 0) {
                     JsonObject coordinates = new JsonObject();
-                    coordinates.addProperty("X", getX / screenWidth);
-                    coordinates.addProperty("Y", getY / screenHeight);
+                    coordinates.addProperty("X", getX / gameContextScene.getWidth());
+                    coordinates.addProperty("Y", getY / gameContextScene.getHeight());
                     coordinates.addProperty("time", timeElapsedMillis);
                     coordinates.addProperty("event", "mouse");
                     saveCoordinates(coordinates);
-
                     if (!config.isHeatMapDisabled()) {
                         incrementHeatMap(getX, getY);
                     }
@@ -927,13 +927,11 @@ public class Stats implements GazeMotionListener {
     }
 
     public void setGameVariant(String gameVariant, String gameNameCode) {
-
         currentGameVariant = gameVariant;
         currentGameNameCode = gameNameCode;
     }
 
     public void setGameSeed(double gameSeed) {
-
         currentGameSeed = gameSeed;
     }
 }

@@ -4,22 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import javafx.scene.paint.Color;
-import org.everit.json.schema.Schema;
-import org.everit.json.schema.ValidationException;
-import org.everit.json.schema.loader.SchemaLoader;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-import org.json.*;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
+import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.FixationPoint;
@@ -28,16 +22,17 @@ import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.ValidationException;
+import org.everit.json.schema.loader.SchemaLoader;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.springframework.context.ApplicationContext;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileInputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -45,6 +40,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+@Slf4j
 public class ReplayingGameFromJson {
     List<GameSpec> gamesList;
     private ApplicationContext applicationContext;
@@ -72,7 +68,7 @@ public class ReplayingGameFromJson {
         this.gamesList = games;
     }
 
-    public void setGameList(List<GameSpec> games){
+    public void setGameList(List<GameSpec> games) {
         gamesList = games;
     }
 
@@ -92,7 +88,7 @@ public class ReplayingGameFromJson {
             JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
             Schema schema = SchemaLoader.load(rawSchema);
             schema.validate(object); // throws a ValidationException if this object is invalid
-        } catch (ValidationException e){
+        } catch (ValidationException e) {
             e.printStackTrace();
         }
 
@@ -143,17 +139,17 @@ public class ReplayingGameFromJson {
         return selectedFileName;
     }
 
-    public void replayGame(){
+    public void replayGame() {
         gameContext = applicationContext.getBean(GameContext.class);
         gazePlay.onGameLaunch(gameContext);
         for (GameSpec gameSpec : gamesList) {
-            if (currentGameNameCode.equals(gameSpec.getGameSummary().getNameCode())){
+            if (currentGameNameCode.equals(gameSpec.getGameSummary().getNameCode())) {
                 selectedGameSpec = gameSpec;
             }
         }
         final Translator translator = gazePlay.getTranslator();
-        for (IGameVariant variant : selectedGameSpec.getGameVariantGenerator().getVariants()){
-            if (currentGameVariant.equals(variant.getLabel(translator))){
+        for (IGameVariant variant : selectedGameSpec.getGameVariantGenerator().getVariants()) {
+            if (currentGameVariant.equals(variant.getLabel(translator))) {
                 gameVariant = variant;
             }
         }
@@ -170,47 +166,31 @@ public class ReplayingGameFromJson {
         final javafx.scene.canvas.Canvas canvas = new Canvas(screenDimension.getWidth(), screenDimension.getHeight());
         gameContext.getChildren().add(canvas);
 
-        Service<Void> loadingService = new Service<Void>(){
+        new Thread(new Runnable() {
             @Override
-            protected Task<Void> createTask() {
-                return new Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        drawFixationLines(canvas, coordinatesAndTimeStamp);
-                        return null;
-                    }
-                };
-            };
-        };
-        loadingService.setOnSucceeded( e -> {
-            loadingService.reset();
-            gameContext.exitGame(statsSaved, gazePlay, currentGame, "replay");
-        });
-
-        loadingService.setOnFailed(e -> {
-            loadingService.restart();
-        });
-
-        loadingService.setOnCancelled(e -> {
-        });
-
-        if (!loadingService.isRunning()) {
-            loadingService.start();
-        }
+            public void run() {
+                drawFixationLines(canvas, coordinatesAndTimeStamp);
+                Platform.runLater(() -> exit(statsSaved, currentGame));
+            }
+        }).start();
 
     }
 
+    private void exit(Stats statsSaved, GameLifeCycle currentGame) {
+        gameContext.exitGame(statsSaved, gazePlay, currentGame, "replay");
+    }
+
     private void drawFixationLines(Canvas canvas, JsonArray coordinatesAndTimeStamp) {
-        Dimension2D dimensions = gameContext.getCurrentScreenDimensionSupplier().get();
-        int screenWidth = (int) dimensions.getWidth();
-        int screenHeight = (int) dimensions.getHeight();
+        int sceneWidth = (int) gameContext.getPrimaryScene().getWidth();
+        int sceneHeight = (int) gameContext.getPrimaryScene().getHeight();
         final GraphicsContext graphics = canvas.getGraphicsContext2D();
+        log.info("SIZE IS {}", coordinatesAndTimeStamp.size());
         for (JsonElement coordinateAndTimeStamp : coordinatesAndTimeStamp) {
             JsonObject coordinateAndTimeObj = coordinateAndTimeStamp.getAsJsonObject();
             String nextEvent = coordinateAndTimeObj.get("event").getAsString();
-            int nextX = (int) (Float.parseFloat(coordinateAndTimeObj.get("X").getAsString()) * screenWidth);
-            int nextY = (int) (Float.parseFloat(coordinateAndTimeObj.get("Y").getAsString()) * screenHeight);
-            int delay = 0;
+            int nextX = (int) (Double.parseDouble(coordinateAndTimeObj.get("X").getAsString()) * sceneWidth);
+            int nextY = (int) (Double.parseDouble(coordinateAndTimeObj.get("Y").getAsString()) * sceneHeight);
+            int delay;
             if (nextEvent.equals("gaze")) {
                 prevTimeGaze = nextTimeGaze;
                 nextTimeGaze = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
@@ -225,30 +205,33 @@ public class ReplayingGameFromJson {
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException e) {
+                e.printStackTrace();
+                break;
             }
         }
     }
 
-    public void paint(GraphicsContext graphics, Canvas canvas, int nextX, int nextY,  String event) {
+    public void paint(GraphicsContext graphics, Canvas canvas, int nextX, int nextY, String event) {
         javafx.scene.paint.Color strokeColor, fillColor;
-        if(event.equals("gaze")) {
-            strokeColor = Color.BLUE;
-            fillColor = Color.rgb(255, 255, 0, 0.5);
+        int circleSize = 10;
+        if (event.equals("gaze")) {
+            strokeColor = Color.rgb(0, 0, 255, 0.5);//Color.BLUE;
+            fillColor = Color.rgb(255, 255, 0, 0.1);
         } else { // if (event.equals("mouse")) {
-            strokeColor = Color.RED;
-            fillColor = Color.rgb(0, 255, 255, 0.5);
+            strokeColor = Color.rgb(255, 0, 0, 0.5);//Color.RED;
+            fillColor = Color.rgb(0, 255, 255, 0.1);
         }
-         //   graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            graphics.setStroke(strokeColor);
-            graphics.strokeOval(nextX - 25, nextY - 25, 50, 50);
-            graphics.setFill(fillColor);
-            graphics.fillOval(nextX - 25, nextY - 25, 50, 50);
-
-            Point2D point = new Point2D((int) gameContext.getPrimaryStage().getX() + nextX, (int) gameContext.getPrimaryStage().getY() + nextY);
-            gameContext.getGazeDeviceManager().onSavedMovementsUpdate(point,event);
+        //   graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        graphics.setStroke(strokeColor);
+        graphics.strokeOval(nextX - circleSize / 2d, nextY - circleSize / 2d, circleSize, circleSize);
+        graphics.setFill(fillColor);
+        graphics.fillOval(nextX - circleSize / 2d, nextY - circleSize / 2d, circleSize, circleSize);
+        Point2D point = new Point2D(nextX, nextY);
+        gameContext.getGazeDeviceManager().onSavedMovementsUpdate(point, event);
     }
 
 }
+
 class JsonFile {
     @Getter
     private double gameSeed;

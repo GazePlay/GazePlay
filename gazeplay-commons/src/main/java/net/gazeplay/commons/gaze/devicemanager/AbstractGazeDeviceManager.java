@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -148,10 +147,21 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     }
 
     synchronized void onGazeUpdate(Point2D gazePositionOnScreen, String event) {
-
         // notifyAllGazeMotionListeners(gazePositionOnScreen);
         final double positionX = gazePositionOnScreen.getX();
         final double positionY = gazePositionOnScreen.getY();
+        updatePosition(positionX, positionY, event);
+    }
+
+    @Override
+    synchronized public void onSavedMovementsUpdate(Point2D gazePositionOnScene, String event) {
+        Point2D gazePositionOnScreen = gameScene.getNode().localToScreen(gazePositionOnScene);
+        final double positionX = gazePositionOnScreen.getX();
+        final double positionY = gazePositionOnScreen.getY();
+        updatePosition(positionX, positionY, event);
+    }
+
+    void updatePosition(double positionX, double positionY, String event) {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -164,9 +174,8 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         add();
         delete();
 
-        Collection<GazeInfos> c = shapesEventFilter.values();
-
         synchronized (shapesEventFilter) {
+            Collection<GazeInfos> c = shapesEventFilter.values();
             for (GazeInfos gi : c) {
                 final Node node = gi.getNode();
                 if (gameScene != null && node != gameScene.getNode()) {
@@ -181,9 +190,21 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         }
     }
 
-    @Override
-    public void onSavedMovementsUpdate(Point2D gazePositionOnScreen, String event) {
-        onGazeUpdate(gazePositionOnScreen, event);
+    public boolean contains(Node node, double positionX, double positionY) {
+        Point2D localPosition = node.screenToLocal(positionX, positionY);
+        int offset = 5;
+
+        return (
+            node.contains(localPosition.getX(), localPosition.getY()) ||
+                node.contains(localPosition.getX() + offset, localPosition.getY()) ||
+                node.contains(localPosition.getX() + offset, localPosition.getY() + offset) ||
+                node.contains(localPosition.getX() + offset, localPosition.getY() - offset) ||
+                node.contains(localPosition.getX() - offset, localPosition.getY()) ||
+                node.contains(localPosition.getX() - offset, localPosition.getY() + offset) ||
+                node.contains(localPosition.getX() - offset, localPosition.getY() - offset) ||
+                node.contains(localPosition.getX(), localPosition.getY() + offset) ||
+                node.contains(localPosition.getX(), localPosition.getY() - offset)
+        );
     }
 
     public void eventFire(double positionX, double positionY, GazeInfos gi, Node node, String event) {
@@ -191,8 +212,8 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
             Point2D localPosition = node.screenToLocal(positionX, positionY);
 
-            if (localPosition != null && node.contains(localPosition)) {
-                if(event.equals("gaze")) {
+            if (localPosition != null && contains(node, positionX, positionY)) {
+                if (event.equals("gaze")) {
                     if (gi.isOnGaze()) {
                         Platform.runLater(
                             () ->
@@ -224,7 +245,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                     }
                 }
             } else {// gaze is not on the shape
-                if(event.equals("gaze")) {
+                if (event.equals("gaze")) {
                     if (gi.isOnGaze()) {// gaze was on the shape previously
                         gi.setOnGaze(false);
                         gi.setTime(-1);
