@@ -164,10 +164,10 @@ public class GazePlayFxApp extends Application {
 
     private void autosize(final Stage primaryStage) {
         final Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-        //
-        primaryStage.setWidth(screenDimension.getWidth() * 0.95);
-        primaryStage.setHeight(screenDimension.getHeight() * 0.90);
-        primaryStage.setMaximized(false);
+
+        primaryStage.setWidth(screenDimension.getWidth());
+        primaryStage.setHeight(screenDimension.getHeight());
+        primaryStage.setMaximized(true);
 
         primaryStage.setFullScreen(true);
     }
