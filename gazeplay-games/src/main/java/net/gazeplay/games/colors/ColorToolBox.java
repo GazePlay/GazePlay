@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -114,6 +115,7 @@ public class ColorToolBox extends Pane {
         this.colorizeButtonsSizePx = colorizeButtonsSizePx;
         progressIndicator = new GazeIndicator(gameContext);
         progressIndicator.setMouseTransparent(true);
+        this.prefWidthProperty().bind(gameContext.getPrimaryScene().widthProperty().divide(5));
 
         this.selectedColorBox = null;
         this.colorsGame = colorsGame;
@@ -125,6 +127,9 @@ public class ColorToolBox extends Pane {
 
         mainPane = new VBox();
         thisRoot.setCenter(mainPane);
+        mainPane.setAlignment(Pos.CENTER);
+        thisRoot.prefWidthProperty().bind(this.widthProperty());
+        mainPane.prefWidthProperty().bind(thisRoot.widthProperty());
         mainPane.setSpacing(0);
 
         imageManager = buildImageManager();
