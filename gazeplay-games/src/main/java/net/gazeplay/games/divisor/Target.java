@@ -64,7 +64,7 @@ class Target extends Parent {
         this.imgLib = imgLib;
         this.pos = pos;
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.radius = 200d / (level + 1);
+        this.radius = (dimension.getWidth()/4) / (level + 1);
         this.timeline = new Timeline();
         this.randomGenerator = random;
 
