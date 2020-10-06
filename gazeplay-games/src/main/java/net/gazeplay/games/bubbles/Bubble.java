@@ -37,9 +37,6 @@ public class Bubble extends Parent implements GameLifeCycle {
     public static final String DIRECTION_LEFT = "toLeft";
     public static final String DIRECTION_RIGHT = "toRight";
 
-    private static final int maxRadius = 70;
-    private static final int minRadius = 30;
-
     private static final int maxTimeLength = 7;
     private static final int minTimeLength = 4;
 
@@ -264,6 +261,9 @@ public class Bubble extends Parent implements GameLifeCycle {
     private Circle buildCircle() {
 
         final Circle newCircle = new Circle();
+        final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
+        double maxRadius = screenDimension.getHeight()/12;
+        double minRadius = screenDimension.getHeight()/30;
         final double radius = (maxRadius - minRadius) * randomGenerator.nextDouble() + minRadius;
 
         newCircle.setRadius(radius);
@@ -287,6 +287,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         final Timeline timeline = new Timeline();
 
+        double maxRadius = dimension2D.getHeight()/12;
 
         if (this.direction == BubblesGameVariant.TOP) {
             centerX = (dimension2D.getWidth() - maxRadius) * randomGenerator.nextDouble() + maxRadius;

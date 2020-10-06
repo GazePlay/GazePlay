@@ -21,15 +21,14 @@ import net.gazeplay.components.GazeIndicator;
 @Slf4j
 public class ColorBox extends StackPane {
 
-    public static final double COLOR_BOX_WIDTH_PX = 200;
-
-    public static final double COLOR_BOX_PADDING = 5;
-
     private final ColorToolBox toolBox;
 
     private final ToggleButton button;
 
     private final Rectangle graphic;
+
+    private final double colorizeButtonsSizePx;
+    private final double colorBoxPadding;
 
     @Getter
     private Color color;
@@ -37,17 +36,21 @@ public class ColorBox extends StackPane {
     @Setter
     private GazeIndicator progressIndicator;
 
-    public ColorBox(final IGameContext gameContext, final Color color, final Pane root, final ColorToolBox toolBox, final ToggleGroup group) {
+    public ColorBox(final IGameContext gameContext, final Color color, final Pane root, final ColorToolBox toolBox, final ToggleGroup group, final double colorizeButtonsSizePx) {
         super();
-
+        this.colorizeButtonsSizePx = colorizeButtonsSizePx;
         this.toolBox = toolBox;
 
         progressIndicator = toolBox.getProgressIndicator();
 
-        button = new ToggleButton();
-        button.setPadding(new Insets(COLOR_BOX_PADDING, COLOR_BOX_PADDING, COLOR_BOX_PADDING, COLOR_BOX_PADDING));
+        double totalWidth = gameContext.getGamePanelDimensionProvider().getDimension2D().getWidth()/5;
+        double colorBoxWidth = (99.d*totalWidth)/100.d;
+        colorBoxPadding = totalWidth/100.d;;
 
-        graphic = new Rectangle(COLOR_BOX_WIDTH_PX, computeHeight(), color);
+        button = new ToggleButton();
+        button.setPadding(new Insets(colorBoxPadding, colorBoxPadding, colorBoxPadding, colorBoxPadding));
+
+        graphic = new Rectangle(colorBoxWidth, computeHeight(), color);
         button.setGraphic(graphic);
 
         gameContext.getGazeDeviceManager().addEventFilter(graphic);
@@ -87,8 +90,8 @@ public class ColorBox extends StackPane {
         double totalHeight = dimension2D.getHeight();
 
         // Compute free space taking into account every elements in the tool box
-        double freeSpace = totalHeight - ((ColorToolBox.SPACING_PX + 2 * COLOR_BOX_PADDING) * (ColorToolBox.NB_COLORS_DISPLAYED)
-            + 3 * ColorToolBox.COLORIZE_BUTTONS_SIZE_PX);
+        double freeSpace = totalHeight - ((2 * colorBoxPadding) * (ColorToolBox.NB_COLORS_DISPLAYED)
+            + 3 * colorizeButtonsSizePx);
 
 
         // + 1 for the curstom color box
