@@ -26,7 +26,7 @@ import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.commons.utils.games.WhereIsItVaildator;
+import net.gazeplay.commons.utils.games.WhereIsItValidator;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 
@@ -151,7 +151,7 @@ public class GameWhereIsItErrorPathDialog extends Stage {
 
                 buttonLoad.textProperty().setValue(newPropertyValue);
 
-                if (WhereIsItVaildator.getNumberOfValidDirectories(newPropertyValue, imagesFolders) != 0) {
+                if (WhereIsItValidator.getNumberOfValidDirectories(newPropertyValue, imagesFolders) != 0) {
                     doneButton.setDisable(false);
                     configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
                 } else {

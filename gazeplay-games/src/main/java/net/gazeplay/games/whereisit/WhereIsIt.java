@@ -23,7 +23,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.difficulty.SourceSet;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
-import net.gazeplay.commons.utils.games.WhereIsItVaildator;
+import net.gazeplay.commons.utils.games.WhereIsItValidator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -267,7 +267,7 @@ public class WhereIsIt implements GameLifeCycle {
         if (this.gameType == CUSTOMIZED) {
             final File imagesDirectory = new File(config.getWhereIsItDir() + "/images/");
             directoryName = imagesDirectory.getPath();
-            directoriesCount = WhereIsItVaildator.getNumberOfValidDirectories(config.getWhereIsItDir(), imagesFolders);
+            directoriesCount = WhereIsItValidator.getNumberOfValidDirectories(config.getWhereIsItDir(), imagesFolders);
         } else {
             final String resourcesDirectory = "data/" + this.gameType.getResourcesDirectoryName();
             final String imagesDirectory = resourcesDirectory + "/images/";
@@ -382,7 +382,7 @@ public class WhereIsIt implements GameLifeCycle {
                 List<File> validImageFiles = new ArrayList<>();
 
                 for (File file : files) {
-                    if (WhereIsItVaildator.fileIsImageFile(file)) {
+                    if (WhereIsItValidator.fileIsImageFile(file)) {
                         validImageFiles.add(file);
                     }
                 }

@@ -21,7 +21,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
-import net.gazeplay.commons.utils.games.WhereIsItVaildator;
+import net.gazeplay.commons.utils.games.WhereIsItValidator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -93,7 +93,7 @@ public class WhereIsItConfigurable implements GameLifeCycle {
     private final ArrayList<TargetAOI> targetAOIList;
 
     public WhereIsItConfigurable(final WhereIsItConfigurableGameType gameType, int level, final boolean fourThree,
-                          final IGameContext gameContext, final Stats stats) {
+                                 final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.gameType = gameType;
         this.fourThree = fourThree;
@@ -127,15 +127,19 @@ public class WhereIsItConfigurable implements GameLifeCycle {
 
                 QuestionAnswer tempquestionAnswer = new QuestionAnswer(split[0], col, row);
 
-                String[] splitanswer = split[3].split(";");
-                for ( i = 0;  i < splitanswer.length; i++) {
+                String[] splitanswer = split[3].replaceAll(";", "AVO!DSPL!TEMPTY;AVO!DSPL!TEMPTY").split(";");
+                for (int i2 = 0; i2 < splitanswer.length; i2++) {
+                    splitanswer[i2] = splitanswer[i2].replaceAll("AVO!DSPL!TEMPTY", "");
+                }
+
+                for (i = 0; i < splitanswer.length; i++) {
                     tempquestionAnswer.add(splitanswer[i]);
                 }
 
-                if(split.length  == 5){
+                if (split.length == 5) {
                     tempquestionAnswer.setBravo(split[4]);
-                } else if (split.length  == 6){
-                    tempquestionAnswer.setBravo(split[4],split[5]);
+                } else if (split.length == 6) {
+                    tempquestionAnswer.setBravo(split[4], split[5]);
                 }
 
                 questions.add(tempquestionAnswer);
@@ -145,16 +149,8 @@ public class WhereIsItConfigurable implements GameLifeCycle {
             throw new RuntimeException(e);
         }
 
-        while (indexAnswered < this.questions.get(questionIndex).imagesorder.size() &&
-            !this.questions.get(questionIndex).imagesorder.get(indexAnswered).equals(this.questions.get(questionIndex).answer)) {
-            indexAnswered++;
-        }
-        final int winnerImageIndexAmongDisplayedImages = indexAnswered;
-        log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
-
         int numberOfImagesToDisplayPerRound = questions.get(questionIndex).col * questions.get(questionIndex).row;
-        currentRoundDetails = pickAndBuildPictures(numberOfImagesToDisplayPerRound, random,
-            winnerImageIndexAmongDisplayedImages);
+        currentRoundDetails = pickAndBuildPictures(numberOfImagesToDisplayPerRound, random);
 
         if (currentRoundDetails != null) {
 
@@ -333,8 +329,7 @@ public class WhereIsItConfigurable implements GameLifeCycle {
         return false;
     }
 
-    RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, final ReplayablePseudoRandom random,
-                                      final int winnerImageIndexAmongDisplayedImages) {
+    RoundDetails pickAndBuildPictures(final int numberOfImagesToDisplayPerRound, final ReplayablePseudoRandom random) {
 
         final Configuration config = gameContext.getConfiguration();
 
@@ -395,15 +390,22 @@ public class WhereIsItConfigurable implements GameLifeCycle {
         String questionSoundPath = null;
         String question = null;
         List<Image> pictograms = null;
-        int index = 0;
         for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
 
-            File folder = imagesFolders.get((index) % filesCount);
+            File matchingFolder = null;
 
-            if (this.questions.get(questionIndex).imagesorder.get(i).equals(folder.getName())) {
-                index = (index + 1) % imagesFolders.size();
+            for (int j = 0; j < imagesFolders.size(); j++) {
+                File folder = imagesFolders.get((j) % filesCount);
+                if (this.questions.get(questionIndex).imagesorder.get(i).equals(folder.getName())) {
+                    matchingFolder = folder;
+                    break;
+                }
+            }
 
-                final File[] files = getFiles(folder);
+
+            if (matchingFolder != null) {
+
+                final File[] files = getFiles(matchingFolder);
 
                 List<File> validImageFiles = new ArrayList<>();
 
@@ -417,20 +419,24 @@ public class WhereIsItConfigurable implements GameLifeCycle {
 
                 final File randomImageFile = validImageFiles.get(numFile);
 
-                if (winnerImageIndexAmongDisplayedImages == i) {
+                boolean isWinner = false;
 
-                    questionSoundPath = getPathSound(folder.getName(), language);
+                if (this.questions.get(questionIndex).imagesorder.get(i).equals(this.questions.get(questionIndex).answer)) {
 
-                    question = getQuestionText(folder.getName(), language);
+                    questionSoundPath = getPathSound(matchingFolder.getName(), language);
 
-                    pictograms = getPictogramms(folder.getName());
+                    question = getQuestionText(matchingFolder.getName(), language);
+
+                    pictograms = getPictogramms(matchingFolder.getName());
+
+                    isWinner = true;
 
                 }
 
                 // The image file needs 'file:' prepended as this will get images from a local source, not resources.
                 final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                    winnerImageIndexAmongDisplayedImages == i,folder, "file:" + randomImageFile, stats, this);
+                    isWinner, matchingFolder, "file:" + randomImageFile, stats, this);
 
                 final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY + 1), (int) gameSizing.height,
                     System.currentTimeMillis());
@@ -448,7 +454,7 @@ public class WhereIsItConfigurable implements GameLifeCycle {
                 posX = 0;
             }
         }
-        return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath, question,
+        return new RoundDetails(pictureCardList, questionSoundPath, question,
             pictograms);
     }
 
@@ -482,7 +488,7 @@ public class WhereIsItConfigurable implements GameLifeCycle {
             final File soundsDirectory = new File(path);
             File[] soundsDirectoryFiles = WhereIsItConfigurable.getFiles(soundsDirectory);
             if (soundsDirectoryFiles != null) {
-                List<File> soundsDirectoryValidSoundFiles = WhereIsItVaildator.getValidSoundFiles(soundsDirectoryFiles);
+                List<File> soundsDirectoryValidSoundFiles = WhereIsItValidator.getValidSoundFiles(soundsDirectoryFiles);
                 return soundsDirectoryValidSoundFiles.get(0).getAbsolutePath();
             }
         } catch (final Exception e) {
@@ -550,7 +556,7 @@ public class WhereIsItConfigurable implements GameLifeCycle {
         return imageList;
     }
 
-    public QuestionAnswer getCurrentQuestionAsnwer(){
+    public QuestionAnswer getCurrentQuestionAsnwer() {
         return questions.get(questionIndex);
     }
 

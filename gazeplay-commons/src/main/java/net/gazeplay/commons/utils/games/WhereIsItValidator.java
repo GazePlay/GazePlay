@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WhereIsItVaildator {
+public class WhereIsItValidator {
 
     public static int getNumberOfValidDirectories(String selectedPath, List<File> imagesFolders) {
         final File imagesDirectory = new File(selectedPath + "/images/");

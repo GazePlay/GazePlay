@@ -327,7 +327,10 @@ public class GameWhereIsItConfigurableDialog extends Stage {
                 String[] split = readLine.split(",");
                 try {
                     int numberOfImages = Integer.parseInt(split[1]) * Integer.parseInt(split[2]);
-                    String[] splittedElement = split[3].split(";");
+                    String[] splittedElement = split[3].replaceAll(";", "AVO!DSPL!TEMPTY;AVO!DSPL!TEMPTY").split(";");
+                    for (int i = 0; i < splittedElement.length; i++) {
+                        splittedElement[i] = splittedElement[i].replaceAll("AVO!DSPL!TEMPTY", "");
+                    }
                     if (numberOfImages != splittedElement.length) {
                         return "'questionOrder.csv' " + translator.translate("Line") + " " + line + ": " + getFinalSentence(translator, "LineNeedEltButGot", numberOfImages, splittedElement.length);
                     }

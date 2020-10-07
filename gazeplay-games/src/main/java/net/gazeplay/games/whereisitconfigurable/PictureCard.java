@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.WhereIsItVaildator;
+import net.gazeplay.commons.utils.games.WhereIsItValidator;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.File;
@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.gazeplay.commons.utils.games.WhereIsItVaildator.getValidSoundFiles;
+import static net.gazeplay.commons.utils.games.WhereIsItValidator.getValidSoundFiles;
 
 @Slf4j
 @ToString
@@ -320,7 +320,7 @@ class PictureCard extends Group {
         List<File> validImageFiles = new ArrayList<>();
 
         for (File file : files) {
-            if (WhereIsItVaildator.fileIsImageFile(file)) {
+            if (WhereIsItValidator.fileIsImageFile(file)) {
                 validImageFiles.add(file);
             }
         }

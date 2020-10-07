@@ -26,23 +26,23 @@ public class WhereIsItValidatorTest {
 
     @Test
     void shouldReturnTrueIfTheFileIsAnImageFile() {
-        assertTrue(WhereIsItVaildator.fileIsImageFile(new File(localDataFolder + "/common/default/images/bear.jpg")));
+        assertTrue(WhereIsItValidator.fileIsImageFile(new File(localDataFolder + "/common/default/images/bear.jpg")));
     }
 
     @Test
     void shouldReturnFalseIfTheFileIsNotAnImageFile() {
-        assertFalse(WhereIsItVaildator.fileIsImageFile(new File(localDataFolder + "/music/song.mp3")));
+        assertFalse(WhereIsItValidator.fileIsImageFile(new File(localDataFolder + "/music/song.mp3")));
     }
 
     @Test
     void shouldReturnFalseIfTheFileDoesntExist() {
-        assertFalse(WhereIsItVaildator.fileIsImageFile(new File(localDataFolder + "unknown")));
+        assertFalse(WhereIsItValidator.fileIsImageFile(new File(localDataFolder + "unknown")));
     }
 
     @Test
     void shouldReturnTheGoodNumberOfValidDirectoriesWhenAllValid() {
         LinkedList<File> tempDirList = new LinkedList<File>();
-        assertEquals(3, WhereIsItVaildator.getNumberOfValidDirectories(localDataFolder + "/whereisit/all_valid", tempDirList));
+        assertEquals(3, WhereIsItValidator.getNumberOfValidDirectories(localDataFolder + "/whereisit/all_valid", tempDirList));
         boolean containsBears = false;
         boolean containsCats = false;
         boolean containsDogs = false;
@@ -67,7 +67,7 @@ public class WhereIsItValidatorTest {
     @Test
     void shouldReturnTheGoodNumberOfValidDirectoriesWhenAllValidWithUselessFiles() {
         LinkedList<File> tempDirList = new LinkedList<File>();
-        assertEquals(3, WhereIsItVaildator.getNumberOfValidDirectories(localDataFolder + "/whereisit/all_valid_with_useless_files", tempDirList));
+        assertEquals(3, WhereIsItValidator.getNumberOfValidDirectories(localDataFolder + "/whereisit/all_valid_with_useless_files", tempDirList));
         boolean containsBears = false;
         boolean containsCats = false;
         boolean containsDogs = false;
@@ -92,14 +92,14 @@ public class WhereIsItValidatorTest {
     @Test
     void shouldReturnTheGoodNumberOfValidDirectoriesWhenAllInvalid() {
         LinkedList<File> tempDirList = new LinkedList<File>();
-        assertEquals(0, WhereIsItVaildator.getNumberOfValidDirectories(localDataFolder + "/whereisit/all_invalid", tempDirList));
+        assertEquals(0, WhereIsItValidator.getNumberOfValidDirectories(localDataFolder + "/whereisit/all_invalid", tempDirList));
         assertEquals(tempDirList.size(), 0);
     }
 
     @Test
     void shouldReturnTheGoodNumberOfValidDirectoriesWhenSomeValid() {
         LinkedList<File> tempDirList = new LinkedList<File>();
-        assertEquals(1, WhereIsItVaildator.getNumberOfValidDirectories(localDataFolder + "/whereisit/some_valid", tempDirList));
+        assertEquals(1, WhereIsItValidator.getNumberOfValidDirectories(localDataFolder + "/whereisit/some_valid", tempDirList));
         assertEquals(tempDirList.get(0).getName(), "bears");
     }
 }
