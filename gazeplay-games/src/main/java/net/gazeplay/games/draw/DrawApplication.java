@@ -1,8 +1,11 @@
 package net.gazeplay.games.draw;
 
 import javafx.geometry.Dimension2D;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
@@ -26,23 +29,28 @@ public class DrawApplication implements GameLifeCycle {
         DrawBuilder drawBuilder = new DrawBuilder(randomGenerator);
         drawBuilder.setColorPicker(new RainbowColorPicker());
 
-        final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
+        final Scene scene = gameContext.getPrimaryScene();
 
         double coefficient = 1.5;
 
-        Dimension2D canvasDimension = new Dimension2D(screenDimension.getWidth() / coefficient,
-            screenDimension.getHeight() / coefficient);
-
-        Canvas canvas = drawBuilder.createCanvas(canvasDimension, coefficient, this.stats);
+        Canvas canvas = drawBuilder.createCanvas(scene, coefficient, this.stats);
 
         StackPane root = new StackPane();
-        root.getChildren().add(canvas);
+        Rectangle border = new Rectangle(0,0, scene.getWidth()/coefficient,scene.getHeight()/coefficient);
+        border.setStrokeWidth(5);
+        border.setStroke(Color.WHITE);
+        border.setFill(Color.BLACK);
+
+        border.widthProperty().bind(scene.widthProperty().divide(coefficient));
+        border.heightProperty().bind(scene.heightProperty().divide(coefficient));
+
+        root.getChildren().addAll(border,canvas);
 
         root.prefWidthProperty().bind(gameContext.getRoot().widthProperty());
         root.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
 
         gameContext.getGazeDeviceManager().addEventFilter(canvas);
-        gameContext.getChildren().add(canvas);
+        gameContext.getChildren().addAll(root);
     }
 
     public DrawApplication(IGameContext gameContext, Stats stats, double gameSeed) {
@@ -53,14 +61,14 @@ public class DrawApplication implements GameLifeCycle {
         DrawBuilder drawBuilder = new DrawBuilder(randomGenerator);
         drawBuilder.setColorPicker(new RainbowColorPicker());
 
-        final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
+        final Scene scene = gameContext.getPrimaryScene();
 
         double coefficient = 1.5;
 
-        Dimension2D canvasDimension = new Dimension2D(screenDimension.getWidth() / coefficient,
-            screenDimension.getHeight() / coefficient);
+        Canvas canvas = drawBuilder.createCanvas(scene, coefficient, this.stats);
 
-        Canvas canvas = drawBuilder.createCanvas(canvasDimension, coefficient, this.stats);
+        canvas.widthProperty().bind(scene.widthProperty().divide(coefficient));
+        canvas.heightProperty().bind(scene.heightProperty().divide(coefficient));
 
         StackPane root = new StackPane();
         root.getChildren().add(canvas);

@@ -2,6 +2,7 @@ package net.gazeplay.games.draw;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
@@ -18,9 +19,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DrawBuilder {
 
     @Setter
-    private Color borderRectangleColor = Color.WHITE;
-
-    @Setter
     private ColorPicker colorPicker;
 
     @Setter
@@ -32,17 +30,20 @@ public class DrawBuilder {
         colorPicker = new RandomColorPicker(randomGenerator);
     }
 
-    public Canvas createCanvas(final Dimension2D canvasDimension, final double coefficient, Stats stats) {
+    public Canvas createCanvas(final Scene scene, final double coefficient, Stats stats) {
+
+        Dimension2D canvasDimension = new Dimension2D(scene.getWidth()/coefficient, scene.getHeight()/coefficient);
         final Canvas canvas = createCanvas(canvasDimension, stats);
-        canvas.setLayoutX(canvasDimension.getWidth() * (coefficient - 1) / 2);
-        canvas.setLayoutY(canvasDimension.getHeight() * (coefficient - 1) / 2);
+
+        canvas.widthProperty().bind(scene.widthProperty().divide(coefficient));
+        canvas.heightProperty().bind(scene.heightProperty().divide(coefficient));
+
         return canvas;
     }
 
     public Canvas createCanvas(final Dimension2D canvasDimension, Stats stats) {
         this.stats = stats;
         final Canvas canvas = new Canvas(canvasDimension.getWidth(), canvasDimension.getHeight());
-
         final GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         initDraw(graphicsContext);
 
@@ -94,21 +95,6 @@ public class DrawBuilder {
     }
 
     private void initDraw(final GraphicsContext gc) {
-        final double canvasWidth = gc.getCanvas().getWidth();
-        final double canvasHeight = gc.getCanvas().getHeight();
-
-        gc.setFill(Color.WHITE);
-        gc.clearRect(0, 0, canvasWidth, canvasHeight);
-
-        gc.setStroke(borderRectangleColor);
-        gc.setLineWidth(5);
-        gc.strokeRect(0, // x of the upper left corner
-            0, // y of the upper left corner
-            canvasWidth, // width of the rectangle
-            canvasHeight); // height of the rectangle
-
-        gc.setFill(Color.RED);
-        gc.setStroke(Color.BLUE);
         gc.setLineWidth(drawLineWidth);
     }
 
