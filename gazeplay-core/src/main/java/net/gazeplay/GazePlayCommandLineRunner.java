@@ -49,7 +49,7 @@ public class GazePlayCommandLineRunner implements CommandLineRunner, ExitCodeGen
 
         CommandLine commandLine = new CommandLine(command, factory);
         //
-        commandLine.addSubcommand("hello", applicationContext.getBean(HelloCommand.class));
+        //commandLine.addSubcommand("hello", applicationContext.getBean(HelloCommand.class));
         //
         List<GameSpec> gameSpecs = gamesLocator.listGames(translator);
         for (GameSpec gameSpec : gameSpecs) {
