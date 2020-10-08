@@ -15,6 +15,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.cli.GameSelectionOptions;
 import net.gazeplay.cli.ReusableOptions;
+import net.gazeplay.cli.SizeOptions;
 import net.gazeplay.cli.UserSelectionOptions;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -65,7 +66,6 @@ public class GazePlayFxApp extends Application {
 
     @Override
     public void start(final Stage primaryStage) {
-        autosize(primaryStage);
         boolean showUserSelectPage = true;
         if (options != null) {
             final UserSelectionOptions userSelectionOptions = options.getUserSelectionOptions();
@@ -82,7 +82,26 @@ public class GazePlayFxApp extends Application {
         }
         log.info("showUserSelectPage = {}", showUserSelectPage);
 
-        final Scene primaryScene = createPrimaryScene(primaryStage);
+        final Scene primaryScene;
+        if (options != null) {
+            final SizeOptions sizeOptions = options.getSizeOptions();
+            if (sizeOptions != null) {
+                if (sizeOptions.getGameHeight() >= 0 && sizeOptions.getGameWidth() >= 0) {
+                    //autosize(primaryStage,500,500);
+                    primaryScene = createPrimaryScene(primaryStage, sizeOptions.getGameWidth(), sizeOptions.getGameHeight());
+                } else {
+                    autosize(primaryStage);
+                    primaryScene = createPrimaryScene(primaryStage);
+                }
+            } else {
+                autosize(primaryStage);
+                primaryScene = createPrimaryScene(primaryStage);
+            }
+        } else {
+            autosize(primaryStage);
+            primaryScene = createPrimaryScene(primaryStage);
+        }
+
         configureKeysHandler(primaryScene);
 
         configurePrimaryStage(primaryStage);
@@ -148,6 +167,14 @@ public class GazePlayFxApp extends Application {
     private Scene createPrimaryScene(final Stage primaryStage) {
         final Pane rootPane = new Pane();
         final Scene primaryScene = new Scene(rootPane, primaryStage.getWidth(), primaryStage.getHeight(), Color.BLACK);
+        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), primaryScene, gazePlay.getCurrentScreenDimensionSupplier());
+        primaryStage.setScene(primaryScene);
+        return primaryScene;
+    }
+
+    private Scene createPrimaryScene(final Stage primaryStage, final double width, final double height) {
+        final Pane rootPane = new Pane();
+        final Scene primaryScene = new Scene(rootPane, width, height, Color.BLACK);
         CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), primaryScene, gazePlay.getCurrentScreenDimensionSupplier());
         primaryStage.setScene(primaryScene);
         return primaryScene;
