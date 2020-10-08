@@ -4,6 +4,8 @@ import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -155,10 +157,12 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     @Override
     synchronized public void onSavedMovementsUpdate(Point2D gazePositionOnScene, String event) {
-        Point2D gazePositionOnScreen = gameScene.getNode().localToScreen(gazePositionOnScene);
-        final double positionX = gazePositionOnScreen.getX();
-        final double positionY = gazePositionOnScreen.getY();
-        updatePosition(positionX, positionY, event);
+        if(gameScene!=null) {
+            Point2D gazePositionOnScreen = gameScene.getNode().localToScreen(gazePositionOnScene);
+            final double positionX = gazePositionOnScreen.getX();
+            final double positionY = gazePositionOnScreen.getY();
+            updatePosition(positionX, positionY, event);
+        }
     }
 
     void updatePosition(double positionX, double positionY, String event) {
@@ -193,18 +197,21 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     public boolean contains(Node node, double positionX, double positionY) {
         Point2D localPosition = node.screenToLocal(positionX, positionY);
         int offset = 5;
-
-        return (
-            node.contains(localPosition.getX(), localPosition.getY()) ||
-                node.contains(localPosition.getX() + offset, localPosition.getY()) ||
-                node.contains(localPosition.getX() + offset, localPosition.getY() + offset) ||
-                node.contains(localPosition.getX() + offset, localPosition.getY() - offset) ||
-                node.contains(localPosition.getX() - offset, localPosition.getY()) ||
-                node.contains(localPosition.getX() - offset, localPosition.getY() + offset) ||
-                node.contains(localPosition.getX() - offset, localPosition.getY() - offset) ||
-                node.contains(localPosition.getX(), localPosition.getY() + offset) ||
-                node.contains(localPosition.getX(), localPosition.getY() - offset)
-        );
+        try {
+            return (
+                node.contains(localPosition.getX(), localPosition.getY()) /*||
+                    node.contains(localPosition.getX() + offset, localPosition.getY()) ||
+                    node.contains(localPosition.getX() + offset, localPosition.getY() + offset) ||
+                    node.contains(localPosition.getX() + offset, localPosition.getY() - offset) ||
+                    node.contains(localPosition.getX() - offset, localPosition.getY()) ||
+                    node.contains(localPosition.getX() - offset, localPosition.getY() + offset) ||
+                    node.contains(localPosition.getX() - offset, localPosition.getY() - offset) ||
+                    node.contains(localPosition.getX(), localPosition.getY() + offset) ||
+                    node.contains(localPosition.getX(), localPosition.getY() - offset)*/
+            );
+        } catch (IndexOutOfBoundsException e){
+            return false;
+        }
     }
 
     public void eventFire(double positionX, double positionY, GazeInfos gi, Node node, String event) {
@@ -232,7 +239,11 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                     if (gi.isOnMouse()) {
                         Platform.runLater(
                             () ->
-                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                                 node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+//                                node.fireEvent(new MouseEvent(MouseEvent.MOUSE_MOVED,
+//                                    localPosition.getX(), localPosition.getY(), positionX, positionY, MouseButton.PRIMARY, 1,
+//                                    true, true, true, true, true, true, true, true, true, true, null))
+
                         );
                     } else {
 
@@ -240,7 +251,11 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                         gi.setTime(System.currentTimeMillis());
                         Platform.runLater(
                             () ->
-                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                                 node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+//                                node.fireEvent(new MouseEvent(MouseEvent.MOUSE_ENTERED,
+//                                    localPosition.getX(), localPosition.getY(), positionX, positionY, MouseButton.PRIMARY, 1,
+//                                    true, true, true, true, true, true, true, true, true, true, null))
+
                         );
                     }
                 }
@@ -268,7 +283,11 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                         if (localPosition != null) {
                             Platform.runLater(
                                 () ->
-                                    node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                                     node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+//                                    node.fireEvent(new MouseEvent(MouseEvent.MOUSE_EXITED,
+//                                        localPosition.getX(), localPosition.getY(), positionX, positionY, MouseButton.PRIMARY, 1,
+//                                        true, true, true, true, true, true, true, true, true, true, null))
+
                             );
                         } else {
                             // nothing to do

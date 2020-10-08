@@ -370,7 +370,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         replayButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
             try {
                 ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getApplicationContext(), games);
-                replayingGame.pickJSONFile();
+                replayingGame.pickJSONFile(replayingGame.getFileName());
+                replayingGame.replayGame();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

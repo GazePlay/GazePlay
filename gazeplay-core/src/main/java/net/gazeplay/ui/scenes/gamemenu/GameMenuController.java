@@ -22,7 +22,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -135,9 +137,8 @@ public class GameMenuController {
         stats.start();
 
         String gameVariantLabel;
-        Translator translator = gazePlay.getTranslator();
         if (gameVariant != null){
-            gameVariantLabel = gameVariant.getLabel(translator);
+            gameVariantLabel = gameVariant.toString();
         }
         else {
             gameVariantLabel = null;

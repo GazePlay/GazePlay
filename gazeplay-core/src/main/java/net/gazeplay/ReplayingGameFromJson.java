@@ -5,11 +5,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
+import javafx.scene.Cursor;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import lombok.Getter;
@@ -39,6 +43,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class ReplayingGameFromJson {
@@ -60,6 +67,9 @@ public class ReplayingGameFromJson {
     private RoundsDurationReport roundsDurationReport;
     private SavedStatsInfo savedStatsInfo;
     private int nextTimeMouse, nextTimeGaze, prevTimeMouse, prevTimeGaze;
+    private double sceneAspectRatio;
+
+    private String fileName;
 
     public ReplayingGameFromJson(GazePlay gazePlay, ApplicationContext applicationContext, List<GameSpec> games) {
         this.applicationContext = applicationContext;
@@ -68,12 +78,8 @@ public class ReplayingGameFromJson {
         this.gamesList = games;
     }
 
-    public void setGameList(List<GameSpec> games) {
-        gamesList = games;
-    }
-
-    public void pickJSONFile() throws IOException {
-        final String fileName = getFileName();
+    public void pickJSONFile(String fileName) throws IOException {
+        this.fileName = fileName;
         if (fileName == null) {
             return;
         }
@@ -109,6 +115,7 @@ public class ReplayingGameFromJson {
         nbGoalsReached = json.getStatsNbGoalsReached();
         nbGoalsToReach = json.getStatsNbGoalsToReach();
         nbUnCountedGoalsReached = json.getStatsNbUnCountedGoalsReached();
+        sceneAspectRatio = json.getSceneAspectRatio();
         lifeCycle = json.getLifeCycle();
         roundsDurationReport = json.getRoundsDurationReport();
         String filePrefix = fileName.substring(0, fileName.lastIndexOf("-"));
@@ -120,8 +127,6 @@ public class ReplayingGameFromJson {
         final File colorBandsFile = new File(filePrefix + "-colorBands.png");
         savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsMouseFile, gazeMetricsGazeFile, gazeMetricsMouseAndGazeFile, screenShotFile,
             colorBandsFile, replayDataFile);
-
-        replayGame();
     }
 
     public String getFileName() {
@@ -140,6 +145,21 @@ public class ReplayingGameFromJson {
     }
 
     public void replayGame() {
+        double height = 2*gameContext.getCurrentScreenDimensionSupplier().get().getHeight() - gameContext.getPrimaryScene().getHeight();
+        double width = gameContext.getCurrentScreenDimensionSupplier().get().getWidth();
+        double screenRatio = height /width;
+        if(sceneAspectRatio < screenRatio) {
+            height = gameContext.getCurrentScreenDimensionSupplier().get().getWidth() * sceneAspectRatio;
+        } else {
+            width = height/sceneAspectRatio;
+        }
+
+        getSpecAndVariant();
+
+        launchGame((int)width,(int)height);
+    }
+
+    public void getSpecAndVariant(){
         gameContext = applicationContext.getBean(GameContext.class);
         gazePlay.onGameLaunch(gameContext);
         for (GameSpec gameSpec : gamesList) {
@@ -149,10 +169,14 @@ public class ReplayingGameFromJson {
         }
         final Translator translator = gazePlay.getTranslator();
         for (IGameVariant variant : selectedGameSpec.getGameVariantGenerator().getVariants()) {
-            if (currentGameVariant.equals(variant.getLabel(translator))) {
+            if (currentGameVariant.equals(variant.toString())) {
                 gameVariant = variant;
             }
         }
+    }
+
+    public void drawLines(){
+        getSpecAndVariant();
         IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats statsSaved = gameLauncher.createSavedStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
@@ -173,7 +197,57 @@ public class ReplayingGameFromJson {
                 Platform.runLater(() -> exit(statsSaved, currentGame));
             }
         }).start();
+    }
 
+    private void launchGame(final int width, final int height){
+        Task task = new Task<Void>() {
+            @Override
+            public Void call() {
+                gazePlay.getPrimaryScene().setCursor(Cursor.WAIT);
+                gazePlay.getPrimaryScene().setRoot(gazePlay.getLoading());
+                return null;
+            }
+        };
+        new Thread(task).start();
+        String javaHome = System.getProperty("java.home");
+        String javaBin = javaHome +
+            File.separator + "bin" +
+            File.separator + "java";
+        String classpath = System.getProperty("java.class.path");
+
+        ProcessBuilder builder;
+        if (gameVariant != null) {
+            builder = new ProcessBuilder(
+                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
+                "--user", "Seb",
+                "--game", selectedGameSpec.getGameSummary().getNameCode(),
+                "--variant", gameVariant.toString(),
+                "--height", ""+height,
+                "--width", ""+width,
+                "-json", this.fileName);
+        } else {
+            builder = new ProcessBuilder(
+                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
+                "--user", "Seb",
+                "--game", selectedGameSpec.getGameSummary().getNameCode(),
+                "--height", ""+height,
+                "--width", ""+width,
+                "-json", this.fileName);
+        }
+        try {
+            builder.inheritIO().start();
+            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+            executor.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    Platform.exit();
+                    System.exit(0);
+                }
+            }, 5, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            log.info("IL Y A EU UNE ERREUR Là");
+            e.printStackTrace();
+        }
     }
 
     private void exit(Stats statsSaved, GameLifeCycle currentGame) {
@@ -245,6 +319,8 @@ class JsonFile {
     private double gameStartedTime;
     @Getter
     private String screenAspectRatio;
+    @Getter
+    private double sceneAspectRatio;
     @Getter
     private JsonArray coordinatesAndTimeStamp;
     @Getter

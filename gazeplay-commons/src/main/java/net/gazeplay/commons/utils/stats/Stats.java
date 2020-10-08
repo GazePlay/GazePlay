@@ -445,8 +445,6 @@ public class Stats implements GazeMotionListener {
     }
 
     public void start() {
-        double screenWidth = gameContextScene.getWidth();
-        double screenHeight = gameContextScene.getHeight();
 
         final Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isVideoRecordingEnabled()) {
@@ -880,12 +878,14 @@ public class Stats implements GazeMotionListener {
         JsonArray fixationSequenceArray = gson.toJsonTree(fixationSequence).getAsJsonArray();
         JsonArray durationBetweenGoalsArray = gson.toJsonTree(roundsDurationReport.getDurationBetweenGoals()).getAsJsonArray();
         String screenAspectRatio = getScreenRatio();
+        double sceneAspectRatio = getSceneRatio();
 
         savedDataObj.addProperty("gameSeed", currentGameSeed);
         savedDataObj.addProperty("gameName", currentGameNameCode);
         savedDataObj.addProperty("gameVariant", currentGameVariant);
         savedDataObj.addProperty("gameStartedTime", startTime);
         savedDataObj.addProperty("screenAspectRatio", screenAspectRatio);
+        savedDataObj.addProperty("sceneAspectRatio", sceneAspectRatio);
         savedDataObj.addProperty("statsNbGoalsReached", nbGoalsReached);
         savedDataObj.addProperty("statsNbGoalsToReach", nbGoalsToReach);
         savedDataObj.addProperty("statsNbUnCountedGoalsReached", nbUnCountedGoalsReached);
@@ -924,6 +924,10 @@ public class Stats implements GazeMotionListener {
         int widthRatio = screenWidth / factor;
         int heightRatio = screenHeight / factor;
         return widthRatio + ":" + heightRatio;
+    }
+
+    double getSceneRatio() {
+        return gameContextScene.getHeight()/gameContextScene.getWidth();
     }
 
     public void setGameVariant(String gameVariant, String gameNameCode) {
