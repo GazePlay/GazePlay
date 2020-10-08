@@ -1,5 +1,6 @@
 package net.gazeplay.games.ninja;
 
+import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
@@ -43,8 +44,12 @@ public class Ninja implements GameLifeCycle {
     public void launch() {
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
         randomPositionGenerator.setRandomGenerator(randomGenerator);
+
+        Scene scene = gameContext.getPrimaryScene();
+        int radius = (int) Math.min(scene.getWidth()/12, scene.getHeight()/12);
+
         portrait = new Target(gameContext, randomPositionGenerator, stats,
-            Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator);
+            Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, radius);
         gameContext.setLimiterAvailable();
         gameContext.getChildren().add(portrait);
         stats.notifyNewRoundReady();

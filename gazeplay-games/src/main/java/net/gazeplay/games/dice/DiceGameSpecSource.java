@@ -10,8 +10,8 @@ public class DiceGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("Dice").gameThumbnail("data/Thumbnails/dice.png")
-                .category(GameCategories.Category.ACTION_REACTION)
                 .category(GameCategories.Category.SELECTION)
+                .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.MULTIMEDIA).build(),
             new DiceGameVariantGenerator(), new DiceGameLauncher());
     }

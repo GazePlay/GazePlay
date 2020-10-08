@@ -10,7 +10,9 @@ public class PaperScissorsStoneGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Paper-Scissors-Stone").gameThumbnail("data/Thumbnails/PaperScissorsStone.png").category(GameCategories.Category.SELECTION).build(),
+            GameSummary.builder().nameCode("Paper-Scissors-Stone").gameThumbnail("data/Thumbnails/PaperScissorsStone.png")
+                .category(GameCategories.Category.SELECTION)
+                .category(GameCategories.Category.LOGIC_MATHS).build(),
             new PaperScissorsStoneLauncher());
     }
 }

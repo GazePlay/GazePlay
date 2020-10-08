@@ -37,7 +37,7 @@ public class Target extends Parent {
         this.num = num;
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
-        this.radius = 75;
+        this.radius = gameContext.getGamePanelDimensionProvider().getDimension2D().getWidth()/18;
         this.fixationLength = fixLength;
 
         final RandomPositionGenerator randomPositionGenerator = this.gameContext.getRandomPositionGenerator();

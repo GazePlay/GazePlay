@@ -33,8 +33,6 @@ public class Math101 implements GameLifeCycle {
 
     private static final float zoom_factor = 1.16f;
 
-    private static final int minHeight = 30;
-
     private final MathGameType gameType;
 
     private final IGameContext gameContext;
@@ -355,11 +353,7 @@ public class Math101 implements GameLifeCycle {
     }
 
     private static double computeCardHeight(final double boxHeight) {
-        if ((boxHeight / zoom_factor) < minHeight) {
-            return minHeight;
-        } else {
             return boxHeight / zoom_factor;
-        }
     }
 
     private static double computeCardWidth(final double cardHeight) {

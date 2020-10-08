@@ -12,6 +12,7 @@ public class MemoryNumbersGameSpecSource implements GameSpecSource {
             GameSummary.builder().nameCode("MemoryNumbers").gameThumbnail("data/Thumbnails/memory-numbers.png")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
+                .category(GameCategories.Category.LITERACY)
                 .category(GameCategories.Category.MEMORIZATION).build(),
             new MemoryGameVariantGenerator(), new MemoryNumbersGameLauncher());
     }

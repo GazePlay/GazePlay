@@ -128,16 +128,20 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         final Image red = new Image(imagePATH + "potionRed.png");
         final Image yellow = new Image(imagePATH + "potionYellow.png");
         final Image blue = new Image(imagePATH + "potionBlue.png");
-        potionRed = new Potion(gameDimension2D.getWidth() * 6 / 7 - (red.getWidth() + red.getWidth()) * 1.5,
-            gameDimension2D.getHeight() - red.getHeight() - 10, red.getWidth(), red.getHeight(), red, Color.RED,
+
+        double imageWidth = gameDimension2D.getWidth()/9;
+        double imageHeight = gameDimension2D.getHeight()/4;
+
+        potionRed = new Potion(gameDimension2D.getWidth() * 6 / 7 - (imageWidth + imageWidth) * 1.5,
+            gameDimension2D.getHeight() - imageHeight - 10, imageWidth, imageHeight, red, Color.RED,
             gameContext, stats, this, gameContext.getConfiguration().getFixationLength());
 
-        potionYellow = new Potion(gameDimension2D.getWidth() * 6 / 7 - yellow.getWidth() * 1.5,
-            gameDimension2D.getHeight() - yellow.getHeight() - 10, yellow.getWidth(), yellow.getHeight(), yellow,
+        potionYellow = new Potion(gameDimension2D.getWidth() * 6 / 7 - imageWidth * 1.5,
+            gameDimension2D.getHeight() - imageHeight - 10, imageWidth, imageHeight, yellow,
             Color.YELLOW, gameContext, stats, this, gameContext.getConfiguration().getFixationLength());
 
-        potionBlue = new Potion(gameDimension2D.getWidth() * 6 / 7, gameDimension2D.getHeight() - blue.getHeight() - 10,
-            blue.getWidth(), blue.getHeight(), blue, Color.BLUE, gameContext, stats, this,
+        potionBlue = new Potion(gameDimension2D.getWidth() * 6 / 7, gameDimension2D.getHeight() - imageHeight - 10,
+            imageWidth, imageHeight, blue, Color.BLUE, gameContext, stats, this,
             gameContext.getConfiguration().getFixationLength());
 
         final LinkedList<Potion> potionsOnTable = new LinkedList<>();

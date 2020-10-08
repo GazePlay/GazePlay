@@ -6,7 +6,12 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.Glow;
+import javafx.scene.effect.Reflection;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -26,8 +31,6 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 @Slf4j
 public class Race extends Parent implements GameLifeCycle {
-
-    private static final int MIN_RADIUS = 40;
 
     private static final int MAX_TIME_LENGTH = 7;
     private static final int MIN_TIME_LENGTH = 4;
@@ -481,7 +484,9 @@ public class Race extends Parent implements GameLifeCycle {
 
     private void makePlayer(final double racerPosition) {
 
-        playerRacer = buildRacer(100);
+        Scene scene = gameContext.getPrimaryScene();
+        final double size = Math.min(scene.getWidth()/15,scene.getHeight()/15);
+        playerRacer = buildRacer(size);
         playerRacer.toBack();
         this.getChildren().add(playerRacer);
         final double x = 0;
@@ -526,7 +531,14 @@ public class Race extends Parent implements GameLifeCycle {
 
     private Target makeRacers(final double racerPosition) {
 
-        final Target frogRacer = buildRacer(70);
+        Scene scene = gameContext.getPrimaryScene();
+        final double size = Math.min(scene.getWidth()/10,scene.getHeight()/10);
+        final Target frogRacer = buildRacer(size);
+
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setSaturation(1.3);
+        frogRacer.setEffect(colorAdjust);
+
         frogRacer.toBack();
         this.getChildren().add(frogRacer);
         frogRacer.setLayoutX(0);
@@ -558,9 +570,10 @@ public class Race extends Parent implements GameLifeCycle {
     }
 
     private void resize(final ImageView i) {
-        final double d = MIN_RADIUS;
-        i.setFitHeight(d);
-        i.setFitWidth(d * 5 / 4);
+        Scene scene = gameContext.getPrimaryScene();
+        final double size = Math.min(scene.getWidth()/30,scene.getHeight()/30);
+        i.setFitHeight(size);
+        i.setFitWidth(size * 5 / 4);
     }
 
     private void resizeRacer(final ImageView i, final double size) {

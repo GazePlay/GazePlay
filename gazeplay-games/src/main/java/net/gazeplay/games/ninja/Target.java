@@ -26,9 +26,7 @@ import java.util.List;
 @Slf4j
 public class Target extends Portrait {
 
-    private static final int radius = 100;
-
-    private static final int ballRadius = 50;
+    private final int radius;
 
     private static final int nbBall = 20;
 
@@ -56,9 +54,10 @@ public class Target extends Portrait {
 
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
-                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance, final ReplayablePseudoRandom randomGenerator) {
+                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance, final ReplayablePseudoRandom randomGenerator, int radius) {
         super(radius, randomPositionGenerator, imageLibrary);
 
+        this.radius = radius;
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
         this.randomPositionGenerator = randomPositionGenerator;
@@ -87,7 +86,7 @@ public class Target extends Portrait {
                                                       final ImageLibrary imageLibrary, final int count) {
         final List<Portrait> result = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            final Portrait miniPortrait = new Portrait(ballRadius, randomPositionGenerator, imageLibrary);
+            final Portrait miniPortrait = new Portrait(radius/2, randomPositionGenerator, imageLibrary);
             miniPortrait.setOpacity(1);
             miniPortrait.setVisible(false);
             result.add(miniPortrait);
@@ -302,7 +301,7 @@ public class Target extends Portrait {
         fadeTransition.setToValue(0.5);
 
         final Timeline timeline1 = new Timeline();
-        timeline1.getKeyFrames().add(new KeyFrame(new Duration(100), new KeyValue(radiusProperty(), ballRadius)));
+        timeline1.getKeyFrames().add(new KeyFrame(new Duration(100), new KeyValue(radiusProperty(), radius/2)));
         return new ParallelTransition(fadeTransition, timeline1);
     }
 

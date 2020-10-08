@@ -10,7 +10,6 @@ public class FarmGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("Farm").gameThumbnail("data/Thumbnails/farm.png")
-                .category(GameCategories.Category.ACTION_REACTION)
                 .category(GameCategories.Category.SELECTION).build(),
             new FarmGameLauncher());
     }
