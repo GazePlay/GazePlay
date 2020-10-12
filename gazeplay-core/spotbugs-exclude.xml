@@ -4,6 +4,7 @@
         <Bug code="RV, UMAC"/>
     </Match>
     <Match>
+        <Source name="~.*GameMenuController\.java" />
         <Class name="~.*GameMenuController" />
         <Bug pattern="DM_EXIT"/>
     </Match>
