@@ -5,7 +5,7 @@
     </Match>
     <Match>
         <Source name="~.*GameMenuController\.java" />
-        <Bug code="Dm"/>
+        <Bug pattern="DM_EXIT"/>
     </Match>
     <Match>
         <Package name="~.*"/>
