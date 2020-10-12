@@ -11,6 +11,7 @@ import javafx.scene.media.MediaPlayer;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.*;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.gamevariants.IGameVariant;
@@ -23,8 +24,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -77,24 +77,19 @@ public class GameMenuController {
             }
         };
         new Thread(task).start();
-        String javaHome = System.getProperty("java.home");
-        String javaBin = javaHome +
-            File.separator + "bin" +
-            File.separator + "java";
-        String classpath = System.getProperty("java.class.path");
+
         ProcessBuilder builder;
-        if (gameVariant != null) {
-            builder = new ProcessBuilder(
-                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
-                "--user", "Seb",
-                "--game", selectedGameSpec.getGameSummary().getNameCode(),
-                "--variant", gameVariant.toString());
-        } else {
-            builder = new ProcessBuilder(
-                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
-                "--user", "Seb",
-                "--game", selectedGameSpec.getGameSummary().getNameCode());
+
+        int height = 0;
+        int width = 0;
+        if(!gazePlay.isFullScreen()){
+            height = (int) gazePlay.getPrimaryScene().getWindow().getHeight();
+            width = (int) gazePlay.getPrimaryScene().getWindow().getWidth();
         }
+        builder = createBuilder(
+            selectedGameSpec.getGameSummary().getNameCode(),
+            gameVariant,height,width);
+
         try {
             builder.inheritIO().start();
             ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
@@ -107,6 +102,36 @@ public class GameMenuController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public ProcessBuilder createBuilder(String game, IGameVariant gameVariant, int height, int width){
+        String javaHome = System.getProperty("java.home");
+        String javaBin = javaHome +
+            File.separator + "bin" +
+            File.separator + "java";
+        String classpath = System.getProperty("java.class.path");
+
+        LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin, "-cp", classpath, GazePlayLauncher.class.getName()));
+
+        String user = ActiveConfigurationContext.getInstance().getUserName();
+        if(user != null && !user.equals("")) {
+            commands.addAll(Arrays.asList("--user", user));
+        } else {;
+            commands.add("--default-user");
+        }
+
+        commands.addAll(Arrays.asList("--game", game));
+
+        if (gameVariant != null) {
+            commands.addAll(Arrays.asList( "--variant", gameVariant.toString()));
+        }
+
+
+        if(height != 0 && width != 0) {
+            commands.addAll(Arrays.asList("--height", "" + height, "--width", "" + width));
+        }
+
+        return new ProcessBuilder(commands);
     }
 
     public void chooseGame(

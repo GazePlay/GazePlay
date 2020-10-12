@@ -174,8 +174,9 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         if ((randomValue == 2) || (randomValue == 0)) {
             // Move UP
+            double multiplier = (gameType.equals("biboule")?-1:1);
             firstMove.getKeyFrames().add(new KeyFrame(new Duration(2000),
-                new KeyValue(box.translateYProperty(),  -(dimension2D.getHeight() / 5) , Interpolator.LINEAR)));
+                new KeyValue(box.translateYProperty(),  multiplier*(dimension2D.getHeight() / 5) , Interpolator.LINEAR)));
         }
 
         if ((randomValue == 1) || (randomValue == 2)) {

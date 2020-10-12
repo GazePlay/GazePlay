@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.FixationPoint;
@@ -41,6 +42,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -221,25 +223,7 @@ public class ReplayingGameFromJson {
             File.separator + "java";
         String classpath = System.getProperty("java.class.path");
 
-        ProcessBuilder builder;
-        if (gameVariant != null) {
-            builder = new ProcessBuilder(
-                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
-                "--user", "Seb",
-                "--game", selectedGameSpec.getGameSummary().getNameCode(),
-                "--variant", gameVariant.toString(),
-                "--height", ""+height,
-                "--width", ""+width,
-                "-json", this.fileName);
-        } else {
-            builder = new ProcessBuilder(
-                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
-                "--user", "Seb",
-                "--game", selectedGameSpec.getGameSummary().getNameCode(),
-                "--height", ""+height,
-                "--width", ""+width,
-                "-json", this.fileName);
-        }
+        ProcessBuilder builder = createBuilder(height,width);
         try {
             builder.inheritIO().start();
             ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
@@ -254,6 +238,38 @@ public class ReplayingGameFromJson {
             log.info("IL Y A EU UNE ERREUR Là");
             e.printStackTrace();
         }
+    }
+
+    public ProcessBuilder createBuilder(int height, int width){
+        String javaHome = System.getProperty("java.home");
+        String javaBin = javaHome +
+            File.separator + "bin" +
+            File.separator + "java";
+        String classpath = System.getProperty("java.class.path");
+
+        LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin, "-cp", classpath, GazePlayLauncher.class.getName()));
+
+        String user = ActiveConfigurationContext.getInstance().getUserName();
+        if(user != null && !user.equals("")) {
+            commands.addAll(Arrays.asList("--user", user));
+        } else {;
+            commands.add("--default-user");
+        }
+
+        commands.addAll(Arrays.asList("--game", selectedGameSpec.getGameSummary().getNameCode()));
+
+        if (gameVariant != null) {
+            commands.addAll(Arrays.asList( "--variant", gameVariant.toString()));
+        }
+
+
+        if(height != 0 && width != 0) {
+            commands.addAll(Arrays.asList("--height", "" + height, "--width", "" + width));
+        }
+
+        commands.addAll(Arrays.asList("-json", this.fileName));
+
+        return new ProcessBuilder(commands);
     }
 
     private void exit(Stats statsSaved, GameLifeCycle currentGame) {
