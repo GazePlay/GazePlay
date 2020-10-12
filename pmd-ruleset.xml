@@ -7,6 +7,7 @@
     <description>Ruleset for PMD for our particular project</description>
 
     <exclude-pattern>.*/gazeplay-side-projects/.*</exclude-pattern>
+    <exclude-pattern>.*/gazeplay-core/.*</exclude-pattern>
     <exclude-pattern>.*/gazeplay-picto-pick/.*</exclude-pattern>
     <exclude-pattern>.*/gazeplay-melordi/.*</exclude-pattern>
     <exclude-pattern>.*/gazeplay-commons/src/main/java/org/tc33/.*</exclude-pattern>

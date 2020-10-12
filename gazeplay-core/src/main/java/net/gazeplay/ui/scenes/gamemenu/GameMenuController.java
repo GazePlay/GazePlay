@@ -11,6 +11,7 @@ import javafx.scene.media.MediaPlayer;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.*;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
@@ -53,14 +54,14 @@ public class GameMenuController {
         } else {
             if (variants.size() == 1) {
                 IGameVariant onlyGameVariant = variants.iterator().next();
-                chooseGame1(gazePlay, gameSpec, onlyGameVariant);
+                chooseAndStartNewGameProcess(gazePlay, gameSpec, onlyGameVariant);
             } else {
-                chooseGame1(gazePlay, gameSpec, null);
+                chooseAndStartNewGameProcess(gazePlay, gameSpec, null);
             }
         }
     }
 
-    public void chooseGame1(
+    public void chooseAndStartNewGameProcess(
         GazePlay gazePlay,
         GameSpec selectedGameSpec,
         IGameVariant gameVariant
@@ -79,17 +80,33 @@ public class GameMenuController {
             File.separator + "bin" +
             File.separator + "java";
         String classpath = System.getProperty("java.class.path");
+
+        Configuration configuration = ActiveConfigurationContext.getInstance();
+        String username = configuration.getUserName();
+
         ProcessBuilder builder;
-        if (gameVariant != null) {
+
+        if (gameVariant != null &&  !username.equals("") ) {
             builder = new ProcessBuilder(
                 javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
-                "--user", "Seb",
+                "--user", username,
                 "--game", selectedGameSpec.getGameSummary().getNameCode(),
                 "--variant", gameVariant.toString());
+        } else if (gameVariant != null) {
+            builder = new ProcessBuilder(
+                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
+                "--default-user",
+                "--game", selectedGameSpec.getGameSummary().getNameCode(),
+                "--variant", gameVariant.toString());
+        } else if (username.equals("") ) {
+            builder = new ProcessBuilder(
+                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
+                "--default-user",
+                "--game", selectedGameSpec.getGameSummary().getNameCode());
         } else {
             builder = new ProcessBuilder(
                 javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
-                "--user", "Seb",
+                "--user", username,
                 "--game", selectedGameSpec.getGameSummary().getNameCode());
         }
         try {
@@ -106,7 +123,7 @@ public class GameMenuController {
         }
     }
 
-    public void chooseGame(
+    public void chooseAndStartNewGame(
         GazePlay gazePlay,
         GameSpec selectedGameSpec,
         IGameVariant gameVariant
