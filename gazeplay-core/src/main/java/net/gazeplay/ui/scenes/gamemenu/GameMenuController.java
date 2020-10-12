@@ -56,14 +56,14 @@ public class GameMenuController {
         } else {
             if (variants.size() == 1) {
                 IGameVariant onlyGameVariant = variants.iterator().next();
-                chooseGame1(gazePlay, gameSpec, onlyGameVariant);
+                chooseAndStartNewGameProcess(gazePlay, gameSpec, onlyGameVariant);
             } else {
-                chooseGame1(gazePlay, gameSpec, null);
+                chooseAndStartNewGameProcess(gazePlay, gameSpec, null);
             }
         }
     }
 
-    public void chooseGame1(
+    public void chooseAndStartNewGameProcess(
         GazePlay gazePlay,
         GameSpec selectedGameSpec,
         IGameVariant gameVariant
@@ -134,7 +134,7 @@ public class GameMenuController {
         return new ProcessBuilder(commands);
     }
 
-    public void chooseGame(
+    public void chooseAndStartNewGame(
         GazePlay gazePlay,
         GameSpec selectedGameSpec,
         IGameVariant gameVariant

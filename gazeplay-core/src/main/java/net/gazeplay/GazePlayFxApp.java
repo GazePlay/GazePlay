@@ -157,18 +157,18 @@ public class GazePlayFxApp extends Application {
                             if (selectedVariantCode != null) {
                                 IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
                                 log.info("THE VARIANT IS : {}", variant);
-                                gameMenuController.chooseGame(gazePlay, selectedGameSpec, variant);
+                                gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
                             } else {
-                                gameMenuController.chooseGame(gazePlay, selectedGameSpec, null);
+                                gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
                             }
                         }
                     }else {
                         if (selectedVariantCode != null) {
                             IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
                             log.info("THE VARIANT IS : {}", variant);
-                            gameMenuController.chooseGame(gazePlay, selectedGameSpec, variant);
+                            gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
                         } else {
-                            gameMenuController.chooseGame(gazePlay, selectedGameSpec, null);
+                            gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
                         }
                     }
                 } else {

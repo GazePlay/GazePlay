@@ -67,7 +67,7 @@ public class GazePlayCommandLineRunner implements CommandLineRunner, ExitCodeGen
 
         @Override
         public Integer call() throws Exception {
-            gameMenuController.chooseGame(gazeplay, gameSpec, null);
+            gameMenuController.chooseAndStartNewGame(gazeplay, gameSpec, null);
             return 0;
         }
 
