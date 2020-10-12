@@ -4,8 +4,8 @@
         <Bug code="RV, UMAC"/>
     </Match>
     <Match>
-        <Class name="net.gazeplay.ui.scenes.gamemenu.GameMenuController" />
-        <Bug pattern="DM_EXIT"/>
+        <Source name="~.*GameMenuController\.java" />
+        <Bug code="Dm"/>
     </Match>
     <Match>
         <Package name="~.*"/>
