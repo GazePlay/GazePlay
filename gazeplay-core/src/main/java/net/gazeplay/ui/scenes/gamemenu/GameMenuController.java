@@ -1,5 +1,8 @@
 package net.gazeplay.ui.scenes.gamemenu;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.effect.BoxBlur;
@@ -7,10 +10,8 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.GameLifeCycle;
-import net.gazeplay.GameSpec;
-import net.gazeplay.GazePlay;
-import net.gazeplay.IGameLauncher;
+import net.gazeplay.*;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
@@ -20,7 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.Collection;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -43,22 +48,82 @@ public class GameMenuController {
             GameVariantDialog dialog = new GameVariantDialog(gazePlay, this, gazePlay.getPrimaryStage(), gameSpec, root, gameSpec.getGameVariantGenerator().getVariantChooseText());
             dialog.setTitle(gameName);
             dialog.show();
-
-
             dialog.toFront();
             dialog.setAlwaysOnTop(true);
 
         } else {
             if (variants.size() == 1) {
                 IGameVariant onlyGameVariant = variants.iterator().next();
-                chooseGame(gazePlay, gameSpec, onlyGameVariant);
+                chooseAndStartNewGameProcess(gazePlay, gameSpec, onlyGameVariant);
             } else {
-                chooseGame(gazePlay, gameSpec, null);
+                chooseAndStartNewGameProcess(gazePlay, gameSpec, null);
             }
         }
     }
 
-    public void chooseGame(
+    public void chooseAndStartNewGameProcess(
+        GazePlay gazePlay,
+        GameSpec selectedGameSpec,
+        IGameVariant gameVariant
+    ) {
+        Task task = new Task<Void>() {
+            @Override
+            public Void call() {
+                gazePlay.getPrimaryScene().setCursor(Cursor.WAIT);
+                gazePlay.getPrimaryScene().setRoot(gazePlay.getLoading());
+                return null;
+            }
+        };
+        new Thread(task).start();
+        String javaHome = System.getProperty("java.home");
+        String javaBin = javaHome +
+            File.separator + "bin" +
+            File.separator + "java";
+        String classpath = System.getProperty("java.class.path");
+
+        Configuration configuration = ActiveConfigurationContext.getInstance();
+        String username = configuration.getUserName();
+
+        ProcessBuilder builder;
+
+        if (gameVariant != null &&  !username.equals("") ) {
+            builder = new ProcessBuilder(
+                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
+                "--user", username,
+                "--game", selectedGameSpec.getGameSummary().getNameCode(),
+                "--variant", gameVariant.toString());
+        } else if (gameVariant != null) {
+            builder = new ProcessBuilder(
+                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
+                "--default-user",
+                "--game", selectedGameSpec.getGameSummary().getNameCode(),
+                "--variant", gameVariant.toString());
+        } else if (username.equals("") ) {
+            builder = new ProcessBuilder(
+                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
+                "--default-user",
+                "--game", selectedGameSpec.getGameSummary().getNameCode());
+        } else {
+            builder = new ProcessBuilder(
+                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
+                "--user", username,
+                "--game", selectedGameSpec.getGameSummary().getNameCode());
+        }
+        try {
+            builder.inheritIO().start();
+            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+            executor.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    Platform.exit();System.exit(0);
+                }
+            }, 5, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void chooseAndStartNewGame(
         GazePlay gazePlay,
         GameSpec selectedGameSpec,
         IGameVariant gameVariant
