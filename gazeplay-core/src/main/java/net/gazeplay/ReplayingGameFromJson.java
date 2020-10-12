@@ -145,6 +145,9 @@ public class ReplayingGameFromJson {
     }
 
     public void replayGame() {
+        if (fileName == null) {
+            return;
+        }
         double height = 2*gameContext.getCurrentScreenDimensionSupplier().get().getHeight() - gameContext.getPrimaryScene().getHeight();
         double width = gameContext.getCurrentScreenDimensionSupplier().get().getWidth();
         double screenRatio = height /width;
@@ -176,6 +179,9 @@ public class ReplayingGameFromJson {
     }
 
     public void drawLines(){
+        if (fileName == null) {
+            return;
+        }
         getSpecAndVariant();
         IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
         final Scene scene = gazePlay.getPrimaryScene();
@@ -258,29 +264,34 @@ public class ReplayingGameFromJson {
         int sceneWidth = (int) gameContext.getPrimaryScene().getWidth();
         int sceneHeight = (int) gameContext.getPrimaryScene().getHeight();
         final GraphicsContext graphics = canvas.getGraphicsContext2D();
-        log.info("SIZE IS {}", coordinatesAndTimeStamp.size());
-        for (JsonElement coordinateAndTimeStamp : coordinatesAndTimeStamp) {
-            JsonObject coordinateAndTimeObj = coordinateAndTimeStamp.getAsJsonObject();
-            String nextEvent = coordinateAndTimeObj.get("event").getAsString();
-            int nextX = (int) (Double.parseDouble(coordinateAndTimeObj.get("X").getAsString()) * sceneWidth);
-            int nextY = (int) (Double.parseDouble(coordinateAndTimeObj.get("Y").getAsString()) * sceneHeight);
-            int delay;
-            if (nextEvent.equals("gaze")) {
-                prevTimeGaze = nextTimeGaze;
-                nextTimeGaze = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
-                delay = nextTimeGaze - prevTimeGaze;
-                paint(graphics, canvas, nextX, nextY, "gaze");
-            } else {
-                prevTimeMouse = nextTimeMouse;
-                nextTimeMouse = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
-                delay = nextTimeMouse - prevTimeMouse;
-                paint(graphics, canvas, nextX, nextY, "mouse");
-            }
-            try {
-                Thread.sleep(delay);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                break;
+        synchronized (coordinatesAndTimeStamp) {
+            for (JsonElement coordinateAndTimeStamp : coordinatesAndTimeStamp) {
+                JsonObject coordinateAndTimeObj = coordinateAndTimeStamp.getAsJsonObject();
+                String nextEvent = coordinateAndTimeObj.get("event").getAsString();
+                int nextX = (int) (Double.parseDouble(coordinateAndTimeObj.get("X").getAsString()) * sceneWidth);
+                int nextY = (int) (Double.parseDouble(coordinateAndTimeObj.get("Y").getAsString()) * sceneHeight);
+                int delay;
+                if (nextEvent.equals("gaze")) {
+                    prevTimeGaze = nextTimeGaze;
+                    nextTimeGaze = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
+                    delay = nextTimeGaze - prevTimeGaze;
+                    Platform.runLater(()-> {
+                        paint(graphics, canvas, nextX, nextY, "gaze");
+                    });
+                } else {
+                    prevTimeMouse = nextTimeMouse;
+                    nextTimeMouse = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
+                    delay = nextTimeMouse - prevTimeMouse;
+                    Platform.runLater(()-> {
+                        paint(graphics, canvas, nextX, nextY, "mouse");
+                    });
+                }
+                try {
+                    Thread.sleep(delay);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    break;
+                }
             }
         }
     }
