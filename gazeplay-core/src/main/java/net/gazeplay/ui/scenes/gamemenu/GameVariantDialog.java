@@ -65,8 +65,6 @@ public class GameVariantDialog extends Stage {
 
         ScrollPane choicePanelScroller = new ScrollPane();
         choicePanelScroller.setContent(choicePane);
-        //choicePanelScroller.setMinHeight(primaryStage.getHeight() / 5);
-        //choicePanelScroller.setMinWidth(primaryStage.getWidth() / 5);
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
         choicePanelScroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -141,8 +139,6 @@ public class GameVariantDialog extends Stage {
             IGameVariant finalVariant = variant;
             EventHandler<Event> event = mouseEvent -> {
                 close();
-                //  root.setDisable(false);
-                //  root.setEffect(null);
                 gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, finalVariant);
             };
             button.addEventHandler(MOUSE_CLICKED, event);
@@ -157,7 +153,6 @@ public class GameVariantDialog extends Stage {
         setScene(scene);
         setWidth(primaryStage.getWidth() / 2);
         setHeight(primaryStage.getHeight() / 2);
-        // scene.getStylesheets().add(getClass().getResource("modal-dialog.css").toExternalForm());
     }
 
     public boolean isEasymode() {

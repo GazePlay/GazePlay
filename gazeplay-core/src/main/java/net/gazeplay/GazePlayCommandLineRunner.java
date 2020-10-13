@@ -48,14 +48,12 @@ public class GazePlayCommandLineRunner implements CommandLineRunner, ExitCodeGen
     public void run(String... args) {
 
         CommandLine commandLine = new CommandLine(command, factory);
-        //
-        //commandLine.addSubcommand("hello", applicationContext.getBean(HelloCommand.class));
-        //
+
         List<GameSpec> gameSpecs = gamesLocator.listGames(translator);
         for (GameSpec gameSpec : gameSpecs) {
             commandLine.addSubcommand(gameSpec.getGameSummary().getNameCode(), new GameRunnerCommand(gameSpec));
         }
-        //
+
         exitCode = commandLine.execute(args);
     }
 
@@ -66,7 +64,7 @@ public class GazePlayCommandLineRunner implements CommandLineRunner, ExitCodeGen
         private final GameSpec gameSpec;
 
         @Override
-        public Integer call() throws Exception {
+        public Integer call() {
             gameMenuController.chooseAndStartNewGame(gazeplay, gameSpec, null);
             return 0;
         }

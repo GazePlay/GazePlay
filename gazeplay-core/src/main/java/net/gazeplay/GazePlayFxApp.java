@@ -87,7 +87,6 @@ public class GazePlayFxApp extends Application {
             final SizeOptions sizeOptions = options.getSizeOptions();
             if (sizeOptions != null) {
                 if (sizeOptions.getGameHeight() > 0 && sizeOptions.getGameWidth() > 0) {
-                    //autosize(primaryStage,500,500);
                     primaryScene = createPrimaryScene(primaryStage, sizeOptions.getGameWidth(), sizeOptions.getGameHeight());
                 } else {
                     autosize(primaryStage);
@@ -131,7 +130,6 @@ public class GazePlayFxApp extends Application {
                         selectedGameNameCode = selectedGameSpec.getGameSummary().getNameCode();
                     }
                 }
-
 
                 String selectedVariantCode = options.getVariantSelectionOptions().getGameVariant();
                 if (selectedGameNameCode != null) {
