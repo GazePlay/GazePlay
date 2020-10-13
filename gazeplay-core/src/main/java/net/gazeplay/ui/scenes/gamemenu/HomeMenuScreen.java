@@ -1,5 +1,6 @@
 package net.gazeplay.ui.scenes.gamemenu;
 
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -11,17 +12,18 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.GameCategories;
-import net.gazeplay.GameSpec;
-import net.gazeplay.GazePlay;
-import net.gazeplay.ReplayingGameFromJson;
+import net.gazeplay.*;
 import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -60,6 +62,13 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private List<Node> gameCardsList;
     private List<Node> favGameCardsList;
+
+    @Getter
+    private Label errorMessageLabel;
+    @Getter
+    private StackPane errorMessage;
+    @Getter
+    private VBox centerPanel;
 
     public HomeMenuScreen(
         GazePlay gazePlay,
@@ -116,7 +125,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         ProgressIndicator dwellTimeIndicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, dwellTimeIndicator);
 
-        VBox centerPanel = new VBox();
+        centerPanel = new VBox();
         centerPanel.setSpacing(40);
         centerPanel.setAlignment(Pos.TOP_CENTER);
         centerPanel.getChildren().add(gamePickerChoicePane);
@@ -131,9 +140,31 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         //gamesStatisticsPane.refreshPreferredSize();
 
+        StackPane centerStackPane = new StackPane();
+        errorMessage = new StackPane();
+        Rectangle errorBackground = new Rectangle();
+        errorBackground.setFill(new Color(1,0,0,0.75));
+        errorMessageLabel = new Label("Error message goes here");
+        errorBackground.widthProperty().bind(errorMessageLabel.widthProperty().multiply(1.2));
+        errorBackground.heightProperty().bind(errorMessageLabel.heightProperty().multiply(1.2));
+        errorMessage.getChildren().addAll(errorBackground,errorMessageLabel);
+        centerStackPane.getChildren().add(centerPanel);
+        centerStackPane.getChildren().add(errorMessage);
+
+        errorMessage.setOnMouseClicked((event)->{
+            final Timeline opacityTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
+                new KeyValue(errorMessage.opacityProperty(), 0, Interpolator.EASE_OUT)));
+            opacityTimeline.setOnFinished(e -> errorMessage.setMouseTransparent(true));
+            this.centerPanel.setEffect(null);
+            opacityTimeline.play();
+        });
+
+        errorMessage.setOpacity(0);
+        errorMessage.setMouseTransparent(true);
+
         root.setTop(topPane);
         root.setBottom(bottomPane);
-        root.setCenter(centerPanel);
+        root.setCenter(centerStackPane);
 
         root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
             + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
@@ -371,7 +402,17 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             try {
                 ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getApplicationContext(), games);
                 replayingGame.pickJSONFile(replayingGame.getFileName());
-                replayingGame.replayGame();
+                if(ReplayingGameFromJson.replayIsAllowed(replayingGame.getCurrentGameNameCode())){
+                    replayingGame.replayGame();
+                } else {
+                    this.errorMessageLabel.setText("Désolé mais le jeu \""+replayingGame.getCurrentGameNameCode()+"\" n'est pas rejouable.\n Il sera disponible dans une prochaine mise à jour.");
+                    this.errorMessageLabel.setTextAlignment(TextAlignment.CENTER);
+                    ColorAdjust colorAdjust = new ColorAdjust();
+                    colorAdjust.setBrightness(-0.8);
+                    this.centerPanel.setEffect(colorAdjust);
+                    errorMessage.setOpacity(1);
+                    errorMessage.setMouseTransparent(false);
+                }
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

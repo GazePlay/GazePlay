@@ -15,6 +15,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.MathGameVariant;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
@@ -57,7 +58,7 @@ public class Math101 implements GameLifeCycle {
         super();
         this.gameType = gameType;
         this.gameContext = gameContext;
-        this.maxValue = gameVariant.getVariableRange().getMax();
+        this.maxValue = gameVariant.getMax();
         this.stats = stats;
         this.nbLines = 2;
         this.nbColumns = 3;
@@ -73,7 +74,7 @@ public class Math101 implements GameLifeCycle {
         super();
         this.gameType = gameType;
         this.gameContext = gameContext;
-        this.maxValue = gameVariant.getVariableRange().getMax();
+        this.maxValue = gameVariant.getMax();
         this.stats = stats;
         this.nbLines = 2;
         this.nbColumns = 3;

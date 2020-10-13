@@ -143,7 +143,7 @@ public class GameVariantDialog extends Stage {
                 close();
                 //  root.setDisable(false);
                 //  root.setEffect(null);
-                gameMenuController.chooseGame1(gazePlay, gameSpec, finalVariant);
+                gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, finalVariant);
             };
             button.addEventHandler(MOUSE_CLICKED, event);
 

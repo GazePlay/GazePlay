@@ -51,11 +51,32 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class ReplayingGameFromJson {
+
+    private static ArrayList<String> replayableGameList = new ArrayList<String>(
+        Arrays.asList(
+            "BibJump","Blocks","bottle","ColoredBubbles","PortraitBubbles",
+            "Cakes","Colorsss","Creampie","CupsBalls","Dice","Divisor",
+            "Lapins","Scribble","VideoPlayer","EggGame","GooseGame",
+            "Horses","Horses Simplified","Labyrinth","letters","MagicCards",
+            "Potions","Math101: Addition","Math101: All operations","Math101: Division",
+            "Math101: Multiplication","Math101: Substraction","MediaPlayer",
+            "Memory","MemoryLetters","MemoryNumbers","OpenMemory","OpenMemoryLetters",
+            "OpenMemoryNumbers", "WhacAmole","Ninja","Opinions","Order",
+            "Paper-Scissors-Stone","Pet","Piano","FrogsRace",
+            "Room","RushHour","ScratchCard","puzzle",
+            "Farm","Jungle","Savanna","SpaceGame","SpotDifference",
+            "VideoGrid","findodd","flags","WhereIsIt","WhereIsTheAnimal",
+            "WhereIsTheColor","WhereIsTheLetter","WhereIsTheNumber"
+            ,"Robots","Biboule"
+        )
+    );
+
     List<GameSpec> gamesList;
     private ApplicationContext applicationContext;
     private GameContext gameContext;
     private GazePlay gazePlay;
     private double currentGameSeed;
+    @Getter
     private String currentGameNameCode;
     private String currentGameVariant;
     private GameSpec selectedGameSpec;
@@ -78,6 +99,10 @@ public class ReplayingGameFromJson {
         this.gazePlay = gazePlay;
         this.gameContext = applicationContext.getBean(GameContext.class);
         this.gamesList = games;
+    }
+
+    public static boolean replayIsAllowed(String gameCode){
+        return replayableGameList.contains(gameCode);
     }
 
     public void pickJSONFile(String fileName) throws IOException {
