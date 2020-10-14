@@ -57,6 +57,7 @@ public class Bubble extends Parent implements GameLifeCycle {
     private final BubblesGameVariant direction;
 
     private final ReplayablePseudoRandom randomGenerator;
+    private final ReplayablePseudoRandom randomFragmentsGenerator;
 
     public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final BubblesGameVariant direction) {
         this.gameContext = gameContext;
@@ -66,6 +67,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         gameContext.startTimeLimiter();
         gameContext.startScoreLimiter();
 
+        this.randomFragmentsGenerator = new ReplayablePseudoRandom();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
 
@@ -80,6 +82,8 @@ public class Bubble extends Parent implements GameLifeCycle {
         gameContext.startTimeLimiter();
         gameContext.startScoreLimiter();
 
+
+        this.randomFragmentsGenerator = new ReplayablePseudoRandom();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"), randomGenerator);
@@ -171,7 +175,7 @@ public class Bubble extends Parent implements GameLifeCycle {
             fragment.setCenterY(-100);
 
             if (bubbleType == BubbleType.COLOR) {
-                fragment.setFill(new Color(randomGenerator.nextDouble(), randomGenerator.nextDouble(), randomGenerator.nextDouble(), 1));
+                fragment.setFill(new Color(randomFragmentsGenerator.nextDouble(), randomFragmentsGenerator.nextDouble(), randomFragmentsGenerator.nextDouble(), 1));
             } else {
                 fragment.setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
             }
@@ -201,9 +205,9 @@ public class Bubble extends Parent implements GameLifeCycle {
                 new KeyValue(fragment.centerYProperty(), centerY, Interpolator.EASE_OUT)));
             goToCenterTimeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.opacityProperty(), 1)));
 
-            final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
-            final double endXValue = randomGenerator.nextDouble() * screenDimension.getWidth();
-            final double endYValue = randomGenerator.nextDouble() * screenDimension.getHeight();
+            final Dimension2D sceneDimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
+            final double endXValue = randomFragmentsGenerator.nextDouble() * sceneDimensions.getWidth();
+            final double endYValue = randomFragmentsGenerator.nextDouble() * sceneDimensions.getHeight();
 
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
                 new KeyValue(fragment.centerXProperty(), endXValue, Interpolator.LINEAR)));
@@ -216,7 +220,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         sequence.getChildren().addAll(goToCenterTimeline, timeline);
         sequence.play();
 
-        if (randomGenerator.nextDouble() > 0.5) {
+        if (randomFragmentsGenerator.nextDouble() > 0.5) {
             final String soundResource = "data/bubble/sounds/Large-Bubble-SoundBible.com-1084083477.mp3";
             gameContext.getSoundManager().add(soundResource);
         } else {

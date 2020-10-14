@@ -33,6 +33,7 @@ public class Target extends Portrait {
     private final IGameContext gameContext;
 
     private final RandomPositionGenerator randomPositionGenerator;
+    private final RandomPositionGenerator randomMiniBallsPositionGenerator;
 
     private final Stats stats;
 
@@ -61,6 +62,14 @@ public class Target extends Portrait {
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
         this.randomPositionGenerator = randomPositionGenerator;
+
+        this.randomMiniBallsPositionGenerator = new RandomPositionGenerator(new ReplayablePseudoRandom()) {
+            @Override
+            public Dimension2D getDimension2D() {
+                return gameContext.getGamePanelDimensionProvider().getDimension2D();
+            }
+        };
+
         this.stats = stats;
         this.imageLibrary = imageLibrary;
         this.gameVariant = gameVariant;
@@ -68,7 +77,7 @@ public class Target extends Portrait {
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
 
-        this.miniBallsPortraits = generateMiniBallsPortraits(randomPositionGenerator, imageLibrary, nbBall);
+        this.miniBallsPortraits = generateMiniBallsPortraits(imageLibrary, nbBall);
         gameContext.getChildren().addAll(miniBallsPortraits);
 
         final EventHandler<Event> enterEvent = buildEvent();
@@ -82,11 +91,10 @@ public class Target extends Portrait {
         gameContext.start();
     }
 
-    private List<Portrait> generateMiniBallsPortraits(final RandomPositionGenerator randomPositionGenerator,
-                                                      final ImageLibrary imageLibrary, final int count) {
+    private List<Portrait> generateMiniBallsPortraits(final ImageLibrary imageLibrary, final int count) {
         final List<Portrait> result = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            final Portrait miniPortrait = new Portrait(radius/2, randomPositionGenerator, imageLibrary);
+            final Portrait miniPortrait = new Portrait(radius/2, randomMiniBallsPositionGenerator, imageLibrary);
             miniPortrait.setOpacity(1);
             miniPortrait.setVisible(false);
             result.add(miniPortrait);
@@ -252,7 +260,7 @@ public class Target extends Portrait {
             childMiniBall.setOpacity(1);
             childMiniBall.setVisible(true);
 
-            final Position childBallTargetPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
+            final Position childBallTargetPosition = randomMiniBallsPositionGenerator.newRandomPosition(getInitialRadius());
 
             childrenTimelineEnd.getKeyFrames()
                 .add(new KeyFrame(new Duration(1000), new KeyValue(childMiniBall.centerXProperty(),
