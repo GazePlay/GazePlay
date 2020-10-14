@@ -18,12 +18,12 @@ import java.util.LinkedList;
 public class RushHourGameLauncher implements IGameLauncher<Stats, DimensionGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
-        return new PetStats(scene);
+        return new RushHourStats(scene);
     }
 
     @Override
     public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
-        return new PetStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+        return new RushHourStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 
     @Override

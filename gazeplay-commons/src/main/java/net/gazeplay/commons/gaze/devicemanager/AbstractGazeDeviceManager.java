@@ -327,18 +327,18 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     public boolean contains(Node node, double positionX, double positionY) {
         Point2D localPosition = node.screenToLocal(positionX, positionY);
         int offset = 5;
-        if(node!=null && localPosition!=null) {
+        if(localPosition != null) {
             try {
                 return (
-                    node.contains(localPosition.getX(), localPosition.getY()) /*||
-                    node.contains(localPosition.getX() + offset, localPosition.getY()) ||
-                    node.contains(localPosition.getX() + offset, localPosition.getY() + offset) ||
-                    node.contains(localPosition.getX() + offset, localPosition.getY() - offset) ||
-                    node.contains(localPosition.getX() - offset, localPosition.getY()) ||
-                    node.contains(localPosition.getX() - offset, localPosition.getY() + offset) ||
-                    node.contains(localPosition.getX() - offset, localPosition.getY() - offset) ||
-                    node.contains(localPosition.getX(), localPosition.getY() + offset) ||
-                    node.contains(localPosition.getX(), localPosition.getY() - offset)*/
+                    node.contains(localPosition.getX(), localPosition.getY()) //||
+//                    node.contains(localPosition.getX() + offset, localPosition.getY()) ||
+//                    node.contains(localPosition.getX() + offset, localPosition.getY() + offset) ||
+//                    node.contains(localPosition.getX() + offset, localPosition.getY() - offset) ||
+//                    node.contains(localPosition.getX() - offset, localPosition.getY()) ||
+//                    node.contains(localPosition.getX() - offset, localPosition.getY() + offset) ||
+//                    node.contains(localPosition.getX() - offset, localPosition.getY() - offset) ||
+//                    node.contains(localPosition.getX(), localPosition.getY() + offset) ||
+//                    node.contains(localPosition.getX(), localPosition.getY() - offset)
                 );
             } catch (IndexOutOfBoundsException e) {
                 return false;

@@ -54,20 +54,40 @@ public class ReplayingGameFromJson {
 
     private static ArrayList<String> replayableGameList = new ArrayList<String>(
         Arrays.asList(
-            "BibJump","Blocks","bottle","ColoredBubbles","PortraitBubbles",
-            "Cakes","Colorsss","Creampie","CupsBalls","Dice","Divisor",
-            "Lapins","Scribble","VideoPlayer","EggGame","GooseGame",
-            "Horses","Horses Simplified","Labyrinth","letters","MagicCards",
-            "Potions","Math101: Addition","Math101: All operations","Math101: Division",
-            "Math101: Multiplication","Math101: Substraction","MediaPlayer",
-            "Memory","MemoryLetters","MemoryNumbers","OpenMemory","OpenMemoryLetters",
-            "OpenMemoryNumbers", "WhacAmole","Ninja","Opinions","Order",
-            "Paper-Scissors-Stone","Pet","Piano","FrogsRace",
-            "Room","RushHour","ScratchCard","puzzle",
-            "Farm","Jungle","Savanna","SpaceGame","SpotDifference",
-            "VideoGrid","findodd","flags","WhereIsIt","WhereIsTheAnimal",
-            "WhereIsTheColor","WhereIsTheLetter","WhereIsTheNumber"
-            ,"Robots","Biboule"
+            "CupsBalls","VideoPlayer","MagicCards",
+            "Potions","MediaPlayer", "WhacAmole",
+            "Paper-Scissors-Stone","Pet",
+            "Room", "Farm","Jungle","Savanna","SpaceGame","SpotDifference",
+            "VideoGrid",
+
+            //OK:
+            "Scribble","Cakes","Creampie","WhereIsIt","WhereIsTheAnimal","letters",
+            "WhereIsTheColor","WhereIsTheLetter","WhereIsTheNumber","findodd","flags",
+            "ScratchCard","Memory","MemoryLetters","MemoryNumbers","OpenMemory","OpenMemoryLetters",
+            "OpenMemoryNumbers","Dice","EggGame","GooseGame",
+            "Horses","Horses Simplified","puzzle","Opinions","Order",
+
+            "bottle", // OK but 16 version is not working + some really small replay coordinates issues sometimes
+
+            "Math101: Addition","Math101: All operations","Math101: Division",
+            "Math101: Multiplication","Math101: Substraction" // seems ok but need to check that the resize is good
+
+            // Replay offset was really clear here,due to the gameContext.getRoot() instead of gameContext
+            // "Colorsss"
+
+            // replay cursor coordinates issue, can lead to different display:
+            // "Ninja","Piano","Divisor","Lapins", "ColoredBubbles","PortraitBubbles",
+            // "RushHour","FrogsRace",
+
+            // replay cursor coordinates issue:
+            // "Blocks",
+
+            // replay cursor frequency:
+            // "BibJump", "Labyrinth",
+
+            // lots of problem:
+            // "Robots","Biboule"
+
         )
     );
 
@@ -175,9 +195,9 @@ public class ReplayingGameFromJson {
         if (fileName == null) {
             return;
         }
-        double height = 2*gameContext.getCurrentScreenDimensionSupplier().get().getHeight() - gameContext.getPrimaryScene().getHeight();
+        double height = gameContext.getCurrentScreenDimensionSupplier().get().getHeight();
         double width = gameContext.getCurrentScreenDimensionSupplier().get().getWidth();
-        double screenRatio = height /width;
+        double screenRatio = height / width;
         if(sceneAspectRatio < screenRatio) {
             height = gameContext.getCurrentScreenDimensionSupplier().get().getWidth() * sceneAspectRatio;
         } else {
@@ -221,6 +241,7 @@ public class ReplayingGameFromJson {
         final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
         //Drawing in canvas
         final javafx.scene.canvas.Canvas canvas = new Canvas(screenDimension.getWidth(), screenDimension.getHeight());
+        canvas.setMouseTransparent(true);
         gameContext.getChildren().add(canvas);
 
         new Thread(new Runnable() {
@@ -242,13 +263,9 @@ public class ReplayingGameFromJson {
             }
         };
         new Thread(task).start();
-        String javaHome = System.getProperty("java.home");
-        String javaBin = javaHome +
-            File.separator + "bin" +
-            File.separator + "java";
-        String classpath = System.getProperty("java.class.path");
 
         ProcessBuilder builder = createBuilder(height,width);
+
         try {
             builder.inheritIO().start();
             ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
@@ -260,7 +277,6 @@ public class ReplayingGameFromJson {
                 }
             }, 5, TimeUnit.SECONDS);
         } catch (Exception e) {
-            log.info("IL Y A EU UNE ERREUR Là");
             e.printStackTrace();
         }
     }
@@ -302,15 +318,16 @@ public class ReplayingGameFromJson {
     }
 
     private void drawFixationLines(Canvas canvas, JsonArray coordinatesAndTimeStamp) {
-        int sceneWidth = (int) gameContext.getPrimaryScene().getWidth();
-        int sceneHeight = (int) gameContext.getPrimaryScene().getHeight();
+        Dimension2D dim2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        double sceneWidth = dim2D.getWidth();
+        double sceneHeight = dim2D.getHeight();
         final GraphicsContext graphics = canvas.getGraphicsContext2D();
         synchronized (coordinatesAndTimeStamp) {
             for (JsonElement coordinateAndTimeStamp : coordinatesAndTimeStamp) {
                 JsonObject coordinateAndTimeObj = coordinateAndTimeStamp.getAsJsonObject();
                 String nextEvent = coordinateAndTimeObj.get("event").getAsString();
-                int nextX = (int) (Double.parseDouble(coordinateAndTimeObj.get("X").getAsString()) * sceneWidth);
-                int nextY = (int) (Double.parseDouble(coordinateAndTimeObj.get("Y").getAsString()) * sceneHeight);
+                int nextX =  (int) (Double.parseDouble(coordinateAndTimeObj.get("X").getAsString()) * sceneWidth);
+                int nextY =  (int) (Double.parseDouble(coordinateAndTimeObj.get("Y").getAsString()) * sceneHeight);
                 int delay;
                 if (nextEvent.equals("gaze")) {
                     prevTimeGaze = nextTimeGaze;
@@ -353,6 +370,7 @@ public class ReplayingGameFromJson {
         graphics.setFill(fillColor);
         graphics.fillOval(nextX - circleSize / 2d, nextY - circleSize / 2d, circleSize, circleSize);
         Point2D point = new Point2D(nextX, nextY);
+
         gameContext.getGazeDeviceManager().onSavedMovementsUpdate(point, event);
     }
 
