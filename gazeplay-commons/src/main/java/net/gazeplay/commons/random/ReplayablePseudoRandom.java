@@ -35,6 +35,13 @@ public class ReplayablePseudoRandom {
     }
 
     /*
+   Returns the next pseudorandom, uniformly distributed double value between 0.0 and 1.0 from this random number generator's sequence.
+    */
+    public double nextDouble(double bound) {
+        return (this.nextDouble() * bound);
+    }
+
+    /*
     Returns the next pseudorandom, uniformly distributed double value between 0.0 and 1.0 from this random number generator's sequence.
      */
     public double nextDouble() {

@@ -36,19 +36,27 @@ public class DrawApplication implements GameLifeCycle {
         Canvas canvas = drawBuilder.createCanvas(scene, coefficient, this.stats);
 
         StackPane root = new StackPane();
-        Rectangle border = new Rectangle(0,0, scene.getWidth()/coefficient,scene.getHeight()/coefficient);
+
+        root.setPrefWidth(scene.getWidth());
+        root.setPrefHeight(scene.getHeight());
+
+        root.prefWidthProperty().bind(scene.widthProperty());
+        root.prefHeightProperty().bind(scene.heightProperty());
+        root.minWidthProperty().bind(scene.widthProperty());
+        root.minHeightProperty().bind(scene.heightProperty());
+        root.maxWidthProperty().bind(scene.widthProperty());
+        root.maxHeightProperty().bind(scene.heightProperty());
+
+
+        Rectangle border = new Rectangle( canvas.getWidth(),canvas.getHeight());
         border.setStrokeWidth(5);
         border.setStroke(Color.WHITE);
         border.setFill(Color.BLACK);
 
-        border.widthProperty().bind(scene.widthProperty().divide(coefficient));
-        border.heightProperty().bind(scene.heightProperty().divide(coefficient));
+        border.widthProperty().bind(canvas.widthProperty());
+        border.heightProperty().bind(canvas.heightProperty());
 
         root.getChildren().addAll(border,canvas);
-
-        root.prefWidthProperty().bind(gameContext.getRoot().widthProperty());
-        root.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
-
         gameContext.getGazeDeviceManager().addEventFilter(canvas);
         gameContext.getChildren().addAll(root);
     }
@@ -67,17 +75,30 @@ public class DrawApplication implements GameLifeCycle {
 
         Canvas canvas = drawBuilder.createCanvas(scene, coefficient, this.stats);
 
-        canvas.widthProperty().bind(scene.widthProperty().divide(coefficient));
-        canvas.heightProperty().bind(scene.heightProperty().divide(coefficient));
-
         StackPane root = new StackPane();
-        root.getChildren().add(canvas);
 
-        root.prefWidthProperty().bind(gameContext.getRoot().widthProperty());
-        root.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
+        root.setPrefWidth(scene.getWidth());
+        root.setPrefHeight(scene.getHeight());
 
+        root.prefWidthProperty().bind(scene.widthProperty());
+        root.prefHeightProperty().bind(scene.heightProperty());
+        root.minWidthProperty().bind(scene.widthProperty());
+        root.minHeightProperty().bind(scene.heightProperty());
+        root.maxWidthProperty().bind(scene.widthProperty());
+        root.maxHeightProperty().bind(scene.heightProperty());
+
+
+        Rectangle border = new Rectangle( canvas.getWidth(),canvas.getHeight());
+        border.setStrokeWidth(5);
+        border.setStroke(Color.WHITE);
+        border.setFill(Color.BLACK);
+
+        border.widthProperty().bind(canvas.widthProperty());
+        border.heightProperty().bind(canvas.heightProperty());
+
+        root.getChildren().addAll(border,canvas);
         gameContext.getGazeDeviceManager().addEventFilter(canvas);
-        gameContext.getChildren().add(canvas);
+        gameContext.getChildren().addAll(root);
     }
 
     @Override

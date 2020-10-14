@@ -57,7 +57,7 @@ public class Bubble extends Parent implements GameLifeCycle {
     private final BubblesGameVariant direction;
 
     private final ReplayablePseudoRandom randomGenerator;
-    private final ReplayablePseudoRandom randomFragmentsGenerator;
+    private final ReplayablePseudoRandom randomFragmentsGenerator = new ReplayablePseudoRandom();;
 
     public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final BubblesGameVariant direction) {
         this.gameContext = gameContext;
@@ -67,7 +67,6 @@ public class Bubble extends Parent implements GameLifeCycle {
         gameContext.startTimeLimiter();
         gameContext.startScoreLimiter();
 
-        this.randomFragmentsGenerator = new ReplayablePseudoRandom();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
 
@@ -82,8 +81,6 @@ public class Bubble extends Parent implements GameLifeCycle {
         gameContext.startTimeLimiter();
         gameContext.startScoreLimiter();
 
-
-        this.randomFragmentsGenerator = new ReplayablePseudoRandom();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"), randomGenerator);

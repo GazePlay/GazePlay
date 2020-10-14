@@ -52,6 +52,8 @@ class Target extends Parent {
     private final Circle circle;
     private Timeline timeline;
 
+    private final ReplayablePseudoRandom randomFragmentsGenerator = new ReplayablePseudoRandom();
+
     public Target(final IGameContext gameContext, final Stats stats, final ImageLibrary imgLib, final int level, final long start,
                   final Divisor gameInstance, final Position pos, final boolean isRabbit, ReplayablePseudoRandom random) {
         this.level = level;
@@ -68,7 +70,7 @@ class Target extends Parent {
         this.timeline = new Timeline();
         this.randomGenerator = random;
 
-            this.circle = new Circle(pos.getX(), pos.getY(), this.radius);
+        this.circle = new Circle(pos.getX(), pos.getY(), this.radius);
         this.circle.setFill(new ImagePattern(this.imgLib.pickRandomImage(), 0, 0, 1, 1, true));
         this.getChildren().add(circle);
 
@@ -150,7 +152,7 @@ class Target extends Parent {
         final Timeline timelineParticle = new Timeline();
         for (int i = 0; i < 30; i++) {
             final Circle particle = new Circle(x, y, particleRadius);
-            particle.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+            particle.setFill(Color.color(randomFragmentsGenerator.nextDouble(), randomFragmentsGenerator.nextDouble(), randomFragmentsGenerator.nextDouble()));
 
             particles.add(particle);
             this.gameContext.getChildren().add(particle);
@@ -225,8 +227,8 @@ class Target extends Parent {
         final double maxX = (start.getX() + range);
         final double maxY = (start.getY() + range);
 
-        double positionX = randomGenerator.nextInt((int) (maxX - minX)) + minX;
-        double positionY = randomGenerator.nextInt((int) (maxY - minY)) + minY;
+        double positionX = randomFragmentsGenerator.nextInt((int) (maxX - minX)) + minX;
+        double positionY = randomFragmentsGenerator.nextInt((int) (maxY - minY)) + minY;
 
         if (positionX > this.dimension.getWidth()) {
             positionX = this.dimension.getWidth() - radius;
