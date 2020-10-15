@@ -97,28 +97,29 @@ class ConfigurationContextTest {
 
             ObservableList<Node> children = pane.getChildren();
 
-            assertEquals(70, children.size());
+            assertEquals(72, children.size());
             assertTrue(children.get(3) instanceof MenuButton);
             assertTrue(children.get(7) instanceof ChoiceBox);
             assertTrue(children.get(9) instanceof Spinner);
             assertTrue(children.get(11) instanceof CheckBox);
-            assertTrue(children.get(13) instanceof HBox);
+            assertTrue(children.get(13) instanceof CheckBox);
             assertTrue(children.get(15) instanceof HBox);
-            assertTrue(children.get(19) instanceof ChoiceBox);
-            assertTrue(children.get(21) instanceof Spinner);
-            assertTrue(children.get(25) instanceof ChoiceBox);
-            assertTrue(children.get(27) instanceof HBox);
-            assertTrue(children.get(29) instanceof CheckBox);
-            assertTrue(children.get(31) instanceof ChoiceBox);
-            assertTrue(children.get(47) instanceof CheckBox);
-            assertTrue(children.get(49) instanceof ChoiceBox);
-            assertTrue(children.get(51) instanceof HBox);
-            assertTrue(children.get(55) instanceof CheckBox);
+            assertTrue(children.get(17) instanceof HBox);
+            assertTrue(children.get(21) instanceof ChoiceBox);
+            assertTrue(children.get(23) instanceof Spinner);
+            assertTrue(children.get(27) instanceof ChoiceBox);
+            assertTrue(children.get(29) instanceof HBox);
+            assertTrue(children.get(31) instanceof CheckBox);
+            assertTrue(children.get(33) instanceof ChoiceBox);
+            assertTrue(children.get(49) instanceof CheckBox);
+            assertTrue(children.get(51) instanceof ChoiceBox);
+            assertTrue(children.get(53) instanceof HBox);
             assertTrue(children.get(57) instanceof CheckBox);
-            assertTrue(children.get(61) instanceof CheckBox);
+            assertTrue(children.get(59) instanceof CheckBox);
             assertTrue(children.get(63) instanceof CheckBox);
-            assertTrue(children.get(67) instanceof CheckBox);
+            assertTrue(children.get(65) instanceof CheckBox);
             assertTrue(children.get(69) instanceof CheckBox);
+            assertTrue(children.get(71) instanceof CheckBox);
 
         });
         TestingUtils.waitForRunLater();
