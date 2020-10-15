@@ -21,5 +21,4 @@ public class ReusableOptions {
     @CommandLine.ArgGroup(exclusive = false)
     private SizeOptions sizeOptions = new SizeOptions();
 
-
 }
