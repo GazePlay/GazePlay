@@ -180,9 +180,9 @@ public class StatDisplayUtils {
 
         SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
         savedStatsInfo.addObserver((o, arg) -> Platform.runLater(
-            () -> gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFile().toURI().toString()))));
+            () -> gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouseAndGaze().toURI().toString()))));
 
-        gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFile().toURI().toString()));
+        gazeMetrics.setImage(new Image(savedStatsInfo.getGazeMetricsFileMouseAndGaze().toURI().toString()));
 
         EventHandler<Event> openGazeMetricsEvent = createZoomInGazeMetricsEventHandler(gazeMetrics, root);
         gazeMetrics.addEventHandler(MouseEvent.MOUSE_CLICKED, openGazeMetricsEvent);

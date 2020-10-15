@@ -17,13 +17,21 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.ListIterator;
 
 @Slf4j
 public class FixationSequence {
 
     private static final Font sanSerifFont = new Font("SanSerif", 10);
+
+    public static final int MOUSE_FIXATION_SEQUENCE = 0;
+    public static final int GAZE_FIXATION_SEQUENCE = 1;
+
+    private final Color[][] colors = {
+        {Color.INDIANRED, Color.DARKRED},
+        {Color.LIGHTBLUE, Color.DARKBLUE}
+    };
 
     /**
      * Writable image used to create the fixation Sequence image
@@ -33,14 +41,14 @@ public class FixationSequence {
     @Getter
     private LinkedList<FixationPoint> sequence;
 
-    public FixationSequence(final int width, final int height, LinkedList<FixationPoint> fixationPoints) {
+    public FixationSequence(final int width, final int height, ArrayList<LinkedList<FixationPoint>> fixationPoints, int sequenceIndex) {
         this.image = new WritableImage(width, height);
         final Canvas canvas = new Canvas(width, height);
 
-        sequence = vertexReduction(fixationPoints, 15);
+        sequence = vertexReduction(fixationPoints.get(sequenceIndex), 15);
 
-        final GraphicsContext gc = drawFixationLines(canvas, sequence);
-        drawFixationCircles(gc, sequence);
+        final GraphicsContext gc = drawFixationLines(canvas, sequence, colors[sequenceIndex][0]);
+        drawFixationCircles(gc, sequence, sequenceIndex);
 
         final SnapshotParameters params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
@@ -54,14 +62,14 @@ public class FixationSequence {
         sequence.removeIf(fixationPoint -> fixationPoint.getGazeDuration() == -1);
     }
 
-    private GraphicsContext drawFixationLines(Canvas canvas, LinkedList<FixationPoint> sequence) {
+    private GraphicsContext drawFixationLines(Canvas canvas, LinkedList<FixationPoint> sequence, Color color) {
         final GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // draw the line of the sequence
         final GaussianBlur gaussianBlur = new GaussianBlur();
         gaussianBlur.setRadius(2.5);
         gc.setEffect(gaussianBlur);
-        gc.setStroke(Color.rgb(255, 157, 6, 1));
+        gc.setStroke(color);
         gc.setLineWidth(4);
 
         for (int i = 0; i < sequence.size() - 1; i++) {
@@ -76,7 +84,7 @@ public class FixationSequence {
         return gc;
     }
 
-    private void drawFixationCircles(GraphicsContext gc, LinkedList<FixationPoint> sequence) {
+    private void drawFixationCircles(GraphicsContext gc, LinkedList<FixationPoint> sequence, int sequenceIndex) {
         gc.setEffect(null);
         gc.setFont(sanSerifFont);
         gc.setTextAlign(TextAlignment.CENTER);
@@ -89,12 +97,19 @@ public class FixationSequence {
         int x, y;
         double radius, duration;
 
-        gc.setFill(Color.BLACK);
+        gc.setFill(colors[sequenceIndex][0]);
         gc.setFont(Font.font("Verdana", 25));
+
+        double maxDuration = 0;
+        for (final FixationPoint point : sequence) {
+            if (maxDuration < Math.sqrt(point.getGazeDuration())) {
+                maxDuration = Math.sqrt(point.getGazeDuration());
+            }
+        }
 
         for (final FixationPoint point : sequence) {
 
-            gc.setStroke(Color.RED);
+            gc.setStroke(colors[sequenceIndex][1]);
             x = point.getY();
             y = point.getX();
             duration = point.getGazeDuration();
@@ -103,11 +118,17 @@ public class FixationSequence {
             if (duration > 100) {
                 labelCount++;
                 // fixation circle size
-                radius = 20d + Math.sqrt(duration);
+                radius = 40d + 25d * Math.sqrt(duration) / maxDuration;
+                gc.setLineWidth(25d * Math.sqrt(duration) / maxDuration);
                 gc.strokeOval(x - radius / 2d, y - radius / 2d, radius, radius);
-                gc.setFill(Color.rgb(255, 255, 0, 0.5));// yellow 50% transparency
+                gc.setFill(
+                    Color.color(
+                        Math.sqrt(duration) / maxDuration * colors[sequenceIndex][1].getRed(),
+                        Math.sqrt(duration) / maxDuration * colors[sequenceIndex][1].getGreen(),
+                        Math.sqrt(duration) / maxDuration * colors[sequenceIndex][1].getBlue(),
+                        1));
                 gc.fillOval(x - radius / 2d, y - radius / 2d, radius, radius);
-                gc.setFill(Color.BLACK);
+                gc.setFill(colors[sequenceIndex][0]);
                 gc.fillText(Integer.toString(labelCount), x, y, 80);
             } else {
                 point.setGazeDuration(-1);

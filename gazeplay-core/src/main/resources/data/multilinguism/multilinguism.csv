@@ -265,3 +265,8 @@ addNewImagenocare,,,,,,Add new image don't care...,,Ajouter une nouvelle image s
 customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,,,
 
 ReaskQuestionOnFail,,,,,,Ask the question again in case of fail,,Reposer la question en cas d'échec,,,,,,,,,,,
+
+Mouse,,,,,,Mouse,,Souris,,,,,,,,,,,
+Gaze,,,,,,Gaze,,Regard,,,,,,,,,,,
+MouseAndGaze,,,,,,Mouse and Gaze,,Souris et Regard,,,,,,,,,,,
+

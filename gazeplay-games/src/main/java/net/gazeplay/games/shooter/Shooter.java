@@ -364,10 +364,12 @@ public class Shooter extends Parent implements GameLifeCycle {
         waitbeforestart.play();
 
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
         this.gameContext.start();
         clearTransition();
         box.setTranslateX(0);
         box.setTranslateY(0);
+
     }
 
     private void closeTimer(){

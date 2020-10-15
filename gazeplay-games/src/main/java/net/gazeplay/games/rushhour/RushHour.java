@@ -172,7 +172,6 @@ public class RushHour extends Parent implements GameLifeCycle {
         p.setLayoutY(dimension2D.getHeight() / 2 - ground.getHeight()/ 2d);
 
         gameContext.getChildren().add(p);
-        gameContext.getGazeDeviceManager().addEventFilter(p);
 
         setIntersections();
 
@@ -2433,6 +2432,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         final int numberLevels = 33;
         level = (level + 1) % numberLevels;
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
     }
 
