@@ -87,7 +87,7 @@ public class GameMenuController {
 
         ProcessBuilder builder;
 
-        if (gameVariant != null &&  !username.equals("") ) {
+        if (gameVariant != null && !username.equals("")) {
             builder = new ProcessBuilder(
                 javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
                 "--user", username,
@@ -99,7 +99,7 @@ public class GameMenuController {
                 "--default-user",
                 "--game", selectedGameSpec.getGameSummary().getNameCode(),
                 "--variant", gameVariant.toString());
-        } else if (username.equals("") ) {
+        } else if (username.equals("")) {
             builder = new ProcessBuilder(
                 javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
                 "--default-user",
@@ -116,7 +116,8 @@ public class GameMenuController {
             executor.schedule(new Runnable() {
                 @Override
                 public void run() {
-                    Platform.exit();System.exit(0);
+                    Platform.exit();
+                    System.exit(0);
                 }
             }, 5, TimeUnit.SECONDS);
         } catch (Exception e) {
