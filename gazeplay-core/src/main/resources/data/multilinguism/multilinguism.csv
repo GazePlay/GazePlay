@@ -267,4 +267,7 @@ Loading...,,,,,,Loading...,,Chargement...,,,,,,,,,,,
 
 Mouse,,,,,,Mouse,,Souris,,,,,,,,,,,
 Gaze,,,,,,Gaze,,Regard,,,,,,,,,,,
-MouseAndGaze,,,,,,Mouse and Gaze,,Souris et Regard,,,,,,,,,,,
+MouseAndGaze
+
+
+SorryButReplayInvalid,,,,,,Sorry but the game '{}' is not replayable.\nIt will be available in a next update.,,Désolé mais le jeu '{}' n'est pas rejouable.\nIl sera disponible dans une prochaine mise à jour.,,,,,,,,,,,

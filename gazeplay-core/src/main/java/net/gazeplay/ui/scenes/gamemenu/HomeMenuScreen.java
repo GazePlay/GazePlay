@@ -404,8 +404,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 replayingGame.pickJSONFile(replayingGame.getFileName());
                 if(ReplayingGameFromJson.replayIsAllowed(replayingGame.getCurrentGameNameCode())){
                     replayingGame.replayGame();
-                } else {
-                    this.errorMessageLabel.setText("Désolé mais le jeu \""+replayingGame.getCurrentGameNameCode()+"\" n'est pas rejouable.\n Il sera disponible dans une prochaine mise à jour.");
+                } else if (replayingGame.getCurrentGameNameCode() != null){
+                    Translator translator = gazePlay.getTranslator();
+                    this.errorMessageLabel.setText(
+                        translator.translate("SorryButReplayInvalid")
+                            .replace("{}",translator.translate(replayingGame.getCurrentGameNameCode()))
+                            .replace("\\n","\n") );
                     this.errorMessageLabel.setTextAlignment(TextAlignment.CENTER);
                     ColorAdjust colorAdjust = new ColorAdjust();
                     colorAdjust.setBrightness(-0.8);
