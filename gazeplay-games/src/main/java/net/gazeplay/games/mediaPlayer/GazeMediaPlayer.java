@@ -92,6 +92,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
         for (int i = 0; i < 3; i++) {
             mediaButtons[i] = new MediaButton(dimension2D.getWidth() / 4, dimension2D.getHeight() / 7);
+            this.gameContext.getGazeDeviceManager().addEventFilter( mediaButtons[i]);
         }
 
         downArrow = createTextStackPaneButton("v", dimension2D.getWidth() / 5, dimension2D.getHeight() / 7);
@@ -221,6 +222,8 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             progressIndicator.stop();
             button.getChildren().remove(progressIndicator);
         });
+
+        this.gameContext.getGazeDeviceManager().addEventFilter(button);
     }
 
     private void createFullScreenHandler() {
