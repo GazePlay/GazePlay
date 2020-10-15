@@ -25,12 +25,15 @@ public class SoundsOfLife implements GameLifeCycle {
 
     private final Stats stats;
 
+    private final IGameContext gameContext;
+
     private final ArrayList<TargetAOI> targetAOIList;
 
     public SoundsOfLife(IGameContext gameContext, Stats stats, int gameVariant) {
         Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Configuration config = gameContext.getConfiguration();
         this.stats = stats;
+        this.gameContext = gameContext;
         this.targetAOIList = new ArrayList<>();
         String path = "data/soundsoflife/";
         switch (gameVariant) {
@@ -121,6 +124,7 @@ public class SoundsOfLife implements GameLifeCycle {
     @Override
     public void launch() {
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override

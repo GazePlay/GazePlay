@@ -127,6 +127,7 @@ public class Car extends Rectangle {
         this.setToX(x);
         this.setToY(y);
 
+        gameContext.getGazeDeviceManager().addEventFilter(this);
     }
 
     public void update(final int size) {

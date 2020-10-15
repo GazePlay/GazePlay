@@ -171,6 +171,7 @@ public class Letters implements GameLifeCycle {
         // Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
         // this.currentRoundDetails.remainingCount = correctCount;
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     private String pickRandomLetter() {

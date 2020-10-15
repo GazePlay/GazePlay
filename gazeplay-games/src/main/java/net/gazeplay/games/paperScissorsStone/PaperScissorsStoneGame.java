@@ -144,6 +144,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         this.start();
 
         paperScissorsStoneStats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(paperScissorsStoneStats);
     }
 
     public void setUpStonePaperScissorsProgressButton(ProgressButton button, String imageLink, double posX) {
