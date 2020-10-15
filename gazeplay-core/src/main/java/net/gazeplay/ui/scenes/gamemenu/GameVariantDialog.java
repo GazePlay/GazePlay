@@ -28,6 +28,7 @@ import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItErrorPathDialog;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
@@ -35,6 +36,7 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 public class GameVariantDialog extends Stage {
 
     private boolean easymode = false;
+    private GameWhereIsItErrorPathDialog errorDialog;
 
     public GameVariantDialog(
         final GazePlay gazePlay,
@@ -92,18 +94,18 @@ public class GameVariantDialog extends Stage {
             button.getStyleClass().add("gameChooserButton");
             button.getStyleClass().add("gameVariation");
             button.getStyleClass().add("button");
-            //
+
             button.wrapTextProperty().setValue(true);
-            //
+
             button.setMinWidth(primaryStage.getWidth() / 15);
             button.setMinHeight(primaryStage.getHeight() / 15);
-            //
+
             button.setPrefWidth(primaryStage.getWidth() / 10);
             button.setPrefHeight(primaryStage.getHeight() / 10);
-            //
+
             button.setMaxWidth(primaryStage.getWidth() / 8);
             button.setMaxHeight(primaryStage.getHeight() / 8);
-            //
+
             if (variant instanceof DimensionDifficultyGameVariant) {
                 choicePaneEasy.getChildren().add(button);
             } else {
@@ -142,7 +144,11 @@ public class GameVariantDialog extends Stage {
             EventHandler<Event> event = mouseEvent -> {
                 close();
                 root.setDisable(false);
-                gameMenuController.chooseGame(gazePlay, gameSpec, finalVariant);
+                if (config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
+                    whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, finalVariant);
+                } else {
+                    gameMenuController.chooseGame(gazePlay, gameSpec, finalVariant);
+                }
             };
             button.addEventHandler(MOUSE_CLICKED, event);
 
@@ -156,7 +162,14 @@ public class GameVariantDialog extends Stage {
         setScene(scene);
         setWidth(primaryStage.getWidth() / 2);
         setHeight(primaryStage.getHeight() / 2);
-        // scene.getStylesheets().add(getClass().getResource("modal-dialog.css").toExternalForm());
+    }
+
+    private void whereIsItErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root, IGameVariant finalVariant) {
+        String whereIsItPromptLabel = "WhereIsItNotConfigDirectory";
+        this.errorDialog = new GameWhereIsItErrorPathDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel, finalVariant);
+        this.errorDialog.setTitle("error");
+        this.errorDialog.show();
+        this.errorDialog.toFront();
     }
 
     public boolean isEasymode() {

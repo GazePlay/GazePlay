@@ -263,6 +263,10 @@ addNewImagethumbup,,,,,,Add new image happy ...,,Ajouter de nouvelles image cont
 addNewImagethumbdown,,,,,,Add new image unhappy...,,Ajouter une nouvelle image pas content ...,,,,,,,,,,Añade nuevas imágenes que no son felices ...,
 addNewImagenocare,,,,,,Add new image don't care...,,Ajouter une nouvelle image s'en fiche ...,,,,,,,,,,Añadir una nueva imagen no importa ...,
 customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,,,
+Done,,,,,,Done,,Valider,,,,,,,,,,,
+WhereIsItDirectory:,,,,,,'Where is it ?' Configuration:,,Configuration de 'Où est-ce ?':,,,,,,,,,,,
+WhereIsItNotConfigDirectory,,,,,,'Where is it directory' not configured,,'Où est-ce' répertoire non configuré',,,,,,,,,,,
+PickedWrongDir,,,,,,You picked the wrong directory,,Vous avez choisi le mauvais répertoire,,,,,,,,,,,
 
 Mouse,,,,,,Mouse,,Souris,,,,,,,,,,,
 Gaze,,,,,,Gaze,,Regard,,,,,,,,,,,

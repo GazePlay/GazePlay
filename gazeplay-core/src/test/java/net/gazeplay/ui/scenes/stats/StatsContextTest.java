@@ -160,7 +160,7 @@ class StatsContextTest {
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
-    void shouldAddAllToGrid_ShootGames(boolean alignLeft) {
+    void shouldAddAllToGridShootGames(boolean alignLeft) {
         BorderPane root = new BorderPane();
         StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
 
@@ -174,7 +174,7 @@ class StatsContextTest {
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
-    void shouldAddAllToGrid_ExplorationGames(boolean alignLeft) {
+    void shouldAddAllToGridExplorationGames(boolean alignLeft) {
         BorderPane root = new BorderPane();
         StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
 
@@ -187,7 +187,7 @@ class StatsContextTest {
 
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
-    void shouldAddAllToGrid_HiddenItemsGames(boolean alignLeft) {
+    void shouldAddAllToGridHiddenItemsGames(boolean alignLeft) {
         BorderPane root = new BorderPane();
         StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
 

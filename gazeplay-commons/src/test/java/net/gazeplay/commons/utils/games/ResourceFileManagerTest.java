@@ -10,17 +10,21 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @ExtendWith(ApplicationExtension.class)
 class ResourceFileManagerTest {
 
     @Test
     void canGetAllFilesInResourcePackage() {
         Set<String> set = ResourceFileManager.getResourcePaths("data/biboule/images");
-        assert (set.size() == 1);
+        assertEquals(1, set.size());
         set = ResourceFileManager.getResourcePaths("data/common/default/images");
-        assert (set.size() == 2);
+        assertEquals(2, set.size());
+        set = ResourceFileManager.getResourcePaths("data/whereisit");
+        assertEquals(35, set.size());
         set = ResourceFileManager.getResourcePaths("data");
-        assert (set.size() == 3);
+        assertEquals(38, set.size());
     }
 
     @Test
