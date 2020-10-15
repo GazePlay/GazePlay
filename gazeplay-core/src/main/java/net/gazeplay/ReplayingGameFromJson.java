@@ -74,7 +74,8 @@ public class ReplayingGameFromJson {
 
             // replay cursor coordinates issue, can lead to different display:
             // "Ninja","Piano","Divisor","Lapins", "ColoredBubbles","PortraitBubbles",
-            // "RushHour","FrogsRace","WhacAmole"
+            // "RushHour","FrogsRace",
+            // "WhacAmole"
 
             // replay cursor coordinates issue:
             // "Blocks",
@@ -218,7 +219,6 @@ public class ReplayingGameFromJson {
                 selectedGameSpec = gameSpec;
             }
         }
-        final Translator translator = gazePlay.getTranslator();
         for (IGameVariant variant : selectedGameSpec.getGameVariantGenerator().getVariants()) {
             if (currentGameVariant.equals(variant.toString())) {
                 gameVariant = variant;
@@ -346,7 +346,7 @@ public class ReplayingGameFromJson {
                     });
                 }
                 try {
-                    Thread.sleep(delay);
+                    TimeUnit.MILLISECONDS.sleep(delay);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     break;
