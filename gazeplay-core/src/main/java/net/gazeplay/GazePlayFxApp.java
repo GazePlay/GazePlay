@@ -110,8 +110,6 @@ public class GazePlayFxApp extends Application {
         gazePlay.setPrimaryScene(primaryScene);
         gazePlay.setPrimaryStage(primaryStage);
 
-        gazePlay.setLoading();
-
         if (showUserSelectPage) {
             gazePlay.goToUserPage();
         } else {

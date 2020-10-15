@@ -27,6 +27,7 @@ import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
+import net.gazeplay.ui.scenes.loading.LoadingContext;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
 import org.everit.json.schema.loader.SchemaLoader;
@@ -259,7 +260,7 @@ public class ReplayingGameFromJson {
             @Override
             public Void call() {
                 gazePlay.getPrimaryScene().setCursor(Cursor.WAIT);
-                gazePlay.getPrimaryScene().setRoot(gazePlay.getLoading());
+                gazePlay.getPrimaryScene().setRoot(new LoadingContext(gazePlay));
                 return null;
             }
         };

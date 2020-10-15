@@ -57,15 +57,9 @@ public class GazePlay {
     @Autowired
     private ApplicationContext applicationContext;
 
-    @Getter
-    LoadingContext loading;
-
     public GazePlay() {
     }
 
-    void setLoading() {
-        loading = new LoadingContext(this);
-    }
 
     public void onGameLaunch(GameContext gameContext) {
         gameContext.setUpOnStage(primaryScene);

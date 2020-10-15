@@ -18,6 +18,7 @@ import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
+import net.gazeplay.ui.scenes.loading.LoadingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -72,7 +73,7 @@ public class GameMenuController {
             @Override
             public Void call() {
                 gazePlay.getPrimaryScene().setCursor(Cursor.WAIT);
-                gazePlay.getPrimaryScene().setRoot(gazePlay.getLoading());
+                gazePlay.getPrimaryScene().setRoot(new LoadingContext(gazePlay));
                 return null;
             }
         };
