@@ -34,6 +34,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_WHEREISIT_DIR = "WHEREISITDIR";
     private static final String PROPERTY_NAME_QUESTION_LENGTH = "QUESTIONLENGTH";
     private static final String PROPERTY_NAME_ENABLE_REWARD_SOUND = "ENABLE_REWARD_SOUND";
+    private static final String PROPERTY_NAME_REASK_QUESTION_ON_FAIL = "REASK_QUESTION_ON_FAIL";
     private static final String PROPERTY_NAME_LIMITERT = "LIMITERT";
     private static final String PROPERTY_NAME_LIMITERS = "LIMITERS";
     private static final String PROPERTY_NAME_LIMITER_TIME = "LIMITER_TIME";
@@ -71,6 +72,7 @@ public class Configuration {
     public static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
     private static final long DEFAULT_VALUE_QUESTION_LENGTH = 5000;
     private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
+    private static final boolean DEFAULT_VALUE_REASK_QUESTION_ON_FAIL = true;
     private static final boolean DEFAULT_VALUE_LIMITERTIME = false;
     private static final boolean DEFAULT_VALUE_LIMITERSCORE = false;
     private static final int DEFAULT_VALUE_LIMITER_TIME = 90;
@@ -143,6 +145,9 @@ public class Configuration {
 
     @Getter
     private final LongProperty questionLengthProperty;
+
+    @Getter
+    private final BooleanProperty reaskQuestionOnFail;
 
     @Getter
     private final BooleanProperty enableRewardSoundProperty;
@@ -247,6 +252,7 @@ public class Configuration {
         heatMapDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED, propertyChangeListener);
 
         enableRewardSoundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND, propertyChangeListener);
+        reaskQuestionOnFail = new ApplicationConfigBackedBooleanProperty(applicationConfig,PROPERTY_NAME_REASK_QUESTION_ON_FAIL,DEFAULT_VALUE_REASK_QUESTION_ON_FAIL,propertyChangeListener);
 
         limiterSProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERS, DEFAULT_VALUE_LIMITERSCORE, propertyChangeListener);
         limiterTProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERT, DEFAULT_VALUE_LIMITERTIME, propertyChangeListener);
@@ -352,6 +358,10 @@ public class Configuration {
 
     public Boolean isEnableRewardSound() {
         return enableRewardSoundProperty.getValue();
+    }
+
+    public Boolean isReaskedQuestionOnFail() {
+        return reaskQuestionOnFail.getValue();
     }
 
     public boolean isLimiterS() {
