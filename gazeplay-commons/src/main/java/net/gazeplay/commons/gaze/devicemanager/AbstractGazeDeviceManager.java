@@ -168,112 +168,6 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
             }
     }
 
-
-//    void updatePosition(double positionX, double positionY, String event) {
-//
-//        Configuration config = ActiveConfigurationContext.getInstance();
-//
-//        if (config.isGazeMouseEnable() && !config.isMouseFree()) {
-//            Platform.runLater(
-//                () -> robotSupplier.get().mouseMove((int) positionX, (int) positionY)
-//            );
-//        }
-//
-//        add();
-//        delete();
-//
-//        synchronized (shapesEventFilter) {
-//            Collection<GazeInfos> c = shapesEventFilter.values();
-//            LinkedList<GazeInfos> gazeInfosToFire = new LinkedList<>();
-//            for (GazeInfos gi : c) {
-//                if (gameScene != null && gi.getNode() != gameScene.getNode() && !gi.getNode().isDisable()) {
-//                    if(contains(gi.getNode(),positionX,positionY)) {
-//                        if (gazeInfosToFire.isEmpty()) {
-//                            gazeInfosToFire.add(gi);
-//                        } else {
-//                            boolean needsToBeAdded = true;
-//                            for( GazeInfos giToFire: gazeInfosToFire) {
-//                                if (giToFire.getNode().getParent() == gi.getNode().getParent()) {
-//                                    int indexOfGiToFire = giToFire.getNode().getParent().getChildrenUnmodifiable().indexOf(giToFire.getNode());
-//                                    int indexOfGi = gi.getNode().getParent().getChildrenUnmodifiable().indexOf(gi.getNode());
-//                                    if (indexOfGiToFire < indexOfGi) {
-//                                        gazeInfosToFire.remove(giToFire);
-//                                        gazeInfosToFire.add(gi);
-//                                    }
-//                                    needsToBeAdded = false;
-//                                    break;
-//                                }
-//                            }
-//                            if(needsToBeAdded){
-//                                gazeInfosToFire.add(gi);
-//                            }
-//                        }
-//                    } else {
-//                        eventFireExit(positionX,positionY,gi,event);
-//                    }
-//                }
-//            }
-//
-//            if(!gazeInfosToFire.isEmpty()) {
-//                for (GazeInfos giToFire: gazeInfosToFire) {
-//                    eventFireMoveOrEntenred(positionX, positionY, giToFire, event);
-//                }
-//            }
-//
-//
-//            if (gameScene != null) {
-//                eventFire(positionX, positionY, gameScene, event);
-//            }
-//
-//        }
-//    }
-
-//    void updatePosition(double positionX, double positionY, String event) {
-//
-//        Configuration config = ActiveConfigurationContext.getInstance();
-//
-//        if (config.isGazeMouseEnable() && !config.isMouseFree()) {
-//            Platform.runLater(
-//                () -> robotSupplier.get().mouseMove((int) positionX, (int) positionY)
-//            );
-//        }
-//
-//        add();
-//        delete();
-//
-//        synchronized (shapesEventFilter) {
-//            Collection<GazeInfos> c = shapesEventFilter.values();
-//            GazeInfos giToFire = null;
-//            for (GazeInfos gi : c) {
-//                if (gameScene != null && gi.getNode() != gameScene.getNode() && !gi.getNode().isDisable()) {
-//                    if(contains(gi.getNode(),positionX,positionY)) {
-//                        if (giToFire == null || giToFire.getNode() == null) {
-//                            giToFire = gi;
-//                        } else {
-//                                int indexOfGiToFire = giToFire.getNode().getParent().getChildrenUnmodifiable().indexOf(giToFire.getNode());
-//                                int indexOfGi = gi.getNode().getParent().getChildrenUnmodifiable().indexOf(gi.getNode());
-//                                if (indexOfGiToFire < indexOfGi) {
-//                                    giToFire = gi;
-//                                }
-//                            }
-//                    } else {
-//                        eventFireExit(positionX,positionY,gi,event);
-//                    }
-//                }
-//            }
-//
-//            if(giToFire != null) {
-//                eventFireMoveOrEntenred(positionX, positionY, giToFire, event);
-//            }
-//
-//
-//            if (gameScene != null) {
-//                eventFire(positionX, positionY, gameScene, event);
-//            }
-//
-//        }
-//    }
-
     void updatePosition(double positionX, double positionY, String event) {
 
         Configuration config = ActiveConfigurationContext.getInstance();
@@ -292,7 +186,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
             for (GazeInfos gi : c) {
                 if (gameScene != null && gi.getNode() != gameScene.getNode()) {
                     if(eventFire(positionX, positionY, gi, event, c)){
-                        break;
+                       // break;
                     }
                 }
             }
@@ -303,26 +197,6 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
         }
     }
-
-    public boolean isOnTopOfContains(Node node, double positionX, double positionY, Collection<GazeInfos> c){
-        if(contains(node,positionX,positionY)){
-            if (c != null) {
-                for (GazeInfos gi : c) {
-                    Node giNode = gi.getNode();
-                    if (giNode != gameScene.getNode() && contains(giNode, positionX, positionY)) {
-                        log.info("is false {} > {} ", giNode.getViewOrder(), node.getViewOrder());
-                        if ( giNode.getViewOrder() > node.getViewOrder() ){
-                             return false;
-                        }
-                    }
-                }
-            }
-            return true;
-        }
-
-        return false;
-
-    };
 
     public boolean contains(Node node, double positionX, double positionY) {
         Point2D localPosition = node.screenToLocal(positionX, positionY);
@@ -357,7 +231,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
             Point2D localPosition = node.screenToLocal(positionX, positionY);
 
-            if (localPosition != null && isOnTopOfContains(node, positionX, positionY, c)) {
+            if (localPosition != null && contains(node, positionX, positionY)) {
                 if (event.equals("gaze")) {
                     if (gi.isOnGaze()) {
                         Platform.runLater(
