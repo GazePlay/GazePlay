@@ -54,30 +54,27 @@ public class ReplayingGameFromJson {
 
     private static ArrayList<String> replayableGameList = new ArrayList<String>(
         Arrays.asList(
-            "CupsBalls","VideoPlayer","MagicCards",
-            "Potions","MediaPlayer", "WhacAmole",
-            "Paper-Scissors-Stone","Pet",
-            "Room", "Farm","Jungle","Savanna","SpaceGame","SpotDifference",
-            "VideoGrid",
 
-            //OK:
+            //OK: really small offsets problems
             "Scribble","Cakes","Creampie","WhereIsIt","WhereIsTheAnimal","letters",
             "WhereIsTheColor","WhereIsTheLetter","WhereIsTheNumber","findodd","flags",
             "ScratchCard","Memory","MemoryLetters","MemoryNumbers","OpenMemory","OpenMemoryLetters",
-            "OpenMemoryNumbers","Dice","EggGame","GooseGame",
-            "Horses","Horses Simplified","puzzle","Opinions","Order",
+            "OpenMemoryNumbers","Dice","EggGame","GooseGame","MagicCards","Opinions","Order",
+            "Horses","Horses Simplified","puzzle","Farm","Jungle","Savanna","CupsBalls",
+            "Potions", "VideoPlayer","VideoGrid", "bottle"
 
-            "bottle", // OK but 16 version is not working + some really small replay coordinates issues sometimes
 
-            "Math101: Addition","Math101: All operations","Math101: Division",
-            "Math101: Multiplication","Math101: Substraction" // seems ok but need to check that the resize is good
+            // replay OK but the resize of the game itself is bad:
+            // "SpotDifference", "MediaPlayer","Paper-Scissors-Stone",
+            //"Math101: Addition","Math101: All operations","Math101: Division",
+            //"Math101: Multiplication","Math101: Substraction"
 
             // Replay offset was really clear here,due to the gameContext.getRoot() instead of gameContext
             // "Colorsss"
 
             // replay cursor coordinates issue, can lead to different display:
             // "Ninja","Piano","Divisor","Lapins", "ColoredBubbles","PortraitBubbles",
-            // "RushHour","FrogsRace",
+            // "RushHour","FrogsRace","WhacAmole"
 
             // replay cursor coordinates issue:
             // "Blocks",
@@ -86,7 +83,11 @@ public class ReplayingGameFromJson {
             // "BibJump", "Labyrinth",
 
             // lots of problem:
-            // "Robots","Biboule"
+            // "Robots","Biboule","SpaceGame",
+
+            // arranger le jeu:
+            // "Pet",
+            // "Room"
 
         )
     );
@@ -356,7 +357,7 @@ public class ReplayingGameFromJson {
 
     public void paint(GraphicsContext graphics, Canvas canvas, int nextX, int nextY, String event) {
         javafx.scene.paint.Color strokeColor, fillColor;
-        int circleSize = 10;
+        int circleSize = 30;
         if (event.equals("gaze")) {
             strokeColor = Color.rgb(0, 0, 255, 0.5);//Color.BLUE;
             fillColor = Color.rgb(255, 255, 0, 0.1);
@@ -364,7 +365,7 @@ public class ReplayingGameFromJson {
             strokeColor = Color.rgb(255, 0, 0, 0.5);//Color.RED;
             fillColor = Color.rgb(0, 255, 255, 0.1);
         }
-        //   graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         graphics.setStroke(strokeColor);
         graphics.strokeOval(nextX - circleSize / 2d, nextY - circleSize / 2d, circleSize, circleSize);
         graphics.setFill(fillColor);
