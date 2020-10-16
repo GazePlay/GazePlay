@@ -265,7 +265,7 @@ addNewImagenocare,,,,,,Add new image don't care...,,Ajouter une nouvelle image s
 customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,,,
 Done,,,,,,Done,,Valider,,,,,,,,,,,
 WhereIsItDirectory:,,,,,,'Where is it ?' Configuration:,,Configuration de 'Où est-ce ?':,,,,,,,,,,,
-WhereIsItNotConfigDirectory,,,,,,'Where is it directory' not configured,,'Où est-ce' répertoire non configuré',,,,,,,,,,,
+WhereIsItNotConfigDirectory,,,,,,'Where is it' directory not configured,,Répertoire 'Où est-ce' non configuré,,,,,,,,,,,
 PickedWrongDir,,,,,,You picked the wrong directory,,Vous avez choisi le mauvais répertoire,,,,,,,,,,,
 
 Loading...,,,,,,Loading...,,Chargement...,,,,,,,,,,,
