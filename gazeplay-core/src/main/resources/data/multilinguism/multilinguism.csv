@@ -264,7 +264,7 @@ addNewImagethumbdown,,,,,,Add new image unhappy...,,Ajouter une nouvelle image p
 addNewImagenocare,,,,,,Add new image don't care...,,Ajouter une nouvelle image s'en fiche ...,,,,,,,,,,Añadir una nueva imagen no importa ...,
 customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,,,
 
-ReaskQuestionOnFail,,,,,,Ask the question again in case of fail,,Reposer la question en cas d'échec,,,,,,,,,,,
+ReaskQuestionOnFail,,,,,,Ask the question again in case it's answered incorrectly,,Reposer la question en cas de mauvaise réponse,,,,,,,,,,,
 
 Mouse,,,,,,Mouse,,Souris,,,,,,,,,,,
 Gaze,,,,,,Gaze,,Regard,,,,,,,,,,,
