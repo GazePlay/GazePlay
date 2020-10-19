@@ -247,9 +247,8 @@ public class ReplayingGameFromJson {
         currentGame.launch();
 
         EventHandler<Event> homeEvent = e -> {
-            workingThread.stop();
             gameContext.getRoot().setCursor(Cursor.WAIT); // Change cursor to wait style
-            this.exit(statsSaved,currentGame);
+            this.exit(statsSaved, currentGame);
             gameContext.getRoot().setCursor(Cursor.DEFAULT); // Change cursor to default style
         };
 
@@ -312,7 +311,6 @@ public class ReplayingGameFromJson {
         if (user != null && !user.equals("")) {
             commands.addAll(Arrays.asList("--user", user));
         } else {
-            ;
             commands.add("--default-user");
         }
 
@@ -333,6 +331,7 @@ public class ReplayingGameFromJson {
     }
 
     private void exit(Stats statsSaved, GameLifeCycle currentGame) {
+        workingThread.stop();
         gameContext.exitGame(statsSaved, gazePlay, currentGame, "replay");
         gameContext.getGazeDeviceManager().setInReplayMode(false);
     }
@@ -375,17 +374,17 @@ public class ReplayingGameFromJson {
     }
 
     public void updateGazeTab(int nextX, int nextY) {
-       while(lastGazeCoordinates.size()>=numberOfelementToDisplay){
-           lastGazeCoordinates.pop();
-       }
-       lastGazeCoordinates.add(new Point2D(nextX,nextY));
+        while (lastGazeCoordinates.size() >= numberOfelementToDisplay) {
+            lastGazeCoordinates.pop();
+        }
+        lastGazeCoordinates.add(new Point2D(nextX, nextY));
     }
 
     public void updateMouseTab(int nextX, int nextY) {
-        while(lastMouseCoordinates.size()>=numberOfelementToDisplay){
+        while (lastMouseCoordinates.size() >= numberOfelementToDisplay) {
             lastMouseCoordinates.pop();
         }
-        lastMouseCoordinates.add(new Point2D(nextX,nextY));
+        lastMouseCoordinates.add(new Point2D(nextX, nextY));
 
 
     }
