@@ -97,7 +97,7 @@ public class GameWhereIsItErrorPathDialog extends Stage {
         EventHandler<Event> event = mouseEvent -> {
             close();
             root.setDisable(false);
-            gameMenuController.chooseGame(gazePlay, gameSpec, finalVariant);
+            gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, finalVariant);
         };
         doneButton.addEventHandler(MOUSE_CLICKED, event);
 

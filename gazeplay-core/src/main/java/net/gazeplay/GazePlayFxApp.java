@@ -15,9 +15,11 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.cli.GameSelectionOptions;
 import net.gazeplay.cli.ReusableOptions;
+import net.gazeplay.cli.SizeOptions;
 import net.gazeplay.cli.UserSelectionOptions;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
@@ -64,7 +66,9 @@ public class GazePlayFxApp extends Application {
 
     @Override
     public void start(final Stage primaryStage) {
-        autosize(primaryStage);
+
+        final Configuration mainConfig = ActiveConfigurationContext.getInstance();
+
         boolean showUserSelectPage = true;
         if (options != null) {
             final UserSelectionOptions userSelectionOptions = options.getUserSelectionOptions();
@@ -81,14 +85,30 @@ public class GazePlayFxApp extends Application {
         }
         log.info("showUserSelectPage = {}", showUserSelectPage);
 
-        final Scene primaryScene = createPrimaryScene(primaryStage);
+        final Scene primaryScene;
+        if (options != null) {
+            final SizeOptions sizeOptions = options.getSizeOptions();
+            if (sizeOptions != null) {
+                if (sizeOptions.getGameHeight() > 0 && sizeOptions.getGameWidth() > 0) {
+                    primaryScene = createPrimaryScene(primaryStage, sizeOptions.getGameWidth(), sizeOptions.getGameHeight());
+                } else {
+                    autosize(primaryStage);
+                    primaryScene = createPrimaryScene(primaryStage);
+                }
+            } else {
+                autosize(primaryStage);
+                primaryScene = createPrimaryScene(primaryStage);
+            }
+        } else {
+            autosize(primaryStage);
+            primaryScene = createPrimaryScene(primaryStage);
+        }
+
         configureKeysHandler(primaryScene);
 
         configurePrimaryStage(primaryStage);
 
-        final Configuration config = ActiveConfigurationContext.getInstance();
-
-        LatestNewsPopup.displayIfNeeded(config, gazePlay.getTranslator(), gazePlay.getCurrentScreenDimensionSupplier());
+        LatestNewsPopup.displayIfNeeded(mainConfig, gazePlay.getTranslator(), gazePlay.getCurrentScreenDimensionSupplier());
 
         gazePlay.setPrimaryScene(primaryScene);
         gazePlay.setPrimaryStage(primaryStage);
@@ -109,6 +129,8 @@ public class GazePlayFxApp extends Application {
                         selectedGameNameCode = selectedGameSpec.getGameSummary().getNameCode();
                     }
                 }
+
+                String selectedVariantCode = options.getVariantSelectionOptions().getGameVariant();
                 if (selectedGameNameCode != null) {
                     final String searchGameNameCode = selectedGameNameCode;
                     final GameSpec selectedGameSpec = gameSpecs.stream()
@@ -117,7 +139,13 @@ public class GazePlayFxApp extends Application {
                         .orElseThrow(() -> new IllegalArgumentException(searchGameNameCode));
 
                     log.info("gameSpecs = {}", gameSpecs);
-                    gameMenuController.onGameSelection(gazePlay, gazePlay.getPrimaryScene().getRoot(), selectedGameSpec, selectedGameSpec.getGameSummary().getNameCode());
+
+                    if (selectedVariantCode != null) {
+                        IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
+                        gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
+                    } else {
+                        gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
+                    }
                 } else {
                     gazePlay.onReturnToMenu();
                 }
@@ -139,6 +167,14 @@ public class GazePlayFxApp extends Application {
         return primaryScene;
     }
 
+    private Scene createPrimaryScene(final Stage primaryStage, final double width, final double height) {
+        final Pane rootPane = new Pane();
+        final Scene primaryScene = new Scene(rootPane, width, height, Color.BLACK);
+        CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), primaryScene, gazePlay.getCurrentScreenDimensionSupplier());
+        primaryStage.setScene(primaryScene);
+        return primaryScene;
+    }
+
     private void configurePrimaryStage(final Stage primaryStage) {
         primaryStage.setTitle("GazePlay");
         primaryStage.setOnCloseRequest((WindowEvent we) -> primaryStage.close());
@@ -150,10 +186,10 @@ public class GazePlayFxApp extends Application {
 
     private void autosize(final Stage primaryStage) {
         final Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-        //
-        primaryStage.setWidth(screenDimension.getWidth() * 0.95);
-        primaryStage.setHeight(screenDimension.getHeight() * 0.90);
-        primaryStage.setMaximized(false);
+
+        primaryStage.setWidth(screenDimension.getWidth());
+        primaryStage.setHeight(screenDimension.getHeight());
+        primaryStage.setMaximized(true);
 
         primaryStage.setFullScreen(true);
     }
