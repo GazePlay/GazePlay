@@ -8,8 +8,8 @@
         <Bug pattern="DM_EXIT"/>
     </Match>
     <Match>
-    <Source name="~.*ReplayingGameFromJson\.java" />
-    <Bug pattern="DM_EXIT"/>
+        <Source name="~.*ReplayingGameFromJson\.java" />
+        <Bug pattern="DM_EXIT"/>
     </Match>
     <Match>
         <Package name="~.*"/>

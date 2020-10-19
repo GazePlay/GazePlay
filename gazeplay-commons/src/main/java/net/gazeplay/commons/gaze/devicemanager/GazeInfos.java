@@ -31,11 +31,11 @@ class GazeInfos {
     private GazeInfos(Node node, long time, boolean on) {
         this.node = node;
         this.time = time;
-        this.onMouse = on;
+        this.onGaze = on;
     }
 
     public String toString() {
-        return "At " + time + " on " + onMouse + "Node " + node;
+        return "At " + time + " on " + onGaze + "Node " + node;
     }
 
 }

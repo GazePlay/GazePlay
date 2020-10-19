@@ -53,8 +53,9 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class ReplayingGameFromJson {
 
-    Point2D[] fourLastGazeCoordinates = new Point2D[4];
-    Point2D[] fourLastMouseCoordinates = new Point2D[4];
+    private LinkedList<Point2D> lastGazeCoordinates = new LinkedList<Point2D>();
+    private LinkedList<Point2D> lastMouseCoordinates = new LinkedList<Point2D>();
+    int numberOfelementToDisplay = 10;
 
     private static ArrayList<String> replayableGameList = new ArrayList<String>(
         Arrays.asList(
@@ -374,39 +375,17 @@ public class ReplayingGameFromJson {
     }
 
     public void updateGazeTab(int nextX, int nextY) {
-        if (fourLastGazeCoordinates[0] == null) {
-            fourLastGazeCoordinates[0] = new Point2D(nextX, nextY);
-        } else if (fourLastGazeCoordinates[1] == null) {
-            fourLastGazeCoordinates[1] = new Point2D(nextX, nextY);
-        } else if (fourLastGazeCoordinates[2] == null) {
-            fourLastGazeCoordinates[2] = new Point2D(nextX, nextY);
-        } else if (fourLastGazeCoordinates[3] == null) {
-            fourLastGazeCoordinates[3] = new Point2D(nextX, nextY);
-        } else {
-            fourLastGazeCoordinates[0] = fourLastGazeCoordinates[1];
-            fourLastGazeCoordinates[1] = fourLastGazeCoordinates[2];
-            fourLastGazeCoordinates[2] = fourLastGazeCoordinates[3];
-            fourLastGazeCoordinates[3] = new Point2D(nextX, nextY);
-        }
+       while(lastGazeCoordinates.size()>=numberOfelementToDisplay){
+           lastGazeCoordinates.pop();
+       }
+       lastGazeCoordinates.add(new Point2D(nextX,nextY));
     }
 
     public void updateMouseTab(int nextX, int nextY) {
-        if (fourLastMouseCoordinates[0] == null) {
-            fourLastMouseCoordinates[0] = new Point2D(nextX, nextY);
-        } else if (fourLastMouseCoordinates[1] == null) {
-            fourLastMouseCoordinates[1] = new Point2D(nextX, nextY);
-        } else if (fourLastMouseCoordinates[2] == null) {
-            fourLastMouseCoordinates[2] = new Point2D(nextX, nextY);
-        } else if (fourLastMouseCoordinates[3] == null) {
-            fourLastMouseCoordinates[3] = new Point2D(nextX, nextY);
-        } else {
-            fourLastMouseCoordinates[0] = fourLastMouseCoordinates[1];
-            fourLastMouseCoordinates[1] = fourLastMouseCoordinates[2];
-            fourLastMouseCoordinates[2] = fourLastMouseCoordinates[3];
-            fourLastMouseCoordinates[3] = new Point2D(nextX, nextY);
+        while(lastMouseCoordinates.size()>=numberOfelementToDisplay){
+            lastMouseCoordinates.pop();
         }
-
-        javafx.scene.paint.Color strokeColor, fillColor;
+        lastMouseCoordinates.add(new Point2D(nextX,nextY));
 
 
     }
@@ -419,7 +398,7 @@ public class ReplayingGameFromJson {
         strokeColor = Color.rgb(0, 0, 255, 0.5);//Color.BLUE;
         fillColor = Color.rgb(255, 255, 0, 0.1);
 
-        for (Point2D point : fourLastGazeCoordinates) {
+        for (Point2D point : lastGazeCoordinates) {
             if (point != null) {
                 graphics.setStroke(strokeColor);
                 graphics.strokeOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
@@ -431,7 +410,7 @@ public class ReplayingGameFromJson {
         strokeColor = Color.rgb(255, 0, 0, 0.5);//Color.RED;
         fillColor = Color.rgb(0, 255, 255, 0.1);
 
-        for (Point2D point : fourLastMouseCoordinates) {
+        for (Point2D point : lastMouseCoordinates) {
             if (point != null) {
                 graphics.setStroke(strokeColor);
                 graphics.strokeOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);

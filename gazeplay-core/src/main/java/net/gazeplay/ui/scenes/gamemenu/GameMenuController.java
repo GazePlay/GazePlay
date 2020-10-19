@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.*;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -24,8 +23,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -82,13 +82,11 @@ public class GameMenuController {
 
         int height = 0;
         int width = 0;
-        if(!gazePlay.isFullScreen()){
+        if (!gazePlay.isFullScreen()) {
             height = (int) gazePlay.getPrimaryScene().getWindow().getHeight();
             width = (int) gazePlay.getPrimaryScene().getWindow().getWidth();
         }
-        builder = createBuilder(
-            selectedGameSpec.getGameSummary().getNameCode(),
-            gameVariant,height,width);
+        builder = createBuilder(selectedGameSpec.getGameSummary().getNameCode(), gameVariant, height, width);
 
         try {
             builder.inheritIO().start();
@@ -105,7 +103,7 @@ public class GameMenuController {
         }
     }
 
-    public ProcessBuilder createBuilder(String game, IGameVariant gameVariant, int height, int width){
+    public ProcessBuilder createBuilder(String game, IGameVariant gameVariant, int height, int width) {
         String javaHome = System.getProperty("java.home");
         String javaBin = javaHome +
             File.separator + "bin" +
@@ -115,20 +113,20 @@ public class GameMenuController {
         LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin, "-cp", classpath, GazePlayLauncher.class.getName()));
 
         String user = ActiveConfigurationContext.getInstance().getUserName();
-        if(user != null && !user.equals("")) {
+        if (user != null && !user.equals("")) {
             commands.addAll(Arrays.asList("--user", user));
-        } else {;
+        } else {
             commands.add("--default-user");
         }
 
         commands.addAll(Arrays.asList("--game", game));
 
         if (gameVariant != null) {
-            commands.addAll(Arrays.asList( "--variant", gameVariant.toString()));
+            commands.addAll(Arrays.asList("--variant", gameVariant.toString()));
         }
 
 
-        if(height != 0 && width != 0) {
+        if (height != 0 && width != 0) {
             commands.addAll(Arrays.asList("--height", "" + height, "--width", "" + width));
         }
 
@@ -161,10 +159,9 @@ public class GameMenuController {
         stats.start();
 
         String gameVariantLabel;
-        if (gameVariant != null){
+        if (gameVariant != null) {
             gameVariantLabel = gameVariant.toString();
-        }
-        else {
+        } else {
             gameVariantLabel = null;
         }
 

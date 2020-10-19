@@ -656,7 +656,7 @@ public class Stats implements GazeMotionListener {
         final File gazeMetricsFileMouseAndGaze = new File(todayDirectory, gazeMetricsFilePrefixMouseAndGaze + ".png");
         final File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
         final File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
-        final File colorBandsFile = new File(todayDirectory, colorBandsFilePrefix + "png");
+        final File colorBandsFile = new File(todayDirectory, colorBandsFilePrefix + ".png");
         final File replayDataFile = new File(todayDirectory, replayDataFilePrefix + ".json");
 
         final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);

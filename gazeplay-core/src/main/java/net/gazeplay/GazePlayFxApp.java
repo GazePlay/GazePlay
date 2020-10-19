@@ -153,7 +153,6 @@ public class GazePlayFxApp extends Application {
                         }else {
                             if (selectedVariantCode != null) {
                                 IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
-                                log.info("THE VARIANT IS : {}", variant);
                                 gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
                             } else {
                                 gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
@@ -162,7 +161,6 @@ public class GazePlayFxApp extends Application {
                     }else {
                         if (selectedVariantCode != null) {
                             IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
-                            log.info("THE VARIANT IS : {}", variant);
                             gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
                         } else {
                             gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
