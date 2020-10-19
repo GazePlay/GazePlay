@@ -260,9 +260,6 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                         Platform.runLater(
                             () ->
                                 node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-//                                node.fireEvent(new MouseEvent(MouseEvent.MOUSE_MOVED,
-//                                    localPosition.getX(), localPosition.getY(), positionX, positionY, MouseButton.PRIMARY, 1,
-//                                    true, true, true, true, true, true, true, true, true, true, null))
 
                         );
                         return true;
@@ -273,9 +270,6 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                         Platform.runLater(
                             () ->
                                 node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-//                                node.fireEvent(new MouseEvent(MouseEvent.MOUSE_ENTERED,
-//                                    localPosition.getX(), localPosition.getY(), positionX, positionY, MouseButton.PRIMARY, 1,
-//                                    true, true, true, true, true, true, true, true, true, true, null))
 
                         );
                         return true;
@@ -291,12 +285,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                                 () ->
                                     node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
                             );
-                        } else {
-                            // nothing to do
                         }
-                    } else {// gaze was not on the shape previously
-                        // nothing to do
-
                     }
                 } else {
                     if (gi.isOnMouse()) {// gaze was on the shape previously
@@ -306,17 +295,9 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                             Platform.runLater(
                                 () ->
                                     node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-//                                    node.fireEvent(new MouseEvent(MouseEvent.MOUSE_EXITED,
-//                                        localPosition.getX(), localPosition.getY(), positionX, positionY, MouseButton.PRIMARY, 1,
-//                                        true, true, true, true, true, true, true, true, true, true, null))
 
                             );
-                        } else {
-                            // nothing to do
                         }
-                    } else {// gaze was not on the shape previously
-                        // nothing to do
-
                     }
                 }
 
