@@ -53,6 +53,9 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class ReplayingGameFromJson {
 
+    Point2D[] fourLastGazeCoordinates = new Point2D[4];
+    Point2D[] fourLastMouseCoordinates = new Point2D[4];
+
     private static ArrayList<String> replayableGameList = new ArrayList<String>(
         Arrays.asList(
 
@@ -243,12 +246,12 @@ public class ReplayingGameFromJson {
         final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
         //Drawing in canvas
         final javafx.scene.canvas.Canvas canvas = new Canvas(screenDimension.getWidth(), screenDimension.getHeight());
-        canvas.setMouseTransparent(true);
         gameContext.getChildren().add(canvas);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
+                gameContext.getGazeDeviceManager().setInReplayMode(true);
                 drawFixationLines(canvas, coordinatesAndTimeStamp);
                 Platform.runLater(() -> exit(statsSaved, currentGame));
             }
@@ -317,6 +320,7 @@ public class ReplayingGameFromJson {
 
     private void exit(Stats statsSaved, GameLifeCycle currentGame) {
         gameContext.exitGame(statsSaved, gazePlay, currentGame, "replay");
+        gameContext.getGazeDeviceManager().setInReplayMode(false);
     }
 
     private void drawFixationLines(Canvas canvas, JsonArray coordinatesAndTimeStamp) {
@@ -356,23 +360,87 @@ public class ReplayingGameFromJson {
         }
     }
 
-    public void paint(GraphicsContext graphics, Canvas canvas, int nextX, int nextY, String event) {
-        javafx.scene.paint.Color strokeColor, fillColor;
-        int circleSize = 30;
-        if (event.equals("gaze")) {
-            strokeColor = Color.rgb(0, 0, 255, 0.5);//Color.BLUE;
-            fillColor = Color.rgb(255, 255, 0, 0.1);
-        } else { // if (event.equals("mouse")) {
-            strokeColor = Color.rgb(255, 0, 0, 0.5);//Color.RED;
-            fillColor = Color.rgb(0, 255, 255, 0.1);
+    public void updateGazeTab(int nextX, int nextY){
+        if(fourLastGazeCoordinates[0] == null) {
+            fourLastGazeCoordinates[0]=new Point2D(nextX,nextY);
+        } else if (fourLastGazeCoordinates[1] == null){
+            fourLastGazeCoordinates[1]=new Point2D(nextX,nextY);
+        } else if (fourLastGazeCoordinates[2] == null){
+            fourLastGazeCoordinates[2]=new Point2D(nextX,nextY);
+        } else if (fourLastGazeCoordinates[3] == null){
+            fourLastGazeCoordinates[3]=new Point2D(nextX,nextY);
+        } else {
+            fourLastGazeCoordinates[0]= fourLastGazeCoordinates[1];
+            fourLastGazeCoordinates[1]= fourLastGazeCoordinates[2];
+            fourLastGazeCoordinates[2]= fourLastGazeCoordinates[3];
+            fourLastGazeCoordinates[3]=new Point2D(nextX,nextY);
         }
-        graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        graphics.setStroke(strokeColor);
-        graphics.strokeOval(nextX - circleSize / 2d, nextY - circleSize / 2d, circleSize, circleSize);
-        graphics.setFill(fillColor);
-        graphics.fillOval(nextX - circleSize / 2d, nextY - circleSize / 2d, circleSize, circleSize);
-        Point2D point = new Point2D(nextX, nextY);
+    }
 
+    public void updateMouseTab(int nextX, int nextY){
+        if(fourLastMouseCoordinates[0] == null) {
+            fourLastMouseCoordinates[0]=new Point2D(nextX,nextY);
+        } else if (fourLastMouseCoordinates[1] == null){
+            fourLastMouseCoordinates[1]=new Point2D(nextX,nextY);
+        } else if (fourLastMouseCoordinates[2] == null){
+            fourLastMouseCoordinates[2]=new Point2D(nextX,nextY);
+        } else if (fourLastMouseCoordinates[3] == null){
+            fourLastMouseCoordinates[3]=new Point2D(nextX,nextY);
+        } else {
+            fourLastMouseCoordinates[0]= fourLastMouseCoordinates[1];
+            fourLastMouseCoordinates[1]= fourLastMouseCoordinates[2];
+            fourLastMouseCoordinates[2]= fourLastMouseCoordinates[3];
+            fourLastMouseCoordinates[3]=new Point2D(nextX,nextY);
+        }
+
+        javafx.scene.paint.Color strokeColor, fillColor;
+
+
+    }
+
+    public void drawOvals(GraphicsContext graphics){
+        int circleSize = 30;
+
+        javafx.scene.paint.Color strokeColor, fillColor;
+
+        strokeColor = Color.rgb(0, 0, 255, 0.5);//Color.BLUE;
+        fillColor = Color.rgb(255, 255, 0, 0.1);
+
+        for(Point2D point : fourLastGazeCoordinates) {
+            if (point!=null) {
+                graphics.setStroke(strokeColor);
+                graphics.strokeOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
+                graphics.setFill(fillColor);
+                graphics.fillOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
+            }
+        }
+
+        strokeColor = Color.rgb(255, 0, 0, 0.5);//Color.RED;
+        fillColor = Color.rgb(0, 255, 255, 0.1);
+
+        for(Point2D point : fourLastMouseCoordinates) {
+            if (point!=null) {
+                graphics.setStroke(strokeColor);
+                graphics.strokeOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
+                graphics.setFill(fillColor);
+                graphics.fillOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
+            }
+        }
+    }
+
+    public void paint(GraphicsContext graphics, Canvas canvas, int nextX, int nextY, String event) {
+
+        graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        if (event.equals("gaze")) {
+            updateGazeTab(nextX,nextY);
+        } else { // if (event.equals("mouse")) {
+            updateMouseTab(nextX,nextY);
+        }
+
+        drawOvals(graphics);
+
+        Point2D point = new Point2D(nextX, nextY);
         gameContext.getGazeDeviceManager().onSavedMovementsUpdate(point, event);
     }
 

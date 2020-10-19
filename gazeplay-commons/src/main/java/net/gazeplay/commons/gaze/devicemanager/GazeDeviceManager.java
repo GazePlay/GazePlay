@@ -31,4 +31,6 @@ public interface GazeDeviceManager {
     void clear();
 
     void onSavedMovementsUpdate(Point2D gazePositionOnScreen, String event);
+
+    void setInReplayMode(boolean b);
 }

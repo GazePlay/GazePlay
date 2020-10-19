@@ -73,11 +73,10 @@ public class Stats implements GazeMotionListener {
     private int counter = 0;
     private final List<CoordinatesTracker> movementHistory = new ArrayList<>();
 
-    private long previousTimeMouse = 0;
+    private long previousTime = 0;
+
     private int previousXMouse = 0;
     private int previousYMouse = 0;
-
-    private long previousTimeGaze = 0;
     private int previousXGaze = 0;
     private int previousYGaze = 0;
 
@@ -468,7 +467,7 @@ public class Stats implements GazeMotionListener {
             recordGazeMovements = e -> {
                 if (e.getSource() == gameContextScene.getRoot() && e.getTarget() == gameContextScene.getRoot()) {
                     final long timeToFixation = System.currentTimeMillis() - startTime;
-                    final long timeInterval = (timeToFixation - previousTimeMouse);
+                    final long timeInterval = (timeToFixation - previousTime);
                     Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
                     final int getX = (int) toSceneCoordinate.getX();
                     final int getY = (int) toSceneCoordinate.getY();
@@ -493,7 +492,7 @@ public class Stats implements GazeMotionListener {
                                 if (movementHistoryidx > 1) {
                                     generateAOIList(movementHistoryidx - 1);
                                 }
-                                previousTimeMouse = timeToFixation;
+                                previousTime = timeToFixation;
                             }
                         }
                     }
@@ -502,7 +501,7 @@ public class Stats implements GazeMotionListener {
 
             recordMouseMovements = e -> {
                 final long timeElapsedMillis = System.currentTimeMillis() - startTime;
-                final long timeInterval = (timeElapsedMillis - previousTimeGaze);
+                final long timeInterval = (timeElapsedMillis - previousTime);
                 Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
                 final int getX = (int) toSceneCoordinate.getX();
                 final int getY = (int) toSceneCoordinate.getY();
@@ -527,7 +526,7 @@ public class Stats implements GazeMotionListener {
                             if (movementHistoryidx > 1) {
                                 generateAOIList(movementHistoryidx - 1);
                             }
-                            previousTimeGaze = timeElapsedMillis;
+                            previousTime = timeElapsedMillis;
                             counter = 0;
                         }
                         counter++;
@@ -934,7 +933,7 @@ public class Stats implements GazeMotionListener {
     }
 
     double getSceneRatio() {
-        return gameContextScene.getHeight()/gameContextScene.getWidth();
+        return gameContextScene.getHeight() / gameContextScene.getWidth();
     }
 
     public void setGameVariant(String gameVariant, String gameNameCode) {

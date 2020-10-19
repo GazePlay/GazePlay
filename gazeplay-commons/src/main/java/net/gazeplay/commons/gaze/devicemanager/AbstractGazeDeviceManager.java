@@ -4,9 +4,6 @@ import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +25,8 @@ import java.util.function.Supplier;
  */
 @Slf4j
 public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
+
+    private boolean isInReplayMode = false;
 
     private final List<GazeMotionListener> gazeMotionListeners = new CopyOnWriteArrayList<>();
 
@@ -71,6 +70,11 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     @Override
     public void addEventFilter(Node gs) {
         toAdd.add(gs);
+    }
+
+    @Override
+    public void setInReplayMode(boolean b) {
+        isInReplayMode = b;
     }
 
     public void add() {
@@ -153,55 +157,56 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         // notifyAllGazeMotionListeners(gazePositionOnScreen);
         final double positionX = gazePositionOnScreen.getX();
         final double positionY = gazePositionOnScreen.getY();
-        updatePosition(positionX, positionY, event);
+        updatePosition(positionX, positionY, event, false);
     }
 
     @Override
     synchronized public void onSavedMovementsUpdate(Point2D gazePositionOnScene, String event) {
-            if (gameScene != null) {
-                Point2D gazePositionOnScreen = gameScene.getNode().localToScreen(gazePositionOnScene);
-                if(gazePositionOnScreen!=null) {
-                    final double positionX = gazePositionOnScreen.getX();
-                    final double positionY = gazePositionOnScreen.getY();
-                    updatePosition(positionX, positionY, event);
-                }
+        if (gameScene != null) {
+            Point2D gazePositionOnScreen = gameScene.getNode().localToScreen(gazePositionOnScene);
+            if (gazePositionOnScreen != null) {
+                final double positionX = gazePositionOnScreen.getX();
+                final double positionY = gazePositionOnScreen.getY();
+                updatePosition(positionX, positionY, event, true);
             }
+        }
     }
 
-    void updatePosition(double positionX, double positionY, String event) {
+    void updatePosition(double positionX, double positionY, String event, Boolean isBeingReplayed) {
 
-        Configuration config = ActiveConfigurationContext.getInstance();
+        if (!isInReplayMode || (isInReplayMode && isBeingReplayed)) {
 
-        if (config.isGazeMouseEnable() && !config.isMouseFree()) {
-            Platform.runLater(
-                () -> robotSupplier.get().mouseMove((int) positionX, (int) positionY)
-            );
-        }
+            Configuration config = ActiveConfigurationContext.getInstance();
 
-        add();
-        delete();
+            if (config.isGazeMouseEnable() && !config.isMouseFree()) {
+                Platform.runLater(
+                    () -> robotSupplier.get().mouseMove((int) positionX, (int) positionY)
+                );
+            }
 
-        synchronized (shapesEventFilter) {
-            Collection<GazeInfos> c = shapesEventFilter.values();
-            for (GazeInfos gi : c) {
-                if (gameScene != null && gi.getNode() != gameScene.getNode()) {
-                    if(eventFire(positionX, positionY, gi, event, c)){
-                       // break;
+            add();
+            delete();
+
+            synchronized (shapesEventFilter) {
+                Collection<GazeInfos> c = shapesEventFilter.values();
+                for (GazeInfos gi : c) {
+                    if (gameScene != null && gi.getNode() != gameScene.getNode()) {
+                        eventFire(positionX, positionY, gi, event, c);
                     }
                 }
-            }
 
-            if (gameScene != null) {
-                eventFire(positionX, positionY, gameScene, event);
-            }
+                if (gameScene != null) {
+                    eventFire(positionX, positionY, gameScene, event);
+                }
 
+            }
         }
     }
 
     public boolean contains(Node node, double positionX, double positionY) {
         Point2D localPosition = node.screenToLocal(positionX, positionY);
         int offset = 5;
-        if(localPosition != null) {
+        if (localPosition != null) {
             try {
                 return (
                     node.contains(localPosition.getX(), localPosition.getY()) //||
@@ -217,12 +222,13 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
             } catch (IndexOutOfBoundsException e) {
                 return false;
             }
-        } return false;
+        }
+        return false;
     }
 
 
     public void eventFire(double positionX, double positionY, GazeInfos gi, String event) {
-        eventFire(positionX,positionY,gi,event,null);
+        eventFire(positionX, positionY, gi, event, null);
     }
 
     public boolean eventFire(double positionX, double positionY, GazeInfos gi, String event, Collection<GazeInfos> c) {
@@ -253,7 +259,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                     if (gi.isOnMouse()) {
                         Platform.runLater(
                             () ->
-                                 node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), localPosition.getX(), localPosition.getY()))
 //                                node.fireEvent(new MouseEvent(MouseEvent.MOUSE_MOVED,
 //                                    localPosition.getX(), localPosition.getY(), positionX, positionY, MouseButton.PRIMARY, 1,
 //                                    true, true, true, true, true, true, true, true, true, true, null))
@@ -266,7 +272,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                         gi.setTime(System.currentTimeMillis());
                         Platform.runLater(
                             () ->
-                                 node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), localPosition.getX(), localPosition.getY()))
 //                                node.fireEvent(new MouseEvent(MouseEvent.MOUSE_ENTERED,
 //                                    localPosition.getX(), localPosition.getY(), positionX, positionY, MouseButton.PRIMARY, 1,
 //                                    true, true, true, true, true, true, true, true, true, true, null))
@@ -299,7 +305,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                         if (localPosition != null) {
                             Platform.runLater(
                                 () ->
-                                     node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                                    node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
 //                                    node.fireEvent(new MouseEvent(MouseEvent.MOUSE_EXITED,
 //                                        localPosition.getX(), localPosition.getY(), positionX, positionY, MouseButton.PRIMARY, 1,
 //                                        true, true, true, true, true, true, true, true, true, true, null))
