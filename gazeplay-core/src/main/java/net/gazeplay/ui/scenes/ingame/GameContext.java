@@ -276,7 +276,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
-        homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame, replayMode);
+        homeButton = createHomeButtonInGameScreenWithoutHandler(gazePlay);
         menuHBox.getChildren().add(homeButton);
     }
 
@@ -332,23 +332,12 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         gazePlay.onDisplayStats(statsContext);
     }
 
-    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
-                                                   @NonNull GameLifeCycle currentGame, String replayMode) {
-
-        EventHandler<Event> homeEvent = e -> {
-            root.setCursor(Cursor.WAIT); // Change cursor to wait style
-            exitGame(stats, gazePlay, currentGame, replayMode);
-            root.setCursor(Cursor.DEFAULT); // Change cursor to default style
-        };
-
+    public HomeButton createHomeButtonInGameScreenWithoutHandler(@NonNull GazePlay gazePlay) {
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-
-        HomeButton homeButton = new HomeButton(screenDimension);
-        homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
-        return homeButton;
+        return new HomeButton(screenDimension);
     }
 
-    public void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame, String replayMode) {
+    public void exitReplayGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
 
         if (videoRecordingContext != null) {
             videoRecordingContext.pointersClear();
@@ -356,26 +345,11 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         currentGame.dispose();
         ForegroundSoundsUtils.stopSound(); // to stop playing the sound of Bravo
-        //stats.stop();
         gazeDeviceManager.clear();
         gazeDeviceManager.destroy();
 
         soundManager.clear();
         soundManager.destroy();
-
-        /*Runnable asynchronousStatsPersistTask = () -> {
-            try {
-                stats.saveStats();
-            } catch (IOException e) {
-                log.error("Failed to save stats file", e);
-            }
-        };
-
-        if (runAsynchronousStatsPersist) {
-            AsyncUiTaskExecutor.getInstance().getExecutorService().execute(asynchronousStatsPersistTask);
-        } else {
-            asynchronousStatsPersistTask.run();
-        }*/
 
         StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
 

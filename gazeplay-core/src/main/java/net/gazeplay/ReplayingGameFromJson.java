@@ -332,7 +332,7 @@ public class ReplayingGameFromJson {
 
     private void exit(Stats statsSaved, GameLifeCycle currentGame) {
         workingThread.stop();
-        gameContext.exitGame(statsSaved, gazePlay, currentGame, "replay");
+        gameContext.exitReplayGame(statsSaved, gazePlay, currentGame);
         gameContext.getGazeDeviceManager().setInReplayMode(false);
     }
 
