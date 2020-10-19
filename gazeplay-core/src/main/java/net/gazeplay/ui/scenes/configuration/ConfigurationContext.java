@@ -211,6 +211,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
+            I18NText label = new I18NText(translator, "ReaskQuestionOnFail", COLON);
+
+            CheckBox input = buildCheckBox(config.getReaskQuestionOnFail());
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
             I18NText label = new I18NText(translator, "EnableRewardSound", COLON);
 
             CheckBox input = buildCheckBox(config.getEnableRewardSoundProperty());
@@ -563,8 +570,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private Node buildImageChooser(Configuration configuration,
                                    ConfigurationContext configurationContext,
-                                   Translator translator)
-    {
+                                   Translator translator) {
 
         final Button selectButton = new Button("select");
         Stage dialog = new CustomFileChooser(configuration, configurationContext, translator, getGazePlay());

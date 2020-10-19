@@ -44,7 +44,6 @@ public class GameMenuController {
         String gameName
     ) {
         Collection<IGameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
-
         if (variants.size() > 1) {
             root.setEffect(new BoxBlur());
             root.setDisable(true);
@@ -141,14 +140,12 @@ public class GameMenuController {
         IGameVariant gameVariant
     ) {
         GameContext gameContext = applicationContext.getBean(GameContext.class);
-
         gazePlay.onGameLaunch(gameContext);
 
         IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
 
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats stats = gameLauncher.createNewStats(scene);
-
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
 
         gameContext.createControlPanel(gazePlay, stats, currentGame);
