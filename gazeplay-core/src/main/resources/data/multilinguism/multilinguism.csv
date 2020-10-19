@@ -267,9 +267,10 @@ Done,,,,,,Done,,Valider,,,,,,,,,,,
 WhereIsItDirectory:,,,,,,'Where is it ?' Configuration:,,Configuration de 'Où est-ce ?':,,,,,,,,,,,
 WhereIsItNotConfigDirectory,,,,,,'Where is it' directory not configured,,Répertoire 'Où est-ce' non configuré,,,,,,,,,,,
 PickedWrongDir,,,,,,You picked the wrong directory,,Vous avez choisi le mauvais répertoire,,,,,,,,,,,
-
 Loading...,,,,,,Loading...,,Chargement...,,,,,,,,,,,
+ReaskQuestionOnFail,,,,,,Ask the question again in case it's answered incorrectly,,Reposer la question en cas de mauvaise réponse,,,,,,,,,,,
 
 Mouse,,,,,,Mouse,,Souris,,,,,,,,,,,
 Gaze,,,,,,Gaze,,Regard,,,,,,,,,,,
 MouseAndGaze,,,,,,Mouse and Gaze,,Souris et Regard,,,,,,,,,,,
+
