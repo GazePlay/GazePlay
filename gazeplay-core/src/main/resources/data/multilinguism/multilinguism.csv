@@ -264,15 +264,13 @@ addNewImagethumbdown,,,,,,Add new image unhappy...,,Ajouter une nouvelle image p
 addNewImagenocare,,,,,,Add new image don't care...,,Ajouter une nouvelle image s'en fiche ...,,,,,,,,,,Añadir una nueva imagen no importa ...,
 customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,,,
 
-Loading...,,,,,,Loading...,,Chargement...,,,,,,,,,,,
-
 SorryButReplayInvalid,,,,,,Sorry but the game '{}' is not replayable.\nIt will be available in a next update.,,Désolé mais le jeu '{}' n'est pas rejouable.\nIl sera disponible dans une prochaine mise à jour.,,,,,,,,,,,
 
 Done,,,,,,Done,,Valider,,,,,,,,,,,
 WhereIsItDirectory:,,,,,,'Where is it ?' Configuration:,,Configuration de 'Où est-ce ?':,,,,,,,,,,,
-WhereIsItNotConfigDirectory,,,,,,'Where is it directory' not configured,,'Où est-ce' répertoire non configuré',,,,,,,,,,,
+WhereIsItNotConfigDirectory,,,,,,'Where is it' directory not configured,,Répertoire 'Où est-ce' non configuré,,,,,,,,,,,
 PickedWrongDir,,,,,,You picked the wrong directory,,Vous avez choisi le mauvais répertoire,,,,,,,,,,,
-
+Loading...,,,,,,Loading...,,Chargement...,,,,,,,,,,,
 ReaskQuestionOnFail,,,,,,Ask the question again in case it's answered incorrectly,,Reposer la question en cas de mauvaise réponse,,,,,,,,,,,
 
 Mouse,,,,,,Mouse,,Souris,,,,,,,,,,,

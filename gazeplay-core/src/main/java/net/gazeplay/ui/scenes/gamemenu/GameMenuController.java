@@ -96,7 +96,8 @@ public class GameMenuController {
             executor.schedule(new Runnable() {
                 @Override
                 public void run() {
-                    Platform.exit();System.exit(0);
+                    Platform.exit();
+                    System.exit(0);
                 }
             }, 5, TimeUnit.SECONDS);
         } catch (Exception e) {

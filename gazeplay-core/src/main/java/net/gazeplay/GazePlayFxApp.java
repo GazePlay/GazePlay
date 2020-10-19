@@ -64,6 +64,9 @@ public class GazePlayFxApp extends Application {
 
     @Override
     public void start(final Stage primaryStage) {
+
+        final Configuration mainConfig = ActiveConfigurationContext.getInstance();
+
         boolean showUserSelectPage = true;
         if (options != null) {
             final UserSelectionOptions userSelectionOptions = options.getUserSelectionOptions();
@@ -103,9 +106,7 @@ public class GazePlayFxApp extends Application {
 
         configurePrimaryStage(primaryStage);
 
-        final Configuration config = ActiveConfigurationContext.getInstance();
-
-        LatestNewsPopup.displayIfNeeded(config, gazePlay.getTranslator(), gazePlay.getCurrentScreenDimensionSupplier());
+        LatestNewsPopup.displayIfNeeded(mainConfig, gazePlay.getTranslator(), gazePlay.getCurrentScreenDimensionSupplier());
 
         gazePlay.setPrimaryScene(primaryScene);
         gazePlay.setPrimaryStage(primaryStage);
@@ -170,7 +171,6 @@ public class GazePlayFxApp extends Application {
                 } else {
                     gazePlay.onReturnToMenu();
                 }
-
             } else {
                 gazePlay.onReturnToMenu();
             }
