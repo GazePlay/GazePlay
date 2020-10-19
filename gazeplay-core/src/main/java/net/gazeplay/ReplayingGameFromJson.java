@@ -6,21 +6,21 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.Pane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gamevariants.IGameVariant;
-import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -60,12 +60,12 @@ public class ReplayingGameFromJson {
         Arrays.asList(
 
             //OK: really small offsets problems
-            "Scribble","Cakes","Creampie","WhereIsIt","WhereIsTheAnimal","letters",
-            "WhereIsTheColor","WhereIsTheLetter","WhereIsTheNumber","findodd","flags",
-            "ScratchCard","Memory","MemoryLetters","MemoryNumbers","OpenMemory","OpenMemoryLetters",
-            "OpenMemoryNumbers","Dice","EggGame","GooseGame","MagicCards","Opinions","Order",
-            "Horses","Horses Simplified","puzzle","Farm","Jungle","Savanna","CupsBalls",
-            "Potions", "VideoPlayer","VideoGrid", "bottle"
+            "Scribble", "Cakes", "Creampie", "WhereIsIt", "WhereIsTheAnimal", "letters",
+            "WhereIsTheColor", "WhereIsTheLetter", "WhereIsTheNumber", "findodd", "flags",
+            "ScratchCard", "Memory", "MemoryLetters", "MemoryNumbers", "OpenMemory", "OpenMemoryLetters",
+            "OpenMemoryNumbers", "Dice", "EggGame", "GooseGame", "MagicCards", "Opinions", "Order",
+            "Horses", "Horses Simplified", "puzzle", "Farm", "Jungle", "Savanna", "CupsBalls",
+            "Potions", "VideoPlayer", "VideoGrid", "bottle"
 
 
             // replay OK but the resize of the game itself is bad:
@@ -118,6 +118,8 @@ public class ReplayingGameFromJson {
     private int nextTimeMouse, nextTimeGaze, prevTimeMouse, prevTimeGaze;
     private double sceneAspectRatio;
 
+    private Thread workingThread;
+
     private String fileName;
 
     public ReplayingGameFromJson(GazePlay gazePlay, ApplicationContext applicationContext, List<GameSpec> games) {
@@ -127,7 +129,7 @@ public class ReplayingGameFromJson {
         this.gamesList = games;
     }
 
-    public static boolean replayIsAllowed(String gameCode){
+    public static boolean replayIsAllowed(String gameCode) {
         return replayableGameList.contains(gameCode);
     }
 
@@ -204,18 +206,18 @@ public class ReplayingGameFromJson {
         double height = gameContext.getCurrentScreenDimensionSupplier().get().getHeight();
         double width = gameContext.getCurrentScreenDimensionSupplier().get().getWidth();
         double screenRatio = height / width;
-        if(sceneAspectRatio < screenRatio) {
+        if (sceneAspectRatio < screenRatio) {
             height = gameContext.getCurrentScreenDimensionSupplier().get().getWidth() * sceneAspectRatio;
         } else {
-            width = height/sceneAspectRatio;
+            width = height / sceneAspectRatio;
         }
 
         getSpecAndVariant();
 
-        launchGame((int)width,(int)height);
+        launchGame((int) width, (int) height);
     }
 
-    public void getSpecAndVariant(){
+    public void getSpecAndVariant() {
         gameContext = applicationContext.getBean(GameContext.class);
         gazePlay.onGameLaunch(gameContext);
         for (GameSpec gameSpec : gamesList) {
@@ -230,7 +232,7 @@ public class ReplayingGameFromJson {
         }
     }
 
-    public void drawLines(){
+    public void drawLines() {
         if (fileName == null) {
             return;
         }
@@ -243,22 +245,32 @@ public class ReplayingGameFromJson {
         gameContext.createQuitShortcut(gazePlay, statsSaved, currentGame);
         currentGame.launch();
 
+        EventHandler<Event> homeEvent = e -> {
+            workingThread.stop();
+            gameContext.getRoot().setCursor(Cursor.WAIT); // Change cursor to wait style
+            this.exit(statsSaved,currentGame);
+            gameContext.getRoot().setCursor(Cursor.DEFAULT); // Change cursor to default style
+        };
+
+        gameContext.getHomeButton().addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
+
         final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
         //Drawing in canvas
         final javafx.scene.canvas.Canvas canvas = new Canvas(screenDimension.getWidth(), screenDimension.getHeight());
         gameContext.getChildren().add(canvas);
 
-        new Thread(new Runnable() {
+        workingThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 gameContext.getGazeDeviceManager().setInReplayMode(true);
                 drawFixationLines(canvas, coordinatesAndTimeStamp);
                 Platform.runLater(() -> exit(statsSaved, currentGame));
             }
-        }).start();
+        });
+        workingThread.start();
     }
 
-    private void launchGame(final int width, final int height){
+    private void launchGame(final int width, final int height) {
         Task task = new Task<Void>() {
             @Override
             public Void call() {
@@ -269,7 +281,7 @@ public class ReplayingGameFromJson {
         };
         new Thread(task).start();
 
-        ProcessBuilder builder = createBuilder(height,width);
+        ProcessBuilder builder = createBuilder(height, width);
 
         try {
             builder.inheritIO().start();
@@ -286,7 +298,7 @@ public class ReplayingGameFromJson {
         }
     }
 
-    public ProcessBuilder createBuilder(int height, int width){
+    public ProcessBuilder createBuilder(int height, int width) {
         String javaHome = System.getProperty("java.home");
         String javaBin = javaHome +
             File.separator + "bin" +
@@ -296,20 +308,21 @@ public class ReplayingGameFromJson {
         LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin, "-cp", classpath, GazePlayLauncher.class.getName()));
 
         String user = ActiveConfigurationContext.getInstance().getUserName();
-        if(user != null && !user.equals("")) {
+        if (user != null && !user.equals("")) {
             commands.addAll(Arrays.asList("--user", user));
-        } else {;
+        } else {
+            ;
             commands.add("--default-user");
         }
 
         commands.addAll(Arrays.asList("--game", selectedGameSpec.getGameSummary().getNameCode()));
 
         if (gameVariant != null) {
-            commands.addAll(Arrays.asList( "--variant", gameVariant.toString()));
+            commands.addAll(Arrays.asList("--variant", gameVariant.toString()));
         }
 
 
-        if(height != 0 && width != 0) {
+        if (height != 0 && width != 0) {
             commands.addAll(Arrays.asList("--height", "" + height, "--width", "" + width));
         }
 
@@ -332,21 +345,21 @@ public class ReplayingGameFromJson {
             for (JsonElement coordinateAndTimeStamp : coordinatesAndTimeStamp) {
                 JsonObject coordinateAndTimeObj = coordinateAndTimeStamp.getAsJsonObject();
                 String nextEvent = coordinateAndTimeObj.get("event").getAsString();
-                int nextX =  (int) (Double.parseDouble(coordinateAndTimeObj.get("X").getAsString()) * sceneWidth);
-                int nextY =  (int) (Double.parseDouble(coordinateAndTimeObj.get("Y").getAsString()) * sceneHeight);
+                int nextX = (int) (Double.parseDouble(coordinateAndTimeObj.get("X").getAsString()) * sceneWidth);
+                int nextY = (int) (Double.parseDouble(coordinateAndTimeObj.get("Y").getAsString()) * sceneHeight);
                 int delay;
                 if (nextEvent.equals("gaze")) {
                     prevTimeGaze = nextTimeGaze;
                     nextTimeGaze = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
                     delay = nextTimeGaze - prevTimeGaze;
-                    Platform.runLater(()-> {
+                    Platform.runLater(() -> {
                         paint(graphics, canvas, nextX, nextY, "gaze");
                     });
                 } else {
                     prevTimeMouse = nextTimeMouse;
                     nextTimeMouse = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
                     delay = nextTimeMouse - prevTimeMouse;
-                    Platform.runLater(()-> {
+                    Platform.runLater(() -> {
                         paint(graphics, canvas, nextX, nextY, "mouse");
                     });
                 }
@@ -360,37 +373,37 @@ public class ReplayingGameFromJson {
         }
     }
 
-    public void updateGazeTab(int nextX, int nextY){
-        if(fourLastGazeCoordinates[0] == null) {
-            fourLastGazeCoordinates[0]=new Point2D(nextX,nextY);
-        } else if (fourLastGazeCoordinates[1] == null){
-            fourLastGazeCoordinates[1]=new Point2D(nextX,nextY);
-        } else if (fourLastGazeCoordinates[2] == null){
-            fourLastGazeCoordinates[2]=new Point2D(nextX,nextY);
-        } else if (fourLastGazeCoordinates[3] == null){
-            fourLastGazeCoordinates[3]=new Point2D(nextX,nextY);
+    public void updateGazeTab(int nextX, int nextY) {
+        if (fourLastGazeCoordinates[0] == null) {
+            fourLastGazeCoordinates[0] = new Point2D(nextX, nextY);
+        } else if (fourLastGazeCoordinates[1] == null) {
+            fourLastGazeCoordinates[1] = new Point2D(nextX, nextY);
+        } else if (fourLastGazeCoordinates[2] == null) {
+            fourLastGazeCoordinates[2] = new Point2D(nextX, nextY);
+        } else if (fourLastGazeCoordinates[3] == null) {
+            fourLastGazeCoordinates[3] = new Point2D(nextX, nextY);
         } else {
-            fourLastGazeCoordinates[0]= fourLastGazeCoordinates[1];
-            fourLastGazeCoordinates[1]= fourLastGazeCoordinates[2];
-            fourLastGazeCoordinates[2]= fourLastGazeCoordinates[3];
-            fourLastGazeCoordinates[3]=new Point2D(nextX,nextY);
+            fourLastGazeCoordinates[0] = fourLastGazeCoordinates[1];
+            fourLastGazeCoordinates[1] = fourLastGazeCoordinates[2];
+            fourLastGazeCoordinates[2] = fourLastGazeCoordinates[3];
+            fourLastGazeCoordinates[3] = new Point2D(nextX, nextY);
         }
     }
 
-    public void updateMouseTab(int nextX, int nextY){
-        if(fourLastMouseCoordinates[0] == null) {
-            fourLastMouseCoordinates[0]=new Point2D(nextX,nextY);
-        } else if (fourLastMouseCoordinates[1] == null){
-            fourLastMouseCoordinates[1]=new Point2D(nextX,nextY);
-        } else if (fourLastMouseCoordinates[2] == null){
-            fourLastMouseCoordinates[2]=new Point2D(nextX,nextY);
-        } else if (fourLastMouseCoordinates[3] == null){
-            fourLastMouseCoordinates[3]=new Point2D(nextX,nextY);
+    public void updateMouseTab(int nextX, int nextY) {
+        if (fourLastMouseCoordinates[0] == null) {
+            fourLastMouseCoordinates[0] = new Point2D(nextX, nextY);
+        } else if (fourLastMouseCoordinates[1] == null) {
+            fourLastMouseCoordinates[1] = new Point2D(nextX, nextY);
+        } else if (fourLastMouseCoordinates[2] == null) {
+            fourLastMouseCoordinates[2] = new Point2D(nextX, nextY);
+        } else if (fourLastMouseCoordinates[3] == null) {
+            fourLastMouseCoordinates[3] = new Point2D(nextX, nextY);
         } else {
-            fourLastMouseCoordinates[0]= fourLastMouseCoordinates[1];
-            fourLastMouseCoordinates[1]= fourLastMouseCoordinates[2];
-            fourLastMouseCoordinates[2]= fourLastMouseCoordinates[3];
-            fourLastMouseCoordinates[3]=new Point2D(nextX,nextY);
+            fourLastMouseCoordinates[0] = fourLastMouseCoordinates[1];
+            fourLastMouseCoordinates[1] = fourLastMouseCoordinates[2];
+            fourLastMouseCoordinates[2] = fourLastMouseCoordinates[3];
+            fourLastMouseCoordinates[3] = new Point2D(nextX, nextY);
         }
 
         javafx.scene.paint.Color strokeColor, fillColor;
@@ -398,7 +411,7 @@ public class ReplayingGameFromJson {
 
     }
 
-    public void drawOvals(GraphicsContext graphics){
+    public void drawOvals(GraphicsContext graphics) {
         int circleSize = 30;
 
         javafx.scene.paint.Color strokeColor, fillColor;
@@ -406,8 +419,8 @@ public class ReplayingGameFromJson {
         strokeColor = Color.rgb(0, 0, 255, 0.5);//Color.BLUE;
         fillColor = Color.rgb(255, 255, 0, 0.1);
 
-        for(Point2D point : fourLastGazeCoordinates) {
-            if (point!=null) {
+        for (Point2D point : fourLastGazeCoordinates) {
+            if (point != null) {
                 graphics.setStroke(strokeColor);
                 graphics.strokeOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
                 graphics.setFill(fillColor);
@@ -418,8 +431,8 @@ public class ReplayingGameFromJson {
         strokeColor = Color.rgb(255, 0, 0, 0.5);//Color.RED;
         fillColor = Color.rgb(0, 255, 255, 0.1);
 
-        for(Point2D point : fourLastMouseCoordinates) {
-            if (point!=null) {
+        for (Point2D point : fourLastMouseCoordinates) {
+            if (point != null) {
                 graphics.setStroke(strokeColor);
                 graphics.strokeOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
                 graphics.setFill(fillColor);
@@ -433,9 +446,9 @@ public class ReplayingGameFromJson {
         graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         if (event.equals("gaze")) {
-            updateGazeTab(nextX,nextY);
+            updateGazeTab(nextX, nextY);
         } else { // if (event.equals("mouse")) {
-            updateMouseTab(nextX,nextY);
+            updateMouseTab(nextX, nextY);
         }
 
         drawOvals(graphics);

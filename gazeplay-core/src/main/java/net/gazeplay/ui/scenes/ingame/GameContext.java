@@ -49,6 +49,9 @@ import java.util.function.Supplier;
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> implements IGameContext {
 
+    @Getter
+    private HomeButton homeButton;
+
     public static void updateConfigPane(final Pane configPane, Stage primaryStage) {
         double mainHeight = primaryStage.getHeight();
 
@@ -246,7 +249,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
-        HomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
+        homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
         menuHBox.getChildren().add(homeButton);
     }
 
@@ -273,7 +276,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
-        HomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame, replayMode);
+        homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame, replayMode);
         menuHBox.getChildren().add(homeButton);
     }
 
@@ -293,7 +296,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         return homeButton;
     }
 
-    void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
+    public void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
 
         if (videoRecordingContext != null) {
             videoRecordingContext.pointersClear();
