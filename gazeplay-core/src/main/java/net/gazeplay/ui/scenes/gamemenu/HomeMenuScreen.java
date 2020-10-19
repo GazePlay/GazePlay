@@ -397,7 +397,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     }
 
     private CustomButton createReplayGameButton(GazePlay gazePlay, Dimension2D screenDimension, List<GameSpec> games) {
-        CustomButton replayButton = new CustomButton("data/common/images/logout.png", screenDimension);
+        CustomButton replayButton = new CustomButton("data/common/images/replay_button.png", screenDimension);
         replayButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
             try {
                 ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getApplicationContext(), games);
