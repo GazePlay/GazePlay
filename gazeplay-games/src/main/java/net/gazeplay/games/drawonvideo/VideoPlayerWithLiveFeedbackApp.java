@@ -7,7 +7,6 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -109,10 +108,6 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
 
         root.addEventFilter(MouseEvent.MOUSE_EXITED, exitedEventHandler);
         root.addEventFilter(MouseEvent.MOUSE_ENTERED, enteredEventHandler);
-
-        // root.addEventFilter(GazeEvent.GAZE_EXITED, exitedEventHandler);
-        // root.addEventFilter(GazeEvent.GAZE_ENTERED, enteredEventHandler);
-        // gameContext.getGazeDeviceManager().addEventFilter(root);
 
         Runnable canvasSwitchingTask = new Runnable() {
 
@@ -237,10 +232,6 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
 
         root.addEventFilter(MouseEvent.MOUSE_EXITED, exitedEventHandler);
         root.addEventFilter(MouseEvent.MOUSE_ENTERED, enteredEventHandler);
-
-        // root.addEventFilter(GazeEvent.GAZE_EXITED, exitedEventHandler);
-        // root.addEventFilter(GazeEvent.GAZE_ENTERED, enteredEventHandler);
-        // gameContext.getGazeDeviceManager().addEventFilter(root);
 
         Runnable canvasSwitchingTask = new Runnable() {
 
