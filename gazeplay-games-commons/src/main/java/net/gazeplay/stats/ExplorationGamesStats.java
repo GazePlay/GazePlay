@@ -3,7 +3,6 @@ package net.gazeplay.stats;
 import javafx.scene.Scene;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.games.DateUtils;
-import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
@@ -27,11 +26,11 @@ public class ExplorationGamesStats extends Stats {
     }
 
     public ExplorationGamesStats(final Scene scene, String name) {
-        super(scene,name);
+        super(scene, name);
     }
 
     public ExplorationGamesStats(final Scene scene, String name, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
-        super(scene,name, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+        super(scene, name, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 
     @Override

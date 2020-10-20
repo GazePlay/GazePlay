@@ -3,7 +3,6 @@ package net.gazeplay.stats;
 import javafx.scene.Scene;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.games.DateUtils;
-import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
