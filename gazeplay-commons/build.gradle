@@ -19,6 +19,10 @@ dependencies {
     compile 'org.reflections:reflections:0.9.11'
 
     compile 'org.aeonbits.owner:owner:1.0.10'
+    compile 'org.json:json:20200518'
+    // https://mvnrepository.com/artifact/org.json/json
+    compile group: 'org.json', name: 'json', version: '20200518'
+
 
     testImplementation "junit:junit:4.12"
     testImplementation project(':gazeplay-core').sourceSets.test.output

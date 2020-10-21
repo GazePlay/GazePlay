@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -32,7 +33,7 @@ class Potion extends Parent {
     private final double fixationLength;
 
     @Getter
-    private final Rectangle potion;
+    private final ImageView potion;
 
     @Getter
     private final Color potionColor;
@@ -63,8 +64,12 @@ class Potion extends Parent {
 
     Potion(final double positionX, final double positionY, final double width, final double height, final Image image, final Color color,
            final IGameContext gameContext, final MagicPotionsStats stats, final MagicPotions gameInstance, final int fixationlength) {
-        this.potion = new Rectangle((int) positionX, (int) positionY, (int) width, (int) height);
-        this.potion.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+        this.potion = new ImageView(image);
+        this.potion.setX(positionX);
+        this.potion.setY(positionY);
+        this.potion.setFitWidth(width);
+        this.potion.setFitHeight(height);
+        this.potion.setPreserveRatio(true);
 
         final DropShadow shadow = new DropShadow();
         shadow.setColor(Color.BLACK);

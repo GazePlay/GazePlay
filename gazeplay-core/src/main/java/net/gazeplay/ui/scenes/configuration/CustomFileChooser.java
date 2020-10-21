@@ -21,6 +21,7 @@ import javafx.stage.*;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
@@ -101,7 +102,7 @@ public class CustomFileChooser extends Stage {
         flowPanes[flowPaneIndex].getChildren().clear();
 
         List<Image> allImagesList = new LinkedList<>();
-        ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory(folder[flowPaneIndex]));
+        ImageLibrary lib = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory(folder[flowPaneIndex]), new ReplayablePseudoRandom());
         allImagesList.addAll(lib.pickAllImages());
 
         for (Image i : allImagesList) {

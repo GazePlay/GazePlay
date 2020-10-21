@@ -27,7 +27,6 @@ public enum MathGameType {
 
     private final MathOperation[] operators;
 
-    private final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
 
     MathGameType(String gameName, Color coulour, MathOperation... operators) {
         this.gameName = gameName;
@@ -35,7 +34,7 @@ public enum MathGameType {
         this.operators = operators;
     }
 
-    public MathOperation chooseOperator() {
+    public MathOperation chooseOperator(ReplayablePseudoRandom random) {
         if (operators.length == 1) {
             return operators[0];
         } else {

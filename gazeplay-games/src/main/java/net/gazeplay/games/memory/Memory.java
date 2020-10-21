@@ -56,6 +56,8 @@ public class Memory implements GameLifeCycle {
 
     private final boolean isOpen;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
                   final boolean isOpen) {
         super();
@@ -72,16 +74,53 @@ public class Memory implements GameLifeCycle {
         this.stats = stats;
         this.gameContext.startTimeLimiter();
 
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+
         if (gameType == MemoryGameType.LETTERS) {
-            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters");
+
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters", randomGenerator);
 
         } else if (gameType == MemoryGameType.NUMBERS) {
 
-            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers");
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers", randomGenerator);
 
         } else {
             this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"),
-                Utils.getImagesSubdirectory("default"));
+                Utils.getImagesSubdirectory("default"), randomGenerator);
+        }
+
+    }
+
+    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
+                  final boolean isOpen, double gameSeed) {
+        super();
+        this.isOpen = isOpen;
+        final int cardsCount = nbLines * nbColumns;
+        if ((cardsCount & 1) != 0) {
+            // nbLines * nbColumns must be a multiple of 2
+            throw new IllegalArgumentException("Cards count must be an even number in this game");
+        }
+        this.nbRemainingPeers = (nbLines * nbColumns) / 2;
+        this.gameContext = gameContext;
+        this.nbLines = nbLines;
+        this.nbColumns = nbColumns;
+        this.stats = stats;
+        this.gameContext.startTimeLimiter();
+
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+
+        if (gameType == MemoryGameType.LETTERS) {
+
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters", randomGenerator);
+
+        } else if (gameType == MemoryGameType.NUMBERS) {
+
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers", randomGenerator);
+
+        } else {
+            this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"),
+                Utils.getImagesSubdirectory("default"), randomGenerator);
         }
 
         gameContext.start();
@@ -207,9 +246,8 @@ public class Memory implements GameLifeCycle {
 
     private int getRandomValue(final HashMap<Integer, Integer> indUsed) {
         int value;
-        final ReplayablePseudoRandom rdm = new ReplayablePseudoRandom();
         do {
-            value = rdm.nextInt(images.size());
+            value = randomGenerator.nextInt(images.size());
         } while ((!images.containsKey(value)) || (indUsed.containsKey(value) && (indUsed.get(value) == 2)));
         // While selected image is already used 2 times (if it appears )
         return value;

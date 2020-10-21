@@ -13,10 +13,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.cli.GameSelectionOptions;
-import net.gazeplay.cli.ReusableOptions;
-import net.gazeplay.cli.SizeOptions;
-import net.gazeplay.cli.UserSelectionOptions;
+import net.gazeplay.cli.*;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
@@ -30,6 +27,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -140,11 +138,33 @@ public class GazePlayFxApp extends Application {
 
                     log.info("gameSpecs = {}", gameSpecs);
 
-                    if (selectedVariantCode != null) {
-                        IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
-                        gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
-                    } else {
-                        gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
+                    ReplayJsonFileOptions replayJsonFileOptions = options.getReplayJsonFileOptions();
+                    if(replayJsonFileOptions != null) {
+                        String replayFileName = replayJsonFileOptions.getJsonFileName();
+                        if (replayFileName != null) {
+                            final List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
+                            ReplayingGameFromJson replayingGameFromJson = new ReplayingGameFromJson(gazePlay, applicationContext, games);
+                            try {
+                                replayingGameFromJson.pickJSONFile(replayJsonFileOptions.getJsonFileName());
+                                replayingGameFromJson.drawLines();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                        }else {
+                            if (selectedVariantCode != null) {
+                                IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
+                                gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
+                            } else {
+                                gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
+                            }
+                        }
+                    }else {
+                        if (selectedVariantCode != null) {
+                            IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
+                            gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
+                        } else {
+                            gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
+                        }
                     }
                 } else {
                     gazePlay.onReturnToMenu();

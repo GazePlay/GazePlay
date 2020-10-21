@@ -31,6 +31,8 @@ import net.gazeplay.commons.utils.stats.TargetAOI;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,6 +59,7 @@ public class WhereIsIt implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Stats stats;
     private RoundDetails currentRoundDetails;
+    private final ReplayablePseudoRandom randomGenerator;
 
     private final ArrayList<TargetAOI> targetAOIList;
 
@@ -71,6 +74,22 @@ public class WhereIsIt implements GameLifeCycle {
         this.targetAOIList = new ArrayList<>();
         this.gameContext.startScoreLimiter();
         this.gameContext.startTimeLimiter();
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+    }
+
+    public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
+                     final IGameContext gameContext, final Stats stats, double gameSeed) {
+        this.gameContext = gameContext;
+        this.nbLines = nbLines;
+        this.nbColumns = nbColumns;
+        this.gameType = gameType;
+        this.fourThree = fourThree;
+        this.stats = stats;
+        this.targetAOIList = new ArrayList<>();
+        this.gameContext.startScoreLimiter();
+        this.gameContext.startTimeLimiter();
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
     @Override
@@ -80,11 +99,10 @@ public class WhereIsIt implements GameLifeCycle {
         final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
 
-        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
-        final int winnerImageIndexAmongDisplayedImages = random.nextInt(numberOfImagesToDisplayPerRound);
+        final int winnerImageIndexAmongDisplayedImages = randomGenerator.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
-        currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, random,
+        currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, randomGenerator,
             winnerImageIndexAmongDisplayedImages);
 
         if (currentRoundDetails != null) {
@@ -252,6 +270,18 @@ public class WhereIsIt implements GameLifeCycle {
         }
         // remove all at once, in order to update the UserInterface only once
         gameContext.getChildren().removeAll(pictureCardsToHide);
+    }
+
+    static boolean fileIsImageFile(File file){
+        try {
+            String mimetype = Files.probeContentType(file.toPath());
+            if (mimetype != null && mimetype.split("/")[0].equals("image")) {
+                return true;
+            }
+        } catch (IOException ignored) {
+
+        }
+        return false;
     }
 
     RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRound, final ReplayablePseudoRandom random,
@@ -528,7 +558,7 @@ public class WhereIsIt implements GameLifeCycle {
         log.debug("language is " + language);
 
         final String voice;
-        if (Math.random() > 0.5) {
+        if (randomGenerator.nextDouble() > 0.5) {
             voice = "m";
         } else {
             voice = "w";

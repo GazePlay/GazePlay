@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
 import tobii.Tobii;
@@ -88,9 +89,51 @@ public class PetHouse extends Parent implements GameLifeCycle {
     @Getter
     private Rectangle hand;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     PetHouse(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
+
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+
+        setMode(INIT_MODE);
+
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        this.background.setFill(Color.BEIGE /* new ImagePattern(new Image("background.jpg")) */);
+        gameContext.getChildren().add(this.background);
+        water = new ArrayList<>();
+        rd = new Timeline();
+
+        final double facteur = (2 / 2.5) + (1 - 2 / 2.5) / 3;
+
+        zone = new Rectangle(0, 0, dimension2D.getWidth() / 1.7, facteur * dimension2D.getHeight());
+
+        zone.setFill(Color.WHITE);
+        zone.setX(dimension2D.getWidth() / 2 - dimension2D.getWidth() / (1.7 * 2));
+        zone.setY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 2.5);
+
+        handSize = (zone.getWidth() > zone.getHeight()) ? zone.getHeight() / 10 : zone.getWidth() / 10;
+
+        createHand();
+
+        createZoneEvents();
+
+        gameContext.getChildren().add(zone);
+        zone.toFront();
+
+        gameContext.getGazeDeviceManager().addEventFilter(zone);
+
+        gameContext.getChildren().add(this);
+    }
+
+    PetHouse(final IGameContext gameContext, final Stats stats, double gameSeed) {
+        this.gameContext = gameContext;
+        this.stats = stats;
+
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
         setMode(INIT_MODE);
 
@@ -131,7 +174,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
         activateBars();
 
-        pet = new Mypet(zone.getHeight(), zone.getWidth(), this);
+        pet = new Mypet(zone.getHeight(), zone.getWidth(), this, randomGenerator);
 
         pet.setLayoutX(zone.getX() + zone.getWidth() / 2 - pet.getBiboulew() / 2);
         pet.setLayoutY(zone.getY() + zone.getHeight() / 2 - pet.getBibouleh() / 2);
@@ -468,12 +511,12 @@ public class PetHouse extends Parent implements GameLifeCycle {
             c.setFill(Color.AQUA);
 
             gameContext.getChildren().add(c);
-            final TranslateTransition t = new TranslateTransition(Duration.seconds(1 + Math.random() * 1), c);
+            final TranslateTransition t = new TranslateTransition(Duration.seconds(1 + randomGenerator.nextDouble() * 1), c);
             c.translateYProperty().addListener((observable, oldValue, newValue) -> {
                 if (pet.localToParent(pet.getChildren().get(2).getBoundsInParent()).contains(c.getBoundsInParent())) {
                     t.stop();
                     if (inside && mode == BATH_MODE) {
-                        t.setFromX(hand.getX() + Math.random() * (hand.getWidth() / 2));
+                        t.setFromX(hand.getX() + randomGenerator.nextDouble() * (hand.getWidth() / 2));
                         t.setFromY(hand.getY() + hand.getHeight() / 2);
                         t.setToY(zone.getHeight());
                         t.play();
@@ -499,12 +542,12 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
             });
 
-            t.setFromX(hand.getX() + Math.random() * (hand.getWidth() / 2));
+            t.setFromX(hand.getX() + randomGenerator.nextDouble() * (hand.getWidth() / 2));
             t.setFromY(hand.getY() + hand.getHeight() / 2);
             t.setToY(zone.getHeight());
             t.setOnFinished(e -> {
                 if (inside && mode == BATH_MODE) {
-                    t.setFromX(hand.getX() + Math.random() * (hand.getWidth() / 2));
+                    t.setFromX(hand.getX() + randomGenerator.nextDouble() * (hand.getWidth() / 2));
                     t.setFromY(hand.getY() + hand.getHeight() / 2);
                     t.setToY(zone.getHeight());
                     c.setOpacity(1);
@@ -526,8 +569,8 @@ public class PetHouse extends Parent implements GameLifeCycle {
     private void doSport() {
         final double coefx = (zone.getWidth() - zone.getWidth() / 3);
         final double coefy = (zone.getHeight() - zone.getHeight() / 3);
-        final double xpos0 = zone.getX() + Math.random() * coefx;
-        final double ypos0 = zone.getY() + Math.random() * coefy;
+        final double xpos0 = zone.getX() + randomGenerator.nextDouble() * coefx;
+        final double ypos0 = zone.getY() + randomGenerator.nextDouble() * coefy;
         rd = new Timeline();
         rd.getKeyFrames().add(new KeyFrame(Duration.millis(1000),
             new KeyValue(pet.layoutXProperty(), xpos0)));
@@ -535,8 +578,8 @@ public class PetHouse extends Parent implements GameLifeCycle {
             new KeyValue(pet.layoutYProperty(), ypos0)));
         rd.setOnFinished(e -> {
             rd.getKeyFrames().clear();
-            final double xpos = zone.getX() + Math.random() * coefx;
-            final double ypos = zone.getY() + Math.random() * coefy;
+            final double xpos = zone.getX() + randomGenerator.nextDouble() * coefx;
+            final double ypos = zone.getY() + randomGenerator.nextDouble() * coefy;
             rd.getKeyFrames()
                 .add(new KeyFrame(Duration.millis(1000),
                     new KeyValue(pet.layoutXProperty(), xpos)));

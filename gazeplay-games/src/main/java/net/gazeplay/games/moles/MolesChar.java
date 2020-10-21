@@ -45,8 +45,6 @@ public class MolesChar extends Parent {
 
     private final ProgressIndicator progressIndicator;
 
-    private Timeline timeMinToWhackTheMole;
-
     private Timeline timeMoleOut;
 
     private final int timeMoleStayOut = 2500;
@@ -77,7 +75,7 @@ public class MolesChar extends Parent {
 
         this.gameInstance = gameInstance;
 
-        this.progressIndicator = createProgressIndicator(width, height);
+        this.progressIndicator = createProgressIndicator();
 
         this.enterEvent = buildEvent();
 
@@ -95,10 +93,8 @@ public class MolesChar extends Parent {
 
     }
 
-    private ProgressIndicator createProgressIndicator(final double width, final double height) {
+    private ProgressIndicator createProgressIndicator() {
         final ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setMinWidth(width * 0.9);
-        indicator.setMinHeight(width * 0.9);
         indicator.setOpacity(0);
         return indicator;
     }
@@ -124,22 +120,14 @@ public class MolesChar extends Parent {
                     touched = true;
                     goIn();
                 }
-            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
-                final Timeline timeline = new Timeline();
-
-                timeline.play();
-                if (timeMinToWhackTheMole != null) {
-                    timeMinToWhackTheMole.stop();
-                }
-                progressIndicator.setOpacity(0);
                 progressIndicator.setProgress(0);
             }
         };
     }
 
     /* This mole must go out */
-    void getOut() {
+    void getOut(ReplayablePseudoRandom random) {
 
         this.canGoOut = false;
 
@@ -149,7 +137,7 @@ public class MolesChar extends Parent {
         translation.setByX(0);
         translation.setByY(-this.distTranslation);
 
-        this.mole.opacityProperty().set(1);
+        this.mole.opacityProperty().set(0.5);
 
         translation.setOnFinished(actionEvent -> {
 
@@ -163,8 +151,7 @@ public class MolesChar extends Parent {
             out = true;
 
             timeMoleOut = new Timeline(); // New time this mole go out
-            final ReplayablePseudoRandom r = new ReplayablePseudoRandom();
-            final int time = r.nextInt(timeMoleStayOut) + 2000;
+            final int time = random.nextInt(timeMoleStayOut) + 2000;
 
             timeMoleOut.getKeyFrames()
                 .add(new KeyFrame(new Duration(time),
@@ -188,7 +175,7 @@ public class MolesChar extends Parent {
         out = false;
         gameInstance.getTargetAOIList().get(TargetAOIListIndex).setTimeEnded(System.currentTimeMillis());
 
-        this.mole.opacityProperty().set(1);
+        this.mole.opacityProperty().set(0.5);
         gameInstance.getGameContext().getChildren().remove(moleMoved);
         gameContext.getGazeDeviceManager().removeEventFilter(this.moleMoved);
 

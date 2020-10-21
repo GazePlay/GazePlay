@@ -1,9 +1,12 @@
 package net.gazeplay.games.ninja;
 
+import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.Portrait;
+import net.gazeplay.components.RandomPositionGenerator;
 
 /**
  * Created by schwab on 26/12/2016.
@@ -18,17 +21,35 @@ public class Ninja implements GameLifeCycle {
 
     private final NinjaGameVariant gameVariant;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     public Ninja(final IGameContext gameContext, final Stats stats, final NinjaGameVariant gameVariant) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameVariant = gameVariant;
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+    }
+
+    public Ninja(final IGameContext gameContext, final Stats stats, final NinjaGameVariant gameVariant, double gameSeed) {
+        super();
+        this.gameContext = gameContext;
+        this.stats = stats;
+        this.gameVariant = gameVariant;
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
     @Override
     public void launch() {
-        portrait = new Target(gameContext, gameContext.getRandomPositionGenerator(), stats,
-            Portrait.createImageLibrary(), gameVariant, this);
+        final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
+        randomPositionGenerator.setRandomGenerator(randomGenerator);
+
+        Scene scene = gameContext.getPrimaryScene();
+        int radius = (int) Math.min(scene.getWidth()/12, scene.getHeight()/12);
+
+        portrait = new Target(gameContext, randomPositionGenerator, stats,
+            Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, radius);
         gameContext.setLimiterAvailable();
         gameContext.getChildren().add(portrait);
         stats.notifyNewRoundReady();

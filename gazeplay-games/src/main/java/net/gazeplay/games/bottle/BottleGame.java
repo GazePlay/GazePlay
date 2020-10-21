@@ -16,6 +16,7 @@ import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.components.ProgressButton;
 
 import java.util.ArrayList;
@@ -27,7 +28,6 @@ public class BottleGame implements GameLifeCycle {
     private final Configuration configuration;
 
     private final Group backgroundLayer;
-    private final Group middleLayer;
     private final Group foregroundLayer;
     private final IGameContext gameContext;
 
@@ -38,13 +38,13 @@ public class BottleGame implements GameLifeCycle {
     private ArrayList<ProgressButton> bottle;
 
     private Circle ball;
-    private Rectangle bar;
-    private Rectangle bar2;
     private final Text scoreText;
     private int score;
     private int nbBottle;
 
     private boolean isBroken;
+
+    private final ReplayablePseudoRandom randomGenerator;
 
     public BottleGame(IGameContext gameContext, BottleGameStats stats, int number) {
 
@@ -58,9 +58,68 @@ public class BottleGame implements GameLifeCycle {
 
         this.isBroken = false;
         this.backgroundLayer = new Group();
-        this.middleLayer = new Group();
         this.foregroundLayer = new Group();
-        gameContext.getChildren().addAll(backgroundLayer, middleLayer, foregroundLayer);
+        gameContext.getChildren().addAll(backgroundLayer, foregroundLayer);
+
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.bottleGameStats.setGameSeed(randomGenerator.getSeed());
+
+        final Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        backgroundImage.widthProperty().bind(gameContext.getRoot().widthProperty());
+        backgroundImage.heightProperty().bind(gameContext.getRoot().heightProperty());
+        backgroundImage.setFill(new ImagePattern(new Image("data/bottle/supermarket.jpg")));
+
+        backgroundLayer.getChildren().add(backgroundImage);
+
+        final int fixationLength = configuration.getFixationLength();
+
+        scoreText = new Text(0, 50, "0");
+        scoreText.setFill(Color.WHITE);
+        scoreText.setTextAlignment(TextAlignment.CENTER);
+        scoreText.setFont(new Font(50));
+        scoreText.setWrappingWidth(dimension2D.getWidth());
+        foregroundLayer.getChildren().add(scoreText);
+
+        shade = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        shade.setFill(new Color(0, 0, 0, 0.75));
+
+        restartButton = new ProgressButton();
+        final String dataPath = "data/space";
+        final ImageView restartImage = new ImageView(dataPath + "/menu/restart.png");
+        restartImage.setFitHeight(dimension2D.getHeight() / 6);
+        restartImage.setFitWidth(dimension2D.getHeight() / 6);
+        restartButton.setImage(restartImage);
+        restartButton.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getHeight() / 12);
+        restartButton.setLayoutY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 12);
+        restartButton.assignIndicator(event -> launch(), fixationLength);
+
+        finalScoreText = new Text(0, dimension2D.getHeight() / 4, "");
+        finalScoreText.setFill(Color.WHITE);
+        finalScoreText.setTextAlignment(TextAlignment.CENTER);
+        finalScoreText.setFont(new Font(50));
+        finalScoreText.setWrappingWidth(dimension2D.getWidth());
+        foregroundLayer.getChildren().addAll(shade, finalScoreText, restartButton);
+
+        gameContext.getGazeDeviceManager().addEventFilter(restartButton);
+
+    }
+
+    public BottleGame(IGameContext gameContext, BottleGameStats stats, int number, double gameSeed) {
+
+        this.bottleGameStats = stats;
+        this.gameContext = gameContext;
+        this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.configuration = gameContext.getConfiguration();
+
+        this.bottle = new ArrayList<>();
+        this.nbBottle = number;
+
+        this.isBroken = false;
+        this.backgroundLayer = new Group();
+        this.foregroundLayer = new Group();
+        gameContext.getChildren().addAll(backgroundLayer, foregroundLayer);
+
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
         final Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         backgroundImage.widthProperty().bind(gameContext.getRoot().widthProperty());
@@ -108,19 +167,17 @@ public class BottleGame implements GameLifeCycle {
         restartButton.disable();
         finalScoreText.setOpacity(0);
 
-        this.middleLayer.getChildren().clear();
         gameContext.getChildren().clear();
         score = -1;
         updateScore();
         bottle.clear();
 
-        gameContext.getChildren().addAll(backgroundLayer, middleLayer, foregroundLayer);
+        gameContext.getChildren().addAll(backgroundLayer, foregroundLayer);
 
         initBall();
 
         createBottle(nbBottle);
 
-        middleLayer.getChildren().add(ball);
         gameContext.getChildren().add(ball);
 
         initBar();
@@ -137,12 +194,12 @@ public class BottleGame implements GameLifeCycle {
     }
 
     private void initBar() {
-        bar = new Rectangle(dimension2D.getWidth() / 10, dimension2D.getHeight() / 7 + dimension2D.getHeight() / 6, dimension2D.getWidth() * 8 / 10, dimension2D.getHeight() / 20);
-        bar.setFill(new ImagePattern(new Image("data/bottle/etagere.png")));
-        bar2 = new Rectangle(dimension2D.getWidth() / 10, dimension2D.getHeight() / 7 + dimension2D.getHeight() / 3.5 + dimension2D.getHeight() / 6, dimension2D.getWidth() * 8 / 10, dimension2D.getHeight() / 20);
+        Rectangle bar1 = new Rectangle(dimension2D.getWidth() / 10, dimension2D.getHeight() / 7 + dimension2D.getHeight() / 6, dimension2D.getWidth() * 8 / 10, dimension2D.getHeight() / 20);
+        bar1.setFill(new ImagePattern(new Image("data/bottle/etagere.png")));
+        Rectangle bar2 = new Rectangle(dimension2D.getWidth() / 10, dimension2D.getHeight() / 7 + dimension2D.getHeight() / 3.5 + dimension2D.getHeight() / 6, dimension2D.getWidth() * 8 / 10, dimension2D.getHeight() / 20);
         bar2.setFill(new ImagePattern(new Image("data/bottle/etagere.png")));
-        backgroundLayer.getChildren().addAll(bar, bar2);
-        gameContext.getChildren().addAll(bar, bar2);
+        backgroundLayer.getChildren().addAll(bar1, bar2);
+        gameContext.getChildren().addAll(bar1, bar2);
     }
 
     private void createBottle(final int nb) {
@@ -165,13 +222,13 @@ public class BottleGame implements GameLifeCycle {
             bottle.add(b);
         }
 
+        Image bottleImage = new Image("data/bottle/bottle.png");
         for (final ProgressButton bo : bottle) {
-            ImageView bottleI = new ImageView(new Image("data/bottle/bottle.png"));
+            ImageView bottleI = new ImageView(bottleImage);
             bottleI.setFitWidth(dimension2D.getWidth() / 12);
             bottleI.setFitHeight(dimension2D.getHeight() / 6);
             bo.setImage(bottleI);
 
-            middleLayer.getChildren().add(bo);
             gameContext.getChildren().add(bo);
 
 

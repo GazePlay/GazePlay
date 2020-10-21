@@ -107,13 +107,104 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.stats = stats;
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.random = new ReplayablePseudoRandom();
         this.configuration = gameContext.getConfiguration();
         this.gameContext.startTimeLimiter();
         this.gameContext.startScoreLimiter();
+        this.random = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(random.getSeed());
 
-        spaceshipImage = ImageUtils.createCustomizedImageLibrary(null, "space/spaceship");
-        bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/biboule");
+        spaceshipImage = ImageUtils.createCustomizedImageLibrary(null, "space/spaceship", random);
+        bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/biboule", random);
+
+        this.backgroundLayer = new Group();
+        this.middleLayer = new Group();
+        this.foregroundLayer = new Group();
+        gameContext.getChildren().addAll(backgroundLayer, middleLayer, foregroundLayer);
+
+        this.biboules = new ArrayList<>();
+        this.bibouleWidth = dimension2D.getWidth() / 20;
+        this.bibouleHeight = dimension2D.getHeight() / 10;
+        this.bossWidth = dimension2D.getWidth() / 8;
+        this.bossHeight = dimension2D.getHeight() / 4;
+
+        this.translate = MultilinguismFactory.getSingleton();
+
+        final Label onScreenText = new Label();
+        foregroundLayer.getChildren().add(onScreenText);
+
+        scoreText = new Text(0, 50, "0");
+        scoreText.setFill(Color.WHITE);
+        scoreText.setTextAlignment(TextAlignment.CENTER);
+        scoreText.setFont(new Font(50));
+        scoreText.setWrappingWidth(dimension2D.getWidth());
+        foregroundLayer.getChildren().add(scoreText);
+
+        final int fixationLength = configuration.getFixationLength();
+
+        shade = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        shade.setFill(new Color(0, 0, 0, 0.75));
+
+        restartButton = new ProgressButton();
+        final String dataPath = "data/space";
+        final ImageView restartImage = new ImageView(dataPath + "/menu/restart.png");
+        restartImage.setFitHeight(dimension2D.getHeight() / 6);
+        restartImage.setFitWidth(dimension2D.getHeight() / 6);
+        restartButton.setImage(restartImage);
+        restartButton.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getHeight() / 12);
+        restartButton.setLayoutY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 12);
+        restartButton.assignIndicator(event -> launch(), fixationLength);
+
+        finalScoreText = new Text(0, dimension2D.getHeight() / 4, "");
+        finalScoreText.setFill(Color.WHITE);
+        finalScoreText.setTextAlignment(TextAlignment.CENTER);
+        finalScoreText.setFont(new Font(50));
+        finalScoreText.setWrappingWidth(dimension2D.getWidth());
+        foregroundLayer.getChildren().addAll(shade, finalScoreText, restartButton);
+
+        gameContext.getGazeDeviceManager().addEventFilter(restartButton);
+
+        gazeTarget = new Point2D(dimension2D.getWidth() / 2, dimension2D.getHeight() / 2);
+
+        interactionOverlay = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+
+        final EventHandler<Event> movementEvent = (Event event) -> {
+            if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
+                gazeTarget = new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
+            } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
+                gazeTarget = new Point2D(((GazeEvent) event).getX(), ((GazeEvent) event).getY());
+            }
+        };
+
+        interactionOverlay.addEventFilter(MouseEvent.MOUSE_MOVED, movementEvent);
+        interactionOverlay.addEventFilter(GazeEvent.GAZE_MOVED, movementEvent);
+        interactionOverlay.setFill(Color.TRANSPARENT);
+        foregroundLayer.getChildren().add(interactionOverlay);
+
+        gameContext.getGazeDeviceManager().addEventFilter(interactionOverlay);
+
+        this.bibouleValue = 0;
+        this.bossHit = 0;
+        this.bulletListRec = new ArrayList<>();
+        this.biboulesKilled = new ArrayList<>();
+        this.biboulesPos = new ArrayList<>();
+        this.bulletBibouleListRec = new ArrayList<>();
+        this.spaceshipDestroyed = new ArrayList<>();
+        this.bosses = new ArrayList<>();
+        this.bossKilled = new ArrayList<>();
+        this.bulletBossListRec = new ArrayList<>();
+    }
+
+    public SpaceGame(final IGameContext gameContext, final SpaceGameStats stats, double gameSeed) {
+        this.stats = stats;
+        this.gameContext = gameContext;
+        this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.configuration = gameContext.getConfiguration();
+        this.gameContext.startTimeLimiter();
+        this.gameContext.startScoreLimiter();
+        this.random = new ReplayablePseudoRandom(gameSeed);
+
+        spaceshipImage = ImageUtils.createCustomizedImageLibrary(null, "space/spaceship", random);
+        bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/biboule", random);
 
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
@@ -529,7 +620,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         if (CurrentTime - startTime >= 500) {
 
             final Rectangle bulletRec = new Rectangle(spaceship.getX() + spaceship.getWidth() / 2,
-                spaceship.getY() - spaceship.getHeight() / 3, 10, 20);
+                spaceship.getY() - spaceship.getHeight() / 3, spaceship.getHeight()/12, spaceship.getHeight()/6);
             bulletRec.setFill(new ImagePattern(new Image("data/space/bullet/laserBlue01.png")));
             middleLayer.getChildren().add(bulletRec);
             bulletListRec.add(bulletRec);
@@ -665,7 +756,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         for (final Rectangle b : biboules) {
             final int bibouleShoot = random.nextInt(1500);
 
-            final Rectangle bulletBibouleRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), 10, 20);
+            final Rectangle bulletBibouleRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), spaceship.getHeight()/12, spaceship.getHeight()/6);
             bulletBibouleRec.setFill(new ImagePattern(new Image("data/space/bullet/laserRed01.png")));
 
             if (bibouleShoot == 1) {
@@ -716,7 +807,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         for (final Rectangle b : bosses) {
             final int bossShoot = random.nextInt(240);
 
-            final Rectangle bulletBossRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), 15, 30);
+            final Rectangle bulletBossRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), spaceship.getHeight()/8, spaceship.getHeight()/4);
             bulletBossRec.setFill(new ImagePattern(new Image("data/space/bullet/laserRed01.png")));
 
             if (bossShoot == 1) {

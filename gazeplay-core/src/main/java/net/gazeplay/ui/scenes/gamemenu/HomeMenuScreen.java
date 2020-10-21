@@ -1,5 +1,6 @@
 package net.gazeplay.ui.scenes.gamemenu;
 
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -11,16 +12,18 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.GameCategories;
-import net.gazeplay.GameSpec;
-import net.gazeplay.GazePlay;
+import net.gazeplay.*;
 import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -38,6 +41,8 @@ import net.gazeplay.commons.utils.games.MenuUtils;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
@@ -57,6 +62,13 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private List<Node> gameCardsList;
     private List<Node> favGameCardsList;
+
+    @Getter
+    private Label errorMessageLabel;
+    @Getter
+    private StackPane errorMessage;
+    @Getter
+    private VBox centerPanel;
 
     public HomeMenuScreen(
         GazePlay gazePlay,
@@ -90,6 +102,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         final List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
 
+        CustomButton replayGameButton = createReplayGameButton(gazePlay, screenDimension, games);
+
         GamesStatisticsPane gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games);
 
         BorderPane bottomPane = new BorderPane();
@@ -106,12 +120,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         HBox topRightPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(topRightPane);
         topRightPane.setAlignment(Pos.TOP_CENTER);
-        topRightPane.getChildren().addAll(logoutButton, exitButton);
+        topRightPane.getChildren().addAll(replayGameButton, logoutButton, exitButton);
 
         ProgressIndicator dwellTimeIndicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, dwellTimeIndicator);
 
-        VBox centerPanel = new VBox();
+        centerPanel = new VBox();
         centerPanel.setSpacing(40);
         centerPanel.setAlignment(Pos.TOP_CENTER);
         centerPanel.getChildren().add(gamePickerChoicePane);
@@ -126,9 +140,31 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         //gamesStatisticsPane.refreshPreferredSize();
 
+        StackPane centerStackPane = new StackPane();
+        errorMessage = new StackPane();
+        Rectangle errorBackground = new Rectangle();
+        errorBackground.setFill(new Color(1,0,0,0.75));
+        errorMessageLabel = new Label("Error message goes here");
+        errorBackground.widthProperty().bind(errorMessageLabel.widthProperty().multiply(1.2));
+        errorBackground.heightProperty().bind(errorMessageLabel.heightProperty().multiply(1.2));
+        errorMessage.getChildren().addAll(errorBackground,errorMessageLabel);
+        centerStackPane.getChildren().add(centerPanel);
+        centerStackPane.getChildren().add(errorMessage);
+
+        errorMessage.setOnMouseClicked((event)->{
+            final Timeline opacityTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
+                new KeyValue(errorMessage.opacityProperty(), 0, Interpolator.EASE_OUT)));
+            opacityTimeline.setOnFinished(e -> errorMessage.setMouseTransparent(true));
+            this.centerPanel.setEffect(null);
+            opacityTimeline.play();
+        });
+
+        errorMessage.setOpacity(0);
+        errorMessage.setMouseTransparent(true);
+
         root.setTop(topPane);
         root.setBottom(bottomPane);
-        root.setCenter(centerPanel);
+        root.setCenter(centerStackPane);
 
         root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
             + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
@@ -358,6 +394,34 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         CustomButton logoutButton = new CustomButton("data/common/images/logout.png", screenDimension);
         logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> gazePlay.goToUserPage());
         return logoutButton;
+    }
+
+    private CustomButton createReplayGameButton(GazePlay gazePlay, Dimension2D screenDimension, List<GameSpec> games) {
+        CustomButton replayButton = new CustomButton("data/common/images/replay_button.png", screenDimension);
+        replayButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
+            try {
+                ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getApplicationContext(), games);
+                replayingGame.pickJSONFile(replayingGame.getFileName());
+                if(ReplayingGameFromJson.replayIsAllowed(replayingGame.getCurrentGameNameCode())){
+                    replayingGame.replayGame();
+                } else if (replayingGame.getCurrentGameNameCode() != null){
+                    Translator translator = gazePlay.getTranslator();
+                    this.errorMessageLabel.setText(
+                        translator.translate("SorryButReplayInvalid")
+                            .replace("{}",translator.translate(replayingGame.getCurrentGameNameCode()))
+                            .replace("\\n","\n") );
+                    this.errorMessageLabel.setTextAlignment(TextAlignment.CENTER);
+                    ColorAdjust colorAdjust = new ColorAdjust();
+                    colorAdjust.setBrightness(-0.8);
+                    this.centerPanel.setEffect(colorAdjust);
+                    errorMessage.setOpacity(1);
+                    errorMessage.setMouseTransparent(false);
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        return replayButton;
     }
 
     private CheckBox buildCategoryCheckBox(

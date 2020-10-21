@@ -35,7 +35,7 @@ public class Target extends Portrait {
 
     private boolean animationEnded = true;
 
-    private static final int radius = 100;
+    private final int radius;
 
     private final RandomPositionGenerator randomPositionGenerator;
 
@@ -50,9 +50,10 @@ public class Target extends Portrait {
     private final IGameContext gameContext;
 
     public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
-                  final ImageLibrary imageLibrary, CreamPie gameInstance) {
+                  final ImageLibrary imageLibrary, CreamPie gameInstance, final int radius) {
 
         super(radius, randomPositionGenerator, imageLibrary);
+        this.radius = radius;
         this.randomPositionGenerator = randomPositionGenerator;
         this.hand = hand;
         this.imageLibrary = imageLibrary;

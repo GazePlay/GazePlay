@@ -2,13 +2,14 @@ package net.gazeplay.games.draw;
 
 import javafx.scene.paint.Color;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 @Slf4j
 public class ProgressiveColorPicker implements ColorPicker {
 
-    private final RandomColorPicker randomColorPicker = new RandomColorPicker();
+    private final RandomColorPicker randomColorPicker;
 
-    private Color currentColor = randomColorPicker.pickColor();
+    private Color currentColor;
 
     private static final int MAX_COLOR_VALUE = 255;
 
@@ -16,6 +17,11 @@ public class ProgressiveColorPicker implements ColorPicker {
      * should be a prime number ?
      */
     private static final int INCREMENT = 13;
+
+    public ProgressiveColorPicker(ReplayablePseudoRandom randomGenerator) {
+        randomColorPicker = new RandomColorPicker(randomGenerator);
+        currentColor = randomColorPicker.pickColor();
+    }
 
     @Override
     public Color pickColor() {

@@ -3,6 +3,7 @@ package net.gazeplay.commons.utils.games;
 import com.google.common.collect.Sets;
 import javafx.scene.image.Image;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 import java.io.File;
 import java.util.*;
@@ -19,8 +20,8 @@ public class ImageUtils {
      * @param directoryFile The directory in which to search for images.
      * @return LazyImageLibrary with a Default fallback.
      */
-    public static ImageLibrary createImageLibrary(final File directoryFile) {
-        return new LazyImageLibrary(directoryFile, createDefaultImageLibrary(null));
+    public static ImageLibrary createImageLibrary(final File directoryFile, ReplayablePseudoRandom randomGenerator) {
+        return new LazyImageLibrary(directoryFile, createDefaultImageLibrary(null, randomGenerator), randomGenerator);
     }
 
     /**
@@ -29,9 +30,9 @@ public class ImageUtils {
      * @param defaultDirectoryFile Default, or fallback, directory to search within.
      * @return LazyImageLibrary with a fallback LazyImageLibrary.
      */
-    public static ImageLibrary createImageLibrary(final File directoryFile, final File defaultDirectoryFile) {
+    public static ImageLibrary createImageLibrary(final File directoryFile, final File defaultDirectoryFile, ReplayablePseudoRandom randomGenerator) {
         return new LazyImageLibrary(directoryFile,
-            createDefaultImageLibrary(new LazyImageLibrary(defaultDirectoryFile)));
+            createDefaultImageLibrary(new LazyImageLibrary(defaultDirectoryFile, randomGenerator), randomGenerator), randomGenerator);
     }
 
     /**
@@ -42,10 +43,10 @@ public class ImageUtils {
      * @return A ResourceImageLibrary including the <pre>fallbackImageLibrary</pre>
      * @see net.gazeplay.commons.utils.games.ResourceImageLibrary
      */
-    public static ImageLibrary createDefaultImageLibrary(final ImageLibrary fallbackImageLibrary) {
+    public static ImageLibrary createDefaultImageLibrary(final ImageLibrary fallbackImageLibrary, ReplayablePseudoRandom randomGenerator) {
         final String defaultResourceDirectory = "data/common/default/images/";
 
-        return new ResourceImageLibrary(defaultResourceDirectory, fallbackImageLibrary);
+        return new ResourceImageLibrary(defaultResourceDirectory, fallbackImageLibrary, randomGenerator);
     }
 
     /**
@@ -58,10 +59,10 @@ public class ImageUtils {
      * @return A ResourceImageLibrary including the <pre>fallbackImageLibrary</pre>
      * @see net.gazeplay.commons.utils.games.ResourceImageLibrary
      */
-    public static ImageLibrary createCustomizedImageLibrary(final ImageLibrary fallbackImageLibrary, final String path) {
+    public static ImageLibrary createCustomizedImageLibrary(final ImageLibrary fallbackImageLibrary, final String path, ReplayablePseudoRandom randomGenerator) {
         final String defaultResourceDirectory = "data/" + path;
 
-        return new ResourceImageLibrary(defaultResourceDirectory, fallbackImageLibrary);
+        return new ResourceImageLibrary(defaultResourceDirectory, fallbackImageLibrary, randomGenerator);
     }
 
     @Deprecated

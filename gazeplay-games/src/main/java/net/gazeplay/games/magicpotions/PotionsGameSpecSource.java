@@ -10,7 +10,6 @@ public class PotionsGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("Potions").gameThumbnail("data/Thumbnails/potions.jpg")
-                .category(GameCategories.Category.ACTION_REACTION)
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.MEMORIZATION).build(),

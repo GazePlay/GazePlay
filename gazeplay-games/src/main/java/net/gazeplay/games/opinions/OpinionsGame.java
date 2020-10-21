@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -39,6 +40,8 @@ public class OpinionsGame implements GameLifeCycle {
 
     private int score = 0;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats) {
         this.stats = stats;
         this.opinionGameStats = this.stats;
@@ -46,8 +49,29 @@ public class OpinionsGame implements GameLifeCycle {
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
 
-        thumbImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions/thumbs"));
-        this.backgroundImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions"));
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+
+        thumbImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions/thumbs"), randomGenerator);
+        this.backgroundImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions"), randomGenerator);
+        this.backgroundLayer = new Group();
+        this.middleLayer = new Group();
+        final Group foregroundLayer = new Group();
+        gameContext.getChildren().add(foregroundLayer);
+
+    }
+
+    public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats, double gameSeed) {
+        this.stats = stats;
+        this.opinionGameStats = this.stats;
+        this.gameContext = gameContext;
+        this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.configuration = gameContext.getConfiguration();
+
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+
+        thumbImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions/thumbs"), randomGenerator);
+        this.backgroundImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions"), randomGenerator);
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
         final Group foregroundLayer = new Group();

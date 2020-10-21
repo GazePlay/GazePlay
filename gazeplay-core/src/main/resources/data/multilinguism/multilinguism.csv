@@ -263,6 +263,9 @@ addNewImagethumbup,,,,,,Add new image happy ...,,Ajouter de nouvelles image cont
 addNewImagethumbdown,,,,,,Add new image unhappy...,,Ajouter une nouvelle image pas content ...,,,,,,,,,,Añade nuevas imágenes que no son felices ...,
 addNewImagenocare,,,,,,Add new image don't care...,,Ajouter une nouvelle image s'en fiche ...,,,,,,,,,,Añadir una nueva imagen no importa ...,
 customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,,,
+
+SorryButReplayInvalid,,,,,,Sorry but the game '{}' is not replayable.\nIt will be available in a next update.,,Désolé mais le jeu '{}' n'est pas rejouable.\nIl sera disponible dans une prochaine mise à jour.,,,,,,,,,,,
+
 Done,,,,,,Done,,Valider,,,,,,,,,,,
 WhereIsItDirectory:,,,,,,'Where is it ?' Configuration:,,Configuration de 'Où est-ce ?':,,,,,,,,,,,
 WhereIsItNotConfigDirectory,,,,,,'Where is it' directory not configured,,Répertoire 'Où est-ce' non configuré,,,,,,,,,,,

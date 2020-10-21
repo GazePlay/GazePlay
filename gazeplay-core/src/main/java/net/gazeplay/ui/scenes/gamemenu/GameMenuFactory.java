@@ -11,15 +11,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.GameCategories;
-import net.gazeplay.GameSpec;
-import net.gazeplay.GameSummary;
-import net.gazeplay.GazePlay;
+import net.gazeplay.*;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
@@ -137,18 +136,17 @@ public class GameMenuFactory {
 
         final HBox gameCategoryContainer = new HBox();
         final VBox favIconContainer = new VBox(favGamesImageView);
+
         switch (orientation) {
             case HORIZONTAL:
-                gameCategoryContainer.setAlignment(Pos.BOTTOM_RIGHT);
-                gameCard.setBottom(gameCategoryContainer);
                 gameCard.setTop(favIconContainer);
                 break;
             case VERTICAL:
-                gameCategoryContainer.setAlignment(Pos.BOTTOM_RIGHT);
-                gameCard.setBottom(gameCategoryContainer);
                 gameCard.setLeft(favIconContainer);
                 break;
         }
+        gameCategoryContainer.setAlignment(Pos.BOTTOM_RIGHT);
+        gameCard.setBottom(gameCategoryContainer);
         for (GameCategories.Category gameCategory : gameSummary.getCategories()) {
             if (gameCategory.getThumbnail() != null) {
                 Image buttonGraphics = new Image(gameCategory.getThumbnail(), 50, 50, true, false);
@@ -169,6 +167,26 @@ public class GameMenuFactory {
                 }
             }
         }
+
+        Circle recordAllowedLabelCircle = new Circle(12.5);
+        if (ReplayingGameFromJson.replayIsAllowed(gameSummary.getNameCode())) {
+            recordAllowedLabelCircle.setFill(Color.FORESTGREEN);
+        } else {
+            recordAllowedLabelCircle.setFill(Color.INDIANRED);
+        }
+        switch (orientation) {
+            case HORIZONTAL:
+                gameCard.heightProperty().addListener(
+                    (observableValue, oldValue, newValue) -> recordAllowedLabelCircle.setRadius(newValue.doubleValue() / 40));
+                gameCategoryContainer.getChildren().add(recordAllowedLabelCircle);
+                break;
+            case VERTICAL:
+                gameCard.widthProperty().addListener(
+                    (observableValue, oldValue, newValue) -> recordAllowedLabelCircle.setRadius(newValue.doubleValue() / 40));
+                gameCategoryContainer.getChildren().add(recordAllowedLabelCircle);
+                break;
+        }
+
 
         final VBox gameTitleContainer = new VBox();
         gameTitleContainer.getChildren().add(gameTitleText);

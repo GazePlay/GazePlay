@@ -10,7 +10,7 @@ public class ColorsGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("Colorsss").gameThumbnail("data/Thumbnails/colors.png")
-                .category(GameCategories.Category.ACTION_REACTION)
+                .category(GameCategories.Category.MULTIMEDIA)
                 .category(GameCategories.Category.SELECTION).description("ColorDesc").build(),
             new ColorsGameLauncher());
     }

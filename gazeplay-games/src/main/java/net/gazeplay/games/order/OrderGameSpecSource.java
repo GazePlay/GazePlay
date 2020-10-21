@@ -11,7 +11,6 @@ public class OrderGameSpecSource implements GameSpecSource {
         return new GameSpec(
             GameSummary.builder().nameCode("Order").gameThumbnail("data/Thumbnails/ordre.png")
                 .category(GameCategories.Category.SELECTION)
-                .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.MEMORIZATION).build(),
             new OrdersGameVariantGenerator(), new OrderGameLauncher());
     }

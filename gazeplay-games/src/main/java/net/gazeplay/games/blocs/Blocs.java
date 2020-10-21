@@ -14,6 +14,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -57,6 +58,8 @@ public class Blocs implements GameLifeCycle {
 
     private CurrentRoundDetails currentRoundDetails;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     public Blocs(final IGameContext gameContext, final int nbLines, final int nbColumns, final boolean colors, final float percents4Win,
                  final boolean useTrail, final Stats stats) {
         gameContext.startScoreLimiter();
@@ -67,8 +70,27 @@ public class Blocs implements GameLifeCycle {
         this.colors = colors;
         this.percents4Win = percents4Win;
         this.stats = stats;
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
 
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"));
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"), randomGenerator);
+
+        enterEvent = buildEvent(gameContext, stats, useTrail);
+
+        initCount = nbColumns * nbLines;
+    }
+
+    public Blocs(final IGameContext gameContext, final int nbLines, final int nbColumns, final boolean colors, final float percents4Win,
+                 final boolean useTrail, final Stats stats, double gameSeed) {
+        this.gameContext = gameContext;
+        this.nbLines = nbLines;
+        this.nbColomns = nbColumns;
+        this.colors = colors;
+        this.percents4Win = percents4Win;
+        this.stats = stats;
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"), randomGenerator);
 
         enterEvent = buildEvent(gameContext, this.stats, useTrail);
 
@@ -108,7 +130,7 @@ public class Blocs implements GameLifeCycle {
                 // spaces between blocks for
                 // Scratchcard
                 if (colors) {
-                    bloc.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
+                    bloc.setFill(new Color(randomGenerator.nextDouble(), randomGenerator.nextDouble(), randomGenerator.nextDouble(), 1));
                 } else {
                     final Color c = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
                         @Override

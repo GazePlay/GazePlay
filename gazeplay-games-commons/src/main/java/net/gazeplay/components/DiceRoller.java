@@ -25,10 +25,10 @@ public class DiceRoller extends MeshView {
     private final ArrayList<Rotate> rotations;
     private final SoundManager soundManager;
 
-    public DiceRoller(final float dieWidth, SoundManager soundManager) {
+    public DiceRoller(final float dieWidth, SoundManager soundManager, ReplayablePseudoRandom randomGenerator) {
         super();
         this.soundManager = soundManager;
-        random = new ReplayablePseudoRandom();
+        random = randomGenerator;
         rotations = new ArrayList<>();
 
         final TriangleMesh mesh = new TriangleMesh();
