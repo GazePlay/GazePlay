@@ -354,6 +354,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             CheckBox input = buildCheckBox(config.getConvexHullDisabledProperty());
 
+            /* REMOVE FROM HERE */
+            input.setDisable(true);
+            label.setOpacity(0.5);
+            /* TO HERE TO ENABLE */
+
             addToGrid(grid, currentFormRow, label, input);
         }
         addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "MoreStatsSettings", COLON));
@@ -379,6 +384,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             I18NText label = new I18NText(translator, "EnableGazeMenu", COLON);
             //TODO: When the gaze menu is ready, convert this to buildCheckBox(config.getGazeMenuEnabledProperty())
             CheckBox input = buildGazeMenu(config);
+
+            /* REMOVE FROM HERE */
+            input.setDisable(true);
+            label.setOpacity(0.5);
+            /* TO HERE TO ENABLE */
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -877,12 +887,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(configuration.getGazeMenuEnabledProperty().getValue());
         checkBox.selectedProperty().bindBidirectional(configuration.getGazeMenuEnabledProperty());
-
-        // TODO
-        // ****** REMOVE FROM HERE
-        checkBox.setDisable(true);
-        // TO HERE TO ENABLE******
-
         return checkBox;
     }
 
