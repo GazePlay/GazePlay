@@ -1,5 +1,6 @@
 package net.gazeplay;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;

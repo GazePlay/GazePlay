@@ -176,14 +176,6 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
         if (!isInReplayMode || (isInReplayMode && isBeingReplayed)) {
 
-            Configuration config = ActiveConfigurationContext.getInstance();
-
-            if (config.isGazeMouseEnable() && !config.isMouseFree()) {
-                Platform.runLater(
-                    () -> robotSupplier.get().mouseMove((int) positionX, (int) positionY)
-                );
-            }
-
             add();
             delete();
 

@@ -41,10 +41,6 @@ public class PositionPollerRunnable implements Runnable {
             // sleep is mandatory to avoid too much calls to gazePosition()
             try {
                 Thread.sleep(10);
-                final Configuration config = ActiveConfigurationContext.getInstance();
-                if (config.isGazeMenuEnable()) {
-                    Thread.sleep(10);
-                }
             } catch (InterruptedException | RuntimeException e) {
                 log.warn("Exception while sleeping until next poll", e);
             }

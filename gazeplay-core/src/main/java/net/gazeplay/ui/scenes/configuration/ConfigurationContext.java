@@ -357,7 +357,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             /* REMOVE FROM HERE */
             input.setDisable(true);
             label.setOpacity(0.5);
-            /* TO HERE TO ENABLE */
+            /* TO HERE TO ENABLE CONVEX HULL FOR AOI */
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -375,32 +375,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             CheckBox input = buildCheckBox(config.getVideoRecordingEnabledProperty());
 
-            addToGrid(grid, currentFormRow, label, input);
-        }
-
-        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "BetaSettings", COLON));
-        // Beta settings
-        {
-            I18NText label = new I18NText(translator, "EnableGazeMenu", COLON);
-            //TODO: When the gaze menu is ready, convert this to buildCheckBox(config.getGazeMenuEnabledProperty())
-            CheckBox input = buildGazeMenu(config);
-
-            /* REMOVE FROM HERE */
-            input.setDisable(true);
-            label.setOpacity(0.5);
-            /* TO HERE TO ENABLE */
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "EnableGazeMouse", COLON);
-            CheckBox input = buildCheckBox(config.getGazeMouseEnabledProperty());
-            String[] labelParts = label.getText().split(";");
-            StringBuilder concatenateLabel = new StringBuilder();
-            for (String labels : labelParts) {
-                concatenateLabel.append(labels).append("\n\t");
-            }
-            label.setText(concatenateLabel.toString());
             addToGrid(grid, currentFormRow, label, input);
         }
 
@@ -881,13 +855,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         hb.getChildren().addAll(darkButton, lightButton);
 
         return hb;
-    }
-
-    private static CheckBox buildGazeMenu(Configuration configuration) {
-        CheckBox checkBox = new CheckBox();
-        checkBox.setSelected(configuration.getGazeMenuEnabledProperty().getValue());
-        checkBox.selectedProperty().bindBidirectional(configuration.getGazeMenuEnabledProperty());
-        return checkBox;
     }
 
     static ChoiceBox<GameButtonOrientation> buildGameButtonOrientationChooser(

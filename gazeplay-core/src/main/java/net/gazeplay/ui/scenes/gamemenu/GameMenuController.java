@@ -68,15 +68,8 @@ public class GameMenuController {
         GameSpec selectedGameSpec,
         IGameVariant gameVariant
     ) {
-        Task task = new Task<Void>() {
-            @Override
-            public Void call() {
-                gazePlay.getPrimaryScene().setCursor(Cursor.WAIT);
-                gazePlay.getPrimaryScene().setRoot(new LoadingContext(gazePlay));
-                return null;
-            }
-        };
-        new Thread(task).start();
+        gazePlay.getPrimaryScene().setCursor(Cursor.WAIT);
+        gazePlay.getPrimaryScene().setRoot(new LoadingContext(gazePlay));
 
         ProcessBuilder builder;
 
@@ -94,8 +87,8 @@ public class GameMenuController {
             executor.schedule(new Runnable() {
                 @Override
                 public void run() {
-                    Platform.exit();
-                    System.exit(0);
+                    gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
+                    gazePlay.onReturnToMenu();
                 }
             }, 5, TimeUnit.SECONDS);
         } catch (Exception e) {

@@ -52,8 +52,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
-    private final GazeDeviceManager gazeDeviceManager;
-
     private final SoundManager soundManager;
 
     private final GameMenuFactory gameMenuFactory;
@@ -72,13 +70,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     public HomeMenuScreen(
         GazePlay gazePlay,
-        GazeDeviceManager gazeDeviceManager,
         SoundManager soundManager,
         GameMenuFactory gameMenuFactory,
         GamesLocator gamesLocator
     ) {
         super(gazePlay, new BorderPane());
-        this.gazeDeviceManager = gazeDeviceManager;
         this.soundManager = soundManager;
         this.gameMenuFactory = gameMenuFactory;
 
@@ -252,70 +248,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             translator,
             gameSpec,
             gameButtonOrientation);
-
-        gameCard.setEnterhandler(e -> {
-            if (config.isGazeMenuEnable()) {
-                if (e.getSource() == gameCard /* && !gameCard.isActive() */) {
-                    dwellTimeIndicator.setProgress(0);
-                    dwellTimeIndicator.setOpacity(1);
-                    dwellTimeIndicator.toFront();
-                    switch (gameButtonOrientation) {
-                        case HORIZONTAL:
-                            ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(dwellTimeIndicator);
-                            break;
-                        case VERTICAL:
-                            ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(dwellTimeIndicator);
-                            break;
-                    }
-                    final Timeline timelineProgressBar = new Timeline();
-                    ((GameButtonPane) e.getSource()).setTimelineProgressBar(timelineProgressBar);
-
-                    timelineProgressBar.setDelay(new Duration(500));
-
-                    timelineProgressBar.getKeyFrames()
-                        .add(new KeyFrame(new Duration(config.getFixationLength()),
-                            new KeyValue(dwellTimeIndicator.progressProperty(), 1)));
-
-                    timelineProgressBar.onFinishedProperty()
-                        .set(actionEvent -> {
-                            dwellTimeIndicator.setOpacity(0);
-                            for (Node n : choicePanel.getChildren()) {
-                                if (n instanceof GameButtonPane) {
-                                    if (((GameButtonPane) n).getTimelineProgressBar() != null) {
-                                        ((GameButtonPane) n).getTimelineProgressBar().stop();
-                                    }
-                                }
-                            }
-                            ((GameButtonPane) e.getSource()).getEventhandler().handle(null);
-                        });
-                    timelineProgressBar.play();
-                }
-            }
-        });
-
-        gameCard.setExithandler(e -> {
-            if (config.isGazeMenuEnable()) {
-                if (e.getSource() == gameCard /* && gameCard.isActive() */) {
-                    dwellTimeIndicator.setProgress(0);
-                    ((GameButtonPane) e.getSource()).getTimelineProgressBar().stop();
-                    dwellTimeIndicator.setOpacity(0);
-                    switch (gameButtonOrientation) {
-                        case HORIZONTAL:
-                            ((BorderPane) ((GameButtonPane) e.getSource()).getLeft()).setRight(null);
-                            break;
-                        case VERTICAL:
-                            ((BorderPane) ((GameButtonPane) e.getSource()).getCenter()).setRight(null);
-                            break;
-                    }
-                }
-            }
-        });
-
-        if (ActiveConfigurationContext.getInstance().isGazeMenuEnable()) {
-            gameCard.addEventFilter(GazeEvent.GAZE_ENTERED, gameCard.getEnterhandler());
-            gameCard.addEventFilter(GazeEvent.GAZE_EXITED, gameCard.getExithandler());
-            gazeDeviceManager.addEventFilter(gameCard);
-        }
 
         return gameCard;
     }
