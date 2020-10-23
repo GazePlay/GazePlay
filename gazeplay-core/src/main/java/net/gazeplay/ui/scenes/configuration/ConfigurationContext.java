@@ -357,7 +357,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             /* REMOVE FROM HERE */
             input.setDisable(true);
             label.setOpacity(0.5);
-            /* TO HERE TO ENABLE */
+            /* TO HERE TO ENABLE CONVEX HULL FOR AOI */
 
             addToGrid(grid, currentFormRow, label, input);
         }
