@@ -292,7 +292,7 @@ public class ReplayingGameFromJson {
                     gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
                     gazePlay.onReturnToMenu();
                 }
-            }, 10, TimeUnit.SECONDS);
+            }, 5, TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
         }
