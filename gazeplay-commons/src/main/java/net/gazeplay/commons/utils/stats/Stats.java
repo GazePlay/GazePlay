@@ -321,11 +321,13 @@ public class Stats implements GazeMotionListener {
                 }
 
                 final Double[] polygonPoints;
-                if (config.getConvexHullDisabledProperty().getValue()) {
-                    polygonPoints = calculateConvexHull(points);
-                } else {
-                    polygonPoints = calculateRectangle(points);
-                }
+
+                // Uncomment to use convex hull
+                // if (config.getConvexHullDisabledProperty().getValue()) {
+                // polygonPoints = calculateConvexHull(points);
+                // } else {
+                polygonPoints = calculateRectangle(points);
+                // }
 
                 final Polygon areaOfInterest = new Polygon();
                 areaOfInterest.getPoints().addAll(polygonPoints);
@@ -348,11 +350,13 @@ public class Stats implements GazeMotionListener {
                 }
 
                 final Double[] polygonPoints;
-                if (config.getConvexHullDisabledProperty().getValue()) {
-                    polygonPoints = calculateConvexHull(points);
-                } else {
-                    polygonPoints = calculateRectangle(points);
-                }
+
+                // Uncomment to use convex hull
+                // if (config.getConvexHullDisabledProperty().getValue()) {
+                //     polygonPoints = calculateConvexHull(points);
+                // } else {
+                polygonPoints = calculateRectangle(points);
+                // }
 
                 final Polygon areaOfInterest = new Polygon();
                 areaOfInterest.getPoints().addAll(polygonPoints);
