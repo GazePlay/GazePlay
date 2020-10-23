@@ -102,8 +102,6 @@ public class GazePlayFxApp extends Application {
             primaryScene = createPrimaryScene(primaryStage);
         }
 
-        configureKeysHandler(primaryScene);
-
         configurePrimaryStage(primaryStage);
 
         LatestNewsPopup.displayIfNeeded(mainConfig, gazePlay.getTranslator(), gazePlay.getCurrentScreenDimensionSupplier());
@@ -212,29 +210,6 @@ public class GazePlayFxApp extends Application {
         primaryStage.setMaximized(true);
 
         primaryStage.setFullScreen(true);
-    }
-
-    private void configureKeysHandler(final Scene primaryScene) {
-        primaryScene.addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
-            if (ke.getCode() == KeyCode.SPACE && ActiveConfigurationContext.getInstance().isGazeMouseEnable()) {
-                Platform.runLater(() -> {
-                    try {
-                        final Robot robot = new Robot();
-                        robot.mousePress(InputEvent.BUTTON1_MASK);
-                        robot.mouseRelease(InputEvent.BUTTON1_MASK);
-                    } catch (final AWTException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                });
-            }
-        });
-        primaryScene.addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
-            final Configuration activeConfig = ActiveConfigurationContext.getInstance();
-            if (ke.getCode() == KeyCode.S && activeConfig.isGazeMouseEnable()) {
-                activeConfig.setMouseFree(!activeConfig.isMouseFree());
-            }
-        });
     }
 
 }

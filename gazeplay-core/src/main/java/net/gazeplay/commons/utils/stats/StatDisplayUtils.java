@@ -37,7 +37,7 @@ import static javafx.scene.chart.XYChart.Data;
 public class StatDisplayUtils {
 
     public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
-        EventHandler<Event> homeEvent = e -> returnToMenu(gazePlay, statsContext);
+        EventHandler<Event> homeEvent = e -> closeStatsWindow();
 
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
@@ -47,14 +47,9 @@ public class StatDisplayUtils {
         return homeButton;
     }
 
-    static void returnToMenu(GazePlay gazePlay, StatsContext statsContext) {
-        statsContext.getRoot().setCursor(Cursor.WAIT); // Change cursor to wait style
-
-        BackgroundMusicManager.getInstance().restorePlaylist();
-        BackgroundMusicManager.getInstance().previous();
-        gazePlay.onReturnToMenu();
-
-        statsContext.getRoot().setCursor(Cursor.DEFAULT); // Change cursor to default style
+    static void closeStatsWindow() {
+        Platform.exit();
+        System.exit(0);
     }
 
     public static LineChart<String, Number> buildLineChart(Stats stats, final Region root) {

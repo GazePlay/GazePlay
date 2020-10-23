@@ -93,15 +93,6 @@ class StatDisplayUtilsTest {
     }
 
     @Test
-    void shouldSetTheCursorWhenPressed() {
-        StatDisplayUtils.returnToMenu(gazePlay, mockStatsContext);
-
-        verify(mockStatsContext.getRoot(), times(2)).setCursor(captor.capture());
-        assertTrue(captor.getAllValues().contains(Cursor.WAIT));
-        assertTrue(captor.getAllValues().contains(Cursor.DEFAULT));
-    }
-
-    @Test
     void shouldBuildLineChartForNormalGame() {
         final List<Long> mockShots = new ArrayList<>(List.of(1L, 2L, 3L));
 

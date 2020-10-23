@@ -279,7 +279,7 @@ public class ReplayingGameFromJson {
                 return null;
             }
         };
-        new Thread(task).start();
+        task.run();
 
         ProcessBuilder builder = createBuilder(height, width);
 
@@ -289,10 +289,10 @@ public class ReplayingGameFromJson {
             executor.schedule(new Runnable() {
                 @Override
                 public void run() {
-                    Platform.exit();
-                    System.exit(0);
+                    gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
+                    gazePlay.onReturnToMenu();
                 }
-            }, 5, TimeUnit.SECONDS);
+            }, 10, TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
         }
