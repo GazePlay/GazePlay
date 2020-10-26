@@ -9,8 +9,6 @@ import net.gazeplay.commons.ui.I18NLabel;
 
 public class LoadingContext extends BorderPane {
 
-    private LogoFactory logoFactory;
-
     public LoadingContext(GazePlay gazePlay) {
         //  ImageView backgroundImage = new ImageView(new Image("data/common/images/bravo.gif"));
         I18NLabel loadingLabel = new I18NLabel(gazePlay.getTranslator(), "Loading...");
@@ -19,15 +17,11 @@ public class LoadingContext extends BorderPane {
             "    -fx-font-weight: bold;\n" +
             "    -fx-font-size: 25pt;\n" +
             "    -fx-font-smoothing-type: lcd;");
-        logoFactory = LogoFactory.getInstance();
-        VBox stackPane = new VBox(logoFactory.createLogoAnimated(gazePlay.getPrimaryStage()), loadingLabel);
+        VBox stackPane = new VBox(LogoFactory.getInstance().createLogoAnimated(gazePlay.getPrimaryStage()), loadingLabel);
         loadingLabel.setAlignment(Pos.CENTER);
         stackPane.setAlignment(Pos.CENTER);
         this.setStyle("-fx-background-color: black");
         this.setCenter(stackPane);
     }
 
-    public void stopAnimation(){
-        logoFactory.stopAnimation();
-    }
 }

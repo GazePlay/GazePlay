@@ -26,7 +26,6 @@ import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import net.gazeplay.ui.scenes.loading.LoadingContext;
 import org.everit.json.schema.Schema;
@@ -47,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -247,7 +248,6 @@ public class ReplayingGameFromJson {
 
         EventHandler<Event> homeEvent = e -> {
             gameContext.getRoot().setCursor(Cursor.WAIT); // Change cursor to wait style
-            workingThread.interrupt();
             this.exit(statsSaved, currentGame);
             gameContext.getRoot().setCursor(Cursor.DEFAULT); // Change cursor to default style
         };
@@ -280,7 +280,19 @@ public class ReplayingGameFromJson {
 
         ProcessBuilder builder = createBuilder(height, width);
 
-        GameMenuController.runProcessDisplayLoadAndWaitForNewJVMDisplayed(gazePlay, builder);
+        try {
+            builder.inheritIO().start();
+            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+            executor.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
+                    gazePlay.onReturnToMenu();
+                }
+            }, 5, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public ProcessBuilder createBuilder(int height, int width) {
@@ -316,6 +328,7 @@ public class ReplayingGameFromJson {
     }
 
     private void exit(Stats statsSaved, GameLifeCycle currentGame) {
+        workingThread.stop();
         gameContext.exitReplayGame(statsSaved, gazePlay, currentGame);
         gameContext.getGazeDeviceManager().setInReplayMode(false);
     }
@@ -350,7 +363,7 @@ public class ReplayingGameFromJson {
                 try {
                     TimeUnit.MILLISECONDS.sleep(delay);
                 } catch (InterruptedException e) {
-                    log.info("Game has been interrupted");
+                    e.printStackTrace();
                     break;
                 }
             }
@@ -374,42 +387,32 @@ public class ReplayingGameFromJson {
     }
 
     public void drawOvals(GraphicsContext graphics) {
-        int circleSize = 10;
+        int circleSize = 30;
 
         javafx.scene.paint.Color strokeColor, fillColor;
 
-        strokeColor = Color.rgb(0, 0, 255);//Color.BLUE;
+        strokeColor = Color.rgb(0, 0, 255, 0.5);//Color.BLUE;
         fillColor = Color.rgb(255, 255, 0, 0.1);
-        graphics.beginPath();
-        if (lastGazeCoordinates.size() > 0) {
-            drawReplayLine(graphics, circleSize, strokeColor, fillColor, lastGazeCoordinates);
-        }
 
-        strokeColor = Color.rgb(255, 0, 0);//Color.RED;
-        fillColor = Color.rgb(0, 255, 255, 1);
-        if (lastMouseCoordinates.size() > 0) {
-            drawReplayLine(graphics, circleSize, strokeColor, fillColor, lastMouseCoordinates);
-        }
-    }
-
-    private void drawReplayLine(GraphicsContext graphics, int circleSize, Color strokeColor, Color fillColor, LinkedList<Point2D> lastGazeCoordinates) {
-        for (int i = lastGazeCoordinates.size() - 1; i >= 0; i--) {
-            Point2D point = lastGazeCoordinates.get(i);
+        for (Point2D point : lastGazeCoordinates) {
             if (point != null) {
-                strokeColor = Color.rgb(
-                    (int) (strokeColor.getRed() * 255),
-                    (int) (strokeColor.getBlue() * 255),
-                    (int) (strokeColor.getGreen() * 255),
-                    i * 1d / lastGazeCoordinates.size());
                 graphics.setStroke(strokeColor);
-                graphics.setLineWidth(5);
-                graphics.lineTo(point.getX(), point.getY());
-                graphics.stroke();
+                graphics.strokeOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
+                graphics.setFill(fillColor);
+                graphics.fillOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
             }
-            point = lastGazeCoordinates.getLast();
-            graphics.strokeOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
-            graphics.setFill(fillColor);
-            graphics.fillOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
+        }
+
+        strokeColor = Color.rgb(255, 0, 0, 0.5);//Color.RED;
+        fillColor = Color.rgb(0, 255, 255, 0.1);
+
+        for (Point2D point : lastMouseCoordinates) {
+            if (point != null) {
+                graphics.setStroke(strokeColor);
+                graphics.strokeOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
+                graphics.setFill(fillColor);
+                graphics.fillOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
+            }
         }
     }
 

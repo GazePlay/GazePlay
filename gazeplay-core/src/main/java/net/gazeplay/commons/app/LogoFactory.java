@@ -16,9 +16,6 @@ public class LogoFactory {
 
     final static String staticLogoImagePath = "data/common/images/logos/gazeplay-top-logo.png";
 
-    private Thread logoAnimatedThread;
-    private SequentialTransition logoAnimatedAnimationTransition;
-
     static class LogoCreationException extends RuntimeException {
         LogoCreationException(Throwable cause) {
             super(cause);
@@ -31,25 +28,18 @@ public class LogoFactory {
 
         GazePlayAnimatedLogo gazePlayAnimatedLogo = GazePlayAnimatedLogo.newInstance((int) preferredHeight);
 
-        logoAnimatedThread = new Thread(() -> {
+        Thread t = new Thread(() -> {
             try {
                 Thread.sleep(2 * 1000);
             } catch (InterruptedException e) {
                 throw new LogoCreationException(e);
             }
-            logoAnimatedAnimationTransition = gazePlayAnimatedLogo.createAnimation();
-            logoAnimatedAnimationTransition.setCycleCount(-1);
-            logoAnimatedAnimationTransition.play();
+            SequentialTransition animation = gazePlayAnimatedLogo.createAnimation();
+            animation.setCycleCount(-1);
+            animation.play();
         });
-        logoAnimatedThread.start();
+        t.start();
         return gazePlayAnimatedLogo.getLetters();
-    }
-
-    public void stopAnimation(){
-        logoAnimatedAnimationTransition.stop();
-        if(logoAnimatedThread !=null && logoAnimatedThread.isAlive()){
-            logoAnimatedThread.interrupt();
-        }
     }
 
     public Node createLogoStatic(Stage stage) {
