@@ -259,13 +259,10 @@ public class ReplayingGameFromJson {
         final javafx.scene.canvas.Canvas canvas = new Canvas(screenDimension.getWidth(), screenDimension.getHeight());
         gameContext.getChildren().add(canvas);
 
-        workingThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                gameContext.getGazeDeviceManager().setInReplayMode(true);
-                drawFixationLines(canvas, coordinatesAndTimeStamp);
-                Platform.runLater(() -> exit(statsSaved, currentGame));
-            }
+        workingThread = new Thread(() -> {
+            gameContext.getGazeDeviceManager().setInReplayMode(true);
+            drawFixationLines(canvas, coordinatesAndTimeStamp);
+            Platform.runLater(() -> exit(statsSaved, currentGame));
         });
         workingThread.start();
     }
