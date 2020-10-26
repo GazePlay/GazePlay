@@ -1,12 +1,9 @@
 package net.gazeplay;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -19,14 +16,14 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.latestnews.LatestNewsPopup;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 import org.springframework.context.ApplicationContext;
 
-import java.awt.*;
-import java.awt.event.InputEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -137,7 +134,7 @@ public class GazePlayFxApp extends Application {
                     log.info("gameSpecs = {}", gameSpecs);
 
                     ReplayJsonFileOptions replayJsonFileOptions = options.getReplayJsonFileOptions();
-                    if(replayJsonFileOptions != null) {
+                    if (replayJsonFileOptions != null) {
                         String replayFileName = replayJsonFileOptions.getJsonFileName();
                         if (replayFileName != null) {
                             final List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
@@ -148,7 +145,7 @@ public class GazePlayFxApp extends Application {
                             } catch (IOException ex) {
                                 ex.printStackTrace();
                             }
-                        }else {
+                        } else {
                             if (selectedVariantCode != null) {
                                 IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
                                 gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
@@ -156,7 +153,7 @@ public class GazePlayFxApp extends Application {
                                 gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
                             }
                         }
-                    }else {
+                    } else {
                         if (selectedVariantCode != null) {
                             IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
                             gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
@@ -170,6 +167,11 @@ public class GazePlayFxApp extends Application {
             } else {
                 gazePlay.onReturnToMenu();
             }
+        }
+
+        File f = new File(GazePlayDirectories.getGazePlayFolder() + "/TokenLauncher");
+        if (f.exists()) {
+            f.delete();
         }
 
         CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
