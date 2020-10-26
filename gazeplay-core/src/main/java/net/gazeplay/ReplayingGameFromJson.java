@@ -375,33 +375,26 @@ public class ReplayingGameFromJson {
 
     public void drawOvals(GraphicsContext graphics) {
         int circleSize = 10;
-
-        javafx.scene.paint.Color strokeColor, fillColor;
-
-        strokeColor = Color.rgb(0, 0, 255);//Color.BLUE;
-        fillColor = Color.rgb(255, 255, 0, 0.1);
         graphics.beginPath();
         if (lastGazeCoordinates.size() > 0) {
-            drawReplayLine(graphics, circleSize, strokeColor, fillColor, lastGazeCoordinates);
+            drawReplayLine(graphics, circleSize, Color.rgb(0, 0, 255), Color.rgb(255, 255, 0, 0.1), lastGazeCoordinates);
         }
-
-        strokeColor = Color.rgb(255, 0, 0);//Color.RED;
-        fillColor = Color.rgb(0, 255, 255, 1);
         if (lastMouseCoordinates.size() > 0) {
-            drawReplayLine(graphics, circleSize, strokeColor, fillColor, lastMouseCoordinates);
+            drawReplayLine(graphics, circleSize, Color.rgb(255, 0, 0), Color.rgb(0, 255, 255, 1), lastMouseCoordinates);
         }
     }
 
     private void drawReplayLine(GraphicsContext graphics, int circleSize, Color strokeColor, Color fillColor, LinkedList<Point2D> lastGazeCoordinates) {
+        Color tempStokeColor = strokeColor;
         for (int i = lastGazeCoordinates.size() - 1; i >= 0; i--) {
             Point2D point = lastGazeCoordinates.get(i);
             if (point != null) {
-                strokeColor = Color.rgb(
+                tempStokeColor = Color.rgb(
                     (int) (strokeColor.getRed() * 255),
                     (int) (strokeColor.getBlue() * 255),
                     (int) (strokeColor.getGreen() * 255),
                     i * 1d / lastGazeCoordinates.size());
-                graphics.setStroke(strokeColor);
+                graphics.setStroke(tempStokeColor);
                 graphics.setLineWidth(5);
                 graphics.lineTo(point.getX(), point.getY());
                 graphics.stroke();
