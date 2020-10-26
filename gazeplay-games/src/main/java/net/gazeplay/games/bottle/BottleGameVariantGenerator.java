@@ -15,6 +15,7 @@ public class BottleGameVariantGenerator implements IGameVariantGenerator {
         return Sets.newLinkedHashSet(Lists.newArrayList(
             new IntGameVariant(4),
             new IntGameVariant(8),
+            new IntGameVariant(12),
             new IntGameVariant(16)
         ));
     }
