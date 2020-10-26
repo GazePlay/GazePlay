@@ -1,5 +1,7 @@
 package net.gazeplay.ui.scenes.gamemenu;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,7 +15,6 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
-import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import net.gazeplay.ui.scenes.loading.LoadingContext;
@@ -22,7 +23,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -81,45 +81,16 @@ public class GameMenuController {
         }
         builder = createBuilder(selectedGameSpec.getGameSummary().getNameCode(), gameVariant, height, width);
 
-        runProcessDisplayLoadAndWaitForNewJVMDisplayed(gazePlay, builder);
-    }
-
-    public static void runProcessDisplayLoadAndWaitForNewJVMDisplayed(GazePlay gazePlay, ProcessBuilder builder) {
-        Thread t = new Thread(() -> {
-            File f = new File(GazePlayDirectories.getGazePlayFolder() + "/TokenLauncher");
-            boolean success = false;
-            try {
-                success = f.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (success) {
-                while (f.exists()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
-                gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
-                gazePlay.onReturnToMenu();
-            } else {
-                ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-                executor.schedule(new Runnable() {
-                    @Override
-                    public void run() {
-                        ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
-                        gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
-                        gazePlay.onReturnToMenu();
-                    }
-                }, 10, TimeUnit.SECONDS);
-            }
-        });
-        t.start();
-
         try {
             builder.inheritIO().start();
+            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+            executor.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
+                    gazePlay.onReturnToMenu();
+                }
+            }, 5, TimeUnit.SECONDS);
         } catch (Exception e) {
             e.printStackTrace();
         }
