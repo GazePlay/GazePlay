@@ -106,13 +106,10 @@ public class GameMenuController {
                 gazePlay.onReturnToMenu();
             } else {
                 ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-                executor.schedule(new Runnable() {
-                    @Override
-                    public void run() {
-                        ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
-                        gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
-                        gazePlay.onReturnToMenu();
-                    }
+                executor.schedule(() -> {
+                    ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
+                    gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
+                    gazePlay.onReturnToMenu();
                 }, 10, TimeUnit.SECONDS);
             }
         });

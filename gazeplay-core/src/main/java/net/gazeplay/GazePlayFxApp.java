@@ -171,7 +171,9 @@ public class GazePlayFxApp extends Application {
 
         File f = new File(GazePlayDirectories.getGazePlayFolder() + "/TokenLauncher");
         if (f.exists()) {
-            f.delete();
+            if (!f.delete()) {
+                log.warn("Token File has not been deleted !");
+            }
         }
 
         CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
