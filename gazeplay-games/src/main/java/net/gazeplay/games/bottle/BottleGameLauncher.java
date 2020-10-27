@@ -1,10 +1,22 @@
 package net.gazeplay.games.bottle;
 
 import javafx.scene.Scene;
+import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
+import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.gamevariants.IntGameVariant;
+import net.gazeplay.commons.utils.FixationPoint;
+import net.gazeplay.commons.utils.stats.LifeCycle;
+import net.gazeplay.commons.utils.stats.RoundsDurationReport;
+import net.gazeplay.commons.utils.stats.SavedStatsInfo;
+import net.gazeplay.games.biboulejump.BibouleJump;
+import net.gazeplay.games.biboulejump.BibouleJumpStats;
+import net.gazeplay.games.biboulejump.BibouleJumpVariant;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class BottleGameLauncher implements IGameLauncher<BottleGameStats, IntGameVariant> {
 
@@ -16,5 +28,15 @@ public class BottleGameLauncher implements IGameLauncher<BottleGameStats, IntGam
     @Override
     public BottleGame createNewGame(IGameContext gameContext, IntGameVariant gameVariant, BottleGameStats stats) {
         return new BottleGame(gameContext, stats, gameVariant.getNumber());
+    }
+
+    @Override
+    public BottleGameStats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+        return new BottleGameStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+    }
+
+    @Override
+    public BottleGame replayGame(IGameContext gameContext, IntGameVariant gameVariant, BottleGameStats stats, double gameSeed) {
+        return new BottleGame(gameContext, stats, gameVariant.getNumber(), gameSeed);
     }
 }

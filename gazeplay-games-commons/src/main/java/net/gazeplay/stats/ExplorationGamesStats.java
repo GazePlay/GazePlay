@@ -1,8 +1,10 @@
 package net.gazeplay.stats;
 
 import javafx.scene.Scene;
+import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.games.DateUtils;
-import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.stats.LifeCycle;
+import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -10,6 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class ExplorationGamesStats extends Stats {
 
@@ -17,8 +21,16 @@ public class ExplorationGamesStats extends Stats {
         super(scene);
     }
 
+    public ExplorationGamesStats(final Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+        super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+    }
+
     public ExplorationGamesStats(final Scene scene, String name) {
-        super(scene,name);
+        super(scene, name);
+    }
+
+    public ExplorationGamesStats(final Scene scene, String name, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+        super(scene, name, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 
     @Override

@@ -9,22 +9,22 @@ import java.util.ArrayList;
 @Slf4j
 public class Strategy {
     private final int nbExchanges;
-    ReplayablePseudoRandom randomGenerator;
     @Getter
     private final ArrayList<Action> actions;
     private final int maxCellsX;
     private final int maxCellsY;
+    private final ReplayablePseudoRandom randomGenerator;
 
     private enum Strategies {
         rotationUpDown, rotationMoveClosestInPlace
     }
 
-    public Strategy(final int nbCups, final int nbExchanges, final int maxCellsX, final int maxCellsY, ReplayablePseudoRandom randomGenerator) {
+    public Strategy(final int nbCups, final int nbExchanges, final int maxCellsX, final int maxCellsY, ReplayablePseudoRandom random) {
         this.nbExchanges = nbExchanges;
         this.actions = new ArrayList<>();
         this.maxCellsX = maxCellsX;
         this.maxCellsY = maxCellsY;
-        this.randomGenerator = randomGenerator;
+        this.randomGenerator = random;
     }
 
     public ArrayList<Action> chooseStrategy() {

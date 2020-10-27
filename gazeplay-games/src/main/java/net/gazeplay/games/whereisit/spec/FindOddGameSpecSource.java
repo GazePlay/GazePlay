@@ -13,7 +13,7 @@ public class FindOddGameSpecSource implements GameSpecSource {
         return new GameSpec(
             GameSummary.builder().nameCode("findodd").gameThumbnail("data/Thumbnails/findtheodd.jpg")
                 .category(GameCategories.Category.SELECTION)
-                .category(GameCategories.Category.LITERACY)
+                .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.MEMORIZATION).build(),
             new WhereIsItGameVariantGenerator(), new FindOddGameLauncher());
     }

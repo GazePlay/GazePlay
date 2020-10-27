@@ -1,35 +1,30 @@
 package net.gazeplay;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.cli.GameSelectionOptions;
-import net.gazeplay.cli.ReusableOptions;
-import net.gazeplay.cli.SizeOptions;
-import net.gazeplay.cli.UserSelectionOptions;
+import net.gazeplay.cli.*;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.latestnews.LatestNewsPopup;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 import org.springframework.context.ApplicationContext;
 
-import java.awt.*;
-import java.awt.event.InputEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -66,6 +61,9 @@ public class GazePlayFxApp extends Application {
 
     @Override
     public void start(final Stage primaryStage) {
+
+        final Configuration mainConfig = ActiveConfigurationContext.getInstance();
+
         boolean showUserSelectPage = true;
         if (options != null) {
             final UserSelectionOptions userSelectionOptions = options.getUserSelectionOptions();
@@ -87,7 +85,6 @@ public class GazePlayFxApp extends Application {
             final SizeOptions sizeOptions = options.getSizeOptions();
             if (sizeOptions != null) {
                 if (sizeOptions.getGameHeight() > 0 && sizeOptions.getGameWidth() > 0) {
-                    //autosize(primaryStage,500,500);
                     primaryScene = createPrimaryScene(primaryStage, sizeOptions.getGameWidth(), sizeOptions.getGameHeight());
                 } else {
                     autosize(primaryStage);
@@ -102,18 +99,12 @@ public class GazePlayFxApp extends Application {
             primaryScene = createPrimaryScene(primaryStage);
         }
 
-        configureKeysHandler(primaryScene);
-
         configurePrimaryStage(primaryStage);
 
-        final Configuration config = ActiveConfigurationContext.getInstance();
-
-        LatestNewsPopup.displayIfNeeded(config, gazePlay.getTranslator(), gazePlay.getCurrentScreenDimensionSupplier());
+        LatestNewsPopup.displayIfNeeded(mainConfig, gazePlay.getTranslator(), gazePlay.getCurrentScreenDimensionSupplier());
 
         gazePlay.setPrimaryScene(primaryScene);
         gazePlay.setPrimaryStage(primaryStage);
-
-        gazePlay.setLoading();
 
         if (showUserSelectPage) {
             gazePlay.goToUserPage();
@@ -132,7 +123,6 @@ public class GazePlayFxApp extends Application {
                     }
                 }
 
-
                 String selectedVariantCode = options.getVariantSelectionOptions().getGameVariant();
                 if (selectedGameNameCode != null) {
                     final String searchGameNameCode = selectedGameNameCode;
@@ -143,19 +133,46 @@ public class GazePlayFxApp extends Application {
 
                     log.info("gameSpecs = {}", gameSpecs);
 
-                    if (selectedVariantCode != null) {
-                        IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
-                        log.info("THE VARIANT IS : {}", variant);
-                        gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
+                    ReplayJsonFileOptions replayJsonFileOptions = options.getReplayJsonFileOptions();
+                    if (replayJsonFileOptions != null) {
+                        String replayFileName = replayJsonFileOptions.getJsonFileName();
+                        if (replayFileName != null) {
+                            final List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
+                            ReplayingGameFromJson replayingGameFromJson = new ReplayingGameFromJson(gazePlay, applicationContext, games);
+                            try {
+                                replayingGameFromJson.pickJSONFile(replayJsonFileOptions.getJsonFileName());
+                                replayingGameFromJson.drawLines();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                        } else {
+                            if (selectedVariantCode != null) {
+                                IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
+                                gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
+                            } else {
+                                gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
+                            }
+                        }
                     } else {
-                        gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
+                        if (selectedVariantCode != null) {
+                            IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
+                            gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
+                        } else {
+                            gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
+                        }
                     }
                 } else {
                     gazePlay.onReturnToMenu();
                 }
-
             } else {
                 gazePlay.onReturnToMenu();
+            }
+        }
+
+        File f = new File(GazePlayDirectories.getGazePlayFolder() + "/TokenLauncher");
+        if (f.exists()) {
+            if (!f.delete()) {
+                log.warn("Token File has not been deleted !");
             }
         }
 
@@ -197,29 +214,6 @@ public class GazePlayFxApp extends Application {
         primaryStage.setMaximized(true);
 
         primaryStage.setFullScreen(true);
-    }
-
-    private void configureKeysHandler(final Scene primaryScene) {
-        primaryScene.addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
-            if (ke.getCode() == KeyCode.SPACE && ActiveConfigurationContext.getInstance().isGazeMouseEnable()) {
-                Platform.runLater(() -> {
-                    try {
-                        final Robot robot = new Robot();
-                        robot.mousePress(InputEvent.BUTTON1_MASK);
-                        robot.mouseRelease(InputEvent.BUTTON1_MASK);
-                    } catch (final AWTException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                });
-            }
-        });
-        primaryScene.addEventFilter(KeyEvent.KEY_PRESSED, ke -> {
-            final Configuration activeConfig = ActiveConfigurationContext.getInstance();
-            if (ke.getCode() == KeyCode.S && activeConfig.isGazeMouseEnable()) {
-                activeConfig.setMouseFree(!activeConfig.isMouseFree());
-            }
-        });
     }
 
 }

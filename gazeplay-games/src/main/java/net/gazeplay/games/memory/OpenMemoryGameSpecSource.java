@@ -11,7 +11,6 @@ public class OpenMemoryGameSpecSource implements GameSpecSource {
         return new GameSpec(
             GameSummary.builder().nameCode("OpenMemory").gameThumbnail("data/Thumbnails/openMemory.png")
                 .category(GameCategories.Category.SELECTION)
-                .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.MEMORIZATION).build(),
             new MemoryGameVariantGenerator(), new OpenMemoryGameLauncher());
     }

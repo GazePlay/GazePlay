@@ -10,8 +10,7 @@ public class RabbitsGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("Lapins").gameThumbnail("data/Thumbnails/rabbits.png")
-                .category(GameCategories.Category.ACTION_REACTION)
-                .category(GameCategories.Category.LOGIC_MATHS).build(),
+                .category(GameCategories.Category.ACTION_REACTION).build(),
             new RabbitsGameLauncher());
     }
 }

@@ -6,19 +6,18 @@ import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.components.ProgressButton;
 
 import java.io.IOException;
 
@@ -32,7 +31,7 @@ class Potion extends Parent {
     private final double fixationLength;
 
     @Getter
-    private final Rectangle potion;
+    private final ImageView potion;
 
     @Getter
     private final Color potionColor;
@@ -47,9 +46,7 @@ class Potion extends Parent {
     @Getter
     private boolean chosen;
 
-    private final ProgressIndicator progressIndicator;
-
-    private Timeline timelineProgressBar; // used to make a selection long = fixation length
+    private final ProgressButton progressButton;
 
     private final MagicPotions gameInstance;
 
@@ -63,9 +60,6 @@ class Potion extends Parent {
 
     Potion(final double positionX, final double positionY, final double width, final double height, final Image image, final Color color,
            final IGameContext gameContext, final MagicPotionsStats stats, final MagicPotions gameInstance, final int fixationlength) {
-        this.potion = new Rectangle((int) positionX, (int) positionY, (int) width, (int) height);
-        this.potion.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
-
         final DropShadow shadow = new DropShadow();
         shadow.setColor(Color.BLACK);
         shadow.setWidth(10);
@@ -73,8 +67,12 @@ class Potion extends Parent {
         shadow.setOffsetX(5);
         shadow.setOffsetY(5);
         shadow.setRadius(3);
-        this.potion.setEffect(shadow);
 
+        this.potion = new ImageView(image);
+        this.potion.setFitWidth(width);
+        this.potion.setFitHeight(height);
+        this.potion.setPreserveRatio(true);
+        this.potion.setEffect(shadow);
         this.image = image;
         this.potionColor = color;
 
@@ -84,27 +82,22 @@ class Potion extends Parent {
         this.gameInstance = gameInstance;
         this.fixationLength = fixationlength;
 
-        this.enterEvent = buildEvent();
-
-        gameContext.getGazeDeviceManager().addEventFilter(this.potion);
-
-        this.addEventFilter(MouseEvent.ANY, enterEvent);
-        this.addEventFilter(GazeEvent.ANY, enterEvent);
-
         currentTimeline = new Timeline();
-        this.getChildren().add(this.potion);
 
-        this.progressIndicator = createProgressIndicator(width);
-        this.getChildren().add(this.progressIndicator);
+        this.progressButton = createProgressIndicator(positionX, positionY);
+        this.enterEvent = buildEvent(progressButton);
+        progressButton.assignIndicator(enterEvent,fixationlength);
+        gameContext.getGazeDeviceManager().addEventFilter(this.progressButton);
+        this.getChildren().add(this.progressButton);
+        progressButton.active();
     }
 
-    private ProgressIndicator createProgressIndicator(final double width) {
-        final ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(potion.getX());
-        indicator.setTranslateY(potion.getY() + width * 0.75);
-        indicator.setMinWidth(width * 0.9);
-        indicator.setMinHeight(width * 0.9);
-        indicator.setOpacity(0);
+    private ProgressButton createProgressIndicator(double positionX, double positionY) {
+        final ProgressButton indicator = new ProgressButton();
+        indicator.setImage(potion);
+        indicator.setTranslateX(positionX);
+        indicator.setTranslateY(positionY);
+
         return indicator;
     }
 
@@ -121,6 +114,10 @@ class Potion extends Parent {
         stats.incrementNumberOfGoalsReached();
         currentTimeline.stop();
         currentTimeline = new Timeline();
+
+        gameInstance.getPotionBlue().progressButton.disable();
+        gameInstance.getPotionRed().progressButton.disable();
+        gameInstance.getPotionYellow().progressButton.disable();
 
         gameContext.updateScore(stats,gameInstance);
 
@@ -142,9 +139,12 @@ class Potion extends Parent {
         gameInstance.getPotionYellow().removeEventFilter(MouseEvent.ANY,
             gameInstance.getPotionYellow().getEnterEvent());
         gameInstance.getPotionYellow().removeEventFilter(GazeEvent.ANY, gameInstance.getPotionYellow().getEnterEvent());
-        progressIndicator.setStyle(" -fx-progress-color: red;");
-        progressIndicator.setOpacity(1);
-        progressIndicator.setAccessibleText("");
+        progressButton.setStyle(" -fx-progress-color: red;");
+        progressButton.setAccessibleText("");
+
+        gameInstance.getPotionBlue().progressButton.disable();
+        gameInstance.getPotionRed().progressButton.disable();
+        gameInstance.getPotionYellow().progressButton.disable();
 
         currentTimeline.stop();
         currentTimeline = new Timeline();
@@ -168,26 +168,13 @@ class Potion extends Parent {
         });
     }
 
-    private EventHandler<Event> buildEvent() {
-        return event -> {
-            if (chosen) {
-                return;
-            }
-            if (event.getEventType() == MouseEvent.MOUSE_ENTERED
-                || event.getEventType() == GazeEvent.GAZE_ENTERED) {
-                progressIndicator.setOpacity(1);
-                progressIndicator.setProgress(0);
-
-                timelineProgressBar = new Timeline();
-
-                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationLength),
-                    new KeyValue(progressIndicator.progressProperty(), 1)));
-
-                timelineProgressBar.setOnFinished(event1 -> {
+    private EventHandler<Event> buildEvent(ProgressButton progressButton) {
+        return  event -> {
                     chosen = true;
                     gameInstance.currentRoundDetails.getMixture().add(potionColor); // we add the color of the potion to our mixture
                     // change opacity of potion when it has been selected once
-                    potion.setOpacity(.3);
+                    progressButton.disable();
+                    progressButton.setOpacity(.3);
 
                     potion.removeEventFilter(MouseEvent.ANY, enterEvent); // we cannot select anymore this color
                     potion.removeEventFilter(GazeEvent.ANY, enterEvent);
@@ -217,15 +204,6 @@ class Potion extends Parent {
                         default:
                             throw new IllegalArgumentException("value : " + gameInstance.currentRoundDetails.getMixture().size());
                     }
-                });
-                timelineProgressBar.play();
-
-            } else if (event.getEventType() == MouseEvent.MOUSE_EXITED
-                || event.getEventType() == GazeEvent.GAZE_EXITED) {
-                timelineProgressBar.stop();
-                progressIndicator.setOpacity(0);
-                progressIndicator.setProgress(0);
-            }
         };
     }
 

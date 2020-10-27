@@ -43,7 +43,8 @@ class AreaOfInterestTest {
         new File("metricsGaze.csv"),
         new File("metricsBoth.csv"),
         new File("screenshot.png"),
-        new File("colors.txt")
+        new File("colors.txt"),
+        new File("replayData.txt")
     );
     Dimension2D screen = new Dimension2D(700, 800);
     Supplier<Dimension2D> supplier = () -> screen;

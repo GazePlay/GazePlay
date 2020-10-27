@@ -1,7 +1,5 @@
 package net.gazeplay.ui.scenes.gamemenu;
 
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -15,14 +13,19 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
+import net.gazeplay.ui.scenes.loading.LoadingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -41,7 +44,6 @@ public class GameMenuController {
         String gameName
     ) {
         Collection<IGameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
-
         if (variants.size() > 1) {
             root.setEffect(new BoxBlur());
             root.setDisable(true);
@@ -66,61 +68,88 @@ public class GameMenuController {
         GameSpec selectedGameSpec,
         IGameVariant gameVariant
     ) {
-        Task task = new Task<Void>() {
-            @Override
-            public Void call() {
-                gazePlay.getPrimaryScene().setCursor(Cursor.WAIT);
-                gazePlay.getPrimaryScene().setRoot(gazePlay.getLoading());
-                return null;
+        gazePlay.getPrimaryScene().setCursor(Cursor.WAIT);
+        gazePlay.getPrimaryScene().setRoot(new LoadingContext(gazePlay));
+
+        ProcessBuilder builder;
+
+        int height = 0;
+        int width = 0;
+        if (!gazePlay.isFullScreen()) {
+            height = (int) gazePlay.getPrimaryScene().getWindow().getHeight();
+            width = (int) gazePlay.getPrimaryScene().getWindow().getWidth();
+        }
+        builder = createBuilder(selectedGameSpec.getGameSummary().getNameCode(), gameVariant, height, width);
+
+        runProcessDisplayLoadAndWaitForNewJVMDisplayed(gazePlay, builder);
+    }
+
+    public static void runProcessDisplayLoadAndWaitForNewJVMDisplayed(GazePlay gazePlay, ProcessBuilder builder) {
+        Thread t = new Thread(() -> {
+            File f = new File(GazePlayDirectories.getGazePlayFolder() + "/TokenLauncher");
+            boolean success = false;
+            try {
+                success = f.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        };
-        new Thread(task).start();
+            if (success) {
+                while (f.exists()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
+                gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
+                gazePlay.onReturnToMenu();
+            } else {
+                ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+                executor.schedule(() -> {
+                    ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
+                    gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
+                    gazePlay.onReturnToMenu();
+                }, 10, TimeUnit.SECONDS);
+            }
+        });
+        t.start();
+
+        try {
+            builder.inheritIO().start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ProcessBuilder createBuilder(String game, IGameVariant gameVariant, int height, int width) {
         String javaHome = System.getProperty("java.home");
         String javaBin = javaHome +
             File.separator + "bin" +
             File.separator + "java";
         String classpath = System.getProperty("java.class.path");
 
-        Configuration configuration = ActiveConfigurationContext.getInstance();
-        String username = configuration.getUserName();
+        LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin, "-cp", classpath, GazePlayLauncher.class.getName()));
 
-        ProcessBuilder builder;
-
-        if (gameVariant != null &&  !username.equals("") ) {
-            builder = new ProcessBuilder(
-                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
-                "--user", username,
-                "--game", selectedGameSpec.getGameSummary().getNameCode(),
-                "--variant", gameVariant.toString());
-        } else if (gameVariant != null) {
-            builder = new ProcessBuilder(
-                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
-                "--default-user",
-                "--game", selectedGameSpec.getGameSummary().getNameCode(),
-                "--variant", gameVariant.toString());
-        } else if (username.equals("") ) {
-            builder = new ProcessBuilder(
-                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
-                "--default-user",
-                "--game", selectedGameSpec.getGameSummary().getNameCode());
+        String user = ActiveConfigurationContext.getInstance().getUserName();
+        if (user != null && !user.equals("")) {
+            commands.addAll(Arrays.asList("--user", user));
         } else {
-            builder = new ProcessBuilder(
-                javaBin, "-cp", classpath, GazePlayLauncher.class.getName(),
-                "--user", username,
-                "--game", selectedGameSpec.getGameSummary().getNameCode());
+            commands.add("--default-user");
         }
-        try {
-            builder.inheritIO().start();
-            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-            executor.schedule(new Runnable() {
-                @Override
-                public void run() {
-                    Platform.exit();System.exit(0);
-                }
-            }, 5, TimeUnit.SECONDS);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        commands.addAll(Arrays.asList("--game", game));
+
+        if (gameVariant != null) {
+            commands.addAll(Arrays.asList("--variant", gameVariant.toString()));
         }
+
+
+        if (height != 0 && width != 0) {
+            commands.addAll(Arrays.asList("--height", "" + height, "--width", "" + width));
+        }
+
+        return new ProcessBuilder(commands);
     }
 
     public void chooseAndStartNewGame(
@@ -129,14 +158,12 @@ public class GameMenuController {
         IGameVariant gameVariant
     ) {
         GameContext gameContext = applicationContext.getBean(GameContext.class);
-
         gazePlay.onGameLaunch(gameContext);
 
         IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
 
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats stats = gameLauncher.createNewStats(scene);
-
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
 
         gameContext.createControlPanel(gazePlay, stats, currentGame);
@@ -149,6 +176,17 @@ public class GameMenuController {
         }
 
         stats.start();
+
+        String gameVariantLabel;
+        if (gameVariant != null) {
+            gameVariantLabel = gameVariant.toString();
+        } else {
+            gameVariantLabel = null;
+        }
+
+        String gameNameCode = selectedGameSpec.getGameSummary().getNameCode();
+        stats.setGameVariant(gameVariantLabel, gameNameCode);
+
         currentGame.launch();
     }
 

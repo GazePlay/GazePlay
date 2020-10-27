@@ -11,6 +11,7 @@ public class PianoGameSpecSource implements GameSpecSource {
         return new GameSpec(
             GameSummary.builder().nameCode("Piano").gameThumbnail("data/Thumbnails/pianosight.png")
                 .category(GameCategories.Category.ACTION_REACTION)
+                .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MULTIMEDIA).build(),
             new PianoGameLauncher());
     }

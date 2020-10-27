@@ -1,5 +1,6 @@
 package net.gazeplay;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
@@ -17,7 +18,6 @@ import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
 import net.gazeplay.ui.scenes.gamemenu.HomeMenuScreen;
 import net.gazeplay.ui.scenes.ingame.GameContext;
-import net.gazeplay.ui.scenes.loading.LoadingContext;
 import net.gazeplay.ui.scenes.stats.AreaOfInterest;
 import net.gazeplay.ui.scenes.stats.ScanpathView;
 import net.gazeplay.ui.scenes.stats.StatsContext;
@@ -57,14 +57,7 @@ public class GazePlay {
     @Autowired
     private ApplicationContext applicationContext;
 
-    @Getter
-    LoadingContext loading;
-
     public GazePlay() {
-    }
-
-    void setLoading() {
-        loading = new LoadingContext(this);
     }
 
     public void onGameLaunch(GameContext gameContext) {

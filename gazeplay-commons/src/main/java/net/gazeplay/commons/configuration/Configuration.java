@@ -34,6 +34,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_WHEREISIT_DIR = "WHEREISITDIR";
     private static final String PROPERTY_NAME_QUESTION_LENGTH = "QUESTIONLENGTH";
     private static final String PROPERTY_NAME_ENABLE_REWARD_SOUND = "ENABLE_REWARD_SOUND";
+    private static final String PROPERTY_NAME_REASK_QUESTION_ON_FAIL = "REASK_QUESTION_ON_FAIL";
     private static final String PROPERTY_NAME_LIMITERT = "LIMITERT";
     private static final String PROPERTY_NAME_LIMITERS = "LIMITERS";
     private static final String PROPERTY_NAME_LIMITER_TIME = "LIMITER_TIME";
@@ -49,8 +50,6 @@ public class Configuration {
     private static final String PROPERTY_NAME_MUSIC_VOLUME = "MUSIC_VOLUME";
     private static final String PROPERTY_NAME_MUSIC_FOLDER = "MUSIC_FOLDER";
     private static final String PROPERTY_NAME_EFFECTS_VOLUME = "EFFECTS_VOLUME";
-    private static final String PROPERTY_NAME_GAZE_MENU = "GAZE_MENU";
-    private static final String PROPERTY_NAME_GAZE_MOUSE = "GAZE_MOUSE";
     private static final String PROPERTY_NAME_BACKGROUND_STYLE = "BACKGROUND_STYLE";
     private static final String PROPERTY_NAME_BACKGROUND_ENABLED = "BACKGROUND_ENABLED";
     private static final String PROPERTY_NAME_ANIMATION_SPEED_RATIO = "ANIMATION_SPEED_RATIO";
@@ -71,6 +70,7 @@ public class Configuration {
     public static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
     private static final long DEFAULT_VALUE_QUESTION_LENGTH = 5000;
     private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
+    private static final boolean DEFAULT_VALUE_REASK_QUESTION_ON_FAIL = true;
     private static final boolean DEFAULT_VALUE_LIMITERTIME = false;
     private static final boolean DEFAULT_VALUE_LIMITERSCORE = false;
     private static final int DEFAULT_VALUE_LIMITER_TIME = 90;
@@ -88,8 +88,6 @@ public class Configuration {
     public static final String DEFAULT_VALUE_BACKGROUND_MUSIC = "songidea(copycat)_0.mp3";
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
     private static final boolean DEFAULT_VALUE_FORCE_DISPLAY_NEWS = false;
-    private static final boolean DEFAULT_VALUE_GAZE_MENU = false;
-    private static final boolean DEFAULT_VALUE_GAZE_MOUSE = false;
     private static final BackgroundStyle DEFAULT_VALUE_BACKGROUND_STYLE = BackgroundStyle.DARK;
     private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = false;
     private static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
@@ -118,9 +116,6 @@ public class Configuration {
     private final StringProperty quitKeyProperty;
 
     @Getter
-    private final BooleanProperty gazeMenuEnabledProperty;
-
-    @Getter
     private final StringProperty eyetrackerProperty;
 
     @Getter
@@ -143,6 +138,9 @@ public class Configuration {
 
     @Getter
     private final LongProperty questionLengthProperty;
+
+    @Getter
+    private final BooleanProperty reaskQuestionOnFail;
 
     @Getter
     private final BooleanProperty enableRewardSoundProperty;
@@ -182,9 +180,6 @@ public class Configuration {
 
     @Getter
     private final BooleanProperty fixationSequenceDisabledProperty;
-
-    @Getter
-    private final BooleanProperty gazeMouseEnabledProperty;
 
     @Getter
     private final ObjectProperty<BackgroundStyle> backgroundStyleProperty;
@@ -247,6 +242,7 @@ public class Configuration {
         heatMapDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED, propertyChangeListener);
 
         enableRewardSoundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND, propertyChangeListener);
+        reaskQuestionOnFail = new ApplicationConfigBackedBooleanProperty(applicationConfig,PROPERTY_NAME_REASK_QUESTION_ON_FAIL,DEFAULT_VALUE_REASK_QUESTION_ON_FAIL,propertyChangeListener);
 
         limiterSProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERS, DEFAULT_VALUE_LIMITERSCORE, propertyChangeListener);
         limiterTProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERT, DEFAULT_VALUE_LIMITERTIME, propertyChangeListener);
@@ -257,8 +253,6 @@ public class Configuration {
         convexHullDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED, propertyChangeListener);
         videoRecordingEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_VIDEO_RECORDING_ENABLED, DEFAULT_VALUE_VIDEO_RECORDING_ENABLED, propertyChangeListener);
         fixationSequenceDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIXATIONSEQUENCE_DISABLED, DEFAULT_VALUE_FIXATIONSEQUENCE_DISABLED, propertyChangeListener);
-        gazeMenuEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MENU, DEFAULT_VALUE_GAZE_MENU, propertyChangeListener);
-        gazeMouseEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_GAZE_MOUSE, DEFAULT_VALUE_GAZE_MOUSE, propertyChangeListener);
         backgroundStyleProperty = new ApplicationConfigBackedObjectProperty<>(applicationConfig, PROPERTY_NAME_BACKGROUND_STYLE, DEFAULT_VALUE_BACKGROUND_STYLE, propertyChangeListener,
             new EnumMarshaller<>(),
             new EnumUnmarshaller<>(BackgroundStyle.class));
@@ -354,6 +348,10 @@ public class Configuration {
         return enableRewardSoundProperty.getValue();
     }
 
+    public Boolean isReaskedQuestionOnFail() {
+        return reaskQuestionOnFail.getValue();
+    }
+
     public boolean isLimiterS() {
         return limiterSProperty.getValue();
     }
@@ -405,14 +403,6 @@ public class Configuration {
 
     public String getVideoFolder() {
         return videoFolderProperty.getValue();
-    }
-
-    public Boolean isGazeMenuEnable() {
-        return gazeMenuEnabledProperty.getValue();
-    }
-
-    public Boolean isGazeMouseEnable() {
-        return gazeMouseEnabledProperty.getValue();
     }
 
     public BackgroundStyle getBackgroundStyle() {

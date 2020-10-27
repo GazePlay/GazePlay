@@ -88,11 +88,100 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         this.stats = stats;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
         this.config = gameContext.getConfiguration();
         this.variant = variant;
 
-        bibouleImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/biboules");
-        cloudImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/clouds");
+        bibouleImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/biboules", randomGenerator);
+        cloudImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/clouds", randomGenerator);
+
+        this.backgroundLayer = new Group();
+        this.middleLayer = new Group();
+        final Group foregroundLayer = new Group();
+        this.gameContext.getChildren().addAll(backgroundLayer, middleLayer, foregroundLayer);
+
+        this.platforms = new ArrayList();
+        this.platformHeight = dimensions.getHeight() / 10;
+        this.platformWidth = dimensions.getWidth() / 7;
+
+        initBackground();
+
+        final Label onScreenText = new Label();
+        foregroundLayer.getChildren().add(onScreenText);
+
+        scoreText = new Text(0, 50, "0");
+        scoreText.setTextAlignment(TextAlignment.CENTER);
+        scoreText.setFont(new Font(50));
+        scoreText.setWrappingWidth(dimensions.getWidth());
+        Color textColor = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+            @Override
+            public Color visitLight() {
+                return Color.BLACK;
+            }
+
+            @Override
+            public Color visitDark() {
+                return Color.WHITE;
+            }
+        });
+        scoreText.setFill(textColor);
+        foregroundLayer.getChildren().add(scoreText);
+
+        // Menu
+        final int fixationLength = config.getFixationLength();
+
+        shade = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
+        shade.setFill(new Color(0, 0, 0, 0.75));
+
+        restartButton = new ProgressButton();
+        final ImageView restartImage = new ImageView(DATA_PATH + "/menu/restart.png");
+        restartImage.setFitHeight(dimensions.getHeight() / 6);
+        restartImage.setFitWidth(dimensions.getHeight() / 6);
+        restartButton.setImage(restartImage);
+        restartButton.setLayoutX(dimensions.getWidth() / 2 - dimensions.getHeight() / 12);
+        restartButton.setLayoutY(dimensions.getHeight() / 2 - dimensions.getHeight() / 12);
+        restartButton.assignIndicator(event -> launch(), fixationLength);
+
+        finalScoreText = new Text(0, dimensions.getHeight() / 4, "");
+        finalScoreText.setFill(Color.WHITE);
+        finalScoreText.setTextAlignment(TextAlignment.CENTER);
+        finalScoreText.setFont(new Font(50));
+        finalScoreText.setWrappingWidth(dimensions.getWidth());
+        foregroundLayer.getChildren().addAll(shade, finalScoreText, restartButton);
+
+        this.gameContext.getGazeDeviceManager().addEventFilter(restartButton);
+
+        // Interaction
+        gazeTarget = new Point2D(dimensions.getWidth() / 2.0, dimensions.getHeight() / 2.0);
+
+        interactionOverlay = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
+
+        final EventHandler<Event> movementEvent = (Event event) -> {
+            if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
+                gazeTarget = new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
+            } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
+                gazeTarget = new Point2D(((GazeEvent) event).getX(), ((GazeEvent) event).getY());
+            }
+        };
+
+        interactionOverlay.addEventFilter(MouseEvent.MOUSE_MOVED, movementEvent);
+        interactionOverlay.addEventFilter(GazeEvent.GAZE_MOVED, movementEvent);
+        interactionOverlay.setFill(Color.TRANSPARENT);
+        foregroundLayer.getChildren().add(interactionOverlay);
+
+        this.gameContext.getGazeDeviceManager().addEventFilter(interactionOverlay);
+    }
+
+    public BibouleJump(final IGameContext gameContext, final BibouleJumpStats stats, final BibouleJumpVariant variant, double gameSeed) {
+        this.gameContext = gameContext;
+        this.stats = stats;
+        this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+        this.config = gameContext.getConfiguration();
+        this.variant = variant;
+
+        bibouleImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/biboules", randomGenerator);
+        cloudImages = ImageUtils.createCustomizedImageLibrary(null, "biboulejump/clouds", randomGenerator);
 
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();

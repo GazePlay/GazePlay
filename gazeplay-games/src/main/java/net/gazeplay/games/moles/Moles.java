@@ -57,6 +57,8 @@ public class Moles extends Parent implements GameLifeCycle {
 
     private Timer minuteur;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     Moles(IGameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
@@ -65,6 +67,19 @@ public class Moles extends Parent implements GameLifeCycle {
         moleRadius = 0;
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+    }
+
+    Moles(IGameContext gameContext, Stats stats, double gameSeed) {
+        super();
+        this.gameContext = gameContext;
+        this.stats = stats;
+        targetAOIList = new ArrayList<>();
+        moleRadius = 0;
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
     @Override
@@ -160,27 +175,26 @@ public class Moles extends Parent implements GameLifeCycle {
     private synchronized void play() {
 
         nbMolesOut = new AtomicInteger(0);
-        ReplayablePseudoRandom r = new ReplayablePseudoRandom();
 
         minuteur = new Timer();
         TimerTask tache = new TimerTask() {
             public void run() {
 
-                int n = (int) r.random();
+                int n = randomGenerator.nextInt(6);
                 if (nbMolesOut.get() <= 3) {
-                    chooseMoleToOut(r);
-                } else if ((nbMolesOut.get() <= 4) && (n % 4 == 0)) {
-                    chooseMoleToOut(r);
-                } else if ((nbMolesOut.get() <= 5) && (n % 8 == 0)) {
-                    chooseMoleToOut(r);
-                } else if ((nbMolesOut.get() <= 6) && (n % 12 == 0)) {
-                    chooseMoleToOut(r);
-                } else if ((nbMolesOut.get() <= 7) && (n % 16 == 0)) {
-                    chooseMoleToOut(r);
-                } else if ((nbMolesOut.get() <= 8) && (n % 20 == 0)) {
-                    chooseMoleToOut(r);
-                } else if ((nbMolesOut.get() <= 9) && (n % 24 == 0)) {
-                    chooseMoleToOut(r);
+                    chooseMoleToOut();
+                } else if ((nbMolesOut.get() <= 4) && (n == 0)) {
+                    chooseMoleToOut();
+                } else if ((nbMolesOut.get() <= 5) && (n == 1)) {
+                    chooseMoleToOut();
+                } else if ((nbMolesOut.get() <= 6) && (n == 2)) {
+                    chooseMoleToOut();
+                } else if ((nbMolesOut.get() <= 7) && (n == 3)) {
+                    chooseMoleToOut();
+                } else if ((nbMolesOut.get() <= 8) && (n == 4)) {
+                    chooseMoleToOut();
+                } else if ((nbMolesOut.get() <= 9) && (n == 5)) {
+                    chooseMoleToOut();
                 }
             }
         };
@@ -202,21 +216,27 @@ public class Moles extends Parent implements GameLifeCycle {
     }
 
     /* Select a mole not out for the moment and call "getOut()" */
-    private void chooseMoleToOut(ReplayablePseudoRandom r) {
+    private void chooseMoleToOut() {
         if (this.currentRoundDetails == null) {
             return;
         }
         int indice;
-        do {
-            int nbHoles = 10;
-            indice = r.nextInt(nbHoles);
-        } while (!currentRoundDetails.molesList.get(indice).canGoOut);
+        int nbHoles = 10;
+
+        LinkedList<Integer> availableHoles = new LinkedList<>();
+        for(int i = 0; i < nbHoles; i++){
+            if(currentRoundDetails.molesList.get(i).canGoOut){
+                availableHoles.add(i);
+            }
+        }
+        indice = availableHoles.get(randomGenerator.nextInt(availableHoles.size()));
+
         MolesChar m = currentRoundDetails.molesList.get(indice);
         final TargetAOI targetAOI = new TargetAOI(m.getPositionX(), m.getPositionY(), (int)moleRadius/3,
             System.currentTimeMillis());
         targetAOIList.add(targetAOI);
         m.setTargetAOIListIndex(targetAOIList.size()-1);
-        m.getOut();
+        m.getOut(randomGenerator);
         stats.incrementNumberOfGoalsToReach();
     }
 

@@ -11,8 +11,7 @@ public class CupsBallsGameSpecSource implements GameSpecSource {
         return new GameSpec(
             GameSummary.builder().nameCode("CupsBalls").gameThumbnail("data/Thumbnails/passpass.png")
                 .category(GameCategories.Category.MEMORIZATION)
-                .category(GameCategories.Category.SELECTION)
-                .category(GameCategories.Category.LOGIC_MATHS).build(),
+                .category(GameCategories.Category.SELECTION).build(),
             new CupsBallsGameVariantGenerator(), new CupsBallsGameLauncher());
     }
 }

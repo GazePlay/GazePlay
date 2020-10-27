@@ -1,11 +1,14 @@
 package net.gazeplay.commons.random;
 
+import lombok.Getter;
+
 /**
  * @author Christophe El Zeinaty
  */
 
 public class ReplayablePseudoRandom {
 
+    @Getter
     private double seed;
 
     public ReplayablePseudoRandom() {
@@ -29,6 +32,13 @@ public class ReplayablePseudoRandom {
      */
     public int nextInt(int bound) {
         return (int) (this.nextDouble() * bound);
+    }
+
+    /*
+   Returns the next pseudorandom, uniformly distributed double value between 0.0 and 1.0 from this random number generator's sequence.
+    */
+    public double nextDouble(double bound) {
+        return (this.nextDouble() * bound);
     }
 
     /*

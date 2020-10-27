@@ -31,7 +31,7 @@ public class HomeMenuScreenFactoryBean implements FactoryBean<HomeMenuScreen> {
 
     @Override
     public HomeMenuScreen getObject() {
-        return new HomeMenuScreen(gazePlay, gazeDeviceManagerFactory.get(), soundsManagerFactory.get(), gameMenuFactory, gamesLocator);
+        return new HomeMenuScreen(gazePlay, soundsManagerFactory.get(), gameMenuFactory, gamesLocator);
     }
 
     @Override
