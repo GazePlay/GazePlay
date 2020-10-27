@@ -4,8 +4,7 @@ import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-
-import java.util.Random;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 class Cheese extends Parent {
 
@@ -15,19 +14,19 @@ class Cheese extends Parent {
     private int indexY;
     private int indexX;
 
-    private Random r;
+    private ReplayablePseudoRandom randomGenerator;
 
-    Cheese(final double entiereRecX, final double entiereRecY, final double width, final double height, final Labyrinth gameInstance) {
+    Cheese(final double entiereRecX, final double entiereRecY, final double width, final double height, final Labyrinth gameInstance, ReplayablePseudoRandom random) {
         this.gameInstance = gameInstance;
         cheese = new Rectangle(entiereRecX, entiereRecY, width, height);
         cheese.setFill(new ImagePattern(new Image("data/labyrinth/images/cheese.png"), 5, 5, 1, 1, true));
         indexY = 0;
         indexX = 0;
         cheese.setMouseTransparent(true);
+        this.randomGenerator = random;
     }
 
     void beginCheese() {
-        r = new Random();
         moveCheese();
         this.getChildren().add(cheese);
     }
@@ -35,8 +34,8 @@ class Cheese extends Parent {
     void moveCheese() {
         int x, y;
         do {
-            y = r.nextInt(gameInstance.nbBoxesLine);
-            x = r.nextInt(gameInstance.nbBoxesColumns);
+            y = randomGenerator.nextInt(gameInstance.nbBoxesLine);
+            x = randomGenerator.nextInt(gameInstance.nbBoxesColumns);
         } while (!gameInstance.isFreeForCheese(y, x));
 
         indexY = y;

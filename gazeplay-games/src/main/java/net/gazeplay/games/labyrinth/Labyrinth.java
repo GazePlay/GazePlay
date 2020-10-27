@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
 @Slf4j
@@ -37,11 +38,46 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     private final LabyrinthGameVariant variant;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     public Labyrinth(final IGameContext gameContext, final Stats stats, final LabyrinthGameVariant variant) {
         super();
 
         this.gameContext = gameContext;
+        this.gameContext.startScoreLimiter();
+        this.gameContext.startTimeLimiter();
         this.stats = stats;
+
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+
+        this.variant = variant;
+        final Configuration config = gameContext.getConfiguration();
+        fixationlength = config.getFixationLength();
+
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        log.debug("dimension2D = {}", dimension2D);
+
+        entiereRecX = dimension2D.getWidth() * 0.25;
+        entiereRecY = dimension2D.getHeight() * 0.15;
+        entiereRecWidth = dimension2D.getWidth() * 0.6;
+        entiereRecHeight = dimension2D.getHeight() * 0.7;
+
+        caseWidth = entiereRecWidth / nbBoxesColumns;
+        caseHeight = entiereRecHeight / nbBoxesLine;
+        adjustmentCaseWidth = caseWidth / 6;
+        adjustmentCaseHeight = caseHeight / 6;
+
+    }
+
+    public Labyrinth(final IGameContext gameContext, final Stats stats, final LabyrinthGameVariant variant, double gameSeed) {
+        super();
+
+        this.gameContext = gameContext;
+        this.stats = stats;
+
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+
         this.variant = variant;
         final Configuration config = gameContext.getConfiguration();
         fixationlength = config.getFixationLength();
@@ -67,6 +103,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         final Rectangle recJeu = new Rectangle(entiereRecX, entiereRecY, entiereRecWidth, entiereRecHeight);
@@ -76,7 +113,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         walls = creationLabyrinth();
 
         // Creation of cheese
-        cheese = new Cheese(entiereRecX, entiereRecY, dimension2D.getWidth() / 15, dimension2D.getHeight() / 15, this);
+        cheese = new Cheese(entiereRecX, entiereRecY, dimension2D.getWidth() / 15, dimension2D.getHeight() / 15, this, randomGenerator);
         mouse = createMouse();
 
         gameContext.getChildren().add(mouse);
@@ -85,8 +122,11 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         cheese.beginCheese();
         gameContext.getChildren().add(cheese);
 
+        gameContext.start();
+
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     private Mouse createMouse() {
@@ -104,6 +144,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
                 throw new IllegalArgumentException("Unsupported variant ID");
         }
     }
+
 
     @Override
     public void dispose() {
@@ -158,6 +199,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     void testIfCheese(final int i, final int j) {
         if (cheese.isTheCheese(i, j)) {
             stats.incrementNumberOfGoalsReached();
+            gameContext.updateScore(stats, this);
             cheese.moveCheese();
             stats.incrementNumberOfGoalsToReach();
             mouse.nbMove = 0;

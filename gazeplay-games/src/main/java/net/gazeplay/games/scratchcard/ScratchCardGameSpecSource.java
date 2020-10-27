@@ -9,7 +9,8 @@ public class ScratchCardGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("ScratchCard").gameThumbnail("data/Thumbnails/scratchcard.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            GameSummary.builder().nameCode("ScratchCard").gameThumbnail("data/Thumbnails/scratchcard.png")
+                .category(GameCategories.Category.ACTION_REACTION).build(),
             new ScratchCardGameLauncher());
     }
 }

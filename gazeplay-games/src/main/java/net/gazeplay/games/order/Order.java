@@ -16,6 +16,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**
@@ -27,6 +28,8 @@ public class Order implements GameLifeCycle {
     private final Stats stats;
     private int currentNum;
     private final int nbTarget;
+    private final ReplayablePseudoRandom randomGenerator;
+
 
     public Order(IGameContext gameContext, int nbTarget, Stats stats) {
         super();
@@ -34,10 +37,28 @@ public class Order implements GameLifeCycle {
         this.stats = stats;
         this.currentNum = 0;
         this.nbTarget = nbTarget;
+        //this.gameContext.startScoreLimiter();
+        this.gameContext.startTimeLimiter();
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+    }
+
+    public Order(IGameContext gameContext, int nbTarget, Stats stats, double gameSeed) {
+        super();
+        this.gameContext = gameContext;
+        this.stats = stats;
+        this.currentNum = 0;
+        this.nbTarget = nbTarget;
+        //this.gameContext.startScoreLimiter();
+        this.gameContext.startTimeLimiter();
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
+        gameContext.getGazeDeviceManager().addStats(stats);
+        gameContext.start();
         spawn();
     }
 
@@ -45,6 +66,7 @@ public class Order implements GameLifeCycle {
         handleAnswer(t, this.currentNum == t.getNum() - 1);
 
         if (this.currentNum == nbTarget) {
+            gameContext.updateScore(stats,this);
             gameContext.playWinTransition(20, actionEvent -> Order.this.restart());
         }
     }
@@ -63,9 +85,9 @@ public class Order implements GameLifeCycle {
         Timeline pause = new Timeline();
         pause.getKeyFrames().add(new KeyFrame(Duration.seconds(1)));
         pause.setOnFinished(actionEvent -> {
-            Order.this.gameContext.getChildren().remove(c);
+            gameContext.getChildren().remove(c);
             if (!correct) {
-                Order.this.restart();
+                restart();
             }
         });
 
@@ -83,7 +105,7 @@ public class Order implements GameLifeCycle {
 
             @Override
             public void handle(ActionEvent actionEvent) {
-                Target t = new Target(Order.this, gameContext, i + 1, gameContext.getConfiguration().getFixationLength());
+                Target t = new Target(Order.this, gameContext, i + 1, gameContext.getConfiguration().getFixationLength(), randomGenerator);
                 gameContext.getChildren().add(t);
                 tabTarget[i] = t;
                 i++;
@@ -114,4 +136,5 @@ public class Order implements GameLifeCycle {
         this.currentNum = 0;
         gameContext.clear();
     }
+
 }

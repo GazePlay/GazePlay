@@ -47,6 +47,7 @@ public class RushHour extends Parent implements GameLifeCycle {
     public RushHour(final IGameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
+        this.gameContext.startTimeLimiter();
         level = 0;
         size = new SimpleIntegerProperty();
         gameContext.getPrimaryStage().widthProperty().addListener((observable, oldValue, newValue) -> {
@@ -64,8 +65,8 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         });
 
-        ground = new Rectangle(); // to avoid NullPointerException
 
+        ground = new Rectangle(); // to avoid NullPointerException
     }
 
     private void setLevel(final int i) {
@@ -171,7 +172,6 @@ public class RushHour extends Parent implements GameLifeCycle {
         p.setLayoutY(dimension2D.getHeight() / 2 - ground.getHeight()/ 2d);
 
         gameContext.getChildren().add(p);
-        gameContext.getGazeDeviceManager().addEventFilter(p);
 
         setIntersections();
 
@@ -2421,6 +2421,7 @@ public class RushHour extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
         endOfGame = false;
+        gameContext.setLimiterAvailable();
         setLevel(level);
         if (toWin.isDirection()) {
             toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiH.png")));
@@ -2431,6 +2432,8 @@ public class RushHour extends Parent implements GameLifeCycle {
         final int numberLevels = 33;
         level = (level + 1) % numberLevels;
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
+        gameContext.firstStart();
     }
 
     @Override
@@ -2455,6 +2458,8 @@ public class RushHour extends Parent implements GameLifeCycle {
     private void win () {
         endOfGame = true;
         stats.incrementNumberOfGoalsReached();
+
+        gameContext.updateScore(stats, this);
         gameContext.playWinTransition(500, actionEvent -> {
             dispose();
             launch();
@@ -2531,5 +2536,4 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         p.getChildren().addAll(up, down, left, right, door);
     }
-
 }

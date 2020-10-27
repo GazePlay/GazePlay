@@ -26,12 +26,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 @Slf4j
 public class CakeFactory extends Parent implements GameLifeCycle {
@@ -96,11 +96,37 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     @Setter
     private ProgressButton[] buttons;
 
+    private final ReplayablePseudoRandom random;
+
     CakeFactory(final IGameContext gameContext, final Stats stats, final CakeGameVariant variant) {
         this.gameContext = gameContext;
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.debug("dimension2D = {}", dimension2D);
         this.stats = stats;
+        this.gameContext.startTimeLimiter();
+        this.random = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(random.getSeed());
+        centerX = dimension2D.getWidth() / 2;
+        centerY = dimension2D.getHeight() / 2;
+        buttonSize = dimension2D.getWidth() / 8;
+        cake = new StackPane[3];
+        currentCake = 0;
+        maxCake = 0;
+        setNappage(false);
+        this.variant = variant;
+        buttons = new ProgressButton[6];
+        this.fixationLength = gameContext.getConfiguration().getFixationLength();
+
+        initBackground(dimension2D);
+    }
+
+    CakeFactory(final IGameContext gameContext, final Stats stats, final CakeGameVariant variant, double gameSeed) {
+        this.gameContext = gameContext;
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        log.debug("dimension2D = {}", dimension2D);
+        this.stats = stats;
+        this.gameContext.startTimeLimiter();
+        this.random = new ReplayablePseudoRandom(gameSeed);
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2;
         buttonSize = dimension2D.getWidth() / 8;
@@ -228,11 +254,13 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             final FadeTransition ft = new FadeTransition(Duration.millis(500), randomCake);
             ft.setToValue(1);
             ft.setOnFinished(actionEvent -> {
+                gameContext.updateScore(stats,this);
                 playWin();
             });
             ft.play();
         } else {
             stats.incrementNumberOfGoalsReached();
+            gameContext.updateScore(stats,this);
             playWin();
         }
     }
@@ -262,6 +290,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             launch();
 
             gameContext.onGameStarted();
+
         });
     }
 
@@ -541,7 +570,6 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     }
 
     private void generateRandomCake() {
-        final Random random = new Random();
         for (int i = 0; i < 3; i++) {
             model[i][0] = 1 + random.nextInt(4);
             model[i][1] = 1 + random.nextInt(5);
@@ -606,6 +634,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
         gameContext.getChildren().add(this);
 
         for (int i = 0; i < 3; i++) {
@@ -629,6 +658,8 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
         this.gameContext.resetBordersToFront();
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
+        this.gameContext.firstStart();
     }
 
     @Override

@@ -17,6 +17,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -36,9 +37,6 @@ public class Bubble extends Parent implements GameLifeCycle {
     public static final String DIRECTION_LEFT = "toLeft";
     public static final String DIRECTION_RIGHT = "toRight";
 
-    private static final int maxRadius = 70;
-    private static final int minRadius = 30;
-
     private static final int maxTimeLength = 7;
     private static final int minTimeLength = 4;
 
@@ -52,36 +50,40 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private final ImageLibrary imageLibrary;
 
-    private final List<Circle> fragments;
+    private List<Circle> fragments;
 
     private EventHandler<Event> enterEvent;
 
     private final BubblesGameVariant direction;
 
-    public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final boolean useBackgroundImage, final BubblesGameVariant direction) {
+    private final ReplayablePseudoRandom randomGenerator;
+    private final ReplayablePseudoRandom randomFragmentsGenerator = new ReplayablePseudoRandom();;
+
+    public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final BubblesGameVariant direction) {
         this.gameContext = gameContext;
         this.type = type;
         this.stats = stats;
         this.direction = direction;
+        gameContext.startTimeLimiter();
+        gameContext.startScoreLimiter();
 
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"));
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
 
-        initBackground(useBackgroundImage);
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"), randomGenerator);
+    }
 
-        gameContext.getChildren().add(this);
+    public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final BubblesGameVariant direction, double gameSeed) {
+        this.gameContext = gameContext;
+        this.type = type;
+        this.stats = stats;
+        this.direction = direction;
+        gameContext.startTimeLimiter();
+        gameContext.startScoreLimiter();
 
-        this.fragments = buildFragments(type);
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
-        this.getChildren().addAll(fragments);
-
-        enterEvent = e -> {
-
-            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-
-                enter((Circle) e.getTarget());
-            }
-        };
-
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"), randomGenerator);
     }
 
     void initBackground(boolean useBackgroundImage) {
@@ -109,13 +111,45 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
+        this.getChildren().clear();
+        initBackground(true);
+        gameContext.getChildren().add(this);
+        gameContext.setLimiterAvailable();
 
+        this.fragments = buildFragments(type);
+
+        this.getChildren().addAll(fragments);
+
+        enterEvent = e -> {
+
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+
+                enter((Circle) e.getTarget());
+            }
+        };
+
+        gameContext.start();
         for (int i = 0; i < 10; i++) {
 
             newCircle();
         }
 
+
+        this.fragments = buildFragments(type);
+
+        this.getChildren().addAll(fragments);
+
+        enterEvent = e -> {
+
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+
+                enter((Circle) e.getTarget());
+            }
+        };
+
+
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override
@@ -138,7 +172,7 @@ public class Bubble extends Parent implements GameLifeCycle {
             fragment.setCenterY(-100);
 
             if (bubbleType == BubbleType.COLOR) {
-                fragment.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
+                fragment.setFill(new Color(randomFragmentsGenerator.nextDouble(), randomFragmentsGenerator.nextDouble(), randomFragmentsGenerator.nextDouble(), 1));
             } else {
                 fragment.setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
             }
@@ -168,9 +202,9 @@ public class Bubble extends Parent implements GameLifeCycle {
                 new KeyValue(fragment.centerYProperty(), centerY, Interpolator.EASE_OUT)));
             goToCenterTimeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.opacityProperty(), 1)));
 
-            final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
-            final double endXValue = Math.random() * screenDimension.getWidth();
-            final double endYValue = Math.random() * screenDimension.getHeight();
+            final Dimension2D sceneDimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
+            final double endXValue = randomFragmentsGenerator.nextDouble() * sceneDimensions.getWidth();
+            final double endYValue = randomFragmentsGenerator.nextDouble() * sceneDimensions.getHeight();
 
             timeline.getKeyFrames().add(new KeyFrame(new Duration(1000),
                 new KeyValue(fragment.centerXProperty(), endXValue, Interpolator.LINEAR)));
@@ -183,15 +217,13 @@ public class Bubble extends Parent implements GameLifeCycle {
         sequence.getChildren().addAll(goToCenterTimeline, timeline);
         sequence.play();
 
-        if (Math.random() > 0.5) {
+        if (randomFragmentsGenerator.nextDouble() > 0.5) {
             final String soundResource = "data/bubble/sounds/Large-Bubble-SoundBible.com-1084083477.mp3";
             gameContext.getSoundManager().add(soundResource);
         } else {
             final String soundResource = "data/bubble/sounds/Blop-Mark_DiAngelo-79054334.mp3";
             gameContext.getSoundManager().add(soundResource);
         }
-
-
     }
 
     private void enter(final Circle target) {
@@ -203,6 +235,8 @@ public class Bubble extends Parent implements GameLifeCycle {
         this.getChildren().remove(target);
 
         stats.incrementNumberOfGoalsReached();
+
+        gameContext.updateScore(stats,this);
 
         explose(centerX, centerY); // instead of C to avoid wrong position of the explosion
 
@@ -228,12 +262,15 @@ public class Bubble extends Parent implements GameLifeCycle {
     private Circle buildCircle() {
 
         final Circle newCircle = new Circle();
-        final double radius = (maxRadius - minRadius) * Math.random() + minRadius;
+        final Dimension2D screenDimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        double maxRadius = Math.min(screenDimension.getWidth()/12,screenDimension.getHeight()/12);
+        double minRadius =  Math.min(screenDimension.getHeight()/30,screenDimension.getWidth()/30);
+        final double radius = (maxRadius - minRadius) * randomGenerator.nextDouble() + minRadius;
 
         newCircle.setRadius(radius);
 
         if (type == BubbleType.COLOR) {
-            newCircle.setFill(new Color(Math.random(), Math.random(), Math.random(), 0.9));
+            newCircle.setFill(new Color(randomGenerator.nextDouble(), randomGenerator.nextDouble(), randomGenerator.nextDouble(), 0.9));
         } else {
             newCircle.setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
         }
@@ -247,32 +284,33 @@ public class Bubble extends Parent implements GameLifeCycle {
         double centerX = 0;
         double centerY = 0;
 
-        final double timelength = ((maxTimeLength - minTimeLength) * Math.random() + minTimeLength) * 1000;
+        final double timelength = ((maxTimeLength - minTimeLength) * randomGenerator.nextDouble() + minTimeLength) * 1000;
 
         final Timeline timeline = new Timeline();
 
+        double maxRadius = dimension2D.getHeight()/12;
 
         if (this.direction == BubblesGameVariant.TOP) {
-            centerX = (dimension2D.getWidth() - maxRadius) * Math.random() + maxRadius;
+            centerX = (dimension2D.getWidth() - maxRadius) * randomGenerator.nextDouble() + maxRadius;
             centerY = dimension2D.getHeight();
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(circle.centerYProperty(), -maxRadius, Interpolator.EASE_IN)));
         } else if (this.direction == BubblesGameVariant.BOTTOM) {
-            centerX = (dimension2D.getWidth() - maxRadius) * Math.random() + maxRadius;
+            centerX = (dimension2D.getWidth() - maxRadius) * randomGenerator.nextDouble() + maxRadius;
             centerY = 0;
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(circle.centerYProperty(), dimension2D.getHeight() + maxRadius, Interpolator.EASE_IN)));
         } else if (this.direction == BubblesGameVariant.RIGHT) {
             centerX = 0;
-            centerY = (dimension2D.getHeight() - maxRadius) * Math.random() + maxRadius;
+            centerY = (dimension2D.getHeight() - maxRadius) * randomGenerator.nextDouble() + maxRadius;
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(circle.centerXProperty(), dimension2D.getWidth() + maxRadius, Interpolator.EASE_IN)));
         } else if (this.direction == BubblesGameVariant.LEFT) {
             centerX = dimension2D.getWidth();
-            centerY = (dimension2D.getHeight() - maxRadius) * Math.random() + maxRadius;
+            centerY = (dimension2D.getHeight() - maxRadius) * randomGenerator.nextDouble() + maxRadius;
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(circle.centerXProperty(), -maxRadius, Interpolator.EASE_IN)));

@@ -20,6 +20,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.ImageLibrary;
@@ -30,7 +31,6 @@ import net.gazeplay.components.AspectRatioImageRectangleUtil;
 
 import java.util.Collections;
 import java.util.Locale;
-import java.util.Random;
 
 public class Letters implements GameLifeCycle {
 
@@ -71,7 +71,7 @@ public class Letters implements GameLifeCycle {
     @NonNull
     private final Translator translator;
 
-    private final Random random = new Random();
+    private final ReplayablePseudoRandom randomGenerator;
 
     protected CurrentRoundDetails currentRoundDetails;
 
@@ -84,7 +84,32 @@ public class Letters implements GameLifeCycle {
 
         this.stats = stats;
 
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"));
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"), randomGenerator);
+        translator = gameContext.getTranslator();
+
+        Locale locale = translator.currentLocale();
+
+        if (locale.getLanguage().equalsIgnoreCase("fra")) {
+            this.currentLanguage = "fra";
+        } else {
+            this.currentLanguage = "eng";
+        }
+
+    }
+
+    public Letters(IGameContext gameContext, int nbLines, int nbColumns, Stats stats, double gameSeed) {
+        this.gameContext = gameContext;
+        this.nbLines = nbLines;
+        this.nbColomns = nbColumns;
+
+        this.stats = stats;
+
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"), randomGenerator);
         translator = gameContext.getTranslator();
 
         Locale locale = translator.currentLocale();
@@ -171,10 +196,11 @@ public class Letters implements GameLifeCycle {
         // Bloc[][] blocksList = createCards(mainLetter, r, alphabet, width, height, config);
         // this.currentRoundDetails.remainingCount = correctCount;
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     private String pickRandomLetter() {
-        return alphabet[(random.nextInt(alphabet.length))];
+        return alphabet[(randomGenerator.nextInt(alphabet.length))];
     }
 
     private Bloc[][] createCards(String mainLetter, double width, double height,
@@ -184,14 +210,14 @@ public class Letters implements GameLifeCycle {
 
         final int fixationlength = config.getFixationLength();
 
-        final int rowTrue = random.nextInt(nbLines);
-        final int colTrue = random.nextInt(nbColomns);
+        final int rowTrue = randomGenerator.nextInt(nbLines);
+        final int colTrue = randomGenerator.nextInt(nbColomns);
 
         for (int i = 0; i < nbLines; i++) {
             for (int j = 0; j < nbColomns; j++) {
                 String currentLetter;
 
-                float f = random.nextFloat();
+                float f = randomGenerator.nextFloat();
 
                 if (i == rowTrue && j == colTrue) {
                     currentLetter = mainLetter;
@@ -253,7 +279,7 @@ public class Letters implements GameLifeCycle {
     }
 
     private String createQuestionSoundPath(String currentLanguage, String currentLetter) {
-        if (random.nextBoolean()) {
+        if (randomGenerator.nextBoolean()) {
             return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/f/quest/" + currentLetter.toUpperCase()
                 + ".mp3";
         }

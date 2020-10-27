@@ -9,7 +9,8 @@ public class PetGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Pet").gameThumbnail("data/Thumbnails/pet.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            GameSummary.builder().nameCode("Pet").gameThumbnail("data/Thumbnails/pet.png")
+                .category(GameCategories.Category.SELECTION).build(),
             new PetGameLauncher());
     }
 }

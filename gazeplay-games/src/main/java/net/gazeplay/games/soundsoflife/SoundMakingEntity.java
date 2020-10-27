@@ -12,11 +12,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.utils.stats.Stats;
-
 import java.util.ArrayList;
-import java.util.Random;
 
 @Slf4j
 public class SoundMakingEntity extends Parent {
@@ -29,13 +28,13 @@ public class SoundMakingEntity extends Parent {
     private final SoundManager soundManager;
 
     public SoundMakingEntity(final ImageView imageView, final Stats stats, final ArrayList<String> audioClips,
-                             final ProgressIndicator progressIndicator, final int fixationLength, final SoundManager soundManager) {
+                             final ProgressIndicator progressIndicator, final int fixationLength, final SoundManager soundManager, ReplayablePseudoRandom randomGenerator) {
         this.audioClips = audioClips;
         this.progressIndicator = progressIndicator;
         this.stats = stats;
         this.soundManager = soundManager;
 
-        final Random random = new Random();
+        final ReplayablePseudoRandom random = randomGenerator;
         soundIter = random.nextInt(audioClips.size());
 
         this.getChildren().addAll(imageView, progressIndicator);

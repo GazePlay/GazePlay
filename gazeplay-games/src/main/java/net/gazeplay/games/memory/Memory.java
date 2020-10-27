@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -55,6 +56,8 @@ public class Memory implements GameLifeCycle {
 
     private final boolean isOpen;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
                   final boolean isOpen) {
         super();
@@ -69,19 +72,58 @@ public class Memory implements GameLifeCycle {
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.stats = stats;
+        this.gameContext.startTimeLimiter();
+
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
 
         if (gameType == MemoryGameType.LETTERS) {
 
-            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters");
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters", randomGenerator);
 
         } else if (gameType == MemoryGameType.NUMBERS) {
 
-            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers");
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers", randomGenerator);
 
         } else {
             this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"),
-                Utils.getImagesSubdirectory("default"));
+                Utils.getImagesSubdirectory("default"), randomGenerator);
         }
+
+    }
+
+    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
+                  final boolean isOpen, double gameSeed) {
+        super();
+        this.isOpen = isOpen;
+        final int cardsCount = nbLines * nbColumns;
+        if ((cardsCount & 1) != 0) {
+            // nbLines * nbColumns must be a multiple of 2
+            throw new IllegalArgumentException("Cards count must be an even number in this game");
+        }
+        this.nbRemainingPeers = (nbLines * nbColumns) / 2;
+        this.gameContext = gameContext;
+        this.nbLines = nbLines;
+        this.nbColumns = nbColumns;
+        this.stats = stats;
+        this.gameContext.startTimeLimiter();
+
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+
+        if (gameType == MemoryGameType.LETTERS) {
+
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters", randomGenerator);
+
+        } else if (gameType == MemoryGameType.NUMBERS) {
+
+            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers", randomGenerator);
+
+        } else {
+            this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"),
+                Utils.getImagesSubdirectory("default"), randomGenerator);
+        }
+
+        gameContext.start();
 
     }
 
@@ -101,6 +143,7 @@ public class Memory implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.setLimiterAvailable();
         final Configuration config = gameContext.getConfiguration();
         final int cardsCount = nbColumns * nbLines;
 
@@ -115,6 +158,8 @@ public class Memory implements GameLifeCycle {
         gameContext.getChildren().addAll(cardList);
 
         stats.notifyNewRoundReady();
+
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override
@@ -201,9 +246,8 @@ public class Memory implements GameLifeCycle {
 
     private int getRandomValue(final HashMap<Integer, Integer> indUsed) {
         int value;
-        final Random rdm = new Random();
         do {
-            value = rdm.nextInt(images.size());
+            value = randomGenerator.nextInt(images.size());
         } while ((!images.containsKey(value)) || (indUsed.containsKey(value) && (indUsed.get(value) == 2)));
         // While selected image is already used 2 times (if it appears )
         return value;
@@ -212,4 +256,5 @@ public class Memory implements GameLifeCycle {
     public int getnbRemainingPeers() {
         return nbRemainingPeers;
     }
+
 }

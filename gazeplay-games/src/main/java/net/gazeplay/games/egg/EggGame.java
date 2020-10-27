@@ -21,10 +21,20 @@ public class EggGame implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         this.numberOfTurns = numOfTurns;
+        gameContext.startTimeLimiter();
+    }
+
+    public EggGame(final IGameContext gameContext, final Stats stats, final int numOfTurns, double gameSeed) {
+        super();
+        this.gameContext = gameContext;
+        this.stats = stats;
+        this.numberOfTurns = numOfTurns;
     }
 
     @Override
     public void launch() {
+        gameContext.start();
+        gameContext.setLimiterAvailable();
         final Configuration config = gameContext.getConfiguration();
 
         final Egg egg = createEgg(config);
@@ -33,6 +43,7 @@ public class EggGame implements GameLifeCycle {
 
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override
@@ -41,17 +52,8 @@ public class EggGame implements GameLifeCycle {
     }
 
     private Egg createEgg(final Configuration config) {
-        final javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-        final double eggHeight = gameDimension2D.getHeight() / 2;
-        final double eggWidth = 3. * eggHeight / 4.;
-
         final int fixationlength = config.getFixationLength();
-
-        final double positionX = gameDimension2D.getWidth() / 2 - eggWidth / 2;
-        final double positionY = gameDimension2D.getHeight() / 2 - eggHeight / 2;
-
-        return new Egg(positionX, positionY, eggWidth, eggHeight, gameContext, stats, this, fixationlength, numberOfTurns);
+        return new Egg(gameContext, stats, this, fixationlength, numberOfTurns);
     }
 
 }

@@ -1,6 +1,9 @@
 package net.gazeplay.games.divisor;
 
-import javafx.animation.*;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -18,12 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.Position;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * @author vincent
@@ -39,17 +42,20 @@ class Target extends Parent {
     private final EventHandler<Event> enterEvent;
     private final IGameContext gameContext;
     private final Divisor gameInstance;
-    private final long startTime;
     private final Dimension2D dimension;
     private final boolean isRabbit;
+    private final ReplayablePseudoRandom randomGenerator;
+    private final long startTime;
 
     @Getter
     private final ImageLibrary imgLib;
     private final Circle circle;
     private Timeline timeline;
 
+    private final ReplayablePseudoRandom randomFragmentsGenerator = new ReplayablePseudoRandom();
+
     public Target(final IGameContext gameContext, final Stats stats, final ImageLibrary imgLib, final int level, final long start,
-                  final Divisor gameInstance, final Position pos, final boolean isRabbit) {
+                  final Divisor gameInstance, final Position pos, final boolean isRabbit, ReplayablePseudoRandom random) {
         this.level = level;
         this.difficulty = 3;
         this.gameContext = gameContext;
@@ -60,8 +66,9 @@ class Target extends Parent {
         this.imgLib = imgLib;
         this.pos = pos;
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.radius = 200d / (level + 1);
+        this.radius = Math.min((dimension.getWidth()/6) / (level + 1),(dimension.getHeight()/6) / (level + 1));
         this.timeline = new Timeline();
+        this.randomGenerator = random;
 
         this.circle = new Circle(pos.getX(), pos.getY(), this.radius);
         this.circle.setFill(new ImagePattern(this.imgLib.pickRandomImage(), 0, 0, 1, 1, true));
@@ -145,7 +152,7 @@ class Target extends Parent {
         final Timeline timelineParticle = new Timeline();
         for (int i = 0; i < 30; i++) {
             final Circle particle = new Circle(x, y, particleRadius);
-            particle.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+            particle.setFill(Color.color(randomFragmentsGenerator.nextDouble(), randomFragmentsGenerator.nextDouble(), randomFragmentsGenerator.nextDouble()));
 
             particles.add(particle);
             this.gameContext.getChildren().add(particle);
@@ -162,30 +169,34 @@ class Target extends Parent {
 
         timelineParticle.setOnFinished(actionEvent -> {
             Target.this.gameContext.getChildren().removeAll(particles);
-            if (stats.getNbGoalsReached() == stats.getNbGoalsToReach()) {
-                final long totalTime = (System.currentTimeMillis() - startTime) / 1000;
-                final Label l = new Label("Score : " + totalTime + "s");
-                final Color color = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
-                    @Override
-                    public Color visitLight() {
-                        return Color.BLACK;
-                    }
 
-                    @Override
-                    public Color visitDark() {
-                        return Color.WHITE;
-                    }
-                });
-                l.setTextFill(color);
-                l.setFont(Font.font(50));
-                l.setLineSpacing(10);
-                l.setLayoutX(15);
-                l.setLayoutY(14);
-                gameContext.getChildren().add(l);
-                gameContext.playWinTransition(30, actionEvent1 -> gameInstance.restart());
-            }
         });
         timelineParticle.play();
+
+        if (stats.getNbGoalsReached() == stats.getNbGoalsToReach()) {
+            final long totalTime = (System.currentTimeMillis() - startTime) / 1000;
+            final Label l = new Label("Score : " + totalTime + "s");
+            final Color color = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+                @Override
+                public Color visitLight() {
+                    return Color.BLACK;
+                }
+
+                @Override
+                public Color visitDark() {
+                    return Color.WHITE;
+                }
+            });
+            l.setTextFill(color);
+            l.setFont(Font.font(50));
+            l.setLineSpacing(10);
+            l.setLayoutX(15);
+            l.setLayoutY(14);
+            gameContext.getChildren().add(l);
+
+            gameContext.updateScore(stats,gameInstance);
+            gameContext.playWinTransition(0, actionEvent1 -> gameInstance.restart());
+        }
     }
 
     private void createChildren(final double x, double y) {
@@ -193,36 +204,31 @@ class Target extends Parent {
         double tempY = y;
         for (int i = 0; i < 2; i++) {
             final Target target = new Target(gameContext, stats, this.imgLib, level + 1, startTime, gameInstance,
-                new Position(tempX, tempY), isRabbit);
+                new Position(tempX, tempY), isRabbit, randomGenerator);
 
             if (tempY + target.radius > (int) dimension.getHeight()) {
                 tempY = (int) dimension.getHeight() - (int) target.radius * 2;
             }
             gameContext.getChildren().add(target);
         }
-        stats.incrementNumberOfGoalsToReach();
-        stats.incrementNumberOfGoalsToReach();
     }
 
     private int randomDirection() {
-        final Random r = new Random();
-        int x = r.nextInt(3) + 4;
-        if (r.nextInt(2) >= 1) {
+        int x = randomGenerator.nextInt(3) + 4;
+        if (randomGenerator.nextInt(2) >= 1) {
             x = -x;
         }
         return x;
     }
 
     private Position randomPosWithRange(final Position start, final double range, final double radius) {
-        final Random random = new Random();
-
         final double minX = (start.getX() - range);
         final double minY = (start.getY() - range);
         final double maxX = (start.getX() + range);
         final double maxY = (start.getY() + range);
 
-        double positionX = random.nextInt((int) (maxX - minX)) + minX;
-        double positionY = random.nextInt((int) (maxY - minY)) + minY;
+        double positionX = randomFragmentsGenerator.nextInt((int) (maxX - minX)) + minX;
+        double positionY = randomFragmentsGenerator.nextInt((int) (maxY - minY)) + minY;
 
         if (positionX > this.dimension.getWidth()) {
             positionX = this.dimension.getWidth() - radius;
@@ -240,4 +246,5 @@ class Target extends Parent {
 
         gameContext.getGazeDeviceManager().addEventFilter(this);
     }
+
 }

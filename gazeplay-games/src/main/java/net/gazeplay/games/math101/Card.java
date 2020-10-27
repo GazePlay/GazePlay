@@ -162,15 +162,19 @@ public class Card extends Parent {
 
         currentTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(card.yProperty(), 0)));
 
-        currentTimeline.onFinishedProperty().set(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
-            gameInstance.dispose();
+        currentTimeline.onFinishedProperty().set(actionEvent ->
+        {
+            gameContext.updateScore(stats, gameInstance);
+            gameContext.playWinTransition(500, actionEvent1 -> {
+                gameInstance.dispose();
 
-            gameContext.clear();
+                gameContext.clear();
 
-            gameInstance.launch();
+                gameInstance.launch();
 
-            gameContext.onGameStarted();
-        }));
+                gameContext.onGameStarted();
+            });
+        });
 
         currentTimeline.play();
     }
@@ -198,7 +202,7 @@ public class Card extends Parent {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                progressIndicator.setOpacity(1);
+                progressIndicator.setOpacity(0.4);
                 progressIndicator.setProgress(0);
 
                 currentTimeline.stop();

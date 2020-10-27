@@ -25,12 +25,38 @@ Une bonne pratique consiste à suivre les étapes suivantes.
 
 Vous trouverez des informations supplémentaires [ici](https://openclassrooms.com/courses/gerer-son-code-avec-git-et-github/contribuer-a-des-projets-open-source)
 
-## Pull request
-Il vous sera demandé de faire *a minima* une *pull request* **quotidienne** afin d'éviter que votre code s'éloigne trop de la branche principale. Chaque **pull request** doit être documentée au mieux. En faisant le lien, entre autres, avec l'issue correspondante.
+## Git Flow
+Nous suivons la pratique du flux de travail [Git Flow] (https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
+pour mieux gérer les versions et les tests de manière automatisée.
 
+### Tirer la demande
+Il vous sera demandé de faire *a minima* une *pull request* **quotidienne** afin d'éviter que votre code s'éloigne trop de la branche principale. 
+Votre branche doit être nommée en tant que branche de fonctionnalité (et pas seulement `develop`) et toutes les demandes d'extraction doivent être configurées pour fusionner en `develop`.
+Chaque **pull request** doit être documentée au mieux. En faisant le lien, entre autres, avec l'issue correspondante.
 Afin de faire une *pull request*, toujours faire un `gradlew` qui exécutera tous les tests et s'assurera que le code n'est pas cassé.
-
 Chaque requête sera examinée par un des administrateur.
+
+### Mettre à jour votre propre fork
+Vous constaterez souvent que votre propre fork de GazePlay est en retard sur le référentiel principal de GazePlay. Pour mettre à jour votre fork, suivez
+ces étapes:
+
+```shell script
+# Définissez votre référentiel en amont si vous ne l'avez pas déjà fait
+git remote add upstream https://github.com/GazePlay/GazePlay.git
+
+# Tirez le dernier développement dans votre develop
+git checkout develop
+git pull upstream develop
+git push <myrepo> develop
+
+# Apportez vos modifications
+git checkout -b MyChange
+# - vos engagements vont ici -
+git push <myrepo> MyChange
+
+# Réinitialiser pour develop et répéter le processus pour le prochain PR
+git checkout develop
+```
 
 ## Gradle
 

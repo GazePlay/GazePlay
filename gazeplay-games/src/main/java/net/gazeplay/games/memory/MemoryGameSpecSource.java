@@ -11,7 +11,6 @@ public class MemoryGameSpecSource implements GameSpecSource {
         return new GameSpec(
             GameSummary.builder().nameCode("Memory").gameThumbnail("data/Thumbnails/memory.png")
                 .category(GameCategories.Category.SELECTION)
-                .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.MEMORIZATION).build(),
             new MemoryGameVariantGenerator(), new MemoryGameLauncher());
     }

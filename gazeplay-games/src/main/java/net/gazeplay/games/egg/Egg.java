@@ -7,6 +7,7 @@ import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -41,16 +42,28 @@ public class Egg extends Parent {
 
     private final EventHandler<Event> enterEvent;
 
-    public Egg(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext, final Stats stats,
+    public Egg(final IGameContext gameContext, final Stats stats,
                final EggGame gameInstance, final int fixationlength, final int numberOfTurn) {
 
         this.totalNumberOfTurns = numberOfTurn;
+
+        final Scene scene = gameContext.getPrimaryScene();
+        final double height = scene.getHeight() / 2;
+        final double width = 3. * height / 4.;
+
+        final double positionX = scene.getWidth() / 2 - width / 2;
+        final double positionY = scene.getHeight() / 2 - height / 2;
 
         this.cards = new StackPane();
         this.cards.setLayoutX(positionX);
         this.cards.setLayoutY(positionY);
         this.cards.setPrefWidth(width);
         this.cards.setPrefHeight(height);
+
+        this.cards.prefHeightProperty().bind(scene.heightProperty().divide(2d));
+        this.cards.prefWidthProperty().bind(this.cards.heightProperty().multiply(3d).divide(4d));
+        this.cards.layoutXProperty().bind(scene.widthProperty().divide(2d).subtract(this.cards.widthProperty().divide(2d)));
+        this.cards.layoutYProperty().bind(scene.heightProperty().divide(2d).subtract(this.cards.heightProperty().divide(2d)));
 
         final Rectangle image1 = new Rectangle(positionX, positionY, width, height);
         image1.setFill(new ImagePattern(new Image("data/egg/images/egg1.jpg"), 0, 0, 1, 1, true));
@@ -62,6 +75,22 @@ public class Egg extends Parent {
 
         final Rectangle image3 = new Rectangle(positionX, positionY, width, height);
         image3.setFill(new ImagePattern(new Image("data/egg/images/egg3.jpg"), 0, 0, 1, 1, true));
+
+        image1.heightProperty().bind(scene.heightProperty().divide(2d));
+        image1.widthProperty().bind(image1.heightProperty().multiply(3d).divide(4d));
+        image1.xProperty().bind(scene.widthProperty().divide(2d).subtract(image1.widthProperty().divide(2d)));
+        image1.yProperty().bind(scene.heightProperty().divide(2d).subtract(image1.heightProperty().divide(2d)));
+
+        image2.heightProperty().bind(scene.heightProperty().divide(2d));
+        image2.widthProperty().bind(image2.heightProperty().multiply(3d).divide(4d));
+        image2.xProperty().bind(scene.widthProperty().divide(2d).subtract(image2.widthProperty().divide(2d)));
+        image2.yProperty().bind(scene.heightProperty().divide(2d).subtract(image2.heightProperty().divide(2d)));
+
+        image3.heightProperty().bind(scene.heightProperty().divide(2d));
+        image3.widthProperty().bind(image3.heightProperty().multiply(3d).divide(4d));
+        image3.xProperty().bind(scene.widthProperty().divide(2d).subtract(image3.widthProperty().divide(2d)));
+        image3.yProperty().bind(scene.heightProperty().divide(2d).subtract(image3.heightProperty().divide(2d)));
+
 
         this.cards.getChildren().addAll(image3, image2, image1);
 
@@ -75,7 +104,7 @@ public class Egg extends Parent {
 
         this.getChildren().add(cards);
 
-        this.progressIndicator = createProgressIndicator(width / 2, height / 2);
+        this.progressIndicator = createProgressIndicator();
         this.getChildren().add(this.progressIndicator);
 
         this.enterEvent = buildEvent();
@@ -87,12 +116,15 @@ public class Egg extends Parent {
 
     }
 
-    private ProgressIndicator createProgressIndicator(final double width, final double height) {
+    private ProgressIndicator createProgressIndicator() {
         final ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(cards.getLayoutX() + width / 2);
-        indicator.setTranslateY(cards.getLayoutY() + height / 2);
-        indicator.setMinWidth(width);
-        indicator.setMinHeight(width);
+
+        indicator.minWidthProperty().bind(cards.widthProperty().divide(2));
+        indicator.minHeightProperty().bind(cards.widthProperty().divide(2));
+
+        indicator.translateXProperty().bind(cards.layoutXProperty().add(cards.widthProperty().divide(2).divide(2)));
+        indicator.translateYProperty().bind(cards.layoutYProperty().add(cards.heightProperty().divide(2).divide(2)));
+
         indicator.setOpacity(0);
         indicator.setMouseTransparent(true);
         return indicator;
@@ -117,8 +149,6 @@ public class Egg extends Parent {
 
                     timelineProgressBar.setOnFinished(actionEvent -> {
 
-                        log.info("enter in the image 3");
-
                         if (turnNumber < totalNumberOfTurns - 1) {
                             stats.incrementNumberOfGoalsReached();
                             turnNumber++;
@@ -142,6 +172,8 @@ public class Egg extends Parent {
                             final PauseTransition t = new PauseTransition(Duration.seconds(2));
 
                             t.setOnFinished(actionEvent1 -> {
+
+                                gameContext.updateScore(stats,gameInstance);
 
                                 gameContext.playWinTransition(0, event -> {
                                     gameInstance.dispose();

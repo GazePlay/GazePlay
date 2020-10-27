@@ -17,8 +17,8 @@ dependencies {
 
     testImplementation "org.mockito:mockito-core:2.+"
     testImplementation "junit:junit:4.12"
-    testImplementation project(':gazeplay')
-    testImplementation project(':gazeplay').sourceSets.test.output
+    testImplementation project(':gazeplay-core')
+    testImplementation project(':gazeplay-core').sourceSets.test.output
 }
 
 test {

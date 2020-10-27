@@ -15,11 +15,13 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.MathGameVariant;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.TargetAOI;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by EL HUSSEINI Wafaa on 14/03/2019.
@@ -32,8 +34,6 @@ public class Math101 implements GameLifeCycle {
 
     private static final float zoom_factor = 1.16f;
 
-    private static final int minHeight = 30;
-
     private final MathGameType gameType;
 
     private final IGameContext gameContext;
@@ -41,6 +41,8 @@ public class Math101 implements GameLifeCycle {
     private final int maxValue;
 
     private final Stats stats;
+
+    private final ArrayList<TargetAOI> targetAOIList;
 
     private final int nbLines;
 
@@ -50,25 +52,46 @@ public class Math101 implements GameLifeCycle {
 
     private RoundDetails currentRoundDetails;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     public Math101(final MathGameType gameType, final IGameContext gameContext, final MathGameVariant gameVariant, final Stats stats) {
         super();
         this.gameType = gameType;
         this.gameContext = gameContext;
-        this.maxValue = gameVariant.getVariableRange().getMax();
+        this.maxValue = gameVariant.getMax();
         this.stats = stats;
         this.nbLines = 2;
         this.nbColumns = 3;
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.targetAOIList = new ArrayList<>();
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
     }
 
-    private static Formula generateRandomFormula(final MathGameType gameType, final int maxValue) {
-        final Random r = new Random();
+    public Math101(final MathGameType gameType, final IGameContext gameContext, final MathGameVariant gameVariant, final Stats stats, double gameSeed) {
+        super();
+        this.gameType = gameType;
+        this.gameContext = gameContext;
+        this.maxValue = gameVariant.getMax();
+        this.stats = stats;
+        this.nbLines = 2;
+        this.nbColumns = 3;
+        this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.targetAOIList = new ArrayList<>();
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+    }
+
+    private static Formula generateRandomFormula(final MathGameType gameType, final int maxValue, ReplayablePseudoRandom randomGenerator) {
 
         // choose numbers
-        int number1 = r.nextInt(maxValue + 1);
-        int number2 = r.nextInt(maxValue + 1);
+        int number1 = randomGenerator.nextInt(maxValue + 1);
+        int number2 = randomGenerator.nextInt(maxValue + 1);
 
-        final MathOperation operator = gameType.chooseOperator();
+        final MathOperation operator = gameType.chooseOperator(randomGenerator);
 
         final int correctAnswer;
         switch (operator) {
@@ -94,8 +117,8 @@ public class Math101 implements GameLifeCycle {
                 // operator is /
                 while ((number2 == 0 && number1 == 0) || (number1 % number2 != 0)) {
                     // both cannot be 0
-                    number1 = r.nextInt(maxValue + 1);
-                    number2 = r.nextInt(maxValue + 1);
+                    number1 = randomGenerator.nextInt(maxValue + 1);
+                    number2 = randomGenerator.nextInt(maxValue + 1);
 
                     if (number2 > number1) {
                         final int temp = number2;
@@ -141,7 +164,8 @@ public class Math101 implements GameLifeCycle {
 
     @Override
     public void launch() {
-        final Formula formula = generateRandomFormula(gameType, maxValue);
+        gameContext.setLimiterAvailable();
+        final Formula formula = generateRandomFormula(gameType, maxValue, randomGenerator);
 
         final Text question = createQuestionText(formula);
 
@@ -169,12 +193,13 @@ public class Math101 implements GameLifeCycle {
         stack.setLayoutX(boardX);
         stack.setLayoutY(boardY);
         final Rectangle boardRectangle = new Rectangle(boardX, boardY, boardWidth, boardHeight);
+        final TargetAOI targetAOI = new TargetAOI(boardX+boardWidth/2, boardY+boardHeight/2, (int)boardHeight/2, System.currentTimeMillis());
+        targetAOIList.add(targetAOI);
         boardRectangle.setFill(new ImagePattern(new Image("data/math101/images/blackboard.png"), 0, 0, 1, 1, true));
 
-        final Random r = new Random();
         // Setup the question parameters
         final int cardsCount = 3;
-        final int winnerCardIndex = r.nextInt(cardsCount); // index in the list between 0 and 2
+        final int winnerCardIndex = randomGenerator.nextInt(cardsCount); // index in the list between 0 and 2
 
         final Configuration config = gameContext.getConfiguration();
 
@@ -191,11 +216,24 @@ public class Math101 implements GameLifeCycle {
         cardList.get(winnerCardIndex).toFront();
 
         stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
         stats.incrementNumberOfGoalsToReach();
+        gameContext.firstStart();
+    }
+
+    private ArrayList<TargetAOI> getTargetAOIList() {
+        return this.targetAOIList;
     }
 
     @Override
     public void dispose() {
+
+        for (int i=0; i<targetAOIList.size(); i++){
+            targetAOIList.get(i).setTimeEnded(System.currentTimeMillis());
+        }
+
+        stats.setTargetAOIList(targetAOIList);
+
         if (currentRoundDetails != null) {
             if (currentRoundDetails.cardList != null) {
                 gameContext.getChildren().removeAll(currentRoundDetails.cardList);
@@ -273,15 +311,14 @@ public class Math101 implements GameLifeCycle {
                     image = new Image("data/math101/images/correct2.png");
 
                 } else {
-                    final Random r = new Random();
 
                     int tempCurrent = correctAnswer;
 
                     while (tempCurrent == correctAnswer || resultInt.contains(tempCurrent)) {
                         if ((operator.equals(MathOperation.MULTIPLY) || operator.equals(MathOperation.DIVID)) && (correctAnswer > maxValue)) {
-                            tempCurrent = r.nextInt(2 * correctAnswer);
+                            tempCurrent = randomGenerator.nextInt(2 * correctAnswer);
                         } else {
-                            tempCurrent = r.nextInt(2 * maxValue);
+                            tempCurrent = randomGenerator.nextInt(2 * maxValue);
                         }
                     }
                     resultInt.add(tempCurrent);
@@ -294,6 +331,9 @@ public class Math101 implements GameLifeCycle {
 
                 final double positionX = computePositionX(boxWidth, cardWidth, currentColumnIndex);
                 final double positionY = computePositionY(boxHeight, cardHeight, currentLineIndex);
+
+                final TargetAOI targetAOI = new TargetAOI(positionX+cardWidth/2.5, positionY+boxWidth/3, (int)cardWidth/3, System.currentTimeMillis());
+                targetAOIList.add(targetAOI);
 
                 final Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, currentValue, gameContext, stats, this, fixationlength);
 
@@ -314,11 +354,7 @@ public class Math101 implements GameLifeCycle {
     }
 
     private static double computeCardHeight(final double boxHeight) {
-        if ((boxHeight / zoom_factor) < minHeight) {
-            return minHeight;
-        } else {
             return boxHeight / zoom_factor;
-        }
     }
 
     private static double computeCardWidth(final double cardHeight) {
@@ -332,5 +368,4 @@ public class Math101 implements GameLifeCycle {
     private static double computePositionY(final double cardboxHeight, final double cardHeight, final int rowIndex) {
         return (cardboxHeight - cardHeight) / 2 + (rowIndex * cardboxHeight) / zoom_factor;
     }
-
 }

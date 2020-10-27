@@ -14,6 +14,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.LinkedList;
@@ -58,6 +59,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
     private final Dimension2D gameDimension2D;
 
+    private final ReplayablePseudoRandom randomGenerator;
 
     @Getter
     @Setter
@@ -76,11 +78,26 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = (MagicPotionsStats) stats;
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+    }
+
+    MagicPotions(final IGameContext gameContext, final Stats stats, double gameSeed) {
+        super();
+        this.gameContext = gameContext;
+        this.stats = (MagicPotionsStats) stats;
+        this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        gameContext.startScoreLimiter();
+        gameContext.startTimeLimiter();
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
     @Override
     public void launch() {
 
+        gameContext.setLimiterAvailable();
         final String imagePATH = "data/potions/images/";
 
         initBackground(imagePATH);
@@ -92,7 +109,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         final double bibY = 50;//
 
         // make random potion request
-        final PotionMix request = PotionMix.getRandomPotionRequest();
+        final PotionMix request = PotionMix.getRandomPotionRequest(randomGenerator);
 
         final Client client = new Client(bibX, bibY, bibouleClient.getWidth(), bibouleClient.getHeight(), bibouleClient, request);
 
@@ -111,16 +128,20 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         final Image red = new Image(imagePATH + "potionRed.png");
         final Image yellow = new Image(imagePATH + "potionYellow.png");
         final Image blue = new Image(imagePATH + "potionBlue.png");
-        potionRed = new Potion(gameDimension2D.getWidth() * 6 / 7 - (red.getWidth() + red.getWidth()) * 1.5,
-            gameDimension2D.getHeight() - red.getHeight() - 10, red.getWidth(), red.getHeight(), red, Color.RED,
+
+        double imageWidth = gameDimension2D.getWidth()/9;
+        double imageHeight = gameDimension2D.getHeight()/4;
+
+        potionRed = new Potion(gameDimension2D.getWidth() * 6 / 7 - (imageWidth + imageWidth) * 1.5,
+            gameDimension2D.getHeight() - imageHeight - 10, imageWidth, imageHeight, red, Color.RED,
             gameContext, stats, this, gameContext.getConfiguration().getFixationLength());
 
-        potionYellow = new Potion(gameDimension2D.getWidth() * 6 / 7 - yellow.getWidth() * 1.5,
-            gameDimension2D.getHeight() - yellow.getHeight() - 10, yellow.getWidth(), yellow.getHeight(), yellow,
+        potionYellow = new Potion(gameDimension2D.getWidth() * 6 / 7 - imageWidth * 1.5,
+            gameDimension2D.getHeight() - imageHeight - 10, imageWidth, imageHeight, yellow,
             Color.YELLOW, gameContext, stats, this, gameContext.getConfiguration().getFixationLength());
 
-        potionBlue = new Potion(gameDimension2D.getWidth() * 6 / 7, gameDimension2D.getHeight() - blue.getHeight() - 10,
-            blue.getWidth(), blue.getHeight(), blue, Color.BLUE, gameContext, stats, this,
+        potionBlue = new Potion(gameDimension2D.getWidth() * 6 / 7, gameDimension2D.getHeight() - imageHeight - 10,
+            imageWidth, imageHeight, blue, Color.BLUE, gameContext, stats, this,
             gameContext.getConfiguration().getFixationLength());
 
         final LinkedList<Potion> potionsOnTable = new LinkedList<>();
@@ -145,6 +166,8 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
+        gameContext.getGazeDeviceManager().addStats(stats);
+        gameContext.firstStart();
 
     }
 

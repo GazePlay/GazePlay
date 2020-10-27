@@ -3,11 +3,11 @@ package net.gazeplay.commons.utils.games;
 import javafx.scene.image.Image;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
 import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -18,8 +18,8 @@ public abstract class AbstractImageLibrary implements ImageLibrary {
     @Nullable
     @Setter
     private ImageLibrary fallbackImageLibrary;
-
-    private final Random random = new Random();
+    @Setter
+    private ReplayablePseudoRandom randomGenerator;
 
     @Override
     public abstract int getImagesCount();
@@ -64,7 +64,7 @@ public abstract class AbstractImageLibrary implements ImageLibrary {
     }
 
     private Set<Image> collectRandom(final int limit, final int distinctImagesCount) {
-        return IntStream.generate(() -> random.nextInt(distinctImagesCount)).distinct().limit(limit).boxed()
+        return IntStream.generate(() -> randomGenerator.nextInt(distinctImagesCount)).distinct().limit(limit).boxed()
             .peek(i -> log.debug("Picking Image at random index {} in ImageLibrary", i)).map(this::loadImageAtIndex)
             .collect(Collectors.toSet());
     }

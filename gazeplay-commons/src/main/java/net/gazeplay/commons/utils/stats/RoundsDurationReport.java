@@ -11,7 +11,7 @@ public class RoundsDurationReport {
 
     @Getter
     private long totalAdditiveDuration;
-
+    @Getter
     private final List<Long> durationBetweenGoals = new ArrayList<>();
 
     public void addRoundDuration(final long lastRoundDuration) {
