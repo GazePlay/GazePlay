@@ -20,6 +20,12 @@ jobs:
         run: |
           ./gradlew --stacktrace --info downloadAndExtractJREs
           chmod -R 777 build/jre
+
+      - name: Setup Git Config
+        run: |
+          git config --global user.email "ci@gazeplay.net"
+          git config --global user.name "GazePlay Automation"
+
       - name: Run Gradle Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
