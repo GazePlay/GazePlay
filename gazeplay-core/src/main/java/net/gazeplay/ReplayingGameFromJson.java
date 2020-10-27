@@ -374,21 +374,23 @@ public class ReplayingGameFromJson {
     }
 
     public void drawOvals(GraphicsContext graphics) {
+
         int circleSize = 10;
-        graphics.beginPath();
         if (lastGazeCoordinates.size() > 0) {
-            drawReplayLine(graphics, circleSize, Color.rgb(0, 0, 255), Color.rgb(255, 255, 0, 0.1), lastGazeCoordinates);
+            drawReplayLine(graphics, circleSize, Color.LIGHTBLUE, Color.DARKBLUE, lastGazeCoordinates);
         }
         if (lastMouseCoordinates.size() > 0) {
-            drawReplayLine(graphics, circleSize, Color.rgb(255, 0, 0), Color.rgb(0, 255, 255, 1), lastMouseCoordinates);
+            drawReplayLine(graphics, circleSize, Color.INDIANRED, Color.DARKRED, lastMouseCoordinates);
         }
     }
 
     private void drawReplayLine(GraphicsContext graphics, int circleSize, Color strokeColor, Color fillColor, LinkedList<Point2D> lastGazeCoordinates) {
         Color tempStokeColor = strokeColor;
+        Point2D point;
         for (int i = lastGazeCoordinates.size() - 1; i >= 0; i--) {
-            Point2D point = lastGazeCoordinates.get(i);
-            if (point != null) {
+            point = lastGazeCoordinates.get(i);
+            graphics.beginPath();
+            if (point != null && i != lastGazeCoordinates.size() - 1) {
                 tempStokeColor = Color.rgb(
                     (int) (strokeColor.getRed() * 255),
                     (int) (strokeColor.getBlue() * 255),
@@ -398,12 +400,16 @@ public class ReplayingGameFromJson {
                 graphics.setLineWidth(5);
                 graphics.lineTo(point.getX(), point.getY());
                 graphics.stroke();
+            } else if (point != null) {
+                graphics.moveTo(point.getX(), point.getY());
             }
-            point = lastGazeCoordinates.getLast();
-            graphics.strokeOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
-            graphics.setFill(fillColor);
-            graphics.fillOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
         }
+        point = lastGazeCoordinates.getLast();
+        graphics.setStroke(strokeColor);
+        graphics.strokeOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
+        graphics.setFill(fillColor);
+        graphics.fillOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
+
     }
 
     public void paint(GraphicsContext graphics, Canvas canvas, int nextX, int nextY, String event) {
