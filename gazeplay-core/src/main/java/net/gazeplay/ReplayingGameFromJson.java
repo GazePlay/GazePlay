@@ -387,9 +387,9 @@ public class ReplayingGameFromJson {
     private void drawReplayLine(GraphicsContext graphics, int circleSize, Color strokeColor, Color fillColor, LinkedList<Point2D> lastGazeCoordinates) {
         Color tempStokeColor = strokeColor;
         Point2D point;
+        graphics.beginPath();
         for (int i = lastGazeCoordinates.size() - 1; i >= 0; i--) {
             point = lastGazeCoordinates.get(i);
-            graphics.beginPath();
             if (point != null && i != lastGazeCoordinates.size() - 1) {
                 tempStokeColor = Color.rgb(
                     (int) (strokeColor.getRed() * 255),
