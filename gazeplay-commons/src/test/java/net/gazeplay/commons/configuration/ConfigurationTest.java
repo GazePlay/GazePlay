@@ -188,16 +188,6 @@ class ConfigurationTest {
     }
 
     @Test
-    void shouldGetIsGazeMenuEnabled() {
-        assertEquals(properties.get("GAZE_MENU"), configuration.isGazeMenuEnable().toString());
-    }
-
-    @Test
-    void shouldGetIsGazeMouseEnabled() {
-        assertEquals(properties.get("GAZE_MOUSE"), configuration.isGazeMouseEnable().toString());
-    }
-
-    @Test
     void shouldGetBackgroundStyle() {
         assertEquals(properties.get("BACKGROUND_STYLE"), configuration.getBackgroundStyle().toString());
     }

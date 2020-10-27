@@ -46,6 +46,8 @@ public class BottleGame implements GameLifeCycle {
 
     private final ReplayablePseudoRandom randomGenerator;
 
+    Image brokenBottle = new Image("data/bottle/broken.png");
+
     public BottleGame(IGameContext gameContext, BottleGameStats stats, int number) {
 
         this.bottleGameStats = stats;
@@ -277,10 +279,7 @@ public class BottleGame implements GameLifeCycle {
     }
 
     private void bottleBreaker(ProgressButton bottle) {
-        ImageView bottleI = new ImageView(new Image("data/bottle/broken.png"));
-        bottleI.setFitWidth(dimension2D.getWidth() / 12);
-        bottleI.setFitHeight(dimension2D.getHeight() / 6);
-        bottle.setImage(bottleI);
+        bottle.getImage().setImage(brokenBottle);
 
         FadeTransition bottleDisappear = new FadeTransition(Duration.seconds(1), bottle);
         bottleDisappear.setFromValue(1);
