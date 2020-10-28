@@ -61,7 +61,7 @@ class VersionInfoTest {
         final List<String> lines = Arrays.asList("Implementation-Title: gazeplay", "Implementation-Version: 1.7");
         createMockManifest(lines);
 
-        final String result = VersionInfo.findVersionInfo("gazeplay", false).get();
+        final String result = VersionInfo.findVersionInfo("gazeplay").get();
 
         assertEquals("1.7", result);
     }
@@ -71,7 +71,7 @@ class VersionInfoTest {
         final List<String> lines = Arrays.asList("Implementation-Title: wrong-game", "Implementation-Version: 1.7");
         createMockManifest(lines);
 
-        final Optional<String> result = VersionInfo.findVersionInfo("gazeplay", false);
+        final Optional<String> result = VersionInfo.findVersionInfo("gazeplay");
 
         assertTrue(result.isEmpty());
     }
