@@ -45,26 +45,26 @@ class MenuUtilsTest {
         assertEquals("Current Profile: Default", menuBar.getMenus().get(1).getText());
     }
 
-    @Test
-    void givenVersionIsKnown_givenProfileIsNamed_shouldBuildMenuBar() {
-        when(mockConfiguration.getUserName()).thenReturn("test user name");
-        new MockUp<ActiveConfigurationContext>() {
-            @mockit.Mock
-            public Configuration getInstance() {
-                return mockConfiguration;
-            }
-        };
-        new MockUp<VersionInfo>() {
-            @mockit.Mock
-            public Optional<String> findVersionInfo(String id, boolean time) {
-                return Optional.of("v1.2.3");
-            }
-        };
-
-        MenuBar menuBar = MenuUtils.buildMenuBar();
-        assertEquals("GazePlay v1.2.3", menuBar.getMenus().get(0).getText());
-        assertEquals("Current Profile: test user name", menuBar.getMenus().get(1).getText());
-    }
+//    @Test
+//    void givenVersionIsKnown_givenProfileIsNamed_shouldBuildMenuBar() {
+//        when(mockConfiguration.getUserName()).thenReturn("test user name");
+//        new MockUp<ActiveConfigurationContext>() {
+//            @mockit.Mock
+//            public Configuration getInstance() {
+//                return mockConfiguration;
+//            }
+//        };
+//        new MockUp<VersionInfo>() {
+//            @mockit.Mock
+//            public Optional<String> findVersionInfo(String id, boolean time) {
+//                return Optional.of("v1.2.3");
+//            }
+//        };
+//
+//        MenuBar menuBar = MenuUtils.buildMenuBar();
+//        assertEquals("GazePlay v1.2.3", menuBar.getMenus().get(0).getText());
+//        assertEquals("Current Profile: test user name", menuBar.getMenus().get(1).getText());
+//    }
 
     @Test
     void givenLicenseFileIsFound_shouldCreateLicenseMenu() {
