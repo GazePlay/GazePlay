@@ -20,7 +20,7 @@ public class MenuUtils {
         String licenseFileAsString = loadLicenseFileAsString(classLoader);
 
         @Nullable
-        Optional<String> versionNumber = VersionInfo.findVersionInfo(VersionInfo.artifactId, false);
+        Optional<String> versionNumber = VersionInfo.findVersionInfo(VersionInfo.artifactId);
 
         MenuItem licenseMenuItem = new MenuItem(licenseFileAsString);
 
