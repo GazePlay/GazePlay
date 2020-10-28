@@ -1,61 +1,29 @@
 package net.gazeplay.commons;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Enumeration;
-import java.util.Optional;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
+
+@Slf4j
 public class VersionInfo {
 
     public static final String artifactId = "gazeplay";
 
     public static String findVersionInfo() {
-        return findVersionInfo(artifactId, true).orElse("Current Version");
+        return findVersionInfo(artifactId).orElse("Current Version");
     }
 
-    public static Optional<String> findVersionInfo(final String applicationName, final boolean includeBuildTime) {
-        try {
-            return locateVersionInfo(applicationName, includeBuildTime);
-        } catch (final IOException e) {
-            throw new RuntimeException("Failed to load the version info", e);
-        }
+    public static Optional<String> findVersionInfo(final String applicationName) {
+        return locateVersionInfo(applicationName);
     }
 
-    private static Optional<String> locateVersionInfo(final String applicationName, final boolean includeBuildTime) throws IOException {
-        final Enumeration<URL> resources = Thread.currentThread().getContextClassLoader()
-            .getResources("META-INF/MANIFEST.MF");
-
-        while (resources.hasMoreElements()) {
-            final URL manifestUrl = resources.nextElement();
-            final Manifest manifest = new Manifest(manifestUrl.openStream());
-            final Attributes mainAttributes = manifest.getMainAttributes();
-            final String implementationTitle = mainAttributes.getValue("Implementation-Title");
-
-            if (implementationTitle != null && implementationTitle.equals(applicationName)) {
-                final String implementationVersion = mainAttributes.getValue("Implementation-Version");
-                final StringBuilder resultBuilder = new StringBuilder();
-
-                if (implementationVersion != null) {
-                    resultBuilder.append(implementationVersion);
-                }
-
-                if (includeBuildTime) {
-                    final String buildTime = mainAttributes.getValue("Build-Time");
-
-                    if (buildTime != null) {
-                        resultBuilder.append(" (").append(buildTime).append(")");
-                    }
-                }
-                if (resultBuilder.toString().isEmpty()) {
-                    return Optional.empty();
-                } else {
-                    return Optional.of(resultBuilder.toString());
-                }
-            }
+    private static Optional<String> locateVersionInfo(final String applicationName) {
+        final Package resources = VersionInfo.class.getPackage();
+        final String implementationTitle = resources.getImplementationTitle();
+        if (implementationTitle != null && implementationTitle.contains(applicationName)) {
+            final String implementationVersion = resources.getImplementationVersion();
+            return Optional.of(implementationVersion);
         }
         return Optional.empty();
     }
-
 }
