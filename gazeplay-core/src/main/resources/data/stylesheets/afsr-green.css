@@ -1,0 +1,214 @@
+/**
+ * Created by schwab on 28/10/2017.
+ *
+ * Inspired by http://fxexperience.com/2011/12/styling-fx-buttons-with-css/
+ */
+
+* {
+    -fx-g: #67aa03;
+    -fx-gd: #345c05;
+    -fx-v: #942e8d;
+    -fx-vd:#5a1c53;
+}
+
+.topRoot{
+    -fx-background-color: black;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-width: 5px;
+    -fx-border-color: -fx-g;
+    -fx-effect:none;
+}
+
+.root {
+    -fx-font-size: 11pt;
+    -fx-font-family: 'sans-serif';
+    -fx-base: white;
+    -fx-background: white;
+}
+
+
+.gameChooserButton {
+    -fx-background-radius: 3px;
+    -fx-border-radius: 3px;
+    -fx-background-insets: 0;
+    -fx-border-insets: 1px;
+    -fx-border-image-insets: 10px;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-text-fill: white;
+    -fx-effect: none;
+}
+
+.gameChooserButton.gameVariation {
+}
+
+.gameChooserButtonThumbnail {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8px;
+    -fx-border-color: transparent;
+    -fx-effect: none;
+}
+
+.gameChooserButtonGameTypeIndicator {
+    -fx-background-color: rgba(0, 0, 0, 1);
+    -fx-background-radius: 8px;
+    -fx-border-color: transparent;
+    -fx-effect: none;
+}
+
+.gameChooserButtonTitle {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-smoothing-type: lcd;
+    -fx-prompt-text-fill: white;
+    -fx-effect: innershadow( gaussian , white , 127,1,0,1 );
+}
+
+.scroll-pane {
+    -fx-background-color: black;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: black;
+}
+
+.scroll-bar:horizontal, .scroll-bar:vertical{
+    -fx-background-color:transparent;
+}
+
+.increment-button, .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: -fx-g;
+    -fx-background-radius: 5em;
+}
+
+.withoutTextProgress {
+    -fx-padding: 0 0 -16 0;
+}
+
+.withoutTextProgress .percentage{
+    -fx-fill: null;
+}
+
+.selectedColorBox {
+    -fx-background-color : white;
+}
+
+
+
+
+.choice-box {
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-alignment: baseline-center;
+    -fx-background-color: -fx-g;
+    -fx-text-fill: white;
+    -fx-mark-color: white;
+}
+
+.progress-indicator {
+
+    -fx-control-inner-background: white;
+    -fx-progress-color: -fx-g;
+}
+
+/* Selected item text color on the control itself */
+.choice-box > .label {
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+/* Background color of the whole context menu*/
+.choice-box .context-menu {
+
+    -fx-font-weight: bold;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-background-color: -fx-g;
+    -fx-text-fill: white;
+}
+
+/* Focused item background color in the list*/
+.choice-box .menu-item:focused {
+    -fx-font-size: 25pt;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-text-fill: white;
+    -fx-background-color: -fx-gd;
+}
+
+/* Text color of non-focused items in the list*/
+.choice-box .menu-item > .label {
+
+    -fx-text-fill: white;
+}
+
+/* Text color of focused item in the list*/
+.choice-box .menu-item:focused > .label {
+
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-font-weight: bold;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-background-color: -fx-g;
+    -fx-text-fill: white;
+}
+
+.button:hover {
+
+    -fx-background-color: -fx-gd;
+}
+
+/* Items with a background color corresponding to current them */
+.bg-colored {
+    -fx-background-color: -fx-g;
+    -fx-text-fill: white;
+}
+
+.spinner {
+    -fx-body-color: -fx-g;
+    -fx-text-fill: white;
+    -fx-mark-color: white;
+}
+
+.toggle-button {
+    -fx-background-color: -fx-g;
+    -fx-text-fill: white;
+}
+
+.toggle-button:hover {
+    -fx-background-color: -fx-gd;
+    -fx-text-fill: white;
+}
+
+.toggle-button:selected {
+    -fx-background-color: white;
+    -fx-text-fill: -fx-g;
+}
+
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-body-color: -fx-g;
+}
+
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
+    -fx-body-color: white;
+}

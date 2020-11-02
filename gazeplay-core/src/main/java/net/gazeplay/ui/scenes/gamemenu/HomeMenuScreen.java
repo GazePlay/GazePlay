@@ -13,6 +13,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -109,9 +111,19 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         Node logo = LogoFactory.getInstance().createLogoStatic(gazePlay.getPrimaryStage());
 
+        HBox logosBox = new HBox();
+        logosBox.getChildren().add(logo);
+        logosBox.setSpacing(20);
+        logosBox.setAlignment(Pos.CENTER);
+
+        ImageView iv = new ImageView(new Image("data/common/images/logos/Logo-AFSR.png"));
+        iv.fitHeightProperty().bind(((ImageView)logo).fitHeightProperty().multiply(0.7));
+        iv.setPreserveRatio(true);
+        logosBox.getChildren().add(iv);
+
         StackPane topLogoPane = new StackPane();
         topLogoPane.setPadding(new Insets(15, 15, 15, 15));
-        topLogoPane.getChildren().add(logo);
+        topLogoPane.getChildren().add(logosBox);
 
         HBox topRightPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(topRightPane);
