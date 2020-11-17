@@ -465,6 +465,30 @@ public class WhereIsItConfigurable implements GameLifeCycle {
         return folder.listFiles(file -> !file.getName().startsWith("."));
     }
 
+    /**
+     * Return all files which don't start with a point
+     */
+    static public File[] getFolder(final File folder, String regex) {
+        if(folder!=null) {
+            File[] result = folder.listFiles(file ->
+                !file.getName().startsWith(".") &&
+                    file.isDirectory() &&
+                    file.getName().replaceAll("\uFEFF", "").contains(regex)
+            );
+            if (result != null && result.length > 0) {
+                return result;
+            } else {
+                result = new File[1];
+                result[0] = null;
+                return result;
+            }
+        }else {
+            File[] result = new File[1];
+            result[0] = null;
+            return result;
+        }
+    }
+
     private void error(final String language) {
 
         gameContext.clear();

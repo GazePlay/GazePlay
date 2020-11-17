@@ -188,11 +188,19 @@ class PictureCard extends Group {
         File soundFile = new File(config.getWhereIsItConfigurableDir() + "/common/win/sounds/" + gameInstance.getCurrentQuestionAsnwer().soundBravo);
         File imageFile = new File(config.getWhereIsItConfigurableDir() + "/common/win/images/" + gameInstance.getCurrentQuestionAsnwer().imageBravo);
         File videoFile = new File(config.getWhereIsItConfigurableDir() + "/common/win/videos/" + gameInstance.getCurrentQuestionAsnwer().videoBravo);
-        log.info(" vid = {} && {}", gameInstance.getCurrentQuestionAsnwer().videoBravo, videoFile);
-        log.info(" image = {} && {}", gameInstance.getCurrentQuestionAsnwer().imageBravo, imageFile);
-        log.info(" sound = {} && {}", gameInstance.getCurrentQuestionAsnwer().soundBravo, soundFile);
+
+
+        File parent = new File(config.getWhereIsItConfigurableDir());
+        log.info("******************* LETS START *******************");
+        getChildAndBom(parent,"");
+
+
+        log.info(" vid = {} && {} && {}", gameInstance.getCurrentQuestionAsnwer().videoBravo, videoFile,videoFile.exists());
+        log.info(" image = {} && {} && {}", gameInstance.getCurrentQuestionAsnwer().imageBravo, imageFile,imageFile.exists());
+        log.info(" sound = {} && {} && {}", gameInstance.getCurrentQuestionAsnwer().soundBravo, soundFile,soundFile.exists());
         if (gameInstance.getCurrentQuestionAsnwer().videoBravo != null && videoFile.exists()) {
             //fullAnimation.setOnFinished(actionEvent ->
+            log.info("**** BRAVO VIDEO");
             gameContext.playWinTransition(
                 500,
                 videoFile.getAbsolutePath(),
@@ -202,6 +210,7 @@ class PictureCard extends Group {
         } else if (
             gameInstance.getCurrentQuestionAsnwer().soundBravo != null && soundFile.exists() &&
                 gameInstance.getCurrentQuestionAsnwer().imageBravo != null && imageFile.exists()) {
+            log.info("**** IMAGE AND SOUND BRAVO");
             // fullAnimation.setOnFinished(actionEvent ->
             gameContext.playWinTransition(
                 500,
@@ -211,6 +220,7 @@ class PictureCard extends Group {
                 // )
             );
         } else {
+            log.info("**** BASIC BRAVO");
             // fullAnimation.setOnFinished(actionEvent ->
             gameContext.playWinTransition(
                 500,
@@ -219,6 +229,24 @@ class PictureCard extends Group {
             );
         }
         // fullAnimation.play();
+    }
+
+    public void getChildAndBom(File parent, String offset){
+        File[] children = parent.listFiles(file ->
+            !file.getName().startsWith(".")
+        );
+
+        if(children!=null) {
+            for (File child : children) {
+                if (child.getName().contains("\uFEFF")) {
+                    log.info(offset + "** {}", child.getName());
+                } else {
+                    log.info(offset +"{}", child.getName());
+                }
+                if(child.isDirectory())
+                    getChildAndBom(child,offset+"\t");
+            }
+        }
     }
 
     private void onWrongCardSelected(WhereIsItConfigurable gameInstance) {
@@ -248,7 +276,8 @@ class PictureCard extends Group {
                 soundResource = new File(folder.getParentFile().getParentFile(), "/common/fail/sounds");
             }
             File[] files = WhereIsItConfigurable.getFiles(soundResource);
-            List<File> validSoundFiles = getValidSoundFiles(files);
+            if(files !=null) {
+                List<File> validSoundFiles = getValidSoundFiles(files);
             if (validSoundFiles.size() == 0) {
                 soundResource = new File(folder.getParentFile().getParentFile(), "/common/fail/sounds");
                 files = WhereIsItConfigurable.getFiles(soundResource);
@@ -258,6 +287,7 @@ class PictureCard extends Group {
             final File randomImageFile = validSoundFiles.get(0);
             gameContext.getSoundManager().add(randomImageFile.getAbsolutePath());
 
+            }
             log.info("WERE CHOOSING THE FILE {}", soundResource);
 
             customInputEventHandler.ignoreAnyInput = false;
@@ -309,12 +339,12 @@ class PictureCard extends Group {
     }
 
     private ImageView createErrorImageRectangle(double posX, double posY, double width, double height) {
+        File localFail = WhereIsItConfigurable.getFolder(folder,"fail")[0];
+        localFail = WhereIsItConfigurable.getFolder(localFail,"image")[0];
 
-        File localFail = new File(folder, "/fail/images");
-        if (!localFail.exists()) {
-            localFail = new File(folder.getParentFile().getParentFile(), "/common/fail/images");
+        if (localFail==null || !localFail.exists()) {
+            localFail = new File(folder.getParentFile().getParentFile(), "/common/fail/images/");
         }
-
         final File[] files = WhereIsItConfigurable.getFiles(localFail);
 
         List<File> validImageFiles = new ArrayList<>();
