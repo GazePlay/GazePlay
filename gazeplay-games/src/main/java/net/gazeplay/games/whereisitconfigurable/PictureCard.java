@@ -157,16 +157,24 @@ class PictureCard extends Group {
 
         EventHandler<ActionEvent> action = actionEvent1 -> {
             gameInstance.questionIndex++;
-            gameInstance.dispose();
-            gameContext.clear();
-            try {
-                stats.saveStats();
-                stats.reset();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(gameInstance.questionIndex >= gameInstance.getNumberOfQuestions()){
+                gameInstance.questionIndex = 0;
+                gameInstance.dispose();
+                gameContext.clear();
+                gameContext.showRoundStats(stats,gameInstance);
+            }else {
+                gameInstance.dispose();
+                gameContext.clear();
+                try {
+                    stats.saveStats();
+                    stats.reset();
+                    stats.incrementNumberOfGoalsToReach();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                gameInstance.launch();
+                gameContext.onGameStarted();
             }
-            gameInstance.launch();
-            gameContext.onGameStarted();
 
         };
 
@@ -270,7 +278,6 @@ class PictureCard extends Group {
 
             final File randomImageFile = validSoundFiles.get(0);
             gameContext.getSoundManager().add(randomImageFile.getAbsolutePath());
-
             }
             log.info("WERE CHOOSING THE FILE {}", soundResource);
 

@@ -4,7 +4,7 @@ import lombok.Getter;
 import net.gazeplay.commons.gamevariants.difficulty.Difficulty;
 
 public enum WhereIsItConfigurableGameType {
-    CUSTOMIZED("customized", "customized");
+    CUSTOMIZED("configurableWhereIsIt", "configurableWhereIsIt");
 
     @Getter
     private final String gameName;

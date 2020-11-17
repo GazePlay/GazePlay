@@ -77,7 +77,9 @@ class QuestionAnswer {
 public class WhereIsItConfigurable implements GameLifeCycle {
 
     private LinkedList<QuestionAnswer> questions = new LinkedList<>();
-    int questionIndex = 0;
+    int questionIndex;
+    @Getter
+    int numberOfQuestions = 0;
 
     private static final int NBMAXPICTO = 10;
     private static final double MAXSIZEPICTO = 250;
@@ -113,7 +115,6 @@ public class WhereIsItConfigurable implements GameLifeCycle {
         gameContext.setLimiterAvailable();
 
         final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
-        int indexAnswered = 0;
 
         File questionOrderFile = new File(config.getWhereIsItConfigurableDir() + "/questionOrder.csv");
         try (
@@ -145,6 +146,7 @@ public class WhereIsItConfigurable implements GameLifeCycle {
                 }
 
                 questions.add(tempquestionAnswer);
+                numberOfQuestions++;
             }
 
         } catch (IOException e) {
@@ -164,6 +166,7 @@ public class WhereIsItConfigurable implements GameLifeCycle {
         }
 
         stats.notifyNewRoundReady();
+        stats.incrementNumberOfGoalsToReach();
         gameContext.firstStart();
     }
 
@@ -286,6 +289,8 @@ public class WhereIsItConfigurable implements GameLifeCycle {
      */
     @Override
     public void dispose() {
+        numberOfQuestions=0;
+        questions.clear();
         if (currentRoundDetails != null) {
             if (currentRoundDetails.getPictureCardList() != null) {
                 for(PictureCard pc : currentRoundDetails.getPictureCardList()){
