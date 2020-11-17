@@ -37,8 +37,9 @@ class PictureCard extends Group {
     private final IGameContext gameContext;
     private final boolean winner;
 
-    private final ImageView imageRectangle;
-    private final ImageView errorImageRectangle;
+    @Getter
+    private ImageView imageRectangle;
+    private ImageView errorImageRectangle;
 
     private final double initialWidth;
     private final double initialHeight;
@@ -54,6 +55,7 @@ class PictureCard extends Group {
 
     private boolean selected;
 
+    @Getter
     private final PictureCard.CustomInputEventHandler customInputEventHandler;
 
     private final WhereIsItConfigurable gameInstance;
@@ -98,9 +100,7 @@ class PictureCard extends Group {
         customInputEventHandler = new PictureCard.CustomInputEventHandler();
 
         gameContext.getGazeDeviceManager().addEventFilter(imageRectangle);
-
         this.addEventFilter(MouseEvent.ANY, customInputEventHandler);
-
         this.addEventFilter(GazeEvent.ANY, customInputEventHandler);
     }
 
@@ -153,21 +153,6 @@ class PictureCard extends Group {
         Dimension2D gamePanelDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.info("gamePanelDimension2D = {}", gamePanelDimension2D);
 
-//        ScaleTransition scaleToFullScreenTransition = new ScaleTransition(new Duration(1000), imageRectangle);
-//        scaleToFullScreenTransition.setByX((gamePanelDimension2D.getWidth() / initialWidth) - 1);
-//        scaleToFullScreenTransition.setByY((gamePanelDimension2D.getHeight() / initialHeight) - 1);
-//
-//        TranslateTransition translateToCenterTransition = new TranslateTransition(new Duration(1000),
-//            imageRectangle);
-//        translateToCenterTransition
-//            .setByX(-initialPositionX + (gamePanelDimension2D.getWidth() - initialWidth) / 2);
-//        translateToCenterTransition
-//            .setByY(-initialPositionY + (gamePanelDimension2D.getHeight() - initialHeight) / 2);
-//
-//        ParallelTransition fullAnimation = new ParallelTransition();
-//        fullAnimation.getChildren().add(translateToCenterTransition);
-//        fullAnimation.getChildren().add(scaleToFullScreenTransition);
-
         gameContext.updateScore(stats, gameInstance);
 
         EventHandler<ActionEvent> action = actionEvent1 -> {
@@ -191,7 +176,6 @@ class PictureCard extends Group {
 
 
         File parent = new File(config.getWhereIsItConfigurableDir());
-        log.info("******************* LETS START *******************");
         getChildAndBom(parent,"");
 
 
@@ -298,7 +282,7 @@ class PictureCard extends Group {
 
     private ImageView createImageView(double posX, double posY, double width, double height,
                                       @NonNull String imagePath) {
-        final Image image = new Image(imagePath);
+        final Image image = new Image(imagePath );
 
         ImageView result = new ImageView(image);
 
@@ -339,8 +323,11 @@ class PictureCard extends Group {
     }
 
     private ImageView createErrorImageRectangle(double posX, double posY, double width, double height) {
-        File localFail = WhereIsItConfigurable.getFolder(folder,"fail")[0];
-        localFail = WhereIsItConfigurable.getFolder(localFail,"image")[0];
+        File localFail = WhereIsItConfigurable.getFolder(folder,"fail");
+
+        if( localFail!=null ) {
+            localFail = WhereIsItConfigurable.getFolder(localFail, "image");
+        }
 
         if (localFail==null || !localFail.exists()) {
             localFail = new File(folder.getParentFile().getParentFile(), "/common/fail/images/");
@@ -357,7 +344,6 @@ class PictureCard extends Group {
         final File randomImageFile = validImageFiles.get(0);
 
         final Image image = new Image("file:" + randomImageFile.getAbsolutePath());
-
 
         ImageView result = new ImageView(image);
 
@@ -377,7 +363,6 @@ class PictureCard extends Group {
         result.setTranslateX((result.getFitWidth() - w) / 2);
         result.setTranslateY((result.getFitHeight() - h) / 2);
         result.setPreserveRatio(true);
-
 
         result.setOpacity(0);
         result.setVisible(false);

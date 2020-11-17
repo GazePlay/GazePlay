@@ -108,7 +108,7 @@ public class GameWhereIsItConfigurableDialog extends Stage {
         EventHandler<Event> event = mouseEvent -> {
             close();
             root.setDisable(false);
-            gameMenuController.chooseGame(gazePlay, gameSpec, new IntGameVariant(currentLevelItem));
+            gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, new IntGameVariant(currentLevelItem));
         };
         doneButton.addEventHandler(MOUSE_CLICKED, event);
 

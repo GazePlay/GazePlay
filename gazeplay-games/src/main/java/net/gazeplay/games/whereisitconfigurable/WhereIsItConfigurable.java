@@ -7,6 +7,7 @@ import javafx.animation.TranslateTransition;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
@@ -20,6 +21,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.WhereIsItValidator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -286,7 +288,12 @@ public class WhereIsItConfigurable implements GameLifeCycle {
     public void dispose() {
         if (currentRoundDetails != null) {
             if (currentRoundDetails.getPictureCardList() != null) {
-                gameContext.getChildren().removeAll(currentRoundDetails.getPictureCardList());
+                for(PictureCard pc : currentRoundDetails.getPictureCardList()){
+                    gameContext.getGazeDeviceManager().removeEventFilter(pc.getImageRectangle());
+                    pc.removeEventFilter(MouseEvent.ANY, pc.getCustomInputEventHandler());
+                    pc.removeEventFilter(GazeEvent.ANY, pc.getCustomInputEventHandler());
+                    gameContext.getChildren().remove(pc);
+                }
             }
             currentRoundDetails = null;
         }
@@ -468,24 +475,20 @@ public class WhereIsItConfigurable implements GameLifeCycle {
     /**
      * Return all files which don't start with a point
      */
-    static public File[] getFolder(final File folder, String regex) {
+    static public File getFolder(final File folder, String regex) {
         if(folder!=null) {
             File[] result = folder.listFiles(file ->
                 !file.getName().startsWith(".") &&
                     file.isDirectory() &&
-                    file.getName().replaceAll("\uFEFF", "").contains(regex)
+                    file.getName().replaceAll("\uFEFF", "").startsWith(regex)
             );
             if (result != null && result.length > 0) {
-                return result;
+                return result[0];
             } else {
-                result = new File[1];
-                result[0] = null;
-                return result;
+                return null;
             }
         }else {
-            File[] result = new File[1];
-            result[0] = null;
-            return result;
+            return null;
         }
     }
 
