@@ -12,7 +12,6 @@ public class FlagsGameSpecSource implements GameSpecSource {
         return new GameSpec(
             GameSummary.builder().nameCode("flags").gameThumbnail("data/Thumbnails/flags.png")
                 .category(GameCategories.Category.SELECTION)
-                .category(GameCategories.Category.LITERACY)
                 .category(GameCategories.Category.MEMORIZATION).build(),
             new FlagsGameLauncher());
     }

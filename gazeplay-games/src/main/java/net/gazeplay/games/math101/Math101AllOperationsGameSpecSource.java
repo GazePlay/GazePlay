@@ -11,8 +11,7 @@ public class Math101AllOperationsGameSpecSource implements GameSpecSource {
         return new GameSpec(
             GameSummary.builder().nameCode("Math101: All operations").priority(1).gameThumbnail("data/Thumbnails/math101.png")
                 .category(GameCategories.Category.SELECTION)
-                .category(GameCategories.Category.LOGIC_MATHS)
-                .category(GameCategories.Category.MEMORIZATION).description("MathDesc").build(),
+                .category(GameCategories.Category.LOGIC_MATHS).description("MathDesc").build(),
             new Math101AllOperationsGameVariantGenerator(), new MathGameLauncher(MathGameType.MATHALL));
     }
 }

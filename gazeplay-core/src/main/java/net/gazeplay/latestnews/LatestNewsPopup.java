@@ -48,7 +48,7 @@ public class LatestNewsPopup {
 
     private final Stage stage;
 
-    private final Optional<String> versionNumber = VersionInfo.findVersionInfo(VersionInfo.artifactId, false);
+    private final Optional<String> versionNumber = VersionInfo.findVersionInfo(VersionInfo.artifactId);
 
     static class NewsPopupException extends RuntimeException {
         NewsPopupException(Throwable cause) {

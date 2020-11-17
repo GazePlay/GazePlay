@@ -18,7 +18,11 @@ class GazeInfos {
 
     @Getter
     @Setter
-    private boolean on;
+    private boolean onGaze;
+
+    @Getter
+    @Setter
+    private boolean onMouse;
 
     GazeInfos(Node node) {
         this(node, 0, false);
@@ -27,11 +31,11 @@ class GazeInfos {
     private GazeInfos(Node node, long time, boolean on) {
         this.node = node;
         this.time = time;
-        this.on = on;
+        this.onGaze = on;
     }
 
     public String toString() {
-        return "At " + time + " on " + on + "Node " + node;
+        return "At " + time + " on " + onGaze + "Node " + node;
     }
 
 }

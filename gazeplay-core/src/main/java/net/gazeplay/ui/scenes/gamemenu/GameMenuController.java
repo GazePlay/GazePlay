@@ -1,5 +1,6 @@
 package net.gazeplay.ui.scenes.gamemenu;
 
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.effect.BoxBlur;
@@ -7,21 +8,28 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.GameLifeCycle;
-import net.gazeplay.GameSpec;
-import net.gazeplay.GazePlay;
-import net.gazeplay.IGameLauncher;
+import net.gazeplay.*;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItConfigurableDialog;
 import net.gazeplay.ui.scenes.ingame.GameContext;
+import net.gazeplay.ui.scenes.loading.LoadingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -52,11 +60,70 @@ public class GameMenuController {
             }else {
                 if (variants.size() == 1) {
                     IGameVariant onlyGameVariant = variants.iterator().next();
-                    chooseGame(gazePlay, gameSpec, onlyGameVariant);
+                    chooseAndStartNewGameProcess(gazePlay, gameSpec, onlyGameVariant);
                 } else {
-                    chooseGame(gazePlay, gameSpec, null);
+                    chooseAndStartNewGameProcess(gazePlay, gameSpec, null);
                 }
             }
+        }
+    }
+
+    public void chooseAndStartNewGameProcess(
+        GazePlay gazePlay,
+        GameSpec selectedGameSpec,
+        IGameVariant gameVariant
+    ) {
+        gazePlay.getPrimaryScene().setCursor(Cursor.WAIT);
+        gazePlay.getPrimaryScene().setRoot(new LoadingContext(gazePlay));
+
+        ProcessBuilder builder;
+
+        int height = 0;
+        int width = 0;
+        if (!gazePlay.isFullScreen()) {
+            height = (int) gazePlay.getPrimaryScene().getWindow().getHeight();
+            width = (int) gazePlay.getPrimaryScene().getWindow().getWidth();
+        }
+        builder = createBuilder(selectedGameSpec.getGameSummary().getNameCode(), gameVariant, height, width);
+
+        runProcessDisplayLoadAndWaitForNewJVMDisplayed(gazePlay, builder);
+    }
+
+    public static void runProcessDisplayLoadAndWaitForNewJVMDisplayed(GazePlay gazePlay, ProcessBuilder builder) {
+        Thread t = new Thread(() -> {
+            File f = new File(GazePlayDirectories.getGazePlayFolder() + "/TokenLauncher");
+            boolean success = false;
+            try {
+                success = f.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (success) {
+                while (f.exists()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
+                gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
+                gazePlay.onReturnToMenu();
+            } else {
+                ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+                executor.schedule(() -> {
+                    ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
+                    gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
+                    gazePlay.onReturnToMenu();
+                }, 10, TimeUnit.SECONDS);
+            }
+        });
+        t.start();
+
+        try {
+            builder.inheritIO().start();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -69,7 +136,37 @@ public class GameMenuController {
         whereIsItConfigurableDialog.toFront();
     }
 
-    public void chooseGame(
+    public ProcessBuilder createBuilder(String game, IGameVariant gameVariant, int height, int width) {
+        String javaHome = System.getProperty("java.home");
+        String javaBin = javaHome +
+            File.separator + "bin" +
+            File.separator + "java";
+        String classpath = System.getProperty("java.class.path");
+
+        LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin, "-cp", classpath, GazePlayLauncher.class.getName()));
+
+        String user = ActiveConfigurationContext.getInstance().getUserName();
+        if (user != null && !user.equals("")) {
+            commands.addAll(Arrays.asList("--user", user));
+        } else {
+            commands.add("--default-user");
+        }
+
+        commands.addAll(Arrays.asList("--game", game));
+
+        if (gameVariant != null) {
+            commands.addAll(Arrays.asList("--variant", gameVariant.toString()));
+        }
+
+
+        if (height != 0 && width != 0) {
+            commands.addAll(Arrays.asList("--height", "" + height, "--width", "" + width));
+        }
+
+        return new ProcessBuilder(commands);
+    }
+
+    public void chooseAndStartNewGame(
         GazePlay gazePlay,
         GameSpec selectedGameSpec,
         IGameVariant gameVariant
@@ -93,6 +190,17 @@ public class GameMenuController {
         }
 
         stats.start();
+
+        String gameVariantLabel;
+        if (gameVariant != null) {
+            gameVariantLabel = gameVariant.toString();
+        } else {
+            gameVariantLabel = null;
+        }
+
+        String gameNameCode = selectedGameSpec.getGameSummary().getNameCode();
+        stats.setGameVariant(gameVariantLabel, gameNameCode);
+
         currentGame.launch();
     }
 

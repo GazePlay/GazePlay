@@ -10,7 +10,6 @@ public class MagicCardsGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("MagicCards").gameThumbnail("data/Thumbnails/magicCard.png")
-                .category(GameCategories.Category.ACTION_REACTION)
                 .category(GameCategories.Category.SELECTION).build(),
             new MagicCardsGameVariantGenerator(), new MagicCardsGameLauncher());
     }

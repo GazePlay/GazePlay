@@ -93,15 +93,6 @@ class StatDisplayUtilsTest {
     }
 
     @Test
-    void shouldSetTheCursorWhenPressed() {
-        StatDisplayUtils.returnToMenu(gazePlay, mockStatsContext);
-
-        verify(mockStatsContext.getRoot(), times(2)).setCursor(captor.capture());
-        assertTrue(captor.getAllValues().contains(Cursor.WAIT));
-        assertTrue(captor.getAllValues().contains(Cursor.DEFAULT));
-    }
-
-    @Test
     void shouldBuildLineChartForNormalGame() {
         final List<Long> mockShots = new ArrayList<>(List.of(1L, 2L, 3L));
 
@@ -240,7 +231,7 @@ class StatDisplayUtilsTest {
     @Test
     void shouldBuildGazeMetrics() {
         final File mockFile = new File("bear.jpg");
-        final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile, mockFile, mockFile);
+        final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile, mockFile, mockFile, mockFile);
 
         when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
 
@@ -252,7 +243,7 @@ class StatDisplayUtilsTest {
     @Test
     void shouldZoomInToGazeMetrics() {
         final File mockFile = new File("bear.jpg");
-        final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile, mockFile, mockFile);
+        final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile, mockFile, mockFile, mockFile);
 
         when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
 
@@ -270,7 +261,7 @@ class StatDisplayUtilsTest {
     @Test
     void shouldZoomOutOfGazeMetrics() {
         final File mockFile = new File("bear.jpg");
-        final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile, mockFile, mockFile);
+        final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile, mockFile, mockFile, mockFile);
 
         when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
 

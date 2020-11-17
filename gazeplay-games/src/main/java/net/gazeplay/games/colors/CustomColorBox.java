@@ -10,8 +10,8 @@ public class CustomColorBox extends ColorBox {
     private final ColorBox representingBox;
 
     public CustomColorBox(final IGameContext gameContext, final Color color, final Pane root, final ColorToolBox toolBox, final ToggleGroup colorGroup,
-                          final ColorBox representingBox) {
-        super(gameContext, color, root, toolBox, colorGroup);
+                          final ColorBox representingBox, final double colorizeButtonsSizePx) {
+        super(gameContext, color, root, toolBox, colorGroup, colorizeButtonsSizePx);
         this.representingBox = representingBox;
     }
 

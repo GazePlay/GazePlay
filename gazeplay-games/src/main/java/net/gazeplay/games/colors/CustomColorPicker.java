@@ -20,7 +20,6 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.components.GazeIndicator;
 import net.gazeplay.components.GazeFollowerIndicator;
 
-import static net.gazeplay.games.colors.ColorToolBox.COLORIZE_BUTTONS_SIZE_PX;
 import static net.gazeplay.games.colors.ColorToolBox.COLORS_IMAGES_PATH;
 
 @Slf4j
@@ -45,7 +44,7 @@ public class CustomColorPicker extends Pane {
     private ColorBox selectedColor;
 
     public CustomColorPicker(final IGameContext gameContext, final Pane root, final ColorToolBox toolBox, final ColorBox representingBox,
-                             final Stage stage) {
+                             final Stage stage, final double colorizeButtonsSizePx) {
         super();
 
         this.getStyleClass().add("bg-colored");
@@ -67,12 +66,11 @@ public class CustomColorPicker extends Pane {
 
             for (int j = 0; j < NB_COLOR_PER_ROW; ++j) {
                 final ColorBox colorBox = new CustomColorBox(gameContext, COLOR_LIST[i * NB_COLOR_PER_ROW + j], root, toolBox, colorGroup,
-                    representingBox);
+                    representingBox, colorizeButtonsSizePx);
 
                 colorGrid.add(colorBox, j, i);
             }
         }
-
 
         mainNode.getChildren().add(colorGrid);
 
@@ -82,7 +80,7 @@ public class CustomColorPicker extends Pane {
         // Close button
         Image buttonImg = null;
         try {
-            buttonImg = new Image(CLOSE_CURSTOM_PANEL_IMAGE_PATH, COLORIZE_BUTTONS_SIZE_PX, COLORIZE_BUTTONS_SIZE_PX,
+            buttonImg = new Image(CLOSE_CURSTOM_PANEL_IMAGE_PATH, colorizeButtonsSizePx, colorizeButtonsSizePx,
                 false, true);
         } catch (final IllegalArgumentException e) {
             log.warn(e.toString() + " : " + CLOSE_CURSTOM_PANEL_IMAGE_PATH);
@@ -94,8 +92,8 @@ public class CustomColorPicker extends Pane {
             closeButton.setPrefHeight(buttonImg.getHeight());
         } else {
             closeButton = new Button("X");
-            closeButton.setPrefHeight(COLORIZE_BUTTONS_SIZE_PX);
-            closeButton.setPrefWidth(COLORIZE_BUTTONS_SIZE_PX);
+            closeButton.setPrefHeight(colorizeButtonsSizePx);
+            closeButton.setPrefWidth(colorizeButtonsSizePx);
         }
         closeButton.setOnAction(closeEvent);
         mainNode.getChildren().add(closeButton);

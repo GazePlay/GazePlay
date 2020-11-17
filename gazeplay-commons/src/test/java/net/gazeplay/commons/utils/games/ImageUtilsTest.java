@@ -2,6 +2,7 @@ package net.gazeplay.commons.utils.games;
 
 import javafx.scene.image.Image;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -26,19 +27,19 @@ class ImageUtilsTest {
 
     @Test
     void canCreateAnImageLibraryFromADirectory() {
-        final ImageLibrary library = ImageUtils.createImageLibrary(new File(localDataFolder));
+        final ImageLibrary library = ImageUtils.createImageLibrary(new File(localDataFolder), new ReplayablePseudoRandom());
         assert (library.getImagesCount() == 1);
     }
 
     @Test
     void canCreateAnImageLibraryFromResources() {
-        final ImageLibrary library = ImageUtils.createDefaultImageLibrary(null);
+        final ImageLibrary library = ImageUtils.createDefaultImageLibrary(null, new ReplayablePseudoRandom());
         assert (library.getImagesCount() == 2);
     }
 
     @Test
     void canCreateACustomImageLibraryFromADirectory() {
-        final ImageLibrary library = ImageUtils.createCustomizedImageLibrary(null, "biboule/images");
+        final ImageLibrary library = ImageUtils.createCustomizedImageLibrary(null, "biboule/images", new ReplayablePseudoRandom());
         assert (library.getImagesCount() == 1);
     }
 

@@ -96,12 +96,37 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     @Setter
     private ProgressButton[] buttons;
 
+    private final ReplayablePseudoRandom random;
+
     CakeFactory(final IGameContext gameContext, final Stats stats, final CakeGameVariant variant) {
         this.gameContext = gameContext;
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.debug("dimension2D = {}", dimension2D);
         this.stats = stats;
         this.gameContext.startTimeLimiter();
+        this.random = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(random.getSeed());
+        centerX = dimension2D.getWidth() / 2;
+        centerY = dimension2D.getHeight() / 2;
+        buttonSize = dimension2D.getWidth() / 8;
+        cake = new StackPane[3];
+        currentCake = 0;
+        maxCake = 0;
+        setNappage(false);
+        this.variant = variant;
+        buttons = new ProgressButton[6];
+        this.fixationLength = gameContext.getConfiguration().getFixationLength();
+
+        initBackground(dimension2D);
+    }
+
+    CakeFactory(final IGameContext gameContext, final Stats stats, final CakeGameVariant variant, double gameSeed) {
+        this.gameContext = gameContext;
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        log.debug("dimension2D = {}", dimension2D);
+        this.stats = stats;
+        this.gameContext.startTimeLimiter();
+        this.random = new ReplayablePseudoRandom(gameSeed);
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2;
         buttonSize = dimension2D.getWidth() / 8;
@@ -545,7 +570,6 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     }
 
     private void generateRandomCake() {
-        final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
         for (int i = 0; i < 3; i++) {
             model[i][0] = 1 + random.nextInt(4);
             model[i][1] = 1 + random.nextInt(5);

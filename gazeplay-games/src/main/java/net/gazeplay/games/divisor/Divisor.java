@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
@@ -21,11 +22,24 @@ public class Divisor implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Stats stats;
     private final boolean isRabbit;
+    private final ReplayablePseudoRandom randomGenerator;
 
     public Divisor(final IGameContext gameContext, final Stats stats, final boolean isRabbit) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.gameContext.getRandomPositionGenerator().setRandomGenerator(randomGenerator);
+        this.isRabbit = isRabbit;
+    }
+
+    public Divisor(final IGameContext gameContext, final Stats stats, final boolean isRabbit, double gameSeed) {
+        super();
+        this.gameContext = gameContext;
+        this.stats = stats;
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+        this.gameContext.getRandomPositionGenerator().setRandomGenerator(randomGenerator);
         this.isRabbit = isRabbit;
         this.gameContext.startTimeLimiter();
     }
@@ -38,19 +52,19 @@ public class Divisor implements GameLifeCycle {
 
 
         if (isRabbit) {
-            imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "divisor/rabbit/images");
+            imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "divisor/rabbit/images", randomGenerator);
             initBackground();
             gameContext.resetBordersToFront();
         } else {
-            imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"));
+            imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"), randomGenerator);
         }
 
         this.stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.incrementNumberOfGoalsToReach(15);
 
-         target = new Target(gameContext, stats, imageLibrary, 0,System.currentTimeMillis(), this,
-            this.gameContext.getRandomPositionGenerator().newRandomPosition(100), isRabbit);
+         target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
+            this.gameContext.getRandomPositionGenerator().newRandomPosition(100 + 2), isRabbit, randomGenerator);
 
         gameContext.getChildren().add(target);
         gameContext.firstStart();
@@ -80,8 +94,6 @@ public class Divisor implements GameLifeCycle {
 
     public void restart() {
         this.dispose();
-        //this.launch();
-        //gameContext.onGameStarted();
         gameContext.showRoundStats(stats, this);
     }
 

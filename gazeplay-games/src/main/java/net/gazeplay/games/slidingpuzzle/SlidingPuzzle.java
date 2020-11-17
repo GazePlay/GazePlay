@@ -42,6 +42,8 @@ public class SlidingPuzzle implements GameLifeCycle {
         private final int y;
     }
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     SlidingPuzzle(final Stats stats, final IGameContext gameContext, final int nbLines, final int nbColumns, final EnumGameVariant<PuzzleGameVariantGenerator.PuzzleGameVariant> gameVariant) {
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.boxWidth = computeCardBoxWidth(gameDimension2D, nbColumns);
@@ -50,6 +52,21 @@ public class SlidingPuzzle implements GameLifeCycle {
         this.cardWidth = cardHeight;
         this.stats = stats;
         this.gameContext = gameContext;
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+
+        this.picPath = gameVariant.getEnumValue().getResourcesPath();
+    }
+
+    SlidingPuzzle(final Stats stats, final IGameContext gameContext, final int nbLines, final int nbColumns, final EnumGameVariant<PuzzleGameVariantGenerator.PuzzleGameVariant> gameVariant, double gameSeed) {
+        this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.boxWidth = computeCardBoxWidth(gameDimension2D, nbColumns);
+        this.boxHeight = computeCardBoxHeight(gameDimension2D, nbLines);
+        this.cardHeight = (int) computeCardHeight(boxHeight);
+        this.cardWidth = cardHeight;
+        this.stats = stats;
+        this.gameContext = gameContext;
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
         this.picPath = gameVariant.getEnumValue().getResourcesPath();
     }
@@ -149,7 +166,6 @@ public class SlidingPuzzle implements GameLifeCycle {
     }
 
     private List<SlidingPuzzleCard> createCards(final Configuration config) {
-        final ReplayablePseudoRandom randomGenerator = new ReplayablePseudoRandom();
 
         final int fixationlength = config.getFixationLength();
 

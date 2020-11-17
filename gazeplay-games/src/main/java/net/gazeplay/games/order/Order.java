@@ -16,6 +16,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**
@@ -27,6 +28,7 @@ public class Order implements GameLifeCycle {
     private final Stats stats;
     private int currentNum;
     private final int nbTarget;
+    private final ReplayablePseudoRandom randomGenerator;
 
 
     public Order(IGameContext gameContext, int nbTarget, Stats stats) {
@@ -37,6 +39,19 @@ public class Order implements GameLifeCycle {
         this.nbTarget = nbTarget;
         //this.gameContext.startScoreLimiter();
         this.gameContext.startTimeLimiter();
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+    }
+
+    public Order(IGameContext gameContext, int nbTarget, Stats stats, double gameSeed) {
+        super();
+        this.gameContext = gameContext;
+        this.stats = stats;
+        this.currentNum = 0;
+        this.nbTarget = nbTarget;
+        //this.gameContext.startScoreLimiter();
+        this.gameContext.startTimeLimiter();
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
     @Override
@@ -90,7 +105,7 @@ public class Order implements GameLifeCycle {
 
             @Override
             public void handle(ActionEvent actionEvent) {
-                Target t = new Target(Order.this, gameContext, i + 1, gameContext.getConfiguration().getFixationLength());
+                Target t = new Target(Order.this, gameContext, i + 1, gameContext.getConfiguration().getFixationLength(), randomGenerator);
                 gameContext.getChildren().add(t);
                 tabTarget[i] = t;
                 i++;

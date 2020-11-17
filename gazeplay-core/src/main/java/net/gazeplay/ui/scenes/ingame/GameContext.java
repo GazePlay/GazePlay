@@ -31,6 +31,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.DefaultAnimationSpeedRatioSource;
 import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
@@ -50,6 +51,9 @@ import java.util.function.Supplier;
 
 @Slf4j
 public class GameContext extends GraphicalContext<Pane> implements IGameContext {
+
+    @Getter
+    private HomeButton homeButton;
 
     public static void updateConfigPane(final Pane configPane, Stage primaryStage) {
         double mainHeight = primaryStage.getHeight();
@@ -115,7 +119,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         this.configPane = configPane;
 
         this.gamePanelDimensionProvider = new GamePanelDimensionProvider(() -> root, gazePlay::getPrimaryScene);
-        this.randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider);
+        this.randomPositionGenerator = new RandomPanePositionGenerator(gamePanelDimensionProvider, new ReplayablePseudoRandom());
 
         if (this.getConfiguration().isVideoRecordingEnabled()) {
             videoRecordingContext = new VideoRecordingContext(root, this);
@@ -248,7 +252,34 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
-        HomeButton homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
+        homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
+        menuHBox.getChildren().add(homeButton);
+    }
+
+    public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame, String replayMode) {
+        Configuration config = ActiveConfigurationContext.getInstance();
+        MusicControl musicControl = getMusicControl();
+        AnimationSpeedRatioControl animationSpeedRatioControl = AnimationSpeedRatioControl.getInstance();
+
+        GridPane leftControlPane = new GridPane();
+        leftControlPane.setHgap(5);
+        leftControlPane.setVgap(5);
+        leftControlPane.setAlignment(Pos.TOP_CENTER);
+        leftControlPane.add(musicControl.createMusicControlPane(), 0, 0);
+        leftControlPane.add(musicControl.createVolumeLevelControlPane(config, gazePlay.getTranslator()), 1, 0);
+        leftControlPane.add(animationSpeedRatioControl.createSpeedEffectsPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 2, 0);
+        leftControlPane.getChildren().forEach(node -> {
+            GridPane.setVgrow(node, Priority.ALWAYS);
+            GridPane.setHgrow(node, Priority.ALWAYS);
+        });
+
+
+        menuHBox.getChildren().add(leftControlPane);
+
+        I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
+        menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
+
+        homeButton = createHomeButtonInGameScreenWithoutHandler(gazePlay);
         menuHBox.getChildren().add(homeButton);
     }
 
@@ -268,7 +299,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         return homeButton;
     }
 
-    void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
+    public void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
 
         if (videoRecordingContext != null) {
             videoRecordingContext.pointersClear();
@@ -296,6 +327,32 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         } else {
             asynchronousStatsPersistTask.run();
         }
+
+        StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
+
+        this.clear();
+
+        gazePlay.onDisplayStats(statsContext);
+    }
+
+    public HomeButton createHomeButtonInGameScreenWithoutHandler(@NonNull GazePlay gazePlay) {
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+        return new HomeButton(screenDimension);
+    }
+
+    public void exitReplayGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
+
+        if (videoRecordingContext != null) {
+            videoRecordingContext.pointersClear();
+        }
+
+        currentGame.dispose();
+        ForegroundSoundsUtils.stopSound(); // to stop playing the sound of Bravo
+        gazeDeviceManager.clear();
+        gazeDeviceManager.destroy();
+
+        soundManager.clear();
+        soundManager.destroy();
 
         StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
 

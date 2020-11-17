@@ -21,6 +21,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.time.LocalDate;
@@ -31,9 +32,6 @@ import java.util.TimerTask;
 
 @Slf4j
 public class Shooter extends Parent implements GameLifeCycle {
-
-
-    private static final Random random = new Random();
 
     private static final double MIN_RADIUS = 30.d;
 
@@ -64,6 +62,8 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     private Timer minuteur;
 
+    private final ReplayablePseudoRandom randomGenerator;
+
     Shooter(final IGameContext gameContext, final Stats stats, final String type) {
         this.gameContext = gameContext;
         this.stats = stats;
@@ -74,6 +74,30 @@ public class Shooter extends Parent implements GameLifeCycle {
         score = 0;
         gameType = type;
         hand = new StackPane();
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+
+        targetFrames = new Image[6];
+        targetFrames[0] = new Image("data/" + gameType + "/images/Blue.png");
+        targetFrames[1] = new Image("data/" + gameType + "/images/Green.png");
+        targetFrames[2] = new Image("data/" + gameType + "/images/Yellow.png");
+        targetFrames[3] = new Image("data/" + gameType + "/images/Orange.png");
+        targetFrames[4] = new Image("data/" + gameType + "/images/Red.png");
+        targetFrames[5] = new Image("data/" + gameType + "/images/Flash.png");
+
+        box = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
+
+    }
+
+    Shooter(final IGameContext gameContext, final Stats stats, final String type, double gameSeed) {
+        this.gameContext = gameContext;
+        this.stats = stats;
+        final LocalDate localDate = LocalDate.now();
+        date = DateTimeFormatter.ofPattern("d MMMM uuuu ").format(localDate);
+        score = 0;
+        gameType = type;
+        hand = new StackPane();
+        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
         targetFrames = new Image[6];
         targetFrames[0] = new Image("data/" + gameType + "/images/Blue.png");
@@ -138,7 +162,7 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         clearTransition();
 
-        final int randomValue = random.nextInt(3);
+        final int randomValue = randomGenerator.nextInt(3);
 
         boolean goesFromLeftToRight = false;
 
@@ -150,8 +174,9 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         if ((randomValue == 2) || (randomValue == 0)) {
             // Move UP
+            double multiplier = (gameType.equals("biboule")?-1:1);
             firstMove.getKeyFrames().add(new KeyFrame(new Duration(2000),
-                new KeyValue(box.translateYProperty(),  -(dimension2D.getHeight() / 5) , Interpolator.LINEAR)));
+                new KeyValue(box.translateYProperty(),  multiplier*(dimension2D.getHeight() / 5) , Interpolator.LINEAR)));
         }
 
         if ((randomValue == 1) || (randomValue == 2)) {
@@ -423,7 +448,7 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         text.setText(cst);
 
-        final int r = 1 + random.nextInt(3);
+        final int r = 1 + randomGenerator.nextInt(3);
 
         final String soundResource = "data/" + gameType + "/sounds/hand_sound" + r + ".mp3";
         gameContext.getSoundManager().add(soundResource);
@@ -534,9 +559,9 @@ public class Shooter extends Parent implements GameLifeCycle {
     }
 
     private void moveTarget(final Target sp) {
-        final double timebasic = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * Math.random() + MIN_TIME_LENGTH) * 1000;
+        final double timebasic = ((MAX_TIME_LENGTH - MIN_TIME_LENGTH) * randomGenerator.nextDouble() + MIN_TIME_LENGTH) * 1000;
 
-        Point randomPoint = getRandomPoint(random.nextInt(8));
+        Point randomPoint = getRandomPoint(randomGenerator.nextInt(8));
 
         final TranslateTransition tt1 = new TranslateTransition(new Duration(timebasic), sp);
         tt1.setToY(-sp.getCenterY() + randomPoint.y);

@@ -69,8 +69,6 @@ public class GameVariantDialog extends Stage {
 
         ScrollPane choicePanelScroller = new ScrollPane();
         choicePanelScroller.setContent(choicePane);
-        //choicePanelScroller.setMinHeight(primaryStage.getHeight() / 5);
-        //choicePanelScroller.setMinWidth(primaryStage.getWidth() / 5);
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
         choicePanelScroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -149,7 +147,7 @@ public class GameVariantDialog extends Stage {
                 if (config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
                     whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, finalVariant);
                 } else {
-                    gameMenuController.chooseGame(gazePlay, gameSpec, finalVariant);
+                    gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, finalVariant);
                 }
             };
             button.addEventHandler(MOUSE_CLICKED, event);
@@ -168,10 +166,10 @@ public class GameVariantDialog extends Stage {
 
     private void whereIsItErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root, IGameVariant finalVariant) {
         String whereIsItPromptLabel = "WhereIsItNotConfigDirectory";
-        this.errorDialog = new GameWhereIsItErrorPathDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel, finalVariant);
-        this.errorDialog.setTitle("error");
-        this.errorDialog.show();
-        this.errorDialog.toFront();
+        GameWhereIsItErrorPathDialog errorDialog = new GameWhereIsItErrorPathDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel, finalVariant);
+        errorDialog.setTitle("error");
+        errorDialog.show();
+        errorDialog.toFront();
     }
 
     public boolean isEasymode() {

@@ -17,16 +17,12 @@ public class WhereIsItValidator {
                 File[] filesInf = f.listFiles();
                 if (filesInf != null) {
                     if (f.isDirectory() && filesInf.length > 0) {
-                        boolean containsImage = false;
-                        int i = 0;
-                        while (!containsImage && i < filesInf.length) {
-                            File file = filesInf[i];
-                            containsImage = fileIsImageFile(file);
-                            i++;
-                        }
-                        if (containsImage) {
-                            imagesFolders.add(f);
-                            filesCount++;
+                        for (File file : filesInf) {
+                            if (fileIsImageFile(file)) {
+                                imagesFolders.add(f);
+                                filesCount++;
+                                break;
+                            }
                         }
                     }
                 }

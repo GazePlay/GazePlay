@@ -13,6 +13,7 @@ import net.gazeplay.commons.configuration.AnimationSpeedRatioSource;
 import net.gazeplay.commons.configuration.BackgroundStyle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
@@ -64,7 +65,7 @@ class DivisorTest {
         when(mockGameContext.getConfiguration()).thenReturn(mockConfiguration);
         when(mockGameContext.getGamePanelDimensionProvider()).thenReturn(mockProvider);
         when(mockGameContext.getChildren()).thenReturn(children);
-        when(mockGameContext.getRandomPositionGenerator()).thenReturn(new RandomPositionGenerator() {
+        when(mockGameContext.getRandomPositionGenerator()).thenReturn(new RandomPositionGenerator(new ReplayablePseudoRandom()) {
             @Override
             public Dimension2D getDimension2D() {
                 return new Dimension2D(100, 200);

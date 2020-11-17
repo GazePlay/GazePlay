@@ -11,8 +11,7 @@ public class Math101DivisionGameSpecSource implements GameSpecSource {
         return new GameSpec(
             GameSummary.builder().nameCode("Math101: Division").priority(2).gameThumbnail("data/Thumbnails/math101.png")
                 .category(GameCategories.Category.SELECTION)
-                .category(GameCategories.Category.LOGIC_MATHS)
-                .category(GameCategories.Category.MEMORIZATION).description("MathDescDiv").build(),
+                .category(GameCategories.Category.LOGIC_MATHS).description("MathDescDiv").build(),
             new Math101DivisionGameVariantGenerator(), new MathGameLauncher(MathGameType.DIVISION));
     }
 }

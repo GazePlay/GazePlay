@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.components.ProgressButton;
 
 import java.util.Random;
@@ -41,13 +42,13 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
     private ProgressButton scissors;
     private ProgressButton ennemy;
 
-    private Random random;
-
     private int score = 0;
 
     private enum type {paper, stone, scissors}
 
     private type ennemyT;
+
+    private final ReplayablePseudoRandom random;
 
     public PaperScissorsStoneGame(final IGameContext gameContext, final PaperScissorsStoneStats stats) {
         this.stats = stats;
@@ -55,7 +56,47 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
-        this.random = new Random();
+        this.random = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(random.getSeed());
+
+        this.backgroundLayer = new Group();
+        this.middleLayer = new Group();
+        final Group foregroundLayer = new Group();
+        final StackPane sp = new StackPane();
+        gameContext.getChildren().addAll(sp, backgroundLayer, middleLayer, foregroundLayer);
+
+        final int fixationLength = configuration.getFixationLength();
+
+        shade = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        shade.setFill(new Color(0, 0, 0, 0.75));
+
+        restartButton = new ProgressButton();
+        final String dataPath = "data/space";
+        final ImageView restartImage = new ImageView(dataPath + "/menu/restart.png");
+        restartImage.setFitHeight(dimension2D.getHeight() / 6);
+        restartImage.setFitWidth(dimension2D.getHeight() / 6);
+        restartButton.setImage(restartImage);
+        restartButton.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getHeight() / 12);
+        restartButton.setLayoutY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 12);
+        restartButton.assignIndicator(event -> launch(), fixationLength);
+
+        finalScoreText = new Text(0, dimension2D.getHeight() / 4, "");
+        finalScoreText.setFill(Color.WHITE);
+        finalScoreText.setTextAlignment(TextAlignment.CENTER);
+        finalScoreText.setFont(new Font(50));
+        finalScoreText.setWrappingWidth(dimension2D.getWidth());
+        foregroundLayer.getChildren().addAll(shade, finalScoreText, restartButton);
+
+        gameContext.getGazeDeviceManager().addEventFilter(restartButton);
+    }
+
+    public PaperScissorsStoneGame(final IGameContext gameContext, final PaperScissorsStoneStats stats, double gameSeed) {
+        this.stats = stats;
+        this.paperScissorsStoneStats = stats;
+        this.gameContext = gameContext;
+        this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.configuration = gameContext.getConfiguration();
+        this.random = new ReplayablePseudoRandom(gameSeed);
 
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();

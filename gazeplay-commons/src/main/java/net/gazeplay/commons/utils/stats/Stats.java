@@ -1,5 +1,9 @@
 package net.gazeplay.commons.utils.stats;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -33,10 +37,13 @@ import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
@@ -65,9 +72,14 @@ public class Stats implements GazeMotionListener {
     private RoundsDurationReport roundsDurationReport = new RoundsDurationReport();
     private int counter = 0;
     private final List<CoordinatesTracker> movementHistory = new ArrayList<>();
+
     private long previousTime = 0;
-    private int previousX = 0;
-    private int previousY = 0;
+
+    private int previousXMouse = 0;
+    private int previousYMouse = 0;
+    private int previousXGaze = 0;
+    private int previousYGaze = 0;
+
     private File movieFolder;
     private boolean convexHULL = true;
     private ScreenRecorder screenRecorder;
@@ -103,6 +115,12 @@ public class Stats implements GazeMotionListener {
     @Getter
     private WritableImage gameScreenShot;
 
+    JsonArray coordinateData = new JsonArray();
+    private JsonObject savedDataObj = new JsonObject();
+    String currentGameVariant;
+    String currentGameNameCode;
+    double currentGameSeed = 0.;
+
     private String directoryOfVideo;
 
     private String nameOfVideo;
@@ -135,14 +153,31 @@ public class Stats implements GazeMotionListener {
         javafx.scene.paint.Color.CHOCOLATE
     };
 
-
     public Stats(final Scene gameContextScene) {
         this(gameContextScene, null);
+    }
+
+    public Stats(final Scene gameContextScene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+        this(gameContextScene, null, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 
     public Stats(final Scene gameContextScene, final String gameName) {
         this.gameContextScene = gameContextScene;
         this.gameName = gameName;
+
+        heatMapPixelSize = computeHeatMapPixelSize(gameContextScene);
+    }
+
+    public Stats(final Scene gameContextScene, final String gameName, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+        this.gameContextScene = gameContextScene;
+        this.gameName = gameName;
+        this.nbGoalsReached = nbGoalsReached;
+        this.nbGoalsToReach = nbGoalsToReach;
+        this.nbUnCountedGoalsReached = nbUnCountedGoalsReached;
+        this.fixationSequence = fixationSequence;
+        this.lifeCycle = lifeCycle;
+        this.roundsDurationReport = roundsDurationReport;
+        this.savedStatsInfo = savedStatsInfo;
 
         heatMapPixelSize = computeHeatMapPixelSize(gameContextScene);
     }
@@ -286,11 +321,13 @@ public class Stats implements GazeMotionListener {
                 }
 
                 final Double[] polygonPoints;
-                if (config.getConvexHullDisabledProperty().getValue()) {
-                    polygonPoints = calculateConvexHull(points);
-                } else {
-                    polygonPoints = calculateRectangle(points);
-                }
+
+                // Uncomment to use convex hull
+                // if (config.getConvexHullDisabledProperty().getValue()) {
+                // polygonPoints = calculateConvexHull(points);
+                // } else {
+                polygonPoints = calculateRectangle(points);
+                // }
 
                 final Polygon areaOfInterest = new Polygon();
                 areaOfInterest.getPoints().addAll(polygonPoints);
@@ -313,11 +350,13 @@ public class Stats implements GazeMotionListener {
                 }
 
                 final Double[] polygonPoints;
-                if (config.getConvexHullDisabledProperty().getValue()) {
-                    polygonPoints = calculateConvexHull(points);
-                } else {
-                    polygonPoints = calculateRectangle(points);
-                }
+
+                // Uncomment to use convex hull
+                // if (config.getConvexHullDisabledProperty().getValue()) {
+                //     polygonPoints = calculateConvexHull(points);
+                // } else {
+                polygonPoints = calculateRectangle(points);
+                // }
 
                 final Polygon areaOfInterest = new Polygon();
                 areaOfInterest.getPoints().addAll(polygonPoints);
@@ -415,6 +454,7 @@ public class Stats implements GazeMotionListener {
     }
 
     public void start() {
+
         final Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isVideoRecordingEnabled()) {
             startVideoRecording();
@@ -430,21 +470,26 @@ public class Stats implements GazeMotionListener {
 
             recordGazeMovements = e -> {
                 if (e.getSource() == gameContextScene.getRoot() && e.getTarget() == gameContextScene.getRoot()) {
-                    final int getX = (int) e.getX();
-                    final int getY = (int) e.getY();
+                    final long timeToFixation = System.currentTimeMillis() - startTime;
+                    final long timeInterval = (timeToFixation - previousTime);
+                    Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
+                    final int getX = (int) toSceneCoordinate.getX();
+                    final int getY = (int) toSceneCoordinate.getY();
                     if (getX > 0 && getY > 0) {
+
+                        setJSONCoordinates(timeToFixation, getX, getY, "gaze");
+
                         if (!config.isHeatMapDisabled()) {
                             incrementHeatMap(getX, getY);
                         }
                         if (!config.isFixationSequenceDisabled()) {
                             incrementFixationSequence(getX, getY, fixationSequence.get(FixationSequence.GAZE_FIXATION_SEQUENCE));
                         }
+
                         if (config.getAreaOfInterestDisabledProperty().getValue()) {
-                            if (getX != previousX || getY != previousY) {
-                                final long timeToFixation = System.currentTimeMillis() - startTime;
-                                previousX = getX;
-                                previousY = getY;
-                                final long timeInterval = (timeToFixation - previousTime);
+                            if (getX != previousXMouse || getY != previousYMouse) {
+                                previousXMouse = getX;
+                                previousYMouse = getY;
                                 movementHistory
                                     .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
                                 movementHistoryidx++;
@@ -459,21 +504,26 @@ public class Stats implements GazeMotionListener {
             };
 
             recordMouseMovements = e -> {
-                final int getX = (int) e.getSceneX();
-                final int getY = (int) e.getSceneY();
+                final long timeElapsedMillis = System.currentTimeMillis() - startTime;
+                final long timeInterval = (timeElapsedMillis - previousTime);
+                Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
+                final int getX = (int) toSceneCoordinate.getX();
+                final int getY = (int) toSceneCoordinate.getY();
                 if (getX > 0 || getY > 0) {
+
+                    setJSONCoordinates(timeElapsedMillis, getX, getY, "mouse");
+
                     if (!config.isHeatMapDisabled()) {
                         incrementHeatMap(getX, getY);
                     }
                     if (!config.isFixationSequenceDisabled()) {
                         incrementFixationSequence(getX, getY, fixationSequence.get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
                     }
+
                     if (config.getAreaOfInterestDisabledProperty().getValue()) {
-                        if (getX != previousX || getY != previousY && counter == 2) {
-                            final long timeElapsedMillis = System.currentTimeMillis() - startTime;
-                            previousX = getX;
-                            previousY = getY;
-                            final long timeInterval = (timeElapsedMillis - previousTime);
+                        if (getX != previousXGaze || getY != previousYGaze && counter == 2) {
+                            previousXGaze = getX;
+                            previousYGaze = getY;
                             movementHistory
                                 .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
                             movementHistoryidx++;
@@ -488,11 +538,20 @@ public class Stats implements GazeMotionListener {
                 }
             };
 
-                gameContextScene.getRoot().addEventFilter(GazeEvent.ANY, recordGazeMovements);
-                gameContextScene.getRoot().addEventFilter(MouseEvent.ANY, recordMouseMovements);
+            gameContextScene.getRoot().addEventFilter(GazeEvent.ANY, recordGazeMovements);
+            gameContextScene.getRoot().addEventFilter(MouseEvent.ANY, recordMouseMovements);
 
         });
         currentRoundStartTime = lifeCycle.getStartTime();
+    }
+
+    private void setJSONCoordinates(long timeElapsedMillis, int getX, int getY, String event) {
+        JsonObject coordinates = new JsonObject();
+        coordinates.addProperty("X", getX / gameContextScene.getWidth());
+        coordinates.addProperty("Y", getY / gameContextScene.getHeight());
+        coordinates.addProperty("time", timeElapsedMillis);
+        coordinates.addProperty("event", event);
+        saveCoordinates(coordinates);
     }
 
     public List<CoordinatesTracker> getMovementHistoryWithTime() {
@@ -594,13 +653,15 @@ public class Stats implements GazeMotionListener {
         final String gazeMetricsFilePrefixMouseAndGaze = now + "-metricsMouseAndGaze";
         final String screenShotFilePrefix = now + "-screenshot";
         final String colorBandsFilePrefix = now + "-colorBands";
+        final String replayDataFilePrefix = now + "-replayData";
 
         final File gazeMetricsFileMouse = new File(todayDirectory, gazeMetricsFilePrefixMouse + ".png");
         final File gazeMetricsFileGaze = new File(todayDirectory, gazeMetricsFilePrefixGaze + ".png");
         final File gazeMetricsFileMouseAndGaze = new File(todayDirectory, gazeMetricsFilePrefixMouseAndGaze + ".png");
         final File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
         final File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
-        final File colorBandsFile = new File(todayDirectory, colorBandsFilePrefix + "png");
+        final File colorBandsFile = new File(todayDirectory, colorBandsFilePrefix + ".png");
+        final File replayDataFile = new File(todayDirectory, replayDataFilePrefix + ".json");
 
         final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
         saveImageAsPng(screenshotImage, screenShotFile);
@@ -613,8 +674,13 @@ public class Stats implements GazeMotionListener {
         Graphics gGaze = initGazeMetricsImage(bImageGaze, screenshotImage);
         Graphics gMouseAndGaze = initGazeMetricsImage(bImageMouseAndGaze, screenshotImage);
 
+        try (BufferedWriter bf = Files.newBufferedWriter(replayDataFile.toPath(), Charset.defaultCharset())) {
+            bf.write(buildSavedDataJSON(coordinateData).toString());
+            bf.flush();
+        }
+
         final SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsFileMouse, gazeMetricsFileGaze, gazeMetricsFileMouseAndGaze, screenShotFile,
-            colorBandsFile);
+            colorBandsFile, replayDataFile);
 
         this.savedStatsInfo = savedStatsInfo;
         if (this.heatMap != null) {
@@ -817,4 +883,69 @@ public class Stats implements GazeMotionListener {
         gameScreenShot = gameContextScene.snapshot(null);
     }
 
+    private JsonObject buildSavedDataJSON(JsonArray data) {
+        Gson gson = new GsonBuilder().create();
+        JsonArray fixationSequenceArray = gson.toJsonTree(fixationSequence).getAsJsonArray();
+        JsonArray durationBetweenGoalsArray = gson.toJsonTree(roundsDurationReport.getDurationBetweenGoals()).getAsJsonArray();
+        String screenAspectRatio = getScreenRatio();
+        double sceneAspectRatio = getSceneRatio();
+
+        savedDataObj.addProperty("gameSeed", currentGameSeed);
+        savedDataObj.addProperty("gameName", currentGameNameCode);
+        savedDataObj.addProperty("gameVariant", currentGameVariant);
+        savedDataObj.addProperty("gameStartedTime", startTime);
+        savedDataObj.addProperty("screenAspectRatio", screenAspectRatio);
+        savedDataObj.addProperty("sceneAspectRatio", sceneAspectRatio);
+        savedDataObj.addProperty("statsNbGoalsReached", nbGoalsReached);
+        savedDataObj.addProperty("statsNbGoalsToReach", nbGoalsToReach);
+        savedDataObj.addProperty("statsNbUnCountedGoalsReached", nbUnCountedGoalsReached);
+
+        JsonObject lifeCycleObject = new JsonObject();
+        lifeCycleObject.addProperty("startTime", lifeCycle.getStartTime());
+        lifeCycleObject.addProperty("stopTime", lifeCycle.getStopTime());
+        savedDataObj.add("lifeCycle", lifeCycleObject);
+
+        JsonObject roundsDurationReportObject = new JsonObject();
+        roundsDurationReportObject.addProperty("totalAdditiveDuration", roundsDurationReport.getTotalAdditiveDuration());
+        roundsDurationReportObject.add("durationBetweenGoals", durationBetweenGoalsArray);
+        savedDataObj.add("roundsDurationReport", roundsDurationReportObject);
+
+        savedDataObj.add("fixationSequence", fixationSequenceArray);
+        savedDataObj.add("coordinatesAndTimeStamp", data);
+        return savedDataObj;
+    }
+
+    private JsonArray saveCoordinates(JsonObject coordinates) {
+        coordinateData.add(coordinates);
+        return coordinateData;
+    }
+
+    public int greatestCommonFactor(int width, int height) {
+        return (height == 0) ? width : greatestCommonFactor(height, width % height);
+    }
+
+    String getScreenRatio() {
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int screenWidth = gd.getDisplayMode().getWidth();
+        int screenHeight = gd.getDisplayMode().getHeight();
+
+        int factor = greatestCommonFactor(screenWidth, screenHeight);
+
+        int widthRatio = screenWidth / factor;
+        int heightRatio = screenHeight / factor;
+        return widthRatio + ":" + heightRatio;
+    }
+
+    double getSceneRatio() {
+        return gameContextScene.getHeight() / gameContextScene.getWidth();
+    }
+
+    public void setGameVariant(String gameVariant, String gameNameCode) {
+        currentGameVariant = gameVariant;
+        currentGameNameCode = gameNameCode;
+    }
+
+    public void setGameSeed(double gameSeed) {
+        currentGameSeed = gameSeed;
+    }
 }

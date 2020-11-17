@@ -10,7 +10,6 @@ public class SavanaGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("Savanna").gameThumbnail("data/Thumbnails/savana.png")
-                .category(GameCategories.Category.ACTION_REACTION)
                 .category(GameCategories.Category.SELECTION).build(),
             new SavannaGameLauncher());
     }
