@@ -1,6 +1,6 @@
 ---
 title: References
-permalink: /references
+permalink: /references/
 layout: single
 ---
 GazePlay is open source, research-based software developed by students and volunteers.
