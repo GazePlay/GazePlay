@@ -9,3 +9,5 @@ main:
     url: /contact/
   - title: "Help"
     url: /help/
+  - title: "References"
+    url: /references/
