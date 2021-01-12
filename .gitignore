@@ -20,3 +20,4 @@ out
 
 # gh-pages
 _site
+gradle*
