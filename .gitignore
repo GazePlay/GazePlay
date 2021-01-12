@@ -17,3 +17,7 @@ gazeplay.log.*
 .gradle/
 build
 out
+
+# gh-pages
+_site
+gradle*
