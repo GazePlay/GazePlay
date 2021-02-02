@@ -2,8 +2,12 @@ package net.gazeplay.games.whereisitconfigurable;
 
 //It is repeated always, it works like a charm :)
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -115,7 +119,7 @@ public class WhereIsItConfigurable implements GameLifeCycle {
         gameContext.setLimiterAvailable();
 
         final ReplayablePseudoRandom random = new ReplayablePseudoRandom();
-
+        int inactionTime = 0;
         File questionOrderFile = new File(config.getWhereIsItConfigurableDir() + "/questionOrder.csv");
         try (
             InputStream fileInputStream = Files.newInputStream(questionOrderFile.toPath());
@@ -139,11 +143,14 @@ public class WhereIsItConfigurable implements GameLifeCycle {
                     tempquestionAnswer.add(splitanswer[i]);
                 }
 
-                if (split.length == 5) {
+                if (split.length == 6) {
                     tempquestionAnswer.setBravo(split[4]);
-                } else if (split.length == 6) {
+                    inactionTime = Integer.parseInt(split[5]);
+                } else if (split.length == 7) {
                     tempquestionAnswer.setBravo(split[4], split[5]);
+                    inactionTime = Integer.parseInt(split[6]);
                 }
+
 
                 questions.add(tempquestionAnswer);
                 numberOfQuestions++;
@@ -158,7 +165,7 @@ public class WhereIsItConfigurable implements GameLifeCycle {
 
         if (currentRoundDetails != null) {
 
-            final Transition animation = createQuestionTransition(currentRoundDetails.getQuestion(), currentRoundDetails.getPictos());
+            final Transition animation = createQuestionTransition(currentRoundDetails.getQuestion(), currentRoundDetails.getPictos(), inactionTime);
             animation.play();
             if (currentRoundDetails.getQuestionSoundPath() != null) {
                 playQuestionSound();
@@ -170,7 +177,7 @@ public class WhereIsItConfigurable implements GameLifeCycle {
         gameContext.firstStart();
     }
 
-    private Transition createQuestionTransition(final String question, final List<Image> listOfPictos) {
+    private Transition createQuestionTransition(final String question, final List<Image> listOfPictos, final int inactionTime) {
 
         questionText = new Text(question);
 
@@ -255,6 +262,7 @@ public class WhereIsItConfigurable implements GameLifeCycle {
         fullAnimation.setToY(bottomCenter);
 
         fullAnimation.setOnFinished(actionEvent -> {
+            // TODO
             // gameContext.getChildren().remove(questionText);
 
             gameContext.getChildren().removeAll(pictogramesList);
@@ -267,6 +275,15 @@ public class WhereIsItConfigurable implements GameLifeCycle {
                 p.toFront();
                 p.setOpacity(1);
             }
+
+            Timeline loop4 = new Timeline(new KeyFrame(Duration.millis(inactionTime), new EventHandler<ActionEvent>(){
+                public void handle(ActionEvent arg) {
+                    for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
+                        p.setIgnoreAnyInput(false);
+                    }
+                }
+            }));
+            loop4.play();
 
             questionText.toFront();
 

@@ -13,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
@@ -377,6 +378,10 @@ class PictureCard extends Group {
         return result;
     }
 
+    public void setIgnoreAnyInput(boolean b){
+        customInputEventHandler.ignoreAnyInput = b;
+    }
+
     private ProgressIndicator buildProgressIndicator(double parentWidth, double parentHeight) {
         double minWidth = parentWidth / 2;
         double minHeight = parentHeight / 2;
@@ -395,13 +400,12 @@ class PictureCard extends Group {
     }
 
     private class CustomInputEventHandler implements EventHandler<Event> {
-
         /**
          * this is used to temporarily indicate to ignore input for instance, when an animation is in progress, we
          * do not want the game to continue to process input, as the user input is irrelevant while the animation is
          * in progress
          */
-        private boolean ignoreAnyInput = false;
+        public boolean ignoreAnyInput = true;
 
         @Override
         public void handle(Event e) {
