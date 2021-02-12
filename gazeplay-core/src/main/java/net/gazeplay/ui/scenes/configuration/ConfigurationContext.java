@@ -325,19 +325,19 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             CheckBox input = buildCheckBox(config.getHeatMapDisabledProperty());
 
-            addToGrid(grid, currentFormRow, label, input);
+            addSubToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "HeatMapOpacity", COLON);
             ChoiceBox<Double> input = buildHeatMapOpacityChoiceBox(config);
 
-            addToGrid(grid, currentFormRow, label, input);
+            addSubToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "HeatMapColors", COLON);
             HBox input = buildHeatMapColorHBox(config, translator);
 
-            addToGrid(grid, currentFormRow, label, input);
+            addSubToGrid(grid, currentFormRow, label, input);
         }
 
         addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "AOISettings", COLON));
@@ -347,7 +347,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             CheckBox input = buildCheckBox(config.getAreaOfInterestDisabledProperty());
 
-            addToGrid(grid, currentFormRow, label, input);
+            addSubToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "EnableConvexHull", COLON);
@@ -359,7 +359,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             label.setOpacity(0.5);
             /* TO HERE TO ENABLE CONVEX HULL FOR AOI */
 
-            addToGrid(grid, currentFormRow, label, input);
+            addSubToGrid(grid, currentFormRow, label, input);
         }
         addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "MoreStatsSettings", COLON));
         // More Stats settings
@@ -368,14 +368,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             CheckBox input = buildCheckBox(config.getFixationSequenceDisabledProperty());
 
-            addToGrid(grid, currentFormRow, label, input);
+            addSubToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "EnableVideoRecording", COLON);
 
             CheckBox input = buildCheckBox(config.getVideoRecordingEnabledProperty());
 
-            addToGrid(grid, currentFormRow, label, input);
+            addSubToGrid(grid, currentFormRow, label, input);
         }
 
         return grid;
@@ -390,7 +390,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         label.setId("item");
 
         Separator s = new Separator();
-        grid.add(s, 0, currentRowIndex, 3, 1);
+        grid.add(s, 0, currentRowIndex, 4, 1);
         GridPane.setHalignment(s, HPos.CENTER);
 
         int newCurrentRowIndex = currentFormRow.incrementAndGet();
@@ -404,27 +404,19 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     void addSubCategoryTitle(GridPane grid, AtomicInteger currentFormRow, I18NText label) {
-        int columnIndexLabelLeft = 0;
+        int columnIndexLabelLeft = 1;
         int columnIndexLabelRight = 2;
-        int columnIndexInputLeft = 1;
-        int columnIndexInputRight = 0;
 
         final int currentRowIndex = currentFormRow.incrementAndGet();
 
         label.setId("item");
 
-        Separator s = new Separator();
-
         if (currentLanguageAlignmentIsLeftAligned) {
             grid.add(label, columnIndexLabelLeft, currentRowIndex);
             GridPane.setHalignment(label, HPos.LEFT);
-            grid.add(s, columnIndexInputLeft, currentRowIndex, 2, 1);
-            GridPane.setHalignment(s, HPos.LEFT);
         } else {
             grid.add(label, columnIndexLabelRight, currentRowIndex);
             GridPane.setHalignment(label, HPos.RIGHT);
-            grid.add(s, columnIndexInputRight, currentRowIndex, 2, 1);
-            GridPane.setHalignment(s, HPos.RIGHT);
         }
     }
 
@@ -432,6 +424,29 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         int columnIndexLabelLeft = 1;
         int columnIndexInputLeft = 2;
         int columnIndexLabelRight = 1;
+        int columnIndexInputRight = 0;
+
+        final int currentRowIndex = currentFormRow.incrementAndGet();
+
+        label.setId("item");
+
+        if (currentLanguageAlignmentIsLeftAligned) {
+            grid.add(label, columnIndexLabelLeft, currentRowIndex);
+            GridPane.setHalignment(label, HPos.LEFT);
+            grid.add(input, columnIndexInputLeft, currentRowIndex);
+            GridPane.setHalignment(input, HPos.LEFT);
+        } else {
+            grid.add(label, columnIndexLabelRight, currentRowIndex);
+            GridPane.setHalignment(label, HPos.RIGHT);
+            grid.add(input, columnIndexInputRight, currentRowIndex);
+            GridPane.setHalignment(input, HPos.RIGHT);
+        }
+    }
+
+    void addSubToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
+        int columnIndexLabelLeft = 2;
+        int columnIndexInputLeft = 3;
+        int columnIndexLabelRight = 0;
         int columnIndexInputRight = 0;
 
         final int currentRowIndex = currentFormRow.incrementAndGet();
