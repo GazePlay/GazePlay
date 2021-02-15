@@ -418,12 +418,12 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         if (currentLanguageAlignmentIsLeftAligned) {
             grid.add(label, columnIndexLabelLeft, currentRowIndex);
             GridPane.setHalignment(label, HPos.LEFT);
-            grid.add(s, columnIndexInputLeft+1, currentRowIndex, 2, 1);
+            grid.add(s, columnIndexInputLeft + 1, currentRowIndex, 2, 1);
             GridPane.setHalignment(s, HPos.LEFT);
         } else {
             grid.add(label, columnIndexLabelRight, currentRowIndex);
             GridPane.setHalignment(label, HPos.RIGHT);
-            grid.add(s, columnIndexInputRight+1, currentRowIndex, 2, 1);
+            grid.add(s, columnIndexInputRight + 1, currentRowIndex, 2, 1);
             GridPane.setHalignment(s, HPos.RIGHT);
         }
     }
