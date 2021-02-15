@@ -249,7 +249,7 @@ toLeft,,,从右到左,,,from right to left,,de droite à gauche,,,,,,,,,,de la d
 
 Dark,,,,,,Dark,,Sombre,,,,,,,,,,Oscuro,
 Light,,,,,,Light,,Clair,,,,,,,,,,Claro,
-BackgroundStyle,,,,,,Background style,,Couleur de fond des jeux,,,,,,,,,,,
+BackgroundStyle,,,,,,Background style,,Couleur de l'arrière-plan des jeux,,,,,,,,,,,
 BackgroundEnabled,,,,,,Background images enabled,,Fonds d'écran activés,,,,,,,,,,,
 
 addNewImages,,,,,,Add new images ...,,Ajouter de nouvelles images ...,,,,,,,,,,Agregar nuevas imágenes ...,
