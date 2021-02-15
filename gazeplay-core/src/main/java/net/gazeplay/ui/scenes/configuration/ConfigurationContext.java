@@ -446,8 +446,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     void addSubToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
         int columnIndexLabelLeft = 2;
         int columnIndexInputLeft = 3;
-        int columnIndexLabelRight = 0;
-        int columnIndexInputRight = 0;
+        int columnIndexLabelRight = 2;
+        int columnIndexInputRight = 1;
 
         final int currentRowIndex = currentFormRow.incrementAndGet();
 
@@ -997,6 +997,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         Button minusButton = new Button("-");
 
         hbox.getChildren().addAll(resetButton, plusButton, minusButton);
+
+        int btnCount = hbox.getChildren().size();
+        resetButton.prefWidthProperty().bind(hbox.widthProperty().divide(btnCount));
 
         resetButton.setOnAction((event) -> {
             config.getHeatMapColorsProperty().setValue(Configuration.DEFAULT_VALUE_HEATMAP_COLORS);
