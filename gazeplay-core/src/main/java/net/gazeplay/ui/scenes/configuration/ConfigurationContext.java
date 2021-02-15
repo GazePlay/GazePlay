@@ -406,17 +406,25 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     void addSubCategoryTitle(GridPane grid, AtomicInteger currentFormRow, I18NText label) {
         int columnIndexLabelLeft = 1;
         int columnIndexLabelRight = 2;
+        int columnIndexInputLeft = 1;
+        int columnIndexInputRight = 0;
 
         final int currentRowIndex = currentFormRow.incrementAndGet();
 
         label.setId("item");
 
+        Separator s = new Separator();
+
         if (currentLanguageAlignmentIsLeftAligned) {
             grid.add(label, columnIndexLabelLeft, currentRowIndex);
             GridPane.setHalignment(label, HPos.LEFT);
+            grid.add(s, columnIndexInputLeft+1, currentRowIndex, 2, 1);
+            GridPane.setHalignment(s, HPos.LEFT);
         } else {
             grid.add(label, columnIndexLabelRight, currentRowIndex);
             GridPane.setHalignment(label, HPos.RIGHT);
+            grid.add(s, columnIndexInputRight+1, currentRowIndex, 2, 1);
+            GridPane.setHalignment(s, HPos.RIGHT);
         }
     }
 
