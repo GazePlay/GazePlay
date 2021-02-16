@@ -191,20 +191,38 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     void winButton(final boolean winOnly) {
         boolean win = true;
         boolean currentOk = true;
-        for (int i = 0; i < 3; i++) {
+        if (!variant.equals(CakeGameVariant.FREE)) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (layers[i][j] != model[i][j]) {
+                        win = false;
+                        if (i == currentCake) {
+                            currentOk = false;
+                        }
+                    }
+                }
+            }
+            if (layers[2][3] != model[2][3]) {
+                win = false;
+                if (2 == currentCake) {
+                    currentOk = false;
+                }
+            }
+        }
+        else{
             for (int j = 0; j < 3; j++) {
-                if (layers[i][j] != model[i][j]) {
+                if (layers[0][j] != model[0][j]) {
                     win = false;
-                    if (i == currentCake) {
+                    if (0 == currentCake) {
                         currentOk = false;
                     }
                 }
             }
-        }
-        if (layers[2][3] != model[2][3]) {
-            win = false;
-            if (2 == currentCake) {
-                currentOk = false;
+            if (layers[0][3] != model[0][3]) {
+                win = false;
+                if (0 == currentCake) {
+                    currentOk = false;
+                }
             }
         }
         if (!winOnly) {
@@ -218,7 +236,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             }
         }
 
-        if (win && !variant.equals(CakeGameVariant.FREE)) {
+        if (win) {
             winFunction();
         }
     }
@@ -250,19 +268,13 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     void winFunction() {
         active(-1);
-        if (!variant.equals(CakeGameVariant.FREE)) {
-            final FadeTransition ft = new FadeTransition(Duration.millis(500), randomCake);
-            ft.setToValue(1);
-            ft.setOnFinished(actionEvent -> {
-                gameContext.updateScore(stats,this);
-                playWin();
-            });
-            ft.play();
-        } else {
-            stats.incrementNumberOfGoalsReached();
+        final FadeTransition ft = new FadeTransition(Duration.millis(500), randomCake);
+        ft.setToValue(1);
+        ft.setOnFinished(actionEvent -> {
             gameContext.updateScore(stats,this);
             playWin();
-        }
+        });
+        ft.play();
     }
 
     private void checkGoodAnswer(){
@@ -485,9 +497,8 @@ public class CakeFactory extends Parent implements GameLifeCycle {
                 cake[c].toFront();
             }
             active(0);
-            if (!variant.equals(CakeGameVariant.FREE)) {
-                winButton(false);
-            }
+
+            winButton(false);
 
             for (final Node child : p[0]) {
                 child.toFront();
