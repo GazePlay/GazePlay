@@ -208,8 +208,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
                     currentOk = false;
                 }
             }
-        }
-        else{
+        } else {
             for (int j = 0; j < 3; j++) {
                 if (layers[0][j] != model[0][j]) {
                     win = false;
@@ -271,13 +270,13 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         final FadeTransition ft = new FadeTransition(Duration.millis(500), randomCake);
         ft.setToValue(1);
         ft.setOnFinished(actionEvent -> {
-            gameContext.updateScore(stats,this);
+            gameContext.updateScore(stats, this);
             playWin();
         });
         ft.play();
     }
 
-    private void checkGoodAnswer(){
+    private void checkGoodAnswer() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (layers[i][j] == model[i][j]) {
@@ -588,8 +587,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
                 model[i][2] = 1 + random.nextInt(3);
             }
             model[2][3] = 1 + random.nextInt(2);
-        }
-        else{
+        } else {
             model[0][0] = 1 + random.nextInt(4);
             model[0][1] = 1 + random.nextInt(5);
             model[0][2] = 1 + random.nextInt(3);
@@ -607,14 +605,13 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         if (variant.equals(CakeGameVariant.FREE)) {
             nbFloors = 1;
             nbDecoration = 4;
-        }
-        else{
+        } else {
             nbFloors = 3;
             nbDecoration = 3;
         }
 
         for (int i = 0; i < nbFloors; i++) {
-            if (i == 2){
+            if (i == 2) {
                 nbDecoration = 4;
             }
             for (int j = 0; j < nbDecoration; j++) {
