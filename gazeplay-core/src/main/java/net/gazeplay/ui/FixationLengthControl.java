@@ -29,11 +29,9 @@ public class FixationLengthControl {
     @Getter
     private static final FixationLengthControl instance = new FixationLengthControl();
 
-    private static final double FIXATION_LENGTH_RANGE_WIDTH = 9d;
+    private static final int FIXATION_LENGTH_SLIDER_MIN_VALUE = 300;
 
-    private static final double FIXATION_LENGTH_SLIDER_MIN_VALUE = -1d * FIXATION_LENGTH_RANGE_WIDTH * 0.9d;
-
-    private static final double FIXATION_LENGTH_SLIDER_MAX_VALUE = FIXATION_LENGTH_RANGE_WIDTH;
+    private static final int FIXATION_LENGTH_SLIDER_MAX_VALUE = 10000;
 
     public TitledPane createfixationLengthPane(Configuration config, Translator translator, Scene primaryScene) {
         Label fixationLengthValueLabel = new Label("");
@@ -59,7 +57,7 @@ public class FixationLengthControl {
     }
 
     public Slider createFixationLengthSlider(Configuration config, Label fixationLengthValueLabel) {
-        final double initialFixationLengthRatioValue = config.getFixationlengthProperty().getValue();
+        final int initialFixationLengthRatioValue = config.getFixationlengthProperty().getValue();
 
         Slider slider = new Slider();
         slider.setMinWidth(QuickControl.SLIDERS_MIN_WIDTH);
@@ -67,66 +65,45 @@ public class FixationLengthControl {
         slider.setPrefWidth(QuickControl.SLIDERS_MAX_WIDTH);
         slider.setMin(FIXATION_LENGTH_SLIDER_MIN_VALUE);
         slider.setMax(FIXATION_LENGTH_SLIDER_MAX_VALUE);
-        slider.setMajorTickUnit(1);
-        slider.setMinorTickCount(1);
+        slider.setMajorTickUnit(2500);
+        slider.setMinorTickCount(100);
         slider.setShowTickMarks(true);
         slider.setSnapToTicks(true);
-        slider.setBlockIncrement(1d);
-        slider.setValue(fixationLengthToSliderValue(initialFixationLengthRatioValue));
+        slider.setBlockIncrement(100);
+        slider.setValue(initialFixationLengthRatioValue);
 
         fixationLengthValueLabel.setText(formatValue(initialFixationLengthRatioValue));
 
         // user can reset ratio to default just by clicking on the label
-        fixationLengthValueLabel.setOnMouseClicked(event -> slider.setValue(0d));
+        fixationLengthValueLabel.setOnMouseClicked(event -> slider.setValue(500));
 
         slider.valueProperty().addListener((observable) -> {
-            int fixationLengthValue = (int) sliderValueToFixationLength((int) slider.getValue());
-            String labelText = formatValue(fixationLengthValue);
+            String labelText = formatValue(slider.getValue());
             fixationLengthValueLabel.setText(labelText);
-            config.getFixationlengthProperty().set(fixationLengthValue);
+            config.getFixationlengthProperty().set((int)slider.getValue());
         });
 
         return slider;
     }
 
     public String formatValue(double fixationLengthValue) {
-        return "x" + String.format("%.2f", fixationLengthValue);
+        return "x" + String.format("%.2f", fixationLengthValue / 1000.0);
     }
-
-    public double sliderValueToFixationLength(int value) {
-        if (value >= 0d) {
-            return 1d + value;
-        } else {
-            BigDecimal result = new BigDecimal(value).setScale(2, RoundingMode.DOWN).divide(new BigDecimal(FIXATION_LENGTH_RANGE_WIDTH).setScale(2, RoundingMode.DOWN), RoundingMode.DOWN).setScale(2, RoundingMode.DOWN);
-            return result.add(new BigDecimal(1d)).doubleValue();
-        }
-    }
-
-    public double fixationLengthToSliderValue(double value) {
-        if (value >= 1d) {
-            return value - 1d;
-        } else {
-            BigDecimal result = new BigDecimal(value).add(new BigDecimal(-1d));
-            result = result.setScale(2, RoundingMode.DOWN).multiply(new BigDecimal(FIXATION_LENGTH_RANGE_WIDTH).setScale(2, RoundingMode.DOWN)).setScale(2, RoundingMode.DOWN);
-            return result.doubleValue();
-        }
-    }
-
 
     public void registerKeyHandler(@NonNull Scene primaryScene, final Slider fixationLengthRatioSlider) {
 
-        EventHandler increaseSpeedEventHandler = (EventHandler<KeyEvent>) event -> {
-            final double sliderFixationValue = Math.floor(fixationLengthRatioSlider.getValue());
+        EventHandler increaseFixationLengthEventHandler = (EventHandler<KeyEvent>) event -> {
+            final int sliderFixationValue = (int)fixationLengthRatioSlider.getValue();
             if (sliderFixationValue < fixationLengthRatioSlider.getMax()) {
-                fixationLengthRatioSlider.setValue(sliderFixationValue + 1);
+                fixationLengthRatioSlider.setValue(sliderFixationValue + 100.0);
             } else {
                 log.info("max fixation length reached !");
             }
         };
-        EventHandler decreaseSpeedEventHandler = (EventHandler<KeyEvent>) event -> {
-            final double sliderFixationValue = Math.floor(fixationLengthRatioSlider.getValue());
+        EventHandler decreaseFixationLengthEventHandler = (EventHandler<KeyEvent>) event -> {
+            final int sliderFixationValue = (int)fixationLengthRatioSlider.getValue();
             if (sliderFixationValue > fixationLengthRatioSlider.getMin()) {
-                fixationLengthRatioSlider.setValue(sliderFixationValue - 1);
+                fixationLengthRatioSlider.setValue(sliderFixationValue - 100.0);
             } else {
                 log.info("min fixation length reached !");
             }
@@ -135,10 +112,10 @@ public class FixationLengthControl {
         primaryScene.addEventHandler(KeyEvent.KEY_PRESSED, (keyEvent) -> {
             if (keyEvent.getCode().toString().equals("F")) {
                 log.info("Key Value :{}", keyEvent.getCode().toString());
-                increaseSpeedEventHandler.handle(keyEvent);
+                increaseFixationLengthEventHandler.handle(keyEvent);
             } else if (keyEvent.getCode().toString().equals("S")) {
                 log.info("Key Value :{}", keyEvent.getCode().toString());
-                decreaseSpeedEventHandler.handle(keyEvent);
+                decreaseFixationLengthEventHandler.handle(keyEvent);
             }
         });
 
