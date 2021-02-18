@@ -35,12 +35,12 @@ public class BottleGame implements GameLifeCycle {
     private final ProgressButton restartButton;
     private final Text finalScoreText;
 
-    private ArrayList<ProgressButton> bottle;
+    private final ArrayList<ProgressButton> bottle;
 
     private Circle ball;
     private final Text scoreText;
     private int score;
-    private int nbBottle;
+    private final int nbBottle;
 
     private boolean isBroken;
 
@@ -240,12 +240,12 @@ public class BottleGame implements GameLifeCycle {
             gameContext.getChildren().add(bo);
 
 
-            bo.assignIndicator(event -> {
+            bo.assignIndicatorUpdatable(event -> {
                 if (!isBroken) {
                     isBroken = true;
                     ballMovement(bo);
                 }
-            }, configuration.getFixationLength());
+            }, this.gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(bo);
             bo.active();
 
