@@ -122,7 +122,7 @@ public class MemoryCard extends Parent {
         stats.incrementNumberOfGoalsReached();
 
         for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
-            if (gameInstance.currentRoundDetails.cardList.get(i).turned && gameInstance.currentRoundDetails.cardList.get(i).id ==  gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned ) {
+            if (gameInstance.currentRoundDetails.cardList.get(i).turned && gameInstance.currentRoundDetails.cardList.get(i).id == gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned) {
                 gameInstance.currentRoundDetails.cardList.get(i).card.removeEventFilter(MouseEvent.ANY, enterEvent);
                 gameInstance.currentRoundDetails.cardList.get(i).card.removeEventFilter(GazeEvent.ANY, enterEvent);
                 gameContext.getGazeDeviceManager()
@@ -131,7 +131,7 @@ public class MemoryCard extends Parent {
             } else if (gameInstance.currentRoundDetails.cardList.get(i).turned && !isOpen) {
                 gameInstance.currentRoundDetails.cardList.get(i).turned = false;
                 gameInstance.currentRoundDetails.cardList.get(i).card
-                        .setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
+                    .setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
             }
             gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned = -1;
         }
@@ -231,7 +231,7 @@ public class MemoryCard extends Parent {
 
                 timelineProgressBar = new Timeline();
 
-                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(this.gameContext.getConfiguration().getFixationLength()),
                     new KeyValue(progressIndicator.progressProperty(), 1)));
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
