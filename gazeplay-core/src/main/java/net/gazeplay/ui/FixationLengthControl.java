@@ -17,9 +17,6 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NTitledPane;
 import net.gazeplay.commons.ui.Translator;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 import static net.gazeplay.ui.QuickControl.*;
 
 @NoArgsConstructor
@@ -80,7 +77,7 @@ public class FixationLengthControl {
         slider.valueProperty().addListener((observable) -> {
             String labelText = formatValue(slider.getValue());
             fixationLengthValueLabel.setText(labelText);
-            config.getFixationlengthProperty().set((int)slider.getValue());
+            config.getFixationlengthProperty().set((int) slider.getValue());
         });
 
         return slider;
@@ -93,7 +90,7 @@ public class FixationLengthControl {
     public void registerKeyHandler(@NonNull Scene primaryScene, final Slider fixationLengthRatioSlider) {
 
         EventHandler increaseFixationLengthEventHandler = (EventHandler<KeyEvent>) event -> {
-            final int sliderFixationValue = (int)fixationLengthRatioSlider.getValue();
+            final int sliderFixationValue = (int) fixationLengthRatioSlider.getValue();
             if (sliderFixationValue < fixationLengthRatioSlider.getMax()) {
                 fixationLengthRatioSlider.setValue(sliderFixationValue + 100.0);
             } else {
@@ -101,7 +98,7 @@ public class FixationLengthControl {
             }
         };
         EventHandler decreaseFixationLengthEventHandler = (EventHandler<KeyEvent>) event -> {
-            final int sliderFixationValue = (int)fixationLengthRatioSlider.getValue();
+            final int sliderFixationValue = (int) fixationLengthRatioSlider.getValue();
             if (sliderFixationValue > fixationLengthRatioSlider.getMin()) {
                 fixationLengthRatioSlider.setValue(sliderFixationValue - 100.0);
             } else {
