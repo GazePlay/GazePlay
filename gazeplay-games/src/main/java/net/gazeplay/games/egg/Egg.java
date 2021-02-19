@@ -173,7 +173,7 @@ public class Egg extends Parent {
 
                             t.setOnFinished(actionEvent1 -> {
 
-                                gameContext.updateScore(stats,gameInstance);
+                                gameContext.updateScore(stats, gameInstance);
 
                                 gameContext.playWinTransition(0, event -> {
                                     gameInstance.dispose();
