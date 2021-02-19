@@ -437,4 +437,5 @@ public class Configuration {
         return latestNewsDisplayForced.getValue();
     }
 
+    public void setFixationLength(final int fixationLength) { fixationlengthProperty.setValue(fixationLength); }
 }

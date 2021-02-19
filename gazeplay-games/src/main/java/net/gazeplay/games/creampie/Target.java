@@ -60,6 +60,7 @@ public class Target extends Portrait {
         this.stats = stats;
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
+        gameContext.getConfiguration().setFixationLength(0);
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
         this.targetAOIList = new ArrayList<>();
