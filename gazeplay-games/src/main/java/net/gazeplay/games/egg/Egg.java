@@ -144,7 +144,7 @@ public class Egg extends Parent {
 
                     timelineProgressBar = new Timeline();
 
-                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
                         new KeyValue(progressIndicator.progressProperty(), 1)));
 
                     timelineProgressBar.setOnFinished(actionEvent -> {
