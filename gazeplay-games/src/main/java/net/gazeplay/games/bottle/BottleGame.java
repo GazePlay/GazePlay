@@ -93,7 +93,7 @@ public class BottleGame implements GameLifeCycle {
         restartButton.setImage(restartImage);
         restartButton.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getHeight() / 12);
         restartButton.setLayoutY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 12);
-        restartButton.assignIndicator(event -> launch(), fixationLength);
+        restartButton.assignIndicatorUpdatable(event -> launch(), gameContext);
 
         finalScoreText = new Text(0, dimension2D.getHeight() / 4, "");
         finalScoreText.setFill(Color.WHITE);
@@ -150,7 +150,7 @@ public class BottleGame implements GameLifeCycle {
         restartButton.setImage(restartImage);
         restartButton.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getHeight() / 12);
         restartButton.setLayoutY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 12);
-        restartButton.assignIndicator(event -> launch(), fixationLength);
+        restartButton.assignIndicatorUpdatable(event -> launch(), gameContext);
 
         finalScoreText = new Text(0, dimension2D.getHeight() / 4, "");
         finalScoreText.setFill(Color.WHITE);
@@ -245,7 +245,7 @@ public class BottleGame implements GameLifeCycle {
                     isBroken = true;
                     ballMovement(bo);
                 }
-            }, this.gameContext);
+            }, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(bo);
             bo.active();
 
