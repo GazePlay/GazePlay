@@ -63,8 +63,6 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         final StackPane sp = new StackPane();
         gameContext.getChildren().addAll(sp, backgroundLayer, middleLayer, foregroundLayer);
 
-        final int fixationLength = configuration.getFixationLength();
-
         shade = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         shade.setFill(new Color(0, 0, 0, 0.75));
 
@@ -101,8 +99,6 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         final Group foregroundLayer = new Group();
         final StackPane sp = new StackPane();
         gameContext.getChildren().addAll(sp, backgroundLayer, middleLayer, foregroundLayer);
-
-        final int fixationLength = configuration.getFixationLength();
 
         shade = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         shade.setFill(new Color(0, 0, 0, 0.75));

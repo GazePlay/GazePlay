@@ -131,7 +131,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         foregroundLayer.getChildren().add(scoreText);
 
         // Menu
-        final int fixationLength = config.getFixationLength();
 
         shade = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
         shade.setFill(new Color(0, 0, 0, 0.75));
@@ -219,7 +218,6 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         foregroundLayer.getChildren().add(scoreText);
 
         // Menu
-        final int fixationLength = config.getFixationLength();
 
         shade = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
         shade.setFill(new Color(0, 0, 0, 0.75));

@@ -296,8 +296,6 @@ public class Math101 implements GameLifeCycle {
         resultInt.add(correctAnswer);
         int currentCardIndex = 0;
 
-        final int fixationlength = config.getFixationLength();
-
         for (int currentLineIndex = 1; currentLineIndex < nbLines; currentLineIndex++) {
             for (int currentColumnIndex = 0; currentColumnIndex < nbColumns; currentColumnIndex++) {
 

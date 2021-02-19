@@ -139,8 +139,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         scoreText.setWrappingWidth(dimension2D.getWidth());
         foregroundLayer.getChildren().add(scoreText);
 
-        final int fixationLength = configuration.getFixationLength();
-
         shade = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         shade.setFill(new Color(0, 0, 0, 0.75));
 
@@ -228,8 +226,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         scoreText.setFont(new Font(50));
         scoreText.setWrappingWidth(dimension2D.getWidth());
         foregroundLayer.getChildren().add(scoreText);
-
-        final int fixationLength = configuration.getFixationLength();
 
         shade = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         shade.setFill(new Color(0, 0, 0, 0.75));
