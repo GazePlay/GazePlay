@@ -58,7 +58,7 @@ public class Dice implements GameLifeCycle {
         rollButton.setLayoutX(dimensions.getWidth() / 2 - nextImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() - 1.2 * nextImage.getFitHeight());
         rollButton.setImage(nextImage);
-        rollButton.assignIndicator(event -> {
+        rollButton.assignIndicatorUpdatable(event -> {
             if (active) {
                 active = false;
                 totalText.setOpacity(0);
@@ -67,7 +67,7 @@ public class Dice implements GameLifeCycle {
                 }
                 stats.incrementNumberOfGoalsReached();
             }
-        }, config.getFixationLength());
+        }, gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 
@@ -122,7 +122,7 @@ public class Dice implements GameLifeCycle {
         rollButton.setLayoutX(dimensions.getWidth() / 2 - nextImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() - 1.2 * nextImage.getFitHeight());
         rollButton.setImage(nextImage);
-        rollButton.assignIndicator(event -> {
+        rollButton.assignIndicatorUpdatable(event -> {
             if (active) {
                 active = false;
                 totalText.setOpacity(0);
@@ -131,7 +131,7 @@ public class Dice implements GameLifeCycle {
                 }
                 stats.incrementNumberOfGoalsReached();
             }
-        }, config.getFixationLength());
+        }, gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 
