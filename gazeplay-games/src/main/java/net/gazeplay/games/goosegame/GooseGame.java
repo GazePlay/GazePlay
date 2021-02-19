@@ -229,7 +229,7 @@ public class GooseGame implements GameLifeCycle {
         rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() - 1.2 * rollImage.getFitHeight());
         rollButton.setImage(rollImage);
-        rollButton.assignIndicator(event -> roll(), config.getFixationLength());
+        rollButton.assignIndicatorUpdatable(event -> roll(), gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 
@@ -400,7 +400,7 @@ public class GooseGame implements GameLifeCycle {
         rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() - 1.2 * rollImage.getFitHeight());
         rollButton.setImage(rollImage);
-        rollButton.assignIndicator(event -> roll(), config.getFixationLength());
+        rollButton.assignIndicatorUpdatable(event -> roll(), gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 
