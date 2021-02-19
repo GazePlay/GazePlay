@@ -73,8 +73,6 @@ public class BottleGame implements GameLifeCycle {
 
         backgroundLayer.getChildren().add(backgroundImage);
 
-        final int fixationLength = configuration.getFixationLength();
-
         scoreText = new Text(0, 50, "0");
         scoreText.setFill(Color.WHITE);
         scoreText.setTextAlignment(TextAlignment.CENTER);
@@ -129,8 +127,6 @@ public class BottleGame implements GameLifeCycle {
         backgroundImage.setFill(new ImagePattern(new Image("data/bottle/supermarket.jpg")));
 
         backgroundLayer.getChildren().add(backgroundImage);
-
-        final int fixationLength = configuration.getFixationLength();
 
         scoreText = new Text(0, 50, "0");
         scoreText.setFill(Color.WHITE);

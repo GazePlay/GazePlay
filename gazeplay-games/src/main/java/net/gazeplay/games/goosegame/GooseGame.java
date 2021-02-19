@@ -23,7 +23,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.components.DiceRoller;
 import net.gazeplay.components.Position;
@@ -72,7 +71,6 @@ public class GooseGame implements GameLifeCycle {
         this.nbPlayers = nbPlayers;
 
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final Configuration config = gameContext.getConfiguration();
 
         this.random = new ReplayablePseudoRandom();
         this.stats.setGameSeed(random.getSeed());
@@ -244,7 +242,6 @@ public class GooseGame implements GameLifeCycle {
         this.nbPlayers = nbPlayers;
 
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final Configuration config = gameContext.getConfiguration();
 
         this.random = new ReplayablePseudoRandom(gameSeed);
 
