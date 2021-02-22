@@ -6,6 +6,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.util.Duration;
@@ -49,6 +50,12 @@ public class Target extends Portrait {
 
     private final IGameContext gameContext;
 
+    private final ProgressIndicator progressIndicator;
+
+    private Timeline timelineProgressBar;
+
+    Position newPosition;
+
     public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
                   final ImageLibrary imageLibrary, CreamPie gameInstance, final int radius) {
 
@@ -60,6 +67,8 @@ public class Target extends Portrait {
         this.stats = stats;
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
+        newPosition = randomPositionGenerator.newRandomBoundedPosition(getInitialRadius(), 0, 1, 0, 0.8);
+        this.progressIndicator = createProgressIndicator(newPosition.getX(), newPosition.getY(), radius);
         gameContext.getConfiguration().setFixationLength(0);
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
@@ -72,6 +81,12 @@ public class Target extends Portrait {
                 animationEnded = false;
                 enter();
             }
+            else if ((e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED)
+                && !animationEnded) {
+
+                animationEnded = true;
+                exit();
+            }
         };
 
         gameContext.start();
@@ -82,21 +97,49 @@ public class Target extends Portrait {
 
         this.addEventFilter(GazeEvent.ANY, enterEvent);
 
+        // Prevent null pointer exception
+        timelineProgressBar = new Timeline();
+    }
+
+    private ProgressIndicator createProgressIndicator(double x, double y, final double radius) {
+        final ProgressIndicator indicator = new ProgressIndicator(0);
+        indicator.setTranslateX(x);
+        indicator.setTranslateY(y);
+        indicator.setMinWidth(radius);
+        indicator.setMinHeight(radius);
+        indicator.setOpacity(0);
+        return indicator;
     }
 
     private void enter() {
 
-        stats.incrementNumberOfGoalsReached();
-        gameContext.updateScore(stats,gameInstance);
-        this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
+        progressIndicator.setOpacity(0.4);
+        progressIndicator.setProgress(0);
+        timelineProgressBar = new Timeline();
 
-        final Animation animation = createAnimation();
-        animation.play();
+        timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
+            new KeyValue(progressIndicator.progressProperty(), 1)));
 
-        hand.onTargetHit(this);
+        timelineProgressBar.setOnFinished(actionEvent -> {
 
-        gameContext.getSoundManager().add(SOUNDS_MISSILE);
+            stats.incrementNumberOfGoalsReached();
+            gameContext.updateScore(stats, gameInstance);
+            this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
+            final Animation animation = createAnimation();
+            animation.play();
+
+            hand.onTargetHit(this);
+
+            gameContext.getSoundManager().add(SOUNDS_MISSILE);
+        });
+    }
+
+    private void exit(){
+        timelineProgressBar.stop();
+
+        progressIndicator.setOpacity(0);
+        progressIndicator.setProgress(0);
     }
 
     public ArrayList<TargetAOI> getTargetAOIList() {
@@ -125,7 +168,7 @@ public class Target extends Portrait {
     }
 
     private void newPosition(){
-        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(getInitialRadius(), 0, 1, 0, 0.8);
+        newPosition = randomPositionGenerator.newRandomBoundedPosition(getInitialRadius(), 0, 1, 0, 0.8);
 
         setRadius(radius);
         setCenterX(newPosition.getX());
