@@ -153,6 +153,8 @@ public class Stats implements GazeMotionListener {
         javafx.scene.paint.Color.CHOCOLATE
     };
 
+    private static boolean configMenuOpen = false;
+
     public Stats(final Scene gameContextScene) {
         this(gameContextScene, null);
     }
@@ -504,36 +506,38 @@ public class Stats implements GazeMotionListener {
             };
 
             recordMouseMovements = e -> {
-                final long timeElapsedMillis = System.currentTimeMillis() - startTime;
-                final long timeInterval = (timeElapsedMillis - previousTime);
-                Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
-                final int getX = (int) toSceneCoordinate.getX();
-                final int getY = (int) toSceneCoordinate.getY();
-                if (getX > 0 || getY > 0) {
+                if (!configMenuOpen) {
+                    final long timeElapsedMillis = System.currentTimeMillis() - startTime;
+                    final long timeInterval = (timeElapsedMillis - previousTime);
+                    Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
+                    final int getX = (int) toSceneCoordinate.getX();
+                    final int getY = (int) toSceneCoordinate.getY();
+                    if (getX > 0 || getY > 0) {
 
-                    setJSONCoordinates(timeElapsedMillis, getX, getY, "mouse");
+                        setJSONCoordinates(timeElapsedMillis, getX, getY, "mouse");
 
-                    if (!config.isHeatMapDisabled()) {
-                        incrementHeatMap(getX, getY);
-                    }
-                    if (!config.isFixationSequenceDisabled()) {
-                        incrementFixationSequence(getX, getY, fixationSequence.get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
-                    }
-
-                    if (config.getAreaOfInterestDisabledProperty().getValue()) {
-                        if (getX != previousXGaze || getY != previousYGaze && counter == 2) {
-                            previousXGaze = getX;
-                            previousYGaze = getY;
-                            movementHistory
-                                .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
-                            movementHistoryidx++;
-                            if (movementHistoryidx > 1) {
-                                generateAOIList(movementHistoryidx - 1);
-                            }
-                            previousTime = timeElapsedMillis;
-                            counter = 0;
+                        if (!config.isHeatMapDisabled()) {
+                            incrementHeatMap(getX, getY);
                         }
-                        counter++;
+                        if (!config.isFixationSequenceDisabled()) {
+                            incrementFixationSequence(getX, getY, fixationSequence.get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
+                        }
+
+                        if (config.getAreaOfInterestDisabledProperty().getValue()) {
+                            if (getX != previousXGaze || getY != previousYGaze && counter == 2) {
+                                previousXGaze = getX;
+                                previousYGaze = getY;
+                                movementHistory
+                                    .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
+                                movementHistoryidx++;
+                                if (movementHistoryidx > 1) {
+                                    generateAOIList(movementHistoryidx - 1);
+                                }
+                                previousTime = timeElapsedMillis;
+                                counter = 0;
+                            }
+                            counter++;
+                        }
                     }
                 }
             };
@@ -948,4 +952,6 @@ public class Stats implements GazeMotionListener {
     public void setGameSeed(double gameSeed) {
         currentGameSeed = gameSeed;
     }
+
+    public static void setConfigMenuOpen(boolean configMenuStatus){ configMenuOpen = configMenuStatus;}
 }

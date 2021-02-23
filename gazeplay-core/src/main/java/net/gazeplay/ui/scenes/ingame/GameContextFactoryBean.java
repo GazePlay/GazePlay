@@ -24,6 +24,8 @@ import net.gazeplay.commons.soundsmanager.SoundsManagerFactory;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
+import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.ui.scenes.stats.ScanpathView;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -158,8 +160,10 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
                 from = 1;
                 to = 0;
                 angle = -1 * angle;
+                Stats.setConfigMenuOpen(false);
             } else if (!configPane.getChildren().contains(controlPanel)) {
                 configPane.getChildren().add(controlPanel);
+                Stats.setConfigMenuOpen(true);
             }
             RotateTransition rt = new RotateTransition(Duration.millis(500), bt);
             rt.setByAngle(angle);
