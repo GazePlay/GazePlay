@@ -147,6 +147,7 @@ public class Target extends ProgressPortrait {
         setLayoutX(newPosition.getX());
         setLayoutY(newPosition.getY());
         getButton().setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
+        setVisible(true);
 
         stats.incrementNumberOfGoalsToReach();
 
