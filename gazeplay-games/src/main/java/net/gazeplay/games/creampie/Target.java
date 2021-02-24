@@ -66,7 +66,7 @@ public class Target extends Portrait {
 
         enterEvent = e -> {
             if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
-                && animationEnded && !Stats.getConfigMenuStatus()) {
+                && animationEnded) {
 
                 animationEnded = false;
                 enter();
