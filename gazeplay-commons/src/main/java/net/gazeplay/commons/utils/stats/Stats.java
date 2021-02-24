@@ -954,4 +954,6 @@ public class Stats implements GazeMotionListener {
     }
 
     public static void setConfigMenuOpen(boolean configMenuStatus){ configMenuOpen = configMenuStatus;}
+
+    public static boolean getConfigMenuStatus(){ return configMenuOpen; }
 }
