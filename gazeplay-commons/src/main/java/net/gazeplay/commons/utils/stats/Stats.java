@@ -81,7 +81,7 @@ public class Stats implements GazeMotionListener {
     private int previousYGaze = 0;
 
     private File movieFolder;
-    private boolean convexHULL = true;
+    private final boolean convexHULL = true;
     private ScreenRecorder screenRecorder;
     private ArrayList<TargetAOI> targetAOIList = null;
     private double[][] heatMap;
@@ -116,7 +116,7 @@ public class Stats implements GazeMotionListener {
     private WritableImage gameScreenShot;
 
     JsonArray coordinateData = new JsonArray();
-    private JsonObject savedDataObj = new JsonObject();
+    private final JsonObject savedDataObj = new JsonObject();
     String currentGameVariant;
     String currentGameNameCode;
     double currentGameSeed = 0.;
@@ -140,7 +140,7 @@ public class Stats implements GazeMotionListener {
     private final List<Polygon> allAOIListPolygon = new ArrayList<>();
     @Getter
     private final List<Double[]> allAOIListPolygonPt = new ArrayList<>();
-    private double highestFixationTime = 0;
+    private final double highestFixationTime = 0;
     private final Configuration config = ActiveConfigurationContext.getInstance();
     private int colorIterator;
     private final javafx.scene.paint.Color[] colors = new javafx.scene.paint.Color[]{
@@ -953,6 +953,8 @@ public class Stats implements GazeMotionListener {
         currentGameSeed = gameSeed;
     }
 
-    public static void setConfigMenuOpen(boolean configMenuStatus){ configMenuOpen = configMenuStatus;}
+    public static void setConfigMenuOpen(boolean configMenuStatus) {
+        configMenuOpen = configMenuStatus;
+    }
 
 }
