@@ -50,6 +50,8 @@ public class Target extends ProgressPortrait {
 
     private final IGameContext gameContext;
 
+    private boolean onUse = false;
+
     @Getter
     private double centerX;
 
@@ -72,8 +74,12 @@ public class Target extends ProgressPortrait {
         this.targetAOIList = new ArrayList<>();
 
         enterEvent = e -> {
-            animationEnded = false;
-            enter();
+            if (!onUse) {
+                animationEnded = false;
+                onUse = true;
+                disableProgressIndicator();
+                enter();
+            }
         };
 
         createTarget();
@@ -130,6 +136,7 @@ public class Target extends ProgressPortrait {
 
         timeline.setOnFinished(actionEvent -> {
             animationEnded = true;
+            onUse = false;
             if(targetAOIList.size()>0){
                 targetAOIList.get(targetAOIList.size()-1).setTimeEnded(System.currentTimeMillis());
             }
@@ -148,6 +155,7 @@ public class Target extends ProgressPortrait {
         setLayoutY(newPosition.getY());
         getButton().setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
         setVisible(true);
+        active();
 
         stats.incrementNumberOfGoalsToReach();
 

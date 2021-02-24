@@ -74,6 +74,10 @@ public class ProgressPortrait extends StackPane {
         this.button.setDisable(true);
     }
 
+    public  void disableProgressIndicator(){
+        inuse = false;
+    }
+
     public void setImage(final ImageView img) {
         image = img;
         image.setMouseTransparent(true);
