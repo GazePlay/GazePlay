@@ -1,33 +1,17 @@
 package net.gazeplay.games.bubbles;
 
-import javafx.animation.*;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
-import net.gazeplay.commons.utils.games.ImageLibrary;
-import net.gazeplay.commons.utils.games.ImageUtils;
-import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.Portrait;
 import net.gazeplay.components.RandomPositionGenerator;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by schwab on 28/08/2016.
@@ -98,13 +82,12 @@ public class Bubble implements GameLifeCycle {
         initBackground(true);
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
         randomPositionGenerator.setRandomGenerator(randomGenerator);
-
         for (int i = 0; i < 10; i++) {
             portrait = new Target(gameContext, randomPositionGenerator, stats,
                 Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, type);
+            gameContext.getChildren().add(portrait);
         }
         gameContext.setLimiterAvailable();
-        gameContext.getChildren().add(portrait);
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.incrementNumberOfGoalsToReach();

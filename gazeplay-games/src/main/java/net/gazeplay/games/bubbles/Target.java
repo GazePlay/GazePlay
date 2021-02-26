@@ -4,27 +4,23 @@ import javafx.animation.*;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressPortrait;
 import net.gazeplay.components.RandomPositionGenerator;
-import net.gazeplay.games.ninja.Ninja;
-import net.gazeplay.games.ninja.NinjaGameVariant;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class Target  extends ProgressPortrait {
+public class Target extends ProgressPortrait {
 
     private static final int maxTimeLength = 7;
     private static final int minTimeLength = 4;
@@ -50,9 +46,11 @@ public class Target  extends ProgressPortrait {
     private final ReplayablePseudoRandom randomGenerator;
     private final ReplayablePseudoRandom randomFragmentsGenerator = new ReplayablePseudoRandom();
 
-    private List<Circle> fragments;
+    private final List<Circle> fragments;
 
     private final BubbleType type;
+
+    private Timeline timeline;
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
                   final ImageLibrary imageLibrary, final BubblesGameVariant gameVariant, final Bubble gameInstance, final ReplayablePseudoRandom randomGenerator, BubbleType type) {
@@ -160,18 +158,20 @@ public class Target  extends ProgressPortrait {
 
         stats.incrementNumberOfGoalsReached();
 
-        gameContext.updateScore(stats,gameInstance);
+        gameContext.updateScore(stats, gameInstance);
 
         explose(centerX, centerY); // instead of C to avoid wrong position of the explosion
 
-        this.createTarget();
+        timeline.stop();
+
+        moveTarget();
     }
 
     private void createTarget() {
 
         final Dimension2D screenDimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        double maxRadius = Math.min(screenDimension.getWidth()/12,screenDimension.getHeight()/12);
-        double minRadius =  Math.min(screenDimension.getHeight()/30,screenDimension.getWidth()/30);
+        double maxRadius = Math.min(screenDimension.getWidth() / 12, screenDimension.getHeight() / 12);
+        double minRadius = Math.min(screenDimension.getHeight() / 30, screenDimension.getWidth() / 30);
         final double radius = (maxRadius - minRadius) * randomGenerator.nextDouble() + minRadius;
 
         getButton().setRadius(radius);
@@ -182,14 +182,14 @@ public class Target  extends ProgressPortrait {
         }
         setVisible(true);
 
-        assignIndicatorUpdatable(enterEvent,gameContext);
+        assignIndicatorUpdatable(enterEvent, gameContext);
         gameContext.getGazeDeviceManager().addEventFilter(this);
         active();
 
-        moveCircle();
+        moveTarget();
     }
 
-    private void moveCircle() {
+    private void moveTarget() {
         final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         double centerX = 0;
@@ -197,9 +197,9 @@ public class Target  extends ProgressPortrait {
 
         final double timelength = ((maxTimeLength - minTimeLength) * randomGenerator.nextDouble() + minTimeLength) * 1000;
 
-        final Timeline timeline = new Timeline();
+        timeline = new Timeline();
 
-        double maxRadius = dimension2D.getHeight()/12;
+        double maxRadius = dimension2D.getHeight() / 12;
 
         if (this.gameVariant == BubblesGameVariant.TOP) {
             centerX = (dimension2D.getWidth() - maxRadius) * randomGenerator.nextDouble() + maxRadius;
@@ -232,7 +232,7 @@ public class Target  extends ProgressPortrait {
         setLayoutY(centerY);
 
         timeline.setOnFinished(actionEvent -> {
-                createTarget();
+            createTarget();
         });
 
         timeline.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
