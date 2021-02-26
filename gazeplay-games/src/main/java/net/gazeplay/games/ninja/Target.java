@@ -13,8 +13,8 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.components.Portrait;
 import net.gazeplay.components.Position;
+import net.gazeplay.components.ProgressPortrait;
 import net.gazeplay.components.RandomPositionGenerator;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import java.util.List;
  * Created by schwab on 26/12/2016.
  */
 @Slf4j
-public class Target extends Portrait {
+public class Target extends ProgressPortrait {
 
     private final int radius;
 
@@ -37,7 +37,7 @@ public class Target extends Portrait {
 
     private final Stats stats;
 
-    private final List<Portrait> miniBallsPortraits;
+    private final List<ProgressPortrait> miniBallsProgressPortraits;
 
     private final ImageLibrary imageLibrary;
 
@@ -53,10 +53,12 @@ public class Target extends Portrait {
 
     public Animation currentTranslation;
 
+    private final EventHandler<Event> enterEvent;
+
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
                   final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance, final ReplayablePseudoRandom randomGenerator, int radius) {
-        super(radius, randomPositionGenerator, imageLibrary);
+        super();
 
         this.radius = radius;
         this.gameInstance = gameInstance;
@@ -77,27 +79,33 @@ public class Target extends Portrait {
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
 
-        this.miniBallsPortraits = generateMiniBallsPortraits(imageLibrary, nbBall);
-        gameContext.getChildren().addAll(miniBallsPortraits);
+        enterEvent = buildEvent();
 
-        final EventHandler<Event> enterEvent = buildEvent();
+        this.miniBallsProgressPortraits = generateMiniBallsProgressPortraits(imageLibrary, nbBall);
+        gameContext.getChildren().addAll(miniBallsProgressPortraits);
 
-        this.addEventFilter(MouseEvent.ANY, enterEvent);
-
+        assignIndicatorUpdatable(enterEvent, gameContext);
         gameContext.getGazeDeviceManager().addEventFilter(this);
-        this.addEventHandler(GazeEvent.ANY, enterEvent);
+        active();
 
         move();
         gameContext.start();
     }
 
-    private List<Portrait> generateMiniBallsPortraits(final ImageLibrary imageLibrary, final int count) {
-        final List<Portrait> result = new ArrayList<>(count);
+    private List<ProgressPortrait> generateMiniBallsProgressPortraits(final ImageLibrary imageLibrary, final int count) {
+        final List<ProgressPortrait> result = new ArrayList<>(count);
+        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(radius, 0, 1, 0, 0.8);
         for (int i = 0; i < count; i++) {
-            final Portrait miniPortrait = new Portrait(radius/2, randomMiniBallsPositionGenerator, imageLibrary);
-            miniPortrait.setOpacity(1);
-            miniPortrait.setVisible(false);
-            result.add(miniPortrait);
+            final ProgressPortrait miniProgressPortrait = new ProgressPortrait();
+            miniProgressPortrait.getButton().setRadius(radius);
+            miniProgressPortrait.setLayoutX(newPosition.getX());
+            miniProgressPortrait.setLayoutY(newPosition.getY());
+            miniProgressPortrait.getButton().setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
+            miniProgressPortrait.setOpacity(1);
+            miniProgressPortrait.setVisible(true);
+            miniProgressPortrait.assignIndicatorUpdatable(enterEvent, gameContext);
+            miniProgressPortrait.active();
+            result.add(miniProgressPortrait);
         }
         return result;
     }
@@ -110,8 +118,7 @@ public class Target extends Portrait {
             // e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_ENTERED ||
             // e.getEventType() == GazeEvent.GAZE_MOVED) && anniOff) {
 
-            if (animationStopped
-                && (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
+            if (animationStopped) {
 
                 animationStopped = false;
                 enter(e);
@@ -121,15 +128,15 @@ public class Target extends Portrait {
 
     private void moveRandom(final int length) {
 
-        final Position currentPosition = new Position((int) getCenterX(), (int) getCenterY());
+        final Position currentPosition = new Position((int) getLayoutX(), (int) getLayoutY());
 
-        final Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
+        final Position newPosition = randomPositionGenerator.newRandomPosition(radius);
         log.debug("currentPosition = {}, newPosition = {}, length = {}", currentPosition, newPosition, length);
 
         final TranslateTransition translation = new TranslateTransition(
             new Duration(length), this);
-        translation.setByX(-this.getCenterX() + newPosition.getX());
-        translation.setByY(-this.getCenterY() + newPosition.getY());
+        translation.setByX(-this.getLayoutX() + newPosition.getX());
+        translation.setByY(-this.getLayoutY() + newPosition.getY());
         translation.setOnFinished(actionEvent -> {
             resetTargetAtPosition(newPosition);
 
@@ -146,7 +153,8 @@ public class Target extends Portrait {
         Target.this.setScaleY(1);
         Target.this.setScaleZ(1);
 
-        Target.this.setPosition(pos);
+        Target.this.setLayoutX(pos.getX());
+        Target.this.setLayoutY(pos.getY());
 
         Target.this.setTranslateX(0);
         Target.this.setTranslateY(0);
@@ -156,11 +164,11 @@ public class Target extends Portrait {
     private void createBackAndForthTranlations(final Position pos1, final Position pos2, final int length) {
 
         final Timeline translation1 = new Timeline(new KeyFrame(new Duration(length),
-            new KeyValue(this.centerXProperty(), pos1.getX()), new KeyValue(this.centerYProperty(), pos1.getY())));
+            new KeyValue(this.layoutXProperty(), pos1.getX()), new KeyValue(this.layoutYProperty(), pos1.getY())));
         translation1.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
 
         final Timeline translation2 = new Timeline(new KeyFrame(new Duration(length),
-            new KeyValue(this.centerXProperty(), pos2.getX()), new KeyValue(this.centerYProperty(), pos2.getY())));
+            new KeyValue(this.layoutXProperty(), pos2.getX()), new KeyValue(this.layoutYProperty(), pos2.getY())));
         translation2.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
 
         translation1.setOnFinished(actionEvent -> {
@@ -177,7 +185,8 @@ public class Target extends Portrait {
             translation1.play();
         });
 
-        setPosition(pos2);
+        setLayoutX(pos2.getX());
+        setLayoutY(pos2.getY());
         currentTranslation = translation1;
         translation1.playFrom(new Duration(length).multiply(randomGen.nextDouble()));
     }
@@ -192,22 +201,22 @@ public class Target extends Portrait {
                 moveRandom(length);
                 break;
             case VERTICAL: // vertical
-                createBackAndForthTranlations(new Position(getCenterX(), getInitialRadius()),
-                    new Position(getCenterX(), dimension2D.getHeight() - getInitialRadius()), length * 2);
+                createBackAndForthTranlations(new Position(getLayoutX(), radius),
+                    new Position(getLayoutX(), dimension2D.getHeight() - radius), length * 2);
                 break;
             case HORIZONTAL: // horizontal
-                createBackAndForthTranlations(new Position(getInitialRadius(), getCenterY()),
-                    new Position(dimension2D.getWidth() - getInitialRadius(), getCenterY()), length * 2);
+                createBackAndForthTranlations(new Position(radius, getLayoutY()),
+                    new Position(dimension2D.getWidth() - radius, getLayoutY()), length * 2);
                 break;
             case DIAGONAL_UPPER_LEFT_TO_LOWER_RIGHT: // Diagonal \
-                createBackAndForthTranlations(new Position(getInitialRadius(), getInitialRadius()),
-                    new Position(dimension2D.getWidth() - getInitialRadius(),
-                        dimension2D.getHeight() - getInitialRadius()),
+                createBackAndForthTranlations(new Position(radius, radius),
+                    new Position(dimension2D.getWidth() - radius,
+                        dimension2D.getHeight() - radius),
                     length * 2);
                 break;
             case DIAGONAL_UPPER_RIGHT_TO_LOWER_LEFT: // Diagonal /
-                createBackAndForthTranlations(new Position(dimension2D.getWidth() - getInitialRadius(), getInitialRadius()),
-                    new Position(0, dimension2D.getHeight() - getInitialRadius()), length * 2);
+                createBackAndForthTranlations(new Position(dimension2D.getWidth() - radius, radius),
+                    new Position(0, dimension2D.getHeight() - radius), length * 2);
                 break;
         }
 
@@ -233,7 +242,7 @@ public class Target extends Portrait {
 
         stats.incrementNumberOfGoalsReached();
 
-        gameContext.updateScore(stats,gameInstance);
+        gameContext.updateScore(stats, gameInstance);
 
         final Animation runningTranslation = currentTranslation;
         if (runningTranslation != null) {
@@ -255,39 +264,40 @@ public class Target extends Portrait {
         log.debug("pointerPosition = {}, currentPositionWithTranslation = {}", pointerPosition,
             currentPositionWithTranslation);
 
-        for (final Portrait childMiniBall : miniBallsPortraits) {
-            childMiniBall.setPosition(currentPositionWithTranslation);
+        for (final ProgressPortrait childMiniBall : miniBallsProgressPortraits) {
+            childMiniBall.setLayoutX(currentPositionWithTranslation.getX());
+            childMiniBall.setLayoutY(currentPositionWithTranslation.getY());
             childMiniBall.setOpacity(1);
             childMiniBall.setVisible(true);
 
-            final Position childBallTargetPosition = randomMiniBallsPositionGenerator.newRandomPosition(getInitialRadius());
+            final Position childBallTargetPosition = randomMiniBallsPositionGenerator.newRandomPosition(radius);
 
             childrenTimelineEnd.getKeyFrames()
-                .add(new KeyFrame(new Duration(1000), new KeyValue(childMiniBall.centerXProperty(),
+                .add(new KeyFrame(new Duration(1000), new KeyValue(childMiniBall.layoutXProperty(),
                     childBallTargetPosition.getX(), Interpolator.EASE_OUT)));
 
             childrenTimelineEnd.getKeyFrames()
-                .add(new KeyFrame(new Duration(1000), new KeyValue(childMiniBall.centerYProperty(),
+                .add(new KeyFrame(new Duration(1000), new KeyValue(childMiniBall.layoutYProperty(),
                     childBallTargetPosition.getY(), Interpolator.EASE_OUT)));
 
             childrenTimelineEnd.getKeyFrames()
                 .add(new KeyFrame(new Duration(1000), new KeyValue(childMiniBall.opacityProperty(), 0)));
         }
 
-        final Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
+        final Position newPosition = randomPositionGenerator.newRandomPosition(radius);
 
         final Timeline selfTimeLine = new Timeline();
 
-        selfTimeLine.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(radiusProperty(), radius)));
+        selfTimeLine.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(getButton().radiusProperty(), radius)));
 
         selfTimeLine.getKeyFrames()
-            .add(new KeyFrame(new Duration(1000), new KeyValue(centerXProperty(), newPosition.getX())));
+            .add(new KeyFrame(new Duration(1000), new KeyValue(layoutXProperty(), newPosition.getX())));
 
         selfTimeLine.getKeyFrames()
-            .add(new KeyFrame(new Duration(1000), new KeyValue(centerYProperty(), newPosition.getY())));
+            .add(new KeyFrame(new Duration(1000), new KeyValue(layoutYProperty(), newPosition.getY())));
 
         selfTimeLine.getKeyFrames().add(new KeyFrame(new Duration(1000),
-            new KeyValue(fillProperty(), new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true))));
+            new KeyValue(getButton().fillProperty(), new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true))));
 
         final Transition transition4 = createTransition4();
 
@@ -309,7 +319,7 @@ public class Target extends Portrait {
         fadeTransition.setToValue(0.5);
 
         final Timeline timeline1 = new Timeline();
-        timeline1.getKeyFrames().add(new KeyFrame(new Duration(100), new KeyValue(radiusProperty(), radius/2)));
+        timeline1.getKeyFrames().add(new KeyFrame(new Duration(100), new KeyValue(getButton().radiusProperty(), radius / 2)));
         return new ParallelTransition(fadeTransition, timeline1);
     }
 

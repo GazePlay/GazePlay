@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -13,14 +14,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-
-import javafx.scene.image.Image;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
-import lombok.Getter;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
@@ -74,7 +69,7 @@ public class ProgressPortrait extends StackPane {
         this.button.setDisable(true);
     }
 
-    public  void disableProgressIndicator(){
+    public void disableProgressIndicator() {
         inuse = false;
     }
 
@@ -198,6 +193,10 @@ public class ProgressPortrait extends StackPane {
         active2();
 
         return indicator;
+    }
+
+    public Position getCurrentPositionWithTranslation() {
+        return new Position((int) getLayoutX() + (int) getTranslateX(), (int) getLayoutY() + (int) getTranslateY());
     }
 
     protected Image pickRandomImage(final List<Image> availableImages) {
