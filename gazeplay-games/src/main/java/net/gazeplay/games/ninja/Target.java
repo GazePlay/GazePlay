@@ -13,6 +13,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.Portrait;
 import net.gazeplay.components.Position;
 import net.gazeplay.components.ProgressPortrait;
 import net.gazeplay.components.RandomPositionGenerator;
@@ -84,12 +85,25 @@ public class Target extends ProgressPortrait {
         this.miniBallsProgressPortraits = generateMiniBallsProgressPortraits(imageLibrary, nbBall);
         gameContext.getChildren().addAll(miniBallsProgressPortraits);
 
-        assignIndicatorUpdatable(enterEvent, gameContext);
-        gameContext.getGazeDeviceManager().addEventFilter(this);
-        active();
+        createTarget();
 
         move();
         gameContext.start();
+    }
+
+    private void createTarget() {
+
+        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(radius, 0, 1, 0, 0.8);
+
+        getButton().setRadius(radius);
+        setLayoutX(newPosition.getX());
+        setLayoutY(newPosition.getY());
+        getButton().setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
+        setVisible(true);
+
+        assignIndicatorUpdatable(enterEvent,gameContext);
+        gameContext.getGazeDeviceManager().addEventFilter(this);
+        active();
     }
 
     private List<ProgressPortrait> generateMiniBallsProgressPortraits(final ImageLibrary imageLibrary, final int count) {
@@ -101,10 +115,7 @@ public class Target extends ProgressPortrait {
             miniProgressPortrait.setLayoutX(newPosition.getX());
             miniProgressPortrait.setLayoutY(newPosition.getY());
             miniProgressPortrait.getButton().setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
-            miniProgressPortrait.setOpacity(1);
-            miniProgressPortrait.setVisible(true);
-            miniProgressPortrait.assignIndicatorUpdatable(enterEvent, gameContext);
-            miniProgressPortrait.active();
+            miniProgressPortrait.setVisible(false);
             result.add(miniProgressPortrait);
         }
         return result;
