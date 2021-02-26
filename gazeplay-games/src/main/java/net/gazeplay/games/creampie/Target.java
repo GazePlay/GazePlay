@@ -12,7 +12,6 @@ import javafx.util.Duration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
@@ -65,7 +64,7 @@ public class Target extends ProgressPortrait {
         this.radius = radius;
         this.randomPositionGenerator = randomPositionGenerator;
         this.hand = hand;
-        this.imageLibrary = imageLibrary;;
+        this.imageLibrary = imageLibrary;
         this.stats = stats;
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
@@ -100,7 +99,7 @@ public class Target extends ProgressPortrait {
         setRotate(0);
         setVisible(true);
 
-        assignIndicatorUpdatable(enterEvent,gameContext);
+        assignIndicatorUpdatable(enterEvent, gameContext);
         gameContext.getGazeDeviceManager().addEventFilter(this);
         active();
     }
@@ -108,7 +107,7 @@ public class Target extends ProgressPortrait {
     private void enter() {
 
         stats.incrementNumberOfGoalsReached();
-        gameContext.updateScore(stats,gameInstance);
+        gameContext.updateScore(stats, gameInstance);
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
         final Animation animation = createAnimation();
@@ -137,8 +136,8 @@ public class Target extends ProgressPortrait {
         timeline.setOnFinished(actionEvent -> {
             animationEnded = true;
             onUse = false;
-            if(targetAOIList.size()>0){
-                targetAOIList.get(targetAOIList.size()-1).setTimeEnded(System.currentTimeMillis());
+            if (targetAOIList.size() > 0) {
+                targetAOIList.get(targetAOIList.size() - 1).setTimeEnded(System.currentTimeMillis());
             }
             newPosition();
         });
@@ -146,7 +145,7 @@ public class Target extends ProgressPortrait {
         return timeline;
     }
 
-    private void newPosition(){
+    private void newPosition() {
         final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(radius, 0, 1, 0, 0.8);
         this.centerX = newPosition.getX();
         this.centerY = newPosition.getY();
