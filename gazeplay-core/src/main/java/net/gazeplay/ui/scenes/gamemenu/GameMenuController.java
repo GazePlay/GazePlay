@@ -149,6 +149,8 @@ public class GameMenuController {
             commands.addAll(Arrays.asList("--height", "" + height, "--width", "" + width));
         }
 
+        System.out.println(""+commands);
+
         return new ProcessBuilder(commands);
     }
 
