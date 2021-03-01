@@ -1,11 +1,13 @@
 package net.gazeplay.games.pianosight;
 
 import javafx.animation.*;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -54,6 +56,10 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private final ReplayablePseudoRandom randomGenerator;
 
+    private ProgressIndicator progressIndicator;
+
+    private Timeline timelineProgressBar;
+
     public Piano(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
@@ -61,6 +67,7 @@ public class Piano extends Parent implements GameLifeCycle {
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2.2;
         this.fragments = buildFragments();
+        this.progressIndicator = createProgressIndicator(centerX, centerY, dimension2D);
         this.getChildren().addAll(fragments);
         tilesTab = new ArrayList<>();
         instru = new Instru();
@@ -77,6 +84,7 @@ public class Piano extends Parent implements GameLifeCycle {
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2.2;
         this.fragments = buildFragments();
+        this.progressIndicator = createProgressIndicator(centerX, centerY, dimension2D);
         this.getChildren().addAll(fragments);
         tilesTab = new ArrayList<>();
         instru = new Instru();
@@ -111,6 +119,8 @@ public class Piano extends Parent implements GameLifeCycle {
 
         final Timeline timeline1 = new Timeline();
         final Timeline timeline2 = new Timeline();
+
+        progressIndicator.setOpacity(0);
 
         for (final ImageView fragment : fragments) {
 
@@ -215,6 +225,7 @@ public class Piano extends Parent implements GameLifeCycle {
 
         final EventHandler<Event> circleEvent = e -> {
             if (circleTemp.getFill() == Color.YELLOW) {
+                this.progressIndicator = createProgressIndicator(circleTemp.getTranslateX(), circleTemp.getTranslateY(), dimension2D);
                 if (firstNote != -1) {
                     final int precNote = firstNote;
                     final int precKey = midiReader.getKey();
@@ -322,63 +333,82 @@ public class Piano extends Parent implements GameLifeCycle {
 
             if (((Tile) e.getTarget()).note == firstNote) {
 
-                final int precNote = firstNote;
-                final int precKey = midiReader.getKey();
+                progressIndicator.setOpacity(1);
+                progressIndicator.setProgress(0);
 
-                final int index1 = midiReader.nextNote();
-                if (index1 > -1) {
-                    firstNote = NOTE_NAMES[index1];
-                } else {
-                    firstNote = index1;
-                }
+                timelineProgressBar = new Timeline();
 
-                if (precNote != -1 && tilesTab.get(precNote).arc.getFill() == Color.YELLOW) {
-                    instru.noteOn(precKey);
-                    stats.incrementNumberOfGoalsReached();
-                    double x;
-                    double y;
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
+                    new KeyValue(progressIndicator.progressProperty(), 1)));
 
-                    if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                        final MouseEvent me = (MouseEvent) e;
-                        x = me.getX();
-                        y = me.getY();
-                    } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                        final GazeEvent ge = (GazeEvent) e;
-                        x = ge.getX();
-                        y = ge.getY();
+                timelineProgressBar.setOnFinished((ActionEvent actionEvent) -> {
+
+                    final int precNote = firstNote;
+                    final int precKey = midiReader.getKey();
+
+                    final int index1 = midiReader.nextNote();
+                    if (index1 > -1) {
+                        firstNote = NOTE_NAMES[index1];
                     } else {
-                        x = centerX + size * Math.cos(Math.toRadians(-theta));
-                        y = centerY + size * Math.sin(Math.toRadians(-theta));
-                        explose(x, y);
-                        final double theta1 = (((index1 + 1) * 360d) / 7d - origin);
-                        x = centerX + size * Math.cos(Math.toRadians(-theta1));
-                        y = centerY + size * Math.sin(Math.toRadians(-theta1));
+                        firstNote = index1;
                     }
-                    explose(x, y);
-                    if (firstNote != -1) {
-                        if (tilesTab.get(firstNote).arc.getFill() == Color.YELLOW) {
-                            tilesTab.get(precNote).arc.setFill(color2);
-                            circleTemp.setFill(Color.YELLOW);
-                            circleTemp.setOpacity(1);
+
+                    if (precNote != -1 && tilesTab.get(precNote).arc.getFill() == Color.YELLOW) {
+                        instru.noteOn(precKey);
+                        stats.incrementNumberOfGoalsReached();
+                        double x;
+                        double y;
+
+                        if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                            final MouseEvent me = (MouseEvent) e;
+                            x = me.getX();
+                            y = me.getY();
+                        } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                            final GazeEvent ge = (GazeEvent) e;
+                            x = ge.getX();
+                            y = ge.getY();
+                        } else {
+                            x = centerX + size * Math.cos(Math.toRadians(-theta));
+                            y = centerY + size * Math.sin(Math.toRadians(-theta));
+                            explose(x, y);
+                            final double theta1 = (((index1 + 1) * 360d) / 7d - origin);
+                            x = centerX + size * Math.cos(Math.toRadians(-theta1));
+                            y = centerY + size * Math.sin(Math.toRadians(-theta1));
+                        }
+                        explose(x, y);
+                        if (firstNote != -1) {
+                            if (tilesTab.get(firstNote).arc.getFill() == Color.YELLOW) {
+                                tilesTab.get(precNote).arc.setFill(color2);
+                                circleTemp.setFill(Color.YELLOW);
+                                circleTemp.setOpacity(1);
+                            } else {
+                                tilesTab.get(precNote).arc.setFill(color2);
+                                tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
+                            }
+
                         } else {
                             tilesTab.get(precNote).arc.setFill(color2);
-                            tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
                         }
-
-                    } else {
-                        tilesTab.get(precNote).arc.setFill(color2);
                     }
-                }
+                });
+                timelineProgressBar.play();
 
             } else {
                 tilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color2);
 
             }
-
         };
 
         final EventHandler<Event> tileEventExited = e -> {
             log.info("index ={}", index);
+
+            if (timelineProgressBar != null) {
+                timelineProgressBar.stop();
+            }
+
+            progressIndicator.setOpacity(0);
+            progressIndicator.setProgress(0);
+
             if (tilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == color2) {
                 tilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color1);
             }
@@ -417,4 +447,13 @@ public class Piano extends Parent implements GameLifeCycle {
 
     }
 
+    private ProgressIndicator createProgressIndicator(double x, double y, Dimension2D dimension2D) {
+        final ProgressIndicator indicator = new ProgressIndicator(0);
+        indicator.setMinSize(dimension2D.getWidth() / 10, dimension2D.getHeight() / 10);
+        indicator.setTranslateX(x);
+        indicator.setTranslateY(y);
+        indicator.setOpacity(0);
+        gameContext.getChildren().add(indicator);
+        return indicator;
+    }
 }
