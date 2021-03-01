@@ -4,6 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
@@ -38,14 +39,19 @@ public class MolesChar extends Parent {
 
     private final double distTranslation;
 
+    private final double width;
+    private final double height;
+
     private boolean touched;
     private boolean canTouched;
     boolean canGoOut;
     public boolean out;
 
     private final ProgressIndicator progressIndicator;
+    private final ProgressIndicator progressIndicatorTest;
 
     private Timeline timeMoleOut;
+    private Timeline timelineProgressBar;
 
     private final int timeMoleStayOut = 2500;
 
@@ -61,8 +67,10 @@ public class MolesChar extends Parent {
         final IGameContext gameContext,
         final Moles gameInstance
     ) {
-        this.positionX=positionX;
-        this.positionY=positionY;
+        this.positionX = positionX;
+        this.positionY = positionY;
+        this.width = width;
+        this.height = height;
         this.gameContext = gameContext;
 
         this.out = false;
@@ -75,15 +83,16 @@ public class MolesChar extends Parent {
 
         this.gameInstance = gameInstance;
 
-        this.progressIndicator = createProgressIndicator();
-
         this.enterEvent = buildEvent();
+
+        this.progressIndicator = createProgressIndicator();
+        this.progressIndicatorTest = createProgressIndicatorTest();
 
         this.moleMoved = new Rectangle(positionX, positionY - distTrans, width, height);
         this.moleMoved.setFill(new ImagePattern(new Image("data/whackmole/images/bibouleMole.png"), 5, 5, 1, 1, true));
         this.moleMoved.opacityProperty().set(1);
-        this.moleMoved.addEventHandler(MouseEvent.ANY, enterEvent);
-        this.moleMoved.addEventHandler(GazeEvent.ANY, enterEvent);
+        this.moleMoved.addEventFilter(MouseEvent.ANY, enterEvent);
+        this.moleMoved.addEventFilter(GazeEvent.ANY, enterEvent);
         gameContext.getGazeDeviceManager().addEventFilter(this.moleMoved);
 
         this.mole = new Rectangle(positionX, positionY, width, height);
@@ -99,6 +108,16 @@ public class MolesChar extends Parent {
         return indicator;
     }
 
+    private ProgressIndicator createProgressIndicatorTest() {
+        final ProgressIndicator indicatorTest = new ProgressIndicator(0);
+        indicatorTest.setMinSize(this.width / 2, this.height / 2);
+        indicatorTest.setTranslateX(this.positionX + (distTranslation / 3));
+        indicatorTest.setTranslateY(this.positionY - distTranslation);
+        indicatorTest.setOpacity(0);
+        gameContext.getChildren().add(indicatorTest);
+        return indicatorTest;
+    }
+
     public EventHandler<Event> buildEvent() {
         return e -> {
 
@@ -108,20 +127,34 @@ public class MolesChar extends Parent {
             }
 
             /* If the mole is out and touched */
-            if (
-                e.getEventType() == MouseEvent.MOUSE_MOVED
-                    || e.getEventType() == GazeEvent.GAZE_MOVED
-                    || e.getEventType() == MouseEvent.MOUSE_ENTERED
-                    || e.getEventType() == GazeEvent.GAZE_ENTERED
-            ) {
-                canTouched = false;
-                if (!touched && out) {
-                    gameInstance.oneMoleWhacked();
-                    touched = true;
-                    goIn();
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+
+                progressIndicatorTest.setOpacity(1);
+                progressIndicatorTest.setProgress(0);
+
+                timelineProgressBar = new Timeline();
+
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
+                    new KeyValue(progressIndicatorTest.progressProperty(), 1)));
+
+                timelineProgressBar.setOnFinished((ActionEvent actionEvent) -> {
+                    canTouched = false;
+
+                    if (!touched && out) {
+                        gameInstance.oneMoleWhacked();
+                        touched = true;
+                        goIn();
+                    }
+                });
+
+                timelineProgressBar.play();
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                if (timelineProgressBar != null) {
+                    timelineProgressBar.stop();
                 }
 
-                progressIndicator.setProgress(0);
+                progressIndicatorTest.setOpacity(0);
+                progressIndicatorTest.setProgress(0);
             }
         };
     }
@@ -173,6 +206,7 @@ public class MolesChar extends Parent {
     private void goIn() {
         canTouched = false;
         out = false;
+        progressIndicatorTest.setOpacity(0);
         gameInstance.getTargetAOIList().get(TargetAOIListIndex).setTimeEnded(System.currentTimeMillis());
 
         this.mole.opacityProperty().set(0.5);
