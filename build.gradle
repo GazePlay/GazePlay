@@ -43,6 +43,7 @@ allprojects {
         maven {
             url = 'https://raw.github.com/agomezmoron/screen-recorder/mvn-repo'
         }
+
     }
 }
 

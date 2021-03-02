@@ -77,6 +77,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private final boolean currentLanguageAlignmentIsLeftAligned;
 
+    private IGameVariant currentSelectedVariant;
+    private GameSpec currentSelectedGame;
+
     ConfigurationContext(GazePlay gazePlay) {
         super(gazePlay, new BorderPane());
 
@@ -199,7 +202,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "CreateShortCut", COLON);
 
-            MenuButton input = buildVariantShortcutMaker(config, configurationContext);
+            VBox input = buildVariantShortcutMaker(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -560,7 +563,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     enum DirectoryType {
-        FILE, WHERE_IS_IT, MUSIC, VIDEO
+        FILE, WHERE_IS_IT, MUSIC, VIDEO, SHORTCUT
     }
 
     private Node buildImageChooser(Configuration configuration,
@@ -605,6 +608,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             case VIDEO:
                 fileDir = configuration.getVideoFolder();
                 break;
+            case SHORTCUT:
+                fileDir = configuration.getShortcutFolder();
+                break;
             default:
                 fileDir = configuration.getFileDir();
         }
@@ -624,6 +630,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     break;
                 case VIDEO:
                     currentFolder = new File(configuration.getVideoFolder());
+                    break;
+                case SHORTCUT:
+                    currentFolder = new File(configuration.getShortcutFolder());
                     break;
                 default:
                     currentFolder = new File(configuration.getFileDir());
@@ -656,6 +665,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     break;
                 case VIDEO:
                     configuration.getVideoFolderProperty().setValue(newPropertyValue);
+                    break;
+                case SHORTCUT:
+                    configuration.getShortcutFolderProperty().setValue(newPropertyValue);
                     break;
                 default:
                     configuration.getFiledirProperty().setValue(newPropertyValue);
@@ -690,6 +702,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                         buttonLoad.textProperty().setValue(defaultValue);
                     });
                 break;
+            case SHORTCUT:
+                resetButton.setOnAction(
+                    e -> {
+                        String defaultValue = GazePlayDirectories.getShortcutDirectory().getAbsolutePath();
+                        configuration.getShortcutFolderProperty().setValue(defaultValue);
+                        buttonLoad.textProperty().setValue(defaultValue);
+                    });
+                break;
             default:
                 resetButton.setOnAction(
                     e -> {
@@ -703,62 +723,93 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         return pane;
     }
-    MenuButton buildVariantShortcutMaker(
+
+    VBox buildVariantShortcutMaker(
         Configuration configuration,
         ConfigurationContext configurationContext
     ) {
 
-        MenuButton languageBox = new MenuButton("ShortCut");
+        VBox shortCutBox = new VBox(buildDirectoryChooser(configuration, configurationContext, getGazePlay().getTranslator(), DirectoryType.SHORTCUT));
+        MenuButton gameBox = new MenuButton();
+        I18NButton generateButton = new I18NButton(getGazePlay().getTranslator(), "Generate");
+        gameBox.setText(getGazePlay().getTranslator().translate("SelectGame"));
+        gameBox.textProperty().addListener((arg, oldVal, newVal) -> {
+            if (newVal.equals(getGazePlay().getTranslator().translate("SelectGame"))) {
+                generateButton.setDisable(true);
+                generateButton.setOpacity(0.5);
+            } else {
+                generateButton.setDisable(false);
+                generateButton.setOpacity(1);
+            }
+        });
+        generateButton.setDisable(true);
+        generateButton.setOpacity(0.5);
+        MenuButton variantBox = new MenuButton(getGazePlay().getTranslator().translate("SelectVariant"));
 
-        String userOption =configuration.getUserName().length() == 0 ? "--default-user" :  "--user " + configuration.getUserName();
+        String userOption = configuration.getUserName().length() == 0 ? "--default-user" : "--user " + configuration.getUserName();
 
         List<GameSpec> games = getGazePlay().getGamesLocator().listGames(getGazePlay().getTranslator());
-        for (GameSpec game : games ) {
+        for (GameSpec game : games) {
 
             Set<IGameVariant> variants = game.getGameVariantGenerator().getVariants();
-            String gameOption = "--game \""+game.getGameSummary().getNameCode() +"\"";
-
-            MenuItem gameShortcutItem = new MenuItem(game.getGameSummary().getNameCode());
+            MenuItem gameShortcutItem = new MenuItem(getGazePlay().getTranslator().translate(game.getGameSummary().getNameCode()));
             gameShortcutItem.setOnAction(event -> {
+                currentSelectedGame = game;
+                currentSelectedVariant = null;
+                variantBox.getItems().clear();
+                variantBox.setText(getGazePlay().getTranslator().translate("SelectVariant"));
+                shortCutBox.getChildren().remove(variantBox);
+                gameBox.setText(gameShortcutItem.getText());
+                if (variants.size() > 0) {
+                    shortCutBox.getChildren().remove(generateButton);
+
+                    for (IGameVariant variant : variants) {
+                        MenuItem gameAndVariantShortcut = new MenuItem(variant.getLabel(getGazePlay().getTranslator()));
+
+                        gameAndVariantShortcut.setOnAction(event2 -> {
+
+                            currentSelectedVariant = variant;
+                            variantBox.setText(gameAndVariantShortcut.getText());
+                        });
+
+                        variantBox.getItems().add(gameAndVariantShortcut);
+                    }
+                    shortCutBox.getChildren().add(variantBox);
+                    shortCutBox.getChildren().add(generateButton);
+                }
+
+            });
+
+            gameBox.getItems().add(gameShortcutItem);
+        }
+        shortCutBox.getChildren().add(gameBox);
+
+        // generateButton.disabledProperty().isNotEqualTo(gameBox.textProperty().isEqualTo("Select Game"));
+        generateButton.setOnAction(e3 -> {
+            if (currentSelectedGame != null) {
+                String gameOption = "--game \"" + currentSelectedGame.getGameSummary().getNameCode() + "\"";
+                String variantOption = currentSelectedVariant == null ? "" : "--variant \"" + currentSelectedVariant.toString() + "\"";
+
                 ShellLink slwithvariant = ShellLink.createLink(".\\build\\distributions\\gazeplay-windows-x64-1.8.2-SNAPSHOT\\gazeplay-windows-x64-1.8.2-SNAPSHOT\\bin\\gazeplay-windows.bat")
                     .setWorkingDir(".\\build\\distributions\\gazeplay-windows-x64-1.8.2-SNAPSHOT\\gazeplay-windows-x64-1.8.2-SNAPSHOT\\bin")
                     .setIconLocation("C:\\Program Files (x86)\\GazePlay\\bin\\gazeplayicon.ico")
-                    .setCMDArgs(userOption + " " + gameOption);
+                    .setCMDArgs(userOption + " " + gameOption + " " + variantOption);
                 slwithvariant.getHeader().setIconIndex(0);
+
                 try {
-                    slwithvariant.saveTo(gameShortcutItem.getText() + ".lnk");
+                    slwithvariant.saveTo(configuration.getShortcutFolderProperty().getValue() + "\\" + gameBox.getText() + (currentSelectedVariant == null ? "" : (" - " + variantBox.getText())) + ".lnk");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            });
-
-
-            for (IGameVariant variant : variants) {
-                MenuItem gameAndVariantShortcut = new MenuItem(game.getGameSummary().getNameCode() +" - "+ variant.getLabel(getGazePlay().getTranslator()));
-                String variantOption = "--variant \""+ variant.toString()+"\"";
-
-                gameAndVariantShortcut.setOnAction(event -> {
-                    ShellLink slwithvariant = ShellLink.createLink(".\\build\\distributions\\gazeplay-windows-x64-1.8.2-SNAPSHOT\\gazeplay-windows-x64-1.8.2-SNAPSHOT\\bin\\gazeplay-windows.bat")
-                        .setWorkingDir(".\\build\\distributions\\gazeplay-windows-x64-1.8.2-SNAPSHOT\\gazeplay-windows-x64-1.8.2-SNAPSHOT\\bin")
-                        .setIconLocation("C:\\Program Files (x86)\\GazePlay\\bin\\gazeplayicon.ico")
-                        .setCMDArgs(userOption + " "+ gameOption + " " + variantOption);
-                    slwithvariant.getHeader().setIconIndex(0);
-
-                    try {
-                        slwithvariant.saveTo(gameAndVariantShortcut.getText() + ".lnk");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-
-                languageBox.getItems().add(gameAndVariantShortcut);
             }
-        }
+        });
 
-        languageBox.setPrefWidth(PREF_WIDTH);
-        languageBox.setPrefHeight(PREF_HEIGHT);
+        shortCutBox.getChildren().add(generateButton);
 
-        return languageBox;
+        gameBox.setPrefWidth(PREF_WIDTH);
+        gameBox.setPrefHeight(PREF_HEIGHT);
+
+        return shortCutBox;
     }
 
     MenuButton buildLanguageChooser(
@@ -829,6 +880,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         return languageBox;
     }
+
     static ChoiceBox<EyeTracker> buildEyeTrackerConfigChooser(Configuration configuration) {
         ChoiceBox<EyeTracker> choiceBox = new ChoiceBox<>();
 

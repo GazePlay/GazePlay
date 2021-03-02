@@ -57,6 +57,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
     private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
     private static final String PROPERTY_NAME_VIDEO_FOLDER = "VIDEO_FOLDER";
+    private static final String PROPERTY_NAME_SHORTCUT_FOLDER = "SHORTCUT_FOLDER";
     private static final String PROPERTY_NAME_COLORS_DEFAULT_IMAGE = "COLORS_DEFAULT_IMAGE";
     private static final String PROPERTY_NAME_FORCE_DISPLAY_NEWS = "FORCE_DISPLAY_NEWS";
     private static final String PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME = "LATEST_NEWS_POPUP_LAST_SHOWN_TIME";
@@ -203,6 +204,9 @@ public class Configuration {
     private final StringProperty videoFolderProperty;
 
     @Getter
+    private final StringProperty shortcutFolderProperty;
+
+    @Getter
     private final StringProperty userNameProperty;
 
     @Getter
@@ -242,7 +246,7 @@ public class Configuration {
         heatMapDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED, propertyChangeListener);
 
         enableRewardSoundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND, propertyChangeListener);
-        reaskQuestionOnFail = new ApplicationConfigBackedBooleanProperty(applicationConfig,PROPERTY_NAME_REASK_QUESTION_ON_FAIL,DEFAULT_VALUE_REASK_QUESTION_ON_FAIL,propertyChangeListener);
+        reaskQuestionOnFail = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_REASK_QUESTION_ON_FAIL, DEFAULT_VALUE_REASK_QUESTION_ON_FAIL, propertyChangeListener);
 
         limiterSProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERS, DEFAULT_VALUE_LIMITERSCORE, propertyChangeListener);
         limiterTProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERT, DEFAULT_VALUE_LIMITERTIME, propertyChangeListener);
@@ -268,6 +272,7 @@ public class Configuration {
         filedirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FILEDIR, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(), propertyChangeListener);
         musicFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MUSIC_FOLDER, DEFAULT_VALUE_MUSIC_FOLDER, propertyChangeListener);
         videoFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_VIDEO_FOLDER, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath(), propertyChangeListener);
+        shortcutFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_SHORTCUT_FOLDER, GazePlayDirectories.getShortcutDirectory().getAbsolutePath(), propertyChangeListener);
         userNameProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_NAME, DEFAULT_VALUE_USER_NAME, propertyChangeListener);
         userPictureProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_PICTURE, DEFAULT_VALUE_USER_PICTURE, propertyChangeListener);
         colorsDefaultImageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_COLORS_DEFAULT_IMAGE, DEFAULT_VALUE_COLORS_DEFAULT_IMAGE, propertyChangeListener);
@@ -405,6 +410,10 @@ public class Configuration {
         return videoFolderProperty.getValue();
     }
 
+    public String getShortcutFolder() {
+        return shortcutFolderProperty.getValue();
+    }
+
     public BackgroundStyle getBackgroundStyle() {
         return backgroundStyleProperty.getValue();
     }
@@ -437,5 +446,7 @@ public class Configuration {
         return latestNewsDisplayForced.getValue();
     }
 
-    public void setFixationLength(final int fixationLength) { fixationlengthProperty.setValue(fixationLength); }
+    public void setFixationLength(final int fixationLength) {
+        fixationlengthProperty.setValue(fixationLength);
+    }
 }
