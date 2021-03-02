@@ -5,11 +5,11 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.EnumGameVariant;
-import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -28,12 +28,13 @@ public class PortraitBubblesGameLauncher implements IGameLauncher<Stats, EnumGam
     @Override
     public GameLifeCycle createNewGame(final IGameContext gameContext, final EnumGameVariant<BubblesGameVariant> gameVariant,
                                        final Stats stats) {
+        gameContext.getConfiguration().setFixationLength(0);
         return new Bubble(gameContext, BubbleType.PORTRAIT, stats, gameVariant.getEnumValue());
     }
 
     @Override
     public GameLifeCycle replayGame(final IGameContext gameContext, final EnumGameVariant<BubblesGameVariant> gameVariant,
-                                       final Stats stats, double gameSeed) {
+                                    final Stats stats, double gameSeed) {
         return new Bubble(gameContext, BubbleType.PORTRAIT, stats, gameVariant.getEnumValue(), gameSeed);
     }
 }

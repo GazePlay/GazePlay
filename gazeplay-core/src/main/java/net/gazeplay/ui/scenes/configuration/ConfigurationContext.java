@@ -252,7 +252,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "FixationLength", COLON);
 
-            Spinner<Double> input = buildSpinner(0.3, 10, (double) config.getFixationLength() / 1000,
+            Spinner<Double> input = buildSpinner(0, 10, (double) config.getFixationLength() / 1000,
                 0.1, config.getFixationlengthProperty());
 
             addToGrid(grid, currentFormRow, label, input);
