@@ -95,33 +95,33 @@ public class OpinionsGame implements GameLifeCycle {
         thumbDown = new ProgressButton();
         createAddButtonOpinions(thumbDown, "data/opinions/thumbs/thumbdown.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
 
-        thumbDown.assignIndicator(event -> {
+        thumbDown.assignIndicatorUpdatable(event -> {
             background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
             stats.incrementNumberOfGoalsReached();
             updateScore();
-        }, configuration.getFixationLength());
+        }, gameContext);
         gameContext.getGazeDeviceManager().addEventFilter(thumbDown);
         thumbDown.active();
 
         noCare = new ProgressButton();
         createAddButtonOpinions(noCare, "data/opinions/thumbs/nocare.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
 
-        noCare.assignIndicator(event -> {
+        noCare.assignIndicatorUpdatable(event -> {
             background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
             stats.incrementNumberOfGoalsReached();
             updateScore();
-        }, configuration.getFixationLength());
+        }, gameContext);
         gameContext.getGazeDeviceManager().addEventFilter(noCare);
         noCare.active();
 
         thumbUp = new ProgressButton();
         createAddButtonOpinions(thumbUp, "data/opinions/thumbs/thumbup.png", 0, dimension2D.getHeight() * 2 / 5);
 
-        thumbUp.assignIndicator(event -> {
+        thumbUp.assignIndicatorUpdatable(event -> {
             background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
             stats.incrementNumberOfGoalsReached();
             updateScore();
-        }, configuration.getFixationLength());
+        }, gameContext);
         gameContext.getGazeDeviceManager().addEventFilter(thumbUp);
         thumbUp.active();
 

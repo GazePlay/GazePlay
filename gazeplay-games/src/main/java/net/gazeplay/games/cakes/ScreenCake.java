@@ -57,7 +57,7 @@ public class ScreenCake extends LinkedList {
         iv.setPreserveRatio(true);
         bt.setImage(iv);
         bt.getButton().setRadius(buttonSize / 2);
-        bt.assignIndicator(buttonHandler, cakef.getFixationLength());
+        bt.assignIndicatorUpdatable(buttonHandler, this.gameContext);
         bt.active();
         cakef.getButtons()[i] = bt;
         if (i == 2) {
@@ -79,7 +79,7 @@ public class ScreenCake extends LinkedList {
         bt.setLayoutX(dimension2D.getWidth() - buttonSize);
         bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
         final EventHandler<Event> buttonHandler = e -> cakef.winFunction();
-        bt.assignIndicator(buttonHandler, cakef.getFixationLength());
+        bt.assignIndicatorUpdatable(buttonHandler, this.gameContext);
         bt.active();
         cakef.getButtons()[i] = bt;
         this.add(bt);
