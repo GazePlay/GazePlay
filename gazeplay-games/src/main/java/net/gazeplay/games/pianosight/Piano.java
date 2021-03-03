@@ -67,7 +67,6 @@ public class Piano extends Parent implements GameLifeCycle {
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2.2;
         this.fragments = buildFragments();
-        this.progressIndicator = createProgressIndicator(centerX, centerY, dimension2D);
         this.getChildren().addAll(fragments);
         tilesTab = new ArrayList<>();
         instru = new Instru();
@@ -84,7 +83,6 @@ public class Piano extends Parent implements GameLifeCycle {
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2.2;
         this.fragments = buildFragments();
-        this.progressIndicator = createProgressIndicator(centerX, centerY, dimension2D);
         this.getChildren().addAll(fragments);
         tilesTab = new ArrayList<>();
         instru = new Instru();
@@ -225,7 +223,6 @@ public class Piano extends Parent implements GameLifeCycle {
 
         final EventHandler<Event> circleEvent = e -> {
             if (circleTemp.getFill() == Color.YELLOW) {
-                this.progressIndicator = createProgressIndicator(circleTemp.getTranslateX(), circleTemp.getTranslateY(), dimension2D);
                 if (firstNote != -1) {
                     final int precNote = firstNote;
                     final int precKey = midiReader.getKey();
@@ -332,6 +329,8 @@ public class Piano extends Parent implements GameLifeCycle {
         final EventHandler<Event> tileEventEnter = e -> {
 
             if (((Tile) e.getTarget()).note == firstNote) {
+
+                this.progressIndicator = createProgressIndicator(index, size, dimension2D);
 
                 progressIndicator.setOpacity(1);
                 progressIndicator.setProgress(0);
@@ -447,11 +446,64 @@ public class Piano extends Parent implements GameLifeCycle {
 
     }
 
-    private ProgressIndicator createProgressIndicator(double x, double y, Dimension2D dimension2D) {
+    private ProgressIndicator createProgressIndicator(int index, double size, Dimension2D dimension2D) {
         final ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setMinSize(dimension2D.getWidth() / 10, dimension2D.getHeight() / 10);
-        indicator.setTranslateX(x);
-        indicator.setTranslateY(y);
+        indicator.setMinSize(dimension2D.getWidth() / 20, dimension2D.getHeight() / 20);
+
+        switch (index) {
+            case 0: // Tile blanche droite
+                indicator.setTranslateX(centerX + (size * 0.75));
+                indicator.setTranslateY(centerY - (size * 0.25));
+                break;
+            case 1: // Tile blanche haut-droite
+                indicator.setTranslateX(centerX + (size * 0.25));
+                indicator.setTranslateY(centerY - (size * 0.75));
+                break;
+            case 2: // Tile blanche haut-gauche
+                indicator.setTranslateX(centerX - (size * 0.50));
+                indicator.setTranslateY(centerY - (size * 0.75));
+                break;
+            case 3: // Tile blanche gauche
+                indicator.setTranslateX(centerX - (size * 0.75));
+                indicator.setTranslateY(centerY - (size * 0.25));
+                break;
+            case 4: // Tile blanche bas-gauche
+                indicator.setTranslateX(centerX - (size * 0.75));
+                indicator.setTranslateY(centerY + (size * 0.5));
+                break;
+            case 5: // tile blanche bas-milieu
+                indicator.setTranslateX(centerX - size * 0.10);
+                indicator.setTranslateY(centerY + (size * 0.75));
+                break;
+            case 6: // tile blanche bas-droite
+                indicator.setTranslateX(centerX + size * 0.75);
+                indicator.setTranslateY(centerY + (size * 0.5));
+                break;
+            case 7: // tile noir bas-droite
+                indicator.setTranslateX(centerX + size * 0.25);
+                indicator.setTranslateY(centerY + (size * 0.75));
+                break;
+            case 9: // tile noir haut-droite
+                indicator.setTranslateX(centerX + size * 0.55);
+                indicator.setTranslateY(centerY - (size * 0.6));
+                break;
+            case 10: // tile noir haut-milieu
+                indicator.setTranslateX(centerX - size * 0.10);
+                indicator.setTranslateY(centerY - (size * 0.90));
+                break;
+            case 11: // tile noir haut-gauche
+                indicator.setTranslateX(centerX - size * 0.6);
+                indicator.setTranslateY(centerY - (size * 0.6));
+                break;
+            case 13: // tile noir bas-droite
+                indicator.setTranslateX(centerX - size * 0.3);
+                indicator.setTranslateY(centerY + (size * 0.75));
+                break;
+            default:
+                indicator.setTranslateX(centerX);
+                indicator.setTranslateY(centerY);
+        }
+
         indicator.setOpacity(0);
         gameContext.getChildren().add(indicator);
         return indicator;
