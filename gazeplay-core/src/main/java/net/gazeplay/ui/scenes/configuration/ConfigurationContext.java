@@ -51,6 +51,7 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
 
@@ -748,39 +749,42 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         String userOption = configuration.getUserName().length() == 0 ? "--default-user" : "--user " + configuration.getUserName();
 
-        List<GameSpec> games = getGazePlay().getGamesLocator().listGames(getGazePlay().getTranslator());
-        for (GameSpec game : games) {
+        GamesLocator gamesLocator = getGazePlay().getGamesLocator();
+        if(gamesLocator != null) {
+            List<GameSpec> games = gamesLocator.listGames(getGazePlay().getTranslator());
+            for (GameSpec game : games) {
 
-            Set<IGameVariant> variants = game.getGameVariantGenerator().getVariants();
-            MenuItem gameShortcutItem = new MenuItem(getGazePlay().getTranslator().translate(game.getGameSummary().getNameCode()));
-            gameShortcutItem.setOnAction(event -> {
-                currentSelectedGame = game;
-                currentSelectedVariant = null;
-                variantBox.getItems().clear();
-                variantBox.setText(getGazePlay().getTranslator().translate("SelectVariant"));
-                shortCutBox.getChildren().remove(variantBox);
-                gameBox.setText(gameShortcutItem.getText());
-                if (variants.size() > 0) {
-                    shortCutBox.getChildren().remove(generateButton);
+                Set<IGameVariant> variants = game.getGameVariantGenerator().getVariants();
+                MenuItem gameShortcutItem = new MenuItem(getGazePlay().getTranslator().translate(game.getGameSummary().getNameCode()));
+                gameShortcutItem.setOnAction(event -> {
+                    currentSelectedGame = game;
+                    currentSelectedVariant = null;
+                    variantBox.getItems().clear();
+                    variantBox.setText(getGazePlay().getTranslator().translate("SelectVariant"));
+                    shortCutBox.getChildren().remove(variantBox);
+                    gameBox.setText(gameShortcutItem.getText());
+                    if (variants.size() > 0) {
+                        shortCutBox.getChildren().remove(generateButton);
 
-                    for (IGameVariant variant : variants) {
-                        MenuItem gameAndVariantShortcut = new MenuItem(variant.getLabel(getGazePlay().getTranslator()));
+                        for (IGameVariant variant : variants) {
+                            MenuItem gameAndVariantShortcut = new MenuItem(variant.getLabel(getGazePlay().getTranslator()));
 
-                        gameAndVariantShortcut.setOnAction(event2 -> {
+                            gameAndVariantShortcut.setOnAction(event2 -> {
 
-                            currentSelectedVariant = variant;
-                            variantBox.setText(gameAndVariantShortcut.getText());
-                        });
+                                currentSelectedVariant = variant;
+                                variantBox.setText(gameAndVariantShortcut.getText());
+                            });
 
-                        variantBox.getItems().add(gameAndVariantShortcut);
+                            variantBox.getItems().add(gameAndVariantShortcut);
+                        }
+                        shortCutBox.getChildren().add(variantBox);
+                        shortCutBox.getChildren().add(generateButton);
                     }
-                    shortCutBox.getChildren().add(variantBox);
-                    shortCutBox.getChildren().add(generateButton);
-                }
 
-            });
+                });
 
-            gameBox.getItems().add(gameShortcutItem);
+                gameBox.getItems().add(gameShortcutItem);
+            }
         }
         shortCutBox.getChildren().add(gameBox);
 
