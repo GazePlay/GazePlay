@@ -15,6 +15,7 @@ import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItConfigurableDialog;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import net.gazeplay.ui.scenes.loading.LoadingContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,11 +55,15 @@ public class GameMenuController {
             dialog.setAlwaysOnTop(true);
 
         } else {
-            if (variants.size() == 1) {
-                IGameVariant onlyGameVariant = variants.iterator().next();
-                chooseAndStartNewGameProcess(gazePlay, gameSpec, onlyGameVariant);
-            } else {
-                chooseAndStartNewGameProcess(gazePlay, gameSpec, null);
+            if(gameSpec.getGameSummary().getNameCode().equals("WhereIsItConfigurable")) {
+                whereIsItConfigurableErrorHandling(gazePlay, this, gameSpec, root);
+            }else {
+                if (variants.size() == 1) {
+                    IGameVariant onlyGameVariant = variants.iterator().next();
+                    chooseAndStartNewGameProcess(gazePlay, gameSpec, onlyGameVariant);
+                } else {
+                    chooseAndStartNewGameProcess(gazePlay, gameSpec, null);
+                }
             }
         }
     }
@@ -120,6 +125,15 @@ public class GameMenuController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private void whereIsItConfigurableErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root) {
+        String whereIsItPromptLabel = "WhereIsItConfigurableDirectory";
+        GameWhereIsItConfigurableDialog whereIsItConfigurableDialog = new GameWhereIsItConfigurableDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel);
+        //this.whereIsItConfigurableDialog.setTitle("error");
+        whereIsItConfigurableDialog.show();
+        whereIsItConfigurableDialog.toFront();
     }
 
     public ProcessBuilder createBuilder(String game, IGameVariant gameVariant, int height, int width) {

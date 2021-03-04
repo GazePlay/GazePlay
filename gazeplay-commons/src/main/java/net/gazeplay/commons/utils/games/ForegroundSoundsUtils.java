@@ -2,6 +2,7 @@ package net.gazeplay.commons.utils.games;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -30,11 +31,39 @@ public class ForegroundSoundsUtils {
             path = url.toString();
         }
        // stopSound();
+        log.info(path);
         final Configuration configuration = ActiveConfigurationContext.getInstance();
         Media media = new Media(path);
         MediaPlayer soundPlayer = new MediaPlayer(media);
         soundPlayer.setVolume(configuration.getEffectsVolumeProperty().getValue());
         soundPlayer.volumeProperty().bindBidirectional(configuration.getEffectsVolumeProperty());
+        soundPlayer.play();
+        lastSoundPlayer = soundPlayer;
+    }
+
+    public static synchronized void playSound(String resource, int duration){
+        log.debug("Try to play " + resource);
+        URL url = ClassLoader.getSystemResource(resource);
+        String path;
+        if (url == null) {
+            final File file = new File(resource);
+            log.debug("using file");
+            if (!file.exists()) {
+                log.warn("file doesn't exist : {}", resource);
+            }
+            path = file.toURI().toString();
+        } else {
+            log.debug("using url");
+            path = url.toString();
+        }
+        // stopSound();
+        log.info(path);
+        final Configuration configuration = ActiveConfigurationContext.getInstance();
+        Media media = new Media(path);
+        MediaPlayer soundPlayer = new MediaPlayer(media);
+        soundPlayer.setVolume(configuration.getEffectsVolumeProperty().getValue());
+        soundPlayer.volumeProperty().bindBidirectional(configuration.getEffectsVolumeProperty());
+        soundPlayer.setStopTime(Duration.millis(duration));
         soundPlayer.play();
         lastSoundPlayer = soundPlayer;
     }

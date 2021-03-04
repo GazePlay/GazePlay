@@ -32,6 +32,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_FIXATIONLENGTH = "FIXATIONLENGTH";
     private static final String PROPERTY_NAME_CSSFILE = "CSSFILE";
     private static final String PROPERTY_NAME_WHEREISIT_DIR = "WHEREISITDIR";
+    private static final String PROPERTY_NAME_WHEREISITCONFIGURABLE_DIR = "WHEREISITCONFIGURABLEDIR";
     private static final String PROPERTY_NAME_QUESTION_LENGTH = "QUESTIONLENGTH";
     private static final String PROPERTY_NAME_ENABLE_REWARD_SOUND = "ENABLE_REWARD_SOUND";
     private static final String PROPERTY_NAME_REASK_QUESTION_ON_FAIL = "REASK_QUESTION_ON_FAIL";
@@ -68,6 +69,7 @@ public class Configuration {
     private static final int DEFAULT_VALUE_FIXATION_LENGTH = 500;
     private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
     public static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
+    public static final String DEFAULT_VALUE_WHEREISITCONFIGURABLE_DIR = "";
     private static final long DEFAULT_VALUE_QUESTION_LENGTH = 5000;
     private static final boolean DEFAULT_VALUE_ENABLE_REWARD_SOUND = true;
     private static final boolean DEFAULT_VALUE_REASK_QUESTION_ON_FAIL = true;
@@ -135,6 +137,10 @@ public class Configuration {
 
     @Getter
     private final StringProperty whereIsItDirProperty;
+
+
+    @Getter
+    private final StringProperty whereIsItConfigurableDirProperty;
 
     @Getter
     private final LongProperty questionLengthProperty;
@@ -273,6 +279,7 @@ public class Configuration {
         colorsDefaultImageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_COLORS_DEFAULT_IMAGE, DEFAULT_VALUE_COLORS_DEFAULT_IMAGE, propertyChangeListener);
 
         whereIsItDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_WHEREISIT_DIR, DEFAULT_VALUE_WHEREISIT_DIR, propertyChangeListener);
+        whereIsItConfigurableDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_WHEREISITCONFIGURABLE_DIR, DEFAULT_VALUE_WHEREISITCONFIGURABLE_DIR, propertyChangeListener);
 
         latestNewsPopupShownTime = new ApplicationConfigBackedLongProperty(applicationConfig, PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, 0, propertyChangeListener);
 
@@ -338,6 +345,10 @@ public class Configuration {
 
     public String getWhereIsItDir() {
         return whereIsItDirProperty.getValue();
+    }
+
+    public String getWhereIsItConfigurableDir() {
+        return whereIsItConfigurableDirProperty.getValue();
     }
 
     public long getQuestionLength() {

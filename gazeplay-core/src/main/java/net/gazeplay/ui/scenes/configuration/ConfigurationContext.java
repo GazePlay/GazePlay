@@ -316,6 +316,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
+        {
+            I18NText label = new I18NText(translator, "WhereIsItConfigurableDirectory", COLON);
+
+            Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.WHERE_IS_IT_CONFIGURABLE);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "StatsSettings", COLON));
         // Stats settings
         addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "HeatMapSettings", COLON));
@@ -549,7 +557,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     enum DirectoryType {
-        FILE, WHERE_IS_IT, MUSIC, VIDEO
+        FILE, WHERE_IS_IT, WHERE_IS_IT_CONFIGURABLE, MUSIC, VIDEO
     }
 
     private Node buildImageChooser(Configuration configuration,
@@ -586,6 +594,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         switch (type) {
             case WHERE_IS_IT:
                 fileDir = configuration.getWhereIsItDir();
+                break;
+            case WHERE_IS_IT_CONFIGURABLE:
+                fileDir = configuration.getWhereIsItConfigurableDir();
                 break;
             case MUSIC:
                 changeMusicFolder(configuration.getMusicFolder(), configuration);
@@ -640,6 +651,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 case WHERE_IS_IT:
                     configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
                     break;
+                case WHERE_IS_IT_CONFIGURABLE:
+                    configuration.getWhereIsItConfigurableDirProperty().setValue(newPropertyValue);
+                    break;
                 case MUSIC:
                     changeMusicFolder(newPropertyValue, configuration);
                     break;
@@ -660,6 +674,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     e -> {
                         String defaultValue = Configuration.DEFAULT_VALUE_WHEREISIT_DIR;
                         configuration.getWhereIsItDirProperty()
+                            .setValue(defaultValue);
+                        buttonLoad.textProperty().setValue(defaultValue);
+                    });
+                break;
+            case WHERE_IS_IT_CONFIGURABLE:
+                resetButton.setOnAction(
+                    e -> {
+                        String defaultValue = Configuration.DEFAULT_VALUE_WHEREISITCONFIGURABLE_DIR;
+                        configuration.getWhereIsItConfigurableDirProperty()
                             .setValue(defaultValue);
                         buttonLoad.textProperty().setValue(defaultValue);
                     });

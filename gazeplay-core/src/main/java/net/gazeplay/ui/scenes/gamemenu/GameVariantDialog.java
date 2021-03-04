@@ -29,6 +29,7 @@ import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItErrorPathDialog;
+import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItConfigurableDialog;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
@@ -36,6 +37,8 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 public class GameVariantDialog extends Stage {
 
     private boolean easymode = false;
+    private GameWhereIsItErrorPathDialog errorDialog;
+    private GameWhereIsItConfigurableDialog WhereIsItConfigurableDialog;
 
     public GameVariantDialog(
         final GazePlay gazePlay,

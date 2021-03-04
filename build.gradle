@@ -23,6 +23,12 @@ logging.captureStandardOutput LogLevel.INFO
 
 ext.javafxVersion = "11.0.2"
 
+// Make it available everywhere via the project ext:
+ext {
+    Download = de.undercouch.gradle.tasks.download.Download
+    download = download
+}
+
 apply from: "${rootDir}/gradle/package.gradle"
 apply from: "${rootDir}/gradle/installer.gradle"
 apply from: "${rootDir}/gradle/jre.gradle"

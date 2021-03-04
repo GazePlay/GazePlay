@@ -10,6 +10,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
@@ -47,9 +48,11 @@ public class Bravo extends Rectangle {
 
     private static final String defaultSoundResourceLocation = "data/common/sounds/applause.mp3";
 
-    private final String pictureResourceLocation;
+    @Setter
+    private String pictureResourceLocation;
 
-    private final String soundResource;
+    @Setter
+    private String soundResource;
 
     private final boolean enableRewardSound;
 
@@ -143,7 +146,7 @@ public class Bravo extends Rectangle {
             if (this.enableRewardSound) {
                 log.debug("Playing sound animation ...");
                 try {
-                    ForegroundSoundsUtils.playSound(soundResource);
+                    ForegroundSoundsUtils.playSound(soundResource, soundClipDuration);
                 } catch (final Exception e) {
 
                     log.warn("file doesn't exist : {}", soundResource);
@@ -196,7 +199,12 @@ public class Bravo extends Rectangle {
     }
 
     private void resetState(final Region root) {
-        final Image image = new Image(pictureResourceLocation);
+        Image image;
+        if (pictureResourceLocation.equals(defaultPictureResourceLocation)) {
+            image = new Image(pictureResourceLocation);
+        } else {
+            image = new Image("file:" + pictureResourceLocation);
+        }
 
         final double imageWidth = image.getWidth();
         final double imageHeight = image.getHeight();
