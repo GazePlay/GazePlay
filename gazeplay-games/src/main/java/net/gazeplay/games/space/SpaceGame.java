@@ -139,8 +139,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         scoreText.setWrappingWidth(dimension2D.getWidth());
         foregroundLayer.getChildren().add(scoreText);
 
-        final int fixationLength = configuration.getFixationLength();
-
         shade = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         shade.setFill(new Color(0, 0, 0, 0.75));
 
@@ -152,7 +150,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         restartButton.setImage(restartImage);
         restartButton.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getHeight() / 12);
         restartButton.setLayoutY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 12);
-        restartButton.assignIndicator(event -> launch(), fixationLength);
+        restartButton.assignIndicatorUpdatable(event -> launch(), gameContext);
 
         finalScoreText = new Text(0, dimension2D.getHeight() / 4, "");
         finalScoreText.setFill(Color.WHITE);
@@ -229,8 +227,6 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         scoreText.setWrappingWidth(dimension2D.getWidth());
         foregroundLayer.getChildren().add(scoreText);
 
-        final int fixationLength = configuration.getFixationLength();
-
         shade = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         shade.setFill(new Color(0, 0, 0, 0.75));
 
@@ -242,7 +238,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         restartButton.setImage(restartImage);
         restartButton.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getHeight() / 12);
         restartButton.setLayoutY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 12);
-        restartButton.assignIndicator(event -> launch(), fixationLength);
+        restartButton.assignIndicatorUpdatable(event -> launch(), gameContext);
 
         finalScoreText = new Text(0, dimension2D.getHeight() / 4, "");
         finalScoreText.setFill(Color.WHITE);
@@ -557,7 +553,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         stats.incrementNumberOfGoalsReached(score);
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
-        gameContext.updateScore(stats,this);
+        gameContext.updateScore(stats, this);
     }
 
     private void createBiboule(final double x, final double y) {
@@ -620,7 +616,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         if (CurrentTime - startTime >= 500) {
 
             final Rectangle bulletRec = new Rectangle(spaceship.getX() + spaceship.getWidth() / 2,
-                spaceship.getY() - spaceship.getHeight() / 3, spaceship.getHeight()/12, spaceship.getHeight()/6);
+                spaceship.getY() - spaceship.getHeight() / 3, spaceship.getHeight() / 12, spaceship.getHeight() / 6);
             bulletRec.setFill(new ImagePattern(new Image("data/space/bullet/laserBlue01.png")));
             middleLayer.getChildren().add(bulletRec);
             bulletListRec.add(bulletRec);
@@ -756,7 +752,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         for (final Rectangle b : biboules) {
             final int bibouleShoot = random.nextInt(1500);
 
-            final Rectangle bulletBibouleRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), spaceship.getHeight()/12, spaceship.getHeight()/6);
+            final Rectangle bulletBibouleRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), spaceship.getHeight() / 12, spaceship.getHeight() / 6);
             bulletBibouleRec.setFill(new ImagePattern(new Image("data/space/bullet/laserRed01.png")));
 
             if (bibouleShoot == 1) {
@@ -807,7 +803,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         for (final Rectangle b : bosses) {
             final int bossShoot = random.nextInt(240);
 
-            final Rectangle bulletBossRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), spaceship.getHeight()/8, spaceship.getHeight()/4);
+            final Rectangle bulletBossRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), spaceship.getHeight() / 8, spaceship.getHeight() / 4);
             bulletBossRec.setFill(new ImagePattern(new Image("data/space/bullet/laserRed01.png")));
 
             if (bossShoot == 1) {
