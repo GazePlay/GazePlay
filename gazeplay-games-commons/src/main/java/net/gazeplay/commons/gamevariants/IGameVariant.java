@@ -19,7 +19,7 @@ public interface IGameVariant {
             case "IntGameVariant":
                 return new IntGameVariant(Integer.parseInt(split[1]));
             case "IntStringGameVariant":
-                return new IntStringGameVariant(Integer.parseInt(split[1]),split[2]);
+                return new IntStringGameVariant(Integer.parseInt(split[1]), split[2]);
             case "DimensionGameVariant":
                 return new DimensionGameVariant(Integer.parseInt(split[1]), Integer.parseInt(split[2]));
             case "MathGameVariant":

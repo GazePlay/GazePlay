@@ -37,8 +37,6 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 public class GameVariantDialog extends Stage {
 
     private int easymode = 0;
-    private GameWhereIsItErrorPathDialog errorDialog;
-
 
     ToggleGroup group = new ToggleGroup();
 
