@@ -169,38 +169,38 @@ public class GameVariantDialog extends Stage {
                     });
                 }
 
-            } else if (gameSpec.getGameSummary().getNameCode().equals("EggGame")) {
-                int number = ((IntStringGameVariant) variant).getNumber();
-
-                RadioButton normal = new RadioButton("" + number);
-                boolean toggleAlreadyExist = false;
-                for (Toggle toggle : group.getToggles()) {
-                    if (((RadioButton) toggle).getText().equals("" + number)) {
-                        normal = ((RadioButton) toggle);
-                        toggleAlreadyExist = true;
-                        break;
-                    }
-                }
-
-                if (!toggleAlreadyExist) {
-                    normal.setToggleGroup(group);
-
-                    group.getToggles().get(0).setSelected(true);
-                    RadioButton main = ((RadioButton) group.getToggles().get(0));
-                    easymode = Integer.parseInt(main.getText());
-                    choicePanelScroller.setContent(choicePanes.get(easymode));
-
-
-                    bottom.getChildren().add(normal);
-                    sceneContentPane.setBottom(bottom);
-                    normal.setOnAction(actionEvent -> {
-                        if (easymode != number) {
-                            easymode = number;
-                            choicePanelScroller.setContent(choicePanes.get(number));
-                        }
-                    });
-                }
-
+//            } else if (gameSpec.getGameSummary().getNameCode().equals("EggGame")) {
+//                int number = ((IntStringGameVariant) variant).getNumber();
+//
+//                RadioButton normal = new RadioButton("" + number);
+//                boolean toggleAlreadyExist = false;
+//                for (Toggle toggle : group.getToggles()) {
+//                    if (((RadioButton) toggle).getText().equals("" + number)) {
+//                        normal = ((RadioButton) toggle);
+//                        toggleAlreadyExist = true;
+//                        break;
+//                    }
+//                }
+//
+//                if (!toggleAlreadyExist) {
+//                    normal.setToggleGroup(group);
+//
+//                    group.getToggles().get(0).setSelected(true);
+//                    RadioButton main = ((RadioButton) group.getToggles().get(0));
+//                    easymode = Integer.parseInt(main.getText());
+//                    choicePanelScroller.setContent(choicePanes.get(easymode));
+//
+//
+//                    bottom.getChildren().add(normal);
+//                    sceneContentPane.setBottom(bottom);
+//                    normal.setOnAction(actionEvent -> {
+//                        if (easymode != number) {
+//                            easymode = number;
+//                            choicePanelScroller.setContent(choicePanes.get(number));
+//                        }
+//                    });
+//                }
+//
             }
 
             IGameVariant finalVariant = variant;
