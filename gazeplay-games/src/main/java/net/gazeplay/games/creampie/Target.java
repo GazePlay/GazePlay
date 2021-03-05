@@ -126,8 +126,8 @@ public class Target extends ProgressPortrait {
     private Animation createAnimation() {
         final Timeline timeline = new Timeline();
 
-        /*timeline.getKeyFrames()
-            .add(new KeyFrame(new Duration(2000), new KeyValue(radiusProperty(), radius * 1.6)));*/
+        timeline.getKeyFrames()
+            .add(new KeyFrame(new Duration(2000), new KeyValue(getButton().radiusProperty(), radius * 1.6)));
         timeline.getKeyFrames()
             .add(new KeyFrame(new Duration(2000), new KeyValue(rotateProperty(), getRotate() + (360 * 3))));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(visibleProperty(), false)));
