@@ -38,7 +38,7 @@ public class Target extends ProgressPortrait {
 
     private final Stats stats;
 
-    private final List<ProgressPortrait> miniBallsProgressPortraits;
+    private final List<Portrait> miniBallsPortraits;
 
     private final ImageLibrary imageLibrary;
 
@@ -82,8 +82,8 @@ public class Target extends ProgressPortrait {
 
         enterEvent = buildEvent();
 
-        this.miniBallsProgressPortraits = generateMiniBallsProgressPortraits(imageLibrary, nbBall);
-        gameContext.getChildren().addAll(miniBallsProgressPortraits);
+        this.miniBallsPortraits = generateMiniBallsPortraits(imageLibrary, nbBall);
+        gameContext.getChildren().addAll(miniBallsPortraits);
 
         createTarget();
 
@@ -106,17 +106,13 @@ public class Target extends ProgressPortrait {
         active();
     }
 
-    private List<ProgressPortrait> generateMiniBallsProgressPortraits(final ImageLibrary imageLibrary, final int count) {
-        final List<ProgressPortrait> result = new ArrayList<>(count);
-        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(radius, 0, 1, 0, 0.8);
+    private List<Portrait> generateMiniBallsPortraits(final ImageLibrary imageLibrary, final int count) {
+        final List<Portrait> result = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            final ProgressPortrait miniProgressPortrait = new ProgressPortrait();
-            miniProgressPortrait.getButton().setRadius(radius);
-            miniProgressPortrait.setLayoutX(newPosition.getX());
-            miniProgressPortrait.setLayoutY(newPosition.getY());
-            miniProgressPortrait.getButton().setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
-            miniProgressPortrait.setVisible(false);
-            result.add(miniProgressPortrait);
+            final Portrait miniPortrait = new Portrait(radius/2, randomMiniBallsPositionGenerator, imageLibrary);
+            miniPortrait.setOpacity(1);
+            miniPortrait.setVisible(false);
+            result.add(miniPortrait);
         }
         return result;
     }
@@ -275,20 +271,19 @@ public class Target extends ProgressPortrait {
         log.debug("pointerPosition = {}, currentPositionWithTranslation = {}", pointerPosition,
             currentPositionWithTranslation);
 
-        for (final ProgressPortrait childMiniBall : miniBallsProgressPortraits) {
-            childMiniBall.setLayoutX(currentPositionWithTranslation.getX());
-            childMiniBall.setLayoutY(currentPositionWithTranslation.getY());
+        for (final Portrait childMiniBall : miniBallsPortraits) {
+            childMiniBall.setPosition(currentPositionWithTranslation);
             childMiniBall.setOpacity(1);
             childMiniBall.setVisible(true);
 
             final Position childBallTargetPosition = randomMiniBallsPositionGenerator.newRandomPosition(radius);
 
             childrenTimelineEnd.getKeyFrames()
-                .add(new KeyFrame(new Duration(1000), new KeyValue(childMiniBall.layoutXProperty(),
+                .add(new KeyFrame(new Duration(1000), new KeyValue(childMiniBall.centerXProperty(),
                     childBallTargetPosition.getX(), Interpolator.EASE_OUT)));
 
             childrenTimelineEnd.getKeyFrames()
-                .add(new KeyFrame(new Duration(1000), new KeyValue(childMiniBall.layoutYProperty(),
+                .add(new KeyFrame(new Duration(1000), new KeyValue(childMiniBall.centerYProperty(),
                     childBallTargetPosition.getY(), Interpolator.EASE_OUT)));
 
             childrenTimelineEnd.getKeyFrames()
