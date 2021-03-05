@@ -93,8 +93,8 @@ public class Target extends ProgressPortrait {
         this.centerY = newPosition.getY();
 
         getButton().setRadius(radius);
-        setLayoutX(newPosition.getX());
-        setLayoutY(newPosition.getY());
+        setLayoutX(this.centerX);
+        setLayoutY(this.centerY);
         getButton().setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
         setRotate(0);
         setVisible(true);
