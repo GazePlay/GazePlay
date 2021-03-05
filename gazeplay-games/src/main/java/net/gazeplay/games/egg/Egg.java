@@ -39,6 +39,8 @@ public class Egg extends Parent {
     private int turnNumber = 0;
     private final int totalNumberOfTurns;
 
+    private final String gameType;
+
     private final ProgressIndicator progressIndicator;
 
     private Timeline timelineProgressBar;
@@ -51,9 +53,10 @@ public class Egg extends Parent {
     private final ReplayablePseudoRandom random;
 
     public Egg(final IGameContext gameContext, final Stats stats,
-               final EggGame gameInstance, final int fixationlength, final int numberOfTurn) {
+               final EggGame gameInstance, final int fixationlength, final int numberOfTurn, final String type) {
 
         this.totalNumberOfTurns = numberOfTurn;
+        this.gameType = type;
 
         final Scene scene = gameContext.getPrimaryScene();
         final double height = scene.getHeight() / 2;
@@ -85,8 +88,10 @@ public class Egg extends Parent {
         image2.setMouseTransparent(true);
 
         final Rectangle image3 = new Rectangle(positionX, positionY, width, height);
-        if (imageLibrary.getImagesCount() > 0) {
+        if (gameType.equals("personalize") && (imageLibrary.getImagesCount() > 0)) {
             image3.setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
+        } else if (gameType.equals("egg")) {
+            image3.setFill(new ImagePattern(new Image("data/egg/images/egg3.jpg"), 0, 0, 1, 1, true));
         } else {
             image3.setFill(new ImagePattern(new Image("data/egg/images/egg3.jpg"), 0, 0, 1, 1, true));
         }
