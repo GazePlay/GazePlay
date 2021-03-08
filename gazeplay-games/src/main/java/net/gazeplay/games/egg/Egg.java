@@ -90,9 +90,9 @@ public class Egg extends Parent {
         final Rectangle image3 = new Rectangle(positionX, positionY, width, height);
         if (gameType.equals("personalize") && (imageLibrary.getImagesCount() > 0)) {
             image3.setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
-        } else if (gameType.equals("egg")) {
+        } else if (gameType.equals("personalize") && (imageLibrary.getImagesCount() == 0)){
             image3.setFill(new ImagePattern(new Image("data/egg/images/egg3.jpg"), 0, 0, 1, 1, true));
-        } else {
+        } else if (gameType.equals("egg")) {
             image3.setFill(new ImagePattern(new Image("data/egg/images/egg3.jpg"), 0, 0, 1, 1, true));
         }
 
