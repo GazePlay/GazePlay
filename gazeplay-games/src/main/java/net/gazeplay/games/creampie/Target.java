@@ -35,8 +35,6 @@ public class Target extends Portrait {
 
     private boolean animationEnded = true;
 
-    private final int radius;
-
     private final RandomPositionGenerator randomPositionGenerator;
 
     private final Stats stats;
@@ -50,10 +48,9 @@ public class Target extends Portrait {
     private final IGameContext gameContext;
 
     public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
-                  final ImageLibrary imageLibrary, CreamPie gameInstance, final int radius) {
+                  final ImageLibrary imageLibrary, CreamPie gameInstance) {
 
-        super(radius, randomPositionGenerator, imageLibrary);
-        this.radius = radius;
+        super(gameContext.getConfiguration().getElementSize(), randomPositionGenerator, imageLibrary);
         this.randomPositionGenerator = randomPositionGenerator;
         this.hand = hand;
         this.imageLibrary = imageLibrary;
@@ -126,7 +123,7 @@ public class Target extends Portrait {
     private void newPosition(){
         final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(getInitialRadius(), 0, 1, 0, 0.8);
 
-        setRadius(radius);
+        setRadius(gameContext.getConfiguration().getElementSize());
         setCenterX(newPosition.getX());
         setCenterY(newPosition.getY());
         setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));

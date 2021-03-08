@@ -257,6 +257,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
+        {
+            I18NText label = new I18NText(translator, "Choose size", COLON);
+
+            Spinner<Double> input = buildSpinner(5, 200, config.getElementSize(),
+                1, config.getElementSizeProperty());
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
 
 
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GraphicsSettings", COLON));
