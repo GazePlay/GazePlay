@@ -4,6 +4,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -47,7 +49,6 @@ public class MolesChar extends Parent {
     boolean canGoOut;
     public boolean out;
 
-    private final ProgressIndicator progressIndicator;
     private final ProgressIndicator progressIndicatorMoles;
 
     private Timeline timeMoleOut;
@@ -85,7 +86,6 @@ public class MolesChar extends Parent {
 
         this.enterEvent = buildEvent();
 
-        this.progressIndicator = createProgressIndicator();
         this.progressIndicatorMoles = createProgressIndicatorMoles();
 
         this.moleMoved = new Rectangle(positionX, positionY - distTrans, width, height);
@@ -100,12 +100,6 @@ public class MolesChar extends Parent {
         this.getChildren().add(mole);
         this.mole.opacityProperty().set(0);
 
-    }
-
-    private ProgressIndicator createProgressIndicator() {
-        final ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setOpacity(0);
-        return indicator;
     }
 
     private ProgressIndicator createProgressIndicatorMoles() {
@@ -183,12 +177,13 @@ public class MolesChar extends Parent {
 
             out = true;
 
+            DoubleProperty timeOut = new SimpleDoubleProperty(0);
             timeMoleOut = new Timeline(); // New time this mole go out
             final int time = random.nextInt(timeMoleStayOut) + 2000;
 
             timeMoleOut.getKeyFrames()
                 .add(new KeyFrame(new Duration(time),
-                    new KeyValue(progressIndicator.progressProperty(), 1)));
+                    new KeyValue(timeOut, 1)));
             timeMoleOut.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
             /* If the Mole is stay out without being touching */
             timeMoleOut.setOnFinished(actionEvent1 -> {
