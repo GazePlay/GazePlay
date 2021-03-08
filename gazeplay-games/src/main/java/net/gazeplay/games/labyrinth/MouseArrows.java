@@ -129,7 +129,7 @@ public abstract class MouseArrows extends Mouse {
                 indicatorUp.setOpacity(1);
                 indicatorUp.setProgress(0);
                 timelineProgressBar = new Timeline();
-                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameInstance.fixationlength),
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(this.gameContext.getConfiguration().getFixationLength()),
                     new KeyValue(indicatorUp.progressProperty(), 1)));
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
@@ -166,7 +166,7 @@ public abstract class MouseArrows extends Mouse {
                 indicatorDown.setOpacity(1);
                 indicatorDown.setProgress(0);
                 timelineProgressBar = new Timeline();
-                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameInstance.fixationlength),
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(this.gameContext.getConfiguration().getFixationLength()),
                     new KeyValue(indicatorDown.progressProperty(), 1)));
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
@@ -203,7 +203,7 @@ public abstract class MouseArrows extends Mouse {
                 indicatorRight.setOpacity(1);
                 indicatorRight.setProgress(0);
                 timelineProgressBar = new Timeline();
-                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameInstance.fixationlength),
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(this.gameContext.getConfiguration().getFixationLength()),
                     new KeyValue(indicatorRight.progressProperty(), 1)));
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
@@ -240,7 +240,7 @@ public abstract class MouseArrows extends Mouse {
                 indicatorLeft.setOpacity(1);
                 indicatorLeft.setProgress(0);
                 timelineProgressBar = new Timeline();
-                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameInstance.fixationlength),
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(this.gameContext.getConfiguration().getFixationLength()),
                     new KeyValue(indicatorLeft.progressProperty(), 1)));
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
