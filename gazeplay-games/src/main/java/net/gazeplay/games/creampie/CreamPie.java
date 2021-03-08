@@ -1,6 +1,5 @@
 package net.gazeplay.games.creampie;
 
-import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;

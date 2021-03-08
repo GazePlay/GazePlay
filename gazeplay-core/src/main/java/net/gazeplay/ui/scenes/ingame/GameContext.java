@@ -37,11 +37,7 @@ import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
-import net.gazeplay.ui.AnimationSpeedRatioControl;
-import net.gazeplay.ui.FixationLengthControl;
-import net.gazeplay.ui.ElementSizeControl;
-import net.gazeplay.ui.GraphicalContext;
-import net.gazeplay.ui.MusicControl;
+import net.gazeplay.ui.*;
 import net.gazeplay.ui.scenes.stats.StatsContext;
 import net.gazeplay.ui.scenes.stats.StatsContextFactory;
 
@@ -66,7 +62,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     boolean limiterT = false;
     long startTime = 0;
     long endTime = 0;
-    boolean limiteUsed =false;
+    boolean limiteUsed = false;
 
     @Setter
     private static boolean runAsynchronousStatsPersist = false;
@@ -157,9 +153,10 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     @Override
-    public void setLimiterAvailable(){
+    public void setLimiterAvailable() {
         limiteUsed = false;
     }
+
     @Override
     public void start() {
         startTime = System.currentTimeMillis();
@@ -167,7 +164,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     @Override
     public void firstStart() {
-        if(startTime == 0){
+        if (startTime == 0) {
             start();
         }
     }
@@ -179,11 +176,13 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     @Override
     public void updateScore(Stats stats, GameLifeCycle currentGame) {
-        updateScore(stats, currentGame, e->{}, e->{});
+        updateScore(stats, currentGame, e -> {
+        }, e -> {
+        });
     }
 
-        @Override
-    public void updateScore(Stats stats, GameLifeCycle currentGame,  EventHandler<ActionEvent> onTimeLimiterEndEventHandler, EventHandler<ActionEvent> onScoreLimiterEndEventHandler) {
+    @Override
+    public void updateScore(Stats stats, GameLifeCycle currentGame, EventHandler<ActionEvent> onTimeLimiterEndEventHandler, EventHandler<ActionEvent> onScoreLimiterEndEventHandler) {
         if (limiterS && !limiteUsed) {
             if (stats.getNbGoalsReached() == getConfiguration().getLimiterScore()) {
                 onScoreLimiterEndEventHandler.handle(null);

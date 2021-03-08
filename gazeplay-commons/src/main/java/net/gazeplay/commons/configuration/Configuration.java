@@ -247,7 +247,7 @@ public class Configuration {
         heatMapDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED, propertyChangeListener);
 
         enableRewardSoundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND, propertyChangeListener);
-        reaskQuestionOnFail = new ApplicationConfigBackedBooleanProperty(applicationConfig,PROPERTY_NAME_REASK_QUESTION_ON_FAIL,DEFAULT_VALUE_REASK_QUESTION_ON_FAIL,propertyChangeListener);
+        reaskQuestionOnFail = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_REASK_QUESTION_ON_FAIL, DEFAULT_VALUE_REASK_QUESTION_ON_FAIL, propertyChangeListener);
 
         limiterSProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERS, DEFAULT_VALUE_LIMITERSCORE, propertyChangeListener);
         limiterTProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERT, DEFAULT_VALUE_LIMITERTIME, propertyChangeListener);

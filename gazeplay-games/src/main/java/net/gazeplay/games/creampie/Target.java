@@ -83,7 +83,7 @@ public class Target extends Portrait {
     private void enter() {
 
         stats.incrementNumberOfGoalsReached();
-        gameContext.updateScore(stats,gameInstance);
+        gameContext.updateScore(stats, gameInstance);
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
         final Animation animation = createAnimation();
@@ -111,8 +111,8 @@ public class Target extends Portrait {
 
         timeline.setOnFinished(actionEvent -> {
             animationEnded = true;
-            if(targetAOIList.size()>0){
-                targetAOIList.get(targetAOIList.size()-1).setTimeEnded(System.currentTimeMillis());
+            if (targetAOIList.size() > 0) {
+                targetAOIList.get(targetAOIList.size() - 1).setTimeEnded(System.currentTimeMillis());
             }
             newPosition();
         });
@@ -120,7 +120,7 @@ public class Target extends Portrait {
         return timeline;
     }
 
-    private void newPosition(){
+    private void newPosition() {
         final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(getInitialRadius(), 0, 1, 0, 0.8);
 
         setRadius(gameContext.getConfiguration().getElementSize());
