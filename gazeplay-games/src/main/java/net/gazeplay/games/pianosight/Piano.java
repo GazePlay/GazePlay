@@ -332,6 +332,7 @@ public class Piano extends Parent implements GameLifeCycle {
 
                 this.progressIndicator = createProgressIndicator(index, size, dimension2D);
 
+                progressIndicator.setMouseTransparent(true);
                 progressIndicator.setOpacity(1);
                 progressIndicator.setProgress(0);
 
