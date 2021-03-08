@@ -62,8 +62,8 @@ public class ElementSizeControl {
         slider.setPrefWidth(QuickControl.SLIDERS_MAX_WIDTH);
         slider.setMin(ELEMENT_SIZE_SLIDER_MIN_VALUE);
         slider.setMax(ELEMENT_SIZE_SLIDER_MAX_VALUE);
-        slider.setMajorTickUnit(195);
-        slider.setMinorTickCount(195);
+        slider.setMajorTickUnit(5);
+        slider.setMinorTickCount(4);
         slider.setShowTickMarks(true);
         slider.setSnapToTicks(true);
         slider.setBlockIncrement(1);
