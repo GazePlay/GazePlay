@@ -48,7 +48,7 @@ public class Egg extends Parent {
 
     private final EventHandler<Event> enterEvent;
 
-    private final ImageLibrary imageLibrary;
+    private ImageLibrary imageLibrary;
 
     private final ReplayablePseudoRandom random;
 
@@ -88,10 +88,11 @@ public class Egg extends Parent {
         image2.setMouseTransparent(true);
 
         final Rectangle image3 = new Rectangle(positionX, positionY, width, height);
-        if (gameType.equals("personalize") && (imageLibrary.getImagesCount() > 0)) {
+        if (gameType.equals("personalize")) {
+            if (imageLibrary.getImagesCount() == 0) {
+                imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"), random);
+            }
             image3.setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
-        } else if (gameType.equals("personalize") && (imageLibrary.getImagesCount() == 0)){
-            image3.setFill(new ImagePattern(new Image("data/egg/images/egg3.jpg"), 0, 0, 1, 1, true));
         } else if (gameType.equals("egg")) {
             image3.setFill(new ImagePattern(new Image("data/egg/images/egg3.jpg"), 0, 0, 1, 1, true));
         }
