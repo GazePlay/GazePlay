@@ -704,6 +704,8 @@ public class Stats implements GazeMotionListener {
         return savedStatsInfo;
     }
 
+    public RoundsDurationReport getRoundsDurationReport() { return roundsDurationReport;}
+
     public long computeRoundsDurationAverageDuration() {
         return roundsDurationReport.computeAverageLength();
     }
