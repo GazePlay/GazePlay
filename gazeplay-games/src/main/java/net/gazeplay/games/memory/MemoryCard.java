@@ -51,6 +51,10 @@ public class MemoryCard extends Parent {
 
     final boolean isOpen;
 
+    private int nbWrongCards;
+
+    private int nbCorrectCards;
+
 
     public MemoryCard(final double positionX, final double positionY, final double width, final double height, final Image image, final int idc,
                       final IGameContext gameContext, final Stats stats, final Memory gameInstance, final int fixationlength, final boolean isOpen) {
@@ -81,6 +85,10 @@ public class MemoryCard extends Parent {
         this.fixationlength = fixationlength;
 
         this.gameInstance = gameInstance;
+
+        this.nbCorrectCards = 0;
+
+        this.nbWrongCards = 0;
 
         this.getChildren().add(card);
 
@@ -116,6 +124,8 @@ public class MemoryCard extends Parent {
 
     private void onCorrectCardSelected() {
 
+        nbCorrectCards++;
+
         stats.incrementNumberOfGoalsReached();
 
         for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
@@ -141,13 +151,15 @@ public class MemoryCard extends Parent {
         /* No more cards to play : End of this game : Begin a new Game */
         if (gameInstance.getnbRemainingPeers() == 0) {
 
-            gameContext.updateScore(stats,gameInstance);
+            gameContext.updateScore(stats, gameInstance);
 
             gameContext.playWinTransition(500, actionEvent -> {
 
                 gameInstance.dispose();
 
                 gameContext.clear();
+
+                gameInstance.setNbColumns(gameInstance.getNbColumns() + 1);
 
                 gameInstance.launch();
 
@@ -158,6 +170,8 @@ public class MemoryCard extends Parent {
 
     /* The 2 turned cards are not matching */
     private void onWrongCardSelected() {
+
+        nbWrongCards++;
 
         if (gameInstance.currentRoundDetails == null) {
             return;

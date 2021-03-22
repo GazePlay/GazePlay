@@ -39,7 +39,7 @@ public class Memory implements GameLifeCycle {
     private final IGameContext gameContext;
 
     private final int nbLines;
-    private final int nbColumns;
+    private int nbColumns;
 
     private final Stats stats;
 
@@ -256,5 +256,11 @@ public class Memory implements GameLifeCycle {
     public int getnbRemainingPeers() {
         return nbRemainingPeers;
     }
+
+    //public int getNbLines() { return nbLines; }
+
+    public int getNbColumns() { return nbColumns; }
+
+    public void setNbColumns(int nbColumns) { this.nbColumns = nbColumns; }
 
 }
