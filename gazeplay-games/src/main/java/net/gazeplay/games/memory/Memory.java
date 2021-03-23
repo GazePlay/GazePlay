@@ -58,6 +58,10 @@ public class Memory implements GameLifeCycle {
 
     private final ReplayablePseudoRandom randomGenerator;
 
+    private int nbWrongCards;
+
+    private int nbCorrectCards;
+
     public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
                   final boolean isOpen) {
         super();
@@ -72,6 +76,8 @@ public class Memory implements GameLifeCycle {
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.stats = stats;
+        this.nbCorrectCards = 0;
+        this.nbWrongCards = 0;
         this.gameContext.startTimeLimiter();
 
         this.randomGenerator = new ReplayablePseudoRandom();
@@ -106,6 +112,8 @@ public class Memory implements GameLifeCycle {
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.stats = stats;
+        this.nbCorrectCards = 0;
+        this.nbWrongCards = 0;
         this.gameContext.startTimeLimiter();
 
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
@@ -262,5 +270,17 @@ public class Memory implements GameLifeCycle {
     public int getNbColumns() { return nbColumns; }
 
     public void setNbColumns(int nbColumns) { this.nbColumns = nbColumns; }
+
+    public int getNbWrongCards() { return  nbWrongCards; }
+
+    public void incNbWrongCards() {nbWrongCards++; }
+
+    public void resetNbWrongCards() { nbWrongCards = 0; }
+
+    public int getNbCorrectCards() { return  nbCorrectCards; }
+
+    public void incNbCorrectCards() {nbCorrectCards++; }
+
+    public void resetNbCorrectCards() { nbCorrectCards = 0; }
 
 }
