@@ -106,6 +106,12 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
             }
         });
 
+        root.setOnTouchReleased(mouseEvent -> {
+            for (Canvas canvas : canvasList) {
+                canvas.setVisible(false);
+            }
+        });
+
         root.addEventFilter(MouseEvent.MOUSE_EXITED, exitedEventHandler);
         root.addEventFilter(MouseEvent.MOUSE_ENTERED, enteredEventHandler);
 
@@ -225,6 +231,12 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
             // set the canvas to invisible
             // in order to allow mouse interaction with the WebView (YouTube controls)
             // the canvas will be set visible when the mouse exit then re-enter the scene
+            for (Canvas canvas : canvasList) {
+                canvas.setVisible(false);
+            }
+        });
+
+        root.setOnTouchReleased(mouseEvent -> {
             for (Canvas canvas : canvasList) {
                 canvas.setVisible(false);
             }

@@ -145,7 +145,7 @@ public class CustomFileChooser extends Stage {
         dialog.setOnCloseRequest(windowEvent -> this.getScene().getRoot().setEffect(null));
 
 
-        EventHandler<Event> yesEventHandler = event -> {
+        EventHandler yesEventHandler = event -> {
             try {
                 URI url = new URI(i.getUrl());
                 final File imageToDelete = new File(url.getPath());
@@ -171,7 +171,7 @@ public class CustomFileChooser extends Stage {
         };
         final Button yes = createAnswerButton("YesRemove", yesEventHandler);
 
-        EventHandler<Event> noEventHandler = event -> {
+        EventHandler noEventHandler = event -> {
             closeDialog(dialog);
         };
         final Button no = createAnswerButton("NoCancel", noEventHandler);
@@ -198,14 +198,14 @@ public class CustomFileChooser extends Stage {
         dialog.close();
     }
 
-    private I18NButton createAnswerButton(String text, EventHandler<Event> eventHandler) {
+    private I18NButton createAnswerButton(String text, EventHandler eventHandler) {
         I18NButton button = new I18NButton(translator, text);
         button.getStyleClass().add("gameChooserButton");
         button.getStyleClass().add("gameVariation");
         button.getStyleClass().add("button");
         button.setMinHeight(gazePlay.getPrimaryStage().getHeight() / 10);
         button.setMinWidth(gazePlay.getPrimaryStage().getWidth() / 10);
-        button.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+        button.setOnAction(eventHandler);
         return button;
     }
 
@@ -367,6 +367,9 @@ public class CustomFileChooser extends Stage {
             ongletBackground.setFill(colors[i]);
             section[i].getChildren().add(ongletBackground);
             section[i].setOnMouseClicked(e -> {
+                group[index].toFront();
+            });
+            section[i].setOnTouchReleased(e -> {
                 group[index].toFront();
             });
 

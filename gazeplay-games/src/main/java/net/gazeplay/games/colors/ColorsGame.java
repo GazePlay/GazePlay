@@ -11,6 +11,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -122,10 +123,12 @@ public class ColorsGame implements GameLifeCycle {
 
                 // Stop registering colorization events
                 rectangle.removeEventFilter(MouseEvent.ANY, colorizationEventHandler.mouseEventEventHandler);
+                rectangle.removeEventFilter(TouchEvent.ANY, colorizationEventHandler.mouseEventEventHandler);
                 rectangle.removeEventFilter(GazeEvent.ANY, colorizationEventHandler.gazeEventEventHandler);
 
             } else {
                 rectangle.addEventFilter(MouseEvent.ANY, colorizationEventHandler.mouseEventEventHandler);
+                rectangle.addEventFilter(TouchEvent.ANY, colorizationEventHandler.mouseEventEventHandler);
                 rectangle.addEventFilter(GazeEvent.ANY, colorizationEventHandler.gazeEventEventHandler);
             }
         });
@@ -263,6 +266,7 @@ public class ColorsGame implements GameLifeCycle {
         colorizationEventHandler = new CustomEventHandler();
 
         rectangle.addEventFilter(MouseEvent.ANY, colorizationEventHandler.mouseEventEventHandler);
+        rectangle.addEventFilter(TouchEvent.ANY, colorizationEventHandler.mouseEventEventHandler);
         rectangle.addEventFilter(GazeEvent.ANY, colorizationEventHandler.gazeEventEventHandler);
 
     }
@@ -537,15 +541,15 @@ public class ColorsGame implements GameLifeCycle {
         private Double currentY = 0.;
 
         @Getter
-        private final EventHandler<MouseEvent> mouseEventEventHandler = event -> {
-            if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
-                onMouseClicked(event);
+        private final EventHandler mouseEventEventHandler = event -> {
+            if (event.getEventType() == MouseEvent.MOUSE_CLICKED || event.getEventType() == TouchEvent.TOUCH_RELEASED) {
+                onMouseClicked();
             } else if (event.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                onMouseEntered(event);
+                onMouseEntered((MouseEvent) event);
             } else if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
-                onMouseMoved(event);
+                onMouseMoved((MouseEvent) event);
             } else if (event.getEventType() == MouseEvent.MOUSE_EXITED) {
-                onMouseExited(event);
+                onMouseExited((MouseEvent) event);
             }
         };
 
@@ -640,7 +644,7 @@ public class ColorsGame implements GameLifeCycle {
             gazeProgressIndicator.start();
         }
 
-        private void onMouseClicked(final MouseEvent event) {
+        private void onMouseClicked() {
             colorize(currentX, currentY);
         }
 

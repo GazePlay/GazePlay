@@ -106,10 +106,6 @@ public class Target extends Portrait {
 
         return e -> {
 
-            // if((e.getEventType() == MouseEvent.MOUSE_ENTERED_TARGET ||e.getEventType() == MouseEvent.MOUSE_ENTERED ||
-            // e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_ENTERED ||
-            // e.getEventType() == GazeEvent.GAZE_MOVED) && anniOff) {
-
             if (animationStopped
                 && (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
 

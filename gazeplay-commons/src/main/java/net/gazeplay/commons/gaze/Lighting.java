@@ -8,6 +8,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -32,11 +33,13 @@ public class Lighting extends Parent {
 
         EventHandler<Event> enterEvent = e -> {
             if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == MouseEvent.MOUSE_MOVED
+                || e.getEventType() == TouchEvent.TOUCH_MOVED
                 || e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == GazeEvent.GAZE_MOVED)) {
                 enter();
             }
         };
         this.addEventFilter(MouseEvent.ANY, enterEvent);
+        this.addEventFilter(TouchEvent.ANY, enterEvent);
         this.addEventHandler(GazeEvent.ANY, enterEvent);
     }
 

@@ -15,6 +15,7 @@ import javafx.scene.effect.Reflection;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -237,10 +238,14 @@ public class Race extends Parent implements GameLifeCycle {
         Rectangle imageRectangle = createBackground();
         gameContext.getChildren().add(this);
 
-        final EventHandler<MouseEvent> handEvent = e -> {
+        final EventHandler handEvent = e -> {
             if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
-                final double x = e.getX();
-                final double y = e.getY();
+                final double x = ((MouseEvent)e).getX();
+                final double y = ((MouseEvent)e).getY();
+                hand.setRotate(getAngle(new Point(x, y)));
+            } else if (e.getEventType() == TouchEvent.TOUCH_MOVED) {
+                final double x = ((TouchEvent)e).getTouchPoint().getX();
+                final double y = ((TouchEvent)e).getTouchPoint().getY();
                 hand.setRotate(getAngle(new Point(x, y)));
             }
         };
@@ -253,6 +258,7 @@ public class Race extends Parent implements GameLifeCycle {
             hand.setRotate(getAngle(new Point(x, y)));
         };
         imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
+        imageRectangle.addEventFilter(TouchEvent.ANY, handEvent);
         this.addEventFilter(GazeEvent.ANY, handEventGaze);
 
         final Point[] points = new Point[8];

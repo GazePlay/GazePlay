@@ -129,9 +129,6 @@ public class Pictos extends Parent {
 
             final Rectangle target = (Rectangle) e.getTarget();
 
-            // log.debug("Rectangle " + Target.getTranslateX());
-            // log.debug(e.getEventType());
-
             if (found) {
 
                 return;
@@ -139,7 +136,6 @@ public class Pictos extends Parent {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
-                // log.debug("ENTRÉE");
                 entry = (new Date()).getTime();
 
                 int i;
@@ -152,13 +148,9 @@ public class Pictos extends Parent {
 
             } else if (e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == MouseEvent.MOUSE_MOVED) {
 
-                // log.debug("MOVE");
-
                 final long now = (new Date()).getTime();
 
                 if (entry != -1 && (now - entry) > min_time) {
-
-                    // log.debug("GAGNÉ");
 
                     found = true;
 
@@ -192,32 +184,21 @@ public class Pictos extends Parent {
 
                     final Timeline timeline = new Timeline();
 
-                    // timeline.getKeyFrames().add(new KeyFrame(new Duration(500),new KeyValue(R1.heightProperty(),
-                    // R1.getHeight() * zoom_factor)));
-                    // timeline.getKeyFrames().add(new KeyFrame(new Duration(500),new KeyValue(R1.widthProperty(),
-                    // R1.getWidth() * zoom_factor)));
                     timeline.getKeyFrames()
                         .add(new KeyFrame(new Duration(1), new KeyValue(target.strokeProperty(), Color.RED)));
 
                     timeline.play();
-
-                    // log.debug("DESSUS " + (now - entry));
 
                 }
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
 
                 final Timeline timeline = new Timeline();
 
-                // timeline.getKeyFrames().add(new KeyFrame(new Duration(500),new KeyValue(R1.heightProperty(),
-                // R1.getHeight() * zoom_factor)));
-                // timeline.getKeyFrames().add(new KeyFrame(new Duration(500),new KeyValue(R1.widthProperty(),
-                // R1.getWidth() * zoom_factor)));
                 timeline.getKeyFrames()
                     .add(new KeyFrame(new Duration(1), new KeyValue(target.strokeProperty(), Color.BLACK)));
 
                 timeline.play();
 
-                // log.debug("SORTIE");
                 entry = -1;
             }
         };

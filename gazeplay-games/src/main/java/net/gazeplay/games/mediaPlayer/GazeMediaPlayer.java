@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -201,6 +202,10 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             handler.handle(null);
         });
 
+        button.addEventFilter(TouchEvent.TOUCH_RELEASED, e -> {
+            handler.handle(null);
+        });
+
         button.addEventFilter(MouseEvent.MOUSE_ENTERED, eventEntered -> {
             button.getChildren().add(progressIndicator);
             progressIndicator.setOnFinish(handler);
@@ -258,6 +263,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
             dialog.setAlwaysOnTop(true);
         };
         addVideo.addEventFilter(MouseEvent.MOUSE_CLICKED, eventAddVideo);
+        addVideo.addEventFilter(TouchEvent.TOUCH_RELEASED, eventAddVideo);
     }
 
     private void createHandlers() {
@@ -426,14 +432,14 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         tfi.setMinHeight(primaryStage.getHeight() / 20);
         tfi.setMinWidth(primaryStage.getWidth() / 10);
 
-        final EventHandler<Event> chooseImageHandler = event -> {
+        final EventHandler chooseImageHandler = event -> {
             final String s = getImage(tfi, dialog);
             if (s != null) {
                 tfi.setText(s);
             }
         };
 
-        tfi.addEventFilter(MouseEvent.MOUSE_CLICKED, chooseImageHandler);
+        tfi.setOnAction(chooseImageHandler);
 
         // URL BLOCK ___
         final VBox urlSide = new VBox();

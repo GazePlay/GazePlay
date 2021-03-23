@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -263,6 +264,10 @@ public class Shooter extends Parent implements GameLifeCycle {
                 final double x = ((MouseEvent) e).getX();
                 final double y = ((MouseEvent) e).getY();
                 hand.setRotate(getAngle(new Point(x, y)));
+            } else if (e.getEventType() == TouchEvent.TOUCH_MOVED) {
+                final double x = ((TouchEvent) e).getTouchPoint().getX();
+                final double y = ((TouchEvent) e).getTouchPoint().getY();
+                hand.setRotate(getAngle(new Point(x, y)));
             }
         };
 
@@ -273,6 +278,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         };
 
         imageRectangle.addEventFilter(MouseEvent.ANY, handEvent);
+        imageRectangle.addEventFilter(TouchEvent.ANY, handEvent);
         this.addEventFilter(GazeEvent.ANY, handEventGaze);
 
         enterEvent = e -> {

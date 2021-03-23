@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -168,6 +169,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         final EventHandler<Event> movementEvent = (Event event) -> {
             if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
                 gazeTarget = new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
+            } else if (event.getEventType() == TouchEvent.TOUCH_MOVED) {
+                gazeTarget = new Point2D(((TouchEvent) event).getTouchPoint().getX(), ((TouchEvent) event).getTouchPoint().getY());
             } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
                 gazeTarget = new Point2D(((GazeEvent) event).getX(), ((GazeEvent) event).getY());
             }
@@ -256,6 +259,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         final EventHandler<Event> movementEvent = (Event event) -> {
             if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
                 gazeTarget = new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
+            } else  if (event.getEventType() == TouchEvent.TOUCH_MOVED) {
+                gazeTarget = new Point2D(((TouchEvent) event).getTouchPoint().getX(), ((TouchEvent) event).getTouchPoint().getY());
             } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
                 gazeTarget = new Point2D(((GazeEvent) event).getX(), ((GazeEvent) event).getY());
             }

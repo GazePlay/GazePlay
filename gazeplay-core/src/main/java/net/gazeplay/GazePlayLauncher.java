@@ -26,6 +26,9 @@ public class GazePlayLauncher {
 
     public static void main(String[] args) {
 
+        System.setProperty("com.sun.javafx.isEmbedded", "true");
+        System.setProperty("com.sun.javafx.touch", "true");
+
         Thread.currentThread().setName(GazePlayLauncher.class.getSimpleName() + "-main");
         Thread.currentThread().setUncaughtExceptionHandler(new LoggingUncaughtExceptionHandler());
 

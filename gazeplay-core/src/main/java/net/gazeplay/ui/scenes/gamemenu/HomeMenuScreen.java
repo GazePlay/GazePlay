@@ -23,12 +23,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.*;
+import net.gazeplay.GameCategories;
+import net.gazeplay.GameSpec;
+import net.gazeplay.GazePlay;
+import net.gazeplay.ReplayingGameFromJson;
 import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
@@ -41,7 +42,6 @@ import net.gazeplay.commons.utils.games.MenuUtils;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -139,21 +139,23 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         StackPane centerStackPane = new StackPane();
         errorMessage = new StackPane();
         Rectangle errorBackground = new Rectangle();
-        errorBackground.setFill(new Color(1,0,0,0.75));
+        errorBackground.setFill(new Color(1, 0, 0, 0.75));
         errorMessageLabel = new Label("Error message goes here");
         errorBackground.widthProperty().bind(errorMessageLabel.widthProperty().multiply(1.2));
         errorBackground.heightProperty().bind(errorMessageLabel.heightProperty().multiply(1.2));
-        errorMessage.getChildren().addAll(errorBackground,errorMessageLabel);
+        errorMessage.getChildren().addAll(errorBackground, errorMessageLabel);
         centerStackPane.getChildren().add(centerPanel);
         centerStackPane.getChildren().add(errorMessage);
 
-        errorMessage.setOnMouseClicked((event)->{
+        EventHandler displayErrorHandler = (event) -> {
             final Timeline opacityTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(errorMessage.opacityProperty(), 0, Interpolator.EASE_OUT)));
             opacityTimeline.setOnFinished(e -> errorMessage.setMouseTransparent(true));
             this.centerPanel.setEffect(null);
             opacityTimeline.play();
-        });
+        };
+        errorMessage.setOnMouseClicked(displayErrorHandler);
+        errorMessage.setOnTouchReleased(displayErrorHandler);
 
         errorMessage.setOpacity(0);
         errorMessage.setMouseTransparent(true);
@@ -334,14 +336,14 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             try {
                 ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getApplicationContext(), games);
                 replayingGame.pickJSONFile(replayingGame.getFileName());
-                if(ReplayingGameFromJson.replayIsAllowed(replayingGame.getCurrentGameNameCode())){
+                if (ReplayingGameFromJson.replayIsAllowed(replayingGame.getCurrentGameNameCode())) {
                     replayingGame.replayGame();
-                } else if (replayingGame.getCurrentGameNameCode() != null){
+                } else if (replayingGame.getCurrentGameNameCode() != null) {
                     Translator translator = gazePlay.getTranslator();
                     this.errorMessageLabel.setText(
                         translator.translate("SorryButReplayInvalid")
-                            .replace("{}",translator.translate(replayingGame.getCurrentGameNameCode()))
-                            .replace("\\n","\n") );
+                            .replace("{}", translator.translate(replayingGame.getCurrentGameNameCode()))
+                            .replace("\\n", "\n"));
                     this.errorMessageLabel.setTextAlignment(TextAlignment.CENTER);
                     ColorAdjust colorAdjust = new ColorAdjust();
                     colorAdjust.setBrightness(-0.8);

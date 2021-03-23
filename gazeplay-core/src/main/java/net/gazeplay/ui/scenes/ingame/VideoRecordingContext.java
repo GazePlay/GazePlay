@@ -3,6 +3,7 @@ package net.gazeplay.ui.scenes.ingame;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -38,6 +39,10 @@ public class VideoRecordingContext {
                 mousePointer.setCenterX(((MouseEvent) e).getX());
                 mousePointer.setCenterY(((MouseEvent) e).getY());
                 mousePointer.toFront();
+            } else if (e.getEventType() == TouchEvent.TOUCH_MOVED) {
+                mousePointer.setCenterX(((TouchEvent) e).getTouchPoint().getX());
+                mousePointer.setCenterY(((TouchEvent) e).getTouchPoint().getY());
+                mousePointer.toFront();
             } else if (e.getEventType() == GazeEvent.GAZE_MOVED) {
                 gazePointer.setCenterX(((GazeEvent) e).getX());
                 gazePointer.setCenterY(((GazeEvent) e).getY());
@@ -45,11 +50,13 @@ public class VideoRecordingContext {
             }
         };
         root.addEventFilter(MouseEvent.ANY, pointerEvent);
+        root.addEventFilter(TouchEvent.ANY, pointerEvent);
         root.addEventFilter(GazeEvent.ANY, pointerEvent);
     }
 
     public void pointersClear() {
         root.removeEventFilter(MouseEvent.ANY, pointerEvent);
+        root.removeEventFilter(TouchEvent.ANY, pointerEvent);
         root.removeEventFilter(GazeEvent.ANY, pointerEvent);
         root.getChildren().remove(gazePointer);
         root.getChildren().remove(mousePointer);
