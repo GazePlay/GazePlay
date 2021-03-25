@@ -320,7 +320,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private CustomButton createExitButton(Dimension2D screenDimension) {
         CustomButton exitButton = new CustomButton("data/common/images/power-off.png", screenDimension);
-        exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
+        exitButton.setOnTouchReleased(e -> System.exit(0));
+        exitButton.setOnMouseClicked(e -> System.exit(0));
         return exitButton;
     }
 

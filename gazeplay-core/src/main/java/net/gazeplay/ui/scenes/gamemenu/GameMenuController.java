@@ -129,7 +129,7 @@ public class GameMenuController {
             File.separator + "java";
         String classpath = System.getProperty("java.class.path");
 
-        LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin, "-cp", classpath, GazePlayLauncher.class.getName()));
+        LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin, "-cp", classpath, "-Djdk.gtk.version=2", GazePlayLauncher.class.getName()));
 
         String user = ActiveConfigurationContext.getInstance().getUserName();
         if (user != null && !user.equals("")) {
