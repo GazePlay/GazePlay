@@ -144,23 +144,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         );
 
 
-        gridPane.setOnTouchPressed(e -> {
-            scrollStarted = settingsPanelScroller.getVvalue();
-            dragOrigin = e.getTouchPoint().getSceneY();
-        });
-
-        gridPane.setOnTouchMoved(e -> {
-            if (dragOrigin != -1) {
-                double distance = (dragOrigin - e.getTouchPoint().getSceneY()) / gazePlay.getPrimaryScene().getHeight();
-                settingsPanelScroller.setVvalue(scrollStarted + distance / 3);
-            }
-        });
-
-        gridPane.setOnTouchReleased(e -> {
-                dragOrigin = -1;
-            }
-        );
-
         settingsPanelScroller.setFitToWidth(true);
         settingsPanelScroller.setFitToHeight(true);
 
