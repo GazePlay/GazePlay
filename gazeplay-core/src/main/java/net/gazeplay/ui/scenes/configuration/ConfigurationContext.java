@@ -71,6 +71,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static final double PREF_HEIGHT = 25;
 
+    private double dragOrigin = -1;
+    private double scrollStarted;
+
     private final boolean currentLanguageAlignmentIsLeftAligned;
 
     ConfigurationContext(GazePlay gazePlay) {
@@ -123,6 +126,40 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         GridPane gridPane = buildConfigGridPane(this, translator);
 
         ScrollPane settingsPanelScroller = new ScrollPane(gridPane);
+
+        gridPane.setOnMousePressed(e -> {
+            scrollStarted = settingsPanelScroller.getVvalue();
+            dragOrigin = e.getSceneY();
+        });
+        gridPane.setOnMouseDragged(e -> {
+            if (dragOrigin != -1) {
+                double distance = (dragOrigin - e.getSceneY()) / gazePlay.getPrimaryScene().getHeight();
+                settingsPanelScroller.setVvalue(scrollStarted + distance / 3);
+            }
+        });
+
+        gridPane.setOnMouseReleased(e -> {
+                dragOrigin = -1;
+            }
+        );
+
+
+        gridPane.setOnTouchPressed(e -> {
+            scrollStarted = settingsPanelScroller.getVvalue();
+            dragOrigin = e.getTouchPoint().getSceneY();
+        });
+
+        gridPane.setOnTouchMoved(e -> {
+            if (dragOrigin != -1) {
+                double distance = (dragOrigin - e.getTouchPoint().getSceneY()) / gazePlay.getPrimaryScene().getHeight();
+                settingsPanelScroller.setVvalue(scrollStarted + distance / 3);
+            }
+        });
+
+        gridPane.setOnTouchReleased(e -> {
+                dragOrigin = -1;
+            }
+        );
 
         settingsPanelScroller.setFitToWidth(true);
         settingsPanelScroller.setFitToHeight(true);

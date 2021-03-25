@@ -61,6 +61,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private List<Node> gameCardsList;
     private List<Node> favGameCardsList;
 
+    private double dragOrigin = -1;
+    private double scrollStarted;
+
     @Getter
     private Label errorMessageLabel;
     @Getter
@@ -119,7 +122,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topRightPane.getChildren().addAll(replayGameButton, logoutButton, exitButton);
 
         ProgressIndicator dwellTimeIndicator = new ProgressIndicator(0);
-        Node gamePickerChoicePane = createGamePickerChoicePane(games, config, dwellTimeIndicator);
+        Node gamePickerChoicePane = createGamePickerChoicePane(gazePlay, games, config, dwellTimeIndicator);
 
         centerPanel = new VBox();
         centerPanel.setSpacing(40);
@@ -176,6 +179,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     }
 
     private ScrollPane createGamePickerChoicePane(
+        GazePlay gazePlay,
         List<GameSpec> games,
         final Configuration config,
         final ProgressIndicator dwellTimeIndicator
@@ -197,6 +201,24 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanelScroller.setFitToHeight(true);
 
         filterGames(choicePanel, gameCardsList, favGameCardsList, config, dwellTimeIndicator, new GameCardVisiblePredicate(config));
+
+
+        choicePanel.setOnMousePressed(e -> {
+            scrollStarted = choicePanelScroller.getVvalue();
+            dragOrigin = e.getSceneY();
+        });
+        choicePanel.setOnMouseDragged(e -> {
+            if (dragOrigin != -1) {
+                double distance = (dragOrigin - e.getSceneY()) / gazePlay.getPrimaryScene().getHeight();
+                choicePanelScroller.setVvalue(scrollStarted + distance / 3);
+            }
+        });
+
+        choicePanel.setOnMouseReleased(e -> {
+                dragOrigin = -1;
+            }
+        );
+
 
         return choicePanelScroller;
     }
