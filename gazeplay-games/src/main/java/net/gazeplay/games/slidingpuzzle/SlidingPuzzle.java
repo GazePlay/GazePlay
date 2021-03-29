@@ -204,6 +204,21 @@ public class SlidingPuzzle implements GameLifeCycle {
 
         }
 
+        //checking if the game has a solution
+        int count=0;
+        for (int i=0; i<8; i++){
+            for (int j=i+1; j<8; j++){
+                SlidingPuzzleCard card1=result.get(i);
+                SlidingPuzzleCard card2=result.get(j);
+                if (card1.getInitX()+3*(card1.getInitY())<card2.getInitX()+3*(card2.getInitY())){
+                    count++;
+                }
+            }
+        }
+        if (count%2==1){        //If the shuffle is odd
+             return createCards(config);
+        }
+
         return result;
     }
 
