@@ -38,7 +38,7 @@ public class Memory implements GameLifeCycle {
 
     private final IGameContext gameContext;
 
-    private final int nbLines;
+    private int nbLines;
     private int nbColumns;
 
     private final Stats stats;
@@ -61,6 +61,10 @@ public class Memory implements GameLifeCycle {
     private int nbWrongCards;
 
     private int nbCorrectCards;
+
+    private List<Integer> listOfResults = new ArrayList<>();
+
+    private int level = 2;
 
     public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
                   final boolean isOpen) {
@@ -271,6 +275,10 @@ public class Memory implements GameLifeCycle {
 
     public void setNbColumns(int nbColumns) { this.nbColumns = nbColumns; }
 
+    public int getNbLines() { return nbLines; }
+
+    public void setNbLines(int nbLines) { this.nbLines = nbLines; }
+
     public int getNbWrongCards() { return  nbWrongCards; }
 
     public void incNbWrongCards() {nbWrongCards++; }
@@ -282,5 +290,60 @@ public class Memory implements GameLifeCycle {
     public void incNbCorrectCards() {nbCorrectCards++; }
 
     public void resetNbCorrectCards() { nbCorrectCards = 0; }
+
+    public int totalNbOfTries() { return getNbCorrectCards() + getNbWrongCards(); }
+
+    public List<Integer> getListOfResults() {
+        return listOfResults;
+    }
+
+    public void addRoundResult(int lastRoundResult) {
+        listOfResults.add(lastRoundResult);
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void adaptLevel() {
+
+        if (level == 6) {
+            setNbColumns(4);
+            setNbLines(3);
+        }
+
+        else if (level == 7) {
+            setNbColumns(4);
+            setNbLines(4);
+            level++;
+        }
+
+        else if (level == 8) {
+            setNbColumns(4);
+            setNbLines(4);
+        }
+
+        else if (level == 9) {
+            setNbColumns(6);
+            setNbLines(3);
+        }
+
+        else if (level == 10) {
+            setNbColumns(5);
+            setNbLines(4);
+        }
+
+        else {
+            setNbColumns(level);
+            setNbLines(2);
+        }
+
+    }
+
+
 
 }

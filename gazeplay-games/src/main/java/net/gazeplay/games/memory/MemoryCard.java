@@ -143,12 +143,26 @@ public class MemoryCard extends Parent {
 
         /* No more cards to play : End of this game : Begin a new Game */
         if (gameInstance.getnbRemainingPeers() == 0) {
+            gameInstance.addRoundResult(gameInstance.totalNbOfTries());
+            int sizeOfList = gameInstance.getListOfResults().size();
+            int compare = 0;
 
-            log.info("nbWrong = {}, nbCorrect = {}, nbColumns = {}", gameInstance.getNbWrongCards(), gameInstance.getNbCorrectCards(), gameInstance.getNbColumns());
-            if (gameInstance.getNbWrongCards() + gameInstance.getNbCorrectCards() <= gameInstance.getNbColumns() + 1) {
-                gameInstance.setNbColumns(gameInstance.getNbColumns() + 1);
+            log.info("nbOfTries = {}", gameInstance.totalNbOfTries());
+            if (sizeOfList % 3 == 0 && sizeOfList != 0) {
+                for (int i = 0; i < 3; i++) {
+                    if (gameInstance.totalNbOfTries() <= 2*gameInstance.getLevel() && gameInstance.getNbColumns() <= 6)
+                        compare ++;
+                    if (gameInstance.totalNbOfTries() >= 2.5*gameInstance.getLevel() && gameInstance.getNbColumns() > 2)
+                        compare --;
+                }
+                if (compare == 3) gameInstance.setLevel(gameInstance.getLevel() + 1);
+                if (compare == -3) gameInstance.setLevel(gameInstance.getLevel() - 1);
             }
-            //log.info("nbWrong = {}, nbCorrect = {}, nbColumns = {}", nbWrongCards, nbCorrectCards, gameInstance.getNbColumns());
+
+            gameInstance.adaptLevel();
+            log.info("level = {}", gameInstance.getLevel());
+            log.info("nbLines = {}, nbColumns = {}", gameInstance.getNbLines(), gameInstance.getNbColumns());
+
             gameContext.updateScore(stats, gameInstance);
 
             gameContext.playWinTransition(500, actionEvent -> {
