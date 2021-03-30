@@ -1,7 +1,6 @@
 package net.gazeplay.components;
 
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +34,10 @@ public class GazeFollowerIndicator extends GazeIndicator {
             moveGazeIndicator(event.getX(), event.getY());
         });
 
-        root.addEventFilter(TouchEvent.TOUCH_MOVED, (event) -> {
-            moveGazeIndicator(event.getTouchPoint().getX(), event.getTouchPoint().getY());
+        root.addEventFilter(MouseEvent.MOUSE_DRAGGED, (event) -> {
+            moveGazeIndicator(event.getX(), event.getY());
         });
+
         root.addEventFilter(GazeEvent.GAZE_MOVED, (event) -> {
             moveGazeIndicator(event.getX(), event.getY());
         });

@@ -3,7 +3,6 @@ package net.gazeplay.games.spotthedifferences;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TouchEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import lombok.Getter;
@@ -40,7 +39,7 @@ public class Difference extends Circle {
                 } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
                     timer = 0;
                 } else if (e.getEventType() == MouseEvent.MOUSE_MOVED ||
-                    e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == TouchEvent.TOUCH_MOVED) {
+                    e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
                     final long timeElapsed = System.currentTimeMillis() - timer;
                     if (timer > 0 && timeElapsed > GAZE_TIME) {
                         timer = 0;
