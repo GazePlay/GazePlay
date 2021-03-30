@@ -205,18 +205,30 @@ public class SlidingPuzzle implements GameLifeCycle {
         }
 
         //checking if the game has a solution
+        //explanation (in french) : https://youtu.be/-3IsCOJieCc
         int count=0;
         for (int i=0; i<8; i++){
             for (int j=i+1; j<8; j++){
                 SlidingPuzzleCard card1=result.get(i);
                 SlidingPuzzleCard card2=result.get(j);
-                if (card1.getInitX()+3*(card1.getInitY())<card2.getInitX()+3*(card2.getInitY())){
+                if (card1.getInitY()>card2.getInitY() || card1.getInitY()==card2.getInitY() && card1.getInitX()>card2.getInitX()){
                     count++;
                 }
             }
         }
         if (count%2==1){        //If the shuffle is odd
-             return createCards(config);
+            for (int i=0; i<8; i++){
+                for (int j=0; j<8; j++){
+                    SlidingPuzzleCard card1=result.get(i);
+                    SlidingPuzzleCard card2=result.get(j);
+                    if (card1.getCardId()==1 && card2.getCardId()==2){
+                        result.set(i, new SlidingPuzzleCard(1, card2.getInitX(), card2.getInitY(), cardWidth, cardHeight,
+                            picPath + "1" + ".png", fixationlength, gameContext, this, stats, kingPosX, kingPosY));
+                        result.set(j, new SlidingPuzzleCard(2, card1.getInitX(), card1.getInitY(), cardWidth, cardHeight,
+                            picPath + "2" + ".png", fixationlength, gameContext, this, stats, kingPosX, kingPosY));
+                    }
+                }
+            }
         }
 
         return result;
