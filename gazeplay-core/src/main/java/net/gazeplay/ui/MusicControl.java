@@ -11,7 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.Media;
 import javafx.scene.shape.Circle;
 import lombok.Getter;
 import lombok.NonNull;
@@ -115,10 +115,13 @@ public class MusicControl {
 
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
 
-        final MediaPlayer currentMusic = backgroundMusicManager.getCurrentMusic();
-
+        final Media currentMedia = backgroundMusicManager.getCurrentMedia();
         // final Label musicName = new Label(backgroundMusicManager.getMusicTitle(currentMusic));
-        musicName = new MarqueeText(BackgroundMusicManager.getMusicTitle(currentMusic));
+        if (currentMedia != null) {
+            musicName = new MarqueeText(BackgroundMusicManager.getMusicTitle(currentMedia));
+        } else {
+            musicName = new MarqueeText("None");
+        }
 
         backgroundMusicManager.getIsMusicChanging().addListener((observable, oldValue, newValue) -> {
 
@@ -342,8 +345,10 @@ public class MusicControl {
     private void setMusicTitle(final MarqueeText musicLabel) {
         if (musicLabel != null) {
             final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
-            final String musicTitle = BackgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
-            musicLabel.getTextProperty().setValue(musicTitle);
+            if (backgroundMusicManager.getCurrentMedia() != null) {
+                final String musicTitle = BackgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMedia());
+                musicLabel.getTextProperty().setValue(musicTitle);
+            }
         }
     }
 

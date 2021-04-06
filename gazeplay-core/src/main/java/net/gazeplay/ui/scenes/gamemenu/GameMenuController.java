@@ -191,14 +191,11 @@ public class GameMenuController {
     }
 
     void playBackgroundMusic(GameContext gameContext, GameSpec selectedGameSpec, BackgroundMusicManager musicManager) {
-        MediaPlayer currentMusic = musicManager.getCurrentMusic();
+        Media currentMedia = musicManager.getCurrentMedia();
         boolean defaultMusicPlaying = true;
-        if (currentMusic != null) {
-            Media currentMedia = currentMusic.getMedia();
             if (currentMedia != null) {
                 defaultMusicPlaying = currentMedia.getSource().contains(Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC);
             }
-        }
         log.info("is default music set : {}", defaultMusicPlaying);
         if (defaultMusicPlaying || musicManager.getPlaylist().isEmpty()) {
             musicManager.backupPlaylist();

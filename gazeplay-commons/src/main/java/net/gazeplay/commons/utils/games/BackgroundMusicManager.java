@@ -47,15 +47,18 @@ public class BackgroundMusicManager {
     }
 
     @Getter
-    private final List<MediaPlayer> playlist = new ArrayList<>();
+    private final List<Media> playlist = new ArrayList<>();
 
-    private final List<MediaPlayer> defaultPlayList = new ArrayList<>();
-
-    @Getter
-    private final List<MediaPlayer> backupPlaylist = new ArrayList<>();
+    private final List<Media> defaultPlayList = new ArrayList<>();
 
     @Getter
-    private MediaPlayer currentMusic;
+    private final List<Media> backupPlaylist = new ArrayList<>();
+
+    @Getter
+    private Media currentMedia;
+
+    @Getter
+    private MediaPlayer currentMediaPlayer;
 
     private final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3, TimeUnit.MINUTES,
         new LinkedBlockingQueue<>(), new CustomThreadFactory(this.getClass().getSimpleName(),
@@ -77,11 +80,22 @@ public class BackgroundMusicManager {
     public BackgroundMusicManager() {
         isPlayingProperty.addListener((observable) -> {
 
-            if (currentMusic != null) {
+            if (Utils.isWindows() || !currentMedia.getSource().contains(".mp3")) {
                 if (isPlayingProperty.getValue()) {
-                    this.currentMusic.play();
+                    this.currentMediaPlayer.play();
                 } else {
-                    this.currentMusic.pause();
+                    this.currentMediaPlayer.pause();
+                }
+            } else {
+                if (isPlayingProperty.getValue()) {
+                    try {
+                        new ProcessBuilder("ffplay",
+                            "-nodisp",
+                            "-autoexit",
+                            currentMedia.getSource()).start();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -126,7 +140,7 @@ public class BackgroundMusicManager {
         addFolderRecursively(folder);
 
         // If no current music, update it
-        if (currentMusic == null) {
+        if (currentMedia == null) {
             changeCurrentMusic();
         }
 
@@ -151,7 +165,7 @@ public class BackgroundMusicManager {
         File[] matchingFiles = folder.listFiles(supportedFilesFilter);
         if (matchingFiles != null) {
             for (File file : matchingFiles) {
-                playlist.add(createMediaPlayer(file.toURI().toString()));
+                playlist.add(new Media(file.toURI().toString()));
             }
         }
         File[] subDirectories = folder.listFiles(directoryFilter);
@@ -169,16 +183,20 @@ public class BackgroundMusicManager {
 
         final boolean wasPlaying = isPlaying();
 
-        if (currentMusic != null) {
+        if (currentMedia != null) {
             stop();
         }
 
         isMusicChanging.setValue(true);
 
         log.info("current index : {}", musicIndexProperty.getValue());
-        final MediaPlayer nextMusic = playlist.get(musicIndexProperty.getValue());
+        final Media nextMusic = playlist.get(musicIndexProperty.getValue());
 
-        this.currentMusic = nextMusic;
+        this.currentMedia = nextMusic;
+
+        if (Utils.isWindows() || !nextMusic.getSource().contains(".mp3")) {
+            this.currentMediaPlayer = new MediaPlayer(this.currentMedia);
+        }
 
         log.info("Changing current music : {}", getMusicTitle(nextMusic));
         isMusicChanging.setValue(false);
@@ -216,9 +234,10 @@ public class BackgroundMusicManager {
     }
 
     public void emptyPlaylist() {
-        if (currentMusic != null) {
+        if (currentMedia != null) {
             stop();
-            currentMusic = null;
+            currentMedia = null;
+            currentMediaPlayer = null;
         }
         isMusicChanging.setValue(true);
         playlist.clear();
@@ -257,17 +276,19 @@ public class BackgroundMusicManager {
      */
     public void play() {
 
-        if (currentMusic != null) {
+        if (currentMedia != null) {
             this.isPlayingProperty.setValue(true);
         }
     }
 
     public void stop() {
-        if (currentMusic != null) {
+        if (currentMedia != null) {
             if (isPlaying()) {
                 pause();
             }
-            currentMusic.stop();
+            if (Utils.isWindows() || !currentMedia.getSource().contains(".mp3")) {
+                currentMediaPlayer.stop();
+            }
         }
     }
 
@@ -291,7 +312,10 @@ public class BackgroundMusicManager {
         if ((value < 0) || (value > 1)) {
             throw new IllegalArgumentException("volume must be between 0 and 1");
         }
-        currentMusic.setVolume(value);
+
+        if (currentMedia != null && (Utils.isWindows() || !currentMedia.getSource().contains(".mp3"))) {
+            currentMediaPlayer.setVolume(value);
+        }
     }
 
     /**
@@ -302,9 +326,9 @@ public class BackgroundMusicManager {
     public void playMusicAlone(String resourceUrlAsString) {
         Runnable asyncTask = () -> {
 
-            MediaPlayer localMediaPlayer = getMediaPlayerFromSource(resourceUrlAsString);
+            Media localMedia = getMediaFromSource(resourceUrlAsString);
             // If there is already the music in playlist, just play it
-            if (localMediaPlayer == null) {
+            if (localMedia == null) {
 
                 // parse the URL early
                 // in order to fail early if the URL is invalid
@@ -321,24 +345,24 @@ public class BackgroundMusicManager {
                 final String localResourceName = mediaFile.toURI().toString();
 
                 try {
-                    localMediaPlayer = createMediaPlayer(resourceUrlAsString);
+                    localMedia = new Media(resourceUrlAsString);
                 } catch (RuntimeException e) {
                     log.error("Exception while playing media file {} ", localResourceName, e);
                 }
 
             }
 
-            if (localMediaPlayer != null) {
+            if (localMedia != null) {
 
-                log.info("Playing sound {}", localMediaPlayer.getMedia().getSource());
+                log.info("Playing sound {}", localMedia.getSource());
                 if (isPlaying()) {
                     pause();
                 }
-                playlist.add(localMediaPlayer);
+                playlist.add(localMedia);
                 changeMusic(playlist.size() - 1);
                 // If Music hasn't changed (for exemple if previous index is the same),
                 // then do the change manually
-                if (currentMusic != localMediaPlayer) {
+                if (currentMedia != null && !currentMedia.getSource().equals(localMedia.getSource())) {
                     changeCurrentMusic();
                 }
 
@@ -388,6 +412,20 @@ public class BackgroundMusicManager {
         return new MediaPlayer(media);
     }
 
+    MediaPlayer createMediaPlayer(Media media) {
+        try {
+            final MediaPlayer player = makeMediaPlayer(media);
+            player.setOnError(() -> log.error("error on audio media loading : " + player.getError()));
+            player.volumeProperty().bindBidirectional(ActiveConfigurationContext.getInstance().getMusicVolumeProperty());
+            player.setOnEndOfMedia(this::next);
+
+            return player;
+        } catch (MediaException e) {
+            log.error("error while loading media {}, type : {}", media.getSource(), e.getType(), e);
+        }
+        return new MediaPlayer((new Media("")));
+    }
+
     MediaPlayer createMediaPlayer(String source) {
         try {
             final Media media = new Media(source);
@@ -409,23 +447,22 @@ public class BackgroundMusicManager {
      * @param source The source to look for.
      * @return The media player found or null.
      */
-    private MediaPlayer getMediaPlayerFromSource(final String source) {
+    private Media getMediaFromSource(final String source) {
 
-        for (MediaPlayer mediaPlayer : playlist) {
-            final Media media = mediaPlayer.getMedia();
+        for (Media media : playlist) {
             if (media.getSource().equals(source)) {
-                return mediaPlayer;
+                return media;
             }
         }
         return null;
     }
 
-    public static String getMusicTitle(final MediaPlayer music) {
+    public static String getMusicTitle(final Media music) {
         if (music == null) {
             return "None";
         }
 
-        ObservableMap<String, Object> metaData = music.getMedia().getMetadata();
+        ObservableMap<String, Object> metaData = music.getMetadata();
         String title = null;
         try {
             title = (String) metaData.get("title");
@@ -434,7 +471,7 @@ public class BackgroundMusicManager {
         }
 
         if (title == null) {
-            title = getMusicTitle(music.getMedia().getSource());
+            title = getMusicTitle(music.getSource());
         }
         return title;
     }

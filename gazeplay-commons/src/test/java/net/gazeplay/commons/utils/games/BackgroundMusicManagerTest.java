@@ -62,7 +62,7 @@ class BackgroundMusicManagerTest {
 
         musicManagerSpy.getAudioFromFolder(localDataFolder);
         mediaPlayer = musicManagerSpy.createMediaPlayer(uri);
-        previousVolume = musicManagerSpy.getCurrentMusic().getVolume();
+        previousVolume = musicManagerSpy.getCurrentMediaPlayer().getVolume();
     }
 
     void initMocks() {
@@ -80,8 +80,8 @@ class BackgroundMusicManagerTest {
 
     @AfterEach
     void teardown() {
-        if (musicManagerSpy.getCurrentMusic() != null) {
-            musicManagerSpy.getCurrentMusic().setVolume(previousVolume);
+        if (musicManagerSpy.getCurrentMediaPlayer() != null) {
+            musicManagerSpy.getCurrentMediaPlayer().setVolume(previousVolume);
         }
     }
 

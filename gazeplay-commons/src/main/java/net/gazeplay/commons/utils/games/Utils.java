@@ -3,12 +3,9 @@ package net.gazeplay.commons.utils.games;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import org.apache.commons.io.IOUtils;
 
-import java.io.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.File;
+import java.io.InputStream;
 import java.util.Enumeration;
 
 /**
@@ -19,6 +16,7 @@ public class Utils {
 
     /**
      * Gets an InputStream to the provided resource.
+     *
      * @param resource Path to the resource
      * @return The InputStream of the resource
      */
@@ -30,6 +28,7 @@ public class Utils {
     /**
      * Provides the default GazePlay file directory. By default this will be {user.home}/GazePlay/files,
      * but can be overridden by the user in the app or in the GazePlay.properties file.
+     *
      * @return GazePlay files directory
      */
     public static String getFilesFolder() {
@@ -66,7 +65,7 @@ public class Utils {
      * @return true if the operating system is Windows
      */
     public static boolean isWindows() {
-        return System.getProperty("os.name").toLowerCase().indexOf("win") > 0;
+        return System.getProperty("os.name").toLowerCase().contains("win");
     }
 
     public static void logSystemProperties() {

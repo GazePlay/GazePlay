@@ -49,7 +49,7 @@ class GameMenuControllerTest {
 
     @Test
     void shouldSetBackgroundMusic() {
-        when(mockMusicManager.getCurrentMusic().getMedia().getSource()).thenReturn("songidea(copycat)_0.mp3");
+        when(mockMusicManager.getCurrentMedia().getSource()).thenReturn("songidea(copycat)_0.mp3");
         when(mockMusicManager.getPlaylist().isEmpty()).thenReturn(false);
 
         when(mockGameSpec.getGameSummary()).thenReturn(mockGameSummary);
@@ -63,7 +63,7 @@ class GameMenuControllerTest {
 
     @Test
     void shouldNotSetBackgroundMusic() {
-        when(mockMusicManager.getCurrentMusic().getMedia().getSource()).thenReturn("another-song.mp3");
+        when(mockMusicManager.getCurrentMedia().getSource()).thenReturn("another-song.mp3");
         when(mockMusicManager.getPlaylist().isEmpty()).thenReturn(false);
 
         gameMenuController.playBackgroundMusic(mockGameContext, mockGameSpec, mockMusicManager);
