@@ -198,7 +198,7 @@ public class BackgroundMusicManager {
             this.currentMediaPlayer = new MediaPlayer(this.currentMedia);
         }
 
-        log.info("Changing current music : {}", getMusicTitle(nextMusic));
+        log.info("Changing current music : {}", getMusicTitle(this.currentMedia));
         isMusicChanging.setValue(false);
 
         if (wasPlaying) {
@@ -225,10 +225,10 @@ public class BackgroundMusicManager {
 
         boolean isPlaying = isPlaying();
 
+        log.info("changing music to "+ newMusicIndex);
         musicIndexProperty.setValue(newMusicIndex);
 
         if (isPlaying) {
-
             play();
         }
     }
@@ -353,7 +353,6 @@ public class BackgroundMusicManager {
             }
 
             if (localMedia != null) {
-
                 log.info("Playing sound {}", localMedia.getSource());
                 if (isPlaying()) {
                     pause();
@@ -362,7 +361,7 @@ public class BackgroundMusicManager {
                 changeMusic(playlist.size() - 1);
                 // If Music hasn't changed (for exemple if previous index is the same),
                 // then do the change manually
-                if (currentMedia != null && !currentMedia.getSource().equals(localMedia.getSource())) {
+                if (currentMedia == null || !currentMedia.getSource().equals(localMedia.getSource())) {
                     changeCurrentMusic();
                 }
 
