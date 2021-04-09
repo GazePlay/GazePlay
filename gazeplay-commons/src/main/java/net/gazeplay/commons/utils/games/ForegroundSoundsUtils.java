@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 
+import javax.sound.sampled.*;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 @Slf4j
@@ -14,7 +16,7 @@ public class ForegroundSoundsUtils {
 
     private static MediaPlayer lastSoundPlayer;
 
-    public static synchronized void playSound(String resource) {
+    public static synchronized void playSound(String resource) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
         log.debug("Try to play " + resource);
         URL url = ClassLoader.getSystemResource(resource);
         String path;
@@ -29,14 +31,23 @@ public class ForegroundSoundsUtils {
             log.debug("using url");
             path = url.toString();
         }
-       // stopSound();
+        // stopSound();
         final Configuration configuration = ActiveConfigurationContext.getInstance();
         Media media = new Media(path);
-        MediaPlayer soundPlayer = new MediaPlayer(media);
-        soundPlayer.setVolume(configuration.getEffectsVolumeProperty().getValue());
-        soundPlayer.volumeProperty().bindBidirectional(configuration.getEffectsVolumeProperty());
-        soundPlayer.play();
-        lastSoundPlayer = soundPlayer;
+
+        if (Utils.isWindows() || !path.contains(".mp3")) {
+
+            MediaPlayer soundPlayer = new MediaPlayer(media);
+            soundPlayer.setVolume(configuration.getEffectsVolumeProperty().getValue());
+            soundPlayer.volumeProperty().bindBidirectional(configuration.getEffectsVolumeProperty());
+            soundPlayer.play();
+            lastSoundPlayer = soundPlayer;
+        } else {
+            new ProcessBuilder("ffplay",
+                "-nodisp",
+                "-autoexit",
+                media.getSource()).start();
+        }
     }
 
     public static synchronized void stopSound() {

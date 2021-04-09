@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class BackgroundMusicManager {
 
     private static final List<String> SUPPORTED_FILE_EXTENSIONS = Arrays.asList(".aif", ".aiff", ".fxm", ".flv", ".m3u8",
-        ".mp3", ".mp4", ".m4v", ".m4a", ".mp4", ".wav");
+        ".mp3", ".mp4", ".m4v", ".m4a", ".wav");
 
     @Getter
     private static BackgroundMusicManager instance = new BackgroundMusicManager();
@@ -59,6 +59,9 @@ public class BackgroundMusicManager {
 
     @Getter
     private MediaPlayer currentMediaPlayer;
+
+    @Getter
+    private Process currentProcessBuilder;
 
     private final ExecutorService executorService = new ThreadPoolExecutor(1, 1, 3, TimeUnit.MINUTES,
         new LinkedBlockingQueue<>(), new CustomThreadFactory(this.getClass().getSimpleName(),
@@ -89,13 +92,17 @@ public class BackgroundMusicManager {
             } else {
                 if (isPlayingProperty.getValue()) {
                     try {
-                        new ProcessBuilder("ffplay",
+                        currentProcessBuilder = new ProcessBuilder("ffplay",
                             "-nodisp",
                             "-autoexit",
+                            "-volume",
+                            ""+(int)(ActiveConfigurationContext.getInstance().getMusicVolumeProperty().getValue()*100),
                             currentMedia.getSource()).start();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                } else {
+                    currentProcessBuilder.destroy();
                 }
             }
 
@@ -288,6 +295,8 @@ public class BackgroundMusicManager {
             }
             if (Utils.isWindows() || !currentMedia.getSource().contains(".mp3")) {
                 currentMediaPlayer.stop();
+            } else {
+                currentProcessBuilder.destroy();
             }
         }
     }

@@ -172,6 +172,11 @@ public class GameMenuController {
 
         if (selectedGameSpec.getGameSummary().getBackgroundMusicUrl() != null) {
             final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
+            gazePlay.getPrimaryStage().setOnCloseRequest((e)->{
+                if(musicManager.getCurrentProcessBuilder()!=null) {
+                    musicManager.getCurrentProcessBuilder().destroy();
+                }
+            });
             playBackgroundMusic(gameContext, selectedGameSpec, musicManager);
         }
 
