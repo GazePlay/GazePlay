@@ -161,11 +161,11 @@ public class Bloc extends Parent {// Rectangle {
         ReplayablePseudoRandom r = new ReplayablePseudoRandom();
         if (r.nextBoolean()) {
             return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/f/letter/" + currentLetter.toUpperCase()
-                + ".mp3";
+                + ".wav";
         }
 
         return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/m/letter/" + currentLetter.toUpperCase()
-            + ".mp3";
+            + ".wav";
 
     }
 

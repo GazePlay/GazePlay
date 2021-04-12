@@ -449,7 +449,7 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         final int r = 1 + randomGenerator.nextInt(3);
 
-        final String soundResource = "data/" + gameType + "/sounds/hand_sound" + r + ".mp3";
+        final String soundResource = "data/" + gameType + "/sounds/hand_sound" + r + ".wav";
         gameContext.getSoundManager().add(soundResource);
 
         t.getChildren().get(5).setOpacity(1);

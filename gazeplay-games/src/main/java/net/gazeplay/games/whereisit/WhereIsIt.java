@@ -565,7 +565,7 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         return "data/" + this.gameType.getResourcesDirectoryName() + "/sounds/" + language + "/" + folder + "." + voice
-            + "." + language + ".mp3";
+            + "." + language + ".wav";
     }
 
     private String getQuestionText(final String folder, final String language) {

@@ -115,7 +115,7 @@ class GameContextTest {
         new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo, mockHBox, mockGazeDeviceManager, mockSoundManager, mockConfigPane);
 
         verify(mockList, times(2)).add(any());
-        verify(mockRoot, times(3)).addEventFilter(any(), any());
+        verify(mockRoot, times(2)).addEventFilter(any(), any());
     }
 
     @Test

@@ -108,7 +108,7 @@ class BackgroundMusicManagerTest {
     @ValueSource(doubles = {0, 0.1, 0.5, 1})
     void shouldSetTheVolume(final double volume) {
         musicManagerSpy.setVolume(volume);
-        verify(mockMediaPlayer).setVolume(volume);
+        verify(mediaPlayer).setVolume(volume);
     }
 
     @ParameterizedTest

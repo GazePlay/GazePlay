@@ -281,10 +281,10 @@ public class Letters implements GameLifeCycle {
     private String createQuestionSoundPath(String currentLanguage, String currentLetter) {
         if (randomGenerator.nextBoolean()) {
             return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/f/quest/" + currentLetter.toUpperCase()
-                + ".mp3";
+                + ".wav";
         }
         return "data/literacy/sounds/" + currentLanguage.toLowerCase() + "/m/quest/" + currentLetter.toUpperCase()
-            + ".mp3";
+            + ".wav";
     }
 
     private void playSound(String path) {

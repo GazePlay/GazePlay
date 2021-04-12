@@ -83,13 +83,21 @@ public class BackgroundMusicManager {
     public BackgroundMusicManager() {
         isPlayingProperty.addListener((observable) -> {
 
-            if (Utils.isWindows() || !currentMedia.getSource().contains(".mp3")) {
-                if (isPlayingProperty.getValue()) {
-                    this.currentMediaPlayer.play();
+            try{
+                if (currentMediaPlayer != null) {
+                    if (isPlayingProperty.getValue()) {
+                        this.currentMediaPlayer.play();
+                    } else {
+                        this.currentMediaPlayer.pause();
+                        if(currentProcessBuilder != null) {
+                            currentProcessBuilder.destroy();
+                        }
+                    }
                 } else {
-                    this.currentMediaPlayer.pause();
+                    throw new MediaPlayerIsNullException();
                 }
-            } else {
+            } catch(MediaException | MediaPlayerIsNullException me) {
+                log.info("Exception in MediaPlayer, trying to use ffplay instead");
                 if (isPlayingProperty.getValue()) {
                     try {
                         currentProcessBuilder = new ProcessBuilder("ffplay",
@@ -201,8 +209,10 @@ public class BackgroundMusicManager {
 
         this.currentMedia = nextMusic;
 
-        if (Utils.isWindows() || !nextMusic.getSource().contains(".mp3")) {
-            this.currentMediaPlayer = new MediaPlayer(this.currentMedia);
+        try {
+            this.currentMediaPlayer = createMediaPlayer(this.currentMedia);
+        }catch(MediaException me){
+            log.info("MediaPlayer can't be created due to MediaException");
         }
 
         log.info("Changing current music : {}", getMusicTitle(this.currentMedia));
@@ -293,9 +303,10 @@ public class BackgroundMusicManager {
             if (isPlaying()) {
                 pause();
             }
-            if (Utils.isWindows() || !currentMedia.getSource().contains(".mp3")) {
+            if (currentMediaPlayer != null) {
                 currentMediaPlayer.stop();
-            } else {
+            }
+            if (currentProcessBuilder != null) {
                 currentProcessBuilder.destroy();
             }
         }
@@ -322,7 +333,7 @@ public class BackgroundMusicManager {
             throw new IllegalArgumentException("volume must be between 0 and 1");
         }
 
-        if (currentMedia != null && (Utils.isWindows() || !currentMedia.getSource().contains(".mp3"))) {
+        if (currentMediaPlayer != null) {
             currentMediaPlayer.setVolume(value);
         }
     }
@@ -426,7 +437,6 @@ public class BackgroundMusicManager {
             player.setOnError(() -> log.error("error on audio media loading : " + player.getError()));
             player.volumeProperty().bindBidirectional(ActiveConfigurationContext.getInstance().getMusicVolumeProperty());
             player.setOnEndOfMedia(this::next);
-
             return player;
         } catch (MediaException e) {
             log.error("error while loading media {}, type : {}", media.getSource(), e.getType(), e);
@@ -441,7 +451,6 @@ public class BackgroundMusicManager {
             player.setOnError(() -> log.error("error on audio media loading : " + player.getError()));
             player.volumeProperty().bindBidirectional(ActiveConfigurationContext.getInstance().getMusicVolumeProperty());
             player.setOnEndOfMedia(this::next);
-
             return player;
         } catch (MediaException e) {
             log.error("error while loading media {}, type : {}", source, e.getType(), e);

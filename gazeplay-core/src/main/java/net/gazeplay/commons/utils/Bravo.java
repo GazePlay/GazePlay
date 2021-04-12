@@ -45,7 +45,7 @@ public class Bravo extends Rectangle {
 
     private static final String defaultPictureResourceLocation = "data/common/images/bravo.gif";
 
-    private static final String defaultSoundResourceLocation = "data/common/sounds/applause.mp3";
+    private static final String defaultSoundResourceLocation = "data/common/sounds/applause.wav";
 
     private final String pictureResourceLocation;
 

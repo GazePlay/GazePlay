@@ -16,7 +16,7 @@ class Explosion extends Rectangle {
 
     private static final String defaultPictureResourceLocation = "data/common/images/explosion.gif";
 
-    private static final String defaultSoundResourceLocation = "data/common/sounds/explosion.mp3";
+    private static final String defaultSoundResourceLocation = "data/common/sounds/explosion.wav";
 
     @Setter
     private boolean enableRewardSound;

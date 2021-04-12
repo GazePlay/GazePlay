@@ -1,6 +1,7 @@
 package net.gazeplay.commons.utils.games;
 
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
@@ -35,14 +36,14 @@ public class ForegroundSoundsUtils {
         final Configuration configuration = ActiveConfigurationContext.getInstance();
         Media media = new Media(path);
 
-        if (Utils.isWindows() || !path.contains(".mp3")) {
-
+        try {
             MediaPlayer soundPlayer = new MediaPlayer(media);
             soundPlayer.setVolume(configuration.getEffectsVolumeProperty().getValue());
             soundPlayer.volumeProperty().bindBidirectional(configuration.getEffectsVolumeProperty());
             soundPlayer.play();
             lastSoundPlayer = soundPlayer;
-        } else {
+        } catch (MediaException me) {
+            log.info("Exception in MediaPlayer, trying to use ffplay instead");
             new ProcessBuilder("ffplay",
                 "-nodisp",
                 "-autoexit",
