@@ -5,7 +5,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.*;
@@ -172,8 +171,8 @@ public class GameMenuController {
 
         if (selectedGameSpec.getGameSummary().getBackgroundMusicUrl() != null) {
             final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
-            gazePlay.getPrimaryStage().setOnCloseRequest((e)->{
-                if(musicManager.getCurrentProcessBuilder()!=null) {
+            gazePlay.getPrimaryStage().setOnCloseRequest((e) -> {
+                if (musicManager.getCurrentProcessBuilder() != null) {
                     musicManager.getCurrentProcessBuilder().destroy();
                 }
             });
@@ -198,9 +197,9 @@ public class GameMenuController {
     void playBackgroundMusic(GameContext gameContext, GameSpec selectedGameSpec, BackgroundMusicManager musicManager) {
         Media currentMedia = musicManager.getCurrentMedia();
         boolean defaultMusicPlaying = true;
-            if (currentMedia != null) {
-                defaultMusicPlaying = currentMedia.getSource().contains(Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC);
-            }
+        if (currentMedia != null) {
+            defaultMusicPlaying = currentMedia.getSource().contains(Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC);
+        }
         log.info("is default music set : {}", defaultMusicPlaying);
         if (defaultMusicPlaying || musicManager.getPlaylist().isEmpty()) {
             musicManager.backupPlaylist();

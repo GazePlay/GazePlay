@@ -82,25 +82,25 @@ public class BackgroundMusicManager {
 
     public BackgroundMusicManager() {
         isPlayingProperty.addListener((observable) -> {
-                if (currentMediaPlayer != null && (Utils.isWindows() || !currentMedia.getSource().endsWith(".mp3"))) {
-                    // currentMediaPlayer is not null
-                    if (isPlayingProperty.getValue()) {
-                            this.currentMediaPlayer.play();
-                            log.info("NOW PLAYING :" + getMusicTitle(this.currentMediaPlayer.getMedia()));
-                    } else {
-                       pauseCurentMediaPlayer();
-                       pauseCurrentProcessBuilder();
-                    }
+            if (currentMediaPlayer != null && (Utils.isWindows() || !currentMedia.getSource().endsWith(".mp3"))) {
+                // currentMediaPlayer is not null
+                if (isPlayingProperty.getValue()) {
+                    this.currentMediaPlayer.play();
+                    log.info("NOW PLAYING :" + getMusicTitle(this.currentMediaPlayer.getMedia()));
                 } else {
-                    // currentMediaPlayer is null, we use ffplay instead
-                    if (isPlayingProperty.getValue()) {
-                        log.warn("Invalid music extension. try using ffplay player instead");
-                        ffplayCurrentMedia(currentMedia);
-                    } else {
-                        pauseCurrentProcessBuilder();
-                        pauseCurentMediaPlayer();
-                    }
+                    pauseCurentMediaPlayer();
+                    pauseCurrentProcessBuilder();
                 }
+            } else {
+                // currentMediaPlayer is null, we use ffplay instead
+                if (isPlayingProperty.getValue()) {
+                    log.warn("Invalid music extension. try using ffplay player instead");
+                    ffplayCurrentMedia(currentMedia);
+                } else {
+                    pauseCurrentProcessBuilder();
+                    pauseCurentMediaPlayer();
+                }
+            }
 
         });
 
@@ -114,13 +114,13 @@ public class BackgroundMusicManager {
         });
     }
 
-    public void ffplayCurrentMedia(Media currentMedia){
+    public void ffplayCurrentMedia(Media currentMedia) {
         try {
             currentProcessBuilder = new ProcessBuilder("ffplay",
                 "-nodisp",
                 "-autoexit",
                 "-volume",
-                ""+(int)(ActiveConfigurationContext.getInstance().getMusicVolumeProperty().getValue()*100),
+                "" + (int) (ActiveConfigurationContext.getInstance().getMusicVolumeProperty().getValue() * 100),
                 currentMedia.getSource()).start();
             log.info("NOW FFPLAYING :" + getMusicTitle(currentMedia));
         } catch (IOException e) {
@@ -131,7 +131,7 @@ public class BackgroundMusicManager {
     public void onEndGame() {
         stopCurrentMediaPlayer();
         stopCurrentProcessBuilder();
-       // currentMedia = null;
+        // currentMedia = null;
         if (!isCustomMusicSet.getValue()) {
             log.info("replaying default music");
             emptyPlaylist();
@@ -192,7 +192,7 @@ public class BackgroundMusicManager {
     }
 
     void changeCurrentMusic() {
-        log.info("LIST SIZE IS EQUAL TO "+ playlist.size());
+        log.info("LIST SIZE IS EQUAL TO " + playlist.size());
         if (playlist.isEmpty()) {
             return;
         }
@@ -279,32 +279,32 @@ public class BackgroundMusicManager {
     }
 
     public void stop() {
-            if (isPlaying()) {
-                pause();
-            }
-            stopCurrentMediaPlayer();
-            stopCurrentProcessBuilder();
+        if (isPlaying()) {
+            pause();
+        }
+        stopCurrentMediaPlayer();
+        stopCurrentProcessBuilder();
 
     }
 
-    public void pauseCurentMediaPlayer(){
+    public void pauseCurentMediaPlayer() {
         if (currentMediaPlayer != null) {
             currentMediaPlayer.pause();
         }
     }
 
-    public void pauseCurrentProcessBuilder(){
+    public void pauseCurrentProcessBuilder() {
         // Impossible for now, stop instead
         stopCurrentProcessBuilder();
     }
 
-    public void stopCurrentMediaPlayer(){
+    public void stopCurrentMediaPlayer() {
         if (currentMediaPlayer != null) {
             currentMediaPlayer.stop();
         }
     }
 
-    public void stopCurrentProcessBuilder(){
+    public void stopCurrentProcessBuilder() {
         if (currentProcessBuilder != null) {
             currentProcessBuilder.destroy();
         }
@@ -438,7 +438,7 @@ public class BackgroundMusicManager {
     }
 
     MediaPlayer createMediaPlayer(String source) {
-        try{
+        try {
             final Media media = new Media(source);
             return createMediaPlayer(media);
         } catch (MediaException e) {
