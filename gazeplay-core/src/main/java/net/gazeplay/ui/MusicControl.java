@@ -116,12 +116,7 @@ public class MusicControl {
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
 
         final Media currentMedia = backgroundMusicManager.getCurrentMedia();
-        // final Label musicName = new Label(backgroundMusicManager.getMusicTitle(currentMusic));
-        if (currentMedia != null) {
-            musicName = new MarqueeText(BackgroundMusicManager.getMusicTitle(currentMedia));
-        } else {
-            musicName = new MarqueeText("None");
-        }
+        musicName = new MarqueeText(BackgroundMusicManager.getMusicTitle(currentMedia));
 
         backgroundMusicManager.getIsMusicChanging().addListener((observable, oldValue, newValue) -> {
 
@@ -188,11 +183,10 @@ public class MusicControl {
                 final Configuration configuration = ActiveConfigurationContext.getInstance();
                 backgroundMusicManager.getAudioFromFolder(configuration.getMusicFolder());
             }
-            backgroundMusicManager.changeMusic(0);
-            backgroundMusicManager.play();
-
+            backgroundMusicManager.changeMusic(-1);
             // We need to manually set the music title for the first set up
             setMusicTitle(musicName);
+            backgroundMusicManager.play();
         }
 
         final I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "Music");

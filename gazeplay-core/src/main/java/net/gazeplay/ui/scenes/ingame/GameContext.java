@@ -34,6 +34,7 @@ import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
@@ -289,6 +290,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
                                                    @NonNull GameLifeCycle currentGame) {
 
         EventHandler<Event> homeEvent = e -> {
+            BackgroundMusicManager.getInstance().stop();
             root.setCursor(Cursor.WAIT); // Change cursor to wait style
             exitGame(stats, gazePlay, currentGame);
             root.setCursor(Cursor.DEFAULT); // Change cursor to default style

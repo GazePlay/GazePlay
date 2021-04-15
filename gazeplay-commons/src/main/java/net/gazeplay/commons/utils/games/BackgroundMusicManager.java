@@ -82,54 +82,56 @@ public class BackgroundMusicManager {
 
     public BackgroundMusicManager() {
         isPlayingProperty.addListener((observable) -> {
-
-            try{
-                if (currentMediaPlayer != null) {
+                if (currentMediaPlayer != null && (Utils.isWindows() || !currentMedia.getSource().endsWith(".mp3"))) {
+                    // currentMediaPlayer is not null
                     if (isPlayingProperty.getValue()) {
-                        this.currentMediaPlayer.play();
+                            this.currentMediaPlayer.play();
+                            log.info("NOW PLAYING :" + getMusicTitle(this.currentMediaPlayer.getMedia()));
                     } else {
-                        this.currentMediaPlayer.pause();
-                        if(currentProcessBuilder != null) {
-                            currentProcessBuilder.destroy();
-                        }
+                       pauseCurentMediaPlayer();
+                       pauseCurrentProcessBuilder();
                     }
                 } else {
-                    throw new MediaPlayerIsNullException();
-                }
-            } catch(MediaException | MediaPlayerIsNullException me) {
-                log.info("Exception in MediaPlayer, trying to use ffplay instead");
-                if (isPlayingProperty.getValue()) {
-                    try {
-                        currentProcessBuilder = new ProcessBuilder("ffplay",
-                            "-nodisp",
-                            "-autoexit",
-                            "-volume",
-                            ""+(int)(ActiveConfigurationContext.getInstance().getMusicVolumeProperty().getValue()*100),
-                            currentMedia.getSource()).start();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    // currentMediaPlayer is null, we use ffplay instead
+                    if (isPlayingProperty.getValue()) {
+                        log.warn("Invalid music extension. try using ffplay player instead");
+                        ffplayCurrentMedia(currentMedia);
+                    } else {
+                        pauseCurrentProcessBuilder();
+                        pauseCurentMediaPlayer();
                     }
-                } else {
-                    currentProcessBuilder.destroy();
                 }
-            }
 
         });
 
         // If music is playing and index is changed, then change the music playing
         musicIndexProperty.addListener((observable, oldValue, newValue) -> {
-
             if (newValue.intValue() < 0 || newValue.intValue() >= playlist.size()) {
                 musicIndexProperty.setValue(0);
                 log.warn("Invalid music index set. 0 will be set instead");
             }
             changeCurrentMusic();
         });
+    }
 
+    public void ffplayCurrentMedia(Media currentMedia){
+        try {
+            currentProcessBuilder = new ProcessBuilder("ffplay",
+                "-nodisp",
+                "-autoexit",
+                "-volume",
+                ""+(int)(ActiveConfigurationContext.getInstance().getMusicVolumeProperty().getValue()*100),
+                currentMedia.getSource()).start();
+            log.info("NOW FFPLAYING :" + getMusicTitle(currentMedia));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void onEndGame() {
-
+        stopCurrentMediaPlayer();
+        stopCurrentProcessBuilder();
+       // currentMedia = null;
         if (!isCustomMusicSet.getValue()) {
             log.info("replaying default music");
             emptyPlaylist();
@@ -139,15 +141,12 @@ public class BackgroundMusicManager {
     }
 
     public void getAudioFromFolder(String folderPath) {
-
         log.info("audio folder : {}", folderPath);
         final File folder = new File(folderPath);
         if (!folder.exists()) {
-            // throw new RuntimeException("invalid path for audio folder : " + folderPath);
             log.warn("invalid path for audio folder : " + folderPath);
             return;
         } else if (!folder.isDirectory()) {
-            // throw new RuntimeException("path for audio folder is not a directory : " + folderPath);
             log.warn("path for audio folder is not a directory : " + folderPath);
             return;
         }
@@ -156,7 +155,8 @@ public class BackgroundMusicManager {
 
         // If no current music, update it
         if (currentMedia == null) {
-            changeCurrentMusic();
+            //To trigger the change event
+            changeMusic(-1);
         }
 
         if (!folderPath.equals(Configuration.DEFAULT_VALUE_MUSIC_FOLDER)) {
@@ -191,7 +191,8 @@ public class BackgroundMusicManager {
         }
     }
 
-    private void changeCurrentMusic() {
+    void changeCurrentMusic() {
+        log.info("LIST SIZE IS EQUAL TO "+ playlist.size());
         if (playlist.isEmpty()) {
             return;
         }
@@ -205,17 +206,12 @@ public class BackgroundMusicManager {
         isMusicChanging.setValue(true);
 
         log.info("current index : {}", musicIndexProperty.getValue());
-        final Media nextMusic = playlist.get(musicIndexProperty.getValue());
+        this.currentMedia = playlist.get(musicIndexProperty.getValue());
 
-        this.currentMedia = nextMusic;
-
-        try {
-            this.currentMediaPlayer = createMediaPlayer(this.currentMedia);
-        }catch(MediaException me){
-            log.info("MediaPlayer can't be created due to MediaException");
-        }
+        this.currentMediaPlayer = createMediaPlayer(this.currentMedia);
 
         log.info("Changing current music : {}", getMusicTitle(this.currentMedia));
+
         isMusicChanging.setValue(false);
 
         if (wasPlaying) {
@@ -224,7 +220,6 @@ public class BackgroundMusicManager {
     }
 
     public boolean isPlaying() {
-
         return this.isPlayingProperty.getValue();
     }
 
@@ -235,30 +230,16 @@ public class BackgroundMusicManager {
      * @param newMusicIndex The new index to use. Must be >= 0 and < playlist.size() otherwise nothing will be done.
      */
     public void changeMusic(int newMusicIndex) {
-
-        if (newMusicIndex < 0 || newMusicIndex >= playlist.size()) {
-            return;
-        }
-
-        boolean isPlaying = isPlaying();
-
-        log.info("changing music to "+ newMusicIndex);
         musicIndexProperty.setValue(newMusicIndex);
-
-        if (isPlaying) {
-            play();
-        }
     }
 
     public void emptyPlaylist() {
         if (currentMedia != null) {
             stop();
-            currentMedia = null;
-            currentMediaPlayer = null;
         }
         isMusicChanging.setValue(true);
         playlist.clear();
-        musicIndexProperty.setValue(0);
+        musicIndexProperty.setValue(-1);
         isMusicChanging.setValue(false);
     }
 
@@ -292,23 +273,40 @@ public class BackgroundMusicManager {
      * Play the current selected music in the playlist. If it was paused then it will start from when it was.
      */
     public void play() {
-
         if (currentMedia != null) {
             this.isPlayingProperty.setValue(true);
         }
     }
 
     public void stop() {
-        if (currentMedia != null) {
             if (isPlaying()) {
                 pause();
             }
-            if (currentMediaPlayer != null) {
-                currentMediaPlayer.stop();
-            }
-            if (currentProcessBuilder != null) {
-                currentProcessBuilder.destroy();
-            }
+            stopCurrentMediaPlayer();
+            stopCurrentProcessBuilder();
+
+    }
+
+    public void pauseCurentMediaPlayer(){
+        if (currentMediaPlayer != null) {
+            currentMediaPlayer.pause();
+        }
+    }
+
+    public void pauseCurrentProcessBuilder(){
+        // Impossible for now, stop instead
+        stopCurrentProcessBuilder();
+    }
+
+    public void stopCurrentMediaPlayer(){
+        if (currentMediaPlayer != null) {
+            currentMediaPlayer.stop();
+        }
+    }
+
+    public void stopCurrentProcessBuilder(){
+        if (currentProcessBuilder != null) {
+            currentProcessBuilder.destroy();
         }
     }
 
@@ -375,16 +373,12 @@ public class BackgroundMusicManager {
             if (localMedia != null) {
                 log.info("Playing sound {}", localMedia.getSource());
                 if (isPlaying()) {
-                    pause();
+                    stop();
                 }
                 playlist.add(localMedia);
+                musicIndexProperty.set(-1);
                 changeMusic(playlist.size() - 1);
-                // If Music hasn't changed (for exemple if previous index is the same),
-                // then do the change manually
-                if (currentMedia == null || !currentMedia.getSource().equals(localMedia.getSource())) {
-                    changeCurrentMusic();
-                }
-
+                changeCurrentMusic();
                 play();
             }
         };
@@ -413,7 +407,6 @@ public class BackgroundMusicManager {
             }
             try {
                 log.info("Downloading music file {}", resourceURL);
-
                 FileUtils.copyURLToFile(resourceURL, tempOutputFile, 10000, 10000);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -434,28 +427,24 @@ public class BackgroundMusicManager {
     MediaPlayer createMediaPlayer(Media media) {
         try {
             final MediaPlayer player = makeMediaPlayer(media);
-            player.setOnError(() -> log.error("error on audio media loading : " + player.getError()));
             player.volumeProperty().bindBidirectional(ActiveConfigurationContext.getInstance().getMusicVolumeProperty());
             player.setOnEndOfMedia(this::next);
+            log.info("CREATED");
             return player;
         } catch (MediaException e) {
-            log.error("error while loading media {}, type : {}", media.getSource(), e.getType(), e);
+            log.error("error while loading media {}, type : {}", media.getSource(), e.getType());
+            return null;
         }
-        return new MediaPlayer((new Media("")));
     }
 
     MediaPlayer createMediaPlayer(String source) {
-        try {
+        try{
             final Media media = new Media(source);
-            final MediaPlayer player = makeMediaPlayer(media);
-            player.setOnError(() -> log.error("error on audio media loading : " + player.getError()));
-            player.volumeProperty().bindBidirectional(ActiveConfigurationContext.getInstance().getMusicVolumeProperty());
-            player.setOnEndOfMedia(this::next);
-            return player;
+            return createMediaPlayer(media);
         } catch (MediaException e) {
-            log.error("error while loading media {}, type : {}", source, e.getType(), e);
+            log.error("error while loading media {}, type : {}", source, e.getType());
+            return null;
         }
-        return null;
     }
 
     /**
@@ -465,7 +454,6 @@ public class BackgroundMusicManager {
      * @return The media player found or null.
      */
     private Media getMediaFromSource(final String source) {
-
         for (Media media : playlist) {
             if (media.getSource().equals(source)) {
                 return media;
