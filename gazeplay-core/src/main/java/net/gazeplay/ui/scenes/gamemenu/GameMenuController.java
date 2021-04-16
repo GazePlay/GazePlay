@@ -171,11 +171,6 @@ public class GameMenuController {
 
         if (selectedGameSpec.getGameSummary().getBackgroundMusicUrl() != null) {
             final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
-            gazePlay.getPrimaryStage().setOnCloseRequest((e) -> {
-                if (musicManager.getCurrentProcessBuilder() != null) {
-                    musicManager.getCurrentProcessBuilder().destroy();
-                }
-            });
             playBackgroundMusic(gameContext, selectedGameSpec, musicManager);
         }
 
@@ -190,6 +185,10 @@ public class GameMenuController {
 
         String gameNameCode = selectedGameSpec.getGameSummary().getNameCode();
         stats.setGameVariant(gameVariantLabel, gameNameCode);
+
+        gazePlay.getPrimaryStage().setOnCloseRequest((e) -> {
+            BackgroundMusicManager.getInstance().stop();
+        });
 
         currentGame.launch();
     }

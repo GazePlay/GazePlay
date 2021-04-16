@@ -16,6 +16,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
@@ -105,6 +106,9 @@ public class GazePlayFxApp extends Application {
 
         gazePlay.setPrimaryScene(primaryScene);
         gazePlay.setPrimaryStage(primaryStage);
+        primaryStage.setOnCloseRequest((e) -> {
+            BackgroundMusicManager.getInstance().stop();
+        });
 
         if (showUserSelectPage) {
             gazePlay.goToUserPage();
