@@ -70,10 +70,10 @@ public class Card extends Parent {
                 final IGameContext gameContext, final Stats stats, final Math101 gameInstance, final int fixationlength) {
 
         this.card = new Rectangle(positionX, positionY, width, height);
-        this.card.setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
+        this.card.setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png")));
 
         this.card.setFill(Color.BEIGE);
-        this.card.setFill(new ImagePattern(new Image("data/math101/images/note2.png"), 0, 0, 1, 1, true));
+        this.card.setFill(new ImagePattern(new Image("data/math101/images/note2.png")));
 
         // Setting the height and width of the arc
         // this.card.setArcWidth(30.0);
@@ -226,7 +226,7 @@ public class Card extends Parent {
 
                     turned = true;
 
-                    card.setFill(new ImagePattern(image, 0, 100, 1, 1, true));
+                    card.setFill(new ImagePattern(image));
 
                     card.removeEventFilter(MouseEvent.ANY, enterEvent);
                     card.removeEventFilter(GazeEvent.ANY, enterEvent);

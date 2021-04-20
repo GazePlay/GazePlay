@@ -78,6 +78,7 @@ public class AnimationSpeedRatioControl {
 
         // user can reset ratio to default just by clicking on the label
         speedEffectValueLabel.setOnMouseClicked(event -> slider.setValue(0d));
+        speedEffectValueLabel.setOnTouchReleased(event -> slider.setValue(0d));
 
         slider.valueProperty().addListener((observable) -> {
             double speedRatioValue = sliderValueToSpeedRatio(slider.getValue());

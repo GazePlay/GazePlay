@@ -38,7 +38,8 @@ public class Difference extends Circle {
                     timer = System.currentTimeMillis();
                 } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
                     timer = 0;
-                } else if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_MOVED) {
+                } else if (e.getEventType() == MouseEvent.MOUSE_MOVED ||
+                    e.getEventType() == GazeEvent.GAZE_MOVED || e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
                     final long timeElapsed = System.currentTimeMillis() - timer;
                     if (timer > 0 && timeElapsed > GAZE_TIME) {
                         timer = 0;

@@ -185,6 +185,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         };
 
         pet.addEventFilter(MouseEvent.MOUSE_MOVED, handevent);
+        pet.addEventFilter(MouseEvent.MOUSE_DRAGGED, handevent);
         pet.addEventFilter(GazeEvent.GAZE_MOVED, handevent);
 
         gameContext.getChildren().add(pet);
@@ -204,7 +205,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
             offsetx = hand.getWidth() / 4;
             offsety = -hand.getHeight() / 4;
         }
-        if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+        if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
             hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
                 - gameContext.getPrimaryStage().getX() - hand.getWidth() / 2);
             hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
@@ -244,7 +245,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 offsetx = hand.getWidth() / 4;
                 offsety = -hand.getHeight() / 4;
             }
-            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+            if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
                 hand.setX(offsetx + MouseInfo.getPointerInfo().getLocation().getX()
                     - gameContext.getPrimaryStage().getX() - hand.getWidth() / 2);
                 hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
@@ -258,6 +259,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         };
 
         zone.addEventFilter(MouseEvent.MOUSE_MOVED, handevent);
+        zone.addEventFilter(MouseEvent.MOUSE_DRAGGED, handevent);
         zone.addEventFilter(GazeEvent.GAZE_MOVED, handevent);
 
         final EventHandler<Event> enterevent = e -> {
@@ -633,6 +635,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         bowl.addEventFilter(GazeEvent.GAZE_ENTERED, handenter);
 
         bowl.addEventFilter(MouseEvent.MOUSE_MOVED, handevent);
+        bowl.addEventFilter(MouseEvent.MOUSE_DRAGGED, handevent);
         gameContext.getGazeDeviceManager().addEventFilter(bowl);
 
         gameContext.getChildren().add(bowl);

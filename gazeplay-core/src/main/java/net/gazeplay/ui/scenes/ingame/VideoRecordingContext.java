@@ -34,7 +34,7 @@ public class VideoRecordingContext {
         gameContext.getGazeDeviceManager().addEventFilter(root);
 
         pointerEvent = e -> {
-            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+            if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
                 mousePointer.setCenterX(((MouseEvent) e).getX());
                 mousePointer.setCenterY(((MouseEvent) e).getY());
                 mousePointer.toFront();

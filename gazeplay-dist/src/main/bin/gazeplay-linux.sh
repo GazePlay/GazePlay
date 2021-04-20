@@ -5,7 +5,7 @@ set -e
 MAIN_JAR_FILE=gazeplay-@VERSION@.jar
 
 export JAVA_OPTS="-Xms256m -Xmx1g"
-export JAVA_OPTS="$JAVA_OPTS -Dlogging.appender.console.level=OFF"
+export JAVA_OPTS="$JAVA_OPTS -Dlogging.appender.console.level=OFF -Djdk.gtk.version=2"
 
 WORKING_DIR=$(pwd)
 

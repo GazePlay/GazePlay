@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.paint.Color;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -48,16 +49,26 @@ public class DrawBuilder {
         initDraw(graphicsContext);
 
         canvas.addEventHandler(MouseEvent.MOUSE_MOVED, event -> {
+            log.info("mouse moved");
             graphicsContext.lineTo(event.getX(), event.getY());
-            // graphicsContext.setStroke(colorPicker.pickColor());
+            graphicsContext.stroke();
+        });
+
+        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, event -> {
+            log.info("touch moved");
+            graphicsContext.lineTo(event.getX(), event.getY());
             graphicsContext.stroke();
         });
 
         canvas.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+            log.info("mouse entered");
             changeColor(graphicsContext);
         });
 
-        canvas.addEventHandler(MouseEvent.MOUSE_EXITED, event -> graphicsContext.closePath());
+        canvas.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+            log.info("mouse exited");
+            graphicsContext.closePath();
+        });
 
         canvas.addEventFilter(GazeEvent.GAZE_MOVED, new EventHandler<>() {
 

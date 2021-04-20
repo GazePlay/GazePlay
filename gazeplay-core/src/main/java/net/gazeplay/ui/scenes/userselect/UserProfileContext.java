@@ -15,6 +15,7 @@ import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -271,6 +272,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         }
 
         content.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseClickedEventHandler);
+        content.addEventFilter(TouchEvent.TOUCH_RELEASED, mouseClickedEventHandler);
         return user;
     }
 
@@ -281,8 +283,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         final double size
     ) {
         final CustomButton button = new CustomButton("data/common/images/error.png", size);
-
-        button.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
+        EventHandler showDialog = event -> {
             final Stage dialog = createRemoveDialog(gazePlay.getPrimaryStage(), choicePanel, user, gazePlay.getCurrentScreenDimensionSupplier());
 
             final String dialogTitle = getGazePlay().getTranslator().translate("Remove");
@@ -292,7 +293,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             dialog.setAlwaysOnTop(true);
 
             dialog.show();
-        });
+        };
+        button.addEventHandler(MouseEvent.MOUSE_CLICKED, showDialog);
+        button.addEventHandler(TouchEvent.TOUCH_RELEASED, showDialog);
 
         final BorderPane rbp = new BorderPane();
         rbp.getStyleClass().add("gameChooserButton");
@@ -376,7 +379,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             primaryStage.getHeight() / 10,
             primaryStage.getWidth() / 10
         );
-        yes.setOnMouseClicked(event -> {
+        yes.setOnAction(event -> {
             dialog.close();
             choicePanel.getChildren().remove(user);
             final File userDirectory = GazePlayDirectories.getUserProfileDirectory(user.getName());
@@ -389,7 +392,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             primaryStage.getHeight() / 10,
             primaryStage.getWidth() / 10
         );
-        no.setOnMouseClicked(event -> dialog.close());
+        no.setOnAction(event -> dialog.close());
 
         choicePane.getChildren().add(yes);
         choicePane.getChildren().add(no);
@@ -443,7 +446,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             primaryStage.getHeight() / 20,
             primaryStage.getWidth() / 10
         );
-        chooseImageButton.setOnMouseClicked(event -> {
+        chooseImageButton.setOnAction(event -> {
             final String s = getImage(dialog, chooseImageButton);
             if (s != null) {
                 chooseImageButton.setText(s);
@@ -455,7 +458,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             primaryStage.getHeight() / 20,
             primaryStage.getWidth() / 20
         );
-        reset.setOnMouseClicked(event -> {
+        reset.setOnAction(event -> {
             chooseImageButton.setGraphic(null);
             chooseImageButton.setText(getGazePlay().getTranslator().translate("ChooseImage"));
         });
@@ -472,7 +475,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         );
         choicePane.getChildren().add(okButton);
 
-        final EventHandler<Event> event;
+        final EventHandler event;
 
         if (newUser) {
             event = mouseEvent -> {
@@ -546,7 +549,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                 primaryStage.getScene().getRoot().setEffect(null);
             };
         }
-        okButton.setOnMouseClicked(event);
+        okButton.setOnAction(event);
 
         final Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
 

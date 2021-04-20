@@ -3,7 +3,7 @@
 set -e
 
 export JAVA_OPTS="-Xms256m -Xmx1g"
-export JAVA_OPTS="$JAVA_OPTS -Dlogging.appender.console.level=OFF"
+export JAVA_OPTS="$JAVA_OPTS -Dlogging.appender.console.level=OFF -Djdk.gtk.version=2"
 
 CLASSPATH=$(find ../lib -name "*.jar" | sort | tr '\n' ':')
 

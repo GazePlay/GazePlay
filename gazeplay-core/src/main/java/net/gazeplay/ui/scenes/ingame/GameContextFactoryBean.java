@@ -132,11 +132,11 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
         buttonImg.setFitWidth(buttonSize);
         buttonImg.setFitHeight(buttonSize);
 
-        final Button bt = new Button();
-        bt.setMinHeight(BUTTON_MIN_HEIGHT);
-        bt.setGraphic(buttonImg);
-        bt.setStyle("-fx-background-color: transparent;");
-        updateConfigButton(bt, buttonImg, primaryStage);
+        final Button displayControllerMenuButton = new Button();
+        displayControllerMenuButton.setMinHeight(BUTTON_MIN_HEIGHT);
+        displayControllerMenuButton.setGraphic(buttonImg);
+        displayControllerMenuButton.setStyle("-fx-background-color: transparent;");
+        updateConfigButton(displayControllerMenuButton, buttonImg, primaryStage);
         /*
          * bt.setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; " +
          * "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; " + "-fx-max-height: " +
@@ -147,10 +147,10 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
         configPane.setAlignment(Pos.CENTER_LEFT);
         // Pane configPane = new Pane();
         primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> updateConfigPane(configPane, primaryStage));
-        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateConfigButton(bt, buttonImg, primaryStage));
+        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateConfigButton(displayControllerMenuButton, buttonImg, primaryStage));
         configPane.heightProperty().addListener((observable) -> updateConfigPane(configPane, primaryStage));
 
-        EventHandler<MouseEvent> mousePressedControlPanelEventHandler = mouseEvent -> {
+        EventHandler openOrCloseControlPanelEventHandler = mouseEvent -> {
             double from = 0;
             double to = 1;
             double angle = 360;
@@ -161,7 +161,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
             } else if (!configPane.getChildren().contains(controlPanel)) {
                 configPane.getChildren().add(controlPanel);
             }
-            RotateTransition rt = new RotateTransition(Duration.millis(500), bt);
+            RotateTransition rt = new RotateTransition(Duration.millis(500), displayControllerMenuButton);
             rt.setByAngle(angle);
             FadeTransition ft = new FadeTransition(Duration.millis(500), controlPanel);
             ft.setFromValue(from);
@@ -187,12 +187,12 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
         controlPanel.setMouseTransparent(true);
         menuOpen = false;
 
-        bt.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedControlPanelEventHandler);
-        bt.getStyleClass().add("button");
+        displayControllerMenuButton.setOnAction(openOrCloseControlPanelEventHandler);
+        displayControllerMenuButton.getStyleClass().add("button");
 
-        buttonTransparentHandler(bt);
+        buttonTransparentHandler(displayControllerMenuButton);
 
-        configPane.getChildren().add(bt);
+        configPane.getChildren().add(displayControllerMenuButton);
         root.getChildren().add(gamingRoot);
         root.getChildren().add(configPane);
 

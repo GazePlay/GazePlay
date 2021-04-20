@@ -23,12 +23,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.*;
+import net.gazeplay.GameCategories;
+import net.gazeplay.GameSpec;
+import net.gazeplay.GazePlay;
+import net.gazeplay.ReplayingGameFromJson;
 import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
@@ -41,7 +42,6 @@ import net.gazeplay.commons.utils.games.MenuUtils;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +60,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private List<Node> gameCardsList;
     private List<Node> favGameCardsList;
+
+    private double dragOrigin = -1;
+    private double scrollStarted;
 
     @Getter
     private Label errorMessageLabel;
@@ -119,7 +122,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topRightPane.getChildren().addAll(replayGameButton, logoutButton, exitButton);
 
         ProgressIndicator dwellTimeIndicator = new ProgressIndicator(0);
-        Node gamePickerChoicePane = createGamePickerChoicePane(games, config, dwellTimeIndicator);
+        Node gamePickerChoicePane = createGamePickerChoicePane(gazePlay, games, config, dwellTimeIndicator);
 
         centerPanel = new VBox();
         centerPanel.setSpacing(40);
@@ -139,21 +142,23 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         StackPane centerStackPane = new StackPane();
         errorMessage = new StackPane();
         Rectangle errorBackground = new Rectangle();
-        errorBackground.setFill(new Color(1,0,0,0.75));
+        errorBackground.setFill(new Color(1, 0, 0, 0.75));
         errorMessageLabel = new Label("Error message goes here");
         errorBackground.widthProperty().bind(errorMessageLabel.widthProperty().multiply(1.2));
         errorBackground.heightProperty().bind(errorMessageLabel.heightProperty().multiply(1.2));
-        errorMessage.getChildren().addAll(errorBackground,errorMessageLabel);
+        errorMessage.getChildren().addAll(errorBackground, errorMessageLabel);
         centerStackPane.getChildren().add(centerPanel);
         centerStackPane.getChildren().add(errorMessage);
 
-        errorMessage.setOnMouseClicked((event)->{
+        EventHandler displayErrorHandler = (event) -> {
             final Timeline opacityTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(errorMessage.opacityProperty(), 0, Interpolator.EASE_OUT)));
             opacityTimeline.setOnFinished(e -> errorMessage.setMouseTransparent(true));
             this.centerPanel.setEffect(null);
             opacityTimeline.play();
-        });
+        };
+        errorMessage.setOnMouseClicked(displayErrorHandler);
+        errorMessage.setOnTouchReleased(displayErrorHandler);
 
         errorMessage.setOpacity(0);
         errorMessage.setMouseTransparent(true);
@@ -174,6 +179,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     }
 
     private ScrollPane createGamePickerChoicePane(
+        GazePlay gazePlay,
         List<GameSpec> games,
         final Configuration config,
         final ProgressIndicator dwellTimeIndicator
@@ -195,6 +201,24 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanelScroller.setFitToHeight(true);
 
         filterGames(choicePanel, gameCardsList, favGameCardsList, config, dwellTimeIndicator, new GameCardVisiblePredicate(config));
+
+
+        choicePanel.setOnMousePressed(e -> {
+            scrollStarted = choicePanelScroller.getVvalue();
+            dragOrigin = e.getSceneY();
+        });
+        choicePanel.setOnMouseDragged(e -> {
+            if (dragOrigin != -1) {
+                double distance = (dragOrigin - e.getSceneY()) / gazePlay.getPrimaryScene().getHeight();
+                choicePanelScroller.setVvalue(scrollStarted + distance / 3);
+            }
+        });
+
+        choicePanel.setOnMouseReleased(e -> {
+                dragOrigin = -1;
+            }
+        );
+
 
         return choicePanelScroller;
     }
@@ -318,7 +342,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private CustomButton createExitButton(Dimension2D screenDimension) {
         CustomButton exitButton = new CustomButton("data/common/images/power-off.png", screenDimension);
-        exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
+        exitButton.setOnTouchReleased(e -> System.exit(0));
+        exitButton.setOnMouseClicked(e -> System.exit(0));
         return exitButton;
     }
 
@@ -334,14 +359,14 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             try {
                 ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getApplicationContext(), games);
                 replayingGame.pickJSONFile(replayingGame.getFileName());
-                if(ReplayingGameFromJson.replayIsAllowed(replayingGame.getCurrentGameNameCode())){
+                if (ReplayingGameFromJson.replayIsAllowed(replayingGame.getCurrentGameNameCode())) {
                     replayingGame.replayGame();
-                } else if (replayingGame.getCurrentGameNameCode() != null){
+                } else if (replayingGame.getCurrentGameNameCode() != null) {
                     Translator translator = gazePlay.getTranslator();
                     this.errorMessageLabel.setText(
                         translator.translate("SorryButReplayInvalid")
-                            .replace("{}",translator.translate(replayingGame.getCurrentGameNameCode()))
-                            .replace("\\n","\n") );
+                            .replace("{}", translator.translate(replayingGame.getCurrentGameNameCode()))
+                            .replace("\\n", "\n"));
                     this.errorMessageLabel.setTextAlignment(TextAlignment.CENTER);
                     ColorAdjust colorAdjust = new ColorAdjust();
                     colorAdjust.setBrightness(-0.8);
