@@ -414,7 +414,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         final SequentialTransition sq = new SequentialTransition();
         sq.getChildren().addAll(pt, pt2);
 
-        final String soundResource = "data/cake/sounds/spray.mp3";
+        final String soundResource = "data/cake/sounds/spray.wav";
         gameContext.getSoundManager().add(soundResource);
 
         sq.setOnFinished(actionEvent -> {
@@ -563,7 +563,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
         });
 
-        final String soundResource = "data/cake/sounds/grabcoming.mp3";
+        final String soundResource = "data/cake/sounds/grabcoming.wav";
         gameContext.getSoundManager().add(soundResource);
 
         sq.play();

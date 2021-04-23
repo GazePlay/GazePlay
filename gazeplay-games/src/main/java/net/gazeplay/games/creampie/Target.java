@@ -45,7 +45,7 @@ public class Target extends Portrait {
 
     private final ArrayList<TargetAOI> targetAOIList;
 
-    private static final String SOUNDS_MISSILE = "data/creampie/sounds/missile.mp3";
+    private static final String SOUNDS_MISSILE = "data/creampie/sounds/missile.wav";
 
     private final IGameContext gameContext;
 

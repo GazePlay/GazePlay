@@ -3,6 +3,7 @@ package net.gazeplay.ui.scenes.userselect;
 import com.ginsberg.junit.exit.ExpectSystemExitWithStatus;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -322,11 +323,11 @@ class UserProfileContextTest {
             Button yes = (Button) choicePane.getChildren().get(0);
             Button no = (Button) choicePane.getChildren().get(1);
 
-            yes.fireEvent(TestingUtils.clickOnTarget(yes));
+            yes.fire();
             assertFalse(choicePanel.getChildren().contains(user));
 
             result.show();
-            no.fireEvent(TestingUtils.clickOnTarget(no));
+            no.fire();
             assertFalse(result.isShowing());
         });
         TestingUtils.waitForRunLater();
@@ -396,7 +397,7 @@ class UserProfileContextTest {
             assertNull(chooseImage.getGraphic());
             assertEquals("Choose Image", chooseImage.getText());
 
-            ok.fireEvent(TestingUtils.clickOnTarget(ok));
+            ok.fire();
             assertTrue(choicePanel.getChildren().contains(user));
             assertEquals("New Name", ((User) choicePanel.getChildren().get(0)).getName());
         });
@@ -443,7 +444,7 @@ class UserProfileContextTest {
             assertNull(chooseImage.getGraphic());
             assertEquals("Choose Image", chooseImage.getText());
 
-            ok.fireEvent(TestingUtils.clickOnTarget(ok));
+            ok.fire();
             assertTrue(choicePanel.getChildren().contains(user));
             assertEquals("Already Used", ((Text) choicePane.getChildren().get(4)).getText());
         });

@@ -116,8 +116,6 @@ class Mypet extends Pane {
         getMouth().setX(biboulew / 2 - getMouth().getWidth() / 2);
         getMouth().setY(3 * bibouleh / 4);
         getMouth().setFill(new ImagePattern(mouth));
-        // getMouth().setFHeight(mouth.getHeight() * hratio);
-        // getMouth().setFitWidth(mouth.getWidth() * wratio);
 
         final Image eyes = new Image("data/pet/images/eye.png");
 

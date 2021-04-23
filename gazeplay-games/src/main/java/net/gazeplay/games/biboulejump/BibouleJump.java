@@ -159,7 +159,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         interactionOverlay = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
 
         final EventHandler<Event> movementEvent = (Event event) -> {
-            if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
+            if (event.getEventType() == MouseEvent.MOUSE_MOVED || event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
                 gazeTarget = new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
             } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
                 gazeTarget = new Point2D(((GazeEvent) event).getX(), ((GazeEvent) event).getY());
@@ -167,6 +167,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         };
 
         interactionOverlay.addEventFilter(MouseEvent.MOUSE_MOVED, movementEvent);
+        interactionOverlay.addEventFilter(MouseEvent.MOUSE_DRAGGED, movementEvent);
         interactionOverlay.addEventFilter(GazeEvent.GAZE_MOVED, movementEvent);
         interactionOverlay.setFill(Color.TRANSPARENT);
         foregroundLayer.getChildren().add(interactionOverlay);
@@ -246,7 +247,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         interactionOverlay = new Rectangle(0, 0, dimensions.getWidth(), dimensions.getHeight());
 
         final EventHandler<Event> movementEvent = (Event event) -> {
-            if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
+            if (event.getEventType() == MouseEvent.MOUSE_MOVED || event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
                 gazeTarget = new Point2D(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
             } else if (event.getEventType() == GazeEvent.GAZE_MOVED) {
                 gazeTarget = new Point2D(((GazeEvent) event).getX(), ((GazeEvent) event).getY());
@@ -254,7 +255,9 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         };
 
         interactionOverlay.addEventFilter(MouseEvent.MOUSE_MOVED, movementEvent);
+        interactionOverlay.addEventFilter(MouseEvent.MOUSE_DRAGGED, movementEvent);
         interactionOverlay.addEventFilter(GazeEvent.GAZE_MOVED, movementEvent);
+
         interactionOverlay.setFill(Color.TRANSPARENT);
         foregroundLayer.getChildren().add(interactionOverlay);
 

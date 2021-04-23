@@ -14,6 +14,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -144,7 +145,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
     I18NButton createDisplayButton(String buttonName, Stats stats, ImageView metrics) {
         I18NButton displayButton = new I18NButton(getGazePlay().getTranslator(), buttonName);
-        displayButton.setOnMouseClicked((e) -> {
+        displayButton.setOnAction((e) -> {
             SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
             switch (buttonName) {
                 case "Mouse":
@@ -279,6 +280,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
         scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
+        scanPathButton.addEventFilter(TouchEvent.TOUCH_RELEASED, viewScanPath);
 
         HBox controlButtonPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(controlButtonPane);

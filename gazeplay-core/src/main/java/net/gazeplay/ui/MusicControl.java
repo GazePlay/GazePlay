@@ -11,7 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.Media;
 import javafx.scene.shape.Circle;
 import lombok.Getter;
 import lombok.NonNull;
@@ -115,10 +115,8 @@ public class MusicControl {
 
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
 
-        final MediaPlayer currentMusic = backgroundMusicManager.getCurrentMusic();
-
-        // final Label musicName = new Label(backgroundMusicManager.getMusicTitle(currentMusic));
-        musicName = new MarqueeText(BackgroundMusicManager.getMusicTitle(currentMusic));
+        final Media currentMedia = backgroundMusicManager.getCurrentMedia();
+        musicName = new MarqueeText(BackgroundMusicManager.getMusicTitle(currentMedia));
 
         backgroundMusicManager.getIsMusicChanging().addListener((observable, oldValue, newValue) -> {
 
@@ -185,11 +183,10 @@ public class MusicControl {
                 final Configuration configuration = ActiveConfigurationContext.getInstance();
                 backgroundMusicManager.getAudioFromFolder(configuration.getMusicFolder());
             }
-            backgroundMusicManager.changeMusic(0);
-            backgroundMusicManager.play();
-
+            backgroundMusicManager.changeMusic(-1);
             // We need to manually set the music title for the first set up
             setMusicTitle(musicName);
+            backgroundMusicManager.play();
         }
 
         final I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "Music");
@@ -342,8 +339,10 @@ public class MusicControl {
     private void setMusicTitle(final MarqueeText musicLabel) {
         if (musicLabel != null) {
             final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
-            final String musicTitle = BackgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
-            musicLabel.getTextProperty().setValue(musicTitle);
+            if (backgroundMusicManager.getCurrentMedia() != null) {
+                final String musicTitle = BackgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMedia());
+                musicLabel.getTextProperty().setValue(musicTitle);
+            }
         }
     }
 

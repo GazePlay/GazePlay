@@ -73,6 +73,7 @@ public class FixationLengthControl {
 
         // user can reset ratio to default just by clicking on the label
         fixationLengthValueLabel.setOnMouseClicked(event -> slider.setValue(500));
+        fixationLengthValueLabel.setOnTouchReleased(event -> slider.setValue(500));
 
         slider.valueProperty().addListener((observable) -> {
             String labelText = formatValue(slider.getValue());

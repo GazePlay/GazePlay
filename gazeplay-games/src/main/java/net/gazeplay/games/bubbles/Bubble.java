@@ -218,10 +218,10 @@ public class Bubble extends Parent implements GameLifeCycle {
         sequence.play();
 
         if (randomFragmentsGenerator.nextDouble() > 0.5) {
-            final String soundResource = "data/bubble/sounds/Large-Bubble-SoundBible.com-1084083477.mp3";
+            final String soundResource = "data/bubble/sounds/Large-Bubble-SoundBible.com-1084083477.wav";
             gameContext.getSoundManager().add(soundResource);
         } else {
-            final String soundResource = "data/bubble/sounds/Blop-Mark_DiAngelo-79054334.mp3";
+            final String soundResource = "data/bubble/sounds/Blop-Mark_DiAngelo-79054334.wav";
             gameContext.getSoundManager().add(soundResource);
         }
     }

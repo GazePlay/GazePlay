@@ -70,7 +70,7 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
         center.getChildren().addAll(pointsGaze);
 
         I18NButton displayMouseButton = new I18NButton(getGazePlay().getTranslator(), "Mouse");
-        displayMouseButton.setOnMouseClicked((e) -> {
+        displayMouseButton.setOnAction((e) -> {
             center.getChildren().removeAll(pointsMouse);
             center.getChildren().removeAll(pointsGaze);
             center.getChildren().addAll(pointsMouse);
@@ -78,7 +78,7 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
         });
 
         I18NButton displayGazeButton = new I18NButton(getGazePlay().getTranslator(), "Gaze");
-        displayGazeButton.setOnMouseClicked((e) -> {
+        displayGazeButton.setOnAction((e) -> {
             center.getChildren().removeAll(pointsMouse);
             center.getChildren().removeAll(pointsGaze);
             center.getChildren().addAll(pointsGaze);
@@ -86,7 +86,7 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
         });
 
         I18NButton displayMouseAndGazeButton = new I18NButton(getGazePlay().getTranslator(), "MouseAndGaze");
-        displayMouseAndGazeButton.setOnMouseClicked((e) -> {
+        displayMouseAndGazeButton.setOnAction((e) -> {
             center.getChildren().removeAll(pointsMouse);
             center.getChildren().removeAll(pointsGaze);
             center.getChildren().addAll(pointsMouse);

@@ -203,7 +203,7 @@ public class Egg extends Parent {
     }
 
     public void playSound(final int i) {
-        final String soundResource = "data/egg/sounds/" + i + ".mp3";
+        final String soundResource = "data/egg/sounds/" + i + ".wav";
         gameContext.getSoundManager().add(soundResource);
     }
 

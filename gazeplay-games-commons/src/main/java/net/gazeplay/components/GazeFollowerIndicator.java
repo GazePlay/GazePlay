@@ -34,6 +34,10 @@ public class GazeFollowerIndicator extends GazeIndicator {
             moveGazeIndicator(event.getX(), event.getY());
         });
 
+        root.addEventFilter(MouseEvent.MOUSE_DRAGGED, (event) -> {
+            moveGazeIndicator(event.getX(), event.getY());
+        });
+
         root.addEventFilter(GazeEvent.GAZE_MOVED, (event) -> {
             moveGazeIndicator(event.getX(), event.getY());
         });

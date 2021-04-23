@@ -5,7 +5,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.*;
@@ -129,7 +128,7 @@ public class GameMenuController {
             File.separator + "java";
         String classpath = System.getProperty("java.class.path");
 
-        LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin, "-cp", classpath, GazePlayLauncher.class.getName()));
+        LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin, "-cp", classpath, "-Djdk.gtk.version=2", GazePlayLauncher.class.getName()));
 
         String user = ActiveConfigurationContext.getInstance().getUserName();
         if (user != null && !user.equals("")) {
@@ -187,17 +186,18 @@ public class GameMenuController {
         String gameNameCode = selectedGameSpec.getGameSummary().getNameCode();
         stats.setGameVariant(gameVariantLabel, gameNameCode);
 
+        gazePlay.getPrimaryStage().setOnCloseRequest((e) -> {
+            BackgroundMusicManager.getInstance().stop();
+        });
+
         currentGame.launch();
     }
 
     void playBackgroundMusic(GameContext gameContext, GameSpec selectedGameSpec, BackgroundMusicManager musicManager) {
-        MediaPlayer currentMusic = musicManager.getCurrentMusic();
+        Media currentMedia = musicManager.getCurrentMedia();
         boolean defaultMusicPlaying = true;
-        if (currentMusic != null) {
-            Media currentMedia = currentMusic.getMedia();
-            if (currentMedia != null) {
-                defaultMusicPlaying = currentMedia.getSource().contains(Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC);
-            }
+        if (currentMedia != null) {
+            defaultMusicPlaying = currentMedia.getSource().contains(Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC);
         }
         log.info("is default music set : {}", defaultMusicPlaying);
         if (defaultMusicPlaying || musicManager.getPlaylist().isEmpty()) {

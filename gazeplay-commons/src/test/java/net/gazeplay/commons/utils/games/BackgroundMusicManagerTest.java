@@ -49,20 +49,14 @@ class BackgroundMusicManagerTest {
             + "data" + sep
             + "music" + sep;
 
-    private MediaPlayer mediaPlayer;
-    private double previousVolume;
-
     private SimpleDoubleProperty volumeProperty = new SimpleDoubleProperty(0.5);
     ObservableMap<String, Object> metadata = FXCollections.observableHashMap();
 
     @BeforeEach
     void setup() {
         initMocks();
-        final String uri = new File(localDataFolder + "song.mp3").toURI().toString();
-
         musicManagerSpy.getAudioFromFolder(localDataFolder);
-        mediaPlayer = musicManagerSpy.createMediaPlayer(uri);
-        previousVolume = musicManagerSpy.getCurrentMusic().getVolume();
+        musicManagerSpy.changeCurrentMusic();
     }
 
     void initMocks() {
@@ -80,20 +74,20 @@ class BackgroundMusicManagerTest {
 
     @AfterEach
     void teardown() {
-        if (musicManagerSpy.getCurrentMusic() != null) {
-            musicManagerSpy.getCurrentMusic().setVolume(previousVolume);
+        if (musicManagerSpy.getCurrentMediaPlayer() != null) {
+            musicManagerSpy.getCurrentMediaPlayer().setVolume(0);
         }
     }
 
     @Test
-    void shouldCreateMediaPlayer() {
-        assertNotNull(mediaPlayer);
+    void shouldCreateMedia() {
+        assertNotNull(musicManagerSpy.getCurrentMedia());
     }
 
     @Test
     void shouldReturnNullOnError() {
         final String uri = new File(localDataFolder + "test.properties").toURI().toString();
-        mediaPlayer = musicManagerSpy.createMediaPlayer(uri);
+        MediaPlayer mediaPlayer = musicManagerSpy.createMediaPlayer(uri);
         assertNull(mediaPlayer);
     }
 

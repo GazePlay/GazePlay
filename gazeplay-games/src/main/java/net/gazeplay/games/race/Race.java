@@ -8,10 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.effect.Bloom;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.Glow;
-import javafx.scene.effect.Reflection;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -237,10 +234,10 @@ public class Race extends Parent implements GameLifeCycle {
         Rectangle imageRectangle = createBackground();
         gameContext.getChildren().add(this);
 
-        final EventHandler<MouseEvent> handEvent = e -> {
-            if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
-                final double x = e.getX();
-                final double y = e.getY();
+        final EventHandler handEvent = e -> {
+            if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+                final double x = ((MouseEvent) e).getX();
+                final double y = ((MouseEvent) e).getY();
                 hand.setRotate(getAngle(new Point(x, y)));
             }
         };
@@ -450,7 +447,7 @@ public class Race extends Parent implements GameLifeCycle {
             movePlayer(playerRacer, racerMovement);
         }
         if (racerMovement == 18) {
-            this.gameContext.updateScore(stats,this);
+            this.gameContext.updateScore(stats, this);
             gameContext.playWinTransition(500, actionEvent -> {
                 dispose();
                 gameContext.clear();
@@ -485,7 +482,7 @@ public class Race extends Parent implements GameLifeCycle {
     private void makePlayer(final double racerPosition) {
 
         Scene scene = gameContext.getPrimaryScene();
-        final double size = Math.min(scene.getWidth()/15,scene.getHeight()/15);
+        final double size = Math.min(scene.getWidth() / 15, scene.getHeight() / 15);
         playerRacer = buildRacer(size);
         playerRacer.toBack();
         this.getChildren().add(playerRacer);
@@ -532,7 +529,7 @@ public class Race extends Parent implements GameLifeCycle {
     private Target makeRacers(final double racerPosition) {
 
         Scene scene = gameContext.getPrimaryScene();
-        final double size = Math.min(scene.getWidth()/10,scene.getHeight()/10);
+        final double size = Math.min(scene.getWidth() / 10, scene.getHeight() / 10);
         final Target frogRacer = buildRacer(size);
 
         ColorAdjust colorAdjust = new ColorAdjust();
@@ -571,7 +568,7 @@ public class Race extends Parent implements GameLifeCycle {
 
     private void resize(final ImageView i) {
         Scene scene = gameContext.getPrimaryScene();
-        final double size = Math.min(scene.getWidth()/30,scene.getHeight()/30);
+        final double size = Math.min(scene.getWidth() / 30, scene.getHeight() / 30);
         i.setFitHeight(size);
         i.setFitWidth(size * 5 / 4);
     }

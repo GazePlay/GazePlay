@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TouchEvent;
 import lombok.Getter;
 import lombok.Setter;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
@@ -51,6 +52,7 @@ public class MediaButton extends StackPaneButton {
 
     void setupEvent(EventHandler<ActionEvent> newMediaEvent, GazeIndicator progressIndicator) {
         this.removeEventFilter(MouseEvent.MOUSE_CLICKED, clickEvent);
+        this.removeEventFilter(TouchEvent.TOUCH_RELEASED, clickEvent);
         this.removeEventFilter(GazeEvent.GAZE_ENTERED, enterEvent);
         this.removeEventFilter(GazeEvent.GAZE_EXITED, exitEvent);
 
@@ -59,6 +61,7 @@ public class MediaButton extends StackPaneButton {
         };
 
         this.addEventFilter(MouseEvent.MOUSE_CLICKED, clickEvent);
+        this.addEventFilter(TouchEvent.TOUCH_RELEASED, clickEvent);
 
         enterEvent = eventEntered -> {
             if(!this.getChildren().contains(progressIndicator)) {
