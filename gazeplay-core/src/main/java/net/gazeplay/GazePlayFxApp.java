@@ -4,16 +4,19 @@ import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import mslinks.ShellLink;
 import net.gazeplay.cli.*;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.generators.NoVariantGenerator;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
@@ -21,6 +24,7 @@ import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.latestnews.LatestNewsPopup;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
+import net.gazeplay.ui.scenes.gamemenu.GameVariantDialog;
 import org.springframework.context.ApplicationContext;
 
 import java.io.File;
@@ -63,6 +67,7 @@ public class GazePlayFxApp extends Application {
     public void start(final Stage primaryStage) {
 
         final Configuration mainConfig = ActiveConfigurationContext.getInstance();
+        boolean displayStageAtTheEnd = true;
 
         boolean showUserSelectPage = true;
         if (options != null) {
@@ -149,16 +154,42 @@ public class GazePlayFxApp extends Application {
                             if (selectedVariantCode != null) {
                                 IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
                                 gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
-                            } else {
+                            } else if (selectedGameSpec.getGameVariantGenerator() instanceof NoVariantGenerator) {
                                 gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
+                            } else {
+                                GameVariantDialog dialog = new GameVariantDialog(
+                                    gazePlay,
+                                    gameMenuController,
+                                    gazePlay.getPrimaryStage(),
+                                    selectedGameSpec,
+                                    new BorderPane(),
+                                    selectedGameSpec.getGameVariantGenerator().getVariantChooseText());
+                                dialog.setTitle(selectedGameNameCode);
+                                dialog.show();
+                                dialog.toFront();
+                                dialog.setAlwaysOnTop(true);
+                                displayStageAtTheEnd = false;
                             }
                         }
                     } else {
                         if (selectedVariantCode != null) {
                             IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
                             gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
-                        } else {
+                        } else if (selectedGameSpec.getGameVariantGenerator() instanceof NoVariantGenerator){
                             gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
+                        } else {
+                            GameVariantDialog dialog = new GameVariantDialog(
+                                gazePlay,
+                                gameMenuController,
+                                gazePlay.getPrimaryStage(),
+                                selectedGameSpec,
+                                new BorderPane(),
+                                selectedGameSpec.getGameVariantGenerator().getVariantChooseText());
+                            dialog.setTitle(selectedGameNameCode);
+                            dialog.show();
+                            dialog.toFront();
+                            dialog.setAlwaysOnTop(true);
+                            displayStageAtTheEnd = false;
                         }
                     }
                 } else {
@@ -177,8 +208,11 @@ public class GazePlayFxApp extends Application {
         }
 
         CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
-        primaryStage.centerOnScreen();
-        primaryStage.show();
+
+        if( displayStageAtTheEnd) {
+            primaryStage.centerOnScreen();
+            primaryStage.show();
+        }
     }
 
     private Scene createPrimaryScene(final Stage primaryStage) {

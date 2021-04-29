@@ -19,6 +19,10 @@ public class GazePlayDirectories {
         return new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "videos");
     }
 
+    public static File getShortcutDirectory() {
+        return new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "shortcut");
+    }
+
     public static File getProfilesDirectory() {
         return new File(getGazePlayFolder(), "profiles");
     }

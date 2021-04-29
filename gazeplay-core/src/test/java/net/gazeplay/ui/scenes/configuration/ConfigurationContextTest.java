@@ -97,27 +97,27 @@ class ConfigurationContextTest {
 
             ObservableList<Node> children = pane.getChildren();
 
-            assertEquals(66, children.size());
+            assertEquals(68, children.size());
             assertTrue(children.get(3) instanceof MenuButton);
-            assertTrue(children.get(7) instanceof ChoiceBox);
-            assertTrue(children.get(9) instanceof Spinner);
-            assertTrue(children.get(11) instanceof CheckBox);
+            assertTrue(children.get(9) instanceof ChoiceBox);
+            assertTrue(children.get(11) instanceof Spinner);
             assertTrue(children.get(13) instanceof CheckBox);
-            assertTrue(children.get(15) instanceof HBox);
+            assertTrue(children.get(15) instanceof CheckBox);
             assertTrue(children.get(17) instanceof HBox);
-            assertTrue(children.get(21) instanceof ChoiceBox);
-            assertTrue(children.get(23) instanceof Spinner);
-            assertTrue(children.get(27) instanceof ChoiceBox);
-            assertTrue(children.get(29) instanceof HBox);
-            assertTrue(children.get(31) instanceof CheckBox);
-            assertTrue(children.get(33) instanceof ChoiceBox);
-            assertTrue(children.get(49) instanceof CheckBox);
-            assertTrue(children.get(51) instanceof ChoiceBox);
-            assertTrue(children.get(53) instanceof HBox);
-            assertTrue(children.get(57) instanceof CheckBox);
+            assertTrue(children.get(19) instanceof HBox);
+            assertTrue(children.get(23) instanceof ChoiceBox);
+            assertTrue(children.get(25) instanceof Spinner);
+            assertTrue(children.get(29) instanceof ChoiceBox);
+            assertTrue(children.get(31) instanceof HBox);
+            assertTrue(children.get(33) instanceof CheckBox);
+            assertTrue(children.get(35) instanceof ChoiceBox);
+            assertTrue(children.get(51) instanceof CheckBox);
+            assertTrue(children.get(53) instanceof ChoiceBox);
+            assertTrue(children.get(55) instanceof HBox);
             assertTrue(children.get(59) instanceof CheckBox);
-            assertTrue(children.get(63) instanceof CheckBox);
+            assertTrue(children.get(61) instanceof CheckBox);
             assertTrue(children.get(65) instanceof CheckBox);
+            assertTrue(children.get(67) instanceof CheckBox);
 
         });
         TestingUtils.waitForRunLater();
@@ -372,19 +372,21 @@ class ConfigurationContextTest {
         when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
         when(mockScene.getWindow()).thenReturn(mockWindow);
 
-        Platform.runLater(() -> {
-            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-            HBox result = (HBox) context.buildDirectoryChooser(mockConfig, mockContext, mockTranslator, type);
-            Button loadButton = (Button) result.getChildren().get(0);
-            Button resetButton = (Button) result.getChildren().get(1);
+        if (type != ConfigurationContext.DirectoryType.SHORTCUT) {
+            Platform.runLater(() -> {
+                ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+                HBox result = (HBox) context.buildDirectoryChooser(mockConfig, mockContext, mockTranslator, type);
+                Button loadButton = (Button) result.getChildren().get(0);
+                Button resetButton = (Button) result.getChildren().get(1);
 
-            assertEquals(fileDirProperty.getValue(), loadButton.textProperty().getValue());
+                assertEquals(fileDirProperty.getValue(), loadButton.textProperty().getValue());
 
-            resetButton.fire();
-            assertEquals(answers.get(type), fileDirProperty.getValue());
-            assertEquals(answers.get(type), loadButton.textProperty().getValue());
-        });
-        TestingUtils.waitForRunLater();
+                resetButton.fire();
+                assertEquals(answers.get(type), fileDirProperty.getValue());
+                assertEquals(answers.get(type), loadButton.textProperty().getValue());
+            });
+            TestingUtils.waitForRunLater();
+        }
     }
 
     @Test

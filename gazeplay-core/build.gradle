@@ -19,6 +19,7 @@ dependencies {
     compile 'org.json:json:20200518'
     compile 'com.github.everit-org.json-schema:org.everit.json.schema:1.12.1'
 
+    compile group: 'com.github.vatbub', name: 'mslinks', version: '1.0.3'
     compile "info.picocli:picocli-spring-boot-starter:4.0.4"
 
     runtime project(':gazeplay-games')
