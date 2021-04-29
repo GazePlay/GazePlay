@@ -794,8 +794,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 String gameOption = "--game \"" + currentSelectedGame.getGameSummary().getNameCode() + "\"";
                 String variantOption = currentSelectedVariant == null ? "" : "--variant \"" + currentSelectedVariant.toString() + "\"";
 
-                ShellLink slwithvariant = ShellLink.createLink(".\\build\\distributions\\gazeplay-windows-x64-1.8.2-SNAPSHOT\\gazeplay-windows-x64-1.8.2-SNAPSHOT\\bin\\gazeplay-windows.bat")
-                    .setWorkingDir(".\\build\\distributions\\gazeplay-windows-x64-1.8.2-SNAPSHOT\\gazeplay-windows-x64-1.8.2-SNAPSHOT\\bin")
+                ShellLink slwithvariant = ShellLink.createLink("C:\\Program Files (x86)\\GazePlay\\bin\\gazeplay-windows.bat")
+                    .setWorkingDir("C:\\Program Files (x86)\\GazePlay\\bin\\")
                     .setIconLocation("C:\\Program Files (x86)\\GazePlay\\bin\\gazeplayicon.ico")
                     .setCMDArgs(userOption + " " + gameOption + " " + variantOption);
                 slwithvariant.getHeader().setIconIndex(0);
