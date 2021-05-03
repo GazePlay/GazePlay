@@ -30,7 +30,7 @@ import java.util.List;
 @Slf4j
 public class Piano extends Parent implements GameLifeCycle {
 
-    private static final int[] NOTE_NAMES = {0, 7, 1, 8, 2, 3, 9, 4, 10, 5, 11, 6};
+    private static final int[] NOTE_NAMES = {0, 7, 1, 13, 2, 3, 9, 4, 10, 5, 11, 6};
 
     private final double centerX;
     private final double centerY;
