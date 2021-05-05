@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -17,8 +18,19 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.ConfigurationSource;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 @Slf4j
 public class MolesChar extends Parent {
@@ -54,12 +66,19 @@ public class MolesChar extends Parent {
     @Setter
     private int TargetAOIListIndex;
 
+    //url bidoule if à or default case, and DefaultUser if user don't has a portrait
+    private String url;
+
+    //0: bidoule, 1: user's portrait, more can be added, default case: bidoule
+    private int type;
+
     MolesChar(
         final double positionX, final double positionY,
         final double width, final double height,
         final double distTrans,
         final IGameContext gameContext,
-        final Moles gameInstance
+        final Moles gameInstance,
+        final int type
     ) {
         this.positionX=positionX;
         this.positionY=positionY;
@@ -79,15 +98,47 @@ public class MolesChar extends Parent {
 
         this.enterEvent = buildEvent();
 
+        this.type=type;
+
+        url="data/whackmole/images/bibouleMole.png";
+        if (type==1){
+            url="data/common/images/DefaultUser.png";
+        }
+        String username = ActiveConfigurationContext.getInstance().getUserName();
+        final Configuration currentUserProfileConfiguration = ConfigurationSource.createFromProfile(username);
+        final String userPicture = currentUserProfileConfiguration.getUserPicture();
+
+
+
         this.moleMoved = new Rectangle(positionX, positionY - distTrans, width, height);
-        this.moleMoved.setFill(new ImagePattern(new Image("data/whackmole/images/bibouleMole.png"), 5, 5, 1, 1, true));
+        this.moleMoved.setFill(new ImagePattern(new Image(url), 5, 5, 1, 1, true));
+        if (type == 1 && userPicture != null) {
+            final File userPictureFile = new File(userPicture);
+            if (userPictureFile.exists()) {
+                try (InputStream is = Files.newInputStream(userPictureFile.toPath());) {
+                    this.moleMoved.setFill(new ImagePattern(new Image(is), 5, 5, 1, 1, true));
+                } catch (final IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         this.moleMoved.opacityProperty().set(1);
         this.moleMoved.addEventHandler(MouseEvent.ANY, enterEvent);
         this.moleMoved.addEventHandler(GazeEvent.ANY, enterEvent);
         gameContext.getGazeDeviceManager().addEventFilter(this.moleMoved);
 
         this.mole = new Rectangle(positionX, positionY, width, height);
-        this.mole.setFill(new ImagePattern(new Image("data/whackmole/images/bibouleMole.png"), 5, 5, 1, 1, true));
+        this.mole.setFill(new ImagePattern(new Image(url), 5, 5, 1, 1, true));
+        if (type == 1 && userPicture != null) {
+            final File userPictureFile = new File(userPicture);
+            if (userPictureFile.exists()) {
+                try (InputStream is = Files.newInputStream(userPictureFile.toPath());) {
+                    this.mole.setFill(new ImagePattern(new Image(is), 5, 5, 1, 1, true));
+                } catch (final IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         this.getChildren().add(mole);
         this.mole.opacityProperty().set(0);
 

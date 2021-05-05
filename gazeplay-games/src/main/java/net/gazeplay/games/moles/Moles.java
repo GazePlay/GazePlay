@@ -59,7 +59,9 @@ public class Moles extends Parent implements GameLifeCycle {
 
     private final ReplayablePseudoRandom randomGenerator;
 
-    Moles(IGameContext gameContext, Stats stats) {
+    private int type;
+
+    Moles(IGameContext gameContext, Stats stats, int type) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
@@ -69,9 +71,10 @@ public class Moles extends Parent implements GameLifeCycle {
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
+        this.type=type;
     }
 
-    Moles(IGameContext gameContext, Stats stats, double gameSeed) {
+    Moles(IGameContext gameContext, Stats stats, double gameSeed, int type) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
@@ -80,6 +83,7 @@ public class Moles extends Parent implements GameLifeCycle {
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+        this.type=type;
     }
 
     @Override
@@ -106,7 +110,7 @@ public class Moles extends Parent implements GameLifeCycle {
         adjustBackground(imageFond);
         gameContext.getChildren().add(imageFond);
 
-        List<MolesChar> molesList = initMoles(config);
+        List<MolesChar> molesList = initMoles(config, type);
         currentRoundDetails = new RoundDetails(molesList);
         this.getChildren().addAll(molesList);
         gameContext.getChildren().add(this);
@@ -267,7 +271,7 @@ public class Moles extends Parent implements GameLifeCycle {
         return tabPlacement;
     }
 
-    private List<MolesChar> initMoles(Configuration config) {
+    private List<MolesChar> initMoles(Configuration config, int type) {
         javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         ArrayList<MolesChar> result = new ArrayList<>();
@@ -285,7 +289,7 @@ public class Moles extends Parent implements GameLifeCycle {
         /* Creation and placement of moles in the field */
         for (double[] doubles : place) {
             result.add(new MolesChar(doubles[0], doubles[1], moleWidth, moleHeight, distTrans, gameContext,
-                this));
+                this, type));
         }
 
         return result;

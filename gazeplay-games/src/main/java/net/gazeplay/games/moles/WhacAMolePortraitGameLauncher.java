@@ -14,7 +14,7 @@ import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class WhacAMoleGameLauncher implements IGameLauncher<Stats, DimensionGameVariant> {
+public class WhacAMolePortraitGameLauncher implements IGameLauncher<Stats, DimensionGameVariant> {
 
     @Override
     public Stats createNewStats(Scene scene) {
@@ -32,7 +32,7 @@ public class WhacAMoleGameLauncher implements IGameLauncher<Stats, DimensionGame
         DimensionGameVariant gameVariant,
         Stats stats
     ) {
-        return new Moles(gameContext, stats, 0);
+        return new Moles(gameContext, stats, 1);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class WhacAMoleGameLauncher implements IGameLauncher<Stats, DimensionGame
         DimensionGameVariant gameVariant,
         Stats stats, double gameSeed
     ) {
-        return new Moles(gameContext, stats, gameSeed, 0);
+        return new Moles(gameContext, stats, gameSeed, 1);
     }
 
 }
