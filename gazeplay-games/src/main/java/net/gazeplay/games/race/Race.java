@@ -8,10 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.effect.Bloom;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.Glow;
-import javafx.scene.effect.Reflection;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -49,7 +46,7 @@ public class Race extends Parent implements GameLifeCycle {
     private final Image racer;
 
     private final int bugsAmount = 14;
-    private int movementPerBug = 2;
+    private final int movementPerBug = 2;
 
     private Target playerRacer;
     private int racerMovement = 0;
@@ -561,9 +558,8 @@ public class Race extends Parent implements GameLifeCycle {
 
         frogRacer.t = pt;
         pt.setOnFinished(event -> {
-
+            endGame(frogRacer);
         });
-
         pt.play();
 
         return frogRacer;
@@ -674,5 +670,14 @@ public class Race extends Parent implements GameLifeCycle {
             }
         });
         pt.play();
+    }
+
+    private void endGame(Target frogRacer) {
+        if (frogRacer.centerY >= gameContext.getPrimaryScene().getWidth() / 2) {
+            raceFinished();
+            dispose();
+            gameContext.clear();
+            launch();
+        }
     }
 }
