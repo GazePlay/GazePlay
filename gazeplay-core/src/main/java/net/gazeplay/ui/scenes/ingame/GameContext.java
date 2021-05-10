@@ -1,6 +1,6 @@
 package net.gazeplay.ui.scenes.ingame;
 
-import javafx.animation.TranslateTransition;
+import javafx.animation.PauseTransition;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -16,7 +16,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -450,7 +449,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     public void onGameStarted() {
         int delay = 2000;
         gamingRoot.setDisable(true);
-        TranslateTransition Wait = new TranslateTransition(Duration.millis(delay), new Text(""));
+        PauseTransition Wait = new PauseTransition(Duration.millis(delay));
         Wait.setOnFinished(WaitEvent -> {
             gamingRoot.setDisable(false);
         });
