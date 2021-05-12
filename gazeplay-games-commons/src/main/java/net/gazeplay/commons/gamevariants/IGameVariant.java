@@ -34,6 +34,8 @@ public interface IGameVariant {
                 } catch (ClassNotFoundException ignored) {
                     return null;
                 }
+            case "DynamicMemoryVariant":
+                return new DynamicMemoryVariant(Integer.parseInt(split[1]));
             default:
                 return null;
         }

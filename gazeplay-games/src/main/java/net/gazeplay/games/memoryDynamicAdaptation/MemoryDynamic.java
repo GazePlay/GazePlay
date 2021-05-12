@@ -1,4 +1,4 @@
-package net.gazeplay.games.memory;
+package net.gazeplay.games.memoryDynamicAdaptation;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
@@ -17,7 +17,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.*;
 
 @Slf4j
-public class Memory implements GameLifeCycle {
+public class MemoryDynamic implements GameLifeCycle {
 
     private static final float cardRatio = 0.75f;
 
@@ -31,7 +31,7 @@ public class Memory implements GameLifeCycle {
     @Data
     @AllArgsConstructor
     public static class RoundDetails {
-        public final List<MemoryCard> cardList;
+        public final List<MemoryCardDynamic> cardList;
     }
 
     private int nbRemainingPeers;
@@ -68,7 +68,7 @@ public class Memory implements GameLifeCycle {
 
 
 
-    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
+    public MemoryDynamic(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
                   final boolean isOpen) {
         super();
         this.isOpen = isOpen;
@@ -104,7 +104,7 @@ public class Memory implements GameLifeCycle {
 
     }
 
-    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
+    public MemoryDynamic(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
                   final boolean isOpen, double gameSeed) {
         super();
         this.isOpen = isOpen;
@@ -163,7 +163,7 @@ public class Memory implements GameLifeCycle {
 
         images = pickRandomImages();
 
-        final List<MemoryCard> cardList = createCards(images, config);
+        final List<MemoryCardDynamic> cardList = createCards(images, config);
 
         nbRemainingPeers = cardsCount / 2;
 
@@ -190,8 +190,8 @@ public class Memory implements GameLifeCycle {
         if (this.currentRoundDetails == null) {
             return;
         }
-        final List<MemoryCard> cardsToHide = new ArrayList<>();
-        for (final MemoryCard pictureCard : this.currentRoundDetails.cardList) {
+        final List<MemoryCardDynamic> cardsToHide = new ArrayList<>();
+        for (final MemoryCardDynamic pictureCard : this.currentRoundDetails.cardList) {
             if (pictureCard.isTurned()) {
                 cardsToHide.add(pictureCard);
             }
@@ -201,7 +201,7 @@ public class Memory implements GameLifeCycle {
         gameContext.getChildren().removeAll(cardsToHide);
     }
 
-    private List<MemoryCard> createCards(final HashMap<Integer, Image> im, final Configuration config) {
+    private List<MemoryCardDynamic> createCards(final HashMap<Integer, Image> im, final Configuration config) {
         final javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         log.debug("Width {} ; height {}", gameDimension2D.getWidth(), gameDimension2D.getHeight());
@@ -215,7 +215,7 @@ public class Memory implements GameLifeCycle {
 
         log.debug("width {} ", width);
 
-        final List<MemoryCard> result = new ArrayList<>();
+        final List<MemoryCardDynamic> result = new ArrayList<>();
 
         // HashMap <index, number of times the index was used >
         final HashMap<Integer, Integer> indUsed = new HashMap<>();
@@ -241,7 +241,7 @@ public class Memory implements GameLifeCycle {
 
                 final Image image = images.get(id);
 
-                final MemoryCard card = new MemoryCard(positionX, positionY, cardWidth, cardHeight, image, id, gameContext,
+                final MemoryCardDynamic card = new MemoryCardDynamic(positionX, positionY, cardWidth, cardHeight, image, id, gameContext,
                     stats, this, fixationlength, isOpen);
 
                 result.add(card);
