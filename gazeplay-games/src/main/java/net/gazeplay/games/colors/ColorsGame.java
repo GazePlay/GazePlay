@@ -169,6 +169,7 @@ public class ColorsGame implements GameLifeCycle {
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
+        gameContext.onGameStarted();
     }
 
     @Override
