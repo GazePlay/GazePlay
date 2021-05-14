@@ -548,6 +548,7 @@ public class Race extends Parent implements GameLifeCycle {
         final TranslateTransition tt1 = new TranslateTransition(new Duration(((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * randomGenerator.nextDouble() + MIN_RACE_TIME_LENGTH)
             * 1000), frogRacer);
         tt1.setToX(dimension2D.getWidth() - dimension2D.getWidth() * 0.1);
+
         final ScaleTransition st = new ScaleTransition(new Duration(((MAX_RACE_TIME_LENGTH - MIN_RACE_TIME_LENGTH) * randomGenerator.nextDouble() + MIN_RACE_TIME_LENGTH)
             * 1000), frogRacer);
         st.setByX(1);
@@ -558,6 +559,7 @@ public class Race extends Parent implements GameLifeCycle {
 
         frogRacer.t = pt;
         pt.setOnFinished(event -> {
+            frogRacer.centerX = tt1.getToX();
             endGame(frogRacer);
         });
         pt.play();
@@ -673,7 +675,9 @@ public class Race extends Parent implements GameLifeCycle {
     }
 
     private void endGame(Target frogRacer) {
-        if (frogRacer.centerY >= gameContext.getPrimaryScene().getWidth() / 2) {
+        log.info("frogRacer.centerX : {} ; gameContext.getPrimaryScene().getWidth() * 9/10 : {}", frogRacer.getTranslateX(), gameContext.getPrimaryScene().getWidth() * 9 / 10);
+        if (frogRacer.getTranslateX() >= gameContext.getPrimaryScene().getWidth() * 9 / 10) {
+            frogRacer.centerX = 0;
             raceFinished();
             dispose();
             gameContext.clear();
