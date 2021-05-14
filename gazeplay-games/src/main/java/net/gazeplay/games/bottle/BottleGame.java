@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -21,6 +22,7 @@ import net.gazeplay.components.ProgressButton;
 
 import java.util.ArrayList;
 
+@Slf4j
 public class BottleGame implements GameLifeCycle {
 
     private final BottleGameStats bottleGameStats;
@@ -48,7 +50,9 @@ public class BottleGame implements GameLifeCycle {
 
     Image brokenBottle = new Image("data/bottle/broken.png");
 
-    public BottleGame(IGameContext gameContext, BottleGameStats stats, int number) {
+    String Stype;
+
+    public BottleGame(IGameContext gameContext, BottleGameStats stats, int number, String Stype) {
 
         this.bottleGameStats = stats;
         this.gameContext = gameContext;
@@ -104,9 +108,11 @@ public class BottleGame implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
+        this.Stype=Stype;
+
     }
 
-    public BottleGame(IGameContext gameContext, BottleGameStats stats, int number, double gameSeed) {
+    public BottleGame(IGameContext gameContext, BottleGameStats stats, int number, String Stype, double gameSeed) {
 
         this.bottleGameStats = stats;
         this.gameContext = gameContext;
@@ -161,6 +167,8 @@ public class BottleGame implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
+        this.Stype=Stype;
+
     }
 
     @Override
@@ -205,6 +213,31 @@ public class BottleGame implements GameLifeCycle {
     }
 
     private void createBottle(final int nb) {
+        //Normal size
+        int sizex=12;
+        int sizey=6;
+        if (Stype.equals("Big")){
+            sizex=8;
+            sizey=4;
+        }
+        else if(Stype.equals("Small")){
+            sizex=16;
+            sizey=8;
+        }
+        else if(Stype.equals("High")) {
+            sizex=12;
+            sizey=4;
+        }
+        else if(Stype.equals("Tiny")){
+            sizex=24;
+            sizey=12;
+        }
+        else if(!Stype.equals("Normal")){
+            //If the type is unknown, use the "Normal" settings
+            log.warn("unknown type : " + Stype + "\nThe 'Normal' settings will be use");
+        }
+
+        log.info("type : {} ; x : {} ; y : {}", Stype, sizex, sizey);
         ProgressButton b;
         double x;
         double y;
@@ -212,7 +245,7 @@ public class BottleGame implements GameLifeCycle {
         double sideOffset = dimension2D.getWidth() / 10d;
         double spaceBetweeBottle = (dimension2D.getWidth() - 2 * sideOffset) / (bottlePerLine + 1);
 
-        double bottlewidth = dimension2D.getWidth() / 12;
+        double bottlewidth = dimension2D.getWidth() / sizex;
 
 
         for (int i = 0; i < nb; i++) {
@@ -222,6 +255,7 @@ public class BottleGame implements GameLifeCycle {
             } else {
                 y = dimension2D.getHeight() / 7d + dimension2D.getHeight() / 3.5;
             }
+            y = y - (dimension2D.getHeight()/sizey - dimension2D.getHeight()/6);
             b = new ProgressButton();
             b.setLayoutX(x);
             b.setLayoutY(y);
@@ -234,7 +268,7 @@ public class BottleGame implements GameLifeCycle {
         for (final ProgressButton bo : bottle) {
             ImageView bottleI = new ImageView(bottleImage);
             bottleI.setFitWidth(bottlewidth);
-            bottleI.setFitHeight(dimension2D.getHeight() / 6);
+            bottleI.setFitHeight(dimension2D.getHeight() / sizey);
             bo.setImage(bottleI);
 
             gameContext.getChildren().add(bo);
