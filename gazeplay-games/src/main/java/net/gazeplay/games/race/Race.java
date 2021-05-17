@@ -560,8 +560,9 @@ public class Race extends Parent implements GameLifeCycle {
         frogRacer.t = pt;
         pt.setOnFinished(event -> {
             frogRacer.centerX = tt1.getToX();
-            endGame(frogRacer);
+            endGame(frogRacer, pt, tt1);
         });
+
         pt.play();
 
         return frogRacer;
@@ -674,10 +675,10 @@ public class Race extends Parent implements GameLifeCycle {
         pt.play();
     }
 
-    private void endGame(Target frogRacer) {
-        log.info("frogRacer.centerX : {} ; gameContext.getPrimaryScene().getWidth() * 9/10 : {}", frogRacer.getTranslateX(), gameContext.getPrimaryScene().getWidth() * 9 / 10);
-        if (frogRacer.getTranslateX() >= gameContext.getPrimaryScene().getWidth() * 9 / 10) {
-            frogRacer.centerX = 0;
+    private void endGame(Target frogRacer, ParallelTransition pt, TranslateTransition tt1) {
+        log.info("frogRacer.centerX : {} ; gameContext.getPrimaryScene().getWidth() * 9/10 : {}", frogRacer.centerX, gameContext.getPrimaryScene().getWidth() * 9 / 10);
+        if (frogRacer.getBoundsInParent().getCenterX() >= gameContext.getPrimaryScene().getWidth() * 9 / 10) {
+
             raceFinished();
             dispose();
             gameContext.clear();
