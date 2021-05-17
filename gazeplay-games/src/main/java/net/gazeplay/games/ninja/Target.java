@@ -58,6 +58,8 @@ public class Target extends Portrait {
     private RoundsDurationReport roundsDurationReport;
 
     private int length;
+
+    private final String variantType;
     //private List<Long> durationBetweenGoals;
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
@@ -68,6 +70,7 @@ public class Target extends Portrait {
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
         this.randomPositionGenerator = randomPositionGenerator;
+        this.variantType = gameVariant.getLabel();
 
         this.randomMiniBallsPositionGenerator = new RandomPositionGenerator(new ReplayablePseudoRandom()) {
             @Override
@@ -133,17 +136,22 @@ public class Target extends Portrait {
 
         final Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
         log.debug("currentPosition = {}, newPosition = {}, length = {}", currentPosition, newPosition, length);
+        int finalLength;
 
-        double distance = Math.sqrt(Math.pow(currentPosition.getX()- newPosition.getX(),2) + Math.pow(currentPosition.getY() - newPosition.getY(),2));
-        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        double height = dimension2D.getHeight();
-        int ratio = (int) (length/height);
-        int lengthR = (int) (distance*ratio);
-        log.info("length = {}", length);
-        log.info("lengthR = {}, level = {}, distance = {}", lengthR, ratio, distance);
+        if (variantType.equals("Random Dynamic")) {
+            double distance = Math.sqrt(Math.pow(currentPosition.getX() - newPosition.getX(), 2) + Math.pow(currentPosition.getY() - newPosition.getY(), 2));
+            Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+            double height = dimension2D.getHeight();
+            int ratio = (int) (length / height);
+            int lengthR = (int) (distance * ratio);
+            log.info("length = {}", length);
+            log.info("lengthR = {}, ratio = {}, distance = {}", lengthR, ratio, distance);
 
+            finalLength = lengthR;
+        } else
+            finalLength = length;
         final TranslateTransition translation = new TranslateTransition(
-            new Duration(lengthR), this);
+            new Duration(finalLength), this);
         translation.setByX(-this.getCenterX() + newPosition.getX());
         translation.setByY(-this.getCenterY() + newPosition.getY());
         translation.setOnFinished(actionEvent -> {
@@ -203,45 +211,69 @@ public class Target extends Portrait {
     }
 
     private void move() {
-        //final int lengthRandom = randomGen.nextInt(length) + 1000;// between 1 and 3 seconds
+        int lengthRandom = randomGen.nextInt(2000) + 1000;// between 1 and 3 seconds
 
         final Dimension2D dimension2D = randomPositionGenerator.getDimension2D();
 
-        if ( 600 < length && length < 12000) {
-            int compare = 0;
-            List<Long> listOfDurationBetweenGoals = roundsDurationReport.getOriginalDurationsBetweenGoals();
-            int sizeOfList = listOfDurationBetweenGoals.size();
-            if (sizeOfList % 3 == 0 && sizeOfList != 0) {
-                for (int i = 0; i < 3; i++) {
-                    log.info("DurationBetweenGoals.get(sizeOfList - 1 - i) = {}", listOfDurationBetweenGoals.get(sizeOfList - 1 - i));
-                    if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) <= 1000) compare++;
-                    if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) >= 2000) compare--;
+        if (variantType.contains("Dynamic")){
+            if (dimension2D.getHeight() < length && length < 12000) {
+                int compare = 0;
+                List<Long> listOfDurationBetweenGoals = roundsDurationReport.getOriginalDurationsBetweenGoals();
+                int sizeOfList = listOfDurationBetweenGoals.size();
+                if (sizeOfList % 3 == 0 && sizeOfList != 0) {
+                    for (int i = 0; i < 3; i++) {
+                        log.info("DurationBetweenGoals.get(sizeOfList - 1 - i) = {}", listOfDurationBetweenGoals.get(sizeOfList - 1 - i));
+                        if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) <= 1000) compare++;
+                        if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) >= 2000) compare--;
 
+                    }
+                    if (compare == 3) length -= 400;
+                    if (compare == -3) length += 400;
                 }
-                if (compare == 3) length -= 400;
-                if (compare == -3) length += 400;
             }
         }
-        //log.info("length = {}", length);
+
         switch (gameVariant) {
             case RANDOM: // random
-                moveRandom(length);
+                moveRandom(lengthRandom);
                 break;
             case VERTICAL: // vertical
                 createBackAndForthTranslations(new Position(getCenterX(), getInitialRadius()),
-                    new Position(getCenterX(), dimension2D.getHeight() - getInitialRadius()), length);
+                    new Position(getCenterX(), dimension2D.getHeight() - getInitialRadius()), lengthRandom*2);
                 break;
             case HORIZONTAL: // horizontal
                 createBackAndForthTranslations(new Position(getInitialRadius(), getCenterY()),
-                    new Position(dimension2D.getWidth() - getInitialRadius(), getCenterY()), length);
+                    new Position(dimension2D.getWidth() - getInitialRadius(), getCenterY()), lengthRandom*2);
                 break;
             case DIAGONAL_UPPER_LEFT_TO_LOWER_RIGHT: // Diagonal \
                 createBackAndForthTranslations(new Position(getInitialRadius(), getInitialRadius()),
                     new Position(dimension2D.getWidth() - getInitialRadius(),
                         dimension2D.getHeight() - getInitialRadius()),
-                    length);
+                    lengthRandom*2);
                 break;
             case DIAGONAL_UPPER_RIGHT_TO_LOWER_LEFT: // Diagonal /
+                createBackAndForthTranslations(new Position(dimension2D.getWidth() - getInitialRadius(), getInitialRadius()),
+                    new Position(0, dimension2D.getHeight() - getInitialRadius()), lengthRandom*2);
+                break;
+
+            case DYNAMIC_RANDOM:
+                moveRandom(length);
+                break;
+            case DYNAMIC_VERTICAL: // vertical
+                createBackAndForthTranslations(new Position(getCenterX(), getInitialRadius()),
+                    new Position(getCenterX(), dimension2D.getHeight() - getInitialRadius()), length);
+                break;
+            case DYNAMIC_HORIZONTAL: // horizontal
+                createBackAndForthTranslations(new Position(getInitialRadius(), getCenterY()),
+                    new Position(dimension2D.getWidth() - getInitialRadius(), getCenterY()), length);
+                break;
+            case DYNAMIC_DIAGONAL_UPPER_LEFT_TO_LOWER_RIGHT: // Diagonal \
+                createBackAndForthTranslations(new Position(getInitialRadius(), getInitialRadius()),
+                    new Position(dimension2D.getWidth() - getInitialRadius(),
+                        dimension2D.getHeight() - getInitialRadius()),
+                    length);
+                break;
+            case DYNAMIC_DIAGONAL_UPPER_RIGHT_TO_LOWER_LEFT: // Diagonal /
                 createBackAndForthTranslations(new Position(dimension2D.getWidth() - getInitialRadius(), getInitialRadius()),
                     new Position(0, dimension2D.getHeight() - getInitialRadius()), length);
                 break;

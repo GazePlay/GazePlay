@@ -25,6 +25,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
 import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.generators.EnumGameVariantGenerator;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
@@ -124,6 +125,60 @@ public class GameVariantDialog extends Stage {
                 bottom.getChildren().add(normal);
                 sceneContentPane.setBottom(bottom);
                 facile.setOnAction(actionEvent -> {
+                    if (!easymode) {
+                        easymode = true;
+                        choicePanelScroller.setContent(choicePaneEasy);
+                    }
+                });
+                normal.setOnAction(actionEvent -> {
+                    if (easymode) {
+                        easymode = false;
+                        choicePanelScroller.setContent(choicePane);
+                    }
+                });
+            }
+
+            if (gameSpec.getGameSummary().getNameCode().contains("Memory")) {
+                if (variant instanceof DimensionGameVariant) {
+                    variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "normal");
+                }
+                ToggleGroup group = new ToggleGroup();
+                RadioButton normal = new RadioButton("Normal");
+                normal.setToggleGroup(group);
+                normal.setSelected(true);
+                RadioButton dynamic = new RadioButton("Dynamic");
+                dynamic.setToggleGroup(group);
+                HBox bottom = new HBox();
+                bottom.getChildren().add(dynamic);
+                bottom.getChildren().add(normal);
+                sceneContentPane.setBottom(bottom);
+                dynamic.setOnAction(actionEvent -> {
+                    if (!easymode) {
+                        easymode = true;
+                        choicePanelScroller.setContent(choicePaneEasy);
+                    }
+                });
+                normal.setOnAction(actionEvent -> {
+                    if (easymode) {
+                        easymode = false;
+                        choicePanelScroller.setContent(choicePane);
+                    }
+                });
+            }
+
+            if (gameSpec.getGameSummary().getNameCode().equals("Ninja")) {
+
+                ToggleGroup group = new ToggleGroup();
+                RadioButton normal = new RadioButton("Normal");
+                normal.setToggleGroup(group);
+                normal.setSelected(true);
+                RadioButton dynamic = new RadioButton("Dynamic");
+                dynamic.setToggleGroup(group);
+                HBox bottom = new HBox();
+                bottom.getChildren().add(dynamic);
+                bottom.getChildren().add(normal);
+                sceneContentPane.setBottom(bottom);
+                dynamic.setOnAction(actionEvent -> {
                     if (!easymode) {
                         easymode = true;
                         choicePanelScroller.setContent(choicePaneEasy);

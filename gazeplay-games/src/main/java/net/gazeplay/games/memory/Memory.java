@@ -40,6 +40,7 @@ public class Memory implements GameLifeCycle {
 
     private int nbLines;
     private int nbColumns;
+    private String difficulty;
 
     private final Stats stats;
 
@@ -68,7 +69,7 @@ public class Memory implements GameLifeCycle {
 
 
 
-    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
+    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final String difficulty, final Stats stats,
                   final boolean isOpen) {
         super();
         this.isOpen = isOpen;
@@ -81,6 +82,7 @@ public class Memory implements GameLifeCycle {
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
+        this.difficulty = difficulty;
         this.stats = stats;
         this.nbCorrectCards = 0;
         this.nbWrongCards = 0;
@@ -104,7 +106,7 @@ public class Memory implements GameLifeCycle {
 
     }
 
-    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
+    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final String difficulty, final Stats stats,
                   final boolean isOpen, double gameSeed) {
         super();
         this.isOpen = isOpen;
@@ -117,6 +119,7 @@ public class Memory implements GameLifeCycle {
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
+        this.difficulty = difficulty;
         this.stats = stats;
         this.nbCorrectCards = 0;
         this.nbWrongCards = 0;
@@ -346,6 +349,7 @@ public class Memory implements GameLifeCycle {
 
     }
 
-
-
+    public String getDifficulty() {
+        return difficulty;
+    }
 }
