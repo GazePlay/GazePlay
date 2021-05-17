@@ -70,6 +70,8 @@ public class Race extends Parent implements GameLifeCycle {
 
     private final ReplayablePseudoRandom randomGenerator;
 
+    private int numberOfRacerFinished = 0;
+
     // done
     public Race(final IGameContext gameContext, final Stats stats, final String type) {
         this.gameContext = gameContext;
@@ -532,6 +534,8 @@ public class Race extends Parent implements GameLifeCycle {
         final double size = Math.min(scene.getWidth()/10,scene.getHeight()/10);
         final Target frogRacer = buildRacer(size);
 
+        int numberOfRacer = 0;
+
         ColorAdjust colorAdjust = new ColorAdjust();
         colorAdjust.setSaturation(1.3);
         frogRacer.setEffect(colorAdjust);
@@ -559,12 +563,10 @@ public class Race extends Parent implements GameLifeCycle {
 
         frogRacer.t = pt;
         pt.setOnFinished(event -> {
-            frogRacer.centerX = tt1.getToX();
-            endGame(frogRacer, pt, tt1);
+            endGame(frogRacer);
         });
 
         pt.play();
-
         return frogRacer;
     }
 
@@ -675,14 +677,18 @@ public class Race extends Parent implements GameLifeCycle {
         pt.play();
     }
 
-    private void endGame(Target frogRacer, ParallelTransition pt, TranslateTransition tt1) {
+    private void endGame(Target frogRacer) {
         log.info("frogRacer.centerX : {} ; gameContext.getPrimaryScene().getWidth() * 9/10 : {}", frogRacer.centerX, gameContext.getPrimaryScene().getWidth() * 9 / 10);
         if (frogRacer.getBoundsInParent().getCenterX() >= gameContext.getPrimaryScene().getWidth() * 9 / 10) {
+            numberOfRacerFinished = numberOfRacerFinished + 1;
 
-            raceFinished();
-            dispose();
-            gameContext.clear();
-            launch();
+            if(numberOfRacerFinished == 3) {
+                numberOfRacerFinished = 0;
+                raceFinished();
+                dispose();
+                gameContext.clear();
+                launch();
+            }
         }
     }
 }
