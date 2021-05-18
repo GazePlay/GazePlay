@@ -15,6 +15,8 @@ import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.components.ProgressButton;
+import net.gazeplay.games.cakes.CakeGameVariant;
+import org.w3c.dom.css.Rect;
 
 import java.util.List;
 
@@ -38,11 +40,16 @@ public class OpinionsGame implements GameLifeCycle {
     private ProgressButton noCare;
     private ProgressButton thumbUp;
 
+    private ProgressButton Oui;
+    private ProgressButton Non;
+
     private int score = 0;
 
     private final ReplayablePseudoRandom randomGenerator;
 
-    public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats) {
+    private final OpinionsGameVariant type;
+
+    public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats, final OpinionsGameVariant type) {
         this.stats = stats;
         this.opinionGameStats = this.stats;
         this.gameContext = gameContext;
@@ -59,9 +66,11 @@ public class OpinionsGame implements GameLifeCycle {
         final Group foregroundLayer = new Group();
         gameContext.getChildren().add(foregroundLayer);
 
+        this.type = type;
+
     }
 
-    public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats, double gameSeed) {
+    public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats, final OpinionsGameVariant type,  double gameSeed) {
         this.stats = stats;
         this.opinionGameStats = this.stats;
         this.gameContext = gameContext;
@@ -76,6 +85,8 @@ public class OpinionsGame implements GameLifeCycle {
         this.middleLayer = new Group();
         final Group foregroundLayer = new Group();
         gameContext.getChildren().add(foregroundLayer);
+
+        this.type = type;
 
     }
 
@@ -92,63 +103,125 @@ public class OpinionsGame implements GameLifeCycle {
         backgroundLayer.getChildren().add(background);
         background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
 
-        thumbDown = new ProgressButton();
-        createAddButtonOpinions(thumbDown, "data/opinions/thumbs/thumbdown.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
+        if (type.equals(OpinionsGameVariant.OPINIONS)) {
 
-        thumbDown.assignIndicator(event -> {
-            background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
-            stats.incrementNumberOfGoalsReached();
-            updateScore();
-        }, configuration.getFixationLength());
-        gameContext.getGazeDeviceManager().addEventFilter(thumbDown);
-        thumbDown.active();
+            thumbDown = new ProgressButton();
+            createAddButtonOpinions(thumbDown, "data/opinions/thumbs/thumbdown.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
 
-        noCare = new ProgressButton();
-        createAddButtonOpinions(noCare, "data/opinions/thumbs/nocare.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
+            thumbDown.assignIndicator(event -> {
+                background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+                stats.incrementNumberOfGoalsReached();
+                updateScore();
+            }, configuration.getFixationLength());
+            gameContext.getGazeDeviceManager().addEventFilter(thumbDown);
+            thumbDown.active();
 
-        noCare.assignIndicator(event -> {
-            background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
-            stats.incrementNumberOfGoalsReached();
-            updateScore();
-        }, configuration.getFixationLength());
-        gameContext.getGazeDeviceManager().addEventFilter(noCare);
-        noCare.active();
+            noCare = new ProgressButton();
+            createAddButtonOpinions(noCare, "data/opinions/thumbs/nocare.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
 
-        thumbUp = new ProgressButton();
-        createAddButtonOpinions(thumbUp, "data/opinions/thumbs/thumbup.png", 0, dimension2D.getHeight() * 2 / 5);
+            noCare.assignIndicator(event -> {
+                background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+                stats.incrementNumberOfGoalsReached();
+                updateScore();
+            }, configuration.getFixationLength());
+            gameContext.getGazeDeviceManager().addEventFilter(noCare);
+            noCare.active();
 
-        thumbUp.assignIndicator(event -> {
-            background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
-            stats.incrementNumberOfGoalsReached();
-            updateScore();
-        }, configuration.getFixationLength());
-        gameContext.getGazeDeviceManager().addEventFilter(thumbUp);
-        thumbUp.active();
+            thumbUp = new ProgressButton();
+            createAddButtonOpinions(thumbUp, "data/opinions/thumbs/thumbup.png", 0, dimension2D.getHeight() * 2 / 5);
 
-        List<Image> Picture = thumbImage.pickAllImages();
-        for (Image I : Picture) {
-            log.info("coucou: " + I.getUrl());
-            if (I.getUrl().equals("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbdown.png")) {
-                ImageView thumbDo = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbdown.png")).getImage());
-                thumbDown.setImage(thumbDo);
-                thumbDo.setFitWidth(dimension2D.getWidth() / 10);
-                thumbDo.setFitHeight(dimension2D.getHeight() / 5);
-            }
-            if (I.getUrl().equals("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbup.png")) {
-                ImageView thumbU = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbup.png")).getImage());
-                thumbUp.setImage(thumbU);
-                thumbU.setFitWidth(dimension2D.getWidth() / 10);
-                thumbU.setFitHeight(dimension2D.getHeight() / 5);
-            }
-            if (I.getUrl().equals("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/nocare.png")) {
-                ImageView noCar = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/nocare.png")).getImage());
-                noCare.setImage(noCar);
-                noCar.setFitWidth(dimension2D.getWidth() / 10);
-                noCar.setFitHeight(dimension2D.getHeight() / 5);
-            }
+            thumbUp.assignIndicator(event -> {
+                background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+                stats.incrementNumberOfGoalsReached();
+                updateScore();
+            }, configuration.getFixationLength());
+            gameContext.getGazeDeviceManager().addEventFilter(thumbUp);
+            thumbUp.active();
+
+            /*List<Image> Picture = thumbImage.pickAllImages();
+            for (Image I : Picture) {
+                log.info("coucou: " + I.getUrl());
+                if (I.getUrl().equals("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbdown.png")) {
+                    ImageView thumbDo = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbdown.png")).getImage());
+                    thumbDown.setImage(thumbDo);
+                    thumbDo.setFitWidth(dimension2D.getWidth() / 10);
+                    thumbDo.setFitHeight(dimension2D.getHeight() / 5);
+                }
+                if (I.getUrl().equals("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbup.png")) {
+                    ImageView thumbU = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbup.png")).getImage());
+                    thumbUp.setImage(thumbU);
+                    thumbU.setFitWidth(dimension2D.getWidth() / 10);
+                    thumbU.setFitHeight(dimension2D.getHeight() / 5);
+                }
+                if (I.getUrl().equals("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/nocare.png")) {
+                    ImageView noCar = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/nocare.png")).getImage());
+                    noCare.setImage(noCar);
+                    noCar.setFitWidth(dimension2D.getWidth() / 10);
+                    noCar.setFitHeight(dimension2D.getHeight() / 5);
+                }
+            }*/
+
+            middleLayer.getChildren().addAll(thumbUp, thumbDown, noCare);
+
         }
 
-        middleLayer.getChildren().addAll(thumbUp, thumbDown, noCare);
+        else {
+
+            Oui = new ProgressButton();
+
+            Non = new ProgressButton();
+
+            Rectangle bar = new Rectangle();
+
+            if (type.equals(OpinionsGameVariant.ONHB)) {
+                createAddButtonOpinions(Oui, "data/opinions/thumbs/oui.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
+                createAddButtonOpinions(Non, "data/opinions/thumbs/non.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, dimension2D.getHeight() * 16 / 20);
+                bar = new Rectangle(dimension2D.getWidth() * 0.05, dimension2D.getHeight() * 0.475, dimension2D.getWidth() * 0.9, dimension2D.getHeight() * 0.05);
+                bar.setFill(new ImagePattern(new Image("data/opinions/thumbs/etagere.png")));
+            }
+
+            if (type.equals(OpinionsGameVariant.ONBH)) {
+                createAddButtonOpinions(Oui, "data/opinions/thumbs/oui.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, dimension2D.getHeight() * 16 / 20);
+                createAddButtonOpinions(Non, "data/opinions/thumbs/non.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
+                bar = new Rectangle(dimension2D.getWidth() * 0.05, dimension2D.getHeight() * 0.475, dimension2D.getWidth() * 0.9, dimension2D.getHeight() * 0.05);
+                bar.setFill(new ImagePattern(new Image("data/opinions/thumbs/etagere.png")));
+            }
+
+            if (type.equals(OpinionsGameVariant.ONGD)) {
+                createAddButtonOpinions(Oui, "data/opinions/thumbs/oui.png", 0, dimension2D.getHeight() * 2 / 5);
+                createAddButtonOpinions(Non, "data/opinions/thumbs/non.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
+                bar = new Rectangle(dimension2D.getWidth() * 0.475, dimension2D.getHeight() * 0.05, dimension2D.getWidth() * 0.05, dimension2D.getHeight() * 0.9);
+                bar.setFill(new ImagePattern(new Image("data/opinions/thumbs/etagererot.png")));
+            }
+
+            if (type.equals(OpinionsGameVariant.ONDG)) {
+                createAddButtonOpinions(Oui, "data/opinions/thumbs/oui.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
+                createAddButtonOpinions(Non, "data/opinions/thumbs/non.png", 0, dimension2D.getHeight() * 2 / 5);
+                bar = new Rectangle(dimension2D.getWidth() * 0.475, dimension2D.getHeight() * 0.05, dimension2D.getWidth() * 0.05, dimension2D.getHeight() * 0.9);
+                bar.setFill(new ImagePattern(new Image("data/opinions/thumbs/etagererot.png")));
+            }
+
+            Oui.assignIndicator(event -> {
+                background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+                stats.incrementNumberOfGoalsReached();
+                updateScore();
+            }, configuration.getFixationLength());
+            gameContext.getGazeDeviceManager().addEventFilter(Oui);
+            Oui.active();
+
+            Non.assignIndicator(event -> {
+                background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+                stats.incrementNumberOfGoalsReached();
+                updateScore();
+            }, configuration.getFixationLength());
+            gameContext.getGazeDeviceManager().addEventFilter(Non);
+            Non.active();
+
+            middleLayer.getChildren().addAll(Oui, Non);
+
+            backgroundLayer.getChildren().add(bar);
+
+        }
 
         gameContext.getChildren().addAll(backgroundLayer, middleLayer);
 
@@ -163,6 +236,8 @@ public class OpinionsGame implements GameLifeCycle {
             thumbUp.disable(true);
             thumbDown.disable(true);
             noCare.disable(true);
+            Oui.disable(true);
+            Non.disable(true);
             score = 0;
         }
     }
