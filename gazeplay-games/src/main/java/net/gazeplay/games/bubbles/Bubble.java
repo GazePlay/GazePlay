@@ -263,8 +263,8 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         final Circle newCircle = new Circle();
         final Dimension2D screenDimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        double maxRadius = Math.min(screenDimension.getWidth()/12,screenDimension.getHeight()/12);
-        double minRadius =  Math.min(screenDimension.getHeight()/30,screenDimension.getWidth()/30);
+        double maxRadius = Math.min(screenDimension.getWidth()/8,screenDimension.getHeight()/8);
+        double minRadius =  Math.min(screenDimension.getHeight()/15,screenDimension.getWidth()/15);
         final double radius = (maxRadius - minRadius) * randomGenerator.nextDouble() + minRadius;
 
         newCircle.setRadius(radius);
