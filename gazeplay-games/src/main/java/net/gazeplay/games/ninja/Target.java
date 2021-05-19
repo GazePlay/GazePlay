@@ -139,15 +139,20 @@ public class Target extends Portrait {
         int finalLength;
 
         if (variantType.equals("Random Dynamic")) {
-            double distance = Math.sqrt(Math.pow(currentPosition.getX() - newPosition.getX(), 2) + Math.pow(currentPosition.getY() - newPosition.getY(), 2));
+
             Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             double height = dimension2D.getHeight();
+            double distance = Math.sqrt(Math.pow(currentPosition.getX() - newPosition.getX(), 2) + Math.pow(currentPosition.getY() - newPosition.getY(), 2));
             int ratio = (int) (length / height);
             int lengthR = (int) (distance * ratio);
+
             log.info("length = {}", length);
             log.info("lengthR = {}, ratio = {}, distance = {}", lengthR, ratio, distance);
 
-            finalLength = lengthR;
+            if (ratio != 0)
+                finalLength = lengthR;
+            else
+                finalLength = (int)distance;
         } else
             finalLength = length;
         final TranslateTransition translation = new TranslateTransition(
@@ -216,7 +221,7 @@ public class Target extends Portrait {
         final Dimension2D dimension2D = randomPositionGenerator.getDimension2D();
 
         if (variantType.contains("Dynamic")){
-            if (dimension2D.getHeight() < length && length < 12000) {
+            if (500 < length && length < 12000) {
                 int compare = 0;
                 List<Long> listOfDurationBetweenGoals = roundsDurationReport.getOriginalDurationsBetweenGoals();
                 int sizeOfList = listOfDurationBetweenGoals.size();
@@ -227,8 +232,8 @@ public class Target extends Portrait {
                         if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) >= 2000) compare--;
 
                     }
-                    if (compare == 3) length -= 400;
-                    if (compare == -3) length += 400;
+                    if (compare == 3 && length > 600) length -= 400;
+                    if (compare == -3 && length < 11800) length += 400;
                 }
             }
         }

@@ -26,6 +26,7 @@ import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
 import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.generators.EnumGameVariantGenerator;
+import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
@@ -104,7 +105,7 @@ public class GameVariantDialog extends Stage {
             button.setMaxWidth(primaryStage.getWidth() / 8);
             button.setMaxHeight(primaryStage.getHeight() / 8);
 
-            if (variant instanceof DimensionDifficultyGameVariant) {
+            if ((variant instanceof DimensionDifficultyGameVariant) || (variant.toString().contains("DYNAMIC"))) {
                 choicePaneEasy.getChildren().add(button);
             } else {
                 choicePane.getChildren().add(button);
@@ -140,10 +141,10 @@ public class GameVariantDialog extends Stage {
 
             if (gameSpec.getGameSummary().getNameCode().contains("Memory")) {
                 if (variant instanceof DimensionGameVariant) {
-                    variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "normal");
+                    variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "Dynamic");
                 }
                 ToggleGroup group = new ToggleGroup();
-                RadioButton normal = new RadioButton("Normal");
+                RadioButton normal = new RadioButton("Static");
                 normal.setToggleGroup(group);
                 normal.setSelected(true);
                 RadioButton dynamic = new RadioButton("Dynamic");
@@ -167,9 +168,8 @@ public class GameVariantDialog extends Stage {
             }
 
             if (gameSpec.getGameSummary().getNameCode().equals("Ninja")) {
-
                 ToggleGroup group = new ToggleGroup();
-                RadioButton normal = new RadioButton("Normal");
+                RadioButton normal = new RadioButton("Static");
                 normal.setToggleGroup(group);
                 normal.setSelected(true);
                 RadioButton dynamic = new RadioButton("Dynamic");
