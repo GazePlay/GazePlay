@@ -174,8 +174,8 @@ public class OpinionsGame implements GameLifeCycle {
             Rectangle bar = new Rectangle();
 
             if (type.equals(OpinionsGameVariant.ONHB)) {
-                createAddButtonOpinions(Oui, "data/opinions/thumbs/oui.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
-                createAddButtonOpinions(Non, "data/opinions/thumbs/non.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, dimension2D.getHeight() * 16 / 20);
+                createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
+                createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, dimension2D.getHeight() * 16 / 20);
                 bar = new Rectangle(dimension2D.getWidth() * 0.05, dimension2D.getHeight() * 0.475, dimension2D.getWidth() * 0.9, dimension2D.getHeight() * 0.05);
                 bar.setFill(new ImagePattern(new Image("data/opinions/thumbs/etagere.png")));
             }
