@@ -230,7 +230,7 @@ public class OpinionsGame implements GameLifeCycle {
     private void updateScore() {
         score = score + 1;
         if (score == 10) {
-            gameContext.playWinTransition(100, event1 -> gameContext.showRoundStats(opinionGameStats, this));
+            gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(opinionGameStats, this));
             middleLayer.getChildren().clear();
             score = 0;
         }
