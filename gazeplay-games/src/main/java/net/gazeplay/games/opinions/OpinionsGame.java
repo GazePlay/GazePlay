@@ -15,8 +15,6 @@ import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.components.ProgressButton;
-import net.gazeplay.games.cakes.CakeGameVariant;
-import org.w3c.dom.css.Rect;
 
 import java.util.List;
 
@@ -181,22 +179,22 @@ public class OpinionsGame implements GameLifeCycle {
             }
 
             if (type.equals(OpinionsGameVariant.ONBH)) {
-                createAddButtonOpinions(Oui, "data/opinions/thumbs/oui.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, dimension2D.getHeight() * 16 / 20);
-                createAddButtonOpinions(Non, "data/opinions/thumbs/non.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
+                createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, dimension2D.getHeight() * 16 / 20);
+                createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
                 bar = new Rectangle(dimension2D.getWidth() * 0.05, dimension2D.getHeight() * 0.475, dimension2D.getWidth() * 0.9, dimension2D.getHeight() * 0.05);
                 bar.setFill(new ImagePattern(new Image("data/opinions/thumbs/etagere.png")));
             }
 
             if (type.equals(OpinionsGameVariant.ONGD)) {
-                createAddButtonOpinions(Oui, "data/opinions/thumbs/oui.png", 0, dimension2D.getHeight() * 2 / 5);
-                createAddButtonOpinions(Non, "data/opinions/thumbs/non.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
+                createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", 0, dimension2D.getHeight() * 2 / 5);
+                createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
                 bar = new Rectangle(dimension2D.getWidth() * 0.475, dimension2D.getHeight() * 0.05, dimension2D.getWidth() * 0.05, dimension2D.getHeight() * 0.9);
                 bar.setFill(new ImagePattern(new Image("data/opinions/thumbs/etagererot.png")));
             }
 
             if (type.equals(OpinionsGameVariant.ONDG)) {
-                createAddButtonOpinions(Oui, "data/opinions/thumbs/oui.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
-                createAddButtonOpinions(Non, "data/opinions/thumbs/non.png", 0, dimension2D.getHeight() * 2 / 5);
+                createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
+                createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", 0, dimension2D.getHeight() * 2 / 5);
                 bar = new Rectangle(dimension2D.getWidth() * 0.475, dimension2D.getHeight() * 0.05, dimension2D.getWidth() * 0.05, dimension2D.getHeight() * 0.9);
                 bar.setFill(new ImagePattern(new Image("data/opinions/thumbs/etagererot.png")));
             }
@@ -232,12 +230,8 @@ public class OpinionsGame implements GameLifeCycle {
     private void updateScore() {
         score = score + 1;
         if (score == 10) {
-            gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(opinionGameStats, this));
-            thumbUp.disable(true);
-            thumbDown.disable(true);
-            noCare.disable(true);
-            Oui.disable(true);
-            Non.disable(true);
+            gameContext.playWinTransition(100, event1 -> gameContext.showRoundStats(opinionGameStats, this));
+            middleLayer.getChildren().clear();
             score = 0;
         }
     }
