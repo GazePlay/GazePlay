@@ -125,7 +125,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
         if (doAnim) {
             //The animation of the creation of the labyrinthe
-            int delay = 20;
+            int delay = 20;     //The delay between each dig (in ms)
             Anim(delay);
         } else {
             // Creation of cheese
@@ -223,11 +223,11 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         ret[0][0]=0;
 
         //Goals to dig
-        int nbObj = (int) (Math.cbrt(nbBoxesColumns * nbBoxesLine));
+        int nbObj = (int) (1.5 * Math.cbrt(nbBoxesColumns * nbBoxesLine));
         int Objx, Objy;     //My goal to reach
         int Robx, Roby;     //My digger robot
         int r;              //My rand var
-        int rmax = 20;      //My bond of my rand var
+        int rmax = 10;      //My bond of my rand var
         int noise = (int) (Math.sqrt(nbObj));
         for (int i=0; i<nbObj; i++){
             Objx = (int) (nbBoxesLine * (i % (int) (Math.sqrt(nbObj)) / (Math.sqrt(nbObj)-2) + (randomGenerator.nextDouble()-0.5)/noise));
@@ -238,7 +238,6 @@ public class Labyrinth extends Parent implements GameLifeCycle {
             if (Objy>=nbBoxesColumns){Objy=nbBoxesColumns-1;}
             Robx = Objx;
             Roby = Objy;
-            //*
             while (lab[Robx][Roby] == 1){
                 Robx = randomGenerator.nextInt(nbBoxesLine);
                 Roby = randomGenerator.nextInt(nbBoxesColumns);
