@@ -321,12 +321,6 @@ public class Memory implements GameLifeCycle {
             setNbLines(3);
         }
 
-        else if (level == 7) {
-            setNbColumns(4);
-            setNbLines(4);
-            level++;
-        }
-
         else if (level == 8) {
             setNbColumns(4);
             setNbLines(4);

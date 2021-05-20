@@ -156,8 +156,18 @@ public class MemoryCard extends Parent {
                         if (gameInstance.totalNbOfTries() >= 2.5 * gameInstance.getLevel() && gameInstance.getNbColumns() > 2)
                             compare--;
                     }
-                    if (compare == 3) gameInstance.setLevel(gameInstance.getLevel() + 1);
-                    if (compare == -3) gameInstance.setLevel(gameInstance.getLevel() - 1);
+                    if (compare == 3) {
+                        if(gameInstance.getLevel() == 6)
+                            gameInstance.setLevel(gameInstance.getLevel() + 2);
+                        else
+                            gameInstance.setLevel(gameInstance.getLevel() + 1);
+                    }
+                    if (compare == -3) {
+                        if(gameInstance.getLevel() == 8)
+                            gameInstance.setLevel(gameInstance.getLevel() - 2);
+                        else
+                            gameInstance.setLevel(gameInstance.getLevel() - 1);
+                    }
                 }
 
                 gameInstance.adaptLevel();
