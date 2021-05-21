@@ -149,7 +149,7 @@ public class Bubble extends Parent implements GameLifeCycle {
         enterEvent = e -> {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                inTarget=true;
+                inTarget = true;
                 enter((Circle) e.getTarget());
             }
             if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED){
