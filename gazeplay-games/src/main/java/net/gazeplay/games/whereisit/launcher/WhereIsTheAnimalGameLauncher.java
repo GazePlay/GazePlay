@@ -5,6 +5,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
+import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
 import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
@@ -18,7 +19,7 @@ import net.gazeplay.games.whereisit.WhereIsItStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class WhereIsTheAnimalGameLauncher implements IGameLauncher<Stats, DimensionGameVariant> {
+public class WhereIsTheAnimalGameLauncher implements IGameLauncher<Stats, DimensionDifficultyGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new WhereIsItStats(scene, WhereIsItGameType.ANIMAL_NAME.getGameName());
@@ -31,14 +32,20 @@ public class WhereIsTheAnimalGameLauncher implements IGameLauncher<Stats, Dimens
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
-                                       DimensionGameVariant gameVariant, Stats stats) {
-        return new WhereIsIt(WhereIsItGameType.ANIMAL_NAME, gameVariant.getWidth(),
-            gameVariant.getHeight(), false, gameContext, stats);
+                                       DimensionDifficultyGameVariant gameVariant, Stats stats) {
+        if (gameVariant.getDifficulty().equals("Dynamic")) {
+            return new WhereIsIt(WhereIsItGameType.ANIMAL_NAME_DYNAMIC, gameVariant.getWidth(),
+                gameVariant.getHeight(), false, gameContext, stats);
+        } else {
+            return new WhereIsIt(WhereIsItGameType.ANIMAL_NAME, gameVariant.getWidth(),
+                gameVariant.getHeight(), false, gameContext, stats);
+        }
+
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
-                                    DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+                                    DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
         return new WhereIsIt(WhereIsItGameType.ANIMAL_NAME, gameVariant.getWidth(),
             gameVariant.getHeight(), false, gameContext, stats, gameSeed);
     }

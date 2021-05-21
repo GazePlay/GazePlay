@@ -66,6 +66,11 @@ public class GameVariantDialog extends Stage {
         choicePaneEasy.setHgap(10);
         choicePaneEasy.setVgap(10);
 
+        FlowPane choicePaneDynamic = new FlowPane();
+        choicePaneDynamic.setAlignment(Pos.CENTER);
+        choicePaneDynamic.setHgap(10);
+        choicePaneDynamic.setVgap(10);
+
         ScrollPane choicePanelScroller = new ScrollPane();
         choicePanelScroller.setContent(choicePane);
         choicePanelScroller.setFitToWidth(true);
@@ -105,10 +110,40 @@ public class GameVariantDialog extends Stage {
             button.setMaxWidth(primaryStage.getWidth() / 8);
             button.setMaxHeight(primaryStage.getHeight() / 8);
 
-            if ((variant instanceof DimensionDifficultyGameVariant) || (variant.toString().contains("DYNAMIC"))) {
+            if ((variant instanceof DimensionDifficultyGameVariant) && (variant.toString().contains("easy"))) {
                 choicePaneEasy.getChildren().add(button);
+            } else if ((variant instanceof DimensionDifficultyGameVariant) || (variant.toString().contains("DYNAMIC"))) {
+                choicePaneDynamic.getChildren().add(button);
             } else {
                 choicePane.getChildren().add(button);
+            }
+
+            if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal")) {
+                if (variant instanceof DimensionGameVariant) {
+                    variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "normal");
+                }
+                ToggleGroup group = new ToggleGroup();
+                RadioButton normal = new RadioButton("normal");
+                normal.setToggleGroup(group);
+                normal.setSelected(true);
+                RadioButton dynamic = new RadioButton("dynamic");
+                dynamic.setToggleGroup(group);
+                HBox bottom = new HBox();
+                bottom.getChildren().add(dynamic);
+                bottom.getChildren().add(normal);
+                sceneContentPane.setBottom(bottom);
+                dynamic.setOnAction(actionEvent -> {
+                    if (!easymode) {
+                        easymode = true;
+                        choicePanelScroller.setContent(choicePaneDynamic);
+                    }
+                });
+                normal.setOnAction(actionEvent -> {
+                    if (easymode) {
+                        easymode = false;
+                        choicePanelScroller.setContent(choicePane);
+                    }
+                });
             }
 
             if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) {
@@ -138,6 +173,7 @@ public class GameVariantDialog extends Stage {
                     }
                 });
             }
+
 
             if (gameSpec.getGameSummary().getNameCode().contains("Memory")) {
                 if (variant instanceof DimensionGameVariant) {
@@ -181,7 +217,7 @@ public class GameVariantDialog extends Stage {
                 dynamic.setOnAction(actionEvent -> {
                     if (!easymode) {
                         easymode = true;
-                        choicePanelScroller.setContent(choicePaneEasy);
+                        choicePanelScroller.setContent(choicePaneDynamic);
                     }
                 });
                 normal.setOnAction(actionEvent -> {
