@@ -11,24 +11,26 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.utils.stats.Stats;
+
 import java.util.ArrayList;
 
 @Slf4j
 public class SoundMakingEntity extends Parent {
     private final ArrayList<String> audioClips;
     private final ProgressIndicator progressIndicator;
-    private final Timeline progressTimeline;
+    private Timeline progressTimeline;
     private final Timeline movetimeline;
     private int soundIter;
     private final Stats stats;
     private final SoundManager soundManager;
 
     public SoundMakingEntity(final ImageView imageView, final Stats stats, final ArrayList<String> audioClips,
-                             final ProgressIndicator progressIndicator, final int fixationLength, final SoundManager soundManager, ReplayablePseudoRandom randomGenerator) {
+                             final ProgressIndicator progressIndicator, final IGameContext gameContext, final SoundManager soundManager, ReplayablePseudoRandom randomGenerator) {
         this.audioClips = audioClips;
         this.progressIndicator = progressIndicator;
         this.stats = stats;
@@ -39,11 +41,6 @@ public class SoundMakingEntity extends Parent {
 
         this.getChildren().addAll(imageView, progressIndicator);
 
-        progressTimeline = new Timeline(
-            new KeyFrame(new Duration(fixationLength), new KeyValue(progressIndicator.progressProperty(), 1)));
-
-        progressTimeline.setOnFinished(e -> selected());
-
         movetimeline = new Timeline(new KeyFrame(Duration.seconds(0.5), new KeyValue(imageView.rotateProperty(), 10)),
             new KeyFrame(Duration.seconds(1), new KeyValue(imageView.rotateProperty(), -10)),
             new KeyFrame(Duration.seconds(1.5), new KeyValue(imageView.rotateProperty(), 10)),
@@ -52,6 +49,10 @@ public class SoundMakingEntity extends Parent {
             new KeyFrame(Duration.seconds(3), new KeyValue(imageView.rotateProperty(), 0)));
 
         final EventHandler<Event> enterHandler = (Event event) -> {
+            progressTimeline = new Timeline(
+                new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(progressIndicator.progressProperty(), 1)));
+            progressTimeline.setOnFinished(e -> selected());
+
             progressIndicator.setOpacity(1);
             progressTimeline.playFromStart();
         };

@@ -37,12 +37,12 @@ public class BottleGame implements GameLifeCycle {
     private final ProgressButton restartButton;
     private final Text finalScoreText;
 
-    private ArrayList<ProgressButton> bottle;
+    private final ArrayList<ProgressButton> bottle;
 
     private Circle ball;
     private final Text scoreText;
     private int score;
-    private int nbBottle;
+    private final int nbBottle;
 
     private boolean isBroken;
 
@@ -77,8 +77,6 @@ public class BottleGame implements GameLifeCycle {
 
         backgroundLayer.getChildren().add(backgroundImage);
 
-        final int fixationLength = configuration.getFixationLength();
-
         scoreText = new Text(0, 50, "0");
         scoreText.setFill(Color.WHITE);
         scoreText.setTextAlignment(TextAlignment.CENTER);
@@ -97,7 +95,7 @@ public class BottleGame implements GameLifeCycle {
         restartButton.setImage(restartImage);
         restartButton.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getHeight() / 12);
         restartButton.setLayoutY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 12);
-        restartButton.assignIndicator(event -> launch(), fixationLength);
+        restartButton.assignIndicatorUpdatable(event -> launch(), gameContext);
 
         finalScoreText = new Text(0, dimension2D.getHeight() / 4, "");
         finalScoreText.setFill(Color.WHITE);
@@ -136,8 +134,6 @@ public class BottleGame implements GameLifeCycle {
 
         backgroundLayer.getChildren().add(backgroundImage);
 
-        final int fixationLength = configuration.getFixationLength();
-
         scoreText = new Text(0, 50, "0");
         scoreText.setFill(Color.WHITE);
         scoreText.setTextAlignment(TextAlignment.CENTER);
@@ -156,7 +152,7 @@ public class BottleGame implements GameLifeCycle {
         restartButton.setImage(restartImage);
         restartButton.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getHeight() / 12);
         restartButton.setLayoutY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 12);
-        restartButton.assignIndicator(event -> launch(), fixationLength);
+        restartButton.assignIndicatorUpdatable(event -> launch(), gameContext);
 
         finalScoreText = new Text(0, dimension2D.getHeight() / 4, "");
         finalScoreText.setFill(Color.WHITE);
@@ -274,12 +270,12 @@ public class BottleGame implements GameLifeCycle {
             gameContext.getChildren().add(bo);
 
 
-            bo.assignIndicator(event -> {
+            bo.assignIndicatorUpdatable(event -> {
                 if (!isBroken) {
                     isBroken = true;
                     ballMovement(bo);
                 }
-            }, configuration.getFixationLength());
+            }, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(bo);
             bo.active();
 
