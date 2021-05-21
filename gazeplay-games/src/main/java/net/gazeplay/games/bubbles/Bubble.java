@@ -248,7 +248,7 @@ public class Bubble extends Parent implements GameLifeCycle {
             explose(centerX, centerY); // instead of C to avoid wrong position of the explosion
             this.newCircle();
         } else {
-            PauseTransition Wait = new PauseTransition(Duration.millis((int) (5)));
+            PauseTransition Wait = new PauseTransition(Duration.millis(5));
             Wait.setOnFinished(WaitEvent -> {
                 if (inTarget) {
                     target.setRadius(target.getRadius() * Math.pow(1.03,gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty().getValue()));
@@ -280,9 +280,6 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         final Circle newCircle = new Circle();
         final Dimension2D screenDimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        /*double maxRadius = Math.min(screenDimension.getWidth()/12,screenDimension.getHeight()/12);
-        double minRadius =  Math.min(screenDimension.getHeight()/30,screenDimension.getWidth()/30);
-        final double radius = (maxRadius - minRadius) * randomGenerator.nextDouble() + minRadius;*/
         final double radius = Math.min(screenDimension.getHeight()/20,screenDimension.getWidth()/20);
 
         newCircle.setRadius(radius);
@@ -353,7 +350,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private void decreaseSize(final Circle target){
         final Dimension2D screenDimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        PauseTransition Wait = new PauseTransition(Duration.millis((int) (5)));
+        PauseTransition Wait = new PauseTransition(Duration.millis(5));
         Wait.setOnFinished(WaitEvent -> {
             if (target.getRadius()>Math.min(screenDimension.getWidth()/20,screenDimension.getHeight()/20)) {
                 target.setRadius(target.getRadius() / Math.pow(1.005,gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty().getValue()));
