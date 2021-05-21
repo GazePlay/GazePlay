@@ -238,7 +238,7 @@ public class Bubble extends Parent implements GameLifeCycle {
 
     private void enter(final Circle target) {
         final Dimension2D screenDimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        if (target.getRadius()>Math.min(screenDimension.getHeight()/7,screenDimension.getWidth()/7)) {
+        if (target.getRadius()>Math.min(screenDimension.getHeight()/8,screenDimension.getWidth()/8)) {
             final double centerX = target.getCenterX();
             final double centerY = target.getCenterY();
             gameContext.getGazeDeviceManager().removeEventFilter(target);
@@ -280,9 +280,10 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         final Circle newCircle = new Circle();
         final Dimension2D screenDimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        double maxRadius = Math.min(screenDimension.getWidth()/12,screenDimension.getHeight()/12);
-        double minRadius =  Math.min(screenDimension.getHeight()/20,screenDimension.getWidth()/20);
-        final double radius = (maxRadius - minRadius) * randomGenerator.nextDouble() + minRadius;
+        /*double maxRadius = Math.min(screenDimension.getWidth()/12,screenDimension.getHeight()/12);
+        double minRadius =  Math.min(screenDimension.getHeight()/30,screenDimension.getWidth()/30);
+        final double radius = (maxRadius - minRadius) * randomGenerator.nextDouble() + minRadius;*/
+        final double radius = Math.min(screenDimension.getHeight()/20,screenDimension.getWidth()/20);
 
         newCircle.setRadius(radius);
 
