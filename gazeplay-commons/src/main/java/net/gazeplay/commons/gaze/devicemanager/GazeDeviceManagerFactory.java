@@ -51,7 +51,7 @@ public class GazeDeviceManagerFactory {
         final GazeDeviceManager gazeDeviceManager;
 
         switch (eyeTracker) {
-            case tobii:
+            case tobii_eyeX_4C:
                 gazeDeviceManager = new TobiiGazeDeviceManager();
                 break;
             case eyetribe:
