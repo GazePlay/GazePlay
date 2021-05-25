@@ -161,6 +161,8 @@ public class Blocs implements GameLifeCycle {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
+
+        gameContext.SetOffFixationLengthControl();
     }
 
     @Override
