@@ -56,6 +56,8 @@ public class WhereIsIt implements GameLifeCycle {
     private final int nbColumns;
     private final boolean fourThree;
 
+    private int level = 1;
+
     private final IGameContext gameContext;
     private final Stats stats;
     private RoundDetails currentRoundDetails;
@@ -302,34 +304,29 @@ public class WhereIsIt implements GameLifeCycle {
 
         } else if( this.gameType == ANIMAL_NAME_DYNAMIC) {
             final String resourcesDirectory = "data/" + this.gameType.getResourcesDirectoryName();
-            final String imagesDirectory = resourcesDirectory + "/images/";
+            directoryName = resourcesDirectory;
+
             final String winnerImagesDirectory = resourcesDirectory + "/images/cats/";
-            directoryName = imagesDirectory;
+            final String imagesDirectoryLvl1 = resourcesDirectory + "/images/lvl1/";
+            final String imagesDirectoryLvl2 = resourcesDirectory + "/images/lvl2/";
+            final String imagesDirectoryLvl3 = resourcesDirectory + "/images/lvl3/";
+            final String imagesDirectoryLvl4 = resourcesDirectory + "/images/lvl4/";
+            final String imagesDirectoryLvl5 = resourcesDirectory + "/images/lvl5/";
 
-            Set<String> levelsSet;
-            try {
-                SourceSet sourceSet = new SourceSet(resourcesDirectory + "/levels.json");
-                levelsSet = (sourceSet.getResources(this.gameType.getDifficulty()));
-            } catch (FileNotFoundException fe) {
-                log.info("No difficulty file found; Reading from all directories");
-                levelsSet = Collections.emptySet();
-            }
+            String[] lvlDirectories = {imagesDirectoryLvl1, imagesDirectoryLvl2, imagesDirectoryLvl3, imagesDirectoryLvl4, imagesDirectoryLvl5};
 
-            Set<String> tempOtherFolders = ResourceFileManager.getResourceFolders(imagesDirectory);
             Set<String> tempWinnerFolders = ResourceFileManager.getResourceFolders(winnerImagesDirectory);
-
-            // If nothing can be found we take the entire folder contents.
-            if (!levelsSet.isEmpty()) {
-                Set<String> finalDifficultySet = levelsSet;
-                tempOtherFolders = tempOtherFolders
-                    .parallelStream()
-                    .filter(s ->
-                        finalDifficultySet.parallelStream().anyMatch(s::contains)
-                    )
-                    .collect(Collectors.toSet());
-            }
-
-            resourcesFolders.addAll(tempOtherFolders);
+            /*
+            Set<String> foldersLvl1 = ResourceFileManager.getResourceFolders(imagesDirectoryLvl1);
+            Set<String> foldersLvl2 = ResourceFileManager.getResourceFolders(imagesDirectoryLvl2);
+            Set<String> foldersLvl3 = ResourceFileManager.getResourceFolders(imagesDirectoryLvl3);
+            Set<String> foldersLvl4 = ResourceFileManager.getResourceFolders(imagesDirectoryLvl4);
+            Set<String> foldersLvl5 = ResourceFileManager.getResourceFolders(imagesDirectoryLvl5);
+            */
+            // TODO if lvl == i then
+            for (int i = 0; i < lvlDirectories.length; i ++)
+                if (level == i - 1)
+                    resourcesFolders.addAll(ResourceFileManager.getResourceFolders(lvlDirectories[i]));
             winnerFolders.addAll(tempWinnerFolders);
 
             directoriesCount = resourcesFolders.size();
@@ -486,13 +483,14 @@ public class WhereIsIt implements GameLifeCycle {
                     posX = 0;
                 }
             }
+
         } else if (this.gameType == ANIMAL_NAME_DYNAMIC) {
             int index = random.nextInt(resourcesFolders.size());
             final String folder = resourcesFolders.remove((index) % directoriesCount);
 
-            // index = random.nextInt(resourcesFolders.size());
             final String winnerFolder = winnerFolders.remove(0);
             final String folderName = (new File(winnerFolder)).getName();
+            log.info("WinnerFolderName = {}", folderName);
 
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
                 final Set<String> files;
@@ -510,7 +508,7 @@ public class WhereIsIt implements GameLifeCycle {
 
                     questionSoundPath = getPathSound(folderName, language);
 
-                    getQuestionText(folderName, language);
+                    question = getQuestionText(folderName, language);
 
                     pictograms = getPictogramms(folderName);
 
