@@ -6,6 +6,9 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.print.PageLayout;
+import javafx.print.PageOrientation;
+import javafx.print.PrinterJob;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -31,6 +34,7 @@ import net.gazeplay.components.CssUtil;
 import net.gazeplay.components.GazeFollowerIndicator;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -282,6 +286,39 @@ public class ColorToolBox extends Pane {
         ImageIO.write(swingImg, format, file);
     }
 
+    private void printImage(final Image image){
+        final PrinterJob printerJob = PrinterJob.createPrinterJob();
+        if (printerJob.showPrintDialog(gameContext.getPrimaryStage())) {
+            if (printerJob.showPageSetupDialog(gameContext.getPrimaryStage())) {
+                if (printerJob != null) {
+                    ImageView iv = new ImageView();
+                    iv.setPreserveRatio(true);
+                    iv.setImage(image);
+                    PageLayout pageLayout = printerJob.getJobSettings().getPageLayout();
+                    double x = Math.min((pageLayout.getPrintableHeight()-pageLayout.getBottomMargin()-pageLayout.getTopMargin())/pageLayout.getPrintableHeight(),
+                        (pageLayout.getPrintableWidth()-pageLayout.getRightMargin()-pageLayout.getLeftMargin())/pageLayout.getPrintableWidth());
+                    iv.setScaleX(x);
+                    iv.setScaleY(x);
+                    if (pageLayout.getPageOrientation() == PageOrientation.valueOf("PORTRAIT")) {
+                        iv.setX(-pageLayout.getRightMargin());
+                        iv.setY(-pageLayout.getBottomMargin());
+                    }
+                    else {
+                        iv.setY(-pageLayout.getRightMargin()*2);
+                        iv.setX(pageLayout.getBottomMargin()/2);
+                    }
+                    while (pageLayout.getPrintableHeight()<iv.getLayoutY() || pageLayout.getPrintableWidth()<iv.getLayoutX()){
+                        iv.setScaleX(0.8);
+                        iv.setScaleY(0.8);
+                    }
+                    if (printerJob.printPage(iv)) {
+                        printerJob.endJob();
+                    }
+                }
+            }
+        }
+    }
+
     private static void configureImageFileChooser(final FileChooser imageFileChooser) {
         imageFileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Images", "*.*"),
             new FileChooser.ExtensionFilter("JPG", "*.jpg"), new FileChooser.ExtensionFilter("PNG", "*.png"),
@@ -365,8 +402,15 @@ public class ColorToolBox extends Pane {
             }
         });
 
+        final Button PImageButton = new Button(translator.translate("PrintImg"));
+        PImageButton.setPrefHeight(colorizeButtonsSizePx / 2);
+        PImageButton.setOnAction((event) -> {
+            printImage(colorsGame.getWritableImg());
+        });
+
         bottomBox.getChildren().add(imageChooserButton);
         bottomBox.getChildren().add(imageSaverButton);
+        bottomBox.getChildren().add(PImageButton);
 
         return bottomBox;
     }
