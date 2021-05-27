@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -288,38 +289,23 @@ public class ColorToolBox extends Pane {
 
     private void printImage(final Image image){
         final PrinterJob printerJob = PrinterJob.createPrinterJob();
-        if (printerJob.showPrintDialog(gameContext.getPrimaryStage())) {
-            if (printerJob.showPageSetupDialog(gameContext.getPrimaryStage())) {
-                if (printerJob != null) {
-                    ImageView iv = new ImageView();
-                    iv.setPreserveRatio(true);
-                    iv.setImage(image);
-                    PageLayout pageLayout = printerJob.getJobSettings().getPageLayout();
-                    double scale = Math.min((pageLayout.getPrintableHeight()-pageLayout.getBottomMargin()-pageLayout.getTopMargin())/pageLayout.getPrintableHeight(),
-                        (pageLayout.getPrintableWidth()-pageLayout.getRightMargin()-pageLayout.getLeftMargin())/pageLayout.getPrintableWidth());
-                    //iv.setScaleX(scale);
-                    //iv.setScaleY(scale);
-                    if (iv.getBoundsInParent().getWidth()>iv.getBoundsInParent().getHeight()){
-                        iv.setScaleX(scale*scale * pageLayout.getPrintableWidth()/iv.getBoundsInParent().getWidth());
-                        iv.setScaleY(scale*scale * pageLayout.getPrintableWidth()/iv.getBoundsInParent().getWidth());
-                        iv.setRotate(90);
-                    } else {
-                        iv.setScaleX(scale*scale * pageLayout.getPrintableHeight()/iv.getBoundsInParent().getHeight());
-                        iv.setScaleY(scale*scale * pageLayout.getPrintableHeight()/iv.getBoundsInParent().getHeight());
-                    }
-                    if (pageLayout.getPageOrientation() == PageOrientation.valueOf("PORTRAIT")) {
-                        iv.setX(-pageLayout.getPrintableWidth()/2 + pageLayout.getLeftMargin() + pageLayout.getRightMargin());
-                        iv.setY(-pageLayout.getPrintableHeight()/2 + pageLayout.getTopMargin() + pageLayout.getBottomMargin());
-                    }
-                    else {
-                        iv.setY(-pageLayout.getRightMargin()*2);
-                        iv.setX(pageLayout.getBottomMargin());
-                    }
-                    if (printerJob.printPage(iv)) {
-                        printerJob.endJob();
-                    }
-                }
+        if (printerJob.showPrintDialog(gameContext.getPrimaryStage()) && printerJob.showPageSetupDialog(gameContext.getPrimaryStage())) {
+            ImageView iv = new ImageView();
+            iv.setPreserveRatio(true);
+            iv.setImage(image);
+            PageLayout pageLayout = printerJob.getJobSettings().getPageLayout();
+            double scaleX = pageLayout.getPrintableWidth() / iv.getBoundsInParent().getWidth();
+            double scaleY = pageLayout.getPrintableHeight() / iv.getBoundsInParent().getHeight();
+            iv.getTransforms().add(new Scale(scaleX, scaleY));
+            if (printerJob.printPage(iv)) {
+                printerJob.endJob();
             }
+            else {
+                log.debug("The printing fail");
+            }
+        }
+        else {
+            log.info("don't print because the user cancel it");
         }
     }
 
