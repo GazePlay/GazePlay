@@ -104,6 +104,13 @@ public class WhereIsIt implements GameLifeCycle {
         final int winnerImageIndexAmongDisplayedImages = randomGenerator.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
+        //if (stats.nbGoalsReached % 6 == 0)
+            //get roc info, then change or not the level
+        /*if (stats.nbGoalsReached > 0) {
+            float[] roc = currentRoundDetails.getPictureCardList().get(currentRoundDetails.getPictureCardList().size() - 1).getROCData();
+
+            log.info("roc = {}", roc);
+        }*/
         currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, randomGenerator,
             winnerImageIndexAmongDisplayedImages);
 
@@ -324,8 +331,8 @@ public class WhereIsIt implements GameLifeCycle {
             Set<String> foldersLvl5 = ResourceFileManager.getResourceFolders(imagesDirectoryLvl5);
             */
             // TODO if lvl == i then
-            for (int i = 0; i < lvlDirectories.length; i ++)
-                if (level == i - 1)
+            for (int i = 1; i < lvlDirectories.length + 1; i ++)
+                if (level == i)
                     resourcesFolders.addAll(ResourceFileManager.getResourceFolders(lvlDirectories[i]));
             winnerFolders.addAll(tempWinnerFolders);
 
