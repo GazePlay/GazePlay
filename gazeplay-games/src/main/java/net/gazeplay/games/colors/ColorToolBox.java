@@ -295,21 +295,25 @@ public class ColorToolBox extends Pane {
                     iv.setPreserveRatio(true);
                     iv.setImage(image);
                     PageLayout pageLayout = printerJob.getJobSettings().getPageLayout();
-                    double x = Math.min((pageLayout.getPrintableHeight()-pageLayout.getBottomMargin()-pageLayout.getTopMargin())/pageLayout.getPrintableHeight(),
+                    double scale = Math.min((pageLayout.getPrintableHeight()-pageLayout.getBottomMargin()-pageLayout.getTopMargin())/pageLayout.getPrintableHeight(),
                         (pageLayout.getPrintableWidth()-pageLayout.getRightMargin()-pageLayout.getLeftMargin())/pageLayout.getPrintableWidth());
-                    iv.setScaleX(x);
-                    iv.setScaleY(x);
+                    //iv.setScaleX(scale);
+                    //iv.setScaleY(scale);
+                    if (iv.getBoundsInParent().getWidth()>iv.getBoundsInParent().getHeight()){
+                        iv.setScaleX(scale*scale * pageLayout.getPrintableWidth()/iv.getBoundsInParent().getWidth());
+                        iv.setScaleY(scale*scale * pageLayout.getPrintableWidth()/iv.getBoundsInParent().getWidth());
+                        iv.setRotate(90);
+                    } else {
+                        iv.setScaleX(scale*scale * pageLayout.getPrintableHeight()/iv.getBoundsInParent().getHeight());
+                        iv.setScaleY(scale*scale * pageLayout.getPrintableHeight()/iv.getBoundsInParent().getHeight());
+                    }
                     if (pageLayout.getPageOrientation() == PageOrientation.valueOf("PORTRAIT")) {
-                        iv.setX(-pageLayout.getRightMargin());
-                        iv.setY(-pageLayout.getBottomMargin());
+                        iv.setX(-pageLayout.getPrintableWidth()/2 + pageLayout.getLeftMargin() + pageLayout.getRightMargin());
+                        iv.setY(-pageLayout.getPrintableHeight()/2 + pageLayout.getTopMargin() + pageLayout.getBottomMargin());
                     }
                     else {
                         iv.setY(-pageLayout.getRightMargin()*2);
-                        iv.setX(pageLayout.getBottomMargin()/2);
-                    }
-                    while (pageLayout.getPrintableHeight()<iv.getLayoutY() || pageLayout.getPrintableWidth()<iv.getLayoutX()){
-                        iv.setScaleX(0.8);
-                        iv.setScaleY(0.8);
+                        iv.setX(pageLayout.getBottomMargin());
                     }
                     if (printerJob.printPage(iv)) {
                         printerJob.endJob();
