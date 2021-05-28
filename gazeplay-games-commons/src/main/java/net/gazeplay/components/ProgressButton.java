@@ -185,4 +185,47 @@ public class ProgressButton extends StackPane {
 
         return indicator;
     }
+
+    public ProgressIndicator assignIndicatorUpdatable(final EventHandler<Event> enterEvent) {
+        indicator.setMouseTransparent(true);
+        indicator.setOpacity(0);
+        final ProgressButton pb = this;
+        final Event e1 = new Event(pb, pb, GazeEvent.ANY);
+
+        enterbuttonHandler = e -> {
+            if (inuse) {
+                indicator.setProgress(0);
+                indicator.setOpacity(0.5);
+
+                timelineProgressBar.stop();
+                timelineProgressBar.getKeyFrames().clear();
+
+                timelineProgressBar.setDelay(new Duration(300));
+
+                timelineProgressBar.getKeyFrames().add(
+                    new KeyFrame(new Duration(1000), new KeyValue(indicator.progressProperty(), 1)));
+
+                timelineProgressBar.onFinishedProperty().set(actionEvent -> {
+                    indicator.setOpacity(0);
+                    if (enterEvent != null) {
+                        enterEvent.handle(e1);
+                    }
+                });
+                timelineProgressBar.play();
+            }
+        };
+
+        exitbuttonHandler = e -> {
+            if (inuse) {
+
+                timelineProgressBar.stop();
+                indicator.setOpacity(0);
+                indicator.setProgress(0);
+            }
+        };
+
+        active2();
+
+        return indicator;
+    }
 }

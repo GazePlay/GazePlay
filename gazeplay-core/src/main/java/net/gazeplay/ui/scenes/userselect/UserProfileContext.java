@@ -39,6 +39,7 @@ import net.gazeplay.commons.utils.FileUtils;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.components.ProgressButton;
 import net.gazeplay.ui.GraphicalContext;
 
 import java.io.File;
@@ -227,7 +228,12 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         content.setBottom(userNameText);
 
         user.setAlignment(Pos.TOP_RIGHT);
-        user.getChildren().add(content);
+
+        final  StackPane Puser = new StackPane();
+
+        Puser.getChildren().add(content);
+
+        user.getChildren().add(Puser);
 
         if (editable) {
             final double buttonsSize = screenDimension.getWidth() / 50;
@@ -269,6 +275,11 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                 gazePlay.onReturnToMenu();
             };
         }
+
+        ProgressButton Buser = new ProgressButton();
+        Buser.assignIndicatorUpdatable(mouseClickedEventHandler);
+        Buser.active();
+        Puser.getChildren().add(Buser);
 
         content.addEventFilter(MouseEvent.MOUSE_CLICKED, mouseClickedEventHandler);
         return user;
@@ -380,6 +391,8 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         final ScrollPane choicePanelScroller = initializeScroller(choicePane, primaryStage);
 
+        final StackPane Pyes = new StackPane();
+
         final Button yes = createDialogButton(
             getGazePlay().getTranslator().translate("YesRemove"),
             primaryStage.getHeight() / 10,
@@ -393,6 +406,22 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             log.info("Profile: " + user.getName() + " deleted");
         });
 
+        final ProgressButton Byes = new ProgressButton();
+
+        Byes.assignIndicatorUpdatable(event -> {
+            dialog.close();
+            choicePanel.getChildren().remove(user);
+            final File userDirectory = GazePlayDirectories.getUserProfileDirectory(user.getName());
+            FileUtils.deleteDirectoryRecursively(userDirectory);
+            log.info("Profile: " + user.getName() + " deleted");
+        });
+
+        Byes.active();
+
+        Pyes.getChildren().addAll(yes, Byes);
+
+        final StackPane Pno = new StackPane();
+
         final Button no = createDialogButton(
             getGazePlay().getTranslator().translate("NoCancel"),
             primaryStage.getHeight() / 10,
@@ -400,8 +429,16 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         );
         no.setOnMouseClicked(event -> dialog.close());
 
-        choicePane.getChildren().add(yes);
-        choicePane.getChildren().add(no);
+        final ProgressButton Bno = new ProgressButton();
+
+        Bno.assignIndicatorUpdatable(event -> dialog.close());
+
+        Bno.active();
+
+        Pno.getChildren().addAll(no, Bno);
+
+        choicePane.getChildren().add(Pyes);
+        choicePane.getChildren().add(Pno);
 
         final Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
         final Configuration config = ActiveConfigurationContext.getInstance();
@@ -447,6 +484,8 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         final Text ti = new Text(getGazePlay().getTranslator().translate("Image"));
         ti.setFill(Color.WHITE);
 
+        final StackPane Pchoose = new StackPane();
+
         final Button chooseImageButton = createDialogButton(
             getGazePlay().getTranslator().translate("ChooseImage"),
             primaryStage.getHeight() / 20,
@@ -459,6 +498,21 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             }
         });
 
+        final ProgressButton Bchoose = new ProgressButton();
+
+        Bchoose.assignIndicatorUpdatable(event -> {
+            final String s = getImage(dialog, chooseImageButton);
+            if (s != null) {
+                chooseImageButton.setText(s);
+            }
+        });
+
+        Bchoose.active();
+
+        Pchoose.getChildren().addAll(chooseImageButton, Bchoose);
+
+        final StackPane Preset = new StackPane();
+
         final Button reset = createDialogButton(
             getGazePlay().getTranslator().translate("reset"),
             primaryStage.getHeight() / 20,
@@ -469,17 +523,34 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             chooseImageButton.setText(getGazePlay().getTranslator().translate("ChooseImage"));
         });
 
-        imageField.getChildren().addAll(ti, chooseImageButton, reset);
+        final ProgressButton Breset = new ProgressButton();
+
+        Breset.assignIndicatorUpdatable(event -> {
+            chooseImageButton.setGraphic(null);
+            chooseImageButton.setText(getGazePlay().getTranslator().translate("ChooseImage"));
+        });
+        Breset.active();
+
+        Preset.getChildren().addAll(reset, Breset);
+
+        imageField.getChildren().addAll(ti, Pchoose, Preset);
 
         final ImageView iv = new ImageView();
         choicePane.getChildren().addAll(imageField, nameField, iv);
+
+        final StackPane Pok = new StackPane();
 
         final Button okButton = createDialogButton(
             "Ok",
             primaryStage.getHeight() / 10,
             primaryStage.getWidth() / 10
         );
-        choicePane.getChildren().add(okButton);
+
+        final ProgressButton Bok = new ProgressButton();
+
+        Pok.getChildren().addAll(okButton, Bok);
+
+        choicePane.getChildren().add(Pok);
 
         final EventHandler<Event> event;
 
@@ -556,6 +627,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             };
         }
         okButton.setOnMouseClicked(event);
+
+        Bok.assignIndicatorUpdatable(event);
+        Bok.active();
 
         final Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
 
