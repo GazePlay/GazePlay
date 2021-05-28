@@ -278,6 +278,8 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         ProgressButton Buser = new ProgressButton();
         Buser.assignIndicatorUpdatable(mouseClickedEventHandler);
+        Buser.getButton().setRadius(75);
+        Buser.getButton().setVisible(false);
         Buser.active();
         Puser.getChildren().add(Buser);
 
@@ -416,6 +418,8 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             log.info("Profile: " + user.getName() + " deleted");
         });
 
+        Byes.getButton().setRadius(50);
+        Byes.getButton().setVisible(false);
         Byes.active();
 
         Pyes.getChildren().addAll(yes, Byes);
@@ -433,6 +437,8 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         Bno.assignIndicatorUpdatable(event -> dialog.close());
 
+        Bno.getButton().setRadius(50);
+        Bno.getButton().setVisible(false);
         Bno.active();
 
         Pno.getChildren().addAll(no, Bno);
@@ -507,6 +513,8 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             }
         });
 
+        Bchoose.getButton().setRadius(50);
+        Bchoose.getButton().setVisible(false);
         Bchoose.active();
 
         Pchoose.getChildren().addAll(chooseImageButton, Bchoose);
@@ -529,6 +537,8 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             chooseImageButton.setGraphic(null);
             chooseImageButton.setText(getGazePlay().getTranslator().translate("ChooseImage"));
         });
+        Breset.getButton().setRadius(50);
+        Breset.getButton().setVisible(false);
         Breset.active();
 
         Preset.getChildren().addAll(reset, Breset);
@@ -630,6 +640,8 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         okButton.setOnMouseClicked(event);
 
         Bok.assignIndicatorUpdatable(event);
+        Bok.getButton().setRadius(50);
+        Bok.getButton().setVisible(false);
         Bok.active();
 
         final Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
