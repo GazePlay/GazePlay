@@ -545,13 +545,13 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             primaryStage.getHeight() / 10,
             primaryStage.getWidth() / 10
         );
-        choicePane.getChildren().add(okButton);
+        //choicePane.getChildren().add(okButton);
 
         final ProgressButton Bok = new ProgressButton();
 
         Pok.getChildren().addAll(okButton, Bok);
 
-        //choicePane.getChildren().add(Pok);
+        choicePane.getChildren().add(Pok);
 
         final EventHandler<Event> event;
 
@@ -610,7 +610,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                 if (chooseImageButton.getGraphic() != null) {
                     ip = new ImagePattern(((ImageView) chooseImageButton.getGraphic()).getImage());
                 }
-                modifyUser(user, user.getName(), ip);
+                //modifyUser(user, user.getName(), ip);
 
                 final Configuration conf = ConfigurationSource.createFromProfile(user.getName());
 
