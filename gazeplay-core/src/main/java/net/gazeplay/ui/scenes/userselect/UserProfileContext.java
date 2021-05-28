@@ -229,7 +229,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         user.setAlignment(Pos.TOP_RIGHT);
 
-        final  StackPane Puser = new StackPane();
+        final StackPane Puser = new StackPane();
 
         Puser.getChildren().add(content);
 
@@ -610,7 +610,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                 if (chooseImageButton.getGraphic() != null) {
                     ip = new ImagePattern(((ImageView) chooseImageButton.getGraphic()).getImage());
                 }
-                //modifyUser(user, user.getName(), ip);
+                modifyUser(user, user.getName(), ip);
 
                 final Configuration conf = ConfigurationSource.createFromProfile(user.getName());
 
@@ -658,7 +658,8 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
     }
 
     private void modifyUser(final HBox user, final String name, final ImagePattern ip) {
-        final BorderPane c = (BorderPane) user.getChildren().get(0);
+        final StackPane u = (StackPane) user.getChildren().get(0);
+        final BorderPane c = (BorderPane) u.getChildren().get(0);
         final Rectangle r = (Rectangle) c.getCenter();
         if (ip != null) {
             r.setFill(ip);
