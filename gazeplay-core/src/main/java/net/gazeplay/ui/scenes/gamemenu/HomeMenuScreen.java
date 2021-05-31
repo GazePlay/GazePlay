@@ -38,6 +38,7 @@ import net.gazeplay.commons.utils.ConfigurationButtonFactory;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.MenuUtils;
+import net.gazeplay.components.ProgressButton;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 
@@ -80,8 +81,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
-        CustomButton exitButton = createExitButton(screenDimension);
-        CustomButton logoutButton = createLogoutButton(gazePlay, screenDimension);
+        StackPane exitButton = createExitButton(screenDimension);
+        StackPane logoutButton = createLogoutButton(gazePlay, screenDimension);
 
         ConfigurationButton configurationButton = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
 
@@ -98,7 +99,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         final List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
 
-        CustomButton replayGameButton = createReplayGameButton(gazePlay, screenDimension, games);
+        StackPane replayGameButton = createReplayGameButton(gazePlay, screenDimension, games);
 
         GamesStatisticsPane gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games);
 
@@ -316,21 +317,37 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return configuration.getFavoriteGamesProperty().contains(g.getGameSummary().getNameCode());
     }
 
-    private CustomButton createExitButton(Dimension2D screenDimension) {
+    private StackPane createExitButton(Dimension2D screenDimension) {
+        StackPane Pexit = new StackPane();
+        ProgressButton Bexit = new ProgressButton();
         CustomButton exitButton = new CustomButton("data/common/images/power-off.png", screenDimension);
+        Pexit.getChildren().addAll(exitButton, Bexit);
         exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
-        return exitButton;
+        Bexit.assignIndicatorUpdatable(e -> System.exit(0));
+        Bexit.active();
+        Bexit.getButton().setVisible(false);
+        Bexit.getButton().setRadius(50);
+        return Pexit;
     }
 
-    private CustomButton createLogoutButton(GazePlay gazePlay, Dimension2D screenDimension) {
+    private StackPane createLogoutButton(GazePlay gazePlay, Dimension2D screenDimension) {
+        StackPane Plog = new StackPane();
+        ProgressButton Blog = new ProgressButton();
         CustomButton logoutButton = new CustomButton("data/common/images/logout.png", screenDimension);
+        Plog.getChildren().addAll(logoutButton, Blog);
         logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> gazePlay.goToUserPage());
-        return logoutButton;
+        Blog.assignIndicatorUpdatable(e -> gazePlay.goToUserPage());
+        Blog.active();
+        Blog.getButton().setRadius(50);
+        Blog.getButton().setVisible(false);
+        return Plog;
     }
 
-    private CustomButton createReplayGameButton(GazePlay gazePlay, Dimension2D screenDimension, List<GameSpec> games) {
+    private StackPane createReplayGameButton(GazePlay gazePlay, Dimension2D screenDimension, List<GameSpec> games) {
+        StackPane PRep = new StackPane();
+        ProgressButton BRep = new ProgressButton();
         CustomButton replayButton = new CustomButton("data/common/images/replay_button.png", screenDimension);
-        replayButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
+        EventHandler<Event> event = (EventHandler<Event>) e -> {
             try {
                 ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getApplicationContext(), games);
                 replayingGame.pickJSONFile(replayingGame.getFileName());
@@ -352,8 +369,14 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-        });
-        return replayButton;
+        };
+        replayButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
+        BRep.assignIndicatorUpdatable(event);
+        BRep.active();
+        BRep.getButton().setVisible(false);
+        BRep.getButton().setRadius(50);
+        PRep.getChildren().addAll(replayButton, BRep);
+        return PRep;
     }
 
     private CheckBox buildCategoryCheckBox(
