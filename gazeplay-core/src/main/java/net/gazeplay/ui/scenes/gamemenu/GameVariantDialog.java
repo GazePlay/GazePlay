@@ -118,14 +118,25 @@ public class GameVariantDialog extends Stage {
                     variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "normal");
                 }
                 ToggleGroup group = new ToggleGroup();
+
+                StackPane Pnormal = new StackPane();
+                StackPane Pfacile = new StackPane();
+
+                ProgressButton Bnormal = new ProgressButton();
+                ProgressButton Bfacile = new ProgressButton();
+
                 RadioButton normal = new RadioButton("normal");
                 normal.setToggleGroup(group);
                 normal.setSelected(true);
                 RadioButton facile = new RadioButton("easy");
                 facile.setToggleGroup(group);
+
+                Pnormal.getChildren().addAll(normal, Bnormal);
+                Pfacile.getChildren().addAll(facile, Bfacile);
+
                 HBox bottom = new HBox();
-                bottom.getChildren().add(facile);
-                bottom.getChildren().add(normal);
+                bottom.getChildren().add(Pfacile);
+                bottom.getChildren().add(Pnormal);
                 sceneContentPane.setBottom(bottom);
                 facile.setOnAction(actionEvent -> {
                     if (!easymode) {
@@ -139,6 +150,26 @@ public class GameVariantDialog extends Stage {
                         choicePanelScroller.setContent(choicePane);
                     }
                 });
+
+                Bnormal.assignIndicatorUpdatable(actionEvent -> {normal.setSelected(true);
+                    if (easymode) {
+                        easymode = false;
+                        choicePanelScroller.setContent(choicePane);
+                    }
+                });
+                Bfacile.assignIndicatorUpdatable(actionEvent -> {facile.setSelected(true);
+                    if (!easymode) {
+                        easymode = true;
+                        choicePanelScroller.setContent(choicePaneEasy);
+                    }
+                });
+
+                Bnormal.getButton().setRadius(25);
+                Bfacile.getButton().setRadius(25);
+                Bnormal.getButton().setVisible(false);
+                Bfacile.getButton().setVisible(false);
+                Bnormal.active();
+                Bfacile.active();
             }
 
             IGameVariant finalVariant = variant;
