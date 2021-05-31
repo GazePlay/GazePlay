@@ -54,10 +54,6 @@ class PictureCard extends Group {
 
     private final WhereIsIt gameInstance;
 
-    private int tpr = 0;
-    private int fpr = 0;
-    private boolean firstWrong = false;
-
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
                 boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsIt gameInstance) {
 
@@ -137,10 +133,10 @@ class PictureCard extends Group {
     private void onCorrectCardSelected(WhereIsIt gameInstance) {
         log.debug("WINNER");
 
-        if (firstWrong)
-            tpr++;
+        if (!gameInstance.getFirstWrong())
+            gameInstance.updateRight();
 
-        firstWrong = false;
+        gameInstance.firstRightCardSelected();
 
         stats.incrementNumberOfGoalsReached();
 
@@ -186,8 +182,9 @@ class PictureCard extends Group {
     }
 
     private void onWrongCardSelected(WhereIsIt gameInstance) {
-        fpr++;
-        firstWrong = true;
+        //could be a single function?
+        gameInstance.updateWrong();
+        gameInstance.firstWrongCardSelected();
 
         customInputEventHandler.ignoreAnyInput = true;
         progressIndicator.setVisible(false);
@@ -347,13 +344,6 @@ class PictureCard extends Group {
             progressIndicator.setProgress(0);
         }
 
-    }
-
-    public float[] getROCData() {
-        float[] roc = {0, 0};
-        roc[0] = (float) tpr/stats.nbGoalsReached;
-        roc[1] = (float) fpr/stats.nbGoalsReached;
-        return roc;
     }
 
 }

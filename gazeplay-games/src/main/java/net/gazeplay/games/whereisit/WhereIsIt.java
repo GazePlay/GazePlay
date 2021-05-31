@@ -57,6 +57,9 @@ public class WhereIsIt implements GameLifeCycle {
     private final boolean fourThree;
 
     private int level = 1;
+    private int rightDecision = 0;
+    private int wrongDecision = 0;
+    private boolean firstWrong = false;
 
     private final IGameContext gameContext;
     private final Stats stats;
@@ -106,11 +109,12 @@ public class WhereIsIt implements GameLifeCycle {
 
         //if (stats.nbGoalsReached % 6 == 0)
             //get roc info, then change or not the level
-        /*if (stats.nbGoalsReached > 0) {
-            float[] roc = currentRoundDetails.getPictureCardList().get(currentRoundDetails.getPictureCardList().size() - 1).getROCData();
+        if (stats.nbGoalsReached > 0) {
+            float[] roc = getROCData();
 
             log.info("roc = {}", roc);
-        }*/
+            chi2decision(rightDecision, wrongDecision);
+        }
         currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, randomGenerator,
             winnerImageIndexAmongDisplayedImages);
 
@@ -712,6 +716,70 @@ public class WhereIsIt implements GameLifeCycle {
 
         log.debug("imageList: {}", imageList);
         return imageList;
+    }
+
+    public float[] getROCData() {
+        float[] roc = {0, 0};
+        roc[0] = (float) rightDecision/stats.nbGoalsReached;
+        roc[1] = (float) wrongDecision/stats.nbGoalsReached;
+        return roc;
+    }
+
+    public void updateRight() {
+        rightDecision++;
+    }
+
+    public void updateWrong() {
+        wrongDecision++;
+    }
+
+    public boolean getFirstWrong() {
+        return firstWrong;
+    }
+
+    public void firstWrongCardSelected() {
+        firstWrong = true;
+    }
+
+    public void firstRightCardSelected() {
+        firstWrong = false;
+    }
+
+    public int factorial (int n) {
+        if (n == 0)
+            return 1;
+        else
+            return(n * factorial(n-1));
+    }
+
+    public float compute(int n, int k){
+        return factorial(n)/(factorial(k)*factorial(n-k));
+    }
+
+    public double binomProba(int n, int k, double p){
+        return compute(n, k) * Math.pow(p, k)*Math.pow(1-p, n-k);
+    }
+
+    public boolean chi2decision(int tp, int fp) {
+        boolean decision = false;
+        int N = stats.nbGoalsReached;
+        int[] observed = {tp, fp};
+        final double chi2_25 = 1.32;
+
+        double[] probas = {N * binomProba(1, 1,0.5), N * binomProba(1, 0,0.5)};
+
+        double chi2_obs = 0;
+
+        chi2_obs = Math.pow(observed[0] - probas[0], 2) / probas[0] + Math.pow(observed[1] - probas[1], 2) / probas[1];
+
+
+        log.info("tp = {}, fp = {}", tp, fp);
+        log.info("chi2_obs = {}", chi2_obs);
+
+        if ( chi2_25 <= chi2_obs)
+            decision = true;
+
+        return decision;
     }
 
 }
