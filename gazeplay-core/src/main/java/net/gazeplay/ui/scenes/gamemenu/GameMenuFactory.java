@@ -7,10 +7,7 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
@@ -20,8 +17,10 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.*;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.components.ProgressButton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -47,7 +46,7 @@ public class GameMenuFactory {
     @Autowired
     private GameMenuController gameMenuController;
 
-    public GameButtonPane createGameButton(
+    public StackPane createGameButton(
         @NonNull final GazePlay gazePlay,
         @NonNull final Region root,
         @NonNull final Configuration config,
@@ -85,7 +84,12 @@ public class GameMenuFactory {
         thumbnailContainer.setPadding(new Insets(1, 1, 1, 1));
         thumbnailContainer.setOpaqueInsets(new Insets(1, 1, 1, 1));
 
+        StackPane Pcard = new StackPane();
+        ProgressButton Bcard = new ProgressButton();
+
         GameButtonPane gameCard = new GameButtonPane(gameSpec);
+
+        Pcard.getChildren().addAll(gameCard, Bcard);
         switch (orientation) {
             case HORIZONTAL:
                 gameCard.getStyleClass().add("gameChooserButton");
@@ -136,13 +140,17 @@ public class GameMenuFactory {
 
         final HBox gameCategoryContainer = new HBox();
         final VBox favIconContainer = new VBox(favGamesImageView);
+        final StackPane Pfav = new StackPane();
+        final ProgressButton Bfav = new ProgressButton();
+
+        Pfav.getChildren().addAll(favIconContainer, Bfav);
 
         switch (orientation) {
             case HORIZONTAL:
-                gameCard.setTop(favIconContainer);
+                gameCard.setTop(Pfav);
                 break;
             case VERTICAL:
-                gameCard.setLeft(favIconContainer);
+                gameCard.setLeft(Pfav);
                 break;
         }
         gameCategoryContainer.setAlignment(Pos.BOTTOM_RIGHT);
@@ -232,7 +240,7 @@ public class GameMenuFactory {
                 gameDescriptionPane.setPadding(new Insets(10, 0, 10, 0));
 
                 gameCard.setCenter(thumbnailContainer);
-                gameCard.setLeft(favIconContainer);
+                gameCard.setLeft(Pfav);
 
                 BorderPane bottomPane = new BorderPane();
                 bottomPane.setRight(gameCategoryContainer);
@@ -264,6 +272,15 @@ public class GameMenuFactory {
             }
         });
 
+        Bcard.assignIndicatorUpdatable(event -> {
+            if (!favGamesImageView.isHover()) {
+                gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName);
+            }
+        });
+        Bcard.active();
+        Bcard.getButton().setRadius(50);
+        Bcard.getButton().setVisible(false);
+
         @Data
         class EventState {
             private final long time;
@@ -289,8 +306,23 @@ public class GameMenuFactory {
             }
         };
         favIconContainer.addEventFilter(MOUSE_CLICKED, favoriteGameSwitchEventHandler);
+        Bfav.assignIndicatorUpdatable(event -> {
+            if (config.getFavoriteGamesProperty().contains(gameSummary.getNameCode())) {
+                config.getFavoriteGamesProperty().remove(gameSummary.getNameCode());
+                ColorAdjust colorAdjust = new ColorAdjust();
+                colorAdjust.setSaturation(-1);
+                favGamesImageView.setEffect(colorAdjust);
+            } else {
+                config.getFavoriteGamesProperty().add(gameSummary.getNameCode());
+                favGamesImageView.setEffect(null);
+            }
+        });
+        Bfav.active();
+        Bfav.getButton().setVisible(false);
+        Bfav.getButton().setRadius(1);
+        Bfav.setPrefHeight(favIconContainer.getHeight());
 
-        return gameCard;
+        return Pcard;
     }
 
 
