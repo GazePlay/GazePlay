@@ -9,10 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -28,6 +25,7 @@ import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.components.ProgressButton;
 import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItErrorPathDialog;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
@@ -87,10 +85,16 @@ public class GameVariantDialog extends Stage {
         final Translator translator = gazePlay.getTranslator();
 
         for (IGameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
+
+            StackPane Pvar = new StackPane();
+            ProgressButton Bvar = new ProgressButton();
+
             Button button = new Button(variant.getLabel(translator));
             button.getStyleClass().add("gameChooserButton");
             button.getStyleClass().add("gameVariation");
             button.getStyleClass().add("button");
+
+            Pvar.getChildren().addAll(button, Bvar);
 
             button.wrapTextProperty().setValue(true);
 
@@ -104,9 +108,9 @@ public class GameVariantDialog extends Stage {
             button.setMaxHeight(primaryStage.getHeight() / 8);
 
             if (variant instanceof DimensionDifficultyGameVariant) {
-                choicePaneEasy.getChildren().add(button);
+                choicePaneEasy.getChildren().add(Pvar);
             } else {
-                choicePane.getChildren().add(button);
+                choicePane.getChildren().add(Pvar);
             }
 
             if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) {
@@ -148,6 +152,11 @@ public class GameVariantDialog extends Stage {
                 }
             };
             button.addEventHandler(MOUSE_CLICKED, event);
+            Bvar.assignIndicatorUpdatable(event);
+            Bvar.active();
+            Bvar.getButton().setRadius(50);
+            Bvar.getButton().setVisible(false);
+            Bvar.active();
 
         }
 
