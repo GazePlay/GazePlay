@@ -595,8 +595,6 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             primaryStage.getHeight() / 10,
             primaryStage.getWidth() / 10
         );
-        //choicePane.getChildren().add(okButton);
-
         final ProgressButton Bok = new ProgressButton();
 
         Pok.getChildren().addAll(okButton, Bok);
