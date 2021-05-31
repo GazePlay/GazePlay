@@ -70,12 +70,21 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         final Node logo = LogoFactory.getInstance().createLogoAnimated(gazePlay.getPrimaryStage());
 
-        final StackPane topRightPane = new StackPane();
-        //ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(topRightPane);
+        final HBox topRightPane = new HBox();
+        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(topRightPane);
         topRightPane.setAlignment(Pos.TOP_CENTER);
 
+        final StackPane Pexit = new StackPane();
+
         final CustomButton exitButton = createExitButton(screenDimension);
-        topRightPane.getChildren().addAll(exitButton, exitButton.indicator);
+        final ProgressButton Bexit = new ProgressButton();
+        Bexit.assignIndicatorUpdatable((EventHandler<Event>) e -> System.exit(0));
+        Bexit.active();
+        Bexit.getButton().setRadius(40);
+        Bexit.getButton().setVisible(false);
+        Pexit.getChildren().addAll(exitButton, Bexit);
+
+        topRightPane.getChildren().add(Pexit);
 
         final Node userPickerChoicePane = createUserPickerChoicePane(gazePlay);
 
@@ -295,7 +304,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
     ) {
         final CustomButton button = new CustomButton("data/common/images/error.png", size);
 
-        button.assignIndicatorUpdatable((EventHandler<Event>) event -> {
+        final StackPane PDel = new StackPane();
+
+        button.addEventHandler(MouseEvent.MOUSE_CLICKED,(EventHandler<Event>) event -> {
             final Stage dialog = createRemoveDialog(gazePlay.getPrimaryStage(), choicePanel, user, gazePlay.getCurrentScreenDimensionSupplier());
 
             final String dialogTitle = getGazePlay().getTranslator().translate("Remove");
@@ -307,18 +318,32 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             dialog.show();
         });
 
-        button.active();
+        final ProgressButton BDel = new ProgressButton();
+        BDel.assignIndicatorUpdatable((EventHandler<Event>) event -> {
+            final Stage dialog = createRemoveDialog(gazePlay.getPrimaryStage(), choicePanel, user, gazePlay.getCurrentScreenDimensionSupplier());
+
+            final String dialogTitle = getGazePlay().getTranslator().translate("Remove");
+            dialog.setTitle(dialogTitle);
+
+            dialog.toFront();
+            dialog.setAlwaysOnTop(true);
+
+            dialog.show();
+        });
+        BDel.getButton().setRadius(25);
+        BDel.getButton().setVisible(false);
+        BDel.active();
+
+        PDel.getChildren().addAll(button, BDel);
 
         final BorderPane rbp = new BorderPane();
         rbp.getStyleClass().add("gameChooserButton");
         rbp.getStyleClass().add("button");
-        rbp.setCenter(button);
+        rbp.setCenter(PDel);
         rbp.maxWidthProperty().bind(button.widthProperty());
         rbp.maxHeightProperty().bind(button.heightProperty());
         rbp.minWidthProperty().bind(button.widthProperty());
         rbp.minHeightProperty().bind(button.heightProperty());
-
-        rbp.getChildren().add(button.indicator);
 
         return rbp;
     }
@@ -326,7 +351,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
     private BorderPane createEditUserButton(final GazePlay gazePlay, final FlowPane choicePanel, final User user, final double size, final Dimension2D screenDimension) {
         final CustomButton button = new CustomButton("data/common/images/configuration-button-alt3.png", size);
 
-        button.assignIndicatorUpdatable((EventHandler<Event>) event -> {
+        final StackPane PEdi = new StackPane();
+
+        button.addEventHandler(MouseEvent.MOUSE_CLICKED,(EventHandler<Event>) event -> {
             final Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user, false, screenDimension);
 
             final String dialogTitle = getGazePlay().getTranslator().translate("UserModif");
@@ -338,26 +365,39 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             dialog.show();
         });
 
-        button.active();
+        final ProgressButton BEdi = new ProgressButton();
+        BEdi.assignIndicatorUpdatable((EventHandler<Event>) event -> {
+            final Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user, false, screenDimension);
+
+            final String dialogTitle = getGazePlay().getTranslator().translate("UserModif");
+            dialog.setTitle(dialogTitle);
+
+            dialog.toFront();
+            dialog.setAlwaysOnTop(true);
+
+            dialog.show();
+        });
+        BEdi.getButton().setRadius(25);
+        BEdi.getButton().setVisible(false);
+        BEdi.active();
+
+        PEdi.getChildren().addAll(button, BEdi);
 
         final BorderPane rbp = new BorderPane();
         rbp.getStyleClass().add("gameChooserButton");
         rbp.getStyleClass().add("button");
-        rbp.setCenter(button);
+        rbp.setCenter(PEdi);
         rbp.maxWidthProperty().bind(button.widthProperty());
         rbp.maxHeightProperty().bind(button.heightProperty());
         rbp.minWidthProperty().bind(button.widthProperty());
         rbp.minHeightProperty().bind(button.heightProperty());
-
-        rbp.getChildren().add(button.indicator);
 
         return rbp;
     }
 
     private CustomButton createExitButton(final Dimension2D screenDimension) {
         final CustomButton exitButton = new CustomButton("data/common/images/power-off.png", screenDimension);
-        exitButton.assignIndicatorUpdatable((EventHandler<Event>) e -> System.exit(0));
-        exitButton.active();
+        exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
         return exitButton;
     }
 
