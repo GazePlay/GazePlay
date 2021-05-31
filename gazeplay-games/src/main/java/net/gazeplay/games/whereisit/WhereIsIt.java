@@ -107,13 +107,9 @@ public class WhereIsIt implements GameLifeCycle {
         final int winnerImageIndexAmongDisplayedImages = randomGenerator.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
-        //if (stats.nbGoalsReached % 6 == 0)
-            //get roc info, then change or not the level
-        if (stats.nbGoalsReached > 0) {
-            float[] roc = getROCData();
-
-            log.info("roc = {}", roc);
-            chi2decision(rightDecision, wrongDecision);
+        if (stats.nbGoalsReached > 0 && stats.nbGoalsReached % 5 == 0) {
+            if (chi2decision(rightDecision, wrongDecision))
+                level ++;
         }
         currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, randomGenerator,
             winnerImageIndexAmongDisplayedImages);
@@ -327,17 +323,10 @@ public class WhereIsIt implements GameLifeCycle {
             String[] lvlDirectories = {imagesDirectoryLvl1, imagesDirectoryLvl2, imagesDirectoryLvl3, imagesDirectoryLvl4, imagesDirectoryLvl5};
 
             Set<String> tempWinnerFolders = ResourceFileManager.getResourceFolders(winnerImagesDirectory);
-            /*
-            Set<String> foldersLvl1 = ResourceFileManager.getResourceFolders(imagesDirectoryLvl1);
-            Set<String> foldersLvl2 = ResourceFileManager.getResourceFolders(imagesDirectoryLvl2);
-            Set<String> foldersLvl3 = ResourceFileManager.getResourceFolders(imagesDirectoryLvl3);
-            Set<String> foldersLvl4 = ResourceFileManager.getResourceFolders(imagesDirectoryLvl4);
-            Set<String> foldersLvl5 = ResourceFileManager.getResourceFolders(imagesDirectoryLvl5);
-            */
-            // TODO if lvl == i then
+
             for (int i = 1; i < lvlDirectories.length + 1; i ++)
                 if (level == i)
-                    resourcesFolders.addAll(ResourceFileManager.getResourceFolders(lvlDirectories[i]));
+                    resourcesFolders.addAll(ResourceFileManager.getResourceFolders(lvlDirectories[i-1]));
             winnerFolders.addAll(tempWinnerFolders);
 
             directoriesCount = resourcesFolders.size();
@@ -718,13 +707,6 @@ public class WhereIsIt implements GameLifeCycle {
         return imageList;
     }
 
-    public float[] getROCData() {
-        float[] roc = {0, 0};
-        roc[0] = (float) rightDecision/stats.nbGoalsReached;
-        roc[1] = (float) wrongDecision/stats.nbGoalsReached;
-        return roc;
-    }
-
     public void updateRight() {
         rightDecision++;
     }
@@ -753,7 +735,7 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     public float compute(int n, int k){
-        return factorial(n)/(factorial(k)*factorial(n-k));
+        return (float)factorial(n)/(factorial(k)*factorial(n-k));
     }
 
     public double binomProba(int n, int k, double p){
@@ -764,19 +746,17 @@ public class WhereIsIt implements GameLifeCycle {
         boolean decision = false;
         int N = stats.nbGoalsReached;
         int[] observed = {tp, fp};
-        final double chi2_25 = 1.32;
+        final double chi2_05 = 3.84;
 
         double[] probas = {N * binomProba(1, 1,0.5), N * binomProba(1, 0,0.5)};
 
-        double chi2_obs = 0;
-
-        chi2_obs = Math.pow(observed[0] - probas[0], 2) / probas[0] + Math.pow(observed[1] - probas[1], 2) / probas[1];
+        double chi2_obs =  Math.pow(observed[0] - probas[0], 2) / probas[0] + Math.pow(observed[1] - probas[1], 2) / probas[1];
 
 
         log.info("tp = {}, fp = {}", tp, fp);
         log.info("chi2_obs = {}", chi2_obs);
 
-        if ( chi2_25 <= chi2_obs)
+        if (chi2_05 <= chi2_obs)
             decision = true;
 
         return decision;
