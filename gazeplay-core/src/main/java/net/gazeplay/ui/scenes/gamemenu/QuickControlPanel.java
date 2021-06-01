@@ -2,6 +2,7 @@ package net.gazeplay.ui.scenes.gamemenu;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import lombok.Getter;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.Configuration;
@@ -17,7 +18,7 @@ public class QuickControlPanel {
     public HBox createQuickControlPanel(
         GazePlay gazePlay,
         MusicControl musicControl,
-        ConfigurationButton configurationButton,
+        StackPane configurationButton,
         Configuration config
     ) {
         HBox leftControlPane = new HBox();

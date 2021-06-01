@@ -84,7 +84,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         StackPane exitButton = createExitButton(screenDimension);
         StackPane logoutButton = createLogoutButton(gazePlay, screenDimension);
 
-        ConfigurationButton configurationButton = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
+        StackPane configurationButton = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
 
         Configuration config = ActiveConfigurationContext.getInstance();
 

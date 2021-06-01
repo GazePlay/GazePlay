@@ -1,6 +1,7 @@
 package net.gazeplay.commons.utils;
 
 import javafx.geometry.Dimension2D;
+import javafx.scene.layout.StackPane;
 import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.utils.screen.ScreenDimensionSupplier;
@@ -35,8 +36,8 @@ class ConfigurationButtonFactoryTest {
 
     @Test
     void shouldCreateConfigurationButton() {
-        ConfigurationButton button = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
-        button.fireEvent(TestingUtils.clickOnTarget(button));
+        StackPane button = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
+        button.fireEvent(TestingUtils.clickOnTarget(button.getChildren().get(0)));
 
         verify(gazePlay).onDisplayConfigurationManagement();
     }
