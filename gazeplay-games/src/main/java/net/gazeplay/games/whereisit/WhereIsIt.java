@@ -107,9 +107,19 @@ public class WhereIsIt implements GameLifeCycle {
         final int winnerImageIndexAmongDisplayedImages = randomGenerator.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
-        if (stats.nbGoalsReached > 0 && stats.nbGoalsReached % 5 == 0) {
-            if (chi2decision(rightDecision, wrongDecision))
-                level ++;
+        if (stats.nbGoalsReached > 0 && stats.nbGoalsReached % 8 == 0) {
+            boolean randomness = chi2decision(rightDecision, wrongDecision);
+            if (randomness && rightDecision > wrongDecision) {
+                if (level < 5)
+                    level++;
+                rightDecision = 0;
+                wrongDecision = 0;
+            }
+            if (!randomness && level > 1) {
+                level--;
+                rightDecision = 0;
+                wrongDecision = 0;
+            }
         }
         currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, randomGenerator,
             winnerImageIndexAmongDisplayedImages);
