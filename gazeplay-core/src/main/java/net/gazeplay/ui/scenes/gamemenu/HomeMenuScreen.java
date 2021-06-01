@@ -211,7 +211,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final List<Node> gameCardsList = new ArrayList<>();
 
         for (GameSpec gameSpec : games) {
-            final StackPane gameCard = createGameCard(config, gameSpec, translator, gameButtonOrientation, dwellTimeIndicator);
+            final GameButtonPane gameCard = createGameCard(config, gameSpec, translator, gameButtonOrientation, dwellTimeIndicator);
             gameCardsList.add(gameCard);
         }
 
@@ -233,16 +233,16 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final List<Node> favGameCardsList = new ArrayList<>();
 
         for (GameSpec gameSpec : filteredFavList) {
-            final StackPane gameCard = createGameCard(config, gameSpec, translator, gameButtonOrientation, dwellTimeIndicator);
+            final GameButtonPane gameCard = createGameCard(config, gameSpec, translator, gameButtonOrientation, dwellTimeIndicator);
             favGameCardsList.add(gameCard);
         }
 
         return favGameCardsList;
     }
 
-    private StackPane createGameCard(final Configuration config, GameSpec gameSpec, final Translator translator, GameButtonOrientation gameButtonOrientation, final ProgressIndicator dwellTimeIndicator) {
+    private GameButtonPane createGameCard(final Configuration config, GameSpec gameSpec, final Translator translator, GameButtonOrientation gameButtonOrientation, final ProgressIndicator dwellTimeIndicator) {
 
-        StackPane gameCard = gameMenuFactory.createGameButton(
+        GameButtonPane gameCard = gameMenuFactory.createGameButton(
             getGazePlay(),
             root,
             config,
@@ -281,7 +281,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         gameSearchBar.textProperty().addListener((obs, oldValue, newValue) -> {
             log.debug(newValue);
             filterGames(choicePanel, gameCardsList, favGameCardsList, config, dwellTimeIndicator, node -> {
-                GameButtonPane gameButtonPane = (GameButtonPane) ((StackPane) node).getChildren().get(0);
+                GameButtonPane gameButtonPane = (GameButtonPane) node;
                 return (new GameCardVisiblePredicate(config)).test(node) &&
                     translator.translate(gameButtonPane.getGameSpec().getGameSummary().getNameCode()).toLowerCase().contains(newValue.toLowerCase());
             });
@@ -400,7 +400,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 config.getHiddenCategoriesProperty().add(category.getGameCategory());
             }
             filterGames(choicePanel, gameCardsList, favGameCardsList, config, dwellTimeIndicator, node -> {
-                GameButtonPane gameButtonPane = (GameButtonPane) ((StackPane) node).getChildren().get(0);
+                GameButtonPane gameButtonPane = (GameButtonPane) node;
                 return (new GameCardVisiblePredicate(config)).test(node) &&
                     translator.translate(gameButtonPane.getGameSpec().getGameSummary().getNameCode()).toLowerCase().contains(searchBar.getText().toLowerCase());
             });
@@ -415,8 +415,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         @Override
         public boolean test(Node node) {
-            StackPane gameButtonPane = (StackPane) node;
-            SortedSet<GameCategories.Category> gameCategories = ((GameButtonPane) gameButtonPane.getChildren().get(0)).getGameSpec().getGameSummary().getCategories();
+            GameButtonPane gameButtonPane = (GameButtonPane) node;
+            SortedSet<GameCategories.Category> gameCategories = gameButtonPane.getGameSpec().getGameSummary().getCategories();
             List<@NonNull String> gameCategoriesNames = gameCategories.stream().map(GameCategories.Category::getGameCategory).collect(Collectors.toList());
             return !config.getHiddenCategoriesProperty().containsAll(gameCategoriesNames);
         }

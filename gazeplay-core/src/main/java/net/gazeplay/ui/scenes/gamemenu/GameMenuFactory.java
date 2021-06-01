@@ -46,7 +46,7 @@ public class GameMenuFactory {
     @Autowired
     private GameMenuController gameMenuController;
 
-    public StackPane createGameButton(
+    public GameButtonPane createGameButton(
         @NonNull final GazePlay gazePlay,
         @NonNull final Region root,
         @NonNull final Configuration config,
@@ -84,12 +84,13 @@ public class GameMenuFactory {
         thumbnailContainer.setPadding(new Insets(1, 1, 1, 1));
         thumbnailContainer.setOpaqueInsets(new Insets(1, 1, 1, 1));
 
-        StackPane Pcard = new StackPane();
         ProgressButton Bcard = new ProgressButton();
 
         GameButtonPane gameCard = new GameButtonPane(gameSpec);
 
-        Pcard.getChildren().addAll(gameCard, Bcard);
+        BorderPane Bgame = new BorderPane();
+        gameCard.setBottom(Bgame);
+        Bgame.setTop(Bcard);
         switch (orientation) {
             case HORIZONTAL:
                 gameCard.getStyleClass().add("gameChooserButton");
@@ -154,7 +155,7 @@ public class GameMenuFactory {
                 break;
         }
         gameCategoryContainer.setAlignment(Pos.BOTTOM_RIGHT);
-        gameCard.setBottom(gameCategoryContainer);
+        Bgame.setBottom(gameCategoryContainer);
         for (GameCategories.Category gameCategory : gameSummary.getCategories()) {
             if (gameCategory.getThumbnail() != null) {
                 Image buttonGraphics = new Image(gameCategory.getThumbnail(), 50, 50, true, false);
@@ -322,7 +323,7 @@ public class GameMenuFactory {
         Bfav.getButton().setRadius(1);
         Bfav.setPrefHeight(favIconContainer.getHeight());
 
-        return Pcard;
+        return gameCard;
     }
 
 
