@@ -11,10 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.NonNull;
@@ -36,6 +33,7 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.ProgressButton;
 import net.gazeplay.components.RandomPositionGenerator;
 import net.gazeplay.ui.AnimationSpeedRatioControl;
 import net.gazeplay.ui.FixationLengthControl;
@@ -51,7 +49,7 @@ import java.util.function.Supplier;
 public class GameContext extends GraphicalContext<Pane> implements IGameContext {
 
     @Getter
-    private HomeButton homeButton;
+    private StackPane homeButton;
 
     public static void updateConfigPane(final Pane configPane, Stage primaryStage) {
         double mainHeight = primaryStage.getHeight();
@@ -281,12 +279,16 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
-        homeButton = createHomeButtonInGameScreenWithoutHandler(gazePlay);
+        homeButton = new StackPane();
+        homeButton.getChildren().add(createHomeButtonInGameScreenWithoutHandler(gazePlay));
         menuHBox.getChildren().add(homeButton);
     }
 
-    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
+    public StackPane createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
                                                    @NonNull GameLifeCycle currentGame) {
+
+        StackPane Phome = new StackPane();
+        ProgressButton Bhome = new ProgressButton();
 
         EventHandler<Event> homeEvent = e -> {
             root.setCursor(Cursor.WAIT); // Change cursor to wait style
@@ -298,7 +300,15 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         HomeButton homeButton = new HomeButton(screenDimension);
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
-        return homeButton;
+
+        Bhome.assignIndicatorUpdatable(homeEvent, this);
+        Bhome.active();
+        Bhome.getButton().setVisible(false);
+        Bhome.getButton().setRadius(50);
+
+        Phome.getChildren().addAll(homeButton, Bhome);
+
+        return Phome;
     }
 
     public void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
