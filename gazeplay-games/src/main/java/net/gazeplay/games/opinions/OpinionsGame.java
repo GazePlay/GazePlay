@@ -169,34 +169,24 @@ public class OpinionsGame implements GameLifeCycle {
 
             Non = new ProgressButton();
 
-            Rectangle bar = new Rectangle();
-
             if (type.equals(OpinionsGameVariant.ONHB)) {
                 createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, dimension2D.getHeight() * 16 / 20);
-                bar = new Rectangle(dimension2D.getWidth() * 0.05, dimension2D.getHeight() * 0.475, dimension2D.getWidth() * 0.9, dimension2D.getHeight() * 0.05);
-                bar.setFill(new ImagePattern(new Image("data/opinions/thumbs/etagere.png")));
             }
 
             if (type.equals(OpinionsGameVariant.ONBH)) {
                 createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, dimension2D.getHeight() * 16 / 20);
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
-                bar = new Rectangle(dimension2D.getWidth() * 0.05, dimension2D.getHeight() * 0.475, dimension2D.getWidth() * 0.9, dimension2D.getHeight() * 0.05);
-                bar.setFill(new ImagePattern(new Image("data/opinions/thumbs/etagere.png")));
             }
 
             if (type.equals(OpinionsGameVariant.ONGD)) {
                 createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", 0, dimension2D.getHeight() * 2 / 5);
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
-                bar = new Rectangle(dimension2D.getWidth() * 0.475, dimension2D.getHeight() * 0.05, dimension2D.getWidth() * 0.05, dimension2D.getHeight() * 0.9);
-                bar.setFill(new ImagePattern(new Image("data/opinions/thumbs/etagererot.png")));
             }
 
             if (type.equals(OpinionsGameVariant.ONDG)) {
                 createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", 0, dimension2D.getHeight() * 2 / 5);
-                bar = new Rectangle(dimension2D.getWidth() * 0.475, dimension2D.getHeight() * 0.05, dimension2D.getWidth() * 0.05, dimension2D.getHeight() * 0.9);
-                bar.setFill(new ImagePattern(new Image("data/opinions/thumbs/etagererot.png")));
             }
 
             Oui.assignIndicator(event -> {
@@ -216,8 +206,6 @@ public class OpinionsGame implements GameLifeCycle {
             Non.active();
 
             middleLayer.getChildren().addAll(Oui, Non);
-
-            backgroundLayer.getChildren().add(bar);
 
         }
 

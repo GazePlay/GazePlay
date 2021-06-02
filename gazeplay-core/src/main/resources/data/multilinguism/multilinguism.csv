@@ -277,3 +277,7 @@ Mouse,,,,,,Mouse,,Souris,,,,,,,,,,,
 Gaze,,,,,,Gaze,,Regard,,,,,,,,,,,
 MouseAndGaze,,,,,,Mouse and Gaze,,Souris et Regard,,,,,,,,,,,
 
+OuiNon_Haut-Bas,,,,,,Yes at the top and no at the bottom,,Oui en haut et non en bas,,,,,,,,,,,
+OuiNon_Bas-Haut,,,,,,Yes at the bottom and no at the top,,Oui en bas et non en haut,,,,,,,,,,,
+OuiNon_Gauche-Droite,,,,,,Yes to the left and no to the rigth,,Oui à gauche et non à droite,,,,,,,,,,,
+OuiNon_Droite-Gauche,,,,,,Yes to the rigth and no to the left,,Oui à droite et non à gauche,,,,,,,,,,,
