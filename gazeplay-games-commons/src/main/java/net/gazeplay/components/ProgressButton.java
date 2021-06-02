@@ -186,7 +186,7 @@ public class ProgressButton extends StackPane {
         return indicator;
     }
 
-    public ProgressIndicator assignIndicatorUpdatable(final EventHandler<Event> enterEvent) {
+    public ProgressIndicator assignIndicator(final EventHandler<Event> enterEvent) {
         indicator.setMouseTransparent(true);
         indicator.setOpacity(0);
         final ProgressButton pb = this;

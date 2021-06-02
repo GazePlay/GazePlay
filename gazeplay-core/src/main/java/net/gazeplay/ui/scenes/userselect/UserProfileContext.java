@@ -78,7 +78,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         final CustomButton exitButton = createExitButton(screenDimension);
         final ProgressButton Bexit = new ProgressButton();
-        Bexit.assignIndicatorUpdatable((EventHandler<Event>) e -> System.exit(0));
+        Bexit.assignIndicator((EventHandler<Event>) e -> System.exit(0));
         Bexit.active();
         Bexit.getButton().setRadius(40);
         Bexit.getButton().setVisible(false);
@@ -286,7 +286,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         }
 
         ProgressButton Buser = new ProgressButton();
-        Buser.assignIndicatorUpdatable(mouseClickedEventHandler);
+        Buser.assignIndicator(mouseClickedEventHandler);
         Buser.getButton().setRadius(75);
         Buser.getButton().setVisible(false);
         Buser.active();
@@ -319,7 +319,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         });
 
         final ProgressButton BDel = new ProgressButton();
-        BDel.assignIndicatorUpdatable((EventHandler<Event>) event -> {
+        BDel.assignIndicator((EventHandler<Event>) event -> {
             final Stage dialog = createRemoveDialog(gazePlay.getPrimaryStage(), choicePanel, user, gazePlay.getCurrentScreenDimensionSupplier());
 
             final String dialogTitle = getGazePlay().getTranslator().translate("Remove");
@@ -366,7 +366,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         });
 
         final ProgressButton BEdi = new ProgressButton();
-        BEdi.assignIndicatorUpdatable((EventHandler<Event>) event -> {
+        BEdi.assignIndicator((EventHandler<Event>) event -> {
             final Stage dialog = createDialog(gazePlay, gazePlay.getPrimaryStage(), choicePanel, user, false, screenDimension);
 
             final String dialogTitle = getGazePlay().getTranslator().translate("UserModif");
@@ -450,7 +450,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         final ProgressButton Byes = new ProgressButton();
 
-        Byes.assignIndicatorUpdatable(event -> {
+        Byes.assignIndicator(event -> {
             dialog.close();
             choicePanel.getChildren().remove(user);
             final File userDirectory = GazePlayDirectories.getUserProfileDirectory(user.getName());
@@ -475,7 +475,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         final ProgressButton Bno = new ProgressButton();
 
-        Bno.assignIndicatorUpdatable(event -> dialog.close());
+        Bno.assignIndicator(event -> dialog.close());
 
         Bno.getButton().setRadius(50);
         Bno.getButton().setVisible(false);
@@ -546,7 +546,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         final ProgressButton Bchoose = new ProgressButton();
 
-        Bchoose.assignIndicatorUpdatable(event -> {
+        Bchoose.assignIndicator(event -> {
             final String s = getImage(dialog, chooseImageButton);
             if (s != null) {
                 chooseImageButton.setText(s);
@@ -573,7 +573,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         final ProgressButton Breset = new ProgressButton();
 
-        Breset.assignIndicatorUpdatable(event -> {
+        Breset.assignIndicator(event -> {
             chooseImageButton.setGraphic(null);
             chooseImageButton.setText(getGazePlay().getTranslator().translate("ChooseImage"));
         });
@@ -677,7 +677,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         }
         okButton.setOnMouseClicked(event);
 
-        Bok.assignIndicatorUpdatable(event);
+        Bok.assignIndicator(event);
         Bok.getButton().setRadius(50);
         Bok.getButton().setVisible(false);
         Bok.active();

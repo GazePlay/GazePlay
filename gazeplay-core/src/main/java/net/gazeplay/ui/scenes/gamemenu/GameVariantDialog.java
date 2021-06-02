@@ -151,13 +151,13 @@ public class GameVariantDialog extends Stage {
                     }
                 });
 
-                Bnormal.assignIndicatorUpdatable(actionEvent -> {normal.setSelected(true);
+                Bnormal.assignIndicator(actionEvent -> {normal.setSelected(true);
                     if (easymode) {
                         easymode = false;
                         choicePanelScroller.setContent(choicePane);
                     }
                 });
-                Bfacile.assignIndicatorUpdatable(actionEvent -> {facile.setSelected(true);
+                Bfacile.assignIndicator(actionEvent -> {facile.setSelected(true);
                     if (!easymode) {
                         easymode = true;
                         choicePanelScroller.setContent(choicePaneEasy);
@@ -183,7 +183,7 @@ public class GameVariantDialog extends Stage {
                 }
             };
             button.addEventHandler(MOUSE_CLICKED, event);
-            Bvar.assignIndicatorUpdatable(event);
+            Bvar.assignIndicator(event);
             Bvar.active();
             Bvar.getButton().setRadius(50);
             Bvar.getButton().setVisible(false);

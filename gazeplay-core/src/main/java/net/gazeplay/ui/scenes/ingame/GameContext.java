@@ -422,7 +422,19 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             currentGame.launch();
         });
 
-        StatsContext statsContext = StatsContextFactory.newInstance(getGazePlay(), stats, continueButton);
+        StackPane Pcontinue = new StackPane();
+        ProgressButton Bcontinue = new ProgressButton();
+        Pcontinue.getChildren().addAll(continueButton, Bcontinue);
+        Bcontinue.assignIndicator(e -> {
+            getGazePlay().onGameLaunch(this);
+            stats.reset();
+            currentGame.launch();
+        });
+        Bcontinue.active();
+        Bcontinue.getButton().setRadius(50);
+        Bcontinue.getButton().setVisible(false);
+
+        StatsContext statsContext = StatsContextFactory.newInstance(getGazePlay(), stats, Pcontinue);
 
         this.clear();
         getGazePlay().onDisplayStats(statsContext);

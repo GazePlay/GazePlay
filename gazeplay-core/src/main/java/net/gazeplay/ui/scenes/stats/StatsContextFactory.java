@@ -1,6 +1,7 @@
 package net.gazeplay.ui.scenes.stats;
 
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import lombok.NonNull;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.utils.CustomButton;
@@ -18,7 +19,7 @@ public class StatsContextFactory {
     public static StatsContext newInstance(
         @NonNull GazePlay gazePlay,
         @NonNull Stats stats,
-        CustomButton continueButton
+        StackPane continueButton
     ) {
         BorderPane root = new BorderPane();
         return new StatsContext(gazePlay, root, stats, continueButton);

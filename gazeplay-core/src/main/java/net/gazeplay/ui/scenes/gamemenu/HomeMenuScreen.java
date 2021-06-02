@@ -323,7 +323,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         CustomButton exitButton = new CustomButton("data/common/images/power-off.png", screenDimension);
         Pexit.getChildren().addAll(exitButton, Bexit);
         exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
-        Bexit.assignIndicatorUpdatable(e -> System.exit(0));
+        Bexit.assignIndicator(e -> System.exit(0));
         Bexit.active();
         Bexit.getButton().setVisible(false);
         Bexit.getButton().setRadius(50);
@@ -336,7 +336,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         CustomButton logoutButton = new CustomButton("data/common/images/logout.png", screenDimension);
         Plog.getChildren().addAll(logoutButton, Blog);
         logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> gazePlay.goToUserPage());
-        Blog.assignIndicatorUpdatable(e -> gazePlay.goToUserPage());
+        Blog.assignIndicator(e -> gazePlay.goToUserPage());
         Blog.active();
         Blog.getButton().setRadius(50);
         Blog.getButton().setVisible(false);
@@ -371,7 +371,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
         };
         replayButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event);
-        BRep.assignIndicatorUpdatable(event);
+        BRep.assignIndicator(event);
         BRep.active();
         BRep.getButton().setVisible(false);
         BRep.getButton().setRadius(50);

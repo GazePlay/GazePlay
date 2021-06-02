@@ -21,7 +21,7 @@ public class ConfigurationButtonFactory {
             MouseEvent.MOUSE_CLICKED,
             e -> gazePlay.onDisplayConfigurationManagement());
 
-        Bconf.assignIndicatorUpdatable(e -> {gazePlay.onDisplayConfigurationManagement();});
+        Bconf.assignIndicator(e -> {gazePlay.onDisplayConfigurationManagement();});
         Bconf.active();
         Bconf.getButton().setRadius(50);
         Bconf.getButton().setVisible(false);

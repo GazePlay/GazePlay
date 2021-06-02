@@ -273,7 +273,7 @@ public class GameMenuFactory {
             }
         });
 
-        Bcard.assignIndicatorUpdatable(event -> {
+        Bcard.assignIndicator(event -> {
             if (!favGamesImageView.isHover()) {
                 gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName);
             }
@@ -307,7 +307,7 @@ public class GameMenuFactory {
             }
         };
         favIconContainer.addEventFilter(MOUSE_CLICKED, favoriteGameSwitchEventHandler);
-        Bfav.assignIndicatorUpdatable(event -> {
+        Bfav.assignIndicator(event -> {
             if (config.getFavoriteGamesProperty().contains(gameSummary.getNameCode())) {
                 config.getFavoriteGamesProperty().remove(gameSummary.getNameCode());
                 ColorAdjust colorAdjust = new ColorAdjust();

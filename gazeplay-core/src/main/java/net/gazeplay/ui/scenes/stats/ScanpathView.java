@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
@@ -35,7 +36,7 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
 
     private Color[] colors = {Color.RED, Color.BLUE};
 
-    public ScanpathView(GazePlay gazePlay, Stats stats, CustomButton continueButton) {
+    public ScanpathView(GazePlay gazePlay, Stats stats, StackPane continueButton) {
         super(gazePlay, new BorderPane());
 
         final Pane center = buildCenterPane(stats);

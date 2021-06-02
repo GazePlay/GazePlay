@@ -44,7 +44,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
     private final double RATIO = 0.35;
 
-    StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton) {
+    StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, StackPane continueButton) {
         super(gazePlay, root);
 
         final Translator translator = gazePlay.getTranslator();
@@ -261,7 +261,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         Stats stats,
         Configuration config,
         RadioButton colorBands,
-        CustomButton continueButton
+        StackPane continueButton
     ) {
         HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
 
