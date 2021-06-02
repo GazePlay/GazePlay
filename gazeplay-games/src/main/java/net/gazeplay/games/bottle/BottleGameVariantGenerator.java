@@ -14,26 +14,26 @@ public class BottleGameVariantGenerator implements IGameVariantGenerator {
     @Override
     public Set<IGameVariant> getVariants() {
         return Sets.newLinkedHashSet(Lists.newArrayList(
-            new IntStringGameVariant(4, "Normal"),
-            new IntStringGameVariant(8, "Normal"),
-            new IntStringGameVariant(12, "Normal"),
-            new IntStringGameVariant(16, "Normal"),
-            new IntStringGameVariant(4, "Big"),
-            new IntStringGameVariant(8, "Big"),
-            new IntStringGameVariant(12, "Big"),
-            new IntStringGameVariant(16, "Big"),
-            new IntStringGameVariant(4, "Small"),
-            new IntStringGameVariant(8, "Small"),
-            new IntStringGameVariant(12, "Small"),
-            new IntStringGameVariant(16, "Small"),
-            new IntStringGameVariant(4, "High"),
-            new IntStringGameVariant(8, "High"),
-            new IntStringGameVariant(12, "High"),
-            new IntStringGameVariant(16, "High"),
-            new IntStringGameVariant(4, "Tiny"),
-            new IntStringGameVariant(8, "Tiny"),
-            new IntStringGameVariant(12, "Tiny"),
-            new IntStringGameVariant(16, "Tiny")
+            new IntStringGameVariant(4, "NormalB"),
+            new IntStringGameVariant(8, "NormalB"),
+            new IntStringGameVariant(12, "NormalB"),
+            new IntStringGameVariant(16, "NormalB"),
+            new IntStringGameVariant(4, "BigB"),
+            new IntStringGameVariant(8, "BigB"),
+            new IntStringGameVariant(12, "BigB"),
+            new IntStringGameVariant(16, "BigB"),
+            new IntStringGameVariant(4, "SmallB"),
+            new IntStringGameVariant(8, "SmallB"),
+            new IntStringGameVariant(12, "SmallB"),
+            new IntStringGameVariant(16, "SmallB"),
+            new IntStringGameVariant(4, "HighB"),
+            new IntStringGameVariant(8, "HighB"),
+            new IntStringGameVariant(12, "HighB"),
+            new IntStringGameVariant(16, "HighB"),
+            new IntStringGameVariant(4, "TinyB"),
+            new IntStringGameVariant(8, "TinyB"),
+            new IntStringGameVariant(12, "TinyB"),
+            new IntStringGameVariant(16, "TinyB")
         ));
     }
 }

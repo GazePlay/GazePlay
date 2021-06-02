@@ -191,6 +191,8 @@ public class BottleGame implements GameLifeCycle {
 
         bottleGameStats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(bottleGameStats);
+
+        gameContext.onGameStarted();
     }
 
     private void initBall() {
@@ -212,23 +214,23 @@ public class BottleGame implements GameLifeCycle {
         //Normal size
         int sizex=12;
         int sizey=6;
-        if (Stype.equals("Big")){
+        if (Stype.equals("BigB")){
             sizex=8;
             sizey=4;
         }
-        else if(Stype.equals("Small")){
+        else if(Stype.equals("SmallB")){
             sizex=16;
             sizey=8;
         }
-        else if(Stype.equals("High")) {
+        else if(Stype.equals("HighB")) {
             sizex=12;
             sizey=4;
         }
-        else if(Stype.equals("Tiny")){
+        else if(Stype.equals("TinyB")){
             sizex=24;
             sizey=12;
         }
-        else if(!Stype.equals("Normal")){
+        else if(!Stype.equals("NormalB")){
             //If the type is unknown, use the "Normal" settings
             log.warn("unknown type : " + Stype + "\nThe 'Normal' settings will be use");
         }
