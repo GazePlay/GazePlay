@@ -14,12 +14,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import net.gazeplay.components.ProgressButton;
 import net.gazeplay.stats.ShootGamesStats;
 import net.gazeplay.ui.scenes.stats.StatsContext;
 
@@ -36,7 +38,7 @@ import static javafx.scene.chart.XYChart.Data;
 @Slf4j
 public class StatDisplayUtils {
 
-    public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
+    public static StackPane createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
         EventHandler<Event> homeEvent = e -> closeStatsWindow();
 
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
@@ -44,7 +46,15 @@ public class StatDisplayUtils {
         HomeButton homeButton = new HomeButton(screenDimension);
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
 
-        return homeButton;
+        StackPane Phome = new StackPane();
+        ProgressButton Bhome = new ProgressButton();
+        Bhome.assignIndicator(homeEvent);
+        Bhome.active();
+        Bhome.getButton().setRadius(50);
+        Bhome.getButton().setVisible(false);
+        Phome.getChildren().addAll(homeButton, Bhome);
+
+        return Phome;
     }
 
     static void closeStatsWindow() {

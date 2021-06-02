@@ -28,6 +28,7 @@ import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.StatDisplayUtils;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.ProgressButton;
 import net.gazeplay.stats.ExplorationGamesStats;
 import net.gazeplay.stats.HiddenItemsGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
@@ -263,7 +264,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         RadioButton colorBands,
         StackPane continueButton
     ) {
-        HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
+        StackPane homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
 
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
@@ -277,19 +278,35 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             gazePlay.onDisplayScanpath(scanPath);
         };
 
+        StackPane Paoi = new StackPane();
+        ProgressButton Baoi = new ProgressButton();
+        Baoi.assignIndicator(e -> gazePlay.onDisplayAOI(stats));
+        Baoi.active();
+        Baoi.getButton().setVisible(false);
+        Baoi.getButton().setRadius(50);
+        Paoi.getChildren().addAll(aoiButton, Baoi);
+
         CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
         scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
+
+        StackPane Pscan = new StackPane();
+        ProgressButton Bscan = new ProgressButton();
+        Bscan.assignIndicator(viewScanPath);
+        Bscan.active();
+        Bscan.getButton().setRadius(50);
+        Bscan.getButton().setVisible(false);
+        Pscan.getChildren().addAll(scanPathButton, Bscan);
 
         HBox controlButtonPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(controlButtonPane);
         controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
 
         if (config.getAreaOfInterestDisabledProperty().getValue())
-            controlButtonPane.getChildren().add(aoiButton);
+            controlButtonPane.getChildren().add(Paoi);
 
         if (!config.isFixationSequenceDisabled()) {
             controlButtonPane.getChildren().add(colorBands);
-            controlButtonPane.getChildren().add(scanPathButton);
+            controlButtonPane.getChildren().add(Pscan);
         }
 
         controlButtonPane.getChildren().add(homeButton);

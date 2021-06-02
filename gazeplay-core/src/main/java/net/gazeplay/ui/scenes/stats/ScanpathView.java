@@ -26,6 +26,7 @@ import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.ProgressButton;
 import net.gazeplay.ui.GraphicalContext;
 
 import java.util.LinkedList;
@@ -50,8 +51,20 @@ public class ScanpathView extends GraphicalContext<BorderPane> {
             gazePlay.onDisplayStats(statsContext);
         });
 
+        StackPane Phome = new StackPane();
+        ProgressButton Bhome = new ProgressButton();
+        Bhome.assignIndicator(e -> {
+            StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats, continueButton);
+            this.clear();
+            gazePlay.onDisplayStats(statsContext);
+        });
+        Bhome.active();
+        Bhome.getButton().setVisible(false);
+        Bhome.getButton().setRadius(50);
+        Phome.getChildren().addAll(homeButton, Bhome);
+
         HBox bottom = new HBox();
-        bottom.getChildren().add(homeButton);
+        bottom.getChildren().add(Phome);
 
         root.setCenter(center);
         root.setBottom(bottom);
