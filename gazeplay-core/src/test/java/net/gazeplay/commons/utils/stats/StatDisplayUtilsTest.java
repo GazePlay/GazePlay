@@ -12,6 +12,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.utils.FixationPoint;
@@ -88,8 +89,8 @@ class StatDisplayUtilsTest {
 
     @Test
     void shouldCreateHomeButton() {
-        final HomeButton button = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, mockStatsContext);
-        assert button.isVisible();
+        final StackPane button = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, mockStatsContext);
+        assert button.getChildren().get(0).isVisible();
     }
 
     @Test
