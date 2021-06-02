@@ -57,6 +57,7 @@ public class WhereIsIt implements GameLifeCycle {
     private final boolean fourThree;
 
     private int level = 1;
+    private int lvlReplays = 1;
     private int rightDecision = 0;
     private int wrongDecision = 0;
     private boolean firstWrong = false;
@@ -109,16 +110,20 @@ public class WhereIsIt implements GameLifeCycle {
 
         if (stats.nbGoalsReached > 0 && stats.nbGoalsReached % 8 == 0) {
             boolean randomness = chi2decision(rightDecision, wrongDecision);
+            lvlReplays ++;
+
             if (randomness && rightDecision > wrongDecision) {
                 if (level < 5)
                     level++;
                 rightDecision = 0;
                 wrongDecision = 0;
+                lvlReplays = 0;
             }
             if (!randomness && level > 1) {
                 level--;
                 rightDecision = 0;
                 wrongDecision = 0;
+                lvlReplays = 0;
             }
         }
         currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, randomGenerator,
@@ -754,19 +759,26 @@ public class WhereIsIt implements GameLifeCycle {
 
     public boolean chi2decision(int tp, int fp) {
         boolean decision = false;
-        int N = stats.nbGoalsReached;
         int[] observed = {tp, fp};
-        final double chi2_05 = 3.84;
 
-        double[] probas = {N * binomProba(1, 1,0.5), N * binomProba(1, 0,0.5)};
+        final ArrayList<Double> chi2_theoretic = new ArrayList<Double>();
+        chi2_theoretic.add(3.84);
+        chi2_theoretic.add(2.71);
+        chi2_theoretic.add(1.32);
+        chi2_theoretic.add(0.45);
+
+        double[] probas = {8 * lvlReplays * binomProba(1, 1,0.5), 8 * lvlReplays * binomProba(1, 0,0.5)};
 
         double chi2_obs =  Math.pow(observed[0] - probas[0], 2) / probas[0] + Math.pow(observed[1] - probas[1], 2) / probas[1];
 
 
         log.info("tp = {}, fp = {}", tp, fp);
         log.info("chi2_obs = {}", chi2_obs);
+        log.info("chi2_th = {}, replays = {}", chi2_theoretic, lvlReplays);
 
-        if (chi2_05 <= chi2_obs)
+        int index = lvlReplays > 4 ?  lvlReplays - 1 : 3;
+
+        if (chi2_theoretic.get(index) <= chi2_obs)
             decision = true;
 
         return decision;
