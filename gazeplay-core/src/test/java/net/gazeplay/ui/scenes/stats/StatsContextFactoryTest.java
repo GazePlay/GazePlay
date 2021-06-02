@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Dimension2D;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import mockit.MockUp;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
@@ -88,8 +89,10 @@ class StatsContextFactoryTest {
     @Test
     void shouldCreateNewInstanceWithContinueButton() {
         CustomButton button = new CustomButton("bear.jpg", 300);
+        StackPane Pb = new StackPane();
+        Pb.getChildren().add(button);
         StatsContext result =
-            StatsContextFactory.newInstance(mockGazePlay, mockStats, button);
+            StatsContextFactory.newInstance(mockGazePlay, mockStats, Pb);
 
         BorderPane pane = (BorderPane) result.getRoot().getChildren().get(1);
         HBox box = (HBox) pane.getChildren().get(1);
