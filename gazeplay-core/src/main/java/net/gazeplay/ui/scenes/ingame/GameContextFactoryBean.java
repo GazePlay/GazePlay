@@ -3,6 +3,7 @@ package net.gazeplay.ui.scenes.ingame;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,6 +25,7 @@ import net.gazeplay.commons.soundsmanager.SoundsManagerFactory;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
+import net.gazeplay.components.ProgressButton;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -150,7 +152,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
         primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateConfigButton(bt, buttonImg, primaryStage));
         configPane.heightProperty().addListener((observable) -> updateConfigPane(configPane, primaryStage));
 
-        EventHandler<MouseEvent> mousePressedControlPanelEventHandler = mouseEvent -> {
+        EventHandler<Event> mousePressedControlPanelEventHandler = mouseEvent -> {
             double from = 0;
             double to = 1;
             double angle = 360;
@@ -190,16 +192,24 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
         bt.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedControlPanelEventHandler);
         bt.getStyleClass().add("button");
 
-        buttonTransparentHandler(bt);
+        StackPane Pbt = new StackPane();
+        ProgressButton Bbt = new ProgressButton();
+        Bbt.assignIndicator(mousePressedControlPanelEventHandler);
+        Bbt.active();
+        Bbt.getButton().setVisible(false);
+        Bbt.getButton().setRadius(70);
+        Pbt.getChildren().addAll(bt, Bbt);
 
-        configPane.getChildren().add(bt);
+        buttonTransparentHandler(bt, Bbt);
+
+        configPane.getChildren().add(Pbt);
         root.getChildren().add(gamingRoot);
         root.getChildren().add(configPane);
 
         return new GameContext(gazePlay, translator, root, gamingRoot, bravo, controlPanel, gazeDeviceManagerFactory.get(), soundsManagerFactory.get(), configPane);
     }
 
-    private void buttonTransparentHandler(Button bt) {
+    private void buttonTransparentHandler(Button bt, ProgressButton Bbt) {
         FadeTransition fd = new FadeTransition(Duration.millis(500), bt);
         fd.setFromValue(1);
         fd.setToValue(0.1);
@@ -217,7 +227,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
             }
         };
 
-        bt.addEventFilter(MouseEvent.MOUSE_ENTERED, mouseEnterControlPanelEventHandler);
+        Bbt.addEventFilter(MouseEvent.MOUSE_ENTERED, mouseEnterControlPanelEventHandler);
 
         EventHandler<MouseEvent> mouseExitControlPanelEventHandler = mouseEvent -> {
             if (!menuOpen) {
@@ -225,7 +235,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
             }
         };
 
-        bt.addEventHandler(MouseEvent.MOUSE_EXITED, mouseExitControlPanelEventHandler);
+        Bbt.addEventHandler(MouseEvent.MOUSE_EXITED, mouseExitControlPanelEventHandler);
 
         initialFd.play();
 
