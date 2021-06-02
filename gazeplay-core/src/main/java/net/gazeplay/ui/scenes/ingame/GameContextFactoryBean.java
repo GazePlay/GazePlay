@@ -197,7 +197,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
         Bbt.assignIndicator(mousePressedControlPanelEventHandler);
         Bbt.active();
         Bbt.getButton().setVisible(false);
-        Bbt.getButton().setRadius(70);
+        Bbt.getButton().setRadius(75);
         Pbt.getChildren().addAll(bt, Bbt);
 
         buttonTransparentHandler(bt, Bbt);
