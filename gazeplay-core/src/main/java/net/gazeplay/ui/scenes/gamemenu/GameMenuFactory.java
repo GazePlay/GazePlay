@@ -93,19 +93,18 @@ public class GameMenuFactory {
 
         GameButtonPane gameCard = new GameButtonPane(gameSpec);
 
+        gameCard.getStyleClass().add("gameChooserButton");
+
         switch (orientation) {
             case HORIZONTAL:
-                Card.getStyleClass().add("gameChooserButton");
                 Card.getStyleClass().add("gameChooserButtonHorizontal");
                 break;
             case VERTICAL:
-                Card.getStyleClass().add("gameChooserButton");
                 Card.getStyleClass().add("gameChooserButtonVertical");
                 break;
         }
 
-
-        Card.getStyleClass().add("button");
+        gameCard.getStyleClass().add("button");
 
         double thumbnailBorderSize = 28d;
 
@@ -272,7 +271,7 @@ public class GameMenuFactory {
                 break;
         }
 
-        Card.addEventHandler(MOUSE_PRESSED, (MouseEvent e) -> {
+        gameCard.addEventHandler(MOUSE_PRESSED, (MouseEvent e) -> {
             if (!favGamesImageView.isHover()) {
                 gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName);
             }
