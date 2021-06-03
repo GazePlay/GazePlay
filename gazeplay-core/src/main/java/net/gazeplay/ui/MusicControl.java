@@ -310,7 +310,20 @@ public class MusicControl {
             unmuteButton.setVisible(localMuted);
         });
 
-        return new StackPane(muteButton, unmuteButton);
+        ProgressButton muteunmute = new ProgressButton();
+        muteunmute.assignIndicator(event -> {
+            boolean mute = volumeSlider.getValue() == 0;
+            if (mute){
+                volumeSlider.setValue(beforeMutedValue);
+            } else {
+                beforeMutedValue = volumeSlider.getValue();
+                volumeSlider.setValue(0);
+            }
+        });
+        muteunmute.active();
+        muteunmute.getButton().setVisible(false);
+
+        return new StackPane(muteButton, unmuteButton, muteunmute);
     }
 
     private Slider createMediaVolumeSlider(final Configuration config) {
