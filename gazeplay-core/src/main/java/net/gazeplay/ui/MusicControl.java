@@ -25,6 +25,7 @@ import net.gazeplay.commons.ui.I18NTitledPane;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.MarqueeText;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import net.gazeplay.components.ProgressButton;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -132,8 +133,16 @@ public class MusicControl {
         final Button previousButton = createButton("<", PREVIOUS_ICON, "previous", ICON_SIZE / 2d);
         previousButton.setOnAction((event) -> backgroundMusicManager.previous());
 
+        final StackPane Pprev = new StackPane();
+        final ProgressButton Bprev = new ProgressButton();
+        Bprev.assignIndicator((event) -> backgroundMusicManager.previous());
+        Bprev.active();
+        Bprev.getButton().setVisible(false);
+        Pprev.getChildren().addAll(previousButton, Bprev);
+
         pauseButton = createButton("||", PAUSE_ICON, "pause");
         pauseButton.setOnAction((event) -> backgroundMusicManager.pause());
+
 
         playButton = createButton("|>", PLAY_ICON, "play");
         playButton.setOnAction((event) -> backgroundMusicManager.play());
@@ -149,6 +158,13 @@ public class MusicControl {
         final Button nextButton = createButton(">", NEXT_ICON, "next", ICON_SIZE / 2d);
         nextButton.setOnAction((event) -> backgroundMusicManager.next());
 
+        final StackPane Pnext = new StackPane();
+        final ProgressButton Bnext = new ProgressButton();
+        Bnext.assignIndicator((event) -> backgroundMusicManager.next());
+        Bnext.active();
+        Bnext.getButton().setVisible(false);
+        Pnext.getChildren().addAll(nextButton, Bnext);
+
         backgroundMusicManager.getIsPlayingProperty().addListener((observable) -> {
             if (backgroundMusicManager.isPlaying()) {
                 playButton.setVisible(false);
@@ -159,7 +175,23 @@ public class MusicControl {
             }
         });
 
-        final StackPane stackPane = new StackPane(pauseButton, playButton);
+        ProgressButton pauseplay = new ProgressButton();
+        pauseplay.assignIndicator(event -> {
+            if (backgroundMusicManager.isPlaying()) {
+                playButton.setVisible(false);
+                pauseButton.setVisible(true);
+                backgroundMusicManager.pause();
+            } else {
+                playButton.setVisible(true);
+                pauseButton.setVisible(false);
+                backgroundMusicManager.play();
+            }
+        });
+        pauseplay.active();
+        pauseplay.getButton().setRadius(30);
+        pauseplay.getButton().setVisible(false);
+
+        final StackPane stackPane = new StackPane(pauseButton, playButton, pauseplay);
 
 
         final HBox line1 = new HBox();
@@ -170,9 +202,9 @@ public class MusicControl {
         final HBox line2 = new HBox();
         line2.setSpacing(CONTENT_SPACING);
         line2.setAlignment(Pos.CENTER);
-        line2.getChildren().add(previousButton);
+        line2.getChildren().add(Pprev);
         line2.getChildren().add(stackPane);
-        line2.getChildren().add(nextButton);
+        line2.getChildren().add(Pnext);
 
         final VBox content = new VBox();
         content.setAlignment(Pos.CENTER);
