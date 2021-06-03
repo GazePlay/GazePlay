@@ -298,9 +298,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         searchBar.prefWidthProperty().bind(root.widthProperty().multiply(1d / 4d));
         searchBar.minWidthProperty().bind(root.widthProperty().multiply(1d / 4d));
 
-        List<CheckBox> allCheckBoxes = new ArrayList<>();
+        List<BorderPane> allCheckBoxes = new ArrayList<>();
         for (GameCategories.Category category : GameCategories.Category.values()) {
-            CheckBox checkBox = buildCategoryCheckBox(category, config, translator, choicePanel, gameCardsList, searchBar, dwellTimeIndicator);
+            BorderPane checkBox = buildCategoryCheckBox(category, config, translator, choicePanel, gameCardsList, searchBar, dwellTimeIndicator);
             allCheckBoxes.add(checkBox);
         }
 
@@ -379,7 +379,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return PRep;
     }
 
-    private CheckBox buildCategoryCheckBox(
+    private BorderPane buildCategoryCheckBox(
         GameCategories.Category category,
         Configuration config,
         Translator translator,
@@ -388,9 +388,18 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         TextField searchBar,
         ProgressIndicator dwellTimeIndicator
     ) {
+        BorderPane Cpane = new BorderPane();
+
         I18NText label = new I18NText(translator, category.getGameCategory());
-        CheckBox categoryCheckbox = new CheckBox(label.getText());
-        categoryCheckbox.setTextFill(Color.WHITE);
+        label.setFill(Color.WHITE);
+
+        Cpane.setCenter(label);
+
+        StackPane Spane = new StackPane();
+
+        Cpane.setLeft(Spane);
+
+        CheckBox categoryCheckbox = new CheckBox();
 
         categoryCheckbox.setSelected(!config.getHiddenCategoriesProperty().contains(category.getGameCategory()));
         categoryCheckbox.selectedProperty().addListener((o) -> {
@@ -405,7 +414,20 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                     translator.translate(gameButtonPane.getGameSpec().getGameSummary().getNameCode()).toLowerCase().contains(searchBar.getText().toLowerCase());
             });
         });
-        return categoryCheckbox;
+
+        ProgressButton Bpane = new ProgressButton();
+        Bpane.assignIndicator(event -> {
+            if (categoryCheckbox.isSelected()){
+                categoryCheckbox.setSelected(false);
+            } else {
+                categoryCheckbox.setSelected(true);
+            }
+        });
+        Bpane.active();
+
+        Spane.getChildren().addAll(categoryCheckbox, Bpane);
+
+        return Cpane;
     }
 
     @AllArgsConstructor
