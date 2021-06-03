@@ -86,24 +86,26 @@ public class GameMenuFactory {
 
         ProgressButton Bcard = new ProgressButton();
 
+        BorderPane Card = new BorderPane();
+
+        StackPane Pcard = new StackPane();
+        Pcard.getChildren().addAll(Card, Bcard);
+
         GameButtonPane gameCard = new GameButtonPane(gameSpec);
 
-        BorderPane Bgame = new BorderPane();
-        gameCard.setBottom(Bgame);
-        Bgame.setTop(Bcard);
         switch (orientation) {
             case HORIZONTAL:
-                gameCard.getStyleClass().add("gameChooserButton");
-                gameCard.getStyleClass().add("gameChooserButtonHorizontal");
+                Card.getStyleClass().add("gameChooserButton");
+                Card.getStyleClass().add("gameChooserButtonHorizontal");
                 break;
             case VERTICAL:
-                gameCard.getStyleClass().add("gameChooserButton");
-                gameCard.getStyleClass().add("gameChooserButtonVertical");
+                Card.getStyleClass().add("gameChooserButton");
+                Card.getStyleClass().add("gameChooserButtonVertical");
                 break;
         }
 
 
-        gameCard.getStyleClass().add("button");
+        Card.getStyleClass().add("button");
 
         double thumbnailBorderSize = 28d;
 
@@ -122,7 +124,7 @@ public class GameMenuFactory {
 
             switch (orientation) {
                 case HORIZONTAL:
-                    gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
+                    Card.heightProperty().addListener((observableValue, oldValue, newValue) -> {
                         double preferredHeight = newValue.doubleValue() - thumbnailBorderSize;
                         imageView.setFitHeight(preferredHeight - 10);
                         imageView.setFitWidth(preferredHeight * imageSizeRatio);
@@ -130,11 +132,11 @@ public class GameMenuFactory {
 
                     break;
                 case VERTICAL:
-                    gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
+                    Card.widthProperty().addListener((observableValue, oldValue, newValue) -> {
                         double preferredWidth = newValue.doubleValue() * THUMBNAIL_WIDTH_RATIO;
                         imageView.setFitWidth(preferredWidth);
                     });
-                    gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue() * THUMBNAIL_HEIGHT_RATIO));
+                    Card.heightProperty().addListener((observableValue, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue() * THUMBNAIL_HEIGHT_RATIO));
                     break;
             }
         }
@@ -149,13 +151,15 @@ public class GameMenuFactory {
         switch (orientation) {
             case HORIZONTAL:
                 gameCard.setTop(Pfav);
+                gameCard.setBottom(Pcard);
                 break;
             case VERTICAL:
                 gameCard.setLeft(Pfav);
+                gameCard.setRight(Pcard);
                 break;
         }
         gameCategoryContainer.setAlignment(Pos.BOTTOM_RIGHT);
-        Bgame.setBottom(gameCategoryContainer);
+        Card.setBottom(gameCategoryContainer);
         for (GameCategories.Category gameCategory : gameSummary.getCategories()) {
             if (gameCategory.getThumbnail() != null) {
                 Image buttonGraphics = new Image(gameCategory.getThumbnail(), 50, 50, true, false);
@@ -164,12 +168,12 @@ public class GameMenuFactory {
                 imageView.setPreserveRatio(true);
                 switch (orientation) {
                     case HORIZONTAL:
-                        gameCard.heightProperty().addListener(
+                        Card.heightProperty().addListener(
                             (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 10));
                         gameCategoryContainer.getChildren().add(imageView);
                         break;
                     case VERTICAL:
-                        gameCard.widthProperty().addListener(
+                        Card.widthProperty().addListener(
                             (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 10));
                         gameCategoryContainer.getChildren().add(imageView);
                         break;
@@ -185,12 +189,12 @@ public class GameMenuFactory {
         }
         switch (orientation) {
             case HORIZONTAL:
-                gameCard.heightProperty().addListener(
+                Card.heightProperty().addListener(
                     (observableValue, oldValue, newValue) -> recordAllowedLabelCircle.setRadius(newValue.doubleValue() / 40));
                 gameCategoryContainer.getChildren().add(recordAllowedLabelCircle);
                 break;
             case VERTICAL:
-                gameCard.widthProperty().addListener(
+                Card.widthProperty().addListener(
                     (observableValue, oldValue, newValue) -> recordAllowedLabelCircle.setRadius(newValue.doubleValue() / 40));
                 gameCategoryContainer.getChildren().add(recordAllowedLabelCircle);
                 break;
@@ -214,17 +218,17 @@ public class GameMenuFactory {
                 }
                 gameDescriptionPane.setPadding(new Insets(0, 10, 0, 10));
 
-                gameCard.setRight(gameDescriptionPane);
-                gameCard.setLeft(thumbnailContainer);
+                Card.setRight(gameDescriptionPane);
+                Card.setLeft(thumbnailContainer);
 
                 gameTitleContainer.setAlignment(Pos.TOP_RIGHT);
                 gameTitleText.setTextAlignment(TextAlignment.RIGHT);
 
-                gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
+                Card.heightProperty().addListener((observableValue, oldValue, newValue) -> {
                     thumbnailContainer.setPrefHeight(newValue.doubleValue() / 2 / 16 * 9);
                     gameDescriptionPane.setPrefHeight(newValue.doubleValue() - thumbnailBorderSize);
                 });
-                gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
+                Card.widthProperty().addListener((observableValue, oldValue, newValue) -> {
                     thumbnailContainer.setPrefWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
                     thumbnailContainer.setMaxWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
                     gameDescriptionPane.setPrefWidth(newValue.doubleValue() / 2 - thumbnailBorderSize);
@@ -240,8 +244,9 @@ public class GameMenuFactory {
                 }
                 gameDescriptionPane.setPadding(new Insets(10, 0, 10, 0));
 
-                gameCard.setCenter(thumbnailContainer);
+                Card.setCenter(thumbnailContainer);
                 gameCard.setLeft(Pfav);
+                gameCard.setRight(Pcard);
 
                 BorderPane bottomPane = new BorderPane();
                 bottomPane.setRight(gameCategoryContainer);
@@ -249,17 +254,17 @@ public class GameMenuFactory {
 
                 gameDescriptionPane.setCenter(bottomPane);
 
-                gameCard.setBottom(gameDescriptionPane);
+                Card.setBottom(gameDescriptionPane);
 
                 gameTitleContainer.setAlignment(Pos.TOP_CENTER);
                 gameTitleText.setTextAlignment(TextAlignment.CENTER);
 
-                gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
+                Card.widthProperty().addListener((observableValue, oldValue, newValue) -> {
                     thumbnailContainer.setPrefWidth(newValue.doubleValue() - thumbnailBorderSize);
                     gameDescriptionPane.setPrefWidth(newValue.doubleValue() - thumbnailBorderSize);
                     gameTitleText.setWrappingWidth(newValue.doubleValue() - thumbnailBorderSize);
                 });
-                gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
+                Card.heightProperty().addListener((observableValue, oldValue, newValue) -> {
                     thumbnailContainer.setPrefHeight(newValue.doubleValue() / 2);
                     gameDescriptionPane.setPrefHeight(newValue.doubleValue() / 2);
                 });
@@ -267,7 +272,7 @@ public class GameMenuFactory {
                 break;
         }
 
-        gameCard.addEventHandler(MOUSE_PRESSED, (MouseEvent e) -> {
+        Card.addEventHandler(MOUSE_PRESSED, (MouseEvent e) -> {
             if (!favGamesImageView.isHover()) {
                 gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName);
             }
