@@ -326,7 +326,8 @@ public class GameMenuFactory {
         Bfav.active();
         Bfav.getButton().setVisible(false);
         Bfav.getButton().setRadius(1);
-        Bfav.setPrefHeight(favIconContainer.getHeight());
+        Pfav.setMaxHeight(favIconContainer.getHeight());
+        Pfav.setMaxWidth(favIconContainer.getWidth());
 
         return gameCard;
     }
