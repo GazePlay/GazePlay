@@ -1,18 +1,20 @@
 package net.gazeplay.ui;
 
+import javafx.animation.PauseTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.I18NTitledPane;
 import net.gazeplay.commons.ui.Translator;
@@ -96,6 +99,8 @@ public class MusicControl {
     private Button pauseButton;
 
     private double beforeMutedValue;
+
+    private boolean IsInArrow = false;
 
     public void updateMusicController() {
         setMusicTitle(musicName);
@@ -350,6 +355,50 @@ public class MusicControl {
         final Slider effectsVolumeSlider = createEffectsVolumeSlider(config);
         final Node effectsMuteSwitchButton = createMuteSwitchButton(effectsVolumeSlider);
 
+        ImagePattern LEFT = new ImagePattern(new Image("data/labyrinth/images/leftArrow.png"));
+        ImagePattern RIGHT = new ImagePattern(new Image("data/labyrinth/images/rightArrow.png"));
+
+        Rectangle LEFT1 = new Rectangle(40, 40);
+        Rectangle RIGHT1 = new Rectangle(40, 40);
+
+        LEFT1.setFill(LEFT);
+        RIGHT1.setFill(RIGHT);
+
+        //Mouse event
+        LEFT1.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, mouseEvent -> {
+            IsInArrow = true;
+            LEFTarrow(mediaVolumeSlider);
+        });
+        LEFT1.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, mouseEvent -> {
+            IsInArrow = false;
+        });
+
+        RIGHT1.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, mouseEvent -> {
+            IsInArrow = true;
+            RIGHTarrow(mediaVolumeSlider);
+        });
+        RIGHT1.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, mouseEvent -> {
+            IsInArrow = false;
+        });
+
+        //Gaze event
+        LEFT1.addEventHandler(GazeEvent.GAZE_ENTERED_TARGET, mouseEvent -> {
+            IsInArrow = true;
+            LEFTarrow(mediaVolumeSlider);
+        });
+        LEFT1.addEventHandler(GazeEvent.GAZE_EXITED_TARGET, mouseEvent -> {
+            IsInArrow = false;
+        });
+
+        RIGHT1.addEventHandler(GazeEvent.GAZE_ENTERED_TARGET, mouseEvent -> {
+            IsInArrow = true;
+            RIGHTarrow(mediaVolumeSlider);
+        });
+        RIGHT1.addEventHandler(GazeEvent.GAZE_EXITED_TARGET, mouseEvent -> {
+            IsInArrow = false;
+        });
+
+
         final HBox line1 = new HBox();
         {
             line1.setSpacing(CONTENT_SPACING);
@@ -359,7 +408,48 @@ public class MusicControl {
             line1.getChildren().add(label);
             line1.getChildren().add(mediaMuteSwitchButton);
             line1.getChildren().add(mediaVolumeSlider);
+            line1.getChildren().addAll(LEFT1, RIGHT1);
         }
+
+        Rectangle LEFT2 = new Rectangle(40, 40);
+        Rectangle RIGHT2 = new Rectangle(40, 40);
+
+        LEFT2.setFill(LEFT);
+        RIGHT2.setFill(RIGHT);
+
+        //Mouse event
+        LEFT2.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, mouseEvent -> {
+            IsInArrow = true;
+            LEFTarrow(effectsVolumeSlider);
+        });
+        LEFT2.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, mouseEvent -> {
+            IsInArrow = false;
+        });
+
+        RIGHT2.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, mouseEvent -> {
+            IsInArrow = true;
+            RIGHTarrow(effectsVolumeSlider);
+        });
+        RIGHT2.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, mouseEvent -> {
+            IsInArrow = false;
+        });
+
+        //Gaze event
+        LEFT2.addEventHandler(GazeEvent.GAZE_ENTERED_TARGET, mouseEvent -> {
+            IsInArrow = true;
+            LEFTarrow(effectsVolumeSlider);
+        });
+        LEFT2.addEventHandler(GazeEvent.GAZE_EXITED_TARGET, mouseEvent -> {
+            IsInArrow = false;
+        });
+
+        RIGHT2.addEventHandler(GazeEvent.GAZE_ENTERED_TARGET, mouseEvent -> {
+            IsInArrow = true;
+            RIGHTarrow(effectsVolumeSlider);
+        });
+        RIGHT2.addEventHandler(GazeEvent.GAZE_EXITED_TARGET, mouseEvent -> {
+            IsInArrow = false;
+        });
 
         final HBox line2 = new HBox();
         {
@@ -370,6 +460,7 @@ public class MusicControl {
             line2.getChildren().add(label);
             line2.getChildren().add(effectsMuteSwitchButton);
             line2.getChildren().add(effectsVolumeSlider);
+            line2.getChildren().addAll(LEFT2, RIGHT2);
         }
 
         final VBox content = new VBox();
@@ -390,6 +481,28 @@ public class MusicControl {
             final String musicTitle = BackgroundMusicManager.getMusicTitle(backgroundMusicManager.getCurrentMusic());
             musicLabel.getTextProperty().setValue(musicTitle);
         }
+    }
+
+    void LEFTarrow(Slider SP){
+        PauseTransition left = new PauseTransition(Duration.millis(2));
+        left.setOnFinished(downevent ->{
+            if (IsInArrow){
+                SP.setValue(SP.getValue()-0.005);
+                left.play();
+            }
+        });
+        left.play();
+    }
+
+    void RIGHTarrow(Slider SP){
+        PauseTransition right = new PauseTransition(Duration.millis(2));
+        right.setOnFinished(upevent ->{
+            if (IsInArrow){
+                SP.setValue(SP.getValue()+0.005);
+                right.play();
+            }
+        });
+        right.play();
     }
 
 }
