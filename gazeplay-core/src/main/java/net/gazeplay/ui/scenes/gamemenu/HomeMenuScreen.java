@@ -199,8 +199,13 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
 
-        ImageView UP = new ImageView(new Image("data/labyrinth/images/upArrow.png"));
-        ImageView DOWN = new ImageView(new Image("data/labyrinth/images/downArrow.png"));
+        ImagePattern IUP = new ImagePattern(new Image("data/labyrinth/images/upArrow.png"));
+        ImagePattern IDOWN = new ImagePattern(new Image("data/labyrinth/images/downArrow.png"));
+
+        Rectangle UP = new Rectangle(100, 200);
+        Rectangle DOWN = new Rectangle(100, 200);
+        UP.setFill(IUP);
+        DOWN.setFill(IDOWN);
 
         //Mouse event
         UP.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, mouseEvent -> {
