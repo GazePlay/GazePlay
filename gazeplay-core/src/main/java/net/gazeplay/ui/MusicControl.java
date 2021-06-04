@@ -355,8 +355,8 @@ public class MusicControl {
         final Slider effectsVolumeSlider = createEffectsVolumeSlider(config);
         final Node effectsMuteSwitchButton = createMuteSwitchButton(effectsVolumeSlider);
 
-        ImagePattern LEFT = new ImagePattern(new Image("data/moinsnoir.png"));
-        ImagePattern RIGHT = new ImagePattern(new Image("data/plusnoir.png"));
+        ImagePattern LEFT = new ImagePattern(new Image("data/moinsnoir2.png"));
+        ImagePattern RIGHT = new ImagePattern(new Image("data/plusnoir2.png"));
 
         Rectangle LEFT1 = new Rectangle(40, 40);
         Rectangle RIGHT1 = new Rectangle(40, 40);
