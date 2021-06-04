@@ -247,7 +247,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         menuHBox.getChildren().add(leftControlPane);
 
-        I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
+        Node toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
         homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
@@ -276,7 +276,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         menuHBox.getChildren().add(leftControlPane);
 
-        I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
+        Node toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
         homeButton = new StackPane();

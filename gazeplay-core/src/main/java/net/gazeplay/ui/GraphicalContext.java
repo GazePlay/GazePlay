@@ -10,12 +10,14 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NTooltip;
+import net.gazeplay.components.ProgressButton;
 
 @Slf4j
 public abstract class GraphicalContext<T extends Parent> {
@@ -51,7 +53,7 @@ public abstract class GraphicalContext<T extends Parent> {
         log.warn("Nodes not removed: {}", getChildren().size());
     }
 
-    public I18NButton createToggleFullScreenButtonInGameScreen(@NonNull GazePlay gazePlay) {
+    public StackPane createToggleFullScreenButtonInGameScreen(@NonNull GazePlay gazePlay) {
         EventHandler<Event> eventHandler = e -> gazePlay.toggleFullScreen();
 
         I18NButton button = new I18NButton(gazePlay.getTranslator(), (String[]) null);
@@ -61,7 +63,11 @@ public abstract class GraphicalContext<T extends Parent> {
 
         button.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
-        return button;
+        ProgressButton progressButton = new ProgressButton();
+        progressButton.assignIndicator(eventHandler);
+        progressButton.active();
+
+        return new StackPane(button, progressButton);
     }
 
     private void configureFullScreenToggleButton(Boolean isFullScreen, I18NButton button) {

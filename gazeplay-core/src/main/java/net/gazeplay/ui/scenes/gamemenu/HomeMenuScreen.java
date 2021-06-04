@@ -92,7 +92,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         HBox leftControlPane = QuickControlPanel.getInstance().createQuickControlPanel(gazePlay, getMusicControl(), configurationButton, config);
 
-        I18NButton toggleFullScreenButton = createToggleFullScreenButtonInGameScreen(gazePlay);
+        Node toggleFullScreenButton = createToggleFullScreenButtonInGameScreen(gazePlay);
 
         HBox rightControlPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(rightControlPane);
