@@ -50,8 +50,8 @@ public class AnimationSpeedRatioControl {
         Slider speedRatioSlider = createSpeedEffectSlider(config, speedEffectValueLabel);
         registerKeyHandler(primaryScene, speedRatioSlider);
 
-        ImagePattern LEFTI = new ImagePattern(new Image("data/labyrinth/images/leftArrow.png"));
-        ImagePattern RIGHTI = new ImagePattern(new Image("data/labyrinth/images/rightArrow.png"));
+        ImagePattern LEFTI = new ImagePattern(new Image("data/moinsnoir.png"));
+        ImagePattern RIGHTI = new ImagePattern(new Image("data/plusnoir.png"));
 
         Rectangle LEFT = new Rectangle(40, 40);
         Rectangle RIGHT = new Rectangle(40, 40);
