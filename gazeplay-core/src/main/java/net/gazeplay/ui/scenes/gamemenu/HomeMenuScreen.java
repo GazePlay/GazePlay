@@ -1,9 +1,6 @@
 package net.gazeplay.ui.scenes.gamemenu;
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -13,9 +10,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
@@ -68,6 +68,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private StackPane errorMessage;
     @Getter
     private VBox centerPanel;
+
+    private boolean IsInArrow = false;
 
     public HomeMenuScreen(
         GazePlay gazePlay,
@@ -174,11 +176,13 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
-    private ScrollPane createGamePickerChoicePane(
+    private BorderPane createGamePickerChoicePane(
         List<GameSpec> games,
         final Configuration config,
         final ProgressIndicator dwellTimeIndicator
     ) {
+        BorderPane ScrollNbut = new BorderPane();
+
         gameCardsList = createGameCardsList(games, config, dwellTimeIndicator);
         favGameCardsList = createFavGameCardsList(games, config, dwellTimeIndicator);
 
@@ -195,9 +199,54 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
 
+        ImageView UP = new ImageView(new Image("data/labyrinth/images/upArrow.png"));
+        ImageView DOWN = new ImageView(new Image("data/labyrinth/images/downArrow.png"));
+
+        //Mouse event
+        UP.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, mouseEvent -> {
+            IsInArrow = true;
+            UParrow(choicePanelScroller);
+        });
+        UP.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, mouseEvent -> {
+            IsInArrow = false;
+        });
+
+        DOWN.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, mouseEvent -> {
+            IsInArrow = true;
+            DOWNarrow(choicePanelScroller);
+        });
+        DOWN.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, mouseEvent -> {
+            IsInArrow = false;
+        });
+
+        //Gaze event
+        UP.addEventHandler(GazeEvent.GAZE_ENTERED_TARGET, mouseEvent -> {
+            IsInArrow = true;
+            UParrow(choicePanelScroller);
+        });
+        UP.addEventHandler(GazeEvent.GAZE_EXITED_TARGET, mouseEvent -> {
+            IsInArrow = false;
+        });
+
+        DOWN.addEventHandler(GazeEvent.GAZE_ENTERED_TARGET, mouseEvent -> {
+            IsInArrow = true;
+            DOWNarrow(choicePanelScroller);
+        });
+        DOWN.addEventHandler(GazeEvent.GAZE_EXITED_TARGET, mouseEvent -> {
+            IsInArrow = false;
+        });
+
         filterGames(choicePanel, gameCardsList, favGameCardsList, config, dwellTimeIndicator, new GameCardVisiblePredicate(config));
 
-        return choicePanelScroller;
+        ScrollNbut.setCenter(choicePanelScroller);
+
+        BorderPane But = new BorderPane();
+        But.setTop(UP);
+        But.setBottom(DOWN);
+
+        ScrollNbut.setRight(But);
+
+        return ScrollNbut;
     }
 
     private List<Node> createGameCardsList(
@@ -443,5 +492,27 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             return !config.getHiddenCategoriesProperty().containsAll(gameCategoriesNames);
         }
 
+    }
+
+    private void DOWNarrow(ScrollPane SP){
+        PauseTransition down = new PauseTransition(Duration.millis(2));
+        down.setOnFinished(downevent ->{
+            if (IsInArrow){
+                SP.setVvalue(SP.getVvalue()+0.005);
+                down.play();
+            }
+        });
+        down.play();
+    }
+
+    private void UParrow(ScrollPane SP){
+        PauseTransition up = new PauseTransition(Duration.millis(2));
+        up.setOnFinished(upevent ->{
+            if (IsInArrow){
+                SP.setVvalue(SP.getVvalue()-0.005);
+                up.play();
+            }
+        });
+        up.play();
     }
 }
