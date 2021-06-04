@@ -62,11 +62,10 @@ public class MolesChar extends Parent {
     @Setter
     private int TargetAOIListIndex;
 
-    //url bidoule if 0 or default case, and DefaultUser if user don't has a portrait
+    //url bidoule if bidoule or default case, and DefaultUser if the user don't has a portrait
     private String url;
 
-    //0: bidoule, 1: user's portrait, more can be added, default case: bidoule
-    private int type;
+    private String type;
 
     MolesChar(
         final double positionX, final double positionY,
@@ -74,7 +73,7 @@ public class MolesChar extends Parent {
         final double distTrans,
         final IGameContext gameContext,
         final Moles gameInstance,
-        final  int type
+        final String type
     ) {
         this.positionX=positionX;
         this.positionY=positionY;
@@ -97,7 +96,7 @@ public class MolesChar extends Parent {
         this.type=type;
 
         url="data/whackmole/images/bibouleMole.png";
-        if (type==1){
+        if (type.equals("UserP")){
             url="data/common/images/DefaultUser.png";
         }
         String username = ActiveConfigurationContext.getInstance().getUserName();
@@ -108,7 +107,7 @@ public class MolesChar extends Parent {
 
         this.moleMoved = new Rectangle(positionX, positionY - distTrans, width, height);
         this.moleMoved.setFill(new ImagePattern(new Image(url), 5, 5, 1, 1, true));
-        if (type == 1 && userPicture != null) {
+        if (type.equals("UserP") && userPicture != null) {
             final File userPictureFile = new File(userPicture);
             if (userPictureFile.exists()) {
                 try (InputStream is = Files.newInputStream(userPictureFile.toPath());) {
@@ -125,7 +124,7 @@ public class MolesChar extends Parent {
 
         this.mole = new Rectangle(positionX, positionY, width, height);
         this.mole.setFill(new ImagePattern(new Image(url), 5, 5, 1, 1, true));
-        if (type == 1 && userPicture != null) {
+        if (type.equals("UserP") && userPicture != null) {
             final File userPictureFile = new File(userPicture);
             if (userPictureFile.exists()) {
                 try (InputStream is = Files.newInputStream(userPictureFile.toPath());) {

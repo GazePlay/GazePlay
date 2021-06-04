@@ -59,9 +59,9 @@ public class Moles extends Parent implements GameLifeCycle {
 
     private final ReplayablePseudoRandom randomGenerator;
 
-    private  int type;
+    private String type;
 
-    Moles(IGameContext gameContext, Stats stats, int type) {
+    Moles(IGameContext gameContext, Stats stats, final MolesGameVariant type) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
@@ -71,10 +71,10 @@ public class Moles extends Parent implements GameLifeCycle {
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
-        this.type=type;
+        this.type=type.getLabel();
     }
 
-    Moles(IGameContext gameContext, Stats stats, double gameSeed, int type) {
+    Moles(IGameContext gameContext, Stats stats, final MolesGameVariant type, double gameSeed) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
@@ -83,7 +83,7 @@ public class Moles extends Parent implements GameLifeCycle {
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-        this.type=type;
+        this.type=type.getLabel();
     }
 
     @Override
@@ -271,7 +271,7 @@ public class Moles extends Parent implements GameLifeCycle {
         return tabPlacement;
     }
 
-    private List<MolesChar> initMoles(Configuration config, int type) {
+    private List<MolesChar> initMoles(Configuration config, String type) {
         javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         ArrayList<MolesChar> result = new ArrayList<>();
