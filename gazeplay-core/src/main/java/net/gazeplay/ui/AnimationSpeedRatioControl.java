@@ -1,19 +1,26 @@
 package net.gazeplay.ui;
 
+import javafx.animation.PauseTransition;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NTitledPane;
 import net.gazeplay.commons.ui.Translator;
 
@@ -35,16 +42,61 @@ public class AnimationSpeedRatioControl {
 
     private static final double SPEED_RATIO_SLIDER_MAX_VALUE = SPEED_RATIO_RANGE_WIDTH;
 
+    private boolean IsInArrow = false;
+
     public TitledPane createSpeedEffectsPane(Configuration config, Translator translator, Scene primaryScene) {
         Label speedEffectValueLabel = new Label("");
         speedEffectValueLabel.setMinWidth(ICON_SIZE);
         Slider speedRatioSlider = createSpeedEffectSlider(config, speedEffectValueLabel);
         registerKeyHandler(primaryScene, speedRatioSlider);
 
+        ImagePattern LEFTI = new ImagePattern(new Image("data/labyrinth/images/leftArrow.png"));
+        ImagePattern RIGHTI = new ImagePattern(new Image("data/labyrinth/images/rightArrow.png"));
+
+        Rectangle LEFT = new Rectangle(40, 40);
+        Rectangle RIGHT = new Rectangle(40, 40);
+
+        LEFT.setFill(LEFTI);
+        RIGHT.setFill(RIGHTI);
+
+        //Mouse event
+        LEFT.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, mouseEvent -> {
+            IsInArrow = true;
+            LEFTarrow(speedRatioSlider);
+        });
+        LEFT.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, mouseEvent -> {
+            IsInArrow = false;
+        });
+
+        RIGHT.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, mouseEvent -> {
+            IsInArrow = true;
+            RIGHTarrow(speedRatioSlider);
+        });
+        RIGHT.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, mouseEvent -> {
+            IsInArrow = false;
+        });
+
+        //Gaze event
+        LEFT.addEventHandler(GazeEvent.GAZE_ENTERED_TARGET, mouseEvent -> {
+            IsInArrow = true;
+            LEFTarrow(speedRatioSlider);
+        });
+        LEFT.addEventHandler(GazeEvent.GAZE_EXITED_TARGET, mouseEvent -> {
+            IsInArrow = false;
+        });
+
+        RIGHT.addEventHandler(GazeEvent.GAZE_ENTERED_TARGET, mouseEvent -> {
+            IsInArrow = true;
+            RIGHTarrow(speedRatioSlider);
+        });
+        RIGHT.addEventHandler(GazeEvent.GAZE_EXITED_TARGET, mouseEvent -> {
+            IsInArrow = false;
+        });
+
         HBox line1 = new HBox();
         line1.setSpacing(CONTENT_SPACING);
         line1.setAlignment(Pos.CENTER);
-        line1.getChildren().addAll(speedEffectValueLabel, speedRatioSlider);
+        line1.getChildren().addAll(speedEffectValueLabel, speedRatioSlider, LEFT, RIGHT);
 
         VBox content = new VBox();
         content.setAlignment(Pos.CENTER);
@@ -142,6 +194,28 @@ public class AnimationSpeedRatioControl {
             }
         });
 
+    }
+
+    void LEFTarrow(Slider SP){
+        PauseTransition left = new PauseTransition(Duration.millis(2));
+        left.setOnFinished(leftevent ->{
+            if (IsInArrow){
+                SP.setValue(SP.getValue()-0.05);
+                left.play();
+            }
+        });
+        left.play();
+    }
+
+    void RIGHTarrow(Slider SP){
+        PauseTransition right = new PauseTransition(Duration.millis(2));
+        right.setOnFinished(rightevent ->{
+            if (IsInArrow){
+                SP.setValue(SP.getValue()+0.05);
+                right.play();
+            }
+        });
+        right.play();
     }
 
 }
