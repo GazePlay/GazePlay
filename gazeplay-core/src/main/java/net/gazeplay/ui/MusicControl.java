@@ -485,7 +485,7 @@ public class MusicControl {
 
     void LEFTarrow(Slider SP){
         PauseTransition left = new PauseTransition(Duration.millis(2));
-        left.setOnFinished(downevent ->{
+        left.setOnFinished(leftevent ->{
             if (IsInArrow){
                 SP.setValue(SP.getValue()-0.005);
                 left.play();
@@ -496,7 +496,7 @@ public class MusicControl {
 
     void RIGHTarrow(Slider SP){
         PauseTransition right = new PauseTransition(Duration.millis(2));
-        right.setOnFinished(upevent ->{
+        right.setOnFinished(rightevent ->{
             if (IsInArrow){
                 SP.setValue(SP.getValue()+0.005);
                 right.play();
