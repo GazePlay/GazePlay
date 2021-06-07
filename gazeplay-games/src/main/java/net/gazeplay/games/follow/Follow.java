@@ -63,16 +63,15 @@ public class Follow implements GameLifeCycle {
 
         RPlayer = new Rectangle(px-size/2, py-size/2, size, size);
         RPlayer.setFill(new ImagePattern(new Image("data/biboule/images/Blue.png")));
-        //gameContext.getChildren().add(RPlayer);
+        gameContext.getChildren().add(RPlayer);
 
-        speed = 1;
+        //speed = 1;
 
-        followthegaze();
+        startafterdelay(5000);
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
-        gameContext.onGameStarted();
     }
 
     @Override
@@ -85,8 +84,8 @@ public class Follow implements GameLifeCycle {
         double x = rx - px;
         double y = ry - py;
         double dist = x*x + y*y;
-        PauseTransition Wait = new PauseTransition(Duration.millis(5));
-        Wait.setOnFinished(Waitevent -> {
+        PauseTransition next = new PauseTransition(Duration.millis(5));
+        next.setOnFinished(nextevent -> {
             if (dist>dimension2D.getWidth()/100) {
                 gameContext.getChildren().remove(RPlayer);
                 px = px + x / Math.sqrt(dist);
@@ -97,13 +96,19 @@ public class Follow implements GameLifeCycle {
             }
             followthegaze();
         });
-        Wait.play();
+        next.play();
     }
 
     private void position(){
-        rx = dimension2D.getWidth() * 2/5;
-        ry = dimension2D.getHeight() * 2/3;
         rx = MouseInfo.getPointerInfo().getLocation().getX();
         ry = MouseInfo.getPointerInfo().getLocation().getY();
+    }
+
+    private void startafterdelay(int delay){
+        PauseTransition Wait = new PauseTransition(Duration.millis(delay));
+        Wait.setOnFinished(Waitevent -> {
+            followthegaze();
+        });
+        Wait.play();
     }
 }
