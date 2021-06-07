@@ -65,7 +65,7 @@ public class Follow implements GameLifeCycle {
         RPlayer.setFill(new ImagePattern(new Image("data/biboule/images/Blue.png")));
         //gameContext.getChildren().add(RPlayer);
 
-        speed = 2;
+        speed = 1;
 
         followthegaze();
 
@@ -85,7 +85,7 @@ public class Follow implements GameLifeCycle {
         double x = rx - px;
         double y = ry - py;
         double dist = x*x + y*y;
-        PauseTransition Wait = new PauseTransition(Duration.millis((int) (5 / speed)));
+        PauseTransition Wait = new PauseTransition(Duration.millis(5));
         Wait.setOnFinished(Waitevent -> {
             if (dist>dimension2D.getWidth()/100) {
                 gameContext.getChildren().remove(RPlayer);
