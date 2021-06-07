@@ -66,6 +66,7 @@ public class Follow implements GameLifeCycle {
         RPlayer.setFill(new ImagePattern(new Image("data/biboule/images/Blue.png")));
         gameContext.getChildren().add(RPlayer);
 
+        //increase the speed decrease the accuracy
         speed = 1;
 
         startafterdelay(5000);
@@ -87,14 +88,17 @@ public class Follow implements GameLifeCycle {
         double dist = x*x + y*y;
         PauseTransition next = new PauseTransition(Duration.millis(5));
         next.setOnFinished(nextevent -> {
-            if (dist>dimension2D.getWidth()/100) {
-                gameContext.getChildren().remove(RPlayer);
+            gameContext.getChildren().remove(RPlayer);
+            if (dist>speed*dimension2D.getWidth()/100) {
                 px = px + speed * x / Math.sqrt(dist);
                 py = py + speed * y / Math.sqrt(dist);
-                RPlayer.setX(px-size/2);
-                RPlayer.setY(py-size/2);
-                gameContext.getChildren().add(RPlayer);
+            } else {
+                px = rx;
+                py = ry;
             }
+            RPlayer.setX(px-size/2);
+            RPlayer.setY(py-size/2);
+            gameContext.getChildren().add(RPlayer);
             followthegaze();
         });
         next.play();
