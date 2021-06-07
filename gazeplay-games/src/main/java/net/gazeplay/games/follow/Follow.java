@@ -14,7 +14,6 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
 
 @Slf4j
 public class Follow implements GameLifeCycle {
@@ -28,7 +27,7 @@ public class Follow implements GameLifeCycle {
     @Setter
     private FollowGameVariant variant;
 
-    private Dimension2D dimension2D;
+    private final Dimension2D dimension2D;
 
     //player's position
     private double px;
@@ -63,7 +62,7 @@ public class Follow implements GameLifeCycle {
 
         RPlayer = new Rectangle(px-size/2, py-size/2, size, size);
         RPlayer.setFill(new ImagePattern(new Image("data/biboule/images/Blue.png")));
-        gameContext.getChildren().add(RPlayer);
+        //gameContext.getChildren().add(RPlayer);
 
         //speed = 1;
 
@@ -106,9 +105,7 @@ public class Follow implements GameLifeCycle {
 
     private void startafterdelay(int delay){
         PauseTransition Wait = new PauseTransition(Duration.millis(delay));
-        Wait.setOnFinished(Waitevent -> {
-            followthegaze();
-        });
+        Wait.setOnFinished(Waitevent -> followthegaze());
         Wait.play();
     }
 }
