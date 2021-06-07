@@ -55,6 +55,8 @@ public class Follow implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.getChildren().clear();
+
         py = dimension2D.getHeight()/2;
         px = dimension2D.getWidth()/2;
 
@@ -62,9 +64,9 @@ public class Follow implements GameLifeCycle {
 
         RPlayer = new Rectangle(px-size/2, py-size/2, size, size);
         RPlayer.setFill(new ImagePattern(new Image("data/biboule/images/Blue.png")));
-        //gameContext.getChildren().add(RPlayer);
+        gameContext.getChildren().add(RPlayer);
 
-        //speed = 1;
+        speed = 1;
 
         startafterdelay(5000);
 
@@ -87,8 +89,8 @@ public class Follow implements GameLifeCycle {
         next.setOnFinished(nextevent -> {
             if (dist>dimension2D.getWidth()/100) {
                 gameContext.getChildren().remove(RPlayer);
-                px = px + x / Math.sqrt(dist);
-                py = py + y / Math.sqrt(dist);
+                px = px + speed * x / Math.sqrt(dist);
+                py = py + speed * y / Math.sqrt(dist);
                 RPlayer.setX(px-size/2);
                 RPlayer.setY(py-size/2);
                 gameContext.getChildren().add(RPlayer);
