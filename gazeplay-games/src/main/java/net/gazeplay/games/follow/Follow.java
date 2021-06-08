@@ -157,4 +157,18 @@ public class Follow implements GameLifeCycle {
         }
         return test;
     }
+
+    private void win(){
+        gameContext.updateScore(stats, this);
+
+        gameContext.playWinTransition(500, actionEvent -> {
+            dispose();
+
+            gameContext.getGazeDeviceManager().clear();
+
+            gameContext.clear();
+
+            gameContext.showRoundStats(stats, this);
+        });
+    }
 }
