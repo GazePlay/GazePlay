@@ -48,7 +48,9 @@ public class Follow implements GameLifeCycle {
     //player square
     private Rectangle RPlayer;
 
-    private final ArrayList<Rectangle> ListRec;
+    private boolean canmove;
+
+    private final ArrayList<Rectangle> ListWall;
 
     private  final  ArrayList<EventItem> ListEI;
 
@@ -59,7 +61,7 @@ public class Follow implements GameLifeCycle {
 
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        ListRec = new ArrayList<>();
+        ListWall = new ArrayList<>();
 
         ListEI = new ArrayList<>();
 
@@ -69,6 +71,8 @@ public class Follow implements GameLifeCycle {
     @Override
     public void launch() {
         gameContext.getChildren().clear();
+
+        canmove = true;
 
         py = dimension2D.getHeight()/2;
         px = dimension2D.getWidth()/2;
@@ -85,16 +89,19 @@ public class Follow implements GameLifeCycle {
         //List of Wall
         Rectangle Wall = new Rectangle(dimension2D.getWidth()/3, dimension2D.getHeight()/5, dimension2D.getWidth()/5, dimension2D.getHeight()/6);
         Wall.setFill(new ImagePattern(new Image("data/follow/wall.png")));
-        ListRec.add(Wall);
+        ListWall.add(Wall);
         gameContext.getChildren().add(Wall);
 
         //List of EventItem
-        javafx.event.EventHandler<ActionEvent> event = e -> win();
+        javafx.event.EventHandler<ActionEvent> event = e -> {
+            win();
+            canmove = false;
+        };
         EventItem target = new EventItem(0, 0, size/2, size/2, new ImagePattern(new Image("data/follow/target.png")), event, true);
         ListEI.add(target);
         gameContext.getChildren().add(target.rectangle);
 
-        startafterdelay(5000);
+        startafterdelay(1000);
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
@@ -113,30 +120,32 @@ public class Follow implements GameLifeCycle {
         double dist = x*x + y*y;
         PauseTransition next = new PauseTransition(Duration.millis(5));
         next.setOnFinished(nextevent -> {
-            gameContext.getChildren().remove(RPlayer);
-            if (dist>speed*dimension2D.getWidth()/100) {
-                boolean bx = TestAllWall(px + speed * x / Math.sqrt(dist), py);
-                boolean by = TestAllWall(px, py + speed * y / Math.sqrt(dist));
-                if (bx) {
-                    px = px + speed * x / Math.sqrt(dist);
+            if (canmove) {
+                gameContext.getChildren().remove(RPlayer);
+                if (dist > speed * dimension2D.getWidth() / 100) {
+                    boolean bx = TestAllWall(px + speed * x / Math.sqrt(dist), py);
+                    boolean by = TestAllWall(px, py + speed * y / Math.sqrt(dist));
+                    if (bx) {
+                        px = px + speed * x / Math.sqrt(dist);
+                    }
+                    if (by) {
+                        py = py + speed * y / Math.sqrt(dist);
+                    }
+                } else {
+                    boolean bx = TestAllWall(rx, py);
+                    boolean by = TestAllWall(px, ry);
+                    if (bx) {
+                        px = rx;
+                    }
+                    if (by) {
+                        py = ry;
+                    }
                 }
-                if (by) {
-                    py = py + speed * y / Math.sqrt(dist);
-                }
-            } else {
-                boolean bx = TestAllWall(rx, py);
-                boolean by = TestAllWall(px, ry);
-                if (bx) {
-                    px = rx;
-                }
-                if (by) {
-                    py = ry;
-                }
+                RPlayer.setX(px - size / 2);
+                RPlayer.setY(py - size / 2);
+                gameContext.getChildren().add(RPlayer);
+                CheckEI();
             }
-            RPlayer.setX(px-size/2);
-            RPlayer.setY(py-size/2);
-            gameContext.getChildren().add(RPlayer);
-            CheckEI();
             followthegaze();
         });
         next.play();
@@ -164,7 +173,7 @@ public class Follow implements GameLifeCycle {
 
     private boolean TestAllWall(double x, double y){
         boolean test = true;
-        for (Rectangle Rec : ListRec){
+        for (Rectangle Rec : ListWall){
             test = test && IsNotInWall(Rec, x, y, size);
         }
         return test;
