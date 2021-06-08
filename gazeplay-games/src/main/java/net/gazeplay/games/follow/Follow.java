@@ -54,8 +54,8 @@ public class Follow implements GameLifeCycle {
 
     private final  ArrayList<EventItem> ListEI;
 
-    private int gaolsreached;
-    private int gaols;
+    private int goalsreached;
+    private int goals;
 
     Follow(final IGameContext gameContext, final Stats stats, final FollowGameVariant variant){
         this.gameContext = gameContext;
@@ -104,24 +104,19 @@ public class Follow implements GameLifeCycle {
         ListEI.add(target);
         gameContext.getChildren().add(target.rectangle);
         /**/
-        javafx.event.EventHandler<ActionEvent> eventgaol = e -> {
-            gaolsreached = gaolsreached+1;
-            if (gaolsreached>=gaols){
-                win();
-            }
-        };
-        /*EventItem sphere1 = new EventItem(dimension2D.getWidth() * 6/8, dimension2D.getHeight() * 2/7, size/3, size/3, new ImagePattern(new Image("data/follow/coin.png")), eventgaol, true);
+        javafx.event.EventHandler<ActionEvent> eventgoal = e -> multigoals();
+        EventItem sphere1 = new EventItem(dimension2D.getWidth() * 6/8, dimension2D.getHeight() * 2/7, size/3, size/3, new ImagePattern(new Image("data/follow/coin.png")), eventgoal, true);
         ListEI.add(sphere1);
         gameContext.getChildren().add(sphere1.rectangle);
-        EventItem sphere2 = new EventItem(dimension2D.getWidth() * 3/8, dimension2D.getHeight() * 6/7, size/3, size/3, new ImagePattern(new Image("data/follow/coin.png")), eventgaol, true);
+        EventItem sphere2 = new EventItem(dimension2D.getWidth() * 3/8, dimension2D.getHeight() * 6/7, size/3, size/3, new ImagePattern(new Image("data/follow/coin.png")), eventgoal, true);
         ListEI.add(sphere2);
         gameContext.getChildren().add(sphere2.rectangle);
-        EventItem sphere3 = new EventItem(dimension2D.getWidth() * 4/8, dimension2D.getHeight() * 1/7, size/3, size/3, new ImagePattern(new Image("data/follow/coin.png")), eventgaol, true);
+        EventItem sphere3 = new EventItem(dimension2D.getWidth() * 4/8, dimension2D.getHeight() * 1/7, size/3, size/3, new ImagePattern(new Image("data/follow/coin.png")), eventgoal, true);
         ListEI.add(sphere3);
-        gameContext.getChildren().add(sphere3.rectangle);*/
+        gameContext.getChildren().add(sphere3.rectangle);
 
-        gaolsreached = 0;
-        gaols = 3;
+        goalsreached = 0;
+        goals = 3;
 
         startafterdelay(1000);
 
@@ -216,14 +211,27 @@ public class Follow implements GameLifeCycle {
     }
 
     private void CheckEI(){
+        ArrayList<EventItem> Remove = new ArrayList<>();
         for(EventItem EI : ListEI){
             if (!IsNotInWall(EI.rectangle, px, py, size)){
                 if (EI.remove) {
-                    ListEI.remove(EI);
+                    Remove.add(EI);
                     gameContext.getChildren().remove(EI.rectangle);
                 }
                 EI.active();
             }
         }
+        ListEI.removeAll(Remove);
+    }
+
+    private void multigoals(boolean b){
+        goalsreached++;
+        if (goalsreached>=goals){
+            win();
+            canmove = b;
+        }
+    }
+    private void multigoals(){
+        multigoals(true);
     }
 }
