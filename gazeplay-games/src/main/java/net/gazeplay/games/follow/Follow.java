@@ -1,6 +1,7 @@
 package net.gazeplay.games.follow;
 
 import javafx.animation.PauseTransition;
+import javafx.event.ActionEvent;
 import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
@@ -49,14 +50,18 @@ public class Follow implements GameLifeCycle {
 
     private final ArrayList<Rectangle> ListRec;
 
+    private  final  ArrayList<EventItem> ListEI;
+
     Follow(final IGameContext gameContext, final Stats stats, final FollowGameVariant variant){
         this.gameContext = gameContext;
         this.stats = stats;
         this.variant = variant;
 
-        this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        this.ListRec = new ArrayList<>();
+        ListRec = new ArrayList<>();
+
+        ListEI = new ArrayList<>();
 
         launch();
     }
@@ -82,6 +87,12 @@ public class Follow implements GameLifeCycle {
         Wall.setFill(new ImagePattern(new Image("data/follow/wall.png")));
         ListRec.add(Wall);
         gameContext.getChildren().add(Wall);
+
+        //List of EventItem
+        javafx.event.EventHandler<ActionEvent> event = e -> win();
+        EventItem target = new EventItem(0, 0, size/2, size/2, new ImagePattern(new Image("data/follow/target.png")), event);
+        ListEI.add(target);
+        gameContext.getChildren().add(target.rectangle);
 
         startafterdelay(5000);
 
@@ -125,6 +136,7 @@ public class Follow implements GameLifeCycle {
             RPlayer.setX(px-size/2);
             RPlayer.setY(py-size/2);
             gameContext.getChildren().add(RPlayer);
+            CheckEI();
             followthegaze();
         });
         next.play();
@@ -170,5 +182,13 @@ public class Follow implements GameLifeCycle {
 
             gameContext.showRoundStats(stats, this);
         });
+    }
+
+    private void CheckEI(){
+        for(EventItem EI : ListEI){
+            if (!IsNotInWall(EI.rectangle, px, py, size)){
+                EI.active();
+            }
+        }
     }
 }
