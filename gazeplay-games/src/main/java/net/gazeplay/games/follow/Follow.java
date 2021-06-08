@@ -75,11 +75,11 @@ public class Follow implements GameLifeCycle {
         gameContext.getChildren().add(RPlayer);
 
         //increase the speed but decrease the accuracy
-        speed = 1;
+        speed = 2;
 
         //List of Wall
-        Rectangle Wall = new Rectangle(0, 0, dimension2D.getWidth()/5, dimension2D.getHeight()/4);
-        Wall.setFill(new ImagePattern(new Image("data/biboule/images/Blue.png")));
+        Rectangle Wall = new Rectangle(dimension2D.getWidth()/3, dimension2D.getHeight()/5, dimension2D.getWidth()/5, dimension2D.getHeight()/6);
+        Wall.setFill(new ImagePattern(new Image("data/follow/wall.png")));
         ListRec.add(Wall);
         gameContext.getChildren().add(Wall);
 
@@ -142,8 +142,8 @@ public class Follow implements GameLifeCycle {
     }
 
     private boolean IsNotInWall(Rectangle Wall, double x, double y, double size){
-        double Wx = Wall.getX();
-        double Wy = Wall.getY();
+        double Wx = Wall.getX() + size/2;
+        double Wy = Wall.getY() + size/2;
         double Ww = Wall.getWidth();
         double Wh = Wall.getHeight();
 
