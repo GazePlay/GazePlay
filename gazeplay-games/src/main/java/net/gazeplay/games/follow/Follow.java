@@ -52,7 +52,10 @@ public class Follow implements GameLifeCycle {
 
     private final ArrayList<Rectangle> ListWall;
 
-    private  final  ArrayList<EventItem> ListEI;
+    private final  ArrayList<EventItem> ListEI;
+
+    private int gaolsreached;
+    private int gaols;
 
     Follow(final IGameContext gameContext, final Stats stats, final FollowGameVariant variant){
         this.gameContext = gameContext;
@@ -93,13 +96,32 @@ public class Follow implements GameLifeCycle {
         gameContext.getChildren().add(Wall);
 
         //List of EventItem
-        javafx.event.EventHandler<ActionEvent> event = e -> {
+        javafx.event.EventHandler<ActionEvent> eventwin = e -> {
             win();
             canmove = false;
         };
-        EventItem target = new EventItem(0, 0, size/2, size/2, new ImagePattern(new Image("data/follow/target.png")), event, true);
+        EventItem target = new EventItem(0, 0, size/2, size/2, new ImagePattern(new Image("data/follow/target.png")), eventwin, true);
         ListEI.add(target);
         gameContext.getChildren().add(target.rectangle);
+        /**/
+        javafx.event.EventHandler<ActionEvent> eventgaol = e -> {
+            gaolsreached = gaolsreached+1;
+            if (gaolsreached>=gaols){
+                win();
+            }
+        };
+        /*EventItem sphere1 = new EventItem(dimension2D.getWidth() * 6/8, dimension2D.getHeight() * 2/7, size/3, size/3, new ImagePattern(new Image("data/follow/coin.png")), eventgaol, true);
+        ListEI.add(sphere1);
+        gameContext.getChildren().add(sphere1.rectangle);
+        EventItem sphere2 = new EventItem(dimension2D.getWidth() * 3/8, dimension2D.getHeight() * 6/7, size/3, size/3, new ImagePattern(new Image("data/follow/coin.png")), eventgaol, true);
+        ListEI.add(sphere2);
+        gameContext.getChildren().add(sphere2.rectangle);
+        EventItem sphere3 = new EventItem(dimension2D.getWidth() * 4/8, dimension2D.getHeight() * 1/7, size/3, size/3, new ImagePattern(new Image("data/follow/coin.png")), eventgaol, true);
+        ListEI.add(sphere3);
+        gameContext.getChildren().add(sphere3.rectangle);*/
+
+        gaolsreached = 0;
+        gaols = 3;
 
         startafterdelay(1000);
 
@@ -117,21 +139,21 @@ public class Follow implements GameLifeCycle {
         position();
         double x = rx - px;
         double y = ry - py;
-        double dist = x*x + y*y;
+        double dist = Math.sqrt(x*x + y*y);
         PauseTransition next = new PauseTransition(Duration.millis(5));
         next.setOnFinished(nextevent -> {
             if (canmove) {
                 gameContext.getChildren().remove(RPlayer);
-                if (dist > speed * dimension2D.getWidth() / 100) {
+                if (dist > speed) {
                     boolean bx = TestAllWall(px + speed * x / Math.sqrt(dist), py);
                     boolean by = TestAllWall(px, py + speed * y / Math.sqrt(dist));
                     if (bx) {
-                        px = px + speed * x / Math.sqrt(dist);
+                        px = px + speed * x / dist;
                     }
                     if (by) {
-                        py = py + speed * y / Math.sqrt(dist);
+                        py = py + speed * y / dist;
                     }
-                } else {
+                } /*else {
                     boolean bx = TestAllWall(rx, py);
                     boolean by = TestAllWall(px, ry);
                     if (bx) {
@@ -140,7 +162,7 @@ public class Follow implements GameLifeCycle {
                     if (by) {
                         py = ry;
                     }
-                }
+                }*/
                 RPlayer.setX(px - size / 2);
                 RPlayer.setY(py - size / 2);
                 gameContext.getChildren().add(RPlayer);
@@ -196,11 +218,11 @@ public class Follow implements GameLifeCycle {
     private void CheckEI(){
         for(EventItem EI : ListEI){
             if (!IsNotInWall(EI.rectangle, px, py, size)){
-                gameContext.getChildren().remove(EI.rectangle);
                 if (EI.remove) {
                     ListEI.remove(EI);
-                    EI.active();
+                    gameContext.getChildren().remove(EI.rectangle);
                 }
+                EI.active();
             }
         }
     }

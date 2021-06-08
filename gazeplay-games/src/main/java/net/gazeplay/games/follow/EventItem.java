@@ -19,7 +19,7 @@ public class EventItem{
     }
 
     public void active(){
-        PauseTransition Wait = new PauseTransition(Duration.millis(5));
+        PauseTransition Wait = new PauseTransition(Duration.millis(10));
         Wait.setOnFinished(event);
         Wait.play();
     }
