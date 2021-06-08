@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
-import org.w3c.dom.css.Rect;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -48,7 +47,7 @@ public class Follow implements GameLifeCycle {
     //player square
     private Rectangle RPlayer;
 
-    private ArrayList<Rectangle> ListRec;
+    private final ArrayList<Rectangle> ListRec;
 
     Follow(final IGameContext gameContext, final Stats stats, final FollowGameVariant variant){
         this.gameContext = gameContext;
@@ -57,7 +56,7 @@ public class Follow implements GameLifeCycle {
 
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        this.ListRec = new ArrayList<Rectangle>();
+        this.ListRec = new ArrayList<>();
 
         launch();
     }
@@ -148,9 +147,7 @@ public class Follow implements GameLifeCycle {
         double Ww = Wall.getWidth();
         double Wh = Wall.getHeight();
 
-        boolean Not = (x+size<Wx) || (y+size<Wy) || (x>Wx+Ww) || (y>Wy+Wh);
-
-        return Not;
+        return (x+size<Wx) || (y+size<Wy) || (x>Wx+Ww) || (y>Wy+Wh);
     }
 
     private boolean TestAllWall(double x, double y){
