@@ -90,7 +90,7 @@ public class Follow implements GameLifeCycle {
 
         //List of EventItem
         javafx.event.EventHandler<ActionEvent> event = e -> win();
-        EventItem target = new EventItem(0, 0, size/2, size/2, new ImagePattern(new Image("data/follow/target.png")), event);
+        EventItem target = new EventItem(0, 0, size/2, size/2, new ImagePattern(new Image("data/follow/target.png")), event, true);
         ListEI.add(target);
         gameContext.getChildren().add(target.rectangle);
 
@@ -187,7 +187,11 @@ public class Follow implements GameLifeCycle {
     private void CheckEI(){
         for(EventItem EI : ListEI){
             if (!IsNotInWall(EI.rectangle, px, py, size)){
-                EI.active();
+                gameContext.getChildren().remove(EI.rectangle);
+                if (EI.remove) {
+                    ListEI.remove(EI);
+                    EI.active();
+                }
             }
         }
     }
