@@ -356,6 +356,13 @@ public class Follow implements GameLifeCycle {
             ListEI.add(KeyGREEN);
             gameContext.getChildren().add(KeyGREEN.rectangle);
         }
+
+        javafx.event.EventHandler<ActionEvent> eventwin = e -> {
+            win();
+        };
+        EventItem KeyGREEN = new EventItem(3 * size, 2 * size, size, size, new ImagePattern(new Image("data/follow/ruby1.png")), eventwin, true);
+        ListEI.add(KeyGREEN);
+        gameContext.getChildren().add(KeyGREEN.rectangle);
     }
 
     private void itemcoin(){
