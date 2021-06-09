@@ -54,10 +54,6 @@ public class Follow implements GameLifeCycle {
 
     private final  ArrayList<EventItem> ListEI;
 
-    /*//If multi-goals game (like FCOIN)
-    private int goals;
-
-    private boolean[] Listcoin;*/
 
     Follow(final IGameContext gameContext, final Stats stats, final FollowGameVariant variant){
         this.gameContext = gameContext;
@@ -85,11 +81,11 @@ public class Follow implements GameLifeCycle {
         size = dimension2D.getWidth()/50;
 
         RPlayer = new Rectangle(px-size/2, py-size/2, size, size);
-        RPlayer.setFill(new ImagePattern(new Image(/*"data/biboule/images/Blue.png"*/"data/follow/target.png")));
+        RPlayer.setFill(new ImagePattern(new Image("data/biboule/images/Blue.png")));
         gameContext.getChildren().add(RPlayer);
 
         //increase the speed but decrease the accuracy
-        speed = 1.5;
+        speed = 2;
 
         contour();
         if (variant.equals(FollowGameVariant.FKEY)){
@@ -100,37 +96,8 @@ public class Follow implements GameLifeCycle {
             InitWallItemCoin();
         }
         else {
-            log.error("Variant not found", variant);
+            log.error("Variant not found : " + variant.getLabel());
         }
-
-        /*//List of EventItem
-        javafx.event.EventHandler<ActionEvent> eventwin = e -> {
-            win();
-        };
-        EventItem target = new EventItem(2*size, 2*size, size/2, size/2, new ImagePattern(new Image("data/follow/target.png")), eventwin, true);
-        ListEI.add(target);
-        gameContext.getChildren().add(target.rectangle);
-        javafx.event.EventHandler<ActionEvent> eventgoal0 = e -> {
-            Listcoin[0]=true;
-            multigoals();
-        };
-        javafx.event.EventHandler<ActionEvent> eventgoal1 = e -> {
-            Listcoin[1]=true;
-            multigoals();
-        };
-        javafx.event.EventHandler<ActionEvent> eventgoal2 = e -> {
-            Listcoin[2]=true;
-            multigoals();
-        };
-        EventItem sphere1 = new EventItem(dimension2D.getWidth() * 6/8, dimension2D.getHeight() * 2/7, size/3, size/3, new ImagePattern(new Image("data/follow/coin.png")), eventgoal0, true);
-        ListEI.add(sphere1);
-        gameContext.getChildren().add(sphere1.rectangle);
-        EventItem sphere2 = new EventItem(dimension2D.getWidth() * 3/8, dimension2D.getHeight() * 6/7, size/3, size/3, new ImagePattern(new Image("data/follow/coin.png")), eventgoal1, true);
-        ListEI.add(sphere2);
-        gameContext.getChildren().add(sphere2.rectangle);
-        EventItem sphere3 = new EventItem(dimension2D.getWidth() * 4/8, dimension2D.getHeight() * 1/7, size/3, size/3, new ImagePattern(new Image("data/follow/coin.png")), eventgoal2, true);
-        ListEI.add(sphere3);
-        gameContext.getChildren().add(sphere3.rectangle);*/
 
         startafterdelay(1000);
 
@@ -360,13 +327,6 @@ public class Follow implements GameLifeCycle {
         int x = 32;
         int y = 18;
         double size = dimension2D.getWidth()/x;
-
-        /*Listcoin = new boolean[(x-1)*(y-1)];
-        for (int i=0; i<(x-1)*(y-1); i++){
-            Listcoin[i]=false;
-        }
-
-        goals = 0;*/
 
         int Map[][] = new int[][]
             {
