@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum FollowGameVariant {
-    NORMAL("normal"),
-    CANARD("canard");
+    FKEY("FKEY"),
+    FCOIN("FCOIN");
 
     @Getter
     private final String label;

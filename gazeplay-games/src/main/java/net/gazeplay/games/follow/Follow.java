@@ -54,7 +54,7 @@ public class Follow implements GameLifeCycle {
 
     private final  ArrayList<EventItem> ListEI;
 
-    /*private int goalsreached;*/
+    //If multi-goals game (like FCOIN)
     private int goals = 3;
 
     private boolean[] Listcoin;
@@ -97,21 +97,19 @@ public class Follow implements GameLifeCycle {
         //increase the speed but decrease the accuracy
         speed = 2;
 
-        //List of Wall
-        Rectangle Wall = new Rectangle(dimension2D.getWidth()/3, dimension2D.getHeight()/5, dimension2D.getWidth()/5, dimension2D.getHeight()/6);
-        Wall.setFill(new ImagePattern(new Image("data/follow/wall.png")));
-        ListWall.add(Wall);
-        gameContext.getChildren().add(Wall);
+        contour();
+        if (variant.equals(FollowGameVariant.FKEY)){
+            wallkey();
+            itemkey();
+        }
 
-        //List of EventItem
+        /*//List of EventItem
         javafx.event.EventHandler<ActionEvent> eventwin = e -> {
             win();
-            canmove = false;
         };
-        EventItem target = new EventItem(0, 0, size/2, size/2, new ImagePattern(new Image("data/follow/target.png")), eventwin, true);
+        EventItem target = new EventItem(2*size, 2*size, size/2, size/2, new ImagePattern(new Image("data/follow/target.png")), eventwin, true);
         ListEI.add(target);
         gameContext.getChildren().add(target.rectangle);
-        /**/
         javafx.event.EventHandler<ActionEvent> eventgoal0 = e -> {
             Listcoin[0]=true;
             multigoals();
@@ -132,10 +130,7 @@ public class Follow implements GameLifeCycle {
         gameContext.getChildren().add(sphere2.rectangle);
         EventItem sphere3 = new EventItem(dimension2D.getWidth() * 4/8, dimension2D.getHeight() * 1/7, size/3, size/3, new ImagePattern(new Image("data/follow/coin.png")), eventgoal2, true);
         ListEI.add(sphere3);
-        gameContext.getChildren().add(sphere3.rectangle);
-
-        /*goalsreached = 0;
-        goals = 3;*/
+        gameContext.getChildren().add(sphere3.rectangle);*/
 
         startafterdelay(1000);
 
@@ -216,6 +211,8 @@ public class Follow implements GameLifeCycle {
     }
 
     private void win(){
+        canmove = false;
+
         gameContext.updateScore(stats, this);
 
         gameContext.playWinTransition(500, actionEvent -> {
@@ -243,22 +240,59 @@ public class Follow implements GameLifeCycle {
         ListEI.removeAll(Remove);
     }
 
-    private void multigoals(boolean b){
-        /*goalsreached++;
-        if (goalsreached>=goals){
-            win();
-            canmove = b;
-        }*/
+    private void multigoals(){
         boolean test = true;
         for (int i = 0; i<goals; i++){
             test = test && Listcoin[i];
         }
         if (test){
             win();
-            canmove = b;
         }
     }
-    private void multigoals(){
-        multigoals(true);
+
+    //work only with 9/16 screen
+    private void contour(){
+        int x = 48;
+        int y = 27;
+        double w = dimension2D.getWidth();
+        double h = w*9/16;
+        double size = w/x;
+        Rectangle W;
+        for (int i=0; i<x; i++){
+            W = new Rectangle(i*size, 0, size, size);
+            W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
+            ListWall.add(W);
+            gameContext.getChildren().add(W);
+            W = new Rectangle(i*size, h-size, size, size);
+            W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
+            ListWall.add(W);
+            gameContext.getChildren().add(W);
+        }
+        for (int i=1; i<y-1; i++){
+            W = new Rectangle(0, i*size, size, size);
+            W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
+            ListWall.add(W);
+            gameContext.getChildren().add(W);
+            W = new Rectangle(w-size, i*size, size, size);
+            W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
+            ListWall.add(W);
+            gameContext.getChildren().add(W);
+        }
+    }
+
+    private void wallkey(){
+
+    }
+
+    private void wallcoin(){
+
+    }
+
+    private void itemkey(){
+
+    }
+
+    private void itemcoin(){
+
     }
 }
