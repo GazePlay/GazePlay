@@ -54,10 +54,10 @@ public class Follow implements GameLifeCycle {
 
     private final  ArrayList<EventItem> ListEI;
 
-    //If multi-goals game (like FCOIN)
+    /*//If multi-goals game (like FCOIN)
     private int goals;
 
-    private boolean[] Listcoin;
+    private boolean[] Listcoin;*/
 
     Follow(final IGameContext gameContext, final Stats stats, final FollowGameVariant variant){
         this.gameContext = gameContext;
@@ -69,8 +69,6 @@ public class Follow implements GameLifeCycle {
         ListWall = new ArrayList<>();
 
         ListEI = new ArrayList<>();
-
-        //Listcoin = new boolean[0];
 
         launch();
     }
@@ -143,7 +141,8 @@ public class Follow implements GameLifeCycle {
 
     @Override
     public void dispose() {
-
+        ListEI.clear();
+        ListWall.clear();
     }
 
     private void followthegaze(){
@@ -204,6 +203,8 @@ public class Follow implements GameLifeCycle {
     }
 
     private void win(){
+        dispose();
+
         canmove = false;
 
         gameContext.updateScore(stats, this);
@@ -235,8 +236,8 @@ public class Follow implements GameLifeCycle {
 
     private void multigoals(){
         boolean test = true;
-        for (int i = 0; i<goals; i++){
-            test = test && Listcoin[i];
+        for (EventItem EI : ListEI){
+            test = test && EI.multigoals;
         }
         if (test){
             win();
@@ -360,12 +361,12 @@ public class Follow implements GameLifeCycle {
         int y = 18;
         double size = dimension2D.getWidth()/x;
 
-        Listcoin = new boolean[(x-1)*(y-1)];
+        /*Listcoin = new boolean[(x-1)*(y-1)];
         for (int i=0; i<(x-1)*(y-1); i++){
             Listcoin[i]=false;
         }
 
-        goals = 0;
+        goals = 0;*/
 
         int Map[][] = new int[][]
             {
@@ -382,9 +383,9 @@ public class Follow implements GameLifeCycle {
                 {0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0},
                 {0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0},
-                {0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
-                {0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-                {0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1}
+                {1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
+                {1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1}
             };
 
         Rectangle W;
@@ -399,11 +400,9 @@ public class Follow implements GameLifeCycle {
                     gameContext.getChildren().add(W);
                 }
                 else {
-                    Coin = new EventItem((i+1)*size, (j+1)*size, size, size, new ImagePattern(new Image("data/follow/coin.png")), (javafx.event.EventHandler<ActionEvent>) e-> {Listcoin[goals]=true; goals--; multigoals();}, true);
+                    Coin = new EventItem((i+1)*size, (j+1)*size, size, size, new ImagePattern(new Image("data/follow/coin.png")), e-> {multigoals(); /*Maybe add a song*/}, true, false);
                     ListEI.add(Coin);
                     gameContext.getChildren().add(Coin.rectangle);
-
-                    goals++;
                 }
             }
         }
