@@ -99,13 +99,7 @@ public class Follow implements GameLifeCycle {
             itemkey();
         }
         else if (variant.equals(FollowGameVariant.FCOIN)){
-            goals = 10;
-            Listcoin = new boolean[goals];
-            for (int i=0; i<goals; i++){
-                Listcoin[i]=false;
-            }
-            wallcoin();
-            itemcoin();
+            InitWallItemCoin();
         }
         else {
             log.error("Variant not found", variant);
@@ -316,10 +310,6 @@ public class Follow implements GameLifeCycle {
         }
     }
 
-    private void wallcoin(){
-
-    }
-
     private void itemkey(){
         int x = 32;
         int y = 18;
@@ -365,7 +355,57 @@ public class Follow implements GameLifeCycle {
         gameContext.getChildren().add(KeyGREEN.rectangle);
     }
 
-    private void itemcoin(){
+    private void InitWallItemCoin(){
+        int x = 32;
+        int y = 18;
+        double size = dimension2D.getWidth()/x;
 
+        Listcoin = new boolean[(x-1)*(y-1)];
+        for (int i=0; i<(x-1)*(y-1); i++){
+            Listcoin[i]=false;
+        }
+
+        goals = 0;
+
+        int Map[][] = new int[][]
+            {
+                {1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1},
+                {0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1},
+                {0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1},
+                {0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0},
+                {1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0},
+                {1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0},
+                {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0},
+                {0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0},
+                {0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0},
+                {0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+                {0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0},
+                {0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0},
+                {0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
+                {0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                {0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1}
+            };
+
+        Rectangle W;
+        EventItem Coin;
+
+        for (int i=0; i<x-2; i++){
+            for (int j=0; j<y-2; j++){
+                if (Map[j][i]==1){
+                    W = new Rectangle((i+1)*size, (j+1)*size, size, size);
+                    W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
+                    ListWall.add(W);
+                    gameContext.getChildren().add(W);
+                }
+                else {
+                    Coin = new EventItem((i+1)*size, (j+1)*size, size, size, new ImagePattern(new Image("data/follow/coin.png")), (javafx.event.EventHandler<ActionEvent>) e-> {Listcoin[goals]=true; goals--; multigoals();}, true);
+                    ListEI.add(Coin);
+                    gameContext.getChildren().add(Coin.rectangle);
+
+                    goals++;
+                }
+            }
+        }
     }
 }
