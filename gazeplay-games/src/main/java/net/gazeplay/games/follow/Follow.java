@@ -102,6 +102,13 @@ public class Follow implements GameLifeCycle {
             wallkey();
             itemkey();
         }
+        else if (variant.equals(FollowGameVariant.FCOIN)){
+            wallcoin();
+            itemcoin();
+        }
+        else {
+            log.error("Variant not found", variant);
+        }
 
         /*//List of EventItem
         javafx.event.EventHandler<ActionEvent> eventwin = e -> {
@@ -281,6 +288,10 @@ public class Follow implements GameLifeCycle {
     }
 
     private void wallkey(){
+        int x = 48;
+        int y = 27;
+        double size = dimension2D.getWidth()/x;
+
 
     }
 
