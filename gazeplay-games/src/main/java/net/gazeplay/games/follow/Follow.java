@@ -84,18 +84,18 @@ public class Follow implements GameLifeCycle {
         py = dimension2D.getHeight()/2;
         px = dimension2D.getWidth()/2;
 
-        size = dimension2D.getHeight()/10;
+        size = dimension2D.getWidth()/50;
 
         for (int i=0; i<goals; i++){
             Listcoin[i]=false;
         }
 
         RPlayer = new Rectangle(px-size/2, py-size/2, size, size);
-        RPlayer.setFill(new ImagePattern(new Image("data/biboule/images/Blue.png")));
+        RPlayer.setFill(new ImagePattern(new Image(/*"data/biboule/images/Blue.png"*/"data/follow/target.png")));
         gameContext.getChildren().add(RPlayer);
 
         //increase the speed but decrease the accuracy
-        speed = 2;
+        speed = 1.5;
 
         contour();
         if (variant.equals(FollowGameVariant.FKEY)){
@@ -169,22 +169,13 @@ public class Follow implements GameLifeCycle {
                     if (by) {
                         py = py + speed * y / dist;
                     }
-                } /*else {
-                    boolean bx = TestAllWall(rx, py);
-                    boolean by = TestAllWall(px, ry);
-                    if (bx) {
-                        px = rx;
-                    }
-                    if (by) {
-                        py = ry;
-                    }
-                }*/
+                }
                 RPlayer.setX(px - size / 2);
                 RPlayer.setY(py - size / 2);
                 gameContext.getChildren().add(RPlayer);
                 CheckEI();
+                followthegaze();
             }
-            followthegaze();
         });
         next.play();
     }
@@ -257,10 +248,9 @@ public class Follow implements GameLifeCycle {
         }
     }
 
-    //work only with 9/16 screen
     private void contour(){
-        int x = 48;
-        int y = 27;
+        int x = 32;
+        int y = 18;
         double w = dimension2D.getWidth();
         double h = w*9/16;
         double size = w/x;
@@ -288,11 +278,29 @@ public class Follow implements GameLifeCycle {
     }
 
     private void wallkey(){
-        int x = 48;
-        int y = 27;
+        int x = 32;
+        int y = 18;
         double size = dimension2D.getWidth()/x;
+        Rectangle W;
 
-
+        for (int i=1; i<10; i++){
+            W = new Rectangle(i*size, 5*size, size, size);
+            W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
+            ListWall.add(W);
+            gameContext.getChildren().add(W);
+        }
+        for (int i=1; i<4; i++){
+            W = new Rectangle(9*size, i*size, size, size);
+            W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
+            ListWall.add(W);
+            gameContext.getChildren().add(W);
+        }
+        for (int i=6; i<y-2; i++){
+            W = new Rectangle(6*size, i*size, size, size);
+            W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
+            ListWall.add(W);
+            gameContext.getChildren().add(W);
+        }
     }
 
     private void wallcoin(){
@@ -300,7 +308,35 @@ public class Follow implements GameLifeCycle {
     }
 
     private void itemkey(){
+        int x = 32;
+        int y = 18;
+        double size = dimension2D.getWidth()/x;
 
+        Rectangle DoorRED = new Rectangle(9*size, 4*size, size, size);
+        DoorRED.setFill(new ImagePattern(new Image("data/follow/door1rouge.png")));
+        ListWall.add(DoorRED);
+        gameContext.getChildren().add(DoorRED);
+
+        javafx.event.EventHandler<ActionEvent> eventkeyred = e -> {
+            ListWall.remove(DoorRED);
+            gameContext.getChildren().remove(DoorRED);
+        };
+        EventItem KeyRED = new EventItem(3*size, 7*size, size, size, new ImagePattern(new Image("data/follow/keyred.png")), eventkeyred, true);
+        ListEI.add(KeyRED);
+        gameContext.getChildren().add(KeyRED.rectangle);
+
+        Rectangle DoorGREEN = new Rectangle(6*size, (y-2)*size, size, size);
+        DoorGREEN.setFill(new ImagePattern(new Image("data/follow/door1verte.png")));
+        ListWall.add(DoorGREEN);
+        gameContext.getChildren().add(DoorGREEN);
+
+        javafx.event.EventHandler<ActionEvent> eventkeygreen = e -> {
+            ListWall.remove(DoorGREEN);
+            gameContext.getChildren().remove(DoorGREEN);
+        };
+        EventItem KeyGREEN = new EventItem((x-3)*size, 4*size, size, size, new ImagePattern(new Image("data/follow/keygreen.png")), eventkeygreen, true);
+        ListEI.add(KeyGREEN);
+        gameContext.getChildren().add(KeyGREEN.rectangle);
     }
 
     private void itemcoin(){
