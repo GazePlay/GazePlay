@@ -75,10 +75,6 @@ public class Follow implements GameLifeCycle {
     public void launch() {
         gameContext.getChildren().clear();
 
-        Gaze = new Rectangle(0, 0, dimension2D.getWidth()/200, dimension2D.getWidth()/200);
-        Gaze.setFill(new ImagePattern(new Image("data/follow/ruby1.png")));
-        gameContext.getChildren().add(Gaze);
-
         canmove = true;
 
         py = dimension2D.getHeight()/2;
@@ -105,6 +101,10 @@ public class Follow implements GameLifeCycle {
             log.error("Variant not found : " + variant.getLabel());
         }
 
+        Gaze = new Rectangle(0, 0, dimension2D.getWidth()/200, dimension2D.getWidth()/200);
+        Gaze.setFill(new ImagePattern(new Image("data/follow/ruby1.png")));
+        gameContext.getChildren().add(Gaze);
+
         startafterdelay(1000);
 
         stats.notifyNewRoundReady();
@@ -114,6 +114,7 @@ public class Follow implements GameLifeCycle {
 
     @Override
     public void dispose() {
+        stats.stop();
         ListEI.clear();
         ListWall.clear();
     }
@@ -126,7 +127,6 @@ public class Follow implements GameLifeCycle {
         PauseTransition next = new PauseTransition(Duration.millis(5));
         next.setOnFinished(nextevent -> {
             if (canmove) {
-                gameContext.getChildren().remove(RPlayer);
                 if (dist > speed) {
                     double tx = px + speed * x / dist;
                     double ty = py + speed * y / dist;
@@ -153,7 +153,6 @@ public class Follow implements GameLifeCycle {
                 }
                 RPlayer.setX(px - size / 2);
                 RPlayer.setY(py - size / 2);
-                gameContext.getChildren().add(RPlayer);
                 CheckEI();
                 followthegaze();
             }
@@ -184,6 +183,8 @@ public class Follow implements GameLifeCycle {
     }
 
     private void win(){
+        gameContext.getChildren().remove(Gaze);
+
         dispose();
 
         canmove = false;
@@ -191,7 +192,6 @@ public class Follow implements GameLifeCycle {
         gameContext.updateScore(stats, this);
 
         gameContext.playWinTransition(500, actionEvent -> {
-            dispose();
 
             gameContext.getGazeDeviceManager().clear();
 
