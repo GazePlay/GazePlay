@@ -134,18 +134,18 @@ public class Follow implements GameLifeCycle {
                     double ty = py + speed * y / dist;
 
                     for (Rectangle Wall : ListWall){
-                        if (!IsNotInWall(Wall, tx, py, size)){
+                        if (IsInWall(Wall, tx, py, size)){
                             if (x>0){
-                                tx = Wall.getX() - size*0.51;
+                                tx = Wall.getX() - size/2;
                             } else {
-                                tx = Wall.getX()+Wall.getWidth() + size*0.51;
+                                tx = Wall.getX()+Wall.getWidth() + size/2;
                             }
                         }
-                        if (!IsNotInWall(Wall, px, ty, size)){
+                        if (IsInWall(Wall, px, ty, size)){
                             if (y>0){
-                                ty = Wall.getY() - size*0.51;
+                                ty = Wall.getY() - size/2;
                             } else {
-                                ty = Wall.getY()+Wall.getHeight() + size*0.51;
+                                ty = Wall.getY()+Wall.getHeight() + size/2;
                             }
                         }
                     }
@@ -175,13 +175,13 @@ public class Follow implements GameLifeCycle {
         Wait.play();
     }
 
-    private boolean IsNotInWall(Rectangle Wall, double x, double y, double size){
+    private boolean IsInWall(Rectangle Wall, double x, double y, double size){
         double Wx = Wall.getX() + size/2;
         double Wy = Wall.getY() + size/2;
         double Ww = Wall.getWidth();
         double Wh = Wall.getHeight();
 
-        return (x+size<Wx) || (y+size<Wy) || (x>Wx+Ww) || (y>Wy+Wh);
+        return (x+size>Wx) && (y+size>Wy) && (x<Wx+Ww) && (y<Wy+Wh);
     }
 
     private void win(){
@@ -206,7 +206,7 @@ public class Follow implements GameLifeCycle {
     private void CheckEI(){
         ArrayList<EventItem> Remove = new ArrayList<>();
         for(EventItem EI : ListEI){
-            if (!IsNotInWall(EI.rectangle, px, py, size)){
+            if (IsInWall(EI.rectangle, px, py, size)){
                 if (EI.remove) {
                     Remove.add(EI);
                     gameContext.getChildren().remove(EI.rectangle);
@@ -331,9 +331,7 @@ public class Follow implements GameLifeCycle {
             gameContext.getChildren().add(KeyGREEN.rectangle);
         }
 
-        javafx.event.EventHandler<ActionEvent> eventwin = e -> {
-            win();
-        };
+        javafx.event.EventHandler<ActionEvent> eventwin = e -> win();
         EventItem KeyGREEN = new EventItem(3 * size, 2 * size, size, size, new ImagePattern(new Image("data/follow/ruby1.png")), eventwin, true);
         ListEI.add(KeyGREEN);
         gameContext.getChildren().add(KeyGREEN.rectangle);
