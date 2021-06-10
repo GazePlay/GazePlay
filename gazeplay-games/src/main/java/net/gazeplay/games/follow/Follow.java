@@ -280,8 +280,14 @@ public class Follow implements GameLifeCycle {
             ListWall.add(W);
             gameContext.getChildren().add(W);
         }
-        for (int i=4; i<y-1; i++){
+        for (int i=4; i<y-6; i++){
             W = new Rectangle((x-9)*size, i*size, size, size);
+            W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
+            ListWall.add(W);
+            gameContext.getChildren().add(W);
+        }
+        for (int i=y-5; i<y-1; i++) {
+            W = new Rectangle((x - 9) * size, i * size, size, size);
             W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
             ListWall.add(W);
             gameContext.getChildren().add(W);
@@ -321,9 +327,16 @@ public class Follow implements GameLifeCycle {
             ListWall.add(DoorGREEN);
             gameContext.getChildren().add(DoorGREEN);
 
+            Rectangle DoorGREEN2 = new Rectangle((x-9) * size, (y - 6) * size, size, size);
+            DoorGREEN2.setFill(new ImagePattern(new Image("data/follow/door1verte.png")));
+            ListWall.add(DoorGREEN2);
+            gameContext.getChildren().add(DoorGREEN2);
+
             javafx.event.EventHandler<ActionEvent> eventkeygreen = e -> {
                 ListWall.remove(DoorGREEN);
                 gameContext.getChildren().remove(DoorGREEN);
+                ListWall.remove(DoorGREEN2);
+                gameContext.getChildren().remove(DoorGREEN2);
                 //Maybe add a sound
             };
             EventItem KeyGREEN = new EventItem((x - 3) * size, 4 * size, size, size, new ImagePattern(new Image("data/follow/keygreen.png")), eventkeygreen, true);
@@ -335,6 +348,17 @@ public class Follow implements GameLifeCycle {
         EventItem Ruby = new EventItem(3 * size, 2 * size, size, size, new ImagePattern(new Image("data/follow/ruby1.png")), eventwin, true);
         ListEI.add(Ruby);
         gameContext.getChildren().add(Ruby.rectangle);
+
+        javafx.event.EventHandler<ActionEvent> eventtrap = e -> {
+            Rectangle WallTrap = new Rectangle((x-9) * size, size, size, 3* size);
+            WallTrap.setFill(new ImagePattern(new Image("data/follow/jailbar1.png")));
+            gameContext.getChildren().add(WallTrap);
+            ListWall.add(WallTrap);
+            //Maybe add a sound
+        };
+        EventItem Trap = new EventItem((x-8) * size, 5 * size, 3 * size, size, new ImagePattern(new Image("data/follow/nothing.png")), eventtrap, true);
+        ListEI.add(Trap);
+        gameContext.getChildren().add(Trap.rectangle);
     }
 
     private void InitWallItemCoin(){
