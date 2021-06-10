@@ -82,6 +82,8 @@ public class Follow implements GameLifeCycle {
 
         size = dimension2D.getWidth()/50;
 
+        dallage();
+
         RPlayer = new Rectangle(px-size/2, py-size/2, size, size);
         RPlayer.setFill(new ImagePattern(new Image("data/biboule/images/Blue.png")));
         gameContext.getChildren().add(RPlayer);
@@ -378,6 +380,21 @@ public class Follow implements GameLifeCycle {
                     ListEI.add(Coin);
                     gameContext.getChildren().add(Coin.rectangle);
                 }
+            }
+        }
+    }
+
+    private void dallage(){
+        int x = 32;
+        int y = 18;
+        double size = dimension2D.getWidth()/x;
+        Rectangle D;
+
+        for (int i=0; i<x; i++){
+            for (int j=0; j<y; j++){
+                D = new Rectangle(i*size, j*size, size, size);
+                D.setFill(new ImagePattern(new Image("data/follow/slab1.png")));
+                gameContext.getChildren().add(D);
             }
         }
     }
