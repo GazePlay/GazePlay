@@ -54,6 +54,8 @@ public class Follow implements GameLifeCycle {
 
     private final  ArrayList<EventItem> ListEI;
 
+    private Rectangle Gaze;
+
 
     Follow(final IGameContext gameContext, final Stats stats, final FollowGameVariant variant){
         this.gameContext = gameContext;
@@ -72,6 +74,10 @@ public class Follow implements GameLifeCycle {
     @Override
     public void launch() {
         gameContext.getChildren().clear();
+
+        Gaze = new Rectangle(0, 0, dimension2D.getWidth()/200, dimension2D.getWidth()/200);
+        Gaze.setFill(new ImagePattern(new Image("data/follow/ruby1.png")));
+        gameContext.getChildren().add(Gaze);
 
         canmove = true;
 
@@ -158,6 +164,8 @@ public class Follow implements GameLifeCycle {
     private void position(){
         rx = MouseInfo.getPointerInfo().getLocation().getX();
         ry = MouseInfo.getPointerInfo().getLocation().getY();
+        Gaze.setX(rx);
+        Gaze.setY(ry);
     }
 
     private void startafterdelay(int delay){
@@ -174,14 +182,6 @@ public class Follow implements GameLifeCycle {
 
         return (x+size<Wx) || (y+size<Wy) || (x>Wx+Ww) || (y>Wy+Wh);
     }
-
-    /*private boolean TestAllWall(double x, double y){
-        boolean test = true;
-        for (Rectangle Rec : ListWall){
-            test = test && IsNotInWall(Rec, x, y, size);
-        }
-        return test;
-    }*/
 
     private void win(){
         dispose();
