@@ -107,7 +107,7 @@ public class Follow implements GameLifeCycle {
         Gaze.setFill(new ImagePattern(new Image("data/follow/ruby1.png")));
         gameContext.getChildren().add(Gaze);
 
-        startafterdelay(1000);
+        startafterdelay();
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
@@ -169,8 +169,8 @@ public class Follow implements GameLifeCycle {
         Gaze.setY(ry);
     }
 
-    private void startafterdelay(int delay){
-        PauseTransition Wait = new PauseTransition(Duration.millis(delay));
+    private void startafterdelay(){
+        PauseTransition Wait = new PauseTransition(Duration.millis(1000));
         Wait.setOnFinished(Waitevent -> followthegaze());
         Wait.play();
     }
