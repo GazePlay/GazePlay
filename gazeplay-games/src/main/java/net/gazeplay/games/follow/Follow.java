@@ -122,14 +122,28 @@ public class Follow implements GameLifeCycle {
             if (canmove) {
                 gameContext.getChildren().remove(RPlayer);
                 if (dist > speed) {
-                    boolean bx = TestAllWall(px + speed * x / Math.sqrt(dist), py);
-                    boolean by = TestAllWall(px, py + speed * y / Math.sqrt(dist));
-                    if (bx) {
-                        px = px + speed * x / dist;
+                    double tx = px + speed * x / dist;
+                    double ty = py + speed * y / dist;
+
+                    for (Rectangle Wall : ListWall){
+                        if (!IsNotInWall(Wall, tx, py, size)){
+                            if (x>0){
+                                tx = Wall.getX() - size*0.51;
+                            } else {
+                                tx = Wall.getX()+Wall.getWidth() + size*0.51;
+                            }
+                        }
+                        if (!IsNotInWall(Wall, px, ty, size)){
+                            if (y>0){
+                                ty = Wall.getY() - size*0.51;
+                            } else {
+                                ty = Wall.getY()+Wall.getHeight() + size*0.51;
+                            }
+                        }
                     }
-                    if (by) {
-                        py = py + speed * y / dist;
-                    }
+
+                    px = tx;
+                    py = ty;
                 }
                 RPlayer.setX(px - size / 2);
                 RPlayer.setY(py - size / 2);
@@ -161,13 +175,13 @@ public class Follow implements GameLifeCycle {
         return (x+size<Wx) || (y+size<Wy) || (x>Wx+Ww) || (y>Wy+Wh);
     }
 
-    private boolean TestAllWall(double x, double y){
+    /*private boolean TestAllWall(double x, double y){
         boolean test = true;
         for (Rectangle Rec : ListWall){
             test = test && IsNotInWall(Rec, x, y, size);
         }
         return test;
-    }
+    }*/
 
     private void win(){
         dispose();
