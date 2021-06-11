@@ -82,7 +82,7 @@ public class Follow implements GameLifeCycle {
 
         size = dimension2D.getWidth()/50;
 
-        dallage();
+        paving();
 
         RPlayer = new Rectangle(px-size/2, py-size/2, size, size);
         RPlayer.setFill(new ImagePattern(new Image("data/biboule/images/Blue.png")));
@@ -406,7 +406,7 @@ public class Follow implements GameLifeCycle {
         }
     }
 
-    private void dallage(){
+    private void paving(){
         int x = 32;
         int y = 18;
         double size = dimension2D.getWidth()/x;
