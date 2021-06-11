@@ -2,8 +2,12 @@ package net.gazeplay.games.follow;
 
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Point2D;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -12,6 +16,9 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.FixationSequence;
+import net.gazeplay.commons.utils.stats.CoordinatesTracker;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.awt.*;
@@ -107,6 +114,27 @@ public class Follow implements GameLifeCycle {
         Gaze.setFill(new ImagePattern(new Image("data/follow/ruby1.png")));
         gameContext.getChildren().add(Gaze);
 
+        {
+            Scene gameContextScene = gameContext.getPrimaryScene();
+
+            EventHandler<GazeEvent> recordGazeMovements = e -> {
+                Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
+                rx = toSceneCoordinate.getX();
+                ry = toSceneCoordinate.getY();
+
+            };
+
+            EventHandler<MouseEvent> recordMouseMovements = e -> {
+                Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
+                rx = toSceneCoordinate.getX();
+                ry = toSceneCoordinate.getY();
+
+            };
+
+            gameContextScene.getRoot().addEventFilter(GazeEvent.ANY, recordGazeMovements);
+            gameContextScene.getRoot().addEventFilter(MouseEvent.ANY, recordMouseMovements);
+        }
+
         startafterdelay();
 
         stats.notifyNewRoundReady();
@@ -163,8 +191,6 @@ public class Follow implements GameLifeCycle {
     }
 
     private void position(){
-        rx = MouseInfo.getPointerInfo().getLocation().getX();
-        ry = MouseInfo.getPointerInfo().getLocation().getY();
         Gaze.setX(rx);
         Gaze.setY(ry);
     }
