@@ -111,11 +111,10 @@ public class Follow implements GameLifeCycle {
 
         contour();
         if (variant.equals(FollowGameVariant.FKEY)){
-            wallkey();
-            itemkey();
+            Key();
         }
         else if (variant.equals(FollowGameVariant.FCOIN)){
-            InitWallItemCoin();
+            Coin();
         }
         else {
             log.error("Variant not found : " + variant.getLabel());
@@ -289,7 +288,8 @@ public class Follow implements GameLifeCycle {
     }
 
     private void wallkey(){
-        Rectangle W;
+
+        /*Rectangle W;
 
         for (int i=1; i<10; i++){
             W = new Rectangle(i*sizeWw, 5*sizeWh, sizeWw, sizeWh);
@@ -326,13 +326,34 @@ public class Follow implements GameLifeCycle {
             W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
             ListWall.add(W);
             gameContext.getChildren().add(W);
-        }
+        }*/
     }
 
-    private void itemkey(){
+    private void Key(){
+        int Map[][] = new int[][]
+            {
+                {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0}
+            };
+
+        build(Map);
 
         {
-            Rectangle DoorRED = new Rectangle(9 * sizeWw, 4 * sizeWh, sizeWw, sizeWh);
+            Rectangle DoorRED = new Rectangle(9 * sizeWw, 3 * sizeWh, sizeWw, 2*sizeWh);
             DoorRED.setFill(new ImagePattern(new Image("data/follow/door1rouge.png")));
             ListWall.add(DoorRED);
             gameContext.getChildren().add(DoorRED);
@@ -348,12 +369,12 @@ public class Follow implements GameLifeCycle {
         }
 
         {
-            Rectangle DoorGREEN = new Rectangle(6 * sizeWw, (y - 2) * sizeWh, sizeWw, sizeWh);
+            Rectangle DoorGREEN = new Rectangle(6 * sizeWw, (y - 3) * sizeWh, sizeWw, 2*sizeWh);
             DoorGREEN.setFill(new ImagePattern(new Image("data/follow/door1verte.png")));
             ListWall.add(DoorGREEN);
             gameContext.getChildren().add(DoorGREEN);
 
-            Rectangle DoorGREEN2 = new Rectangle((x-9) * sizeWw, (y - 6) * sizeWh, sizeWw, sizeWh);
+            Rectangle DoorGREEN2 = new Rectangle((x-9) * sizeWw, (y - 7) * sizeWh, sizeWw, 2*sizeWh);
             DoorGREEN2.setFill(new ImagePattern(new Image("data/follow/door1verte.png")));
             ListWall.add(DoorGREEN2);
             gameContext.getChildren().add(DoorGREEN2);
@@ -387,7 +408,7 @@ public class Follow implements GameLifeCycle {
         gameContext.getChildren().add(Trap.rectangle);
     }
 
-    private void InitWallItemCoin(){
+    private void Coin(){
 
         int Map[][] = new int[][]
             {
