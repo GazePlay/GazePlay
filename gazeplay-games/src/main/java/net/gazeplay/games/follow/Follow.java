@@ -103,7 +103,7 @@ public class Follow implements GameLifeCycle {
         paving();
 
         RPlayer = new Rectangle(px-sizeP/2, py-sizeP/2, sizeP, sizeP);
-        RPlayer.setFill(new ImagePattern(new Image("data/biboule/images/Blue.png")));
+        RPlayer.setFill(new ImagePattern(new Image("data/follow/Biboule.png")));
         gameContext.getChildren().add(RPlayer);
 
         //increase the speed but decrease the accuracy
