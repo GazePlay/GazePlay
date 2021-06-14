@@ -142,8 +142,8 @@ public class Follow implements GameLifeCycle {
 
             };
 
-            gameContextScene.getRoot().addEventFilter(GazeEvent.ANY, recordGazeMovements);
-            //gameContextScene.getRoot().addEventFilter(MouseEvent.ANY, recordMouseMovements);
+            gameContextScene.getRoot().addEventFilter(GazeEvent.GAZE_MOVED, recordGazeMovements);
+            gameContextScene.getRoot().addEventFilter(MouseEvent.MOUSE_MOVED, recordMouseMovements);
         }
 
         startafterdelay();
