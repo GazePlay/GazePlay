@@ -111,10 +111,10 @@ public class Follow implements GameLifeCycle {
 
         contour();
         if (variant.equals(FollowGameVariant.FKEY)){
-            Key();
+            FKEY();
         }
         else if (variant.equals(FollowGameVariant.FCOIN)){
-            Coin();
+            FCOIN();
         }
         else {
             log.error("Variant not found : " + variant.getLabel());
@@ -329,7 +329,7 @@ public class Follow implements GameLifeCycle {
         }*/
     }
 
-    private void Key(){
+    private void FKEY(){
         int Map[][] = new int[][]
             {
                 {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
@@ -392,7 +392,7 @@ public class Follow implements GameLifeCycle {
         }
 
         javafx.event.EventHandler<ActionEvent> eventwin = e -> win();
-        EventItem Ruby = new EventItem(3 * sizeWw, 2 * sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/ruby1.png")), eventwin, true);
+        EventItem Ruby = new EventItem(2 * sizeWw, 2 * sizeWh, 2*sizeWw, 2*sizeWh, new ImagePattern(new Image("data/follow/ruby1.png")), eventwin, true);
         ListEI.add(Ruby);
         gameContext.getChildren().add(Ruby.rectangle);
 
@@ -408,7 +408,7 @@ public class Follow implements GameLifeCycle {
         gameContext.getChildren().add(Trap.rectangle);
     }
 
-    private void Coin(){
+    private void FCOIN(){
 
         int Map[][] = new int[][]
             {
