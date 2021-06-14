@@ -17,11 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.FixationSequence;
-import net.gazeplay.commons.utils.stats.CoordinatesTracker;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 @Slf4j
@@ -43,7 +40,7 @@ public class Follow implements GameLifeCycle {
     private double py;
 
     //size of the player square
-    double size;
+    double sizeP;
 
     //gaze's position
     private double rx;
@@ -62,6 +59,14 @@ public class Follow implements GameLifeCycle {
     private final  ArrayList<EventItem> ListEI;
 
     private Rectangle Gaze;
+
+    //number position item (x,y)
+    private int x;
+    private int y;
+
+    //size wall/item
+    private double sizeWw;
+    private double sizeWh;
 
 
     Follow(final IGameContext gameContext, final Stats stats, final FollowGameVariant variant){
@@ -84,14 +89,20 @@ public class Follow implements GameLifeCycle {
 
         canmove = true;
 
+        x=32;
+        y=18;
+
+        sizeWw = dimension2D.getWidth()/x;
+        sizeWh = dimension2D.getHeight()/y;
+
         py = dimension2D.getHeight()/2;
         px = dimension2D.getWidth()/2;
 
-        size = dimension2D.getWidth()/50;
+        sizeP = dimension2D.getWidth()/50;
 
         paving();
 
-        RPlayer = new Rectangle(px-size/2, py-size/2, size, size);
+        RPlayer = new Rectangle(px-sizeP/2, py-sizeP/2, sizeP, sizeP);
         RPlayer.setFill(new ImagePattern(new Image("data/biboule/images/Blue.png")));
         gameContext.getChildren().add(RPlayer);
 
@@ -132,7 +143,7 @@ public class Follow implements GameLifeCycle {
             };
 
             gameContextScene.getRoot().addEventFilter(GazeEvent.ANY, recordGazeMovements);
-            gameContextScene.getRoot().addEventFilter(MouseEvent.ANY, recordMouseMovements);
+            //gameContextScene.getRoot().addEventFilter(MouseEvent.ANY, recordMouseMovements);
         }
 
         startafterdelay();
@@ -162,18 +173,18 @@ public class Follow implements GameLifeCycle {
                     double ty = py + speed * y / dist;
 
                     for (Rectangle Wall : ListWall){
-                        if (IsInWall(Wall, tx, py, size)){
+                        if (IsInWall(Wall, tx, py, sizeP)){
                             if (x>0){
-                                tx = Wall.getX() - size/2;
+                                tx = Wall.getX() - sizeP/2;
                             } else {
-                                tx = Wall.getX()+Wall.getWidth() + size/2;
+                                tx = Wall.getX()+Wall.getWidth() + sizeP/2;
                             }
                         }
-                        if (IsInWall(Wall, px, ty, size)){
+                        if (IsInWall(Wall, px, ty, sizeP)){
                             if (y>0){
-                                ty = Wall.getY() - size/2;
+                                ty = Wall.getY() - sizeP/2;
                             } else {
-                                ty = Wall.getY()+Wall.getHeight() + size/2;
+                                ty = Wall.getY()+Wall.getHeight() + sizeP/2;
                             }
                         }
                     }
@@ -181,8 +192,8 @@ public class Follow implements GameLifeCycle {
                     px = tx;
                     py = ty;
                 }
-                RPlayer.setX(px - size / 2);
-                RPlayer.setY(py - size / 2);
+                RPlayer.setX(px - sizeP / 2);
+                RPlayer.setY(py - sizeP / 2);
                 CheckEI();
                 followthegaze();
             }
@@ -232,7 +243,7 @@ public class Follow implements GameLifeCycle {
     private void CheckEI(){
         ArrayList<EventItem> Remove = new ArrayList<>();
         for(EventItem EI : ListEI){
-            if (IsInWall(EI.rectangle, px, py, size)){
+            if (IsInWall(EI.rectangle, px, py, sizeP)){
                 if (EI.remove) {
                     Remove.add(EI);
                     gameContext.getChildren().remove(EI.rectangle);
@@ -254,28 +265,23 @@ public class Follow implements GameLifeCycle {
     }
 
     private void contour(){
-        int x = 32;
-        int y = 18;
-        double w = dimension2D.getWidth();
-        double h = w*9/16;
-        double size = w/x;
         Rectangle W;
         for (int i=0; i<x; i++){
-            W = new Rectangle(i*size, 0, size, size);
+            W = new Rectangle(i*sizeWw, 0, sizeWw, sizeWh);
             W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
             ListWall.add(W);
             gameContext.getChildren().add(W);
-            W = new Rectangle(i*size, h-size, size, size);
+            W = new Rectangle(i*sizeWw, dimension2D.getHeight()-sizeWh, sizeWw, sizeWh);
             W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
             ListWall.add(W);
             gameContext.getChildren().add(W);
         }
         for (int i=1; i<y-1; i++){
-            W = new Rectangle(0, i*size, size, size);
+            W = new Rectangle(0, i*sizeWh, sizeWw, sizeWh);
             W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
             ListWall.add(W);
             gameContext.getChildren().add(W);
-            W = new Rectangle(w-size, i*size, size, size);
+            W = new Rectangle(dimension2D.getWidth()-sizeWw, i*sizeWh, sizeWw, sizeWh);
             W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
             ListWall.add(W);
             gameContext.getChildren().add(W);
@@ -283,43 +289,40 @@ public class Follow implements GameLifeCycle {
     }
 
     private void wallkey(){
-        int x = 32;
-        int y = 18;
-        double size = dimension2D.getWidth()/x;
         Rectangle W;
 
         for (int i=1; i<10; i++){
-            W = new Rectangle(i*size, 5*size, size, size);
+            W = new Rectangle(i*sizeWw, 5*sizeWh, sizeWw, sizeWh);
             W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
             ListWall.add(W);
             gameContext.getChildren().add(W);
         }
         for (int i=1; i<4; i++){
-            W = new Rectangle(9*size, i*size, size, size);
+            W = new Rectangle(9*sizeWw, i*sizeWh, sizeWw, sizeWh);
             W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
             ListWall.add(W);
             gameContext.getChildren().add(W);
         }
         for (int i=6; i<y-2; i++){
-            W = new Rectangle(6*size, i*size, size, size);
+            W = new Rectangle(6*sizeWw, i*sizeWh, sizeWw, sizeWh);
             W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
             ListWall.add(W);
             gameContext.getChildren().add(W);
         }
         for (int i=4; i<y-6; i++){
-            W = new Rectangle((x-9)*size, i*size, size, size);
+            W = new Rectangle((x-9)*sizeWw, i*sizeWh, sizeWw, sizeWh);
             W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
             ListWall.add(W);
             gameContext.getChildren().add(W);
         }
         for (int i=y-5; i<y-1; i++) {
-            W = new Rectangle((x - 9) * size, i * size, size, size);
+            W = new Rectangle((x - 9) * sizeWw, i * sizeWh, sizeWw, sizeWh);
             W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
             ListWall.add(W);
             gameContext.getChildren().add(W);
         }
         for (int i=1; i<y-4; i++){
-            W = new Rectangle((x-5)*size, i*size, size, size);
+            W = new Rectangle((x-5)*sizeWw, i*sizeWh, sizeWw, sizeWh);
             W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
             ListWall.add(W);
             gameContext.getChildren().add(W);
@@ -327,12 +330,9 @@ public class Follow implements GameLifeCycle {
     }
 
     private void itemkey(){
-        int x = 32;
-        int y = 18;
-        double size = dimension2D.getWidth()/x;
 
         {
-            Rectangle DoorRED = new Rectangle(9 * size, 4 * size, size, size);
+            Rectangle DoorRED = new Rectangle(9 * sizeWw, 4 * sizeWh, sizeWw, sizeWh);
             DoorRED.setFill(new ImagePattern(new Image("data/follow/door1rouge.png")));
             ListWall.add(DoorRED);
             gameContext.getChildren().add(DoorRED);
@@ -342,18 +342,18 @@ public class Follow implements GameLifeCycle {
                 gameContext.getChildren().remove(DoorRED);
                 //Maybe add a song
             };
-            EventItem KeyRED = new EventItem(3 * size, 7 * size, size, size, new ImagePattern(new Image("data/follow/keyred.png")), eventkeyred, true);
+            EventItem KeyRED = new EventItem(3 * sizeWw, 7 * sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/keyred.png")), eventkeyred, true);
             ListEI.add(KeyRED);
             gameContext.getChildren().add(KeyRED.rectangle);
         }
 
         {
-            Rectangle DoorGREEN = new Rectangle(6 * size, (y - 2) * size, size, size);
+            Rectangle DoorGREEN = new Rectangle(6 * sizeWw, (y - 2) * sizeWh, sizeWw, sizeWh);
             DoorGREEN.setFill(new ImagePattern(new Image("data/follow/door1verte.png")));
             ListWall.add(DoorGREEN);
             gameContext.getChildren().add(DoorGREEN);
 
-            Rectangle DoorGREEN2 = new Rectangle((x-9) * size, (y - 6) * size, size, size);
+            Rectangle DoorGREEN2 = new Rectangle((x-9) * sizeWw, (y - 6) * sizeWh, sizeWw, sizeWh);
             DoorGREEN2.setFill(new ImagePattern(new Image("data/follow/door1verte.png")));
             ListWall.add(DoorGREEN2);
             gameContext.getChildren().add(DoorGREEN2);
@@ -365,32 +365,29 @@ public class Follow implements GameLifeCycle {
                 gameContext.getChildren().remove(DoorGREEN2);
                 //Maybe add a sound
             };
-            EventItem KeyGREEN = new EventItem((x - 3) * size, 4 * size, size, size, new ImagePattern(new Image("data/follow/keygreen.png")), eventkeygreen, true);
+            EventItem KeyGREEN = new EventItem((x - 3) * sizeWw, 4 * sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/keygreen.png")), eventkeygreen, true);
             ListEI.add(KeyGREEN);
             gameContext.getChildren().add(KeyGREEN.rectangle);
         }
 
         javafx.event.EventHandler<ActionEvent> eventwin = e -> win();
-        EventItem Ruby = new EventItem(3 * size, 2 * size, size, size, new ImagePattern(new Image("data/follow/ruby1.png")), eventwin, true);
+        EventItem Ruby = new EventItem(3 * sizeWw, 2 * sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/ruby1.png")), eventwin, true);
         ListEI.add(Ruby);
         gameContext.getChildren().add(Ruby.rectangle);
 
         javafx.event.EventHandler<ActionEvent> eventtrap = e -> {
-            Rectangle WallTrap = new Rectangle((x-9) * size, size, size, 3* size);
+            Rectangle WallTrap = new Rectangle((x-9) * sizeWw, sizeWh, sizeWw, 3* sizeWh);
             WallTrap.setFill(new ImagePattern(new Image("data/follow/jailbar1.png")));
             gameContext.getChildren().add(WallTrap);
             ListWall.add(WallTrap);
             //Maybe add a sound
         };
-        EventItem Trap = new EventItem((x-8) * size, 5 * size, 3 * size, size, new ImagePattern(new Image("data/follow/nothing.png")), eventtrap, true);
+        EventItem Trap = new EventItem((x-8) * sizeWw, 5 * sizeWh, 3 * sizeWw, sizeWh, new ImagePattern(new Image("data/follow/nothing.png")), eventtrap, true);
         ListEI.add(Trap);
         gameContext.getChildren().add(Trap.rectangle);
     }
 
     private void InitWallItemCoin(){
-        int x = 32;
-        int y = 18;
-        double size = dimension2D.getWidth()/x;
 
         int Map[][] = new int[][]
             {
@@ -418,13 +415,13 @@ public class Follow implements GameLifeCycle {
         for (int i=0; i<x-2; i++){
             for (int j=0; j<y-2; j++){
                 if (Map[j][i]==1){
-                    W = new Rectangle((i+1)*size, (j+1)*size, size, size);
+                    W = new Rectangle((i+1)*sizeWw, (j+1)*sizeWh, sizeWw, sizeWh);
                     W.setFill(new ImagePattern(new Image("data/follow/wall1.png")));
                     ListWall.add(W);
                     gameContext.getChildren().add(W);
                 }
                 else if(Map[j][i]==0) {
-                    Coin = new EventItem((i+1)*size, (j+1)*size, size, size, new ImagePattern(new Image("data/follow/coin.png")), e-> {multigoals(); /*Maybe add a song*/}, true, false);
+                    Coin = new EventItem((i+1)*sizeWw, (j+1)*sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/coin.png")), e-> {multigoals(); /*Maybe add a song*/}, true, false);
                     ListEI.add(Coin);
                     gameContext.getChildren().add(Coin.rectangle);
                 }
