@@ -328,7 +328,7 @@ public class Follow implements GameLifeCycle {
     }
 
     private void FKEY(){
-        int Map[][] = new int[][]
+        int[][] Map = new int[][]
             {
                 {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
@@ -413,7 +413,7 @@ public class Follow implements GameLifeCycle {
 
     private void FCOIN(){
 
-        int Map[][] = new int[][]
+        int[][] Map = new int[][]
             {
                 {1, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1},
                 {2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 2, 1},
