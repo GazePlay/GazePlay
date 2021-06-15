@@ -114,6 +114,7 @@ public class Follow implements GameLifeCycle {
         //Make the paving of the floor
         paving();
 
+        //Make the player
         RPlayer = new Rectangle(px-sizeP/2, py-sizeP/2, sizeP, sizeP);
         RPlayer.setFill(new ImagePattern(new Image("data/follow/Biboule.png")));
         gameContext.getChildren().add(RPlayer);
@@ -298,14 +299,11 @@ public class Follow implements GameLifeCycle {
     }
 
     private void paving(){
-        int x = 32;
-        int y = 18;
-        double size = dimension2D.getWidth()/x;
         Rectangle D;
 
         for (int i=0; i<x; i++){
             for (int j=0; j<y; j++){
-                D = new Rectangle(i*size, j*size, size, size);
+                D = new Rectangle(i*sizeWw, j*sizeWh, sizeWw, sizeWh);
                 D.setFill(new ImagePattern(new Image("data/follow/slab1.png")));
                 gameContext.getChildren().add(D);
             }
