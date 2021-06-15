@@ -48,8 +48,11 @@ public class SoundsOfLife implements GameLifeCycle {
             case 1:
                 path += "jungle/";
                 break;
-            default:
+            case 2:
                 path += "savanna/";
+                break;
+            default:
+                path += "sea/";
         }
 
         JsonParser parser = new JsonParser();
@@ -127,8 +130,11 @@ public class SoundsOfLife implements GameLifeCycle {
             case 1:
                 path += "jungle/";
                 break;
-            default:
+            case 2:
                 path += "savanna/";
+                break;
+            default:
+                path += "sea/";
         }
 
         JsonParser parser = new JsonParser();
