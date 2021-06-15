@@ -228,15 +228,15 @@ public class Follow implements GameLifeCycle {
     }
 
     private void win(){
-        gameContext.getChildren().remove(Gaze);
-
-        dispose();
-
-        canmove = false;
+        stats.stop();
 
         gameContext.updateScore(stats, this);
 
         gameContext.playWinTransition(500, actionEvent -> {
+
+            canmove = false;
+
+            dispose();
 
             gameContext.getGazeDeviceManager().clear();
 
