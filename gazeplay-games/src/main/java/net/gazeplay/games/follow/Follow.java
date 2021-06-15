@@ -111,6 +111,7 @@ public class Follow implements GameLifeCycle {
 
         sizeP = dimension2D.getWidth()/50;
 
+        //Make the paving of the floor
         paving();
 
         RPlayer = new Rectangle(px-sizeP/2, py-sizeP/2, sizeP, sizeP);
@@ -120,7 +121,9 @@ public class Follow implements GameLifeCycle {
         //increase the speed but decrease the accuracy
         speed = 4;
 
+        //Make the border of the screen
         contour();
+
         if (variant.equals(FollowGameVariant.FKEY)){
             FKEY();
         }
