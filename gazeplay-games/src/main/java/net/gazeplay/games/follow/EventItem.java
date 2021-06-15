@@ -6,15 +6,14 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-public class EventItem{
-    public Rectangle rectangle;
+public class EventItem extends Rectangle{
     private final javafx.event.EventHandler<ActionEvent> event;
     public final boolean remove;
     private boolean isActivable;
 
     EventItem(double x, double y, double width, double height, ImagePattern Im, javafx.event.EventHandler<ActionEvent> event, boolean remove){
-        rectangle = new Rectangle(x, y, width, height);
-        rectangle.setFill(Im);
+        super(x,y,width,height);
+        this.setFill(Im);
         this.event = event;
         this.remove = remove;
         isActivable = true;

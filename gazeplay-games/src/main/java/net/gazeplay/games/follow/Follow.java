@@ -249,10 +249,10 @@ public class Follow implements GameLifeCycle {
     private void CheckEI(){
         ArrayList<EventItem> Remove = new ArrayList<>();
         for(EventItem EI : ListEI){
-            if (IsInWall(EI.rectangle, px, py, sizeP)){
+            if (IsInWall(EI, px, py, sizeP)){
                 if (EI.remove) {
                     Remove.add(EI);
-                    gameContext.getChildren().remove(EI.rectangle);
+                    gameContext.getChildren().remove(EI);
                 }
                 EI.active();
             }
@@ -321,7 +321,7 @@ public class Follow implements GameLifeCycle {
                     scoretoreach++;
                     Coin = new EventItem((i+1)*sizeWw, (j+1)*sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/coin.png")), e-> {stats.incrementNumberOfGoalsReached(); score++; multigoals(); /*Maybe add a song*/}, true);
                     ListEI.add(Coin);
-                    gameContext.getChildren().add(Coin.rectangle);
+                    gameContext.getChildren().add(Coin);
                 }
             }
         }
@@ -364,7 +364,7 @@ public class Follow implements GameLifeCycle {
             };
             EventItem KeyRED = new EventItem(3 * sizeWw, 7 * sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/keyred.png")), eventkeyred, true);
             ListEI.add(KeyRED);
-            gameContext.getChildren().add(KeyRED.rectangle);
+            gameContext.getChildren().add(KeyRED);
         }
 
         {
@@ -388,7 +388,7 @@ public class Follow implements GameLifeCycle {
             };
             EventItem KeyGREEN = new EventItem((x - 3) * sizeWw, 4 * sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/keygreen.png")), eventkeygreen, true);
             ListEI.add(KeyGREEN);
-            gameContext.getChildren().add(KeyGREEN.rectangle);
+            gameContext.getChildren().add(KeyGREEN);
         }
 
         javafx.event.EventHandler<ActionEvent> eventwin = e -> {
@@ -397,7 +397,7 @@ public class Follow implements GameLifeCycle {
         };
         EventItem Ruby = new EventItem(2 * sizeWw, 2 * sizeWh, 2*sizeWw, 2*sizeWh, new ImagePattern(new Image("data/follow/ruby1.png")), eventwin, true);
         ListEI.add(Ruby);
-        gameContext.getChildren().add(Ruby.rectangle);
+        gameContext.getChildren().add(Ruby);
 
         javafx.event.EventHandler<ActionEvent> eventtrap = e -> {
             Rectangle WallTrap = new Rectangle((x-9) * sizeWw, sizeWh, sizeWw, 3* sizeWh);
@@ -408,7 +408,7 @@ public class Follow implements GameLifeCycle {
         };
         EventItem Trap = new EventItem((x-8) * sizeWw, 5 * sizeWh, 3 * sizeWw, sizeWh, new ImagePattern(new Image("data/follow/nothing.png")), eventtrap, true);
         ListEI.add(Trap);
-        gameContext.getChildren().add(Trap.rectangle);
+        gameContext.getChildren().add(Trap);
     }
 
     private void FCOIN(){
