@@ -319,7 +319,7 @@ public class Follow implements GameLifeCycle {
                 }
                 else if(Map[j][i]==2) {
                     scoretoreach++;
-                    Coin = new EventItem((i+1)*sizeWw, (j+1)*sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/coin.png")), e-> {stats.incrementNumberOfGoalsReached(); score++; multigoals(); /*Maybe add a song*/}, true, false);
+                    Coin = new EventItem((i+1)*sizeWw, (j+1)*sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/coin.png")), e-> {stats.incrementNumberOfGoalsReached(); score++; multigoals(); /*Maybe add a song*/}, true);
                     ListEI.add(Coin);
                     gameContext.getChildren().add(Coin.rectangle);
                 }
