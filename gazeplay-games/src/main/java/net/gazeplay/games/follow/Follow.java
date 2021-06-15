@@ -52,12 +52,16 @@ public class Follow implements GameLifeCycle {
     //player square
     private Rectangle RPlayer;
 
+    //If the player can move or not
     private boolean canmove;
 
+    //List of walls
     private final ArrayList<Rectangle> ListWall;
 
+    //List of EventItems
     private final  ArrayList<EventItem> ListEI;
 
+    //Pointer of the gaze
     private Rectangle Gaze;
 
     //number position item (x,y)
