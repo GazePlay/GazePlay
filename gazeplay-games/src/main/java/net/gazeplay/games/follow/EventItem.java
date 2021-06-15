@@ -11,6 +11,7 @@ public class EventItem{
     private final javafx.event.EventHandler<ActionEvent> event;
     public final boolean remove;
     public boolean multigoals;
+    private boolean isActivable;
 
     EventItem(double x, double y, double width, double height, ImagePattern Im, javafx.event.EventHandler<ActionEvent> event, boolean remove){
         rectangle = new Rectangle(x, y, width, height);
@@ -18,6 +19,7 @@ public class EventItem{
         this.event = event;
         this.remove = remove;
         multigoals = true;
+        isActivable = true;
     }
 
     EventItem(double x, double y, double width, double height, ImagePattern Im, javafx.event.EventHandler<ActionEvent> event, boolean remove, boolean multigoals){
@@ -26,12 +28,23 @@ public class EventItem{
         this.event = event;
         this.remove = remove;
         this.multigoals = multigoals;
+        isActivable = true;
     }
 
     public void active(){
-        multigoals = true;
-        PauseTransition Wait = new PauseTransition(Duration.millis(10));
-        Wait.setOnFinished(event);
+        if (isActivable) {
+            isActivable = false;
+            multigoals = true;
+            PauseTransition Wait = new PauseTransition(Duration.millis(10));
+            Wait.setOnFinished(event);
+            Wait.play();
+            doActivable();
+        }
+    }
+
+    private void doActivable(){
+        PauseTransition Wait = new PauseTransition(Duration.millis(2000));
+        Wait.setOnFinished(e -> isActivable = true);
         Wait.play();
     }
 }

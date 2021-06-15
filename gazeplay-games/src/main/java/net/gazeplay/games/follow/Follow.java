@@ -68,6 +68,10 @@ public class Follow implements GameLifeCycle {
     private double sizeWw;
     private double sizeWh;
 
+    //score with coins
+    private int score;
+    private int scoretoreach;
+
 
     Follow(final IGameContext gameContext, final Stats stats, final FollowGameVariant variant){
         this.gameContext = gameContext;
@@ -80,12 +84,15 @@ public class Follow implements GameLifeCycle {
 
         ListEI = new ArrayList<>();
 
-        launch();
+        //launch();
     }
 
     @Override
     public void launch() {
         gameContext.getChildren().clear();
+
+        score = 0;
+        scoretoreach = 0;
 
         canmove = true;
 
@@ -107,7 +114,7 @@ public class Follow implements GameLifeCycle {
         gameContext.getChildren().add(RPlayer);
 
         //increase the speed but decrease the accuracy
-        speed = 2;
+        speed = 4;
 
         contour();
         if (variant.equals(FollowGameVariant.FKEY)){
@@ -254,11 +261,7 @@ public class Follow implements GameLifeCycle {
     }
 
     private void multigoals(){
-        boolean test = true;
-        for (EventItem EI : ListEI){
-            test = test && EI.multigoals;
-        }
-        if (test){
+        if (score>=scoretoreach){
             win();
         }
     }
@@ -315,7 +318,8 @@ public class Follow implements GameLifeCycle {
                     gameContext.getChildren().add(W);
                 }
                 else if(Map[j][i]==2) {
-                    Coin = new EventItem((i+1)*sizeWw, (j+1)*sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/coin.png")), e-> {multigoals(); /*Maybe add a song*/}, true, false);
+                    scoretoreach++;
+                    Coin = new EventItem((i+1)*sizeWw, (j+1)*sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/coin.png")), e-> {stats.incrementNumberOfGoalsReached(); score++; multigoals(); /*Maybe add a song*/}, true, false);
                     ListEI.add(Coin);
                     gameContext.getChildren().add(Coin.rectangle);
                 }
@@ -356,6 +360,7 @@ public class Follow implements GameLifeCycle {
                 ListWall.remove(DoorRED);
                 gameContext.getChildren().remove(DoorRED);
                 //Maybe add a song
+                stats.incrementNumberOfGoalsReached();
             };
             EventItem KeyRED = new EventItem(3 * sizeWw, 7 * sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/keyred.png")), eventkeyred, true);
             ListEI.add(KeyRED);
@@ -379,13 +384,17 @@ public class Follow implements GameLifeCycle {
                 ListWall.remove(DoorGREEN2);
                 gameContext.getChildren().remove(DoorGREEN2);
                 //Maybe add a sound
+                stats.incrementNumberOfGoalsReached();
             };
             EventItem KeyGREEN = new EventItem((x - 3) * sizeWw, 4 * sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/keygreen.png")), eventkeygreen, true);
             ListEI.add(KeyGREEN);
             gameContext.getChildren().add(KeyGREEN.rectangle);
         }
 
-        javafx.event.EventHandler<ActionEvent> eventwin = e -> win();
+        javafx.event.EventHandler<ActionEvent> eventwin = e -> {
+            stats.incrementNumberOfGoalsReached();
+            win();
+        };
         EventItem Ruby = new EventItem(2 * sizeWw, 2 * sizeWh, 2*sizeWw, 2*sizeWh, new ImagePattern(new Image("data/follow/ruby1.png")), eventwin, true);
         ListEI.add(Ruby);
         gameContext.getChildren().add(Ruby.rectangle);
