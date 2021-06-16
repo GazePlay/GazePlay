@@ -115,9 +115,7 @@ public class Follow implements GameLifeCycle {
         paving();
 
         //Make the player
-        RPlayer = new Rectangle(px-sizeP/2, py-sizeP/2, sizeP, sizeP);
-        RPlayer.setFill(new ImagePattern(new Image("data/follow/Biboule.png")));
-        gameContext.getChildren().add(RPlayer);
+        player();
 
         //increase the speed but decrease the accuracy
         speed = 4;
@@ -135,9 +133,7 @@ public class Follow implements GameLifeCycle {
             log.error("Variant not found : " + variant.getLabel());
         }
 
-        Gaze = new Rectangle(0, 0, dimension2D.getWidth()/200, dimension2D.getWidth()/200);
-        Gaze.setFill(new ImagePattern(new Image("data/follow/ruby1.png")));
-        gameContext.getChildren().add(Gaze);
+        pointer();
 
         {
             Scene gameContextScene = gameContext.getPrimaryScene();
@@ -272,6 +268,18 @@ public class Follow implements GameLifeCycle {
         if (score>=scoretoreach){
             win();
         }
+    }
+
+    private void player(){
+        RPlayer = new Rectangle(px-sizeP/2, py-sizeP/2, sizeP, sizeP);
+        RPlayer.setFill(new ImagePattern(new Image("data/follow/Biboule.png")));
+        gameContext.getChildren().add(RPlayer);
+    }
+
+    private void pointer(){
+        Gaze = new Rectangle(0, 0, dimension2D.getWidth()/200, dimension2D.getWidth()/200);
+        Gaze.setFill(new ImagePattern(new Image("data/follow/ruby1.png")));
+        gameContext.getChildren().add(Gaze);
     }
 
     private void contour(){
