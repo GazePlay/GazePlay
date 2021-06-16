@@ -11,7 +11,7 @@ public class FollowGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Follow").gameThumbnail("data/Thumbnails/follow.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            GameSummary.builder().nameCode("Follow").gameThumbnail("data/Thumbnails/follow.png").category(GameCategories.Category.LOGIC_MATHS).build(),
             new FollowGameVariantGenerator(), new FollowGameLauncher());
     }
 }
