@@ -17,6 +17,9 @@ public class Charlie implements GameLifeCycle {
 
     private final Dimension2D dimension2D;
 
+    private String[][] Picture;
+    private String[][] PictureName;
+
     Charlie(IGameContext gameContext, Stats stats, DimensionGameVariant gameVariant){
 
         this.gameContext = gameContext;
@@ -42,6 +45,19 @@ public class Charlie implements GameLifeCycle {
 
     public void launch(){
 
+        Picture = new String[][]
+            {
+
+            };
+
+        PictureName = new String[][]
+            {
+
+            };
+
+        stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
+        gameContext.firstStart();
     }
 
     public void dispose(){
