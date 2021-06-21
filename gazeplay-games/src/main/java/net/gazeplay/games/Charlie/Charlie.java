@@ -34,6 +34,9 @@ public class Charlie implements GameLifeCycle {
     private int row = 9;
     private int column = 16;
 
+    private int rowWin;
+    private int columnWin;
+
     Charlie(IGameContext gameContext, Stats stats, DimensionGameVariant gameVariant){
 
         this.gameContext = gameContext;
@@ -78,7 +81,7 @@ public class Charlie implements GameLifeCycle {
 
         PictureName = new String[][]
             {
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"Lion", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
                 {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
                 {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
                 {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
@@ -89,6 +92,9 @@ public class Charlie implements GameLifeCycle {
                 {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}
             };
 
+        rowWin = random.nextInt(gameVariant.getWidth());
+        columnWin = random.nextInt(gameVariant.getHeight());
+
         String path = "data/Charlie/";
 
         String question = translator.translate("Where is") + " ";
@@ -97,6 +103,8 @@ public class Charlie implements GameLifeCycle {
             shuffleColumn(random.nextInt(column), random.nextInt(column));
             shuffleRow(random.nextInt(row), random.nextInt(row));
         }
+
+        question+=translator.translate(PictureName[rowWin][columnWin]);
 
         Transition TransitionQuestion = CreateQuestionTransition(question);
         TransitionQuestion.play();
