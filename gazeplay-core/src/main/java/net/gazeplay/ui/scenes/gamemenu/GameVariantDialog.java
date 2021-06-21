@@ -112,7 +112,7 @@ public class GameVariantDialog extends Stage {
 
             if ((variant instanceof DimensionDifficultyGameVariant) && (variant.toString().contains("easy"))) {
                 choicePaneEasy.getChildren().add(button);
-            } else if ((variant instanceof DimensionDifficultyGameVariant) || (variant.toString().contains("DYNAMIC"))) {
+            } else if ((variant instanceof DimensionDifficultyGameVariant) || variant.toString().contains("Dynamic") || variant.toString().contains("DYNAMIC")) {
                 choicePaneDynamic.getChildren().add(button);
             } else {
                 choicePane.getChildren().add(button);
@@ -123,10 +123,10 @@ public class GameVariantDialog extends Stage {
                     variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "normal");
                 }
                 ToggleGroup group = new ToggleGroup();
-                RadioButton normal = new RadioButton("normal");
+                RadioButton normal = new RadioButton("Normal");
                 normal.setToggleGroup(group);
                 normal.setSelected(true);
-                RadioButton dynamic = new RadioButton("dynamic");
+                RadioButton dynamic = new RadioButton("Dynamic");
                 dynamic.setToggleGroup(group);
                 HBox bottom = new HBox();
                 bottom.getChildren().add(dynamic);
@@ -192,7 +192,7 @@ public class GameVariantDialog extends Stage {
                 dynamic.setOnAction(actionEvent -> {
                     if (!easymode) {
                         easymode = true;
-                        choicePanelScroller.setContent(choicePaneEasy);
+                        choicePanelScroller.setContent(choicePaneDynamic);
                     }
                 });
                 normal.setOnAction(actionEvent -> {

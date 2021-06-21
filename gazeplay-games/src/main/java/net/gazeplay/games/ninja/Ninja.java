@@ -53,7 +53,7 @@ public class Ninja implements GameLifeCycle {
         int radius = (int) Math.min(scene.getWidth()/12, scene.getHeight()/12);
 
         portrait = new Target(gameContext, randomPositionGenerator, stats,
-            Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, radius, stats.getRoundsDurationReport(), 3000);
+            Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, radius, stats.getRoundsDurationReport(), stats.getLevelsReport(), 3000);
         gameContext.setLimiterAvailable();
         gameContext.getChildren().add(portrait);
         stats.notifyNewRoundReady();

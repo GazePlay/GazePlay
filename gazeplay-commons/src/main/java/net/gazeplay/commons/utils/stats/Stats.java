@@ -70,6 +70,7 @@ public class Stats implements GazeMotionListener {
     private EventHandler<GazeEvent> recordGazeMovements;
     private LifeCycle lifeCycle = new LifeCycle();
     private RoundsDurationReport roundsDurationReport = new RoundsDurationReport();
+    private LevelsReport levelsReport = new LevelsReport();
     private int counter = 0;
     private final List<CoordinatesTracker> movementHistory = new ArrayList<>();
 
@@ -949,5 +950,17 @@ public class Stats implements GazeMotionListener {
 
     public void setGameSeed(double gameSeed) {
         currentGameSeed = gameSeed;
+    }
+
+    public String getCurrentGameVariant(){
+        return currentGameVariant;
+    }
+
+    public LevelsReport getLevelsReport() {
+        return levelsReport;
+    }
+
+    public List<Long> getLevelsRounds() {
+        return this.levelsReport.getOriginalLevelsPerRounds();
     }
 }

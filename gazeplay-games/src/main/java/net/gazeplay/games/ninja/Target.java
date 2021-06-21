@@ -13,6 +13,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
+import net.gazeplay.commons.utils.stats.LevelsReport;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.Portrait;
 import net.gazeplay.components.Position;
@@ -57,13 +58,15 @@ public class Target extends Portrait {
 
     private RoundsDurationReport roundsDurationReport;
 
-    private int length;
+    private LevelsReport levelsReport;
+
+    private long length;
 
     private final String variantType;
     //private List<Long> durationBetweenGoals;
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
-                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance, final ReplayablePseudoRandom randomGenerator, int radius, RoundsDurationReport roundsDurationReport, int length) {
+                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance, final ReplayablePseudoRandom randomGenerator, int radius, RoundsDurationReport roundsDurationReport, LevelsReport levelsReport, int length) {
         super(radius, randomPositionGenerator, imageLibrary);
 
         this.radius = radius;
@@ -84,6 +87,7 @@ public class Target extends Portrait {
         this.gameVariant = gameVariant;
         this.randomGen = randomGenerator;
         this.roundsDurationReport = roundsDurationReport;
+        this.levelsReport = levelsReport;
         this.length = length;
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
@@ -130,13 +134,13 @@ public class Target extends Portrait {
         };
     }
 
-    private void moveRandom(final int length) {
+    private void moveRandom(final long length) {
 
         final Position currentPosition = new Position((int) getCenterX(), (int) getCenterY());
 
         final Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
         log.debug("currentPosition = {}, newPosition = {}, length = {}", currentPosition, newPosition, length);
-        int finalLength;
+        long finalLength;
 
         if (variantType.equals("Random Dynamic")) {
 
@@ -182,7 +186,7 @@ public class Target extends Portrait {
         Target.this.setTranslateZ(0);
     }
 
-    private void createBackAndForthTranslations(final Position pos1, final Position pos2, final int length) {
+    private void createBackAndForthTranslations(final Position pos1, final Position pos2, final long length) {
 
         final Timeline translation1 = new Timeline(new KeyFrame(new Duration(length),
             new KeyValue(this.centerXProperty(), pos1.getX()), new KeyValue(this.centerYProperty(), pos1.getY())));
@@ -232,10 +236,12 @@ public class Target extends Portrait {
                         if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) >= 2000) compare--;
 
                     }
-                    if (compare == 3 && length > 600) length -= 400;
+                    if (compare == 3 && length > 600)
+                        length -= 400;
                     if (compare == -3 && length < 11800) length += 400;
                 }
             }
+            levelsReport.addRoundDuration(length);
         }
 
         switch (gameVariant) {

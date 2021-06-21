@@ -169,6 +169,72 @@ public class StatDisplayUtils {
             return null;
     }
 
+    public static LineChart<String, Number> buildLevelChart(Stats stats, final Region root) {
+        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis yAxis = new NumberAxis();
+
+        LineChart<String, Number> levelChart = new LineChart<>(xAxis, yAxis);
+
+        // defining a series
+        Series<String, Number> series = new Series<>();
+       /* Series<String, Number> average = new Series<>();
+        Series<String, Number> sdp = new Series<>();
+        Series<String, Number> sdm = new Series<>();*/
+        // populating the series with data
+
+        final List<Long> shots = stats.getLevelsRounds();
+
+        double sd = stats.computeRoundsDurationStandardDeviation();
+
+        String xValue = "0";
+
+        /*average.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration()));
+        sdp.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() + sd));
+        sdm.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() - sd));*/
+
+        int i = 1;
+
+        for (Long duration : shots) {
+            xValue = Integer.toString(i);
+            series.getData().add(new Data<>(xValue, duration));
+            /*average.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration()));
+
+            sdp.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() + sd));
+            sdm.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() - sd));*/
+            i++;
+        }
+
+        xValue = Integer.toString(i);
+        /*average.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration()));
+        sdp.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() + sd));
+        sdm.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() - sd));*/
+
+        levelChart.setCreateSymbols(false);
+
+        /*levelChart.getData().add(average);
+        levelChart.getData().add(sdp);
+        levelChart.getData().add(sdm);*/
+        levelChart.getData().add(series);
+
+        series.getNode().setStyle("-fx-stroke-width: 3; -fx-stroke: red; -fx-stroke-dash-offset:5;");
+        /*average.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: lightgreen;");
+        sdp.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey;");
+        sdm.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey;");*/
+
+        EventHandler<Event> openLineChartEvent = createZoomInLineChartEventHandler(levelChart, root);
+
+        levelChart.addEventHandler(MouseEvent.MOUSE_CLICKED, openLineChartEvent);
+
+        levelChart.setLegendVisible(false);
+
+        root.widthProperty().addListener((observable, oldValue, newValue) -> levelChart.setMaxWidth(newValue.doubleValue() * 0.4));
+        root.heightProperty().addListener((observable, oldValue, newValue) -> levelChart.setMaxHeight(newValue.doubleValue() * 0.4));
+        levelChart.setMaxWidth(root.getWidth() * 0.4);
+        levelChart.setMaxHeight(root.getHeight() * 0.4);
+
+        return levelChart;
+    }
+
     public static ImageView buildGazeMetrics(Stats stats, final Region root) {
         ImageView gazeMetrics = new ImageView();
         gazeMetrics.setPreserveRatio(true);
