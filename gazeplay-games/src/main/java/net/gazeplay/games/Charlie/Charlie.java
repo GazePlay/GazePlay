@@ -93,11 +93,13 @@ public class Charlie implements GameLifeCycle {
 
         String question = translator.translate("Where is") + " ";
 
+        for (int i=0; i<20; i++){
+            shuffleColumn(random.nextInt(column), random.nextInt(column));
+            shuffleRow(random.nextInt(row), random.nextInt(row));
+        }
+
         Transition TransitionQuestion = CreateQuestionTransition(question);
         TransitionQuestion.play();
-
-        shuffleRow(0,1);
-        shuffleColumn(0,1);
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
