@@ -31,6 +31,9 @@ public class Charlie implements GameLifeCycle {
     private String[][] Picture;
     private String[][] PictureName;
 
+    private int row = 9;
+    private int column = 16;
+
     Charlie(IGameContext gameContext, Stats stats, DimensionGameVariant gameVariant){
 
         this.gameContext = gameContext;
@@ -62,12 +65,28 @@ public class Charlie implements GameLifeCycle {
 
         Picture = new String[][]
             {
-
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}
             };
 
         PictureName = new String[][]
             {
-
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}
             };
 
         String path = "data/Charlie/";
@@ -76,6 +95,9 @@ public class Charlie implements GameLifeCycle {
 
         Transition TransitionQuestion = CreateQuestionTransition(question);
         TransitionQuestion.play();
+
+        shuffleRow(0,1);
+        shuffleColumn(0,1);
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
@@ -135,5 +157,31 @@ public class Charlie implements GameLifeCycle {
 
         return fullAnimation;
 
+    }
+
+    private void shuffleRow(int a, int b){
+        String temp;
+        for (int i=0; i<column; i++){
+            temp = Picture[a][i];
+            Picture[a][i] = Picture[b][i];
+            Picture[b][i] = temp;
+
+            temp = PictureName[a][i];
+            PictureName[a][i] = PictureName[b][i];
+            PictureName[b][i] = temp;
+        }
+    }
+
+    private void shuffleColumn(int a, int b){
+        String temp;
+        for (int i=0; i<row; i++){
+            temp = Picture[i][a];
+            Picture[i][a] = Picture[i][b];
+            Picture[i][b] = temp;
+
+            temp = PictureName[i][a];
+            PictureName[i][a] = PictureName[i][b];
+            PictureName[i][b] = temp;
+        }
     }
 }
