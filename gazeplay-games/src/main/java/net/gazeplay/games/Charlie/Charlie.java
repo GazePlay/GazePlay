@@ -91,7 +91,7 @@ public class Charlie implements GameLifeCycle {
 
         questionText.setTranslateY(0);
 
-        final String color = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<String>() {
+        final String color = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<>() {
             @Override
             public String visitLight() {
                 return "titleB";
@@ -115,11 +115,6 @@ public class Charlie implements GameLifeCycle {
         StackPane.setAlignment(questionText, Pos.CENTER);
 
         gameContext.getChildren().add(questionText);
-        final long timeStarted = System.currentTimeMillis();
-        /*final TargetAOI targetAOI = new TargetAOI(dimension2D.getWidth() / 2, dimension2D.getHeight() / 2, (int) questionText.getBoundsInParent().getWidth(),
-            timeStarted);
-        targetAOI.setTimeEnded(timeStarted + gameContext.getConfiguration().getQuestionLength());
-        targetAOIList.add(targetAOI);*/
 
         final TranslateTransition fullAnimation = new TranslateTransition(
             Duration.millis(gameContext.getConfiguration().getQuestionLength() / 2.0), questionText);
