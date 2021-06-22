@@ -124,11 +124,11 @@ public class Charlie implements GameLifeCycle {
         for (int i=0; i<gameVariant.getWidth(); i++){
             for (int j=0; j<gameVariant.getHeight(); j++){
                 PB = new ProgressButton();
-                PB.setLayoutX((i*(0.9 - (0.9 - 1/16)/8)/(gameVariant.getWidth()-1) + 0.05)*dimension2D.getWidth());
+                PB.setLayoutX((i*(0.9 - (0.9 - 0.0625)/8)/(gameVariant.getWidth()-1) + 0.05)*dimension2D.getWidth());
                 PB.setLayoutY(((j+1)*0.75/(gameVariant.getHeight()+1) + 0.05)*dimension2D.getHeight());
                 Im = new ImageView(new Image(path+/*Picture[j][i]*/"BibouleBlue.png"));
-                Im.setFitWidth((0.9 - 1/16)/8*dimension2D.getWidth());
-                Im.setFitHeight((0.75 - 1/16)/8*dimension2D.getHeight());
+                Im.setFitWidth((0.9 - 0.0625)/8*dimension2D.getWidth());
+                Im.setFitHeight((0.75 - 0.0625)/8*dimension2D.getHeight());
                 PB.setImage(Im);
                 if (i==rowWin && j==columnWin){
                     Charlie = PB;
