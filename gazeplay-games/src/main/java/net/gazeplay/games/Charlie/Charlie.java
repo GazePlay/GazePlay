@@ -152,7 +152,8 @@ public class Charlie implements GameLifeCycle {
     }
 
     public void dispose(){
-
+        PBlist.clear();
+        gameContext.getChildren().clear();
     }
 
     private Transition CreateQuestionTransition(final String question){
@@ -239,5 +240,23 @@ public class Charlie implements GameLifeCycle {
 
     private void win(){
 
+        stats.incrementNumberOfGoalsReached();
+
+        Charlie.setDisable(true);
+
+        stats.stop();
+
+        gameContext.updateScore(stats, this);
+
+        gameContext.playWinTransition(500, actionEvent -> {
+
+            dispose();
+
+            gameContext.getGazeDeviceManager().clear();
+
+            gameContext.clear();
+
+            gameContext.showRoundStats(stats, this);
+        });
     }
 }
