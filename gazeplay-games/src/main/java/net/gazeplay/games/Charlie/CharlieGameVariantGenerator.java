@@ -12,10 +12,10 @@ public class CharlieGameVariantGenerator implements IGameVariantGenerator {
     @Override
     public Set<IGameVariant> getVariants() {
         return Sets.newLinkedHashSet(Lists.newArrayList(
-            new DimensionGameVariant(1, 3),
-            new DimensionGameVariant(3, 5),
-            new DimensionGameVariant(6, 10),
-            new DimensionGameVariant(9, 16)
+            new DimensionGameVariant(3, 1),
+            new DimensionGameVariant(5, 3),
+            new DimensionGameVariant(10, 6),
+            new DimensionGameVariant(16, 9)
         ));
     }
 }

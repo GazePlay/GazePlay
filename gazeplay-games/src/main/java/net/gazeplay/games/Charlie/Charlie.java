@@ -4,6 +4,8 @@ import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -15,6 +17,10 @@ import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.ProgressButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Charlie implements GameLifeCycle {
 
@@ -31,11 +37,15 @@ public class Charlie implements GameLifeCycle {
     private String[][] Picture;
     private String[][] PictureName;
 
-    private int row = 9;
-    private int column = 16;
+    private final int row = 9;
+    private final int column = 16;
 
     private int rowWin;
     private int columnWin;
+
+    private final List<ProgressButton> PBlist;
+
+    private ProgressButton Charlie;
 
     Charlie(IGameContext gameContext, Stats stats, DimensionGameVariant gameVariant){
 
@@ -49,6 +59,8 @@ public class Charlie implements GameLifeCycle {
         this.translator = gameContext.getTranslator();
 
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        PBlist = new ArrayList<>();
     }
 
     Charlie(IGameContext gameContext, Stats stats, DimensionGameVariant gameVariant, double gameSeed){
@@ -62,13 +74,15 @@ public class Charlie implements GameLifeCycle {
         this.translator = gameContext.getTranslator();
 
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        PBlist = new ArrayList<>();
     }
 
     public void launch(){
 
         Picture = new String[][]
             {
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"BibouleBlue.png", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
                 {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
                 {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
                 {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
@@ -81,7 +95,7 @@ public class Charlie implements GameLifeCycle {
 
         PictureName = new String[][]
             {
-                {"Lion", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"BibouleBlue", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
                 {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
                 {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
                 {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
@@ -104,12 +118,35 @@ public class Charlie implements GameLifeCycle {
             shuffleRow(random.nextInt(row), random.nextInt(row));
         }
 
-        question+=translator.translate(PictureName[rowWin][columnWin]);
+        ProgressButton PB;
+        ImageView Im;
+
+        for (int i=0; i<gameVariant.getWidth(); i++){
+            for (int j=0; j<gameVariant.getHeight(); j++){
+                PB = new ProgressButton();
+                PB.setLayoutX((i*(0.9 - (0.9 - 1/16)/8)/(gameVariant.getWidth()-1) + 0.05)*dimension2D.getWidth());
+                PB.setLayoutY(((j+1)*0.75/(gameVariant.getHeight()+1) + 0.05)*dimension2D.getHeight());
+                Im = new ImageView(new Image(path+/*Picture[j][i]*/"BibouleBlue.png"));
+                Im.setFitWidth((0.9 - 1/16)/8*dimension2D.getWidth());
+                Im.setFitHeight((0.75 - 1/16)/8*dimension2D.getHeight());
+                PB.setImage(Im);
+                if (i==rowWin && j==columnWin){
+                    Charlie = PB;
+                }
+                PB.setVisible(false);
+                PBlist.add(PB);
+                gameContext.getChildren().add(PB);
+            }
+        }
+
+        Charlie.assignIndicatorUpdatable(e -> win(), gameContext);
+        Charlie.disable();
+
+        question+=translator.translate(PictureName[columnWin][rowWin]);
 
         Transition TransitionQuestion = CreateQuestionTransition(question);
         TransitionQuestion.play();
 
-        stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
     }
@@ -162,6 +199,11 @@ public class Charlie implements GameLifeCycle {
 
             stats.notifyNewRoundReady();
 
+            for (ProgressButton PB : PBlist){
+                PB.setVisible(true);
+            }
+            Charlie.active();
+
             gameContext.onGameStarted();
         });
 
@@ -193,5 +235,9 @@ public class Charlie implements GameLifeCycle {
             PictureName[i][a] = PictureName[i][b];
             PictureName[i][b] = temp;
         }
+    }
+
+    private void win(){
+
     }
 }
