@@ -241,7 +241,7 @@ public class Target extends Portrait {
                     if (compare == -3 && length < 11800) length += 400;
                 }
             }
-            levelsReport.addRoundDuration(length);
+            levelsReport.addRoundLevel(length);
         }
 
         switch (gameVariant) {

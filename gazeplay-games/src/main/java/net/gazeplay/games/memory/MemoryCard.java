@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.stats.LevelsReport;
 import net.gazeplay.commons.utils.stats.Stats;
 
 @Slf4j
@@ -51,6 +52,8 @@ public class MemoryCard extends Parent {
 
     final boolean isOpen;
 
+    private LevelsReport levelsReport;
+
 
     public MemoryCard(final double positionX, final double positionY, final double width, final double height, final Image image, final int idc,
                       final IGameContext gameContext, final Stats stats, final Memory gameInstance, final int fixationlength, final boolean isOpen) {
@@ -81,6 +84,8 @@ public class MemoryCard extends Parent {
         this.fixationlength = fixationlength;
 
         this.gameInstance = gameInstance;
+
+        this.levelsReport = stats.getLevelsReport();
 
         this.getChildren().add(card);
 
@@ -144,6 +149,7 @@ public class MemoryCard extends Parent {
         /* No more cards to play : End of this game : Begin a new Game */
         if (gameInstance.getnbRemainingPeers() == 0) {
             if (gameInstance.getDifficulty().equals("Dynamic")) {
+                levelsReport.addRoundLevel(gameInstance.getLevel());
                 gameInstance.addRoundResult(gameInstance.totalNbOfTries());
                 int sizeOfList = gameInstance.getListOfResults().size();
                 int compare = 0;

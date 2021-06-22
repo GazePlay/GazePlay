@@ -963,4 +963,8 @@ public class Stats implements GazeMotionListener {
     public List<Long> getLevelsRounds() {
         return this.levelsReport.getOriginalLevelsPerRounds();
     }
+
+    public String getCurrentGameNameCode() {
+        return this.currentGameNameCode;
+    }
 }

@@ -33,6 +33,17 @@ import java.util.concurrent.TimeUnit;
 
 import static javafx.scene.chart.XYChart.Data;
 
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
+
 @Slf4j
 public class StatDisplayUtils {
 
@@ -177,49 +188,49 @@ public class StatDisplayUtils {
 
         // defining a series
         Series<String, Number> series = new Series<>();
-       /* Series<String, Number> average = new Series<>();
+        Series<String, Number> average = new Series<>();
         Series<String, Number> sdp = new Series<>();
-        Series<String, Number> sdm = new Series<>();*/
+        Series<String, Number> sdm = new Series<>();
         // populating the series with data
 
         final List<Long> shots = stats.getLevelsRounds();
 
-        double sd = stats.computeRoundsDurationStandardDeviation();
+        double sd = stats.getLevelsReport().computeSD();
 
         String xValue = "0";
 
-        /*average.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration()));
-        sdp.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() + sd));
-        sdm.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() - sd));*/
+        average.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel()));
+        sdp.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel() + sd));
+        sdm.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel() - sd));
 
         int i = 1;
 
         for (Long duration : shots) {
             xValue = Integer.toString(i);
             series.getData().add(new Data<>(xValue, duration));
-            /*average.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration()));
+            average.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel()));
 
-            sdp.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() + sd));
-            sdm.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() - sd));*/
+            sdp.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel() + sd));
+            sdm.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel() - sd));
             i++;
         }
 
         xValue = Integer.toString(i);
-        /*average.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration()));
-        sdp.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() + sd));
-        sdm.getData().add(new Data<>(xValue, stats.computeRoundsDurationAverageDuration() - sd));*/
+        average.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel()));
+        sdp.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel() + sd));
+        sdm.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel() - sd));
 
         levelChart.setCreateSymbols(false);
 
-        /*levelChart.getData().add(average);
+        levelChart.getData().add(average);
         levelChart.getData().add(sdp);
-        levelChart.getData().add(sdm);*/
+        levelChart.getData().add(sdm);
         levelChart.getData().add(series);
 
-        series.getNode().setStyle("-fx-stroke-width: 3; -fx-stroke: red; -fx-stroke-dash-offset:5;");
-        /*average.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: lightgreen;");
+        series.getNode().setStyle("-fx-stroke-width: 3; -fx-stroke: purple; -fx-stroke-dash-offset:5;");
+        average.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: lightgreen;");
         sdp.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey;");
-        sdm.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey;");*/
+        sdm.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey;");
 
         EventHandler<Event> openLineChartEvent = createZoomInLineChartEventHandler(levelChart, root);
 
@@ -233,6 +244,34 @@ public class StatDisplayUtils {
         levelChart.setMaxHeight(root.getHeight() * 0.4);
 
         return levelChart;
+    }
+
+    public static TableView buildTable(Stats stats, final Region root) {
+        TableView table = new TableView();
+        /*stage.setTitle("Table View Sample");
+        stage.setWidth(300);
+        stage.setHeight(500);*/
+
+        table.setEditable(false);
+
+        TableColumn indexCol = new TableColumn("Index");
+        TableColumn levelCol = new TableColumn("Level");
+        TableColumn decisionCol = new TableColumn("Decision with a given theoretical chi2 ");
+
+        TableColumn alpha50 = new TableColumn("50%");
+        TableColumn alpha25 = new TableColumn("25%%");
+        TableColumn alpha10 = new TableColumn("10%");
+        TableColumn alpha5 = new TableColumn("5%");
+        TableColumn alpha1 = new TableColumn("1%");
+        TableColumn alpha05 = new TableColumn("0.5%");
+
+        decisionCol.getColumns().addAll(alpha50, alpha25, alpha10, alpha5, alpha1, alpha05);
+
+        table.getColumns().addAll(indexCol, levelCol, decisionCol);
+
+        Scene scene = new Scene(root, 450, 300);
+
+        return table;
     }
 
     public static ImageView buildGazeMetrics(Stats stats, final Region root) {
