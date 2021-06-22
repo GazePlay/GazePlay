@@ -40,9 +40,6 @@ public class Charlie implements GameLifeCycle {
     private final int row = 9;
     private final int column = 16;
 
-    private int rowWin;
-    private int columnWin;
-
     private final List<ProgressButton> PBlist;
 
     private ProgressButton Charlie;
@@ -106,8 +103,8 @@ public class Charlie implements GameLifeCycle {
                 {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}
             };
 
-        rowWin = random.nextInt(gameVariant.getWidth());
-        columnWin = random.nextInt(gameVariant.getHeight());
+        int rowWin = random.nextInt(gameVariant.getWidth());
+        int columnWin = random.nextInt(gameVariant.getHeight());
 
         String path = "data/Charlie/";
 
