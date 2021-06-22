@@ -40,8 +40,10 @@ public class Charlie implements GameLifeCycle {
     private final int row = 9;
     private final int column = 16;
 
+    //List of the Picture Buttons
     private final List<ProgressButton> PBlist;
 
+    //The goal to reach
     private ProgressButton Charlie;
 
     Charlie(IGameContext gameContext, Stats stats, DimensionGameVariant gameVariant){
