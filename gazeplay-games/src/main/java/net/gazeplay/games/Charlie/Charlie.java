@@ -98,7 +98,7 @@ public class Charlie implements GameLifeCycle {
 
         String question = translator.translate("Where is") + " ";
 
-        for (int i=0; i<20; i++){
+        for (int i=0; i<50; i++){
             shuffleColumn(random.nextInt(column), random.nextInt(column));
             shuffleRow(random.nextInt(row), random.nextInt(row));
         }
