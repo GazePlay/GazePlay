@@ -34,7 +34,6 @@ public class Charlie implements GameLifeCycle {
 
     private final Dimension2D dimension2D;
 
-    private String[][] Picture;
     private String[][] PictureName;
 
     private final int row = 9;
@@ -79,22 +78,9 @@ public class Charlie implements GameLifeCycle {
 
     public void launch(){
 
-        Picture = new String[][]
-            {
-                {"BibouleBlue.png", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}
-            };
-
         PictureName = new String[][]
             {
-                {"BibouleBlue", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
+                {"BibouleBlue", "BibouleGreen", "BibouleOrange", "BibouleRed", "BibouleYellow", "bottle", "coeur", "whiterabbit", "brownrabbit", "blackrabbit", "cheese", "mouse", "musicnote", "robot", "carwhite", "caryellow"},
                 {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
                 {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
                 {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
@@ -125,7 +111,7 @@ public class Charlie implements GameLifeCycle {
                 PB = new ProgressButton();
                 PB.setLayoutX((i*(0.9 - (0.9 - 0.0625)/8)/(gameVariant.getWidth()-1) + 0.05)*dimension2D.getWidth());
                 PB.setLayoutY(((j+1)*0.75/(gameVariant.getHeight()+1) + 0.05)*dimension2D.getHeight());
-                Im = new ImageView(new Image(path+/*Picture[j][i]*/"BibouleBlue.png"));
+                Im = new ImageView(new Image(path+/*PictureName[j][i]+".png"*/"BibouleBlue.png"));
                 Im.setFitWidth((0.9 - 0.0625)/8*dimension2D.getWidth());
                 Im.setFitHeight((0.75 - 0.0625)/8*dimension2D.getHeight());
                 PB.setImage(Im);
@@ -214,10 +200,6 @@ public class Charlie implements GameLifeCycle {
     private void shuffleRow(int a, int b){
         String temp;
         for (int i=0; i<column; i++){
-            temp = Picture[a][i];
-            Picture[a][i] = Picture[b][i];
-            Picture[b][i] = temp;
-
             temp = PictureName[a][i];
             PictureName[a][i] = PictureName[b][i];
             PictureName[b][i] = temp;
@@ -227,10 +209,6 @@ public class Charlie implements GameLifeCycle {
     private void shuffleColumn(int a, int b){
         String temp;
         for (int i=0; i<row; i++){
-            temp = Picture[i][a];
-            Picture[i][a] = Picture[i][b];
-            Picture[i][b] = temp;
-
             temp = PictureName[i][a];
             PictureName[i][a] = PictureName[i][b];
             PictureName[i][b] = temp;
