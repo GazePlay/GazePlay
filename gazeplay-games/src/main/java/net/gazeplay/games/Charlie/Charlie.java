@@ -36,9 +36,6 @@ public class Charlie implements GameLifeCycle {
 
     private List<String> PictureName;
 
-    private final int row = 9;
-    private final int column = 16;
-
     //List of the Picture Buttons
     private final List<ProgressButton> PBlist;
 
@@ -94,11 +91,6 @@ public class Charlie implements GameLifeCycle {
 
         String CharlieName = PictureName.remove(random.nextInt(PictureName.size()));
 
-        /*for (int i=0; i<50; i++){
-            shuffleColumn(random.nextInt(column), random.nextInt(column));
-            shuffleRow(random.nextInt(row), random.nextInt(row));
-        }*/
-
         ProgressButton PB;
         ImageView Im;
 
@@ -136,6 +128,7 @@ public class Charlie implements GameLifeCycle {
 
     public void dispose(){
         PBlist.clear();
+        PictureName.clear();
         gameContext.getChildren().clear();
     }
 
@@ -194,24 +187,6 @@ public class Charlie implements GameLifeCycle {
         return fullAnimation;
 
     }
-
-    /*private void shuffleRow(int a, int b){
-        String temp;
-        for (int i=0; i<column; i++){
-            temp = PictureName[a][i];
-            PictureName[a][i] = PictureName[b][i];
-            PictureName[b][i] = temp;
-        }
-    }
-
-    private void shuffleColumn(int a, int b){
-        String temp;
-        for (int i=0; i<row; i++){
-            temp = PictureName[i][a];
-            PictureName[i][a] = PictureName[i][b];
-            PictureName[i][b] = temp;
-        }
-    }*/
 
     private void win(){
 
