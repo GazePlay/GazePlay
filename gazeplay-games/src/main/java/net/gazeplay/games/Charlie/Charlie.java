@@ -81,11 +81,11 @@ public class Charlie implements GameLifeCycle {
         PictureName.add("BibouleOrange");
         PictureName.add("BibouleRed");
         PictureName.add("BibouleYellow");
-        PictureName.add("blackrabbit");
+        /*PictureName.add("blackrabbit");
         PictureName.add("brownrabbit");
         PictureName.add("mouse");
         PictureName.add("robot");
-        PictureName.add("whiterabbit");
+        PictureName.add("whiterabbit");*/
 
         int rowWin = random.nextInt(gameVariant.getWidth());
         int columnWin = random.nextInt(gameVariant.getHeight());
@@ -110,8 +110,8 @@ public class Charlie implements GameLifeCycle {
                 } else {
                     Im = new ImageView(new Image(path +PictureName.get(random.nextInt(PictureName.size()))+".png"));
                 }
-                Im.setFitWidth((0.9 - 0.0625)/8*dimension2D.getWidth());
-                Im.setFitHeight((0.75 - 0.0625)/8*dimension2D.getHeight());
+                Im.setFitWidth((0.9 - 0.0625)/10*dimension2D.getWidth());
+                Im.setFitHeight((0.75 - 0.0625)/10*dimension2D.getHeight());
                 PB.setImage(Im);
                 PB.setVisible(false);
                 PBlist.add(PB);
