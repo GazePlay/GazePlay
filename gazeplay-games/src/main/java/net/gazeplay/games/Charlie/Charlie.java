@@ -34,7 +34,7 @@ public class Charlie implements GameLifeCycle {
 
     private final Dimension2D dimension2D;
 
-    private String[][] PictureName;
+    private List<String> PictureName;
 
     private final int row = 9;
     private final int column = 16;
@@ -78,18 +78,12 @@ public class Charlie implements GameLifeCycle {
 
     public void launch(){
 
-        PictureName = new String[][]
-            {
-                {"BibouleBlue", "BibouleGreen", "BibouleOrange", "BibouleRed", "BibouleYellow", "bottle", "coeur", "whiterabbit", "brownrabbit", "blackrabbit", "cheese", "mouse", "musicnote", "robot", "carwhite", "caryellow"},
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
-                {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""}
-            };
+        PictureName = new ArrayList<>();
+        PictureName.add("BibouleBlue");
+        PictureName.add("BibouleGreen");
+        PictureName.add("BibouleOrange");
+        PictureName.add("BibouleRed");
+        PictureName.add("BibouleYellow");
 
         int rowWin = random.nextInt(gameVariant.getWidth());
         int columnWin = random.nextInt(gameVariant.getHeight());
@@ -98,10 +92,12 @@ public class Charlie implements GameLifeCycle {
 
         String question = translator.translate("Where is") + " ";
 
-        for (int i=0; i<50; i++){
+        String CharlieName = PictureName.remove(random.nextInt(PictureName.size()));
+
+        /*for (int i=0; i<50; i++){
             shuffleColumn(random.nextInt(column), random.nextInt(column));
             shuffleRow(random.nextInt(row), random.nextInt(row));
-        }
+        }*/
 
         ProgressButton PB;
         ImageView Im;
@@ -111,13 +107,15 @@ public class Charlie implements GameLifeCycle {
                 PB = new ProgressButton();
                 PB.setLayoutX((i*(0.9 - (0.9 - 0.0625)/8)/(gameVariant.getWidth()-1) + 0.05)*dimension2D.getWidth());
                 PB.setLayoutY(((j+1)*0.75/(gameVariant.getHeight()+1) + 0.05)*dimension2D.getHeight());
-                Im = new ImageView(new Image(path+/*PictureName[j][i]+".png"*/"BibouleBlue.png"));
+                if (i==rowWin && j==columnWin){
+                    Charlie = PB;
+                    Im = new ImageView(new Image(path +CharlieName+".png"));
+                } else {
+                    Im = new ImageView(new Image(path +PictureName.get(random.nextInt(PictureName.size()))+".png"));
+                }
                 Im.setFitWidth((0.9 - 0.0625)/8*dimension2D.getWidth());
                 Im.setFitHeight((0.75 - 0.0625)/8*dimension2D.getHeight());
                 PB.setImage(Im);
-                if (i==rowWin && j==columnWin){
-                    Charlie = PB;
-                }
                 PB.setVisible(false);
                 PBlist.add(PB);
                 gameContext.getChildren().add(PB);
@@ -127,7 +125,7 @@ public class Charlie implements GameLifeCycle {
         Charlie.assignIndicatorUpdatable(e -> win(), gameContext);
         Charlie.disable();
 
-        question+=translator.translate(PictureName[columnWin][rowWin]);
+        question+=translator.translate(CharlieName);
 
         Transition TransitionQuestion = CreateQuestionTransition(question);
         TransitionQuestion.play();
@@ -197,7 +195,7 @@ public class Charlie implements GameLifeCycle {
 
     }
 
-    private void shuffleRow(int a, int b){
+    /*private void shuffleRow(int a, int b){
         String temp;
         for (int i=0; i<column; i++){
             temp = PictureName[a][i];
@@ -213,7 +211,7 @@ public class Charlie implements GameLifeCycle {
             PictureName[i][a] = PictureName[i][b];
             PictureName[i][b] = temp;
         }
-    }
+    }*/
 
     private void win(){
 
