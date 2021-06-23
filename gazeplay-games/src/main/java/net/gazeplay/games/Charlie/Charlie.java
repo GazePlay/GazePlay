@@ -81,6 +81,11 @@ public class Charlie implements GameLifeCycle {
         PictureName.add("BibouleOrange");
         PictureName.add("BibouleRed");
         PictureName.add("BibouleYellow");
+        PictureName.add("blackrabbit");
+        PictureName.add("brownrabbit");
+        PictureName.add("mouse");
+        PictureName.add("robot");
+        PictureName.add("whiterabbit");
 
         int rowWin = random.nextInt(gameVariant.getWidth());
         int columnWin = random.nextInt(gameVariant.getHeight());
