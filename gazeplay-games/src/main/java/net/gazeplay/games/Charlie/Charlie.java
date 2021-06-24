@@ -4,16 +4,15 @@ import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
@@ -26,6 +25,7 @@ import net.gazeplay.components.ProgressButton;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class Charlie implements GameLifeCycle {
 
     private final IGameContext gameContext;
@@ -96,6 +96,18 @@ public class Charlie implements GameLifeCycle {
         PictureName.add("BibouleRedM");
         PictureName.add("BibouleYellowM");
 
+        PictureName.add("BibouleBlueL");
+        PictureName.add("BibouleGreenL");
+        PictureName.add("BibouleOrangeL");
+        PictureName.add("BibouleRedL");
+        PictureName.add("BibouleYellowL");
+
+        PictureName.add("BibouleBlueML");
+        PictureName.add("BibouleGreenML");
+        PictureName.add("BibouleOrangeML");
+        PictureName.add("BibouleRedML");
+        PictureName.add("BibouleYellowML");
+
         int rowWin = random.nextInt(gameVariant.getWidth());
         int columnWin = random.nextInt(gameVariant.getHeight());
 
@@ -154,6 +166,7 @@ public class Charlie implements GameLifeCycle {
             question += translator.translate("BibouleYellow");
         }
         else {
+            log.error("Not a biboule+color picture" + " : " + CharlieName);
             question += translator.translate(CharlieName);
         }
         question += "\n";
