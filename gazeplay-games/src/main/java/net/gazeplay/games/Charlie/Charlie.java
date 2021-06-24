@@ -130,8 +130,8 @@ public class Charlie implements GameLifeCycle {
                 } else {
                     Im = new ImageView(new Image(path +PictureName.get(random.nextInt(PictureName.size()))+".png"));
                 }
-                Im.setFitWidth((0.9 - 0.0625)/10*dimension2D.getWidth());
-                Im.setFitHeight((0.75 - 0.0625)/10*dimension2D.getHeight());
+                Im.setFitWidth((0.9 - 0.0625)/8*dimension2D.getWidth());
+                Im.setFitHeight((0.75 - 0.0625)/8*dimension2D.getHeight());
                 PB.setImage(Im);
                 PB.setVisible(false);
                 Plist.add(PB);
@@ -142,8 +142,8 @@ public class Charlie implements GameLifeCycle {
         Charlie.setLayoutX((rowWin*(0.9 - (0.9 - 0.0625)/8)/(gameVariant.getWidth()-1) + 0.05)*dimension2D.getWidth());
         Charlie.setLayoutY(((columnWin+1)*0.75/(gameVariant.getHeight()+1))*dimension2D.getHeight());
         Im = new ImageView(new Image(path + "nothing.png"));
-        Im.setFitWidth((0.9 - 0.0625)/10*dimension2D.getWidth());
-        Im.setFitHeight((0.75 - 0.0625)/10*dimension2D.getHeight());
+        Im.setFitWidth((0.9 - 0.0625)/8*dimension2D.getWidth());
+        Im.setFitHeight((0.75 - 0.0625)/8*dimension2D.getHeight());
         Charlie.setImage(Im);
         gameContext.getChildren().add(Charlie);
 
