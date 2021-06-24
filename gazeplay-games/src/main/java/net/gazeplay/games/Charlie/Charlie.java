@@ -4,9 +4,13 @@ import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
@@ -76,7 +80,9 @@ public class Charlie implements GameLifeCycle {
 
     public void launch(){
 
-        //mu list of picture, maybe change the system ?
+        initBackground();
+
+        //my list of picture, maybe change the system ?
         PictureName = new ArrayList<>();
         PictureName.add("BibouleBlue");
         PictureName.add("BibouleGreen");
@@ -256,5 +262,14 @@ public class Charlie implements GameLifeCycle {
 
             gameContext.showRoundStats(stats, this);
         });
+    }
+
+    void initBackground() {
+        if (gameContext.getConfiguration().isBackgroundEnabled()) {
+            Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+            //Add a true background image
+            backgroundImage.setFill(new ImagePattern(new Image("data/Charlie/nothing.png")));
+            gameContext.getChildren().add(0, backgroundImage);
+        }
     }
 }
