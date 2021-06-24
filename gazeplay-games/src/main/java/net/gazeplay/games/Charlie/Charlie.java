@@ -282,7 +282,6 @@ public class Charlie implements GameLifeCycle {
             Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
             //Add a true background image
             //backgroundImage.setFill(new ImagePattern(new Image("data/Charlie/background.png")));
-            //backgroundImage.setFill(new ImagePattern(new Image("data/Charlie/nothing.png")));
             gameContext.getChildren().add(0, backgroundImage);
         }
     }
