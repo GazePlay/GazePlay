@@ -34,9 +34,10 @@ public class Charlie implements GameLifeCycle {
 
     private final Dimension2D dimension2D;
 
+    //List of the Picture who may by in the game
     private List<String> PictureName;
 
-    //List of the Picture Buttons
+    //List of the Picture Buttons in the game
     private final List<ProgressButton> PBlist;
 
     //The goal to reach
@@ -75,6 +76,7 @@ public class Charlie implements GameLifeCycle {
 
     public void launch(){
 
+        //mu list of picture, maybe change the system ?
         PictureName = new ArrayList<>();
         PictureName.add("BibouleBlue");
         PictureName.add("BibouleGreen");
@@ -126,17 +128,20 @@ public class Charlie implements GameLifeCycle {
         if (CharlieName.contains("BibouleBlue")) {
             question += translator.translate("BibouleBlue");
         }
-        if (CharlieName.contains("BibouleRed")) {
+        else if (CharlieName.contains("BibouleRed")) {
             question += translator.translate("BibouleRed");
         }
-        if (CharlieName.contains("BibouleGreen")) {
+        else if (CharlieName.contains("BibouleGreen")) {
             question += translator.translate("BibouleGreen");
         }
-        if (CharlieName.contains("BibouleOrange")) {
+        else if (CharlieName.contains("BibouleOrange")) {
             question += translator.translate("BibouleOrange");
         }
-        if (CharlieName.contains("BibouleYellow")) {
+        else if (CharlieName.contains("BibouleYellow")) {
             question += translator.translate("BibouleYellow");
+        }
+        else {
+            question += translator.translate(CharlieName);
         }
         question += "\n";
 
@@ -147,7 +152,10 @@ public class Charlie implements GameLifeCycle {
         }
         question += " ";
 
-        if (CharlieName.contains("L")) {
+        question += translator.translate("and");
+        question += " ";
+
+        if (CharlieName.contains("G")) {
             question += translator.translate("YGlass");
         } else {
             question += translator.translate("NGlass");

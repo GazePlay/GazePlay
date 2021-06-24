@@ -288,5 +288,7 @@ BibouleYellow,,,,,,the yellow biboule,,le biboule jaune,,,,,,,,,,,
 YMustache,,,,,,with a mustache,,avec une moustache,,,,,,,,,,,
 NMustache,,,,,,without mustache,,sans moustache,,,,,,,,,,,
 
-YGlass,,,,,,and with glass,,et avec une paire de lunettes,,,,,,,,,,,
-NGlass,,,,,,and without glass,,et sans lunette,,,,,,,,,,,
+YGlass,,,,,,with glass,,avec une paire de lunettes,,,,,,,,,,,
+NGlass,,,,,,without glass,,sans lunette,,,,,,,,,,,
+
+and,,,,,,and,,et,,,,,,,,,,,
