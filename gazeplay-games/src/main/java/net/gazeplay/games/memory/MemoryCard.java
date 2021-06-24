@@ -174,6 +174,7 @@ public class MemoryCard extends Parent {
                         else
                             gameInstance.setLevel(gameInstance.getLevel() - 1);
                     }
+                    levelsReport.addRoundLevel(gameInstance.getLevel());
                 }
 
                 gameInstance.adaptLevel();

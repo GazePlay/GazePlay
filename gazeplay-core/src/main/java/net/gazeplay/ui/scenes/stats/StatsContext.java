@@ -146,10 +146,12 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             });
         }
         HBox controlButtonPane;
-        log.info("NameCode = {}", stats.getCurrentGameNameCode());
-        if ((stats.getCurrentGameVariant().contains("Dynamic") || stats.getCurrentGameVariant().contains("DYNAMIC")) && !stats.getCurrentGameNameCode().equals("WhereIsTheAnimal"))
+
+        if (stats.getCurrentGameNameCode().equals("Ninja") && stats.getCurrentGameVariant().contains("DYNAMIC"))
             controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, continueButton);
-        else if (stats.getCurrentGameNameCode().equals("WhereIsTheAnimal"))
+        else if (stats.getCurrentGameVariant().contains("Dynamic") && stats.getCurrentGameNameCode().contains("Memory"))
+            controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, continueButton);
+        else if (stats.getCurrentGameNameCode().equals("WhereIsTheAnimal") && stats.getCurrentGameVariant().contains("Dynamic"))
             controlButtonPane = createControlButtonPane(gazePlay, stats, config, chi2Info, continueButton);
         else
             controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, continueButton);

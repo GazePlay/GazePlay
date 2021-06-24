@@ -269,7 +269,7 @@ public class StatDisplayUtils {
 
         table.getColumns().addAll(indexCol, levelCol, decisionCol);
 
-        Scene scene = new Scene(root, 450, 300);
+        //Scene scene = new Scene(root, 450, 300);
 
         return table;
     }
