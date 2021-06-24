@@ -248,28 +248,43 @@ public class StatDisplayUtils {
 
     public static TableView buildTable(Stats stats, final Region root) {
         TableView table = new TableView();
-        /*stage.setTitle("Table View Sample");
-        stage.setWidth(300);
-        stage.setHeight(500);*/
+        table.setMaxWidth(1200);
 
         table.setEditable(false);
 
         TableColumn indexCol = new TableColumn("Index");
+        indexCol.setMaxWidth(150);
+        indexCol.setMinWidth(150);
+
         TableColumn levelCol = new TableColumn("Level");
+        levelCol.setMaxWidth(150);
+        levelCol.setMinWidth(150);
         TableColumn decisionCol = new TableColumn("Decision with a given theoretical chi2 ");
+        decisionCol.setMaxWidth(900);
+        decisionCol.setMinWidth(900);
 
         TableColumn alpha50 = new TableColumn("50%");
-        TableColumn alpha25 = new TableColumn("25%%");
+        alpha50.setMaxWidth(150);
+        alpha50.setMinWidth(150);
+        TableColumn alpha25 = new TableColumn("25%");
+        alpha25.setMaxWidth(150);
+        alpha25.setMinWidth(150);
         TableColumn alpha10 = new TableColumn("10%");
+        alpha10.setMaxWidth(150);
+        alpha10.setMinWidth(150);
         TableColumn alpha5 = new TableColumn("5%");
+        alpha5.setMaxWidth(150);
+        alpha5.setMinWidth(150);
         TableColumn alpha1 = new TableColumn("1%");
+        alpha1.setMaxWidth(150);
+        alpha1.setMinWidth(150);
         TableColumn alpha05 = new TableColumn("0.5%");
+        alpha05.setMaxWidth(150);
+        alpha05.setMinWidth(150);
 
         decisionCol.getColumns().addAll(alpha50, alpha25, alpha10, alpha5, alpha1, alpha05);
 
         table.getColumns().addAll(indexCol, levelCol, decisionCol);
-
-        //Scene scene = new Scene(root, 450, 300);
 
         return table;
     }

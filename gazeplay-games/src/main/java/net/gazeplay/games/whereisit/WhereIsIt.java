@@ -26,6 +26,7 @@ import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.games.WhereIsItVaildator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
+import net.gazeplay.commons.utils.stats.ChiReport;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 
@@ -107,7 +108,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         final int winnerImageIndexAmongDisplayedImages = randomGenerator.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
-
+        stats.getChiReport().addChiObs(chi2Obs(rightDecision, wrongDecision));
         if (stats.nbGoalsReached > 0 && stats.nbGoalsReached % 8 == 0) {
             boolean randomness = chi2decision(rightDecision, wrongDecision);
             lvlReplays ++;
@@ -126,6 +127,7 @@ public class WhereIsIt implements GameLifeCycle {
                 lvlReplays = 0;
             }
         }
+
         currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, randomGenerator,
             winnerImageIndexAmongDisplayedImages);
 
@@ -757,9 +759,14 @@ public class WhereIsIt implements GameLifeCycle {
         return compute(n, k) * Math.pow(p, k)*Math.pow(1-p, n-k);
     }
 
+    public double chi2Obs(int tp, int fp) {
+        double[] probas = {8 * lvlReplays * binomProba(1, 1,0.5), 8 * lvlReplays * binomProba(1, 0,0.5)};
+
+        return Math.pow(tp - probas[0], 2) / probas[0] + Math.pow(fp - probas[1], 2) / probas[1];
+    }
+
     public boolean chi2decision(int tp, int fp) {
         boolean decision = false;
-        int[] observed = {tp, fp};
 
         final ArrayList<Double> chi2_theoretic = new ArrayList<Double>();
         chi2_theoretic.add(3.84);
@@ -767,10 +774,7 @@ public class WhereIsIt implements GameLifeCycle {
         chi2_theoretic.add(1.32);
         chi2_theoretic.add(0.45);
 
-        double[] probas = {8 * lvlReplays * binomProba(1, 1,0.5), 8 * lvlReplays * binomProba(1, 0,0.5)};
-
-        double chi2_obs =  Math.pow(observed[0] - probas[0], 2) / probas[0] + Math.pow(observed[1] - probas[1], 2) / probas[1];
-
+        double chi2_obs = chi2Obs(tp, fp);
 
         log.info("tp = {}, fp = {}", tp, fp);
         log.info("chi2_obs = {}", chi2_obs);

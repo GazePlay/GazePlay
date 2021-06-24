@@ -71,6 +71,7 @@ public class Stats implements GazeMotionListener {
     private LifeCycle lifeCycle = new LifeCycle();
     private RoundsDurationReport roundsDurationReport = new RoundsDurationReport();
     private LevelsReport levelsReport = new LevelsReport();
+    private ChiReport chiReport = new ChiReport();
     private int counter = 0;
     private final List<CoordinatesTracker> movementHistory = new ArrayList<>();
 
@@ -966,5 +967,9 @@ public class Stats implements GazeMotionListener {
 
     public String getCurrentGameNameCode() {
         return this.currentGameNameCode;
+    }
+
+    public ChiReport getChiReport() {
+        return this.chiReport;
     }
 }
