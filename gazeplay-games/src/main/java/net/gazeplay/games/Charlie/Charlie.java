@@ -81,11 +81,12 @@ public class Charlie implements GameLifeCycle {
         PictureName.add("BibouleOrange");
         PictureName.add("BibouleRed");
         PictureName.add("BibouleYellow");
-        /*PictureName.add("blackrabbit");
-        PictureName.add("brownrabbit");
-        PictureName.add("mouse");
-        PictureName.add("robot");
-        PictureName.add("whiterabbit");*/
+
+        PictureName.add("BibouleBlueM");
+        PictureName.add("BibouleGreenM");
+        PictureName.add("BibouleOrangeM");
+        PictureName.add("BibouleRedM");
+        PictureName.add("BibouleYellowM");
 
         int rowWin = random.nextInt(gameVariant.getWidth());
         int columnWin = random.nextInt(gameVariant.getHeight());
@@ -103,7 +104,7 @@ public class Charlie implements GameLifeCycle {
             for (int j=0; j<gameVariant.getHeight(); j++){
                 PB = new ProgressButton();
                 PB.setLayoutX((i*(0.9 - (0.9 - 0.0625)/8)/(gameVariant.getWidth()-1) + 0.05)*dimension2D.getWidth());
-                PB.setLayoutY(((j+1)*0.75/(gameVariant.getHeight()+1) + 0.05)*dimension2D.getHeight());
+                PB.setLayoutY(((j+1)*0.75/(gameVariant.getHeight()+1))*dimension2D.getHeight());
                 if (i==rowWin && j==columnWin){
                     Charlie = PB;
                     Im = new ImageView(new Image(path +CharlieName+".png"));
@@ -122,7 +123,35 @@ public class Charlie implements GameLifeCycle {
         Charlie.assignIndicatorUpdatable(e -> win(), gameContext);
         Charlie.disable();
 
-        question+=translator.translate(CharlieName);
+        if (CharlieName.contains("BibouleBlue")) {
+            question += translator.translate("BibouleBlue");
+        }
+        if (CharlieName.contains("BibouleRed")) {
+            question += translator.translate("BibouleRed");
+        }
+        if (CharlieName.contains("BibouleGreen")) {
+            question += translator.translate("BibouleGreen");
+        }
+        if (CharlieName.contains("BibouleOrange")) {
+            question += translator.translate("BibouleOrange");
+        }
+        if (CharlieName.contains("BibouleYellow")) {
+            question += translator.translate("BibouleYellow");
+        }
+        question += "\n";
+
+        if (CharlieName.contains("M")) {
+            question += translator.translate("YMustache");
+        } else {
+            question += translator.translate("NMustache");
+        }
+        question += " ";
+
+        if (CharlieName.contains("L")) {
+            question += translator.translate("YGlass");
+        } else {
+            question += translator.translate("NGlass");
+        }
 
         Transition TransitionQuestion = CreateQuestionTransition(question);
         TransitionQuestion.play();
@@ -172,8 +201,7 @@ public class Charlie implements GameLifeCycle {
 
         fullAnimation.setDelay(Duration.millis(gameContext.getConfiguration().getQuestionLength()));
 
-        final double bottomCenter = (0.9 * dimension2D.getHeight()) - questionText.getY()
-            + questionText.getBoundsInParent().getHeight() * 3;
+        final double bottomCenter = (0.9 * dimension2D.getHeight()) - questionText.getY();
         fullAnimation.setToY(bottomCenter);
 
         fullAnimation.setOnFinished(actionEvent -> {
