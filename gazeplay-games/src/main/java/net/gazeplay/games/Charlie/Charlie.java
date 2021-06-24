@@ -37,8 +37,8 @@ public class Charlie implements GameLifeCycle {
     //List of the Picture who may by in the game
     private List<String> PictureName;
 
-    //List of the Picture Buttons in the game
-    private final List<ProgressButton> PBlist;
+    //List of the Picture in the game
+    private final List<ProgressButton> Plist;
 
     //The goal to reach
     private ProgressButton Charlie;
@@ -56,7 +56,7 @@ public class Charlie implements GameLifeCycle {
 
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        PBlist = new ArrayList<>();
+        Plist = new ArrayList<>();
     }
 
     Charlie(IGameContext gameContext, Stats stats, DimensionGameVariant gameVariant, double gameSeed){
@@ -71,7 +71,7 @@ public class Charlie implements GameLifeCycle {
 
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        PBlist = new ArrayList<>();
+        Plist = new ArrayList<>();
     }
 
     public void launch(){
@@ -108,7 +108,6 @@ public class Charlie implements GameLifeCycle {
                 PB.setLayoutX((i*(0.9 - (0.9 - 0.0625)/8)/(gameVariant.getWidth()-1) + 0.05)*dimension2D.getWidth());
                 PB.setLayoutY(((j+1)*0.75/(gameVariant.getHeight()+1))*dimension2D.getHeight());
                 if (i==rowWin && j==columnWin){
-                    Charlie = PB;
                     Im = new ImageView(new Image(path +CharlieName+".png"));
                 } else {
                     Im = new ImageView(new Image(path +PictureName.get(random.nextInt(PictureName.size()))+".png"));
@@ -117,10 +116,18 @@ public class Charlie implements GameLifeCycle {
                 Im.setFitHeight((0.75 - 0.0625)/10*dimension2D.getHeight());
                 PB.setImage(Im);
                 PB.setVisible(false);
-                PBlist.add(PB);
+                Plist.add(PB);
                 gameContext.getChildren().add(PB);
             }
         }
+        Charlie = new ProgressButton();
+        Charlie.setLayoutX((rowWin*(0.9 - (0.9 - 0.0625)/8)/(gameVariant.getWidth()-1) + 0.05)*dimension2D.getWidth());
+        Charlie.setLayoutY(((columnWin+1)*0.75/(gameVariant.getHeight()+1))*dimension2D.getHeight());
+        Im = new ImageView(new Image(path + "nothing.png"));
+        Im.setFitWidth((0.9 - 0.0625)/10*dimension2D.getWidth());
+        Im.setFitHeight((0.75 - 0.0625)/10*dimension2D.getHeight());
+        Charlie.setImage(Im);
+        gameContext.getChildren().add(Charlie);
 
         Charlie.assignIndicatorUpdatable(e -> win(), gameContext);
         Charlie.disable();
@@ -155,7 +162,7 @@ public class Charlie implements GameLifeCycle {
         question += translator.translate("and");
         question += " ";
 
-        if (CharlieName.contains("G")) {
+        if (CharlieName.contains("L")) {
             question += translator.translate("YGlass");
         } else {
             question += translator.translate("NGlass");
@@ -169,7 +176,7 @@ public class Charlie implements GameLifeCycle {
     }
 
     public void dispose(){
-        PBlist.clear();
+        Plist.clear();
         PictureName.clear();
         gameContext.getChildren().clear();
     }
@@ -217,7 +224,7 @@ public class Charlie implements GameLifeCycle {
 
             stats.notifyNewRoundReady();
 
-            for (ProgressButton PB : PBlist){
+            for (ProgressButton PB : Plist){
                 PB.setVisible(true);
             }
             Charlie.active();
