@@ -108,8 +108,10 @@ public class WhereIsIt implements GameLifeCycle {
 
         final int winnerImageIndexAmongDisplayedImages = randomGenerator.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
-        stats.getChiReport().addChiObs(chi2Obs(rightDecision, wrongDecision));
+
         if (stats.nbGoalsReached > 0 && stats.nbGoalsReached % 8 == 0) {
+            stats.getChiReport().addChiObs(chi2Obs(rightDecision, wrongDecision));
+            stats.getChiReport().addChiLevel(level);
             boolean randomness = chi2decision(rightDecision, wrongDecision);
             lvlReplays ++;
 
@@ -118,13 +120,13 @@ public class WhereIsIt implements GameLifeCycle {
                     level++;
                 rightDecision = 0;
                 wrongDecision = 0;
-                lvlReplays = 0;
+                lvlReplays = 1;
             }
             if (!randomness && level > 1) {
                 level--;
                 rightDecision = 0;
                 wrongDecision = 0;
-                lvlReplays = 0;
+                lvlReplays = 1;
             }
         }
 

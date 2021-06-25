@@ -1,6 +1,7 @@
 package net.gazeplay.commons.utils.stats;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
@@ -10,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.chart.*;
 import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -252,13 +254,18 @@ public class StatDisplayUtils {
 
         table.setEditable(false);
 
+        ObservableList<ChiData> data = stats.getChiReport().createData();
+
         TableColumn indexCol = new TableColumn("Index");
         indexCol.setMaxWidth(150);
         indexCol.setMinWidth(150);
+        indexCol.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         TableColumn levelCol = new TableColumn("Level");
         levelCol.setMaxWidth(150);
         levelCol.setMinWidth(150);
+        levelCol.setCellValueFactory(new PropertyValueFactory<ChiData, Integer>("level"));
+
         TableColumn decisionCol = new TableColumn("Decision with a given theoretical chi2 ");
         decisionCol.setMaxWidth(900);
         decisionCol.setMinWidth(900);
@@ -266,24 +273,36 @@ public class StatDisplayUtils {
         TableColumn alpha50 = new TableColumn("50%");
         alpha50.setMaxWidth(150);
         alpha50.setMinWidth(150);
+        alpha50.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha50"));
+
         TableColumn alpha25 = new TableColumn("25%");
         alpha25.setMaxWidth(150);
         alpha25.setMinWidth(150);
+        alpha25.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha25"));
+
         TableColumn alpha10 = new TableColumn("10%");
         alpha10.setMaxWidth(150);
         alpha10.setMinWidth(150);
+        alpha10.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha10"));
+
         TableColumn alpha5 = new TableColumn("5%");
         alpha5.setMaxWidth(150);
         alpha5.setMinWidth(150);
+        alpha5.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha5"));
+
         TableColumn alpha1 = new TableColumn("1%");
         alpha1.setMaxWidth(150);
         alpha1.setMinWidth(150);
+        alpha1.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha1"));
+
         TableColumn alpha05 = new TableColumn("0.5%");
         alpha05.setMaxWidth(150);
         alpha05.setMinWidth(150);
+        alpha05.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha05"));
 
         decisionCol.getColumns().addAll(alpha50, alpha25, alpha10, alpha5, alpha1, alpha05);
 
+        table.setItems(data);
         table.getColumns().addAll(indexCol, levelCol, decisionCol);
 
         return table;
