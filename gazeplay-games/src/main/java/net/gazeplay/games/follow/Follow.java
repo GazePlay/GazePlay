@@ -87,8 +87,6 @@ public class Follow implements GameLifeCycle {
         ListWall = new ArrayList<>();
 
         ListEI = new ArrayList<>();
-
-        //launch();
     }
 
     @Override
