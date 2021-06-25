@@ -126,12 +126,12 @@ public class Charlie implements GameLifeCycle {
                 PB.setLayoutX((i*(0.9 - (0.9 - 0.0625)/8)/(gameVariant.getWidth()-1) + 0.05)*dimension2D.getWidth());
                 PB.setLayoutY(((j+1)*0.75/(gameVariant.getHeight()+1))*dimension2D.getHeight());
                 if (i==rowWin && j==columnWin){
-                    Im = new ImageView(new Image(path +CharlieName+".png"));
+                    Im = new ImageView(new Image(path + CharlieName + ".png"));
                 } else {
-                    Im = new ImageView(new Image(path +PictureName.get(random.nextInt(PictureName.size()))+".png"));
+                    Im = new ImageView(new Image(path + PictureName.get(random.nextInt(PictureName.size())) + ".png"));
                 }
-                Im.setFitWidth((0.9 - 0.0625)/8*dimension2D.getWidth());
-                Im.setFitHeight((0.75 - 0.0625)/8*dimension2D.getHeight());
+                Im.setFitWidth((0.9 - 0.0625)/8 * dimension2D.getWidth());
+                Im.setFitHeight((0.75 - 0.0625)/8 * dimension2D.getHeight());
                 PB.setImage(Im);
                 PB.setVisible(false);
                 Plist.add(PB);
@@ -166,7 +166,7 @@ public class Charlie implements GameLifeCycle {
             question += translator.translate("BibouleYellow");
         }
         else {
-            log.error("Not a biboule+color picture" + " : " + CharlieName);
+            log.error("Not a biboule+color picture or unknown color" + " : " + CharlieName);
             question += translator.translate(CharlieName);
         }
         question += "\n";
