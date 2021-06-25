@@ -9,7 +9,7 @@ public class CharlieGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Charlie").gameThumbnail("data/Thumbnails/cakes.png")
+            GameSummary.builder().nameCode("Charlie").gameThumbnail("data/Thumbnails/Charlie.png")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION)
                 .build(),
