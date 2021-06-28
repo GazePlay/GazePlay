@@ -38,8 +38,9 @@ public class Memory implements GameLifeCycle {
 
     private final IGameContext gameContext;
 
-    private final int nbLines;
-    private final int nbColumns;
+    private int nbLines;
+    private int nbColumns;
+    private String difficulty;
 
     private final Stats stats;
 
@@ -58,7 +59,17 @@ public class Memory implements GameLifeCycle {
 
     private final ReplayablePseudoRandom randomGenerator;
 
-    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
+    private int nbWrongCards;
+
+    private int nbCorrectCards;
+
+    private List<Integer> listOfResults = new ArrayList<>();
+
+    private int level = 2;
+
+
+
+    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final String difficulty, final Stats stats,
                   final boolean isOpen) {
         super();
         this.isOpen = isOpen;
@@ -71,7 +82,10 @@ public class Memory implements GameLifeCycle {
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
+        this.difficulty = difficulty;
         this.stats = stats;
+        this.nbCorrectCards = 0;
+        this.nbWrongCards = 0;
         this.gameContext.startTimeLimiter();
 
         this.randomGenerator = new ReplayablePseudoRandom();
@@ -92,7 +106,7 @@ public class Memory implements GameLifeCycle {
 
     }
 
-    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
+    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final String difficulty, final Stats stats,
                   final boolean isOpen, double gameSeed) {
         super();
         this.isOpen = isOpen;
@@ -105,7 +119,10 @@ public class Memory implements GameLifeCycle {
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
+        this.difficulty = difficulty;
         this.stats = stats;
+        this.nbCorrectCards = 0;
+        this.nbWrongCards = 0;
         this.gameContext.startTimeLimiter();
 
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
@@ -257,4 +274,76 @@ public class Memory implements GameLifeCycle {
         return nbRemainingPeers;
     }
 
+    //public int getNbLines() { return nbLines; }
+
+    public int getNbColumns() { return nbColumns; }
+
+    public void setNbColumns(int nbColumns) { this.nbColumns = nbColumns; }
+
+    public int getNbLines() { return nbLines; }
+
+    public void setNbLines(int nbLines) { this.nbLines = nbLines; }
+
+    public int getNbWrongCards() { return  nbWrongCards; }
+
+    public void incNbWrongCards() {nbWrongCards++; }
+
+    public void resetNbWrongCards() { nbWrongCards = 0; }
+
+    public int getNbCorrectCards() { return  nbCorrectCards; }
+
+    public void incNbCorrectCards() {nbCorrectCards++; }
+
+    public void resetNbCorrectCards() { nbCorrectCards = 0; }
+
+    public int totalNbOfTries() { return getNbCorrectCards() + getNbWrongCards(); }
+
+    public List<Integer> getListOfResults() {
+        return listOfResults;
+    }
+
+    public void addRoundResult(int lastRoundResult) {
+        listOfResults.add(lastRoundResult);
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void adaptLevel() {
+
+        if (level == 6) {
+            setNbColumns(4);
+            setNbLines(3);
+        }
+
+        else if (level == 8) {
+            setNbColumns(4);
+            setNbLines(4);
+        }
+
+        else if (level == 9) {
+            setNbColumns(6);
+            setNbLines(3);
+        }
+
+        else if (level == 10) {
+            setNbColumns(5);
+            setNbLines(4);
+        }
+
+        else {
+            setNbColumns(level);
+            setNbLines(2);
+        }
+
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
 }

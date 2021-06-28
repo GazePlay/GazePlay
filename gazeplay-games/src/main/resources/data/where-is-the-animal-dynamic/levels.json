@@ -1,0 +1,27 @@
+{
+  "lvl1": [
+    "crocodiles",
+    "turtules",
+    "bees"
+  ],
+  "lvl2": [
+    "owls",
+    "eagles",
+    "parrots",
+    "pigeaons"
+  ],
+  "lvl3": [
+    "horses",
+    "bears",
+    "elephants"
+  ],
+  "lvl4": [
+    "dogs",
+    "squirrels",
+    "rabbits"
+  ],
+  "lvl5": [
+    "lions",
+    "tires"
+  ]
+}

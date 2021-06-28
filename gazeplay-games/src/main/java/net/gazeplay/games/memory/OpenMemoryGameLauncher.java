@@ -4,7 +4,7 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
-import net.gazeplay.commons.gamevariants.DimensionGameVariant;
+import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.commons.utils.FixationPoint;
@@ -15,7 +15,7 @@ import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class OpenMemoryGameLauncher implements IGameLauncher<Stats, DimensionGameVariant> {
+public class OpenMemoryGameLauncher implements IGameLauncher<Stats, DimensionDifficultyGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new MagicCardsGamesStats(scene);
@@ -28,15 +28,15 @@ public class OpenMemoryGameLauncher implements IGameLauncher<Stats, DimensionGam
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
-                                       DimensionGameVariant gameVariant, Stats stats) {
+                                       DimensionDifficultyGameVariant gameVariant, Stats stats) {
         return new Memory(Memory.MemoryGameType.DEFAULT, gameContext, gameVariant.getWidth(),
-            gameVariant.getHeight(), stats, true);
+            gameVariant.getHeight(), gameVariant.getDifficulty(), stats, true);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
-                                       DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+                                       DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
         return new Memory(Memory.MemoryGameType.DEFAULT, gameContext, gameVariant.getWidth(),
-            gameVariant.getHeight(), stats, true, gameSeed);
+            gameVariant.getHeight(), gameVariant.getDifficulty(), stats, true, gameSeed);
     }
 }

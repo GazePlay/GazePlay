@@ -1,6 +1,7 @@
 package net.gazeplay.commons.utils.stats;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
@@ -10,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.chart.*;
 import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -32,6 +34,17 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static javafx.scene.chart.XYChart.Data;
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 @Slf4j
 public class StatDisplayUtils {
@@ -167,6 +180,132 @@ public class StatDisplayUtils {
             return colorBands;
         } else
             return null;
+    }
+
+    public static LineChart<String, Number> buildLevelChart(Stats stats, final Region root) {
+        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis yAxis = new NumberAxis();
+
+        LineChart<String, Number> levelChart = new LineChart<>(xAxis, yAxis);
+
+        // defining a series
+        Series<String, Number> series = new Series<>();
+        Series<String, Number> average = new Series<>();
+        Series<String, Number> sdp = new Series<>();
+        Series<String, Number> sdm = new Series<>();
+        // populating the series with data
+
+        final List<Long> shots = stats.getLevelsRounds();
+
+        double sd = stats.getLevelsReport().computeSD();
+
+        String xValue = "0";
+
+        average.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel()));
+        sdp.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel() + sd));
+        sdm.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel() - sd));
+
+        int i = 1;
+
+        for (Long duration : shots) {
+            xValue = Integer.toString(i);
+            series.getData().add(new Data<>(xValue, duration));
+            average.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel()));
+
+            sdp.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel() + sd));
+            sdm.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel() - sd));
+            i++;
+        }
+
+        xValue = Integer.toString(i);
+        average.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel()));
+        sdp.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel() + sd));
+        sdm.getData().add(new Data<>(xValue, stats.getLevelsReport().computeAverageLevel() - sd));
+
+        levelChart.setCreateSymbols(false);
+
+        levelChart.getData().add(average);
+        levelChart.getData().add(sdp);
+        levelChart.getData().add(sdm);
+        levelChart.getData().add(series);
+
+        series.getNode().setStyle("-fx-stroke-width: 3; -fx-stroke: purple; -fx-stroke-dash-offset:5;");
+        average.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: lightgreen;");
+        sdp.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey;");
+        sdm.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey;");
+
+        EventHandler<Event> openLineChartEvent = createZoomInLineChartEventHandler(levelChart, root);
+
+        levelChart.addEventHandler(MouseEvent.MOUSE_CLICKED, openLineChartEvent);
+
+        levelChart.setLegendVisible(false);
+
+        root.widthProperty().addListener((observable, oldValue, newValue) -> levelChart.setMaxWidth(newValue.doubleValue() * 0.4));
+        root.heightProperty().addListener((observable, oldValue, newValue) -> levelChart.setMaxHeight(newValue.doubleValue() * 0.4));
+        levelChart.setMaxWidth(root.getWidth() * 0.4);
+        levelChart.setMaxHeight(root.getHeight() * 0.4);
+
+        return levelChart;
+    }
+
+    public static TableView<ChiData> buildTable(Stats stats, final Region root) {
+        TableView<ChiData> table = new TableView<ChiData>();
+        table.setMaxWidth(1200);
+
+        table.setEditable(false);
+
+        ObservableList<ChiData> data = stats.getChiReport().createData();
+
+        TableColumn<ChiData, Integer> indexCol = new TableColumn<ChiData, Integer>("Index");
+        indexCol.setMaxWidth(150);
+        indexCol.setMinWidth(150);
+        indexCol.setCellValueFactory(new PropertyValueFactory<ChiData, Integer>("id"));
+
+        TableColumn<ChiData, Integer> levelCol = new TableColumn<ChiData, Integer>("Level");
+        levelCol.setMaxWidth(150);
+        levelCol.setMinWidth(150);
+        levelCol.setCellValueFactory(new PropertyValueFactory<ChiData, Integer>("level"));
+
+        TableColumn<ChiData, Integer> decisionCol = new TableColumn<ChiData, Integer>("Decision with a given theoretical chi2 ");
+        decisionCol.setMaxWidth(900);
+        decisionCol.setMinWidth(900);
+
+        TableColumn<ChiData, String> alpha50 = new TableColumn<ChiData, String>("50%");
+        alpha50.setMaxWidth(150);
+        alpha50.setMinWidth(150);
+        alpha50.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha50"));
+
+        TableColumn<ChiData, String> alpha25 = new TableColumn<ChiData, String>("25%");
+        alpha25.setMaxWidth(150);
+        alpha25.setMinWidth(150);
+        alpha25.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha25"));
+
+        TableColumn<ChiData, String> alpha10 = new TableColumn<ChiData, String>("10%");
+        alpha10.setMaxWidth(150);
+        alpha10.setMinWidth(150);
+        alpha10.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha10"));
+
+        TableColumn<ChiData, String> alpha5 = new TableColumn<ChiData, String>("5%");
+        alpha5.setMaxWidth(150);
+        alpha5.setMinWidth(150);
+        alpha5.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha5"));
+
+        TableColumn<ChiData, String> alpha1 = new TableColumn<ChiData, String>("1%");
+        alpha1.setMaxWidth(150);
+        alpha1.setMinWidth(150);
+        alpha1.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha1"));
+
+        TableColumn<ChiData, String> alpha05 = new TableColumn<ChiData, String>("0.5%");
+        alpha05.setMaxWidth(150);
+        alpha05.setMinWidth(150);
+        alpha05.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha05"));
+
+        decisionCol.getColumns().addAll(alpha50, alpha25, alpha10, alpha5, alpha1, alpha05);
+
+        table.setItems(data);
+        table.getColumns().addAll(indexCol, levelCol, decisionCol);
+
+        return table;
     }
 
     public static ImageView buildGazeMetrics(Stats stats, final Region root) {

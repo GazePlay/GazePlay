@@ -25,6 +25,8 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
 import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.generators.EnumGameVariantGenerator;
+import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
@@ -63,6 +65,11 @@ public class GameVariantDialog extends Stage {
         choicePaneEasy.setAlignment(Pos.CENTER);
         choicePaneEasy.setHgap(10);
         choicePaneEasy.setVgap(10);
+
+        FlowPane choicePaneDynamic = new FlowPane();
+        choicePaneDynamic.setAlignment(Pos.CENTER);
+        choicePaneDynamic.setHgap(10);
+        choicePaneDynamic.setVgap(10);
 
         ScrollPane choicePanelScroller = new ScrollPane();
         choicePanelScroller.setContent(choicePane);
@@ -103,10 +110,40 @@ public class GameVariantDialog extends Stage {
             button.setMaxWidth(primaryStage.getWidth() / 8);
             button.setMaxHeight(primaryStage.getHeight() / 8);
 
-            if (variant instanceof DimensionDifficultyGameVariant) {
+            if ((variant instanceof DimensionDifficultyGameVariant) && (variant.toString().contains("easy"))) {
                 choicePaneEasy.getChildren().add(button);
+            } else if ((variant instanceof DimensionDifficultyGameVariant) || variant.toString().contains("Dynamic") || variant.toString().contains("DYNAMIC")) {
+                choicePaneDynamic.getChildren().add(button);
             } else {
                 choicePane.getChildren().add(button);
+            }
+
+            if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal")) {
+                if (variant instanceof DimensionGameVariant) {
+                    variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "normal");
+                }
+                ToggleGroup group = new ToggleGroup();
+                RadioButton normal = new RadioButton("Normal");
+                normal.setToggleGroup(group);
+                normal.setSelected(true);
+                RadioButton dynamic = new RadioButton("Dynamic");
+                dynamic.setToggleGroup(group);
+                HBox bottom = new HBox();
+                bottom.getChildren().add(dynamic);
+                bottom.getChildren().add(normal);
+                sceneContentPane.setBottom(bottom);
+                dynamic.setOnAction(actionEvent -> {
+                    if (!easymode) {
+                        easymode = true;
+                        choicePanelScroller.setContent(choicePaneDynamic);
+                    }
+                });
+                normal.setOnAction(actionEvent -> {
+                    if (easymode) {
+                        easymode = false;
+                        choicePanelScroller.setContent(choicePane);
+                    }
+                });
             }
 
             if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) {
@@ -127,6 +164,60 @@ public class GameVariantDialog extends Stage {
                     if (!easymode) {
                         easymode = true;
                         choicePanelScroller.setContent(choicePaneEasy);
+                    }
+                });
+                normal.setOnAction(actionEvent -> {
+                    if (easymode) {
+                        easymode = false;
+                        choicePanelScroller.setContent(choicePane);
+                    }
+                });
+            }
+
+
+            if (gameSpec.getGameSummary().getNameCode().contains("Memory")) {
+                if (variant instanceof DimensionGameVariant) {
+                    variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "Dynamic");
+                }
+                ToggleGroup group = new ToggleGroup();
+                RadioButton normal = new RadioButton("Static");
+                normal.setToggleGroup(group);
+                normal.setSelected(true);
+                RadioButton dynamic = new RadioButton("Dynamic");
+                dynamic.setToggleGroup(group);
+                HBox bottom = new HBox();
+                bottom.getChildren().add(dynamic);
+                bottom.getChildren().add(normal);
+                sceneContentPane.setBottom(bottom);
+                dynamic.setOnAction(actionEvent -> {
+                    if (!easymode) {
+                        easymode = true;
+                        choicePanelScroller.setContent(choicePaneDynamic);
+                    }
+                });
+                normal.setOnAction(actionEvent -> {
+                    if (easymode) {
+                        easymode = false;
+                        choicePanelScroller.setContent(choicePane);
+                    }
+                });
+            }
+
+            if (gameSpec.getGameSummary().getNameCode().equals("Ninja")) {
+                ToggleGroup group = new ToggleGroup();
+                RadioButton normal = new RadioButton("Static");
+                normal.setToggleGroup(group);
+                normal.setSelected(true);
+                RadioButton dynamic = new RadioButton("Dynamic");
+                dynamic.setToggleGroup(group);
+                HBox bottom = new HBox();
+                bottom.getChildren().add(dynamic);
+                bottom.getChildren().add(normal);
+                sceneContentPane.setBottom(bottom);
+                dynamic.setOnAction(actionEvent -> {
+                    if (!easymode) {
+                        easymode = true;
+                        choicePanelScroller.setContent(choicePaneDynamic);
                     }
                 });
                 normal.setOnAction(actionEvent -> {
