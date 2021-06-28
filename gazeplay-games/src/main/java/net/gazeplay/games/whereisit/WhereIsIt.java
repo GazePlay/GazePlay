@@ -109,7 +109,7 @@ public class WhereIsIt implements GameLifeCycle {
         final int winnerImageIndexAmongDisplayedImages = randomGenerator.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
-        if (stats.nbGoalsReached > 0 && stats.nbGoalsReached % 2 == 0) {
+        if (stats.nbGoalsReached > 0 && stats.nbGoalsReached % 8 == 0) {
             stats.getChiReport().addChiObs(chi2Obs(rightDecision, wrongDecision));
             stats.getChiReport().addChiLevel(level);
             boolean randomness = chi2decision(rightDecision, wrongDecision);
