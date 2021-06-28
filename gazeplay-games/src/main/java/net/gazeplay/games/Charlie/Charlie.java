@@ -145,6 +145,7 @@ public class Charlie implements GameLifeCycle {
         Im.setFitWidth((0.9 - 0.0625)/8*dimension2D.getWidth());
         Im.setFitHeight((0.75 - 0.0625)/8*dimension2D.getHeight());
         Charlie.setImage(Im);
+        gameContext.getGazeDeviceManager().addEventFilter(Charlie);
         gameContext.getChildren().add(Charlie);
 
         Charlie.assignIndicatorUpdatable(e -> win(), gameContext);
