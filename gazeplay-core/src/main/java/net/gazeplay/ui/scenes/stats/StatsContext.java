@@ -138,7 +138,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 if (chi2Info.isSelected()) {
                     centerPane.getChildren().remove(lineChart);
                     centerPane.getChildren().add(chi2Chart);
-                    centerPane.getStylesheets().add("data/common/chart.css");
+                    centerPane.getStylesheets().add("data/common/table.css");
                 } else {
                     centerPane.getChildren().remove(chi2Chart);
                     centerPane.getChildren().add(lineChart);
