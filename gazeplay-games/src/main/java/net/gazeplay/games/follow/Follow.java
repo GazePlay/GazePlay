@@ -169,30 +169,51 @@ public class Follow implements GameLifeCycle {
     }
 
     private void followthegaze(){
-        position();
-        double x = rx - px;
-        double y = ry - py;
-        double dist = Math.sqrt(x*x + y*y);
         PauseTransition next = new PauseTransition(Duration.millis(5));
         next.setOnFinished(nextevent -> {
+            followthegaze();
+            position();
+            double x = rx - px;
+            double y = ry - py;
+            double dist = Math.sqrt(x*x + y*y);
             if (canmove) {
                 if (dist > speed) {
                     double tx = px + speed * x / dist;
                     double ty = py + speed * y / dist;
 
-                    for (Rectangle Wall : ListWall){
-                        if (IsInWall(Wall, tx, py, sizeP)){
-                            if (x>0){
-                                tx = Wall.getX() - sizeP/2;
+                    boolean test = true;
+
+                    for (Rectangle Wall : ListWall) {
+                        if (IsInWall(Wall, tx, py, sizeP)) {
+                            if (x > 0) {
+                                tx = Wall.getX() - sizeP / 2;
                             } else {
-                                tx = Wall.getX()+Wall.getWidth() + sizeP/2;
+                                tx = Wall.getX() + Wall.getWidth() + sizeP / 2;
                             }
+                            test = false;
                         }
-                        if (IsInWall(Wall, px, ty, sizeP)){
-                            if (y>0){
-                                ty = Wall.getY() - sizeP/2;
+                        if (IsInWall(Wall, px, ty, sizeP)) {
+                            if (y > 0) {
+                                ty = Wall.getY() - sizeP / 2;
                             } else {
-                                ty = Wall.getY()+Wall.getHeight() + sizeP/2;
+                                ty = Wall.getY() + Wall.getHeight() + sizeP / 2;
+                            }
+                            test = false;
+                        }
+                    }
+                    if (test) {
+                        for (Rectangle Wall : ListWall) {
+                            if (IsInWall(Wall, tx, ty, sizeP)) {
+                                if (x > 0) {
+                                    tx = Wall.getX() - sizeP / 2;
+                                } else {
+                                    tx = Wall.getX() + Wall.getWidth() + sizeP / 2;
+                                }
+                                /*if (y > 0) {
+                                    ty = Wall.getY() - sizeP / 2;
+                                } else {
+                                    ty = Wall.getY() + Wall.getHeight() + sizeP / 2;
+                                }*/
                             }
                         }
                     }
@@ -203,7 +224,6 @@ public class Follow implements GameLifeCycle {
                 RPlayer.setX(px - sizeP / 2);
                 RPlayer.setY(py - sizeP / 2);
                 CheckEI();
-                followthegaze();
             }
         });
         next.play();
