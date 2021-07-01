@@ -1,12 +1,14 @@
 package net.gazeplay.games.cakes;
 
-import javafx.animation.*;
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -214,7 +216,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             }
         }
 
-        if (winOnly && currentOk){
+        if (winOnly && currentOk) {
             if (getMaxCake() < 2) {
                 setMaxCake(getMaxCake() + 1);
                 setCurrentCake(getMaxCake());
@@ -258,18 +260,18 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             final FadeTransition ft = new FadeTransition(Duration.millis(500), randomCake);
             ft.setToValue(1);
             ft.setOnFinished(actionEvent -> {
-                gameContext.updateScore(stats,this);
+                gameContext.updateScore(stats, this);
                 playWin();
             });
             ft.play();
         } else {
             stats.incrementNumberOfGoalsReached();
-            gameContext.updateScore(stats,this);
+            gameContext.updateScore(stats, this);
             playWin();
         }
     }
 
-    private void checkGoodAnswer(){
+    private void checkGoodAnswer() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (layers[i][j] == model[i][j]) {

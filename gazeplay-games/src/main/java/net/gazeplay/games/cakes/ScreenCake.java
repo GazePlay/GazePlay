@@ -35,7 +35,9 @@ public class ScreenCake extends LinkedList {
         final double buttonSize = cakef.getButtonSize();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         int n = 4;
-        if (easy){n=6;}
+        if (easy) {
+            n = 6;
+        }
         for (int i = 0; i < n; i++) { // HomePage of the game
             final ProgressButton bt = new ProgressButton();
             bt.getButton().setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
