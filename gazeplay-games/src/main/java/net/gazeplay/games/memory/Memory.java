@@ -4,6 +4,8 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -38,8 +40,11 @@ public class Memory implements GameLifeCycle {
 
     private final IGameContext gameContext;
 
+    @Getter @Setter
     private int nbLines;
+    @Getter @Setter
     private int nbColumns;
+
     private String difficulty;
 
     private final Stats stats;
@@ -53,20 +58,24 @@ public class Memory implements GameLifeCycle {
 
     public RoundDetails currentRoundDetails;
 
+    @Getter
     public int nbTurnedCards;
 
     private final boolean isOpen;
 
     private final ReplayablePseudoRandom randomGenerator;
 
+    @Getter
     private int nbWrongCards;
 
+    @Getter
     private int nbCorrectCards;
 
+    @Getter
     private List<Integer> listOfResults = new ArrayList<>();
 
+    @Getter @Setter
     private int level = 2;
-
 
 
     public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final String difficulty, final Stats stats,
@@ -270,27 +279,13 @@ public class Memory implements GameLifeCycle {
         return value;
     }
 
-    public int getnbRemainingPeers() {
+    public int getNbRemainingPeers() {
         return nbRemainingPeers;
     }
-
-    //public int getNbLines() { return nbLines; }
-
-    public int getNbColumns() { return nbColumns; }
-
-    public void setNbColumns(int nbColumns) { this.nbColumns = nbColumns; }
-
-    public int getNbLines() { return nbLines; }
-
-    public void setNbLines(int nbLines) { this.nbLines = nbLines; }
-
-    public int getNbWrongCards() { return  nbWrongCards; }
 
     public void incNbWrongCards() {nbWrongCards++; }
 
     public void resetNbWrongCards() { nbWrongCards = 0; }
-
-    public int getNbCorrectCards() { return  nbCorrectCards; }
 
     public void incNbCorrectCards() {nbCorrectCards++; }
 
@@ -298,20 +293,8 @@ public class Memory implements GameLifeCycle {
 
     public int totalNbOfTries() { return getNbCorrectCards() + getNbWrongCards(); }
 
-    public List<Integer> getListOfResults() {
-        return listOfResults;
-    }
-
     public void addRoundResult(int lastRoundResult) {
         listOfResults.add(lastRoundResult);
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
     }
 
     public void adaptLevel() {

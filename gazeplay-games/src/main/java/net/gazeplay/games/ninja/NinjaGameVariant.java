@@ -12,7 +12,7 @@ public enum NinjaGameVariant {
     DIAGONAL_UPPER_RIGHT_TO_LOWER_LEFT("Diagonal from upper right to lower left"),
 
     DYNAMIC_RANDOM("Random Dynamic"),
-    DYNAMIC_VERTICAL("Vertical  Dynamic"),
+    DYNAMIC_VERTICAL("Vertical Dynamic"),
     DYNAMIC_HORIZONTAL("Horizontal Dynamic"),
     DYNAMIC_DIAGONAL_UPPER_LEFT_TO_LOWER_RIGHT("Diagonal from upper left to lower right Dynamic"),
     DYNAMIC_DIAGONAL_UPPER_RIGHT_TO_LOWER_LEFT("Diagonal from upper right to lower left Dynamic");

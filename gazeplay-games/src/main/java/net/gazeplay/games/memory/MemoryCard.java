@@ -142,7 +142,7 @@ public class MemoryCard extends Parent {
         gameInstance.removeSelectedCards();
 
         /* No more cards to play : End of this game : Begin a new Game */
-        if (gameInstance.getnbRemainingPeers() == 0) {
+        if (gameInstance.getNbRemainingPeers() == 0) {
             if (gameInstance.getDifficulty().equals("Dynamic")) {
                 gameInstance.addRoundResult(gameInstance.totalNbOfTries());
                 int sizeOfList = gameInstance.getListOfResults().size();
@@ -171,8 +171,6 @@ public class MemoryCard extends Parent {
                 }
 
                 gameInstance.adaptLevel();
-                log.info("level = {}", gameInstance.getLevel());
-                log.info("nbLines = {}, nbColumns = {}", gameInstance.getNbLines(), gameInstance.getNbColumns());
             }
 
             gameContext.updateScore(stats, gameInstance);
@@ -198,7 +196,7 @@ public class MemoryCard extends Parent {
     private void onWrongCardSelected() {
 
         gameInstance.incNbWrongCards();
-        log.info("nbWrong = {}", gameInstance.getNbWrongCards());
+        //log.info("nbWrong = {}", gameInstance.getNbWrongCards());
 
         if (gameInstance.currentRoundDetails == null) {
             return;
