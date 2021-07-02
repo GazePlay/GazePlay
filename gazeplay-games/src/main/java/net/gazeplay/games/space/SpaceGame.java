@@ -621,7 +621,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             middleLayer.getChildren().add(bulletRec);
             bulletListRec.add(bulletRec);
 
-            bulletTransition = new TranslateTransition(Duration.seconds(3), bulletRec);
+            bulletTransition = new TranslateTransition(Duration.seconds(1), bulletRec);
             bulletTransition.setToY(-1 * dimension2D.getHeight());
             bulletTransition.setCycleCount(1);
             bulletTransition.setInterpolator(Interpolator.LINEAR);
