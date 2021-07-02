@@ -144,7 +144,7 @@ public class Egg extends Parent {
 
                     timelineProgressBar = new Timeline();
 
-                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
                         new KeyValue(progressIndicator.progressProperty(), 1)));
 
                     timelineProgressBar.setOnFinished(actionEvent -> {
@@ -173,7 +173,7 @@ public class Egg extends Parent {
 
                             t.setOnFinished(actionEvent1 -> {
 
-                                gameContext.updateScore(stats,gameInstance);
+                                gameContext.updateScore(stats, gameInstance);
 
                                 gameContext.playWinTransition(0, event -> {
                                     gameInstance.dispose();
