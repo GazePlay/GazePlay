@@ -452,7 +452,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     public void onGameStarted() {
     }
 
-    public void SetOffFixationLengthControl(){
+    public void setOffFixationLengthControl(){
         leftControlPane.getChildren().remove(FixPan);
     }
 

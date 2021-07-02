@@ -301,7 +301,7 @@ public class Piano extends Parent implements GameLifeCycle {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
 
-        gameContext.SetOffFixationLengthControl();
+        gameContext.setOffFixationLengthControl();
     }
 
     @Override

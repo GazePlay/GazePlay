@@ -326,7 +326,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
 
-        gameContext.SetOffFixationLengthControl();
+        gameContext.setOffFixationLengthControl();
     }
 
     @Override

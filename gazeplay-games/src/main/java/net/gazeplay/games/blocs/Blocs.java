@@ -162,7 +162,7 @@ public class Blocs implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
 
-        gameContext.SetOffFixationLengthControl();
+        gameContext.setOffFixationLengthControl();
     }
 
     @Override

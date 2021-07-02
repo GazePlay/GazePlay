@@ -171,7 +171,7 @@ public class Room implements GameLifeCycle {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
 
-        gameContext.SetOffFixationLengthControl();
+        gameContext.setOffFixationLengthControl();
     }
 
     @Override

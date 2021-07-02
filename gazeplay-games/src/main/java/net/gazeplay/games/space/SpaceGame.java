@@ -393,7 +393,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.start();
 
-        gameContext.SetOffFixationLengthControl();
+        gameContext.setOffFixationLengthControl();
     }
 
 

@@ -59,7 +59,7 @@ public interface IGameContext {
 
     void onGameStarted();
 
-    void SetOffFixationLengthControl();
+    void setOffFixationLengthControl();
 
     void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler);
 

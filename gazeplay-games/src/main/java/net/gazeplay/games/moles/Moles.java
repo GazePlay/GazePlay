@@ -145,8 +145,7 @@ public class Moles extends Parent implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(stats);
         play();
 
-        gameContext.SetOffFixationLengthControl();
-
+        gameContext.setOffFixationLengthControl();
     }
 
     void adjustBackground(Rectangle image) {
