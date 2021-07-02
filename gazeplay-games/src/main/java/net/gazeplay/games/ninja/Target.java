@@ -134,6 +134,7 @@ public class Target extends Portrait {
         final Position currentPosition = new Position((int) getCenterX(), (int) getCenterY());
 
         final Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
+        resetTargetAtPosition(currentPosition);
         log.debug("currentPosition = {}, newPosition = {}, length = {}", currentPosition, newPosition, length);
         int finalLength;
 
