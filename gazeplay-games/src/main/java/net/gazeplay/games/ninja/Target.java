@@ -60,7 +60,6 @@ public class Target extends Portrait {
     private int length;
 
     private final String variantType;
-    //private List<Long> durationBetweenGoals;
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
                   final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance, final ReplayablePseudoRandom randomGenerator, int radius, RoundsDurationReport roundsDurationReport, int length) {
@@ -146,8 +145,8 @@ public class Target extends Portrait {
             int ratio = (int) (length / height);
             int lengthR = (int) (distance * ratio);
 
-            log.info("length = {}", length);
-            log.info("lengthR = {}, ratio = {}, distance = {}", lengthR, ratio, distance);
+            log.debug("length = {}", length);
+            log.debug("lengthR = {}, ratio = {}, distance = {}", lengthR, ratio, distance);
 
             if (ratio != 0)
                 finalLength = lengthR;
@@ -192,9 +191,9 @@ public class Target extends Portrait {
             new KeyValue(this.centerXProperty(), pos2.getX()), new KeyValue(this.centerYProperty(), pos2.getY())));
         translation2.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
 
-        log.info("currentPosition = {}, newPosition = {}, length = {}", pos1, pos2, length);
+        log.debug("currentPosition = {}, newPosition = {}, length = {}", pos1, pos2, length);
         double distance = Math.sqrt(Math.pow(pos1.getX()- pos2.getX(),2) + Math.pow(pos1.getY() - pos2.getY(),2));
-        log.info("distance = {}", distance);
+        log.debug("distance = {}", distance);
 
         translation1.setOnFinished(actionEvent -> {
             resetTargetAtPosition(pos1);
@@ -227,7 +226,7 @@ public class Target extends Portrait {
                 int sizeOfList = listOfDurationBetweenGoals.size();
                 if (sizeOfList % 3 == 0 && sizeOfList != 0) {
                     for (int i = 0; i < 3; i++) {
-                        log.info("DurationBetweenGoals.get(sizeOfList - 1 - i) = {}", listOfDurationBetweenGoals.get(sizeOfList - 1 - i));
+                        log.debug("DurationBetweenGoals.get(sizeOfList - 1 - i) = {}", listOfDurationBetweenGoals.get(sizeOfList - 1 - i));
                         if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) <= 1000) compare++;
                         if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) >= 2000) compare--;
 

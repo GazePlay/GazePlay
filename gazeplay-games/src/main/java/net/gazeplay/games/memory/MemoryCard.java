@@ -117,7 +117,7 @@ public class MemoryCard extends Parent {
     private void onCorrectCardSelected() {
 
         gameInstance.incNbCorrectCards();
-        log.info("nbCorrect = {}", gameInstance.getNbCorrectCards());
+        log.debug("nbCorrect = {}", gameInstance.getNbCorrectCards());
 
         stats.incrementNumberOfGoalsReached();
 
@@ -148,7 +148,7 @@ public class MemoryCard extends Parent {
                 int sizeOfList = gameInstance.getListOfResults().size();
                 int compare = 0;
 
-                log.info("nbOfTries = {}", gameInstance.totalNbOfTries());
+                log.debug("nbOfTries = {}", gameInstance.totalNbOfTries());
                 if (sizeOfList % 3 == 0 && sizeOfList != 0) {
                     for (int i = 0; i < 3; i++) {
                         if (gameInstance.totalNbOfTries() <= 2 * gameInstance.getLevel() && gameInstance.getNbColumns() <= 6)
@@ -157,13 +157,13 @@ public class MemoryCard extends Parent {
                             compare--;
                     }
                     if (compare == 3) {
-                        if(gameInstance.getLevel() == 6)
+                        if (gameInstance.getLevel() == 6)
                             gameInstance.setLevel(gameInstance.getLevel() + 2);
                         else
                             gameInstance.setLevel(gameInstance.getLevel() + 1);
                     }
                     if (compare == -3) {
-                        if(gameInstance.getLevel() == 8)
+                        if (gameInstance.getLevel() == 8)
                             gameInstance.setLevel(gameInstance.getLevel() - 2);
                         else
                             gameInstance.setLevel(gameInstance.getLevel() - 1);
@@ -196,7 +196,7 @@ public class MemoryCard extends Parent {
     private void onWrongCardSelected() {
 
         gameInstance.incNbWrongCards();
-        //log.info("nbWrong = {}", gameInstance.getNbWrongCards());
+        log.debug("nbWrong = {}", gameInstance.getNbWrongCards());
 
         if (gameInstance.currentRoundDetails == null) {
             return;

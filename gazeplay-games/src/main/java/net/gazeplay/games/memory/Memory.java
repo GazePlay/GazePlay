@@ -16,7 +16,10 @@ import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 public class Memory implements GameLifeCycle {
@@ -36,13 +39,16 @@ public class Memory implements GameLifeCycle {
         public final List<MemoryCard> cardList;
     }
 
+    @Getter
     private int nbRemainingPeers;
 
     private final IGameContext gameContext;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private int nbLines;
-    @Getter @Setter
+    @Getter
+    @Setter
     private int nbColumns;
 
     private String difficulty;
@@ -74,7 +80,8 @@ public class Memory implements GameLifeCycle {
     @Getter
     private List<Integer> listOfResults = new ArrayList<>();
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private int level = 2;
 
 
@@ -279,19 +286,25 @@ public class Memory implements GameLifeCycle {
         return value;
     }
 
-    public int getNbRemainingPeers() {
-        return nbRemainingPeers;
+    public void incNbWrongCards() {
+        nbWrongCards++;
     }
 
-    public void incNbWrongCards() {nbWrongCards++; }
+    public void resetNbWrongCards() {
+        nbWrongCards = 0;
+    }
 
-    public void resetNbWrongCards() { nbWrongCards = 0; }
+    public void incNbCorrectCards() {
+        nbCorrectCards++;
+    }
 
-    public void incNbCorrectCards() {nbCorrectCards++; }
+    public void resetNbCorrectCards() {
+        nbCorrectCards = 0;
+    }
 
-    public void resetNbCorrectCards() { nbCorrectCards = 0; }
-
-    public int totalNbOfTries() { return getNbCorrectCards() + getNbWrongCards(); }
+    public int totalNbOfTries() {
+        return getNbCorrectCards() + getNbWrongCards();
+    }
 
     public void addRoundResult(int lastRoundResult) {
         listOfResults.add(lastRoundResult);
@@ -302,24 +315,16 @@ public class Memory implements GameLifeCycle {
         if (level == 6) {
             setNbColumns(4);
             setNbLines(3);
-        }
-
-        else if (level == 8) {
+        } else if (level == 8) {
             setNbColumns(4);
             setNbLines(4);
-        }
-
-        else if (level == 9) {
+        } else if (level == 9) {
             setNbColumns(6);
             setNbLines(3);
-        }
-
-        else if (level == 10) {
+        } else if (level == 10) {
             setNbColumns(5);
             setNbLines(4);
-        }
-
-        else {
+        } else {
             setNbColumns(level);
             setNbLines(2);
         }
