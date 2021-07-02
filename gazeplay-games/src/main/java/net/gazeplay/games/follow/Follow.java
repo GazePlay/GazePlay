@@ -204,16 +204,20 @@ public class Follow implements GameLifeCycle {
                     if (test) {
                         for (Rectangle Wall : ListWall) {
                             if (IsInWall(Wall, tx, ty, sizeP)) {
-                                if (x > 0) {
-                                    tx = Wall.getX() - sizeP / 2;
-                                } else {
-                                    tx = Wall.getX() + Wall.getWidth() + sizeP / 2;
+                                if (Math.abs(x)>Math.abs(y)) {
+                                    if (x > 0) {
+                                        tx = Wall.getX() - sizeP / 2;
+                                    } else {
+                                        tx = Wall.getX() + Wall.getWidth() + sizeP / 2;
+                                    }
                                 }
-                                /*if (y > 0) {
-                                    ty = Wall.getY() - sizeP / 2;
-                                } else {
-                                    ty = Wall.getY() + Wall.getHeight() + sizeP / 2;
-                                }*/
+                                else {
+                                    if (y > 0) {
+                                        ty = Wall.getY() - sizeP / 2;
+                                    } else {
+                                        ty = Wall.getY() + Wall.getHeight() + sizeP / 2;
+                                    }
+                                }
                             }
                         }
                     }
