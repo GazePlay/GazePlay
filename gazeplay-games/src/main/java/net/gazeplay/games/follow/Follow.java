@@ -238,7 +238,7 @@ public class Follow implements GameLifeCycle {
                 }
                 rPlayer.setX(px - sizeP / 2);
                 rPlayer.setY(py - sizeP / 2);
-                CheckEI();
+                checkEI();
             }
         });
         next.play();
@@ -283,18 +283,18 @@ public class Follow implements GameLifeCycle {
         });
     }
 
-    private void CheckEI(){
-        ArrayList<EventItem> Remove = new ArrayList<>();
-        for(EventItem EI : listEI){
-            if (isInWall(EI, px, py, sizeP)){
-                if (EI.remove) {
-                    Remove.add(EI);
-                    gameContext.getChildren().remove(EI);
+    private void checkEI(){
+        ArrayList<EventItem> remove = new ArrayList<>();
+        for(EventItem eI : listEI){
+            if (isInWall(eI, px, py, sizeP)){
+                if (eI.remove) {
+                    remove.add(eI);
+                    gameContext.getChildren().remove(eI);
                 }
-                EI.active();
+                eI.active();
             }
         }
-        listEI.removeAll(Remove);
+        listEI.removeAll(remove);
     }
 
     private void multigoals(){
