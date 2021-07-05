@@ -256,12 +256,12 @@ public class Follow implements GameLifeCycle {
     }
 
     private boolean isInWall(Rectangle wall, double x, double y, double size){
-        double Wx = wall.getX() + size/2;
-        double Wy = wall.getY() + size/2;
-        double Ww = wall.getWidth();
-        double Wh = wall.getHeight();
+        double wx = wall.getX() + size/2;
+        double wy = wall.getY() + size/2;
+        double ww = wall.getWidth();
+        double wh = wall.getHeight();
 
-        return (x+size>Wx) && (y+size>Wy) && (x<Wx+Ww) && (y<Wy+Wh);
+        return (x+size>wx) && (y+size>wy) && (x<wx+ww) && (y<wy+wh);
     }
 
     private void win(){
