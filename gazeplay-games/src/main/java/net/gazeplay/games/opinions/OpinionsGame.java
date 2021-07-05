@@ -16,8 +16,6 @@ import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.components.ProgressButton;
 
-import java.util.List;
-
 @Slf4j
 public class OpinionsGame implements GameLifeCycle {
 
@@ -136,29 +134,6 @@ public class OpinionsGame implements GameLifeCycle {
             gameContext.getGazeDeviceManager().addEventFilter(thumbUp);
             thumbUp.active();
 
-            /*List<Image> Picture = thumbImage.pickAllImages();
-            for (Image I : Picture) {
-                log.info("coucou: " + I.getUrl());
-                if (I.getUrl().equals("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbdown.png")) {
-                    ImageView thumbDo = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbdown.png")).getImage());
-                    thumbDown.setImage(thumbDo);
-                    thumbDo.setFitWidth(dimension2D.getWidth() / 10);
-                    thumbDo.setFitHeight(dimension2D.getHeight() / 5);
-                }
-                if (I.getUrl().equals("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbup.png")) {
-                    ImageView thumbU = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/thumbup.png")).getImage());
-                    thumbUp.setImage(thumbU);
-                    thumbU.setFitWidth(dimension2D.getWidth() / 10);
-                    thumbU.setFitHeight(dimension2D.getHeight() / 5);
-                }
-                if (I.getUrl().equals("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/nocare.png")) {
-                    ImageView noCar = new ImageView(new ImagePattern(new Image("file:/C:/Users/MATOU/GazePlay/files/images/opinions/thumbs/nocare.png")).getImage());
-                    noCare.setImage(noCar);
-                    noCar.setFitWidth(dimension2D.getWidth() / 10);
-                    noCar.setFitHeight(dimension2D.getHeight() / 5);
-                }
-            }*/
-
             middleLayer.getChildren().addAll(thumbUp, thumbDown, noCare);
 
         }
@@ -174,17 +149,17 @@ public class OpinionsGame implements GameLifeCycle {
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, dimension2D.getHeight() * 16 / 20);
             }
 
-            if (type.equals(OpinionsGameVariant.ONBH)) {
+            else if (type.equals(OpinionsGameVariant.ONBH)) {
                 createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, dimension2D.getHeight() * 16 / 20);
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
             }
 
-            if (type.equals(OpinionsGameVariant.ONGD)) {
+            else if (type.equals(OpinionsGameVariant.ONGD)) {
                 createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", 0, dimension2D.getHeight() * 2 / 5);
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
             }
 
-            if (type.equals(OpinionsGameVariant.ONDG)) {
+            else if (type.equals(OpinionsGameVariant.ONDG)) {
                 createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", 0, dimension2D.getHeight() * 2 / 5);
             }
