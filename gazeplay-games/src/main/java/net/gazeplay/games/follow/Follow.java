@@ -250,9 +250,9 @@ public class Follow implements GameLifeCycle {
     }
 
     private void startafterdelay(){
-        PauseTransition Wait = new PauseTransition(Duration.millis(1000));
-        Wait.setOnFinished(Waitevent -> followthegaze());
-        Wait.play();
+        PauseTransition wait = new PauseTransition(Duration.millis(1000));
+        wait.setOnFinished(waitevent -> followthegaze());
+        wait.play();
     }
 
     private boolean isInWall(Rectangle wall, double x, double y, double size){
