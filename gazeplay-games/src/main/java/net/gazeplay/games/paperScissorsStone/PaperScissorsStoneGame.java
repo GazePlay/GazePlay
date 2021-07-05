@@ -19,8 +19,6 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.components.ProgressButton;
 
-import java.util.Random;
-
 @Slf4j
 public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCycle {
 
@@ -65,8 +63,6 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         final StackPane sp = new StackPane();
         gameContext.getChildren().addAll(sp, backgroundLayer, middleLayer, foregroundLayer);
 
-        final int fixationLength = configuration.getFixationLength();
-
         shade = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         shade.setFill(new Color(0, 0, 0, 0.75));
 
@@ -78,7 +74,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         restartButton.setImage(restartImage);
         restartButton.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getHeight() / 12);
         restartButton.setLayoutY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 12);
-        restartButton.assignIndicator(event -> launch(), fixationLength);
+        restartButton.assignIndicatorUpdatable(event -> launch(), gameContext);
 
         finalScoreText = new Text(0, dimension2D.getHeight() / 4, "");
         finalScoreText.setFill(Color.WHITE);
@@ -104,8 +100,6 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         final StackPane sp = new StackPane();
         gameContext.getChildren().addAll(sp, backgroundLayer, middleLayer, foregroundLayer);
 
-        final int fixationLength = configuration.getFixationLength();
-
         shade = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         shade.setFill(new Color(0, 0, 0, 0.75));
 
@@ -117,7 +111,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         restartButton.setImage(restartImage);
         restartButton.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getHeight() / 12);
         restartButton.setLayoutY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 12);
-        restartButton.assignIndicator(event -> launch(), fixationLength);
+        restartButton.assignIndicatorUpdatable(event -> launch(), gameContext);
 
         finalScoreText = new Text(0, dimension2D.getHeight() / 4, "");
         finalScoreText.setFill(Color.WHITE);
@@ -196,38 +190,38 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         button.setImage(stoneI);
 
         if (button == paper) {
-            button.assignIndicator(event -> {
+            button.assignIndicatorUpdatable(event -> {
                 if (ennemyT == type.stone) {
                     gameWin();
                 } else {
                     button.disable(true);
                 }
                 stats.incrementNumberOfGoalsReached();
-            }, configuration.getFixationLength());
+            }, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(paper);
             button.active();
         }
         if (button == stone) {
-            button.assignIndicator(event -> {
+            button.assignIndicatorUpdatable(event -> {
                 if (ennemyT == type.scissors) {
                     gameWin();
                 } else {
                     button.disable(true);
                 }
                 stats.incrementNumberOfGoalsReached();
-            }, configuration.getFixationLength());
+            }, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(stone);
             button.active();
         }
         if (button == scissors) {
-            button.assignIndicator(event -> {
+            button.assignIndicatorUpdatable(event -> {
                 if (ennemyT == type.paper) {
                     gameWin();
                 } else {
                     button.disable(true);
                 }
                 stats.incrementNumberOfGoalsReached();
-            }, configuration.getFixationLength());
+            }, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(scissors);
             button.active();
         }

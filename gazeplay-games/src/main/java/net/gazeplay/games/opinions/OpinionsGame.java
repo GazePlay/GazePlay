@@ -147,6 +147,7 @@ public class OpinionsGame implements GameLifeCycle {
             if (type.equals(OpinionsGameVariant.ONHB)) {
                 createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, dimension2D.getHeight() * 16 / 20);
+
             }
 
             else if (type.equals(OpinionsGameVariant.ONBH)) {

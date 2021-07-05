@@ -47,7 +47,7 @@ public class GameBox extends Parent {
 
         if (wall == 1) {
             isAWall = true;
-            final Color colorWall = Color.MAROON;
+            final Color colorWall = Color.web("#501010");
             r.setFill(colorWall);
         } else {
             isAWall = false;

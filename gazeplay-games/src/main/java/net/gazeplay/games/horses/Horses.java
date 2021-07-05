@@ -168,12 +168,12 @@ public class Horses implements GameLifeCycle {
                 pawn.activate(e -> {
                     deactivatePawns();
                     pawn.spawn();
-                }, config.getFixationLength());
+                }, gameContext);
             } else if (pawn.isOnTrack() && pawn.canMove(diceOutcome)) {
                 pawn.activate(e -> {
                     deactivatePawns();
                     pawn.move(diceOutcome);
-                }, config.getFixationLength());
+                }, gameContext);
             } else {
                 nbNonMovablePawns++;
             }
@@ -305,10 +305,10 @@ public class Horses implements GameLifeCycle {
         backgroundLayer.getChildren().add(dieContainer);
 
         rollButton = new ProgressButton();
-        rollButton.assignIndicator(event -> {
+        rollButton.assignIndicatorUpdatable(event -> {
             roll();
             stats.incrementNumberOfGoalsReached();
-        }, config.getFixationLength());
+        }, gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 
@@ -407,10 +407,10 @@ public class Horses implements GameLifeCycle {
             chooseButton.setPrefHeight((nbElementsPerSide - 3d) / 2d * gridElementSize);
             chooseButton.setLayoutX(teamChooserPositions.get(team)[0]);
             chooseButton.setLayoutY(teamChooserPositions.get(team)[1]);
-            chooseButton.assignIndicator(e -> {
+            chooseButton.assignIndicatorUpdatable(e -> {
                 foregroundLayer.getChildren().remove(chooseButton);
                 selectTeam(team);
-            }, config.getFixationLength());
+            }, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(chooseButton);
             chooseButton.active();
             foregroundLayer.getChildren().add(chooseButton);

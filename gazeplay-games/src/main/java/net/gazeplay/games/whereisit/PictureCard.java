@@ -46,7 +46,7 @@ class PictureCard extends Group {
     private final String imagePath;
 
     private final ProgressIndicator progressIndicator;
-    private final Timeline progressIndicatorAnimationTimeLine;
+    private Timeline progressIndicatorAnimationTimeLine;
 
     private boolean selected;
 
@@ -81,8 +81,6 @@ class PictureCard extends Group {
         }
         this.progressIndicator = buildProgressIndicator(width, height);
 
-        this.progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
-
         this.errorImageRectangle = createErrorImageRectangle();
 
         this.getChildren().add(imageRectangle);
@@ -102,7 +100,7 @@ class PictureCard extends Group {
         Timeline result = new Timeline();
 
         result.getKeyFrames()
-            .add(new KeyFrame(new Duration(minTime), new KeyValue(progressIndicator.progressProperty(), 1)));
+            .add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(progressIndicator.progressProperty(), 1)));
 
         EventHandler<ActionEvent> progressIndicatorAnimationTimeLineOnFinished = createProgressIndicatorAnimationTimeLineOnFinished(
             gameInstance);
@@ -200,7 +198,7 @@ class PictureCard extends Group {
         fullAnimation.getChildren().addAll(imageFadeOutTransition, errorFadeInTransition);
 
         fullAnimation.setOnFinished(actionEvent -> {
-            if(gameContext.getConfiguration().isReaskedQuestionOnFail()) {
+            if (gameContext.getConfiguration().isReaskedQuestionOnFail()) {
                 gameInstance.playQuestionSound();
             }
             customInputEventHandler.ignoreAnyInput = false;
@@ -319,6 +317,8 @@ class PictureCard extends Group {
 
         private void onEntered() {
             log.info("ENTERED {}", imagePath);
+
+            progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
 
             progressIndicator.setProgress(0);
             progressIndicator.setVisible(true);
