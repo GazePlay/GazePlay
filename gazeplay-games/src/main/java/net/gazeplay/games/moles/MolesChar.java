@@ -22,6 +22,8 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.configuration.ConfigurationSource;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.ImageLibrary;
+import net.gazeplay.components.Portrait;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,7 +75,8 @@ public class MolesChar extends Parent {
         final double distTrans,
         final IGameContext gameContext,
         final Moles gameInstance,
-        final String type
+        final String type,
+        final ReplayablePseudoRandom randomGenerator
     ) {
         this.positionX=positionX;
         this.positionY=positionY;
@@ -95,45 +98,26 @@ public class MolesChar extends Parent {
 
         this.type=type;
 
-        url="data/whackmole/images/bibouleMole.png";
+        final ImageLibrary imageLibrary = Portrait.createImageLibrary(randomGenerator);
+
+        Image moleImage;
+
         if (type.equals("UserP")){
-            url="data/common/images/DefaultUser.png";
+            moleImage = imageLibrary.pickRandomImage();
         }
-        String username = ActiveConfigurationContext.getInstance().getUserName();
-        final Configuration currentUserProfileConfiguration = ConfigurationSource.createFromProfile(username);
-        final String userPicture = currentUserProfileConfiguration.getUserPicture();
-
-
+        else {
+            moleImage = new Image("data/whackmole/images/bibouleMole.png");
+        }
 
         this.moleMoved = new Rectangle(positionX, positionY - distTrans, width, height);
-        this.moleMoved.setFill(new ImagePattern(new Image(url), 5, 5, 1, 1, true));
-        if (type.equals("UserP") && userPicture != null) {
-            final File userPictureFile = new File(userPicture);
-            if (userPictureFile.exists()) {
-                try (InputStream is = Files.newInputStream(userPictureFile.toPath());) {
-                    this.moleMoved.setFill(new ImagePattern(new Image(is), 5, 5, 1, 1, true));
-                } catch (final IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
+        this.moleMoved.setFill(new ImagePattern(moleImage, 5, 5, 1, 1, true));
         this.moleMoved.opacityProperty().set(1);
         this.moleMoved.addEventHandler(MouseEvent.ANY, enterEvent);
         this.moleMoved.addEventHandler(GazeEvent.ANY, enterEvent);
         gameContext.getGazeDeviceManager().addEventFilter(this.moleMoved);
 
         this.mole = new Rectangle(positionX, positionY, width, height);
-        this.mole.setFill(new ImagePattern(new Image(url), 5, 5, 1, 1, true));
-        if (type.equals("UserP") && userPicture != null) {
-            final File userPictureFile = new File(userPicture);
-            if (userPictureFile.exists()) {
-                try (InputStream is = Files.newInputStream(userPictureFile.toPath());) {
-                    this.mole.setFill(new ImagePattern(new Image(is), 5, 5, 1, 1, true));
-                } catch (final IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
+        this.mole.setFill(new ImagePattern(moleImage, 5, 5, 1, 1, true));
         this.getChildren().add(mole);
         this.mole.opacityProperty().set(0);
 
