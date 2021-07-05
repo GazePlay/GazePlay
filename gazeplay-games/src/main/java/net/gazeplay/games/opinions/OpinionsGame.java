@@ -42,6 +42,9 @@ public class OpinionsGame implements GameLifeCycle {
 
     private final ReplayablePseudoRandom randomGenerator;
 
+    private Image current_background;
+    private Image old_background;
+
     public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats) {
         this.stats = stats;
         this.opinionGameStats = this.stats;
@@ -90,13 +93,19 @@ public class OpinionsGame implements GameLifeCycle {
         background.heightProperty().bind(gameContext.getRoot().heightProperty());
 
         backgroundLayer.getChildren().add(background);
-        background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+        current_background = backgroundImage.pickRandomImage();
+        background.setFill(new ImagePattern(current_background));
+        old_background = current_background;
 
         thumbDown = new ProgressButton();
         createAddButtonOpinions(thumbDown, "data/opinions/thumbs/thumbdown.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
 
         thumbDown.assignIndicatorUpdatable(event -> {
-            background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+            while (old_background.getUrl().equals(current_background.getUrl())){
+                current_background = backgroundImage.pickRandomImage();
+            }
+            background.setFill(new ImagePattern(current_background));
+            old_background = current_background;
             stats.incrementNumberOfGoalsReached();
             updateScore();
         }, gameContext);
@@ -107,7 +116,11 @@ public class OpinionsGame implements GameLifeCycle {
         createAddButtonOpinions(noCare, "data/opinions/thumbs/nocare.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
 
         noCare.assignIndicatorUpdatable(event -> {
-            background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+            while (old_background.getUrl().equals(current_background.getUrl())){
+                current_background = backgroundImage.pickRandomImage();
+            }
+            background.setFill(new ImagePattern(current_background));
+            old_background = current_background;
             stats.incrementNumberOfGoalsReached();
             updateScore();
         }, gameContext);
@@ -118,7 +131,11 @@ public class OpinionsGame implements GameLifeCycle {
         createAddButtonOpinions(thumbUp, "data/opinions/thumbs/thumbup.png", 0, dimension2D.getHeight() * 2 / 5);
 
         thumbUp.assignIndicatorUpdatable(event -> {
-            background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+            while (old_background.getUrl().equals(current_background.getUrl())){
+                current_background = backgroundImage.pickRandomImage();
+            }
+            background.setFill(new ImagePattern(current_background));
+            old_background = current_background;
             stats.incrementNumberOfGoalsReached();
             updateScore();
         }, gameContext);
