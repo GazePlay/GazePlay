@@ -127,6 +127,9 @@ public class Follow implements GameLifeCycle {
         else if (variant.equals(FollowGameVariant.FCOIN)){
             fCOIN();
         }
+        else if (variant.equals(FollowGameVariant.FKEYEASY)){
+            fKEYEASY();
+        }
         else {
             log.error("Variant not found : " + variant.getLabel());
         }
@@ -311,7 +314,7 @@ public class Follow implements GameLifeCycle {
 
     private void pointer(){
         gaze = new Rectangle(0, 0, dimension2D.getWidth()/200, dimension2D.getWidth()/200);
-        gaze.setFill(new ImagePattern(new Image("data/follow/ruby1.png")));
+        gaze.setFill(new ImagePattern(new Image("data/follow/ruby1RS.png")));
         gameContext.getChildren().add(gaze);
     }
 
@@ -370,6 +373,57 @@ public class Follow implements GameLifeCycle {
                     gameContext.getChildren().add(coin);
                 }
             }
+        }
+    }
+
+    private void fKEYEASY(){
+        int[][] map = new int[][]
+            {
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+            };
+
+        build(map);
+
+        {
+            javafx.event.EventHandler<ActionEvent> eventwin = e -> {
+                stats.incrementNumberOfGoalsReached();
+                win();
+            };
+            EventItem ruby = new EventItem(2 * sizeWw, 11 * sizeWh, 3 * sizeWw, 3 * sizeWh, new ImagePattern(new Image("data/follow/ruby1RS.png")), eventwin, true);
+            listEI.add(ruby);
+            gameContext.getChildren().add(ruby);
+        }
+
+        {
+            Rectangle grille = new Rectangle(6 * sizeWw, 11 * sizeWh, sizeWw, 3*sizeWh);
+            grille.setFill(new ImagePattern(new Image("data/follow/jailbar1.png")));
+            listWall.add(grille);
+            gameContext.getChildren().add(grille);
+
+            javafx.event.EventHandler<ActionEvent> eventkey = e -> {
+                listWall.remove(grille);
+                gameContext.getChildren().remove(grille);
+                //Maybe add a song
+                stats.incrementNumberOfGoalsReached();
+            };
+            EventItem key = new EventItem(28 * sizeWw, 3 * sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/key.png")), eventkey, true);
+            listEI.add(key);
+            gameContext.getChildren().add(key);
         }
     }
 
@@ -441,7 +495,7 @@ public class Follow implements GameLifeCycle {
             stats.incrementNumberOfGoalsReached();
             win();
         };
-        EventItem ruby = new EventItem(2 * sizeWw, 2 * sizeWh, 2*sizeWw, 2*sizeWh, new ImagePattern(new Image("data/follow/ruby1.png")), eventwin, true);
+        EventItem ruby = new EventItem(2 * sizeWw, 2 * sizeWh, 2*sizeWw, 2*sizeWh, new ImagePattern(new Image("data/follow/ruby1RS.png")), eventwin, true);
         listEI.add(ruby);
         gameContext.getChildren().add(ruby);
 
