@@ -186,17 +186,17 @@ public class Follow implements GameLifeCycle {
                     for (Rectangle Wall : ListWall) {
                         if (IsInWall(Wall, tx, py, sizeP)) {
                             if (x > 0) {
-                                tx = Wall.getX() - sizeP / 2;
+                                tx = Wall.getX() - 1.001 * sizeP / 2;
                             } else {
-                                tx = Wall.getX() + Wall.getWidth() + sizeP / 2;
+                                tx = Wall.getX() + Wall.getWidth() + 1.001 * sizeP / 2;
                             }
                             test = false;
                         }
                         if (IsInWall(Wall, px, ty, sizeP)) {
                             if (y > 0) {
-                                ty = Wall.getY() - sizeP / 2;
+                                ty = Wall.getY() - 1.001 * sizeP / 2;
                             } else {
-                                ty = Wall.getY() + Wall.getHeight() + sizeP / 2;
+                                ty = Wall.getY() + Wall.getHeight() + 1.001 * sizeP / 2;
                             }
                             test = false;
                         }
@@ -206,24 +206,31 @@ public class Follow implements GameLifeCycle {
                             if (IsInWall(Wall, tx, ty, sizeP)) {
                                 if (Math.abs(x)>Math.abs(y)) {
                                     if (x > 0) {
-                                        tx = Wall.getX() - sizeP / 2;
+                                        tx = Wall.getX() - 1.001 * sizeP / 2;
                                     } else {
-                                        tx = Wall.getX() + Wall.getWidth() + sizeP / 2;
+                                        tx = Wall.getX() + Wall.getWidth() + 1.001 * sizeP / 2;
                                     }
                                 }
                                 else {
                                     if (y > 0) {
-                                        ty = Wall.getY() - sizeP / 2;
+                                        ty = Wall.getY() - 1.001 * sizeP / 2;
                                     } else {
-                                        ty = Wall.getY() + Wall.getHeight() + sizeP / 2;
+                                        ty = Wall.getY() + Wall.getHeight() + 1.001 * sizeP / 2;
                                     }
                                 }
                             }
                         }
                     }
 
-                    px = tx;
-                    py = ty;
+                    boolean in = false;
+                    for (Rectangle Wall : ListWall){
+                        in = in || IsInWall(Wall, tx, ty, sizeP);
+                    }
+
+                    if (!in) {
+                        px = tx;
+                        py = ty;
+                    }
                 }
                 RPlayer.setX(px - sizeP / 2);
                 RPlayer.setY(py - sizeP / 2);
