@@ -16,7 +16,7 @@ public class ScreenCake extends LinkedList {
 
     public IGameContext gameContext;
 
-    public ScreenCake(final int i, final CakeFactory cakef) {
+    public ScreenCake(final int i, final CakeFactory cakef, final boolean easy) {
         super();
         /*
          * gameContext = cakef.getGameContext(); Dimension2D dimension2D =
@@ -26,20 +26,28 @@ public class ScreenCake extends LinkedList {
          * Image("data/cake/background.png"))); back.setMouseTransparent(true); this.add(back);
          */
         if (i == 0) {
-            createScreenZero(cakef);
+            createScreenZero(cakef, easy);
         }
     }
 
-    public void createScreenZero(final CakeFactory cakef) {
+    public void createScreenZero(final CakeFactory cakef, final boolean easy) {
         gameContext = cakef.getGameContext();
         final double buttonSize = cakef.getButtonSize();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        for (int i = 0; i < 6; i++) { // HomePage of the game
+        int n = 4;
+        if (easy) {
+            n = 6;
+        }
+        for (int i = 0; i < n; i++) { // HomePage of the game
             final ProgressButton bt = new ProgressButton();
             bt.getButton().setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                 + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                 + "-fx-max-height: " + buttonSize + "px;");
-            bt.setLayoutX((i + 1) * dimension2D.getWidth() / 6 - buttonSize / 2);
+            if (easy) {
+                bt.setLayoutX((i + 1) * dimension2D.getWidth() / 6 - buttonSize / 2);
+            } else {
+                bt.setLayoutX((i + 1) * dimension2D.getWidth() / 5 - buttonSize / 2);
+            }
             final EventHandler<Event> buttonHandler = createprogessButtonHandler(i, cakef);
             if (i != 5) {
                 createButton(i, bt, buttonHandler, cakef);
@@ -60,9 +68,6 @@ public class ScreenCake extends LinkedList {
         bt.assignIndicatorUpdatable(buttonHandler, this.gameContext);
         bt.active();
         cakef.getButtons()[i] = bt;
-        if (i == 2) {
-            cakef.getButtons()[i].setDisable(!cakef.isNappage());
-        }
         this.add(bt);
         gameContext.getGazeDeviceManager().addEventFilter(bt.getButton());
 
