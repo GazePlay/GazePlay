@@ -451,11 +451,11 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     public void onGameStarted(int delay) {
         gamingRoot.setDisable(true);
-        PauseTransition Wait = new PauseTransition(Duration.millis(delay));
-        Wait.setOnFinished(WaitEvent -> {
+        PauseTransition wait = new PauseTransition(Duration.millis(delay));
+        wait.setOnFinished(waitEvent -> {
             gamingRoot.setDisable(false);
         });
-        Wait.play();
+        wait.play();
     }
 
 }
