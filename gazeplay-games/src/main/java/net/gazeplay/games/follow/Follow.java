@@ -62,7 +62,7 @@ public class Follow implements GameLifeCycle {
     private final  ArrayList<EventItem> listEI;
 
     //Pointer of the gaze
-    private Rectangle Gaze;
+    private Rectangle gaze;
 
     //number position item (x,y)
     private int x;
@@ -245,8 +245,8 @@ public class Follow implements GameLifeCycle {
     }
 
     private void position(){
-        Gaze.setX(rx);
-        Gaze.setY(ry);
+        gaze.setX(rx);
+        gaze.setY(ry);
     }
 
     private void startafterdelay(){
@@ -310,9 +310,9 @@ public class Follow implements GameLifeCycle {
     }
 
     private void pointer(){
-        Gaze = new Rectangle(0, 0, dimension2D.getWidth()/200, dimension2D.getWidth()/200);
-        Gaze.setFill(new ImagePattern(new Image("data/follow/ruby1.png")));
-        gameContext.getChildren().add(Gaze);
+        gaze = new Rectangle(0, 0, dimension2D.getWidth()/200, dimension2D.getWidth()/200);
+        gaze.setFill(new ImagePattern(new Image("data/follow/ruby1.png")));
+        gameContext.getChildren().add(gaze);
     }
 
     private void contour(){
