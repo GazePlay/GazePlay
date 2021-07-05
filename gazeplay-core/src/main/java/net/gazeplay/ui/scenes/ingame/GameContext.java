@@ -447,13 +447,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
      * until the delay is over
      */
     public void onGameStarted() {
-        int delay = 2000;
-        gamingRoot.setDisable(true);
-        PauseTransition Wait = new PauseTransition(Duration.millis(delay));
-        Wait.setOnFinished(WaitEvent -> {
-            gamingRoot.setDisable(false);
-        });
-        Wait.play();
     }
 
     public void onGameStarted(int delay) {
