@@ -191,7 +191,7 @@ public class Follow implements GameLifeCycle {
                 boolean test = true;
 
                 for (Rectangle Wall : ListWall) {
-                    if (IsInWall(Wall, tx, py, sizeP)) {
+                    if (isInWall(Wall, tx, py, sizeP)) {
                         if (x > 0) {
                             tx = Wall.getX() - 1.001 * sizeP / 2;
                         } else {
@@ -199,7 +199,7 @@ public class Follow implements GameLifeCycle {
                         }
                         test = false;
                     }
-                    if (IsInWall(Wall, px, ty, sizeP)) {
+                    if (isInWall(Wall, px, ty, sizeP)) {
                         if (y > 0) {
                             ty = Wall.getY() - 1.001 * sizeP / 2;
                         } else {
@@ -210,7 +210,7 @@ public class Follow implements GameLifeCycle {
                 }
                 if (test) {
                     for (Rectangle Wall : ListWall) {
-                        if (IsInWall(Wall, tx, ty, sizeP)) {
+                        if (isInWall(Wall, tx, ty, sizeP)) {
                             if (Math.abs(x)>Math.abs(y)) {
                                 if (x > 0) {
                                     tx = Wall.getX() - 1.001 * sizeP / 2;
@@ -230,7 +230,7 @@ public class Follow implements GameLifeCycle {
                 }
                 boolean in = false;
                 for (Rectangle Wall : ListWall){
-                    in = in || IsInWall(Wall, tx, ty, sizeP);
+                    in = in || isInWall(Wall, tx, ty, sizeP);
                 }
                 if (!in) {
                     px = tx;
@@ -255,7 +255,7 @@ public class Follow implements GameLifeCycle {
         Wait.play();
     }
 
-    private boolean IsInWall(Rectangle Wall, double x, double y, double size){
+    private boolean isInWall(Rectangle Wall, double x, double y, double size){
         double Wx = Wall.getX() + size/2;
         double Wy = Wall.getY() + size/2;
         double Ww = Wall.getWidth();
@@ -286,7 +286,7 @@ public class Follow implements GameLifeCycle {
     private void CheckEI(){
         ArrayList<EventItem> Remove = new ArrayList<>();
         for(EventItem EI : ListEI){
-            if (IsInWall(EI, px, py, sizeP)){
+            if (isInWall(EI, px, py, sizeP)){
                 if (EI.remove) {
                     Remove.add(EI);
                     gameContext.getChildren().remove(EI);
