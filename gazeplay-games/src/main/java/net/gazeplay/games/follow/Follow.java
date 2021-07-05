@@ -177,60 +177,64 @@ public class Follow implements GameLifeCycle {
             double y = ry - py;
             double dist = Math.sqrt(x*x + y*y);
             if (canmove) {
+                double tx;
+                double ty;
                 if (dist > speed) {
-                    double tx = px + speed * x / dist;
-                    double ty = py + speed * y / dist;
+                    tx = px + speed * x / dist;
+                    ty = py + speed * y / dist;
+                }
+                else {
+                    tx = rx;
+                    ty = ry;
+                }
 
-                    boolean test = true;
+                boolean test = true;
 
+                for (Rectangle Wall : ListWall) {
+                    if (IsInWall(Wall, tx, py, sizeP)) {
+                        if (x > 0) {
+                            tx = Wall.getX() - 1.001 * sizeP / 2;
+                        } else {
+                            tx = Wall.getX() + Wall.getWidth() + 1.001 * sizeP / 2;
+                        }
+                        test = false;
+                    }
+                    if (IsInWall(Wall, px, ty, sizeP)) {
+                        if (y > 0) {
+                            ty = Wall.getY() - 1.001 * sizeP / 2;
+                        } else {
+                            ty = Wall.getY() + Wall.getHeight() + 1.001 * sizeP / 2;
+                        }
+                        test = false;
+                    }
+                }
+                if (test) {
                     for (Rectangle Wall : ListWall) {
-                        if (IsInWall(Wall, tx, py, sizeP)) {
-                            if (x > 0) {
-                                tx = Wall.getX() - 1.001 * sizeP / 2;
-                            } else {
-                                tx = Wall.getX() + Wall.getWidth() + 1.001 * sizeP / 2;
-                            }
-                            test = false;
-                        }
-                        if (IsInWall(Wall, px, ty, sizeP)) {
-                            if (y > 0) {
-                                ty = Wall.getY() - 1.001 * sizeP / 2;
-                            } else {
-                                ty = Wall.getY() + Wall.getHeight() + 1.001 * sizeP / 2;
-                            }
-                            test = false;
-                        }
-                    }
-                    if (test) {
-                        for (Rectangle Wall : ListWall) {
-                            if (IsInWall(Wall, tx, ty, sizeP)) {
-                                if (Math.abs(x)>Math.abs(y)) {
-                                    if (x > 0) {
-                                        tx = Wall.getX() - 1.001 * sizeP / 2;
-                                    } else {
-                                        tx = Wall.getX() + Wall.getWidth() + 1.001 * sizeP / 2;
-                                    }
+                        if (IsInWall(Wall, tx, ty, sizeP)) {
+                            if (Math.abs(x)>Math.abs(y)) {
+                                if (x > 0) {
+                                    tx = Wall.getX() - 1.001 * sizeP / 2;
+                                } else {
+                                    tx = Wall.getX() + Wall.getWidth() + 1.001 * sizeP / 2;
                                 }
-                                else {
-                                    if (y > 0) {
-                                        ty = Wall.getY() - 1.001 * sizeP / 2;
-                                    } else {
-                                        ty = Wall.getY() + Wall.getHeight() + 1.001 * sizeP / 2;
-                                    }
+                            }
+                            else {
+                                if (y > 0) {
+                                    ty = Wall.getY() - 1.001 * sizeP / 2;
+                                } else {
+                                    ty = Wall.getY() + Wall.getHeight() + 1.001 * sizeP / 2;
                                 }
                             }
                         }
                     }
-
-                    boolean in = false;
-                    for (Rectangle Wall : ListWall){
-                        in = in || IsInWall(Wall, tx, ty, sizeP);
-                    }
-
-                    if (!in) {
-                        px = tx;
-                        py = ty;
-                    }
+                }
+                boolean in = false;
+                for (Rectangle Wall : ListWall){
+                    in = in || IsInWall(Wall, tx, ty, sizeP);
+                }
+                if (!in) {
+                    px = tx;
+                    py = ty;
                 }
                 RPlayer.setX(px - sizeP / 2);
                 RPlayer.setY(py - sizeP / 2);
