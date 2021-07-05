@@ -171,8 +171,6 @@ class PictureCard extends Group {
             // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
             // gameInstance.stats);
 
-            gameContext.onGameStarted();
-
         }));
 
         fullAnimation.play();
