@@ -4,6 +4,8 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +34,7 @@ public class OpinionsGame implements GameLifeCycle {
     private final ImageLibrary backgroundImage;
     private final ImageLibrary thumbImage;
 
-    private Rectangle background;
+    private ImageView background;
 
     private ProgressButton thumbDown;
     private ProgressButton noCare;
@@ -85,18 +87,24 @@ public class OpinionsGame implements GameLifeCycle {
         this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
 
-        background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        background.widthProperty().bind(gameContext.getRoot().widthProperty());
-        background.heightProperty().bind(gameContext.getRoot().heightProperty());
+        background = new ImageView();
+        background.fitWidthProperty().bind(gameContext.getRoot().widthProperty());
+        background.fitHeightProperty().bind(gameContext.getRoot().heightProperty());
+        background.setPreserveRatio(true);
 
-        backgroundLayer.getChildren().add(background);
-        background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+        BorderPane backgroundCenteredPane = new BorderPane();
+        backgroundCenteredPane.prefWidthProperty().bind(gameContext.getRoot().widthProperty());
+        backgroundCenteredPane.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
+        backgroundCenteredPane.setCenter(background);
+
+        backgroundLayer.getChildren().add(backgroundCenteredPane);
+        background.setImage(backgroundImage.pickRandomImage());
 
         thumbDown = new ProgressButton();
         createAddButtonOpinions(thumbDown, "data/opinions/thumbs/thumbdown.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
 
         thumbDown.assignIndicator(event -> {
-            background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+            background.setImage(backgroundImage.pickRandomImage());
             stats.incrementNumberOfGoalsReached();
             updateScore();
         }, configuration.getFixationLength());
@@ -107,7 +115,7 @@ public class OpinionsGame implements GameLifeCycle {
         createAddButtonOpinions(noCare, "data/opinions/thumbs/nocare.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
 
         noCare.assignIndicator(event -> {
-            background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+            background.setImage(backgroundImage.pickRandomImage());
             stats.incrementNumberOfGoalsReached();
             updateScore();
         }, configuration.getFixationLength());
@@ -118,7 +126,7 @@ public class OpinionsGame implements GameLifeCycle {
         createAddButtonOpinions(thumbUp, "data/opinions/thumbs/thumbup.png", 0, dimension2D.getHeight() * 2 / 5);
 
         thumbUp.assignIndicator(event -> {
-            background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+            background.setImage(backgroundImage.pickRandomImage());
             stats.incrementNumberOfGoalsReached();
             updateScore();
         }, configuration.getFixationLength());
