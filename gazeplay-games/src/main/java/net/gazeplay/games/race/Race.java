@@ -451,6 +451,9 @@ public class Race extends Parent implements GameLifeCycle {
         if (racerMovement == 18) {
             this.gameContext.updateScore(stats,this);
             gameContext.playWinTransition(500, actionEvent -> {
+                racers[0].t.stop();
+                racers[1].t.stop();
+                racers[2].t.stop();
                 dispose();
                 gameContext.clear();
                 launch();
@@ -557,16 +560,13 @@ public class Race extends Parent implements GameLifeCycle {
             * 1000), frogRacer);
         st.setByX(1);
         st.setByY(1);
-        final ParallelTransition pt = new ParallelTransition();
-        pt.getChildren().addAll(tt1);
-        pt.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
 
-        frogRacer.t = pt;
-        pt.setOnFinished(event -> {
+        frogRacer.t = tt1;
+        tt1.setOnFinished(event -> {
             endGame(frogRacer);
         });
 
-        pt.play();
+        tt1.play();
         return frogRacer;
     }
 
@@ -678,12 +678,14 @@ public class Race extends Parent implements GameLifeCycle {
     }
 
     private void endGame(Target frogRacer) {
-        log.info("frogRacer.centerX : {} ; gameContext.getPrimaryScene().getWidth() * 9/10 : {}", frogRacer.centerX, gameContext.getPrimaryScene().getWidth() * 9 / 10);
         if (frogRacer.getBoundsInParent().getCenterX() >= gameContext.getPrimaryScene().getWidth() * 9 / 10) {
             numberOfRacerFinished = numberOfRacerFinished + 1;
 
-            if(numberOfRacerFinished == 3) {
+            if(numberOfRacerFinished == 1) {
                 numberOfRacerFinished = 0;
+                racers[0].t.stop();
+                racers[1].t.stop();
+                racers[2].t.stop();
                 raceFinished();
                 dispose();
                 gameContext.clear();
