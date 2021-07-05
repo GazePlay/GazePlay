@@ -11,9 +11,9 @@ public class EventItem extends Rectangle{
     public final boolean remove;
     private boolean isActivable;
 
-    EventItem(double x, double y, double width, double height, ImagePattern Im, javafx.event.EventHandler<ActionEvent> event, boolean remove){
+    EventItem(double x, double y, double width, double height, ImagePattern im, javafx.event.EventHandler<ActionEvent> event, boolean remove){
         super(x,y,width,height);
-        this.setFill(Im);
+        this.setFill(im);
         this.event = event;
         this.remove = remove;
         isActivable = true;
@@ -22,16 +22,16 @@ public class EventItem extends Rectangle{
     public void active(){
         if (isActivable) {
             isActivable = false;
-            PauseTransition Wait = new PauseTransition(Duration.millis(10));
-            Wait.setOnFinished(event);
-            Wait.play();
+            PauseTransition wait = new PauseTransition(Duration.millis(10));
+            wait.setOnFinished(event);
+            wait.play();
             doActivable();
         }
     }
 
     private void doActivable(){
-        PauseTransition Wait = new PauseTransition(Duration.millis(2000));
-        Wait.setOnFinished(e -> isActivable = true);
-        Wait.play();
+        PauseTransition wait = new PauseTransition(Duration.millis(2000));
+        wait.setOnFinished(e -> isActivable = true);
+        wait.play();
     }
 }
