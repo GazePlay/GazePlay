@@ -253,6 +253,11 @@ toBottom,,,从上到下,,,from top to bottom,,du haut vers le bas,,,,,,,,,,de ar
 toRight,,,从左到you,,,from left to right,,de gauche à droite,,,,,,,,,,de la izquierda hacia la derecha,
 toLeft,,,从右到左,,,from right to left,,de droite à gauche,,,,,,,,,,de la derecha hacia la izquierda,
 
+toTop_FIX,,,,,,from bottom to top; fix to destroy the bubble,,du bas vers le haut ; fixer pour détruire la bulle,,,,,,,,,,,
+toBottom_FIX,,,,,,from top to bottom; fix to destroy the bubble,,du haut vers le bas ; fixer pour détruire la bulle,,,,,,,,,,,
+toRight_FIX,,,,,,from left to right; fix to destroy the bubble,,de gauche à droite ; fixer pour détruire la bulle,,,,,,,,,,,
+toLeft_FIX,,,,,,from right to left; fix to destroy the bubble,,de droite à gauche ; fixer pour détruire la bulle,,,,,,,,,,,
+
 Dark,,,,,,Dark,,Sombre,,,,,,,,,,Oscuro,
 Light,,,,,,Light,,Clair,,,,,,,,,,Claro,
 BackgroundStyle,,,,,,Background style,,Style de fond,,,,,,,,,,,

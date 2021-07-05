@@ -37,6 +37,11 @@ public class Bubble extends Parent implements GameLifeCycle {
     public static final String DIRECTION_LEFT = "toLeft";
     public static final String DIRECTION_RIGHT = "toRight";
 
+    public static final String DIRECTION_TOP_FIX = "toTop_FIX";
+    public static final String DIRECTION_BOTTOM_FIX = "toBottom_FIX";
+    public static final String DIRECTION_LEFT_FIX = "toLeft_FIX";
+    public static final String DIRECTION_RIGHT_FIX = "toRight_FIX";
+
     private static final int maxTimeLength = 7;
     private static final int minTimeLength = 4;
 
@@ -237,27 +242,43 @@ public class Bubble extends Parent implements GameLifeCycle {
     }
 
     private void enter(final Circle target) {
-        final Dimension2D screenDimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        if (target.getRadius()>Math.min(screenDimension.getHeight()/8,screenDimension.getWidth()/8)) {
+        if (this.direction.toString().endsWith("FIX")) {
+            final Dimension2D screenDimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+            if (target.getRadius() > Math.min(screenDimension.getHeight() / 8, screenDimension.getWidth() / 8)) {
+                final double centerX = target.getCenterX();
+                final double centerY = target.getCenterY();
+                gameContext.getGazeDeviceManager().removeEventFilter(target);
+                this.getChildren().remove(target);
+                stats.incrementNumberOfGoalsReached();
+                gameContext.updateScore(stats, this);
+                explose(centerX, centerY); // instead of C to avoid wrong position of the explosion
+                this.newCircle();
+            } else {
+                PauseTransition Wait = new PauseTransition(Duration.millis(5));
+                Wait.setOnFinished(WaitEvent -> {
+                    if (inTarget) {
+                        target.setRadius(target.getRadius() * Math.pow(1.03, gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty().getValue()));
+                        enter(target);
+                    }
+                });
+                Wait.play();
+            }
+        } else {
             final double centerX = target.getCenterX();
             final double centerY = target.getCenterY();
+
             gameContext.getGazeDeviceManager().removeEventFilter(target);
             this.getChildren().remove(target);
+
             stats.incrementNumberOfGoalsReached();
-            gameContext.updateScore(stats, this);
+
+            gameContext.updateScore(stats,this);
+
             explose(centerX, centerY); // instead of C to avoid wrong position of the explosion
+
             this.newCircle();
-        } else {
-            PauseTransition Wait = new PauseTransition(Duration.millis(5));
-            Wait.setOnFinished(WaitEvent -> {
-                if (inTarget) {
-                    target.setRadius(target.getRadius() * Math.pow(1.03,gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty().getValue()));
-                    enter(target);
-                }
-            });
-            Wait.play();
         }
-        }
+    }
 
     private void newCircle() {
         final Circle circle = buildCircle();
@@ -273,14 +294,23 @@ public class Bubble extends Parent implements GameLifeCycle {
         circle.addEventHandler(GazeEvent.ANY, enterEvent);
 
         moveCircle(circle);
-        decreaseSize(circle);
+        if (this.direction.toString().endsWith("FIX")) {
+            decreaseSize(circle);
+        }
     }
 
     private Circle buildCircle() {
 
         final Circle newCircle = new Circle();
         final Dimension2D screenDimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final double radius = Math.min(screenDimension.getHeight()/20,screenDimension.getWidth()/20);
+        final double radius;
+        if (this.direction.toString().endsWith("FIX")) {
+            radius = Math.min(screenDimension.getHeight() / 20, screenDimension.getWidth() / 20);
+        } else {
+            double maxRadius = Math.min(screenDimension.getWidth()/12,screenDimension.getHeight()/8);
+            double minRadius =  Math.min(screenDimension.getHeight()/30,screenDimension.getWidth()/20);
+            radius = (maxRadius - minRadius) * randomGenerator.nextDouble() + minRadius;
+        }
 
         newCircle.setRadius(radius);
 
@@ -305,25 +335,25 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         double maxRadius = dimension2D.getHeight()/12;
 
-        if (this.direction == BubblesGameVariant.TOP) {
+        if (this.direction == BubblesGameVariant.TOP || this.direction == BubblesGameVariant.TOP_FIX) {
             centerX = (dimension2D.getWidth() - maxRadius) * randomGenerator.nextDouble() + maxRadius;
             centerY = dimension2D.getHeight();
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(circle.centerYProperty(), -maxRadius, Interpolator.EASE_IN)));
-        } else if (this.direction == BubblesGameVariant.BOTTOM) {
+        } else if (this.direction == BubblesGameVariant.BOTTOM || this.direction == BubblesGameVariant.BOTTOM_FIX) {
             centerX = (dimension2D.getWidth() - maxRadius) * randomGenerator.nextDouble() + maxRadius;
             centerY = 0;
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(circle.centerYProperty(), dimension2D.getHeight() + maxRadius, Interpolator.EASE_IN)));
-        } else if (this.direction == BubblesGameVariant.RIGHT) {
+        } else if (this.direction == BubblesGameVariant.RIGHT || this.direction == BubblesGameVariant.RIGHT_FIX) {
             centerX = 0;
             centerY = (dimension2D.getHeight() - maxRadius) * randomGenerator.nextDouble() + maxRadius;
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(circle.centerXProperty(), dimension2D.getWidth() + maxRadius, Interpolator.EASE_IN)));
-        } else if (this.direction == BubblesGameVariant.LEFT) {
+        } else if (this.direction == BubblesGameVariant.LEFT || this.direction == BubblesGameVariant.LEFT_FIX) {
             centerX = dimension2D.getWidth();
             centerY = (dimension2D.getHeight() - maxRadius) * randomGenerator.nextDouble() + maxRadius;
             timeline.getKeyFrames()
