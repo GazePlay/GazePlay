@@ -50,7 +50,7 @@ public class Follow implements GameLifeCycle {
     private double speed;
 
     //player square
-    private Rectangle RPlayer;
+    private Rectangle rPlayer;
 
     //If the player can move or not
     private boolean canmove;
@@ -236,8 +236,8 @@ public class Follow implements GameLifeCycle {
                     px = tx;
                     py = ty;
                 }
-                RPlayer.setX(px - sizeP / 2);
-                RPlayer.setY(py - sizeP / 2);
+                rPlayer.setX(px - sizeP / 2);
+                rPlayer.setY(py - sizeP / 2);
                 CheckEI();
             }
         });
@@ -304,9 +304,9 @@ public class Follow implements GameLifeCycle {
     }
 
     private void player(){
-        RPlayer = new Rectangle(px-sizeP/2, py-sizeP/2, sizeP, sizeP);
-        RPlayer.setFill(new ImagePattern(new Image("data/follow/Biboule.png")));
-        gameContext.getChildren().add(RPlayer);
+        rPlayer = new Rectangle(px-sizeP/2, py-sizeP/2, sizeP, sizeP);
+        rPlayer.setFill(new ImagePattern(new Image("data/follow/Biboule.png")));
+        gameContext.getChildren().add(rPlayer);
     }
 
     private void pointer(){
