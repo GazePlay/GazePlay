@@ -190,47 +190,47 @@ public class Follow implements GameLifeCycle {
 
                 boolean test = true;
 
-                for (Rectangle Wall : listWall) {
-                    if (isInWall(Wall, tx, py, sizeP)) {
+                for (Rectangle wall : listWall) {
+                    if (isInWall(wall, tx, py, sizeP)) {
                         if (x > 0) {
-                            tx = Wall.getX() - 1.001 * sizeP / 2;
+                            tx = wall.getX() - 1.001 * sizeP / 2;
                         } else {
-                            tx = Wall.getX() + Wall.getWidth() + 1.001 * sizeP / 2;
+                            tx = wall.getX() + wall.getWidth() + 1.001 * sizeP / 2;
                         }
                         test = false;
                     }
-                    if (isInWall(Wall, px, ty, sizeP)) {
+                    if (isInWall(wall, px, ty, sizeP)) {
                         if (y > 0) {
-                            ty = Wall.getY() - 1.001 * sizeP / 2;
+                            ty = wall.getY() - 1.001 * sizeP / 2;
                         } else {
-                            ty = Wall.getY() + Wall.getHeight() + 1.001 * sizeP / 2;
+                            ty = wall.getY() + wall.getHeight() + 1.001 * sizeP / 2;
                         }
                         test = false;
                     }
                 }
                 if (test) {
-                    for (Rectangle Wall : listWall) {
-                        if (isInWall(Wall, tx, ty, sizeP)) {
+                    for (Rectangle wall : listWall) {
+                        if (isInWall(wall, tx, ty, sizeP)) {
                             if (Math.abs(x)>Math.abs(y)) {
                                 if (x > 0) {
-                                    tx = Wall.getX() - 1.001 * sizeP / 2;
+                                    tx = wall.getX() - 1.001 * sizeP / 2;
                                 } else {
-                                    tx = Wall.getX() + Wall.getWidth() + 1.001 * sizeP / 2;
+                                    tx = wall.getX() + wall.getWidth() + 1.001 * sizeP / 2;
                                 }
                             }
                             else {
                                 if (y > 0) {
-                                    ty = Wall.getY() - 1.001 * sizeP / 2;
+                                    ty = wall.getY() - 1.001 * sizeP / 2;
                                 } else {
-                                    ty = Wall.getY() + Wall.getHeight() + 1.001 * sizeP / 2;
+                                    ty = wall.getY() + wall.getHeight() + 1.001 * sizeP / 2;
                                 }
                             }
                         }
                     }
                 }
                 boolean in = false;
-                for (Rectangle Wall : listWall){
-                    in = in || isInWall(Wall, tx, ty, sizeP);
+                for (Rectangle wall : listWall){
+                    in = in || isInWall(wall, tx, ty, sizeP);
                 }
                 if (!in) {
                     px = tx;
@@ -255,11 +255,11 @@ public class Follow implements GameLifeCycle {
         Wait.play();
     }
 
-    private boolean isInWall(Rectangle Wall, double x, double y, double size){
-        double Wx = Wall.getX() + size/2;
-        double Wy = Wall.getY() + size/2;
-        double Ww = Wall.getWidth();
-        double Wh = Wall.getHeight();
+    private boolean isInWall(Rectangle wall, double x, double y, double size){
+        double Wx = wall.getX() + size/2;
+        double Wy = wall.getY() + size/2;
+        double Ww = wall.getWidth();
+        double Wh = wall.getHeight();
 
         return (x+size>Wx) && (y+size>Wy) && (x<Wx+Ww) && (y<Wy+Wh);
     }
