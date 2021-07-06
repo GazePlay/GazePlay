@@ -52,8 +52,7 @@ public class EggGame implements GameLifeCycle {
     }
 
     private Egg createEgg(final Configuration config) {
-        final int fixationlength = config.getFixationLength();
-        return new Egg(gameContext, stats, this, fixationlength, numberOfTurns);
+        return new Egg(gameContext, stats, this, gameContext.getConfiguration().getFixationLength(), numberOfTurns);
     }
 
 }

@@ -151,7 +151,10 @@ public class Cup {
         ball.getItem().setVisible(true);
 
         revealBallTransition.setOnFinished((ActionEvent actionEvent) -> {
-            gameContext.updateScore(stats, gameInstance, event -> {gameInstance.openAllIncorrectCups();}, event -> {});
+            gameContext.updateScore(stats, gameInstance, event -> {
+                gameInstance.openAllIncorrectCups();
+            }, event -> {
+            });
 
             gameContext.playWinTransition(0, (ActionEvent actionEvent1) -> {
 
@@ -160,8 +163,6 @@ public class Cup {
                 gameContext.clear();
 
                 gameInstance.launch();
-
-                gameContext.onGameStarted();
             });
         });
 
@@ -191,7 +192,7 @@ public class Cup {
 
                 timelineProgressBar = new Timeline();
 
-                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationDurationNeeded),
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
                     new KeyValue(progressIndicator.progressProperty(), 1)));
 
                 timelineProgressBar.setOnFinished((ActionEvent actionEvent) -> {

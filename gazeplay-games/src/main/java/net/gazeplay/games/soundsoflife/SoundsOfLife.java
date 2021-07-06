@@ -86,7 +86,7 @@ public class SoundsOfLife implements GameLifeCycle {
             double y = coordinates.get("y").getAsDouble() * scaleRatio + background.getY();
             imageView.setX(x - imageView.getFitWidth() / 2);
             imageView.setY(y - imageView.getFitHeight() / 2);
-            final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int)((imageView.getFitWidth() + imageView.getFitHeight())/3),
+            final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int) ((imageView.getFitWidth() + imageView.getFitHeight()) / 3),
                 System.currentTimeMillis());
             targetAOIList.add(targetAOI);
             // Creating progress indicator
@@ -105,7 +105,7 @@ public class SoundsOfLife implements GameLifeCycle {
             }
 
             SoundMakingEntity entity = new SoundMakingEntity(imageView, stats, sounds, progressIndicator,
-                config.getFixationLength(), gameContext.getSoundManager(), randomGenerator);
+                gameContext, gameContext.getSoundManager(), randomGenerator);
             gameContext.getChildren().add(entity);
             gameContext.getGazeDeviceManager().addEventFilter(entity);
         }
@@ -165,7 +165,7 @@ public class SoundsOfLife implements GameLifeCycle {
             double y = coordinates.get("y").getAsDouble() * scaleRatio + background.getY();
             imageView.setX(x - imageView.getFitWidth() / 2);
             imageView.setY(y - imageView.getFitHeight() / 2);
-            final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int)((imageView.getFitWidth() + imageView.getFitHeight())/3),
+            final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int) ((imageView.getFitWidth() + imageView.getFitHeight()) / 3),
                 System.currentTimeMillis());
             targetAOIList.add(targetAOI);
             // Creating progress indicator
@@ -184,7 +184,7 @@ public class SoundsOfLife implements GameLifeCycle {
             }
 
             SoundMakingEntity entity = new SoundMakingEntity(imageView, stats, sounds, progressIndicator,
-                config.getFixationLength(), gameContext.getSoundManager(), randomGenerator);
+                gameContext, gameContext.getSoundManager(), randomGenerator);
             gameContext.getChildren().add(entity);
             gameContext.getGazeDeviceManager().addEventFilter(entity);
         }
@@ -213,7 +213,7 @@ public class SoundsOfLife implements GameLifeCycle {
 
     @Override
     public void dispose() {
-        for(TargetAOI aoi : targetAOIList){
+        for (TargetAOI aoi : targetAOIList) {
             aoi.setTimeEnded(System.currentTimeMillis());
         }
         this.stats.setTargetAOIList(targetAOIList);

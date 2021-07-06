@@ -15,7 +15,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.DiceRoller;
@@ -48,8 +47,6 @@ public class Dice implements GameLifeCycle {
 
         rolls = new int[nbDice];
 
-        final Configuration config = gameContext.getConfiguration();
-
         // Roll button is used to roll all the dice at once
         rollButton = new ProgressButton();
         final ImageView nextImage = new ImageView("data/dice/roll.png");
@@ -58,7 +55,7 @@ public class Dice implements GameLifeCycle {
         rollButton.setLayoutX(dimensions.getWidth() / 2 - nextImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() - 1.2 * nextImage.getFitHeight());
         rollButton.setImage(nextImage);
-        rollButton.assignIndicator(event -> {
+        rollButton.assignIndicatorUpdatable(event -> {
             if (active) {
                 active = false;
                 totalText.setOpacity(0);
@@ -67,7 +64,7 @@ public class Dice implements GameLifeCycle {
                 }
                 stats.incrementNumberOfGoalsReached();
             }
-        }, config.getFixationLength());
+        }, gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 
@@ -112,8 +109,6 @@ public class Dice implements GameLifeCycle {
 
         rolls = new int[nbDice];
 
-        final Configuration config = gameContext.getConfiguration();
-
         // Roll button is used to roll all the dice at once
         rollButton = new ProgressButton();
         final ImageView nextImage = new ImageView("data/dice/roll.png");
@@ -122,7 +117,7 @@ public class Dice implements GameLifeCycle {
         rollButton.setLayoutX(dimensions.getWidth() / 2 - nextImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() - 1.2 * nextImage.getFitHeight());
         rollButton.setImage(nextImage);
-        rollButton.assignIndicator(event -> {
+        rollButton.assignIndicatorUpdatable(event -> {
             if (active) {
                 active = false;
                 totalText.setOpacity(0);
@@ -131,7 +126,7 @@ public class Dice implements GameLifeCycle {
                 }
                 stats.incrementNumberOfGoalsReached();
             }
-        }, config.getFixationLength());
+        }, gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 

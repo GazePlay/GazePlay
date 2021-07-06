@@ -161,6 +161,7 @@ public class Blocs implements GameLifeCycle {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
+        gameContext.onGameStarted(2000);
     }
 
     @Override
@@ -243,7 +244,6 @@ public class Blocs implements GameLifeCycle {
                     gameContext.playWinTransition(0, event -> {
                         gameContext.clear();
                         Blocs.this.launch();
-                        gameContext.onGameStarted();
                     });
                 }
             }

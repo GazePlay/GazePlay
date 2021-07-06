@@ -14,7 +14,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
@@ -43,14 +42,14 @@ public class GazeIndicator extends ProgressIndicator implements IGazeProgressInd
 
     @Getter
     private boolean isStarted;
+    private final IGameContext gameContext;
 
     public GazeIndicator(final IGameContext gameContext) {
         super(0);
 
         this.setVisible(false);
 
-        final Configuration config = gameContext.getConfiguration();
-        this.duration = config.getFixationLength();
+        this.gameContext = gameContext;
         this.animation = new Timeline();
         this.nodedToListenTo = new HashMap<>();
 
@@ -71,7 +70,7 @@ public class GazeIndicator extends ProgressIndicator implements IGazeProgressInd
         animation.stop();
         animation = new Timeline();
 
-        animation.getKeyFrames().add(new KeyFrame(new Duration(duration), new KeyValue(this.progressProperty(), 1)));
+        animation.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(this.progressProperty(), 1)));
 
         animation.setOnFinished(onFinishHandler);
         animation.play();
