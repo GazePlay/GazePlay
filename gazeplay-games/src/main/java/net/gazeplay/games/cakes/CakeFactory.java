@@ -191,7 +191,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     void winButton(final boolean winOnly) {
         boolean win = true;
         boolean currentOk = true;
-        if (!variant.equals(CakeGameVariant.FREE)) {
+        if (!variant.equals(CakeGameVariant.ONELAYER)) {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
                     if (layers[i][j] != model[i][j]) {
@@ -229,6 +229,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             buttons[2].disable(!nappage);
             if (!currentOk) {
                 buttons[4].setOpacity(0.5);
+            }
+            if(variant.equals(CakeGameVariant.ONELAYER)){
+                buttons[4].setOpacity(0);
             }
             if (!nappage) {
                 buttons[2].setOpacity(0.5);
@@ -580,7 +583,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     }
 
     private void generateRandomCake() {
-        if (!variant.equals(CakeGameVariant.FREE)) {
+        if (!variant.equals(CakeGameVariant.ONELAYER)) {
             for (int i = 0; i < 3; i++) {
                 model[i][0] = 1 + random.nextInt(4);
                 model[i][1] = 1 + random.nextInt(5);
@@ -602,7 +605,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         int nbFloors;
         int nbDecoration;
 
-        if (variant.equals(CakeGameVariant.FREE)) {
+        if (variant.equals(CakeGameVariant.ONELAYER)) {
             nbFloors = 1;
             nbDecoration = 4;
         } else {
@@ -633,7 +636,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         randomCake.setLayoutX(3 * dimension2D.getWidth() / 4);
         randomCake.setLayoutY(dimension2D.getHeight() / 2);
         gameContext.getChildren().add(randomCake);
-        if (variant.equals(CakeGameVariant.EXTREM)) {
+        if (variant.equals(CakeGameVariant.THREELAYERSHIDEN)) {
 
             final EventHandler<Event> cakeVanisher = e -> {
                 log.debug("cake is vanishing");
