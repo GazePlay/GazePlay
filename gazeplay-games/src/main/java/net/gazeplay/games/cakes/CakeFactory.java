@@ -230,7 +230,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             if (!currentOk) {
                 buttons[4].setOpacity(0.5);
             }
-            if(variant.equals(CakeGameVariant.ONELAYER)){
+            if (variant.equals(CakeGameVariant.ONELAYER)) {
                 buttons[4].setOpacity(0);
             }
             if (!nappage) {
