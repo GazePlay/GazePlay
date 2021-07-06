@@ -59,6 +59,8 @@ public interface IGameContext {
 
     void onGameStarted();
 
+    void onGameStarted(int delay);
+
     void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler);
 
     void endWinTransition();
