@@ -62,7 +62,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME = "LATEST_NEWS_POPUP_LAST_SHOWN_TIME";
     private static final String PROPERTY_NAME_FAVORITE_GAMES = "FAVORITE_GAMES";
     private static final String PROPERTY_NAME_HIDDEN_CATEGORIES = "HIDDEN_CATEGORIES";
-    private static final String PROPERTY_NAME_ELEMENTSIZE = "ELEMENTSIZE";
+    private static final String PROPERTY_NAME_ELEMENTSIZE = "ELEMENT_SIZE";
 
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
