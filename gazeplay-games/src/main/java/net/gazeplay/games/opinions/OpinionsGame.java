@@ -45,6 +45,9 @@ public class OpinionsGame implements GameLifeCycle {
 
     private final OpinionsGameVariant type;
 
+    private Image current_picture;
+    private Image old_picture;
+
     public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats, final OpinionsGameVariant type) {
         this.stats = stats;
         this.opinionGameStats = this.stats;
@@ -97,7 +100,9 @@ public class OpinionsGame implements GameLifeCycle {
         background.heightProperty().bind(gameContext.getRoot().heightProperty());
 
         backgroundLayer.getChildren().add(background);
-        background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+        current_picture = backgroundImage.pickRandomImage();
+        background.setFill(new ImagePattern(current_picture));
+        old_picture = current_picture;
 
         if (type.equals(OpinionsGameVariant.OPINIONS)) {
 
@@ -105,7 +110,11 @@ public class OpinionsGame implements GameLifeCycle {
             createAddButtonOpinions(thumbDown, "data/opinions/thumbs/thumbdown.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
 
             thumbDown.assignIndicator(event -> {
-                background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+                while (old_picture.getUrl().equals(current_picture.getUrl())){
+                    current_picture = backgroundImage.pickRandomImage();
+                }
+                background.setFill(new ImagePattern(current_picture));
+                old_picture = current_picture;
                 stats.incrementNumberOfGoalsReached();
                 updateScore();
             }, configuration.getFixationLength());
@@ -116,7 +125,11 @@ public class OpinionsGame implements GameLifeCycle {
             createAddButtonOpinions(noCare, "data/opinions/thumbs/nocare.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
 
             noCare.assignIndicator(event -> {
-                background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+                while (old_picture.getUrl().equals(current_picture.getUrl())){
+                    current_picture = backgroundImage.pickRandomImage();
+                }
+                background.setFill(new ImagePattern(current_picture));
+                old_picture = current_picture;
                 stats.incrementNumberOfGoalsReached();
                 updateScore();
             }, configuration.getFixationLength());
@@ -127,7 +140,11 @@ public class OpinionsGame implements GameLifeCycle {
             createAddButtonOpinions(thumbUp, "data/opinions/thumbs/thumbup.png", 0, dimension2D.getHeight() * 2 / 5);
 
             thumbUp.assignIndicator(event -> {
-                background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+                while (old_picture.getUrl().equals(current_picture.getUrl())){
+                    current_picture = backgroundImage.pickRandomImage();
+                }
+                background.setFill(new ImagePattern(current_picture));
+                old_picture = current_picture;
                 stats.incrementNumberOfGoalsReached();
                 updateScore();
             }, configuration.getFixationLength());
@@ -166,7 +183,11 @@ public class OpinionsGame implements GameLifeCycle {
             }
 
             Oui.assignIndicator(event -> {
-                background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+                while (old_picture.getUrl().equals(current_picture.getUrl())){
+                    current_picture = backgroundImage.pickRandomImage();
+                }
+                background.setFill(new ImagePattern(current_picture));
+                old_picture = current_picture;
                 stats.incrementNumberOfGoalsReached();
                 updateScore();
             }, configuration.getFixationLength());
@@ -174,7 +195,11 @@ public class OpinionsGame implements GameLifeCycle {
             Oui.active();
 
             Non.assignIndicator(event -> {
-                background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+                while (old_picture.getUrl().equals(current_picture.getUrl())){
+                    current_picture = backgroundImage.pickRandomImage();
+                }
+                background.setFill(new ImagePattern(current_picture));
+                old_picture = current_picture;
                 stats.incrementNumberOfGoalsReached();
                 updateScore();
             }, configuration.getFixationLength());
