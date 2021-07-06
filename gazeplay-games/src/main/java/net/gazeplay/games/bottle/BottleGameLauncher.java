@@ -1,19 +1,13 @@
 package net.gazeplay.games.bottle;
 
 import javafx.scene.Scene;
-import net.gazeplay.GameLifeCycle;
-import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
-import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.gamevariants.IntGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
-import net.gazeplay.games.biboulejump.BibouleJump;
-import net.gazeplay.games.biboulejump.BibouleJumpStats;
-import net.gazeplay.games.biboulejump.BibouleJumpVariant;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
