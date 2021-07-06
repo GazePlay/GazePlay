@@ -7,6 +7,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.gamevariants.IntGameVariant;
+import net.gazeplay.commons.gamevariants.IntStringGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -18,7 +19,7 @@ import net.gazeplay.games.biboulejump.BibouleJumpVariant;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class BottleGameLauncher implements IGameLauncher<BottleGameStats, IntGameVariant> {
+public class BottleGameLauncher implements IGameLauncher<BottleGameStats, IntStringGameVariant> {
 
     @Override
     public BottleGameStats createNewStats(Scene scene) {
@@ -26,8 +27,8 @@ public class BottleGameLauncher implements IGameLauncher<BottleGameStats, IntGam
     }
 
     @Override
-    public BottleGame createNewGame(IGameContext gameContext, IntGameVariant gameVariant, BottleGameStats stats) {
-        return new BottleGame(gameContext, stats, gameVariant.getNumber());
+    public BottleGame createNewGame(IGameContext gameContext, IntStringGameVariant gameVariant, BottleGameStats stats) {
+        return new BottleGame(gameContext, stats, gameVariant.getNumber(), gameVariant.getType());
     }
 
     @Override
@@ -36,7 +37,7 @@ public class BottleGameLauncher implements IGameLauncher<BottleGameStats, IntGam
     }
 
     @Override
-    public BottleGame replayGame(IGameContext gameContext, IntGameVariant gameVariant, BottleGameStats stats, double gameSeed) {
-        return new BottleGame(gameContext, stats, gameVariant.getNumber(), gameSeed);
+    public BottleGame replayGame(IGameContext gameContext, IntStringGameVariant gameVariant, BottleGameStats stats, double gameSeed) {
+        return new BottleGame(gameContext, stats, gameVariant.getNumber(), gameVariant.getType(), gameSeed);
     }
 }

@@ -202,6 +202,7 @@ public class CupsAndBalls implements GameLifeCycle {
                 createNewTransition(actions);
             } else {
                 gameContext.firstStart();
+                gameContext.onGameStarted(2000);
             }
         });
 

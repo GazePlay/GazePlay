@@ -102,7 +102,18 @@ public class Bubble extends Parent implements GameLifeCycle {
                 }
             });
 
-            imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
+            int randomWallpaperIndex = randomGenerator.nextInt(3);
+            switch (randomWallpaperIndex) {
+                case 1:
+                    imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/inhabited-ocean.png")));
+                    break;
+                case 2:
+                    imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/empty-ocean.png")));
+                    break;
+                default:
+                    imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
+                    break;
+            }
             imageRectangle.setOpacity(imageRectangleOpacity);
 
             gameContext.getChildren().add(imageRectangle);
