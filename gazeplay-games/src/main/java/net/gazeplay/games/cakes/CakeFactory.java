@@ -310,7 +310,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         p = new List[6];
         for (int i = 0; i < 6; i++) {
             p[i] = new LinkedList<>();
-            p[i].addAll(new ScreenCake(i, this, variant.equals(CakeGameVariant.FREE)));
+            p[i].addAll(new ScreenCake(i, this, variant.equals(CakeGameVariant.ONELAYER)));
         }
 
         for (int j = 1; j < 5; j++) {
