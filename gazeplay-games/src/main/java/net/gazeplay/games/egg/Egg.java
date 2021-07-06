@@ -77,7 +77,7 @@ public class Egg extends Parent {
         this.cards.layoutYProperty().bind(scene.heightProperty().divide(2d).subtract(this.cards.heightProperty().divide(2d)));
 
         this.random = new ReplayablePseudoRandom();
-        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"), random);
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"), random);
 
         final Rectangle image1 = new Rectangle(positionX, positionY, width, height);
         image1.setFill(new ImagePattern(new Image("data/egg/images/egg1.jpg"), 0, 0, 1, 1, true));
@@ -89,9 +89,6 @@ public class Egg extends Parent {
 
         final Rectangle image3 = new Rectangle(positionX, positionY, width, height);
         if (gameType.equals("personalize")) {
-            if (imageLibrary.getImagesCount() == 0) {
-                imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("portraits"), random);
-            }
             image3.setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
         } else if (gameType.equals("egg")) {
             image3.setFill(new ImagePattern(new Image("data/egg/images/egg3.jpg"), 0, 0, 1, 1, true));
