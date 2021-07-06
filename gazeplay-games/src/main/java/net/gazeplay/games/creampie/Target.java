@@ -70,7 +70,6 @@ public class Target extends Portrait {
 
                 animationEnded = false;
                 enter();
-
             }
         };
 
