@@ -14,26 +14,26 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class EggGameGameLauncher implements IGameLauncher<Stats, IntGameVariant> {
+public class PersonalizeEggGameGameLauncher implements IGameLauncher<Stats, IntGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
-        return new EggGameStats(scene, "egg");
+        return new EggGameStats(scene, "personalize");
     }
 
     @Override
     public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
-        return new EggGameStats(scene, "egg", nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+        return new EggGameStats(scene, "personalize", nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, IntGameVariant gameVariant,
                                        Stats stats) {
-        return new EggGame(gameContext, stats, gameVariant.getNumber(), "egg");
+        return new EggGame(gameContext, stats, gameVariant.getNumber(), "personalize");
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IntGameVariant gameVariant,
                                     Stats stats, double gameSeed) {
-        return new EggGame(gameContext, stats, gameVariant.getNumber(), "egg", gameSeed);
+        return new EggGame(gameContext, stats, gameVariant.getNumber(), "personalize", gameSeed);
     }
 }
