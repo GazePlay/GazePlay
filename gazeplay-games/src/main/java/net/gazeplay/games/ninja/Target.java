@@ -121,8 +121,7 @@ public class Target extends Portrait {
         final Position currentPosition = new Position((int) getCenterX(), (int) getCenterY());
 
         final Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
-        log.debug("currentPosition = {}, newPosition = {}, length = {}", currentPosition, newPosition, length);
-
+        resetTargetAtPosition(currentPosition);
         final TranslateTransition translation = new TranslateTransition(
             new Duration(length), this);
         translation.setByX(-this.getCenterX() + newPosition.getX());

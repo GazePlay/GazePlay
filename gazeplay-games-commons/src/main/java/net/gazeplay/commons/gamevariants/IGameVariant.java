@@ -34,6 +34,8 @@ public interface IGameVariant {
                 } catch (ClassNotFoundException ignored) {
                     return null;
                 }
+            case "IntStringGameVariant":
+                return new IntStringGameVariant(Integer.parseInt(split[1]), split[2]);
             default:
                 return null;
         }
