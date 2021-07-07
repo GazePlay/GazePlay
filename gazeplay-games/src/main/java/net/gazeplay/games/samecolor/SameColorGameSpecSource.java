@@ -9,7 +9,7 @@ public class SameColorGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("SameColor").gameThumbnail("data/Thumbnails/Charlie.png")
+            GameSummary.builder().nameCode("SameColor").gameThumbnail("data/Thumbnails/biboulejump.png")
                 .category(GameCategories.Category.SELECTION)
                 .build(),
             new SameColorGameVariantGenerator(), new SameColorGameLauncher());

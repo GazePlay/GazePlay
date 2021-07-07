@@ -77,6 +77,9 @@ public class SameColor implements GameLifeCycle {
 
         gameContext.getChildren().add(background);
         background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
+
+        stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     public void dispose(){
