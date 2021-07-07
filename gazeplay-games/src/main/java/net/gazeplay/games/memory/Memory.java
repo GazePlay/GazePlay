@@ -160,6 +160,8 @@ public class Memory implements GameLifeCycle {
         stats.notifyNewRoundReady();
 
         gameContext.getGazeDeviceManager().addStats(stats);
+
+        gameContext.onGameStarted(3000);
     }
 
     @Override
