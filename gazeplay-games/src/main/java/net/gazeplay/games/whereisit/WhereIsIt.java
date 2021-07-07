@@ -221,7 +221,7 @@ public class WhereIsIt implements GameLifeCycle {
 
             stats.notifyNewRoundReady();
 
-            gameContext.onGameStarted();
+            gameContext.onGameStarted(2000);
         });
 
         return fullAnimation;
