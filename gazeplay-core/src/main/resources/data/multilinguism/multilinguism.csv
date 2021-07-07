@@ -282,6 +282,11 @@ Mouse,,,,,,Mouse,,Souris,,,,,,,,,,,
 Gaze,,,,,,Gaze,,Regard,,,,,,,,,,,
 MouseAndGaze,,,,,,Mouse and Gaze,,Souris et Regard,,,,,,,,,,,
 
+Follow,,,,,,Follow the path,,Suivre le chemin,,,,,,,,,,,
+FKEYEASY,,,,,,Find the key,,Trouver la clé,,,,,,,,,,,
+FKEY,,,,,,Find the keys,,Trouver les clés,,,,,,,,,,,
+FCOIN,,,,,,Find the coins,,Trouver les pièces,,,,,,,,,,,
+
 OuiNon_Haut-Bas,,,,,,Yes at the top and no at the bottom,,Oui en haut et non en bas,,,,,,,,,,,
 OuiNon_Bas-Haut,,,,,,Yes at the bottom and no at the top,,Oui en bas et non en haut,,,,,,,,,,,
 OuiNon_Gauche-Droite,,,,,,Yes to the left and no to the rigth,,Oui à gauche et non à droite,,,,,,,,,,,
@@ -297,4 +302,5 @@ BigB,,,,,,big bottles,,grosses bouteilles,,,,,,,,,,,
 SmallB,,,,,,small bottles,,petites bouteilles,,,,,,,,,,,
 HighB,,,,,,high botles,,grandes bouteilles,,,,,,,,,,,
 TinyB,,,,,,tiny bottles,,bouteilles minuscules,,,,,,,,,,,
+
 
