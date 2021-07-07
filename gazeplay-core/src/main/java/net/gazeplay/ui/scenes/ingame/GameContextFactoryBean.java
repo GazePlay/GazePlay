@@ -155,15 +155,23 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
             double from = 0;
             double to = 1;
             double angle = 360;
+
             if (menuOpen) {
                 from = 1;
                 to = 0;
                 angle = -1 * angle;
                 Stats.setConfigMenuOpen(false);
+
             } else if (!configPane.getChildren().contains(controlPanel)) {
                 configPane.getChildren().add(controlPanel);
                 Stats.setConfigMenuOpen(true);
             }
+            configPane.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+                Stats.setConfigMenuOpen(false);
+                menuOpen = false;
+                controlPanel.setVisible(false);
+                controlPanel.setDisable(true);
+            });
             RotateTransition rt = new RotateTransition(Duration.millis(500), bt);
             rt.setByAngle(angle);
             FadeTransition ft = new FadeTransition(Duration.millis(500), controlPanel);
