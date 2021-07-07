@@ -13,7 +13,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.Getter;
@@ -462,7 +465,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     public void onGameStarted() {
     }
 
-    public void setOffFixationLengthControl(){
+    public void setOffFixationLengthControl() {
         leftControlPane.getChildren().remove(fixPan);
     }
 
