@@ -1,5 +1,6 @@
 package net.gazeplay.ui.scenes.ingame;
 
+import javafx.animation.PauseTransition;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -16,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -444,7 +446,21 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         return gamingRoot;
     }
 
+    /*
+     * When the game starts,
+     * the player can't select an element
+     * until the delay is over
+     */
     public void onGameStarted() {
+    }
+
+    public void onGameStarted(int delay) {
+        gamingRoot.setDisable(true);
+        PauseTransition wait = new PauseTransition(Duration.millis(delay));
+        wait.setOnFinished(waitEvent -> {
+            gamingRoot.setDisable(false);
+        });
+        wait.play();
     }
 
 }

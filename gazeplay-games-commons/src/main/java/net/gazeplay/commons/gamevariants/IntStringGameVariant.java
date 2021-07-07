@@ -32,7 +32,7 @@ public class IntStringGameVariant implements IGameVariant {
 
     @Override
     public String getLabel(final Translator translator) {
-        return number + " \n " + translator.translate(stringValue);
+        return number + " " + translator.translate(stringValue);
     }
 
     @Override
