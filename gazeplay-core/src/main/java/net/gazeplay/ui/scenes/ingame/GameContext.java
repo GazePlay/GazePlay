@@ -42,7 +42,6 @@ import net.gazeplay.ui.MusicControl;
 import net.gazeplay.ui.scenes.stats.StatsContext;
 import net.gazeplay.ui.scenes.stats.StatsContextFactory;
 
-import javax.swing.border.TitledBorder;
 import java.io.IOException;
 import java.util.function.Supplier;
 
@@ -95,7 +94,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     private VideoRecordingContext videoRecordingContext;
 
-    private TitledPane FixPan;
+    private TitledPane fixPan;
 
     private GridPane leftControlPane;
 
@@ -243,8 +242,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         leftControlPane.add(musicControl.createMusicControlPane(), 0, 0);
         leftControlPane.add(musicControl.createVolumeLevelControlPane(config, gazePlay.getTranslator()), 1, 0);
         leftControlPane.add(animationSpeedRatioControl.createSpeedEffectsPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 2, 0);
-        FixPan = fixationLengthControl.createfixationLengthPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene());
-        leftControlPane.add(FixPan, 3, 0);
+        fixPan = fixationLengthControl.createfixationLengthPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene());
+        leftControlPane.add(fixPan, 3, 0);
         leftControlPane.getChildren().forEach(node -> {
             GridPane.setVgrow(node, Priority.ALWAYS);
             GridPane.setHgrow(node, Priority.ALWAYS);
@@ -273,8 +272,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         leftControlPane.add(musicControl.createMusicControlPane(), 0, 0);
         leftControlPane.add(musicControl.createVolumeLevelControlPane(config, gazePlay.getTranslator()), 1, 0);
         leftControlPane.add(animationSpeedRatioControl.createSpeedEffectsPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 2, 0);
-        FixPan = fixationLengthControl.createfixationLengthPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene());
-        leftControlPane.add(FixPan, 3, 0);
+        fixPan = fixationLengthControl.createfixationLengthPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene());
+        leftControlPane.add(fixPan, 3, 0);
         leftControlPane.getChildren().forEach(node -> {
             GridPane.setVgrow(node, Priority.ALWAYS);
             GridPane.setHgrow(node, Priority.ALWAYS);
@@ -453,7 +452,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public void setOffFixationLengthControl(){
-        leftControlPane.getChildren().remove(FixPan);
+        leftControlPane.getChildren().remove(fixPan);
     }
 
 }
