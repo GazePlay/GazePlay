@@ -190,6 +190,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
                     }
                 });
                 pt.play();
+                buttonTransparentHandler(bt);
 
             });
             RotateTransition rt = new RotateTransition(Duration.millis(500), bt);
