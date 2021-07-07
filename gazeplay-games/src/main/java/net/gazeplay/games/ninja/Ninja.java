@@ -55,6 +55,8 @@ public class Ninja implements GameLifeCycle {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.incrementNumberOfGoalsToReach();
+
+        gameContext.setOffFixationLengthControl();
     }
 
     @Override

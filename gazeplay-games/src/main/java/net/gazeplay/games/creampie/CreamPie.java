@@ -79,6 +79,8 @@ public class CreamPie implements GameLifeCycle {
         stats.notifyNewRoundReady();
         stats.incrementNumberOfGoalsToReach();
         gameContext.getGazeDeviceManager().addStats(stats);
+
+        gameContext.setOffFixationLengthControl();
     }
 
     @Override

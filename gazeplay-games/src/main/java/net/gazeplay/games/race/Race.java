@@ -365,6 +365,7 @@ public class Race extends Parent implements GameLifeCycle {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
 
+        gameContext.setOffFixationLengthControl();
     }
 
     // done
