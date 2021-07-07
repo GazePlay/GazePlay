@@ -15,6 +15,7 @@ public class IntStringGameVariant implements IGameVariant {
         this.stringValue = stringValue;
     }
 
+    // The following commented code will be used later for different positions of EggGame
     public static String[] positions = new String[]{
         "TOPLEFT",
         "TOPCENTER",
@@ -26,6 +27,7 @@ public class IntStringGameVariant implements IGameVariant {
         "BOTTOMCENTER",
         "BOTTOMRIGHT"};
 
+    // The following commented code will be used later for High-Contrast Color Game
     public static String[] contrastStyles = new String[]{
         "NORMAL", "HIGH"
     };
