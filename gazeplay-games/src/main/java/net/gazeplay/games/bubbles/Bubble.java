@@ -37,6 +37,11 @@ public class Bubble extends Parent implements GameLifeCycle {
     public static final String DIRECTION_LEFT = "toLeft";
     public static final String DIRECTION_RIGHT = "toRight";
 
+    public static final String DIRECTION_TOP_FIX = "toTop_FIX";
+    public static final String DIRECTION_BOTTOM_FIX = "toBottom_FIX";
+    public static final String DIRECTION_LEFT_FIX = "toLeft_FIX";
+    public static final String DIRECTION_RIGHT_FIX = "toRight_FIX";
+
     private static final int maxTimeLength = 7;
     private static final int minTimeLength = 4;
 
@@ -57,7 +62,9 @@ public class Bubble extends Parent implements GameLifeCycle {
     private final BubblesGameVariant direction;
 
     private final ReplayablePseudoRandom randomGenerator;
-    private final ReplayablePseudoRandom randomFragmentsGenerator = new ReplayablePseudoRandom();;
+    private final ReplayablePseudoRandom randomFragmentsGenerator = new ReplayablePseudoRandom();
+
+    private boolean inTarget = false;
 
     public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final BubblesGameVariant direction) {
         this.gameContext = gameContext;
@@ -102,7 +109,18 @@ public class Bubble extends Parent implements GameLifeCycle {
                 }
             });
 
-            imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
+            int randomWallpaperIndex = randomGenerator.nextInt(3);
+            switch (randomWallpaperIndex) {
+                case 1:
+                    imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/inhabited-ocean.png")));
+                    break;
+                case 2:
+                    imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/empty-ocean.png")));
+                    break;
+                default:
+                    imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
+                    break;
+            }
             imageRectangle.setOpacity(imageRectangleOpacity);
 
             gameContext.getChildren().add(imageRectangle);
@@ -123,10 +141,15 @@ public class Bubble extends Parent implements GameLifeCycle {
         enterEvent = e -> {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-
+                inTarget = true;
                 enter((Circle) e.getTarget());
             }
-        };
+
+            if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED){
+                inTarget = false;
+            }
+
+    };
 
         gameContext.start();
         for (int i = 0; i < 10; i++) {
@@ -142,8 +165,11 @@ public class Bubble extends Parent implements GameLifeCycle {
         enterEvent = e -> {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-
+                inTarget = true;
                 enter((Circle) e.getTarget());
+            }
+            if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED){
+                inTarget = false;
             }
         };
 
@@ -227,20 +253,42 @@ public class Bubble extends Parent implements GameLifeCycle {
     }
 
     private void enter(final Circle target) {
+        if (this.direction.toString().endsWith("FIX")) {
+            final Dimension2D screenDimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+            if (target.getRadius() > Math.min(screenDimension.getHeight() / 8, screenDimension.getWidth() / 8)) {
+                final double centerX = target.getCenterX();
+                final double centerY = target.getCenterY();
+                gameContext.getGazeDeviceManager().removeEventFilter(target);
+                this.getChildren().remove(target);
+                stats.incrementNumberOfGoalsReached();
+                gameContext.updateScore(stats, this);
+                explose(centerX, centerY); // instead of C to avoid wrong position of the explosion
+                this.newCircle();
+            } else {
+                PauseTransition Wait = new PauseTransition(Duration.millis(5));
+                Wait.setOnFinished(WaitEvent -> {
+                    if (inTarget) {
+                        target.setRadius(target.getRadius() * Math.pow(1.03, gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty().getValue()));
+                        enter(target);
+                    }
+                });
+                Wait.play();
+            }
+        } else {
+            final double centerX = target.getCenterX();
+            final double centerY = target.getCenterY();
 
-        final double centerX = target.getCenterX();
-        final double centerY = target.getCenterY();
+            gameContext.getGazeDeviceManager().removeEventFilter(target);
+            this.getChildren().remove(target);
 
-        gameContext.getGazeDeviceManager().removeEventFilter(target);
-        this.getChildren().remove(target);
+            stats.incrementNumberOfGoalsReached();
 
-        stats.incrementNumberOfGoalsReached();
+            gameContext.updateScore(stats,this);
 
-        gameContext.updateScore(stats,this);
+            explose(centerX, centerY); // instead of C to avoid wrong position of the explosion
 
-        explose(centerX, centerY); // instead of C to avoid wrong position of the explosion
-
-        this.newCircle();
+            this.newCircle();
+        }
     }
 
     private void newCircle() {
@@ -257,15 +305,23 @@ public class Bubble extends Parent implements GameLifeCycle {
         circle.addEventHandler(GazeEvent.ANY, enterEvent);
 
         moveCircle(circle);
+        if (this.direction.toString().endsWith("FIX")) {
+            decreaseSize(circle);
+        }
     }
 
     private Circle buildCircle() {
 
         final Circle newCircle = new Circle();
         final Dimension2D screenDimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        double maxRadius = Math.min(screenDimension.getWidth()/12,screenDimension.getHeight()/12);
-        double minRadius =  Math.min(screenDimension.getHeight()/30,screenDimension.getWidth()/30);
-        final double radius = (maxRadius - minRadius) * randomGenerator.nextDouble() + minRadius;
+        final double radius;
+        if (this.direction.toString().endsWith("FIX")) {
+            radius = Math.min(screenDimension.getHeight() / 20, screenDimension.getWidth() / 20);
+        } else {
+            double maxRadius = Math.min(screenDimension.getWidth()/12,screenDimension.getHeight()/8);
+            double minRadius =  Math.min(screenDimension.getHeight()/30,screenDimension.getWidth()/20);
+            radius = (maxRadius - minRadius) * randomGenerator.nextDouble() + minRadius;
+        }
 
         newCircle.setRadius(radius);
 
@@ -290,25 +346,25 @@ public class Bubble extends Parent implements GameLifeCycle {
 
         double maxRadius = dimension2D.getHeight()/12;
 
-        if (this.direction == BubblesGameVariant.TOP) {
+        if (this.direction == BubblesGameVariant.TOP || this.direction == BubblesGameVariant.TOP_FIX) {
             centerX = (dimension2D.getWidth() - maxRadius) * randomGenerator.nextDouble() + maxRadius;
             centerY = dimension2D.getHeight();
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(circle.centerYProperty(), -maxRadius, Interpolator.EASE_IN)));
-        } else if (this.direction == BubblesGameVariant.BOTTOM) {
+        } else if (this.direction == BubblesGameVariant.BOTTOM || this.direction == BubblesGameVariant.BOTTOM_FIX) {
             centerX = (dimension2D.getWidth() - maxRadius) * randomGenerator.nextDouble() + maxRadius;
             centerY = 0;
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(circle.centerYProperty(), dimension2D.getHeight() + maxRadius, Interpolator.EASE_IN)));
-        } else if (this.direction == BubblesGameVariant.RIGHT) {
+        } else if (this.direction == BubblesGameVariant.RIGHT || this.direction == BubblesGameVariant.RIGHT_FIX) {
             centerX = 0;
             centerY = (dimension2D.getHeight() - maxRadius) * randomGenerator.nextDouble() + maxRadius;
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(circle.centerXProperty(), dimension2D.getWidth() + maxRadius, Interpolator.EASE_IN)));
-        } else if (this.direction == BubblesGameVariant.LEFT) {
+        } else if (this.direction == BubblesGameVariant.LEFT || this.direction == BubblesGameVariant.LEFT_FIX) {
             centerX = dimension2D.getWidth();
             centerY = (dimension2D.getHeight() - maxRadius) * randomGenerator.nextDouble() + maxRadius;
             timeline.getKeyFrames()
@@ -331,6 +387,18 @@ public class Bubble extends Parent implements GameLifeCycle {
         timeline.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
 
         timeline.play();
+    }
+
+    private void decreaseSize(final Circle target){
+        final Dimension2D screenDimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        PauseTransition Wait = new PauseTransition(Duration.millis(5));
+        Wait.setOnFinished(WaitEvent -> {
+            if (target.getRadius()>Math.min(screenDimension.getWidth()/20,screenDimension.getHeight()/20)) {
+                target.setRadius(target.getRadius() / Math.pow(1.005,gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty().getValue()));
+            }
+            decreaseSize(target);
+        });
+        Wait.play();
     }
 
 }

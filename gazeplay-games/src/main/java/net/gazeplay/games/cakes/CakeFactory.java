@@ -294,9 +294,6 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             gameContext.clear();
 
             launch();
-
-            gameContext.onGameStarted();
-
         });
     }
 
@@ -665,6 +662,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         this.gameContext.firstStart();
+        gameContext.onGameStarted(2000);
     }
 
     @Override
