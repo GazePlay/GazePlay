@@ -293,6 +293,8 @@ OuiNon_Bas-Haut,,,,,,Yes at the bottom and no at the top,,Oui en bas et non en h
 OuiNon_Gauche-Droite,,,,,,Yes to the left and no to the rigth,,Oui à gauche et non à droite,,,,,,,,,,,
 OuiNon_Droite-Gauche,,,,,,Yes to the rigth and no to the left,,Oui à droite et non à gauche,,,,,,,,,,,
 
+Sea,,,,,,Sea,,Mer,,,,,,,,,,,
+
 AnimeLook at the destination box to move,,,,,,With animation. Look at the destination box to move,,Avec animation. Regarde la boîte de destination pour bouger,,,,,,,,,,,
 AnimeLook the movement arrows around the mouse to move,,,,,,With Animation. Look the movement arrows around the mouse to move,,Avec animation. Regarde les flèches de mouvement autour de la souris pour bouger,,,,,,,,,,,
 AnimeLook the movement arrows around the labyrinth to move,,,,,,With Animation. Look the movement arrows around the labyrinth to move,,Avec animation. Regarde les flèches de mouvement autour du labyrinthe pour bouger,,,,,,,,,,,
@@ -303,5 +305,4 @@ BigB,,,,,,big bottles,,grosses bouteilles,,,,,,,,,,,
 SmallB,,,,,,small bottles,,petites bouteilles,,,,,,,,,,,
 HighB,,,,,,high botles,,grandes bouteilles,,,,,,,,,,,
 TinyB,,,,,,tiny bottles,,bouteilles minuscules,,,,,,,,,,,
-
 
