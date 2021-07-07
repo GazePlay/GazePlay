@@ -258,7 +258,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
-
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GraphicsSettings", COLON));
         // Graphics settings
         {
