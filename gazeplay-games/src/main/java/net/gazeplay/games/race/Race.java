@@ -449,11 +449,11 @@ public class Race extends Parent implements GameLifeCycle {
             movePlayer(playerRacer, racerMovement);
         }
         if (racerMovement == 18) {
-            this.gameContext.updateScore(stats,this);
+            this.gameContext.updateScore(stats, this);
+            racers[0].t.stop();
+            racers[1].t.stop();
+            racers[2].t.stop();
             gameContext.playWinTransition(500, actionEvent -> {
-                racers[0].t.stop();
-                racers[1].t.stop();
-                racers[2].t.stop();
                 dispose();
                 gameContext.clear();
                 launch();
@@ -487,7 +487,7 @@ public class Race extends Parent implements GameLifeCycle {
     private void makePlayer(final double racerPosition) {
 
         Scene scene = gameContext.getPrimaryScene();
-        final double size = Math.min(scene.getWidth()/15,scene.getHeight()/15);
+        final double size = Math.min(scene.getWidth() / 15, scene.getHeight() / 15);
         playerRacer = buildRacer(size);
         playerRacer.toBack();
         this.getChildren().add(playerRacer);
@@ -534,7 +534,7 @@ public class Race extends Parent implements GameLifeCycle {
     private Target makeRacers(final double racerPosition) {
 
         Scene scene = gameContext.getPrimaryScene();
-        final double size = Math.min(scene.getWidth()/10,scene.getHeight()/10);
+        final double size = Math.min(scene.getWidth() / 10, scene.getHeight() / 10);
         final Target frogRacer = buildRacer(size);
 
         int numberOfRacer = 0;
@@ -572,7 +572,7 @@ public class Race extends Parent implements GameLifeCycle {
 
     private void resize(final ImageView i) {
         Scene scene = gameContext.getPrimaryScene();
-        final double size = Math.min(scene.getWidth()/30,scene.getHeight()/30);
+        final double size = Math.min(scene.getWidth() / 30, scene.getHeight() / 30);
         i.setFitHeight(size);
         i.setFitWidth(size * 5 / 4);
     }
@@ -678,10 +678,10 @@ public class Race extends Parent implements GameLifeCycle {
     }
 
     private void endGame(Target frogRacer) {
-        if (frogRacer.getBoundsInParent().getCenterX() >= gameContext.getPrimaryScene().getWidth() * 9 / 10) {
+        if (frogRacer.getBoundsInParent().getMinX() >= gameContext.getPrimaryScene().getWidth() * 9 / 10) {
             numberOfRacerFinished = numberOfRacerFinished + 1;
 
-            if(numberOfRacerFinished == 1) {
+            if (numberOfRacerFinished == 1) {
                 numberOfRacerFinished = 0;
                 racers[0].t.stop();
                 racers[1].t.stop();
