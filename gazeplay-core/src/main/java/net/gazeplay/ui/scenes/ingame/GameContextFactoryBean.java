@@ -166,11 +166,31 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
                 configPane.getChildren().add(controlPanel);
                 Stats.setConfigMenuOpen(true);
             }
+            double finalFrom = 1;
+            double finalTo = 0;
+            double finalAngle = -360;
             configPane.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
                 Stats.setConfigMenuOpen(false);
-                menuOpen = false;
+
+                RotateTransition rt = new RotateTransition(Duration.millis(500), bt);
+                rt.setByAngle(finalAngle);
+                FadeTransition ft = new FadeTransition(Duration.millis(500), controlPanel);
+                ft.setFromValue(finalFrom);
+                ft.setToValue(finalTo);
+                ParallelTransition pt = new ParallelTransition();
+                pt.getChildren().addAll(rt, ft);
+                controlPanel.setPrefWidth(primaryStage.getWidth() / 2.5);
                 controlPanel.setVisible(false);
                 controlPanel.setDisable(true);
+                controlPanel.setMouseTransparent(true);
+                menuOpen = false;
+                pt.setOnFinished(actionEvent -> {
+                    if (!menuOpen) {
+                        configPane.getChildren().remove(controlPanel);
+                    }
+                });
+                pt.play();
+
             });
             RotateTransition rt = new RotateTransition(Duration.millis(500), bt);
             rt.setByAngle(angle);
