@@ -2,7 +2,6 @@ package net.gazeplay.games.bottle;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import net.gazeplay.GameSpec;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.IntGameVariant;
 import net.gazeplay.commons.gamevariants.IntStringGameVariant;
