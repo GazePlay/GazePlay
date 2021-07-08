@@ -216,6 +216,7 @@ public class ColorToolBox extends Pane {
             colorsGame.getGameContext().getGazeDeviceManager());
 
         customColorPickerButton.setOnAction(customColorButtonHandler);
+        customColorPickerButton.setOpacity(1);
 
         customColorDialog.setOnCloseRequest((event) -> {
             colorsGame.setEnableColorization(previousEnableColor);
@@ -398,6 +399,9 @@ public class ColorToolBox extends Pane {
             printImage(colorsGame.getWritableImg());
         });
 
+        imageChooserButton.setOpacity(1);
+        imageSaverButton.setOpacity(1);
+        PImageButton.setOpacity(1);
         bottomBox.getChildren().add(imageChooserButton);
         bottomBox.getChildren().add(imageSaverButton);
         bottomBox.getChildren().add(PImageButton);
@@ -486,6 +490,9 @@ public class ColorToolBox extends Pane {
 
         final GazeIndicator colorizeButtonIndicator = new GazeIndicator(gameContext);
         colorizeButtonIndicator.setMouseTransparent(true);
+
+        colorize.setOpacity(1);
+        stopColorize.setOpacity(1);
 
         final Pane colorizeButtonPane = new StackPane(colorize);
         final Pane stopColorizeButtonPane = new StackPane(stopColorize);
