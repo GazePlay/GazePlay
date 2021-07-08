@@ -176,8 +176,6 @@ class SlidingPuzzleCard extends Parent {
             gameContext.clear();
 
             gameInstance.launch();
-
-            gameContext.onGameStarted();
         }));
 
         if (!currentTimeline.getStatus().equals(Timeline.Status.RUNNING)) {

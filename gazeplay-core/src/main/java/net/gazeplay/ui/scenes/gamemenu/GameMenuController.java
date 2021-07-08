@@ -80,7 +80,8 @@ public class GameMenuController {
             width = (int) gazePlay.getPrimaryScene().getWindow().getWidth();
         }
         builder = createBuilder(selectedGameSpec.getGameSummary().getNameCode(), gameVariant, height, width);
-
+        final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
+        musicManager.stop();
         runProcessDisplayLoadAndWaitForNewJVMDisplayed(gazePlay, builder);
     }
 

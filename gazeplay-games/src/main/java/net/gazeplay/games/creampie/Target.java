@@ -35,8 +35,6 @@ public class Target extends ProgressPortrait {
 
     private boolean animationEnded = true;
 
-    private final int radius;
-
     private final RandomPositionGenerator randomPositionGenerator;
 
     private final Stats stats;
@@ -58,10 +56,9 @@ public class Target extends ProgressPortrait {
     private double centerY;
 
     public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
-                  final ImageLibrary imageLibrary, CreamPie gameInstance, final int radius) {
+                  final ImageLibrary imageLibrary, CreamPie gameInstance) {
 
         super();
-        this.radius = radius;
         this.randomPositionGenerator = randomPositionGenerator;
         this.hand = hand;
         this.imageLibrary = imageLibrary;
@@ -88,11 +85,11 @@ public class Target extends ProgressPortrait {
 
     private void createTarget() {
 
-        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(radius, 0, 1, 0, 0.8);
+        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(gameContext.getConfiguration().getElementSize(), 0, 1, 0, 0.8);
         this.centerX = newPosition.getX();
         this.centerY = newPosition.getY();
 
-        getButton().setRadius(radius);
+        getButton().setRadius(gameContext.getConfiguration().getElementSize());
         setLayoutX(this.centerX);
         setLayoutY(this.centerY);
         getButton().setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
@@ -146,7 +143,7 @@ public class Target extends ProgressPortrait {
     }
 
     private void newPosition() {
-        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(radius, 0, 1, 0, 0.8);
+        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(getInitialRadius(), 0, 1, 0, 0.8);
         this.centerX = newPosition.getX();
         this.centerY = newPosition.getY();
 
@@ -158,7 +155,7 @@ public class Target extends ProgressPortrait {
 
         stats.incrementNumberOfGoalsToReach();
 
-        final TargetAOI targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(), radius,
+        final TargetAOI targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(), getInitialRadius,
             System.currentTimeMillis());
         targetAOIList.add(targetAOI);
 
