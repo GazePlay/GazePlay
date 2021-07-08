@@ -5,7 +5,6 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.ImagePattern;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -69,7 +68,7 @@ public class OpinionsGame implements GameLifeCycle {
 
     }
 
-    public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats, final OpinionsGameVariant type,  double gameSeed) {
+    public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats, final OpinionsGameVariant type, double gameSeed) {
         this.stats = stats;
         this.opinionGameStats = this.stats;
         this.gameContext = gameContext;
@@ -118,7 +117,7 @@ public class OpinionsGame implements GameLifeCycle {
 
 
             thumbDown.assignIndicator(event -> {
-                while(old_picture.getUrl().equals(current_picture.getUrl())){
+                while (old_picture.getUrl().equals(current_picture.getUrl())) {
                     current_picture = backgroundImage.pickRandomImage();
                 }
                 background.setImage(current_picture);
@@ -134,7 +133,7 @@ public class OpinionsGame implements GameLifeCycle {
 
 
             noCare.assignIndicator(event -> {
-                while(old_picture.getUrl().equals(current_picture.getUrl())){
+                while (old_picture.getUrl().equals(current_picture.getUrl())) {
                     current_picture = backgroundImage.pickRandomImage();
                 }
                 background.setImage(current_picture);
@@ -150,7 +149,7 @@ public class OpinionsGame implements GameLifeCycle {
 
 
             thumbUp.assignIndicator(event -> {
-                while(old_picture.getUrl().equals(current_picture.getUrl())){
+                while (old_picture.getUrl().equals(current_picture.getUrl())) {
                     current_picture = backgroundImage.pickRandomImage();
                 }
                 background.setImage(current_picture);
@@ -163,9 +162,7 @@ public class OpinionsGame implements GameLifeCycle {
 
             middleLayer.getChildren().addAll(thumbUp, thumbDown, noCare);
 
-        }
-
-        else {
+        } else {
 
             Oui = new ProgressButton();
 
@@ -175,25 +172,19 @@ public class OpinionsGame implements GameLifeCycle {
                 createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, dimension2D.getHeight() * 16 / 20);
 
-            }
-
-            else if (type.equals(OpinionsGameVariant.ONBH)) {
+            } else if (type.equals(OpinionsGameVariant.ONBH)) {
                 createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, dimension2D.getHeight() * 16 / 20);
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
-            }
-
-            else if (type.equals(OpinionsGameVariant.ONGD)) {
+            } else if (type.equals(OpinionsGameVariant.ONGD)) {
                 createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", 0, dimension2D.getHeight() * 2 / 5);
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
-            }
-
-            else if (type.equals(OpinionsGameVariant.ONDG)) {
+            } else if (type.equals(OpinionsGameVariant.ONDG)) {
                 createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", 0, dimension2D.getHeight() * 2 / 5);
             }
 
             Oui.assignIndicator(event -> {
-                while(old_picture.getUrl().equals(current_picture.getUrl())){
+                while (old_picture.getUrl().equals(current_picture.getUrl())) {
                     current_picture = backgroundImage.pickRandomImage();
                 }
                 background.setImage(current_picture);
@@ -205,7 +196,7 @@ public class OpinionsGame implements GameLifeCycle {
             Oui.active();
 
             Non.assignIndicator(event -> {
-                while(old_picture.getUrl().equals(current_picture.getUrl())){
+                while (old_picture.getUrl().equals(current_picture.getUrl())) {
                     current_picture = backgroundImage.pickRandomImage();
                 }
                 background.setImage(current_picture);
