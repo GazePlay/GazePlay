@@ -12,16 +12,16 @@ import java.util.LinkedList;
 
 public class EggGameStats extends ShootGamesStats {
 
-    public EggGameStats(Scene scene) {
+    public EggGameStats(Scene scene, String gameType) {
 
         super(scene);
-        gameName = "Egg";
+        this.gameName = gameType;
     }
 
-    public EggGameStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    public EggGameStats(Scene scene, String gameType, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
 
         super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
-        gameName = "Egg";
+        this.gameName = gameType;
     }
 
 }
