@@ -13,6 +13,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 
@@ -48,8 +49,11 @@ public class SoundsOfLife implements GameLifeCycle {
             case 1:
                 path += "jungle/";
                 break;
-            default:
+            case 2:
                 path += "savanna/";
+                break;
+            default:
+                path += "sea/";
         }
 
         JsonParser parser = new JsonParser();
@@ -127,8 +131,11 @@ public class SoundsOfLife implements GameLifeCycle {
             case 1:
                 path += "jungle/";
                 break;
-            default:
+            case 2:
                 path += "savanna/";
+                break;
+            default:
+                path += "sea/";
         }
 
         JsonParser parser = new JsonParser();
@@ -209,6 +216,8 @@ public class SoundsOfLife implements GameLifeCycle {
     public void launch() {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
+        final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
+        backgroundMusicManager.pause();
     }
 
     @Override

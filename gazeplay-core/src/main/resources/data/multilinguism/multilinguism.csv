@@ -124,7 +124,7 @@ Look at the destination box to move,Për të lëvizur shiko kutinë ku do të mb
 Look the movement arrows around the mouse to move,Për të lëvizur shiko shigjetat përqark miut,أنظر إلى الأسهم حول الفأر لتتحرك,注视老鼠周围的箭头来移动,,,Look the movement arrows around the mouse to move,,Regarde les flèches de mouvement autour de la souris pour bouger,,,Guarda le frecce di movimento intorno al topo per muoverti,,,,,Kijk naar de pijlen rond de muis om te verplaatsen,,Mira las flechas de movimiento alrededor del ratón para moverte,
 Look the movement arrows around the labyrinth to move,Për të lëvizur shiko shigjetat përqark labirintit,أنظر إلى الأسهم حول المتاهات لتتحرك,注视迷宫周围的箭头来移动,,,Look the movement arrows around the labyrinth to move,,Regarde les flèches de mouvement autour du labyrinthe pour bouger,,,Guarda le frecce di movimento intorno al labirinto per muoverti,,,,,Kijk naar de pijlen rond het labyrint om te verplaatsen,,Mira las flechas de movimiento alrededor del laberinto para moverte,
 Select the mouse then look at the destination box to move,Selekto miun pastaj shiko kutinë ku do të mbërrish,إختر الفأر ثم أنظر إلى الوجهة لتتحرك,注视老鼠以选择，注视目标方块来移动,,,Select the mouse then look at the destination box to move,,Selectionne la souris et après regarde la boîte de destination pour bouger,,,Selezziona il topo poi guarda la cassetta di destinazione per muoverti,,,,,Kijk naar de muis; kijk dan naar de bestemmingsbox om te verplaatsen,,Selecciona el ratón y luego mira el cuadro de destino para moverte,
-free,Lehtë,حر,简单,,,Free,,Facile,,,Facile,,,,,Gratis,,Fácil,
+easy,,,,,,Easy,,Facile,,,Facile,,,,,Gratis,,Fácil,
 normal,Normal,عادي,普通,,,Normal,,Normal,,,Normale,,,,,Normaal,,Normal,
 extreme,Ekstrem,درجة قصوى,困难,,,Extreme,,Extrême,,,Estremo,,,,,Extreem,,Extremo,
 BibJump,Biboule Jump,بيبول يقذف,Biboule 跳,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump
@@ -194,6 +194,7 @@ Potions,Përzierje Magjike,,魔法药水,,,Magic Potions,,Potions Magiques,,,Poz
 SpaceGame,Space Game,Space Game,太空游戏,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Ruimtespel,Space Game,Space Game,Space Game
 GooseGame,,,,,,Goose Game,,Jeu de l'oie,,,,,,,,Ganzenbord spel,,,
 EggGame,,,孵鸡蛋,,,Egg Game,,Jeu de l'oeuf,,,,,,,,,,,
+PersonalizeEggGame,,,孵鸡蛋,,,Egg Game personalised,,Jeu de l'oeuf personnalisation,,,,,,,,,,,
 
 players,,,玩家,,,players,,joueurs,,,,,,,,spelers,,,
 Choose number of players,,,选择玩家数量,,,Choose number of players,,Choisis le nombre de joueurs,,,,,,,,kies het aantal spelers,,,
@@ -253,6 +254,11 @@ toBottom,,,从上到下,,,from top to bottom,,du haut vers le bas,,,,,,,,,,de ar
 toRight,,,从左到you,,,from left to right,,de gauche à droite,,,,,,,,,,de la izquierda hacia la derecha,
 toLeft,,,从右到左,,,from right to left,,de droite à gauche,,,,,,,,,,de la derecha hacia la izquierda,
 
+toTop_FIX,,,,,,from bottom to top; fix to destroy the bubble,,du bas vers le haut ; fixer pour détruire la bulle,,,,,,,,,,,
+toBottom_FIX,,,,,,from top to bottom; fix to destroy the bubble,,du haut vers le bas ; fixer pour détruire la bulle,,,,,,,,,,,
+toRight_FIX,,,,,,from left to right; fix to destroy the bubble,,de gauche à droite ; fixer pour détruire la bulle,,,,,,,,,,,
+toLeft_FIX,,,,,,from right to left; fix to destroy the bubble,,de droite à gauche ; fixer pour détruire la bulle,,,,,,,,,,,
+
 Dark,,,,,,Dark,,Sombre,,,,,,,,,,Oscuro,
 Light,,,,,,Light,,Clair,,,,,,,,,,Claro,
 BackgroundStyle,,,,,,Background style,,Style de fond,,,,,,,,,,,
@@ -276,6 +282,18 @@ ReaskQuestionOnFail,,,,,,Ask the question again in case it's answered incorrectl
 Mouse,,,,,,Mouse,,Souris,,,,,,,,,,,
 Gaze,,,,,,Gaze,,Regard,,,,,,,,,,,
 MouseAndGaze,,,,,,Mouse and Gaze,,Souris et Regard,,,,,,,,,,,
+
+Follow,,,,,,Follow the path,,Suivre le chemin,,,,,,,,,,,
+FKEYEASY,,,,,,Find the key,,Trouver la clé,,,,,,,,,,,
+FKEY,,,,,,Find the keys,,Trouver les clés,,,,,,,,,,,
+FCOIN,,,,,,Find the coins,,Trouver les pièces,,,,,,,,,,,
+
+OuiNon_Haut-Bas,,,,,,Yes at the top and no at the bottom,,Oui en haut et non en bas,,,,,,,,,,,
+OuiNon_Bas-Haut,,,,,,Yes at the bottom and no at the top,,Oui en bas et non en haut,,,,,,,,,,,
+OuiNon_Gauche-Droite,,,,,,Yes to the left and no to the rigth,,Oui à gauche et non à droite,,,,,,,,,,,
+OuiNon_Droite-Gauche,,,,,,Yes to the rigth and no to the left,,Oui à droite et non à gauche,,,,,,,,,,,
+
+Sea,,,,,,Sea,,Mer,,,,,,,,,,,
 
 AnimeLook at the destination box to move,,,,,,With animation. Look at the destination box to move,,Avec animation. Regarde la boîte de destination pour bouger,,,,,,,,,,,
 AnimeLook the movement arrows around the mouse to move,,,,,,With Animation. Look the movement arrows around the mouse to move,,Avec animation. Regarde les flèches de mouvement autour de la souris pour bouger,,,,,,,,,,,

@@ -163,8 +163,6 @@ public class Cup {
                 gameContext.clear();
 
                 gameInstance.launch();
-
-                gameContext.onGameStarted();
             });
         });
 

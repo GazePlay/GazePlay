@@ -24,6 +24,7 @@ import net.gazeplay.commons.soundsmanager.SoundsManagerFactory;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
+import net.gazeplay.commons.utils.stats.Stats;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -154,13 +155,44 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
             double from = 0;
             double to = 1;
             double angle = 360;
+
             if (menuOpen) {
                 from = 1;
                 to = 0;
                 angle = -1 * angle;
+                Stats.setConfigMenuOpen(false);
+
             } else if (!configPane.getChildren().contains(controlPanel)) {
                 configPane.getChildren().add(controlPanel);
+                Stats.setConfigMenuOpen(true);
             }
+            double finalFrom = 1;
+            double finalTo = 0;
+            double finalAngle = -360;
+            configPane.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+                Stats.setConfigMenuOpen(false);
+
+                RotateTransition rt = new RotateTransition(Duration.millis(500), bt);
+                rt.setByAngle(finalAngle);
+                FadeTransition ft = new FadeTransition(Duration.millis(500), controlPanel);
+                ft.setFromValue(finalFrom);
+                ft.setToValue(finalTo);
+                ParallelTransition pt = new ParallelTransition();
+                pt.getChildren().addAll(rt, ft);
+                controlPanel.setPrefWidth(primaryStage.getWidth() / 2.5);
+                controlPanel.setVisible(false);
+                controlPanel.setDisable(true);
+                controlPanel.setMouseTransparent(true);
+                menuOpen = false;
+                pt.setOnFinished(actionEvent -> {
+                    if (!menuOpen) {
+                        configPane.getChildren().remove(controlPanel);
+                    }
+                });
+                pt.play();
+                buttonTransparentHandler(bt);
+
+            });
             RotateTransition rt = new RotateTransition(Duration.millis(500), bt);
             rt.setByAngle(angle);
             FadeTransition ft = new FadeTransition(Duration.millis(500), controlPanel);
