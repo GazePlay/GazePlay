@@ -197,6 +197,7 @@ Potions,Përzierje Magjike,,魔法药水,,,Magic Potions,,Potions Magiques,,,Poz
 SpaceGame,Space Game,Space Game,太空游戏,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Ruimtespel,Космическая игра,Space Game,Space Game,Касмічная гульня,
 GooseGame,,,,,,Goose Game,,Jeu de l'oie,,,,,,,,Ganzenbord spel,Ходилка,,,Хадзі па чарзе,
 EggGame,,,孵鸡蛋,,,Egg Game,,Jeu de l'oeuf,,,,,,,,,Разбей яйцо,,,Разбі яйка,
+PersonalizeEggGame,,,孵鸡蛋,,,Egg Game personalised,,Jeu de l'oeuf personnalisation,,,,,,,,,,,,,
 
 players,,,玩家,,,players,,joueurs,,,,,,,,spelers,игроки,,,гульцы,
 Choose number of players,,,选择玩家数量,,,Choose number of players,,Choisis le nombre de joueurs,,,,,,,,kies het aantal spelers,Выберите количество игроков,,,Выберыце колькасць гульцоў,
@@ -251,6 +252,11 @@ Time(seconds),,,时间(秒),,,Time(seconds),,Temps(secondes),,,,,,,,,Время(
 Limiter Time,,,时间限制器,,,Time Limiter,,Limiteur de Temps,,,,,,,,,Ограничитель времени,,,Абмежавальнік часу,
 Limiter Score,,,分数限制器,,,Score Limiter,,Limiteur de Score,,,,,,,,,Ограничитель счёта,,,Абмежавальнік выніку,
 
+toTop_FIX,,,,,,from bottom to top; fix to destroy the bubble,,du bas vers le haut ; fixer pour détruire la bulle,,,,,,,,,,,,,
+toBottom_FIX,,,,,,from top to bottom; fix to destroy the bubble,,du haut vers le bas ; fixer pour détruire la bulle,,,,,,,,,,,,,
+toRight_FIX,,,,,,from left to right; fix to destroy the bubble,,de gauche à droite ; fixer pour détruire la bulle,,,,,,,,,,,,,
+toLeft_FIX,,,,,,from right to left; fix to destroy the bubble,,de droite à gauche ; fixer pour détruire la bulle,,,,,,,,,,,,,
+
 toTop,,,从下到上,,,from bottom to top,,du bas vers le haut,,,,,,,,,снизу вверх,de abajo hacia arriba,,знізу ўверх,
 toBottom,,,从上到下,,,from top to bottom,,du haut vers le bas,,,,,,,,,сверху вниз,de arriba hacia abajo,,зверху ўніз,
 toRight,,,从左到you,,,from left to right,,de gauche à droite,,,,,,,,,слева направо,de la izquierda hacia la derecha,,злева направа,
@@ -275,6 +281,18 @@ WhereIsItNotConfigDirectory,,,,,,'Where is it' directory not configured,,Répert
 PickedWrongDir,,,,,,You picked the wrong directory,,Vous avez choisi le mauvais répertoire,,,,,,,,,Вы выбрали неправильную папку,,,Вы выбралі няправільную тэчку,
 Loading...,,,,,,Loading...,,Chargement...,,,,,,,,,Загрузка,,,Загрузка,
 ReaskQuestionOnFail,,,,,,Ask the question again in case it's answered incorrectly,,Reposer la question en cas de mauvaise réponse,,,,,,,,,Задать вопрос снова если неправильный ответ,,,Задаць пытанне зноў калі няправільны адказ,
+
+Follow,,,,,,Follow the path,,Suivre le chemin,,,,,,,,,,,,,
+FKEYEASY,,,,,,Find the key,,Trouver la clé,,,,,,,,,,,,,
+FKEY,,,,,,Find the keys,,Trouver les clés,,,,,,,,,,,,,
+FCOIN,,,,,,Find the coins,,Trouver les pièces,,,,,,,,,,,,,
+
+OuiNon_Haut-Bas,,,,,,Yes at the top and no at the bottom,,Oui en haut et non en bas,,,,,,,,,,,,,
+OuiNon_Bas-Haut,,,,,,Yes at the bottom and no at the top,,Oui en bas et non en haut,,,,,,,,,,,,,
+OuiNon_Gauche-Droite,,,,,,Yes to the left and no to the rigth,,Oui à gauche et non à droite,,,,,,,,,,,,,
+OuiNon_Droite-Gauche,,,,,,Yes to the rigth and no to the left,,Oui à droite et non à gauche,,,,,,,,,,,,,
+
+Sea,,,,,,Sea,,Mer,,,,,,,,,,,,,
 
 Mouse,,,,,,Mouse,,Souris,,,,,,,,,Мышка,,,Мышка,
 Gaze,,,,,,Gaze,,Regard,,,,,,,,,Взгляд,,,Погляд
