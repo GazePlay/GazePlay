@@ -274,6 +274,7 @@ addNewImagenocare,,,,,,Add new image don't care...,,Ajouter une nouvelle image s
 customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,Выбрать персонализированную папку,,,Выбраць персаналізаваную тэчку,
 
 SorryButReplayInvalid,,,,,,Sorry but the game '{}' is not replayable.\nIt will be available in a next update.,,Désolé mais le jeu '{}' n'est pas rejouable.\nIl sera disponible dans une prochaine mise à jour.,,,,,,,,,Игра '{}' не может быть переигранна,,,Не можна пераграць гульню '{}'
+PrintImg,,,,,,Print image,,Imprimer image,,,,,,,Распечатать изображение,,,Раздрукаваць малюнак,
 
 Done,,,,,,Done,,Valider,,,,,,,,,Готово,,,Гатова,
 WhereIsItDirectory:,,,,,,'Where is it ?' Configuration:,,Configuration de 'Où est-ce ?':,,,,,,,,,Настройки для'Где это?',,,Налады для'Где гэта? ',
