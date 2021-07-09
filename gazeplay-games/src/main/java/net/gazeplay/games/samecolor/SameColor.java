@@ -4,7 +4,6 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
@@ -104,26 +103,26 @@ public class SameColor implements GameLifeCycle {
 
         for (DoubleRec doubleRec : doubleRecList){
             doubleRec.rec1.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {
-                ((DoubleRec) e.getTarget()).isin1 = true;
-                sameselect((DoubleRec) e.getTarget());
+                doubleRec.isin1 = true;
+                sameselect(doubleRec);
             });
             doubleRec.rec2.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {
-                ((DoubleRec) e.getTarget()).isin2 = true;
-                sameselect((DoubleRec) e.getTarget());
+                doubleRec.isin2 = true;
+                sameselect(doubleRec);
             });
-            doubleRec.rec1.addEventFilter(MouseEvent.MOUSE_EXITED, e -> ((DoubleRec) e.getTarget()).isin1 = false);
-            doubleRec.rec2.addEventFilter(MouseEvent.MOUSE_EXITED, e -> ((DoubleRec) e.getTarget()).isin2 = false);
+            //doubleRec.rec1.addEventFilter(MouseEvent.MOUSE_EXITED, e -> doubleRec.isin1 = false);
+            //doubleRec.rec2.addEventFilter(MouseEvent.MOUSE_EXITED, e -> doubleRec.isin2 = false);
 
             doubleRec.rec1.addEventHandler(GazeEvent.GAZE_ENTERED,e -> {
-                ((DoubleRec) e.getTarget()).isin1 = true;
-                sameselect((DoubleRec) e.getTarget());
+                doubleRec.isin1 = true;
+                sameselect(doubleRec);
             });
             doubleRec.rec2.addEventHandler(GazeEvent.GAZE_ENTERED, e -> {
-                ((DoubleRec) e.getTarget()).isin2 = true;
-                sameselect((DoubleRec) e.getTarget());
+                doubleRec.isin2 = true;
+                sameselect(doubleRec);
             });
-            doubleRec.rec1.addEventHandler(GazeEvent.GAZE_EXITED, e -> ((DoubleRec) e.getTarget()).isin1 = false);
-            doubleRec.rec2.addEventHandler(GazeEvent.GAZE_EXITED, e -> ((DoubleRec) e.getTarget()).isin2 = false);
+            //doubleRec.rec1.addEventHandler(GazeEvent.GAZE_EXITED, e -> doubleRec.isin1 = false);
+            //doubleRec.rec2.addEventHandler(GazeEvent.GAZE_EXITED, e -> doubleRec.isin2 = false);
             gameContext.getGazeDeviceManager().addEventFilter(doubleRec.rec1);
             gameContext.getGazeDeviceManager().addEventFilter(doubleRec.rec2);
         }
