@@ -4,8 +4,7 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.BorderPane;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -30,7 +29,7 @@ public class OpinionsGame implements GameLifeCycle {
     private final ImageLibrary backgroundImage;
     private final ImageLibrary thumbImage;
 
-    private Rectangle background;
+    private ImageView background;
 
     private ProgressButton thumbDown;
     private ProgressButton noCare;
@@ -69,7 +68,7 @@ public class OpinionsGame implements GameLifeCycle {
 
     }
 
-    public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats, final OpinionsGameVariant type,  double gameSeed) {
+    public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats, final OpinionsGameVariant type, double gameSeed) {
         this.stats = stats;
         this.opinionGameStats = this.stats;
         this.gameContext = gameContext;
@@ -95,25 +94,33 @@ public class OpinionsGame implements GameLifeCycle {
         this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
 
-        background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        background.widthProperty().bind(gameContext.getRoot().widthProperty());
-        background.heightProperty().bind(gameContext.getRoot().heightProperty());
+        background = new ImageView();
+        background.fitWidthProperty().bind(gameContext.getRoot().widthProperty());
+        background.fitHeightProperty().bind(gameContext.getRoot().heightProperty());
+        background.setPreserveRatio(true);
 
-        backgroundLayer.getChildren().add(background);
+        BorderPane backgroundCenteredPane = new BorderPane();
+        backgroundCenteredPane.prefWidthProperty().bind(gameContext.getRoot().widthProperty());
+        backgroundCenteredPane.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
+        backgroundCenteredPane.setCenter(background);
+
+        backgroundLayer.getChildren().add(backgroundCenteredPane);
         current_picture = backgroundImage.pickRandomImage();
-        background.setFill(new ImagePattern(current_picture));
+        background.setImage(current_picture);
         old_picture = current_picture;
 
         if (type.equals(OpinionsGameVariant.OPINIONS)) {
 
+
             thumbDown = new ProgressButton();
             createAddButtonOpinions(thumbDown, "data/opinions/thumbs/thumbdown.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
 
+
             thumbDown.assignIndicator(event -> {
-                while(old_picture.getUrl().equals(current_picture.getUrl())){
+                while (old_picture.getUrl().equals(current_picture.getUrl())) {
                     current_picture = backgroundImage.pickRandomImage();
                 }
-                background.setFill(new ImagePattern(current_picture));
+                background.setImage(current_picture);
                 old_picture = current_picture;
                 stats.incrementNumberOfGoalsReached();
                 updateScore();
@@ -124,11 +131,12 @@ public class OpinionsGame implements GameLifeCycle {
             noCare = new ProgressButton();
             createAddButtonOpinions(noCare, "data/opinions/thumbs/nocare.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
 
+
             noCare.assignIndicator(event -> {
-                while(old_picture.getUrl().equals(current_picture.getUrl())){
+                while (old_picture.getUrl().equals(current_picture.getUrl())) {
                     current_picture = backgroundImage.pickRandomImage();
                 }
-                background.setFill(new ImagePattern(current_picture));
+                background.setImage(current_picture);
                 old_picture = current_picture;
                 stats.incrementNumberOfGoalsReached();
                 updateScore();
@@ -139,11 +147,12 @@ public class OpinionsGame implements GameLifeCycle {
             thumbUp = new ProgressButton();
             createAddButtonOpinions(thumbUp, "data/opinions/thumbs/thumbup.png", 0, dimension2D.getHeight() * 2 / 5);
 
+
             thumbUp.assignIndicator(event -> {
-                while(old_picture.getUrl().equals(current_picture.getUrl())){
+                while (old_picture.getUrl().equals(current_picture.getUrl())) {
                     current_picture = backgroundImage.pickRandomImage();
                 }
-                background.setFill(new ImagePattern(current_picture));
+                background.setImage(current_picture);
                 old_picture = current_picture;
                 stats.incrementNumberOfGoalsReached();
                 updateScore();
@@ -153,9 +162,7 @@ public class OpinionsGame implements GameLifeCycle {
 
             middleLayer.getChildren().addAll(thumbUp, thumbDown, noCare);
 
-        }
-
-        else {
+        } else {
 
             Oui = new ProgressButton();
 
@@ -165,28 +172,22 @@ public class OpinionsGame implements GameLifeCycle {
                 createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, dimension2D.getHeight() * 16 / 20);
 
-            }
-
-            else if (type.equals(OpinionsGameVariant.ONBH)) {
+            } else if (type.equals(OpinionsGameVariant.ONBH)) {
                 createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, dimension2D.getHeight() * 16 / 20);
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
-            }
-
-            else if (type.equals(OpinionsGameVariant.ONGD)) {
+            } else if (type.equals(OpinionsGameVariant.ONGD)) {
                 createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", 0, dimension2D.getHeight() * 2 / 5);
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
-            }
-
-            else if (type.equals(OpinionsGameVariant.ONDG)) {
+            } else if (type.equals(OpinionsGameVariant.ONDG)) {
                 createAddButtonOpinions(Oui, "data/opinions/thumbs/correct2.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", 0, dimension2D.getHeight() * 2 / 5);
             }
 
             Oui.assignIndicator(event -> {
-                while(old_picture.getUrl().equals(current_picture.getUrl())){
+                while (old_picture.getUrl().equals(current_picture.getUrl())) {
                     current_picture = backgroundImage.pickRandomImage();
                 }
-                background.setFill(new ImagePattern(current_picture));
+                background.setImage(current_picture);
                 old_picture = current_picture;
                 stats.incrementNumberOfGoalsReached();
                 updateScore();
@@ -195,10 +196,10 @@ public class OpinionsGame implements GameLifeCycle {
             Oui.active();
 
             Non.assignIndicator(event -> {
-                while(old_picture.getUrl().equals(current_picture.getUrl())){
+                while (old_picture.getUrl().equals(current_picture.getUrl())) {
                     current_picture = backgroundImage.pickRandomImage();
                 }
-                background.setFill(new ImagePattern(current_picture));
+                background.setImage(current_picture);
                 old_picture = current_picture;
                 stats.incrementNumberOfGoalsReached();
                 updateScore();
