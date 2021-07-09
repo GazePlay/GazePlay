@@ -1,13 +1,16 @@
 package net.gazeplay.games.samecolor;
 
 import javafx.geometry.Dimension2D;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gamevariants.DimensionGameVariant;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.ImageLibrary;
@@ -99,6 +102,32 @@ public class SameColor implements GameLifeCycle {
         gameContext.getChildren().addAll(test.rec1, test.rec2);
         doubleRecList.add(test);
 
+        for (DoubleRec doubleRec : doubleRecList){
+            doubleRec.rec1.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {
+                ((DoubleRec) e.getTarget()).isin1 = true;
+                sameselect((DoubleRec) e.getTarget());
+            });
+            doubleRec.rec2.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {
+                ((DoubleRec) e.getTarget()).isin2 = true;
+                sameselect((DoubleRec) e.getTarget());
+            });
+            doubleRec.rec1.addEventFilter(MouseEvent.MOUSE_EXITED, e -> ((DoubleRec) e.getTarget()).isin1 = false);
+            doubleRec.rec2.addEventFilter(MouseEvent.MOUSE_EXITED, e -> ((DoubleRec) e.getTarget()).isin2 = false);
+
+            doubleRec.rec1.addEventHandler(GazeEvent.GAZE_ENTERED,e -> {
+                ((DoubleRec) e.getTarget()).isin1 = true;
+                sameselect((DoubleRec) e.getTarget());
+            });
+            doubleRec.rec2.addEventHandler(GazeEvent.GAZE_ENTERED, e -> {
+                ((DoubleRec) e.getTarget()).isin2 = true;
+                sameselect((DoubleRec) e.getTarget());
+            });
+            doubleRec.rec1.addEventHandler(GazeEvent.GAZE_EXITED, e -> ((DoubleRec) e.getTarget()).isin1 = false);
+            doubleRec.rec2.addEventHandler(GazeEvent.GAZE_EXITED, e -> ((DoubleRec) e.getTarget()).isin2 = false);
+            gameContext.getGazeDeviceManager().addEventFilter(doubleRec.rec1);
+            gameContext.getGazeDeviceManager().addEventFilter(doubleRec.rec2);
+        }
+
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
     }
@@ -121,6 +150,16 @@ public class SameColor implements GameLifeCycle {
 
                 gameContext.showRoundStats(stats, this);
             });
+        }
+    }
+
+    private void sameselect(DoubleRec doubleRec){
+        if (doubleRec.isin1 && doubleRec.isin2){
+            gameContext.getChildren().removeAll(doubleRec.rec1, doubleRec.rec2);
+            doubleRecList.remove(doubleRec);
+            stats.incrementNumberOfGoalsReached();
+            nbgoalsreached++;
+            testwin();
         }
     }
 }
