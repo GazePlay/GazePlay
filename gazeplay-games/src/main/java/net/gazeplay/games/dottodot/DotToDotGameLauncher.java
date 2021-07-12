@@ -22,7 +22,7 @@ public class DotToDotGameLauncher implements IGameLauncher<Stats, EnumGameVarian
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, EnumGameVariant<DotToDotGameVariant> gameVariant, Stats stats) {
-        return new DotToDot(gameContext, gameVariant, stats);
+        return new DotToDot(gameContext, gameVariant.getEnumValue(), stats);
     }
 
     @Override
@@ -32,6 +32,6 @@ public class DotToDotGameLauncher implements IGameLauncher<Stats, EnumGameVarian
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<DotToDotGameVariant> gameVariant, Stats stats, double gameSeed) {
-        return new DotToDot(gameContext,gameVariant, stats, gameSeed);
+        return new DotToDot(gameContext,gameVariant.getEnumValue(), stats);
     }
 }
