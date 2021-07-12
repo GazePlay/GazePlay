@@ -1,5 +1,6 @@
 package net.gazeplay.games.samecolor;
 
+import javafx.event.ActionEvent;
 import javafx.geometry.Dimension2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -17,6 +18,7 @@ import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.beans.EventHandler;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,30 +103,14 @@ public class SameColor implements GameLifeCycle {
         gameContext.getChildren().addAll(test.rec1, test.rec2);
         doubleRecList.add(test);
 
-        for (DoubleRec doubleRec : doubleRecList){
-            doubleRec.rec1.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {
-                doubleRec.isin1 = true;
-                sameselect(doubleRec);
-            });
-            doubleRec.rec2.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {
-                doubleRec.isin2 = true;
-                sameselect(doubleRec);
-            });
-            //doubleRec.rec1.addEventFilter(MouseEvent.MOUSE_EXITED, e -> doubleRec.isin1 = false);
-            //doubleRec.rec2.addEventFilter(MouseEvent.MOUSE_EXITED, e -> doubleRec.isin2 = false);
+        javafx.event.EventHandler<ActionEvent> eventwin = e -> {
+            stats.incrementNumberOfGoalsReached();
+            nbgoalsreached++;
+            testwin();
+        };
 
-            doubleRec.rec1.addEventHandler(GazeEvent.GAZE_ENTERED,e -> {
-                doubleRec.isin1 = true;
-                sameselect(doubleRec);
-            });
-            doubleRec.rec2.addEventHandler(GazeEvent.GAZE_ENTERED, e -> {
-                doubleRec.isin2 = true;
-                sameselect(doubleRec);
-            });
-            //doubleRec.rec1.addEventHandler(GazeEvent.GAZE_EXITED, e -> doubleRec.isin1 = false);
-            //doubleRec.rec2.addEventHandler(GazeEvent.GAZE_EXITED, e -> doubleRec.isin2 = false);
-            gameContext.getGazeDeviceManager().addEventFilter(doubleRec.rec1);
-            gameContext.getGazeDeviceManager().addEventFilter(doubleRec.rec2);
+        for (DoubleRec doubleRec : doubleRecList){
+            doubleRec.setEvent(eventwin, gameContext.getGazeDeviceManager(), gameContext, doubleRecList);
         }
 
         stats.notifyNewRoundReady();

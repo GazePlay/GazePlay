@@ -1,7 +1,16 @@
 package net.gazeplay.games.samecolor;
 
+import javafx.animation.PauseTransition;
+import javafx.event.ActionEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
+import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+
+import java.util.List;
 
 public class DoubleRec {
 
@@ -21,5 +30,41 @@ public class DoubleRec {
         rec2.setFill(color);
         isin1 = false;
         isin2 = false;
+    }
+
+    public void setEvent(javafx.event.EventHandler<ActionEvent> eventwin, GazeDeviceManager gazeDeviceManager, IGameContext gameContext, List<DoubleRec> list){
+        rec1.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {
+            isin1 = true;
+            sameselect(eventwin, gameContext, list);
+        });
+        rec2.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {
+            isin2 = true;
+            sameselect(eventwin, gameContext, list);
+        });
+        //rec1.addEventFilter(MouseEvent.MOUSE_EXITED, e -> isin1 = false);
+        //rec2.addEventFilter(MouseEvent.MOUSE_EXITED, e -> isin2 = false);
+
+        rec1.addEventHandler(GazeEvent.GAZE_ENTERED, e -> {
+            isin1 = true;
+            sameselect(eventwin, gameContext, list);
+        });
+        rec2.addEventHandler(GazeEvent.GAZE_ENTERED, e -> {
+            isin2 = true;
+            sameselect(eventwin, gameContext, list);
+        });
+        //rec1.addEventHandler(GazeEvent.GAZE_EXITED, e -> isin1 = false);
+        //rec2.addEventHandler(GazeEvent.GAZE_EXITED, e -> isin2 = false);
+        gazeDeviceManager.addEventFilter(rec1);
+        gazeDeviceManager.addEventFilter(rec2);
+    }
+
+    private void sameselect(javafx.event.EventHandler<ActionEvent> eventwin, IGameContext gameContext, List<DoubleRec> list){
+        if (isin1 && isin2){
+            gameContext.getChildren().removeAll(rec1, rec2);
+            list.remove(this);
+            PauseTransition Win = new PauseTransition(Duration.millis(10));
+            Win.setOnFinished(eventwin);
+            Win.play();
+        }
     }
 }
