@@ -46,6 +46,13 @@ public class SameColor implements GameLifeCycle {
 
     private List<DoubleRec> doubleRecList;
 
+    private double width;
+    private double height;
+
+    private int[] place;
+
+    private List<Color> colorList;
+
     SameColor(IGameContext gameContext, Stats stats, DimensionGameVariant gameVariant) {
 
         this.gameContext = gameContext;
@@ -89,8 +96,18 @@ public class SameColor implements GameLifeCycle {
         gameContext.getChildren().clear();
         doubleRecList.clear();
 
+        width = dimension2D.getWidth() / gameVariant.getWidth();
+        height = dimension2D.getHeight() / gameVariant.getHeight();
+
         nbgoalsreached = 0;
         nbgoals = gameVariant.getHeight()*gameVariant.getWidth()/2;
+
+        place = new int[nbgoals*2];
+        for (int i=0; i<nbgoals; i++){
+            place[2*i] = i;
+            place[2*i+1] = i;
+        }
+        shuffle(20);
 
         background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         background.widthProperty().bind(gameContext.getRoot().widthProperty());
@@ -99,7 +116,7 @@ public class SameColor implements GameLifeCycle {
         gameContext.getChildren().add(background);
         background.setFill(new ImagePattern(backgroundImage.pickRandomImage()));
 
-        DoubleRec test = new DoubleRec(0,0,dimension2D.getWidth()/2, dimension2D.getHeight()/2, dimension2D.getWidth()/2, dimension2D.getHeight()/2, Color.RED);
+        DoubleRec test = new DoubleRec(0,0,dimension2D.getWidth()/2, dimension2D.getHeight()/2, width, height/2, Color.RED);
         gameContext.getChildren().addAll(test.rec1, test.rec2);
         doubleRecList.add(test);
 
@@ -138,13 +155,16 @@ public class SameColor implements GameLifeCycle {
         }
     }
 
-    private void sameselect(DoubleRec doubleRec){
-        if (doubleRec.isin1 && doubleRec.isin2){
-            gameContext.getChildren().removeAll(doubleRec.rec1, doubleRec.rec2);
-            doubleRecList.remove(doubleRec);
-            stats.incrementNumberOfGoalsReached();
-            nbgoalsreached++;
-            testwin();
+    private void shuffle(int n){
+        if (n>0){
+            int a = random.nextInt(nbgoals*2);
+            int b = random.nextInt(nbgoals*2);
+
+            int temp = place[a];
+            place[a] = place[b];
+            place[b] = temp;
+
+            shuffle(n-1);
         }
     }
 }
