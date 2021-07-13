@@ -196,8 +196,10 @@ public class ProgressPortrait extends StackPane {
         return indicator;
     }
 
-    public Position getCurrentPositionWithTranslation() {
-        return new Position((int) getLayoutX() + (int) getTranslateX() + getButton().getRadius(), (int) getLayoutY() + (int) getTranslateY() + getButton().getRadius());
+    public Position getCurrentCenterPositionWithTranslation() {
+        return new Position(
+            (int) getLayoutX() + (int) getTranslateX() + getButton().getRadius(),
+            (int) getLayoutY() + (int) getTranslateY() + getButton().getRadius());
     }
 
     protected Image pickRandomImage(final List<Image> availableImages) {

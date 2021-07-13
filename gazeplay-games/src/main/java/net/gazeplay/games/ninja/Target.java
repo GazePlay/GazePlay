@@ -261,7 +261,7 @@ public class Target extends ProgressPortrait {
         final Timeline childrenTimelineStart = new Timeline();
         final Timeline childrenTimelineEnd = new Timeline();
 
-        final Position currentPositionWithTranslation = getCurrentPositionWithTranslation();
+        final Position currentPositionWithTranslation = getCurrentCenterPositionWithTranslation();
 
         final Position pointerPosition = getPointerPosition(e);
         log.debug("pointerPosition = {}, currentPositionWithTranslation = {}", pointerPosition,

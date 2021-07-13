@@ -14,6 +14,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.Position;
 import net.gazeplay.components.ProgressPortrait;
 import net.gazeplay.components.RandomPositionGenerator;
 
@@ -89,7 +90,6 @@ public class Target extends ProgressPortrait {
         gameContext.getGazeDeviceManager().addEventFilter(this);
         active();
 
-
         createTarget();
 
         gameContext.start();
@@ -126,7 +126,7 @@ public class Target extends ProgressPortrait {
         return fragments;
     }
 
-    public void explose(final double centerX, final double centerY) {
+    public void explose() {
 
         final Timeline goToCenterTimeline = new Timeline();
         final Timeline timeline = new Timeline();
@@ -135,14 +135,16 @@ public class Target extends ProgressPortrait {
 
             final Circle fragment = fragments.get(i);
 
-            fragment.setCenterX(centerX);
-            fragment.setCenterY(centerY);
+            Position curentPosition = getCurrentCenterPositionWithTranslation();
+
+            fragment.setCenterX(curentPosition.getX());
+            fragment.setCenterY(curentPosition.getY());
             fragment.setOpacity(1);
 
             goToCenterTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                new KeyValue(fragment.centerXProperty(), centerX, Interpolator.LINEAR)));
+                new KeyValue(fragment.centerXProperty(), curentPosition.getX(), Interpolator.LINEAR)));
             goToCenterTimeline.getKeyFrames().add(new KeyFrame(new Duration(1),
-                new KeyValue(fragment.centerYProperty(), centerY, Interpolator.EASE_OUT)));
+                new KeyValue(fragment.centerYProperty(), curentPosition.getY(), Interpolator.EASE_OUT)));
             goToCenterTimeline.getKeyFrames().add(new KeyFrame(new Duration(1), new KeyValue(fragment.opacityProperty(), 1)));
 
             final Dimension2D sceneDimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -170,8 +172,6 @@ public class Target extends ProgressPortrait {
     }
 
     private void enter(final Event e) {
-        final double centerX = getLayoutX();
-        final double centerY = getLayoutY();
 
         gameContext.getGazeDeviceManager().removeEventFilter(this);
         this.getChildren().remove(this);
@@ -180,7 +180,7 @@ public class Target extends ProgressPortrait {
 
         gameContext.updateScore(stats, gameInstance);
 
-        explose(centerX, centerY); // instead of C to avoid wrong position of the explosion
+        explose(); // instead of C to avoid wrong position of the explosion
 
         timeline.stop();
 
@@ -190,22 +190,31 @@ public class Target extends ProgressPortrait {
     private void createTarget() {
 
         final Dimension2D screenDimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        double maxRadius = Math.min(screenDimension.getWidth() / 12, screenDimension.getHeight() / 12);
-        double minRadius = Math.min(screenDimension.getHeight() / 30, screenDimension.getWidth() / 30);
-        radius = (maxRadius - minRadius) * randomGenerator.nextDouble() + minRadius;
-        getButton().setRadius(radius);
+        updateRadius(screenDimension);
 
-        if (type == BubbleType.COLOR) {
-            getButton().setFill(new Color(randomGenerator.nextDouble(), randomGenerator.nextDouble(), randomGenerator.nextDouble(), 0.9));
-        } else {
-            getButton().setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
-        }
         setVisible(true);
 
         moveTarget();
     }
 
+    private void updateFillProperty(){
+        if (type == BubbleType.COLOR) {
+            getButton().setFill(new Color(randomGenerator.nextDouble(), randomGenerator.nextDouble(), randomGenerator.nextDouble(), 0.9));
+        } else {
+            getButton().setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
+        }
+    }
+
+    private void updateRadius(Dimension2D screenDimension) {
+        double maxRadius = Math.min(screenDimension.getWidth() / 12, screenDimension.getHeight() / 12);
+        double minRadius = Math.min(screenDimension.getHeight() / 30, screenDimension.getWidth() / 30);
+        radius = (maxRadius - minRadius) * randomGenerator.nextDouble() + minRadius;
+        getButton().setRadius(radius);
+    }
+
     private void moveTarget() {
+        updateFillProperty();
+
         final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         double centerX = 0;
@@ -215,35 +224,32 @@ public class Target extends ProgressPortrait {
 
         timeline = new Timeline();
 
-        double maxRadius = Math.min(dimension2D.getWidth() / 12, dimension2D.getHeight() / 12);
-        double minRadius = Math.min(dimension2D.getHeight() / 30, dimension2D.getWidth() / 30);
-        radius = (maxRadius - minRadius) * randomGenerator.nextDouble() + minRadius;
-        getButton().setRadius(radius);
+        updateRadius(dimension2D);
 
         if (this.gameVariant == BubblesGameVariant.TOP || this.gameVariant == BubblesGameVariant.TOP_FIX) {
-            centerX = (dimension2D.getWidth() - radius) * randomGenerator.nextDouble() + radius;
+            centerX = (dimension2D.getWidth() - 2*radius) * randomGenerator.nextDouble();
             centerY = dimension2D.getHeight();
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
-                    new KeyValue(layoutYProperty(), -radius, Interpolator.EASE_IN)));
+                    new KeyValue(layoutYProperty(), -2*radius, Interpolator.EASE_IN)));
         } else if (this.gameVariant == BubblesGameVariant.BOTTOM || this.gameVariant == BubblesGameVariant.BOTTOM_FIX) {
-            centerX = (dimension2D.getWidth() - radius) * randomGenerator.nextDouble() + radius;
-            centerY = 0;
+            centerX = (dimension2D.getWidth() - 2*radius) * randomGenerator.nextDouble();
+            centerY = -2*radius;
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(layoutYProperty(), dimension2D.getHeight() + radius, Interpolator.EASE_IN)));
         } else if (this.gameVariant == BubblesGameVariant.RIGHT || this.gameVariant == BubblesGameVariant.RIGHT_FIX) {
-            centerX = 0;
-            centerY = (dimension2D.getHeight() - radius) * randomGenerator.nextDouble() + radius;
+            centerX = - 2*radius;
+            centerY = (dimension2D.getHeight() - 2*radius) * randomGenerator.nextDouble();
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
-                    new KeyValue(layoutXProperty(), dimension2D.getWidth() + radius, Interpolator.EASE_IN)));
+                    new KeyValue(layoutXProperty(), dimension2D.getWidth() + 2*radius, Interpolator.EASE_IN)));
         } else if (this.gameVariant == BubblesGameVariant.LEFT || this.gameVariant == BubblesGameVariant.LEFT_FIX) {
             centerX = dimension2D.getWidth();
-            centerY = (dimension2D.getHeight() - radius) * randomGenerator.nextDouble() + radius;
+            centerY = (dimension2D.getHeight() - 2*radius) * randomGenerator.nextDouble();
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
-                    new KeyValue(layoutXProperty(), -radius, Interpolator.EASE_IN)));
+                    new KeyValue(layoutXProperty(), -2*radius, Interpolator.EASE_IN)));
         }
 
 
@@ -257,18 +263,6 @@ public class Target extends ProgressPortrait {
         timeline.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
 
         timeline.play();
-    }
-
-    private void decreaseSize() {
-        final Dimension2D screenDimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        PauseTransition Wait = new PauseTransition(Duration.millis(5));
-        Wait.setOnFinished(WaitEvent -> {
-            if (this.getButton().getRadius() > Math.min(screenDimension.getWidth() / 20, screenDimension.getHeight() / 20)) {
-                this.getButton().setRadius(this.getButton().getRadius() / Math.pow(1.005, gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty().getValue()));
-            }
-            decreaseSize();
-        });
-        Wait.play();
     }
 
 }
