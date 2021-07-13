@@ -57,7 +57,7 @@ public class Target extends ProgressPortrait {
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
                   final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance, final ReplayablePseudoRandom randomGenerator) {
-        super();
+        super(gameContext.getConfiguration().getElementSize());
 
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
@@ -90,9 +90,9 @@ public class Target extends ProgressPortrait {
 
     private void createTarget() {
 
-        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(radius, 0, 1, 0, 0.8);
+        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(gameContext.getConfiguration().getElementSize(), 0, 1, 0, 0.8);
 
-        getButton().setRadius(radius);
+        getButton().setRadius(gameContext.getConfiguration().getElementSize());
         setLayoutX(newPosition.getX());
         setLayoutY(newPosition.getY());
         getButton().setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
@@ -134,7 +134,7 @@ public class Target extends ProgressPortrait {
 
         final Position currentPosition = new Position((int) getLayoutX(), (int) getLayoutY());
 
-        final Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
+        final Position newPosition = randomPositionGenerator.newRandomPosition(gameContext.getConfiguration().getElementSize());
         resetTargetAtPosition(currentPosition);
         final TranslateTransition translation = new TranslateTransition(
             new Duration(length), this);
@@ -204,22 +204,22 @@ public class Target extends ProgressPortrait {
                 moveRandom(length);
                 break;
             case VERTICAL: // vertical
-                createBackAndForthTranlations(new Position(getLayoutX(), radius),
-                    new Position(getLayoutX(), dimension2D.getHeight() - radius), length * 2);
+                createBackAndForthTranlations(new Position(getLayoutX(), gameContext.getConfiguration().getElementSize()),
+                    new Position(getLayoutX(), dimension2D.getHeight() - gameContext.getConfiguration().getElementSize()), length * 2);
                 break;
             case HORIZONTAL: // horizontal
-                createBackAndForthTranlations(new Position(radius, getLayoutY()),
-                    new Position(dimension2D.getWidth() - radius, getLayoutY()), length * 2);
+                createBackAndForthTranlations(new Position(gameContext.getConfiguration().getElementSize(), getLayoutY()),
+                    new Position(dimension2D.getWidth() - gameContext.getConfiguration().getElementSize(), getLayoutY()), length * 2);
                 break;
             case DIAGONAL_UPPER_LEFT_TO_LOWER_RIGHT: // Diagonal \
-                createBackAndForthTranlations(new Position(radius, radius),
-                    new Position(dimension2D.getWidth() - radius,
-                        dimension2D.getHeight() - radius),
+                createBackAndForthTranlations(new Position(gameContext.getConfiguration().getElementSize(), gameContext.getConfiguration().getElementSize()),
+                    new Position(dimension2D.getWidth() - gameContext.getConfiguration().getElementSize(),
+                        dimension2D.getHeight() - gameContext.getConfiguration().getElementSize()),
                     length * 2);
                 break;
             case DIAGONAL_UPPER_RIGHT_TO_LOWER_LEFT: // Diagonal /
-                createBackAndForthTranlations(new Position(dimension2D.getWidth() - radius, radius),
-                    new Position(0, dimension2D.getHeight() - radius), length * 2);
+                createBackAndForthTranlations(new Position(dimension2D.getWidth() - gameContext.getConfiguration().getElementSize(), gameContext.getConfiguration().getElementSize()),
+                    new Position(0, dimension2D.getHeight() - gameContext.getConfiguration().getElementSize()), length * 2);
                 break;
         }
 
@@ -272,7 +272,7 @@ public class Target extends ProgressPortrait {
             childMiniBall.setOpacity(1);
             childMiniBall.setVisible(true);
 
-            final Position childBallTargetPosition = randomMiniBallsPositionGenerator.newRandomPosition(radius);
+            final Position childBallTargetPosition = randomMiniBallsPositionGenerator.newRandomPosition(gameContext.getConfiguration().getElementSize());
 
             childrenTimelineEnd.getKeyFrames()
                 .add(new KeyFrame(new Duration(1000), new KeyValue(childMiniBall.centerXProperty(),
@@ -286,11 +286,11 @@ public class Target extends ProgressPortrait {
                 .add(new KeyFrame(new Duration(1000), new KeyValue(childMiniBall.opacityProperty(), 0)));
         }
 
-        final Position newPosition = randomPositionGenerator.newRandomPosition(radius);
+        final Position newPosition = randomPositionGenerator.newRandomPosition(gameContext.getConfiguration().getElementSize());
 
         final Timeline selfTimeLine = new Timeline();
 
-        selfTimeLine.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(radiusProperty(), gameContext.getConfiguration().getElementSize())));
+        selfTimeLine.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(getButton().radiusProperty(), gameContext.getConfiguration().getElementSize())));
 
         selfTimeLine.getKeyFrames()
             .add(new KeyFrame(new Duration(1000), new KeyValue(layoutXProperty(), newPosition.getX())));
@@ -321,7 +321,7 @@ public class Target extends ProgressPortrait {
         fadeTransition.setToValue(0.5);
 
         final Timeline timeline1 = new Timeline();
-        timeline1.getKeyFrames().add(new KeyFrame(new Duration(100), new KeyValue(radiusProperty(), gameContext.getConfiguration().getElementSize() / 2)));
+        timeline1.getKeyFrames().add(new KeyFrame(new Duration(100), new KeyValue(getButton().radiusProperty(), gameContext.getConfiguration().getElementSize()/2)));
         return new ParallelTransition(fadeTransition, timeline1);
     }
 

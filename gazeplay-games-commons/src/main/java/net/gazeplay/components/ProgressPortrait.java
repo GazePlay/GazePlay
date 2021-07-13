@@ -37,7 +37,8 @@ public class ProgressPortrait extends StackPane {
     @Getter
     private ImageView image;
 
-    public ProgressPortrait() {
+
+    public ProgressPortrait(int radius) {
         super();
         button = new Circle();
         button.setFill(Color.LIGHTGREY);
@@ -196,7 +197,7 @@ public class ProgressPortrait extends StackPane {
     }
 
     public Position getCurrentPositionWithTranslation() {
-        return new Position((int) getLayoutX() + (int) getTranslateX(), (int) getLayoutY() + (int) getTranslateY());
+        return new Position((int) getLayoutX() + (int) getTranslateX() + getButton().getRadius(), (int) getLayoutY() + (int) getTranslateY() + getButton().getRadius());
     }
 
     protected Image pickRandomImage(final List<Image> availableImages) {

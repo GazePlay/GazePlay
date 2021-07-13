@@ -24,13 +24,16 @@ public class Bubble implements GameLifeCycle {
     public static final String DIRECTION_LEFT = "toLeft";
     public static final String DIRECTION_RIGHT = "toRight";
 
+    public static final String DIRECTION_TOP_FIX = "toTop_FIX";
+    public static final String DIRECTION_BOTTOM_FIX = "toBottom_FIX";
+    public static final String DIRECTION_LEFT_FIX = "toLeft_FIX";
+    public static final String DIRECTION_RIGHT_FIX = "toRight_FIX";
+
     private final IGameContext gameContext;
 
     private final BubbleType type;
 
     private final Stats stats;
-
-    private Target portrait;
 
     private final BubblesGameVariant gameVariant;
 
@@ -70,7 +73,18 @@ public class Bubble implements GameLifeCycle {
                 }
             });
 
-            imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
+            int randomWallpaperIndex = randomGenerator.nextInt(3);
+            switch (randomWallpaperIndex) {
+                case 1:
+                    imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/inhabited-ocean.png")));
+                    break;
+                case 2:
+                    imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/empty-ocean.png")));
+                    break;
+                default:
+                    imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
+                    break;
+            }
             imageRectangle.setOpacity(imageRectangleOpacity);
 
             gameContext.getChildren().add(imageRectangle);
@@ -83,7 +97,7 @@ public class Bubble implements GameLifeCycle {
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
         randomPositionGenerator.setRandomGenerator(randomGenerator);
         for (int i = 0; i < 10; i++) {
-            portrait = new Target(gameContext, randomPositionGenerator, stats,
+            Target portrait = new Target(gameContext, randomPositionGenerator, stats,
                 Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, type);
             gameContext.getChildren().add(portrait);
         }

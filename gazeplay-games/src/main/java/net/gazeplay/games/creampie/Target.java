@@ -58,7 +58,7 @@ public class Target extends ProgressPortrait {
     public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
                   final ImageLibrary imageLibrary, CreamPie gameInstance) {
 
-        super();
+        super(gameContext.getConfiguration().getElementSize());
         this.randomPositionGenerator = randomPositionGenerator;
         this.hand = hand;
         this.imageLibrary = imageLibrary;
@@ -124,7 +124,7 @@ public class Target extends ProgressPortrait {
         final Timeline timeline = new Timeline();
 
         timeline.getKeyFrames()
-            .add(new KeyFrame(new Duration(2000), new KeyValue(getButton().radiusProperty(), radius * 1.6)));
+            .add(new KeyFrame(new Duration(2000), new KeyValue(getButton().radiusProperty(), gameContext.getConfiguration().getElementSize() * 1.6)));
         timeline.getKeyFrames()
             .add(new KeyFrame(new Duration(2000), new KeyValue(rotateProperty(), getRotate() + (360 * 3))));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(visibleProperty(), false)));
@@ -143,7 +143,7 @@ public class Target extends ProgressPortrait {
     }
 
     private void newPosition() {
-        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(getInitialRadius(), 0, 1, 0, 0.8);
+        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(gameContext.getConfiguration().getElementSize(), 0, 1, 0, 0.8);
         this.centerX = newPosition.getX();
         this.centerY = newPosition.getY();
 
@@ -155,7 +155,7 @@ public class Target extends ProgressPortrait {
 
         stats.incrementNumberOfGoalsToReach();
 
-        final TargetAOI targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(), getInitialRadius,
+        final TargetAOI targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(), gameContext.getConfiguration().getElementSize(),
             System.currentTimeMillis());
         targetAOIList.add(targetAOI);
 
