@@ -13,7 +13,8 @@ public class SameColorGameVariantGenerator implements IGameVariantGenerator {
     public Set<IGameVariant> getVariants() {
         return Sets.newLinkedHashSet(Lists.newArrayList(
             new DimensionGameVariant(3, 2),
-            new DimensionGameVariant(4, 3)
+            new DimensionGameVariant(4, 3),
+            new DimensionGameVariant(6,5)
         ));
     }
 }
