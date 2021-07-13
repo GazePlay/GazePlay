@@ -35,14 +35,11 @@ public class SameColor implements GameLifeCycle {
 
     private final Dimension2D dimension2D;
 
-    private final ReplayablePseudoRandom randomGenerator;
-
     private final ImageLibrary backgroundImage;
 
     private Rectangle background;
 
     private int nbgoals;
-    private int nbgoalsreached;
 
     private List<DoubleRec> doubleRecList;
 
@@ -66,9 +63,7 @@ public class SameColor implements GameLifeCycle {
 
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        this.randomGenerator = new ReplayablePseudoRandom();
-
-        this.backgroundImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions"), randomGenerator);
+        this.backgroundImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions"), random);
 
         doubleRecList = new ArrayList<>();
     }
@@ -85,9 +80,7 @@ public class SameColor implements GameLifeCycle {
 
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-
-        this.backgroundImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions"), randomGenerator);
+        this.backgroundImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions"), random);
 
         doubleRecList = new ArrayList<>();
     }
@@ -99,7 +92,6 @@ public class SameColor implements GameLifeCycle {
         width = dimension2D.getWidth() / gameVariant.getWidth();
         height = dimension2D.getHeight() / gameVariant.getHeight();
 
-        nbgoalsreached = 0;
         nbgoals = gameVariant.getHeight()*gameVariant.getWidth()/2;
 
         colorList = new Color[]
@@ -141,13 +133,12 @@ public class SameColor implements GameLifeCycle {
 
         javafx.event.EventHandler<ActionEvent> eventwin = e -> {
             stats.incrementNumberOfGoalsReached();
-            nbgoalsreached++;
             testwin();
         };
 
         for (DoubleRec doubleRec : doubleRecList){
             gameContext.getChildren().addAll(doubleRec.rec1, doubleRec.rec2);
-            doubleRec.setEvent(eventwin, gameContext.getGazeDeviceManager(), gameContext, doubleRecList);
+            doubleRec.setEvent(eventwin, gameContext.getGazeDeviceManager(), gameContext, doubleRecList, random);
         }
 
         stats.notifyNewRoundReady();
@@ -159,7 +150,7 @@ public class SameColor implements GameLifeCycle {
     }
 
     private void testwin(){
-        if (nbgoalsreached >= nbgoals){
+        if (doubleRecList.isEmpty()){
             stats.stop();
 
             gameContext.updateScore(stats, this);
