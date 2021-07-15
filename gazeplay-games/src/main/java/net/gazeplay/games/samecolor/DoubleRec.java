@@ -49,8 +49,8 @@ public class DoubleRec {
             isin2m = true;
             sameselect(eventwin, gameContext, list, random);
         });
-        //rec1.addEventFilter(MouseEvent.MOUSE_EXITED, e -> isin1m = false);
-        //rec2.addEventFilter(MouseEvent.MOUSE_EXITED, e -> isin2m = false);
+        rec1.addEventFilter(MouseEvent.MOUSE_EXITED, e -> isin1m = false);
+        rec2.addEventFilter(MouseEvent.MOUSE_EXITED, e -> isin2m = false);
 
         rec1.addEventHandler(GazeEvent.GAZE_ENTERED, e -> {
             isin1g = true;
@@ -60,8 +60,8 @@ public class DoubleRec {
             isin2g = true;
             sameselect(eventwin, gameContext, list, random);
         });
-        //rec1.addEventHandler(GazeEvent.GAZE_EXITED, e -> isin1g = false);
-        //rec2.addEventHandler(GazeEvent.GAZE_EXITED, e -> isin2g = false);
+        rec1.addEventHandler(GazeEvent.GAZE_EXITED, e -> isin1g = false);
+        rec2.addEventHandler(GazeEvent.GAZE_EXITED, e -> isin2g = false);
         gazeDeviceManager.addEventFilter(rec1);
         gazeDeviceManager.addEventFilter(rec2);
     }
@@ -70,15 +70,20 @@ public class DoubleRec {
         gameContext.getChildren().removeAll(rec1, rec2);
         gameContext.getChildren().addAll(rec1, rec2);
         if ((isin1m || isin1g) && (isin2m || isin2g)){
-            fits(eventwin, gameContext, list, random);
+            fits(eventwin, gameContext, list, random, 10);
+            /*gameContext.getChildren().removeAll(rec1, rec2);
+            list.remove(this);
+            PauseTransition Win = new PauseTransition(Duration.millis(10));
+            Win.setOnFinished(eventwin);
+            Win.play();*/
         }
     }
 
-    private void fits(javafx.event.EventHandler<ActionEvent> eventwin, IGameContext gameContext, List<DoubleRec> list, ReplayablePseudoRandom random){
-        if (!(isin1m || isin1g) || !(isin2m || isin2g) || shake>=10){
+    private void fits(javafx.event.EventHandler<ActionEvent> eventwin, IGameContext gameContext, List<DoubleRec> list, ReplayablePseudoRandom random, int n){
+        /*if (!(isin1m || isin1g) || !(isin2m || isin2g) || shake>=10){
             fitsoff(eventwin, gameContext, list);
-        }
-        else {
+        }*/
+        if (n>0) {
             PauseTransition move1 = new PauseTransition(Duration.millis(250));
             PauseTransition move2 = new PauseTransition(Duration.millis(250));
             int x = (random.nextInt(100) - 50)/3;
@@ -95,22 +100,21 @@ public class DoubleRec {
                 rec1.setY(rec1.getY() - y);
                 rec2.setX(rec2.getX() - x);
                 rec2.setY(rec2.getY() - y);
-                shake++;
-                fits(eventwin, gameContext, list, random);
+                fits(eventwin, gameContext, list, random, n-1);
             });
             move1.play();
+        } else {
+            fitsoff(eventwin, gameContext, list);
         }
     }
 
     private void fitsoff(javafx.event.EventHandler<ActionEvent> eventwin, IGameContext gameContext, List<DoubleRec> list){
-        if (shake>=10 && list.contains(this)){
+        if (list.contains(this)){
             gameContext.getChildren().removeAll(rec1, rec2);
             list.remove(this);
             PauseTransition Win = new PauseTransition(Duration.millis(10));
             Win.setOnFinished(eventwin);
             Win.play();
-        } else {
-            shake = 0;
         }
     }
 }
