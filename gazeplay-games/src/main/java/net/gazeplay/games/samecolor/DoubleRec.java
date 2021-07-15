@@ -73,18 +73,10 @@ public class DoubleRec {
         if ((isin1m || isin1g) && (isin2m || isin2g) && !tofits){
             tofits = true;
             fits(eventwin, gameContext, list, random, 10);
-            /*gameContext.getChildren().removeAll(rec1, rec2);
-            list.remove(this);
-            PauseTransition Win = new PauseTransition(Duration.millis(10));
-            Win.setOnFinished(eventwin);
-            Win.play();*/
         }
     }
 
     private void fits(javafx.event.EventHandler<ActionEvent> eventwin, IGameContext gameContext, List<DoubleRec> list, ReplayablePseudoRandom random, int n){
-        /*if (!(isin1m || isin1g) || !(isin2m || isin2g) || shake>=10){
-            fitsoff(eventwin, gameContext, list);
-        }*/
         if (n>0) {
             PauseTransition move1 = new PauseTransition(Duration.millis(250));
             PauseTransition move2 = new PauseTransition(Duration.millis(250));
