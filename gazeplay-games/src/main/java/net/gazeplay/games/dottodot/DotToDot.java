@@ -1,11 +1,28 @@
 package net.gazeplay.games.dottodot;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import javafx.geometry.Dimension2D;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.gamevariants.EnumGameVariant;
+import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.TargetAOI;
 
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Objects;
+
+@Slf4j
 public class DotToDot implements GameLifeCycle {
 
     @Getter
@@ -15,18 +32,97 @@ public class DotToDot implements GameLifeCycle {
 
     private final DotToDotGameVariant gameVariant;
 
+    private final ArrayList<TargetAOI> targetAOIList;
+
+    private final ReplayablePseudoRandom randomGenerator;
+
 
     public DotToDot(final IGameContext gameContext, final DotToDotGameVariant gameVariant, final Stats stats) {
-        super();
+        //super();
+        Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        Configuration config = gameContext.getConfiguration();
+
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameVariant = gameVariant;
+        this.targetAOIList = new ArrayList<>();
+        this.randomGenerator = new ReplayablePseudoRandom();
+        this.stats.setGameSeed(randomGenerator.getSeed());
+
+
+        String path = "data/dottodot/";
+
+        JsonParser parser = new JsonParser();
+        JsonObject jsonRoot;
+        jsonRoot = (JsonObject) parser.parse(new InputStreamReader(
+            Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + "elements.json")), StandardCharsets.UTF_8));
+
+        String backgroundPath = path + jsonRoot.get("background").getAsString();
+        Image backgroundImage = new Image(backgroundPath);
+        ImageView background = new ImageView(backgroundImage);
+
+        double scaleRatio = Math.min(dimensions.getWidth() / backgroundImage.getWidth(),
+            dimensions.getHeight() / backgroundImage.getHeight());
+
+        if (config.isBackgroundEnabled()) {
+            log.info("create background");
+            createBackground(background, dimensions, scaleRatio, gameContext);
+        }
+
+        JsonArray elements = jsonRoot.getAsJsonArray("elements");
+        for (JsonElement element : elements) {
+            JsonObject elementObj = (JsonObject) element;
+            // Creating image
+            String imagePath = path + elementObj.get("image").getAsString();
+            Image image = new Image(imagePath);
+            ImageView imageView = new ImageView(image);
+            log.info("image = {}", imagePath);
+            // Scaling image
+            double scale = elementObj.get("scale").getAsDouble();
+            imageView.setFitWidth(image.getWidth() * scaleRatio * scale);
+            imageView.setFitHeight(image.getHeight() * scaleRatio * scale);
+            // Positioning image
+            JsonObject coordinates = elementObj.getAsJsonObject("coords");
+            double x = coordinates.get("x").getAsDouble();
+            double y = coordinates.get("y").getAsDouble();
+            imageView.setX(x - imageView.getFitWidth() / 2);
+            imageView.setY(y - imageView.getFitHeight() / 2);
+            final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int) ((imageView.getFitWidth() + imageView.getFitHeight()) / 3),
+                System.currentTimeMillis());
+            targetAOIList.add(targetAOI);
+            // Creating progress indicator
+            ProgressIndicator progressIndicator = new ProgressIndicator(0);
+            double progIndicSize = Math.min(imageView.getFitWidth(), imageView.getFitHeight()) / 2;
+            progressIndicator.setPrefSize(progIndicSize, progIndicSize);
+            progressIndicator.setLayoutX(x - progIndicSize / 2);
+            progressIndicator.setLayoutY(y - progIndicSize / 2);
+            progressIndicator.setOpacity(0);
+
+            DotEntity dot = new DotEntity(imageView, stats, progressIndicator, gameContext);
+            gameContext.getChildren().add(dot);
+            gameContext.getGazeDeviceManager().addEventFilter(dot);
+            log.info("x = {}, y = {}", imageView.getX(), imageView.getY());
+
+        }
+
+    }
+
+    private void createBackground(ImageView background, Dimension2D dimensions, double scaleRatio, IGameContext gameContext) {
+
+        background.setFitWidth(background.getImage().getWidth() * scaleRatio);
+        background.setFitHeight(background.getImage().getHeight() * scaleRatio);
+
+        double offsetX = (dimensions.getWidth() - background.getFitWidth()) / 2;
+        double offsetY = (dimensions.getHeight() - background.getFitHeight()) / 2;
+
+        background.setX(offsetX);
+        background.setY(offsetY);
+
+        gameContext.getChildren().add(background);
     }
 
     @Override
     public void launch() {
-        gameContext.getChildren().clear();
-        //gameContext.getChildren().add(portrait);
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();

@@ -1,0 +1,13 @@
+{
+    "background": "background.png",
+    "elements": [
+        {
+            "image": "dot.png",
+            "scale": 0.3,
+            "coords": {
+                "x": 50,
+                "y": 40
+            }
+        }
+    ]
+}
