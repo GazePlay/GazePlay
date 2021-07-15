@@ -20,8 +20,10 @@ public class DoubleRec {
 
     public Color color;
 
-    public boolean isin1;
-    public boolean isin2;
+    public boolean isin1m;
+    public boolean isin2m;
+    public boolean isin1g;
+    public boolean isin2g;
 
     private int shake;
 
@@ -31,33 +33,35 @@ public class DoubleRec {
         rec2 = new Rectangle(x2, y2, width, height);
         rec1.setFill(color);
         rec2.setFill(color);
-        isin1 = false;
-        isin2 = false;
+        isin1m = false;
+        isin2m = false;
+        isin1g = false;
+        isin2g = false;
         shake = 0;
     }
 
     public void setEvent(javafx.event.EventHandler<ActionEvent> eventwin, GazeDeviceManager gazeDeviceManager, IGameContext gameContext, List<DoubleRec> list, ReplayablePseudoRandom random){
         rec1.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {
-            isin1 = true;
+            isin1m = true;
             sameselect(eventwin, gameContext, list, random);
         });
         rec2.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {
-            isin2 = true;
+            isin2m = true;
             sameselect(eventwin, gameContext, list, random);
         });
-        //rec1.addEventFilter(MouseEvent.MOUSE_EXITED, e -> isin1 = false);
-        //rec2.addEventFilter(MouseEvent.MOUSE_EXITED, e -> isin2 = false);
+        //rec1.addEventFilter(MouseEvent.MOUSE_EXITED, e -> isin1m = false);
+        //rec2.addEventFilter(MouseEvent.MOUSE_EXITED, e -> isin2m = false);
 
         rec1.addEventHandler(GazeEvent.GAZE_ENTERED, e -> {
-            isin1 = true;
+            isin1g = true;
             sameselect(eventwin, gameContext, list, random);
         });
         rec2.addEventHandler(GazeEvent.GAZE_ENTERED, e -> {
-            isin2 = true;
+            isin2g = true;
             sameselect(eventwin, gameContext, list, random);
         });
-        //rec1.addEventHandler(GazeEvent.GAZE_EXITED, e -> isin1 = false);
-        //rec2.addEventHandler(GazeEvent.GAZE_EXITED, e -> isin2 = false);
+        //rec1.addEventHandler(GazeEvent.GAZE_EXITED, e -> isin1g = false);
+        //rec2.addEventHandler(GazeEvent.GAZE_EXITED, e -> isin2g = false);
         gazeDeviceManager.addEventFilter(rec1);
         gazeDeviceManager.addEventFilter(rec2);
     }
@@ -65,29 +69,20 @@ public class DoubleRec {
     private void sameselect(javafx.event.EventHandler<ActionEvent> eventwin, IGameContext gameContext, List<DoubleRec> list, ReplayablePseudoRandom random){
         gameContext.getChildren().removeAll(rec1, rec2);
         gameContext.getChildren().addAll(rec1, rec2);
-        if (isin1 && isin2){
+        if ((isin1m || isin1g) && (isin2m || isin2g)){
             fits(eventwin, gameContext, list, random);
-        }
-        if (shake>=10){
-            gameContext.getChildren().removeAll(rec1, rec2);
-            list.remove(this);
-            PauseTransition Win = new PauseTransition(Duration.millis(10));
-            Win.setOnFinished(eventwin);
-            Win.play();
-        } else {
-            shake = 0;
         }
     }
 
     private void fits(javafx.event.EventHandler<ActionEvent> eventwin, IGameContext gameContext, List<DoubleRec> list, ReplayablePseudoRandom random){
-        if (!isin1 || !isin2 || shake>=10){
+        if (!(isin1m || isin1g) || !(isin2m || isin2g) || shake>=10){
             fitsoff(eventwin, gameContext, list);
         }
         else {
             PauseTransition move1 = new PauseTransition(Duration.millis(250));
             PauseTransition move2 = new PauseTransition(Duration.millis(250));
-            int x = (random.nextInt(100) - 50);
-            int y = (random.nextInt(100) - 50);
+            int x = (random.nextInt(100) - 50)/3;
+            int y = (random.nextInt(100) - 50)/3;
             move1.setOnFinished(e -> {
                 rec1.setX(rec1.getX() + x);
                 rec1.setY(rec1.getY() + y);
@@ -108,7 +103,7 @@ public class DoubleRec {
     }
 
     private void fitsoff(javafx.event.EventHandler<ActionEvent> eventwin, IGameContext gameContext, List<DoubleRec> list){
-        if (shake>=10){
+        if (shake>=10 && list.contains(this)){
             gameContext.getChildren().removeAll(rec1, rec2);
             list.remove(this);
             PauseTransition Win = new PauseTransition(Duration.millis(10));
