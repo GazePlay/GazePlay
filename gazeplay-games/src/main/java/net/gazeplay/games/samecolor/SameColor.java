@@ -128,7 +128,7 @@ public class SameColor implements GameLifeCycle {
                     }
                 }
             }
-            doubleRecList.add(new DoubleRec(width * (a % gameVariant.getWidth()), height * ((int) a / gameVariant.getWidth()), width * (b % gameVariant.getWidth()), height * ((int) b / gameVariant.getWidth()), width, height, colorList[i]));
+            doubleRecList.add(new DoubleRec(width * (a % gameVariant.getWidth()), height * (a / gameVariant.getWidth()), width * (b % gameVariant.getWidth()), height * (b / gameVariant.getWidth()), width, height, colorList[i]));
         }
 
         javafx.event.EventHandler<ActionEvent> eventwin = e -> {
