@@ -28,7 +28,6 @@ public class CreampieGameLauncher implements IGameLauncher<Stats, IGameVariant> 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant,
                                        Stats stats) {
-        gameContext.getConfiguration().setFixationLength(0);
         return new CreamPie(gameContext, stats);
     }
 

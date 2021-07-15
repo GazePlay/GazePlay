@@ -451,6 +451,4 @@ public class Configuration {
     public Integer getElementSize() {
         return elementSizeProperty.getValue();
     }
-
-    public void setFixationLength(final int fixationLength) { fixationlengthProperty.setValue(fixationLength); }
 }

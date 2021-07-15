@@ -32,7 +32,6 @@ public class PianoGameLauncher implements IGameLauncher<ShooterGamesStats, Dimen
         DimensionGameVariant gameVariant,
         ShooterGamesStats stats
     ) {
-        gameContext.getConfiguration().setFixationLength(0);
         return new Piano(gameContext, stats);
     }
 

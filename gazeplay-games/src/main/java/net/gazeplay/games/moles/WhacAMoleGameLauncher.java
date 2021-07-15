@@ -32,7 +32,6 @@ public class WhacAMoleGameLauncher implements IGameLauncher<Stats, DimensionGame
         DimensionGameVariant gameVariant,
         Stats stats
     ) {
-        gameContext.getConfiguration().setFixationLength(0);
         return new Moles(gameContext, stats);
     }
 

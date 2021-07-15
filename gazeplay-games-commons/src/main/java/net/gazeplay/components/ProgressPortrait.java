@@ -167,8 +167,6 @@ public class ProgressPortrait extends StackPane {
                 timelineProgressBar.stop();
                 timelineProgressBar.getKeyFrames().clear();
 
-                timelineProgressBar.setDelay(new Duration(300));
-
                 timelineProgressBar.getKeyFrames().add(
                     new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(indicator.progressProperty(), 1)));
 

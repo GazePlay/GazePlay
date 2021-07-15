@@ -28,7 +28,6 @@ public class NinjaGameLauncher implements IGameLauncher<Stats, EnumGameVariant<N
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, EnumGameVariant<NinjaGameVariant> gameVariant, Stats stats) {
-        gameContext.getConfiguration().setFixationLength(0);
         return new Ninja(gameContext, stats, gameVariant.getEnumValue());
     }
 

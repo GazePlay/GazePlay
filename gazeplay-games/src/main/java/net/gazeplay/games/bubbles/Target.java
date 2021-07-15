@@ -51,6 +51,8 @@ public class Target extends ProgressPortrait {
 
     private double radius;
 
+    private EventHandler exitEvent;
+
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
                   final ImageLibrary imageLibrary, final BubblesGameVariant gameVariant, final Bubble gameInstance, final ReplayablePseudoRandom randomGenerator, BubbleType type) {
         super(gameContext.getConfiguration().getElementSize());
@@ -71,18 +73,25 @@ public class Target extends ProgressPortrait {
 
         if (this.gameVariant.toString().endsWith("FIX")) {
             timelineGrow = new Timeline();
-            this.getButton().addEventFilter(MouseEvent.MOUSE_EXITED, e -> {
-                log.info("exited");
+            exitEvent = e -> {
                 timelineGrow.stop();
-                timelineGrow.getKeyFrames().clear();
-                timelineGrow.getKeyFrames().add(new KeyFrame(new Duration(100), new KeyValue(this.getButton().radiusProperty(), radius)));
-                timelineGrow.play();
+                getButton().setRadius(radius);
+                setTranslateX(0);
+                setTranslateY(0);
+            };
+            timelineGrow.setOnFinished(e -> {
+                this.removeEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
+                this.setOpacity(0);
             });
+            this.getButton().addEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
             this.getButton().addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {
-                log.info("entered");
-                timelineGrow.stop();
                 timelineGrow.getKeyFrames().clear();
-                timelineGrow.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(this.getButton().radiusProperty(), radius * 2)));
+                timelineGrow.getKeyFrames().addAll(
+                    new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength() - 100), new KeyValue(this.getButton().radiusProperty(), radius * 2)),
+                    new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength() - 100), new KeyValue(this.getButton().radiusProperty(), radius * 2)),
+                    new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength() - 100), new KeyValue(this.translateXProperty(), -this.getButton().radiusProperty().doubleValue())),
+                    new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength() - 100), new KeyValue(this.translateYProperty(), -this.getButton().radiusProperty().doubleValue()))
+                );
                 timelineGrow.play();
             });
         }
@@ -174,7 +183,6 @@ public class Target extends ProgressPortrait {
     private void enter(final Event e) {
 
         gameContext.getGazeDeviceManager().removeEventFilter(this);
-        this.getChildren().remove(this);
 
         stats.incrementNumberOfGoalsReached();
 
@@ -185,6 +193,10 @@ public class Target extends ProgressPortrait {
         timeline.stop();
 
         moveTarget();
+
+        this.getButton().addEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
+        this.setOpacity(1);
+
     }
 
     private void createTarget() {
@@ -197,7 +209,7 @@ public class Target extends ProgressPortrait {
         moveTarget();
     }
 
-    private void updateFillProperty(){
+    private void updateFillProperty() {
         if (type == BubbleType.COLOR) {
             getButton().setFill(new Color(randomGenerator.nextDouble(), randomGenerator.nextDouble(), randomGenerator.nextDouble(), 0.9));
         } else {
@@ -227,29 +239,29 @@ public class Target extends ProgressPortrait {
         updateRadius(dimension2D);
 
         if (this.gameVariant == BubblesGameVariant.TOP || this.gameVariant == BubblesGameVariant.TOP_FIX) {
-            centerX = (dimension2D.getWidth() - 2*radius) * randomGenerator.nextDouble();
+            centerX = (dimension2D.getWidth() - 2 * radius) * randomGenerator.nextDouble();
             centerY = dimension2D.getHeight();
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
-                    new KeyValue(layoutYProperty(), -2*radius, Interpolator.EASE_IN)));
+                    new KeyValue(layoutYProperty(), -2 * radius, Interpolator.EASE_IN)));
         } else if (this.gameVariant == BubblesGameVariant.BOTTOM || this.gameVariant == BubblesGameVariant.BOTTOM_FIX) {
-            centerX = (dimension2D.getWidth() - 2*radius) * randomGenerator.nextDouble();
-            centerY = -2*radius;
+            centerX = (dimension2D.getWidth() - 2 * radius) * randomGenerator.nextDouble();
+            centerY = -2 * radius;
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(layoutYProperty(), dimension2D.getHeight() + radius, Interpolator.EASE_IN)));
         } else if (this.gameVariant == BubblesGameVariant.RIGHT || this.gameVariant == BubblesGameVariant.RIGHT_FIX) {
-            centerX = - 2*radius;
-            centerY = (dimension2D.getHeight() - 2*radius) * randomGenerator.nextDouble();
+            centerX = -2 * radius;
+            centerY = (dimension2D.getHeight() - 2 * radius) * randomGenerator.nextDouble();
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
-                    new KeyValue(layoutXProperty(), dimension2D.getWidth() + 2*radius, Interpolator.EASE_IN)));
+                    new KeyValue(layoutXProperty(), dimension2D.getWidth() + 2 * radius, Interpolator.EASE_IN)));
         } else if (this.gameVariant == BubblesGameVariant.LEFT || this.gameVariant == BubblesGameVariant.LEFT_FIX) {
             centerX = dimension2D.getWidth();
-            centerY = (dimension2D.getHeight() - 2*radius) * randomGenerator.nextDouble();
+            centerY = (dimension2D.getHeight() - 2 * radius) * randomGenerator.nextDouble();
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
-                    new KeyValue(layoutXProperty(), -2*radius, Interpolator.EASE_IN)));
+                    new KeyValue(layoutXProperty(), -2 * radius, Interpolator.EASE_IN)));
         }
 
 
