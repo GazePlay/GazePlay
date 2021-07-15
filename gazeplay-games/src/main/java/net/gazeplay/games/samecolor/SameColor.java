@@ -2,7 +2,6 @@ package net.gazeplay.games.samecolor;
 
 import javafx.event.ActionEvent;
 import javafx.geometry.Dimension2D;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -10,15 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gamevariants.DimensionGameVariant;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
-import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.beans.EventHandler;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,20 +27,13 @@ public class SameColor implements GameLifeCycle {
 
     private final ReplayablePseudoRandom random;
 
-    private final Translator translator;
-
     private final Dimension2D dimension2D;
 
     private final ImageLibrary backgroundImage;
 
-    private Rectangle background;
-
     private int nbgoals;
 
-    private List<DoubleRec> doubleRecList;
-
-    private double width;
-    private double height;
+    private final List<DoubleRec> doubleRecList;
 
     private int[] place;
 
@@ -58,8 +47,6 @@ public class SameColor implements GameLifeCycle {
 
         this.random = new ReplayablePseudoRandom();
         this.stats.setGameSeed(random.getSeed());
-
-        this.translator = gameContext.getTranslator();
 
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -76,8 +63,6 @@ public class SameColor implements GameLifeCycle {
 
         this.random = new ReplayablePseudoRandom(gameSeed);
 
-        this.translator = gameContext.getTranslator();
-
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         this.backgroundImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions"), random);
@@ -89,8 +74,8 @@ public class SameColor implements GameLifeCycle {
         gameContext.getChildren().clear();
         doubleRecList.clear();
 
-        width = dimension2D.getWidth() / gameVariant.getWidth();
-        height = dimension2D.getHeight() / gameVariant.getHeight();
+        double width = dimension2D.getWidth() / gameVariant.getWidth();
+        double height = dimension2D.getHeight() / gameVariant.getHeight();
 
         nbgoals = gameVariant.getHeight()*gameVariant.getWidth()/2;
 
@@ -108,7 +93,7 @@ public class SameColor implements GameLifeCycle {
         }
         shuffle(20);
 
-        background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
+        Rectangle background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         background.widthProperty().bind(gameContext.getRoot().widthProperty());
         background.heightProperty().bind(gameContext.getRoot().heightProperty());
 
