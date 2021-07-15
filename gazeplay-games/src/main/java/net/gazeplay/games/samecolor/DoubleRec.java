@@ -20,12 +20,13 @@ public class DoubleRec {
 
     public Color color;
 
-    public boolean isin1m;
-    public boolean isin2m;
-    public boolean isin1g;
-    public boolean isin2g;
+    private boolean isin1m;
+    private boolean isin2m;
+    private boolean isin1g;
+    private boolean isin2g;
 
-    private int shake;
+    private boolean tofits;
+
 
     DoubleRec(double x1, double y1, double x2, double y2, double width, double height, Color color){
         this.color = color;
@@ -37,7 +38,7 @@ public class DoubleRec {
         isin2m = false;
         isin1g = false;
         isin2g = false;
-        shake = 0;
+        tofits = false;
     }
 
     public void setEvent(javafx.event.EventHandler<ActionEvent> eventwin, GazeDeviceManager gazeDeviceManager, IGameContext gameContext, List<DoubleRec> list, ReplayablePseudoRandom random){
@@ -69,7 +70,8 @@ public class DoubleRec {
     private void sameselect(javafx.event.EventHandler<ActionEvent> eventwin, IGameContext gameContext, List<DoubleRec> list, ReplayablePseudoRandom random){
         gameContext.getChildren().removeAll(rec1, rec2);
         gameContext.getChildren().addAll(rec1, rec2);
-        if ((isin1m || isin1g) && (isin2m || isin2g)){
+        if ((isin1m || isin1g) && (isin2m || isin2g) && !tofits){
+            tofits = true;
             fits(eventwin, gameContext, list, random, 10);
             /*gameContext.getChildren().removeAll(rec1, rec2);
             list.remove(this);
