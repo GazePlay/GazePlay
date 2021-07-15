@@ -19,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.ImageLibrary;
+import net.gazeplay.components.Portrait;
 
 @Slf4j
 public class MolesChar extends Parent {
@@ -54,15 +56,20 @@ public class MolesChar extends Parent {
     @Setter
     private int TargetAOIListIndex;
 
+    //url bidoule if bidoule or default case, and DefaultUser if the user don't has a portrait
+    private String url;
+
     MolesChar(
         final double positionX, final double positionY,
         final double width, final double height,
         final double distTrans,
         final IGameContext gameContext,
-        final Moles gameInstance
+        final Moles gameInstance,
+        final MolesGameVariant variant,
+        final ReplayablePseudoRandom randomGenerator
     ) {
-        this.positionX=positionX;
-        this.positionY=positionY;
+        this.positionX = positionX;
+        this.positionY = positionY;
         this.gameContext = gameContext;
 
         this.out = false;
@@ -79,15 +86,25 @@ public class MolesChar extends Parent {
 
         this.enterEvent = buildEvent();
 
+        final ImageLibrary imageLibrary = Portrait.createImageLibrary(randomGenerator);
+
+        Image moleImage;
+
+        if (variant == MolesGameVariant.USERP) {
+            moleImage = imageLibrary.pickRandomImage();
+        } else {
+            moleImage = new Image("data/whackmole/images/bibouleMole.png");
+        }
+
         this.moleMoved = new Rectangle(positionX, positionY - distTrans, width, height);
-        this.moleMoved.setFill(new ImagePattern(new Image("data/whackmole/images/bibouleMole.png"), 5, 5, 1, 1, true));
+        this.moleMoved.setFill(new ImagePattern(moleImage, 5, 5, 1, 1, true));
         this.moleMoved.opacityProperty().set(1);
         this.moleMoved.addEventHandler(MouseEvent.ANY, enterEvent);
         this.moleMoved.addEventHandler(GazeEvent.ANY, enterEvent);
         gameContext.getGazeDeviceManager().addEventFilter(this.moleMoved);
 
         this.mole = new Rectangle(positionX, positionY, width, height);
-        this.mole.setFill(new ImagePattern(new Image("data/whackmole/images/bibouleMole.png"), 5, 5, 1, 1, true));
+        this.mole.setFill(new ImagePattern(moleImage, 5, 5, 1, 1, true));
         this.getChildren().add(mole);
         this.mole.opacityProperty().set(0);
 
