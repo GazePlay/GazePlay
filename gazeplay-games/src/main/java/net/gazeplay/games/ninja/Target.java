@@ -26,8 +26,6 @@ import java.util.List;
 @Slf4j
 public class Target extends Portrait {
 
-    private final int radius;
-
     private static final int nbBall = 20;
 
     private final IGameContext gameContext;
@@ -55,10 +53,9 @@ public class Target extends Portrait {
 
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
-                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance, final ReplayablePseudoRandom randomGenerator, int radius) {
-        super(radius, randomPositionGenerator, imageLibrary);
+                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance, final ReplayablePseudoRandom randomGenerator) {
+        super(gameContext.getConfiguration().getElementSize(), randomPositionGenerator, imageLibrary);
 
-        this.radius = radius;
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
         this.randomPositionGenerator = randomPositionGenerator;
@@ -94,7 +91,7 @@ public class Target extends Portrait {
     private List<Portrait> generateMiniBallsPortraits(final ImageLibrary imageLibrary, final int count) {
         final List<Portrait> result = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            final Portrait miniPortrait = new Portrait(radius/2, randomMiniBallsPositionGenerator, imageLibrary);
+            final Portrait miniPortrait = new Portrait(gameContext.getConfiguration().getElementSize() / 2, randomMiniBallsPositionGenerator, imageLibrary);
             miniPortrait.setOpacity(1);
             miniPortrait.setVisible(false);
             result.add(miniPortrait);
@@ -124,8 +121,7 @@ public class Target extends Portrait {
         final Position currentPosition = new Position((int) getCenterX(), (int) getCenterY());
 
         final Position newPosition = randomPositionGenerator.newRandomPosition(getInitialRadius());
-        log.debug("currentPosition = {}, newPosition = {}, length = {}", currentPosition, newPosition, length);
-
+        resetTargetAtPosition(currentPosition);
         final TranslateTransition translation = new TranslateTransition(
             new Duration(length), this);
         translation.setByX(-this.getCenterX() + newPosition.getX());
@@ -233,7 +229,7 @@ public class Target extends Portrait {
 
         stats.incrementNumberOfGoalsReached();
 
-        gameContext.updateScore(stats,gameInstance);
+        gameContext.updateScore(stats, gameInstance);
 
         final Animation runningTranslation = currentTranslation;
         if (runningTranslation != null) {
@@ -278,7 +274,7 @@ public class Target extends Portrait {
 
         final Timeline selfTimeLine = new Timeline();
 
-        selfTimeLine.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(radiusProperty(), radius)));
+        selfTimeLine.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(radiusProperty(), gameContext.getConfiguration().getElementSize())));
 
         selfTimeLine.getKeyFrames()
             .add(new KeyFrame(new Duration(1000), new KeyValue(centerXProperty(), newPosition.getX())));
@@ -309,7 +305,7 @@ public class Target extends Portrait {
         fadeTransition.setToValue(0.5);
 
         final Timeline timeline1 = new Timeline();
-        timeline1.getKeyFrames().add(new KeyFrame(new Duration(100), new KeyValue(radiusProperty(), radius/2)));
+        timeline1.getKeyFrames().add(new KeyFrame(new Duration(100), new KeyValue(radiusProperty(), gameContext.getConfiguration().getElementSize() / 2)));
         return new ParallelTransition(fadeTransition, timeline1);
     }
 

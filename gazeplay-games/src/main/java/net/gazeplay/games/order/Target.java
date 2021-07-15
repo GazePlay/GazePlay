@@ -70,7 +70,7 @@ public class Target extends Parent {
         progressIndicator.setProgress(0);
         timelineProgressBar = new Timeline();
         timelineProgressBar.getKeyFrames()
-            .add(new KeyFrame(Duration.millis(fixationLength), new KeyValue(progressIndicator.progressProperty(), 1)));
+            .add(new KeyFrame(Duration.millis(gameContext.getConfiguration().getFixationLength()), new KeyValue(progressIndicator.progressProperty(), 1)));
         timelineProgressBar.setOnFinished(actionEvent -> {
             progressIndicator.setOpacity(0);
             gameInstance.enter(Target.this);

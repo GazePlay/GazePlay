@@ -176,8 +176,6 @@ class SlidingPuzzleCard extends Parent {
             gameContext.clear();
 
             gameInstance.launch();
-
-            gameContext.onGameStarted();
         }));
 
         if (!currentTimeline.getStatus().equals(Timeline.Status.RUNNING)) {
@@ -201,7 +199,7 @@ class SlidingPuzzleCard extends Parent {
 
                 timelineProgressBar = new Timeline();
 
-                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
                     new KeyValue(progressIndicator.progressProperty(), 1)));
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
@@ -211,7 +209,7 @@ class SlidingPuzzleCard extends Parent {
 
                     // gameInstance.showCards();
 
-                    gameInstance.replaceCards(fixationlength, initX, initY, CardId);
+                    gameInstance.replaceCards(gameContext.getConfiguration().getFixationLength(), initX, initY, CardId);
 
                     isMyNeighborEvent();
 

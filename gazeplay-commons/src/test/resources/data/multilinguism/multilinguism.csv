@@ -44,7 +44,7 @@ Lang,Gjuha,لغة,语言,Sprache,Γλώσσα,Language,kieli,Langue,Jezik,Bahasa
 EyeTracker,Eye Tracker,تعقب العين,眼球跟踪,Eyetracker,Συσκευή εντοπισμού ματιού,Eye Tracker,katseohjattava,Oculomètre,Instrument za praćenje pogleda (Eye Tracker),Tracker Mata,Tracciatore oculare (eye tracker),,tropiciel oka,Seguimento do olhar,Tracker Mata,Oogsturingsmodule,АйТрекер,Eye tracker,Theo dõi ánh mắt
 FileDir,Direktoria,دليل الملف,文件夹,Dateiverzeichnis,Κατάλογος αρχείων,Files Directory,tallennuspaikka,Répertoire des fichiers,Datoteka,Direktori Fail,Cartella,,Katalog plików,Diretório de Arquivos,Direktori Fail,Bestands locatie,Директоия файлов,Directorio,Thư mục
 FixationLength,Koha e fiksimit (sekonda),مدة التثبيت (بالثواني),注视时长（秒）,Dauer der Fixierung (Sekunden),Μήκος σταθεροποίησης (δευτερόλεπτα),Fixation Length (seconds),kiinnittämisen pituus,Durée de la fixation (secondes),Dužina fiksiranog pogleda (u sekundama),Panjang Penekanan (saat),Durata fissazione (secondi),,Czas poprawki (sekundy),Duracaõ de fixação,Panjang Penekanan (saat),Fixatietijd (seconden),Длина фиксации (в секундах),Duración de la fijación,Độ dài cố định (giây)
-LayoutFile,Stilet,ملف نموذجي,,Style Sheets,Φύλλα στυλ,Style Sheets,asettelutiedosto,Fichier de style,Raspored datoteka,Helaian Gaya,Fogli di stile,,Arkusze stylów,Diretório do jogo « Onde é »,Helaian Gaya,Stijlen,Таблица стилей,Hojas de estilo,Tập tin Định dạng
+LayoutFile,Stilet,ملف نموذجي,,Style Sheets,Φύλλα στυλ,Style Sheets,asettelutiedosto,Palette de couleurs,Raspored datoteka,Helaian Gaya,Fogli di stile,,Arkusze stylów,Diretório do jogo « Onde é »,Helaian Gaya,Stijlen,Таблица стилей,Hojas de estilo,Tập tin Định dạng
 WhereIsItDirectory,Direktoria “Ku është?”,دليل اللعبة اين هذا؟,《它在哪》游戏目录,Spielverzeichnis « Wo ist es? »,Που είναι; Ευρετήριο παιχνιδιών,« Where is it? » Game directory,missä se on-hakemisto,Répertoire du jeu « Où est-ce ? >,Gdje je? Datoteka igre,« Di mana? » Arahan permainan,"Cartella gioco ""Dov'è?""""artella ",,Gdzie to jest? Katalog gier,Duracaõ de afichagem das perguntas,« Di mana? » Arahan permainan,« Waar is het » Spel bestandslocatie,Где это? директория Игры,"Directorio del juego ""¿Donde está?""""irectorio del ",Thư mục game
 WII-error,Verifikim i direktorisë “Ku është?”,تثبت من دليل اللعبة اين هذا؟,查找《它在哪》游戏目录,Überprüfen Spielverzeichnis « Wo ist es? »,Ελέγξτε «Πού είναι;,Check « Where is it? » Game directory,Tarkista «Missä se on? » Pelihakemisto,Vérifiez le répertoire du jeu « Où est-ce ? ».,Provjeri,Semak « Di mana? » Arahan permainan,"Controllo cartella di gioco ""Dov'è?""""ontroll ",,Sprawdź «Gdzie to jest? » Katalog gier,*Verifique «Onde está?,Semak «Di mana? » Arahan permainan,Controleer de « Waar is het » Spel bestandslocatie,Проверка,"Verifica el directorio del juego ""¿Donde está?""""erifica el di ",Kiểm tra Thư mục game
 QuestionLength,Kohëzgjatja e pyetjeve,مدة ظهور الاسئلة,问题长度,Dauer der Veröffentlichung von Fragen,Μήκος εμφάνισης ερωτήματος,Question Display Length,kysymys,Durée d’affichage des questions,Dužina prikazivanja pitanja,Panjang Paparan Soalan,Durata esposizione della domanda,,Długość wyświetlania pytania,*Pergunta Display Length,Panjang Paparan Soalan,Hoe lang de vraag tonen?,Длина дисплея вопроса,Duración de visualización de las preguntas,Thời gian hiển thị câu hỏi
@@ -192,6 +192,7 @@ Potions,Përzierje Magjike,,魔法药水,,,Magic Potions,,Potions Magiques,,,Poz
 SpaceGame,Space Game,Space Game,太空游戏,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Space Game,Ruimtespel,Space Game,Space Game,Space Game
 GooseGame,,,,,,Goose Game,,Jeu de l'oie,,,,,,,,Ganzenbord spel,,,
 EggGame,,,孵鸡蛋,,,Egg Game,,Jeu de l'oeuf,,,,,,,,,,,
+PersonalizeEggGame,,,孵鸡蛋,,,Egg Game personalised,,Jeu de l'oeuf personnalisation,,,,,,,,,,,
 
 players,,,玩家,,,players,,joueurs,,,,,,,,spelers,,,
 Choose number of players,,,选择玩家数量,,,Choose number of players,,Choisis le nombre de joueurs,,,,,,,,kies het aantal spelers,,,
@@ -238,7 +239,7 @@ GraphicsSettings,,,图像设置,,,Graphics Settings,,Paramètres Graphiques,,,,,
 FoldersSettings,,,文件夹设置,,,Folder Settings,,Paramètres des Dossiers,,,,,,,,,,,
 StatsSettings,,,统计设置,,,Stats Settings,,Paramètres des Statistiques,,,,,,,,,,,
 HeatMapSettings,,,眼动追踪地图设置,,,HeatMap Settings,,Paramètres de la Carte de Chaleur,,,,,,,,,,,
-AOISettings,,,关键注视区设置,,,A.O.I Settings,,Paramètres des Zones d'Interet,,,,,,,,,,,
+AOISettings,,,关键注视区设置,,,A.O.I Settings,,Paramètres des Zones d'Intérêt,,,,,,,,,,,
 MoreStatsSettings,,,更多统计设置,,,More Stats Settings,,Plus de Paramètres de Statistiques,,,,,,,,,,,
 BetaSettings,,,测试设置,,,Beta Settings,,Paramètres en Beta,,,,,,,,,,,
 
@@ -249,8 +250,8 @@ toLeft,,,从右到左,,,from right to left,,de droite à gauche,,,,,,,,,,de la d
 
 Dark,,,,,,Dark,,Sombre,,,,,,,,,,Oscuro,
 Light,,,,,,Light,,Clair,,,,,,,,,,Claro,
-BackgroundStyle,,,,,,Background style,,Style de fond,,,,,,,,,,,
-BackgroundEnabled,,,,,,Background images enabled,,Fonds d'écran activés,,,,,,,,,,,
+BackgroundStyle,,,,,,Background style,,Style de l'arrière-plan des jeux,,,,,,,,,,,
+BackgroundEnabled,,,,,,Background images enabled,,Fonds d'écran activé,,,,,,,,,,,
 
 addNewImages,,,,,,Add new images ...,,Ajouter de nouvelles images ...,,,,,,,,,,Agregar nuevas imágenes ...,
 customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,,,

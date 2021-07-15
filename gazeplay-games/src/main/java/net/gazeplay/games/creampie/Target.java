@@ -35,8 +35,6 @@ public class Target extends Portrait {
 
     private boolean animationEnded = true;
 
-    private final int radius;
-
     private final RandomPositionGenerator randomPositionGenerator;
 
     private final Stats stats;
@@ -50,10 +48,9 @@ public class Target extends Portrait {
     private final IGameContext gameContext;
 
     public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
-                  final ImageLibrary imageLibrary, CreamPie gameInstance, final int radius) {
+                  final ImageLibrary imageLibrary, CreamPie gameInstance) {
 
-        super(radius, randomPositionGenerator, imageLibrary);
-        this.radius = radius;
+        super(gameContext.getConfiguration().getElementSize(), randomPositionGenerator, imageLibrary);
         this.randomPositionGenerator = randomPositionGenerator;
         this.hand = hand;
         this.imageLibrary = imageLibrary;
@@ -86,7 +83,7 @@ public class Target extends Portrait {
     private void enter() {
 
         stats.incrementNumberOfGoalsReached();
-        gameContext.updateScore(stats,gameInstance);
+        gameContext.updateScore(stats, gameInstance);
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
         final Animation animation = createAnimation();
@@ -114,8 +111,8 @@ public class Target extends Portrait {
 
         timeline.setOnFinished(actionEvent -> {
             animationEnded = true;
-            if(targetAOIList.size()>0){
-                targetAOIList.get(targetAOIList.size()-1).setTimeEnded(System.currentTimeMillis());
+            if (targetAOIList.size() > 0) {
+                targetAOIList.get(targetAOIList.size() - 1).setTimeEnded(System.currentTimeMillis());
             }
             newPosition();
         });
@@ -123,10 +120,10 @@ public class Target extends Portrait {
         return timeline;
     }
 
-    private void newPosition(){
+    private void newPosition() {
         final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(getInitialRadius(), 0, 1, 0, 0.8);
 
-        setRadius(radius);
+        setRadius(gameContext.getConfiguration().getElementSize());
         setCenterX(newPosition.getX());
         setCenterY(newPosition.getY());
         setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));

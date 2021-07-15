@@ -193,7 +193,7 @@ public class Math101 implements GameLifeCycle {
         stack.setLayoutX(boardX);
         stack.setLayoutY(boardY);
         final Rectangle boardRectangle = new Rectangle(boardX, boardY, boardWidth, boardHeight);
-        final TargetAOI targetAOI = new TargetAOI(boardX+boardWidth/2, boardY+boardHeight/2, (int)boardHeight/2, System.currentTimeMillis());
+        final TargetAOI targetAOI = new TargetAOI(boardX + boardWidth / 2, boardY + boardHeight / 2, (int) boardHeight / 2, System.currentTimeMillis());
         targetAOIList.add(targetAOI);
         boardRectangle.setFill(new ImagePattern(new Image("data/math101/images/blackboard.png"), 0, 0, 1, 1, true));
 
@@ -219,6 +219,7 @@ public class Math101 implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.incrementNumberOfGoalsToReach();
         gameContext.firstStart();
+        gameContext.onGameStarted(2000);
     }
 
     private ArrayList<TargetAOI> getTargetAOIList() {
@@ -228,7 +229,7 @@ public class Math101 implements GameLifeCycle {
     @Override
     public void dispose() {
 
-        for (int i=0; i<targetAOIList.size(); i++){
+        for (int i = 0; i < targetAOIList.size(); i++) {
             targetAOIList.get(i).setTimeEnded(System.currentTimeMillis());
         }
 
@@ -296,8 +297,6 @@ public class Math101 implements GameLifeCycle {
         resultInt.add(correctAnswer);
         int currentCardIndex = 0;
 
-        final int fixationlength = config.getFixationLength();
-
         for (int currentLineIndex = 1; currentLineIndex < nbLines; currentLineIndex++) {
             for (int currentColumnIndex = 0; currentColumnIndex < nbColumns; currentColumnIndex++) {
 
@@ -332,10 +331,10 @@ public class Math101 implements GameLifeCycle {
                 final double positionX = computePositionX(boxWidth, cardWidth, currentColumnIndex);
                 final double positionY = computePositionY(boxHeight, cardHeight, currentLineIndex);
 
-                final TargetAOI targetAOI = new TargetAOI(positionX+cardWidth/2.5, positionY+boxWidth/3, (int)cardWidth/3, System.currentTimeMillis());
+                final TargetAOI targetAOI = new TargetAOI(positionX + cardWidth / 2.5, positionY + boxWidth / 3, (int) cardWidth / 3, System.currentTimeMillis());
                 targetAOIList.add(targetAOI);
 
-                final Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, currentValue, gameContext, stats, this, fixationlength);
+                final Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, currentValue, gameContext, stats, this, gameContext.getConfiguration().getFixationLength());
 
                 result.add(card);
                 currentCardIndex++;
@@ -354,7 +353,7 @@ public class Math101 implements GameLifeCycle {
     }
 
     private static double computeCardHeight(final double boxHeight) {
-            return boxHeight / zoom_factor;
+        return boxHeight / zoom_factor;
     }
 
     private static double computeCardWidth(final double cardHeight) {
