@@ -438,7 +438,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     public void resetPane(GazePlay gazePlay) {
-        this.gridPane.getChildren().clear();
         gridPane = buildConfigGridPane(this, gazePlay.getTranslator());
     }
 
