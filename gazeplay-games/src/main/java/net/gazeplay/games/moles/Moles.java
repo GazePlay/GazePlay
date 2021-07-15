@@ -49,7 +49,7 @@ public class Moles extends Parent implements GameLifeCycle {
     private Label lab;
 
     private RoundDetails currentRoundDetails;
-  
+
     @Getter
     @Setter
     private ArrayList<TargetAOI> targetAOIList;
@@ -59,7 +59,7 @@ public class Moles extends Parent implements GameLifeCycle {
 
     private final ReplayablePseudoRandom randomGenerator;
 
-    private String type;
+    private MolesGameVariant variant;
 
     Moles(IGameContext gameContext, Stats stats, final MolesGameVariant type) {
         super();
@@ -71,7 +71,7 @@ public class Moles extends Parent implements GameLifeCycle {
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
-        this.type=type.getLabel();
+        this.variant = type;
     }
 
     Moles(IGameContext gameContext, Stats stats, final MolesGameVariant type, double gameSeed) {
@@ -83,7 +83,7 @@ public class Moles extends Parent implements GameLifeCycle {
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-        this.type=type.getLabel();
+        this.variant = type;
     }
 
     @Override
@@ -103,14 +103,13 @@ public class Moles extends Parent implements GameLifeCycle {
         gameContext.start();
 
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final Configuration config = gameContext.getConfiguration();
 
         Rectangle imageFond = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageFond.setFill(new ImagePattern(new Image("data/whackmole/images/molesGround.jpg")));
         adjustBackground(imageFond);
         gameContext.getChildren().add(imageFond);
 
-        List<MolesChar> molesList = initMoles(config, type, randomGenerator);
+        List<MolesChar> molesList = initMoles(variant, randomGenerator);
         currentRoundDetails = new RoundDetails(molesList);
         this.getChildren().addAll(molesList);
         gameContext.getChildren().add(this);
@@ -228,18 +227,18 @@ public class Moles extends Parent implements GameLifeCycle {
         int nbHoles = 10;
 
         LinkedList<Integer> availableHoles = new LinkedList<>();
-        for(int i = 0; i < nbHoles; i++){
-            if(currentRoundDetails.molesList.get(i).canGoOut){
+        for (int i = 0; i < nbHoles; i++) {
+            if (currentRoundDetails.molesList.get(i).canGoOut) {
                 availableHoles.add(i);
             }
         }
         indice = availableHoles.get(randomGenerator.nextInt(availableHoles.size()));
 
         MolesChar m = currentRoundDetails.molesList.get(indice);
-        final TargetAOI targetAOI = new TargetAOI(m.getPositionX(), m.getPositionY(), (int)moleRadius/3,
+        final TargetAOI targetAOI = new TargetAOI(m.getPositionX(), m.getPositionY(), (int) moleRadius / 3,
             System.currentTimeMillis());
         targetAOIList.add(targetAOI);
-        m.setTargetAOIListIndex(targetAOIList.size()-1);
+        m.setTargetAOIListIndex(targetAOIList.size() - 1);
         m.getOut(randomGenerator);
         stats.incrementNumberOfGoalsToReach();
     }
@@ -271,7 +270,7 @@ public class Moles extends Parent implements GameLifeCycle {
         return tabPlacement;
     }
 
-    private List<MolesChar> initMoles(Configuration config, String type, ReplayablePseudoRandom randomGenerator) {
+    private List<MolesChar> initMoles(MolesGameVariant variant, ReplayablePseudoRandom randomGenerator) {
         javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         ArrayList<MolesChar> result = new ArrayList<>();
@@ -289,7 +288,7 @@ public class Moles extends Parent implements GameLifeCycle {
         /* Creation and placement of moles in the field */
         for (double[] doubles : place) {
             result.add(new MolesChar(doubles[0], doubles[1], moleWidth, moleHeight, distTrans, gameContext,
-                this, type, randomGenerator));
+                this, variant, randomGenerator));
         }
 
         return result;
@@ -316,7 +315,7 @@ public class Moles extends Parent implements GameLifeCycle {
             minuteur.cancel();
             minuteur.purge();
         };
-        gameContext.updateScore(stats,this, limiterEndEventHandler, limiterEndEventHandler);
+        gameContext.updateScore(stats, this, limiterEndEventHandler, limiterEndEventHandler);
         lab.setText(s);
 
     }

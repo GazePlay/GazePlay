@@ -17,18 +17,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
-import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.configuration.ConfigurationSource;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.components.Portrait;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 
 @Slf4j
 public class MolesChar extends Parent {
@@ -67,19 +59,17 @@ public class MolesChar extends Parent {
     //url bidoule if bidoule or default case, and DefaultUser if the user don't has a portrait
     private String url;
 
-    private String type;
-
     MolesChar(
         final double positionX, final double positionY,
         final double width, final double height,
         final double distTrans,
         final IGameContext gameContext,
         final Moles gameInstance,
-        final String type,
+        final MolesGameVariant variant,
         final ReplayablePseudoRandom randomGenerator
     ) {
-        this.positionX=positionX;
-        this.positionY=positionY;
+        this.positionX = positionX;
+        this.positionY = positionY;
         this.gameContext = gameContext;
 
         this.out = false;
@@ -96,16 +86,13 @@ public class MolesChar extends Parent {
 
         this.enterEvent = buildEvent();
 
-        this.type=type;
-
         final ImageLibrary imageLibrary = Portrait.createImageLibrary(randomGenerator);
 
         Image moleImage;
 
-        if (type.equals("UserP")){
+        if (variant == MolesGameVariant.USERP) {
             moleImage = imageLibrary.pickRandomImage();
-        }
-        else {
+        } else {
             moleImage = new Image("data/whackmole/images/bibouleMole.png");
         }
 
