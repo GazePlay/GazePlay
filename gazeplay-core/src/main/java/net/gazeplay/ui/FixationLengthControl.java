@@ -29,7 +29,7 @@ public class FixationLengthControl {
     @Getter
     private static final FixationLengthControl instance = new FixationLengthControl();
 
-    private static final int FIXATION_LENGTH_SLIDER_MIN_VALUE = 300;
+    private static final int FIXATION_LENGTH_SLIDER_MIN_VALUE = 0;
 
     private static final int FIXATION_LENGTH_SLIDER_MAX_VALUE = 10000;
 
