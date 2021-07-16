@@ -72,16 +72,18 @@ public class DotToDot implements GameLifeCycle {
         JsonArray elements = jsonRoot.getAsJsonArray("elements");
         for (JsonElement element : elements) {
             JsonObject elementObj = (JsonObject) element;
-            // Creating image
+
+            // Creating a dot
             String imagePath = path + elementObj.get("image").getAsString();
             Image image = new Image(imagePath);
             ImageView imageView = new ImageView(image);
-            log.info("image = {}", imagePath);
-            // Scaling image
+
+            // Scaling
             double scale = elementObj.get("scale").getAsDouble();
-            imageView.setFitWidth(image.getWidth() * scaleRatio * scale);
-            imageView.setFitHeight(image.getHeight() * scaleRatio * scale);
-            // Positioning image
+            imageView.setFitWidth(image.getWidth() * scale);
+            imageView.setFitHeight(image.getHeight() * scale);
+
+            // Positioning a dot
             JsonObject coordinates = elementObj.getAsJsonObject("coords");
             double x = coordinates.get("x").getAsDouble();
             double y = coordinates.get("y").getAsDouble();
@@ -90,18 +92,20 @@ public class DotToDot implements GameLifeCycle {
             final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int) ((imageView.getFitWidth() + imageView.getFitHeight()) / 3),
                 System.currentTimeMillis());
             targetAOIList.add(targetAOI);
+
             // Creating progress indicator
             ProgressIndicator progressIndicator = new ProgressIndicator(0);
             double progIndicSize = Math.min(imageView.getFitWidth(), imageView.getFitHeight()) / 2;
             progressIndicator.setPrefSize(progIndicSize, progIndicSize);
             progressIndicator.setLayoutX(x - progIndicSize / 2);
-            progressIndicator.setLayoutY(y - progIndicSize / 2);
+            progressIndicator.setLayoutY(y - progIndicSize / 2 + 5);
             progressIndicator.setOpacity(0);
 
             DotEntity dot = new DotEntity(imageView, stats, progressIndicator, gameContext);
             gameContext.getChildren().add(dot);
             gameContext.getGazeDeviceManager().addEventFilter(dot);
             log.info("x = {}, y = {}", imageView.getX(), imageView.getY());
+            log.info("progress x = {}, progress y = {}", progressIndicator.getLayoutX(), progressIndicator.getLayoutY());
 
         }
 

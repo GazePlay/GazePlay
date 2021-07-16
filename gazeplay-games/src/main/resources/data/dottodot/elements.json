@@ -3,11 +3,84 @@
     "elements": [
         {
             "image": "dot.png",
-            "scale": 0.3,
+            "scale": 0.6,
             "coords": {
-                "x": 50,
-                "y": 40
+                "x": 600,
+                "y": 850
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.6,
+            "coords": {
+                "x": 750,
+                "y": 550
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.6,
+            "coords": {
+                "x": 500,
+                "y": 350
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.6,
+            "coords": {
+                "x": 800,
+                "y": 350
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.6,
+            "coords": {
+                "x": 900,
+                "y": 50
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.6,
+            "coords": {
+                "x": 1000,
+                "y": 350
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.6,
+            "coords": {
+                "x": 1400,
+                "y": 350
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.6,
+            "coords": {
+                "x": 1100,
+                "y": 550
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.6,
+            "coords": {
+                "x": 1200,
+                "y": 850
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.6,
+            "coords": {
+                "x": 900,
+                "y": 750
             }
         }
+
     ]
 }
