@@ -80,8 +80,8 @@ public class DoubleRec {
         if (n>0) {
             PauseTransition move1 = new PauseTransition(Duration.millis(250));
             PauseTransition move2 = new PauseTransition(Duration.millis(250));
-            int x = (random.nextInt(100) - 50)/3;
-            int y = (random.nextInt(100) - 50)/3;
+            int x = (random.nextInt(20) - 10);
+            int y = (random.nextInt(20) - 10);
             move1.setOnFinished(e -> {
                 rec1.setX(rec1.getX() + x);
                 rec1.setY(rec1.getY() + y);
