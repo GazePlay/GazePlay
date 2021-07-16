@@ -163,9 +163,9 @@ public class SameColor implements GameLifeCycle {
             a = random.nextInt(colorList.length);
             b = random.nextInt(colorList.length);
 
-            Color Ctemp = colorList[a];
+            Color ctemp = colorList[a];
             colorList[a] = colorList[b];
-            colorList[b] = Ctemp;
+            colorList[b] = ctemp;
         }
     }
 }
