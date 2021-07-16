@@ -125,6 +125,8 @@ public class MolesChar extends Parent {
         indicatorMoles.setTranslateX(this.positionX + (distTranslation / 3));
         indicatorMoles.setTranslateY(this.positionY - distTranslation);
         indicatorMoles.setOpacity(0);
+        indicatorMoles.setMouseTransparent(true);
+        indicatorMoles.toFront();
         gameContext.getChildren().add(indicatorMoles);
         return indicatorMoles;
     }
@@ -141,6 +143,7 @@ public class MolesChar extends Parent {
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
                 progressIndicatorMoles.setOpacity(1);
+                progressIndicatorMoles.toFront();
                 progressIndicatorMoles.setProgress(0);
 
                 timelineProgressBarMoles = new Timeline();
