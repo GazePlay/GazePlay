@@ -58,6 +58,7 @@ public class ColorBox extends StackPane {
             button.setPadding(new Insets(newClorBoxPadding, newClorBoxPadding, newClorBoxPadding, newClorBoxPadding));
         });
         button.setGraphic(graphic);
+        button.setOpacity(1);
 
         gameContext.getGazeDeviceManager().addEventFilter(graphic);
 

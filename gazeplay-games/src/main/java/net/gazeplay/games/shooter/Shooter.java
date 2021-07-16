@@ -395,6 +395,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         box.setTranslateX(0);
         box.setTranslateY(0);
 
+        gameContext.setOffFixationLengthControl();
     }
 
     private void closeTimer(){
