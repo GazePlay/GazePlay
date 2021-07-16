@@ -5,7 +5,10 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -104,108 +107,61 @@ public class GameVariantDialog extends Stage {
             button.setMaxWidth(primaryStage.getWidth() / 8);
             button.setMaxHeight(primaryStage.getHeight() / 8);
 
-            if (variant instanceof DimensionDifficultyGameVariant) {
+            if ((variant instanceof DimensionDifficultyGameVariant) || (variant.toString().contains("DYNAMIC"))) {
                 if (!choicePanes.containsKey(1)) {
                     choicePanes.put(1, createFlowPane());
                 }
                 choicePanes.get(1).getChildren().add(button);
             } else if (variant instanceof IntStringGameVariant) {
-                // The following commented code will be used later for High-Contrast Color Game
-                /* if (gameSpec.getGameSummary().getNameCode().equals("bottle")) {
-                    button.setTextAlignment(TextAlignment.CENTER);
-                    if (!choicePanes.containsKey(1)) {
-                        choicePanes.put(1, createFlowPane());
-                    }
-                    if (((IntStringGameVariant) variant).getStringValue().contains("NORMAL")) {
-                        choicePanes.get(0).getChildren().add(button);
-                    } else {
-                        choicePanes.get(1).getChildren().add(button);
-                    }
-                } else */
-                    {
-                    button.setTextAlignment(TextAlignment.CENTER);
-                    int number = ((IntStringGameVariant) variant).getNumber();
+                button.setTextAlignment(TextAlignment.CENTER);
+                int number = ((IntStringGameVariant) variant).getNumber();
 
-                    if (!choicePanes.containsKey(number)) {
-                        choicePanes.put(number, createFlowPane());
-                    }
-                    choicePanes.get(number).getChildren().add(button);
+                if (!choicePanes.containsKey(number)) {
+                    choicePanes.put(number, createFlowPane());
                 }
+                choicePanes.get(number).getChildren().add(button);
             } else {
                 choicePanes.get(0).getChildren().add(button);
             }
 
-            // The following commented code will be used later for High-Contrast Color Game
-            if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") /*|| gameSpec.getGameSummary().getNameCode().equals("bottle")*/) {
+            if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") || gameSpec.getGameSummary().getNameCode().equals("Ninja") || gameSpec.getGameSummary().getNameCode().contains("Memory")) {
                 if (variant instanceof DimensionGameVariant) {
                     variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "normal");
                 }
 
                 if (group.getToggles().size() < 2) {
-                    RadioButton normal, facile;
+                    RadioButton category1, category2;
                     if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) {
-                        normal = new RadioButton("normal");
-                        facile = new RadioButton("easy");
+                        category1 = new RadioButton("normal");
+                        category2 = new RadioButton("easy");
+                    } else if (gameSpec.getGameSummary().getNameCode().equals("Ninja") || gameSpec.getGameSummary().getNameCode().contains("Memory")) {
+                        category1 = new RadioButton("Static");
+                        category2 = new RadioButton("Dynamic");
                     } else {
-                        normal = new RadioButton("Classic");
-                        facile = new RadioButton("High-Contrasts");
+                        category1 = new RadioButton("Classic");
+                        category2 = new RadioButton("High-Contrasts");
                     }
 
-                    normal.setToggleGroup(group);
-                    normal.setSelected(true);
-                    facile.setToggleGroup(group);
+                    category1.setToggleGroup(group);
+                    category1.setSelected(true);
+                    category2.setToggleGroup(group);
 
-                    bottom.getChildren().add(facile);
-                    bottom.getChildren().add(normal);
+                    bottom.getChildren().add(category2);
+                    bottom.getChildren().add(category1);
                     sceneContentPane.setBottom(bottom);
-                    facile.setOnAction(actionEvent -> {
+                    category2.setOnAction(actionEvent -> {
                         if (easymode != 1) {
                             easymode = 1;
                             choicePanelScroller.setContent(choicePanes.get(1));
                         }
                     });
-                    normal.setOnAction(actionEvent -> {
+                    category1.setOnAction(actionEvent -> {
                         if (easymode != 0) {
                             easymode = 0;
                             choicePanelScroller.setContent(choicePanes.get(0));
                         }
                     });
                 }
-
-
-                 //The following commented code will be used later for High-Contrast Color Game
- /*           } else if (gameSpec.getGameSummary().getNameCode().equals("EggGame")) {
-                int number = ((IntStringGameVariant) variant).getNumber();
-
-                RadioButton normal = new RadioButton("" + number);
-                boolean toggleAlreadyExist = false;
-                for (Toggle toggle : group.getToggles()) {
-                    if (((RadioButton) toggle).getText().equals("" + number)) {
-                        normal = ((RadioButton) toggle);
-                        toggleAlreadyExist = true;
-                        break;
-                    }
-                }
-
-                if (!toggleAlreadyExist) {
-                    normal.setToggleGroup(group);
-
-                    group.getToggles().get(0).setSelected(true);
-                    RadioButton main = ((RadioButton) group.getToggles().get(0));
-                    easymode = Integer.parseInt(main.getText());
-                    choicePanelScroller.setContent(choicePanes.get(easymode));
-
-
-                    bottom.getChildren().add(normal);
-                    sceneContentPane.setBottom(bottom);
-                    normal.setOnAction(actionEvent -> {
-                        if (easymode != number) {
-                            easymode = number;
-                            choicePanelScroller.setContent(choicePanes.get(number));
-                        }
-                    });
-                }
-*/
             }
 
             IGameVariant finalVariant = variant;

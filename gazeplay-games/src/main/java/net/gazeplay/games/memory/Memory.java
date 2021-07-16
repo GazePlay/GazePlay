@@ -4,6 +4,8 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -14,7 +16,10 @@ import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 public class Memory implements GameLifeCycle {
@@ -34,12 +39,19 @@ public class Memory implements GameLifeCycle {
         public final List<MemoryCard> cardList;
     }
 
+    @Getter
     private int nbRemainingPeers;
 
     private final IGameContext gameContext;
 
-    private final int nbLines;
-    private final int nbColumns;
+    @Getter
+    @Setter
+    private int nbLines;
+    @Getter
+    @Setter
+    private int nbColumns;
+
+    private String difficulty;
 
     private final Stats stats;
 
@@ -52,13 +64,28 @@ public class Memory implements GameLifeCycle {
 
     public RoundDetails currentRoundDetails;
 
+    @Getter
     public int nbTurnedCards;
 
     private final boolean isOpen;
 
     private final ReplayablePseudoRandom randomGenerator;
 
-    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
+    @Getter
+    private int nbWrongCards;
+
+    @Getter
+    private int nbCorrectCards;
+
+    @Getter
+    private List<Integer> listOfResults = new ArrayList<>();
+
+    @Getter
+    @Setter
+    private int level = 2;
+
+
+    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final String difficulty, final Stats stats,
                   final boolean isOpen) {
         super();
         this.isOpen = isOpen;
@@ -71,7 +98,10 @@ public class Memory implements GameLifeCycle {
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
+        this.difficulty = difficulty;
         this.stats = stats;
+        this.nbCorrectCards = 0;
+        this.nbWrongCards = 0;
         this.gameContext.startTimeLimiter();
 
         this.randomGenerator = new ReplayablePseudoRandom();
@@ -92,7 +122,7 @@ public class Memory implements GameLifeCycle {
 
     }
 
-    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final Stats stats,
+    public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final String difficulty, final Stats stats,
                   final boolean isOpen, double gameSeed) {
         super();
         this.isOpen = isOpen;
@@ -105,7 +135,10 @@ public class Memory implements GameLifeCycle {
         this.gameContext = gameContext;
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
+        this.difficulty = difficulty;
         this.stats = stats;
+        this.nbCorrectCards = 0;
+        this.nbWrongCards = 0;
         this.gameContext.startTimeLimiter();
 
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
@@ -255,8 +288,52 @@ public class Memory implements GameLifeCycle {
         return value;
     }
 
-    public int getnbRemainingPeers() {
-        return nbRemainingPeers;
+    public void incNbWrongCards() {
+        nbWrongCards++;
     }
 
+    public void resetNbWrongCards() {
+        nbWrongCards = 0;
+    }
+
+    public void incNbCorrectCards() {
+        nbCorrectCards++;
+    }
+
+    public void resetNbCorrectCards() {
+        nbCorrectCards = 0;
+    }
+
+    public int totalNbOfTries() {
+        return getNbCorrectCards() + getNbWrongCards();
+    }
+
+    public void addRoundResult(int lastRoundResult) {
+        listOfResults.add(lastRoundResult);
+    }
+
+    public void adaptLevel() {
+
+        if (level == 6) {
+            setNbColumns(4);
+            setNbLines(3);
+        } else if (level == 8) {
+            setNbColumns(4);
+            setNbLines(4);
+        } else if (level == 9) {
+            setNbColumns(6);
+            setNbLines(3);
+        } else if (level == 10) {
+            setNbColumns(5);
+            setNbLines(4);
+        } else {
+            setNbColumns(level);
+            setNbLines(2);
+        }
+
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
 }
