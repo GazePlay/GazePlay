@@ -106,9 +106,9 @@ public class DoubleRec {
         if (list.contains(this)){
             gameContext.getChildren().removeAll(rec1, rec2);
             list.remove(this);
-            PauseTransition Win = new PauseTransition(Duration.millis(10));
-            Win.setOnFinished(eventwin);
-            Win.play();
+            PauseTransition win = new PauseTransition(Duration.millis(10));
+            win.setOnFinished(eventwin);
+            win.play();
         }
     }
 }
