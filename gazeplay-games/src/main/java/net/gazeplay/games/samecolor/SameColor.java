@@ -91,7 +91,7 @@ public class SameColor implements GameLifeCycle {
             place[2*i] = i;
             place[2*i+1] = i;
         }
-        shuffle(20);
+        shuffle();
 
         Rectangle background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         background.widthProperty().bind(gameContext.getRoot().widthProperty());
@@ -151,8 +151,8 @@ public class SameColor implements GameLifeCycle {
         }
     }
 
-    private void shuffle(int n){
-        if (n>0){
+    private void shuffle(){
+        for (int i=0; i<20; i++){
             int a = random.nextInt(nbgoals*2);
             int b = random.nextInt(nbgoals*2);
 
@@ -166,8 +166,6 @@ public class SameColor implements GameLifeCycle {
             Color Ctemp = colorList[a];
             colorList[a] = colorList[b];
             colorList[b] = Ctemp;
-
-            shuffle(n-1);
         }
     }
 }
