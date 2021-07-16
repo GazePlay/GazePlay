@@ -282,8 +282,8 @@ public class Target extends ProgressPortrait {
                     new Position(getLayoutX(), dimension2D.getHeight() - gameContext.getConfiguration().getElementSize()), length);
                 break;
             case DYNAMIC_HORIZONTAL: // horizontal
-                createBackAndForthTranslations(new Position(gameContext.getConfiguration().getElementSize(), getCenterY()),
-                    new Position(dimension2D.getWidth() - gameContext.getConfiguration().getElementSize(), getCenterY()), length);
+                createBackAndForthTranslations(new Position(gameContext.getConfiguration().getElementSize(), getLayoutX()),
+                    new Position(dimension2D.getWidth() - gameContext.getConfiguration().getElementSize(), getLayoutX()), length);
                 break;
             case DYNAMIC_DIAGONAL_UPPER_LEFT_TO_LOWER_RIGHT: // Diagonal \
                 createBackAndForthTranslations(new Position(gameContext.getConfiguration().getElementSize(), gameContext.getConfiguration().getElementSize()),
