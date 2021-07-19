@@ -210,12 +210,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
-        {
-            I18NText label = new I18NText(translator, "CreateShortCut", COLON);
+        if(Utils.isWindows()) {
+            {
+                I18NText label = new I18NText(translator, "CreateShortCut", COLON);
 
-            VBox input = buildVariantShortcutMaker(config, configurationContext);
+                VBox input = buildVariantShortcutMaker(config, configurationContext);
 
-            addToGrid(grid, currentFormRow, label, input);
+                addToGrid(grid, currentFormRow, label, input);
+            }
         }
 
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GamesSettings", COLON));
