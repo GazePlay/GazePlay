@@ -4,17 +4,17 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
-import net.gazeplay.commons.gamevariants.DimensionGameVariant;
-import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class WhacAMoleGameLauncher implements IGameLauncher<Stats, DimensionGameVariant> {
+public class WhacAMoleGameLauncher implements IGameLauncher<Stats, EnumGameVariant<MolesGameVariant>> {
 
     @Override
     public Stats createNewStats(Scene scene) {
@@ -29,19 +29,19 @@ public class WhacAMoleGameLauncher implements IGameLauncher<Stats, DimensionGame
     @Override
     public GameLifeCycle createNewGame(
         IGameContext gameContext,
-        DimensionGameVariant gameVariant,
+        EnumGameVariant<MolesGameVariant> gameVariant,
         Stats stats
     ) {
-        return new Moles(gameContext, stats);
+        return new Moles(gameContext, stats, gameVariant.getEnumValue());
     }
 
     @Override
     public GameLifeCycle replayGame(
         IGameContext gameContext,
-        DimensionGameVariant gameVariant,
+        EnumGameVariant<MolesGameVariant> gameVariant,
         Stats stats, double gameSeed
     ) {
-        return new Moles(gameContext, stats, gameSeed);
+        return new Moles(gameContext, stats, gameVariant.getEnumValue(), gameSeed);
     }
 
 }

@@ -12,7 +12,6 @@ import javafx.util.Duration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
@@ -36,8 +35,6 @@ public class Target extends ProgressPortrait {
 
     private boolean animationEnded = true;
 
-    private final int radius;
-
     private final RandomPositionGenerator randomPositionGenerator;
 
     private final Stats stats;
@@ -50,6 +47,8 @@ public class Target extends ProgressPortrait {
 
     private final IGameContext gameContext;
 
+    private boolean onUse = false;
+
     @Getter
     private double centerX;
 
@@ -57,13 +56,12 @@ public class Target extends ProgressPortrait {
     private double centerY;
 
     public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
-                  final ImageLibrary imageLibrary, CreamPie gameInstance, final int radius) {
+                  final ImageLibrary imageLibrary, CreamPie gameInstance) {
 
-        super();
-        this.radius = radius;
+        super(gameContext.getConfiguration().getElementSize());
         this.randomPositionGenerator = randomPositionGenerator;
         this.hand = hand;
-        this.imageLibrary = imageLibrary;;
+        this.imageLibrary = imageLibrary;
         this.stats = stats;
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
@@ -72,8 +70,12 @@ public class Target extends ProgressPortrait {
         this.targetAOIList = new ArrayList<>();
 
         enterEvent = e -> {
-            animationEnded = false;
-            enter();
+            if (!onUse) {
+                animationEnded = false;
+                onUse = true;
+                disableProgressIndicator();
+                enter();
+            }
         };
 
         createTarget();
@@ -83,18 +85,18 @@ public class Target extends ProgressPortrait {
 
     private void createTarget() {
 
-        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(radius, 0, 1, 0, 0.8);
+        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(gameContext.getConfiguration().getElementSize(), 0, 1, 0, 0.8);
         this.centerX = newPosition.getX();
         this.centerY = newPosition.getY();
 
-        getButton().setRadius(radius);
-        setLayoutX(newPosition.getX());
-        setLayoutY(newPosition.getY());
+        getButton().setRadius(gameContext.getConfiguration().getElementSize());
+        setLayoutX(this.centerX);
+        setLayoutY(this.centerY);
         getButton().setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
         setRotate(0);
         setVisible(true);
 
-        assignIndicatorUpdatable(enterEvent,gameContext);
+        assignIndicatorUpdatable(enterEvent, gameContext);
         gameContext.getGazeDeviceManager().addEventFilter(this);
         active();
     }
@@ -102,7 +104,7 @@ public class Target extends ProgressPortrait {
     private void enter() {
 
         stats.incrementNumberOfGoalsReached();
-        gameContext.updateScore(stats,gameInstance);
+        gameContext.updateScore(stats, gameInstance);
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
 
         final Animation animation = createAnimation();
@@ -121,8 +123,8 @@ public class Target extends ProgressPortrait {
     private Animation createAnimation() {
         final Timeline timeline = new Timeline();
 
-        /*timeline.getKeyFrames()
-            .add(new KeyFrame(new Duration(2000), new KeyValue(radiusProperty(), radius * 1.6)));*/
+        timeline.getKeyFrames()
+            .add(new KeyFrame(new Duration(2000), new KeyValue(getButton().radiusProperty(), gameContext.getConfiguration().getElementSize() * 1.6)));
         timeline.getKeyFrames()
             .add(new KeyFrame(new Duration(2000), new KeyValue(rotateProperty(), getRotate() + (360 * 3))));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(visibleProperty(), false)));
@@ -130,8 +132,9 @@ public class Target extends ProgressPortrait {
 
         timeline.setOnFinished(actionEvent -> {
             animationEnded = true;
-            if(targetAOIList.size()>0){
-                targetAOIList.get(targetAOIList.size()-1).setTimeEnded(System.currentTimeMillis());
+            onUse = false;
+            if (targetAOIList.size() > 0) {
+                targetAOIList.get(targetAOIList.size() - 1).setTimeEnded(System.currentTimeMillis());
             }
             newPosition();
         });
@@ -139,8 +142,8 @@ public class Target extends ProgressPortrait {
         return timeline;
     }
 
-    private void newPosition(){
-        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(radius, 0, 1, 0, 0.8);
+    private void newPosition() {
+        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(gameContext.getConfiguration().getElementSize(), 0, 1, 0, 0.8);
         this.centerX = newPosition.getX();
         this.centerY = newPosition.getY();
 
@@ -148,10 +151,11 @@ public class Target extends ProgressPortrait {
         setLayoutY(newPosition.getY());
         getButton().setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
         setVisible(true);
+        active();
 
         stats.incrementNumberOfGoalsToReach();
 
-        final TargetAOI targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(), radius,
+        final TargetAOI targetAOI = new TargetAOI(newPosition.getX(), newPosition.getY(), gameContext.getConfiguration().getElementSize(),
             System.currentTimeMillis());
         targetAOIList.add(targetAOI);
 

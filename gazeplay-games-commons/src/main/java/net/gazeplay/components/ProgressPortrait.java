@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -13,14 +14,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-
-import javafx.scene.image.Image;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
-import lombok.Getter;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
@@ -42,7 +37,8 @@ public class ProgressPortrait extends StackPane {
     @Getter
     private ImageView image;
 
-    public ProgressPortrait() {
+
+    public ProgressPortrait(int radius) {
         super();
         button = new Circle();
         button.setFill(Color.LIGHTGREY);
@@ -72,6 +68,10 @@ public class ProgressPortrait extends StackPane {
         this.setOpacity(0);
         this.setDisable(true);
         this.button.setDisable(true);
+    }
+
+    public void disableProgressIndicator() {
+        inuse = false;
     }
 
     public void setImage(final ImageView img) {
@@ -167,8 +167,6 @@ public class ProgressPortrait extends StackPane {
                 timelineProgressBar.stop();
                 timelineProgressBar.getKeyFrames().clear();
 
-                timelineProgressBar.setDelay(new Duration(300));
-
                 timelineProgressBar.getKeyFrames().add(
                     new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(indicator.progressProperty(), 1)));
 
@@ -194,6 +192,12 @@ public class ProgressPortrait extends StackPane {
         active2();
 
         return indicator;
+    }
+
+    public Position getCurrentCenterPositionWithTranslation() {
+        return new Position(
+            (int) getLayoutX() + (int) getTranslateX() + getButton().getRadius(),
+            (int) getLayoutY() + (int) getTranslateY() + getButton().getRadius());
     }
 
     protected Image pickRandomImage(final List<Image> availableImages) {

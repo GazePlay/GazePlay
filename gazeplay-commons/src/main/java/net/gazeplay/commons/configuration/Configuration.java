@@ -63,6 +63,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME = "LATEST_NEWS_POPUP_LAST_SHOWN_TIME";
     private static final String PROPERTY_NAME_FAVORITE_GAMES = "FAVORITE_GAMES";
     private static final String PROPERTY_NAME_HIDDEN_CATEGORIES = "HIDDEN_CATEGORIES";
+    private static final String PROPERTY_NAME_ELEMENTSIZE = "ELEMENT_SIZE";
 
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
@@ -94,6 +95,7 @@ public class Configuration {
     private static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
+    private static final int DEFAULT_VALUE_ELEMENT_SIZE = 50;
 
     /*
     source : "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
@@ -218,6 +220,9 @@ public class Configuration {
     @Getter
     private final BooleanProperty latestNewsDisplayForced;
 
+    @Getter
+    private final IntegerProperty elementSizeProperty;
+
     private final File configFile;
 
     private final ApplicationConfig applicationConfig;
@@ -232,6 +237,9 @@ public class Configuration {
         countryProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_COUNTRY, Locale.getDefault().getCountry(), propertyChangeListener);
 
         eyetrackerProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER, propertyChangeListener);
+        if (eyetrackerProperty.getValue().equals("tobii_eyeX_4C")){
+            eyetrackerProperty.setValue("tobii");
+        }
 
         musicVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_MUSIC_VOLUME, DEFAULT_VALUE_MUSIC_VOLUME, propertyChangeListener);
         effectsVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_EFFECTS_VOLUME, DEFAULT_VALUE_EFFECTS_VOLUME, propertyChangeListener);
@@ -285,6 +293,9 @@ public class Configuration {
         hiddenCategoriesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_HIDDEN_CATEGORIES, Sets.newLinkedHashSet(), propertyChangeListener);
 
         latestNewsDisplayForced = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FORCE_DISPLAY_NEWS, DEFAULT_VALUE_FORCE_DISPLAY_NEWS, propertyChangeListener);
+
+        elementSizeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_ELEMENTSIZE, DEFAULT_VALUE_ELEMENT_SIZE, propertyChangeListener);
+
     }
 
     private void saveConfig() throws IOException {
@@ -448,5 +459,9 @@ public class Configuration {
 
     public void setFixationLength(final int fixationLength) {
         fixationlengthProperty.setValue(fixationLength);
+    }
+
+    public Integer getElementSize() {
+        return elementSizeProperty.getValue();
     }
 }
