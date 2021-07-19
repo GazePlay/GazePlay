@@ -73,6 +73,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private final boolean currentLanguageAlignmentIsLeftAligned;
 
+    private GridPane gridPane;
+
     ConfigurationContext(GazePlay gazePlay) {
         super(gazePlay, new BorderPane());
 
@@ -171,7 +173,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     GridPane buildConfigGridPane(ConfigurationContext configurationContext, Translator translator) {
 
-        final Configuration config = ActiveConfigurationContext.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
+
+        if ((config.getUserName()) != null && !config.getUserName().equals("")) {
+            ActiveConfigurationContext.switchToUser(config.getUserName());
+        } else {
+            ActiveConfigurationContext.switchToDefaultUser();
+        }
+
+        config = ActiveConfigurationContext.getInstance();
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -252,7 +262,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "FixationLength", COLON);
 
-            Spinner<Double> input = buildSpinner(0.3, 10, (double) config.getFixationLength() / 1000,
+            Spinner<Double> input = buildSpinner(0, 10, (double) config.getFixationLength() / 1000,
                 0.1, config.getFixationlengthProperty());
 
             addToGrid(grid, currentFormRow, label, input);
@@ -425,6 +435,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             grid.add(s, columnIndexInputRight + 1, currentRowIndex, 2, 1);
             GridPane.setHalignment(s, HPos.RIGHT);
         }
+    }
+
+    public void resetPane(GazePlay gazePlay) {
+        gridPane = buildConfigGridPane(this, gazePlay.getTranslator());
     }
 
     void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {

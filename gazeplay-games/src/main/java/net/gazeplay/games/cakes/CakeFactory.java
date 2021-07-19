@@ -98,7 +98,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     private final ReplayablePseudoRandom random;
 
-    boolean win = true;
+    private boolean win = true;
 
     CakeFactory(final IGameContext gameContext, final Stats stats, final CakeGameVariant variant) {
         this.gameContext = gameContext;
@@ -211,7 +211,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
                 }
             }
         } else {
-            for (int j = 0; j < 3; j++) {
+            for (int j = 0; j <= 3; j++) {
                 if (layers[0][j] != model[0][j]) {
                     win = false;
                     if (0 == currentCake) {
@@ -219,29 +219,26 @@ public class CakeFactory extends Parent implements GameLifeCycle {
                     }
                 }
             }
-            if (layers[0][3] != model[0][3]) {
-                win = false;
-                if (0 == currentCake) {
-                    currentOk = false;
-                }
-            }
         }
+
         if (!winOnly) {
             buttons[2].disable(!nappage);
-            if (!currentOk) {
-                buttons[4].setOpacity(0.5);
-            }
-            if (variant.equals(CakeGameVariant.ONELAYER)) {
-                buttons[4].setOpacity(0);
-            }
             if (!nappage) {
                 buttons[2].setOpacity(0.5);
             }
         }
 
+        if (winOnly && currentOk && !variant.equals(CakeGameVariant.ONELAYER) && getMaxCake() < 2) {
+            backtoScreenZero();
+            setMaxCake(getMaxCake() + 1);
+            setCurrentCake(getMaxCake());
+            createCake(getMaxCake());
+        }
+
         if (win) {
             winFunction();
         }
+
     }
 
     public void active(final int i) {
@@ -493,18 +490,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         bt.setLayoutX(dimension2D.getWidth() - buttonSize);
         bt.setLayoutY(dimension2D.getHeight() - (1.2 * buttonSize));
         buttonHandler = e -> {
-            for (int c = 0; c <= maxCake; c++) {
-                cake[c].toFront();
-            }
-            active(0);
-
-            winButton(false);
-
-            for (final Node child : p[0]) {
-                child.toFront();
-            }
-
-            updateBackgroundColor(col[0]);
+            backtoScreenZero();
         };
         bt.assignIndicatorUpdatable(buttonHandler, this.gameContext);
         bt.active();
@@ -512,7 +498,22 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         p[j].add(bt);
     }
 
-    void createCake(final int i) {
+    private void backtoScreenZero() {
+        for (int c = 0; c <= maxCake; c++) {
+            cake[c].toFront();
+        }
+        active(0);
+
+        winButton(false);
+
+        for (final Node child : p[0]) {
+            child.toFront();
+        }
+
+        updateBackgroundColor(col[0]);
+    }
+
+    private void createCake(final int i) {
         layers[i][0] = 1;
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         setNappage(false);

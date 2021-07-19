@@ -141,19 +141,7 @@ targets,shënjestra,أهداف,目标,,,targets,,objectifs,,,bersagli,,,,,Doelen
 Choose number of cups,,,选择杯子数量,,,Choose number of cups,,Choisis le nombre de gobelets,,,,,,,,Kies het aantal kopjes,Выберите количество чашек,,,Выберыце колькасць кубкаў,
 cups,tasa,كؤوس,,,,cups,,gobelets,,,tazze,,,,,Bekers,чашки,tazas,,кубкі,
 
-Choose size,,,选择尺寸,,,Choose size,,Choisis la taille,,,,,,,,kies maat,Выберите размер,,,выберыце памер,
-
-Math101: Addition,,,数学101：加法,,,Math 101: Addition,,Apprends les Maths : Additions,,,,,,,,Wiskunde 101 : optellen,Учимся считать: Сложение,,,Вучымся лічыць: Складанне,
-Math101: Substraction,,,数学101：减法,,,Math 101: Substraction,,Apprends les Maths : Soustractions,,,,,,,,Wiskunde 102 : aftrekken,Учимся считать: Вычитание,,,Вучымся лічыць: Адніманне,
-Math101: Multiplication,,,数学101：乘法,,,Math 101: Multiplication,,Apprends les Maths : Multiplications,,,,,,,,Wiskunde 103 : vermenigvuldigen,Учимся считать: Умножение,,,Вучымся лічыць: Множанне,
-Math101: Division,,,数学101：除法,,,Math 101: Division,,Apprends les Maths : Divisions,,,,,,,,Wiskunde 104 : delen,Учимся считать: Деление,,,Вучымся лічыць: Дзяленне,
-Math101: All operations,,,数学101：混合运算,,,Math 101: All operations,,Apprends les Maths : Toutes opérations,,,,,,,,Wiskunde 201,Учимся считать: Все вычислительные операции,,,Вучымся лічыць: Усе вылічальныя аперацыі,
-
-MathDesc,,,加减乘除,,,Addition & Subtraction Multiplication & Division,,Addition & Soustraction Multiplication & Division,,,,,,,,"Optellen en aftrekken en vermenigvuldigen en delen",Сложение & Вычитание & Умножение & Деление,,,Складанне & Адніманне & Множанне & Дзяленне,
-MathDescAdd,,,把两个数相加！,,,Add two numbers!,,Addition de deux nombres!,,,,,,,,Tel de twee getallen op!,Сложи два числа!,,,Складзі два чысла!,
-MathDescSub,,,把两个数相减！,,,Subtract two numbers!,,Soustraction de deux nombres!,,,,,,,,Trek de twee getallen van elkaar af!,Вычти два числа!,,,Вылічы два чысла!,
-MathDescMult,,,把两个数相乘！,,,Multiply two numbers!,,Multiplication de deux nombres!,,,,,,,,Vermenigvuldig de twee getallen!,Умножь два числа!,,,Памнож два чысла!,
-MathDescDiv,,,把两个数相除！,,,Divide two numbers!,,Division de deux nombres!,,,,,,,,Deel de twee getallen!,Раздели два числа!,,,Падзялі два чысла!,
+Choose size,,,选择尺寸,,,Choose size,,Choisis la taille,,,,,,,,kies maat,Выберите размер,,,Выберыце памер,
 
 From,,,从,,,From,,De,,,,,,,,Van,От,,,Ад,
 to,,,到,,,to,,à,,,,,,,,tot,до,,,да,
@@ -166,6 +154,23 @@ Random,,,随机,,,Random,,Hasard,,,,,,,,Willekeurig,Случайный,,,Вып�
 Choose Game Variant,Zgjidh variantin a lojës,,选择游戏设置,,,Choose Game Variant,,Choisissez une variante de jeu,,,Scegli un variante di gioco,,,,,Kies spelvorm,Выберите вариант игры,,,Выберыце варыянт гульні,
 With moving platforms,Me platforma lëvizëse,,移动平台,,,With moving platforms,,Avec les platformes animées,,,Con piattaforme mobili,,,,,Met bewegende platformen,С движущимися платформами,,,З платформамі якія рухаюцца,
 Without moving platforms,Pa platforma lëvizëse,,固定平台,,,Without moving platforms,,Sans les platformes animées,,,Senza piattaforme mobili,,,,,Zonder bewegende platformen,Без двигающихся платформ,,,Без платформаў якія рухаюцца,
+Vertical Dynamic,,,,,,Vertical Dynamic,,Vertical Dynamique,,,,,,,,Verticaal Dynamiek,Вертикальный Адаптируемый,,,Вертыкальны Адаптуемы,
+Horizontal Dynamic,,,横向,,,Horizontal Dynamic,,Horizontal Dynamique,,,,,,,,Horizontaal Dynamiek,Горизонтальный Адаптируемый,,,Гарызантальны Адаптуемы,
+Diagonal from upper left to lower right Dynamic,,,左上角 - 右下角,,,Upper Left - Lower Right Dynamic,,Haut Gauche – Bas Droite Dynamique,,,,,,,,Boven links - onder rechts Dynamiek,С верхнего левого и в нижний правый Адаптируемый,,,З верхняга левага і ў ніжні правы Адаптуемы, 
+Diagonal from upper right to lower left Dynamic,,,右上角 - 左下角,,,Upper Right - Lower Left Dynamic,,Haut Droite - Bas Gauche Dynamique,,,,,,,,Boven rechts - onder links Dynamiek,С верхнего правого и в нижний левый Адаптируемый,,,З верхняга правага і ў ніжні левы Адаптуемы,
+Random Dynamic,,,随机,,,Random Dynamic,,Hasard Dynamique,,,,,,,,Willekeurig Dynamiek,Случайный Адаптируемый,,,Выпадковы Адаптуемы,
+
+Math101: Addition,,,数学101：加法,,,Math 101: Addition,,Apprends les Maths : Additions,,,,,,,,Wiskunde 101 : optellen,Учимся считать: Сложение,,,Вучымся лічыць: Складанне,
+Math101: Substraction,,,数学101：减法,,,Math 101: Substraction,,Apprends les Maths : Soustractions,,,,,,,,Wiskunde 102 : aftrekken,Учимся считать: Вычитание,,,Вучымся лічыць: Адніманне,
+Math101: Multiplication,,,数学101：乘法,,,Math 101: Multiplication,,Apprends les Maths : Multiplications,,,,,,,,Wiskunde 103 : vermenigvuldigen,Учимся считать: Умножение,,,Вучымся лічыць: Множанне,
+Math101: Division,,,数学101：除法,,,Math 101: Division,,Apprends les Maths : Divisions,,,,,,,,Wiskunde 104 : delen,Учимся считать: Деление,,,Вучымся лічыць: Дзяленне,
+Math101: All operations,,,数学101：混合运算,,,Math 101: All operations,,Apprends les Maths : Toutes opérations,,,,,,,,Wiskunde 201,Учимся считать: Все вычислительные операции,,,Вучымся лічыць: Усе вылічальныя аперацыі,
+
+MathDesc,,,加减乘除,,,Addition & Subtraction Multiplication & Division,,Addition & Soustraction Multiplication & Division,,,,,,,,"Optellen en aftrekken en vermenigvuldigen en delen",Сложение & Вычитание & Умножение & Деление,,,Складанне & Адніманне & Множанне & Дзяленне,
+MathDescAdd,,,把两个数相加！,,,Add two numbers!,,Addition de deux nombres!,,,,,,,,Tel de twee getallen op!,Сложи два числа!,,,Складзі два чысла!,
+MathDescSub,,,把两个数相减！,,,Subtract two numbers!,,Soustraction de deux nombres!,,,,,,,,Trek de twee getallen van elkaar af!,Вычти два числа!,,,Вылічы два чысла!,
+MathDescMult,,,把两个数相乘！,,,Multiply two numbers!,,Multiplication de deux nombres!,,,,,,,,Vermenigvuldig de twee getallen!,Умножь два числа!,,,Памнож два чысла!,
+MathDescDiv,,,把两个数相除！,,,Divide two numbers!,,Division de deux nombres!,,,,,,,,Deel de twee getallen!,Раздели два числа!,,,Падзялі два чысла!,
 
 Selection games,Lojëra me Përzgjedhje,,选择注视游戏,,,Selection games,,Jeux Sélection,,,Giochi Selezione,,,,,Selectie spelletjes,Игры с выбором,,,Гульні з выбарам,
 Memorization games,Lojëra me Memorizim,,记忆游戏,,,Memorization games,,Jeux Mémorisation,,,Giochi Memorizzazione,,,,,Geheugen spelletjes,Игры с запоминанием,,,Гульні з запамінаннем,
@@ -275,6 +280,7 @@ customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisé
 
 SorryButReplayInvalid,,,,,,Sorry but the game '{}' is not replayable.\nIt will be available in a next update.,,Désolé mais le jeu '{}' n'est pas rejouable.\nIl sera disponible dans une prochaine mise à jour.,,,,,,,,,Игра '{}' не может быть переигранна,,,Не можна пераграць гульню '{}'
 PrintImg,,,,,,Print image,,Imprimer image,,,,,,,Распечатать изображение,,,Раздрукаваць малюнак,
+
 
 Done,,,,,,Done,,Valider,,,,,,,,,Готово,,,Гатова,
 WhereIsItDirectory:,,,,,,'Where is it ?' Configuration:,,Configuration de 'Où est-ce ?':,,,,,,,,,Настройки для'Где это?',,,Налады для'Где гэта? ',
