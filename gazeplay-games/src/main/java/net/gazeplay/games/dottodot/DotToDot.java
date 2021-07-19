@@ -32,15 +32,17 @@ public class DotToDot implements GameLifeCycle {
 
     private final DotToDotGameVariant gameVariant;
 
+    @Getter
     private final ArrayList<TargetAOI> targetAOIList;
 
     private final ReplayablePseudoRandom randomGenerator;
 
+    private ArrayList<DotEntity> dotList;
+
 
     public DotToDot(final IGameContext gameContext, final DotToDotGameVariant gameVariant, final Stats stats) {
         //super();
-        Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Configuration config = gameContext.getConfiguration();
+
 
         this.gameContext = gameContext;
         this.stats = stats;
@@ -48,7 +50,28 @@ public class DotToDot implements GameLifeCycle {
         this.targetAOIList = new ArrayList<>();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
+        this.dotList = new ArrayList<>();
 
+    }
+
+    private void createBackground(ImageView background, Dimension2D dimensions, double scaleRatio, IGameContext gameContext) {
+
+        background.setFitWidth(background.getImage().getWidth() * scaleRatio);
+        background.setFitHeight(background.getImage().getHeight() * scaleRatio);
+
+        double offsetX = (dimensions.getWidth() - background.getFitWidth()) / 2;
+        double offsetY = (dimensions.getHeight() - background.getFitHeight()) / 2;
+
+        background.setX(offsetX);
+        background.setY(offsetY);
+
+        gameContext.getChildren().add(background);
+    }
+
+    @Override
+    public void launch() {
+        Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        Configuration config = gameContext.getConfiguration();
 
         String path = "data/dottodot/";
 
@@ -65,12 +88,13 @@ public class DotToDot implements GameLifeCycle {
             dimensions.getHeight() / backgroundImage.getHeight());
 
         if (config.isBackgroundEnabled()) {
-            log.info("create background");
             createBackground(background, dimensions, scaleRatio, gameContext);
         }
 
         JsonArray elements = jsonRoot.getAsJsonArray("elements");
+        int index = 0;
         for (JsonElement element : elements) {
+            index++;
             JsonObject elementObj = (JsonObject) element;
 
             // Creating a dot
@@ -92,6 +116,7 @@ public class DotToDot implements GameLifeCycle {
             final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int) ((imageView.getFitWidth() + imageView.getFitHeight()) / 3),
                 System.currentTimeMillis());
             targetAOIList.add(targetAOI);
+            log.info("target list = {}", targetAOIList);
 
             // Creating progress indicator
             ProgressIndicator progressIndicator = new ProgressIndicator(0);
@@ -101,35 +126,18 @@ public class DotToDot implements GameLifeCycle {
             progressIndicator.setLayoutY(y - progIndicSize / 2 + 5);
             progressIndicator.setOpacity(0);
 
-            DotEntity dot = new DotEntity(imageView, stats, progressIndicator, gameContext);
+            DotEntity dot = new DotEntity(imageView, stats, progressIndicator, gameContext, this, index);
+            dotList.add(dot);
             gameContext.getChildren().add(dot);
             gameContext.getGazeDeviceManager().addEventFilter(dot);
             log.info("x = {}, y = {}", imageView.getX(), imageView.getY());
             log.info("progress x = {}, progress y = {}", progressIndicator.getLayoutX(), progressIndicator.getLayoutY());
-
         }
 
-    }
+            stats.notifyNewRoundReady();
+            gameContext.getGazeDeviceManager().addStats(stats);
+            gameContext.firstStart();
 
-    private void createBackground(ImageView background, Dimension2D dimensions, double scaleRatio, IGameContext gameContext) {
-
-        background.setFitWidth(background.getImage().getWidth() * scaleRatio);
-        background.setFitHeight(background.getImage().getHeight() * scaleRatio);
-
-        double offsetX = (dimensions.getWidth() - background.getFitWidth()) / 2;
-        double offsetY = (dimensions.getHeight() - background.getFitHeight()) / 2;
-
-        background.setX(offsetX);
-        background.setY(offsetY);
-
-        gameContext.getChildren().add(background);
-    }
-
-    @Override
-    public void launch() {
-        stats.notifyNewRoundReady();
-        gameContext.getGazeDeviceManager().addStats(stats);
-        gameContext.firstStart();
     }
 
     @Override
