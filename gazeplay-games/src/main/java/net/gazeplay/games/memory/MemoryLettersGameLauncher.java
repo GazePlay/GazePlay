@@ -4,7 +4,7 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
-import net.gazeplay.commons.gamevariants.DimensionGameVariant;
+import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.magiccards.MagicCardsGamesStats;
 import net.gazeplay.commons.utils.FixationPoint;
@@ -15,7 +15,7 @@ import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class MemoryLettersGameLauncher implements IGameLauncher<Stats, DimensionGameVariant> {
+public class MemoryLettersGameLauncher implements IGameLauncher<Stats, DimensionDifficultyGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new MagicCardsGamesStats(scene);
@@ -27,16 +27,15 @@ public class MemoryLettersGameLauncher implements IGameLauncher<Stats, Dimension
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext,
-                                       DimensionGameVariant gameVariant, Stats stats) {
+    public GameLifeCycle createNewGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats) {
         return new Memory(Memory.MemoryGameType.LETTERS, gameContext, gameVariant.getWidth(),
-            gameVariant.getHeight(), stats, false);
+            gameVariant.getHeight(), gameVariant.getDifficulty(), stats, false);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
-                                       DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+                                       DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
         return new Memory(Memory.MemoryGameType.LETTERS, gameContext, gameVariant.getWidth(),
-            gameVariant.getHeight(), stats, false, gameSeed);
+            gameVariant.getHeight(), gameVariant.getDifficulty(), stats, false, gameSeed);
     }
 }
