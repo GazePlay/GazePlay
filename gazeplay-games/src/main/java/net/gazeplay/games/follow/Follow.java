@@ -141,8 +141,10 @@ public class Follow implements GameLifeCycle {
 
             EventHandler<GazeEvent> recordGazeMovements = e -> {
                 Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
-                rx = toSceneCoordinate.getX();
-                ry = toSceneCoordinate.getY();
+                if (((toSceneCoordinate.getX()-dimension2D.getWidth()/2)*(toSceneCoordinate.getX()-dimension2D.getWidth()/2) + (toSceneCoordinate.getY()-dimension2D.getHeight()/2)*(toSceneCoordinate.getY()-dimension2D.getHeight()/2))>0.15) {
+                    rx = toSceneCoordinate.getX();
+                    ry = toSceneCoordinate.getY();
+                }
 
             };
 
