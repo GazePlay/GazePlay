@@ -8,7 +8,9 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.Line;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -39,6 +41,12 @@ public class DotToDot implements GameLifeCycle {
 
     private ArrayList<DotEntity> dotList;
 
+    @Getter
+    private ArrayList<Line> lineList;
+
+    @Getter @Setter
+    private int previous;
+
 
     public DotToDot(final IGameContext gameContext, final DotToDotGameVariant gameVariant, final Stats stats) {
         //super();
@@ -51,6 +59,8 @@ public class DotToDot implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
         this.dotList = new ArrayList<>();
+        this.lineList = new ArrayList<>();
+        this.previous = 1;
 
     }
 
@@ -126,7 +136,7 @@ public class DotToDot implements GameLifeCycle {
             progressIndicator.setLayoutY(y - progIndicSize / 2 + 5);
             progressIndicator.setOpacity(0);
 
-            DotEntity dot = new DotEntity(imageView, stats, progressIndicator, gameContext, this, index);
+            DotEntity dot = new DotEntity(imageView, stats, progressIndicator, gameContext, gameVariant, this, index);
             dotList.add(dot);
             gameContext.getChildren().add(dot);
             gameContext.getGazeDeviceManager().addEventFilter(dot);
@@ -134,9 +144,9 @@ public class DotToDot implements GameLifeCycle {
             log.info("progress x = {}, progress y = {}", progressIndicator.getLayoutX(), progressIndicator.getLayoutY());
         }
 
-            stats.notifyNewRoundReady();
-            gameContext.getGazeDeviceManager().addStats(stats);
-            gameContext.firstStart();
+        stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
+        gameContext.firstStart();
 
     }
 
