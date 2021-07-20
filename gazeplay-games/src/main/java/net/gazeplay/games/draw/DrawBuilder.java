@@ -72,9 +72,11 @@ public class DrawBuilder {
                 if (rateLimiterValue == RATE_LIMIT) {
                     rateLimiter.set(0);
 
-                    graphicsContext.lineTo(event.getX(), event.getY());
-                    // graphicsContext.setStroke(colorPicker.pickColor());
-                    graphicsContext.stroke();
+                    if (((event.getX()-canvas.getWidth()/2)*(event.getX()-canvas.getWidth()/2) + (event.getY()-canvas.getHeight()/2)*(event.getY()-canvas.getHeight()/2))>0.15) {
+                        graphicsContext.lineTo(event.getX(), event.getY());
+                        // graphicsContext.setStroke(colorPicker.pickColor());
+                        graphicsContext.stroke();
+                    }
                 }
             }
         });
