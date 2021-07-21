@@ -46,7 +46,7 @@ public class CasseBrique implements GameLifeCycle {
         createbarre();
 
         speed = 0;
-        rad = 0;
+        rad = Math.PI*0.6;
         move();
         startafterdelay(5000);
 
@@ -88,11 +88,20 @@ public class CasseBrique implements GameLifeCycle {
     private void move(){
         PauseTransition wait = new PauseTransition(Duration.millis(5));
         wait.setOnFinished(e -> {
-            ball.setCenterX(ball.getCenterX() + speed * Math.sin(rad));
-            ball.setCenterY(ball.getCenterY() + speed * Math.cos(rad));
-            if (ball.getCenterY()>=dimension2D.getHeight()){
+            if (ball.getCenterX() + sizeball >= dimension2D.getWidth()){
+                rad = rad + Math.PI + 2 * (Math.PI/2 - rad);
+            }
+            else if (ball.getCenterX() - sizeball <= 0){
+                rad = rad + Math.PI + 2 * (-Math.PI/2 - rad);
+            }
+            if (ball.getCenterY() - sizeball <= 0){
+                rad = rad + Math.PI + 2 * (Math.PI - rad);
+            }
+            else if (ball.getCenterY()>=dimension2D.getHeight()){
                 ballfall();
             }
+            ball.setCenterX(ball.getCenterX() + speed * Math.sin(rad));
+            ball.setCenterY(ball.getCenterY() + speed * Math.cos(rad));
             wait.play();
         });
         wait.play();
