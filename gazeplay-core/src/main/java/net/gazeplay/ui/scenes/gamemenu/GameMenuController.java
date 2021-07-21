@@ -163,6 +163,8 @@ public class GameMenuController {
 
         IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
 
+        gazePlay.getTranslator().notifyLanguageChanged();
+
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats stats = gameLauncher.createNewStats(scene);
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
