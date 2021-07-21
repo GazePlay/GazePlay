@@ -95,7 +95,11 @@ public class Target extends ProgressPortrait {
                 timelineGrow.play();
             });
         }
-        assignIndicatorUpdatable(enterEvent, gameContext);
+        if (gameVariant.toString().endsWith("FIX")) {
+            assignIndicatorUpdatable(enterEvent, gameContext);
+        } else {
+            this.assignIndicator(enterEvent, 0);
+        }
         gameContext.getGazeDeviceManager().addEventFilter(this);
         active();
 
