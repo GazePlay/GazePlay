@@ -229,6 +229,10 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             }
         } else {
             win = false;
+            if (getMaxCake()==2 && buttons[4].getOpacity()==1){
+                buttons[4].disable();
+                buttons[4].setOpacity(0.5);
+            }
         }
 
         if (!winOnly) {
@@ -685,7 +689,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         createStack();
         active(0);
 
-        generateRandomCake();
+        if (!variant.equals(CakeGameVariant.FREE)) {
+            generateRandomCake();
+        }
         winButton(false);
 
         this.gameContext.resetBordersToFront();
