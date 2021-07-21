@@ -762,6 +762,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
                     configuration.getLanguageProperty().setValue(language.getLocale().getLanguage());
                     configuration.getCountryProperty().setValue(language.getLocale().getCountry());
+                    ActiveConfigurationContext.getInstance().getLanguageProperty().setValue(language.getLocale().getLanguage());
+                    ActiveConfigurationContext.getInstance().getCountryProperty().setValue(language.getLocale().getCountry());
 
                     configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
 
