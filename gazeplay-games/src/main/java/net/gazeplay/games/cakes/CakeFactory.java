@@ -226,16 +226,19 @@ public class CakeFactory extends Parent implements GameLifeCycle {
                 }
             }
         }
+
         if (!winOnly) {
             buttons[2].disable(!nappage);
-            if (!currentOk) {
-                buttons[4].setOpacity(0.5);
-            }
-            if (variant.equals(CakeGameVariant.ONELAYER)) {
-                buttons[4].setOpacity(0);
-            }
             if (!nappage) {
                 buttons[2].setOpacity(0.5);
+            }
+        }
+
+        if (winOnly && currentOk && !variant.equals(CakeGameVariant.ONELAYER)){
+            if (getMaxCake() < 2) {
+                setMaxCake(getMaxCake() + 1);
+                setCurrentCake(getMaxCake());
+                createCake(getMaxCake());
             }
         }
 
