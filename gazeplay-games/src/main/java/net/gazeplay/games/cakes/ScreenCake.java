@@ -16,7 +16,7 @@ public class ScreenCake extends LinkedList {
 
     public IGameContext gameContext;
 
-    public ScreenCake(final int i, final CakeFactory cakef, final boolean easy) {
+    public ScreenCake(final int i, final CakeFactory cakef, final boolean free) {
         super();
         /*
          * gameContext = cakef.getGameContext(); Dimension2D dimension2D =
@@ -26,16 +26,16 @@ public class ScreenCake extends LinkedList {
          * Image("data/cake/background.png"))); back.setMouseTransparent(true); this.add(back);
          */
         if (i == 0) {
-            createScreenZero(cakef, easy);
+            createScreenZero(cakef, free);
         }
     }
 
-    public void createScreenZero(final CakeFactory cakef, final boolean easy) {
+    public void createScreenZero(final CakeFactory cakef, final boolean free) {
         gameContext = cakef.getGameContext();
         final double buttonSize = cakef.getButtonSize();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         int n = 4;
-        if (easy) {
+        if (free) {
             n = 6;
         }
         for (int i = 0; i < n; i++) { // HomePage of the game
@@ -43,7 +43,7 @@ public class ScreenCake extends LinkedList {
             bt.getButton().setStyle("-fx-background-radius: " + buttonSize + "em; " + "-fx-min-width: " + buttonSize + "px; "
                 + "-fx-min-height: " + buttonSize + "px; " + "-fx-max-width: " + buttonSize + "px; "
                 + "-fx-max-height: " + buttonSize + "px;");
-            if (easy) {
+            if (free) {
                 bt.setLayoutX((i + 1) * dimension2D.getWidth() / 6 - buttonSize / 2);
             } else {
                 bt.setLayoutX((i + 1) * dimension2D.getWidth() / 5 - buttonSize / 2);

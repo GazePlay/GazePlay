@@ -193,38 +193,42 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     void winButton(final boolean winOnly) {
         win = true;
         boolean currentOk = true;
-        if (!variant.equals(CakeGameVariant.ONELAYER)) {
-            for (int i = 0; i < 3; i++) {
+        if (!variant.equals(CakeGameVariant.FREE)) {
+            if (!variant.equals(CakeGameVariant.ONELAYER)) {
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        if (layers[i][j] != model[i][j]) {
+                            win = false;
+                            if (i == currentCake) {
+                                currentOk = false;
+                            }
+                        }
+                    }
+                }
+                if (layers[2][3] != model[2][3]) {
+                    win = false;
+                    if (2 == currentCake) {
+                        currentOk = false;
+                    }
+                }
+            } else {
                 for (int j = 0; j < 3; j++) {
-                    if (layers[i][j] != model[i][j]) {
+                    if (layers[0][j] != model[0][j]) {
                         win = false;
-                        if (i == currentCake) {
+                        if (0 == currentCake) {
                             currentOk = false;
                         }
                     }
                 }
-            }
-            if (layers[2][3] != model[2][3]) {
-                win = false;
-                if (2 == currentCake) {
-                    currentOk = false;
-                }
-            }
-        } else {
-            for (int j = 0; j < 3; j++) {
-                if (layers[0][j] != model[0][j]) {
+                if (layers[0][3] != model[0][3]) {
                     win = false;
                     if (0 == currentCake) {
                         currentOk = false;
                     }
                 }
             }
-            if (layers[0][3] != model[0][3]) {
-                win = false;
-                if (0 == currentCake) {
-                    currentOk = false;
-                }
-            }
+        } else {
+            win = false;
         }
 
         if (!winOnly) {
@@ -234,7 +238,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             }
         }
 
-        if (winOnly && currentOk && !variant.equals(CakeGameVariant.ONELAYER)){
+        if (winOnly && currentOk && !variant.equals(CakeGameVariant.ONELAYER) && !variant.equals(CakeGameVariant.FREE)){
             if (getMaxCake() < 2) {
                 setMaxCake(getMaxCake() + 1);
                 setCurrentCake(getMaxCake());
@@ -313,7 +317,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         p = new List[6];
         for (int i = 0; i < 6; i++) {
             p[i] = new LinkedList<>();
-            p[i].addAll(new ScreenCake(i, this, variant.equals(CakeGameVariant.ONELAYER)));
+            p[i].addAll(new ScreenCake(i, this, variant.equals(CakeGameVariant.FREE)));
         }
 
         for (int j = 1; j < 5; j++) {

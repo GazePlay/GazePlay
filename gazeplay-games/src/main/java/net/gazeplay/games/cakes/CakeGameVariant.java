@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum CakeGameVariant {
+    FREE("free"),
     ONELAYER("easy"),
     THREELAYERS("normal"),
     THREELAYERSHIDEN("extreme");
