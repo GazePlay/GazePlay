@@ -9,6 +9,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,9 @@ public class DotToDot implements GameLifeCycle {
 
     @Getter @Setter
     private int previous;
+
+    @Getter @Setter
+    private int level = 1;
 
 
     public DotToDot(final IGameContext gameContext, final DotToDotGameVariant gameVariant, final Stats stats) {
@@ -88,7 +92,7 @@ public class DotToDot implements GameLifeCycle {
         JsonParser parser = new JsonParser();
         JsonObject jsonRoot;
         jsonRoot = (JsonObject) parser.parse(new InputStreamReader(
-            Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + "elements.json")), StandardCharsets.UTF_8));
+            Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + "elements" + level + ".json")), StandardCharsets.UTF_8));
 
         String backgroundPath = path + jsonRoot.get("background").getAsString();
         Image backgroundImage = new Image(backgroundPath);
@@ -128,18 +132,23 @@ public class DotToDot implements GameLifeCycle {
             targetAOIList.add(targetAOI);
             log.info("target list = {}", targetAOIList);
 
+            //Creating text
+            Text number = new Text(x - 60, y, Integer.toString(index));
+            number.setStyle("-fx-font-size: 50");
+
             // Creating progress indicator
             ProgressIndicator progressIndicator = new ProgressIndicator(0);
-            double progIndicSize = Math.min(imageView.getFitWidth(), imageView.getFitHeight()) / 2;
+            double progIndicSize = Math.min(imageView.getFitWidth(), imageView.getFitHeight()) * 2;
             progressIndicator.setPrefSize(progIndicSize, progIndicSize);
-            progressIndicator.setLayoutX(x - progIndicSize / 2);
-            progressIndicator.setLayoutY(y - progIndicSize / 2 + 5);
+            progressIndicator.setLayoutX(x - progIndicSize / 2 + 3);
+            progressIndicator.setLayoutY(y - progIndicSize / 2 + 12);
             progressIndicator.setOpacity(0);
 
-            DotEntity dot = new DotEntity(imageView, stats, progressIndicator, gameContext, gameVariant, this, index);
+            DotEntity dot = new DotEntity(imageView, stats, progressIndicator, number, gameContext, gameVariant, this, index);
             dotList.add(dot);
             gameContext.getChildren().add(dot);
             gameContext.getGazeDeviceManager().addEventFilter(dot);
+
             log.info("x = {}, y = {}", imageView.getX(), imageView.getY());
             log.info("progress x = {}, progress y = {}", progressIndicator.getLayoutX(), progressIndicator.getLayoutY());
         }

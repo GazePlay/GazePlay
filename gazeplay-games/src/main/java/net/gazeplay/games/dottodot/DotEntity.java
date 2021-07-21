@@ -9,13 +9,13 @@ import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import javafx.scene.image.ImageView;
@@ -38,7 +38,7 @@ public class DotEntity extends Parent {
     private int previous;
 
     public DotEntity (final ImageView imageView, final Stats stats,
-                      final ProgressIndicator progressIndicator, final IGameContext gameContext, final DotToDotGameVariant gameVariant, DotToDot gameInstance, int index) {
+                      final ProgressIndicator progressIndicator, final Text number, final IGameContext gameContext, final DotToDotGameVariant gameVariant, DotToDot gameInstance, int index) {
         this.lineList = new ArrayList<>();
         this.gameContext = gameContext;
         this.progressIndicator = progressIndicator;
@@ -47,49 +47,30 @@ public class DotEntity extends Parent {
         this.index = index;
         this.gameVariant = gameVariant;
 
-        int size = gameObject.getTargetAOIList().size();
-
-        if (this.index == 1) {
+        if (this.index == 1)
             isFirst = true;
-            previous = size;
-        }
-        previous = index - 1;
+        else
+            previous = index - 1;
 
-        this.getChildren().addAll(imageView, progressIndicator);
+        this.getChildren().addAll(number, imageView, this.progressIndicator);
 
         final EventHandler<Event> enterHandler = (Event event) -> {
             log.info("index = {}, previous = {}", index, gameObject.getPrevious());
             progressTimeline = new Timeline(
-                new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(progressIndicator.progressProperty(), 1)));
+                new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(this.progressIndicator.progressProperty(), 1)));
 
+            progressTimeline.setOnFinished(e -> drawTheLine());
 
-            if (previous == gameObject.getPrevious() || (isFirst && gameObject.getPrevious() == size)) {
-                if (!isFirst)
-                    progressTimeline.setOnFinished(e -> nextDot(gameObject.getTargetAOIList().get(index - 2).getXValue(), gameObject.getTargetAOIList().get(index - 2).getYValue(),
-                        gameObject.getTargetAOIList().get(index - 1).getXValue(), gameObject.getTargetAOIList().get(index - 1).getYValue()));
-                else
-                    progressTimeline.setOnFinished(e -> nextDot(gameObject.getTargetAOIList().get(size - 1).getXValue(), gameObject.getTargetAOIList().get(size - 1).getYValue(),
-                        gameObject.getTargetAOIList().get(0).getXValue(), gameObject.getTargetAOIList().get(0).getYValue()));
-                gameObject.setPrevious(index);
-            }
-
-            else {
-                gameContext.getChildren().removeAll(gameObject.getLineList());
-                gameObject.setPrevious(1);
-            }
-
-            progressIndicator.setOpacity(1);
+            this.progressIndicator.setOpacity(1);
             progressTimeline.playFromStart();
-
-
         };
 
         this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterHandler);
         this.addEventFilter(GazeEvent.GAZE_ENTERED, enterHandler);
 
         final EventHandler<Event> exitHandler = (Event event) -> {
-            progressIndicator.setOpacity(0);
-            progressIndicator.setProgress(0);
+            this.progressIndicator.setOpacity(0);
+            this.progressIndicator.setProgress(0);
             progressTimeline.stop();
         };
 
@@ -97,8 +78,34 @@ public class DotEntity extends Parent {
         this.addEventFilter(GazeEvent.GAZE_EXITED, exitHandler);
     }
 
+    public void drawTheLine() {
+        if (previous == gameObject.getPrevious()) {
+            nextDot(gameObject.getTargetAOIList().get(index - 2).getXValue(), gameObject.getTargetAOIList().get(index - 2).getYValue(),
+                gameObject.getTargetAOIList().get(index - 1).getXValue(), gameObject.getTargetAOIList().get(index - 1).getYValue());
+            gameObject.setPrevious(index);
+
+        } else if (isFirst && gameObject.getPrevious() == gameObject.getTargetAOIList().size()) {
+            nextDot(gameObject.getTargetAOIList().get(gameObject.getTargetAOIList().size() - 1).getXValue(), gameObject.getTargetAOIList().get(gameObject.getTargetAOIList().size() - 1).getYValue(),
+                gameObject.getTargetAOIList().get(0).getXValue(), gameObject.getTargetAOIList().get(0).getYValue());
+
+            if (gameObject.getLevel() < 8)
+                gameObject.setLevel(gameObject.getLevel() + 1);
+
+            gameObject.getTargetAOIList().clear();
+            gameContext.playWinTransition(500, actionEvent -> {
+                gameObject.dispose();
+                gameContext.clear();
+                gameObject.launch();
+            });
+
+        } else {
+            gameContext.getChildren().removeAll(gameObject.getLineList());
+            gameObject.setPrevious(1);
+        }
+    }
+
     public void nextDot(double startX, double startY, double endX, double endY) {
-        Line line = new Line(startX + 60, startY, endX + 60, endY);
+        Line line = new Line(startX + 20, startY, endX + 20, endY);
         line.setStyle("-fx-stroke: red;");
         line.setStrokeWidth(5);
 
