@@ -242,17 +242,17 @@ public class CasseBrique implements GameLifeCycle {
         }
     }
 
-    private void build(int[][] Map){
+    private void build(int[][] map){
         Rectangle wall;
         for (int i=0; i<20; i++){
             for (int j=0; j<10; j++){
-                if (Map[j][i]==1){
+                if (map[j][i]==1){
                     wall = new Rectangle(i*widthwall, j*heightwall, widthwall, heightwall);
                     wall.setFill(Color.GREEN);
                     walllist.add(wall);
                     gameContext.getChildren().add(wall);
                 }
-                else if (Map[j][i]==2){
+                else if (map[j][i]==2){
                     wall = new Rectangle(i*widthwall, j*heightwall, widthwall, heightwall);
                     wall.setFill(Color.GRAY);
                     wallhardlist.add(wall);
@@ -263,7 +263,7 @@ public class CasseBrique implements GameLifeCycle {
     }
     
     private void LV1(){
-        int[][] Map = new int[][]
+        int[][] map = new int[][]
             {
                 {0,0,0,0,0,0,0,2,0,0,0,1,0,0,2,0,0,0,0,0},
                 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -276,6 +276,6 @@ public class CasseBrique implements GameLifeCycle {
                 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
             };
-        build(Map);
+        build(map);
     }
 }
