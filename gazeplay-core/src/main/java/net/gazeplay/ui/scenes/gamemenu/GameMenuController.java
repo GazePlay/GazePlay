@@ -80,7 +80,8 @@ public class GameMenuController {
             width = (int) gazePlay.getPrimaryScene().getWindow().getWidth();
         }
         builder = createBuilder(selectedGameSpec.getGameSummary().getNameCode(), gameVariant, height, width);
-
+        final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
+        musicManager.stop();
         runProcessDisplayLoadAndWaitForNewJVMDisplayed(gazePlay, builder);
     }
 
@@ -161,6 +162,8 @@ public class GameMenuController {
         gazePlay.onGameLaunch(gameContext);
 
         IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
+
+        gazePlay.getTranslator().notifyLanguageChanged();
 
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats stats = gameLauncher.createNewStats(scene);

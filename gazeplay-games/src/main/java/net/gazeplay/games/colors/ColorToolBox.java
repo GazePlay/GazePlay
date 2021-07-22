@@ -6,6 +6,9 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.print.PageLayout;
+import javafx.print.PageOrientation;
+import javafx.print.PrinterJob;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -14,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -31,6 +35,7 @@ import net.gazeplay.components.CssUtil;
 import net.gazeplay.components.GazeFollowerIndicator;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -211,6 +216,7 @@ public class ColorToolBox extends Pane {
             colorsGame.getGameContext().getGazeDeviceManager());
 
         customColorPickerButton.setOnAction(customColorButtonHandler);
+        customColorPickerButton.setOpacity(1);
 
         customColorDialog.setOnCloseRequest((event) -> {
             colorsGame.setEnableColorization(previousEnableColor);
@@ -280,6 +286,28 @@ public class ColorToolBox extends Pane {
 
         final BufferedImage swingImg = SwingFXUtils.fromFXImage(image, null);
         ImageIO.write(swingImg, format, file);
+    }
+
+    private void printImage(final Image image){
+        final PrinterJob printerJob = PrinterJob.createPrinterJob();
+        if (printerJob.showPrintDialog(gameContext.getPrimaryStage()) && printerJob.showPageSetupDialog(gameContext.getPrimaryStage())) {
+            ImageView iv = new ImageView();
+            iv.setPreserveRatio(true);
+            iv.setImage(image);
+            PageLayout pageLayout = printerJob.getJobSettings().getPageLayout();
+            double scaleX = pageLayout.getPrintableWidth() / iv.getBoundsInParent().getWidth();
+            double scaleY = pageLayout.getPrintableHeight() / iv.getBoundsInParent().getHeight();
+            iv.getTransforms().add(new Scale(scaleX, scaleY));
+            if (printerJob.printPage(iv)) {
+                printerJob.endJob();
+            }
+            else {
+                log.debug("The printing fail");
+            }
+        }
+        else {
+            log.info("don't print because the user cancel it");
+        }
     }
 
     private static void configureImageFileChooser(final FileChooser imageFileChooser) {
@@ -365,8 +393,18 @@ public class ColorToolBox extends Pane {
             }
         });
 
+        final Button PImageButton = new Button(translator.translate("PrintImg"));
+        PImageButton.setPrefHeight(colorizeButtonsSizePx / 2);
+        PImageButton.setOnAction((event) -> {
+            printImage(colorsGame.getWritableImg());
+        });
+
+        imageChooserButton.setOpacity(1);
+        imageSaverButton.setOpacity(1);
+        PImageButton.setOpacity(1);
         bottomBox.getChildren().add(imageChooserButton);
         bottomBox.getChildren().add(imageSaverButton);
+        bottomBox.getChildren().add(PImageButton);
 
         return bottomBox;
     }
@@ -452,6 +490,9 @@ public class ColorToolBox extends Pane {
 
         final GazeIndicator colorizeButtonIndicator = new GazeIndicator(gameContext);
         colorizeButtonIndicator.setMouseTransparent(true);
+
+        colorize.setOpacity(1);
+        stopColorize.setOpacity(1);
 
         final Pane colorizeButtonPane = new StackPane(colorize);
         final Pane stopColorizeButtonPane = new StackPane(stopColorize);
