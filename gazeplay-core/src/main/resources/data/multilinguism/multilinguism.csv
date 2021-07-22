@@ -156,7 +156,7 @@ With moving platforms,Me platforma lëvizëse,,移动平台,,,With moving platfo
 Without moving platforms,Pa platforma lëvizëse,,固定平台,,,Without moving platforms,,Sans les platformes animées,,,Senza piattaforme mobili,,,,,Zonder bewegende platformen,Без двигающихся платформ,,,Без платформаў якія рухаюцца,
 Vertical Dynamic,,,,,,Vertical Dynamic,,Vertical Dynamique,,,,,,,,Verticaal Dynamiek,Вертикальный Адаптируемый,,,Вертыкальны Адаптуемы,
 Horizontal Dynamic,,,横向,,,Horizontal Dynamic,,Horizontal Dynamique,,,,,,,,Horizontaal Dynamiek,Горизонтальный Адаптируемый,,,Гарызантальны Адаптуемы,
-Diagonal from upper left to lower right Dynamic,,,左上角 - 右下角,,,Upper Left - Lower Right Dynamic,,Haut Gauche – Bas Droite Dynamique,,,,,,,,Boven links - onder rechts Dynamiek,С верхнего левого и в нижний правый Адаптируемый,,,З верхняга левага і ў ніжні правы Адаптуемы, 
+Diagonal from upper left to lower right Dynamic,,,左上角 - 右下角,,,Upper Left - Lower Right Dynamic,,Haut Gauche – Bas Droite Dynamique,,,,,,,,Boven links - onder rechts Dynamiek,С верхнего левого и в нижний правый Адаптируемый,,,З верхняга левага і ў ніжні правы Адаптуемы,
 Diagonal from upper right to lower left Dynamic,,,右上角 - 左下角,,,Upper Right - Lower Left Dynamic,,Haut Droite - Bas Gauche Dynamique,,,,,,,,Boven rechts - onder links Dynamiek,С верхнего правого и в нижний левый Адаптируемый,,,З верхняга правага і ў ніжні левы Адаптуемы,
 Random Dynamic,,,随机,,,Random Dynamic,,Hasard Dynamique,,,,,,,,Willekeurig Dynamiek,Случайный Адаптируемый,,,Выпадковы Адаптуемы,
 
@@ -318,3 +318,4 @@ TinyB,,,,,,tiny bottles,,bouteilles minuscules,,,,,,,,,низкие бутылк
 
 easy,,,,,,Easy,,Facile,,,,,,,,,,,,
 UserP,,,,,,User's portraits,,Portraits de l'utilisateur,,,,,,,,,,,
+SameColor,,,,,,The same color,,La meme couleur,,,,,,,,,,,
