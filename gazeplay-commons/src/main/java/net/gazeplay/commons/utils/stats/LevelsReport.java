@@ -1,12 +1,13 @@
 package net.gazeplay.commons.utils.stats;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 public class LevelsReport {
 
     @Getter
@@ -43,7 +44,12 @@ public class LevelsReport {
         for (final Long value : levelsPerRounds) {
             sum += Math.pow((value - average), 2);
         }
-        return sum / count;
+        double result;
+        if (count == 0)
+            result = 0;
+        else
+            result = sum / count;
+        return result;
     }
 
     public double computeSD() {

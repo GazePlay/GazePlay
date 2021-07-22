@@ -151,7 +151,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, continueButton);
         else if (stats.getCurrentGameVariant().contains("Dynamic") && stats.getCurrentGameNameCode().contains("Memory"))
             controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, continueButton);
-        else if (stats.getCurrentGameNameCode().equals("WhereIsTheAnimal") && stats.getCurrentGameVariant().contains("Dynamic"))
+        else if (stats.getCurrentGameNameCode().equals("WhereIsTheAnimal") && stats.getCurrentGameVariant().contains("DYNAMIC"))
             controlButtonPane = createControlButtonPane(gazePlay, stats, config, chi2Info, continueButton);
         else
             controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, continueButton);
