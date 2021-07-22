@@ -99,7 +99,7 @@ public class Target extends ProgressPortrait {
 
     private void createTarget() {
 
-        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(gameContext.getConfiguration().getElementSize() * 2, 0, 1, 0, 0.8);
+        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(gameContext.getConfiguration().getElementSize(), 0, 1, 0, 0.8);
 
         getButton().setRadius(gameContext.getConfiguration().getElementSize());
         setLayoutX(newPosition.getX());

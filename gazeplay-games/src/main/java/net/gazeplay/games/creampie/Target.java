@@ -84,7 +84,7 @@ public class Target extends ProgressPortrait {
     }
 
     private void createTarget() {
-        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(gameContext.getConfiguration().getElementSize() * 2, 0, 1, 0, 0.8);
+        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(gameContext.getConfiguration().getElementSize(), 0, 1, 0, 0.8);
         this.centerX = newPosition.getX();
         this.centerY = newPosition.getY();
 
@@ -146,7 +146,7 @@ public class Target extends ProgressPortrait {
     }
 
     private void newPosition() {
-        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(gameContext.getConfiguration().getElementSize() * 2, 0, 1, 0, 0.8);
+        final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(gameContext.getConfiguration().getElementSize(), 0, 1, 0, 0.8);
         this.centerX = newPosition.getX();
         this.centerY = newPosition.getY();
 
