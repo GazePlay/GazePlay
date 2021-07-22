@@ -151,8 +151,9 @@ class PictureCard extends Group {
         log.info("gamePanelDimension2D = {}", gamePanelDimension2D);
 
         ScaleTransition scaleToFullScreenTransition = new ScaleTransition(new Duration(1000), imageRectangle);
-        scaleToFullScreenTransition.setByX((gamePanelDimension2D.getWidth() / initialWidth) - 1);
-        scaleToFullScreenTransition.setByY((gamePanelDimension2D.getHeight() / initialHeight) - 1);
+        double ratio = Math.max((gamePanelDimension2D.getWidth() / initialWidth), (gamePanelDimension2D.getHeight() / initialHeight));
+        scaleToFullScreenTransition.setByX(ratio - 1);
+        scaleToFullScreenTransition.setByY(ratio - 1);
 
         TranslateTransition translateToCenterTransition = new TranslateTransition(new Duration(1000),
             imageRectangle);
@@ -173,8 +174,6 @@ class PictureCard extends Group {
             gameInstance.launch();
             // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
             // gameInstance.stats);
-
-            gameContext.onGameStarted();
 
         }));
 
