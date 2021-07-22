@@ -2,11 +2,9 @@ package net.gazeplay.games.whereisit.launcher;
 
 import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
-import net.gazeplay.GameSpec;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
-import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -33,7 +31,7 @@ public class WhereIsTheAnimalGameLauncher implements IGameLauncher<Stats, Dimens
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
                                        DimensionDifficultyGameVariant gameVariant, Stats stats) {
-        if (gameVariant.getDifficulty().equals("Dynamic")) {
+        if (gameVariant.getDifficulty().equals("DYNAMIC")) {
             return new WhereIsIt(WhereIsItGameType.ANIMAL_NAME_DYNAMIC, gameVariant.getWidth(),
                 gameVariant.getHeight(), false, gameContext, stats);
         } else {

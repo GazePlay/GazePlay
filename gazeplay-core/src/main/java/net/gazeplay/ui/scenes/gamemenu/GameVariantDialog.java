@@ -63,11 +63,6 @@ public class GameVariantDialog extends Stage {
         HashMap<Integer, FlowPane> choicePanes = new HashMap<>();
         choicePanes.put(0, createFlowPane());
 
-        FlowPane choicePaneDynamic = new FlowPane();
-        choicePaneDynamic.setAlignment(Pos.CENTER);
-        choicePaneDynamic.setHgap(10);
-        choicePaneDynamic.setVgap(10);
-
         ScrollPane choicePanelScroller = new ScrollPane();
         choicePanelScroller.setContent(choicePanes.get(0));
         choicePanelScroller.setFitToWidth(true);
@@ -129,7 +124,10 @@ public class GameVariantDialog extends Stage {
                 choicePanes.get(0).getChildren().add(button);
             }
 
-            if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") || gameSpec.getGameSummary().getNameCode().equals("Ninja") || gameSpec.getGameSummary().getNameCode().contains("Memory")) {
+            if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
+                gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
+                gameSpec.getGameSummary().getNameCode().contains("Memory")) {
                 if (variant instanceof DimensionGameVariant) {
                     variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "normal");
                 }
@@ -139,7 +137,9 @@ public class GameVariantDialog extends Stage {
                     if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) {
                         category1 = new RadioButton("normal");
                         category2 = new RadioButton("easy");
-                    } else if (gameSpec.getGameSummary().getNameCode().equals("Ninja") || gameSpec.getGameSummary().getNameCode().contains("Memory")) {
+                    } else if (gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
+                        gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
+                        gameSpec.getGameSummary().getNameCode().contains("Memory")) {
                         category1 = new RadioButton("Static");
                         category2 = new RadioButton("Dynamic");
                     } else {
