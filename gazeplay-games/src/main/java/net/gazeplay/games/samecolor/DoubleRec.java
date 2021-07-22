@@ -78,8 +78,8 @@ public class DoubleRec {
 
     private void fits(javafx.event.EventHandler<ActionEvent> eventwin, IGameContext gameContext, List<DoubleRec> list, ReplayablePseudoRandom random, int n){
         if (n>0) {
-            PauseTransition move1 = new PauseTransition(Duration.millis(250));
-            PauseTransition move2 = new PauseTransition(Duration.millis(250));
+            PauseTransition move1 = new PauseTransition(Duration.millis(gameContext.getConfiguration().getFixationLength()));
+            PauseTransition move2 = new PauseTransition(Duration.millis(gameContext.getConfiguration().getFixationLength()));
             int x = (random.nextInt(20) - 10);
             int y = (random.nextInt(20) - 10);
             move1.setOnFinished(e -> {
