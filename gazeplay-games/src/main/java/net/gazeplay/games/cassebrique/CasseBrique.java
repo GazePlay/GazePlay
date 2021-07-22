@@ -41,6 +41,9 @@ public class CasseBrique implements GameLifeCycle {
     private ArrayList<Rectangle> walllist;
     private ArrayList<Rectangle> wallhardlist;
 
+    private double widthwall;
+    private double heightwall;
+
     CasseBrique(final IGameContext gameContext, final Stats stats, final CasseBriqueGameVariant variant){
         this.gameContext = gameContext;
         this.stats = stats;
@@ -57,9 +60,16 @@ public class CasseBrique implements GameLifeCycle {
         heightbarre = dimension2D.getHeight()/35;
         sizeball = dimension2D.getHeight()*0.015;
 
+        widthwall = dimension2D.getWidth()/20;
+        heightwall = dimension2D.getHeight()/15;
+
         createball();
         createbarre();
         oldXbarre = barre.getX();
+        
+        if (variant.getLabel().equals("LV1")){
+            LV1();
+        }
 
         speed = 0;
         rad = 0;
@@ -106,7 +116,6 @@ public class CasseBrique implements GameLifeCycle {
 
     private void createball(){
         ball = new Circle(dimension2D.getWidth()/2, dimension2D.getHeight() * 0.85, sizeball);
-        ball.setFill(Color.GRAY);
         gameContext.getChildren().add(ball);
     }
 
@@ -120,7 +129,6 @@ public class CasseBrique implements GameLifeCycle {
         PauseTransition wait = new PauseTransition(Duration.millis(delay));
         wait.setOnFinished(e -> {
             speed = 4;
-            ball.setFill(Color.RED);
         });
         wait.play();
     }
@@ -128,6 +136,13 @@ public class CasseBrique implements GameLifeCycle {
     private void move(){
         PauseTransition wait = new PauseTransition(Duration.millis(5));
         wait.setOnFinished(e -> {
+            wait.play();
+            if (speed==0){
+                ball.setFill(Color.GRAY);
+            }
+            else {
+                ball.setFill(Color.RED);
+            }
             if (ball.getCenterX() + sizeball >= dimension2D.getWidth()){
                 rad = -rad;
             }
@@ -150,7 +165,6 @@ public class CasseBrique implements GameLifeCycle {
             ball.setCenterX(ball.getCenterX() + speed * Math.sin(rad));
             ball.setCenterY(ball.getCenterY() + speed * Math.cos(rad));
             oldXbarre = barre.getX() - widthbarre/2;
-            wait.play();
         });
         wait.play();
     }
@@ -159,13 +173,13 @@ public class CasseBrique implements GameLifeCycle {
         if (ball.getCenterY() + sizeball >= barre.getY() && ball.getCenterY() <= barre.getY() && ball.getCenterX() + sizeball >= barre.getX() && ball.getCenterX() - sizeball <= barre.getX() + widthbarre){
             rad = -rad + Math.PI + radMoveBarre();
         }
-        if (ball.getCenterY() - sizeball <= barre.getY() && ball.getCenterY() >= barre.getY() && ball.getCenterX() + sizeball >= barre.getX() && ball.getCenterX() - sizeball <= barre.getX() + widthbarre){
+        if (ball.getCenterY() - sizeball <= barre.getY() + barre.getHeight() && ball.getCenterY() >= barre.getY() + barre.getHeight() && ball.getCenterX() + sizeball >= barre.getX() && ball.getCenterX() - sizeball <= barre.getX() + widthbarre){
             rad = -rad + Math.PI + radMoveBarre();
         }
         if (ball.getCenterX() + sizeball >= barre.getX() && ball.getCenterX() <= barre.getX() && ball.getCenterY() + sizeball >= barre.getY() && ball.getCenterY() - sizeball <= barre.getY() + heightbarre){
             rad = -rad + radMoveBarre();
         }
-        if (ball.getCenterX() - sizeball <= barre.getX() && ball.getCenterX() >= barre.getX() && ball.getCenterY() + sizeball >= barre.getY() && ball.getCenterY() - sizeball <= barre.getY() + heightbarre){
+        if (ball.getCenterX() - sizeball <= barre.getX() + barre.getWidth() && ball.getCenterX() >= barre.getX() + barre.getWidth() && ball.getCenterY() + sizeball >= barre.getY() && ball.getCenterY() - sizeball <= barre.getY() + heightbarre){
             rad = -rad + radMoveBarre();
         }
     }
@@ -176,7 +190,7 @@ public class CasseBrique implements GameLifeCycle {
             rad = -rad + Math.PI;
             touch = true;
         }
-        if (ball.getCenterY() - sizeball <= wall.getY() && ball.getCenterY() >= wall.getY() && ball.getCenterX() + sizeball >= wall.getX() && ball.getCenterX() - sizeball <= wall.getX() + wall.getWidth()){
+        if (ball.getCenterY() - sizeball <= wall.getY() + wall.getHeight() && ball.getCenterY() >= wall.getY() + wall.getHeight() && ball.getCenterX() + sizeball >= wall.getX() && ball.getCenterX() - sizeball <= wall.getX() + wall.getWidth()){
             rad = -rad + Math.PI;
             touch = true;
         }
@@ -184,12 +198,13 @@ public class CasseBrique implements GameLifeCycle {
             rad = -rad;
             touch = true;
         }
-        if (ball.getCenterX() - sizeball <= wall.getX() && ball.getCenterX() >= wall.getX() && ball.getCenterY() + sizeball >= wall.getY() && ball.getCenterY() - sizeball <= wall.getY() + wall.getHeight()){
+        if (ball.getCenterX() - sizeball <= wall.getX() + wall.getWidth() && ball.getCenterX() >= wall.getX() + wall.getWidth() && ball.getCenterY() + sizeball >= wall.getY() && ball.getCenterY() - sizeball <= wall.getY() + wall.getHeight()){
             rad = -rad;
             touch = true;
         }
         if (touch && remove){
             walllist.remove(wall);
+            gameContext.getChildren().remove(wall);
             testwin();
         }
     }
@@ -216,6 +231,39 @@ public class CasseBrique implements GameLifeCycle {
     }
 
     private void build(int[][] Map){
-
+        Rectangle wall;
+        for (int i=0; i<20; i++){
+            for (int j=0; j<10; j++){
+                if (Map[j][i]==1){
+                    wall = new Rectangle(i*widthwall, j*heightwall, widthwall, heightwall);
+                    wall.setFill(Color.GREEN);
+                    walllist.add(wall);
+                    gameContext.getChildren().add(wall);
+                }
+                else if (Map[j][i]==2){
+                    wall = new Rectangle(i*widthwall, j*heightwall, widthwall, heightwall);
+                    wall.setFill(Color.GRAY);
+                    wallhardlist.add(wall);
+                    gameContext.getChildren().add(wall);
+                }
+            }
+        }
+    }
+    
+    private void LV1(){
+        int[][] Map = new int[][]
+            {
+                {1,1,1,1,1,1,1,2,0,0,0,1,0,0,2,1,1,1,1,1},
+                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+            };
+        build(Map);
     }
 }
