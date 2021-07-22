@@ -63,6 +63,8 @@ public class CasseBrique implements GameLifeCycle {
         widthwall = dimension2D.getWidth()/20;
         heightwall = dimension2D.getHeight()/15;
 
+        initbackground();
+
         createbarre();
         createball();
         oldXbarre = barre.getX();
@@ -103,7 +105,9 @@ public class CasseBrique implements GameLifeCycle {
     }
 
     public void dispose(){
-
+        walllist.clear();
+        wallhardlist.clear();
+        gameContext.getChildren().clear();
     }
 
     private void ballfall(){
@@ -242,6 +246,10 @@ public class CasseBrique implements GameLifeCycle {
         }
     }
 
+    private void initbackground(){
+
+    }
+
     private void build(int[][] map){
         Rectangle wall;
         for (int i=0; i<20; i++){
@@ -265,16 +273,16 @@ public class CasseBrique implements GameLifeCycle {
     private void LV1(){
         int[][] map = new int[][]
             {
-                {0,0,0,0,0,0,0,2,0,0,0,1,0,0,2,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+                {1,1,1,1,1,1,1,2,1,1,1,1,1,1,2,1,1,1,1,1},
+                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
             };
         build(map);
     }
