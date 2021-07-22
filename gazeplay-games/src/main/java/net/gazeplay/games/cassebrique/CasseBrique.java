@@ -175,7 +175,7 @@ public class CasseBrique implements GameLifeCycle {
                 ball.setCenterX(ball.getCenterX() - speed * Math.sin(rad));
                 ball.setCenterY(ball.getCenterY() - speed * Math.cos(rad));
             }
-            oldXbarre = barre.getX() - widthbarre/2;
+            oldXbarre = barre.getX();
         });
         wait.play();
     }
@@ -222,7 +222,7 @@ public class CasseBrique implements GameLifeCycle {
     }
 
     private double radMoveBarre(){
-        return 2*(oldXbarre - barre.getX())/dimension2D.getWidth();
+        return 15*(oldXbarre - barre.getX())/dimension2D.getWidth();
     }
 
     private void testwin(){
