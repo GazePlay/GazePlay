@@ -38,8 +38,8 @@ public class CasseBrique implements GameLifeCycle {
     
     private double oldXbarre;
 
-    private ArrayList<Rectangle> walllist;
-    private ArrayList<Rectangle> wallhardlist;
+    final private ArrayList<Rectangle> walllist;
+    final private ArrayList<Rectangle> wallhardlist;
 
     private double widthwall;
     private double heightwall;
@@ -63,8 +63,8 @@ public class CasseBrique implements GameLifeCycle {
         widthwall = dimension2D.getWidth()/20;
         heightwall = dimension2D.getHeight()/15;
 
-        createball();
         createbarre();
+        createball();
         oldXbarre = barre.getX();
         
         if (variant.getLabel().equals("LV1")){
@@ -115,7 +115,7 @@ public class CasseBrique implements GameLifeCycle {
     }
 
     private void createball(){
-        ball = new Circle(dimension2D.getWidth()/2, dimension2D.getHeight() * 0.85, sizeball);
+        ball = new Circle(barre.getX() + widthbarre/2, dimension2D.getHeight() * 0.85, sizeball);
         gameContext.getChildren().add(ball);
     }
 
@@ -127,9 +127,7 @@ public class CasseBrique implements GameLifeCycle {
 
     private void startafterdelay(int delay){
         PauseTransition wait = new PauseTransition(Duration.millis(delay));
-        wait.setOnFinished(e -> {
-            speed = 10;
-        });
+        wait.setOnFinished(e -> speed = 10);
         wait.play();
     }
 
@@ -139,6 +137,7 @@ public class CasseBrique implements GameLifeCycle {
             wait.play();
             if (speed==0){
                 ball.setFill(Color.GRAY);
+                ball.setCenterX(barre.getX() + widthbarre/2);
             }
             else {
                 ball.setFill(Color.RED);
