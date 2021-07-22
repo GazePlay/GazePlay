@@ -128,13 +128,13 @@ public class CasseBrique implements GameLifeCycle {
     private void startafterdelay(int delay){
         PauseTransition wait = new PauseTransition(Duration.millis(delay));
         wait.setOnFinished(e -> {
-            speed = 4;
+            speed = 10;
         });
         wait.play();
     }
 
     private void move(){
-        PauseTransition wait = new PauseTransition(Duration.millis(5));
+        PauseTransition wait = new PauseTransition(Duration.millis(15));
         wait.setOnFinished(e -> {
             wait.play();
             if (speed==0){
@@ -164,6 +164,18 @@ public class CasseBrique implements GameLifeCycle {
             }
             ball.setCenterX(ball.getCenterX() + speed * Math.sin(rad));
             ball.setCenterY(ball.getCenterY() + speed * Math.cos(rad));
+            boolean test = false;
+            for (Rectangle wall : walllist){
+                test = test || ball.getCenterX()>wall.getX() && ball.getCenterX()<wall.getX()+wall.getWidth() && ball.getCenterY()>wall.getY() && ball.getCenterY()<wall.getY()+wall.getHeight();
+            }
+            for (Rectangle wall : wallhardlist){
+                test = test || ball.getCenterX()>wall.getX() && ball.getCenterX()<wall.getX()+wall.getWidth() && ball.getCenterY()>wall.getY() && ball.getCenterY()<wall.getY()+wall.getHeight();
+            }
+            test = test || ball.getCenterX()>barre.getX() && ball.getCenterX()<barre.getX()+barre.getWidth() && ball.getCenterY()>barre.getY() && ball.getCenterY()<barre.getY()+barre.getHeight();
+            if (test){
+                ball.setCenterX(ball.getCenterX() - speed * Math.sin(rad));
+                ball.setCenterY(ball.getCenterY() - speed * Math.cos(rad));
+            }
             oldXbarre = barre.getX() - widthbarre/2;
         });
         wait.play();
@@ -253,7 +265,7 @@ public class CasseBrique implements GameLifeCycle {
     private void LV1(){
         int[][] Map = new int[][]
             {
-                {1,1,1,1,1,1,1,2,0,0,0,1,0,0,2,1,1,1,1,1},
+                {0,0,0,0,0,0,0,2,0,0,0,1,0,0,2,0,0,0,0,0},
                 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
