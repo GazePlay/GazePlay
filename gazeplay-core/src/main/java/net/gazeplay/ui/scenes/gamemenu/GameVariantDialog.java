@@ -129,7 +129,7 @@ public class GameVariantDialog extends Stage {
                     case "HighB":
                         indexOfTheVariant = 3;
                         break;
-                    case "TinyB":
+                    default: //case "TinyB"
                         indexOfTheVariant = 0;
                         break;
                 }
