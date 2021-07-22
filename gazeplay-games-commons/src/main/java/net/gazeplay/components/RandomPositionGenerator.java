@@ -29,16 +29,13 @@ public abstract class RandomPositionGenerator {
     public Position newRandomBoundedPosition(final double radius, final double ratioXLeft, final double ratioXRight, final double ratioYBottom,
                                              final double ratioYTop) {
 
-        double minX = radius;
-        double minY = radius;
-
         final Dimension2D dimension2D = getDimension2D();
 
-        minX = minX + (dimension2D.getWidth() * ratioXLeft);
-        minY = minY + (dimension2D.getHeight() * ratioYBottom);
+        final double minX = (dimension2D.getWidth() * ratioXLeft) + radius;
+        final double minY = (dimension2D.getHeight() * ratioYBottom) + radius;
 
-        final double maxX = (dimension2D.getWidth() * ratioXRight) - radius;
-        final double maxY = (dimension2D.getHeight() * ratioYTop) - radius;
+        final double maxX = (dimension2D.getWidth() * ratioXRight) - radius * 2;
+        final double maxY = (dimension2D.getHeight() * ratioYTop) - radius * 2;
 
         log.debug("the width is ={}", dimension2D.getWidth());
         log.debug("the height is ={}", dimension2D.getHeight());
