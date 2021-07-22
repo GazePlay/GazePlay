@@ -7,7 +7,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.print.PageLayout;
-import javafx.print.PageOrientation;
 import javafx.print.PrinterJob;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -30,18 +29,18 @@ import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
-import net.gazeplay.components.GazeIndicator;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.components.GazeFollowerIndicator;
+import net.gazeplay.components.GazeIndicator;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class ColorToolBox extends Pane {
@@ -208,6 +207,15 @@ public class ColorToolBox extends Pane {
             if (previousEnableColor) {
                 colorsGame.setEnableColorization(false);
             }
+
+            customColorDialog.toFront();
+            customColorDialog.setAlwaysOnTop(true);
+            try {
+                TimeUnit.MILLISECONDS.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            customColorDialog.requestFocus();
         };
 
         final GazeIndicator customColorButtonIndic = new GazeFollowerIndicator(gameContext, root);
