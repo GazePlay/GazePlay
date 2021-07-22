@@ -155,6 +155,7 @@ public class DotToDot implements GameLifeCycle {
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
+        stats.incrementNumberOfGoalsToReach();
         gameContext.firstStart();
 
     }

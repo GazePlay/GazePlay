@@ -91,6 +91,9 @@ public class DotEntity extends Parent {
             if (gameObject.getLevel() < 8)
                 gameObject.setLevel(gameObject.getLevel() + 1);
 
+            stats.incrementNumberOfGoalsReached();
+
+            gameContext.updateScore(stats, gameObject);
             gameObject.getTargetAOIList().clear();
             gameContext.playWinTransition(500, actionEvent -> {
                 gameObject.dispose();
