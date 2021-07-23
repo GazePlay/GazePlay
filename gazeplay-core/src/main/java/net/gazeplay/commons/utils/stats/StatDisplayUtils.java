@@ -248,57 +248,57 @@ public class StatDisplayUtils {
         return levelChart;
     }
 
-    public static TableView<ChiData> buildTable(Stats stats, final Region root) {
-        TableView<ChiData> table = new TableView<ChiData>();
+    public static TableView<ChiData> buildTable(Stats stats) {
+        TableView<ChiData> table = new TableView<>();
         table.setMaxWidth(1200);
 
         table.setEditable(false);
 
         ObservableList<ChiData> data = stats.getChiReport().createData();
 
-        TableColumn<ChiData, Integer> indexCol = new TableColumn<ChiData, Integer>("Index");
+        TableColumn<ChiData, Integer> indexCol = new TableColumn<>("Index");
         indexCol.setMaxWidth(150);
         indexCol.setMinWidth(150);
-        indexCol.setCellValueFactory(new PropertyValueFactory<ChiData, Integer>("id"));
+        indexCol.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-        TableColumn<ChiData, Integer> levelCol = new TableColumn<ChiData, Integer>("Level");
+        TableColumn<ChiData, Integer> levelCol = new TableColumn<>("Level");
         levelCol.setMaxWidth(150);
         levelCol.setMinWidth(150);
-        levelCol.setCellValueFactory(new PropertyValueFactory<ChiData, Integer>("level"));
+        levelCol.setCellValueFactory(new PropertyValueFactory<>("level"));
 
-        TableColumn<ChiData, Integer> decisionCol = new TableColumn<ChiData, Integer>("Decision with a given theoretical chi2 ");
+        TableColumn<ChiData, Integer> decisionCol = new TableColumn<>("Decision with a given theoretical chi2 ");
         decisionCol.setMaxWidth(900);
         decisionCol.setMinWidth(900);
 
-        TableColumn<ChiData, String> alpha50 = new TableColumn<ChiData, String>("50%");
+        TableColumn<ChiData, String> alpha50 = new TableColumn<>("50%");
         alpha50.setMaxWidth(150);
         alpha50.setMinWidth(150);
-        alpha50.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha50"));
+        alpha50.setCellValueFactory(new PropertyValueFactory<>("alpha50"));
 
-        TableColumn<ChiData, String> alpha25 = new TableColumn<ChiData, String>("25%");
+        TableColumn<ChiData, String> alpha25 = new TableColumn<>("25%");
         alpha25.setMaxWidth(150);
         alpha25.setMinWidth(150);
-        alpha25.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha25"));
+        alpha25.setCellValueFactory(new PropertyValueFactory<>("alpha25"));
 
-        TableColumn<ChiData, String> alpha10 = new TableColumn<ChiData, String>("10%");
+        TableColumn<ChiData, String> alpha10 = new TableColumn<>("10%");
         alpha10.setMaxWidth(150);
         alpha10.setMinWidth(150);
-        alpha10.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha10"));
+        alpha10.setCellValueFactory(new PropertyValueFactory<>("alpha10"));
 
-        TableColumn<ChiData, String> alpha5 = new TableColumn<ChiData, String>("5%");
+        TableColumn<ChiData, String> alpha5 = new TableColumn<>("5%");
         alpha5.setMaxWidth(150);
         alpha5.setMinWidth(150);
-        alpha5.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha5"));
+        alpha5.setCellValueFactory(new PropertyValueFactory<>("alpha5"));
 
-        TableColumn<ChiData, String> alpha1 = new TableColumn<ChiData, String>("1%");
+        TableColumn<ChiData, String> alpha1 = new TableColumn<>("1%");
         alpha1.setMaxWidth(150);
         alpha1.setMinWidth(150);
-        alpha1.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha1"));
+        alpha1.setCellValueFactory(new PropertyValueFactory<>("alpha1"));
 
-        TableColumn<ChiData, String> alpha05 = new TableColumn<ChiData, String>("0.5%");
+        TableColumn<ChiData, String> alpha05 = new TableColumn<>("0.5%");
         alpha05.setMaxWidth(150);
         alpha05.setMinWidth(150);
-        alpha05.setCellValueFactory(new PropertyValueFactory<ChiData, String>("alpha05"));
+        alpha05.setCellValueFactory(new PropertyValueFactory<>("alpha05"));
 
         decisionCol.getColumns().addAll(alpha50, alpha25, alpha10, alpha5, alpha1, alpha05);
 

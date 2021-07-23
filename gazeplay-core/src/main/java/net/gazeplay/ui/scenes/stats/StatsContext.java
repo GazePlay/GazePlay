@@ -36,8 +36,10 @@ import net.gazeplay.ui.GraphicalContext;
 //import javax.swing.text.TableView;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.scene.control.TableView;
+import org.apache.commons.lang3.ObjectUtils;
 
 @Slf4j
 public class StatsContext extends GraphicalContext<BorderPane> {
@@ -96,12 +98,12 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         RadioButton chi2Info = new RadioButton("Chi2 Info");
 
         if (!config.isFixationSequenceDisabled()) {
-            LinkedList<FixationPoint> tempSequenceList = new LinkedList<FixationPoint>();
+            LinkedList<FixationPoint> tempSequenceList = new LinkedList<>();
             tempSequenceList.addAll(stats.getFixationSequence().get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
             tempSequenceList.addAll(stats.getFixationSequence().get(FixationSequence.GAZE_FIXATION_SEQUENCE));
             AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(tempSequenceList, root);
             LineChart<String, Number> levelChart = StatDisplayUtils.buildLevelChart(stats, root);
-            TableView chi2Chart = StatDisplayUtils.buildTable(stats, root);
+            TableView chi2Chart = StatDisplayUtils.buildTable(stats);
 
             colorBands.setTextFill(Color.WHITE);
             colorBands.getStylesheets().add("data/common/radio.css");
@@ -145,6 +147,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 }
             });
         }
+
         HBox controlButtonPane;
 
         if (stats.getCurrentGameNameCode().equals("Ninja") && stats.getCurrentGameVariant().contains("DYNAMIC"))

@@ -237,14 +237,15 @@ public class WhereIsIt implements GameLifeCycle {
             gameContext.getChildren().removeAll(pictogramesList);
 
             //log.debug("Adding {} pictures", currentRoundDetails.getPictureCardList().size());
-            gameContext.getChildren().addAll(currentRoundDetails.getPictureCardList());
+            if(currentRoundDetails != null) {
+                gameContext.getChildren().addAll(currentRoundDetails.getPictureCardList());
 
-            for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
-                //  log.debug("p = {}", p);
-                p.toFront();
-                p.setOpacity(1);
+                for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
+                    //  log.debug("p = {}", p);
+                    p.toFront();
+                    p.setOpacity(1);
+                }
             }
-
             questionText.toFront();
 
             stats.notifyNewRoundReady();
