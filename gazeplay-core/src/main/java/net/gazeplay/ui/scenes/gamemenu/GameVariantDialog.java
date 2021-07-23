@@ -117,17 +117,17 @@ public class GameVariantDialog extends Stage {
                 String variantString = ((IntStringGameVariant) variant).getStringValue();
                 int indexOfTheVariant = 0;
                 switch (variantString) {
-                    case "NormalB":
-                        indexOfTheVariant = 2;
-                        break;
                     case "BigB":
                         indexOfTheVariant = 4;
                         break;
-                    case "SmallB":
-                        indexOfTheVariant = 1;
-                        break;
                     case "HighB":
                         indexOfTheVariant = 3;
+                        break;
+                    case "NormalB":
+                        indexOfTheVariant = 2;
+                        break;
+                    case "SmallB":
+                        indexOfTheVariant = 1;
                         break;
                     default: //case "TinyB"
                         indexOfTheVariant = 0;
@@ -170,11 +170,11 @@ public class GameVariantDialog extends Stage {
                         categories[1] = new RadioButton("Dynamic");
                     } else if (gameSpec.getGameSummary().getNameCode().equals("bottle")) {
                         categories = new RadioButton[5];
-                        categories[0] = new RadioButton("Normal");
-                        categories[1] = new RadioButton("Big");
-                        categories[2] = new RadioButton("Small");
+                        categories[4] = new RadioButton("Big");
                         categories[3] = new RadioButton("Hight");
-                        categories[4] = new RadioButton("Tiny");
+                        categories[2] = new RadioButton("Normal");
+                        categories[1] = new RadioButton("Small");
+                        categories[0] = new RadioButton("Tiny");
                     } else {
                         categories = new RadioButton[2];
                         categories[0] = new RadioButton("Classic");
