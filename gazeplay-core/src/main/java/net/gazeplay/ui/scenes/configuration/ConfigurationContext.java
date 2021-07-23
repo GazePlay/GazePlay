@@ -36,10 +36,7 @@ import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
-import net.gazeplay.commons.ui.I18NButton;
-import net.gazeplay.commons.ui.I18NText;
-import net.gazeplay.commons.ui.I18NToggleButton;
-import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.ui.*;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
@@ -86,6 +83,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         // Bottom Pane
         HomeButton homeButton = createHomeButtonInConfigurationManagementScreen(gazePlay);
+
+        I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
+        I18NTooltip.install(homeButton, tooltipBackToMenu);
 
         HBox rightControlPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(rightControlPane);
