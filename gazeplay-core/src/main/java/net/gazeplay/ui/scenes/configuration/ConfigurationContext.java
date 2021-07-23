@@ -56,6 +56,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
@@ -210,7 +211,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
-        if(Utils.isWindows()) {
+        if (Utils.isWindows()) {
             {
                 I18NText label = new I18NText(translator, "CreateShortCut", COLON);
 
@@ -788,7 +789,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         String userOption = configuration.getUserName().length() == 0 ? "--default-user" : "--user " + configuration.getUserName();
 
         GamesLocator gamesLocator = getGazePlay().getGamesLocator();
-        if(gamesLocator != null) {
+        if (gamesLocator != null) {
             List<GameSpec> games = gamesLocator.listGames(getGazePlay().getTranslator());
             for (GameSpec game : games) {
 
@@ -831,10 +832,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             if (currentSelectedGame != null) {
                 String gameOption = "--game \"" + currentSelectedGame.getGameSummary().getNameCode() + "\"";
                 String variantOption = currentSelectedVariant == null ? "" : "--variant \"" + currentSelectedVariant.toString() + "\"";
-
-                ShellLink slwithvariant = ShellLink.createLink("C:\\Program Files (x86)\\GazePlay\\bin\\gazeplay-windows.bat")
-                    .setWorkingDir("C:\\Program Files (x86)\\GazePlay\\bin\\")
-                    .setIconLocation("C:\\Program Files (x86)\\GazePlay\\bin\\gazeplayicon.ico")
+                Path currentRelativePath = Paths.get("");
+                String currentBinPath = currentRelativePath.toAbsolutePath().toString();
+                ShellLink slwithvariant = ShellLink.createLink(currentBinPath + "\\gazeplay-windows.bat")
+                    .setWorkingDir(currentBinPath)
+                    .setIconLocation(currentBinPath + "\\gazeplayicon.ico")
                     .setCMDArgs(userOption + " " + gameOption + " " + variantOption);
                 slwithvariant.getHeader().setIconIndex(0);
 
