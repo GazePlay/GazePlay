@@ -35,6 +35,7 @@ public class CasseBrique implements GameLifeCycle {
 
     private double rad;
     private double speed;
+    private double newrad;
     
     private double oldXbarre;
 
@@ -136,7 +137,7 @@ public class CasseBrique implements GameLifeCycle {
     }
 
     private void move(){
-        PauseTransition wait = new PauseTransition(Duration.millis(15));
+        PauseTransition wait = new PauseTransition(Duration.millis(50));
         wait.setOnFinished(e -> {
             wait.play();
             if (speed==0){
@@ -147,13 +148,13 @@ public class CasseBrique implements GameLifeCycle {
                 ball.setFill(Color.RED);
             }
             if (ball.getCenterX() + sizeball >= dimension2D.getWidth()){
-                rad = -rad;
+                newrad = -rad;
             }
             else if (ball.getCenterX() - sizeball <= 0){
-                rad = -rad;
+                newrad = -rad;
             }
             if (ball.getCenterY() - sizeball <= 0){
-                rad = -rad + Math.PI;
+                newrad = -rad + Math.PI;
             }
             else if (ball.getCenterY()>=dimension2D.getHeight()){
                 ballfall();
@@ -165,6 +166,7 @@ public class CasseBrique implements GameLifeCycle {
             for (Rectangle wall : wallhardlist){
                 bounceWall(wall, false);
             }
+            rad = newrad;
             ball.setCenterX(ball.getCenterX() + speed * Math.sin(rad));
             ball.setCenterY(ball.getCenterY() + speed * Math.cos(rad));
             boolean test = false;
@@ -186,35 +188,35 @@ public class CasseBrique implements GameLifeCycle {
 
     private void bounceBarre(){
         if (ball.getCenterY() + sizeball >= barre.getY() && ball.getCenterY() <= barre.getY() && ball.getCenterX() + sizeball >= barre.getX() && ball.getCenterX() - sizeball <= barre.getX() + widthbarre){
-            rad = -rad + Math.PI + radMoveBarre();
+            newrad = -rad + Math.PI + radMoveBarre();
         }
         if (ball.getCenterY() - sizeball <= barre.getY() + barre.getHeight() && ball.getCenterY() >= barre.getY() + barre.getHeight() && ball.getCenterX() + sizeball >= barre.getX() && ball.getCenterX() - sizeball <= barre.getX() + widthbarre){
-            rad = -rad + Math.PI + radMoveBarre();
+            newrad = -rad + Math.PI + radMoveBarre();
         }
         if (ball.getCenterX() + sizeball >= barre.getX() && ball.getCenterX() <= barre.getX() && ball.getCenterY() + sizeball >= barre.getY() && ball.getCenterY() - sizeball <= barre.getY() + heightbarre){
-            rad = -rad + radMoveBarre();
+            newrad = -rad + radMoveBarre();
         }
         if (ball.getCenterX() - sizeball <= barre.getX() + barre.getWidth() && ball.getCenterX() >= barre.getX() + barre.getWidth() && ball.getCenterY() + sizeball >= barre.getY() && ball.getCenterY() - sizeball <= barre.getY() + heightbarre){
-            rad = -rad + radMoveBarre();
+            newrad = -rad + radMoveBarre();
         }
     }
 
     private void bounceWall(Rectangle wall, boolean remove){
         boolean touch = false;
         if (ball.getCenterY() + sizeball >= wall.getY() && ball.getCenterY() <= wall.getY() && ball.getCenterX() + sizeball >= wall.getX() && ball.getCenterX() - sizeball <= wall.getX() + wall.getWidth()){
-            rad = -rad + Math.PI;
+            newrad = -rad + Math.PI;
             touch = true;
         }
         if (ball.getCenterY() - sizeball <= wall.getY() + wall.getHeight() && ball.getCenterY() >= wall.getY() + wall.getHeight() && ball.getCenterX() + sizeball >= wall.getX() && ball.getCenterX() - sizeball <= wall.getX() + wall.getWidth()){
-            rad = -rad + Math.PI;
+            newrad = -rad + Math.PI;
             touch = true;
         }
         if (ball.getCenterX() + sizeball >= wall.getX() && ball.getCenterX() <= wall.getX() && ball.getCenterY() + sizeball >= wall.getY() && ball.getCenterY() - sizeball <= wall.getY() + wall.getHeight()){
-            rad = -rad;
+            newrad = -rad;
             touch = true;
         }
         if (ball.getCenterX() - sizeball <= wall.getX() + wall.getWidth() && ball.getCenterX() >= wall.getX() + wall.getWidth() && ball.getCenterY() + sizeball >= wall.getY() && ball.getCenterY() - sizeball <= wall.getY() + wall.getHeight()){
-            rad = -rad;
+            newrad = -rad;
             touch = true;
         }
         if (touch && remove){
