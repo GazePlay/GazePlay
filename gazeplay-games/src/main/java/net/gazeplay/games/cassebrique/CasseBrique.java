@@ -169,53 +169,53 @@ public class CasseBrique implements GameLifeCycle {
             rad = newrad;
             ball.setCenterX(ball.getCenterX() + speed * Math.sin(rad));
             ball.setCenterY(ball.getCenterY() + speed * Math.cos(rad));
-            boolean test = false;
+            /*boolean test = false;
             for (Rectangle wall : walllist){
-                test = test || ball.getCenterX()>wall.getX() && ball.getCenterX()<wall.getX()+wall.getWidth() && ball.getCenterY()>wall.getY() && ball.getCenterY()<wall.getY()+wall.getHeight();
+                test = test || ball.getCenterX()+sizeball>wall.getX() && ball.getCenterX()-sizeball<wall.getX()+wall.getWidth() && ball.getCenterY()+sizeball>wall.getY() && ball.getCenterY()-sizeball<wall.getY()+wall.getHeight();
             }
             for (Rectangle wall : wallhardlist){
-                test = test || ball.getCenterX()>wall.getX() && ball.getCenterX()<wall.getX()+wall.getWidth() && ball.getCenterY()>wall.getY() && ball.getCenterY()<wall.getY()+wall.getHeight();
+                test = test || ball.getCenterX()+sizeball>wall.getX() && ball.getCenterX()-sizeball<wall.getX()+wall.getWidth() && ball.getCenterY()+sizeball>wall.getY() && ball.getCenterY()-sizeball<wall.getY()+wall.getHeight();
             }
-            test = test || ball.getCenterX()>barre.getX() && ball.getCenterX()<barre.getX()+barre.getWidth() && ball.getCenterY()>barre.getY() && ball.getCenterY()<barre.getY()+barre.getHeight();
+            test = test || ball.getCenterX()+sizeball>barre.getX() && ball.getCenterX()-sizeball<barre.getX()+barre.getWidth() && ball.getCenterY()+sizeball>barre.getY() && ball.getCenterY()-sizeball<barre.getY()+barre.getHeight();
             if (test){
                 ball.setCenterX(ball.getCenterX() - speed * Math.sin(rad));
                 ball.setCenterY(ball.getCenterY() - speed * Math.cos(rad));
-            }
+            }*/
             oldXbarre = barre.getX();
         });
         wait.play();
     }
 
     private void bounceBarre(){
-        if (ball.getCenterY() + sizeball >= barre.getY() && ball.getCenterY() <= barre.getY() && ball.getCenterX() + sizeball >= barre.getX() && ball.getCenterX() - sizeball <= barre.getX() + widthbarre){
+        if (onTop(barre)){
             newrad = -rad + Math.PI + radMoveBarre();
         }
-        if (ball.getCenterY() - sizeball <= barre.getY() + barre.getHeight() && ball.getCenterY() >= barre.getY() + barre.getHeight() && ball.getCenterX() + sizeball >= barre.getX() && ball.getCenterX() - sizeball <= barre.getX() + widthbarre){
+        if (onBottom(barre)){
             newrad = -rad + Math.PI + radMoveBarre();
         }
-        if (ball.getCenterX() + sizeball >= barre.getX() && ball.getCenterX() <= barre.getX() && ball.getCenterY() + sizeball >= barre.getY() && ball.getCenterY() - sizeball <= barre.getY() + heightbarre){
+        if (onLeft(barre)){
             newrad = -rad + radMoveBarre();
         }
-        if (ball.getCenterX() - sizeball <= barre.getX() + barre.getWidth() && ball.getCenterX() >= barre.getX() + barre.getWidth() && ball.getCenterY() + sizeball >= barre.getY() && ball.getCenterY() - sizeball <= barre.getY() + heightbarre){
+        if (onRight(barre)){
             newrad = -rad + radMoveBarre();
         }
     }
 
     private void bounceWall(Rectangle wall, boolean remove){
         boolean touch = false;
-        if (ball.getCenterY() + sizeball >= wall.getY() && ball.getCenterY() <= wall.getY() && ball.getCenterX() + sizeball >= wall.getX() && ball.getCenterX() - sizeball <= wall.getX() + wall.getWidth()){
+        if (onTop(wall)){
             newrad = -rad + Math.PI;
             touch = true;
         }
-        if (ball.getCenterY() - sizeball <= wall.getY() + wall.getHeight() && ball.getCenterY() >= wall.getY() + wall.getHeight() && ball.getCenterX() + sizeball >= wall.getX() && ball.getCenterX() - sizeball <= wall.getX() + wall.getWidth()){
+        if (onBottom(wall)){
             newrad = -rad + Math.PI;
             touch = true;
         }
-        if (ball.getCenterX() + sizeball >= wall.getX() && ball.getCenterX() <= wall.getX() && ball.getCenterY() + sizeball >= wall.getY() && ball.getCenterY() - sizeball <= wall.getY() + wall.getHeight()){
+        if (onLeft(wall)){
             newrad = -rad;
             touch = true;
         }
-        if (ball.getCenterX() - sizeball <= wall.getX() + wall.getWidth() && ball.getCenterX() >= wall.getX() + wall.getWidth() && ball.getCenterY() + sizeball >= wall.getY() && ball.getCenterY() - sizeball <= wall.getY() + wall.getHeight()){
+        if (onRight(wall)){
             newrad = -rad;
             touch = true;
         }
@@ -246,6 +246,22 @@ public class CasseBrique implements GameLifeCycle {
                 gameContext.showRoundStats(stats, this);
             });
         }
+    }
+
+    private boolean onTop(Rectangle wall){
+        return ball.getCenterY() + sizeball >= wall.getY() && ball.getCenterY() <= wall.getY() && ball.getCenterX() + sizeball >= wall.getX() && ball.getCenterX() - sizeball <= wall.getX() + wall.getWidth();
+    }
+
+    private boolean onBottom(Rectangle wall){
+        return ball.getCenterY() - sizeball <= wall.getY() + wall.getHeight() && ball.getCenterY() >= wall.getY() + wall.getHeight() && ball.getCenterX() + sizeball >= wall.getX() && ball.getCenterX() - sizeball <= wall.getX() + wall.getWidth();
+    }
+
+    private boolean onLeft(Rectangle wall){
+        return ball.getCenterX() + sizeball >= wall.getX() && ball.getCenterX() <= wall.getX() && ball.getCenterY() + sizeball >= wall.getY() && ball.getCenterY() - sizeball <= wall.getY() + wall.getHeight();
+    }
+
+    private boolean onRight(Rectangle wall){
+        return ball.getCenterX() - sizeball <= wall.getX() + wall.getWidth() && ball.getCenterX() >= wall.getX() + wall.getWidth() && ball.getCenterY() + sizeball >= wall.getY() && ball.getCenterY() - sizeball <= wall.getY() + wall.getHeight();
     }
 
     private void initbackground(){
