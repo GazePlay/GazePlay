@@ -4,7 +4,7 @@ import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
-import net.gazeplay.games.whereisit.WhereIsItGameVariantGenerator;
+import net.gazeplay.games.whereisit.FindOddGameVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.FindOddGameLauncher;
 
 public class FindOddGameSpecSource implements GameSpecSource {
@@ -15,6 +15,6 @@ public class FindOddGameSpecSource implements GameSpecSource {
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.MEMORIZATION).build(),
-            new WhereIsItGameVariantGenerator(), new FindOddGameLauncher());
+            new FindOddGameVariantGenerator(), new FindOddGameLauncher());
     }
 }

@@ -84,14 +84,13 @@ public class Target extends ProgressPortrait {
     }
 
     private void createTarget() {
-
         final Position newPosition = randomPositionGenerator.newRandomBoundedPosition(gameContext.getConfiguration().getElementSize(), 0, 1, 0, 0.8);
         this.centerX = newPosition.getX();
         this.centerY = newPosition.getY();
 
+        setLayoutX(newPosition.getX() - gameContext.getConfiguration().getElementSize());
+        setLayoutY(newPosition.getY() - gameContext.getConfiguration().getElementSize());
         getButton().setRadius(gameContext.getConfiguration().getElementSize());
-        setLayoutX(this.centerX);
-        setLayoutY(this.centerY);
         getButton().setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
         setRotate(0);
         setVisible(true);
@@ -126,7 +125,11 @@ public class Target extends ProgressPortrait {
         timeline.getKeyFrames()
             .add(new KeyFrame(new Duration(2000), new KeyValue(getButton().radiusProperty(), gameContext.getConfiguration().getElementSize() * 1.6)));
         timeline.getKeyFrames()
-            .add(new KeyFrame(new Duration(2000), new KeyValue(rotateProperty(), getRotate() + (360 * 3))));
+            .add(new KeyFrame(new Duration(2000), new KeyValue(layoutXProperty(), centerX - gameContext.getConfiguration().getElementSize() * 1.6)));
+        timeline.getKeyFrames()
+            .add(new KeyFrame(new Duration(2000), new KeyValue(layoutYProperty(), centerY - gameContext.getConfiguration().getElementSize() * 1.6)));
+        timeline.getKeyFrames()
+            .add(new KeyFrame(new Duration(2000), new KeyValue(getButton().rotateProperty(), getButton().getRotate() + (360 * 3))));
         timeline.getKeyFrames().add(new KeyFrame(new Duration(2000), new KeyValue(visibleProperty(), false)));
 
 
@@ -147,8 +150,9 @@ public class Target extends ProgressPortrait {
         this.centerX = newPosition.getX();
         this.centerY = newPosition.getY();
 
-        setLayoutX(newPosition.getX());
-        setLayoutY(newPosition.getY());
+        setLayoutX(newPosition.getX() - gameContext.getConfiguration().getElementSize());
+        setLayoutY(newPosition.getY() - gameContext.getConfiguration().getElementSize());
+        getButton().setRadius(gameContext.getConfiguration().getElementSize());
         getButton().setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
         setVisible(true);
         active();

@@ -410,7 +410,7 @@ class ConfigurationContextTest {
 
             MenuButton result = context.buildLanguageChooser(mockConfig, context);
 
-            assertEquals(23, result.getItems().size());
+            assertEquals(25, result.getItems().size());
 
             result.getItems().get(1).fire();
 

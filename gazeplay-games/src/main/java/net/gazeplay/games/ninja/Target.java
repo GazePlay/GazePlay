@@ -19,7 +19,6 @@ import net.gazeplay.components.Position;
 import net.gazeplay.components.ProgressPortrait;
 import net.gazeplay.components.RandomPositionGenerator;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +62,7 @@ public class Target extends ProgressPortrait {
 
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
-                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance, final ReplayablePseudoRandom randomGenerator,final RoundsDurationReport roundsDurationReport, int length) {
+                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance, final ReplayablePseudoRandom randomGenerator, final RoundsDurationReport roundsDurationReport, int length) {
         super(gameContext.getConfiguration().getElementSize());
 
         this.gameInstance = gameInstance;
@@ -108,7 +107,7 @@ public class Target extends ProgressPortrait {
         getButton().setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
         setVisible(true);
 
-        assignIndicatorUpdatable(enterEvent,gameContext);
+        assignIndicatorUpdatable(enterEvent, gameContext);
         gameContext.getGazeDeviceManager().addEventFilter(this);
         active();
     }
@@ -163,7 +162,7 @@ public class Target extends ProgressPortrait {
             if (ratio != 0)
                 finalLength = lengthR;
             else
-                finalLength = (int)distance;
+                finalLength = (int) distance;
         } else
             finalLength = length;
         final TranslateTransition translation = new TranslateTransition(
@@ -205,7 +204,7 @@ public class Target extends ProgressPortrait {
         translation2.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
 
         log.debug("currentPosition = {}, newPosition = {}, length = {}", pos1, pos2, length);
-        double distance = Math.sqrt(Math.pow(pos1.getX()- pos2.getX(),2) + Math.pow(pos1.getY() - pos2.getY(),2));
+        double distance = Math.sqrt(Math.pow(pos1.getX() - pos2.getX(), 2) + Math.pow(pos1.getY() - pos2.getY(), 2));
         log.debug("distance = {}", distance);
 
         translation1.setOnFinished(actionEvent -> {
@@ -233,7 +232,7 @@ public class Target extends ProgressPortrait {
 
         final Dimension2D dimension2D = randomPositionGenerator.getDimension2D();
 
-        if (variantType.contains("Dynamic")){
+        if (variantType.contains("Dynamic")) {
             if (500 < length && length < 12000) {
                 int compare = 0;
                 List<Long> listOfDurationBetweenGoals = roundsDurationReport.getOriginalDurationsBetweenGoals();
@@ -257,21 +256,21 @@ public class Target extends ProgressPortrait {
                 break;
             case VERTICAL: // vertical
                 createBackAndForthTranslations(new Position(getLayoutX(), gameContext.getConfiguration().getElementSize()),
-                    new Position(getLayoutX(), dimension2D.getHeight() - gameContext.getConfiguration().getElementSize()), lengthRandom*2);
+                    new Position(getLayoutX(), dimension2D.getHeight() - gameContext.getConfiguration().getElementSize()), lengthRandom * 2);
                 break;
             case HORIZONTAL: // horizontal
                 createBackAndForthTranslations(new Position(gameContext.getConfiguration().getElementSize(), getLayoutY()),
-                    new Position(dimension2D.getWidth() - gameContext.getConfiguration().getElementSize(), getLayoutY()), lengthRandom*2);
+                    new Position(dimension2D.getWidth() - gameContext.getConfiguration().getElementSize(), getLayoutY()), lengthRandom * 2);
                 break;
             case DIAGONAL_UPPER_LEFT_TO_LOWER_RIGHT: // Diagonal \
                 createBackAndForthTranslations(new Position(gameContext.getConfiguration().getElementSize(), gameContext.getConfiguration().getElementSize()),
                     new Position(dimension2D.getWidth() - gameContext.getConfiguration().getElementSize(),
                         dimension2D.getHeight() - gameContext.getConfiguration().getElementSize()),
-                    lengthRandom*2);
+                    lengthRandom * 2);
                 break;
             case DIAGONAL_UPPER_RIGHT_TO_LOWER_LEFT: // Diagonal /
                 createBackAndForthTranslations(new Position(dimension2D.getWidth() - gameContext.getConfiguration().getElementSize(), gameContext.getConfiguration().getElementSize()),
-                    new Position(0, dimension2D.getHeight() - gameContext.getConfiguration().getElementSize()), lengthRandom*2);
+                    new Position(0, dimension2D.getHeight() - gameContext.getConfiguration().getElementSize()), lengthRandom * 2);
                 break;
 
             case DYNAMIC_RANDOM:
@@ -395,7 +394,7 @@ public class Target extends ProgressPortrait {
         fadeTransition.setToValue(0.5);
 
         final Timeline timeline1 = new Timeline();
-        timeline1.getKeyFrames().add(new KeyFrame(new Duration(100), new KeyValue(getButton().radiusProperty(), gameContext.getConfiguration().getElementSize()/2)));
+        timeline1.getKeyFrames().add(new KeyFrame(new Duration(100), new KeyValue(getButton().radiusProperty(), gameContext.getConfiguration().getElementSize() / 2)));
         return new ParallelTransition(fadeTransition, timeline1);
     }
 
