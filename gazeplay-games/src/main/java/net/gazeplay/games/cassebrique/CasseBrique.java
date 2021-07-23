@@ -118,7 +118,7 @@ public class CasseBrique implements GameLifeCycle {
         newrad = rad;
         gameContext.getChildren().remove(ball);
         createball();
-        startafterdelay(4000);
+        startafterdelay(2500);
     }
 
     private void createball(){
