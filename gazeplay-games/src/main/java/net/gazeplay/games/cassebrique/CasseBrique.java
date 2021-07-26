@@ -113,6 +113,7 @@ public class CasseBrique implements GameLifeCycle {
     public void dispose(){
         walllist.clear();
         wallhardlist.clear();
+        wallremovelist.clear();
         gameContext.getChildren().clear();
     }
 
@@ -228,10 +229,6 @@ public class CasseBrique implements GameLifeCycle {
             touch = true;
         }
         if (touch && remove){
-            /*walllist.remove(wall);
-            gameContext.getChildren().remove(wall);
-            stats.incrementNumberOfGoalsReached();
-            testwin();*/
             wallremovelist.add(wall);
             stats.incrementNumberOfGoalsReached();
         }
