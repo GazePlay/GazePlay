@@ -35,15 +35,19 @@ public class CasseBrique implements GameLifeCycle {
 
     private double rad;
     private double speed;
-    private double newrad;
     
     private double oldXbarre;
 
     final private ArrayList<Rectangle> walllist;
     final private ArrayList<Rectangle> wallhardlist;
+    final private ArrayList<Rectangle> wallremovelist;
 
     private double widthwall;
     private double heightwall;
+
+    private boolean touchbar;
+    private boolean touchX;
+    private boolean touchY;
 
     CasseBrique(final IGameContext gameContext, final Stats stats, final CasseBriqueGameVariant variant){
         this.gameContext = gameContext;
@@ -54,6 +58,7 @@ public class CasseBrique implements GameLifeCycle {
 
         walllist = new ArrayList<>();
         wallhardlist = new ArrayList<>();
+        wallremovelist = new ArrayList<>();
     }
 
     public void launch(){
@@ -76,7 +81,6 @@ public class CasseBrique implements GameLifeCycle {
 
         speed = 0;
         rad = 0;
-        newrad = rad;
         move();
         startafterdelay(5000);
 
@@ -115,7 +119,6 @@ public class CasseBrique implements GameLifeCycle {
     private void ballfall(){
         speed = 0;
         rad = 0;
-        newrad = rad;
         gameContext.getChildren().remove(ball);
         createball();
         startafterdelay(2500);
@@ -142,6 +145,9 @@ public class CasseBrique implements GameLifeCycle {
         PauseTransition wait = new PauseTransition(Duration.millis(15));
         wait.setOnFinished(e -> {
             wait.play();
+            touchbar = false;
+            touchX = false;
+            touchY = false;
             if (speed==0){
                 ball.setFill(Color.GRAY);
                 ball.setCenterX(barre.getX() + widthbarre/2);
@@ -150,13 +156,13 @@ public class CasseBrique implements GameLifeCycle {
                 ball.setFill(Color.RED);
             }
             if (ball.getCenterX() + sizeball >= dimension2D.getWidth()){
-                newrad = -rad;
+                touchX = true;
             }
             else if (ball.getCenterX() - sizeball <= 0){
-                newrad = -rad;
+                touchX = true;
             }
             if (ball.getCenterY() - sizeball <= 0){
-                newrad = -rad + Math.PI;
+                touchY = true;
             }
             else if (ball.getCenterY()>=dimension2D.getHeight()){
                 ballfall();
@@ -168,7 +174,19 @@ public class CasseBrique implements GameLifeCycle {
             for (Rectangle wall : wallhardlist){
                 bounceWall(wall, false);
             }
-            rad = newrad;
+            if (touchX){
+                rad = -rad;
+            }
+            if (touchY){
+                rad = -rad + Math.PI;
+            }
+            if (touchbar){
+                rad += radMoveBarre();
+            }
+            walllist.removeAll(wallremovelist);
+            gameContext.getChildren().removeAll(wallremovelist);
+            wallremovelist.clear();
+            testwin();
             ball.setCenterX(ball.getCenterX() + speed * Math.sin(rad));
             ball.setCenterY(ball.getCenterY() + speed * Math.cos(rad));
             /*boolean test = false;
@@ -189,37 +207,33 @@ public class CasseBrique implements GameLifeCycle {
     }
 
     private void bounceBarre(){
-        if (onLeft(barre)){
-            newrad = -newrad + radMoveBarre();
+        if (onLeft(barre) || onRight(barre)){
+            touchX = true;
+            touchbar = true;
         }
-        if (onRight(barre)){
-            newrad = -newrad + radMoveBarre();
-        }
-        if (onTop(barre)){
-            newrad = -newrad + Math.PI + radMoveBarre();
-        }
-        if (onBottom(barre)){
-            newrad = -newrad + Math.PI + radMoveBarre();
+        if (onTop(barre) || onBottom(barre)){
+            touchY = true;
+            touchbar = true;
         }
     }
 
     private void bounceWall(Rectangle wall, boolean remove){
         boolean touch = false;
-        if (newrad == rad) {
-            if (onLeft(wall) || onRight(wall)) {
-                newrad = -newrad;
-                touch = true;
-            }
-            if (onTop(wall) || onBottom(wall)) {
-                newrad = -newrad + Math.PI;
-                touch = true;
-            }
+        if (onLeft(wall) || onRight(wall)) {
+            touchX = true;
+            touch = true;
+        }
+        if (onTop(wall) || onBottom(wall)) {
+            touchY = true;
+            touch = true;
         }
         if (touch && remove){
-            walllist.remove(wall);
+            /*walllist.remove(wall);
             gameContext.getChildren().remove(wall);
             stats.incrementNumberOfGoalsReached();
-            testwin();
+            testwin();*/
+            wallremovelist.add(wall);
+            stats.incrementNumberOfGoalsReached();
         }
     }
 
