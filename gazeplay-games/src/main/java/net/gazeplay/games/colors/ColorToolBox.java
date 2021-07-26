@@ -299,6 +299,13 @@ public class ColorToolBox extends Pane {
     private void printImage(final Image image){
         final PrinterJob printerJob = PrinterJob.createPrinterJob();
         if (printerJob.showPrintDialog(gameContext.getPrimaryStage()) && printerJob.showPageSetupDialog(gameContext.getPrimaryStage())) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            gameContext.getPrimaryStage().requestFocus();
+
             ImageView iv = new ImageView();
             iv.setPreserveRatio(true);
             iv.setImage(image);
