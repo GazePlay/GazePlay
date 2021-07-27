@@ -75,7 +75,7 @@ public class CasseBrique implements GameLifeCycle {
         createball();
         oldXbarre = barre.getX();
         
-        if (variant.getLabel().equals("LV1")){
+        if (variant.equals(CasseBriqueGameVariant.LV1)){
             LV1();
         }
 
@@ -182,7 +182,7 @@ public class CasseBrique implements GameLifeCycle {
                 rad = -rad + Math.PI;
             }
             if (touchbar){
-                radMoveBarre();
+                radInertiaBarre();
             }
             walllist.removeAll(wallremovelist);
             gameContext.getChildren().removeAll(wallremovelist);
@@ -234,7 +234,7 @@ public class CasseBrique implements GameLifeCycle {
         }
     }
 
-    private void radMoveBarre(){
+    private void radInertiaBarre(){
         double e = 1-Math.abs(Math.sin(rad));
         double d = (oldXbarre - barre.getX())/dimension2D.getWidth();
         rad += e*Math.cbrt(d);
