@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -34,13 +35,11 @@ import net.gazeplay.stats.HiddenItemsGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
 import net.gazeplay.ui.GraphicalContext;
 
-//import javax.swing.text.TableView;
 import java.util.LinkedList;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
-import javafx.scene.control.TableView;
-import org.apache.commons.lang3.ObjectUtils;
+
+//import javax.swing.text.TableView;
 
 @Slf4j
 public class StatsContext extends GraphicalContext<BorderPane> {
@@ -151,11 +150,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         HBox controlButtonPane;
 
-        if (stats.getCurrentGameNameCode().equals("Ninja") && stats.getCurrentGameVariant().contains("DYNAMIC"))
+        if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameNameCode().equals("Ninja") && stats.getCurrentGameVariant().contains("DYNAMIC"))
             controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, continueButton);
-        else if (stats.getCurrentGameVariant().contains("Dynamic") && stats.getCurrentGameNameCode().contains("Memory"))
+        else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameVariant().contains("Dynamic") && stats.getCurrentGameNameCode().contains("Memory"))
             controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, continueButton);
-        else if (stats.getCurrentGameNameCode().equals("WhereIsTheAnimal") && stats.getCurrentGameVariant().contains("DYNAMIC"))
+        else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameNameCode().equals("WhereIsTheAnimal") && stats.getCurrentGameVariant().contains("DYNAMIC"))
             controlButtonPane = createControlButtonPane(gazePlay, stats, config, chi2Info, continueButton);
         else
             controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, continueButton);
