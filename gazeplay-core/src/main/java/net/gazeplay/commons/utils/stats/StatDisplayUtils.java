@@ -234,9 +234,9 @@ public class StatDisplayUtils {
         sdp.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey;");
         sdm.getNode().setStyle("-fx-stroke-width: 1; -fx-stroke: grey;");
 
-        EventHandler<Event> openLineChartEvent = createZoomInLineChartEventHandler(levelChart, root);
+        EventHandler<Event> openLevelChartEvent = createZoomInLineChartEventHandler(levelChart, root);
 
-        levelChart.addEventHandler(MouseEvent.MOUSE_CLICKED, openLineChartEvent);
+        levelChart.addEventHandler(MouseEvent.MOUSE_CLICKED, openLevelChartEvent);
 
         levelChart.setLegendVisible(false);
 

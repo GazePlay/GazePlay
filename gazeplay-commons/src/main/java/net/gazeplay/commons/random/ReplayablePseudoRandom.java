@@ -59,10 +59,6 @@ public class ReplayablePseudoRandom {
         return (float) (this.random() / (double) randMax) / 2;
     }
 
-    public double getSeed() {
-        return seed;
-    }
-
     public void setSeed(double seed) {
         this.seed = seed;
     }
