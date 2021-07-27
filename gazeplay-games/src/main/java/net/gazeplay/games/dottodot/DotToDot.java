@@ -17,13 +17,14 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 
+import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 public class DotToDot implements GameLifeCycle {
@@ -38,6 +39,7 @@ public class DotToDot implements GameLifeCycle {
     @Getter
     private final ArrayList<TargetAOI> targetAOIList;
 
+    @Getter
     private final ReplayablePseudoRandom randomGenerator;
 
     private ArrayList<DotEntity> dotList;
@@ -49,7 +51,13 @@ public class DotToDot implements GameLifeCycle {
     private int previous;
 
     @Getter @Setter
-    private int level = 1;
+    private int level = 0;
+
+    @Getter @Setter
+    private int fails = 0;
+
+    @Getter
+    private List<Integer> listOfFails = new LinkedList<>();
 
 
     public DotToDot(final IGameContext gameContext, final DotToDotGameVariant gameVariant, final Stats stats) {
@@ -87,12 +95,19 @@ public class DotToDot implements GameLifeCycle {
         Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Configuration config = gameContext.getConfiguration();
 
-        String path = "data/dottodot/";
+        if (!gameVariant.getLabel().contains("Dynamic")){
+            level = getRandomGenerator().nextInt(8);
+        }
+
+        final String path = "data/dottodot/";
+        final String folder = "level" + level + "/";
+
+        int indexElement = randomGenerator.nextInt(5);
 
         JsonParser parser = new JsonParser();
         JsonObject jsonRoot;
         jsonRoot = (JsonObject) parser.parse(new InputStreamReader(
-            Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + "elements" + level + ".json")), StandardCharsets.UTF_8));
+            Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + folder + "elements" + level +  indexElement  +  ".json")), StandardCharsets.UTF_8));
 
         String backgroundPath = path + jsonRoot.get("background").getAsString();
         Image backgroundImage = new Image(backgroundPath);
@@ -130,7 +145,6 @@ public class DotToDot implements GameLifeCycle {
             final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int) ((imageView.getFitWidth() + imageView.getFitHeight()) / 3),
                 System.currentTimeMillis());
             targetAOIList.add(targetAOI);
-            log.info("target list = {}", targetAOIList);
 
             //Creating text
             Text number = new Text(x - 60, y, Integer.toString(index));
@@ -148,9 +162,6 @@ public class DotToDot implements GameLifeCycle {
             dotList.add(dot);
             gameContext.getChildren().add(dot);
             gameContext.getGazeDeviceManager().addEventFilter(dot);
-
-            log.info("x = {}, y = {}", imageView.getX(), imageView.getY());
-            log.info("progress x = {}, progress y = {}", progressIndicator.getLayoutX(), progressIndicator.getLayoutY());
         }
 
         stats.notifyNewRoundReady();
@@ -164,4 +175,9 @@ public class DotToDot implements GameLifeCycle {
     public void dispose() {
         gameContext.clear();
     }
+
+    public void catchFail() {
+        fails ++;
+    }
+
 }

@@ -55,7 +55,6 @@ public class DotEntity extends Parent {
         this.getChildren().addAll(number, imageView, this.progressIndicator);
 
         final EventHandler<Event> enterHandler = (Event event) -> {
-            log.info("index = {}, previous = {}", index, gameObject.getPrevious());
             progressTimeline = new Timeline(
                 new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(this.progressIndicator.progressProperty(), 1)));
 
@@ -88,10 +87,22 @@ public class DotEntity extends Parent {
             nextDot(gameObject.getTargetAOIList().get(gameObject.getTargetAOIList().size() - 1).getXValue(), gameObject.getTargetAOIList().get(gameObject.getTargetAOIList().size() - 1).getYValue(),
                 gameObject.getTargetAOIList().get(0).getXValue(), gameObject.getTargetAOIList().get(0).getYValue());
 
-            if (gameObject.getLevel() < 8)
-                gameObject.setLevel(gameObject.getLevel() + 1);
-
             stats.incrementNumberOfGoalsReached();
+            log.debug("level = {}, nbGoalsReached = {}, fails = {}", gameObject.getLevel(), stats.nbGoalsReached, gameObject.getFails());
+            gameObject.getListOfFails().add(gameObject.getFails());
+            gameObject.setFails(0);
+
+            if(gameVariant.getLabel().contains("Dynamic")) {
+                if (stats.nbGoalsReached > 0 && stats.nbGoalsReached % 3 == 0) {
+                    if (nextLevelDecision() && gameObject.getLevel() < 7)
+                        gameObject.setLevel(gameObject.getLevel() + 1);
+
+                    if (!nextLevelDecision() && gameObject.getLevel() > 1)
+                        gameObject.setLevel(gameObject.getLevel() - 1);
+                }
+            }
+
+            gameObject.setPrevious(1);
 
             gameContext.updateScore(stats, gameObject);
             gameObject.getTargetAOIList().clear();
@@ -102,6 +113,7 @@ public class DotEntity extends Parent {
             });
 
         } else {
+            gameObject.catchFail();
             gameContext.getChildren().removeAll(gameObject.getLineList());
             gameObject.setPrevious(1);
         }
@@ -114,7 +126,16 @@ public class DotEntity extends Parent {
 
         gameObject.getLineList().add(line);
         gameContext.getChildren().add(line);
-        log.info("startX = {}, startY = {}, endX = {}, endY = {}", gameObject.getTargetAOIList().get(0).getXValue(), gameObject.getTargetAOIList().get(0).getYValue(),
-            gameObject.getTargetAOIList().get(1).getXValue(), gameObject.getTargetAOIList().get(1).getYValue());
+    }
+
+    public boolean nextLevelDecision() {
+        int nbOfGoalsReached = stats.nbGoalsReached;
+        int compare = 3;
+        for (int i = 0; i < 3; i++) {
+            if (gameObject.getListOfFails().get(nbOfGoalsReached - i - 1) > 2)
+                compare--;
+        }
+
+        return (compare == 3);
     }
 }
