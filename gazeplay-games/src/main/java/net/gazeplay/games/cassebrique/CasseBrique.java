@@ -62,7 +62,7 @@ public class CasseBrique implements GameLifeCycle {
     }
 
     public void launch(){
-        widthbarre = dimension2D.getWidth()/5;
+        widthbarre = dimension2D.getWidth()/3;
         heightbarre = dimension2D.getHeight()/35;
         sizeball = dimension2D.getHeight()*0.015;
 
@@ -182,7 +182,7 @@ public class CasseBrique implements GameLifeCycle {
                 rad = -rad + Math.PI;
             }
             if (touchbar){
-                rad += radMoveBarre();
+                radMoveBarre();
             }
             walllist.removeAll(wallremovelist);
             gameContext.getChildren().removeAll(wallremovelist);
@@ -234,8 +234,10 @@ public class CasseBrique implements GameLifeCycle {
         }
     }
 
-    private double radMoveBarre(){
-        return 15*(oldXbarre - barre.getX())/dimension2D.getWidth();
+    private void radMoveBarre(){
+        double e = 1-Math.abs(Math.sin(rad));
+        double d = (oldXbarre - barre.getX())/dimension2D.getWidth();
+        rad += e*Math.cbrt(d);
     }
 
     private void testwin(){
