@@ -5,33 +5,42 @@
             "image": "dot.png",
             "scale": 0.2,
             "coords": {
-                "x": 1200,
-                "y": 800
+                "x": 500,
+                "y": 100
             }
         },
         {
             "image": "dot.png",
             "scale": 0.2,
             "coords": {
-                "x": 1200,
-                "y": 200
+                "x": 500,
+                "y": 600
             }
         },
         {
             "image": "dot.png",
             "scale": 0.2,
             "coords": {
-                "x": 600,
-                "y": 200
+                "x": 900,
+                "y": 900
             }
         },
         {
             "image": "dot.png",
             "scale": 0.2,
             "coords": {
-                "x": 600,
-                "y": 800
+                "x": 1300,
+                "y": 600
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 1300,
+                "y": 100
             }
         }
+
     ]
 }

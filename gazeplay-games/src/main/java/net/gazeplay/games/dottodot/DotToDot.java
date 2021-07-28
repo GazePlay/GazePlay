@@ -95,14 +95,14 @@ public class DotToDot implements GameLifeCycle {
         Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Configuration config = gameContext.getConfiguration();
 
-        if (!gameVariant.getLabel().contains("Dynamic")){
+        if (!gameVariant.getLabel().contains("Dynamic"))
             level = getRandomGenerator().nextInt(8);
-        }
 
         final String path = "data/dottodot/";
         final String folder = "level" + level + "/";
 
         int indexElement = randomGenerator.nextInt(5);
+        log.info("level = {}, index = {}", level, indexElement);
 
         JsonParser parser = new JsonParser();
         JsonObject jsonRoot;
