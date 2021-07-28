@@ -62,7 +62,7 @@ public class CasseBrique implements GameLifeCycle {
     }
 
     public void launch(){
-        widthbarre = dimension2D.getWidth()/3;
+        widthbarre = dimension2D.getWidth()/2.5;
         heightbarre = dimension2D.getHeight()/35;
         sizeball = dimension2D.getHeight()*0.015;
 
@@ -122,7 +122,7 @@ public class CasseBrique implements GameLifeCycle {
         rad = 0;
         gameContext.getChildren().remove(ball);
         createball();
-        startafterdelay(2500);
+        startafterdelay(1500);
     }
 
     private void createball(){
@@ -138,7 +138,7 @@ public class CasseBrique implements GameLifeCycle {
 
     private void startafterdelay(int delay){
         PauseTransition wait = new PauseTransition(Duration.millis(delay));
-        wait.setOnFinished(e -> speed = 10);
+        wait.setOnFinished(e -> speed = 8);
         wait.play();
     }
 
