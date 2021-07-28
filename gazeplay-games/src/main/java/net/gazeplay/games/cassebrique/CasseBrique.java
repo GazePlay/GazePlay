@@ -277,20 +277,20 @@ public class CasseBrique implements GameLifeCycle {
 
     }
 
-    private void build(int[][] map){
+    private void build(Color[][] map){
         Rectangle wall;
         for (int i=0; i<20; i++){
             for (int j=0; j<10; j++){
-                if (map[j][i]==1){
-                    wall = new Rectangle(i*widthwall, j*heightwall, widthwall, heightwall);
-                    wall.setFill(Color.GREEN);
-                    walllist.add(wall);
-                    gameContext.getChildren().add(wall);
-                }
-                else if (map[j][i]==2){
+                if (map[j][i]==Color.GRAY){
                     wall = new Rectangle(i*widthwall, j*heightwall, widthwall, heightwall);
                     wall.setFill(Color.GRAY);
                     wallhardlist.add(wall);
+                    gameContext.getChildren().add(wall);
+                }
+                else if (map[j][i]!=Color.TRANSPARENT){
+                    wall = new Rectangle(i*widthwall, j*heightwall, widthwall, heightwall);
+                    wall.setFill(map[j][i]);
+                    walllist.add(wall);
                     gameContext.getChildren().add(wall);
                 }
             }
@@ -298,18 +298,21 @@ public class CasseBrique implements GameLifeCycle {
     }
     
     private void LV1(){
-        int[][] map = new int[][]
+        Color c1 = Color.GREEN;
+        Color c2 = Color.GRAY;
+        Color c3 = Color.TRANSPARENT;
+        Color[][] map = new Color[][]
             {
-                {1,1,1,1,1,1,1,2,1,1,1,1,1,1,2,1,1,1,1,1},
-                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-                {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+                {c1,c1,c1,c1,c1,c1,c1,c2,c1,c1,c1,c1,c1,c1,c2,c1,c1,c1,c1,c1},
+                {c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1},
+                {c1,c1,c3,c1,c1,c1,c1,c3,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1},
+                {c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c3,c1,c1,c1,c1,c1,c1,c1,c1},
+                {c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1},
+                {c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1},
+                {c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1},
+                {c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1},
+                {c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1},
+                {c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c3,c1,c1,c1,c1}
             };
         build(map);
     }
