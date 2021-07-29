@@ -42,9 +42,6 @@ public class CasseBrique implements GameLifeCycle {
     final private ArrayList<Rectangle> wallhardlist;
     final private ArrayList<Rectangle> wallremovelist;
 
-    private double widthwall;
-    private double heightwall;
-
     private boolean touchbar;
     private boolean touchX;
     private boolean touchY;
@@ -66,9 +63,6 @@ public class CasseBrique implements GameLifeCycle {
         heightbarre = dimension2D.getHeight()/35;
         sizeball = dimension2D.getHeight()*0.015;
 
-        widthwall = dimension2D.getWidth()/19;
-        heightwall = dimension2D.getHeight()/15;
-
         initbackground();
 
         createbarre();
@@ -76,13 +70,13 @@ public class CasseBrique implements GameLifeCycle {
         oldXbarre = barre.getX();
 
         if (variant.equals(CasseBriqueGameVariant.SPACE)){
-            SPACE();
+            space();
         }
         else if (variant.equals(CasseBriqueGameVariant.FACE)){
-
+            face();
         }
         else if (variant.equals(CasseBriqueGameVariant.SMILEY)){
-
+            smiley();
         }
         else {
 
@@ -287,9 +281,13 @@ public class CasseBrique implements GameLifeCycle {
     }
 
     private void build(Color[][] map){
+        int width = map[0].length;
+        int height = map.length;
+        double widthwall = dimension2D.getWidth()/width;
+        double heightwall = dimension2D.getHeight()*0.8/height;
         Rectangle wall;
-        for (int i=0; i<19; i++){
-            for (int j=0; j<10; j++){
+        for (int i=0; i<width; i++){
+            for (int j=0; j<height; j++){
                 if (map[j][i]==Color.GRAY){
                     wall = new Rectangle(i*widthwall, j*heightwall, widthwall, heightwall);
                     wall.setFill(Color.GRAY);
@@ -305,41 +303,31 @@ public class CasseBrique implements GameLifeCycle {
             }
         }
     }
-
-    //default map
-    /*
-    Color cT = Color.TRANSPARENT;
-    Color[][] map = new Color[][]
-        {
-            {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-            {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-            {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-            {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-            {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-            {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-            {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-            {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-            {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-            {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT}
-        };
-    build(map);
-   */
     
-    private void SPACE(){
+    private void space(){
         Color cT = Color.TRANSPARENT;
+        Color c1 = Color.CYAN;
         Color[][] map = new Color[][]
             {
                 {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,c1,cT,cT,cT,cT,cT,cT,cT,c1,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,c1,cT,cT,cT,cT,cT,c1,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,c1,c1,c1,c1,c1,c1,c1,c1,c1,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,c1,c1,cT,c1,c1,c1,c1,c1,cT,c1,c1,cT,cT,cT,cT},
+                {cT,cT,cT,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,cT,cT,cT},
+                {cT,cT,cT,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,c1,cT,c1,cT,cT,cT},
+                {cT,cT,cT,c1,cT,c1,cT,cT,cT,cT,cT,cT,cT,c1,cT,c1,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,c1,c1,c1,cT,c1,c1,c1,cT,cT,cT,cT,cT,cT},
                 {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT}
             };
         build(map);
+    }
+
+    private void face(){
+
+    }
+
+    private void smiley(){
+
     }
 }
