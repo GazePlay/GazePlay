@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum CasseBriqueGameVariant {
-    LV1("LV1"),
-    LV2("LV2"),
-    LV3("LV3");
+    SPACE("CBSPACE"),
+    FACE("CBFACE"),
+    SMILEY("CBSMILEY");
 
     @Getter
     private final String label;
