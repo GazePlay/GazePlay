@@ -72,8 +72,8 @@ public class CasseBrique implements GameLifeCycle {
         if (variant.equals(CasseBriqueGameVariant.SPACE)){
             space();
         }
-        else if (variant.equals(CasseBriqueGameVariant.FACE)){
-            face();
+        else if (variant.equals(CasseBriqueGameVariant.ARC)){
+            arc();
         }
         else if (variant.equals(CasseBriqueGameVariant.SMILEY)){
             smiley();
@@ -323,22 +323,27 @@ public class CasseBrique implements GameLifeCycle {
         build(map);
     }
 
-    private void face(){
+    private void arc(){
         Color cT = Color.TRANSPARENT;
-        Color c1 = Color.YELLOW;
-        Color c2 = Color.BLACK;
+        Color c1 = Color.PURPLE;
+        Color c2 = Color.BLUE;
+        Color c3 = Color.CYAN;
+        Color c4 = Color.GREEN;
+        Color c5 = Color.YELLOW;
+        Color c6 = Color.ORANGE;
+        Color c7 = Color.RED;
         Color[][] map = new Color[][]
             {
                 {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
-                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT}
+                {cT,cT,cT,cT,cT,cT,cT,cT,cT,c7,cT,cT,cT,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,cT,cT,c7,c6,c7,cT,cT,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,cT,c7,c6,c5,c6,c7,cT,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,c7,c6,c5,c4,c5,c6,c7,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,c7,c6,c5,c4,c3,c4,c5,c6,c7,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,c7,c6,c5,c4,c3,c2,c3,c4,c5,c6,c7,cT,cT,cT,cT},
+                {cT,cT,cT,c7,c6,c5,c4,c3,c2,c1,c2,c3,c4,c5,c6,c7,cT,cT,cT},
+                {cT,cT,c7,c6,c5,c4,c3,c2,c1,cT,c1,c2,c3,c4,c5,c6,c7,cT,cT},
+                {cT,c7,c6,c5,c4,c3,c2,c1,cT,cT,cT,c1,c2,c3,c4,c5,c6,c7,cT}
             };
         build(map);
     }
