@@ -79,6 +79,11 @@ public class DotEntity extends Parent {
 
     public void drawTheLine() {
         if (previous == gameObject.getPrevious()) {
+            if(gameVariant.getLabel().contains("Order")) {
+                gameObject.positioningDot(gameObject.getDotList().get(index));
+
+            }
+
             nextDot(gameObject.getTargetAOIList().get(index - 2).getXValue(), gameObject.getTargetAOIList().get(index - 2).getYValue(),
                 gameObject.getTargetAOIList().get(index - 1).getXValue(), gameObject.getTargetAOIList().get(index - 1).getYValue());
             gameObject.setPrevious(index);

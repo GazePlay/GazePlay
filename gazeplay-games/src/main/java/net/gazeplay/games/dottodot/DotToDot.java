@@ -42,6 +42,7 @@ public class DotToDot implements GameLifeCycle {
     @Getter
     private final ReplayablePseudoRandom randomGenerator;
 
+    @Getter
     private ArrayList<DotEntity> dotList;
 
     @Getter
@@ -59,6 +60,13 @@ public class DotToDot implements GameLifeCycle {
     @Getter
     private List<Integer> listOfFails = new LinkedList<>();
 
+    @Getter
+    private JsonObject jsonRoot;
+
+    private final String path = "data/dottodot/";
+
+    @Getter @Setter
+    private int nbOfTargets;
 
     public DotToDot(final IGameContext gameContext, final DotToDotGameVariant gameVariant, final Stats stats) {
         //super();
@@ -98,14 +106,13 @@ public class DotToDot implements GameLifeCycle {
         if (!gameVariant.getLabel().contains("Dynamic"))
             level = getRandomGenerator().nextInt(8);
 
-        final String path = "data/dottodot/";
         final String folder = "level" + level + "/";
 
         int indexElement = randomGenerator.nextInt(5);
         log.info("level = {}, index = {}", level, indexElement);
 
         JsonParser parser = new JsonParser();
-        JsonObject jsonRoot;
+        //JsonObject jsonRoot;
         jsonRoot = (JsonObject) parser.parse(new InputStreamReader(
             Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + folder + "elements" + level +  indexElement  +  ".json")), StandardCharsets.UTF_8));
 
@@ -122,8 +129,23 @@ public class DotToDot implements GameLifeCycle {
 
         JsonArray elements = jsonRoot.getAsJsonArray("elements");
         int index = 0;
+        /*if (gameVariant.getLabel().contains("Number")) {
+
+            for (JsonElement element : elements) {
+                index++;
+                positioningDot(index);
+            }
+        }
+
+        else {
+            positioningDot(1);
+            positioningDot(2);
+            setNbOfTargets(elements.size());
+        }*/
+        //JsonArray elements = jsonRoot.getAsJsonArray("elements");
+        //JsonElement element = elements.get(index);
         for (JsonElement element : elements) {
-            index++;
+            index ++;
             JsonObject elementObj = (JsonObject) element;
 
             // Creating a dot
@@ -160,8 +182,17 @@ public class DotToDot implements GameLifeCycle {
 
             DotEntity dot = new DotEntity(imageView, stats, progressIndicator, number, gameContext, gameVariant, this, index);
             dotList.add(dot);
-            gameContext.getChildren().add(dot);
-            gameContext.getGazeDeviceManager().addEventFilter(dot);
+            if (gameVariant.getLabel().contains("Number")) {
+                gameContext.getChildren().add(dot);
+                gameContext.getGazeDeviceManager().addEventFilter(dot);
+            }
+        }
+
+        if (gameVariant.getLabel().contains("Order")) {
+            gameContext.getChildren().add(dotList.get(0));
+            gameContext.getGazeDeviceManager().addEventFilter(dotList.get(0));
+            gameContext.getChildren().add(dotList.get(1));
+            gameContext.getGazeDeviceManager().addEventFilter(dotList.get(1));
         }
 
         stats.notifyNewRoundReady();
@@ -178,6 +209,13 @@ public class DotToDot implements GameLifeCycle {
 
     public void catchFail() {
         fails ++;
+    }
+
+    public DotEntity positioningDot(DotEntity dot) {
+        gameContext.getChildren().add(dot);
+        gameContext.getGazeDeviceManager().addEventFilter(dot);
+
+        return dot;
     }
 
 }
