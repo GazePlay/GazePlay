@@ -324,10 +324,40 @@ public class CasseBrique implements GameLifeCycle {
     }
 
     private void face(){
-
+        Color cT = Color.TRANSPARENT;
+        Color c1 = Color.YELLOW;
+        Color c2 = Color.BLACK;
+        Color[][] map = new Color[][]
+            {
+                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT}
+            };
+        build(map);
     }
 
     private void smiley(){
-
+        Color cT = Color.TRANSPARENT;
+        Color c1 = Color.YELLOW;
+        Color[][] map = new Color[][]
+            {
+                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,c1,cT,cT,cT,c1,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,c1,cT,cT,cT,c1,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,c1,cT,cT,cT,c1,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,c1,cT,cT,cT,cT,cT,c1,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,c1,c1,c1,c1,c1,cT,cT,cT,cT,cT,cT},
+                {cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT,cT}
+            };
+        build(map);
     }
 }
