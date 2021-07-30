@@ -5,7 +5,9 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -14,6 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.ImageUtils;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
@@ -276,7 +281,17 @@ public class CasseBrique implements GameLifeCycle {
     }
 
     private void initbackground(){
+        ImageView background = new ImageView(ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions"), new ReplayablePseudoRandom()).pickRandomImage());
+        background.fitWidthProperty().bind(gameContext.getRoot().widthProperty());
+        background.fitHeightProperty().bind(gameContext.getRoot().heightProperty());
+        background.setPreserveRatio(true);
 
+        BorderPane backgroundCenteredPane = new BorderPane();
+        backgroundCenteredPane.prefWidthProperty().bind(gameContext.getRoot().widthProperty());
+        backgroundCenteredPane.prefHeightProperty().bind(gameContext.getRoot().heightProperty());
+        backgroundCenteredPane.setCenter(background);
+
+        gameContext.getChildren().add(backgroundCenteredPane);
     }
 
     private void build(Color[][] map){
