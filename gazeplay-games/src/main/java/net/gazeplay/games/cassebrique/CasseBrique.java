@@ -212,12 +212,12 @@ public class CasseBrique implements GameLifeCycle {
         if (onLeft(barre)){
             touchX = true;
             touchbar = true;
-            ball.setCenterX(barre.getX()-sizeball);
+            ball.setCenterX(barre.getX()-1.01*sizeball);
         }
         if (onRight(barre)){
             touchX = true;
             touchbar = true;
-            ball.setCenterX(barre.getX()+barre.getWidth()+sizeball);
+            ball.setCenterX(barre.getX()+barre.getWidth()+1.01*sizeball);
         }
         if (onTop(barre) || onBottom(barre)){
             touchY = true;
