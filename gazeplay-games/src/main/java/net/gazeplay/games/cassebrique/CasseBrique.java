@@ -68,8 +68,11 @@ public class CasseBrique implements GameLifeCycle {
         createbarre();
         createball();
         oldXbarre = barre.getX();
-
-        if (variant.equals(CasseBriqueGameVariant.SPACE)){
+        
+        if (variant.equals(CasseBriqueGameVariant.BLOC)){
+            bloc();
+        }
+        else if (variant.equals(CasseBriqueGameVariant.SPACE)){
             space();
         }
         else if (variant.equals(CasseBriqueGameVariant.ARC)){
@@ -302,6 +305,30 @@ public class CasseBrique implements GameLifeCycle {
                 }
             }
         }
+    }
+    
+    private void bloc(){
+        Color c1 = Color.PURPLE;
+        Color c2 = Color.BLUE;
+        Color c3 = Color.CYAN;
+        Color c4 = Color.GREEN;
+        Color c5 = Color.YELLOW;
+        Color c6 = Color.ORANGE;
+        Color c7 = Color.RED;
+        Color[][] map = new Color[][]
+            {
+                {c1,c2,c3,c4,c5,c6,c7,c1,c2,c3,c4,c5,c6,c7,c1,c2,c3,c4,c5},
+                {c2,c3,c4,c5,c6,c7,c1,c2,c3,c4,c5,c6,c7,c1,c2,c3,c4,c5,c6},
+                {c3,c4,c5,c6,c7,c1,c2,c3,c4,c5,c6,c7,c1,c2,c3,c4,c5,c6,c7},
+                {c4,c5,c6,c7,c1,c2,c3,c4,c5,c6,c7,c1,c2,c3,c4,c5,c6,c7,c1},
+                {c5,c6,c7,c1,c2,c3,c4,c5,c6,c7,c1,c2,c3,c4,c5,c6,c7,c1,c2},
+                {c6,c7,c1,c2,c3,c4,c5,c6,c7,c1,c2,c3,c4,c5,c6,c7,c1,c2,c3},
+                {c7,c1,c2,c3,c4,c5,c6,c7,c1,c2,c3,c4,c5,c6,c7,c1,c2,c3,c4},
+                {c1,c2,c3,c4,c5,c6,c7,c1,c2,c3,c4,c5,c6,c7,c1,c2,c3,c4,c5},
+                {c2,c3,c4,c5,c6,c7,c1,c2,c3,c4,c5,c6,c7,c1,c2,c3,c4,c5,c6},
+                {c3,c4,c5,c6,c7,c1,c2,c3,c4,c5,c6,c7,c1,c2,c3,c4,c5,c6,c7}
+            };
+        build(map);
     }
     
     private void space(){
