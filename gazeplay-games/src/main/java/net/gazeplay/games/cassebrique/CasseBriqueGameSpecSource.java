@@ -9,7 +9,7 @@ public class CasseBriqueGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("CasseBrique").gameThumbnail("data/Thumbnails/cakes.png")
+            GameSummary.builder().nameCode("CasseBrique").gameThumbnail("data/Thumbnails/cassebrique.png")
                 .category(GameCategories.Category.ACTION_REACTION)
                 .build(),
             new CasseBriqueGameVariantGenerator(), new CasseBriqueGameLauncher());
