@@ -129,21 +129,7 @@ public class DotToDot implements GameLifeCycle {
 
         JsonArray elements = jsonRoot.getAsJsonArray("elements");
         int index = 0;
-        /*if (gameVariant.getLabel().contains("Number")) {
 
-            for (JsonElement element : elements) {
-                index++;
-                positioningDot(index);
-            }
-        }
-
-        else {
-            positioningDot(1);
-            positioningDot(2);
-            setNbOfTargets(elements.size());
-        }*/
-        //JsonArray elements = jsonRoot.getAsJsonArray("elements");
-        //JsonElement element = elements.get(index);
         for (JsonElement element : elements) {
             index ++;
             JsonObject elementObj = (JsonObject) element;
@@ -181,7 +167,9 @@ public class DotToDot implements GameLifeCycle {
             progressIndicator.setOpacity(0);
 
             DotEntity dot = new DotEntity(imageView, stats, progressIndicator, number, gameContext, gameVariant, this, index);
+
             dotList.add(dot);
+
             if (gameVariant.getLabel().contains("Number")) {
                 gameContext.getChildren().add(dot);
                 gameContext.getGazeDeviceManager().addEventFilter(dot);
@@ -189,9 +177,8 @@ public class DotToDot implements GameLifeCycle {
         }
 
         if (gameVariant.getLabel().contains("Order")) {
-            gameContext.getChildren().add(dotList.get(0));
+            gameContext.getChildren().addAll(dotList.get(0), dotList.get(1));
             gameContext.getGazeDeviceManager().addEventFilter(dotList.get(0));
-            gameContext.getChildren().add(dotList.get(1));
             gameContext.getGazeDeviceManager().addEventFilter(dotList.get(1));
         }
 
@@ -211,11 +198,9 @@ public class DotToDot implements GameLifeCycle {
         fails ++;
     }
 
-    public DotEntity positioningDot(DotEntity dot) {
+    public void positioningDot(DotEntity dot) {
         gameContext.getChildren().add(dot);
         gameContext.getGazeDeviceManager().addEventFilter(dot);
-
-        return dot;
     }
 
 }

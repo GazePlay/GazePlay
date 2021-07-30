@@ -30,16 +30,15 @@ public class DotEntity extends Parent {
     private final Stats stats;
     private final DotToDotGameVariant gameVariant;
     private static DotToDot gameObject;
-    private int index;
+    final private int index;
     private boolean isFirst = false;
-    private ArrayList<Line> lineList;
 
     @Setter @Getter
     private int previous;
 
     public DotEntity (final ImageView imageView, final Stats stats,
                       final ProgressIndicator progressIndicator, final Text number, final IGameContext gameContext, final DotToDotGameVariant gameVariant, DotToDot gameInstance, int index) {
-        this.lineList = new ArrayList<>();
+
         this.gameContext = gameContext;
         this.progressIndicator = progressIndicator;
         this.stats = stats;
@@ -79,7 +78,9 @@ public class DotEntity extends Parent {
 
     public void drawTheLine() {
         if (previous == gameObject.getPrevious()) {
-            if(gameVariant.getLabel().contains("Order")) {
+            if (gameVariant.getLabel().contains("Order")
+                && index != gameObject.getTargetAOIList().size()
+                && !gameContext.getChildren().contains(gameObject.getDotList().get(index))) {
                 gameObject.positioningDot(gameObject.getDotList().get(index));
 
             }
@@ -111,6 +112,8 @@ public class DotEntity extends Parent {
 
             gameContext.updateScore(stats, gameObject);
             gameObject.getTargetAOIList().clear();
+            gameObject.getDotList().clear();
+
             gameContext.playWinTransition(500, actionEvent -> {
                 gameObject.dispose();
                 gameContext.clear();
@@ -120,6 +123,13 @@ public class DotEntity extends Parent {
         } else {
             gameObject.catchFail();
             gameContext.getChildren().removeAll(gameObject.getLineList());
+
+            /*if(gameVariant.getLabel().contains("Order")) {
+                gameObject.getGameContext().getChildren().removeAll(gameObject.getDotList());
+                //why duplicated if it xas removed ???
+                gameObject.getGameContext().getChildren().addAll(gameObject.getDotList().get(0), gameObject.getDotList().get(0));
+            }*/
+
             gameObject.setPrevious(1);
         }
     }
