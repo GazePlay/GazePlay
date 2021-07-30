@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
@@ -17,6 +18,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 
+@Slf4j
 public class CasseBrique implements GameLifeCycle {
 
     final private IGameContext gameContext;
@@ -82,7 +84,7 @@ public class CasseBrique implements GameLifeCycle {
             smiley();
         }
         else {
-
+            log.error("unknown variannt : " + variant.getLabel());
         }
 
         speed = 0;
@@ -196,18 +198,6 @@ public class CasseBrique implements GameLifeCycle {
             testwin();
             ball.setCenterX(ball.getCenterX() + speed * Math.sin(rad));
             ball.setCenterY(ball.getCenterY() + speed * Math.cos(rad));
-            /*boolean test = false;
-            for (Rectangle wall : walllist){
-                test = test || ball.getCenterX()+sizeball>wall.getX() && ball.getCenterX()-sizeball<wall.getX()+wall.getWidth() && ball.getCenterY()+sizeball>wall.getY() && ball.getCenterY()-sizeball<wall.getY()+wall.getHeight();
-            }
-            for (Rectangle wall : wallhardlist){
-                test = test || ball.getCenterX()+sizeball>wall.getX() && ball.getCenterX()-sizeball<wall.getX()+wall.getWidth() && ball.getCenterY()+sizeball>wall.getY() && ball.getCenterY()-sizeball<wall.getY()+wall.getHeight();
-            }
-            test = test || ball.getCenterX()+sizeball>barre.getX() && ball.getCenterX()-sizeball<barre.getX()+barre.getWidth() && ball.getCenterY()+sizeball>barre.getY() && ball.getCenterY()-sizeball<barre.getY()+barre.getHeight();
-            if (test){
-                ball.setCenterX(ball.getCenterX() - speed * Math.sin(rad));
-                ball.setCenterY(ball.getCenterY() - speed * Math.cos(rad));
-            }*/
             oldXbarre = barre.getX();
         });
         wait.play();
