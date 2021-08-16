@@ -31,7 +31,11 @@ public class BottleGameVariantGenerator implements IGameVariantGenerator {
             new IntStringGameVariant(4, "TinyB"),
             new IntStringGameVariant(8, "TinyB"),
             new IntStringGameVariant(12, "TinyB"),
-            new IntStringGameVariant(16, "TinyB")
+            new IntStringGameVariant(16, "TinyB"),
+            new IntStringGameVariant(4, "InfinityB"),
+            new IntStringGameVariant(8, "InfinityB"),
+            new IntStringGameVariant(12, "InfinityB"),
+            new IntStringGameVariant(16, "InfinityB")
         ));
     }
 }
