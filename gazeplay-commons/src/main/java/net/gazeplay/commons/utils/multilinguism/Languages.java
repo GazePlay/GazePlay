@@ -50,7 +50,7 @@ public class Languages {
 
     private static final SortedMap<Locale, LanguageDetails> languageMap = Collections.unmodifiableSortedMap(createLanguagesMap());
 
-    private static final Locale DEFAULT_CODE = new Locale("fra", "FR");
+    private static final Locale DEFAULT_CODE = Locale.getDefault();
 
     private static final String flagsPath = "data/common/flags/";
 
