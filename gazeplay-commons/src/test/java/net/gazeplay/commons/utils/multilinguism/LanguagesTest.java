@@ -43,14 +43,16 @@ class LanguagesTest {
     @Test
     void shouldGetNullLocale() {
         LanguageDetails result = Languages.getLocale(null);
-        assertEquals("Français", result.getLabel());
-        assertTrue(result.getFlags().get(0).contains("Flag_of_France"));
+        LanguageDetails defaultLDetails = Languages.getLocale(Languages.DEFAULT_CODE) ;
+        assertEquals(defaultLDetails.getLabel(), result.getLabel());
+        assertTrue(defaultLDetails.getFlags().contains(result.getFlags().get(0)));
     }
 
     @Test
     void shouldGetInvalidLocale() {
         LanguageDetails result = Languages.getLocale(new Locale("invalid", "locale"));
-        assertEquals("Français", result.getLabel());
-        assertTrue(result.getFlags().get(0).contains("Flag_of_France"));
+        LanguageDetails defaultLDetails = Languages.getLocale(Languages.DEFAULT_CODE) ;
+        assertEquals(defaultLDetails.getLabel(), result.getLabel());
+        assertTrue(defaultLDetails.getFlags().contains(result.getFlags().get(0)));
     }
 }

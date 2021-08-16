@@ -50,7 +50,7 @@ public class Languages {
 
     private static final SortedMap<Locale, LanguageDetails> languageMap = Collections.unmodifiableSortedMap(createLanguagesMap());
 
-    private static final Locale DEFAULT_CODE = Locale.getDefault();
+    public static final Locale DEFAULT_CODE = new Locale(Locale.getDefault().getISO3Language(), Locale.getDefault().getCountry());
 
     private static final String flagsPath = "data/common/flags/";
 
@@ -125,6 +125,8 @@ public class Languages {
         if (localeValue == null) {
             result = DEFAULT_CODE;
         }
+
+        log.info(result.getCountry() + " XXXXXXXXX " + result.getLanguage());
 
         return languageMap.get(result);
     }
