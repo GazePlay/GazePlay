@@ -112,6 +112,32 @@ public class GameVariantDialog extends Stage {
                     choicePanes.put(1, createFlowPane());
                 }
                 choicePanes.get(1).getChildren().add(button);
+            } else if (gameSpec.getGameSummary().getNameCode().equals("bottle")) {
+                button.setTextAlignment(TextAlignment.CENTER);
+                String variantString = ((IntStringGameVariant) variant).getStringValue();
+                int indexOfTheVariant = 0;
+                switch (variantString) {
+                    case "BigB":
+                        indexOfTheVariant = 4;
+                        break;
+                    case "HighB":
+                        indexOfTheVariant = 3;
+                        break;
+                    case "NormalB":
+                        indexOfTheVariant = 2;
+                        break;
+                    case "SmallB":
+                        indexOfTheVariant = 1;
+                        break;
+                    default: //case "TinyB"
+                        indexOfTheVariant = 0;
+                        break;
+                }
+
+                if (!choicePanes.containsKey(indexOfTheVariant)) {
+                    choicePanes.put(indexOfTheVariant, createFlowPane());
+                }
+                choicePanes.get(indexOfTheVariant).getChildren().add(button);
             } else if (variant instanceof IntStringGameVariant) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 int number = ((IntStringGameVariant) variant).getNumber();
@@ -124,43 +150,52 @@ public class GameVariantDialog extends Stage {
                 choicePanes.get(0).getChildren().add(button);
             }
 
-            if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") || gameSpec.getGameSummary().getNameCode().equals("Ninja") || gameSpec.getGameSummary().getNameCode().contains("Memory")) {
+            if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
+                gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
+                gameSpec.getGameSummary().getNameCode().equals("bottle") ||
+                gameSpec.getGameSummary().getNameCode().contains("Memory")) {
                 if (variant instanceof DimensionGameVariant) {
                     variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "normal");
                 }
 
                 if (group.getToggles().size() < 2) {
-                    RadioButton category1, category2;
+                    RadioButton[] categories;
                     if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) {
-                        category1 = new RadioButton("normal");
-                        category2 = new RadioButton("easy");
+                        categories = new RadioButton[2];
+                        categories[0] = new RadioButton("normal");
+                        categories[1] = new RadioButton("easy");
                     } else if (gameSpec.getGameSummary().getNameCode().equals("Ninja") || gameSpec.getGameSummary().getNameCode().contains("Memory")) {
-                        category1 = new RadioButton("Static");
-                        category2 = new RadioButton("Dynamic");
+                        categories = new RadioButton[2];
+                        categories[0] = new RadioButton("Static");
+                        categories[1] = new RadioButton("Dynamic");
+                    } else if (gameSpec.getGameSummary().getNameCode().equals("bottle")) {
+                        categories = new RadioButton[5];
+                        categories[4] = new RadioButton("Big");
+                        categories[3] = new RadioButton("Hight");
+                        categories[2] = new RadioButton("Normal");
+                        categories[1] = new RadioButton("Small");
+                        categories[0] = new RadioButton("Tiny");
                     } else {
-                        category1 = new RadioButton("Classic");
-                        category2 = new RadioButton("High-Contrasts");
+                        categories = new RadioButton[2];
+                        categories[0] = new RadioButton("Classic");
+                        categories[1] = new RadioButton("High-Contrasts");
                     }
 
-                    category1.setToggleGroup(group);
-                    category1.setSelected(true);
-                    category2.setToggleGroup(group);
+                    for (int i = 0; i < categories.length; i++) {
+                        int index = i;
+                        categories[i].setToggleGroup(group);
+                        bottom.getChildren().add(categories[i]);
+                        categories[i].setOnAction(actionEvent -> {
+                            if (easymode != index) {
+                                easymode = index;
+                                choicePanelScroller.setContent(choicePanes.get(index));
+                            }
+                        });
+                    }
 
-                    bottom.getChildren().add(category2);
-                    bottom.getChildren().add(category1);
+                    categories[0].setSelected(true);
                     sceneContentPane.setBottom(bottom);
-                    category2.setOnAction(actionEvent -> {
-                        if (easymode != 1) {
-                            easymode = 1;
-                            choicePanelScroller.setContent(choicePanes.get(1));
-                        }
-                    });
-                    category1.setOnAction(actionEvent -> {
-                        if (easymode != 0) {
-                            easymode = 0;
-                            choicePanelScroller.setContent(choicePanes.get(0));
-                        }
-                    });
+
                 }
             }
 
