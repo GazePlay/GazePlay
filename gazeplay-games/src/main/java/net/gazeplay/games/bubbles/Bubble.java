@@ -98,7 +98,7 @@ public class Bubble implements GameLifeCycle {
         if (gameVariant == BubblesGameVariant.FIX){
             PauseTransition wait = new PauseTransition(Duration.millis(3500));
             wait.setOnFinished(event -> {
-                wait.setDuration(Duration.millis(2000/gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue()));
+                wait.setDuration(Duration.millis(1500/gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue()));
                 wait.play();
                 Target portrait = new Target(gameContext, randomPositionGenerator, stats,
                     Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, type);
