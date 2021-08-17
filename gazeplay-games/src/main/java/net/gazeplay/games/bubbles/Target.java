@@ -53,6 +53,8 @@ public class Target extends ProgressPortrait {
 
     private EventHandler exitEvent;
 
+    private PauseTransition wait;
+
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
                   final ImageLibrary imageLibrary, final BubblesGameVariant gameVariant, final Bubble gameInstance, final ReplayablePseudoRandom randomGenerator, BubbleType type) {
         super(gameContext.getConfiguration().getElementSize());
@@ -94,8 +96,20 @@ public class Target extends ProgressPortrait {
                 );
                 timelineGrow.play();
             });
-        }
-        if (gameVariant.toString().endsWith("FIX")) {
+
+            wait = new PauseTransition(Duration.millis(15000 / gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue()));
+            wait.setOnFinished(event -> {
+                this.setOpacity(0);
+                gameContext.getGazeDeviceManager().removeEventFilter(this);
+                explose(); // instead of C to avoid wrong position of the explosion
+                timeline.stop();
+                moveTarget();
+                this.getButton().addEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
+                this.setOpacity(1);
+                wait.setDuration(Duration.millis(15000 / gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue()));
+                wait.play();
+            });
+            wait.play();
             assignIndicatorUpdatable(enterEvent, gameContext);
         } else {
             this.assignIndicator(enterEvent, 0);
@@ -185,6 +199,12 @@ public class Target extends ProgressPortrait {
     }
 
     private void enter(final Event e) {
+
+        if (wait != null) {
+            wait.stop();
+            wait.setDuration(Duration.millis(15000 / gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue()));
+            wait.play();
+        }
 
         gameContext.getGazeDeviceManager().removeEventFilter(this);
 
