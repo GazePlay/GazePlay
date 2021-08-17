@@ -210,7 +210,17 @@ public class Target extends ProgressPortrait {
 
         setVisible(true);
 
-        moveTarget();
+        if (gameVariant == BubblesGameVariant.FIX){
+            double centerX = screenDimension.getWidth()*(0.6*randomGenerator.nextDouble()+0.2);
+            double centerY = screenDimension.getHeight()*(0.6*randomGenerator.nextDouble()+0.2);
+
+            setLayoutX(centerX);
+            setLayoutY(centerY);
+
+            updateFillProperty();
+        } else {
+            moveTarget();
+        }
     }
 
     private void updateFillProperty() {
@@ -242,25 +252,25 @@ public class Target extends ProgressPortrait {
 
         updateRadius(dimension2D);
 
-        if (this.gameVariant == BubblesGameVariant.TOP || this.gameVariant == BubblesGameVariant.TOP_FIX) {
+        if (this.gameVariant == BubblesGameVariant.TOP) {
             centerX = (dimension2D.getWidth() - 2 * radius) * randomGenerator.nextDouble();
             centerY = dimension2D.getHeight();
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(layoutYProperty(), -2 * radius, Interpolator.EASE_IN)));
-        } else if (this.gameVariant == BubblesGameVariant.BOTTOM || this.gameVariant == BubblesGameVariant.BOTTOM_FIX) {
+        } else if (this.gameVariant == BubblesGameVariant.BOTTOM) {
             centerX = (dimension2D.getWidth() - 2 * radius) * randomGenerator.nextDouble();
             centerY = -2 * radius;
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(layoutYProperty(), dimension2D.getHeight() + radius, Interpolator.EASE_IN)));
-        } else if (this.gameVariant == BubblesGameVariant.RIGHT || this.gameVariant == BubblesGameVariant.RIGHT_FIX) {
+        } else if (this.gameVariant == BubblesGameVariant.RIGHT) {
             centerX = -2 * radius;
             centerY = (dimension2D.getHeight() - 2 * radius) * randomGenerator.nextDouble();
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(layoutXProperty(), dimension2D.getWidth() + 2 * radius, Interpolator.EASE_IN)));
-        } else if (this.gameVariant == BubblesGameVariant.LEFT || this.gameVariant == BubblesGameVariant.LEFT_FIX) {
+        } else if (this.gameVariant == BubblesGameVariant.LEFT) {
             centerX = dimension2D.getWidth();
             centerY = (dimension2D.getHeight() - 2 * radius) * randomGenerator.nextDouble();
             timeline.getKeyFrames()

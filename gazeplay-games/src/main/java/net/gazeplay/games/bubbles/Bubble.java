@@ -1,9 +1,11 @@
 package net.gazeplay.games.bubbles;
 
+import javafx.animation.PauseTransition;
 import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -24,10 +26,7 @@ public class Bubble implements GameLifeCycle {
     public static final String DIRECTION_LEFT = "toLeft";
     public static final String DIRECTION_RIGHT = "toRight";
 
-    public static final String DIRECTION_TOP_FIX = "toTop_FIX";
-    public static final String DIRECTION_BOTTOM_FIX = "toBottom_FIX";
-    public static final String DIRECTION_LEFT_FIX = "toLeft_FIX";
-    public static final String DIRECTION_RIGHT_FIX = "toRight_FIX";
+    public static final String FIX = "FIX";
 
     private final IGameContext gameContext;
 
@@ -96,10 +95,23 @@ public class Bubble implements GameLifeCycle {
         initBackground(true);
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
         randomPositionGenerator.setRandomGenerator(randomGenerator);
-        for (int i = 0; i < 10; i++) {
-            Target portrait = new Target(gameContext, randomPositionGenerator, stats,
-                Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, type);
-            gameContext.getChildren().add(portrait);
+        if (gameVariant == BubblesGameVariant.FIX){
+            PauseTransition wait = new PauseTransition(Duration.millis(3500));
+            wait.setOnFinished(event -> {
+                wait.setDuration(Duration.millis(2000/gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue()));
+                wait.play();
+                Target portrait = new Target(gameContext, randomPositionGenerator, stats,
+                    Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, type);
+                gameContext.getChildren().add(portrait);
+            });
+            wait.play();
+        }
+        else {
+            for (int i = 0; i < 10; i++) {
+                Target portrait = new Target(gameContext, randomPositionGenerator, stats,
+                    Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, type);
+                gameContext.getChildren().add(portrait);
+            }
         }
         gameContext.setLimiterAvailable();
         stats.notifyNewRoundReady();
