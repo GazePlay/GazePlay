@@ -209,18 +209,7 @@ public class Target extends ProgressPortrait {
         updateRadius(screenDimension);
 
         setVisible(true);
-
-        if (gameVariant == BubblesGameVariant.FIX){
-            double centerX = screenDimension.getWidth()*(0.6*randomGenerator.nextDouble()+0.2);
-            double centerY = screenDimension.getHeight()*(0.6*randomGenerator.nextDouble()+0.2);
-
-            setLayoutX(centerX);
-            setLayoutY(centerY);
-
-            updateFillProperty();
-        } else {
-            moveTarget();
-        }
+        moveTarget();
     }
 
     private void updateFillProperty() {
@@ -276,19 +265,14 @@ public class Target extends ProgressPortrait {
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(layoutXProperty(), -2 * radius, Interpolator.EASE_IN)));
+        } else if (this.gameVariant == BubblesGameVariant.FIX) {
+            centerX = radius + (dimension2D.getWidth() - 2 * radius) * randomGenerator.nextDouble();
+            centerY = radius + (dimension2D.getHeight() - 2 * radius) * randomGenerator.nextDouble();
         }
 
 
         setLayoutX(centerX);
         setLayoutY(centerY);
-
-        timeline.setOnFinished(actionEvent -> {
-            createTarget();
-        });
-
-        timeline.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
-
-        timeline.play();
     }
 
 }

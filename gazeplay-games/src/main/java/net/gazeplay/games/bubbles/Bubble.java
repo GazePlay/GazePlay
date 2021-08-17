@@ -1,11 +1,9 @@
 package net.gazeplay.games.bubbles;
 
-import javafx.animation.PauseTransition;
 import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -95,23 +93,10 @@ public class Bubble implements GameLifeCycle {
         initBackground(true);
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
         randomPositionGenerator.setRandomGenerator(randomGenerator);
-        if (gameVariant == BubblesGameVariant.FIX){
-            PauseTransition wait = new PauseTransition(Duration.millis(3500));
-            wait.setOnFinished(event -> {
-                wait.setDuration(Duration.millis(1500/gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue()));
-                wait.play();
-                Target portrait = new Target(gameContext, randomPositionGenerator, stats,
-                    Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, type);
-                gameContext.getChildren().add(portrait);
-            });
-            wait.play();
-        }
-        else {
-            for (int i = 0; i < 10; i++) {
-                Target portrait = new Target(gameContext, randomPositionGenerator, stats,
-                    Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, type);
-                gameContext.getChildren().add(portrait);
-            }
+        for (int i = 0; i < 10; i++) {
+            Target portrait = new Target(gameContext, randomPositionGenerator, stats,
+                Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, type);
+            gameContext.getChildren().add(portrait);
         }
         gameContext.setLimiterAvailable();
         stats.notifyNewRoundReady();
