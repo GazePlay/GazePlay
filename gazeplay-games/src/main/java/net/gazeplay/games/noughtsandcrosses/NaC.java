@@ -32,6 +32,8 @@ public class NaC extends Parent implements GameLifeCycle {
 
     int[][] game;
 
+    ProgressButton[][] gamebutton;
+
     boolean player1;
 
     NaC(final IGameContext gameContext, final Stats stats, final NaCGameVariant variant) {
@@ -43,11 +45,18 @@ public class NaC extends Parent implements GameLifeCycle {
 
         random = new ReplayablePseudoRandom();
 
-        int[][] game = new int[][]
+        game = new int[][]
             {
                 {0,0,0},
                 {0,0,0},
                 {0,0,0}
+            };
+
+        gamebutton = new ProgressButton[][]
+            {
+                {new ProgressButton(), new ProgressButton(), new ProgressButton()},
+                {new ProgressButton(), new ProgressButton(), new ProgressButton()},
+                {new ProgressButton(), new ProgressButton(), new ProgressButton()}
             };
     }
 
@@ -96,15 +105,6 @@ public class NaC extends Parent implements GameLifeCycle {
         //mettre les images
         Image nought;
         Image crosse;
-        ProgressButton button00;
-        ProgressButton button01;
-        ProgressButton button02;
-        ProgressButton button10;
-        ProgressButton button11;
-        ProgressButton button12;
-        ProgressButton button20;
-        ProgressButton button21;
-        ProgressButton button22;
     }
 
     private void testgame(){
@@ -153,13 +153,14 @@ public class NaC extends Parent implements GameLifeCycle {
     }
 
     private void restart(){
+        Image nothing;
         for (int i=0; i<3; i++){
             for (int j=0; j<3; j++){
                 game[i][j]=0;
+                /*
+                changement boutons
+                 */
             }
         }
-        /*
-        remettre les boutons et enlever les images
-         */
     }
 }
