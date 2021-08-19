@@ -3,6 +3,7 @@ package net.gazeplay.games.noughtsandcrosses;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 import lombok.Setter;
@@ -97,8 +98,24 @@ public class NaC extends Parent implements GameLifeCycle {
 
     private void background(){
         Rectangle back = new Rectangle(0,0, dimension2D.getWidth(), dimension2D.getHeight());
-        //back.setFill();
+        back.setFill(Color.WHITE);
         gameContext.getChildren().add(back);
+        double size = 0.05 * dimension2D.getHeight();
+        double ecart = (dimension2D.getWidth() - dimension2D.getHeight())/2;
+        double zone = (dimension2D.getHeight() - 3*size)/3;
+        Rectangle wall;
+        wall = new Rectangle(ecart + size, zone, dimension2D.getHeight() - 2*size, size);
+        wall.setFill(Color.RED);
+        gameContext.getChildren().add(wall);
+        wall = new Rectangle(ecart + size, 2*zone + size, dimension2D.getHeight() - 2*size, size);
+        wall.setFill(Color.RED);
+        gameContext.getChildren().add(wall);
+        wall = new Rectangle(ecart + zone, size, size, dimension2D.getHeight() - 2*size);
+        wall.setFill(Color.RED);
+        gameContext.getChildren().add(wall);
+        wall = new Rectangle(ecart + 2*zone + size, size, size, dimension2D.getHeight() - 2*size);
+        wall.setFill(Color.RED);
+        gameContext.getChildren().add(wall);
     }
 
     private void button(){
