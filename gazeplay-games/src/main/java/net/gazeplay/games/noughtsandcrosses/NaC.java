@@ -31,11 +31,16 @@ public class NaC extends Parent implements GameLifeCycle {
 
     private final ReplayablePseudoRandom random;
 
-    int[][] game;
+    private int[][] game;
 
-    ProgressButton[][] gamebutton;
+    private ProgressButton[][] gamebutton;
 
-    boolean player1;
+    private boolean player1;
+
+    private double size;
+    private double ecart;
+    private double zone;
+
 
     NaC(final IGameContext gameContext, final Stats stats, final NaCGameVariant variant) {
         this.gameContext = gameContext;
@@ -100,9 +105,9 @@ public class NaC extends Parent implements GameLifeCycle {
         Rectangle back = new Rectangle(0,0, dimension2D.getWidth(), dimension2D.getHeight());
         back.setFill(Color.WHITE);
         gameContext.getChildren().add(back);
-        double size = 0.05 * dimension2D.getHeight();
-        double ecart = (dimension2D.getWidth() - dimension2D.getHeight())/2;
-        double zone = (dimension2D.getHeight() - 4*size)/3;
+        size = 0.05 * dimension2D.getHeight();
+        ecart = (dimension2D.getWidth() - dimension2D.getHeight())/2;
+        zone = (dimension2D.getHeight() - 4*size)/3;
         Rectangle wall;
         wall = new Rectangle(ecart + size, zone + size, dimension2D.getHeight() - 2*size, size);
         wall.setFill(Color.RED);
