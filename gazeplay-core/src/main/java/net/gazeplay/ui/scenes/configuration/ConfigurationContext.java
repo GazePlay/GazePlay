@@ -88,19 +88,20 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HomeButton homeButton = createHomeButtonInConfigurationManagementScreen(gazePlay);
 
         HBox rightControlPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(rightControlPane);
-        rightControlPane.setAlignment(Pos.CENTER_RIGHT);
-        if (currentLanguageAlignmentIsLeftAligned) {
-            rightControlPane.getChildren().add(homeButton);
-        }
+        if(ControlPanelConfigurator.getSingleton()!= null) {
+            ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(rightControlPane);
+            rightControlPane.setAlignment(Pos.CENTER_RIGHT);
+            if (currentLanguageAlignmentIsLeftAligned) {
+                rightControlPane.getChildren().add(homeButton);
+            }
 
-        HBox leftControlPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(leftControlPane);
-        leftControlPane.setAlignment(Pos.CENTER_LEFT);
-        // HomeButton on the Left for Arabic Language
-        if (!currentLanguageAlignmentIsLeftAligned) {
-            leftControlPane.getChildren().add(homeButton);
-        }
+            HBox leftControlPane = new HBox();
+            ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(leftControlPane);
+            leftControlPane.setAlignment(Pos.CENTER_LEFT);
+            // HomeButton on the Left for Arabic Language
+            if (!currentLanguageAlignmentIsLeftAligned) {
+                leftControlPane.getChildren().add(homeButton);
+            }
 
         BorderPane bottomControlPane = new BorderPane();
         bottomControlPane.setLeft(leftControlPane);
@@ -108,6 +109,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         root.setBottom(bottomControlPane);
 
+        }
         // Top Pane
         I18NText configTitleText = new I18NText(translator, "ConfigTitle");
         configTitleText.setId("title");
