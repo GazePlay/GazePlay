@@ -102,18 +102,18 @@ public class NaC extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(back);
         double size = 0.05 * dimension2D.getHeight();
         double ecart = (dimension2D.getWidth() - dimension2D.getHeight())/2;
-        double zone = (dimension2D.getHeight() - 3*size)/3;
+        double zone = (dimension2D.getHeight() - 4*size)/3;
         Rectangle wall;
-        wall = new Rectangle(ecart + size, zone, dimension2D.getHeight() - 2*size, size);
+        wall = new Rectangle(ecart + size, zone + size, dimension2D.getHeight() - 2*size, size);
         wall.setFill(Color.RED);
         gameContext.getChildren().add(wall);
-        wall = new Rectangle(ecart + size, 2*zone + size, dimension2D.getHeight() - 2*size, size);
+        wall = new Rectangle(ecart + size, 2*zone + 2*size, dimension2D.getHeight() - 2*size, size);
         wall.setFill(Color.RED);
         gameContext.getChildren().add(wall);
-        wall = new Rectangle(ecart + zone, size, size, dimension2D.getHeight() - 2*size);
+        wall = new Rectangle(ecart + zone + size, size, size, dimension2D.getHeight() - 2*size);
         wall.setFill(Color.RED);
         gameContext.getChildren().add(wall);
-        wall = new Rectangle(ecart + 2*zone + size, size, size, dimension2D.getHeight() - 2*size);
+        wall = new Rectangle(ecart + 2*zone + 2*size, size, size, dimension2D.getHeight() - 2*size);
         wall.setFill(Color.RED);
         gameContext.getChildren().add(wall);
     }
