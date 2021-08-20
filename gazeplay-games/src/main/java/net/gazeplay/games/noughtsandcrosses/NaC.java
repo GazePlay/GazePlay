@@ -14,6 +14,8 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
 
+import java.util.ArrayList;
+
 
 @Slf4j
 public class NaC extends Parent implements GameLifeCycle {
@@ -41,6 +43,8 @@ public class NaC extends Parent implements GameLifeCycle {
     private double ecart;
     private double zone;
 
+    private ArrayList<Rectangle> rectangles;
+
 
     NaC(final IGameContext gameContext, final Stats stats, final NaCGameVariant variant) {
         this.gameContext = gameContext;
@@ -64,6 +68,8 @@ public class NaC extends Parent implements GameLifeCycle {
                 {new ProgressButton(), new ProgressButton(), new ProgressButton()},
                 {new ProgressButton(), new ProgressButton(), new ProgressButton()}
             };
+
+        rectangles = new ArrayList<>();
     }
 
     @Override
@@ -175,7 +181,6 @@ public class NaC extends Parent implements GameLifeCycle {
     }
 
     private void restart(){
-        Image nothing;
         for (int i=0; i<3; i++){
             for (int j=0; j<3; j++){
                 game[i][j]=0;
@@ -183,6 +188,9 @@ public class NaC extends Parent implements GameLifeCycle {
                 changement boutons
                  */
             }
+        }
+        for (Rectangle r : rectangles){
+            r.setFill(Color.WHITE);
         }
     }
 }
