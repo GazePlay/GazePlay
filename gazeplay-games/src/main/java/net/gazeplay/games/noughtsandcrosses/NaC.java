@@ -211,13 +211,13 @@ public class NaC extends Parent implements GameLifeCycle {
             for (int j=0; j<3; j++){
                 game[i][j]=0;
                 gamebutton[i][j].active();
-                if (!player1 && variant.equals(NaCGameVariant.IA)){
-                    robot();
-                }
             }
         }
         for (Rectangle r : rectangles){
             r.setFill(Color.WHITE);
+        }
+        if (!player1 && variant.equals(NaCGameVariant.IA)){
+            robot();
         }
     }
 }
