@@ -16,7 +16,7 @@
         <Bug pattern="EI_EXPOSE_REP, EI_EXPOSE_REP2"/>
     </Match>
     <Match>
-        <Source name="~.ConfigurationContextTest\.java" />
+        <Source name="~.*ConfigurationContextTest\.java" />
         <Method name="shouldBuildLanguageChooser" />
         <Bug code="RCN" />
     </Match>
