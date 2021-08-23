@@ -10,10 +10,7 @@ public enum BubblesGameVariant {
     BOTTOM(Bubble.DIRECTION_BOTTOM),
     RIGHT(Bubble.DIRECTION_RIGHT),
     LEFT(Bubble.DIRECTION_LEFT),
-    TOP_FIX(Bubble.DIRECTION_TOP_FIX),
-    BOTTOM_FIX(Bubble.DIRECTION_BOTTOM_FIX),
-    RIGHT_FIX(Bubble.DIRECTION_RIGHT_FIX),
-    LEFT_FIX(Bubble.DIRECTION_LEFT_FIX);
+    FIX(Bubble.FIX);
 
     @Getter
     private final String direction;
