@@ -167,6 +167,18 @@ public class NaC extends Parent implements GameLifeCycle {
         }
     }
 
+    private void makerec(){
+        rectangles.add(new Rectangle(ecart + size, size, zone, zone));
+        rectangles.add(new Rectangle(ecart + 2*size + zone, size, zone, zone));
+        rectangles.add(new Rectangle(ecart + 3*size + 2*zone, size, zone, zone));
+        rectangles.add(new Rectangle(ecart + size, 2*size + zone, zone, zone));
+        rectangles.add(new Rectangle(ecart + 2*size + zone, 2*size + zone, zone, zone));
+        rectangles.add(new Rectangle(ecart + 3*size + 2*zone, 2*size + zone, zone, zone));
+        rectangles.add(new Rectangle(ecart + size, 3*size + 2*zone, zone, zone));
+        rectangles.add(new Rectangle(ecart + 2*size + zone, 3*size + 2*zone, zone, zone));
+        rectangles.add(new Rectangle(ecart + 3*size + 2*zone, 3*size + 2*zone, zone, zone));
+    }
+
     private void robot(){
         int x = 0;
         int y = 0;
@@ -184,9 +196,7 @@ public class NaC extends Parent implements GameLifeCycle {
         for (int i=0; i<3; i++){
             for (int j=0; j<3; j++){
                 game[i][j]=0;
-                /*
-                changement boutons
-                 */
+                gamebutton[i][j].active();
             }
         }
         for (Rectangle r : rectangles){
