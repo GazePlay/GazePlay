@@ -88,14 +88,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HomeButton homeButton = createHomeButtonInConfigurationManagementScreen(gazePlay);
 
         HBox rightControlPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(rightControlPane);
+        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(rightControlPane); // Here issue nullPointer
         rightControlPane.setAlignment(Pos.CENTER_RIGHT);
         if (currentLanguageAlignmentIsLeftAligned) {
             rightControlPane.getChildren().add(homeButton);
         }
 
         HBox leftControlPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(leftControlPane);
+        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(leftControlPane); // Here issue nullPointer
         leftControlPane.setAlignment(Pos.CENTER_LEFT);
         // HomeButton on the Left for Arabic Language
         if (!currentLanguageAlignmentIsLeftAligned) {
