@@ -125,7 +125,7 @@ public class Languages {
         if (localeValue == null) {
             result = DEFAULT_CODE;
         }
-        
+
         return languageMap.get(result);
     }
 
