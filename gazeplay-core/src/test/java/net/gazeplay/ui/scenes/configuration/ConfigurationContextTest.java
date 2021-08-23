@@ -1,5 +1,6 @@
 package net.gazeplay.ui.scenes.configuration;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -398,14 +399,14 @@ class ConfigurationContextTest {
         }
     }
 
+    @SuppressFBWarnings
     @Test
     void shouldBuildLanguageChooser() throws InterruptedException {
         Platform.runLater(() -> {
             ConfigurationContext context = new ConfigurationContext(mockGazePlay);
             StringProperty languageProperty = new SimpleStringProperty("eng");
             StringProperty countryProperty = new SimpleStringProperty("GB");
-            MockedStatic<ActiveConfigurationContext> utilities = Mockito.mockStatic(ActiveConfigurationContext.class);
-            try (utilities) {
+            try (MockedStatic<ActiveConfigurationContext> utilities = Mockito.mockStatic(ActiveConfigurationContext.class)) {
                 when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
                 when(mockConfig.getLanguage()).thenReturn(languageProperty.getValue());
                 when(mockConfig.getCountry()).thenReturn(countryProperty.getValue());
