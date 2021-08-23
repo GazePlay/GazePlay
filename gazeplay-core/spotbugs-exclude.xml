@@ -17,7 +17,6 @@
     </Match>
     <Match>
         <Source name="~.*ConfigurationContextTest\.java" />
-        <Method name="shouldBuildLanguageChooser" />
         <Bug code="RCN" />
     </Match>
 </FindBugsFilter>
