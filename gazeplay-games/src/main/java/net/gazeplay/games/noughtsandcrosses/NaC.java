@@ -210,7 +210,11 @@ public class NaC extends Parent implements GameLifeCycle {
         for (int i=0; i<3; i++){
             for (int j=0; j<3; j++){
                 game[i][j]=0;
-                gamebutton[i][j].active();
+                if (player1) {
+                    gamebutton[i][j].active();
+                } else {
+                    robot();
+                }
             }
         }
         for (Rectangle r : rectangles){
