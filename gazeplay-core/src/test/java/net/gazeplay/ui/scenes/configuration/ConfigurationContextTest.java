@@ -399,7 +399,6 @@ class ConfigurationContextTest {
         }
     }
 
-    @SuppressFBWarnings
     @Test
     void shouldBuildLanguageChooser() throws InterruptedException {
         Platform.runLater(() -> {
