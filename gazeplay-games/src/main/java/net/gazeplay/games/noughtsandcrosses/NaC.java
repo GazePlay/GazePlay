@@ -33,9 +33,9 @@ public class NaC extends Parent implements GameLifeCycle {
 
     private final ReplayablePseudoRandom random;
 
-    private int[][] game;
+    private final int[][] game;
 
-    private ProgressButton[][] gamebutton;
+    private final ProgressButton[][] gamebutton;
 
     private boolean player1;
 
@@ -43,7 +43,7 @@ public class NaC extends Parent implements GameLifeCycle {
     private double ecart;
     private double zone;
 
-    private ArrayList<Rectangle> rectangles;
+    private final ArrayList<Rectangle> rectangles;
 
 
     NaC(final IGameContext gameContext, final Stats stats, final NaCGameVariant variant) {
@@ -78,6 +78,7 @@ public class NaC extends Parent implements GameLifeCycle {
 
         background();
         button();
+        makerec();
         player1 = true;
 
         stats.notifyNewRoundReady();
@@ -180,6 +181,11 @@ public class NaC extends Parent implements GameLifeCycle {
     }
 
     private void robot(){
+        for (int i=0; i<3; i++){
+            for (int j=0; j<3; j++){
+                gamebutton[i][j].disable();
+            }
+        }
         int x = 0;
         int y = 0;
         while (game[x][y]!=0){
@@ -188,8 +194,16 @@ public class NaC extends Parent implements GameLifeCycle {
         }
         game[x][y]=2;
         /*
-        edit button & permettre joueur de jouer
+        picture
          */
+        for (int i=0; i<3; i++){
+            for (int j=0; j<3; j++){
+                if (game[i][j]!=0){
+                    gamebutton[i][j].active();
+                }
+            }
+        }
+        player1 = true;
     }
 
     private void restart(){
