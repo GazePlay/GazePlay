@@ -404,7 +404,8 @@ class ConfigurationContextTest {
             ConfigurationContext context = new ConfigurationContext(mockGazePlay);
             StringProperty languageProperty = new SimpleStringProperty("eng");
             StringProperty countryProperty = new SimpleStringProperty("GB");
-            try (MockedStatic<ActiveConfigurationContext> utilities = Mockito.mockStatic(ActiveConfigurationContext.class)) {
+            MockedStatic<ActiveConfigurationContext> utilities = Mockito.mockStatic(ActiveConfigurationContext.class);
+            try (utilities) {
                 when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
                 when(mockConfig.getLanguage()).thenReturn(languageProperty.getValue());
                 when(mockConfig.getCountry()).thenReturn(countryProperty.getValue());
