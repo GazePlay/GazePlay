@@ -21,6 +21,7 @@ import mockit.Mocked;
 import mockit.Verifications;
 import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
@@ -406,6 +407,10 @@ class ConfigurationContextTest {
             when(mockConfig.getCountry()).thenReturn(countryProperty.getValue());
             when(mockConfig.getLanguageProperty()).thenReturn(languageProperty);
             when(mockConfig.getCountryProperty()).thenReturn(countryProperty);
+            when(ActiveConfigurationContext.getInstance().getLanguageProperty().getValue()).thenReturn(languageProperty.getValue());
+            when(ActiveConfigurationContext.getInstance().getCountryProperty().getValue()).thenReturn(countryProperty.getValue());
+            when(ActiveConfigurationContext.getInstance().getLanguageProperty()).thenReturn(languageProperty);
+            when(ActiveConfigurationContext.getInstance().getCountryProperty()).thenReturn(countryProperty);
             when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
 
             MenuButton result = context.buildLanguageChooser(mockConfig, context);
