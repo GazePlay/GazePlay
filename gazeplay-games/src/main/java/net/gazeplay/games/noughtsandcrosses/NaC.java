@@ -3,7 +3,9 @@ package net.gazeplay.games.noughtsandcrosses;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,8 +45,6 @@ public class NaC extends Parent implements GameLifeCycle {
     private double ecart;
     private double zone;
 
-    private final ArrayList<Rectangle> rectangles;
-
 
     NaC(final IGameContext gameContext, final Stats stats, final NaCGameVariant variant) {
         this.gameContext = gameContext;
@@ -68,8 +68,6 @@ public class NaC extends Parent implements GameLifeCycle {
                 {new ProgressButton(), new ProgressButton(), new ProgressButton()},
                 {new ProgressButton(), new ProgressButton(), new ProgressButton()}
             };
-
-        rectangles = new ArrayList<>();
     }
 
     @Override
@@ -78,7 +76,6 @@ public class NaC extends Parent implements GameLifeCycle {
 
         background();
         button();
-        makerec();
         player1 = true;
 
         stats.notifyNewRoundReady();
@@ -132,8 +129,35 @@ public class NaC extends Parent implements GameLifeCycle {
 
     private void button(){
         //mettre les images
-        Image nought;
-        Image crosse;
+        ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
+        nought.setFitHeight(zone);
+        nought.setFitWidth(zone);
+        ImageView crosse = new ImageView(new Image("data/noughtsandcrosses/crosse.png"));
+        crosse.setFitHeight(zone);
+        crosse.setFitWidth(zone);
+        gamebutton[0][0] = new ProgressButton();
+        gamebutton[0][0].setLayoutX(ecart + size);
+        gamebutton[0][0].setLayoutY(size);
+        gamebutton[0][0].getButton().setRadius(zone/2);
+        gamebutton[0][0].assignIndicatorUpdatable(event -> {
+            if (player1){
+                game[0][0] = 1;
+                gamebutton[0][0].setImage(crosse);
+                player1 = false;
+                if (variant.equals(NaCGameVariant.IA)){
+                    robot();
+                }
+            }
+            else {
+                game[0][0] = 1;
+                gamebutton[0][0].setImage(nought);
+                player1 = true;
+            }
+        }, gameContext);
+        gameContext.getGazeDeviceManager().addEventFilter(gamebutton[0][0]);
+        gamebutton[0][0].active();
+        gamebutton[0][0].setVisible(false);
+        gameContext.getChildren().add(gamebutton[0][0]);
     }
 
     private void testgame(){
@@ -168,18 +192,6 @@ public class NaC extends Parent implements GameLifeCycle {
         }
     }
 
-    private void makerec(){
-        rectangles.add(new Rectangle(ecart + size, size, zone, zone));
-        rectangles.add(new Rectangle(ecart + 2*size + zone, size, zone, zone));
-        rectangles.add(new Rectangle(ecart + 3*size + 2*zone, size, zone, zone));
-        rectangles.add(new Rectangle(ecart + size, 2*size + zone, zone, zone));
-        rectangles.add(new Rectangle(ecart + 2*size + zone, 2*size + zone, zone, zone));
-        rectangles.add(new Rectangle(ecart + 3*size + 2*zone, 2*size + zone, zone, zone));
-        rectangles.add(new Rectangle(ecart + size, 3*size + 2*zone, zone, zone));
-        rectangles.add(new Rectangle(ecart + 2*size + zone, 3*size + 2*zone, zone, zone));
-        rectangles.add(new Rectangle(ecart + 3*size + 2*zone, 3*size + 2*zone, zone, zone));
-    }
-
     private void robot(){
         for (int i=0; i<3; i++){
             for (int j=0; j<3; j++){
@@ -211,10 +223,8 @@ public class NaC extends Parent implements GameLifeCycle {
             for (int j=0; j<3; j++){
                 game[i][j]=0;
                 gamebutton[i][j].active();
+                gamebutton[i][j].setOpacity(0);
             }
-        }
-        for (Rectangle r : rectangles){
-            r.setFill(Color.WHITE);
         }
         if (!player1 && variant.equals(NaCGameVariant.IA)){
             robot();
