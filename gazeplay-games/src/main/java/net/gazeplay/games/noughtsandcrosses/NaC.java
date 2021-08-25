@@ -84,6 +84,8 @@ public class NaC extends Parent implements GameLifeCycle {
         button();
         player1 = true;
 
+        gameContext.onGameStarted(2000);
+
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
