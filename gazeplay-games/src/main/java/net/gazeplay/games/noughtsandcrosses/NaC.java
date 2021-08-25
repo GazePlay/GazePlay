@@ -539,13 +539,14 @@ public class NaC extends Parent implements GameLifeCycle {
                 gamebutton[i][j].setOpacity(1);
             }
         }
-        ImageView white = new ImageView(new Image("data/noughtsandcrosses/white.png"));
-        white.setFitHeight(zone);
-        white.setFitWidth(zone);
         PauseTransition wait = new PauseTransition(Duration.millis(2000));
         wait.setOnFinished(e -> {
+            ImageView white;
             for (int i=0; i<3; i++){
                 for (int j=0; j<3; j++){
+                    white = new ImageView(new Image("data/noughtsandcrosses/white.png"));
+                    white.setFitHeight(zone);
+                    white.setFitWidth(zone);
                     game[i][j]=0;
                     gamebutton[i][j].setImage(white);
                     gamebutton[i][j].active();
