@@ -328,3 +328,7 @@ Exit,,,,,,Exit,,Quitter,,,,,,,,,,,,
 Logout,,,,,,Logout,,Déconnection,,,,,,,,,,,,
 Options,,,,,,Options,,Options,,,,,,,,,,,,
 Replay,,,,,,Replay,,Rejouer,,,,,,,,,,,,
+
+NaC,,,,,,Noughts and crosses,,Morpion,,,,,,,,,,,,
+P2,,,,,,2 players,,2 joueurs,,,,,,,,,,,,
+IA,,,,,,versus the computer,,Contre l'ordinateur,,,,,,,,,,,,

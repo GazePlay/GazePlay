@@ -9,7 +9,7 @@ public class NaCGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("NaC").gameThumbnail("data/Thumbnails/mole.png")
+            GameSummary.builder().nameCode("NaC").gameThumbnail("data/Thumbnails/NaC.png")
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.SELECTION)
                 .build(),
