@@ -511,7 +511,7 @@ public class NaC extends Parent implements GameLifeCycle {
                 gamebutton[i][j].setOpacity(1);
             }
         }
-        PauseTransition wait = new PauseTransition(Duration.millis(2000));
+        PauseTransition wait = new PauseTransition(Duration.millis(1000));
         wait.setOnFinished(e -> {
             int x = 0;
             int y = 0;
