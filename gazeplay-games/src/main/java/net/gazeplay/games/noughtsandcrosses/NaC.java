@@ -5,7 +5,6 @@ import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +15,6 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
 
-import java.util.ArrayList;
 
 
 @Slf4j
@@ -74,6 +72,12 @@ public class NaC extends Parent implements GameLifeCycle {
     public void launch(){
         gameContext.getChildren().clear();
 
+        for(int i=0; i<3; i++){
+            for(int j=0; j<3; j++){
+                game[i][j]=0;
+            }
+        }
+
         background();
         button();
         player1 = true;
@@ -128,39 +132,299 @@ public class NaC extends Parent implements GameLifeCycle {
     }
 
     private void button(){
-        //mettre les images
-        ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
-        nought.setFitHeight(zone);
-        nought.setFitWidth(zone);
-        ImageView crosse = new ImageView(new Image("data/noughtsandcrosses/crosse.png"));
-        crosse.setFitHeight(zone);
-        crosse.setFitWidth(zone);
-        gamebutton[0][0] = new ProgressButton();
-        gamebutton[0][0].setLayoutX(ecart + size);
-        gamebutton[0][0].setLayoutY(size);
-        gamebutton[0][0].getButton().setRadius(zone/2);
-        gamebutton[0][0].assignIndicatorUpdatable(event -> {
-            if (player1){
-                game[0][0] = 1;
-                gamebutton[0][0].setImage(crosse);
-                player1 = false;
-                if (variant.equals(NaCGameVariant.IA)){
-                    robot();
+        {
+            ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
+            nought.setFitHeight(zone);
+            nought.setFitWidth(zone);
+            ImageView crosse = new ImageView(new Image("data/noughtsandcrosses/crosse.png"));
+            crosse.setFitHeight(zone);
+            crosse.setFitWidth(zone);
+            gamebutton[0][0] = new ProgressButton();
+            gamebutton[0][0].setLayoutX(ecart + size);
+            gamebutton[0][0].setLayoutY(size);
+            gamebutton[0][0].getButton().setRadius(zone / 2);
+            gamebutton[0][0].assignIndicatorUpdatable(event -> {
+                gamebutton[0][0].disable();
+                gamebutton[0][0].setOpacity(1);
+                if (player1) {
+                    game[0][0] = 1;
+                    gamebutton[0][0].setImage(crosse);
+                    player1 = false;
+                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                        robot();
+                    }
+                } else {
+                    game[0][0] = 2;
+                    gamebutton[0][0].setImage(nought);
+                    player1 = true;
+                    testgame();
                 }
-            }
-            else {
-                game[0][0] = 1;
-                gamebutton[0][0].setImage(nought);
-                player1 = true;
-            }
-        }, gameContext);
-        gameContext.getGazeDeviceManager().addEventFilter(gamebutton[0][0]);
-        gamebutton[0][0].active();
-        gamebutton[0][0].setVisible(false);
-        gameContext.getChildren().add(gamebutton[0][0]);
+            }, gameContext);
+            gameContext.getGazeDeviceManager().addEventFilter(gamebutton[0][0]);
+            gamebutton[0][0].active();
+            gameContext.getChildren().add(gamebutton[0][0]);
+        }
+        {
+            ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
+            nought.setFitHeight(zone);
+            nought.setFitWidth(zone);
+            ImageView crosse = new ImageView(new Image("data/noughtsandcrosses/crosse.png"));
+            crosse.setFitHeight(zone);
+            crosse.setFitWidth(zone);
+            gamebutton[0][1] = new ProgressButton();
+            gamebutton[0][1].setLayoutX(ecart + 2*size + zone);
+            gamebutton[0][1].setLayoutY(size);
+            gamebutton[0][1].getButton().setRadius(zone / 2);
+            gamebutton[0][1].assignIndicatorUpdatable(event -> {
+                gamebutton[0][1].disable();
+                gamebutton[0][1].setOpacity(1);
+                if (player1) {
+                    game[0][1] = 1;
+                    gamebutton[0][1].setImage(crosse);
+                    player1 = false;
+                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                        robot();
+                    }
+                } else {
+                    game[0][1] = 2;
+                    gamebutton[0][1].setImage(nought);
+                    player1 = true;
+                    testgame();
+                }
+            }, gameContext);
+            gameContext.getGazeDeviceManager().addEventFilter(gamebutton[0][1]);
+            gamebutton[0][1].active();
+            gameContext.getChildren().add(gamebutton[0][1]);
+        }
+        {
+            ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
+            nought.setFitHeight(zone);
+            nought.setFitWidth(zone);
+            ImageView crosse = new ImageView(new Image("data/noughtsandcrosses/crosse.png"));
+            crosse.setFitHeight(zone);
+            crosse.setFitWidth(zone);
+            gamebutton[0][2] = new ProgressButton();
+            gamebutton[0][2].setLayoutX(ecart + 3*size + 2*zone);
+            gamebutton[0][2].setLayoutY(size);
+            gamebutton[0][2].getButton().setRadius(zone / 2);
+            gamebutton[0][2].assignIndicatorUpdatable(event -> {
+                gamebutton[0][2].disable();
+                gamebutton[0][2].setOpacity(1);
+                if (player1) {
+                    game[0][2] = 1;
+                    gamebutton[0][2].setImage(crosse);
+                    player1 = false;
+                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                        robot();
+                    }
+                } else {
+                    game[0][2] = 2;
+                    gamebutton[0][2].setImage(nought);
+                    player1 = true;
+                    testgame();
+                }
+            }, gameContext);
+            gameContext.getGazeDeviceManager().addEventFilter(gamebutton[0][2]);
+            gamebutton[0][2].active();
+            gameContext.getChildren().add(gamebutton[0][2]);
+        }
+
+        {
+            ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
+            nought.setFitHeight(zone);
+            nought.setFitWidth(zone);
+            ImageView crosse = new ImageView(new Image("data/noughtsandcrosses/crosse.png"));
+            crosse.setFitHeight(zone);
+            crosse.setFitWidth(zone);
+            gamebutton[1][0] = new ProgressButton();
+            gamebutton[1][0].setLayoutX(ecart + size);
+            gamebutton[1][0].setLayoutY(2*size + zone);
+            gamebutton[1][0].getButton().setRadius(zone / 2);
+            gamebutton[1][0].assignIndicatorUpdatable(event -> {
+                gamebutton[1][0].disable();
+                gamebutton[1][0].setOpacity(1);
+                if (player1) {
+                    game[1][0] = 1;
+                    gamebutton[1][0].setImage(crosse);
+                    player1 = false;
+                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                        robot();
+                    }
+                } else {
+                    game[1][0] = 2;
+                    gamebutton[1][0].setImage(nought);
+                    player1 = true;
+                    testgame();
+                }
+            }, gameContext);
+            gameContext.getGazeDeviceManager().addEventFilter(gamebutton[1][0]);
+            gamebutton[1][0].active();
+            gameContext.getChildren().add(gamebutton[1][0]);
+        }
+        {
+            ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
+            nought.setFitHeight(zone);
+            nought.setFitWidth(zone);
+            ImageView crosse = new ImageView(new Image("data/noughtsandcrosses/crosse.png"));
+            crosse.setFitHeight(zone);
+            crosse.setFitWidth(zone);
+            gamebutton[1][1] = new ProgressButton();
+            gamebutton[1][1].setLayoutX(ecart + 2*size + zone);
+            gamebutton[1][1].setLayoutY(2*size + zone);
+            gamebutton[1][1].getButton().setRadius(zone / 2);
+            gamebutton[1][1].assignIndicatorUpdatable(event -> {
+                gamebutton[1][1].disable();
+                gamebutton[1][1].setOpacity(1);
+                if (player1) {
+                    game[1][1] = 1;
+                    gamebutton[1][1].setImage(crosse);
+                    player1 = false;
+                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                        robot();
+                    }
+                } else {
+                    game[1][1] = 2;
+                    gamebutton[1][1].setImage(nought);
+                    player1 = true;
+                    testgame();
+                }
+            }, gameContext);
+            gameContext.getGazeDeviceManager().addEventFilter(gamebutton[1][1]);
+            gamebutton[1][1].active();
+            gameContext.getChildren().add(gamebutton[1][1]);
+        }
+        {
+            ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
+            nought.setFitHeight(zone);
+            nought.setFitWidth(zone);
+            ImageView crosse = new ImageView(new Image("data/noughtsandcrosses/crosse.png"));
+            crosse.setFitHeight(zone);
+            crosse.setFitWidth(zone);
+            gamebutton[1][2] = new ProgressButton();
+            gamebutton[1][2].setLayoutX(ecart + 3*size + 2*zone);
+            gamebutton[1][2].setLayoutY(2*size + zone);
+            gamebutton[1][2].getButton().setRadius(zone / 2);
+            gamebutton[1][2].assignIndicatorUpdatable(event -> {
+                gamebutton[1][2].disable();
+                gamebutton[1][2].setOpacity(1);
+                if (player1) {
+                    game[1][2] = 1;
+                    gamebutton[1][2].setImage(crosse);
+                    player1 = false;
+                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                        robot();
+                    }
+                } else {
+                    game[1][2] = 2;
+                    gamebutton[1][2].setImage(nought);
+                    player1 = true;
+                    testgame();
+                }
+            }, gameContext);
+            gameContext.getGazeDeviceManager().addEventFilter(gamebutton[1][2]);
+            gamebutton[1][2].active();
+            gameContext.getChildren().add(gamebutton[1][2]);
+        }
+
+        {
+            ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
+            nought.setFitHeight(zone);
+            nought.setFitWidth(zone);
+            ImageView crosse = new ImageView(new Image("data/noughtsandcrosses/crosse.png"));
+            crosse.setFitHeight(zone);
+            crosse.setFitWidth(zone);
+            gamebutton[2][0] = new ProgressButton();
+            gamebutton[2][0].setLayoutX(ecart + size);
+            gamebutton[2][0].setLayoutY(3*size + 2*zone);
+            gamebutton[2][0].getButton().setRadius(zone / 2);
+            gamebutton[2][0].assignIndicatorUpdatable(event -> {
+                gamebutton[2][0].disable();
+                gamebutton[2][0].setOpacity(1);
+                if (player1) {
+                    game[2][0] = 1;
+                    gamebutton[2][0].setImage(crosse);
+                    player1 = false;
+                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                        robot();
+                    }
+                } else {
+                    game[2][0] = 2;
+                    gamebutton[2][0].setImage(nought);
+                    player1 = true;
+                    testgame();
+                }
+            }, gameContext);
+            gameContext.getGazeDeviceManager().addEventFilter(gamebutton[2][0]);
+            gamebutton[2][0].active();
+            gameContext.getChildren().add(gamebutton[2][0]);
+        }
+        {
+            ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
+            nought.setFitHeight(zone);
+            nought.setFitWidth(zone);
+            ImageView crosse = new ImageView(new Image("data/noughtsandcrosses/crosse.png"));
+            crosse.setFitHeight(zone);
+            crosse.setFitWidth(zone);
+            gamebutton[2][1] = new ProgressButton();
+            gamebutton[2][1].setLayoutX(ecart + 2*size + zone);
+            gamebutton[2][1].setLayoutY(3*size + 2*zone);
+            gamebutton[2][1].getButton().setRadius(zone / 2);
+            gamebutton[2][1].assignIndicatorUpdatable(event -> {
+                gamebutton[2][1].disable();
+                gamebutton[2][1].setOpacity(1);
+                if (player1) {
+                    game[2][1] = 1;
+                    gamebutton[2][1].setImage(crosse);
+                    player1 = false;
+                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                        robot();
+                    }
+                } else {
+                    game[2][1] = 2;
+                    gamebutton[2][1].setImage(nought);
+                    player1 = true;
+                    testgame();
+                }
+            }, gameContext);
+            gameContext.getGazeDeviceManager().addEventFilter(gamebutton[2][1]);
+            gamebutton[2][1].active();
+            gameContext.getChildren().add(gamebutton[2][1]);
+        }
+        {
+            ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
+            nought.setFitHeight(zone);
+            nought.setFitWidth(zone);
+            ImageView crosse = new ImageView(new Image("data/noughtsandcrosses/crosse.png"));
+            crosse.setFitHeight(zone);
+            crosse.setFitWidth(zone);
+            gamebutton[2][2] = new ProgressButton();
+            gamebutton[2][2].setLayoutX(ecart + 3*size + 2*zone);
+            gamebutton[2][2].setLayoutY(3*size + 2*zone);
+            gamebutton[2][2].getButton().setRadius(zone / 2);
+            gamebutton[2][2].assignIndicatorUpdatable(event -> {
+                gamebutton[2][2].disable();
+                gamebutton[2][2].setOpacity(1);
+                if (player1) {
+                    game[2][2] = 1;
+                    gamebutton[2][2].setImage(crosse);
+                    player1 = false;
+                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                        robot();
+                    }
+                } else {
+                    game[2][2] = 2;
+                    gamebutton[2][2].setImage(nought);
+                    player1 = true;
+                    testgame();
+                }
+            }, gameContext);
+            gameContext.getGazeDeviceManager().addEventFilter(gamebutton[2][2]);
+            gamebutton[2][2].active();
+            gameContext.getChildren().add(gamebutton[2][2]);
+        }
     }
 
-    private void testgame(){
+    private boolean testgame(){
         if (game[0][0] * game[0][1] * game[0][2] == 1 ||
             game[1][0] * game[1][1] * game[1][2] == 1 ||
             game[2][0] * game[2][1] * game[2][2] == 1 ||
@@ -170,6 +434,7 @@ public class NaC extends Parent implements GameLifeCycle {
             game[0][0] * game[1][1] * game[2][2] == 1 ||
             game[0][2] * game[1][1] * game[2][0] == 1){
                 win();
+                return false;
         }
         else if (game[0][0] * game[0][1] * game[0][2] == 8 ||
             game[1][0] * game[1][1] * game[1][2] == 8 ||
@@ -181,15 +446,19 @@ public class NaC extends Parent implements GameLifeCycle {
             game[0][2] * game[1][1] * game[2][0] == 8){
                 if (variant.equals(NaCGameVariant.P2)){
                     win();
+                    return false;
                 } else {
                     restart();
+                    return true;
                 }
         }
         else if (game[0][0] * game[0][1] * game[0][2] *
             game[1][0] * game[1][1] * game[1][2] *
             game[2][0] * game[2][1] * game[2][2] != 0){
                 restart();
+                return true;
         }
+        return true;
     }
 
     private void robot(){
