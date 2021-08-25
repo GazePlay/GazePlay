@@ -1,11 +1,13 @@
 package net.gazeplay.games.noughtsandcrosses;
 
+import javafx.animation.PauseTransition;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -133,6 +135,9 @@ public class NaC extends Parent implements GameLifeCycle {
 
     private void button(){
         {
+            ImageView white = new ImageView(new Image("data/noughtsandcrosses/white.png"));
+            white.setFitHeight(zone);
+            white.setFitWidth(zone);
             ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
             nought.setFitHeight(zone);
             nought.setFitWidth(zone);
@@ -143,6 +148,7 @@ public class NaC extends Parent implements GameLifeCycle {
             gamebutton[0][0].setLayoutX(ecart + size);
             gamebutton[0][0].setLayoutY(size);
             gamebutton[0][0].getButton().setRadius(zone / 2);
+            gamebutton[0][0].setImage(white);
             gamebutton[0][0].assignIndicatorUpdatable(event -> {
                 gamebutton[0][0].disable();
                 gamebutton[0][0].setOpacity(1);
@@ -165,6 +171,9 @@ public class NaC extends Parent implements GameLifeCycle {
             gameContext.getChildren().add(gamebutton[0][0]);
         }
         {
+            ImageView white = new ImageView(new Image("data/noughtsandcrosses/white.png"));
+            white.setFitHeight(zone);
+            white.setFitWidth(zone);
             ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
             nought.setFitHeight(zone);
             nought.setFitWidth(zone);
@@ -175,6 +184,7 @@ public class NaC extends Parent implements GameLifeCycle {
             gamebutton[0][1].setLayoutX(ecart + 2*size + zone);
             gamebutton[0][1].setLayoutY(size);
             gamebutton[0][1].getButton().setRadius(zone / 2);
+            gamebutton[0][1].setImage(white);
             gamebutton[0][1].assignIndicatorUpdatable(event -> {
                 gamebutton[0][1].disable();
                 gamebutton[0][1].setOpacity(1);
@@ -197,6 +207,9 @@ public class NaC extends Parent implements GameLifeCycle {
             gameContext.getChildren().add(gamebutton[0][1]);
         }
         {
+            ImageView white = new ImageView(new Image("data/noughtsandcrosses/white.png"));
+            white.setFitHeight(zone);
+            white.setFitWidth(zone);
             ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
             nought.setFitHeight(zone);
             nought.setFitWidth(zone);
@@ -207,6 +220,7 @@ public class NaC extends Parent implements GameLifeCycle {
             gamebutton[0][2].setLayoutX(ecart + 3*size + 2*zone);
             gamebutton[0][2].setLayoutY(size);
             gamebutton[0][2].getButton().setRadius(zone / 2);
+            gamebutton[0][2].setImage(white);
             gamebutton[0][2].assignIndicatorUpdatable(event -> {
                 gamebutton[0][2].disable();
                 gamebutton[0][2].setOpacity(1);
@@ -230,6 +244,9 @@ public class NaC extends Parent implements GameLifeCycle {
         }
 
         {
+            ImageView white = new ImageView(new Image("data/noughtsandcrosses/white.png"));
+            white.setFitHeight(zone);
+            white.setFitWidth(zone);
             ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
             nought.setFitHeight(zone);
             nought.setFitWidth(zone);
@@ -240,6 +257,7 @@ public class NaC extends Parent implements GameLifeCycle {
             gamebutton[1][0].setLayoutX(ecart + size);
             gamebutton[1][0].setLayoutY(2*size + zone);
             gamebutton[1][0].getButton().setRadius(zone / 2);
+            gamebutton[1][0].setImage(white);
             gamebutton[1][0].assignIndicatorUpdatable(event -> {
                 gamebutton[1][0].disable();
                 gamebutton[1][0].setOpacity(1);
@@ -262,6 +280,9 @@ public class NaC extends Parent implements GameLifeCycle {
             gameContext.getChildren().add(gamebutton[1][0]);
         }
         {
+            ImageView white = new ImageView(new Image("data/noughtsandcrosses/white.png"));
+            white.setFitHeight(zone);
+            white.setFitWidth(zone);
             ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
             nought.setFitHeight(zone);
             nought.setFitWidth(zone);
@@ -272,6 +293,7 @@ public class NaC extends Parent implements GameLifeCycle {
             gamebutton[1][1].setLayoutX(ecart + 2*size + zone);
             gamebutton[1][1].setLayoutY(2*size + zone);
             gamebutton[1][1].getButton().setRadius(zone / 2);
+            gamebutton[1][1].setImage(white);
             gamebutton[1][1].assignIndicatorUpdatable(event -> {
                 gamebutton[1][1].disable();
                 gamebutton[1][1].setOpacity(1);
@@ -294,6 +316,9 @@ public class NaC extends Parent implements GameLifeCycle {
             gameContext.getChildren().add(gamebutton[1][1]);
         }
         {
+            ImageView white = new ImageView(new Image("data/noughtsandcrosses/white.png"));
+            white.setFitHeight(zone);
+            white.setFitWidth(zone);
             ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
             nought.setFitHeight(zone);
             nought.setFitWidth(zone);
@@ -304,6 +329,7 @@ public class NaC extends Parent implements GameLifeCycle {
             gamebutton[1][2].setLayoutX(ecart + 3*size + 2*zone);
             gamebutton[1][2].setLayoutY(2*size + zone);
             gamebutton[1][2].getButton().setRadius(zone / 2);
+            gamebutton[1][2].setImage(white);
             gamebutton[1][2].assignIndicatorUpdatable(event -> {
                 gamebutton[1][2].disable();
                 gamebutton[1][2].setOpacity(1);
@@ -327,6 +353,9 @@ public class NaC extends Parent implements GameLifeCycle {
         }
 
         {
+            ImageView white = new ImageView(new Image("data/noughtsandcrosses/white.png"));
+            white.setFitHeight(zone);
+            white.setFitWidth(zone);
             ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
             nought.setFitHeight(zone);
             nought.setFitWidth(zone);
@@ -337,6 +366,7 @@ public class NaC extends Parent implements GameLifeCycle {
             gamebutton[2][0].setLayoutX(ecart + size);
             gamebutton[2][0].setLayoutY(3*size + 2*zone);
             gamebutton[2][0].getButton().setRadius(zone / 2);
+            gamebutton[2][0].setImage(white);
             gamebutton[2][0].assignIndicatorUpdatable(event -> {
                 gamebutton[2][0].disable();
                 gamebutton[2][0].setOpacity(1);
@@ -359,6 +389,9 @@ public class NaC extends Parent implements GameLifeCycle {
             gameContext.getChildren().add(gamebutton[2][0]);
         }
         {
+            ImageView white = new ImageView(new Image("data/noughtsandcrosses/white.png"));
+            white.setFitHeight(zone);
+            white.setFitWidth(zone);
             ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
             nought.setFitHeight(zone);
             nought.setFitWidth(zone);
@@ -369,6 +402,7 @@ public class NaC extends Parent implements GameLifeCycle {
             gamebutton[2][1].setLayoutX(ecart + 2*size + zone);
             gamebutton[2][1].setLayoutY(3*size + 2*zone);
             gamebutton[2][1].getButton().setRadius(zone / 2);
+            gamebutton[2][1].setImage(white);
             gamebutton[2][1].assignIndicatorUpdatable(event -> {
                 gamebutton[2][1].disable();
                 gamebutton[2][1].setOpacity(1);
@@ -391,6 +425,9 @@ public class NaC extends Parent implements GameLifeCycle {
             gameContext.getChildren().add(gamebutton[2][1]);
         }
         {
+            ImageView white = new ImageView(new Image("data/noughtsandcrosses/white.png"));
+            white.setFitHeight(zone);
+            white.setFitWidth(zone);
             ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
             nought.setFitHeight(zone);
             nought.setFitWidth(zone);
@@ -401,6 +438,7 @@ public class NaC extends Parent implements GameLifeCycle {
             gamebutton[2][2].setLayoutX(ecart + 3*size + 2*zone);
             gamebutton[2][2].setLayoutY(3*size + 2*zone);
             gamebutton[2][2].getButton().setRadius(zone / 2);
+            gamebutton[2][2].setImage(white);
             gamebutton[2][2].assignIndicatorUpdatable(event -> {
                 gamebutton[2][2].disable();
                 gamebutton[2][2].setOpacity(1);
@@ -462,41 +500,61 @@ public class NaC extends Parent implements GameLifeCycle {
     }
 
     private void robot(){
+        ImageView nought = new ImageView(new Image("data/noughtsandcrosses/nought.png"));
+        nought.setFitHeight(zone);
+        nought.setFitWidth(zone);
         for (int i=0; i<3; i++){
             for (int j=0; j<3; j++){
                 gamebutton[i][j].disable();
+                gamebutton[i][j].setOpacity(1);
             }
         }
-        int x = 0;
-        int y = 0;
-        while (game[x][y]!=0){
-            x = random.nextInt(3);
-            y = random.nextInt(3);
-        }
-        game[x][y]=2;
-        /*
-        picture
-         */
-        for (int i=0; i<3; i++){
-            for (int j=0; j<3; j++){
-                if (game[i][j]!=0){
-                    gamebutton[i][j].active();
+        PauseTransition wait = new PauseTransition(Duration.millis(2000));
+        wait.setOnFinished(e -> {
+            int x = 0;
+            int y = 0;
+            while (game[x][y]!=0){
+                x = random.nextInt(3);
+                y = random.nextInt(3);
+            }
+            game[x][y]=2;
+            gamebutton[x][y].setImage(nought);
+            for (int i=0; i<3; i++){
+                for (int j=0; j<3; j++){
+                    if (game[i][j]==0){
+                        gamebutton[i][j].active();
+                    }
                 }
             }
-        }
-        player1 = true;
+            testgame();
+            player1 = true;
+        });
+        wait.play();
     }
 
     private void restart(){
-        for (int i=0; i<3; i++){
-            for (int j=0; j<3; j++){
-                game[i][j]=0;
-                gamebutton[i][j].active();
-                gamebutton[i][j].setOpacity(0);
+        for(int i=0; i<3; i++){
+            for(int j=0; j<3; j++){
+                gamebutton[i][j].disable();
+                gamebutton[i][j].setOpacity(1);
             }
         }
-        if (!player1 && variant.equals(NaCGameVariant.IA)){
-            robot();
-        }
+        ImageView white = new ImageView(new Image("data/noughtsandcrosses/white.png"));
+        white.setFitHeight(zone);
+        white.setFitWidth(zone);
+        PauseTransition wait = new PauseTransition(Duration.millis(2000));
+        wait.setOnFinished(e -> {
+            for (int i=0; i<3; i++){
+                for (int j=0; j<3; j++){
+                    game[i][j]=0;
+                    gamebutton[i][j].setImage(white);
+                    gamebutton[i][j].active();
+                }
+            }
+            if (!player1 && variant.equals(NaCGameVariant.IA)){
+                robot();
+            }
+        });
+        wait.play();
     }
 }
