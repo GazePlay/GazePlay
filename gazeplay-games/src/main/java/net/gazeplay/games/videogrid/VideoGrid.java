@@ -101,6 +101,8 @@ public class VideoGrid implements GameLifeCycle {
     @Override
     public void launch() {
 
+        gameContext.setOffFixationLengthControl();
+
         if (videoFolder.isDirectory()) {
 
             final File[] files = videoFolder.listFiles(f -> {
