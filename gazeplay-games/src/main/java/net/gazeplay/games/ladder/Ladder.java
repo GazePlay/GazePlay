@@ -83,12 +83,15 @@ public class Ladder implements GameLifeCycle {
 
         int y1;
         int y2;
+        int[] old = new int[] {-1, -1, -1};
         for (int i=0; i<4; i++){
-            y1 = 0;
-            y2 = 0;
             for (int j=0; j<cross; j++){
-                y1 = y1 + random.nextInt(size-cross+j-y1-1) + 1;
-                y2 = y2 + random.nextInt(size-cross+j-y1-1) + 1;
+                y1 = j*3 + random.nextInt(3) + 1;
+                while (y1==old[j]){
+                    y1 = j*3 + random.nextInt(3) + 1;
+                }
+                y2 = j*3 + random.nextInt(3) + 1;
+                old[j] = y2;
                 steps.add(new Step(i, y1, i+1,y2));
             }
         }
