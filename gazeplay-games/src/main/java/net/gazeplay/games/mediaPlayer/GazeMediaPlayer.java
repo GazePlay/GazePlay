@@ -91,16 +91,16 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         upArrow = createTextStackPaneButton("^", dimension2D.getWidth() / 5, dimension2D.getHeight() / 7);
         upArrow.getButton().setStyle("-fx-background-radius: 5em; ");
 
-        HBox[] buttonsAndDelete = new HBox[3];
+      //  HBox[] buttonsAndDelete = new HBox[3];
         for (int i = 0; i < 3; i++) {
             mediaButtons[i] = new MediaButton(dimension2D.getWidth() / 4, dimension2D.getHeight() / 7);
-            Button deleteMedia = new Button();
-            deleteMedia.setOnMouseClicked(e -> {
-                MediaButton buttonTarget = (MediaButton) ((HBox) ((Button) e.getTarget()).getParent() ).getChildren().get(0);
-                log.info("deleting mediafile {}",buttonTarget.getMediaFile().getName());
-                musicList.deleteMedia(buttonTarget.getMediaFile());
-            });
-            buttonsAndDelete[i] = new HBox(mediaButtons[i],deleteMedia);
+       //     Button deleteMedia = new Button();
+           // deleteMedia.setOnMouseClicked(e -> {
+            //    MediaButton buttonTarget = (MediaButton) ((HBox) ((Button) e.getTarget()).getParent() ).getChildren().get(0);
+            //    log.info("deleting mediafile {}",buttonTarget.getMediaFile().getName());
+            //    musicList.deleteMedia(buttonTarget.getMediaFile());
+           // });
+          //  buttonsAndDelete[i] = new HBox(mediaButtons[i],deleteMedia);
             this.gameContext.getGazeDeviceManager().addEventFilter(mediaButtons[i]);
         }
 
@@ -109,7 +109,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
         scrollList.setSpacing(dimension2D.getHeight() / 30);
         scrollList.setAlignment(Pos.CENTER);
-        scrollList.getChildren().addAll(upArrow, buttonsAndDelete[0], buttonsAndDelete[1], buttonsAndDelete[2], downArrow);
+        scrollList.getChildren().addAll(upArrow, mediaButtons[0], mediaButtons[1], mediaButtons[2], downArrow);
 
         videoSide = new VBox();
 
