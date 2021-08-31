@@ -14,8 +14,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.nio.file.StandardOpenOption.APPEND;
-
 @Slf4j
 public class MediaFileReader {
 
@@ -129,7 +127,7 @@ public class MediaFileReader {
 
             if (fileIsUsable) {
                 try (
-                    OutputStream fileOutputStream = Files.newOutputStream(playlistFile.toPath(), StandardOpenOption.CREATE, APPEND);
+                    OutputStream fileOutputStream = Files.newOutputStream(playlistFile.toPath(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
                     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8))
                 ) {
                     if (mediaList.size() == 0) {
@@ -151,6 +149,45 @@ public class MediaFileReader {
         Configuration config = gameContext.getConfiguration();
         String userName = config.getUserName();
         return new File(GazePlayDirectories.getUserDataFolder(userName), "mediaPlayer");
+    }
+
+    public void deleteMedia(MediaFile mf) {
+        final File mediaPlayerDirectory = getMediaPlayerDirectory();
+        final File playlistFile = new File(mediaPlayerDirectory, PLAYER_LIST_CSV);
+
+        if (playlistFile.exists()) {
+            try {
+                try (
+                    OutputStream fileOutputStream = Files.newOutputStream(playlistFile.toPath(), StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+                    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8))
+                ) {
+                    boolean firstDone = false;
+                    for (MediaFile mediaFile : mediaList) {
+                        if (mediaFile != mf) {
+                            if (firstDone) {
+                                bw.write("\n");
+                            }
+                            bw.write(
+                                mediaFile.getType() + "," +
+                                    mediaFile.getPath() + "," +
+                                    mediaFile.getName() + "," +
+                                    mediaFile.getImagepath()
+                            );
+                            log.info("writing {}", mediaFile.getName());
+                            if (!firstDone) {
+                                firstDone = true;
+                            }
+                        } else {
+                            log.info("not writing {}", mediaFile.getName());
+                        }
+                    }
+                    mediaList.remove(mf);
+                    log.info("removing {}", mf.getName());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
