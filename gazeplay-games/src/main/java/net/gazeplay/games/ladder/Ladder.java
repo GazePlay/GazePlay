@@ -2,6 +2,7 @@ package net.gazeplay.games.ladder;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import net.gazeplay.GameLifeCycle;
@@ -22,11 +23,14 @@ public class Ladder implements GameLifeCycle {
     private int cross;
 
     private final ArrayList<Step> steps;
+    private final ArrayList<Step> fall;
 
     private double ecartw;
     private double spacew;
     private double ecarth;
     private double spaceh;
+
+    private Circle player;
 
     Ladder(IGameContext gameContext, Stats stats){
         this.gameContext = gameContext;
@@ -34,6 +38,7 @@ public class Ladder implements GameLifeCycle {
         random = new ReplayablePseudoRandom();
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         steps = new ArrayList<>();
+        fall = new ArrayList<>();
     }
 
     Ladder(IGameContext gameContext, Stats stats, double gameSeed){
@@ -42,6 +47,7 @@ public class Ladder implements GameLifeCycle {
         random = new ReplayablePseudoRandom(gameSeed);
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         steps = new ArrayList<>();
+        fall = new ArrayList<>();
     }
 
     @Override
@@ -77,7 +83,7 @@ public class Ladder implements GameLifeCycle {
     private void creation(){
         for (int i=0; i<5; i++){
             for (int j=0; j<size; j++){
-                steps.add(new Step(i,j,i,j+1));
+                fall.add(new Step(i,j,i,j+1));
             }
         }
 
@@ -96,6 +102,9 @@ public class Ladder implements GameLifeCycle {
             }
         }
 
+        for (Step step : fall){
+            screencreation(step);
+        }
         for (Step step : steps){
             screencreation(step);
         }
