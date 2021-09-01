@@ -2,7 +2,9 @@ package net.gazeplay.games.ladder;
 
 import javafx.animation.PauseTransition;
 import javafx.geometry.Dimension2D;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -33,7 +35,7 @@ public class Ladder implements GameLifeCycle {
     private double ecarth;
     private double spaceh;
 
-    private Circle player;
+    private Rectangle player;
     private double px;
     private double py;
 
@@ -68,14 +70,16 @@ public class Ladder implements GameLifeCycle {
 
         ecartw = dimension2D.getWidth()*0.15;
         spacew = (dimension2D.getWidth()-2*ecartw)/4;
-        ecarth = dimension2D.getHeight()*0.1;
+        ecarth = dimension2D.getHeight()*0.2;
         spaceh = (dimension2D.getHeight()-2*ecarth)/size;
-
-        player = new Circle(0,0,dimension2D.getHeight()/10);
 
         background();
         creation();
         button();
+
+        player = new Rectangle(0,0,dimension2D.getHeight()/10, dimension2D.getHeight()/10);
+        player.setFill(new ImagePattern(new Image("data/follow/Biboule.png")));
+        gameContext.getChildren().add(player);
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
@@ -125,6 +129,7 @@ public class Ladder implements GameLifeCycle {
 
     private void screencreation(Step step){
         Line line = new Line(ecartw+spacew*step.x1,ecarth+spaceh*step.y1,ecartw+spacew*step.x2,ecarth+spaceh*step.y2);
+        line.setStrokeWidth(5);
         gameContext.getChildren().add(line);
     }
 
@@ -143,11 +148,11 @@ public class Ladder implements GameLifeCycle {
             if (n<100){
                 n++;
                 if (start){
-                    player.setCenterX(ecartw + (double)(step.x1- step.x2)/100 * n*spacew);
-                    player.setCenterY(ecarth + (double)(step.y1- step.y2)/100 * n*spaceh);
+                    player.setX(ecartw + (double)(step.x1- step.x2)/100 * n*spacew);
+                    player.setY(ecarth + (double)(step.y1- step.y2)/100 * n*spaceh);
                 } else {
-                    player.setCenterX(ecartw + (double)(step.x1- step.x2)/100 * (100-n)*spacew);
-                    player.setCenterY(ecarth + (double)(step.y1- step.y2)/100 * (100-n)*spaceh);
+                    player.setX(ecartw + (double)(step.x1- step.x2)/100 * (100-n)*spacew);
+                    player.setY(ecarth + (double)(step.y1- step.y2)/100 * (100-n)*spaceh);
                 }
                 wait.play();
             } else {
