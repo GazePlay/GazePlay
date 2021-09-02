@@ -5,7 +5,6 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -37,8 +36,6 @@ public class Ladder implements GameLifeCycle {
     private double spaceh;
 
     private Rectangle player;
-    private double px;
-    private double py;
 
     private double n;
 
@@ -160,6 +157,7 @@ public class Ladder implements GameLifeCycle {
             }
         }, gameContext);
         b.active();
+        progressButtons.add(b);
         gameContext.getChildren().add(b);
         gameContext.getGazeDeviceManager().addEventFilter(b);
     }
@@ -168,8 +166,6 @@ public class Ladder implements GameLifeCycle {
         steps.remove(step);
         fall.remove(step);
         n = 0;
-        //player.setCenterY(ecartw + px*spacew);
-        //player.setCenterY(ecarth +py*spaceh);
         PauseTransition wait = new PauseTransition(Duration.millis(10));
         wait.setOnFinished(event -> {
             if (n<100){
