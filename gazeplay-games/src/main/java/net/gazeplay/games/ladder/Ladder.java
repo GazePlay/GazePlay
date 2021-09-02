@@ -29,6 +29,7 @@ public class Ladder implements GameLifeCycle {
 
     private final ArrayList<Step> steps;
     private final ArrayList<Step> fall;
+    private final Step[] start;
 
     private double ecartw;
     private double spacew;
@@ -41,6 +42,8 @@ public class Ladder implements GameLifeCycle {
 
     private double n;
 
+    private double radius;
+
     private final ArrayList<ProgressButton> progressButtons;
 
     Ladder(IGameContext gameContext, Stats stats){
@@ -51,6 +54,7 @@ public class Ladder implements GameLifeCycle {
         steps = new ArrayList<>();
         fall = new ArrayList<>();
         progressButtons = new ArrayList<>();
+        start = new Step[5];
     }
 
     Ladder(IGameContext gameContext, Stats stats, double gameSeed){
@@ -61,6 +65,7 @@ public class Ladder implements GameLifeCycle {
         steps = new ArrayList<>();
         fall = new ArrayList<>();
         progressButtons = new ArrayList<>();
+        start = new Step[5];
     }
 
     @Override
@@ -72,6 +77,7 @@ public class Ladder implements GameLifeCycle {
         spacew = (dimension2D.getWidth()-2*ecartw)/4;
         ecarth = dimension2D.getHeight()*0.2;
         spaceh = (dimension2D.getHeight()-2*ecarth)/size;
+        radius = ecarth/3;
 
         background();
         creation();
@@ -79,7 +85,7 @@ public class Ladder implements GameLifeCycle {
 
         player = new Rectangle(0,0,dimension2D.getHeight()/10, dimension2D.getHeight()/10);
         player.setFill(new ImagePattern(new Image("data/follow/Biboule.png")));
-        gameContext.getChildren().add(player);
+        //gameContext.getChildren().add(player);
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
@@ -98,9 +104,14 @@ public class Ladder implements GameLifeCycle {
     }
 
     private void creation(){
+        Step s;
         for (int i=0; i<5; i++){
             for (int j=0; j<size; j++){
-                fall.add(new Step(i,j,i,j+1));
+                s = new Step(i,j,i,j+1);
+                fall.add(s);
+                if (j==0){
+                    start[i] = s;
+                }
             }
         }
 
@@ -134,7 +145,23 @@ public class Ladder implements GameLifeCycle {
     }
 
     private void button(){
+        ProgressButton b;
 
+        b = new ProgressButton();
+        b.setLayoutX(ecartw - radius);
+        b.setLayoutY(1.0/3* ecarth);
+        b.getButton().setRadius(radius);
+        b.assignIndicatorUpdatable(event -> {
+            gameContext.getChildren().add(player);
+            move(start[0], true);
+            for (ProgressButton p : progressButtons){
+                p.disable();
+                p.setOpacity(1);
+            }
+        }, gameContext);
+        b.active();
+        gameContext.getChildren().add(b);
+        gameContext.getGazeDeviceManager().addEventFilter(b);
     }
 
     private void move(Step step, boolean start){
@@ -148,11 +175,11 @@ public class Ladder implements GameLifeCycle {
             if (n<100){
                 n++;
                 if (start){
-                    player.setX(ecartw + (double)(step.x1- step.x2)/100 * n*spacew);
-                    player.setY(ecarth + (double)(step.y1- step.y2)/100 * n*spaceh);
+                    player.setX(ecartw + ((double)(step.x2- step.x1)*n/100 + step.x1) *spacew - dimension2D.getHeight()/20);
+                    player.setY(ecarth + ((double)(step.y2- step.y1)*n/100 + step.y1) *spaceh - dimension2D.getHeight()/20);
                 } else {
-                    player.setX(ecartw + (double)(step.x1- step.x2)/100 * (100-n)*spacew);
-                    player.setY(ecarth + (double)(step.y1- step.y2)/100 * (100-n)*spaceh);
+                    player.setX(ecartw + ((double)(step.x2- step.x1)*(100-n)/100 + step.x1) *spacew - dimension2D.getHeight()/20);
+                    player.setY(ecarth + ((double)(step.y2- step.y1)*(100-n)/100 + step.y1) *spaceh - dimension2D.getHeight()/20);
                 }
                 wait.play();
             } else {
@@ -163,6 +190,7 @@ public class Ladder implements GameLifeCycle {
                 }
             }
         });
+        wait.play();
     }
 
     private void find(int x, int y){
