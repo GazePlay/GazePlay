@@ -82,8 +82,7 @@ public class Ladder implements GameLifeCycle {
         button();
 
         player = new Rectangle(0,0,dimension2D.getHeight()/10, dimension2D.getHeight()/10);
-        player.setFill(new ImagePattern(new Image("data/follow/Biboule.png")));
-        //gameContext.getChildren().add(player);
+        player.setFill(new ImagePattern(new Image("data/ladder/Biboule.png")));
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
@@ -97,7 +96,7 @@ public class Ladder implements GameLifeCycle {
 
     private void background(){
         Rectangle back = new Rectangle(0,0,dimension2D.getWidth(), dimension2D.getHeight());
-        back.setFill(Color.WHITE);
+        back.setFill(Color.LIGHTGRAY);
         gameContext.getChildren().add(back);
     }
 
