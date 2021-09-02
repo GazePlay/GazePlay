@@ -38,6 +38,7 @@ public class Ladder implements GameLifeCycle {
     private Rectangle player;
 
     private double n;
+    private int m;
 
     private double radius;
 
@@ -166,16 +167,21 @@ public class Ladder implements GameLifeCycle {
         steps.remove(step);
         fall.remove(step);
         n = 0;
+        if (step.x1==step.x2){
+            m=15;
+        } else {
+            m=100;
+        }
         PauseTransition wait = new PauseTransition(Duration.millis(10));
         wait.setOnFinished(event -> {
-            if (n<100){
+            if (n<m){
                 n++;
                 if (start){
-                    player.setX(ecartw + ((double)(step.x2- step.x1)*n/100 + step.x1) *spacew - dimension2D.getHeight()/20);
-                    player.setY(ecarth + ((double)(step.y2- step.y1)*n/100 + step.y1) *spaceh - dimension2D.getHeight()/20);
+                    player.setX(ecartw + ((step.x2- step.x1)*n/m + step.x1) *spacew - dimension2D.getHeight()/20);
+                    player.setY(ecarth + ((step.y2- step.y1)*n/m + step.y1) *spaceh - dimension2D.getHeight()/20);
                 } else {
-                    player.setX(ecartw + ((double)(step.x2- step.x1)*(100-n)/100 + step.x1) *spacew - dimension2D.getHeight()/20);
-                    player.setY(ecarth + ((double)(step.y2- step.y1)*(100-n)/100 + step.y1) *spaceh - dimension2D.getHeight()/20);
+                    player.setX(ecartw + ((step.x2- step.x1)*(m-n)/m + step.x1) *spacew - dimension2D.getHeight()/20);
+                    player.setY(ecarth + ((step.y2- step.y1)*(m-n)/m + step.y1) *spaceh - dimension2D.getHeight()/20);
                 }
                 wait.play();
             } else {
