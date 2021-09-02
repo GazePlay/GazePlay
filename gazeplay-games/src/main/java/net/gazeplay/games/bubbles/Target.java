@@ -200,7 +200,7 @@ public class Target extends ProgressPortrait {
 
     private void enter(final Event e) {
 
-        if (wait != null) {
+        if (this.gameVariant.toString().endsWith("FIX")&& wait != null) {
             wait.stop();
             wait.setDuration(Duration.millis(15000 / gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue()));
             wait.play();
@@ -218,7 +218,10 @@ public class Target extends ProgressPortrait {
 
         moveTarget();
 
-        this.getButton().addEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
+        if (this.gameVariant.toString().endsWith("FIX")) {
+            this.getButton().addEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
+        }
+
         this.setOpacity(1);
 
     }
@@ -290,9 +293,10 @@ public class Target extends ProgressPortrait {
             centerY = radius + (dimension2D.getHeight() - 2 * radius) * randomGenerator.nextDouble();
         }
 
-
         setLayoutX(centerX);
         setLayoutY(centerY);
+
+        timeline.play();
     }
 
 }
