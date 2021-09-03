@@ -11,7 +11,9 @@ import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.Portrait;
 import net.gazeplay.components.ProgressButton;
 
 import java.util.ArrayList;
@@ -44,6 +46,8 @@ public class Ladder implements GameLifeCycle {
 
     private final ArrayList<ProgressButton> progressButtons;
 
+    private final ImageLibrary imageLibrary;
+
     Ladder(IGameContext gameContext, Stats stats){
         this.gameContext = gameContext;
         this.stats = stats;
@@ -53,6 +57,7 @@ public class Ladder implements GameLifeCycle {
         fall = new ArrayList<>();
         progressButtons = new ArrayList<>();
         start = new Step[5];
+        imageLibrary = Portrait.createImageLibrary(random);
     }
 
     Ladder(IGameContext gameContext, Stats stats, double gameSeed){
@@ -64,10 +69,15 @@ public class Ladder implements GameLifeCycle {
         fall = new ArrayList<>();
         progressButtons = new ArrayList<>();
         start = new Step[5];
+        imageLibrary = Portrait.createImageLibrary(random);
     }
 
     @Override
     public void launch(){
+        steps.clear();
+        fall.clear();
+        progressButtons.clear();
+
         size = 10;
         cross = 3;
 
@@ -96,7 +106,7 @@ public class Ladder implements GameLifeCycle {
 
     private void background(){
         Rectangle back = new Rectangle(0,0,dimension2D.getWidth(), dimension2D.getHeight());
-        back.setFill(Color.LIGHTGRAY);
+        back.setFill(Color.WHITE);
         gameContext.getChildren().add(back);
     }
 
@@ -133,11 +143,22 @@ public class Ladder implements GameLifeCycle {
         for (Step step : steps){
             screencreation(step);
         }
+
+        Image end;
+        Rectangle r;
+        double place = dimension2D.getHeight()/8;
+        for (int i=0; i<5; i++){
+            end = imageLibrary.pickRandomImage();
+            r = new Rectangle(ecartw + i*spacew - place/2,4*dimension2D.getHeight()/5,place,place);
+            r.setFill(new ImagePattern(end));
+            gameContext.getChildren().add(r);
+        }
     }
 
     private void screencreation(Step step){
         Line line = new Line(ecartw+spacew*step.x1,ecarth+spaceh*step.y1,ecartw+spacew*step.x2,ecarth+spaceh*step.y2);
         line.setStrokeWidth(5);
+        step.ln = line;
         gameContext.getChildren().add(line);
     }
 
@@ -148,12 +169,95 @@ public class Ladder implements GameLifeCycle {
         b.setLayoutX(ecartw - radius);
         b.setLayoutY(1.0/3* ecarth);
         b.getButton().setRadius(radius);
+        b.getButton().setFill(Color.RED);
         b.assignIndicatorUpdatable(event -> {
             gameContext.getChildren().add(player);
             move(start[0], true);
             for (ProgressButton p : progressButtons){
                 p.disable();
-                p.setOpacity(1);
+                if (progressButtons.indexOf(p)==0) {
+                    p.setOpacity(1);
+                }
+            }
+        }, gameContext);
+        b.active();
+        progressButtons.add(b);
+        gameContext.getChildren().add(b);
+        gameContext.getGazeDeviceManager().addEventFilter(b);
+
+        b = new ProgressButton();
+        b.setLayoutX(ecartw - radius + spacew);
+        b.setLayoutY(1.0/3* ecarth);
+        b.getButton().setFill(Color.RED);
+        b.getButton().setRadius(radius);
+        b.assignIndicatorUpdatable(event -> {
+            gameContext.getChildren().add(player);
+            move(start[1], true);
+            for (ProgressButton p : progressButtons){
+                p.disable();
+                if (progressButtons.indexOf(p)==1) {
+                    p.setOpacity(1);
+                }
+            }
+        }, gameContext);
+        b.active();
+        progressButtons.add(b);
+        gameContext.getChildren().add(b);
+        gameContext.getGazeDeviceManager().addEventFilter(b);
+
+        b = new ProgressButton();
+        b.setLayoutX(ecartw - radius + 2*spacew);
+        b.setLayoutY(1.0/3* ecarth);
+        b.getButton().setRadius(radius);
+        b.getButton().setFill(Color.RED);
+        b.assignIndicatorUpdatable(event -> {
+            gameContext.getChildren().add(player);
+            move(start[2], true);
+            for (ProgressButton p : progressButtons){
+                p.disable();
+                if (progressButtons.indexOf(p)==2) {
+                    p.setOpacity(1);
+                }
+            }
+        }, gameContext);
+        b.active();
+        progressButtons.add(b);
+        gameContext.getChildren().add(b);
+        gameContext.getGazeDeviceManager().addEventFilter(b);
+
+        b = new ProgressButton();
+        b.setLayoutX(ecartw - radius + 3*spacew);
+        b.setLayoutY(1.0/3* ecarth);
+        b.getButton().setRadius(radius);
+        b.getButton().setFill(Color.RED);
+        b.assignIndicatorUpdatable(event -> {
+            gameContext.getChildren().add(player);
+            move(start[3], true);
+            for (ProgressButton p : progressButtons){
+                p.disable();
+                if (progressButtons.indexOf(p)==3) {
+                    p.setOpacity(1);
+                }
+            }
+        }, gameContext);
+        b.active();
+        progressButtons.add(b);
+        gameContext.getChildren().add(b);
+        gameContext.getGazeDeviceManager().addEventFilter(b);
+
+        b = new ProgressButton();
+        b.setLayoutX(ecartw - radius + 4*spacew);
+        b.setLayoutY(1.0/3* ecarth);
+        b.getButton().setRadius(radius);
+        b.getButton().setFill(Color.RED);
+        b.assignIndicatorUpdatable(event -> {
+            gameContext.getChildren().add(player);
+            move(start[4], true);
+            for (ProgressButton p : progressButtons){
+                p.disable();
+                if (progressButtons.indexOf(p)==4) {
+                    p.setOpacity(1);
+                }
             }
         }, gameContext);
         b.active();
@@ -165,6 +269,7 @@ public class Ladder implements GameLifeCycle {
     private void move(Step step, boolean start){
         steps.remove(step);
         fall.remove(step);
+        step.ln.setStroke(Color.RED);
         n = 0;
         if (step.x1==step.x2){
             m=15;
