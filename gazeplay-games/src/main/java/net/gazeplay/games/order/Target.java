@@ -18,6 +18,8 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.components.Position;
 import net.gazeplay.components.RandomPositionGenerator;
 
+import java.awt.geom.Point2D;
+
 
 /**
  * @author vincent
@@ -37,12 +39,10 @@ public class Target extends Parent {
         this.num = num;
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
-        this.radius = gameContext.getGamePanelDimensionProvider().getDimension2D().getWidth()/18;
+        this.radius = gameContext.getGamePanelDimensionProvider().getDimension2D().getWidth()/11;
         this.fixationLength = fixLength;
 
-        final RandomPositionGenerator randomPositionGenerator = this.gameContext.getRandomPositionGenerator();
-        randomPositionGenerator.setRandomGenerator(randomGenerator);
-        this.pos = randomPositionGenerator.newRandomPosition(100);
+        this.pos = this.getInitialPosition(randomGenerator,num-1);
 
         final Circle cercle = new Circle(pos.getX(), pos.getY(), this.radius);
         cercle.setFill(new ImagePattern(new Image("data/order/images/target.png"), 0, 0, 1, 1, true));
@@ -63,6 +63,27 @@ public class Target extends Parent {
                 progressIndicator.setProgress(0);
             }
         };
+    }
+
+    private Position getInitialPosition(ReplayablePseudoRandom randomGenerator, int numberOfCurrentTargets){
+        final RandomPositionGenerator randomPositionGenerator = this.gameContext.getRandomPositionGenerator();
+        randomPositionGenerator.setRandomGenerator(randomGenerator);
+        Position position = randomPositionGenerator.newRandomPosition(100);
+        if(numberOfCurrentTargets > 0){
+            boolean positionIsOk = false;
+            while(!positionIsOk){
+                positionIsOk = true;
+                for(int i = 0; i < numberOfCurrentTargets; i++) {
+                    double distance = Point2D.distance(position.getX(), position.getY(), gameInstance.getTabTarget()[i].getPos().getX(), gameInstance.getTabTarget()[i].getPos().getY());
+                   if(distance < radius*1.5){
+                       positionIsOk = false;
+                       position = randomPositionGenerator.newRandomPosition(100);
+                       break;
+                   }
+                }
+            }
+        }
+        return position;
     }
 
     private void enter() {
