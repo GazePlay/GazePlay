@@ -30,8 +30,6 @@ public class Order implements GameLifeCycle {
     private int currentNum;
     private final int nbTarget;
     private final ReplayablePseudoRandom randomGenerator;
-    private Target[] tabTarget;
-
     @Getter
     private Target[] tabTarget;
 
