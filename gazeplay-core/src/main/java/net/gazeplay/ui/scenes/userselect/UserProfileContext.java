@@ -45,6 +45,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -444,7 +445,12 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             primaryStage.getWidth() / 10
         );
         chooseImageButton.setOnMouseClicked(event -> {
-            final String s = getImage(dialog, chooseImageButton);
+            String s = null;
+            try {
+                s = getImage(dialog, chooseImageButton);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             if (s != null) {
                 chooseImageButton.setText(s);
             }
@@ -584,6 +590,10 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         }
     }
 
+    public String getContentType(File file) throws IOException {
+        return Files.probeContentType(Path.of(file.getAbsolutePath()));
+    }
+
     private File chooseImageFile(final Stage primaryStage) {
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
@@ -595,9 +605,11 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return fileChooser.showOpenDialog(primaryStage);
     }
 
-    private String getImage(final Stage primaryStage, final Button targetButton) {
+    private String getImage(final Stage primaryStage, final Button targetButton) throws IOException {
         final File selectedImageFile = chooseImageFile(primaryStage);
-        if (selectedImageFile == null) {
+        String typeImage = getContentType(selectedImageFile);
+        log.info("typeImage : {}", typeImage);
+        if (!typeImage.contains("/image")) {
             return null;
         }
         final String result = selectedImageFile.getAbsolutePath();
