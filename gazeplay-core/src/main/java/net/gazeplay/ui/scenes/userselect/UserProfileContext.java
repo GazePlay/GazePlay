@@ -214,7 +214,8 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         final Rectangle pictureRectangle = new Rectangle(0, 0, cardWidth, cardHeight);
         pictureRectangle.setFill(imagePattern);
 
-        final Text userNameText = new Text(user.getName());
+        String name = user.getName().length() < 19 ? user.getName() : user.getName().substring(0,19)+"...";
+        final Text userNameText = new Text(name);
         userNameText.setFill(Color.WHITE);
         userNameText.getStyleClass().add("gameChooserButtonTitle");
         BorderPane.setAlignment(userNameText, Pos.BOTTOM_CENTER);
