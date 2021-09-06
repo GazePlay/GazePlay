@@ -608,7 +608,6 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
     private String getImage(final Stage primaryStage, final Button targetButton) throws IOException {
         final File selectedImageFile = chooseImageFile(primaryStage);
         String typeImage = getContentType(selectedImageFile);
-        log.info("typeImage : {}", typeImage);
         if (!typeImage.contains("/image")) {
             return null;
         }
