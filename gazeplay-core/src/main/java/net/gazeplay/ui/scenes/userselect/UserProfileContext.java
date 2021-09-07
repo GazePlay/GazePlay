@@ -1,7 +1,5 @@
 package net.gazeplay.ui.scenes.userselect;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -42,6 +40,7 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.GraphicalContext;
+import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +51,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import static net.gazeplay.commons.utils.games.Utils.addTextLimiter;
 
 @Slf4j
 public class UserProfileContext extends GraphicalContext<BorderPane> {
@@ -401,18 +402,6 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         CssUtil.setPreferredStylesheets(config, scene, currentScreenDimensionSupplier);
         dialog.setScene(scene);
         return dialog;
-    }
-
-    public static void addTextLimiter(final TextField tf, final int maxLength) {
-        tf.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(final ObservableValue<? extends String> ov, final String oldValue, final String newValue) {
-                if (tf.getText().length() > maxLength) {
-                    String s = tf.getText().substring(0, maxLength);
-                    tf.setText(s);
-                }
-            }
-        });
     }
 
     Stage createDialog(

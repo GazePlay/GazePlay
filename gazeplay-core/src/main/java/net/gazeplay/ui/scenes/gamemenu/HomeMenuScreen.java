@@ -52,6 +52,8 @@ import java.util.SortedSet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static net.gazeplay.commons.utils.games.Utils.addTextLimiter;
+
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
@@ -285,18 +287,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanel.getChildren().addAll(filteredFavList);
         choicePanel.getChildren().add(s);
         choicePanel.getChildren().addAll(filteredList);
-    }
-
-    public static void addTextLimiter(final TextField tf, final int maxLength) {
-        tf.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(final ObservableValue<? extends String> ov, final String oldValue, final String newValue) {
-                if (tf.getText().length() > maxLength) {
-                    String s = tf.getText().substring(0, maxLength);
-                    tf.setText(s);
-                }
-            }
-        });
     }
 
     private TextField buildSearchBar(Configuration config, Translator translator, ProgressIndicator dwellTimeIndicator) {
