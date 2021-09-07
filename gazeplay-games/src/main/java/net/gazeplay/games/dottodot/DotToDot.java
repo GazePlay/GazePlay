@@ -61,8 +61,6 @@ public class DotToDot implements GameLifeCycle {
 
 
     public DotToDot(final IGameContext gameContext, final DotToDotGameVariant gameVariant, final Stats stats) {
-        //super();
-
 
         this.gameContext = gameContext;
         this.stats = stats;

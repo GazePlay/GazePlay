@@ -29,7 +29,7 @@ public class DotEntity extends Parent {
     private Timeline progressTimeline;
     private final Stats stats;
     private final DotToDotGameVariant gameVariant;
-    private static DotToDot gameObject;
+    private DotToDot gameObject;
     private final int index;
     private boolean isFirst = false;
 
@@ -130,7 +130,7 @@ public class DotEntity extends Parent {
         int nbOfGoalsReached = stats.nbGoalsReached;
         int compare = 3;
         for (int i = 0; i < 3; i++) {
-            if (gameObject.getListOfFails().get(nbOfGoalsReached - i - 1) > 2)
+            if (gameObject.getListOfFails().get(nbOfGoalsReached - i - 1) > 1)
                 compare--;
         }
 
