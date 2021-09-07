@@ -1,7 +1,5 @@
 package net.gazeplay.ui.scenes.userselect;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -403,18 +401,6 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return dialog;
     }
 
-    public static void addTextLimiter(final TextField tf, final int maxLength) {
-        tf.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(final ObservableValue<? extends String> ov, final String oldValue, final String newValue) {
-                if (tf.getText().length() > maxLength) {
-                    String s = tf.getText().substring(0, maxLength);
-                    tf.setText(s);
-                }
-            }
-        });
-    }
-
     Stage createDialog(
         final GazePlay gazePlay,
         final Stage primaryStage,
@@ -434,7 +420,6 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         final HBox nameField = new HBox();
 
         final TextField tf = new TextField();
-        addTextLimiter(tf,32);
 
         if (newUser) {
             nameField.setAlignment(Pos.CENTER);

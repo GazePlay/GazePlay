@@ -4,8 +4,6 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -287,21 +285,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanel.getChildren().addAll(filteredList);
     }
 
-    public static void addTextLimiter(final TextField tf, final int maxLength) {
-        tf.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(final ObservableValue<? extends String> ov, final String oldValue, final String newValue) {
-                if (tf.getText().length() > maxLength) {
-                    String s = tf.getText().substring(0, maxLength);
-                    tf.setText(s);
-                }
-            }
-        });
-    }
 
     private TextField buildSearchBar(Configuration config, Translator translator, ProgressIndicator dwellTimeIndicator) {
         TextField gameSearchBar = new TextField();
-        addTextLimiter(gameSearchBar, 32);
 
         gameSearchBar.textProperty().addListener((obs, oldValue, newValue) -> {
             log.debug(newValue);
