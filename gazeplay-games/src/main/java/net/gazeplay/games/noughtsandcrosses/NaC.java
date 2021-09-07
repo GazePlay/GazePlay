@@ -469,8 +469,8 @@ public class NaC extends Parent implements GameLifeCycle {
             game[1][0] * game[1][1] * game[1][2] == 1 ||
             game[2][0] * game[2][1] * game[2][2] == 1 ||
             game[0][0] * game[1][0] * game[2][0] == 1 ||
-            game[0][1] * game[1][1] * game[2][2] == 1 ||
-            game[0][2] * game[1][2] * game[2][1] == 1 ||
+            game[0][1] * game[1][1] * game[2][1] == 1 ||
+            game[0][2] * game[1][2] * game[2][2] == 1 ||
             game[0][0] * game[1][1] * game[2][2] == 1 ||
             game[0][2] * game[1][1] * game[2][0] == 1){
                 win();
@@ -480,8 +480,8 @@ public class NaC extends Parent implements GameLifeCycle {
             game[1][0] * game[1][1] * game[1][2] == 8 ||
             game[2][0] * game[2][1] * game[2][2] == 8 ||
             game[0][0] * game[1][0] * game[2][0] == 8 ||
-            game[0][1] * game[1][1] * game[2][2] == 8 ||
-            game[0][2] * game[1][2] * game[2][1] == 8 ||
+            game[0][1] * game[1][1] * game[2][1] == 8 ||
+            game[0][2] * game[1][2] * game[2][2] == 8 ||
             game[0][0] * game[1][1] * game[2][2] == 8 ||
             game[0][2] * game[1][1] * game[2][0] == 8){
                 if (variant.equals(NaCGameVariant.P2)){
