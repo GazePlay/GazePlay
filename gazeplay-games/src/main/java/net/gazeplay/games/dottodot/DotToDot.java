@@ -8,6 +8,7 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import lombok.Getter;
@@ -127,20 +128,24 @@ public class DotToDot implements GameLifeCycle {
             // Creating a dot
             String imagePath = path + elementObj.get("image").getAsString();
             Image image = new Image(imagePath);
-            ImageView imageView = new ImageView(image);
+            //ImageView imageView = new ImageView(image);
+            Circle dotShape = new Circle(10);
 
             // Scaling
             double scale = elementObj.get("scale").getAsDouble();
-            imageView.setFitWidth(image.getWidth() * scale);
-            imageView.setFitHeight(image.getHeight() * scale);
+            //imageView.setFitWidth(image.getWidth() * scale);
+            //imageView.setFitHeight(image.getHeight() * scale);
 
             // Positioning a dot
             JsonObject coordinates = elementObj.getAsJsonObject("coords");
             double x = coordinates.get("x").getAsDouble();
             double y = coordinates.get("y").getAsDouble();
-            imageView.setX(x - imageView.getFitWidth() / 2);
-            imageView.setY(y - imageView.getFitHeight() / 2);
-            final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int) ((imageView.getFitWidth() + imageView.getFitHeight()) / 3),
+            dotShape.setCenterX(x);
+            dotShape.setCenterY(y);
+
+            //final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int) ((imageView.getFitWidth() + imageView.getFitHeight()) / 3),
+                //System.currentTimeMillis());
+            final TargetAOI targetAOI = new TargetAOI(dotShape.getCenterX(), y, (int) ((dotShape.getRadius() + dotShape.getRadius()) / 3),
                 System.currentTimeMillis());
             targetAOIList.add(targetAOI);
 
@@ -150,13 +155,15 @@ public class DotToDot implements GameLifeCycle {
 
             // Creating progress indicator
             ProgressIndicator progressIndicator = new ProgressIndicator(0);
-            double progIndicSize = Math.min(imageView.getFitWidth(), imageView.getFitHeight()) * 2;
+            //double progIndicSize = Math.min(imageView.getFitWidth(), imageView.getFitHeight()) * 2;
+            double progIndicSize = dotShape.getRadius() * 5;
             progressIndicator.setPrefSize(progIndicSize, progIndicSize);
-            progressIndicator.setLayoutX(x - progIndicSize / 2 + 3);
-            progressIndicator.setLayoutY(y - progIndicSize / 2 + 12);
+            progressIndicator.setLayoutX(x - progIndicSize / 2);
+            progressIndicator.setLayoutY(y - progIndicSize / 2 + 10);
             progressIndicator.setOpacity(0);
 
-            DotEntity dot = new DotEntity(imageView, stats, progressIndicator, number, gameContext, gameVariant, this, index);
+            //DotEntity dot = new DotEntity(imageView, stats, progressIndicator, number, gameContext, gameVariant, this, index);
+            DotEntity dot = new DotEntity(dotShape, stats, progressIndicator, number, gameContext, gameVariant, this, index);
             dotList.add(dot);
             gameContext.getChildren().add(dot);
             gameContext.getGazeDeviceManager().addEventFilter(dot);

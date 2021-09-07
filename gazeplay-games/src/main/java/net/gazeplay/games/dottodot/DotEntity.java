@@ -8,6 +8,8 @@ import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -27,6 +29,7 @@ public class DotEntity extends Parent {
     private final IGameContext gameContext;
     private final ProgressIndicator progressIndicator;
     private Timeline progressTimeline;
+    private Circle dotShape;
     private final Stats stats;
     private final DotToDotGameVariant gameVariant;
     private DotToDot gameObject;
@@ -36,10 +39,11 @@ public class DotEntity extends Parent {
     @Setter @Getter
     private int previous;
 
-    public DotEntity (final ImageView imageView, final Stats stats,
+    public DotEntity (final Circle dotShape, final Stats stats,
                       final ProgressIndicator progressIndicator, final Text number, final IGameContext gameContext, final DotToDotGameVariant gameVariant, DotToDot gameInstance, int index) {
         this.gameContext = gameContext;
         this.progressIndicator = progressIndicator;
+        this.dotShape = dotShape;
         this.stats = stats;
         gameObject = gameInstance;
         this.index = index;
@@ -50,7 +54,7 @@ public class DotEntity extends Parent {
         else
             previous = index - 1;
 
-        this.getChildren().addAll(number, imageView, this.progressIndicator);
+        this.getChildren().addAll(number, this.dotShape, this.progressIndicator);
 
         final EventHandler<Event> enterHandler = (Event event) -> {
             progressTimeline = new Timeline(
@@ -80,10 +84,15 @@ public class DotEntity extends Parent {
             nextDot(gameObject.getTargetAOIList().get(index - 2).getXValue(), gameObject.getTargetAOIList().get(index - 2).getYValue(),
                 gameObject.getTargetAOIList().get(index - 1).getXValue(), gameObject.getTargetAOIList().get(index - 1).getYValue());
             gameObject.setPrevious(index);
+            dotShape.setFill(Color.RED);
 
-        } else if (isFirst && gameObject.getPrevious() == gameObject.getTargetAOIList().size()) {
+        } else if(isFirst && gameObject.getPrevious() == 1) {
+            dotShape.setFill(Color.RED);
+
+        }   else if (isFirst && gameObject.getPrevious() == gameObject.getTargetAOIList().size()) {
             nextDot(gameObject.getTargetAOIList().get(gameObject.getTargetAOIList().size() - 1).getXValue(), gameObject.getTargetAOIList().get(gameObject.getTargetAOIList().size() - 1).getYValue(),
                 gameObject.getTargetAOIList().get(0).getXValue(), gameObject.getTargetAOIList().get(0).getYValue());
+            dotShape.setFill(Color.RED);
 
             stats.incrementNumberOfGoalsReached();
             log.debug("level = {}, nbGoalsReached = {}, fails = {}", gameObject.getLevel(), stats.nbGoalsReached, gameObject.getFails());
@@ -118,8 +127,8 @@ public class DotEntity extends Parent {
     }
 
     public void nextDot(double startX, double startY, double endX, double endY) {
-        Line line = new Line(startX + 20, startY, endX + 20, endY);
-        line.setStyle("-fx-stroke: red;");
+        Line line = new Line(startX, startY, endX, endY);
+        line.setStyle("-fx-stroke: indigo;");
         line.setStrokeWidth(5);
 
         gameObject.getLineList().add(line);
