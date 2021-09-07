@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -214,7 +215,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         final Rectangle pictureRectangle = new Rectangle(0, 0, cardWidth, cardHeight);
         pictureRectangle.setFill(imagePattern);
 
-        final Text userNameText = new Text(user.getName());
+        String name = user.getName().length() <= 20 ? user.getName() : user.getName().substring(0, 20) + "...";
+        final Text userNameText = new Text(name);
+        final Tooltip userNameTooltip = new Tooltip(user.getName());
         userNameText.setFill(Color.WHITE);
         userNameText.getStyleClass().add("gameChooserButtonTitle");
         BorderPane.setAlignment(userNameText, Pos.BOTTOM_CENTER);
@@ -225,6 +228,8 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         content.setPadding(new Insets(10));
         content.setCenter(pictureRectangle);
         content.setBottom(userNameText);
+
+        Tooltip.install(content, userNameTooltip);
 
         user.setAlignment(Pos.TOP_RIGHT);
         user.getChildren().add(content);
