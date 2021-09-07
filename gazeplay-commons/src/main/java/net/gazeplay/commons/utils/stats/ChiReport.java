@@ -34,6 +34,12 @@ public class ChiReport {
         chiTheoretical.add(3.84);
         chiTheoretical.add(6.63);
         chiTheoretical.add(7.88);
+        /*chiTheoretical.add(7.88);
+        chiTheoretical.add(6.63);
+        chiTheoretical.add(3.84);
+        chiTheoretical.add(2.71);
+        chiTheoretical.add(1.32);
+        chiTheoretical.add(0.45);*/
 
         ArrayList<String> decisions = new ArrayList<>();
         for (int i= 0; i < 6; i ++) {
@@ -52,12 +58,12 @@ public class ChiReport {
 
         for (int i = 0; i < chi2PerPlayedLevel.size(); i ++) {
             data.add(new ChiData(i, chi2PlayedLevel.get(i), chi2PerPlayedLevel.get(i),
-                decisions(chi2PerPlayedLevel.get(i)).get(0),
-                decisions(chi2PerPlayedLevel.get(i)).get(1),
-                decisions(chi2PerPlayedLevel.get(i)).get(2),
-                decisions(chi2PerPlayedLevel.get(i)).get(3),
+                decisions(chi2PerPlayedLevel.get(i)).get(5),
                 decisions(chi2PerPlayedLevel.get(i)).get(4),
-                decisions(chi2PerPlayedLevel.get(i)).get(5)));
+                decisions(chi2PerPlayedLevel.get(i)).get(3),
+                decisions(chi2PerPlayedLevel.get(i)).get(2),
+                decisions(chi2PerPlayedLevel.get(i)).get(1),
+                decisions(chi2PerPlayedLevel.get(i)).get(0)));
         }
 
 
