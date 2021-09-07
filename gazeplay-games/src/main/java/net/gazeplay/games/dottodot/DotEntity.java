@@ -30,20 +30,18 @@ public class DotEntity extends Parent {
     private final Stats stats;
     private final DotToDotGameVariant gameVariant;
     private static DotToDot gameObject;
-    private int index;
+    private final int index;
     private boolean isFirst = false;
-    private ArrayList<Line> lineList;
 
     @Setter @Getter
     private int previous;
 
     public DotEntity (final ImageView imageView, final Stats stats,
                       final ProgressIndicator progressIndicator, final Text number, final IGameContext gameContext, final DotToDotGameVariant gameVariant, DotToDot gameInstance, int index) {
-        this.lineList = new ArrayList<>();
         this.gameContext = gameContext;
         this.progressIndicator = progressIndicator;
         this.stats = stats;
-        this.gameObject = gameInstance;
+        gameObject = gameInstance;
         this.index = index;
         this.gameVariant = gameVariant;
 
