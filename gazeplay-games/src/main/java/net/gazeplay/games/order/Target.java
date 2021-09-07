@@ -37,7 +37,7 @@ public class Target extends Parent {
         this.num = num;
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
-        this.radius = gameContext.getGamePanelDimensionProvider().getDimension2D().getWidth()/18;
+        this.radius = gameContext.getGamePanelDimensionProvider().getDimension2D().getWidth() / 18;
         this.fixationLength = fixLength;
 
         final RandomPositionGenerator randomPositionGenerator = this.gameContext.getRandomPositionGenerator();
@@ -91,8 +91,13 @@ public class Target extends Parent {
     public void addEvent() {
         this.addEventFilter(MouseEvent.ANY, enterEvent);
         this.addEventFilter(GazeEvent.ANY, enterEvent);
-
         gameContext.getGazeDeviceManager().addEventFilter(this);
+    }
+
+    public void removeEvent() {
+        this.removeEventFilter(MouseEvent.ANY, enterEvent);
+        this.removeEventFilter(GazeEvent.ANY, enterEvent);
+        gameContext.getGazeDeviceManager().removeEventFilter(this);
     }
 
     public Position getPos() {

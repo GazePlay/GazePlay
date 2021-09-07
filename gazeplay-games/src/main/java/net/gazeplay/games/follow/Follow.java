@@ -91,6 +91,8 @@ public class Follow implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.setOffFixationLengthControl();
+
         gameContext.getChildren().clear();
 
         score = 0;
