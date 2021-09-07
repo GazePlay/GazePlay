@@ -484,7 +484,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                     imagePattern = new ImagePattern(new Image("data/common/images/DefaultUser.png"));
                 }
 
-                final User newUser1 = createUser(gazePlay, choicePanel, tf.getText(), imagePattern, false, false, screenDimension);
+                final User newUser1 = createUser(gazePlay, choicePanel, tf.getText(), imagePattern, true, false, screenDimension);
 
                 if (checkNewName(newUser1.getName())) {
 
