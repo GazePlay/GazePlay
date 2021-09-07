@@ -4,8 +4,6 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -42,6 +40,7 @@ import net.gazeplay.commons.utils.ConfigurationButtonFactory;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.MenuUtils;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 
@@ -51,8 +50,6 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import static net.gazeplay.commons.utils.games.Utils.addTextLimiter;
 
 @Slf4j
 public class HomeMenuScreen extends GraphicalContext<BorderPane> {
@@ -291,7 +288,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private TextField buildSearchBar(Configuration config, Translator translator, ProgressIndicator dwellTimeIndicator) {
         TextField gameSearchBar = new TextField();
-        addTextLimiter(gameSearchBar, 32);
+        Utils.addTextLimiter(gameSearchBar, 32);
 
         gameSearchBar.textProperty().addListener((obs, oldValue, newValue) -> {
             log.debug(newValue);

@@ -52,8 +52,6 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static net.gazeplay.commons.utils.games.Utils.addTextLimiter;
-
 @Slf4j
 public class UserProfileContext extends GraphicalContext<BorderPane> {
 
@@ -423,7 +421,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         final HBox nameField = new HBox();
 
         final TextField tf = new TextField();
-        addTextLimiter(tf, 32);
+        Utils.addTextLimiter(tf, 32);
 
         if (newUser) {
             nameField.setAlignment(Pos.CENTER);
