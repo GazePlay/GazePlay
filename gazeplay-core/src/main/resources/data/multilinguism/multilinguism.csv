@@ -257,10 +257,7 @@ Time(seconds),,,时间(秒),,,Time(seconds),,Temps(secondes),,,,,,,,,Время(
 Limiter Time,,,时间限制器,,,Time Limiter,,Limiteur de Temps,,,,,,,,,Ограничитель времени,,,Абмежавальнік часу,
 Limiter Score,,,分数限制器,,,Score Limiter,,Limiteur de Score,,,,,,,,,Ограничитель счёта,,,Абмежавальнік выніку,
 
-toTop_FIX,,,,,,from bottom to top; fix to destroy the bubble,,du bas vers le haut ; fixer pour détruire la bulle,,,,,,,,,Снизу вниз; Пристально смотреть на шарик чтобы уничтожить,,,Знізу ўніз; Пільна глядзець на шарык каб знішчыць,
-toBottom_FIX,,,,,,from top to bottom; fix to destroy the bubble,,du haut vers le bas ; fixer pour détruire la bulle,,,,,,,,,Сверху вниз; Пристально смотреть на шарик чтобы уничтожить,,,Зверху ўніз; Пільна глядзець на шарык каб знішчыць,
-toRight_FIX,,,,,,from left to right; fix to destroy the bubble,,de gauche à droite ; fixer pour détruire la bulle,,,,,,,,,Слева направо; Пристально смотреть на шарик чтобы уничтожить,,,Злева направа; Пільна глядзець на шарык каб знішчыць,
-toLeft_FIX,,,,,,from right to left; fix to destroy the bubble,,de droite à gauche ; fixer pour détruire la bulle,,,,,,,,,Справа налево; Пристально смотреть на шарик чтобы уничтожить,,,Справа налева; Пільна глядзець на шарык каб знішчыць,
+FIX,,,,,,fix,,fixe,,,,,,,,,,,,,
 
 toTop,,,从下到上,,,from bottom to top,,du bas vers le haut,,,,,,,,,снизу вверх,de abajo hacia arriba,,знізу ўверх,
 toBottom,,,从上到下,,,from top to bottom,,du haut vers le bas,,,,,,,,,сверху вниз,de arriba hacia abajo,,зверху ўніз,
@@ -328,6 +325,8 @@ Exit,,,,,,Exit,,Quitter,,,,,,,,,,,,
 Logout,,,,,,Logout,,Déconnection,,,,,,,,,,,,
 Options,,,,,,Options,,Options,,,,,,,,,,,,
 Replay,,,,,,Replay,,Rejouer,,,,,,,,,,,,
+
+No video found,,,,,,No video found,,Aucune vidéo trouvée,,,,,,,,,,,,
 
 DotToDot,,,,,,Dot to Dot,,Point par point,,,,,,,,,,,,,
 ConnectNumbers,,,,,,Connect numbers,,Connecter des chiffres,,,,,,,,,,,,,

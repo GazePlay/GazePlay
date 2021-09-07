@@ -24,10 +24,7 @@ public class Bubble implements GameLifeCycle {
     public static final String DIRECTION_LEFT = "toLeft";
     public static final String DIRECTION_RIGHT = "toRight";
 
-    public static final String DIRECTION_TOP_FIX = "toTop_FIX";
-    public static final String DIRECTION_BOTTOM_FIX = "toBottom_FIX";
-    public static final String DIRECTION_LEFT_FIX = "toLeft_FIX";
-    public static final String DIRECTION_RIGHT_FIX = "toRight_FIX";
+    public static final String FIX = "FIX";
 
     private final IGameContext gameContext;
 

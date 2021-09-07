@@ -1,5 +1,6 @@
 package net.gazeplay.ui.scenes.configuration;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -21,6 +22,7 @@ import mockit.Mocked;
 import mockit.Verifications;
 import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
@@ -38,6 +40,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -401,22 +405,24 @@ class ConfigurationContextTest {
             ConfigurationContext context = new ConfigurationContext(mockGazePlay);
             StringProperty languageProperty = new SimpleStringProperty("eng");
             StringProperty countryProperty = new SimpleStringProperty("GB");
+            try (MockedStatic<ActiveConfigurationContext> utilities = Mockito.mockStatic(ActiveConfigurationContext.class)) {
+                when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
+                when(mockConfig.getLanguage()).thenReturn(languageProperty.getValue());
+                when(mockConfig.getCountry()).thenReturn(countryProperty.getValue());
+                when(mockConfig.getLanguageProperty()).thenReturn(languageProperty);
+                when(mockConfig.getCountryProperty()).thenReturn(countryProperty);
 
-            when(mockConfig.getLanguage()).thenReturn(languageProperty.getValue());
-            when(mockConfig.getCountry()).thenReturn(countryProperty.getValue());
-            when(mockConfig.getLanguageProperty()).thenReturn(languageProperty);
-            when(mockConfig.getCountryProperty()).thenReturn(countryProperty);
-            when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
+                utilities.when(ActiveConfigurationContext::getInstance).thenReturn(mockConfig);
+                MenuButton result = context.buildLanguageChooser(mockConfig, context);
 
-            MenuButton result = context.buildLanguageChooser(mockConfig, context);
+                assertEquals(25, result.getItems().size());
 
-            assertEquals(25, result.getItems().size());
+                result.getItems().get(1).fire();
 
-            result.getItems().get(1).fire();
-
-            ImageView image = (ImageView) result.getGraphic();
-            assertTrue(image.getImage().getUrl().contains("Arab"));
-            assertEquals("ara", languageProperty.getValue());
+                ImageView image = (ImageView) result.getGraphic();
+                assertTrue(image.getImage().getUrl().contains("Arab"));
+                assertEquals("ara", languageProperty.getValue());
+            }
         });
         TestingUtils.waitForRunLater();
     }
