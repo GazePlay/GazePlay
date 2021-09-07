@@ -215,7 +215,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         final Rectangle pictureRectangle = new Rectangle(0, 0, cardWidth, cardHeight);
         pictureRectangle.setFill(imagePattern);
 
-        String name = user.getName().length() <= 20 ? user.getName() : user.getName().substring(0,20)+"...";
+        String name = user.getName().length() <= 20 ? user.getName() : user.getName().substring(0, 20) + "...";
         final Text userNameText = new Text(name);
         final Tooltip userNameTooltip = new Tooltip(user.getName());
         userNameText.setFill(Color.WHITE);
@@ -229,7 +229,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         content.setCenter(pictureRectangle);
         content.setBottom(userNameText);
 
-        Tooltip.install(content,userNameTooltip);
+        Tooltip.install(content, userNameTooltip);
 
         user.setAlignment(Pos.TOP_RIGHT);
         user.getChildren().add(content);
