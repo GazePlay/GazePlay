@@ -121,8 +121,6 @@ public class DotEntity extends Parent {
 
         } else {
             gameObject.catchFail();
-            gameContext.getChildren().removeAll(gameObject.getLineList());
-            gameObject.setPrevious(1);
         }
     }
 
