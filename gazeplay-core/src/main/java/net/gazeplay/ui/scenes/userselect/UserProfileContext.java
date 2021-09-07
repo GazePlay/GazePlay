@@ -41,6 +41,7 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.GraphicalContext;
+import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -426,6 +427,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         final HBox nameField = new HBox();
 
         final TextField tf = new TextField();
+        Utils.addTextLimiter(tf, 32);
 
         if (newUser) {
             nameField.setAlignment(Pos.CENTER);
