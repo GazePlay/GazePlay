@@ -29,7 +29,7 @@ public class DotEntity extends Parent {
     private Timeline progressTimeline;
     private final Stats stats;
     private final DotToDotGameVariant gameVariant;
-    private static DotToDot gameObject;
+    private DotToDot gameObject;
     final private int index;
     private boolean isFirst = false;
 
@@ -123,12 +123,6 @@ public class DotEntity extends Parent {
         } else {
             gameObject.catchFail();
             gameContext.getChildren().removeAll(gameObject.getLineList());
-
-            /*if(gameVariant.getLabel().contains("Order")) {
-                gameObject.getGameContext().getChildren().removeAll(gameObject.getDotList());
-                //why duplicated if it xas removed ???
-                gameObject.getGameContext().getChildren().addAll(gameObject.getDotList().get(0), gameObject.getDotList().get(0));
-            }*/
 
             gameObject.setPrevious(1);
         }
