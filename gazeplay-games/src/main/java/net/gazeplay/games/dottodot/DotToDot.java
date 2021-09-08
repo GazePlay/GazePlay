@@ -151,9 +151,13 @@ public class DotToDot implements GameLifeCycle {
             Circle dotShape = new Circle(10);
 
             // Positioning a dot
+            double ratioX = dimension2D.getWidth()/1920;
+            double ratioY = dimension2D.getHeight()/1080;
+            
             JsonObject coordinates = elementObj.getAsJsonObject("coords");
-            double x = dimension2D.getWidth() - coordinates.get("x").getAsDouble();
-            double y = dimension2D.getHeight() - coordinates.get("y").getAsDouble();
+            double x = ratioX * coordinates.get("x").getAsDouble();
+            double y = ratioY * coordinates.get("y").getAsDouble();
+
             dotShape.setCenterX(x);
             dotShape.setCenterY(y);
 
