@@ -322,7 +322,7 @@ public class Piano extends Parent implements GameLifeCycle {
         final double theta = ((index * 360d) / 7d - origin);
         final Tile a3 = new Tile(centerX, centerY, size, size, theta, angle, circ);
         a3.color1 = color1;
-        //a3.color2 = color2;
+        a3.color2 = color2;
         a3.arc.setFill(color1);
         a3.arc.setStrokeWidth(10);
         a3.setVisible(true);
@@ -401,14 +401,13 @@ public class Piano extends Parent implements GameLifeCycle {
         };
 
         final EventHandler<Event> tileEventExited = e -> {
-            log.info("index ={}", index);
+            log.info("index = {}", index);
 
             if (timelineProgressBar != null) {
                 timelineProgressBar.stop();
+                progressIndicator.setOpacity(0);
+                progressIndicator.setProgress(0);
             }
-
-            progressIndicator.setOpacity(0);
-            progressIndicator.setProgress(0);
 
             if (tilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == color2) {
                 tilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color1);
