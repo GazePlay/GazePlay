@@ -470,7 +470,7 @@ public class Piano extends Parent implements GameLifeCycle {
                 indicator.setTranslateY(centerY - (size * 0.25));
                 break;
             case 4: // Tile blanche bas-gauche
-                indicator.setTranslateX(centerX - (size * 0.75));
+                indicator.setTranslateX(centerX - (size * 0.55));
                 indicator.setTranslateY(centerY + (size * 0.5));
                 break;
             case 5: // tile blanche bas-milieu
@@ -478,7 +478,7 @@ public class Piano extends Parent implements GameLifeCycle {
                 indicator.setTranslateY(centerY + (size * 0.75));
                 break;
             case 6: // tile blanche bas-droite
-                indicator.setTranslateX(centerX + size * 0.75);
+                indicator.setTranslateX(centerX + size * 0.55);
                 indicator.setTranslateY(centerY + (size * 0.5));
                 break;
             case 7: // tile noir bas-droite
