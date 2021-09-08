@@ -120,7 +120,29 @@ public class DotToDot implements GameLifeCycle {
         }
 
         JsonArray elements = jsonRoot.getAsJsonArray("elements");
+
+        createDots(elements);
+
+        stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
+        stats.incrementNumberOfGoalsToReach();
+        gameContext.firstStart();
+
+    }
+
+    @Override
+    public void dispose() {
+        gameContext.clear();
+    }
+
+    public void catchFail() {
+        fails ++;
+    }
+
+    public void createDots(JsonArray elements) {
         int index = 0;
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
         for (JsonElement element : elements) {
             index++;
             JsonObject elementObj = (JsonObject) element;
@@ -128,11 +150,10 @@ public class DotToDot implements GameLifeCycle {
             // Creating a dot
             Circle dotShape = new Circle(10);
 
-
             // Positioning a dot
             JsonObject coordinates = elementObj.getAsJsonObject("coords");
-            double x = coordinates.get("x").getAsDouble();
-            double y = coordinates.get("y").getAsDouble();
+            double x = dimension2D.getWidth() - coordinates.get("x").getAsDouble();
+            double y = dimension2D.getHeight() - coordinates.get("y").getAsDouble();
             dotShape.setCenterX(x);
             dotShape.setCenterY(y);
 
@@ -140,7 +161,7 @@ public class DotToDot implements GameLifeCycle {
                 System.currentTimeMillis());
             targetAOIList.add(targetAOI);
 
-            //Creating text
+            // Creating text
             Text number = new Text(x - 60, y, Integer.toString(index));
             number.setStyle("-fx-font-size: 50");
 
@@ -157,21 +178,6 @@ public class DotToDot implements GameLifeCycle {
             gameContext.getChildren().add(dot);
             gameContext.getGazeDeviceManager().addEventFilter(dot);
         }
-
-        stats.notifyNewRoundReady();
-        gameContext.getGazeDeviceManager().addStats(stats);
-        stats.incrementNumberOfGoalsToReach();
-        gameContext.firstStart();
-
-    }
-
-    @Override
-    public void dispose() {
-        gameContext.clear();
-    }
-
-    public void catchFail() {
-        fails ++;
     }
 
 }
