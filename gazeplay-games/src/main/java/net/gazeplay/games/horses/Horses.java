@@ -66,6 +66,7 @@ public class Horses implements GameLifeCycle {
     private ProgressButton rollButton;
     private HashMap<TEAMS, ImageView> rollImages;
     private int diceOutcome;
+    private final StackPane dieContainer;
 
     private ArrayList<ProgressButton> teamChoosers;
     private ArrayList<TEAMS> chosenTeams;
@@ -87,6 +88,7 @@ public class Horses implements GameLifeCycle {
         this.stats.setGameSeed(randomGenerator.getSeed());
         this.gameVersion = gameVersion;
         this.nbPlayers = nbPlayers;
+        dieContainer = new StackPane();
     }
 
     public Horses(final IGameContext gameContext, final Stats stats, final int gameVersion, final int nbPlayers, double gameSeed) {
@@ -95,6 +97,7 @@ public class Horses implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
         this.gameVersion = gameVersion;
         this.nbPlayers = nbPlayers;
+        dieContainer = new StackPane();
     }
 
     /**
@@ -152,9 +155,13 @@ public class Horses implements GameLifeCycle {
      * Hides the roll button out of the way, and rolls the die
      */
     private void roll() {
+        foregroundLayer.getChildren().remove(rollButton);
+        foregroundLayer.getChildren().add(dieContainer);
         rollButton.setLayoutX(-1000);
         rollButton.setLayoutY(-1000);
         diceOutcome = die.roll(e -> showMovablePawns());
+        //foregroundLayer.getChildren().remove(dieContainer);
+        foregroundLayer.getChildren().add(rollButton);
     }
 
     /**
@@ -244,6 +251,8 @@ public class Horses implements GameLifeCycle {
         rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() / 2 - rollImage.getFitHeight() / 2);
         rollButton.setImage(rollImage);
+        //backgroundLayer.getChildren().remove(dieContainer);
+        log.info("Remove DIE");
     }
 
     /**
@@ -296,18 +305,28 @@ public class Horses implements GameLifeCycle {
         boardImage.setY(yOffset);
         backgroundLayer.getChildren().add(boardImage);
 
-        die = new DiceRoller((float) gridElementSize / 2, gameContext.getSoundManager(), randomGenerator);
+        /*die = new DiceRoller((float) gridElementSize / 2, gameContext.getSoundManager(), randomGenerator);
         final double diePositionInImage = imageSize / 2 - gridElementSize / 2;
         final StackPane dieContainer = new StackPane();
         dieContainer.getChildren().add(die);
         dieContainer.setLayoutX(xOffset + diePositionInImage);
+        dieContainer.setLayoutY(yOffset + diePositionInImage);*/
+        //backgroundLayer.getChildren().add(dieContainer);
+
+        die = new DiceRoller((float) gridElementSize / 2, gameContext.getSoundManager(), randomGenerator);
+
+
+        //dieContainer.getChildren().add(die);
+        final double diePositionInImage = imageSize / 2 - gridElementSize / 2;
+        dieContainer.setLayoutX(xOffset + diePositionInImage);
         dieContainer.setLayoutY(yOffset + diePositionInImage);
-        backgroundLayer.getChildren().add(dieContainer);
 
         rollButton = new ProgressButton();
         rollButton.assignIndicatorUpdatable(event -> {
             roll();
             stats.incrementNumberOfGoalsReached();
+            //backgroundLayer.getChildren().add(dieContainer);
+            log.info("Add DIE");
         }, gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
