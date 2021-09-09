@@ -112,11 +112,9 @@ public class OpinionsGame implements GameLifeCycle {
         old_picture = current_picture;
 
         EventHandler<Event> event = event1 -> {
-            if (!updateScore()) {
-                while (old_picture.getUrl().equals(current_picture.getUrl())) {
+             while (old_picture.getUrl().equals(current_picture.getUrl()) && !updateScore()) {
                     current_picture = backgroundImage.pickRandomImage();
-                }
-            }
+             }
             background.setImage(current_picture);
             old_picture = current_picture;
             stats.incrementNumberOfGoalsReached();
