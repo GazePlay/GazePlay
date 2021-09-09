@@ -1,5 +1,7 @@
 package net.gazeplay.games.opinions;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -109,22 +111,24 @@ public class OpinionsGame implements GameLifeCycle {
         background.setImage(current_picture);
         old_picture = current_picture;
 
+        EventHandler<Event> event = event1 -> {
+            if (!updateScore()) {
+                while (old_picture.getUrl().equals(current_picture.getUrl())) {
+                    current_picture = backgroundImage.pickRandomImage();
+                }
+            }
+            background.setImage(current_picture);
+            old_picture = current_picture;
+            stats.incrementNumberOfGoalsReached();
+        };
+
         if (type.equals(OpinionsGameVariant.OPINIONS)) {
 
 
             thumbDown = new ProgressButton();
             createAddButtonOpinions(thumbDown, "data/opinions/thumbs/thumbdown.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
 
-
-            thumbDown.assignIndicator(event -> {
-                while (old_picture.getUrl().equals(current_picture.getUrl())) {
-                    current_picture = backgroundImage.pickRandomImage();
-                }
-                background.setImage(current_picture);
-                old_picture = current_picture;
-                stats.incrementNumberOfGoalsReached();
-                updateScore();
-            }, configuration.getFixationLength());
+            thumbDown.assignIndicator(event, configuration.getFixationLength());
             gameContext.getGazeDeviceManager().addEventFilter(thumbDown);
             thumbDown.active();
 
@@ -132,15 +136,7 @@ public class OpinionsGame implements GameLifeCycle {
             createAddButtonOpinions(noCare, "data/opinions/thumbs/nocare.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
 
 
-            noCare.assignIndicator(event -> {
-                while (old_picture.getUrl().equals(current_picture.getUrl())) {
-                    current_picture = backgroundImage.pickRandomImage();
-                }
-                background.setImage(current_picture);
-                old_picture = current_picture;
-                stats.incrementNumberOfGoalsReached();
-                updateScore();
-            }, configuration.getFixationLength());
+            noCare.assignIndicator(event, configuration.getFixationLength());
             gameContext.getGazeDeviceManager().addEventFilter(noCare);
             noCare.active();
 
@@ -148,15 +144,7 @@ public class OpinionsGame implements GameLifeCycle {
             createAddButtonOpinions(thumbUp, "data/opinions/thumbs/thumbup.png", 0, dimension2D.getHeight() * 2 / 5);
 
 
-            thumbUp.assignIndicator(event -> {
-                while (old_picture.getUrl().equals(current_picture.getUrl())) {
-                    current_picture = backgroundImage.pickRandomImage();
-                }
-                background.setImage(current_picture);
-                old_picture = current_picture;
-                stats.incrementNumberOfGoalsReached();
-                updateScore();
-            }, configuration.getFixationLength());
+            thumbUp.assignIndicator(event, configuration.getFixationLength());
             gameContext.getGazeDeviceManager().addEventFilter(thumbUp);
             thumbUp.active();
 
@@ -183,27 +171,11 @@ public class OpinionsGame implements GameLifeCycle {
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", 0, dimension2D.getHeight() * 2 / 5);
             }
 
-            Oui.assignIndicator(event -> {
-                while (old_picture.getUrl().equals(current_picture.getUrl())) {
-                    current_picture = backgroundImage.pickRandomImage();
-                }
-                background.setImage(current_picture);
-                old_picture = current_picture;
-                stats.incrementNumberOfGoalsReached();
-                updateScore();
-            }, configuration.getFixationLength());
+            Oui.assignIndicator(event, configuration.getFixationLength());
             gameContext.getGazeDeviceManager().addEventFilter(Oui);
             Oui.active();
 
-            Non.assignIndicator(event -> {
-                while (old_picture.getUrl().equals(current_picture.getUrl())) {
-                    current_picture = backgroundImage.pickRandomImage();
-                }
-                background.setImage(current_picture);
-                old_picture = current_picture;
-                stats.incrementNumberOfGoalsReached();
-                updateScore();
-            }, configuration.getFixationLength());
+            Non.assignIndicator(event, configuration.getFixationLength());
             gameContext.getGazeDeviceManager().addEventFilter(Non);
             Non.active();
 
@@ -217,13 +189,16 @@ public class OpinionsGame implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(opinionGameStats);
     }
 
-    private void updateScore() {
+    private boolean updateScore() {
+        boolean end = false;
         score = score + 1;
         if (score == 10) {
+            end = true;
             gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(opinionGameStats, this));
             middleLayer.getChildren().clear();
             score = 0;
         }
+        return  end;
     }
 
     private void createAddButtonOpinions(ProgressButton button, String link, double setLayoutX, double setLayoutY) {
