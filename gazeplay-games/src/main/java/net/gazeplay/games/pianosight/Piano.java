@@ -282,7 +282,7 @@ public class Piano extends Parent implements GameLifeCycle {
         final double theta = ((index * 360d) / 7d - origin);
         final Tile a3 = new Tile(centerX, centerY, size, size, theta, angle, circ);
         a3.color1 = color1;
-        a3.color2 = color2;
+        //a3.color2 = color2;
         a3.arc.setFill(color1);
         a3.arc.setStrokeWidth(10);
         a3.setVisible(true);
