@@ -160,8 +160,6 @@ public class Horses implements GameLifeCycle {
         rollButton.setLayoutX(-1000);
         rollButton.setLayoutY(-1000);
         diceOutcome = die.roll(e -> showMovablePawns());
-        //foregroundLayer.getChildren().remove(dieContainer);
-        foregroundLayer.getChildren().add(rollButton);
     }
 
     /**
@@ -251,8 +249,8 @@ public class Horses implements GameLifeCycle {
         rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() / 2 - rollImage.getFitHeight() / 2);
         rollButton.setImage(rollImage);
-        //backgroundLayer.getChildren().remove(dieContainer);
-        log.info("Remove DIE");
+        if (foregroundLayer.getChildren().contains(dieContainer))
+            foregroundLayer.getChildren().remove(dieContainer);
     }
 
     /**
@@ -305,18 +303,10 @@ public class Horses implements GameLifeCycle {
         boardImage.setY(yOffset);
         backgroundLayer.getChildren().add(boardImage);
 
-        /*die = new DiceRoller((float) gridElementSize / 2, gameContext.getSoundManager(), randomGenerator);
-        final double diePositionInImage = imageSize / 2 - gridElementSize / 2;
-        final StackPane dieContainer = new StackPane();
-        dieContainer.getChildren().add(die);
-        dieContainer.setLayoutX(xOffset + diePositionInImage);
-        dieContainer.setLayoutY(yOffset + diePositionInImage);*/
-        //backgroundLayer.getChildren().add(dieContainer);
-
         die = new DiceRoller((float) gridElementSize / 2, gameContext.getSoundManager(), randomGenerator);
 
 
-        //dieContainer.getChildren().add(die);
+        dieContainer.getChildren().add(die);
         final double diePositionInImage = imageSize / 2 - gridElementSize / 2;
         dieContainer.setLayoutX(xOffset + diePositionInImage);
         dieContainer.setLayoutY(yOffset + diePositionInImage);
@@ -325,8 +315,6 @@ public class Horses implements GameLifeCycle {
         rollButton.assignIndicatorUpdatable(event -> {
             roll();
             stats.incrementNumberOfGoalsReached();
-            //backgroundLayer.getChildren().add(dieContainer);
-            log.info("Add DIE");
         }, gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
