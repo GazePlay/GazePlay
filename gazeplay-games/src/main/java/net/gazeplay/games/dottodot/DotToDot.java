@@ -148,7 +148,7 @@ public class DotToDot implements GameLifeCycle {
             JsonObject elementObj = (JsonObject) element;
 
             // Creating a dot
-            Circle dotShape = new Circle(10);
+            Circle dotShape = new Circle(30);
 
             // Positioning a dot
             double ratioX = dimension2D.getWidth()/1920;
@@ -166,15 +166,15 @@ public class DotToDot implements GameLifeCycle {
             targetAOIList.add(targetAOI);
 
             // Creating text
-            Text number = new Text(x - 60, y, Integer.toString(index));
-            number.setStyle("-fx-font-size: 50");
+            Text number = new Text(x - 70, y, Integer.toString(index));
+            number.setStyle("-fx-font-size: 60");
 
             // Creating progress indicator
             ProgressIndicator progressIndicator = new ProgressIndicator(0);
             double progIndicSize = dotShape.getRadius() * 5;
             progressIndicator.setPrefSize(progIndicSize, progIndicSize);
-            progressIndicator.setLayoutX(x - progIndicSize / 2);
-            progressIndicator.setLayoutY(y - progIndicSize / 2 + 10);
+            progressIndicator.setLayoutX(x - progIndicSize / 2 + 50);
+            progressIndicator.setLayoutY(y - progIndicSize / 2 + 50);
             progressIndicator.setOpacity(0);
 
             DotEntity dot = new DotEntity(dotShape, stats, progressIndicator, number, gameContext, gameVariant, this, index);
