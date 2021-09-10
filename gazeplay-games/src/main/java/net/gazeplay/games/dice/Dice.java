@@ -145,8 +145,10 @@ public class Dice implements GameLifeCycle {
 
         if (configuration.getBackgroundStyle() == BackgroundStyle.DARK)
             totalText.setFill(Color.WHITE);
-        else
+        else {
             totalText.setFill(Color.BLACK);
+            //gameContext.getConfiguration().setBackgroundStyle(BackgroundStyle.GRAY);
+        }
 
         totalText.setFont(new Font(dimensions.getHeight() / 4));
         totalText.setWrappingWidth(dimensions.getWidth());
