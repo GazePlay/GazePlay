@@ -251,6 +251,8 @@ public class Horses implements GameLifeCycle {
         rollButton.setImage(rollImage);
         if (foregroundLayer.getChildren().contains(dieContainer))
             foregroundLayer.getChildren().remove(dieContainer);
+        if (!foregroundLayer.getChildren().contains(rollButton))
+            foregroundLayer.getChildren().add(rollButton);
     }
 
     /**
