@@ -18,14 +18,15 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
-import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 
-import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public class DotToDot implements GameLifeCycle {
@@ -43,18 +44,22 @@ public class DotToDot implements GameLifeCycle {
     @Getter
     private final ReplayablePseudoRandom randomGenerator;
 
+    @Getter
     private ArrayList<DotEntity> dotList;
 
     @Getter
     private ArrayList<Line> lineList;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private int previous;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private int level = 0;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private int fails = 0;
 
     @Getter
@@ -106,7 +111,7 @@ public class DotToDot implements GameLifeCycle {
         JsonParser parser = new JsonParser();
         JsonObject jsonRoot;
         jsonRoot = (JsonObject) parser.parse(new InputStreamReader(
-            Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + folder + "elements" + level +  indexElement  +  ".json")), StandardCharsets.UTF_8));
+            Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + folder + "elements" + level + indexElement + ".json")), StandardCharsets.UTF_8));
 
         String backgroundPath = path + jsonRoot.get("background").getAsString();
         Image backgroundImage = new Image(backgroundPath);
@@ -136,7 +141,7 @@ public class DotToDot implements GameLifeCycle {
     }
 
     public void catchFail() {
-        fails ++;
+        fails++;
     }
 
     public void createDots(JsonArray elements) {
@@ -151,9 +156,9 @@ public class DotToDot implements GameLifeCycle {
             Circle dotShape = new Circle(30);
 
             // Positioning a dot
-            double ratioX = dimension2D.getWidth()/1920;
-            double ratioY = dimension2D.getHeight()/1080;
-            
+            double ratioX = dimension2D.getWidth() / 1920;
+            double ratioY = dimension2D.getHeight() / 1080;
+
             JsonObject coordinates = elementObj.getAsJsonObject("coords");
             double x = ratioX * coordinates.get("x").getAsDouble();
             double y = ratioY * coordinates.get("y").getAsDouble();
@@ -179,9 +184,29 @@ public class DotToDot implements GameLifeCycle {
 
             DotEntity dot = new DotEntity(dotShape, stats, progressIndicator, number, gameContext, gameVariant, this, index);
             dotList.add(dot);
-            gameContext.getChildren().add(dot);
-            gameContext.getGazeDeviceManager().addEventFilter(dot);
+
+            if (gameVariant.getLabel().contains("Number")) {
+                gameContext.getChildren().add(dot);
+                gameContext.getGazeDeviceManager().addEventFilter(dot);
+            }
         }
+
+        if (gameVariant.getLabel().contains("Order")) {
+            gameContext.getChildren().addAll(dotList.get(0), dotList.get(1));
+            gameContext.getGazeDeviceManager().addEventFilter(dotList.get(0));
+            gameContext.getGazeDeviceManager().addEventFilter(dotList.get(1));
+        }
+
+        stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
+        stats.incrementNumberOfGoalsToReach();
+        gameContext.firstStart();
+
+    }
+
+    public void positioningDot(DotEntity dot) {
+        gameContext.getChildren().add(dot);
+        gameContext.getGazeDeviceManager().addEventFilter(dot);
     }
 
 }

@@ -20,10 +20,6 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import javafx.scene.image.ImageView;
-
-import java.util.ArrayList;
-
 @Slf4j
 public class DotEntity extends Parent {
     private final IGameContext gameContext;
@@ -36,11 +32,12 @@ public class DotEntity extends Parent {
     private final int index;
     private boolean isFirst = false;
 
-    @Setter @Getter
+    @Setter
+    @Getter
     private int previous;
 
-    public DotEntity (final Circle dotShape, final Stats stats,
-                      final ProgressIndicator progressIndicator, final Text number, final IGameContext gameContext, final DotToDotGameVariant gameVariant, DotToDot gameInstance, int index) {
+    public DotEntity(final Circle dotShape, final Stats stats,
+                     final ProgressIndicator progressIndicator, final Text number, final IGameContext gameContext, final DotToDotGameVariant gameVariant, DotToDot gameInstance, int index) {
         this.gameContext = gameContext;
         this.progressIndicator = progressIndicator;
         this.dotShape = dotShape;
@@ -81,15 +78,22 @@ public class DotEntity extends Parent {
 
     public void drawTheLine() {
         if (previous == gameObject.getPrevious()) {
+            if (gameVariant.getLabel().contains("Order")
+                && index != gameObject.getTargetAOIList().size()
+                && !gameContext.getChildren().contains(gameObject.getDotList().get(index))) {
+                gameObject.positioningDot(gameObject.getDotList().get(index));
+
+            }
+
             nextDot(gameObject.getTargetAOIList().get(index - 2).getXValue(), gameObject.getTargetAOIList().get(index - 2).getYValue(),
                 gameObject.getTargetAOIList().get(index - 1).getXValue(), gameObject.getTargetAOIList().get(index - 1).getYValue());
             gameObject.setPrevious(index);
             dotShape.setFill(Color.RED);
 
-        } else if(isFirst && gameObject.getPrevious() == 1) {
+        } else if (isFirst && gameObject.getPrevious() == 1) {
             dotShape.setFill(Color.RED);
 
-        }   else if (isFirst && gameObject.getPrevious() == gameObject.getTargetAOIList().size()) {
+        } else if (isFirst && gameObject.getPrevious() == gameObject.getTargetAOIList().size()) {
             nextDot(gameObject.getTargetAOIList().get(gameObject.getTargetAOIList().size() - 1).getXValue(), gameObject.getTargetAOIList().get(gameObject.getTargetAOIList().size() - 1).getYValue(),
                 gameObject.getTargetAOIList().get(0).getXValue(), gameObject.getTargetAOIList().get(0).getYValue());
             dotShape.setFill(Color.RED);
@@ -99,7 +103,7 @@ public class DotEntity extends Parent {
             gameObject.getListOfFails().add(gameObject.getFails());
             gameObject.setFails(0);
 
-            if(gameVariant.getLabel().contains("Dynamic")) {
+            if (gameVariant.getLabel().contains("Dynamic")) {
                 if (stats.nbGoalsReached > 0 && stats.nbGoalsReached % 3 == 0) {
                     if (nextLevelDecision() && gameObject.getLevel() < 7)
                         gameObject.setLevel(gameObject.getLevel() + 1);
