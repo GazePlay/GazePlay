@@ -18,14 +18,15 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
-import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 
-import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public class DotToDot implements GameLifeCycle {
@@ -49,13 +50,16 @@ public class DotToDot implements GameLifeCycle {
     @Getter
     private ArrayList<Line> lineList;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private int previous;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private int level = 0;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private int fails = 0;
 
     @Getter
@@ -107,7 +111,7 @@ public class DotToDot implements GameLifeCycle {
         JsonParser parser = new JsonParser();
         JsonObject jsonRoot;
         jsonRoot = (JsonObject) parser.parse(new InputStreamReader(
-            Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + folder + "elements" + level +  indexElement  +  ".json")), StandardCharsets.UTF_8));
+            Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + folder + "elements" + level + indexElement + ".json")), StandardCharsets.UTF_8));
 
         String backgroundPath = path + jsonRoot.get("background").getAsString();
         Image backgroundImage = new Image(backgroundPath);
@@ -137,7 +141,7 @@ public class DotToDot implements GameLifeCycle {
     }
 
     public void catchFail() {
-        fails ++;
+        fails++;
     }
 
     public void createDots(JsonArray elements) {
@@ -145,15 +149,15 @@ public class DotToDot implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         for (JsonElement element : elements) {
-            index ++;
+            index++;
             JsonObject elementObj = (JsonObject) element;
 
             // Creating a dot
             Circle dotShape = new Circle(30);
 
             // Positioning a dot
-            double ratioX = dimension2D.getWidth()/1920;
-            double ratioY = dimension2D.getHeight()/1080;
+            double ratioX = dimension2D.getWidth() / 1920;
+            double ratioY = dimension2D.getHeight() / 1080;
 
             JsonObject coordinates = elementObj.getAsJsonObject("coords");
             double x = ratioX * coordinates.get("x").getAsDouble();
