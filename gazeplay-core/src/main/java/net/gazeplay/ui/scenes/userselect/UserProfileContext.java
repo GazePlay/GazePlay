@@ -41,6 +41,7 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.GraphicalContext;
+import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -426,6 +427,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         final HBox nameField = new HBox();
 
         final TextField tf = new TextField();
+        Utils.addTextLimiter(tf, 32);
 
         if (newUser) {
             nameField.setAlignment(Pos.CENTER);
@@ -495,7 +497,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                     imagePattern = new ImagePattern(new Image("data/common/images/DefaultUser.png"));
                 }
 
-                final User newUser1 = createUser(gazePlay, choicePanel, tf.getText(), imagePattern, false, false, screenDimension);
+                final User newUser1 = createUser(gazePlay, choicePanel, tf.getText(), imagePattern, true, false, screenDimension);
 
                 if (checkNewName(newUser1.getName())) {
 

@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -29,6 +30,7 @@ public class Order implements GameLifeCycle {
     private int currentNum;
     private final int nbTarget;
     private final ReplayablePseudoRandom randomGenerator;
+    @Getter
     private Target[] tabTarget;
 
 
