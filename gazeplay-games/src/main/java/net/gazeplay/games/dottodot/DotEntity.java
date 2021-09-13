@@ -128,6 +128,7 @@ public class DotEntity extends Parent {
         Line line = new Line(startX, startY, endX, endY);
         line.setStyle("-fx-stroke: indigo;");
         line.setStrokeWidth(5);
+        line.setMouseTransparent(true);
 
         gameObject.getLineList().add(line);
         gameContext.getChildren().add(line);
