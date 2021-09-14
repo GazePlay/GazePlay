@@ -15,7 +15,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.BackgroundStyle;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -75,10 +75,19 @@ public class Dice implements GameLifeCycle {
         totalText = new Text(0, dimensions.getHeight() / 5, "");
         totalText.setTextAlignment(TextAlignment.CENTER);
 
-        if (configuration.getBackgroundStyle() == BackgroundStyle.DARK)
-            totalText.setFill(Color.WHITE);
-        else
-            totalText.setFill(Color.BLACK);
+        Color color = configuration.getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+            @Override
+            public Color visitLight() {
+                return Color.BLACK;
+            }
+
+            @Override
+            public Color visitDark() {
+                return Color.WHITE;
+            }
+        });
+
+        totalText.setFill(color);
 
         totalText.setFont(new Font(dimensions.getHeight() / 4));
         totalText.setWrappingWidth(dimensions.getWidth());
@@ -143,12 +152,20 @@ public class Dice implements GameLifeCycle {
         totalText = new Text(0, dimensions.getHeight() / 5, "");
         totalText.setTextAlignment(TextAlignment.CENTER);
 
-        if (configuration.getBackgroundStyle() == BackgroundStyle.DARK)
-            totalText.setFill(Color.WHITE);
-        else {
-            totalText.setFill(Color.BLACK);
-            //gameContext.getConfiguration().setBackgroundStyle(BackgroundStyle.GRAY);
-        }
+        Color color = configuration.getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+            @Override
+            public Color visitLight() {
+                return Color.BLACK;
+            }
+
+            @Override
+            public Color visitDark() {
+                return Color.WHITE;
+            }
+        });
+
+        totalText.setFill(color);
+
 
         totalText.setFont(new Font(dimensions.getHeight() / 4));
         totalText.setWrappingWidth(dimensions.getWidth());
