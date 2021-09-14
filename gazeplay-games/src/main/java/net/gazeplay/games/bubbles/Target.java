@@ -82,7 +82,7 @@ public class Target extends ProgressPortrait {
                 setTranslateY(0);
             };
             timelineGrow.setOnFinished(e -> {
-                this.removeEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
+                this.getButton().removeEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
                 this.setOpacity(0);
             });
             this.getButton().addEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
@@ -100,7 +100,6 @@ public class Target extends ProgressPortrait {
             wait = new PauseTransition(Duration.millis(15000 / gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue()));
             wait.setOnFinished(event -> {
                 this.setOpacity(0);
-                gameContext.getGazeDeviceManager().removeEventFilter(this);
                 explose(); // instead of C to avoid wrong position of the explosion
                 timeline.stop();
                 moveTarget();
@@ -200,13 +199,11 @@ public class Target extends ProgressPortrait {
 
     private void enter(final Event e) {
 
-        if (this.gameVariant.toString().endsWith("FIX")&& wait != null) {
+        if (this.gameVariant.toString().endsWith("FIX") && wait != null) {
             wait.stop();
             wait.setDuration(Duration.millis(15000 / gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue()));
             wait.play();
         }
-
-        gameContext.getGazeDeviceManager().removeEventFilter(this);
 
         stats.incrementNumberOfGoalsReached();
 
@@ -258,7 +255,7 @@ public class Target extends ProgressPortrait {
         double centerX = 0;
         double centerY = 0;
 
-        final double timelength = ((maxTimeLength - minTimeLength) * randomGenerator.nextDouble() + minTimeLength) * 1000;
+        final double timelength = ((maxTimeLength - minTimeLength) * randomGenerator.nextDouble() + minTimeLength) * 1000 / gameContext.getConfiguration().getAnimationSpeedRatioProperty().getValue();
 
         timeline = new Timeline();
 
@@ -291,6 +288,12 @@ public class Target extends ProgressPortrait {
         } else if (this.gameVariant == BubblesGameVariant.FIX) {
             centerX = radius + (dimension2D.getWidth() - 2 * radius) * randomGenerator.nextDouble();
             centerY = radius + (dimension2D.getHeight() - 2 * radius) * randomGenerator.nextDouble();
+        }
+
+        if (this.gameVariant != BubblesGameVariant.FIX) {
+            timeline.setOnFinished(e -> {
+                moveTarget();
+            });
         }
 
         setLayoutX(centerX);
