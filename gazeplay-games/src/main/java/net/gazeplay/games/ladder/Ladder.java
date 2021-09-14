@@ -40,9 +40,6 @@ public class Ladder implements GameLifeCycle {
 
     private Rectangle player;
 
-    private double n;
-    private int m;
-
     private double radius;
 
     private final ArrayList<ProgressButton> progressButtons;
@@ -271,27 +268,27 @@ public class Ladder implements GameLifeCycle {
         steps.remove(step);
         fall.remove(step);
         step.ln.setStroke(Color.RED);
-        TranslateTransition wait = new TranslateTransition(Duration.seconds(gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue() / 2), player);
-        wait.setInterpolator(Interpolator.LINEAR);
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue() / 2), player);
+        translateTransition.setInterpolator(Interpolator.LINEAR);
         if (start) {
-            wait.setFromX(ecartw + step.x1 * spacew - dimension2D.getHeight() / 20);
-            wait.setFromY(ecarth + step.y1 * spaceh - dimension2D.getHeight() / 20);
-            wait.setToX(ecartw + step.x2 * spacew - dimension2D.getHeight() / 20);
-            wait.setToY(ecarth + step.y2 * spaceh - dimension2D.getHeight() / 20);
+            translateTransition.setFromX(ecartw + step.x1 * spacew - dimension2D.getHeight() / 20);
+            translateTransition.setFromY(ecarth + step.y1 * spaceh - dimension2D.getHeight() / 20);
+            translateTransition.setToX(ecartw + step.x2 * spacew - dimension2D.getHeight() / 20);
+            translateTransition.setToY(ecarth + step.y2 * spaceh - dimension2D.getHeight() / 20);
         } else {
-            wait.setToX(ecartw + step.x1 * spacew - dimension2D.getHeight() / 20);
-            wait.setToY(ecarth + step.y1 * spaceh - dimension2D.getHeight() / 20);
-            wait.setFromX(ecartw + step.x2 * spacew - dimension2D.getHeight() / 20);
-            wait.setFromY(ecarth + step.y2 * spaceh - dimension2D.getHeight() / 20);
+            translateTransition.setToX(ecartw + step.x1 * spacew - dimension2D.getHeight() / 20);
+            translateTransition.setToY(ecarth + step.y1 * spaceh - dimension2D.getHeight() / 20);
+            translateTransition.setFromX(ecartw + step.x2 * spacew - dimension2D.getHeight() / 20);
+            translateTransition.setFromY(ecarth + step.y2 * spaceh - dimension2D.getHeight() / 20);
         }
-        wait.setOnFinished(event -> {
+        translateTransition.setOnFinished(event -> {
             if (start) {
                 find(step.x2, step.y2);
             } else {
                 find(step.x1, step.y1);
             }
         });
-        wait.play();
+        translateTransition.play();
     }
 
     private void find(int x, int y) {
