@@ -17,8 +17,8 @@ import javafx.stage.WindowEvent;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
-import net.gazeplay.components.GazeIndicator;
 import net.gazeplay.components.GazeFollowerIndicator;
+import net.gazeplay.components.GazeIndicator;
 
 import static net.gazeplay.games.colors.ColorToolBox.COLORS_IMAGES_PATH;
 
@@ -75,7 +75,10 @@ public class CustomColorPicker extends Pane {
         mainNode.getChildren().add(colorGrid);
 
         // Send a close request on the window
-        final EventHandler<ActionEvent> closeEvent = (ActionEvent event) -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+        final EventHandler<ActionEvent> closeEvent = (ActionEvent event) -> {
+            toolBox.setDialogOpen(false);
+            stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+        };
 
         // Close button
         Image buttonImg = null;
@@ -98,7 +101,7 @@ public class CustomColorPicker extends Pane {
         closeButton.setOnAction(closeEvent);
         mainNode.getChildren().add(closeButton);
 
-        final GazeIndicator closeProgressIndic = new GazeFollowerIndicator(gameContext, this);
+        final GazeIndicator closeProgressIndic = new GazeFollowerIndicator(gameContext, this,closeButton);
         closeProgressIndic.setOnFinish(closeEvent);
         closeProgressIndic.addNodeToListen(closeButton,
             toolBox.getColorsGame().getGameContext().getGazeDeviceManager());

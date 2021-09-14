@@ -1,5 +1,7 @@
 package net.gazeplay.components;
 
+import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
@@ -13,7 +15,7 @@ public class GazeFollowerIndicator extends GazeIndicator {
     private static final double GAZE_PROGRESS_INDICATOR_SIZE = 100;
     private Polygon triangle;
 
-    public GazeFollowerIndicator(IGameContext gameContext, final Pane root) {
+    public GazeFollowerIndicator(IGameContext gameContext, final Pane root, final Node mainNode) {
 
         super(gameContext);
 
@@ -35,7 +37,8 @@ public class GazeFollowerIndicator extends GazeIndicator {
         });
 
         root.addEventFilter(GazeEvent.GAZE_MOVED, (event) -> {
-            moveGazeIndicator(event.getX(), event.getY());
+            Point2D position = mainNode.localToScene(event.getX(), event.getY());
+            moveGazeIndicator(position.getX(), position.getY());
         });
     }
 
