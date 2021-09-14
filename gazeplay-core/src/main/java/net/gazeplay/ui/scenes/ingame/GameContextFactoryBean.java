@@ -111,7 +111,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
         Color color = config.getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
             @Override
             public Color visitLight() {
-                return Color.WHITE;
+                return Color.LIGHTGREY;
             }
 
             @Override

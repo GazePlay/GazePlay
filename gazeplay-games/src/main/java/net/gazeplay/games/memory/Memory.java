@@ -26,7 +26,7 @@ public class Memory implements GameLifeCycle {
 
     private static final float cardRatio = 0.75f;
 
-    private static final int minHeight = 30;
+    private static int minHeight = 30;
 
     public enum MemoryGameType {
 
@@ -243,6 +243,9 @@ public class Memory implements GameLifeCycle {
         indUsed.clear();
 
         final int fixationlength = config.getFixationLength();
+
+        if (getNbLines() > 2)
+            minHeight = 10;
 
         for (int currentLineIndex = 0; currentLineIndex < nbLines; currentLineIndex++) {
             for (int currentColumnIndex = 0; currentColumnIndex < nbColumns; currentColumnIndex++) {

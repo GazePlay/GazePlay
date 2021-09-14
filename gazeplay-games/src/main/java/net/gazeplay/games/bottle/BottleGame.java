@@ -230,7 +230,7 @@ public class BottleGame implements GameLifeCycle {
             sizex=24;
             sizey=12;
         }
-        else if(!Stype.equals("NormalB")){
+        else if(!Stype.equals("NormalB") && !Stype.equals("InfinityB")){
             //If the type is unknown, use the "Normal" settings
             log.warn("unknown type : " + Stype + "\nThe 'Normal' settings will be use");
         }
@@ -276,6 +276,15 @@ public class BottleGame implements GameLifeCycle {
                 if (!isBroken) {
                     isBroken = true;
                     ballMovement(bo);
+                    if (Stype.equals("InfinityB")){
+                        PauseTransition reshow = new PauseTransition(Duration.millis(2500));
+                        reshow.setOnFinished(e -> {
+                            bo.active();
+                            bo.getImage().setImage(bottleImage);
+                            isBroken = false;
+                        });
+                        reshow.play();
+                    }
                 }
             }, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(bo);
@@ -327,7 +336,7 @@ public class BottleGame implements GameLifeCycle {
         score = score + 1;
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
-        if (score == nbBottle) {
+        if (score == nbBottle && !Stype.equals("InfinityB")) {
             gameContext.playWinTransition(0, event1 -> {
                 gameContext.clear();
                 gameContext.showRoundStats(bottleGameStats, this);
