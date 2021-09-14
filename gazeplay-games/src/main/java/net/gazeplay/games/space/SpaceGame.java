@@ -327,24 +327,22 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         backgroundLayer.getChildren().add(backgroundImage2);
         backgroundLayer.getChildren().add(backgroundImage3);
         backgroundImage.toFront();
-        backgroundImage2.toBack();
+        backgroundImage2.toFront();
         backgroundImage3.toBack();
 
         final TranslateTransition translateTransition = new TranslateTransition(Duration.millis(10000), backgroundImage);
         translateTransition.setFromY(0);
         translateTransition.setToY(dimension2D.getHeight());
         translateTransition.setInterpolator(Interpolator.LINEAR);
-        translateTransition.play();
 
         final TranslateTransition translateTransition2 = new TranslateTransition(Duration.millis(10000), backgroundImage2);
-        translateTransition2.setFromY(0);
-        translateTransition2.setToY(dimension2D.getHeight());
+        translateTransition2.setFromY(-dimension2D.getHeight());
+        translateTransition2.setToY(0);
         translateTransition2.setInterpolator(Interpolator.LINEAR);
-        translateTransition2.play();
 
-        final SequentialTransition sequentialTransition = new SequentialTransition(translateTransition, translateTransition2);
-        sequentialTransition.setCycleCount(Animation.INDEFINITE);
-        sequentialTransition.play();
+        final ParallelTransition parallelTransition = new ParallelTransition(translateTransition, translateTransition2);
+        parallelTransition.setCycleCount(Animation.INDEFINITE);
+        parallelTransition.play();
 
         spaceship = new Rectangle(dimension2D.getWidth() / 2, 6 * dimension2D.getHeight() / 7,
             dimension2D.getWidth() / 8, dimension2D.getHeight() / 7);
