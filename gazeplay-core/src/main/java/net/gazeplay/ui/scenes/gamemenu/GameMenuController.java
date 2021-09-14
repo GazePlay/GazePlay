@@ -103,6 +103,7 @@ public class GameMenuController {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+                        break;
                     }
                 }
                 ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
