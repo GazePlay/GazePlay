@@ -33,8 +33,7 @@ public class GazeFollowerIndicator extends GazeIndicator {
         root.getChildren().add(triangle);
 
         root.addEventFilter(MouseEvent.MOUSE_MOVED, (event) -> {
-            Point2D position = mainNode.localToScene(event.getX(), event.getY());
-            moveGazeIndicator(position.getX(), position.getY());
+            moveGazeIndicator(event.getX(), event.getY());
         });
 
         root.addEventFilter(GazeEvent.GAZE_MOVED, (event) -> {
