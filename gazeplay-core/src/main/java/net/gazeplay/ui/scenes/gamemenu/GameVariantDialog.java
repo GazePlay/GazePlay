@@ -117,6 +117,9 @@ public class GameVariantDialog extends Stage {
                 String variantString = ((IntStringGameVariant) variant).getStringValue();
                 int indexOfTheVariant = 0;
                 switch (variantString) {
+                    case "InfinityB":
+                        indexOfTheVariant = 5;
+                        break;
                     case "BigB":
                         indexOfTheVariant = 4;
                         break;
@@ -153,7 +156,8 @@ public class GameVariantDialog extends Stage {
             if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
                 gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
                 gameSpec.getGameSummary().getNameCode().equals("bottle") ||
-                gameSpec.getGameSummary().getNameCode().contains("Memory")) {
+                gameSpec.getGameSummary().getNameCode().contains("Memory") ||
+                gameSpec.getGameSummary().getNameCode().equals("DotToDot")) {
                 if (variant instanceof DimensionGameVariant) {
                     variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "normal");
                 }
@@ -164,12 +168,15 @@ public class GameVariantDialog extends Stage {
                         categories = new RadioButton[2];
                         categories[0] = new RadioButton("normal");
                         categories[1] = new RadioButton("easy");
-                    } else if (gameSpec.getGameSummary().getNameCode().equals("Ninja") || gameSpec.getGameSummary().getNameCode().contains("Memory")) {
+                    } else if (gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
+                        gameSpec.getGameSummary().getNameCode().contains("Memory") ||
+                        gameSpec.getGameSummary().getNameCode().equals("DotToDot")) {
                         categories = new RadioButton[2];
                         categories[0] = new RadioButton("Static");
                         categories[1] = new RadioButton("Dynamic");
                     } else if (gameSpec.getGameSummary().getNameCode().equals("bottle")) {
-                        categories = new RadioButton[5];
+                        categories = new RadioButton[6];
+                        categories[5] = new RadioButton("Infinity");
                         categories[4] = new RadioButton("Big");
                         categories[3] = new RadioButton("Hight");
                         categories[2] = new RadioButton("Normal");
