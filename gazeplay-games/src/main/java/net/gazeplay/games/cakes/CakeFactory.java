@@ -233,6 +233,8 @@ public class CakeFactory extends Parent implements GameLifeCycle {
             setMaxCake(getMaxCake() + 1);
             setCurrentCake(getMaxCake());
             createCake(getMaxCake());
+            buttons[2].disable();
+            buttons[2].setOpacity(0.5);
         }
 
         if (win) {

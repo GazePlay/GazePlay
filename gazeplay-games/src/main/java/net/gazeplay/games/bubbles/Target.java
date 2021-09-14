@@ -53,6 +53,8 @@ public class Target extends ProgressPortrait {
 
     private EventHandler exitEvent;
 
+    private PauseTransition wait;
+
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
                   final ImageLibrary imageLibrary, final BubblesGameVariant gameVariant, final Bubble gameInstance, final ReplayablePseudoRandom randomGenerator, BubbleType type) {
         super(gameContext.getConfiguration().getElementSize());
@@ -80,7 +82,7 @@ public class Target extends ProgressPortrait {
                 setTranslateY(0);
             };
             timelineGrow.setOnFinished(e -> {
-                this.removeEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
+                this.getButton().removeEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
                 this.setOpacity(0);
             });
             this.getButton().addEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
@@ -94,8 +96,23 @@ public class Target extends ProgressPortrait {
                 );
                 timelineGrow.play();
             });
+
+            wait = new PauseTransition(Duration.millis(15000 / gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue()));
+            wait.setOnFinished(event -> {
+                this.setOpacity(0);
+                explose(); // instead of C to avoid wrong position of the explosion
+                timeline.stop();
+                moveTarget();
+                this.getButton().addEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
+                this.setOpacity(1);
+                wait.setDuration(Duration.millis(15000 / gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue()));
+                wait.play();
+            });
+            wait.play();
+            assignIndicatorUpdatable(enterEvent, gameContext);
+        } else {
+            this.assignIndicator(enterEvent, 0);
         }
-        assignIndicatorUpdatable(enterEvent, gameContext);
         gameContext.getGazeDeviceManager().addEventFilter(this);
         active();
 
@@ -182,7 +199,11 @@ public class Target extends ProgressPortrait {
 
     private void enter(final Event e) {
 
-        gameContext.getGazeDeviceManager().removeEventFilter(this);
+        if (this.gameVariant.toString().endsWith("FIX") && wait != null) {
+            wait.stop();
+            wait.setDuration(Duration.millis(15000 / gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue()));
+            wait.play();
+        }
 
         stats.incrementNumberOfGoalsReached();
 
@@ -194,7 +215,10 @@ public class Target extends ProgressPortrait {
 
         moveTarget();
 
-        this.getButton().addEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
+        if (this.gameVariant.toString().endsWith("FIX")) {
+            this.getButton().addEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
+        }
+
         this.setOpacity(1);
 
     }
@@ -205,7 +229,6 @@ public class Target extends ProgressPortrait {
         updateRadius(screenDimension);
 
         setVisible(true);
-
         moveTarget();
     }
 
@@ -232,47 +255,49 @@ public class Target extends ProgressPortrait {
         double centerX = 0;
         double centerY = 0;
 
-        final double timelength = ((maxTimeLength - minTimeLength) * randomGenerator.nextDouble() + minTimeLength) * 1000;
+        final double timelength = ((maxTimeLength - minTimeLength) * randomGenerator.nextDouble() + minTimeLength) * 1000 / gameContext.getConfiguration().getAnimationSpeedRatioProperty().getValue();
 
         timeline = new Timeline();
 
         updateRadius(dimension2D);
 
-        if (this.gameVariant == BubblesGameVariant.TOP || this.gameVariant == BubblesGameVariant.TOP_FIX) {
+        if (this.gameVariant == BubblesGameVariant.TOP) {
             centerX = (dimension2D.getWidth() - 2 * radius) * randomGenerator.nextDouble();
             centerY = dimension2D.getHeight();
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(layoutYProperty(), -2 * radius, Interpolator.EASE_IN)));
-        } else if (this.gameVariant == BubblesGameVariant.BOTTOM || this.gameVariant == BubblesGameVariant.BOTTOM_FIX) {
+        } else if (this.gameVariant == BubblesGameVariant.BOTTOM) {
             centerX = (dimension2D.getWidth() - 2 * radius) * randomGenerator.nextDouble();
             centerY = -2 * radius;
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(layoutYProperty(), dimension2D.getHeight() + radius, Interpolator.EASE_IN)));
-        } else if (this.gameVariant == BubblesGameVariant.RIGHT || this.gameVariant == BubblesGameVariant.RIGHT_FIX) {
+        } else if (this.gameVariant == BubblesGameVariant.RIGHT) {
             centerX = -2 * radius;
             centerY = (dimension2D.getHeight() - 2 * radius) * randomGenerator.nextDouble();
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(layoutXProperty(), dimension2D.getWidth() + 2 * radius, Interpolator.EASE_IN)));
-        } else if (this.gameVariant == BubblesGameVariant.LEFT || this.gameVariant == BubblesGameVariant.LEFT_FIX) {
+        } else if (this.gameVariant == BubblesGameVariant.LEFT) {
             centerX = dimension2D.getWidth();
             centerY = (dimension2D.getHeight() - 2 * radius) * randomGenerator.nextDouble();
             timeline.getKeyFrames()
                 .add(new KeyFrame(new Duration(timelength),
                     new KeyValue(layoutXProperty(), -2 * radius, Interpolator.EASE_IN)));
+        } else if (this.gameVariant == BubblesGameVariant.FIX) {
+            centerX = radius + (dimension2D.getWidth() - 2 * radius) * randomGenerator.nextDouble();
+            centerY = radius + (dimension2D.getHeight() - 2 * radius) * randomGenerator.nextDouble();
         }
 
+        if (this.gameVariant != BubblesGameVariant.FIX) {
+            timeline.setOnFinished(e -> {
+                moveTarget();
+            });
+        }
 
         setLayoutX(centerX);
         setLayoutY(centerY);
-
-        timeline.setOnFinished(actionEvent -> {
-            createTarget();
-        });
-
-        timeline.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
 
         timeline.play();
     }

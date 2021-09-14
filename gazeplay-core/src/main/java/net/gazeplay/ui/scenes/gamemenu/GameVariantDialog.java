@@ -156,7 +156,8 @@ public class GameVariantDialog extends Stage {
             if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
                 gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
                 gameSpec.getGameSummary().getNameCode().equals("bottle") ||
-                gameSpec.getGameSummary().getNameCode().contains("Memory")) {
+                gameSpec.getGameSummary().getNameCode().contains("Memory") ||
+                gameSpec.getGameSummary().getNameCode().equals("DotToDot")) {
                 if (variant instanceof DimensionGameVariant) {
                     variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "normal");
                 }
@@ -167,7 +168,9 @@ public class GameVariantDialog extends Stage {
                         categories = new RadioButton[2];
                         categories[0] = new RadioButton("normal");
                         categories[1] = new RadioButton("easy");
-                    } else if (gameSpec.getGameSummary().getNameCode().equals("Ninja") || gameSpec.getGameSummary().getNameCode().contains("Memory")) {
+                    } else if (gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
+                        gameSpec.getGameSummary().getNameCode().contains("Memory") ||
+                        gameSpec.getGameSummary().getNameCode().equals("DotToDot")) {
                         categories = new RadioButton[2];
                         categories[0] = new RadioButton("Static");
                         categories[1] = new RadioButton("Dynamic");
