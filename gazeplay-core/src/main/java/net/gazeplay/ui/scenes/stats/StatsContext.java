@@ -23,6 +23,7 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
+import net.gazeplay.commons.ui.I18NTooltip;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
@@ -264,6 +265,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         CustomButton continueButton
     ) {
         HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
+
+        I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
+        I18NTooltip.install(homeButton, tooltipBackToMenu);
 
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 

@@ -156,7 +156,7 @@ With moving platforms,Me platforma lëvizëse,,移动平台,,,With moving platfo
 Without moving platforms,Pa platforma lëvizëse,,固定平台,,,Without moving platforms,,Sans les platformes animées,,,Senza piattaforme mobili,,,,,Zonder bewegende platformen,Без двигающихся платформ,,,Без платформаў якія рухаюцца,
 Vertical Dynamic,,,,,,Vertical Dynamic,,Vertical Dynamique,,,,,,,,Verticaal Dynamiek,Вертикальный Адаптируемый,,,Вертыкальны Адаптуемы,
 Horizontal Dynamic,,,横向,,,Horizontal Dynamic,,Horizontal Dynamique,,,,,,,,Horizontaal Dynamiek,Горизонтальный Адаптируемый,,,Гарызантальны Адаптуемы,
-Diagonal from upper left to lower right Dynamic,,,左上角 - 右下角,,,Upper Left - Lower Right Dynamic,,Haut Gauche – Bas Droite Dynamique,,,,,,,,Boven links - onder rechts Dynamiek,С верхнего левого и в нижний правый Адаптируемый,,,З верхняга левага і ў ніжні правы Адаптуемы, 
+Diagonal from upper left to lower right Dynamic,,,左上角 - 右下角,,,Upper Left - Lower Right Dynamic,,Haut Gauche – Bas Droite Dynamique,,,,,,,,Boven links - onder rechts Dynamiek,С верхнего левого и в нижний правый Адаптируемый,,,З верхняга левага і ў ніжні правы Адаптуемы,
 Diagonal from upper right to lower left Dynamic,,,右上角 - 左下角,,,Upper Right - Lower Left Dynamic,,Haut Droite - Bas Gauche Dynamique,,,,,,,,Boven rechts - onder links Dynamiek,С верхнего правого и в нижний левый Адаптируемый,,,З верхняга правага і ў ніжні левы Адаптуемы,
 Random Dynamic,,,随机,,,Random Dynamic,,Hasard Dynamique,,,,,,,,Willekeurig Dynamiek,Случайный Адаптируемый,,,Выпадковы Адаптуемы,
 
@@ -257,10 +257,7 @@ Time(seconds),,,时间(秒),,,Time(seconds),,Temps(secondes),,,,,,,,,Время(
 Limiter Time,,,时间限制器,,,Time Limiter,,Limiteur de Temps,,,,,,,,,Ограничитель времени,,,Абмежавальнік часу,
 Limiter Score,,,分数限制器,,,Score Limiter,,Limiteur de Score,,,,,,,,,Ограничитель счёта,,,Абмежавальнік выніку,
 
-toTop_FIX,,,,,,from bottom to top; fix to destroy the bubble,,du bas vers le haut ; fixer pour détruire la bulle,,,,,,,,,Снизу вниз; Пристально смотреть на шарик чтобы уничтожить,,,Знізу ўніз; Пільна глядзець на шарык каб знішчыць,
-toBottom_FIX,,,,,,from top to bottom; fix to destroy the bubble,,du haut vers le bas ; fixer pour détruire la bulle,,,,,,,,,Сверху вниз; Пристально смотреть на шарик чтобы уничтожить,,,Зверху ўніз; Пільна глядзець на шарык каб знішчыць,
-toRight_FIX,,,,,,from left to right; fix to destroy the bubble,,de gauche à droite ; fixer pour détruire la bulle,,,,,,,,,Слева направо; Пристально смотреть на шарик чтобы уничтожить,,,Злева направа; Пільна глядзець на шарык каб знішчыць,
-toLeft_FIX,,,,,,from right to left; fix to destroy the bubble,,de droite à gauche ; fixer pour détruire la bulle,,,,,,,,,Справа налево; Пристально смотреть на шарик чтобы уничтожить,,,Справа налева; Пільна глядзець на шарык каб знішчыць,
+FIX,,,,,,fix,,fixe,,,,,,,,,,,,,
 
 toTop,,,从下到上,,,from bottom to top,,du bas vers le haut,,,,,,,,,снизу вверх,de abajo hacia arriba,,знізу ўверх,
 toBottom,,,从上到下,,,from top to bottom,,du haut vers le bas,,,,,,,,,сверху вниз,de arriba hacia abajo,,зверху ўніз,
@@ -280,7 +277,6 @@ customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisé
 
 SorryButReplayInvalid,,,,,,Sorry but the game '{}' is not replayable.\nIt will be available in a next update.,,Désolé mais le jeu '{}' n'est pas rejouable.\nIl sera disponible dans une prochaine mise à jour.,,,,,,,,,Игра '{}' не может быть переигранна,,,Не можна пераграць гульню '{}'
 PrintImg,,,,,,Print image,,Imprimer image,,,,,,,Распечатать изображение,,,Раздрукаваць малюнак,
-
 
 Done,,,,,,Done,,Valider,,,,,,,,,Готово,,,Гатова,
 WhereIsItDirectory:,,,,,,'Where is it ?' Configuration:,,Configuration de 'Où est-ce ?':,,,,,,,,,Настройки для'Где это?',,,Налады для'Где гэта? ',
@@ -302,7 +298,7 @@ OuiNon_Droite-Gauche,,,,,,Yes to the rigth and no to the left,,Oui à droite et 
 Sea,,,,,,Sea,,Mer,,,,,,,,,Море,,,Мора,
 
 Mouse,,,,,,Mouse,,Souris,,,,,,,,,Мышка,,,Мышка,
-Gaze,,,,,,Gaze,,Regard,,,,,,,,,Взгляд,,,Погляд
+Gaze,,,,,,Gaze,,Regard,,,,,,,,,Взгляд,,,Погляд,
 MouseAndGaze,,,,,,Mouse and Gaze,,Souris et Regard,,,,,,,,,Мышка и взгляд,,,Мышка і погляд,
 
 AnimeLook at the destination box to move,,,,,,With animation. Look at the destination box to move,,Avec animation. Regarde la boîte de destination pour bouger,,,,,,,,,С анимацией. Посмотри на нужную коробку чтобы передвинуть объект,,,З анімацыяй. Паглядзі на патрэбную скрынку каб перасунуць аб'ект,
@@ -314,10 +310,37 @@ NormalB,,,,,,normal bottles,,bouteilles normales,,,,,,,,,обычные буты
 BigB,,,,,,big bottles,,grosses bouteilles,,,,,,,,,большие бутылки,,,вялікія бутэлькі,
 SmallB,,,,,,small bottles,,petites bouteilles,,,,,,,,,маленькие бутылки,,,маленькія бутэлькі,
 HighB,,,,,,high botles,,grandes bouteilles,,,,,,,,,высокие бутылки,,,высокія бутэлькі,
-TinyB,,,,,,tiny bottles,,bouteilles minuscules,,,,,,,,,низкие бутылки,,,нізкія бутэлькі
+TinyB,,,,,,tiny bottles,,bouteilles minuscules,,,,,,,,,низкие бутылки,,,нізкія бутэлькі,
+
+easy,,,,,,Easy,,Facile,,,,,,,,,,,,
+UserP,,,,,,User's portraits,,Portraits de l'utilisateur,,,,,,,,,,,
+
+Generate,,,,,,Generate Shortcut,,Générer le raccourcis,,,,,,,,,,,
+CreateShortCut,,,,,,Create Game Shortcuts,,Créer des raccourcis vers les jeux,,,,,,,,,,,
+SelectVariant,,,,,,Select a Variant,,Sélectionner une Variante,,,,,,,,,,,
+SelectGame,,,,,,Select a Game,,Sélectionner un Jeu,,,,,,,,,,,
+
+BackToMenu,,,,,,Back to home menu,,Retour au menu principal,,,,,,,,,,,,
+Exit,,,,,,Exit,,Quitter,,,,,,,,,,,,
+Logout,,,,,,Logout,,Déconnection,,,,,,,,,,,,
+Options,,,,,,Options,,Options,,,,,,,,,,,,
+Replay,,,,,,Replay,,Rejouer,,,,,,,,,,,,
+
+Ladder,,,,,,Ladder,,Échelle,,,,,,,,,,,,
+InfinityB,,,,,,infinity bottles,,bouteilles à l'infini,,,,,,,,,,,,
+NaC,,,,,,Noughts and crosses,,Morpion,,,,,,,,,,,,
+P2,,,,,,2 players,,2 joueurs,,,,,,,,,,,,
+IA,,,,,,versus the computer,,Contre l'ordinateur,,,,,,,,,,,,
+No video found,,,,,,No video found,,Aucune vidéo trouvée,,,,,,,,,,,,
 
 CasseBrique,,,,,,Break out,,Casse-brique,,,,,,,,,,,,
 CBBLOC,,,,,,Bloc,,Bloc,,,,,,,,,,,,
 CBSPACE,,,,,,Space Invader,,Space Invader,,,,,,,,,,,,
 CBARC,,,,,,Rainbow,,Arc-en-ciel,,,,,,,,,,,,
 CBSMILEY,,,,,,Smiley,,Sourire,,,,,,,,,,,,
+
+DotToDot,,,,,,Dot to Dot,,Point par point,,,,,,,,,,,,,
+ConnectNumbers,,,,,,Connect numbers,,Connecter des chiffres,,,,,,,,,,,,,
+ConnectOrder,,,,,,Connect in order,,Connecter dans l'ordre,,,,,,,,,,,,,
+ConnectNumbersDynamic,,,,,,Connect in order dynamic,,Connecter des chiffres dynamique,,,,,,,,,,,,,
+ConnectOrderDynamic,,,,,,Connect in order  dynamic,,Connecter dans l'ordre  dynamique,,,,,,,,,,,,,

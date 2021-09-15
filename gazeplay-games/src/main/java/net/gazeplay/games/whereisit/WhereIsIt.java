@@ -544,11 +544,6 @@ public class WhereIsIt implements GameLifeCycle {
             return "";
         }
 
-        if (gameType == FLAGS) {// no sound for now
-            // erase when translation is complete
-            return null;
-        }
-
         if (!(language.equals("fra") || language.equals("eng") || language.equals("chn"))) {
             // sound is only for English, French and Chinese
             // erase when translation is complete

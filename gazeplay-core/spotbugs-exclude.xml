@@ -15,4 +15,8 @@
         <Package name="~.*"/>
         <Bug pattern="EI_EXPOSE_REP, EI_EXPOSE_REP2"/>
     </Match>
+    <Match>
+        <Source name="~.*ConfigurationContextTest\.java" />
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE" />
+    </Match>
 </FindBugsFilter>

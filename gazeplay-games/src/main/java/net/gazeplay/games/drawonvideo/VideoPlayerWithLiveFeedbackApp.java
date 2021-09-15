@@ -290,6 +290,7 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.setOffFixationLengthControl();
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
     }

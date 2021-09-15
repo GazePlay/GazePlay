@@ -54,6 +54,7 @@ public class VideoGrid implements GameLifeCycle {
     private final List<String> compatibleFileTypes;
 
     private final ColorAdjust greyscale;
+    private List<MediaPlayer> mediaPlayers = new LinkedList<>();
 
     public VideoGrid(final IGameContext gameContext, final Stats stats, final int nbColumns, final int nbLines) {
         this.gameContext = gameContext;
@@ -101,6 +102,8 @@ public class VideoGrid implements GameLifeCycle {
     @Override
     public void launch() {
 
+        gameContext.setOffFixationLengthControl();
+
         if (videoFolder.isDirectory()) {
 
             final File[] files = videoFolder.listFiles(f -> {
@@ -128,6 +131,7 @@ public class VideoGrid implements GameLifeCycle {
                     // Creating the mediaplayer
                     final Media media = new Media(file.toURI().toString());
                     final MediaPlayer mediaPlayer = new MediaPlayer(media);
+                    mediaPlayers.add(mediaPlayer);
                     mediaPlayer.volumeProperty().bind(config.getEffectsVolumeProperty());
                     // Loop when the video is over
                     mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.ZERO));
@@ -208,6 +212,9 @@ public class VideoGrid implements GameLifeCycle {
 
     @Override
     public void dispose() {
+        for(MediaPlayer mediaplayer: mediaPlayers){
+            mediaplayer.stop();
+        }
         grid.getChildren().clear();
         gameContext.getChildren().clear();
     }
