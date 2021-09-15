@@ -454,8 +454,11 @@ public class Piano extends Parent implements GameLifeCycle {
                             circleTemp.setFill(Color.BLACK);
                             circleTemp.setOpacity(0);
                         }
+
+                        progressIndicator.setOpacity(0);
                     });
                     timelineProgressBar.play();
+
                 }
             }
         };
