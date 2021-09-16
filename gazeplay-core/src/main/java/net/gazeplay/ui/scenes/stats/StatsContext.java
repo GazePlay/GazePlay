@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -37,6 +38,8 @@ import net.gazeplay.ui.GraphicalContext;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
+
+//import javax.swing.text.TableView;
 
 @Slf4j
 public class StatsContext extends GraphicalContext<BorderPane> {
@@ -91,12 +94,16 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         LineChart<String, Number> lineChart = StatDisplayUtils.buildLineChart(stats, root);
         centerPane.getChildren().add(lineChart);
         RadioButton colorBands = new RadioButton("Color Bands");
+        RadioButton levelsInfo = new RadioButton("Levels Info");
+        RadioButton chi2Info = new RadioButton("Chi2 Info");
 
         if (!config.isFixationSequenceDisabled()) {
-            LinkedList<FixationPoint> tempSequenceList = new LinkedList<FixationPoint>();
+            LinkedList<FixationPoint> tempSequenceList = new LinkedList<>();
             tempSequenceList.addAll(stats.getFixationSequence().get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
             tempSequenceList.addAll(stats.getFixationSequence().get(FixationSequence.GAZE_FIXATION_SEQUENCE));
             AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(tempSequenceList, root);
+            LineChart<String, Number> levelChart = StatDisplayUtils.buildLevelChart(stats, root);
+            TableView chi2Chart = StatDisplayUtils.buildTable(stats);
 
             colorBands.setTextFill(Color.WHITE);
             colorBands.getStylesheets().add("data/common/radio.css");
@@ -111,9 +118,46 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                     centerPane.getChildren().add(lineChart);
                 }
             });
+
+            levelsInfo.setTextFill(Color.WHITE);
+            levelsInfo.getStylesheets().add("data/common/radio.css");
+
+            levelsInfo.setOnAction(event -> {
+                if (levelsInfo.isSelected()) {
+                    centerPane.getChildren().remove(lineChart);
+                    centerPane.getChildren().add(levelChart);
+                    centerPane.getStylesheets().add("data/common/chart.css");
+                } else {
+                    centerPane.getChildren().remove(levelChart);
+                    centerPane.getChildren().add(lineChart);
+                }
+            });
+
+            chi2Info.setTextFill(Color.WHITE);
+            chi2Info.getStylesheets().add("data/common/radio.css");
+
+            chi2Info.setOnAction(event -> {
+                if (chi2Info.isSelected()) {
+                    centerPane.getChildren().remove(lineChart);
+                    centerPane.getChildren().add(chi2Chart);
+                    centerPane.getStylesheets().add("data/common/table.css");
+                } else {
+                    centerPane.getChildren().remove(chi2Chart);
+                    centerPane.getChildren().add(lineChart);
+                }
+            });
         }
 
-        HBox controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, continueButton);
+        HBox controlButtonPane;
+
+        if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameNameCode().equals("Ninja") && stats.getCurrentGameVariant().contains("DYNAMIC"))
+            controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, continueButton);
+        else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameVariant().contains("Dynamic") && stats.getCurrentGameNameCode().contains("Memory"))
+            controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, continueButton);
+        else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameNameCode().equals("WhereIsTheAnimal") && stats.getCurrentGameVariant().contains("DYNAMIC"))
+            controlButtonPane = createControlButtonPane(gazePlay, stats, config, chi2Info, continueButton);
+        else
+            controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, continueButton);
 
         StackPane centerStackPane = new StackPane();
         centerStackPane.getChildren().add(centerPane);

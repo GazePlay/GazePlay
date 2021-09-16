@@ -133,6 +133,11 @@ class PictureCard extends Group {
     private void onCorrectCardSelected(WhereIsIt gameInstance) {
         log.debug("WINNER");
 
+        if (!gameInstance.getFirstWrong())
+            gameInstance.updateRight();
+
+        gameInstance.firstRightCardSelected();
+
         stats.incrementNumberOfGoalsReached();
 
         customInputEventHandler.ignoreAnyInput = true;
@@ -176,6 +181,10 @@ class PictureCard extends Group {
     }
 
     private void onWrongCardSelected(WhereIsIt gameInstance) {
+        //could be a single function?
+        gameInstance.updateWrong();
+        gameInstance.firstWrongCardSelected();
+
         customInputEventHandler.ignoreAnyInput = true;
         progressIndicator.setVisible(false);
 

@@ -154,6 +154,7 @@ public class GameVariantDialog extends Stage {
             }
 
             if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
                 gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
                 gameSpec.getGameSummary().getNameCode().equals("bottle") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
@@ -169,6 +170,7 @@ public class GameVariantDialog extends Stage {
                         categories[0] = new RadioButton("normal");
                         categories[1] = new RadioButton("easy");
                     } else if (gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
+                        gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
                         gameSpec.getGameSummary().getNameCode().contains("Memory") ||
                         gameSpec.getGameSummary().getNameCode().equals("DotToDot")) {
                         categories = new RadioButton[2];
