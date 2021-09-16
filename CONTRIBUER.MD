@@ -36,6 +36,14 @@ Chaque **pull request** doit être documentée au mieux. En faisant le lien, ent
 Afin de faire une *pull request*, toujours faire un `gradlew` qui exécutera tous les tests et s'assurera que le code n'est pas cassé.
 Chaque requête sera examinée par un des administrateur.
 
+### Relier une pull request à un ticket
+Lorsque vous travaillez sur une issue, vous devriez la relier à la pull request correspondante. Pour ce faire, il est possible,
+par exemple, de mentionner le ticket dans la description de votre pull request. Vous trouverez plus d'information sur la page
+de [GitHub Docs](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue).
+
+Cela permet aux autres contributeurs de suivre l'avancement sur ce ticket. Ainsi, une fois la pull request
+fusionnée, l'issue correspondante sera automatiquement fermée.
+
 ### Mettre à jour votre propre fork
 Vous constaterez souvent que votre propre fork de GazePlay est en retard sur le référentiel principal de GazePlay. Pour mettre à jour votre fork, suivez
 ces étapes:
