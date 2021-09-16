@@ -10,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -241,6 +242,10 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         FixationLengthControl fixationLengthControl = FixationLengthControl.getInstance();
         ElementSizeControl elementSizeControl = ElementSizeControl.getInstance();
 
+
+        Stage primaryStage = gazePlay.getPrimaryStage();
+        ScrollPane scrollPane = new ScrollPane();
+
         leftControlPane = new GridPane();
         leftControlPane.setHgap(5);
         leftControlPane.setVgap(5);
@@ -256,14 +261,42 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             GridPane.setHgrow(node, Priority.ALWAYS);
         });
 
-
-        menuHBox.getChildren().add(leftControlPane);
+        scrollPane.setContent(leftControlPane);
+        menuHBox.getChildren().add(scrollPane);
 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
         homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
         menuHBox.getChildren().add(homeButton);
+
+        double buttonSize = primaryStage.getWidth() / 10;
+
+        if (buttonSize < GameContextFactoryBean.BUTTON_MIN_HEIGHT) {
+            buttonSize = GameContextFactoryBean.BUTTON_MIN_HEIGHT;
+        }
+
+        double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
+
+        scrollPane.setPrefWidth(primaryStage.getWidth() - offset - 100);
+        scrollPane.setMinWidth(primaryStage.getWidth() - offset - 100);
+        scrollPane.setMaxWidth(primaryStage.getWidth() - offset - 100);
+
+        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateControllPanel(scrollPane, toggleFullScreenButtonInGameScreen, primaryStage));
+    }
+
+    public void updateControllPanel(ScrollPane scrollPane, I18NButton toggleFullScreenButtonInGameScreen, Stage primaryStage) {
+        double buttonSize = primaryStage.getWidth() / 10;
+
+        if (buttonSize < GameContextFactoryBean.BUTTON_MIN_HEIGHT) {
+            buttonSize = GameContextFactoryBean.BUTTON_MIN_HEIGHT;
+        }
+
+        double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
+
+        scrollPane.setPrefWidth(primaryStage.getWidth() - offset - 100);
+        scrollPane.setMinWidth(primaryStage.getWidth() - offset - 100);
+        scrollPane.setMaxWidth(primaryStage.getWidth() - offset - 100);
     }
 
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame, String replayMode) {
@@ -273,6 +306,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         FixationLengthControl fixationLengthControl = FixationLengthControl.getInstance();
         ElementSizeControl elementSizeControl = ElementSizeControl.getInstance();
 
+        Stage primaryStage = gazePlay.getPrimaryStage();
+        ScrollPane scrollPane = new ScrollPane();
+
         leftControlPane = new GridPane();
         leftControlPane.setHgap(5);
         leftControlPane.setVgap(5);
@@ -289,13 +325,28 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         });
 
 
-        menuHBox.getChildren().add(leftControlPane);
+        scrollPane.setContent(leftControlPane);
+        menuHBox.getChildren().add(scrollPane);
 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
         homeButton = createHomeButtonInGameScreenWithoutHandler(gazePlay);
         menuHBox.getChildren().add(homeButton);
+
+        double buttonSize = primaryStage.getWidth() / 10;
+
+        if (buttonSize < GameContextFactoryBean.BUTTON_MIN_HEIGHT) {
+            buttonSize = GameContextFactoryBean.BUTTON_MIN_HEIGHT;
+        }
+
+        double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
+        scrollPane.setPrefWidth(primaryStage.getWidth() - offset - 100);
+        scrollPane.setMinWidth(primaryStage.getWidth() - offset - 100);
+        scrollPane.setMaxWidth(primaryStage.getWidth() - offset - 100);
+
+        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateControllPanel(scrollPane, toggleFullScreenButtonInGameScreen, primaryStage));
+
     }
 
     public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
