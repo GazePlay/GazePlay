@@ -245,6 +245,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         Stage primaryStage = gazePlay.getPrimaryStage();
         ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToHeight(true);
 
         leftControlPane = new GridPane();
         leftControlPane.setHgap(5);
@@ -278,9 +279,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
 
-        scrollPane.setPrefWidth(primaryStage.getWidth() - offset - 100);
-        scrollPane.setMinWidth(primaryStage.getWidth() - offset - 100);
-        scrollPane.setMaxWidth(primaryStage.getWidth() - offset - 100);
+        scrollPane.setPrefWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
+        scrollPane.setMinWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
+        scrollPane.setMaxWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
 
         primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateControllPanel(scrollPane, toggleFullScreenButtonInGameScreen, primaryStage));
     }
@@ -294,9 +295,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
 
-        scrollPane.setPrefWidth(primaryStage.getWidth() - offset - 100);
-        scrollPane.setMinWidth(primaryStage.getWidth() - offset - 100);
-        scrollPane.setMaxWidth(primaryStage.getWidth() - offset - 100);
+        scrollPane.setPrefWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
+        scrollPane.setMinWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
+        scrollPane.setMaxWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
     }
 
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame, String replayMode) {
@@ -308,6 +309,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         Stage primaryStage = gazePlay.getPrimaryStage();
         ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToHeight(true);
 
         leftControlPane = new GridPane();
         leftControlPane.setHgap(5);
@@ -341,9 +343,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         }
 
         double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
-        scrollPane.setPrefWidth(primaryStage.getWidth() - offset - 100);
-        scrollPane.setMinWidth(primaryStage.getWidth() - offset - 100);
-        scrollPane.setMaxWidth(primaryStage.getWidth() - offset - 100);
+        scrollPane.setPrefWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
+        scrollPane.setMinWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
+        scrollPane.setMaxWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
 
         primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateControllPanel(scrollPane, toggleFullScreenButtonInGameScreen, primaryStage));
 
