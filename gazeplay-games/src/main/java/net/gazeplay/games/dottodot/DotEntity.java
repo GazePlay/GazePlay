@@ -117,6 +117,7 @@ public class DotEntity extends Parent {
 
             gameContext.updateScore(stats, gameObject);
             gameObject.getTargetAOIList().clear();
+            gameObject.getDotList().clear();
             gameContext.playWinTransition(500, actionEvent -> {
                 gameObject.dispose();
                 gameContext.clear();

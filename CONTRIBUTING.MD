@@ -37,6 +37,14 @@ Each request must be documented as well as possible. By making the link, among o
 In order to make a *pull request*, always run `gradlew` which will run all tests and ensure the code has not broken.
 Each request will be examined by one of the contributors.
 
+### Link a pull request to a ticket
+When you work on a particular ticket, you should link it to the corresponding pull request. To do so you can, for instance,
+mention the issue in the pull request's description. For more information, go to
+[GitHub Docs](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue).
+
+Doing so will help other
+contributors to see the progress and also automatically close the issue once the pull request is merged.
+
 ### Updating your own fork
 You will often find that your own fork of GazePlay is lagging behind the main GazePlay repo. To update your fork, follow 
 these steps:
