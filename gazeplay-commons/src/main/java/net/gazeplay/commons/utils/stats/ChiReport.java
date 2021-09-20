@@ -34,12 +34,6 @@ public class ChiReport {
         chiTheoretical.add(3.84);
         chiTheoretical.add(6.63);
         chiTheoretical.add(7.88);
-        /*chiTheoretical.add(7.88);
-        chiTheoretical.add(6.63);
-        chiTheoretical.add(3.84);
-        chiTheoretical.add(2.71);
-        chiTheoretical.add(1.32);
-        chiTheoretical.add(0.45);*/
 
         ArrayList<String> decisions = new ArrayList<>();
         for (int i= 0; i < 6; i ++) {

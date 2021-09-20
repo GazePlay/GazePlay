@@ -222,7 +222,7 @@ class StatsContextTest {
         when(mockConfig.isFixationSequenceDisabled()).thenReturn(false);
         RadioButton radioButton = new RadioButton();
         CustomButton button = new CustomButton("bear.jpg", 300);
-        HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, radioButton, button);
+        HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, radioButton, null, button, false);
 
         assertEquals(5, result.getChildren().size());
 
@@ -249,7 +249,7 @@ class StatsContextTest {
         when(mockConfig.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(false));
         when(mockConfig.isFixationSequenceDisabled()).thenReturn(true);
         RadioButton radioButton = new RadioButton();
-        HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, radioButton, null);
+        HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, radioButton, null, null, false);
 
         assertEquals(1, result.getChildren().size());
     }

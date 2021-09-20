@@ -110,7 +110,16 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             colorBands.setOnAction(event -> {
                 if (colorBands.isSelected()) {
-                    centerPane.getChildren().remove(lineChart);
+                    if (levelsInfo.isSelected()) {
+                        centerPane.getChildren().remove(levelChart);
+                        levelsInfo.setSelected(false);
+                    }
+                    else if (chi2Info.isSelected()) {
+                        centerPane.getChildren().remove(chi2Chart);
+                        chi2Info.setSelected(false);
+                    }
+                    else
+                        centerPane.getChildren().remove(lineChart);
                     centerPane.getChildren().add(areaChart);
                     centerPane.getStylesheets().add("data/common/chart.css");
                 } else {
@@ -124,7 +133,17 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             levelsInfo.setOnAction(event -> {
                 if (levelsInfo.isSelected()) {
-                    centerPane.getChildren().remove(lineChart);
+                    if (colorBands.isSelected()) {
+                        centerPane.getChildren().remove(areaChart);
+                        colorBands.setSelected(false);
+                    }
+                    else if (chi2Info.isSelected()) {
+                        centerPane.getChildren().remove(chi2Chart);
+                        chi2Info.setSelected(false);
+                    }
+                    else
+                        centerPane.getChildren().remove(lineChart);
+                    //centerPane.getChildren().remove(lineChart);
                     centerPane.getChildren().add(levelChart);
                     centerPane.getStylesheets().add("data/common/chart.css");
                 } else {
@@ -138,7 +157,17 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             chi2Info.setOnAction(event -> {
                 if (chi2Info.isSelected()) {
-                    centerPane.getChildren().remove(lineChart);
+                    if (colorBands.isSelected()) {
+                        centerPane.getChildren().remove(areaChart);
+                        colorBands.setSelected(false);
+                    }
+                    if (levelsInfo.isSelected()) {
+                        centerPane.getChildren().remove(levelChart);
+                        levelsInfo.setSelected(false);
+                    }
+                    else
+                        centerPane.getChildren().remove(lineChart);
+                    //centerPane.getChildren().remove(lineChart);
                     centerPane.getChildren().add(chi2Chart);
                     centerPane.getStylesheets().add("data/common/table.css");
                 } else {
@@ -151,13 +180,20 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         HBox controlButtonPane;
 
         if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameNameCode().equals("Ninja") && stats.getCurrentGameVariant().contains("DYNAMIC"))
-            controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, continueButton);
+            controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, levelsInfo, continueButton, true);
+
         else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameVariant().contains("Dynamic") && stats.getCurrentGameNameCode().contains("Memory"))
-            controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, continueButton);
+            controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, levelsInfo, continueButton, true);
+
         else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameNameCode().equals("WhereIsTheAnimal") && stats.getCurrentGameVariant().contains("DYNAMIC"))
-            controlButtonPane = createControlButtonPane(gazePlay, stats, config, chi2Info, continueButton);
+            controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, chi2Info, continueButton, true);
+
+        else if (stats.getCurrentGameNameCode() != null && (stats.getCurrentGameVariant() != null &&
+                (stats.getCurrentGameNameCode().contains("WhereIs")) || stats.getCurrentGameNameCode().contains("flags")))
+            controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, chi2Info, continueButton, true);
+
         else
-            controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, continueButton);
+            controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, null, continueButton, false);
 
         StackPane centerStackPane = new StackPane();
         centerStackPane.getChildren().add(centerPane);
@@ -306,7 +342,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         Stats stats,
         Configuration config,
         RadioButton colorBands,
-        CustomButton continueButton
+        RadioButton addInfo,
+        CustomButton continueButton,
+        boolean additionButton
     ) {
         HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
 
@@ -337,6 +375,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         if (!config.isFixationSequenceDisabled()) {
             controlButtonPane.getChildren().add(colorBands);
+            if(additionButton)
+                controlButtonPane.getChildren().add(addInfo);
             controlButtonPane.getChildren().add(scanPathButton);
         }
 
