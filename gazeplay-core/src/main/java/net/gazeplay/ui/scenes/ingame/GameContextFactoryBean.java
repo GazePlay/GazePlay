@@ -39,7 +39,7 @@ import static net.gazeplay.ui.scenes.ingame.GameContext.updateConfigPane;
 @Slf4j
 public class GameContextFactoryBean implements FactoryBean<GameContext> {
 
-    private static final double BUTTON_MIN_HEIGHT = 64;
+    static final double BUTTON_MIN_HEIGHT = 64;
 
     private static double computeButtonSize(Stage primaryStage) {
         return primaryStage.getWidth() / 10;
