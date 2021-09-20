@@ -221,48 +221,8 @@ public class Piano extends Parent implements GameLifeCycle {
 
         this.getChildren().remove(circ);
 
-        final EventHandler<Event> circleEvent = e -> {
-            if (circleTemp.getFill() == Color.YELLOW) {
-                if (firstNote != -1) {
-                    final int precNote = firstNote;
-                    final int precKey = midiReader.getKey();
+        createCircle();
 
-                    final int index = midiReader.nextNote();
-                    if (index > -1) {
-                        firstNote = NOTE_NAMES[index];
-                    } else {
-                        firstNote = index;
-                    }
-
-                    instru.noteOn(precKey);
-                    stats.incrementNumberOfGoalsReached();
-
-                    if (firstNote != -1) {
-                        tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);
-                        circleTemp.setFill(Color.BLACK);
-                        circleTemp.setOpacity(0);
-                        if (firstNote != -1) {
-                            tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
-                        } else {
-                            tilesTab.get(firstNote).arc.setFill(tilesTab.get(precNote).color1);
-                        }
-
-                    } else {
-                        tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);
-                        circleTemp.setFill(Color.BLACK);
-                        circleTemp.setOpacity(0);
-                    }
-
-                }
-            }
-        };
-
-        circleTemp.addEventFilter(MouseEvent.MOUSE_ENTERED, circleEvent);
-        circleTemp.addEventFilter(GazeEvent.GAZE_ENTERED, circleEvent);
-        gameContext.getGazeDeviceManager().addEventFilter(circleTemp);
-
-        this.getChildren().addAll(this.tilesTab);
-        this.getChildren().get(this.getChildren().indexOf(circleTemp)).toFront();
         final ImageView iv = new ImageView(new Image("data/pianosight/images/1.png"));
         final Button b = new Button("Open", iv);
 
@@ -401,14 +361,13 @@ public class Piano extends Parent implements GameLifeCycle {
         };
 
         final EventHandler<Event> tileEventExited = e -> {
-            log.info("index ={}", index);
+            log.info("index = {}", index);
 
             if (timelineProgressBar != null) {
                 timelineProgressBar.stop();
+                progressIndicator.setOpacity(0);
+                progressIndicator.setProgress(0);
             }
-
-            progressIndicator.setOpacity(0);
-            progressIndicator.setProgress(0);
 
             if (tilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == color2) {
                 tilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color1);
@@ -448,6 +407,70 @@ public class Piano extends Parent implements GameLifeCycle {
 
     }
 
+    private void createCircle() {
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        final EventHandler<Event> circleEvent = e -> {
+            if (circleTemp.getFill() == Color.YELLOW) {
+                if (firstNote != -1) {
+                    this.progressIndicator = createProgressIndicator(12, 2.3, dimension2D);
+
+                    progressIndicator.setMouseTransparent(true);
+                    progressIndicator.setOpacity(1);
+                    progressIndicator.setProgress(0);
+
+                    timelineProgressBar = new Timeline();
+
+                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
+                        new KeyValue(progressIndicator.progressProperty(), 1)));
+
+                    timelineProgressBar.setOnFinished((ActionEvent actionEvent) -> {
+
+                        final int precNote = firstNote;
+                        final int precKey = midiReader.getKey();
+
+                        final int index = midiReader.nextNote();
+                        if (index > -1) {
+                            firstNote = NOTE_NAMES[index];
+                        } else {
+                            firstNote = index;
+                        }
+
+                        instru.noteOn(precKey);
+                        stats.incrementNumberOfGoalsReached();
+
+                        if (firstNote != -1) {
+                            tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);
+                            circleTemp.setFill(Color.BLACK);
+                            circleTemp.setOpacity(0);
+                            if (firstNote != -1) {
+                                tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
+                            } else {
+                                tilesTab.get(firstNote).arc.setFill(tilesTab.get(precNote).color1);
+                            }
+
+                        } else {
+                            tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);
+                            circleTemp.setFill(Color.BLACK);
+                            circleTemp.setOpacity(0);
+                        }
+
+                        progressIndicator.setOpacity(0);
+                    });
+                    timelineProgressBar.play();
+
+                }
+            }
+        };
+
+        circleTemp.addEventFilter(MouseEvent.MOUSE_ENTERED, circleEvent);
+        circleTemp.addEventFilter(GazeEvent.GAZE_ENTERED, circleEvent);
+        gameContext.getGazeDeviceManager().addEventFilter(circleTemp);
+
+        this.getChildren().addAll(this.tilesTab);
+        this.getChildren().get(this.getChildren().indexOf(circleTemp)).toFront();
+    }
+
     private ProgressIndicator createProgressIndicator(int index, double size, Dimension2D dimension2D) {
         final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setMinSize(dimension2D.getWidth() / 20, dimension2D.getHeight() / 20);
@@ -470,7 +493,7 @@ public class Piano extends Parent implements GameLifeCycle {
                 indicator.setTranslateY(centerY - (size * 0.25));
                 break;
             case 4: // Tile blanche bas-gauche
-                indicator.setTranslateX(centerX - (size * 0.75));
+                indicator.setTranslateX(centerX - (size * 0.55));
                 indicator.setTranslateY(centerY + (size * 0.5));
                 break;
             case 5: // tile blanche bas-milieu
@@ -478,7 +501,7 @@ public class Piano extends Parent implements GameLifeCycle {
                 indicator.setTranslateY(centerY + (size * 0.75));
                 break;
             case 6: // tile blanche bas-droite
-                indicator.setTranslateX(centerX + size * 0.75);
+                indicator.setTranslateX(centerX + size * 0.55);
                 indicator.setTranslateY(centerY + (size * 0.5));
                 break;
             case 7: // tile noir bas-droite
@@ -502,7 +525,7 @@ public class Piano extends Parent implements GameLifeCycle {
                 indicator.setTranslateY(centerY + (size * 0.75));
                 break;
             default:
-                indicator.setTranslateX(centerX);
+                indicator.setTranslateX(centerX - size * 0.10);
                 indicator.setTranslateY(centerY);
         }
 
