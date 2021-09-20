@@ -8,6 +8,8 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
@@ -19,7 +21,6 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.commons.utils.stats.TargetAOI;
 
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -37,9 +38,6 @@ public class DotToDot implements GameLifeCycle {
     private final Stats stats;
 
     private final DotToDotGameVariant gameVariant;
-
-    @Getter
-    private final ArrayList<TargetAOI> targetAOIList;
 
     @Getter
     private final ReplayablePseudoRandom randomGenerator;
@@ -71,7 +69,6 @@ public class DotToDot implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameVariant = gameVariant;
-        this.targetAOIList = new ArrayList<>();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
         this.dotList = new ArrayList<>();
@@ -153,7 +150,7 @@ public class DotToDot implements GameLifeCycle {
             JsonObject elementObj = (JsonObject) element;
 
             // Creating a dot
-            Circle dotShape = new Circle(30);
+            StackPane dotShape = new StackPane();
 
             // Positioning a dot
             double ratioX = dimension2D.getWidth() / 1920;
@@ -163,12 +160,18 @@ public class DotToDot implements GameLifeCycle {
             double x = ratioX * coordinates.get("x").getAsDouble();
             double y = ratioY * coordinates.get("y").getAsDouble();
 
-            dotShape.setCenterX(x);
-            dotShape.setCenterY(y);
 
-            final TargetAOI targetAOI = new TargetAOI(dotShape.getCenterX(), y, (int) ((dotShape.getRadius() + dotShape.getRadius()) / 3),
-                System.currentTimeMillis());
-            targetAOIList.add(targetAOI);
+            Circle smallDot = new Circle(10);
+            smallDot.setFill(Color.BLACK);
+            Circle bigDot = new Circle(60);
+            bigDot.setFill(Color.BLACK);
+            bigDot.setOpacity(0.05);
+            dotShape.getChildren().addAll(bigDot, smallDot);
+            dotShape.prefWidthProperty().bind(bigDot.radiusProperty().multiply(2));
+            dotShape.prefHeightProperty().bind(bigDot.radiusProperty().multiply(2));
+
+            dotShape.setLayoutX(x - bigDot.getRadius());
+            dotShape.setLayoutY(y - bigDot.getRadius());
 
             // Creating text
             Text number = new Text(x - 70, y, Integer.toString(index));
@@ -176,10 +179,10 @@ public class DotToDot implements GameLifeCycle {
 
             // Creating progress indicator
             ProgressIndicator progressIndicator = new ProgressIndicator(0);
-            double progIndicSize = dotShape.getRadius() * 5;
+            double progIndicSize = smallDot.getRadius() * 5;
             progressIndicator.setPrefSize(progIndicSize, progIndicSize);
-            progressIndicator.setLayoutX(x - progIndicSize / 2 + 50);
-            progressIndicator.setLayoutY(y - progIndicSize / 2 + 50);
+            progressIndicator.setLayoutX(x - bigDot.getRadius() - progIndicSize / 2 + 50);
+            progressIndicator.setLayoutY(y - bigDot.getRadius() - progIndicSize / 2 + 50);
             progressIndicator.setOpacity(0);
 
             DotEntity dot = new DotEntity(dotShape, stats, progressIndicator, number, gameContext, gameVariant, this, index);
