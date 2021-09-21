@@ -13,13 +13,11 @@ public class WhereIsItGameVariantGenerator implements IGameVariantGenerator {
     @Override
     public Set<IGameVariant> getVariants() {
         return Sets.newLinkedHashSet(Lists.newArrayList(
+            new DimensionGameVariant(1, 2),
             new DimensionGameVariant(2, 2),
             new DimensionGameVariant(2, 3),
             new DimensionGameVariant(3, 2),
-            new DimensionGameVariant(3, 3),
-            new DimensionDifficultyGameVariant(2, 2, "easy"),
-            new DimensionDifficultyGameVariant(2, 3, "easy"),
-            new DimensionDifficultyGameVariant(3, 2, "easy")
+            new DimensionGameVariant(3, 3)
         ));
     }
 }

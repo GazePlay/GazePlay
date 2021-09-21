@@ -1,6 +1,5 @@
 package net.gazeplay.games.ninja;
 
-import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
@@ -23,6 +22,8 @@ public class Ninja implements GameLifeCycle {
 
     private final ReplayablePseudoRandom randomGenerator;
 
+    private final String variantType;
+
     public Ninja(final IGameContext gameContext, final Stats stats, final NinjaGameVariant gameVariant) {
         super();
         this.gameContext = gameContext;
@@ -30,6 +31,7 @@ public class Ninja implements GameLifeCycle {
         this.gameVariant = gameVariant;
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
+        this.variantType = gameVariant.getLabel();
     }
 
     public Ninja(final IGameContext gameContext, final Stats stats, final NinjaGameVariant gameVariant, double gameSeed) {
@@ -38,6 +40,7 @@ public class Ninja implements GameLifeCycle {
         this.stats = stats;
         this.gameVariant = gameVariant;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+        this.variantType = gameVariant.getLabel();
     }
 
     @Override
@@ -45,11 +48,8 @@ public class Ninja implements GameLifeCycle {
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
         randomPositionGenerator.setRandomGenerator(randomGenerator);
 
-        Scene scene = gameContext.getPrimaryScene();
-        int radius = (int) Math.min(scene.getWidth()/12, scene.getHeight()/12);
-
         portrait = new Target(gameContext, randomPositionGenerator, stats,
-            Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, radius);
+            Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator,stats.getRoundsDurationReport(),stats.getLevelsReport(), 3000);
         gameContext.setLimiterAvailable();
         gameContext.getChildren().add(portrait);
         stats.notifyNewRoundReady();

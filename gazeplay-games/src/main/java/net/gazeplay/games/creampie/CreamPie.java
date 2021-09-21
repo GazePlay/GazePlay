@@ -1,6 +1,5 @@
 package net.gazeplay.games.creampie;
 
-import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
@@ -37,10 +36,7 @@ public class CreamPie implements GameLifeCycle {
 
         hand = new Hand();
 
-        Scene scene = gameContext.getPrimaryScene();
-        int radius = (int) Math.min(scene.getHeight()/12, scene.getWidth()/12);
-
-        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this, radius );
+        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this);
         gameContext.getChildren().add(target);
         gameContext.getChildren().add(hand);
     }
@@ -57,10 +53,7 @@ public class CreamPie implements GameLifeCycle {
 
         hand = new Hand();
 
-        Scene scene = gameContext.getPrimaryScene();
-        int radius = (int) Math.min(scene.getHeight()/12, scene.getWidth()/12);
-
-        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this,radius);
+        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this);
 
     }
 

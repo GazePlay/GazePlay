@@ -1,5 +1,6 @@
 package net.gazeplay.ui.scenes.configuration;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -21,6 +22,7 @@ import mockit.Mocked;
 import mockit.Verifications;
 import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
@@ -29,6 +31,7 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,6 +40,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -97,27 +102,32 @@ class ConfigurationContextTest {
 
             ObservableList<Node> children = pane.getChildren();
 
-            assertEquals(66, children.size());
+            int notDisplayedElts = 0;
+            if (!Utils.isWindows()) {
+                notDisplayedElts = 2;
+            }
+
+            assertEquals(68 - notDisplayedElts, children.size());
             assertTrue(children.get(3) instanceof MenuButton);
-            assertTrue(children.get(7) instanceof ChoiceBox);
-            assertTrue(children.get(9) instanceof Spinner);
-            assertTrue(children.get(11) instanceof CheckBox);
-            assertTrue(children.get(13) instanceof CheckBox);
-            assertTrue(children.get(15) instanceof HBox);
-            assertTrue(children.get(17) instanceof HBox);
-            assertTrue(children.get(21) instanceof ChoiceBox);
-            assertTrue(children.get(23) instanceof Spinner);
-            assertTrue(children.get(27) instanceof ChoiceBox);
-            assertTrue(children.get(29) instanceof HBox);
-            assertTrue(children.get(31) instanceof CheckBox);
-            assertTrue(children.get(33) instanceof ChoiceBox);
-            assertTrue(children.get(49) instanceof CheckBox);
-            assertTrue(children.get(51) instanceof ChoiceBox);
-            assertTrue(children.get(53) instanceof HBox);
-            assertTrue(children.get(57) instanceof CheckBox);
-            assertTrue(children.get(59) instanceof CheckBox);
-            assertTrue(children.get(63) instanceof CheckBox);
-            assertTrue(children.get(65) instanceof CheckBox);
+            assertTrue(children.get(9 - notDisplayedElts) instanceof ChoiceBox);
+            assertTrue(children.get(11 - notDisplayedElts) instanceof Spinner);
+            assertTrue(children.get(13 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(15 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(17 - notDisplayedElts) instanceof HBox);
+            assertTrue(children.get(19 - notDisplayedElts) instanceof HBox);
+            assertTrue(children.get(23 - notDisplayedElts) instanceof ChoiceBox);
+            assertTrue(children.get(25 - notDisplayedElts) instanceof Spinner);
+            assertTrue(children.get(29 - notDisplayedElts) instanceof ChoiceBox);
+            assertTrue(children.get(31 - notDisplayedElts) instanceof HBox);
+            assertTrue(children.get(33 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(35 - notDisplayedElts) instanceof ChoiceBox);
+            assertTrue(children.get(51 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(53 - notDisplayedElts) instanceof ChoiceBox);
+            assertTrue(children.get(55 - notDisplayedElts) instanceof HBox);
+            assertTrue(children.get(59 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(61 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(65 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(67 - notDisplayedElts) instanceof CheckBox);
 
         });
         TestingUtils.waitForRunLater();
@@ -372,19 +382,21 @@ class ConfigurationContextTest {
         when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
         when(mockScene.getWindow()).thenReturn(mockWindow);
 
-        Platform.runLater(() -> {
-            ConfigurationContext context = new ConfigurationContext(mockGazePlay);
-            HBox result = (HBox) context.buildDirectoryChooser(mockConfig, mockContext, mockTranslator, type);
-            Button loadButton = (Button) result.getChildren().get(0);
-            Button resetButton = (Button) result.getChildren().get(1);
+        if (type != ConfigurationContext.DirectoryType.SHORTCUT) {
+            Platform.runLater(() -> {
+                ConfigurationContext context = new ConfigurationContext(mockGazePlay);
+                HBox result = (HBox) context.buildDirectoryChooser(mockConfig, mockContext, mockTranslator, type);
+                Button loadButton = (Button) result.getChildren().get(0);
+                Button resetButton = (Button) result.getChildren().get(1);
 
-            assertEquals(fileDirProperty.getValue(), loadButton.textProperty().getValue());
+                assertEquals(fileDirProperty.getValue(), loadButton.textProperty().getValue());
 
-            resetButton.fire();
-            assertEquals(answers.get(type), fileDirProperty.getValue());
-            assertEquals(answers.get(type), loadButton.textProperty().getValue());
-        });
-        TestingUtils.waitForRunLater();
+                resetButton.fire();
+                assertEquals(answers.get(type), fileDirProperty.getValue());
+                assertEquals(answers.get(type), loadButton.textProperty().getValue());
+            });
+            TestingUtils.waitForRunLater();
+        }
     }
 
     @Test
@@ -393,22 +405,24 @@ class ConfigurationContextTest {
             ConfigurationContext context = new ConfigurationContext(mockGazePlay);
             StringProperty languageProperty = new SimpleStringProperty("eng");
             StringProperty countryProperty = new SimpleStringProperty("GB");
+            try (MockedStatic<ActiveConfigurationContext> utilities = Mockito.mockStatic(ActiveConfigurationContext.class)) {
+                when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
+                when(mockConfig.getLanguage()).thenReturn(languageProperty.getValue());
+                when(mockConfig.getCountry()).thenReturn(countryProperty.getValue());
+                when(mockConfig.getLanguageProperty()).thenReturn(languageProperty);
+                when(mockConfig.getCountryProperty()).thenReturn(countryProperty);
 
-            when(mockConfig.getLanguage()).thenReturn(languageProperty.getValue());
-            when(mockConfig.getCountry()).thenReturn(countryProperty.getValue());
-            when(mockConfig.getLanguageProperty()).thenReturn(languageProperty);
-            when(mockConfig.getCountryProperty()).thenReturn(countryProperty);
-            when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
+                utilities.when(ActiveConfigurationContext::getInstance).thenReturn(mockConfig);
+                MenuButton result = context.buildLanguageChooser(mockConfig, context);
 
-            MenuButton result = context.buildLanguageChooser(mockConfig, context);
+                assertEquals(25, result.getItems().size());
 
-            assertEquals(23, result.getItems().size());
+                result.getItems().get(1).fire();
 
-            result.getItems().get(1).fire();
-
-            ImageView image = (ImageView) result.getGraphic();
-            assertTrue(image.getImage().getUrl().contains("Arab"));
-            assertEquals("ara", languageProperty.getValue());
+                ImageView image = (ImageView) result.getGraphic();
+                assertTrue(image.getImage().getUrl().contains("Arab"));
+                assertEquals("ara", languageProperty.getValue());
+            }
         });
         TestingUtils.waitForRunLater();
     }

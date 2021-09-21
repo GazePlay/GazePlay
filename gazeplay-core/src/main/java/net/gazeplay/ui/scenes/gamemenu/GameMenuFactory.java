@@ -22,6 +22,7 @@ import net.gazeplay.*;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -262,6 +263,8 @@ public class GameMenuFactory {
             if (!favGamesImageView.isHover()) {
                 gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName);
             }
+            final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
+            backgroundMusicManager.pause();
         });
 
         @Data

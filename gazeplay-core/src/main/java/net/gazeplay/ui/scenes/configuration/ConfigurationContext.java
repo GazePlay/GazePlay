@@ -29,17 +29,17 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import mslinks.ShellLink;
+import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.BackgroundStyle;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
-import net.gazeplay.commons.ui.I18NButton;
-import net.gazeplay.commons.ui.I18NText;
-import net.gazeplay.commons.ui.I18NToggleButton;
-import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.ui.*;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
@@ -48,6 +48,7 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
 
@@ -55,11 +56,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -73,6 +76,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private final boolean currentLanguageAlignmentIsLeftAligned;
 
+    private IGameVariant currentSelectedVariant;
+    private GameSpec currentSelectedGame;
+
+    private GridPane gridPane;
+
     ConfigurationContext(GazePlay gazePlay) {
         super(gazePlay, new BorderPane());
 
@@ -84,6 +92,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         // Bottom Pane
         HomeButton homeButton = createHomeButtonInConfigurationManagementScreen(gazePlay);
+
+        I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
+        I18NTooltip.install(homeButton, tooltipBackToMenu);
 
         HBox rightControlPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(rightControlPane);
@@ -171,7 +182,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     GridPane buildConfigGridPane(ConfigurationContext configurationContext, Translator translator) {
 
-        final Configuration config = ActiveConfigurationContext.getInstance();
+        Configuration config = ActiveConfigurationContext.getInstance();
+
+        if ((config.getUserName()) != null && !config.getUserName().equals("")) {
+            ActiveConfigurationContext.switchToUser(config.getUserName());
+        } else {
+            ActiveConfigurationContext.switchToDefaultUser();
+        }
+
+        config = ActiveConfigurationContext.getInstance();
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -192,6 +211,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
+        if (Utils.isWindows()) {
+            {
+                I18NText label = new I18NText(translator, "CreateShortCut", COLON);
+
+                VBox input = buildVariantShortcutMaker(config, configurationContext);
+
+                addToGrid(grid, currentFormRow, label, input);
+            }
+        }
 
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GamesSettings", COLON));
         // Games settings
@@ -252,12 +280,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "FixationLength", COLON);
 
-            Spinner<Double> input = buildSpinner(0.3, 10, (double) config.getFixationLength() / 1000,
+            Spinner<Double> input = buildSpinner(0, 10, (double) config.getFixationLength() / 1000,
                 0.1, config.getFixationlengthProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
-
 
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GraphicsSettings", COLON));
         // Graphics settings
@@ -325,19 +352,19 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             CheckBox input = buildCheckBox(config.getHeatMapDisabledProperty());
 
-            addToGrid(grid, currentFormRow, label, input);
+            addSubToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "HeatMapOpacity", COLON);
             ChoiceBox<Double> input = buildHeatMapOpacityChoiceBox(config);
 
-            addToGrid(grid, currentFormRow, label, input);
+            addSubToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "HeatMapColors", COLON);
             HBox input = buildHeatMapColorHBox(config, translator);
 
-            addToGrid(grid, currentFormRow, label, input);
+            addSubToGrid(grid, currentFormRow, label, input);
         }
 
         addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "AOISettings", COLON));
@@ -347,7 +374,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             CheckBox input = buildCheckBox(config.getAreaOfInterestDisabledProperty());
 
-            addToGrid(grid, currentFormRow, label, input);
+            addSubToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "EnableConvexHull", COLON);
@@ -359,7 +386,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             label.setOpacity(0.5);
             /* TO HERE TO ENABLE CONVEX HULL FOR AOI */
 
-            addToGrid(grid, currentFormRow, label, input);
+            addSubToGrid(grid, currentFormRow, label, input);
         }
         addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "MoreStatsSettings", COLON));
         // More Stats settings
@@ -368,14 +395,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             CheckBox input = buildCheckBox(config.getFixationSequenceDisabledProperty());
 
-            addToGrid(grid, currentFormRow, label, input);
+            addSubToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "EnableVideoRecording", COLON);
 
             CheckBox input = buildCheckBox(config.getVideoRecordingEnabledProperty());
 
-            addToGrid(grid, currentFormRow, label, input);
+            addSubToGrid(grid, currentFormRow, label, input);
         }
 
         return grid;
@@ -390,7 +417,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         label.setId("item");
 
         Separator s = new Separator();
-        grid.add(s, 0, currentRowIndex, 3, 1);
+        grid.add(s, 0, currentRowIndex, 4, 1);
         GridPane.setHalignment(s, HPos.CENTER);
 
         int newCurrentRowIndex = currentFormRow.incrementAndGet();
@@ -404,7 +431,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     void addSubCategoryTitle(GridPane grid, AtomicInteger currentFormRow, I18NText label) {
-        int columnIndexLabelLeft = 0;
+        int columnIndexLabelLeft = 1;
         int columnIndexLabelRight = 2;
         int columnIndexInputLeft = 1;
         int columnIndexInputRight = 0;
@@ -418,14 +445,18 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         if (currentLanguageAlignmentIsLeftAligned) {
             grid.add(label, columnIndexLabelLeft, currentRowIndex);
             GridPane.setHalignment(label, HPos.LEFT);
-            grid.add(s, columnIndexInputLeft, currentRowIndex, 2, 1);
+            grid.add(s, columnIndexInputLeft + 1, currentRowIndex, 2, 1);
             GridPane.setHalignment(s, HPos.LEFT);
         } else {
             grid.add(label, columnIndexLabelRight, currentRowIndex);
             GridPane.setHalignment(label, HPos.RIGHT);
-            grid.add(s, columnIndexInputRight, currentRowIndex, 2, 1);
+            grid.add(s, columnIndexInputRight + 1, currentRowIndex, 2, 1);
             GridPane.setHalignment(s, HPos.RIGHT);
         }
+    }
+
+    public void resetPane(GazePlay gazePlay) {
+        gridPane = buildConfigGridPane(this, gazePlay.getTranslator());
     }
 
     void addToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
@@ -433,6 +464,29 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         int columnIndexInputLeft = 2;
         int columnIndexLabelRight = 1;
         int columnIndexInputRight = 0;
+
+        final int currentRowIndex = currentFormRow.incrementAndGet();
+
+        label.setId("item");
+
+        if (currentLanguageAlignmentIsLeftAligned) {
+            grid.add(label, columnIndexLabelLeft, currentRowIndex);
+            GridPane.setHalignment(label, HPos.LEFT);
+            grid.add(input, columnIndexInputLeft, currentRowIndex);
+            GridPane.setHalignment(input, HPos.LEFT);
+        } else {
+            grid.add(label, columnIndexLabelRight, currentRowIndex);
+            GridPane.setHalignment(label, HPos.RIGHT);
+            grid.add(input, columnIndexInputRight, currentRowIndex);
+            GridPane.setHalignment(input, HPos.RIGHT);
+        }
+    }
+
+    void addSubToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, final Node input) {
+        int columnIndexLabelLeft = 2;
+        int columnIndexInputLeft = 3;
+        int columnIndexLabelRight = 2;
+        int columnIndexInputRight = 1;
 
         final int currentRowIndex = currentFormRow.incrementAndGet();
 
@@ -549,7 +603,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     enum DirectoryType {
-        FILE, WHERE_IS_IT, MUSIC, VIDEO
+        FILE, WHERE_IS_IT, MUSIC, VIDEO, SHORTCUT
     }
 
     private Node buildImageChooser(Configuration configuration,
@@ -594,6 +648,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             case VIDEO:
                 fileDir = configuration.getVideoFolder();
                 break;
+            case SHORTCUT:
+                fileDir = configuration.getShortcutFolder();
+                break;
             default:
                 fileDir = configuration.getFileDir();
         }
@@ -613,6 +670,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     break;
                 case VIDEO:
                     currentFolder = new File(configuration.getVideoFolder());
+                    break;
+                case SHORTCUT:
+                    currentFolder = new File(configuration.getShortcutFolder());
                     break;
                 default:
                     currentFolder = new File(configuration.getFileDir());
@@ -645,6 +705,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     break;
                 case VIDEO:
                     configuration.getVideoFolderProperty().setValue(newPropertyValue);
+                    break;
+                case SHORTCUT:
+                    configuration.getShortcutFolderProperty().setValue(newPropertyValue);
                     break;
                 default:
                     configuration.getFiledirProperty().setValue(newPropertyValue);
@@ -679,6 +742,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                         buttonLoad.textProperty().setValue(defaultValue);
                     });
                 break;
+            case SHORTCUT:
+                resetButton.setOnAction(
+                    e -> {
+                        String defaultValue = GazePlayDirectories.getShortcutDirectory().getAbsolutePath();
+                        configuration.getShortcutFolderProperty().setValue(defaultValue);
+                        buttonLoad.textProperty().setValue(defaultValue);
+                    });
+                break;
             default:
                 resetButton.setOnAction(
                     e -> {
@@ -691,6 +762,98 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         pane.getChildren().addAll(buttonLoad, resetButton);
 
         return pane;
+    }
+
+    VBox buildVariantShortcutMaker(
+        Configuration configuration,
+        ConfigurationContext configurationContext
+    ) {
+
+        VBox shortCutBox = new VBox(buildDirectoryChooser(configuration, configurationContext, getGazePlay().getTranslator(), DirectoryType.SHORTCUT));
+        MenuButton gameBox = new MenuButton();
+        I18NButton generateButton = new I18NButton(getGazePlay().getTranslator(), "Generate");
+        gameBox.setText(getGazePlay().getTranslator().translate("SelectGame"));
+        gameBox.textProperty().addListener((arg, oldVal, newVal) -> {
+            if (newVal.equals(getGazePlay().getTranslator().translate("SelectGame"))) {
+                generateButton.setDisable(true);
+                generateButton.setOpacity(0.5);
+            } else {
+                generateButton.setDisable(false);
+                generateButton.setOpacity(1);
+            }
+        });
+        generateButton.setDisable(true);
+        generateButton.setOpacity(0.5);
+        MenuButton variantBox = new MenuButton(getGazePlay().getTranslator().translate("SelectVariant"));
+
+        String userOption = configuration.getUserName().length() == 0 ? "--default-user" : "--user " + configuration.getUserName();
+
+        GamesLocator gamesLocator = getGazePlay().getGamesLocator();
+        if (gamesLocator != null) {
+            List<GameSpec> games = gamesLocator.listGames(getGazePlay().getTranslator());
+            for (GameSpec game : games) {
+
+                Set<IGameVariant> variants = game.getGameVariantGenerator().getVariants();
+                MenuItem gameShortcutItem = new MenuItem(getGazePlay().getTranslator().translate(game.getGameSummary().getNameCode()));
+                gameShortcutItem.setOnAction(event -> {
+                    currentSelectedGame = game;
+                    currentSelectedVariant = null;
+                    variantBox.getItems().clear();
+                    variantBox.setText(getGazePlay().getTranslator().translate("SelectVariant"));
+                    shortCutBox.getChildren().remove(variantBox);
+                    gameBox.setText(gameShortcutItem.getText());
+                    if (variants.size() > 0) {
+                        shortCutBox.getChildren().remove(generateButton);
+
+                        for (IGameVariant variant : variants) {
+                            MenuItem gameAndVariantShortcut = new MenuItem(variant.getLabel(getGazePlay().getTranslator()));
+
+                            gameAndVariantShortcut.setOnAction(event2 -> {
+
+                                currentSelectedVariant = variant;
+                                variantBox.setText(gameAndVariantShortcut.getText());
+                            });
+
+                            variantBox.getItems().add(gameAndVariantShortcut);
+                        }
+                        shortCutBox.getChildren().add(variantBox);
+                        shortCutBox.getChildren().add(generateButton);
+                    }
+
+                });
+
+                gameBox.getItems().add(gameShortcutItem);
+            }
+        }
+        shortCutBox.getChildren().add(gameBox);
+
+        // generateButton.disabledProperty().isNotEqualTo(gameBox.textProperty().isEqualTo("Select Game"));
+        generateButton.setOnAction(e3 -> {
+            if (currentSelectedGame != null) {
+                String gameOption = "--game \"" + currentSelectedGame.getGameSummary().getNameCode() + "\"";
+                String variantOption = currentSelectedVariant == null ? "" : "--variant \"" + currentSelectedVariant.toString() + "\"";
+                Path currentRelativePath = Paths.get("");
+                String currentBinPath = currentRelativePath.toAbsolutePath().toString();
+                ShellLink slwithvariant = ShellLink.createLink(currentBinPath + "\\gazeplay-windows.bat")
+                    .setWorkingDir(currentBinPath)
+                    .setIconLocation(currentBinPath + "\\gazeplayicon.ico")
+                    .setCMDArgs(userOption + " " + gameOption + " " + variantOption);
+                slwithvariant.getHeader().setIconIndex(0);
+
+                try {
+                    slwithvariant.saveTo(configuration.getShortcutFolderProperty().getValue() + "\\" + gameBox.getText() + (currentSelectedVariant == null ? "" : (" - " + variantBox.getText())) + ".lnk");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        shortCutBox.getChildren().add(generateButton);
+
+        gameBox.setPrefWidth(PREF_WIDTH);
+        gameBox.setPrefHeight(PREF_HEIGHT);
+
+        return shortCutBox;
     }
 
     MenuButton buildLanguageChooser(
@@ -726,6 +889,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
                     configuration.getLanguageProperty().setValue(language.getLocale().getLanguage());
                     configuration.getCountryProperty().setValue(language.getLocale().getCountry());
+                    ActiveConfigurationContext.getInstance().getLanguageProperty().setValue(language.getLocale().getLanguage());
+                    ActiveConfigurationContext.getInstance().getCountryProperty().setValue(language.getLocale().getCountry());
 
                     configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
 
@@ -982,6 +1147,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         Button minusButton = new Button("-");
 
         hbox.getChildren().addAll(resetButton, plusButton, minusButton);
+
+        int btnCount = hbox.getChildren().size();
+        resetButton.prefWidthProperty().bind(hbox.widthProperty().divide(btnCount));
 
         resetButton.setOnAction((event) -> {
             config.getHeatMapColorsProperty().setValue(Configuration.DEFAULT_VALUE_HEATMAP_COLORS);

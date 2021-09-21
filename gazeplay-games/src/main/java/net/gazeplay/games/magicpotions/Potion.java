@@ -86,7 +86,7 @@ class Potion extends Parent {
 
         this.progressButton = createProgressIndicator(positionX, positionY);
         this.enterEvent = buildEvent(progressButton);
-        progressButton.assignIndicator(enterEvent,fixationlength);
+        progressButton.assignIndicatorUpdatable(enterEvent, gameContext);
         gameContext.getGazeDeviceManager().addEventFilter(this.progressButton);
         this.getChildren().add(this.progressButton);
         progressButton.active();
@@ -119,7 +119,7 @@ class Potion extends Parent {
         gameInstance.getPotionRed().progressButton.disable();
         gameInstance.getPotionYellow().progressButton.disable();
 
-        gameContext.updateScore(stats,gameInstance);
+        gameContext.updateScore(stats, gameInstance);
 
         currentTimeline.onFinishedProperty().set(event -> gameContext.playWinTransition(0, event1 -> {
             gameInstance.dispose();
@@ -169,41 +169,54 @@ class Potion extends Parent {
     }
 
     private EventHandler<Event> buildEvent(ProgressButton progressButton) {
-        return  event -> {
-                    chosen = true;
-                    gameInstance.currentRoundDetails.getMixture().add(potionColor); // we add the color of the potion to our mixture
-                    // change opacity of potion when it has been selected once
-                    progressButton.disable();
-                    progressButton.setOpacity(.3);
+        return event -> {
+            chosen = true;
+            gameInstance.currentRoundDetails.getMixture().add(potionColor); // we add the color of the potion to our mixture
+            // change opacity of potion when it has been selected once
+            progressButton.disable();
+            progressButton.setOpacity(.3);
 
-                    potion.removeEventFilter(MouseEvent.ANY, enterEvent); // we cannot select anymore this color
-                    potion.removeEventFilter(GazeEvent.ANY, enterEvent);
+            potion.removeEventFilter(MouseEvent.ANY, enterEvent); // we cannot select anymore this color
+            potion.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-                    if (!gameInstance.currentRoundDetails.getPotionsToMix().contains(potionColor)) {
-                        onWrongPotionSelected();
-                    } else if (gameInstance.currentRoundDetails.getMixture().containsAll(gameInstance.currentRoundDetails.getPotionsToMix())) {
-                        onMixAchieved();
+            if (!gameInstance.currentRoundDetails.getPotionsToMix().contains(potionColor)) {
+                onWrongPotionSelected();
+            } else if (gameInstance.currentRoundDetails.getMixture().containsAll(gameInstance.currentRoundDetails.getPotionsToMix())) {
+                onMixAchieved();
+            } else {
+                stats.incrementNumberOfGoalsToReach();
+            }
+            switch (gameInstance.currentRoundDetails.getMixture().size()) {
+                case 1:
+                    gameInstance.currentRoundDetails.getMixPotColor().setFill(gameInstance.currentRoundDetails.getMixture().get(0));
+                    break;
+                case 2:
+                    if (gameInstance.currentRoundDetails.getPotionsToMix().size() == 2) {
+                        gameInstance.currentRoundDetails.getMixPotColor()
+                            .setFill(gameInstance.currentRoundDetails.getRequest().getColor());
                     } else {
-                        stats.incrementNumberOfGoalsToReach();
+                        if ((gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.YELLOW)) ||
+                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.YELLOW))){
+                            gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.ORANGE);
+                        }
+
+                        if ((gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.BLUE) && gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.YELLOW)) ||
+                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.BLUE) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.YELLOW))){
+                            gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.GREEN);
+                        }
+
+                        if ((gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.BLUE)) ||
+                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.BLUE))){
+                            gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.PURPLE);
+                        }
                     }
-                    switch (gameInstance.currentRoundDetails.getMixture().size()) {
-                        case 1:
-                            gameInstance.currentRoundDetails.getMixPotColor().setFill(gameInstance.currentRoundDetails.getMixture().get(0));
-                            break;
-                        case 2:
-                            if (gameInstance.currentRoundDetails.getPotionsToMix().size() == 2) {
-                                gameInstance.currentRoundDetails.getMixPotColor()
-                                    .setFill(gameInstance.currentRoundDetails.getRequest().getColor());
-                            } else {
-                                gameInstance.currentRoundDetails.getMixPotColor().setFill(gameInstance.currentRoundDetails.getMixture().get(1));
-                            }
-                            break;
-                        case 3:
-                            gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.BLACK);
-                            break;
-                        default:
-                            throw new IllegalArgumentException("value : " + gameInstance.currentRoundDetails.getMixture().size());
-                    }
+                    break;
+                case 3:
+                    gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.BLACK);
+                    break;
+                default:
+                    throw new IllegalArgumentException("value : " + gameInstance.currentRoundDetails.getMixture().size());
+            }
         };
     }
 

@@ -46,7 +46,7 @@ class PictureCard extends Group {
     private final String imagePath;
 
     private final ProgressIndicator progressIndicator;
-    private final Timeline progressIndicatorAnimationTimeLine;
+    private Timeline progressIndicatorAnimationTimeLine;
 
     private boolean selected;
 
@@ -81,8 +81,6 @@ class PictureCard extends Group {
         }
         this.progressIndicator = buildProgressIndicator(width, height);
 
-        this.progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
-
         this.errorImageRectangle = createErrorImageRectangle();
 
         this.getChildren().add(imageRectangle);
@@ -102,7 +100,7 @@ class PictureCard extends Group {
         Timeline result = new Timeline();
 
         result.getKeyFrames()
-            .add(new KeyFrame(new Duration(minTime), new KeyValue(progressIndicator.progressProperty(), 1)));
+            .add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(progressIndicator.progressProperty(), 1)));
 
         EventHandler<ActionEvent> progressIndicatorAnimationTimeLineOnFinished = createProgressIndicatorAnimationTimeLineOnFinished(
             gameInstance);
@@ -135,6 +133,11 @@ class PictureCard extends Group {
     private void onCorrectCardSelected(WhereIsIt gameInstance) {
         log.debug("WINNER");
 
+        if (!gameInstance.getFirstWrong())
+            gameInstance.updateRight();
+
+        gameInstance.firstRightCardSelected();
+
         stats.incrementNumberOfGoalsReached();
 
         customInputEventHandler.ignoreAnyInput = true;
@@ -148,8 +151,9 @@ class PictureCard extends Group {
         log.info("gamePanelDimension2D = {}", gamePanelDimension2D);
 
         ScaleTransition scaleToFullScreenTransition = new ScaleTransition(new Duration(1000), imageRectangle);
-        scaleToFullScreenTransition.setByX((gamePanelDimension2D.getWidth() / initialWidth) - 1);
-        scaleToFullScreenTransition.setByY((gamePanelDimension2D.getHeight() / initialHeight) - 1);
+        double ratio = Math.max((gamePanelDimension2D.getWidth() / initialWidth), (gamePanelDimension2D.getHeight() / initialHeight));
+        scaleToFullScreenTransition.setByX(ratio - 1);
+        scaleToFullScreenTransition.setByY(ratio - 1);
 
         TranslateTransition translateToCenterTransition = new TranslateTransition(new Duration(1000),
             imageRectangle);
@@ -171,14 +175,16 @@ class PictureCard extends Group {
             // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
             // gameInstance.stats);
 
-            gameContext.onGameStarted();
-
         }));
 
         fullAnimation.play();
     }
 
     private void onWrongCardSelected(WhereIsIt gameInstance) {
+        //could be a single function?
+        gameInstance.updateWrong();
+        gameInstance.firstWrongCardSelected();
+
         customInputEventHandler.ignoreAnyInput = true;
         progressIndicator.setVisible(false);
 
@@ -200,7 +206,7 @@ class PictureCard extends Group {
         fullAnimation.getChildren().addAll(imageFadeOutTransition, errorFadeInTransition);
 
         fullAnimation.setOnFinished(actionEvent -> {
-            if(gameContext.getConfiguration().isReaskedQuestionOnFail()) {
+            if (gameContext.getConfiguration().isReaskedQuestionOnFail()) {
                 gameInstance.playQuestionSound();
             }
             customInputEventHandler.ignoreAnyInput = false;
@@ -319,6 +325,8 @@ class PictureCard extends Group {
 
         private void onEntered() {
             log.info("ENTERED {}", imagePath);
+
+            progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
 
             progressIndicator.setProgress(0);
             progressIndicator.setVisible(true);

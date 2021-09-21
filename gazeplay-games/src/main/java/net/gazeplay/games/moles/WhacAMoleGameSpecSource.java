@@ -11,6 +11,6 @@ public class WhacAMoleGameSpecSource implements GameSpecSource {
         return new GameSpec(
             GameSummary.builder().nameCode("WhacAmole").gameThumbnail("data/Thumbnails/mole.png")
                 .category(GameCategories.Category.ACTION_REACTION).build(),
-            new WhacAMoleGameLauncher());
+            new MolesGameVariantGenerator(), new WhacAMoleGameLauncher());
     }
 }

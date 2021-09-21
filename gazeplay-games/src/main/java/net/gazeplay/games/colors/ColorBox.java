@@ -43,23 +43,24 @@ public class ColorBox extends StackPane {
 
         progressIndicator = toolBox.getProgressIndicator();
 
-        double initialTotalWidth = gameContext.getGamePanelDimensionProvider().getDimension2D().getWidth()/5;
+        double initialTotalWidth = gameContext.getGamePanelDimensionProvider().getDimension2D().getWidth() / 5;
         double initialColorBoxWidth = (99.d * initialTotalWidth) / 100;
-        colorBoxPadding = initialTotalWidth/100.d;;
+        colorBoxPadding = initialTotalWidth / 100.d;
 
         button = new ToggleButton();
         button.setPadding(new Insets(colorBoxPadding, colorBoxPadding, colorBoxPadding, colorBoxPadding));
 
 
         graphic = new Rectangle(initialColorBoxWidth, computeHeight(), color);
-        graphic.widthProperty().bind(toolBox.widthProperty().multiply(99.d/100d));
-        graphic.widthProperty().addListener((obj,oldval,newval)-> {
-            double newClorBoxPadding = toolBox.widthProperty().doubleValue()/100.d;;
+        graphic.widthProperty().bind(toolBox.widthProperty().multiply(99.d / 100d));
+        graphic.widthProperty().addListener((obj, oldval, newval) -> {
+            double newClorBoxPadding = toolBox.widthProperty().doubleValue() / 100.d;
             button.setPadding(new Insets(newClorBoxPadding, newClorBoxPadding, newClorBoxPadding, newClorBoxPadding));
         });
         button.setGraphic(graphic);
+        button.setOpacity(1);
 
-        gameContext.getGazeDeviceManager().addEventFilter(graphic);
+        gameContext.getGazeDeviceManager().addEventFilter(button);
 
         this.color = color;
 

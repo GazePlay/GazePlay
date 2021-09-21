@@ -66,6 +66,7 @@ public class Horses implements GameLifeCycle {
     private ProgressButton rollButton;
     private HashMap<TEAMS, ImageView> rollImages;
     private int diceOutcome;
+    private final StackPane diceContainer;
 
     private ArrayList<ProgressButton> teamChoosers;
     private ArrayList<TEAMS> chosenTeams;
@@ -87,6 +88,7 @@ public class Horses implements GameLifeCycle {
         this.stats.setGameSeed(randomGenerator.getSeed());
         this.gameVersion = gameVersion;
         this.nbPlayers = nbPlayers;
+        diceContainer = new StackPane();
     }
 
     public Horses(final IGameContext gameContext, final Stats stats, final int gameVersion, final int nbPlayers, double gameSeed) {
@@ -95,6 +97,7 @@ public class Horses implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
         this.gameVersion = gameVersion;
         this.nbPlayers = nbPlayers;
+        diceContainer = new StackPane();
     }
 
     /**
@@ -152,6 +155,8 @@ public class Horses implements GameLifeCycle {
      * Hides the roll button out of the way, and rolls the die
      */
     private void roll() {
+        foregroundLayer.getChildren().remove(rollButton);
+        foregroundLayer.getChildren().add(diceContainer);
         rollButton.setLayoutX(-1000);
         rollButton.setLayoutY(-1000);
         diceOutcome = die.roll(e -> showMovablePawns());
@@ -168,12 +173,12 @@ public class Horses implements GameLifeCycle {
                 pawn.activate(e -> {
                     deactivatePawns();
                     pawn.spawn();
-                }, config.getFixationLength());
+                }, gameContext);
             } else if (pawn.isOnTrack() && pawn.canMove(diceOutcome)) {
                 pawn.activate(e -> {
                     deactivatePawns();
                     pawn.move(diceOutcome);
-                }, config.getFixationLength());
+                }, gameContext);
             } else {
                 nbNonMovablePawns++;
             }
@@ -244,6 +249,10 @@ public class Horses implements GameLifeCycle {
         rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() / 2 - rollImage.getFitHeight() / 2);
         rollButton.setImage(rollImage);
+        if (foregroundLayer.getChildren().contains(diceContainer))
+            foregroundLayer.getChildren().remove(diceContainer);
+        if (!foregroundLayer.getChildren().contains(rollButton))
+            foregroundLayer.getChildren().add(rollButton);
     }
 
     /**
@@ -297,18 +306,18 @@ public class Horses implements GameLifeCycle {
         backgroundLayer.getChildren().add(boardImage);
 
         die = new DiceRoller((float) gridElementSize / 2, gameContext.getSoundManager(), randomGenerator);
+
+
+        diceContainer.getChildren().add(die);
         final double diePositionInImage = imageSize / 2 - gridElementSize / 2;
-        final StackPane dieContainer = new StackPane();
-        dieContainer.getChildren().add(die);
-        dieContainer.setLayoutX(xOffset + diePositionInImage);
-        dieContainer.setLayoutY(yOffset + diePositionInImage);
-        backgroundLayer.getChildren().add(dieContainer);
+        diceContainer.setLayoutX(xOffset + diePositionInImage);
+        diceContainer.setLayoutY(yOffset + diePositionInImage);
 
         rollButton = new ProgressButton();
-        rollButton.assignIndicator(event -> {
+        rollButton.assignIndicatorUpdatable(event -> {
             roll();
             stats.incrementNumberOfGoalsReached();
-        }, config.getFixationLength());
+        }, gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 
@@ -407,10 +416,10 @@ public class Horses implements GameLifeCycle {
             chooseButton.setPrefHeight((nbElementsPerSide - 3d) / 2d * gridElementSize);
             chooseButton.setLayoutX(teamChooserPositions.get(team)[0]);
             chooseButton.setLayoutY(teamChooserPositions.get(team)[1]);
-            chooseButton.assignIndicator(e -> {
+            chooseButton.assignIndicatorUpdatable(e -> {
                 foregroundLayer.getChildren().remove(chooseButton);
                 selectTeam(team);
-            }, config.getFixationLength());
+            }, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(chooseButton);
             chooseButton.active();
             foregroundLayer.getChildren().add(chooseButton);

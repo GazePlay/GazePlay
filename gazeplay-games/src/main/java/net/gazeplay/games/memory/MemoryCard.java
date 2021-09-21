@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.stats.LevelsReport;
 import net.gazeplay.commons.utils.stats.Stats;
 
 @Slf4j
@@ -51,6 +52,8 @@ public class MemoryCard extends Parent {
 
     final boolean isOpen;
 
+    private LevelsReport levelsReport;
+
 
     public MemoryCard(final double positionX, final double positionY, final double width, final double height, final Image image, final int idc,
                       final IGameContext gameContext, final Stats stats, final Memory gameInstance, final int fixationlength, final boolean isOpen) {
@@ -81,6 +84,8 @@ public class MemoryCard extends Parent {
         this.fixationlength = fixationlength;
 
         this.gameInstance = gameInstance;
+
+        this.levelsReport = stats.getLevelsReport();
 
         this.getChildren().add(card);
 
@@ -116,10 +121,13 @@ public class MemoryCard extends Parent {
 
     private void onCorrectCardSelected() {
 
+        gameInstance.incNbCorrectCards();
+        log.debug("nbCorrect = {}", gameInstance.getNbCorrectCards());
+
         stats.incrementNumberOfGoalsReached();
 
         for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
-            if (gameInstance.currentRoundDetails.cardList.get(i).turned && gameInstance.currentRoundDetails.cardList.get(i).id ==  gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned ) {
+            if (gameInstance.currentRoundDetails.cardList.get(i).turned && gameInstance.currentRoundDetails.cardList.get(i).id == gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned) {
                 gameInstance.currentRoundDetails.cardList.get(i).card.removeEventFilter(MouseEvent.ANY, enterEvent);
                 gameInstance.currentRoundDetails.cardList.get(i).card.removeEventFilter(GazeEvent.ANY, enterEvent);
                 gameContext.getGazeDeviceManager()
@@ -128,7 +136,7 @@ public class MemoryCard extends Parent {
             } else if (gameInstance.currentRoundDetails.cardList.get(i).turned && !isOpen) {
                 gameInstance.currentRoundDetails.cardList.get(i).turned = false;
                 gameInstance.currentRoundDetails.cardList.get(i).card
-                        .setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
+                    .setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
             }
             gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned = -1;
         }
@@ -139,25 +147,61 @@ public class MemoryCard extends Parent {
         gameInstance.removeSelectedCards();
 
         /* No more cards to play : End of this game : Begin a new Game */
-        if (gameInstance.getnbRemainingPeers() == 0) {
+        if (gameInstance.getNbRemainingPeers() == 0) {
+            if (gameInstance.getDifficulty().equals("Dynamic")) {
+                levelsReport.addRoundLevel(gameInstance.getLevel());
+                gameInstance.addRoundResult(gameInstance.totalNbOfTries());
+                int sizeOfList = gameInstance.getListOfResults().size();
+                int compare = 0;
 
-            gameContext.updateScore(stats,gameInstance);
+                log.debug("nbOfTries = {}", gameInstance.totalNbOfTries());
+                if (sizeOfList % 3 == 0 && sizeOfList != 0) {
+                    for (int i = 0; i < 3; i++) {
+                        if (gameInstance.totalNbOfTries() <= 2 * gameInstance.getLevel() && gameInstance.getNbColumns() <= 6)
+                            compare++;
+                        if (gameInstance.totalNbOfTries() >= 2.5 * gameInstance.getLevel() && gameInstance.getNbColumns() > 2)
+                            compare--;
+                    }
+                    if (compare == 3) {
+                        if (gameInstance.getLevel() == 6)
+                            gameInstance.setLevel(gameInstance.getLevel() + 2);
+                        else
+                            gameInstance.setLevel(gameInstance.getLevel() + 1);
+                    }
+                    if (compare == -3) {
+                        if (gameInstance.getLevel() == 8)
+                            gameInstance.setLevel(gameInstance.getLevel() - 2);
+                        else
+                            gameInstance.setLevel(gameInstance.getLevel() - 1);
+                    }
+                    levelsReport.addRoundLevel(gameInstance.getLevel());
+                }
+
+                gameInstance.adaptLevel();
+            }
+
+            gameContext.updateScore(stats, gameInstance);
 
             gameContext.playWinTransition(500, actionEvent -> {
+
+                gameInstance.resetNbCorrectCards();
+
+                gameInstance.resetNbWrongCards();
 
                 gameInstance.dispose();
 
                 gameContext.clear();
 
                 gameInstance.launch();
-
-                gameContext.onGameStarted();
             });
         }
     }
 
     /* The 2 turned cards are not matching */
     private void onWrongCardSelected() {
+
+        gameInstance.incNbWrongCards();
+        log.debug("nbWrong = {}", gameInstance.getNbWrongCards());
 
         if (gameInstance.currentRoundDetails == null) {
             return;
@@ -200,7 +244,7 @@ public class MemoryCard extends Parent {
 
                 timelineProgressBar = new Timeline();
 
-                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(this.gameContext.getConfiguration().getFixationLength()),
                     new KeyValue(progressIndicator.progressProperty(), 1)));
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
