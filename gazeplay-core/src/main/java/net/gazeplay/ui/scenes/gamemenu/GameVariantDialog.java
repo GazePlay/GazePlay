@@ -167,27 +167,27 @@ public class GameVariantDialog extends Stage {
                     RadioButton[] categories;
                     if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) {
                         categories = new RadioButton[2];
-                        categories[0] = new RadioButton("normal");
-                        categories[1] = new RadioButton("easy");
+                        categories[0] = new RadioButton(translator.translate("NormalM"));
+                        categories[1] = new RadioButton(translator.translate("Easy"));
                     } else if (gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
                         gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
                         gameSpec.getGameSummary().getNameCode().contains("Memory") ||
                         gameSpec.getGameSummary().getNameCode().equals("DotToDot")) {
                         categories = new RadioButton[2];
-                        categories[0] = new RadioButton("Static");
-                        categories[1] = new RadioButton("Dynamic");
+                        categories[0] = new RadioButton(translator.translate("Static"));
+                        categories[1] = new RadioButton(translator.translate("Dynamic"));
                     } else if (gameSpec.getGameSummary().getNameCode().equals("bottle")) {
                         categories = new RadioButton[6];
-                        categories[5] = new RadioButton("Infinity");
-                        categories[4] = new RadioButton("Big");
-                        categories[3] = new RadioButton("Hight");
-                        categories[2] = new RadioButton("Normal");
-                        categories[1] = new RadioButton("Small");
-                        categories[0] = new RadioButton("Tiny");
+                        categories[5] = new RadioButton(translator.translate("InfinityF"));
+                        categories[4] = new RadioButton(translator.translate("BigF"));
+                        categories[3] = new RadioButton(translator.translate("HightF"));
+                        categories[2] = new RadioButton(translator.translate("NormalF"));
+                        categories[1] = new RadioButton(translator.translate("SmallF"));
+                        categories[0] = new RadioButton(translator.translate("TinyF"));
                     } else {
                         categories = new RadioButton[2];
-                        categories[0] = new RadioButton("Classic");
-                        categories[1] = new RadioButton("High-Contrasts");
+                        categories[0] = new RadioButton(translator.translate("Classic"));
+                        categories[1] = new RadioButton(translator.translate("HighContrasts"));
                     }
 
                     for (int i = 0; i < categories.length; i++) {
