@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -25,7 +26,7 @@ public class DotEntity extends Parent {
     private final IGameContext gameContext;
     private final ProgressIndicator progressIndicator;
     private Timeline progressTimeline;
-    private Circle dotShape;
+    private StackPane dotShape;
     private final Stats stats;
     private final DotToDotGameVariant gameVariant;
     private DotToDot gameObject;
@@ -36,10 +37,11 @@ public class DotEntity extends Parent {
     @Getter
     private int previous;
 
-    public DotEntity(final Circle dotShape, final Stats stats,
+    public DotEntity(final StackPane dotShape, final Stats stats,
                      final ProgressIndicator progressIndicator, final Text number, final IGameContext gameContext, final DotToDotGameVariant gameVariant, DotToDot gameInstance, int index) {
         this.gameContext = gameContext;
         this.progressIndicator = progressIndicator;
+        this.progressIndicator.setMouseTransparent(true);
         this.dotShape = dotShape;
         this.stats = stats;
         gameObject = gameInstance;
@@ -63,40 +65,53 @@ public class DotEntity extends Parent {
             progressTimeline.playFromStart();
         };
 
-        this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterHandler);
-        this.addEventFilter(GazeEvent.GAZE_ENTERED, enterHandler);
+        this.dotShape.addEventFilter(MouseEvent.MOUSE_ENTERED, enterHandler);
+        this.dotShape.addEventFilter(GazeEvent.GAZE_ENTERED, enterHandler);
 
         final EventHandler<Event> exitHandler = (Event event) -> {
+            progressTimeline.stop();
             this.progressIndicator.setOpacity(0);
             this.progressIndicator.setProgress(0);
-            progressTimeline.stop();
         };
 
-        this.addEventFilter(MouseEvent.MOUSE_EXITED, exitHandler);
-        this.addEventFilter(GazeEvent.GAZE_EXITED, exitHandler);
+        this.dotShape.addEventFilter(MouseEvent.MOUSE_EXITED, exitHandler);
+        this.dotShape.addEventFilter(GazeEvent.GAZE_EXITED, exitHandler);
+    }
+
+    double getXValue() {
+        return this.dotShape.getLayoutX() + this.dotShape.getPrefWidth() / 2;
+    }
+
+    double getYValue() {
+        return this.dotShape.getLayoutY() + this.dotShape.getPrefHeight() / 2;
     }
 
     public void drawTheLine() {
         if (previous == gameObject.getPrevious()) {
             if (gameVariant.getLabel().contains("Order")
-                && index != gameObject.getTargetAOIList().size()
                 && !gameContext.getChildren().contains(gameObject.getDotList().get(index))) {
                 gameObject.positioningDot(gameObject.getDotList().get(index));
 
             }
 
-            nextDot(gameObject.getTargetAOIList().get(index - 2).getXValue(), gameObject.getTargetAOIList().get(index - 2).getYValue(),
-                gameObject.getTargetAOIList().get(index - 1).getXValue(), gameObject.getTargetAOIList().get(index - 1).getYValue());
+            nextDot(gameObject.getDotList().get(index - 2).getXValue(), gameObject.getDotList().get(index - 2).getYValue(),
+                gameObject.getDotList().get(index - 1).getXValue(), gameObject.getDotList().get(index - 1).getYValue());
             gameObject.setPrevious(index);
-            dotShape.setFill(Color.RED);
+            dotShape.getChildren().forEach(circle -> {
+                ((Circle) circle).setFill(Color.RED);
+            });
 
         } else if (isFirst && gameObject.getPrevious() == 1) {
-            dotShape.setFill(Color.RED);
+            dotShape.getChildren().forEach(circle -> {
+                ((Circle) circle).setFill(Color.RED);
+            });
 
-        } else if (isFirst && gameObject.getPrevious() == gameObject.getTargetAOIList().size()) {
-            nextDot(gameObject.getTargetAOIList().get(gameObject.getTargetAOIList().size() - 1).getXValue(), gameObject.getTargetAOIList().get(gameObject.getTargetAOIList().size() - 1).getYValue(),
-                gameObject.getTargetAOIList().get(0).getXValue(), gameObject.getTargetAOIList().get(0).getYValue());
-            dotShape.setFill(Color.RED);
+        } else if (isFirst && gameObject.getPrevious() == gameObject.getDotList().size()) {
+            nextDot(gameObject.getDotList().get(gameObject.getDotList().size() - 1).getXValue(), gameObject.getDotList().get(gameObject.getDotList().size() - 1).getYValue(),
+                gameObject.getDotList().get(0).getXValue(), gameObject.getDotList().get(0).getYValue());
+            dotShape.getChildren().forEach(circle -> {
+                ((Circle) circle).setFill(Color.RED);
+            });
 
             stats.incrementNumberOfGoalsReached();
             log.debug("level = {}, nbGoalsReached = {}, fails = {}", gameObject.getLevel(), stats.nbGoalsReached, gameObject.getFails());
@@ -116,7 +131,6 @@ public class DotEntity extends Parent {
             gameObject.setPrevious(1);
 
             gameContext.updateScore(stats, gameObject);
-            gameObject.getTargetAOIList().clear();
             gameObject.getDotList().clear();
             gameContext.playWinTransition(500, actionEvent -> {
                 gameObject.dispose();
