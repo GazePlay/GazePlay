@@ -53,7 +53,8 @@ public class DotEntity extends Parent {
         else
             previous = index - 1;
 
-        this.getChildren().addAll(number, this.dotShape, this.progressIndicator);
+        number.setMouseTransparent(true);
+        this.getChildren().addAll(this.dotShape, number, this.progressIndicator);
 
         final EventHandler<Event> enterHandler = (Event event) -> {
             progressTimeline = new Timeline(
@@ -100,6 +101,7 @@ public class DotEntity extends Parent {
             dotShape.getChildren().forEach(circle -> {
                 ((Circle) circle).setFill(Color.RED);
             });
+
 
         } else if (isFirst && gameObject.getPrevious() == 1) {
             dotShape.getChildren().forEach(circle -> {

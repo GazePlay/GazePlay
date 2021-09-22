@@ -18,6 +18,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -93,8 +94,6 @@ public class DotToDot implements GameLifeCycle {
 
     @Override
     public void launch() {
-        Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Configuration config = gameContext.getConfiguration();
 
         if (!gameVariant.getLabel().contains("Dynamic"))
             level = getRandomGenerator().nextInt(8);
@@ -110,16 +109,19 @@ public class DotToDot implements GameLifeCycle {
         jsonRoot = (JsonObject) parser.parse(new InputStreamReader(
             Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + folder + "elements" + level + indexElement + ".json")), StandardCharsets.UTF_8));
 
-        String backgroundPath = path + jsonRoot.get("background").getAsString();
-        Image backgroundImage = new Image(backgroundPath);
-        ImageView background = new ImageView(backgroundImage);
-
-        double scaleRatio = Math.min(dimensions.getWidth() / backgroundImage.getWidth(),
-            dimensions.getHeight() / backgroundImage.getHeight());
-
-        if (config.isBackgroundEnabled()) {
-            createBackground(background, dimensions, scaleRatio, gameContext);
-        }
+        /* Uncomment this part when images will be available */
+//        Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
+//        Configuration config = gameContext.getConfiguration();
+//        String backgroundPath = path + jsonRoot.get("background").getAsString();
+//        Image backgroundImage = new Image(backgroundPath);
+//        ImageView background = new ImageView(backgroundImage);
+//
+//        double scaleRatio = Math.min(dimensions.getWidth() / backgroundImage.getWidth(),
+//            dimensions.getHeight() / backgroundImage.getHeight());
+//
+//        if (config.isBackgroundEnabled()) {
+//            createBackground(background, dimensions, scaleRatio, gameContext);
+//        }
 
         JsonArray elements = jsonRoot.getAsJsonArray("elements");
 
@@ -162,10 +164,10 @@ public class DotToDot implements GameLifeCycle {
 
 
             Circle smallDot = new Circle(10);
-            smallDot.setFill(Color.BLACK);
+            smallDot.setFill(Color.STEELBLUE);
             Circle bigDot = new Circle(60);
-            bigDot.setFill(Color.BLACK);
-            bigDot.setOpacity(0.05);
+            bigDot.setFill(Color.STEELBLUE);
+            bigDot.setOpacity(0.2);
             dotShape.getChildren().addAll(bigDot, smallDot);
             dotShape.prefWidthProperty().bind(bigDot.radiusProperty().multiply(2));
             dotShape.prefHeightProperty().bind(bigDot.radiusProperty().multiply(2));
@@ -176,6 +178,18 @@ public class DotToDot implements GameLifeCycle {
             // Creating text
             Text number = new Text(x - 70, y, Integer.toString(index));
             number.setStyle("-fx-font-size: 60");
+            Color textColor = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+                @Override
+                public Color visitLight() {
+                    return Color.BLACK;
+                }
+
+                @Override
+                public Color visitDark() {
+                    return Color.WHITE;
+                }
+            });
+            number.setFill(textColor);
 
             // Creating progress indicator
             ProgressIndicator progressIndicator = new ProgressIndicator(0);
