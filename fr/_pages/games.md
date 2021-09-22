@@ -65,6 +65,7 @@ Pour cette version du jeu, les cartes ne sont pas face cachée.
 
 Le joueur doit regarder l'image correspondant à ce qui a été indiquée au début du jeu. <br>
 Ce jeu est disponible en cinq versions : 
+
 * Où est cette Couleur?
 * Où est cet Animal?
 * Où est cette Lettre?
@@ -113,7 +114,8 @@ Trouvez la balle cachée en-dessous d'un des gobelets après avoir été mixés.
 
 ## La fabrique a Gâteaux
 
-Faites le gâteau indiqué sur le livre de recettes. Vous devriez vous soigner des tous les couches, les glaçages et les décorations pour satisfaire votre client.<br> 
+Faites le gâteau indiqué sur le livre de recettes. <br>
+Vous devriez vous soigner des tous les couches, les glaçages et les décorations pour satisfaire votre client. <br> 
 Si vous arrivez à fabriquer le gâteau comme demandé vous serez récompensé.
 
 ![Fabrique gateaux]({{ site.thumbnail_base }}/cakes.png)
@@ -138,7 +140,8 @@ Dessinez à travers votre regard sur la toile. Vous pouvez changer de couleur en
 
 ## Biboules
 
-Regardez les biboules qui sont en train d'échapper pour les retourner dans leur cage avec votre baguette magique. Plus de biboules vous capturez, plus de points vous aurez.
+Regardez les biboules qui sont en train d'échapper pour les retourner dans leur cage avec votre baguette magique. <br>
+Plus de biboules vous capturez, plus de points vous aurez.
 
 ![Biboules]({{ site.thumbnail_base }}/biboules.png)
 
@@ -150,7 +153,8 @@ Sauter de nuage en nuage pour atteindre la plus haute altitude.
 
 ## Blocs
 
-Une grande image est cachée par des blocs de couleur que le joueur doit regarder pour les faire disparaître. Lorsque l'ensemble des blocs ont disparu, la récompense est offerte.
+Une grande image est cachée par des blocs de couleur que le joueur doit regarder pour les faire disparaître. <br>
+Lorsque l'ensemble des blocs ont disparu, la récompense est offerte.
 
 ![Blocs]({{ site.thumbnail_base }}/block.png)
 
@@ -169,21 +173,24 @@ Des bulles contenant des portraits remontent lentement à la surface et exploser
 ## Cartes à gratter
 
 Une grande image est cachée dans une carte à gratter. <br>
-Le joueur gratte la carte grâce à son regard. Lorsque une grande partie de la carte a été grattée, l'image est affichée et la récompense offerte.
+Le joueur gratte la carte grâce à son regard. <br>
+Lorsque une grande partie de la carte a été grattée, l'image est affichée et la récompense offerte.
 
 ![Cartes à gratter]({{ site.thumbnail_base }}/scratchcard.png)
 
 ## Casse-brique
 
-Une image est cachée derrière des briques.<br>
-Le joueur se sert de la balle pour faire disparaître les briques et de la planche pour faire rebondir la balle.<br>
+Une image est cachée derrière des briques. <br>
+Le joueur se sert de la balle pour faire disparaître les briques et de la planche pour faire rebondir la balle. <br>
 Lorsque l'ensemble des briques ont disparu, la récompense est offerte.
 
 ![Casse-brique]({{ site.thumbnail_base}}/cassebrique.png)
 
 ## Diviseur
 
-Plusieurs cibles bougent aléatoirement sur l'écran. En les regardant, vous pouvez les diviser en deux cibles plus petites. Continuez la division jusqu'au moment où il n'y aura plus. Essayez de le faire dans le temps le plus court possible !
+Plusieurs cibles bougent aléatoirement sur l'écran. En les regardant, vous pouvez les diviser en deux cibles plus petites. <br>
+Continuez la division jusqu'au moment où il n'y aura plus. <br>
+Essayez de le faire dans le temps le plus court possible !
 
 ![Diviseur]({{ site.thumbnail_base }}/divisor.png)
 
@@ -295,7 +302,8 @@ Casse les bouteilles pour gagner.
 
 ## Cartes magiques
 
-Plusieurs cartes sont affichées et le joueur doit les regarder pour les retourner. L'une de ces cartes comporte une image.<br>
+Plusieurs cartes sont affichées et le joueur doit les regarder pour les retourner. <br>
+L'une de ces cartes comporte une image. <br>
 Une récompense est offerte au joueur lorsqu'il l'a trouvée.
 
 ![Cartes magiques]({{ site.thumbnail_base }}/magicCard.png)
@@ -314,7 +322,7 @@ Prenez-vous soin de votre Biboule en le nourrissant, le lavant, en jouant avec l
 
 ## Jeu de l'oeuf
 
-Casse l'œuf pour voir ce qu'il contient !<br>
+Casse l'œuf pour voir ce qu'il contient ! <br>
 Existe aussi une variante "Jeu de l'œuf personnaliser", qui contient les images que l'on veut.
 
 ![Oeuf]({{ site.thumbnail_base }}/egg.png)
@@ -345,7 +353,7 @@ Donne ton avis concernant les images montré !
 
 ## Suivre le chemin
 
-Récupère les clés pour t'emparer de la gemme !
+Récupère les clés pour t'emparer de la gemme ! <br>
 Où récupèrent toutes les pièces !
 
 ![Suivre chemin]({{site.thumbnail_base}}/follow.png)
