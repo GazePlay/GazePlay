@@ -4,7 +4,7 @@ permalink: /updates/gazeplay-1-9-0-eng/
 layout: single
 ---
 
-<img src="{{site.baseurl}}/assets/images/gazeplayLogo1-7.png"/>
+<img src="{{site.baseurl}}/assets/images/gazeplayLogo1-9.png"/>
 
 Your version is up to date.
 
@@ -19,4 +19,4 @@ It is possible to support the development of GazePlay through donations. These d
 ---
 
 GazePlay 1.9.0 – <http://www.gazeplay.net> – <gazeplay.net@gmail.com>  
-GAZEPLAY Copyright (C) 2016-2020 Univ. Grenoble Alpes, CNRS, LIG UMR 5217
+GAZEPLAY Copyright (C) 2016-2021 Univ. Grenoble Alpes, CNRS, LIG UMR 5217

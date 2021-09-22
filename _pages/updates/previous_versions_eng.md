@@ -1,5 +1,5 @@
 ---
-title: GazePlay 1.7.2 is out now !
+title: GazePlay 1.9.0 is out now !
 redirect_from:
 - /updates/gazeplay-1-6-1-eng/
 - /updates/gazeplay-1-7-0-eng/
@@ -27,4 +27,4 @@ It is possible to support the development of GazePlay through donations. These d
 ---
 
 GazePlay 1.9.0 – http://www.gazeplay.net – <gazeplay.net@gmail.com>  
-GAZEPLAY Copyright (C) 2016-2020 Univ. Grenoble Alpes, CNRS, LIG UMR 5217
+GAZEPLAY Copyright (C) 2016-2021 Univ. Grenoble Alpes, CNRS, LIG UMR 5217
