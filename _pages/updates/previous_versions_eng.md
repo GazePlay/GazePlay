@@ -1,5 +1,5 @@
 ---
-title: GazePlay 1.7.2 is out now !
+title: GazePlay 1.9.0 is out now !
 redirect_from:
 - /updates/gazeplay-1-6-1-eng/
 - /updates/gazeplay-1-7-0-eng/
