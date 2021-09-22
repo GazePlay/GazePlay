@@ -40,7 +40,8 @@ Guidez la souris vers le fromage en choisissant l'une des options au début du j
 ## Memory
 
 Associez les cartes qui ont la même image en les regardant. <br>
-Ce jeux est en trois versions : 
+Ce jeu est en trois versions : 
+
 * images
 * lettres
 * nombres
@@ -50,38 +51,39 @@ Ce jeux est en trois versions :
 ## Memory Ouvert
 
 Associez les cartes qui ont la même image en les regardant. <br>
-Ce jeux est en trois versions : 
+Ce jeu est en trois versions : 
+
 * images
 * lettres
 * nombres
 
-Pour cette version du jeu les cartes no sont pas face cachées.
+Pour cette version du jeu, les cartes ne sont pas face cachée.
 
 ![Memory Ouvert]({{ site.thumbnail_base }}/openMemory.png)
 
 ## Où est-ce?
 
-Le joueur doit regarder l'image correspondant à ce qui a été indiqué au début du jeu. <br>
-Ce jeux est disponible en cinq versions : 
+Le joueur doit regarder l'image correspondant à ce qui a été indiquée au début du jeu. <br>
+Ce jeu est disponible en cinq versions : 
 * Où est cette Couleur?
 * Où est cet Animal?
 * Où est cette Lettre?
 * Où est ce Nombre?
 * Où est-ce? .
  
-Pour la dernière version l'utilisateur peut choisir ses propres ressources pour le jeu.
+Pour la dernière version, l'utilisateur peut choisir ses propres ressources pour le jeu.
 
 ![Ou Est Ce]({{ site.thumbnail_base }}/whereisit.png)
 
 ## Jeu du taquin
 
-Le jeu du taquin doit être résolu en regardant la piece de puzzle à bouger.
+Le jeu du taquin doit être résolu en regardant la pièce de puzzle à bouger.
 
 ![Jeu du taquin]({{ site.thumbnail_base }}/slidingpuzzle.png)
 
 ## Potions Magiques
 
-Mélangez les bonnes potions colorées pour préparer la commande de Biboule. Attention à ne pas faire un mauvais mélange!
+Mélangez les bonnes potions colorées pour préparer la commande de Biboule. Attention à ne pas faire un mauvais mélange !
 
 ![Potions Magiques]({{ site.thumbnail_base }}/potions.jpg)
 
@@ -105,26 +107,26 @@ Supprimez tous les blocs contenant la lettre mentionnée.
 
 ## Gobelets Pass Pass
 
-Trouvez la balle cachée au dessous d'un des gobelets après avoir été mixés.
+Trouvez la balle cachée en-dessous d'un des gobelets après avoir été mixés.
 
 ![Gobelets pass pass]({{ site.thumbnail_base }}/passpass.png)
 
 ## La fabrique a Gâteaux
 
-Faites le gateaux indiqué sur le livre de recettes. Vous devriez vous soigner des tous les couches, les glaçages et les décorations pour satisfaire votre client.<br> 
-Si vous arrivez à fabriquer le gateau comme demandé vous serez recompensé.
+Faites le gâteau indiqué sur le livre de recettes. Vous devriez vous soigner des tous les couches, les glaçages et les décorations pour satisfaire votre client.<br> 
+Si vous arrivez à fabriquer le gâteau comme demandé vous serez récompensé.
 
 ![Fabrique gateaux]({{ site.thumbnail_base }}/cakes.png)
 
 ## Ordre
 
-Regardez les cibles dans l'ordre qu'elles sont apparues. Si l'ordre est correct une récompense sera offerte.
+Regardez les cibles dans l'ordre qu'elles sont apparues. Si l'ordre est correct, une récompense sera offerte.
 
 ![Ordre]({{ site.thumbnail_base }}/ordre.png)
 
 ## Trouve les drapeaux
 
-Après avoir lu le nom du pays le joueur doit regarder le drapeau correspondant.
+Après avoir lu le nom du pays, le joueur doit regarder le drapeau correspondant.
 
 ![Trouvez drapeaux]({{ site.thumbnail_base }}/flags.png)
 
@@ -181,7 +183,7 @@ Lorsque l'ensemble des briques ont disparu, la récompense est offerte.
 
 ## Diviseur
 
-Plusieurs cibles bougent aléatoirement sur l'écran. En les regardant vous pouvez les diviser en deux cibles plus petites. Continuez la division jusqu'au moment où il n'y aura plus. Essayez de le faire dans le temps le plus court possible !
+Plusieurs cibles bougent aléatoirement sur l'écran. En les regardant, vous pouvez les diviser en deux cibles plus petites. Continuez la division jusqu'au moment où il n'y aura plus. Essayez de le faire dans le temps le plus court possible !
 
 ![Diviseur]({{ site.thumbnail_base }}/divisor.png)
 
@@ -199,29 +201,29 @@ Capture les biboules pour faire avancer ta grenouille contre les autres grenouil
 
 ## La pièce
 
-Parcours la pièce et découvre ce quelle contient.
+Parcours la pièce et découvre ce qu'elle contient.
 
 ![pièce]({{ site.thumbnail_base }}/home.png)
 
 ## Lapins
 
-Plusieurs lapins bougent aléatoirement sur l'écran. En les regardant vous pouvez les diviser en deux lapins plus petits. <br>
+Plusieurs lapins bougent aléatoirement sur l'écran. En les regardant, vous pouvez les diviser en deux lapins plus petits. <br>
 Continuez la division jusqu'au moment où il n'y aura plus. <br>
-Essayez de le faire dans le temps le plus court possible!
+Essayez de le faire dans le temps le plus court possible !
 
 ![Lapins]({{ site.thumbnail_base }}/rabbits.png)
 
 ## Robots
 
-Les robots villains veulent occuper ton planète! <br>
-Détruisez les tous avec votre regard et cumulez le score le plus élevé.
+Les robots vilains veulent occuper ta planète ! <br>
+Détruisez-les tous avec votre regard et cumulez le score le plus élevé.
 
 ![Robots]({{ site.thumbnail_base }}/robots.png)
 
 ## Jeu Spatial
 
-Tirer sur les biboules aliénés avec les lasers de votre vaisseau spatial et incrementez votre score. <br>
-Faites attention à ne pas être touché de leurs lasers rouges!
+Tirer sur les biboules aliénés avec les lasers de votre vaisseau spatial et incrémentez votre score. <br>
+Faites attention à ne pas être touché de leurs lasers rouges !
 
 ![Jeu spatial]({{ site.thumbnail_base }}/space.png)
 
@@ -257,13 +259,13 @@ Déplacez vos chevaux autour de la planche et soyez le premier à arriver au cen
 
 ## Pierre-Papier-Ciseaux
 
-Choisie la bonne forme pour gagner ! <br>
+Choisis la bonne forme pour gagner ! <br>
 
 ![Pierre-papier-ciseaux]({{site.thumbnail_base}}/PaperScissorsStone.png)
 
 ## Rush Hour
 
-Aidez le taxi jeune à sortir du parking en déplacant les voitures qui le bloquent.
+Aidez le taxi jeune à sortir du parking en déplaçant les voitures qui le bloquent.
 
 ![RushHour]({{ site.thumbnail_base }}/rushHour.png)
 
@@ -306,14 +308,14 @@ Une récompense est offerte au joueur lorsqu'il l'a trouvée.
 
 ## J'ai un Biboule!
 
-Prenez-vous soin de votre Biboule en le nourrissant , le lavant , en jouant avec lui et en le caressant.
+Prenez-vous soin de votre Biboule en le nourrissant, le lavant, en jouant avec lui et en le caressant.
 
 ![Biboule]({{ site.thumbnail_base }}/pet.png)
 
 ## Jeu de l'oeuf
 
-Casse l'oeuf pour voir ce qu'il contient !<br>
-Existe aussi une variante "Jeu de l'oeuf personnaliser", qui contient les images que l'on veut.
+Casse l'œuf pour voir ce qu'il contient !<br>
+Existe aussi une variante "Jeu de l'œuf personnaliser", qui contient les images que l'on veut.
 
 ![Oeuf]({{ site.thumbnail_base }}/egg.png)
 
@@ -331,7 +333,7 @@ Existe aussi une variante "Jeu de l'oeuf personnaliser", qui contient les images
 
 ## Opinions
 
-Donne ton avis conernant les images montrer !
+Donne ton avis concernant les images montré !
 
 ![Opinions]({{ site.thumbnail_base }}/opinions.jpg)
 
