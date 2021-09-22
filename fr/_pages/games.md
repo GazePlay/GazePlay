@@ -84,7 +84,8 @@ Le jeu du taquin doit être résolu en regardant la pièce de puzzle à bouger.
 
 ## Potions Magiques
 
-Mélangez les bonnes potions colorées pour préparer la commande de Biboule. Attention à ne pas faire un mauvais mélange !
+Mélangez les bonnes potions colorées pour préparer la commande de Biboule. <br>
+Attention à ne pas faire un mauvais mélange !
 
 ![Potions Magiques]({{ site.thumbnail_base }}/potions.jpg)
 
@@ -122,7 +123,8 @@ Si vous arrivez à fabriquer le gâteau comme demandé vous serez récompensé.
 
 ## Ordre
 
-Regardez les cibles dans l'ordre qu'elles sont apparues. Si l'ordre est correct, une récompense sera offerte.
+Regardez les cibles dans l'ordre qu'elles sont apparues. <br>
+Si l'ordre est correct, une récompense sera offerte.
 
 ![Ordre]({{ site.thumbnail_base }}/ordre.png)
 
@@ -134,7 +136,8 @@ Après avoir lu le nom du pays, le joueur doit regarder le drapeau correspondant
 
 ## Gribouille
 
-Dessinez à travers votre regard sur la toile. Vous pouvez changer de couleur en sortant des contours de la toile.
+Dessinez à travers votre regard sur la toile. <br>
+Vous pouvez changer de couleur en sortant des contours de la toile.
 
 ![Gribouille]({{ site.thumbnail_base }}/gribouille.png)
 
@@ -188,7 +191,8 @@ Lorsque l'ensemble des briques ont disparu, la récompense est offerte.
 
 ## Diviseur
 
-Plusieurs cibles bougent aléatoirement sur l'écran. En les regardant, vous pouvez les diviser en deux cibles plus petites. <br>
+Plusieurs cibles bougent aléatoirement sur l'écran. <br>
+En les regardant, vous pouvez les diviser en deux cibles plus petites. <br>
 Continuez la division jusqu'au moment où il n'y aura plus. <br>
 Essayez de le faire dans le temps le plus court possible !
 
@@ -214,7 +218,8 @@ Parcours la pièce et découvre ce qu'elle contient.
 
 ## Lapins
 
-Plusieurs lapins bougent aléatoirement sur l'écran. En les regardant, vous pouvez les diviser en deux lapins plus petits. <br>
+Plusieurs lapins bougent aléatoirement sur l'écran. <br>
+En les regardant, vous pouvez les diviser en deux lapins plus petits. <br>
 Continuez la division jusqu'au moment où il n'y aura plus. <br>
 Essayez de le faire dans le temps le plus court possible !
 
@@ -242,7 +247,12 @@ Lancer de 1 à 6 dés.
 
 ## Jeux de Mathématiques
 
-Résoudre les problèmes de maths: Addition, Soustraction, Multiplication et Division de deux nombres.
+Résoudre les problèmes de maths de dux nombre: 
+
+* Addition
+* Soustraction
+* Multiplication
+* Division
 
 ![Math101]({{ site.thumbnail_base }}/math101.png)
 
