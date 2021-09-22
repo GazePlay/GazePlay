@@ -94,8 +94,6 @@ public class DotToDot implements GameLifeCycle {
 
     @Override
     public void launch() {
-        Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Configuration config = gameContext.getConfiguration();
 
         if (!gameVariant.getLabel().contains("Dynamic"))
             level = getRandomGenerator().nextInt(8);
@@ -112,6 +110,8 @@ public class DotToDot implements GameLifeCycle {
             Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + folder + "elements" + level + indexElement + ".json")), StandardCharsets.UTF_8));
 
         /* Uncomment this part when images will be available */
+//        Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
+//        Configuration config = gameContext.getConfiguration();
 //        String backgroundPath = path + jsonRoot.get("background").getAsString();
 //        Image backgroundImage = new Image(backgroundPath);
 //        ImageView background = new ImageView(backgroundImage);
