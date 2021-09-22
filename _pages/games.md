@@ -3,270 +3,382 @@ title: Games
 permalink: /games/
 layout: single
 toc: true
+toc_label: "On this page"
+toc_sticky: true
 ---
 
-## Cream Pies
+## Cream pies
 
-Throw a cream pie at the target by looking at it.
+The player throws a cream pie at the static target as he looks at it.
 
-![Creampie]({{ site.thumbnail_base }}/creamPie.png)
+{% include figure image_path="/assets/images/games/creamPie.png" alt="image of the game Cream pie" %}
 
-## Ninja
+## Ninja !
 
-Target is thrown up randomly and explodes when the player looks at it.
+The target follows random movements and explodes when the player looks at it.
 
-![Ninja]({{ site.thumbnail_base }}/ninja.png)
+{% include figure image_path="/assets/images/games/ninja.png" alt="image of the game Ninja !" %}
 
-## Magic Cards
+## Dot to Dot
 
-Several cards are displayed. When the player stares at one card, it turns over. Behind one card is an image. A reward is given to the player when they find the image.
+Several points are displayed, connect them and if the order is respected a reward will be offered.
 
-![magic-card-2]({{ site.thumbnail_base }}/magicCard.png)
+{% include figure image_path="/assets/images/games/dottodot.png" alt="image of the game Dot to Dot" %}
 
-## Blocks
+## Piano
 
-A big image is hidden by colored blocks. The player looks at a block to destroy it. When all blocs have disappeared, a reward is shown.
+Play a melody with the yellow piano keys guiding you.
 
-![blocs]({{ site.thumbnail_base }}/block.png)
-
-## Scratchcard
-
-A big image is hidden under a scratchcard. With their gaze, the player scratches the card. When most of the image is shown, a reward is displayed.
-
-![Scratchcard]({{ site.thumbnail_base }}/scratchcard.png)
-
-## Where is it?
-
-The player has to look at the image corresponding to the item indicated in the beginning of the game. This game comes in five versions: Where is the Color?, Where is the Animal?, Where is the Letter? , Where is the Number? and Where is it?  
-For the latter the user can choose their own resources for the game.
-
-![WhereIsIt]({{ site.thumbnail_base }}/whereisit.png)
-
-## Colored Bubbles
-
-Some colored bubbles arrive from the deep sea and explode when the player looks at them.
-
-![Colored Bubbles]({{ site.thumbnail_base }}/bubblecolor.png)
-
-## Portrait Bubbles
-
-Some bubbles with images come from the bottom and explode when the player looks at them.
-
-![Portrait Bubbles]({{ site.thumbnail_base }}/bubble.png)
-
-## Order
-
-Look at the targets in the order that they appeared. If the order is correct you will get a reward.
-
-![Order]({{ site.thumbnail_base }}/ordre.png)
-
-
-## Biballs
-
-Look at the biballs that are escaping to take them back to their cage with your magic wand. The more biballs you capture, the higher your score. 
-
-![Biboule]({{ site.thumbnail_base }}/biboules.png)
-
-## Robots
-
-The bad robots are coming to conquer your planet! Destroy as much as you can with your gaze and achieve the highest score.
-
-![Robots]({{ site.thumbnail_base }}/robots.png)
-
-## Divisor
-
-Various targets move randomly on the screen. By looking at them you can divide them in to two smaller targets. Continue dividing until there are no targets left. Try doing this in the shortest time possible!
-
-![Divisor]({{ site.thumbnail_base }}/divisor.png)
-
-## Rabbits
-
-Several rabbits move randomly on the screen. By looking at them you can divide them in to two smaller rabbits. Continue dividing until there are no more rabbits left. Try doing this in the shortest time possible!
-
-![Rabbits]({{ site.thumbnail_base }}/rabbits.png)
-
-## Whac-a-mole
-
-Hit the moles digging their way out of the ground by looking at them.
-
-![Mole]({{ site.thumbnail_base }}/mole.png)
-
-## Cups and Balls
-
-Find the ball hidden under one of the cups afer they have been mixed.
-
-![CupsBalls]({{ site.thumbnail_base }}/passpass.png)
-
-## Open Memory
-
-Match the cards that have the same image to each other by looking at them. This game comes in three versions: pictures, letters and numbers.
-
-![OpenMemory]({{ site.thumbnail_base }}/openMemory.png)
-
-## Piano 
-
-Play a melody by looking at the guiding yellow keys of the piano. 
-
-![Piano]({{ site.thumbnail_base }}/pianosight.png)
-
-## I've got a Biball!
-
-Take care of your Biball pet by feeding it, washing it, playing with it and petting it.
-
-![Pet]({{ site.thumbnail_base }}/pet.png)
-
-## Scribble 
-
-Draw through your gaze in the canvas. You can change the colour of your paint by moving out of the canvas. 
-
-![Scribble]({{ site.thumbnail_base }}/gribouille.png)
-
-## Rush Hour
-
-Help the yellow taxi get out of the parking lot by moving the cars that block it.
-
-![RushHour]({{ site.thumbnail_base }}/rushHour.png)
+{% include figure image_path="/assets/images/games/pianosight.png" alt="image of the game Piano" %}
 
 ## Labyrinth
 
-Guide the mouse towards the cheese by choosing one of the options at the beginning of the game.
+Guide the mouse to the cheese by choosing one of the options at the beginning of the game.
 
-![Labyrinth]({{ site.thumbnail_base }}/labyrinth.png)
+{% include figure image_path="/assets/images/games/labyrinth.png" alt="image of the game Labyrinth" %}
 
-## The cake factory
+## Memory
 
-Make the cake given to you in the book of recipes. You have to take care of all the layers, glazing and decorations to satisfy your client. If you succeed in making the cake as requested you will get a reward.
+Match cards that have the same picture by looking at them. <br>
+This game comes in three versions : 
 
-![cakeFactory]({{ site.thumbnail_base }}/cakes.png)
+* pictures
+* letters
+* numbers
 
-## Fun with Flags
+{% include figure image_path="/assets/images/games/memory.png" alt="image of the game Memory" %}
 
-After reading the country name the player must look at the corresponding flag.
+## Open Memory
+
+Match cards that have the same picture by looking at them. <br>
+This game comes in three versions : 
+
+* pictures
+* letters
+* numbers
+
+For this version of the game, the cards are not face down.
+
+{% include figure image_path="/assets/images/games/openMemory.png" alt="image of the game Open Memory" %}
+
+## Where is it ?
+
+The player must look at the image that corresponds to what was indicated at the beginning of the game. <br>
+This game is available in five versions :
+
+* Where is this Color?
+* Where is this Animal?
+* Where is this letter?
+* Where is this Number?
+* Where is this?
  
-![FunWithFlags]({{ site.thumbnail_base }}/flags.png)
+For the latest version, the user can choose his own resources for the game.
 
-## Find the odd one out
+{% include figure image_path="/assets/images/games/whereisit.png" alt="image of the game Where is it ?" %}
 
-The player has to find the odd picture among all the pictures displayed.
+## Sliding puzzle
 
-![Find-the-odd-one-out]({{ site.thumbnail_base }}/findtheodd.jpg)
+The sliding game must be solved by looking at the puzzle piece to move.
 
-## Sliding Puzzle
-
-A sliding puzzle has to be solved by the player by looking at the piece of puzzle to be moved.
-
-![Sliding-Puzzle]({{ site.thumbnail_base }}/slidingpuzzle.png)
-
-## Biboule Jump
-
-Jump on clouds to reach the greatest height.
-
-![Biboule-Jump]({{ site.thumbnail_base }}/biboulejump.png)
-
-## Spot the differences
-
-Spot the differences between two images by staring at them. 
-
-![Trouvez-les-differences]({{ site.thumbnail_base }}/spotthedifference.png)
-
-## Dice
-
-Roll from 1 to 6 dice.
-
-![Des]({{ site.thumbnail_base }}/dice.png)
-
-## Ribbbit Race
-
-Capture biballs for your frog to move forward in a race against three other frogs!
-
-![race]({{ site.thumbnail_base }}/frogsrace.png)
-
-## Math Games
-
-Solve the math problems: Addition, Subtraction, Multiplication and Division of two numbers.
-
-![Math101]({{ site.thumbnail_base }}/math101.png)
-
-## Identify The Letters
-
-Remove all the blocks containing the specified letter.
-
-![Literacy]({{ site.thumbnail_base }}/letters.png)
+{% include figure image_path="/assets/images/games/slidingpuzzle.png" alt="image of the game Sliding puzzle" %}
 
 ## Magic Potions
 
-Mix the right colored potions to prepare Biball's order. Careful not to make a wrong mix!
+Mix the right colored potions to prepare Biboule's order. <br>
+Be careful not to make a bad mix !
 
-![MagicPotions]({{ site.thumbnail_base }}/potions.jpg)
+{% include figure image_path="/assets/images/games/potions.jpg" alt="image of the game Magic Potions" %}
+
+## Spot The Difference
+
+You have to find the differences between the two images by staring at them.
+
+{% include figure image_path="/assets/images/games/spotthedifference.png" alt="image of the game Spot The Difference" %}
+
+## Find the Odd one out
+
+The player must find the intruder among the photos that are displayed.
+
+{% include figure image_path="/assets/images/games/findtheodd.jpg" alt="image of the game Find the Odd one out" %}
+
+## Identify the letters
+
+Delete all blocks containing the mentioned letter.
+
+{% include figure image_path="/assets/images/games/letters.png" alt="image of the game Identify the letters" %}
+
+## Cups and Balls
+
+Find the ball hidden underneath one of the cups after being mixed.
+
+{% include figure image_path="/assets/images/games/passpass.png" alt="image of the game Cups and Balls" %}
+
+## The cake factory
+
+Make the cake indicated on the recipe book. <br>
+You should take care of all the layers, icings and decorations to satisfy your customer. <br>
+If you manage to make the cake as requested you will be rewarded.
+
+{% include figure image_path="/assets/images/games/cakes.png" alt="image of the game The cake factory" %}
+
+## Order
+
+Look at the targets in the order they appeared. <br>
+If the order is correct, a reward will be offered.
+
+{% include figure image_path="/assets/images/games/ordre.png" alt="image of the game Order" %}
+
+## Fun with Flags
+
+After reading the name of the country, the player must look at the corresponding flag.
+
+{% include figure image_path="/assets/images/games/flags.png" alt="image of the game Fun with Flags" %}
+
+## Scribble
+
+Draw through your eyes on the canvas. <br>
+You can change the color by going outside the outline of the canvas.
+
+{% include figure image_path="/assets/images/games/gribouille.png" alt="image of the game Scribble" %}
+
+## Biboules
+
+Look at the escaping bugs and return them to their cage with your wand. The more bugs you capture, the more points you get.
+
+{% include figure image_path="/assets/images/games/biboules.png" alt="image of the game Biboules" %}
+
+## Biboule Jump
+
+Jump from cloud to cloud to reach the highest altitude.
+
+{% include figure image_path="/assets/images/games/biboulejump.png" alt="image of the game Biboule Jump" %}
+
+## Blocks
+
+A large picture is hidden by colored blocks that the player must look at to make them disappear. <br>
+When all the blocks have disappeared, the reward is offered.
+
+{% include figure image_path="/assets/images/games/block.png" alt="image of the game Blocks" %}
+
+## Colored bubbles
+
+Colored bubbles slowly rise to the surface and explode when the player looks at them.
+
+{% include figure image_path="/assets/images/games/bubblecolor.png" alt="image of the game Colored bubbles" %}
+
+## Portrait bubbles
+
+Bubbles containing portraits slowly rise to the surface and explode when the player looks at them.
+
+{% include figure image_path="/assets/images/games/bubble.png" alt="image of the game Portrait bubbles" %}
+
+## Scratch Cards
+
+A large image is hidden in a scratch card. <br>
+The player scratches the card with their eyes. <br>
+When a large portion of the card has been scratched, the image is displayed and the reward offered.
+
+{% include figure image_path="/assets/images/games/scratchcard.png" alt="image of the game Scratch Cards" %}
+
+## Break out
+
+A picture is hidden behind bricks. <br>
+The player uses the ball to make the bricks disappear and the board to make the ball bounce. <br>
+When all the bricks are gone, the reward is offered.
+
+{% include figure image_path="/assets/images/games/cassebrique.png" alt="image of the game Break out" %}
+
+## Divisor
+
+Several targets move randomly on the screen. <br>
+By looking at them, you can split them into two smaller targets. <br>
+Continue splitting until there are no more. <br>
+Try to do it in the shortest time possible !
+
+{% include figure image_path="/assets/images/games/divisor.png" alt="image of the game Divisor" %}
+
+## Whac-a-mole
+
+Tap the moles that are trying to get out of the ground by watching them.
+
+{% include figure image_path="/assets/images/games/mole.png" alt="image of the game Whac-a-mole" %}
+
+## Ribbit run
+
+Capture the bugs to advance your frog against the other frogs !
+
+{% include figure image_path="/assets/images/games/frogsrace.png" alt="image of the gameRibbit run" %}
+
+## The room
+
+Walk through the room and find out what's inside.
+
+{% include figure image_path="/assets/images/games/home.png" alt="image of the game The room" %}
+
+## Rabbits
+
+Several rabbits move randomly on the screen. <br>
+By looking at them, you can split them into two smaller rabbits. <br>
+Continue the division until there are no more. <br>
+Try to do it in the shortest time possible !
+
+{% include figure image_path="/assets/images/games/rabbits.png" alt="image of the game Rabbits" %}
+
+## Robots
+
+Naughty robots want to occupy your planet ! <br>
+Destroy them all with your eyes and accumulate the highest score.
+
+{% include figure image_path="/assets/images/games/robots.png" alt="image of the game Robots" %}
+
+## Space game
+
+Shoot the alien bugs with your spaceship's lasers and increment your score. <br>
+Be careful not to get hit by their red lasers !
+
+{% include figure image_path="/assets/images/games/space.png" alt="image of the game Space game" %}
+
+## Dice
+
+Roll 1 to 6 dice.
+
+{% include figure image_path="/assets/images/games/dice.png" alt="image of the game Dice" %}
+
+## Maths game
+
+Solve math problems of two numbers : 
+
+* Addition
+* Subtraction
+* Multiplication
+* Division
+
+{% include figure image_path="/assets/images/games/math101.png" alt="image of the gameMaths game" %}
 
 ## Goose Game
 
-Roll the dice and advance along the squares on the path to reach the end before the other players do.
+Roll the dice to move along the squares to reach the end before the other players.
 
-![Goosegame]({{ site.thumbnail_base }}/goosegame.png)
+{% include figure image_path="/assets/images/games/goosegame.png" alt="image of the game Goose Game" %}
 
-## Space Game 
+## Noughts and crosses
 
-Kill the alien biballs with your spaceship's lasers and increase your score. Be careful not to be hit by their red lasers!
+Line up 3 crosses or 3 circles before your opponent !
 
-![Spacegame]({{ site.thumbnail_base }}/space.png)
+{% include figure image_path="/assets/images/games/NaC.png" alt="image of the game Noughts and crosses" %}
 
-## VideoPlayer with Feedback 
+## Horses simplified
 
-![videoPlayer]({{ site.thumbnail_base }}/youtube.png)
+Move your horses around the board and be the first to reach the center.
 
-## Media Player 
+{% include figure image_path="/assets/images/games/horsesSimplified.png" alt="image of the game Horses simplified" %}
 
-Play your own videos or those from YouTube.
+## Rock-Paper-Scissors
 
-![Media]({{ site.thumbnail_base }}/gazeMedia.png)
+Choose the right form to win !
 
-## The Room
+{% include figure image_path="/assets/images/games/PaperScissorsStone.png" alt="image of the game Rock-Paper-Scissors" %}
 
-![room]({{ site.thumbnail_base }}/home.png)
+## Rush Hour
+
+Help the young cab to get out of the parking lot by moving the cars that are blocking it.
+
+{% include figure image_path="/assets/images/games/rushHour.png" alt="image of the game Rush Hour" %}
+
+## Ladder
+
+Choose a biboule and this one will show you where it goes !
+
+{% include figure image_path="/assets/images/games/ladder.png" alt="image of the game Ladder" %}
 
 ## Coloring
 
-Color in the images with your gaze.
+Color the picture with your eyes.
 
-![coloring]({{ site.thumbnail_base }}/colors.png)
+{% include figure image_path="/assets/images/games/colors.png" alt="image of the game Coloring" %}
 
-## Math 
+## Horses
 
-![math]({{ site.thumbnail_base }}/math101.png)
+Move your horses around the board and be the first to reach the center.
 
-## Video Grid
+{% include figure image_path="/assets/images/games/horses.png" alt="image of the game Horses" %}
 
-Play multiple videos by looking at them to play them.
+## Bottle
 
-![video grid]({{ site.thumbnail_base }}/videogrid.png)
+Break the bottles to win.
 
-## Little Horses
+{% include figure image_path="/assets/images/games/supermarket.jpg" alt="image of the game Bottle" %}
 
-Move your horses around the board and be the first to make it to the center.
+## Magic Cards
 
-![horses]({{ site.thumbnail_base }}/horses.png)
+Several cards are displayed and the player must look at them to turn them over. <br>
+One of these cards has a picture on it. <br>
+A reward is offered to the player when they find it.
 
-## Little Horses Simplified
-
-Move your horses around the board and be the first to make it to the center.
-
-![horses simplified]({{ site.thumbnail_base }}/horsesSimplified.png)
+{% include figure image_path="/assets/images/games/magicCard.png" alt="image of the game Magic Cards" %}
 
 ## Farm
 
-Listen to the sounds of the Farm animals by looking at them.
+Listen to the sounds of the farm animals as you watch them.
 
-![coloring]({{ site.thumbnail_base }}/farm.png)
+{% include figure image_path="/assets/images/games/farm.png" alt="image of the game Farm" %}
+
+## I've got a Biball !
+
+Take care of your Biboule by feeding him, washing him, playing with him and caressing him.
+
+{% include figure image_path="/assets/images/games/pet.png" alt="image of the game I've got a Biball" %}
+
+## Egg game
+
+Break the egg to see what's inside ! <br>
+There is also a variant "Custom egg game", which contains the images you want.
+
+{% include figure image_path="/assets/images/games/egg.png" alt="image of the game CEgg game" %}
 
 ## Jungle
 
-Listen to the sounds of the Jungle animals by looking at them.
+Listen to the sounds of the jungle animals as you watch them.
 
-![jungle]({{ site.thumbnail_base }}/jungle.png)
+{% include figure image_path="/assets/images/games/jungle.png" alt="image of the game Jungle" %}
 
-## Savana
+## Sea
 
-Listen to the sounds of the animals on the Savana by looking at them.
+Listen to the sounds of the sea animals as you watch them.
 
-![savana]({{ site.thumbnail_base }}/savana.png)
+{% include figure image_path="/assets/images/games/ocean.png" alt="image of the game Sea" %}
+
+## Opinions
+
+Give your opinion about the images shown !
+
+{% include figure image_path="/assets/images/games/opinions.jpg" alt="image of the game Opinions" %}
+
+## Savanna
+
+Listen to the sounds of the animals on the Savannah as you watch them.
+
+{% include figure image_path="/assets/images/games/savana.png" alt="image of the game Savanna" %}
+
+## Follow the path
+
+Get the keys to get the gem ! <br>
+Where to get all the coins !
+
+{% include figure image_path="/assets/images/games/follow.png" alt="image of the game CFollow the path" %}
+
+## Video Grid
+
+Play multiple videos as you watch them to read them.
+
+{% include figure image_path="/assets/images/games/videogrid.png" alt="image of the game Video Grid" %}
+
+## Video Player with Feedback
+
+{% include figure image_path="/assets/images/games/youtube.png" alt="image of the game Video Player with Feedback" %}
+
+## Media Player
+
+Play your own videos or these from YouTube.
+
+{% include figure image_path="/assets/images/games/gazeMedia.png" alt="image of the game Media Player" %}
