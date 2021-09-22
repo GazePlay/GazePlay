@@ -11,7 +11,7 @@ toc_sticky: true
 
 Le joueur lance une tarte à la crème sur la cible statique lorsqu'il la regarde.
 
-![Tartes à la crème]({{ site.thumbnail_base }}/creamPie.png)
+{% include figure image_path="/assets/images/games/creamPie.png" alt="image du jeu tartes à la crème" %}
 
 ## Ninja !
 
@@ -366,6 +366,7 @@ Donne ton avis concernant les images montré !
 Récupère les clés pour t'emparer de la gemme ! <br>
 Où récupèrent toutes les pièces !
 
+{% include figure image_path="/assets/images/games/follow.png" alt="image du jeu suivre le chemin" %}
 ![Suivre chemin]({{site.thumbnail_base}}/follow.png)
 
 ## Grille vidéo
