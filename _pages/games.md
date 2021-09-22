@@ -9,350 +9,353 @@ toc_sticky: true
 
 ## Cream pies
 
-Le joueur lance une tarte à la crème sur la cible statique lorsqu'il la regarde.
+The player throws a cream pie at the static target as he looks at it.
 
 ![Cream pies]({{ site.thumbnail_base }}/creamPie.png)
 
 ## Ninja !
 
-La cible suit des mouvements aléatoires et explose lorsque le joueur la regarde.
+The target follows random movements and explodes when the player looks at it.
 
 ![Ninja]({{ site.thumbnail_base }}/ninja.png)
 
 ## Dot to Dot
 
-Plusieurs points sont affichés, relie les et si l'ordre est respecté une récompense sera offerte.
+Several points are displayed, connect them and if the order is respected a reward will be offered.
 
 ![Dot to Dot]({{ site.thumbnail_base}}/dottodot.png)
 
 ## Piano
 
-Jouez une mélodie en regardant les touches jaunes du piano qui vous guident.
+Play a melody with the yellow piano keys guiding you.
 
 ![Piano]({{ site.thumbnail_base }}/pianosight.png)
 
 ## Labyrinth
 
-Guidez la souris vers le fromage en choisissant l'une des options au début du jeu.
+Guide the mouse to the cheese by choosing one of the options at the beginning of the game.
 
 ![Labyrinth]({{ site.thumbnail_base }}/labyrinth.png)
 
 ## Memory
 
-Associez les cartes qui ont la même image en les regardant. <br>
-Ce jeu est en trois versions : 
+Match cards that have the same picture by looking at them. <br>
+This game comes in three versions: 
 
-* images
-* lettres
-* nombres
+* pictures
+* letters
+* numbers
 
 ![Memory]({{ site.thumbnail_base }}/memory.png)
 
 ## Open Memory
 
-Associez les cartes qui ont la même image en les regardant. <br>
-Ce jeu est en trois versions : 
+Match cards that have the same picture by looking at them. <br>
+This game comes in three versions: 
 
-* images
-* lettres
-* nombres
+* pictures
+* letters
+* numbers
 
-Pour cette version du jeu, les cartes ne sont pas face cachée.
+For this version of the game, the cards are not face down.
 
 ![Open Memory]({{ site.thumbnail_base }}/openMemory.png)
 
 ## Where is it ?
 
-Le joueur doit regarder l'image correspondant à ce qui a été indiquée au début du jeu. <br>
-Ce jeu est disponible en cinq versions : 
-* Où est cette Couleur?
-* Où est cet Animal?
-* Où est cette Lettre?
-* Où est ce Nombre?
-* Où est-ce? .
+The player must look at the image that corresponds to what was indicated at the beginning of the game. <br>
+This game is available in five versions:
+
+* Where is this Color?
+* Where is this Animal?
+* Where is this letter?
+* Where is this Number?
+* Where is this?
  
-Pour la dernière version, l'utilisateur peut choisir ses propres ressources pour le jeu.
+For the latest version, the user can choose his own resources for the game.
 
 ![Where is it]({{ site.thumbnail_base }}/whereisit.png)
 
 ## Sliding puzzle
 
-Le jeu du taquin doit être résolu en regardant la pièce de puzzle à bouger.
+The sliding game must be solved by looking at the puzzle piece to move.
 
 ![Sliding puzzle]({{ site.thumbnail_base }}/slidingpuzzle.png)
 
 ## Magic Potions
 
-Mélangez les bonnes potions colorées pour préparer la commande de Biboule. Attention à ne pas faire un mauvais mélange !
+Mix the right colored potions to prepare Biboule's order. Be careful not to make a bad mix!
 
 ![Magic Potions]({{ site.thumbnail_base }}/potions.jpg)
 
 ## Spot The Difference
 
-Il faut trouver les différences entre les deux images en les fixant du regard.
+You have to find the differences between the two images by staring at them.
 
 ![Spot the difference]({{ site.thumbnail_base }}/spotthedifference.png)
 
 ## Find the Odd one out
 
-Le joueur doit trouver l'intrus parmi les photos qui sont affichées.
+The player must find the intruder among the photos that are displayed.
 
 ![Find the odd one out]({{ site.thumbnail_base }}/findtheodd.jpg)
 
 ## identify the letters
 
-Supprimez tous les blocs contenant la lettre mentionnée.
+Delete all blocks containing the mentioned letter.
 
 ![Identify the letters]({{ site.thumbnail_base }}/letters.png)
 
 ## Cups and Balls
 
-Trouvez la balle cachée en-dessous d'un des gobelets après avoir été mixés.
+Find the ball hidden underneath one of the cups after being mixed.
 
 ![GCups and balls]({{ site.thumbnail_base }}/passpass.png)
 
 ## The cake factory
 
-Faites le gâteau indiqué sur le livre de recettes. Vous devriez vous soigner des tous les couches, les glaçages et les décorations pour satisfaire votre client.<br> 
-Si vous arrivez à fabriquer le gâteau comme demandé vous serez récompensé.
+Make the cake indicated on the recipe book. You should take care of all the layers, icings and decorations to satisfy your customer. <br>
+If you manage to make the cake as requested you will be rewarded.
 
 ![Cake factory]({{ site.thumbnail_base }}/cakes.png)
 
 ## Order
 
-Regardez les cibles dans l'ordre qu'elles sont apparues. Si l'ordre est correct, une récompense sera offerte.
+Look at the targets in the order they appeared. If the order is correct, a reward will be offered.
 
 ![Order]({{ site.thumbnail_base }}/ordre.png)
 
 ## Fun with Flags
 
-Après avoir lu le nom du pays, le joueur doit regarder le drapeau correspondant.
+After reading the name of the country, the player must look at the corresponding flag.
 
 ![Fun with flags]({{ site.thumbnail_base }}/flags.png)
 
 ## Scribble
 
-Dessinez à travers votre regard sur la toile. Vous pouvez changer de couleur en sortant des contours de la toile.
+Draw through your eyes on the canvas. You can change the color by going outside the outline of the canvas.
 
 ![Scribble]({{ site.thumbnail_base }}/gribouille.png)
 
 ## Biboules
 
-Regardez les biboules qui sont en train d'échapper pour les retourner dans leur cage avec votre baguette magique. Plus de biboules vous capturez, plus de points vous aurez.
+Look at the escaping bugs and return them to their cage with your wand. The more bugs you capture, the more points you get.
 
 ![Biboules]({{ site.thumbnail_base }}/biboules.png)
 
 ## Biboule Jump
 
-Sauter de nuage en nuage pour atteindre la plus haute altitude.
+Jump from cloud to cloud to reach the highest altitude.
 
 ![Biboule Jump]({{ site.thumbnail_base }}/biboulejump.png)
 
 ## Blocks
 
-Une grande image est cachée par des blocs de couleur que le joueur doit regarder pour les faire disparaître. Lorsque l'ensemble des blocs ont disparu, la récompense est offerte.
+A large picture is hidden by colored blocks that the player must look at to make them disappear. When all the blocks have disappeared, the reward is offered.
 
 ![Blocks]({{ site.thumbnail_base }}/block.png)
 
 ## Colored bubbles
 
-Des bulles de couleur remontent lentement à la surface et exploser lorsque le joueur les regarde.
+Colored bubbles slowly rise to the surface and explode when the player looks at them.
 
 ![Colored bubbles]({{ site.thumbnail_base }}/bubblecolor.png)
 
 ## Portrait bubbles
 
-Des bulles contenant des portraits remontent lentement à la surface et exploser lorsque le joueur les regarde.
+Bubbles containing portraits slowly rise to the surface and explode when the player looks at them.
 
 ![Portrait bubbles]({{ site.thumbnail_base }}/bubble.png)
 
 ## Scratch Cards
 
-Une grande image est cachée dans une carte à gratter. <br>
-Le joueur gratte la carte grâce à son regard. Lorsque une grande partie de la carte a été grattée, l'image est affichée et la récompense offerte.
+A large image is hidden in a scratch card. <br>
+The player scratches the card with their eyes. When a large portion of the card has been scratched, the image is displayed and the reward offered.
 
 ![Scratch cards]({{ site.thumbnail_base }}/scratchcard.png)
 
 ## Break out
 
-Une image est cachée derrière des briques.<br>
-Le joueur se sert de la balle pour faire disparaître les briques et de la planche pour faire rebondir la balle.<br>
-Lorsque l'ensemble des briques ont disparu, la récompense est offerte.
+A picture is hidden behind bricks. <br>
+The player uses the ball to make the bricks disappear and the board to make the ball bounce. <br>
+When all the bricks are gone, the reward is offered.
 
 ![Break out]({{ site.thumbnail_base}}/cassebrique.png)
 
 ## Divisor
 
-Plusieurs cibles bougent aléatoirement sur l'écran. En les regardant, vous pouvez les diviser en deux cibles plus petites. Continuez la division jusqu'au moment où il n'y aura plus. Essayez de le faire dans le temps le plus court possible !
+Several targets move randomly on the screen. By looking at them, you can split them into two smaller targets. <br>
+Continue splitting until there are no more. <br>
+Try to do it in the shortest time possible!
 
 ![Divisor]({{ site.thumbnail_base }}/divisor.png)
 
 ## Whac-a-mole
 
-Tapez les taupes qui essaient de sortir de la terre en les regardant.
+Tap the moles that are trying to get out of the ground by watching them.
 
 ![Whac-a-mole]({{ site.thumbnail_base }}/mole.png)
 
 ## Ribbit run
 
-Capture les biboules pour faire avancer ta grenouille contre les autres grenouilles !
+Capture the bugs to advance your frog against the other frogs!
 
 ![Ribbit run]({{ site.thumbnail_base }}/frogsrace.png)
 
 ## The room
 
-Parcours la pièce et découvre ce qu'elle contient.
+Walk through the room and find out what's inside.
 
 ![The room]({{ site.thumbnail_base }}/home.png)
 
 ## Rabbits
 
-Plusieurs lapins bougent aléatoirement sur l'écran. En les regardant, vous pouvez les diviser en deux lapins plus petits. <br>
-Continuez la division jusqu'au moment où il n'y aura plus. <br>
-Essayez de le faire dans le temps le plus court possible !
+Several rabbits move randomly on the screen. By looking at them, you can split them into two smaller rabbits. <br>
+Continue the division until there are no more. <br>
+Try to do it in the shortest time possible!
 
 ![Rabbits]({{ site.thumbnail_base }}/rabbits.png)
 
 ## Robots
 
-Les robots vilains veulent occuper ta planète ! <br>
-Détruisez-les tous avec votre regard et cumulez le score le plus élevé.
+Naughty robots want to occupy your planet! <br>
+Destroy them all with your eyes and accumulate the highest score.
 
 ![Robots]({{ site.thumbnail_base }}/robots.png)
 
 ## Space game
 
-Tirer sur les biboules aliénés avec les lasers de votre vaisseau spatial et incrémentez votre score. <br>
-Faites attention à ne pas être touché de leurs lasers rouges !
+Shoot the alien bugs with your spaceship's lasers and increment your score. <br>
+Be careful not to get hit by their red lasers!
 
 ![Space game]({{ site.thumbnail_base }}/space.png)
 
 ## Dice
 
-Lancer de 1 à 6 dés.
+Roll 1 to 6 dice.
 
 ![Dice]({{ site.thumbnail_base }}/dice.png)
 
 ## Maths game
 
-Résoudre les problèmes de maths: Addition, Soustraction, Multiplication et Division de deux nombres.
+Solve math problems: Addition, Subtraction, Multiplication and Division of two numbers.
 
 ![Math101]({{ site.thumbnail_base }}/math101.png)
 
 ## Goose Game
 
-Lancez les dés pour avancer le long des cases afin d'atteindre la fin avant les autres joueurs.
+Roll the dice to move along the squares to reach the end before the other players.
 
 ![Goose game]({{ site.thumbnail_base }}/goosegame.png)
 
 ## Noughts and crosses
 
-Aligne 3 croix ou 3 rond avant ton adversaire !
+Line up 3 crosses or 3 circles before your opponent!
 
 ![Noughts and crosses]({{ site.thumbnail_base }}/NaC.png)
 
 ## Horses simplified
 
-Déplacez vos chevaux autour de la planche et soyez le premier à arriver au centre.
+Move your horses around the board and be the first to reach the center.
 
 ![Horses simplified]({{site.thumbnail_base}}/horsesSimplified.png)
 
 ## Rock-Paper-Scissors
 
-Choisis la bonne forme pour gagner ! <br>
+Choose the right form to win!
 
 ![Rock-paper-scissors]({{site.thumbnail_base}}/PaperScissorsStone.png)
 
 ## Rush Hour
 
-Aidez le taxi jeune à sortir du parking en déplaçant les voitures qui le bloquent.
+Help the young cab to get out of the parking lot by moving the cars that are blocking it.
 
 ![RushHour]({{ site.thumbnail_base }}/rushHour.png)
 
 ## Ladder
 
-Choisie un biboule et celui-ci te montrera ou il va !
+Choose a biboule and this one will show you where it goes!
 
 ![Ladder]({{ site.thumbnail_base }}/ladder.png)
 
 ## Coloring
 
-Colorie l'image avec tes yeux.
+Color the picture with your eyes.
 
 ![coloring]({{ site.thumbnail_base }}/colors.png)
 
 ## Horses
 
-Déplacez vos chevaux autour de la planche et soyez le premier à arriver au centre.
+Move your horses around the board and be the first to reach the center.
 
 ![Horses]({{site.thumbnail_base}}/horses.png)
 
 ## Bottle
 
-Casse les bouteilles pour gagner.
+Break the bottles to win.
 
 ![Bottle]({{site.thumbnail_base}}/supermarket.jpg)
 
 ## Magic Cards
 
-Plusieurs cartes sont affichées et le joueur doit les regarder pour les retourner. L'une de ces cartes comporte une image.<br>
-Une récompense est offerte au joueur lorsqu'il l'a trouvée.
+Several cards are displayed and the player must look at them to turn them over. One of these cards has a picture on it. <br>
+A reward is offered to the player when they find it.
 
 ![Magic cards]({{ site.thumbnail_base }}/magicCard.png)
 
 ## Farm
 
-Écoutez les sons des animaux de la ferme en les regardant.
+Listen to the sounds of the farm animals as you watch them.
 
 ![Farm]({{site.thumbnail_base}}/farm.png)
 
 ## I've got a Biball !
 
-Prenez-vous soin de votre Biboule en le nourrissant, le lavant, en jouant avec lui et en le caressant.
+Take care of your Biboule by feeding him, washing him, playing with him and caressing him.
 
 ![Biball]({{ site.thumbnail_base }}/pet.png)
 
 ## Egg game
 
-Casse l'œuf pour voir ce qu'il contient !<br>
-Existe aussi une variante "Jeu de l'œuf personnaliser", qui contient les images que l'on veut.
+Break the egg to see what's inside ! <br>
+There is also a variant "Custom egg game", which contains the images you want.
 
 ![Egg game]({{ site.thumbnail_base }}/egg.png)
 
 ## Jungle
 
-Écoutez les sons des animaux de la jungle en les regardant.
+Listen to the sounds of the jungle animals as you watch them.
 
 ![Jungle]({{site.thumbnail_base}}/jungle.png)
 
 ## Sea
 
-Écoutez les sons des animaux de la mer en les regardant.
+Listen to the sounds of the sea animals as you watch them.
 
 ![Sea]({{site.thumbnail_base}}/ocean.png)
 
 ## Opinions
 
-Donne ton avis concernant les images montré !
+Give your opinion about the images shown !
 
 ![Opinions]({{ site.thumbnail_base }}/opinions.jpg)
 
 ## Savanna
 
-Écoutez les sons des animaux sur le Savane en les regardant.
+Listen to the sounds of the animals on the Savannah as you watch them.
 
 ![Savanna]({{site.thumbnail_base}}/savana.png)
 
 ## Follow the path
 
-Récupère les clés pour t'emparer de la gemme !
-Où récupèrent toutes les pièces !
+Get the keys to get the gem ! <br>
+Where to get all the coins !
 
 ![Follow the path]({{site.thumbnail_base}}/follow.png)
 
 ## Video Grid
 
-Lisez plusieurs vidéos en les regardant pour les lire.
+Play multiple videos as you watch them to read them.
 
 ![Video grid]({{site.thumbnail_base}}/videogrid.png)
 
@@ -362,6 +365,6 @@ Lisez plusieurs vidéos en les regardant pour les lire.
 
 ## Media Player
 
-Joue tes propres vidéos ou celles-ci depuis YouTube.
+Play your own videos or these from YouTube.
 
 ![MediaPlayer]({{ site.thumbnail_base }}/gazeMedia.png)
