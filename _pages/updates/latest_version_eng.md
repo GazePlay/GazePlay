@@ -4,7 +4,7 @@ permalink: /updates/gazeplay-1-9-0-eng/
 layout: single
 ---
 
-<img src="{{site.baseurl}}/assets/images/gazeplayLogo1-7.png"/>
+<img src="{{site.baseurl}}/assets/images/gazeplayLogo1-9.png"/>
 
 Your version is up to date.
 
