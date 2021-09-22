@@ -59,7 +59,7 @@ Ce jeu est en trois versions :
 
 Pour cette version du jeu, les cartes ne sont pas face cachée.
 
-{% include figure image_path="/assets/images/games/creamPie.png" alt="image du jeu Memory Ouvert" %}
+{% include figure image_path="/assets/images/games/openMemory.png" alt="image du jeu Memory Ouvert" %}
 
 ## Où est-ce?
 
@@ -99,7 +99,7 @@ Il faut trouver les différences entre les deux images en les fixant du regard.
 
 Le joueur doit trouver l'intrus parmi les photos qui sont affichées.
 
-{% include figure image_path="/assets/images/games/findtheodd.png" alt="image du jeu Trouvez l'intrus" %}
+{% include figure image_path="/assets/images/games/findtheodd.jpg" alt="image du jeu Trouvez l'intrus" %}
 
 ## Identifiez La Lettre
 
@@ -146,7 +146,7 @@ Vous pouvez changer de couleur en sortant des contours de la toile.
 Regardez les biboules qui sont en train d'échapper pour les retourner dans leur cage avec votre baguette magique. <br>
 Plus de biboules vous capturez, plus de points vous aurez.
 
-{% include figure image_path="/assets/images/games/bboules.png" alt="image du jeu Biboules" %}
+{% include figure image_path="/assets/images/games/biboules.png" alt="image du jeu Biboules" %}
 
 ## Biboule Jump
 
