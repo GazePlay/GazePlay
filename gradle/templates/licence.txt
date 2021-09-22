@@ -7,7 +7,7 @@ contact : didier.schwab@univ-grenoble-alpes.fr
 Ce logiciel est réalisé dans le cadre d'un projet de recherche
 au sein de l'équipe GETALP (Groupe d'Étude en Traduction Automatique/Traitement
 Automatisé des Langues et de la parole) du LIG (Laboratoire d'Informatique de Grenoble)
-dont les partenaires académiques sont l'Université Grenoble Alpes, le CNRS, Grenoble INP, l'INRIA.
+dont les partenaires académiques sont l'Université Grenoble Alpes, le CNRS, l'INRIA.
 
 Ce projet a été initié par Didier Schwab qui a été rejoint par de nombreuses personnes. Le dépôt
 github du projet peut permettre de constater leur contribution directe.
@@ -15,23 +15,39 @@ github du projet peut permettre de constater leur contribution directe.
 https://github.com/GazePlay/GazePlay
 
 Cette présente page a également pour objectif de rassembler les contribution indirectes au cours
-de rencontrer plus ou moins informelles.
+de rencontres plus ou moins informelles.
 
 Plusieurs étudiants ont contribué au développement des jeux et/ou aux idées dans le cadre
 de leur formation :
 - en 2017-2018 : Rajaa BARHTAOUI (Univ. Grenoble Alpes), Amela FEJZA (Grenoble INP)
 - en 2018-2019 : Mélanie CARRIÈRE (Univ. Grenoble Alpes), Dumitru CORINI (Univ. Grenoble Alpes),
  Vincent GIVAUDAN (Univ.Grenoble Alpes), Thomas MEDARD (Univ. Grenoble Alpes), Sébastien RIOU (Univ. Grenoble Alpes)
-- en 2019-2020 : Sannara Ek (Univ. Grenoble Alpes), Teo Blachère (Univ. Grenoble Alpes),
-Johana Marku (Grenoble INP), Peter Bardawil (Grenoble INP), Wafaa El Husseini (Grenoble INP),
+- en 2019-2020 : Sannara EK (Univ. Grenoble Alpes), Teo BLACHÈRE (Univ. Grenoble Alpes),
+Johana MARKU (Grenoble INP), Peter BARDAWIL (Grenoble INP), Wafaa EL HUSSEINI (Grenoble INP),
  TRUONG Hai Long (Univ. Grenoble Alpes)
+- en 2020-2021 : Vincent ARNONE (Univ. Grenoble Alpes),  Jordan ARRIGO (Univ. Savoie Mont-Blanc),
+ Nairit BANDYOPADHYAY (Univ. Grenoble Alpes), Zachary Rostom BOUCHEMA (Univ. Grenoble Alpes),
+ Christophe EL ZEINATY (Univ. Grenoble Alpes), Vera FILIPOVICH (Univ. Grenoble Alpes), Louis LAMBERT (Univ. Grenoble Alpes),
+Geoffrey LACOTTE (Univ. Grenoble Alpes), Aurane MALASSAGNE (Univ. Grenoble Alpes), Oriana ORLANDI (Univ. Grenoble Alpes),
+Alban PERRIER (École nationale supérieure de cognitique)
+
+Merci aux Ingénieurs dédiés : Sébastien RIOU (depuis 09/2019), Jordan ARRIGO (depuis 09/2021) et Vincent ARNONE (depuis 10/2021).
 
 Merci également à la communauté open source pour son aide : Yann ROBERT, Anantaplex ; Miles BARDON
 
-Merci à Loïc Vial, Univ. Grenoble Alpes (lolo la science) en particulier pour le lien entre la bibliothèque Tobii en C++ et Java
+Merci à Loïc VIAL, Univ. Grenoble Alpes (lolo la science) en particulier pour le lien entre la bibliothèque Tobii en C++ et Java
 
-Merci au personnel de l'EEAP Coste Rousse à Prades-le-Lez et au personnel de l'IMP Ninon Vallin à Grenoble
-pour leurs retours.
+Merci à Marion DOHEN, Amélie ROCHER-CAPELAN, Benjamin LECOUTEUX, membres du groupe Interaaction.
+
+Merci au personnel de l'Etablissement pour Enfants et Adolescents Polyhandicapés Coste Rousse à Prades-le-Lez (34),
+de l'Institut Médico-Pédagogique  Ninon Vallin à Grenoble (38), de l'Institut Médico-Educatif Les Sources de Meylan (38),
+de l'Institut Médico-Educatif et de l'Institut d'éducation motrice Le Plovier de Valence (26) et de
+l'Etablissement pour Enfants et Adolescents Polyhandicapés Le Cigalon de Orange (84) pour leurs retours et leurs idées.
+
+Merci à la Plate-Forme Nouvelles Technologies, Hôpital R. Poincaré / Garches (92).
+
+Merci au Pole Grenoble Cognition, à l'Institut Carnot Cognition, à l'Association Francaise du Syndrome de Rett, à la Fondation Free,
+ à la Fondation AFNIC et à l'association Klésia pour leur engagement et leur soutien financier.
 
 Plusieurs personnes ont également contribué par leurs idées, par leur aide technique ou matérielle :
 Céline Chalbos, Sandra Chaulet, Anne-Sophie Pierson-Fertel, Francis Jambon, Émilie Janots, Claire Lemaire,
@@ -53,7 +69,8 @@ Grec (MK Prossopsis Ltd)
 Italien (Giuseppe Melfi)
 Japonais ()
 Hollandais (Leen Vangroenweghe)
-Russe (Anna Berkutova)
+Russe (Anna Berkutova, Vera FILIPOVICH)
+Bielorusse (Vera FILIPOVICH)
 Malais (LIM Lian Tze, Nur HUSSEIN)
 Indonésien (Awatrawika Dharmmesti ATMYANEGORO)
 Vietnamien ()
