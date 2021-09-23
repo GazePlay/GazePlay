@@ -103,6 +103,7 @@ public class DrawApplication implements GameLifeCycle {
 
     @Override
     public void launch() {
+        gameContext.setOffFixationLengthControl();
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
     }

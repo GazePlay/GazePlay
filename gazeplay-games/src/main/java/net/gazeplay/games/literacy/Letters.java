@@ -185,7 +185,7 @@ public class Letters implements GameLifeCycle {
 
             stats.notifyNewRoundReady();
 
-            gameContext.onGameStarted();
+            gameContext.onGameStarted(3000);
         });
 
         fullAnimation.play();

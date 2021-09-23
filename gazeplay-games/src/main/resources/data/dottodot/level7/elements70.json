@@ -1,0 +1,86 @@
+{
+    "background": "background.png",
+    "elements": [
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 600,
+                "y": 900
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 750,
+                "y": 630
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 500,
+                "y": 400
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 800,
+                "y": 400
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 900,
+                "y": 100
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 1000,
+                "y": 400
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 1300,
+                "y": 400
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 1100,
+                "y": 630
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 1200,
+                "y": 900
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 900,
+                "y": 800
+            }
+        }
+    ]
+}
+

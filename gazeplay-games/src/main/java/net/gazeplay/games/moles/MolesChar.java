@@ -4,6 +4,9 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
@@ -19,6 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.ImageLibrary;
+import net.gazeplay.components.Portrait;
 
 @Slf4j
 public class MolesChar extends Parent {
@@ -38,14 +43,18 @@ public class MolesChar extends Parent {
 
     private final double distTranslation;
 
+    private final double width;
+    private final double height;
+
     private boolean touched;
     private boolean canTouched;
     boolean canGoOut;
     public boolean out;
 
-    private final ProgressIndicator progressIndicator;
+    private final ProgressIndicator progressIndicatorMoles;
 
     private Timeline timeMoleOut;
+    private Timeline timelineProgressBarMoles;
 
     private final int timeMoleStayOut = 2500;
 
@@ -54,15 +63,22 @@ public class MolesChar extends Parent {
     @Setter
     private int TargetAOIListIndex;
 
+    //url bidoule if bidoule or default case, and DefaultUser if the user don't has a portrait
+    private String url;
+
     MolesChar(
         final double positionX, final double positionY,
         final double width, final double height,
         final double distTrans,
         final IGameContext gameContext,
-        final Moles gameInstance
+        final Moles gameInstance,
+        final MolesGameVariant variant,
+        final ReplayablePseudoRandom randomGenerator
     ) {
-        this.positionX=positionX;
-        this.positionY=positionY;
+        this.positionX = positionX;
+        this.positionY = positionY;
+        this.width = width;
+        this.height = height;
         this.gameContext = gameContext;
 
         this.out = false;
@@ -75,28 +91,44 @@ public class MolesChar extends Parent {
 
         this.gameInstance = gameInstance;
 
-        this.progressIndicator = createProgressIndicator();
-
         this.enterEvent = buildEvent();
 
+        this.progressIndicatorMoles = createProgressIndicatorMoles();
+
+        final ImageLibrary imageLibrary = Portrait.createImageLibrary(randomGenerator);
+
+        Image moleImage;
+
+        if (variant == MolesGameVariant.USERP) {
+            moleImage = imageLibrary.pickRandomImage();
+        } else {
+            moleImage = new Image("data/whackmole/images/bibouleMole.png");
+        }
+
         this.moleMoved = new Rectangle(positionX, positionY - distTrans, width, height);
-        this.moleMoved.setFill(new ImagePattern(new Image("data/whackmole/images/bibouleMole.png"), 5, 5, 1, 1, true));
+        this.moleMoved.setFill(new ImagePattern(moleImage, 5, 5, 1, 1, true));
         this.moleMoved.opacityProperty().set(1);
-        this.moleMoved.addEventHandler(MouseEvent.ANY, enterEvent);
-        this.moleMoved.addEventHandler(GazeEvent.ANY, enterEvent);
+        this.moleMoved.addEventFilter(MouseEvent.ANY, enterEvent);
+        this.moleMoved.addEventFilter(GazeEvent.ANY, enterEvent);
         gameContext.getGazeDeviceManager().addEventFilter(this.moleMoved);
 
         this.mole = new Rectangle(positionX, positionY, width, height);
-        this.mole.setFill(new ImagePattern(new Image("data/whackmole/images/bibouleMole.png"), 5, 5, 1, 1, true));
+        this.mole.setFill(new ImagePattern(moleImage, 5, 5, 1, 1, true));
         this.getChildren().add(mole);
         this.mole.opacityProperty().set(0);
 
     }
 
-    private ProgressIndicator createProgressIndicator() {
-        final ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setOpacity(0);
-        return indicator;
+    private ProgressIndicator createProgressIndicatorMoles() {
+        final ProgressIndicator indicatorMoles = new ProgressIndicator(0);
+        indicatorMoles.setMinSize(this.width / 2, this.height / 2);
+        indicatorMoles.setTranslateX(this.positionX + (distTranslation / 3));
+        indicatorMoles.setTranslateY(this.positionY - distTranslation);
+        indicatorMoles.setOpacity(0);
+        indicatorMoles.setMouseTransparent(true);
+        indicatorMoles.toFront();
+        gameContext.getChildren().add(indicatorMoles);
+        return indicatorMoles;
     }
 
     public EventHandler<Event> buildEvent() {
@@ -108,20 +140,35 @@ public class MolesChar extends Parent {
             }
 
             /* If the mole is out and touched */
-            if (
-                e.getEventType() == MouseEvent.MOUSE_MOVED
-                    || e.getEventType() == GazeEvent.GAZE_MOVED
-                    || e.getEventType() == MouseEvent.MOUSE_ENTERED
-                    || e.getEventType() == GazeEvent.GAZE_ENTERED
-            ) {
-                canTouched = false;
-                if (!touched && out) {
-                    gameInstance.oneMoleWhacked();
-                    touched = true;
-                    goIn();
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+
+                progressIndicatorMoles.setOpacity(1);
+                progressIndicatorMoles.toFront();
+                progressIndicatorMoles.setProgress(0);
+
+                timelineProgressBarMoles = new Timeline();
+
+                timelineProgressBarMoles.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
+                    new KeyValue(progressIndicatorMoles.progressProperty(), 1)));
+
+                timelineProgressBarMoles.setOnFinished((ActionEvent actionEvent) -> {
+                    canTouched = false;
+
+                    if (!touched && out) {
+                        gameInstance.oneMoleWhacked();
+                        touched = true;
+                        goIn();
+                    }
+                });
+
+                timelineProgressBarMoles.play();
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                if (timelineProgressBarMoles != null) {
+                    timelineProgressBarMoles.stop();
                 }
 
-                progressIndicator.setProgress(0);
+                progressIndicatorMoles.setOpacity(0);
+                progressIndicatorMoles.setProgress(0);
             }
         };
     }
@@ -150,12 +197,13 @@ public class MolesChar extends Parent {
 
             out = true;
 
+            DoubleProperty timeOut = new SimpleDoubleProperty(0);
             timeMoleOut = new Timeline(); // New time this mole go out
             final int time = random.nextInt(timeMoleStayOut) + 2000;
 
             timeMoleOut.getKeyFrames()
                 .add(new KeyFrame(new Duration(time),
-                    new KeyValue(progressIndicator.progressProperty(), 1)));
+                    new KeyValue(timeOut, 1)));
             timeMoleOut.rateProperty().bind(gameContext.getAnimationSpeedRatioSource().getSpeedRatioProperty());
             /* If the Mole is stay out without being touching */
             timeMoleOut.setOnFinished(actionEvent1 -> {
@@ -173,6 +221,7 @@ public class MolesChar extends Parent {
     private void goIn() {
         canTouched = false;
         out = false;
+        progressIndicatorMoles.setOpacity(0);
         gameInstance.getTargetAOIList().get(TargetAOIListIndex).setTimeEnded(System.currentTimeMillis());
 
         this.mole.opacityProperty().set(0.5);

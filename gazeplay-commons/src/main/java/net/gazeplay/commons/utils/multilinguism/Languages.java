@@ -13,6 +13,8 @@ import java.util.*;
  * <p>
  * ara: Arabic
  * <p>
+ * bel: Belarusian
+ * <p>
  * chn: Chinese
  * <p>
  * deu: German
@@ -24,6 +26,8 @@ import java.util.*;
  * hrv: Croatian
  * <p>
  * ita: Italian
+ * <p>
+ * hin: Hindi
  * <p>
  * jpn: Japanese
  * <p>
@@ -79,10 +83,12 @@ public class Languages {
         put(result, build(CustomLocale.PORTUGAL, "Português", false, true, "800px-Flag_of_Portugal.svg.png"));
         put(result, build(CustomLocale.BRAZIL, "Português", false, true, "800px-Flag_of_Brazil.svg.png"));
         put(result, build(CustomLocale.NETHERLANDS, "Nederlands", false, true, "800px-Flag_of_the_Netherlands.svg.png"));
-        put(result, build(CustomLocale.RUSSIA, "Pу́сский язы́к", false, true, "800px-Flag_of_Russia.svg.png"));
+        put(result, build(CustomLocale.RUSSIA, "Pусский язык", true, true, "800px-Flag_of_Russia.svg.png"));
         put(result, build(CustomLocale.SPAIN, "Español", false, true, "800px-Flag_of_Spain.svg.png"));
         put(result, build(CustomLocale.VIETNAM, "Tiếng Việt", false, true, "800px-Flag_of_Vietnam.svg.png"));
         put(result, build(CustomLocale.MALAYSIA, "Bahasa Melayu", false, true, "800px-Flag_of_Malaysia.svg.png"));
+        put(result, build(CustomLocale.BELARUS, "Беларуская мова", true, true, "800px-Flag_of_Belarus.svg.png"));
+        put(result, build(CustomLocale.INDIA, "हिन्दी", false, true, "800px-Flag_of_India.svg.png"));
         return result;
     }
 

@@ -6,7 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
@@ -32,7 +31,7 @@ public class DrawBuilder {
 
     public Canvas createCanvas(final Scene scene, final double coefficient, Stats stats) {
 
-        Dimension2D canvasDimension = new Dimension2D(scene.getWidth()/coefficient, scene.getHeight()/coefficient);
+        Dimension2D canvasDimension = new Dimension2D(scene.getWidth() / coefficient, scene.getHeight() / coefficient);
         final Canvas canvas = createCanvas(canvasDimension, stats);
 
         canvas.widthProperty().bind(scene.widthProperty().divide(coefficient));
@@ -72,9 +71,11 @@ public class DrawBuilder {
                 if (rateLimiterValue == RATE_LIMIT) {
                     rateLimiter.set(0);
 
-                    graphicsContext.lineTo(event.getX(), event.getY());
-                    // graphicsContext.setStroke(colorPicker.pickColor());
-                    graphicsContext.stroke();
+                    if (((event.getX() - canvas.getWidth() / 2) * (event.getX() - canvas.getWidth() / 2) + (event.getY() - canvas.getHeight() / 2) * (event.getY() - canvas.getHeight() / 2)) > 0.15) {
+                        graphicsContext.lineTo(event.getX(), event.getY());
+                        // graphicsContext.setStroke(colorPicker.pickColor());
+                        graphicsContext.stroke();
+                    }
                 }
             }
         });
@@ -88,7 +89,7 @@ public class DrawBuilder {
         return canvas;
     }
 
-    private void changeColor(GraphicsContext graphicsContext){
+    private void changeColor(GraphicsContext graphicsContext) {
         stats.incrementNumberOfGoalsReached();
         graphicsContext.setStroke(colorPicker.pickColor());
         graphicsContext.beginPath();

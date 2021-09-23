@@ -23,7 +23,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.components.DiceRoller;
 import net.gazeplay.components.Position;
@@ -72,7 +71,6 @@ public class GooseGame implements GameLifeCycle {
         this.nbPlayers = nbPlayers;
 
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final Configuration config = gameContext.getConfiguration();
 
         this.random = new ReplayablePseudoRandom();
         this.stats.setGameSeed(random.getSeed());
@@ -229,7 +227,7 @@ public class GooseGame implements GameLifeCycle {
         rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() - 1.2 * rollImage.getFitHeight());
         rollButton.setImage(rollImage);
-        rollButton.assignIndicator(event -> roll(), config.getFixationLength());
+        rollButton.assignIndicatorUpdatable(event -> roll(), gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 
@@ -244,7 +242,6 @@ public class GooseGame implements GameLifeCycle {
         this.nbPlayers = nbPlayers;
 
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final Configuration config = gameContext.getConfiguration();
 
         this.random = new ReplayablePseudoRandom(gameSeed);
 
@@ -400,7 +397,7 @@ public class GooseGame implements GameLifeCycle {
         rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() - 1.2 * rollImage.getFitHeight());
         rollButton.setImage(rollImage);
-        rollButton.assignIndicator(event -> roll(), config.getFixationLength());
+        rollButton.assignIndicatorUpdatable(event -> roll(), gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 

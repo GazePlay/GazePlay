@@ -22,7 +22,7 @@ class LanguagesTest {
             }
         }
 
-        assertEquals(23, result.size());
+        assertEquals(25, result.size());
         assertEquals("English", gb.getLabel());
         assertTrue(gb.getFlags().get(0).contains("Flag_of_the_United_Kingdom"));
     }
@@ -30,7 +30,7 @@ class LanguagesTest {
     @Test
     void shouldGetAllCodes() {
         Collection<Locale> result = Languages.getAllCodes();
-        assertEquals(23, result.size());
+        assertEquals(25, result.size());
     }
 
     @Test

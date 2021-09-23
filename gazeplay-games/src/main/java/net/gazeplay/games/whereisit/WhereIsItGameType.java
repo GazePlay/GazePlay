@@ -5,6 +5,7 @@ import net.gazeplay.commons.gamevariants.difficulty.Difficulty;
 
 public enum WhereIsItGameType {
     ANIMAL_NAME("where-is-the-animal", "where-is-the-animal"),
+    ANIMAL_NAME_DYNAMIC("where-is-the-animal", "where-is-the-animal-dynamic"),
     COLOR_NAME("where-is-the-color", "where-is-the-color"),
     COLOR_NAME_EASY("where-is-the-color", "where-is-the-color", Difficulty.EASY),
     LETTERS("where-is-the-letter", "where-is-the-letter"),
