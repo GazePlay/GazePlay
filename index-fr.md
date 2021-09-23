@@ -11,7 +11,7 @@ header:
       url: https://github.com/GazePlay/GazePlay/releases/latest/download/GazePlayInstaller.exe
 excerpt: >
   GazePlay est un logiciel libre et gratuit qui rassemble plusieurs mini-jeux jouables grâce à un occulomètre (Eye-tracker).<br />
-  <small><a href="https://github.com/GazePlay/GazePlay/releases/latest">Dernière version v1.8.1</a></small>
+  <small><a href="https://github.com/GazePlay/GazePlay/releases/latest">Dernière version v1.9.1</a></small>
 ---
 
 <iframe width="1236" height="695" src="https://www.youtube.com/embed/U9_jotkmXDg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
