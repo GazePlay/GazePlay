@@ -1,0 +1,17 @@
+.table-view {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: white;
+    -fx-text-align: center;
+}
+
+.table-view .column-header {
+    -fx-text-fill: white;
+}
+
+.table-view .column-header-background .label {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}

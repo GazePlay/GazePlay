@@ -80,40 +80,49 @@ public class GameMenuController {
             width = (int) gazePlay.getPrimaryScene().getWindow().getWidth();
         }
         builder = createBuilder(selectedGameSpec.getGameSummary().getNameCode(), gameVariant, height, width);
-
+        final BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
+        musicManager.stop();
         runProcessDisplayLoadAndWaitForNewJVMDisplayed(gazePlay, builder);
     }
 
     public static void runProcessDisplayLoadAndWaitForNewJVMDisplayed(GazePlay gazePlay, ProcessBuilder builder) {
-        Thread t = new Thread(() -> {
-            File f = new File(GazePlayDirectories.getGazePlayFolder() + "/TokenLauncher");
-            boolean success = false;
-            try {
-                success = f.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+        File f = new File(GazePlayDirectories.getGazePlayFolder() + "/TokenLauncher");
+        try {
+            boolean success = f.createNewFile();
+            if (!success) {
+                log.info("Token laucher can't be created");
             }
-            if (success) {
+        } catch (IOException e) {
+            log.info("Token laucher can't be created");
+            e.printStackTrace();
+        }
+        if (f.exists()) {
+            Thread displayLoadingContextThread = new Thread(() -> {
                 while (f.exists()) {
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+                        break;
                     }
                 }
                 ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
                 gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
                 gazePlay.onReturnToMenu();
-            } else {
-                ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-                executor.schedule(() -> {
-                    ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
-                    gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
-                    gazePlay.onReturnToMenu();
-                }, 10, TimeUnit.SECONDS);
-            }
-        });
-        t.start();
+            });
+            displayLoadingContextThread.start();
+        } else {
+            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+            executor.schedule(() -> {
+                ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
+                gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
+                gazePlay.onReturnToMenu();
+                boolean deleteSuccess = f.delete();
+                if (!deleteSuccess) {
+                    log.info("Token laucher can't be deleted");
+                }
+            }, 10, TimeUnit.SECONDS);
+        }
 
         try {
             builder.inheritIO().start();
@@ -161,6 +170,8 @@ public class GameMenuController {
         gazePlay.onGameLaunch(gameContext);
 
         IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
+
+        gazePlay.getTranslator().notifyLanguageChanged();
 
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats stats = gameLauncher.createNewStats(scene);

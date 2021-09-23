@@ -68,6 +68,8 @@ public class Divisor implements GameLifeCycle {
 
         gameContext.getChildren().add(target);
         gameContext.firstStart();
+
+        gameContext.setOffFixationLengthControl();
     }
 
     private void initBackground() {

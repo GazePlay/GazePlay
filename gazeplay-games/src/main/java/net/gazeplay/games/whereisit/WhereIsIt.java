@@ -26,6 +26,7 @@ import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.games.WhereIsItVaildator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
+import net.gazeplay.commons.utils.stats.ChiReport;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 
@@ -55,6 +56,12 @@ public class WhereIsIt implements GameLifeCycle {
     private final int nbLines;
     private final int nbColumns;
     private final boolean fourThree;
+
+    private int level = 1;
+    private int lvlReplays = 1;
+    private int rightDecision = 0;
+    private int wrongDecision = 0;
+    private boolean firstWrong = false;
 
     private final IGameContext gameContext;
     private final Stats stats;
@@ -101,6 +108,27 @@ public class WhereIsIt implements GameLifeCycle {
 
         final int winnerImageIndexAmongDisplayedImages = randomGenerator.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
+
+        if (stats.nbGoalsReached > 0 && stats.nbGoalsReached % 8 == 0) {
+            stats.getChiReport().addChiObs(chi2Obs(rightDecision, wrongDecision));
+            stats.getChiReport().addChiLevel(level);
+            boolean randomness = chi2decision(rightDecision, wrongDecision);
+            lvlReplays ++;
+
+            if (randomness && rightDecision > wrongDecision) {
+                if (level < 5)
+                    level++;
+                rightDecision = 0;
+                wrongDecision = 0;
+                lvlReplays = 1;
+            }
+            if (!randomness && level > 1) {
+                level--;
+                rightDecision = 0;
+                wrongDecision = 0;
+                lvlReplays = 1;
+            }
+        }
 
         currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, randomGenerator,
             winnerImageIndexAmongDisplayedImages);
@@ -209,19 +237,20 @@ public class WhereIsIt implements GameLifeCycle {
             gameContext.getChildren().removeAll(pictogramesList);
 
             //log.debug("Adding {} pictures", currentRoundDetails.getPictureCardList().size());
-            gameContext.getChildren().addAll(currentRoundDetails.getPictureCardList());
+            if(currentRoundDetails != null) {
+                gameContext.getChildren().addAll(currentRoundDetails.getPictureCardList());
 
-            for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
-                //  log.debug("p = {}", p);
-                p.toFront();
-                p.setOpacity(1);
+                for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
+                    //  log.debug("p = {}", p);
+                    p.toFront();
+                    p.setOpacity(1);
+                }
             }
-
             questionText.toFront();
 
             stats.notifyNewRoundReady();
 
-            gameContext.onGameStarted();
+            gameContext.onGameStarted(2000);
         });
 
         return fullAnimation;
@@ -293,11 +322,35 @@ public class WhereIsIt implements GameLifeCycle {
         final String directoryName;
         List<File> imagesFolders = new LinkedList<>();
         List<String> resourcesFolders = new LinkedList<>();
+        List<String> winnerFolders = new LinkedList<>();
 
         if (this.gameType == CUSTOMIZED) {
             final File imagesDirectory = new File(config.getWhereIsItDir() + "/images/");
             directoryName = imagesDirectory.getPath();
             directoriesCount = WhereIsItVaildator.getNumberOfValidDirectories(config.getWhereIsItDir(), imagesFolders);
+
+        } else if( this.gameType == ANIMAL_NAME_DYNAMIC) {
+            final String resourcesDirectory = "data/" + this.gameType.getResourcesDirectoryName();
+            directoryName = resourcesDirectory;
+
+            final String winnerImagesDirectory = resourcesDirectory + "/images/cats/";
+            final String imagesDirectoryLvl1 = resourcesDirectory + "/images/lvl1/";
+            final String imagesDirectoryLvl2 = resourcesDirectory + "/images/lvl2/";
+            final String imagesDirectoryLvl3 = resourcesDirectory + "/images/lvl3/";
+            final String imagesDirectoryLvl4 = resourcesDirectory + "/images/lvl4/";
+            final String imagesDirectoryLvl5 = resourcesDirectory + "/images/lvl5/";
+
+            String[] lvlDirectories = {imagesDirectoryLvl1, imagesDirectoryLvl2, imagesDirectoryLvl3, imagesDirectoryLvl4, imagesDirectoryLvl5};
+
+            Set<String> tempWinnerFolders = ResourceFileManager.getResourceFolders(winnerImagesDirectory);
+
+            for (int i = 1; i < lvlDirectories.length + 1; i ++)
+                if (level == i)
+                    resourcesFolders.addAll(ResourceFileManager.getResourceFolders(lvlDirectories[i-1]));
+            winnerFolders.addAll(tempWinnerFolders);
+
+            directoriesCount = resourcesFolders.size();
+
         } else {
             final String resourcesDirectory = "data/" + this.gameType.getResourcesDirectoryName();
             final String imagesDirectory = resourcesDirectory + "/images/";
@@ -450,6 +503,54 @@ public class WhereIsIt implements GameLifeCycle {
                     posX = 0;
                 }
             }
+
+        } else if (this.gameType == ANIMAL_NAME_DYNAMIC) {
+            int index = random.nextInt(resourcesFolders.size());
+            final String folder = resourcesFolders.remove((index) % directoriesCount);
+
+            final String winnerFolder = winnerFolders.remove(0);
+            final String folderName = (new File(winnerFolder)).getName();
+            log.info("WinnerFolderName = {}", folderName);
+
+            for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
+                final Set<String> files;
+                if (i == winnerImageIndexAmongDisplayedImages) {
+                    files = ResourceFileManager.getResourcePaths(winnerFolder);
+                } else {
+                    files = ResourceFileManager.getResourcePaths(folder);
+                }
+
+                final int numFile = random.nextInt(files.size());
+
+                final String randomImageFile = (String) files.toArray()[numFile];
+
+                if (winnerImageIndexAmongDisplayedImages == i) {
+
+                    questionSoundPath = getPathSound(folderName, language);
+
+                    question = getQuestionText(folderName, language);
+
+                    pictograms = getPictogramms(folderName);
+
+                }
+
+                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
+                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, winnerImageIndexAmongDisplayedImages == i,
+                    randomImageFile + "", stats, this);
+
+                final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY + 1), (int) gameSizing.height,
+                    System.currentTimeMillis());
+                targetAOIList.add(targetAOI);
+
+                pictureCardList.add(pictureCard);
+
+                if ((i + 1) % nbColumns != 0) {
+                    posX++;
+                } else {
+                    posY++;
+                    posX = 0;
+                }
+            }
         } else {
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
                 int index = random.nextInt(resourcesFolders.size());
@@ -544,11 +645,6 @@ public class WhereIsIt implements GameLifeCycle {
             return "";
         }
 
-        if (gameType == FLAGS) {// no sound for now
-            // erase when translation is complete
-            return null;
-        }
-
         if (!(language.equals("fra") || language.equals("eng") || language.equals("chn"))) {
             // sound is only for English, French and Chinese
             // erase when translation is complete
@@ -624,6 +720,70 @@ public class WhereIsIt implements GameLifeCycle {
 
         log.debug("imageList: {}", imageList);
         return imageList;
+    }
+
+    public void updateRight() {
+        rightDecision++;
+    }
+
+    public void updateWrong() {
+        wrongDecision++;
+    }
+
+    public boolean getFirstWrong() {
+        return firstWrong;
+    }
+
+    public void firstWrongCardSelected() {
+        firstWrong = true;
+    }
+
+    public void firstRightCardSelected() {
+        firstWrong = false;
+    }
+
+    public int factorial (int n) {
+        if (n == 0)
+            return 1;
+        else
+            return(n * factorial(n-1));
+    }
+
+    public float compute(int n, int k){
+        return (float)factorial(n)/(factorial(k)*factorial(n-k));
+    }
+
+    public double binomProba(int n, int k, double p){
+        return compute(n, k) * Math.pow(p, k)*Math.pow(1-p, n-k);
+    }
+
+    public double chi2Obs(int tp, int fp) {
+        double[] probas = {8 * lvlReplays * binomProba(1, 1,0.5), 8 * lvlReplays * binomProba(1, 0,0.5)};
+
+        return Math.pow(tp - probas[0], 2) / probas[0] + Math.pow(fp - probas[1], 2) / probas[1];
+    }
+
+    public boolean chi2decision(int tp, int fp) {
+        boolean decision = false;
+
+        final ArrayList<Double> chi2_theoretic = new ArrayList<Double>();
+        chi2_theoretic.add(3.84);
+        chi2_theoretic.add(2.71);
+        chi2_theoretic.add(1.32);
+        chi2_theoretic.add(0.45);
+
+        double chi2_obs = chi2Obs(tp, fp);
+
+        log.info("tp = {}, fp = {}", tp, fp);
+        log.info("chi2_obs = {}", chi2_obs);
+        log.info("chi2_th = {}, replays = {}", chi2_theoretic, lvlReplays);
+
+        int index = lvlReplays > 4 ?  lvlReplays - 1 : 3;
+
+        if (chi2_theoretic.get(index) <= chi2_obs)
+            decision = true;
+
+        return decision;
     }
 
 }

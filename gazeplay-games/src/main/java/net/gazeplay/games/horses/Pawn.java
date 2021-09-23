@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
+import net.gazeplay.IGameContext;
 import net.gazeplay.components.Position;
 import net.gazeplay.components.ProgressButton;
 
@@ -73,8 +74,8 @@ public class Pawn {
         return currentSquare != null;
     }
 
-    public void activate(final EventHandler<Event> eventHandler, final int fixationLength) {
-        button.assignIndicator(eventHandler, fixationLength);
+    public void activate(final EventHandler<Event> eventHandler, IGameContext gameContext) {
+        button.assignIndicatorUpdatable(eventHandler, gameContext);
         button.active();
         button.setLayoutX(pawnDisplay.getLayoutX());
         button.setLayoutY(pawnDisplay.getLayoutY());

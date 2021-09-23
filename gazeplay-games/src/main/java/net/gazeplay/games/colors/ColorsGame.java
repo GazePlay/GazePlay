@@ -150,7 +150,7 @@ public class ColorsGame implements GameLifeCycle {
     @Override
     public void launch() {
 
-        this.gazeProgressIndicator = new GazeFollowerIndicator(gameContext, root);
+        this.gazeProgressIndicator = new GazeFollowerIndicator(gameContext, root, root);
 
         this.root.getChildren().add(gazeProgressIndicator);
 
@@ -167,6 +167,7 @@ public class ColorsGame implements GameLifeCycle {
 
         colorToolBox.getColorBoxes().forEach(ColorBox::updateHeight);
 
+        gameContext.onGameStarted(3000);
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
     }

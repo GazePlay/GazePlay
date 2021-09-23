@@ -138,7 +138,7 @@ public class Card extends Parent {
         currentTimeline.onFinishedProperty().set(actionEvent ->
         {
 
-            gameContext.updateScore(stats,gameInstance);
+            gameContext.updateScore(stats, gameInstance);
             gameContext.playWinTransition(500, actionEvent1 -> {
 
                 gameInstance.dispose();
@@ -146,8 +146,6 @@ public class Card extends Parent {
                 gameContext.clear();
 
                 gameInstance.launch();
-
-                gameContext.onGameStarted();
             });
         });
 
@@ -193,7 +191,7 @@ public class Card extends Parent {
 
                 timelineProgressBar = new Timeline();
 
-                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
                     new KeyValue(progressIndicator.progressProperty(), 1)));
 
                 currentTimeline.play();

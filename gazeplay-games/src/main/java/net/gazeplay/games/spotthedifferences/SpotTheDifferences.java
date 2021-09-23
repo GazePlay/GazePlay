@@ -113,7 +113,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         nextButton.setLayoutX(dimensions.getWidth() / 2 - nextImage.getFitWidth() / 2);
         nextButton.setLayoutY(dimensions.getHeight() - 1.1 * nextImage.getFitHeight());
         nextButton.setImage(nextImage);
-        nextButton.assignIndicator(event -> launch(), config.getFixationLength());
+        nextButton.assignIndicatorUpdatable(event -> launch(), gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(nextButton);
         nextButton.active();
 

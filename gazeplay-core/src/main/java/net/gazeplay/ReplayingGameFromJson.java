@@ -52,18 +52,18 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class ReplayingGameFromJson {
 
-    private LinkedList<Point2D> lastGazeCoordinates = new LinkedList<Point2D>();
-    private LinkedList<Point2D> lastMouseCoordinates = new LinkedList<Point2D>();
+    private final LinkedList<Point2D> lastGazeCoordinates = new LinkedList<Point2D>();
+    private final LinkedList<Point2D> lastMouseCoordinates = new LinkedList<Point2D>();
     int numberOfelementToDisplay = 10;
 
-    private static ArrayList<String> replayableGameList = new ArrayList<String>(
+    private static final ArrayList<String> replayableGameList = new ArrayList<String>(
         Arrays.asList(
 
             //OK: really small offsets problems
             "Scribble", "Cakes", "Creampie", "WhereIsIt", "WhereIsTheAnimal", "letters",
             "WhereIsTheColor", "WhereIsTheLetter", "WhereIsTheNumber", "findodd", "flags",
             "ScratchCard", "Memory", "MemoryLetters", "MemoryNumbers", "OpenMemory", "OpenMemoryLetters",
-            "OpenMemoryNumbers", "Dice", "EggGame", "GooseGame", "MagicCards", "Opinions", "Order",
+            "OpenMemoryNumbers", "Dice", "EggGame", "PersonalizeEggGame", "GooseGame", "MagicCards", "Opinions", "Order",
             "Horses", "Horses Simplified", "puzzle", "Farm", "Jungle", "Savanna", "CupsBalls",
             "Potions", "VideoPlayer", "VideoGrid", "bottle"
 
@@ -98,9 +98,9 @@ public class ReplayingGameFromJson {
     );
 
     List<GameSpec> gamesList;
-    private ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
     private GameContext gameContext;
-    private GazePlay gazePlay;
+    private final GazePlay gazePlay;
     private double currentGameSeed;
     @Getter
     private String currentGameNameCode;

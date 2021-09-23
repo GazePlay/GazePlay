@@ -13,6 +13,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 
@@ -48,8 +49,11 @@ public class SoundsOfLife implements GameLifeCycle {
             case 1:
                 path += "jungle/";
                 break;
-            default:
+            case 2:
                 path += "savanna/";
+                break;
+            default:
+                path += "sea/";
         }
 
         JsonParser parser = new JsonParser();
@@ -86,7 +90,7 @@ public class SoundsOfLife implements GameLifeCycle {
             double y = coordinates.get("y").getAsDouble() * scaleRatio + background.getY();
             imageView.setX(x - imageView.getFitWidth() / 2);
             imageView.setY(y - imageView.getFitHeight() / 2);
-            final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int)((imageView.getFitWidth() + imageView.getFitHeight())/3),
+            final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int) ((imageView.getFitWidth() + imageView.getFitHeight()) / 3),
                 System.currentTimeMillis());
             targetAOIList.add(targetAOI);
             // Creating progress indicator
@@ -105,7 +109,7 @@ public class SoundsOfLife implements GameLifeCycle {
             }
 
             SoundMakingEntity entity = new SoundMakingEntity(imageView, stats, sounds, progressIndicator,
-                config.getFixationLength(), gameContext.getSoundManager(), randomGenerator);
+                gameContext, gameContext.getSoundManager(), randomGenerator);
             gameContext.getChildren().add(entity);
             gameContext.getGazeDeviceManager().addEventFilter(entity);
         }
@@ -127,8 +131,11 @@ public class SoundsOfLife implements GameLifeCycle {
             case 1:
                 path += "jungle/";
                 break;
-            default:
+            case 2:
                 path += "savanna/";
+                break;
+            default:
+                path += "sea/";
         }
 
         JsonParser parser = new JsonParser();
@@ -165,7 +172,7 @@ public class SoundsOfLife implements GameLifeCycle {
             double y = coordinates.get("y").getAsDouble() * scaleRatio + background.getY();
             imageView.setX(x - imageView.getFitWidth() / 2);
             imageView.setY(y - imageView.getFitHeight() / 2);
-            final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int)((imageView.getFitWidth() + imageView.getFitHeight())/3),
+            final TargetAOI targetAOI = new TargetAOI(imageView.getX(), y, (int) ((imageView.getFitWidth() + imageView.getFitHeight()) / 3),
                 System.currentTimeMillis());
             targetAOIList.add(targetAOI);
             // Creating progress indicator
@@ -184,7 +191,7 @@ public class SoundsOfLife implements GameLifeCycle {
             }
 
             SoundMakingEntity entity = new SoundMakingEntity(imageView, stats, sounds, progressIndicator,
-                config.getFixationLength(), gameContext.getSoundManager(), randomGenerator);
+                gameContext, gameContext.getSoundManager(), randomGenerator);
             gameContext.getChildren().add(entity);
             gameContext.getGazeDeviceManager().addEventFilter(entity);
         }
@@ -209,11 +216,13 @@ public class SoundsOfLife implements GameLifeCycle {
     public void launch() {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
+        final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
+        backgroundMusicManager.pause();
     }
 
     @Override
     public void dispose() {
-        for(TargetAOI aoi : targetAOIList){
+        for (TargetAOI aoi : targetAOIList) {
             aoi.setTimeEnded(System.currentTimeMillis());
         }
         this.stats.setTargetAOIList(targetAOIList);

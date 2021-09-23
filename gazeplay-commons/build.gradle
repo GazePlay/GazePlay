@@ -10,6 +10,7 @@ dependencies {
     compile 'com.google.guava:guava:28.1-jre'
     compile 'com.github.GazePlay:TobiiStreamEngineForJava:5.0'
     compile 'com.automation-remarks:video-recorder-core:2.0'
+    compile 'com.github.vatbub:mslinks:1.0.6.1'
     compile 'ws.schild:jave-core:2.5.0'
     runtime 'org.slf4j:jcl-over-slf4j:1.7.25'
     runtime 'org.slf4j:log4j-over-slf4j:1.7.25'
