@@ -80,7 +80,7 @@ class UtilsTest {
     @Test
     void shouldGetIsWindows() {
         assertEquals(
-            System.getProperty("os.name").contains("win"),
+            System.getProperty("os.name").toLowerCase().contains("win"),
             Utils.isWindows()
         );
     }

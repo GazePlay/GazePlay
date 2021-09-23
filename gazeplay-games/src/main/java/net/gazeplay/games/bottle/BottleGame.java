@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -21,6 +22,7 @@ import net.gazeplay.components.ProgressButton;
 
 import java.util.ArrayList;
 
+@Slf4j
 public class BottleGame implements GameLifeCycle {
 
     private final BottleGameStats bottleGameStats;
@@ -35,12 +37,12 @@ public class BottleGame implements GameLifeCycle {
     private final ProgressButton restartButton;
     private final Text finalScoreText;
 
-    private ArrayList<ProgressButton> bottle;
+    private final ArrayList<ProgressButton> bottle;
 
     private Circle ball;
     private final Text scoreText;
     private int score;
-    private int nbBottle;
+    private final int nbBottle;
 
     private boolean isBroken;
 
@@ -48,7 +50,9 @@ public class BottleGame implements GameLifeCycle {
 
     Image brokenBottle = new Image("data/bottle/broken.png");
 
-    public BottleGame(IGameContext gameContext, BottleGameStats stats, int number) {
+    String Stype;
+
+    public BottleGame(IGameContext gameContext, BottleGameStats stats, int number, String Stype) {
 
         this.bottleGameStats = stats;
         this.gameContext = gameContext;
@@ -73,8 +77,6 @@ public class BottleGame implements GameLifeCycle {
 
         backgroundLayer.getChildren().add(backgroundImage);
 
-        final int fixationLength = configuration.getFixationLength();
-
         scoreText = new Text(0, 50, "0");
         scoreText.setFill(Color.WHITE);
         scoreText.setTextAlignment(TextAlignment.CENTER);
@@ -93,7 +95,7 @@ public class BottleGame implements GameLifeCycle {
         restartButton.setImage(restartImage);
         restartButton.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getHeight() / 12);
         restartButton.setLayoutY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 12);
-        restartButton.assignIndicator(event -> launch(), fixationLength);
+        restartButton.assignIndicatorUpdatable(event -> launch(), gameContext);
 
         finalScoreText = new Text(0, dimension2D.getHeight() / 4, "");
         finalScoreText.setFill(Color.WHITE);
@@ -104,9 +106,11 @@ public class BottleGame implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
+        this.Stype=Stype;
+
     }
 
-    public BottleGame(IGameContext gameContext, BottleGameStats stats, int number, double gameSeed) {
+    public BottleGame(IGameContext gameContext, BottleGameStats stats, int number, String Stype, double gameSeed) {
 
         this.bottleGameStats = stats;
         this.gameContext = gameContext;
@@ -130,8 +134,6 @@ public class BottleGame implements GameLifeCycle {
 
         backgroundLayer.getChildren().add(backgroundImage);
 
-        final int fixationLength = configuration.getFixationLength();
-
         scoreText = new Text(0, 50, "0");
         scoreText.setFill(Color.WHITE);
         scoreText.setTextAlignment(TextAlignment.CENTER);
@@ -150,7 +152,7 @@ public class BottleGame implements GameLifeCycle {
         restartButton.setImage(restartImage);
         restartButton.setLayoutX(dimension2D.getWidth() / 2 - dimension2D.getHeight() / 12);
         restartButton.setLayoutY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 12);
-        restartButton.assignIndicator(event -> launch(), fixationLength);
+        restartButton.assignIndicatorUpdatable(event -> launch(), gameContext);
 
         finalScoreText = new Text(0, dimension2D.getHeight() / 4, "");
         finalScoreText.setFill(Color.WHITE);
@@ -160,6 +162,8 @@ public class BottleGame implements GameLifeCycle {
         foregroundLayer.getChildren().addAll(shade, finalScoreText, restartButton);
 
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
+
+        this.Stype=Stype;
 
     }
 
@@ -187,6 +191,8 @@ public class BottleGame implements GameLifeCycle {
 
         bottleGameStats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(bottleGameStats);
+
+        gameContext.onGameStarted();
     }
 
     private void initBall() {
@@ -205,6 +211,31 @@ public class BottleGame implements GameLifeCycle {
     }
 
     private void createBottle(final int nb) {
+        //Normal size
+        int sizex=12;
+        int sizey=6;
+        if (Stype.equals("BigB")){
+            sizex=8;
+            sizey=4;
+        }
+        else if(Stype.equals("SmallB")){
+            sizex=16;
+            sizey=8;
+        }
+        else if(Stype.equals("HighB")) {
+            sizex=12;
+            sizey=4;
+        }
+        else if(Stype.equals("TinyB")){
+            sizex=24;
+            sizey=12;
+        }
+        else if(!Stype.equals("NormalB") && !Stype.equals("InfinityB")){
+            //If the type is unknown, use the "Normal" settings
+            log.warn("unknown type : " + Stype + "\nThe 'Normal' settings will be use");
+        }
+
+        log.info("type : {} ; x : {} ; y : {}", Stype, sizex, sizey);
         ProgressButton b;
         double x;
         double y;
@@ -212,7 +243,7 @@ public class BottleGame implements GameLifeCycle {
         double sideOffset = dimension2D.getWidth() / 10d;
         double spaceBetweeBottle = (dimension2D.getWidth() - 2 * sideOffset) / (bottlePerLine + 1);
 
-        double bottlewidth = dimension2D.getWidth() / 12;
+        double bottlewidth = dimension2D.getWidth() / sizex;
 
 
         for (int i = 0; i < nb; i++) {
@@ -222,6 +253,7 @@ public class BottleGame implements GameLifeCycle {
             } else {
                 y = dimension2D.getHeight() / 7d + dimension2D.getHeight() / 3.5;
             }
+            y = y - (dimension2D.getHeight()/sizey - dimension2D.getHeight()/6);
             b = new ProgressButton();
             b.setLayoutX(x);
             b.setLayoutY(y);
@@ -234,18 +266,27 @@ public class BottleGame implements GameLifeCycle {
         for (final ProgressButton bo : bottle) {
             ImageView bottleI = new ImageView(bottleImage);
             bottleI.setFitWidth(bottlewidth);
-            bottleI.setFitHeight(dimension2D.getHeight() / 6);
+            bottleI.setFitHeight(dimension2D.getHeight() / sizey);
             bo.setImage(bottleI);
 
             gameContext.getChildren().add(bo);
 
 
-            bo.assignIndicator(event -> {
+            bo.assignIndicatorUpdatable(event -> {
                 if (!isBroken) {
                     isBroken = true;
                     ballMovement(bo);
+                    if (Stype.equals("InfinityB")){
+                        PauseTransition reshow = new PauseTransition(Duration.millis(2500));
+                        reshow.setOnFinished(e -> {
+                            bo.active();
+                            bo.getImage().setImage(bottleImage);
+                            isBroken = false;
+                        });
+                        reshow.play();
+                    }
                 }
-            }, configuration.getFixationLength());
+            }, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(bo);
             bo.active();
 
@@ -295,7 +336,7 @@ public class BottleGame implements GameLifeCycle {
         score = score + 1;
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
-        if (score == nbBottle) {
+        if (score == nbBottle && !Stype.equals("InfinityB")) {
             gameContext.playWinTransition(0, event1 -> {
                 gameContext.clear();
                 gameContext.showRoundStats(bottleGameStats, this);

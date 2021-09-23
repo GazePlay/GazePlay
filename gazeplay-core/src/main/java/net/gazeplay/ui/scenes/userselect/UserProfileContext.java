@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,11 +41,13 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.GraphicalContext;
+import net.gazeplay.commons.utils.games.Utils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -223,7 +226,9 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         final Rectangle pictureRectangle = new Rectangle(0, 0, cardWidth, cardHeight);
         pictureRectangle.setFill(imagePattern);
 
-        final Text userNameText = new Text(user.getName());
+        String name = user.getName().length() <= 20 ? user.getName() : user.getName().substring(0, 20) + "...";
+        final Text userNameText = new Text(name);
+        final Tooltip userNameTooltip = new Tooltip(user.getName());
         userNameText.setFill(Color.WHITE);
         userNameText.getStyleClass().add("gameChooserButtonTitle");
         BorderPane.setAlignment(userNameText, Pos.BOTTOM_CENTER);
@@ -234,6 +239,8 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         content.setPadding(new Insets(10));
         content.setCenter(pictureRectangle);
         content.setBottom(userNameText);
+
+        Tooltip.install(content, userNameTooltip);
 
         user.setAlignment(Pos.TOP_RIGHT);
         user.getChildren().add(content);
@@ -429,6 +436,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         final HBox nameField = new HBox();
 
         final TextField tf = new TextField();
+        Utils.addTextLimiter(tf, 32);
 
         if (newUser) {
             nameField.setAlignment(Pos.CENTER);
@@ -453,7 +461,12 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             primaryStage.getWidth() / 10
         );
         chooseImageButton.setOnMouseClicked(event -> {
-            final String s = getImage(dialog, chooseImageButton);
+            String s = null;
+            try {
+                s = getImage(dialog, chooseImageButton);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             if (s != null) {
                 chooseImageButton.setText(s);
             }
@@ -493,7 +506,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                     imagePattern = new ImagePattern(new Image("data/common/images/DefaultUser.png"));
                 }
 
-                final User newUser1 = createUser(gazePlay, choicePanel, tf.getText(), imagePattern, false, false, screenDimension);
+                final User newUser1 = createUser(gazePlay, choicePanel, tf.getText(), imagePattern, true, false, screenDimension);
 
                 if (checkNewName(newUser1.getName())) {
 
@@ -593,6 +606,10 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         }
     }
 
+    public String getContentType(File file) throws IOException {
+        return Files.probeContentType(Path.of(file.getAbsolutePath()));
+    }
+
     private File chooseImageFile(final Stage primaryStage) {
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Resource File");
@@ -604,9 +621,10 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return fileChooser.showOpenDialog(primaryStage);
     }
 
-    private String getImage(final Stage primaryStage, final Button targetButton) {
+    private String getImage(final Stage primaryStage, final Button targetButton) throws IOException {
         final File selectedImageFile = chooseImageFile(primaryStage);
-        if (selectedImageFile == null) {
+        String typeImage = getContentType(selectedImageFile);
+        if (!typeImage.contains("/image")) {
             return null;
         }
         final String result = selectedImageFile.getAbsolutePath();

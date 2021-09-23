@@ -398,7 +398,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 bt.setLayoutX(buttonSize * 0.2);
             }
 
-            bt.assignIndicator(buttonHandler, gameContext.getConfiguration().getFixationLength());
+            bt.assignIndicatorUpdatable(buttonHandler, gameContext);
             bt.active();
             this.getChildren().add(bt);
             gameContext.getGazeDeviceManager().addEventFilter(bt.getButton());

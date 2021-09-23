@@ -1,0 +1,53 @@
+{
+    "background": "background.png",
+    "elements": [
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 400,
+                "y": 400
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 700,
+                "y": 200
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 1200,
+                "y": 200
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 1200,
+                "y": 700
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 1000,
+                "y": 900
+            }
+        },
+        {
+            "image": "dot.png",
+            "scale": 0.2,
+            "coords": {
+                "x": 400,
+                "y": 900
+            }
+        }
+    ]
+}

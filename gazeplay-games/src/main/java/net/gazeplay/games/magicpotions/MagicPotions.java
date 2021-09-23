@@ -114,8 +114,8 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         final Client client = new Client(bibX, bibY, bibouleClient.getWidth(), bibouleClient.getHeight(), bibouleClient, request);
 
         // since the background of the image is transparent this color will fill it
-        final Circle clientColor = new Circle(gameDimension2D.getWidth() * 3 / 4, bibouleClient.getHeight() / 2.2,
-            bibouleClient.getHeight() / 5);
+        final Circle clientColor = new Circle(gameDimension2D.getWidth() * 0.735, bibouleClient.getHeight() * 0.42,
+            bibouleClient.getHeight() * 0.23);
         clientColor.setFill(request.getColor());
 
         gameContext.getChildren().add(clientColor);

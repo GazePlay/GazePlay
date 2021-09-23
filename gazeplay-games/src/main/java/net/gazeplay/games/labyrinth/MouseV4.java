@@ -126,7 +126,7 @@ public class MouseV4 extends Mouse {
                 indicator.setProgress(0);
 
                 timelineProgressBar = new Timeline();
-                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameInstance.fixationlength),
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(this.gameContext.getConfiguration().getFixationLength()),
                     new KeyValue(indicator.progressProperty(), 1)));
 
                 timelineProgressBar.setOnFinished(actionEvent -> {

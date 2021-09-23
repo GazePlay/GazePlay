@@ -18,6 +18,10 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.ImageLibrary;
+import net.gazeplay.commons.utils.games.ImageUtils;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
 
@@ -35,6 +39,8 @@ public class Egg extends Parent {
     private int turnNumber = 0;
     private final int totalNumberOfTurns;
 
+    private final String gameType;
+
     private final ProgressIndicator progressIndicator;
 
     private Timeline timelineProgressBar;
@@ -42,10 +48,15 @@ public class Egg extends Parent {
 
     private final EventHandler<Event> enterEvent;
 
+    private ImageLibrary imageLibrary;
+
+    private final ReplayablePseudoRandom random;
+
     public Egg(final IGameContext gameContext, final Stats stats,
-               final EggGame gameInstance, final int fixationlength, final int numberOfTurn) {
+               final EggGame gameInstance, final int fixationlength, final int numberOfTurn, final String type) {
 
         this.totalNumberOfTurns = numberOfTurn;
+        this.gameType = type;
 
         final Scene scene = gameContext.getPrimaryScene();
         final double height = scene.getHeight() / 2;
@@ -65,6 +76,9 @@ public class Egg extends Parent {
         this.cards.layoutXProperty().bind(scene.widthProperty().divide(2d).subtract(this.cards.widthProperty().divide(2d)));
         this.cards.layoutYProperty().bind(scene.heightProperty().divide(2d).subtract(this.cards.heightProperty().divide(2d)));
 
+        this.random = new ReplayablePseudoRandom();
+        imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"), random);
+
         final Rectangle image1 = new Rectangle(positionX, positionY, width, height);
         image1.setFill(new ImagePattern(new Image("data/egg/images/egg1.jpg"), 0, 0, 1, 1, true));
         image1.setMouseTransparent(true);
@@ -74,7 +88,11 @@ public class Egg extends Parent {
         image2.setMouseTransparent(true);
 
         final Rectangle image3 = new Rectangle(positionX, positionY, width, height);
-        image3.setFill(new ImagePattern(new Image("data/egg/images/egg3.jpg"), 0, 0, 1, 1, true));
+        if (gameType.equals("personalize")) {
+            image3.setFill(new ImagePattern(imageLibrary.pickRandomImage(), 0, 0, 1, 1, true));
+        } else if (gameType.equals("egg")) {
+            image3.setFill(new ImagePattern(new Image("data/egg/images/egg3.jpg"), 0, 0, 1, 1, true));
+        }
 
         image1.heightProperty().bind(scene.heightProperty().divide(2d));
         image1.widthProperty().bind(image1.heightProperty().multiply(3d).divide(4d));
@@ -144,7 +162,7 @@ public class Egg extends Parent {
 
                     timelineProgressBar = new Timeline();
 
-                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(fixationlength),
+                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
                         new KeyValue(progressIndicator.progressProperty(), 1)));
 
                     timelineProgressBar.setOnFinished(actionEvent -> {
@@ -173,7 +191,7 @@ public class Egg extends Parent {
 
                             t.setOnFinished(actionEvent1 -> {
 
-                                gameContext.updateScore(stats,gameInstance);
+                                gameContext.updateScore(stats, gameInstance);
 
                                 gameContext.playWinTransition(0, event -> {
                                     gameInstance.dispose();

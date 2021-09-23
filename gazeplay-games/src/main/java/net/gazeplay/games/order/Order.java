@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -29,6 +30,8 @@ public class Order implements GameLifeCycle {
     private int currentNum;
     private final int nbTarget;
     private final ReplayablePseudoRandom randomGenerator;
+    @Getter
+    private Target[] tabTarget;
 
 
     public Order(IGameContext gameContext, int nbTarget, Stats stats) {
@@ -66,7 +69,10 @@ public class Order implements GameLifeCycle {
         handleAnswer(t, this.currentNum == t.getNum() - 1);
 
         if (this.currentNum == nbTarget) {
-            gameContext.updateScore(stats,this);
+            for (Target target : tabTarget) {
+                target.removeEvent();
+            }
+            gameContext.updateScore(stats, this);
             gameContext.playWinTransition(20, actionEvent -> Order.this.restart());
         }
     }
@@ -79,6 +85,9 @@ public class Order implements GameLifeCycle {
             c.setFill(new ImagePattern(new Image("data/order/images/success.png"), 0, 0, 1, 1, true));
         } else {
             c.setFill(new ImagePattern(new Image("data/order/images/fail.png"), 0, 0, 1, 1, true));
+            for (Target target : tabTarget) {
+                target.removeEvent();
+            }
         }
         this.gameContext.getChildren().add(c);
 
@@ -97,7 +106,7 @@ public class Order implements GameLifeCycle {
     }
 
     public void spawn() {
-        Target[] tabTarget = new Target[nbTarget];
+        tabTarget = new Target[nbTarget];
         Timeline timer = new Timeline();
 
         timer.setOnFinished(new EventHandler<>() {

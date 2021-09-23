@@ -1,0 +1,60 @@
+{
+  "background": "fond.png",
+  "elements": [
+    {
+      "image": "bulles.png",
+      "scale": 0.3,
+      "coords": {
+        "x": 800,
+        "y": 700
+      },
+      "sounds": [
+        "bulle_temp.wav"
+      ]
+    },
+    {
+      "image": "crabe.png",
+      "scale": 0.3,
+      "coords": {
+        "x": 490,
+        "y": 350
+      },
+      "sounds": [
+        "plouf.wav"
+      ]
+    },
+    {
+      "image": "algue.png",
+      "scale": 0.2,
+      "coords": {
+        "x": 630,
+        "y": 305
+      },
+      "sounds": [
+        "roseau_chine.wav"
+      ]
+    },
+    {
+      "image": "meduse.png",
+      "scale": 0.5,
+      "coords": {
+        "x": 875,
+        "y": 350
+      },
+      "sounds": [
+        "eau_écoulement.wav"
+      ]
+    },
+    {
+      "image": "poulpe.png",
+      "scale": 0.4,
+      "coords": {
+        "x": 325,
+        "y": 750
+      },
+      "sounds": [
+        "eau_remplissage.wav"
+      ]
+    }
+  ]
+}

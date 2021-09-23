@@ -32,7 +32,7 @@ class MemoryTest {
 
     @EnumSource(value = Memory.MemoryGameType.class, mode = EnumSource.Mode.EXCLUDE, names = {"CUSTOMIZED"})
     void shouldPickAndBuildRandomPictures(Memory.MemoryGameType gameType) {
-        Memory memory = new Memory(gameType, mockGameContext, 2, 2, mockStats, true);
+        Memory memory = new Memory(gameType, mockGameContext, 2, 2, "Static", mockStats, true);
         when(mockConfig.getLanguage()).thenReturn("eng");
 
         Dimension2D mockDimension = new Dimension2D(20, 20);

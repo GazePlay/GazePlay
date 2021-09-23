@@ -149,8 +149,6 @@ public class Bloc extends Parent {// Rectangle {
                 gameContext.clear();
 
                 gameInstance.launch();
-
-                gameContext.onGameStarted();
             }));
         }
 

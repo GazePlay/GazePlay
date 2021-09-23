@@ -25,25 +25,27 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.*;
+import net.gazeplay.GameCategories;
+import net.gazeplay.GameSpec;
+import net.gazeplay.GazePlay;
+import net.gazeplay.ReplayingGameFromJson;
 import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
+import net.gazeplay.commons.ui.I18NTooltip;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ConfigurationButton;
 import net.gazeplay.commons.utils.ConfigurationButtonFactory;
 import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.MenuUtils;
+import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,6 +104,17 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         CustomButton replayGameButton = createReplayGameButton(gazePlay, screenDimension, games);
 
+
+        I18NTooltip tooltipExit = new I18NTooltip(gazePlay.getTranslator(), "Exit");
+        I18NTooltip tooltipLogout = new I18NTooltip(gazePlay.getTranslator(), "Logout");
+        I18NTooltip tooltipLogoutOptions = new I18NTooltip(gazePlay.getTranslator(), "Options");
+        I18NTooltip tooltipReplay = new I18NTooltip(gazePlay.getTranslator(), "Replay");
+
+        I18NTooltip.install(exitButton, tooltipExit);
+        I18NTooltip.install(logoutButton, tooltipLogout);
+        I18NTooltip.install(configurationButton, tooltipLogoutOptions);
+        I18NTooltip.install(replayGameButton, tooltipReplay);
+
         GamesStatisticsPane gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games);
 
         BorderPane bottomPane = new BorderPane();
@@ -151,15 +164,15 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         StackPane centerStackPane = new StackPane();
         errorMessage = new StackPane();
         Rectangle errorBackground = new Rectangle();
-        errorBackground.setFill(new Color(1,0,0,0.75));
+        errorBackground.setFill(new Color(1, 0, 0, 0.75));
         errorMessageLabel = new Label("Error message goes here");
         errorBackground.widthProperty().bind(errorMessageLabel.widthProperty().multiply(1.2));
         errorBackground.heightProperty().bind(errorMessageLabel.heightProperty().multiply(1.2));
-        errorMessage.getChildren().addAll(errorBackground,errorMessageLabel);
+        errorMessage.getChildren().addAll(errorBackground, errorMessageLabel);
         centerStackPane.getChildren().add(centerPanel);
         centerStackPane.getChildren().add(errorMessage);
 
-        errorMessage.setOnMouseClicked((event)->{
+        errorMessage.setOnMouseClicked((event) -> {
             final Timeline opacityTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(errorMessage.opacityProperty(), 0, Interpolator.EASE_OUT)));
             opacityTimeline.setOnFinished(e -> errorMessage.setMouseTransparent(true));
@@ -285,9 +298,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         choicePanel.getChildren().addAll(filteredList);
     }
 
-
     private TextField buildSearchBar(Configuration config, Translator translator, ProgressIndicator dwellTimeIndicator) {
         TextField gameSearchBar = new TextField();
+        Utils.addTextLimiter(gameSearchBar, 32);
 
         gameSearchBar.textProperty().addListener((obs, oldValue, newValue) -> {
             log.debug(newValue);
@@ -346,14 +359,14 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             try {
                 ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getApplicationContext(), games);
                 replayingGame.pickJSONFile(replayingGame.getFileName());
-                if(ReplayingGameFromJson.replayIsAllowed(replayingGame.getCurrentGameNameCode())){
+                if (ReplayingGameFromJson.replayIsAllowed(replayingGame.getCurrentGameNameCode())) {
                     replayingGame.replayGame();
-                } else if (replayingGame.getCurrentGameNameCode() != null){
+                } else if (replayingGame.getCurrentGameNameCode() != null) {
                     Translator translator = gazePlay.getTranslator();
                     this.errorMessageLabel.setText(
                         translator.translate("SorryButReplayInvalid")
-                            .replace("{}",translator.translate(replayingGame.getCurrentGameNameCode()))
-                            .replace("\\n","\n") );
+                            .replace("{}", translator.translate(replayingGame.getCurrentGameNameCode()))
+                            .replace("\\n", "\n"));
                     this.errorMessageLabel.setTextAlignment(TextAlignment.CENTER);
                     ColorAdjust colorAdjust = new ColorAdjust();
                     colorAdjust.setBrightness(-0.8);

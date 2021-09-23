@@ -6,6 +6,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -132,11 +135,14 @@ public class AnimationSpeedRatioControl {
             }
         };
 
+        final KeyCombination keyCombinationUP = new KeyCodeCombination(KeyCode.UP, KeyCombination.CONTROL_ANY);
+        final KeyCombination keyCombinationDOWN = new KeyCodeCombination(KeyCode.DOWN, KeyCombination.CONTROL_ANY);
+
         primaryScene.addEventHandler(KeyEvent.KEY_PRESSED, (keyEvent) -> {
-            if (keyEvent.getCode().toString().equals("F")) {
+            if (keyCombinationUP.match(keyEvent)) {
                 log.info("Key Value :{}", keyEvent.getCode().toString());
                 increaseSpeedEventHandler.handle(keyEvent);
-            } else if (keyEvent.getCode().toString().equals("S")) {
+            } else if (keyCombinationDOWN.match(keyEvent)) {
                 log.info("Key Value :{}", keyEvent.getCode().toString());
                 decreaseSpeedEventHandler.handle(keyEvent);
             }

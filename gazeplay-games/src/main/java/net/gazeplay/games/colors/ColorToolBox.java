@@ -6,6 +6,8 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.print.PageLayout;
+import javafx.print.PrinterJob;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -14,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -26,9 +29,9 @@ import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
-import net.gazeplay.components.GazeIndicator;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.components.GazeFollowerIndicator;
+import net.gazeplay.components.GazeIndicator;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -37,6 +40,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class ColorToolBox extends Pane {
@@ -68,6 +72,10 @@ public class ColorToolBox extends Pane {
     private final VBox mainPane;
 
     private final GazeIndicator progressIndicator;
+
+    @Getter
+    @Setter
+    private boolean dialogOpen = false;
 
     /**
      * All the color boxes
@@ -199,20 +207,33 @@ public class ColorToolBox extends Pane {
             customColorDialog.show();
             customColorDialog.sizeToScene();
 
+            this.dialogOpen = true;
+
             previousEnableColor = colorsGame.getDrawingEnable().getValue();
             if (previousEnableColor) {
                 colorsGame.setEnableColorization(false);
             }
+
+            customColorDialog.toFront();
+            customColorDialog.setAlwaysOnTop(true);
+            try {
+                TimeUnit.MILLISECONDS.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            customColorDialog.requestFocus();
         };
 
-        final GazeIndicator customColorButtonIndic = new GazeFollowerIndicator(gameContext, root);
+        final GazeIndicator customColorButtonIndic = new GazeFollowerIndicator(gameContext, root, customColorPickerButton);
         customColorButtonIndic.setOnFinish(customColorButtonHandler);
         customColorButtonIndic.addNodeToListen(customColorPickerButton,
             colorsGame.getGameContext().getGazeDeviceManager());
 
         customColorPickerButton.setOnAction(customColorButtonHandler);
+        customColorPickerButton.setOpacity(1);
 
         customColorDialog.setOnCloseRequest((event) -> {
+            this.setDialogOpen(false);
             colorsGame.setEnableColorization(previousEnableColor);
         });
 
@@ -280,6 +301,33 @@ public class ColorToolBox extends Pane {
 
         final BufferedImage swingImg = SwingFXUtils.fromFXImage(image, null);
         ImageIO.write(swingImg, format, file);
+    }
+
+    private void printImage(final Image image) {
+        final PrinterJob printerJob = PrinterJob.createPrinterJob();
+        if (printerJob.showPrintDialog(gameContext.getPrimaryStage()) && printerJob.showPageSetupDialog(gameContext.getPrimaryStage())) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            gameContext.getPrimaryStage().requestFocus();
+
+            ImageView iv = new ImageView();
+            iv.setPreserveRatio(true);
+            iv.setImage(image);
+            PageLayout pageLayout = printerJob.getJobSettings().getPageLayout();
+            double scaleX = pageLayout.getPrintableWidth() / iv.getBoundsInParent().getWidth();
+            double scaleY = pageLayout.getPrintableHeight() / iv.getBoundsInParent().getHeight();
+            iv.getTransforms().add(new Scale(scaleX, scaleY));
+            if (printerJob.printPage(iv)) {
+                printerJob.endJob();
+            } else {
+                log.debug("The printing fail");
+            }
+        } else {
+            log.info("don't print because the user cancel it");
+        }
     }
 
     private static void configureImageFileChooser(final FileChooser imageFileChooser) {
@@ -365,8 +413,18 @@ public class ColorToolBox extends Pane {
             }
         });
 
+        final Button PImageButton = new Button(translator.translate("PrintImg"));
+        PImageButton.setPrefHeight(colorizeButtonsSizePx / 2);
+        PImageButton.setOnAction((event) -> {
+            printImage(colorsGame.getWritableImg());
+        });
+
+        imageChooserButton.setOpacity(1);
+        imageSaverButton.setOpacity(1);
+        PImageButton.setOpacity(1);
         bottomBox.getChildren().add(imageChooserButton);
         bottomBox.getChildren().add(imageSaverButton);
+        bottomBox.getChildren().add(PImageButton);
 
         return bottomBox;
     }
@@ -453,6 +511,9 @@ public class ColorToolBox extends Pane {
         final GazeIndicator colorizeButtonIndicator = new GazeIndicator(gameContext);
         colorizeButtonIndicator.setMouseTransparent(true);
 
+        colorize.setOpacity(1);
+        stopColorize.setOpacity(1);
+
         final Pane colorizeButtonPane = new StackPane(colorize);
         final Pane stopColorizeButtonPane = new StackPane(stopColorize);
 
@@ -490,15 +551,17 @@ public class ColorToolBox extends Pane {
 
         final Stage dialog = new Stage();
 
+        final net.gazeplay.games.colors.CustomColorPicker customColorPicker = new CustomColorPicker(gameContext, root, this, customBox, dialog, colorizeButtonsSizePx);
+
         dialog.initOwner(primaryStage);
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initStyle(StageStyle.UTILITY);
         dialog.setOnCloseRequest(
-            windowEvent -> primaryStage.getScene().getRoot().setEffect(null));
+            windowEvent -> {
+                primaryStage.getScene().getRoot().setEffect(null);
+            });
         dialog.setTitle(translator.translate("customColorDialogTitle"));
         dialog.setAlwaysOnTop(true);
-
-        final net.gazeplay.games.colors.CustomColorPicker customColorPicker = new CustomColorPicker(gameContext, root, this, customBox, dialog, colorizeButtonsSizePx);
 
         final Scene scene = new Scene(customColorPicker, Color.TRANSPARENT);
 

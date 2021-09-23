@@ -15,6 +15,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -35,6 +36,7 @@ public class Dice implements GameLifeCycle {
     private boolean active;
     private final int[] rolls;
     private final ProgressButton rollButton;
+    private final Configuration configuration;
 
     private final ReplayablePseudoRandom randomGenerator;
 
@@ -44,11 +46,10 @@ public class Dice implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
         final Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.configuration = gameContext.getConfiguration();
         active = true;
 
         rolls = new int[nbDice];
-
-        final Configuration config = gameContext.getConfiguration();
 
         // Roll button is used to roll all the dice at once
         rollButton = new ProgressButton();
@@ -58,7 +59,7 @@ public class Dice implements GameLifeCycle {
         rollButton.setLayoutX(dimensions.getWidth() / 2 - nextImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() - 1.2 * nextImage.getFitHeight());
         rollButton.setImage(nextImage);
-        rollButton.assignIndicator(event -> {
+        rollButton.assignIndicatorUpdatable(event -> {
             if (active) {
                 active = false;
                 totalText.setOpacity(0);
@@ -67,13 +68,27 @@ public class Dice implements GameLifeCycle {
                 }
                 stats.incrementNumberOfGoalsReached();
             }
-        }, config.getFixationLength());
+        }, gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 
         totalText = new Text(0, dimensions.getHeight() / 5, "");
         totalText.setTextAlignment(TextAlignment.CENTER);
-        totalText.setFill(Color.WHITE);
+
+        Color color = configuration.getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+            @Override
+            public Color visitLight() {
+                return Color.BLACK;
+            }
+
+            @Override
+            public Color visitDark() {
+                return Color.WHITE;
+            }
+        });
+
+        totalText.setFill(color);
+
         totalText.setFont(new Font(dimensions.getHeight() / 4));
         totalText.setWrappingWidth(dimensions.getWidth());
 
@@ -109,10 +124,9 @@ public class Dice implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
         final Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         active = true;
+        this.configuration = gameContext.getConfiguration();
 
         rolls = new int[nbDice];
-
-        final Configuration config = gameContext.getConfiguration();
 
         // Roll button is used to roll all the dice at once
         rollButton = new ProgressButton();
@@ -122,7 +136,7 @@ public class Dice implements GameLifeCycle {
         rollButton.setLayoutX(dimensions.getWidth() / 2 - nextImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() - 1.2 * nextImage.getFitHeight());
         rollButton.setImage(nextImage);
-        rollButton.assignIndicator(event -> {
+        rollButton.assignIndicatorUpdatable(event -> {
             if (active) {
                 active = false;
                 totalText.setOpacity(0);
@@ -131,13 +145,28 @@ public class Dice implements GameLifeCycle {
                 }
                 stats.incrementNumberOfGoalsReached();
             }
-        }, config.getFixationLength());
+        }, gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();
 
         totalText = new Text(0, dimensions.getHeight() / 5, "");
         totalText.setTextAlignment(TextAlignment.CENTER);
-        totalText.setFill(Color.WHITE);
+
+        Color color = configuration.getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+            @Override
+            public Color visitLight() {
+                return Color.BLACK;
+            }
+
+            @Override
+            public Color visitDark() {
+                return Color.WHITE;
+            }
+        });
+
+        totalText.setFill(color);
+
+
         totalText.setFont(new Font(dimensions.getHeight() / 4));
         totalText.setWrappingWidth(dimensions.getWidth());
 

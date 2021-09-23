@@ -1,11 +1,13 @@
 package net.gazeplay.games.pianosight;
 
 import javafx.animation.*;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -53,6 +55,10 @@ public class Piano extends Parent implements GameLifeCycle {
     private final List<ImageView> fragments;
 
     private final ReplayablePseudoRandom randomGenerator;
+
+    private ProgressIndicator progressIndicator;
+
+    private Timeline timelineProgressBar;
 
     public Piano(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
@@ -111,6 +117,8 @@ public class Piano extends Parent implements GameLifeCycle {
 
         final Timeline timeline1 = new Timeline();
         final Timeline timeline2 = new Timeline();
+
+        progressIndicator.setOpacity(0);
 
         for (final ImageView fragment : fragments) {
 
@@ -213,48 +221,8 @@ public class Piano extends Parent implements GameLifeCycle {
 
         this.getChildren().remove(circ);
 
-        final EventHandler<Event> circleEvent = e -> {
-            if (circleTemp.getFill() == Color.YELLOW) {
-                if (firstNote != -1) {
-                    final int precNote = firstNote;
-                    final int precKey = midiReader.getKey();
+        createCircle();
 
-                    final int index = midiReader.nextNote();
-                    if (index > -1) {
-                        firstNote = NOTE_NAMES[index];
-                    } else {
-                        firstNote = index;
-                    }
-
-                    instru.noteOn(precKey);
-                    stats.incrementNumberOfGoalsReached();
-
-                    if (firstNote != -1) {
-                        tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);
-                        circleTemp.setFill(Color.BLACK);
-                        circleTemp.setOpacity(0);
-                        if (firstNote != -1) {
-                            tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
-                        } else {
-                            tilesTab.get(firstNote).arc.setFill(tilesTab.get(precNote).color1);
-                        }
-
-                    } else {
-                        tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);
-                        circleTemp.setFill(Color.BLACK);
-                        circleTemp.setOpacity(0);
-                    }
-
-                }
-            }
-        };
-
-        circleTemp.addEventFilter(MouseEvent.MOUSE_ENTERED, circleEvent);
-        circleTemp.addEventFilter(GazeEvent.GAZE_ENTERED, circleEvent);
-        gameContext.getGazeDeviceManager().addEventFilter(circleTemp);
-
-        this.getChildren().addAll(this.tilesTab);
-        this.getChildren().get(this.getChildren().indexOf(circleTemp)).toFront();
         final ImageView iv = new ImageView(new Image("data/pianosight/images/1.png"));
         final Button b = new Button("Open", iv);
 
@@ -300,6 +268,7 @@ public class Piano extends Parent implements GameLifeCycle {
         }
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
+
     }
 
     @Override
@@ -322,63 +291,84 @@ public class Piano extends Parent implements GameLifeCycle {
 
             if (((Tile) e.getTarget()).note == firstNote) {
 
-                final int precNote = firstNote;
-                final int precKey = midiReader.getKey();
+                this.progressIndicator = createProgressIndicator(index, size, dimension2D);
 
-                final int index1 = midiReader.nextNote();
-                if (index1 > -1) {
-                    firstNote = NOTE_NAMES[index1];
-                } else {
-                    firstNote = index1;
-                }
+                progressIndicator.setMouseTransparent(true);
+                progressIndicator.setOpacity(1);
+                progressIndicator.setProgress(0);
 
-                if (precNote != -1 && tilesTab.get(precNote).arc.getFill() == Color.YELLOW) {
-                    instru.noteOn(precKey);
-                    stats.incrementNumberOfGoalsReached();
-                    double x;
-                    double y;
+                timelineProgressBar = new Timeline();
 
-                    if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                        final MouseEvent me = (MouseEvent) e;
-                        x = me.getX();
-                        y = me.getY();
-                    } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                        final GazeEvent ge = (GazeEvent) e;
-                        x = ge.getX();
-                        y = ge.getY();
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
+                    new KeyValue(progressIndicator.progressProperty(), 1)));
+
+                timelineProgressBar.setOnFinished((ActionEvent actionEvent) -> {
+
+                    final int precNote = firstNote;
+                    final int precKey = midiReader.getKey();
+
+                    final int index1 = midiReader.nextNote();
+                    if (index1 > -1) {
+                        firstNote = NOTE_NAMES[index1];
                     } else {
-                        x = centerX + size * Math.cos(Math.toRadians(-theta));
-                        y = centerY + size * Math.sin(Math.toRadians(-theta));
-                        explose(x, y);
-                        final double theta1 = (((index1 + 1) * 360d) / 7d - origin);
-                        x = centerX + size * Math.cos(Math.toRadians(-theta1));
-                        y = centerY + size * Math.sin(Math.toRadians(-theta1));
+                        firstNote = index1;
                     }
-                    explose(x, y);
-                    if (firstNote != -1) {
-                        if (tilesTab.get(firstNote).arc.getFill() == Color.YELLOW) {
-                            tilesTab.get(precNote).arc.setFill(color2);
-                            circleTemp.setFill(Color.YELLOW);
-                            circleTemp.setOpacity(1);
+
+                    if (precNote != -1 && tilesTab.get(precNote).arc.getFill() == Color.YELLOW) {
+                        instru.noteOn(precKey);
+                        stats.incrementNumberOfGoalsReached();
+                        double x;
+                        double y;
+
+                        if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                            final MouseEvent me = (MouseEvent) e;
+                            x = me.getX();
+                            y = me.getY();
+                        } else if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                            final GazeEvent ge = (GazeEvent) e;
+                            x = ge.getX();
+                            y = ge.getY();
+                        } else {
+                            x = centerX + size * Math.cos(Math.toRadians(-theta));
+                            y = centerY + size * Math.sin(Math.toRadians(-theta));
+                            explose(x, y);
+                            final double theta1 = (((index1 + 1) * 360d) / 7d - origin);
+                            x = centerX + size * Math.cos(Math.toRadians(-theta1));
+                            y = centerY + size * Math.sin(Math.toRadians(-theta1));
+                        }
+                        explose(x, y);
+                        if (firstNote != -1) {
+                            if (tilesTab.get(firstNote).arc.getFill() == Color.YELLOW) {
+                                tilesTab.get(precNote).arc.setFill(color2);
+                                circleTemp.setFill(Color.YELLOW);
+                                circleTemp.setOpacity(1);
+                            } else {
+                                tilesTab.get(precNote).arc.setFill(color2);
+                                tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
+                            }
+
                         } else {
                             tilesTab.get(precNote).arc.setFill(color2);
-                            tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
                         }
-
-                    } else {
-                        tilesTab.get(precNote).arc.setFill(color2);
                     }
-                }
+                });
+                timelineProgressBar.play();
 
             } else {
                 tilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color2);
 
             }
-
         };
 
         final EventHandler<Event> tileEventExited = e -> {
-            log.info("index ={}", index);
+            log.info("index = {}", index);
+
+            if (timelineProgressBar != null) {
+                timelineProgressBar.stop();
+                progressIndicator.setOpacity(0);
+                progressIndicator.setProgress(0);
+            }
+
             if (tilesTab.get(((Tile) e.getTarget()).note).arc.getFill() == color2) {
                 tilesTab.get(((Tile) e.getTarget()).note).arc.setFill(color1);
             }
@@ -417,4 +407,130 @@ public class Piano extends Parent implements GameLifeCycle {
 
     }
 
+    private void createCircle() {
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        final EventHandler<Event> circleEvent = e -> {
+            if (circleTemp.getFill() == Color.YELLOW) {
+                if (firstNote != -1) {
+                    this.progressIndicator = createProgressIndicator(12, 2.3, dimension2D);
+
+                    progressIndicator.setMouseTransparent(true);
+                    progressIndicator.setOpacity(1);
+                    progressIndicator.setProgress(0);
+
+                    timelineProgressBar = new Timeline();
+
+                    timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
+                        new KeyValue(progressIndicator.progressProperty(), 1)));
+
+                    timelineProgressBar.setOnFinished((ActionEvent actionEvent) -> {
+
+                        final int precNote = firstNote;
+                        final int precKey = midiReader.getKey();
+
+                        final int index = midiReader.nextNote();
+                        if (index > -1) {
+                            firstNote = NOTE_NAMES[index];
+                        } else {
+                            firstNote = index;
+                        }
+
+                        instru.noteOn(precKey);
+                        stats.incrementNumberOfGoalsReached();
+
+                        if (firstNote != -1) {
+                            tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);
+                            circleTemp.setFill(Color.BLACK);
+                            circleTemp.setOpacity(0);
+                            if (firstNote != -1) {
+                                tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
+                            } else {
+                                tilesTab.get(firstNote).arc.setFill(tilesTab.get(precNote).color1);
+                            }
+
+                        } else {
+                            tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);
+                            circleTemp.setFill(Color.BLACK);
+                            circleTemp.setOpacity(0);
+                        }
+
+                        progressIndicator.setOpacity(0);
+                    });
+                    timelineProgressBar.play();
+
+                }
+            }
+        };
+
+        circleTemp.addEventFilter(MouseEvent.MOUSE_ENTERED, circleEvent);
+        circleTemp.addEventFilter(GazeEvent.GAZE_ENTERED, circleEvent);
+        gameContext.getGazeDeviceManager().addEventFilter(circleTemp);
+
+        this.getChildren().addAll(this.tilesTab);
+        this.getChildren().get(this.getChildren().indexOf(circleTemp)).toFront();
+    }
+
+    private ProgressIndicator createProgressIndicator(int index, double size, Dimension2D dimension2D) {
+        final ProgressIndicator indicator = new ProgressIndicator(0);
+        indicator.setMinSize(dimension2D.getWidth() / 20, dimension2D.getHeight() / 20);
+
+        switch (index) {
+            case 0: // Tile blanche droite
+                indicator.setTranslateX(centerX + (size * 0.75));
+                indicator.setTranslateY(centerY - (size * 0.25));
+                break;
+            case 1: // Tile blanche haut-droite
+                indicator.setTranslateX(centerX + (size * 0.25));
+                indicator.setTranslateY(centerY - (size * 0.75));
+                break;
+            case 2: // Tile blanche haut-gauche
+                indicator.setTranslateX(centerX - (size * 0.50));
+                indicator.setTranslateY(centerY - (size * 0.75));
+                break;
+            case 3: // Tile blanche gauche
+                indicator.setTranslateX(centerX - (size * 0.75));
+                indicator.setTranslateY(centerY - (size * 0.25));
+                break;
+            case 4: // Tile blanche bas-gauche
+                indicator.setTranslateX(centerX - (size * 0.55));
+                indicator.setTranslateY(centerY + (size * 0.5));
+                break;
+            case 5: // tile blanche bas-milieu
+                indicator.setTranslateX(centerX - size * 0.10);
+                indicator.setTranslateY(centerY + (size * 0.75));
+                break;
+            case 6: // tile blanche bas-droite
+                indicator.setTranslateX(centerX + size * 0.55);
+                indicator.setTranslateY(centerY + (size * 0.5));
+                break;
+            case 7: // tile noir bas-droite
+                indicator.setTranslateX(centerX + size * 0.25);
+                indicator.setTranslateY(centerY + (size * 0.75));
+                break;
+            case 9: // tile noir haut-droite
+                indicator.setTranslateX(centerX + size * 0.55);
+                indicator.setTranslateY(centerY - (size * 0.6));
+                break;
+            case 10: // tile noir haut-milieu
+                indicator.setTranslateX(centerX - size * 0.10);
+                indicator.setTranslateY(centerY - (size * 0.90));
+                break;
+            case 11: // tile noir haut-gauche
+                indicator.setTranslateX(centerX - size * 0.6);
+                indicator.setTranslateY(centerY - (size * 0.6));
+                break;
+            case 13: // tile noir bas-droite
+                indicator.setTranslateX(centerX - size * 0.3);
+                indicator.setTranslateY(centerY + (size * 0.75));
+                break;
+            default:
+                indicator.setTranslateX(centerX - size * 0.10);
+                indicator.setTranslateY(centerY);
+        }
+
+        indicator.setOpacity(0);
+        gameContext.getChildren().add(indicator);
+        return indicator;
+    }
 }
