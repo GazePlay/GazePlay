@@ -59,11 +59,27 @@ Enregistrez votre feuille de calcul en tant que `questions.csv` et de la placer 
 
 {% include figure image_path="/assets/images/tutorial/foldersSounds.png" alt="Mon PC" caption="Placez tous vos sons (par exemple des fichiers .mp3) dans ce dossier et donnez leur le même nom que celui du dossier des images qui leur est associé." %}
 
+## Comment créer le raccourci d'un jeu?
+1. Lancer GazePlay et aller dans les paramètres via l'engrenage bleu.
+{% include figure image_path="/assets/images/tutorial/parametes.png" alt="Le bouton paramètre de GazePlay" %}
+
+2. Dans la partie 'Paramètre de langage' puis 'Créer des raccourcis vers les jeux', vous pouvez :
+* Choisir ou mettre le raccourcis (par défaut sur le bureau)
+* Choisir le jeu que l'on va mettre en raccourcis
+* Le bouton qui génère le raccourcis
+
+{% include figure image_path="/assets/images/tutorial/raccourcis.png" alt="La partie raccouris des paremètres" %}
+
+Une fois que l'on a chosie ou mettre le raccourcis et quel jeu on veut en raccourcis, on clique sur le bouton 'Générer le raccourcis'. <br>
+On obtient ainsi la raccourcis du jeux choisi :
+
+{% include figure image_path="/assets/images/tutorial/exempleRaccourcis.png" alt="La partie raccouris des paremètres" %}
+
 ## Comment créer un raccourci sous Windows?
 1. Localisez `gazeplay-windows.bat` dans le dossier` / bin` de votre dossier d'installation de GazePlay.
-1. Faites un clic droit sur «gazeplay-windows.bat» et sélectionnez créer un raccourci.
-2. Déplacez le raccourci sur le bureau.
-3. Double-cliquez sur le raccourci pour lancer GazePlay.
+2. Faites un clic droit sur «gazeplay-windows.bat» et sélectionnez créer un raccourci.
+3. Déplacez le raccourci sur le bureau.
+4. Double-cliquez sur le raccourci pour lancer GazePlay.
 
 ## Je clique sur gazeplay-windows.bat mais cela ne fonctionne pas. Pourquoi?
 Vous pouvez voir un message d'erreur indiquant que vous n'avez pas de machine virtuelle Java sur votre ordinateur.
