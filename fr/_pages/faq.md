@@ -63,7 +63,7 @@ Enregistrez votre feuille de calcul en tant que `questions.csv` et de la placer 
 1. Lancer GazePlay et aller dans les paramètres via l'engrenage bleu.
 {% include figure image_path="/assets/images/tutorial/FR/boutonParamètres.png" alt="Le bouton paramètre de GazePlay" %}
 
-2. Dans la partie 'Paramètre de langage' puis 'Créer des raccourcis vers les jeux', vous pouvez :
+2. Dans la partie 'Paramètre de langue' puis 'Créer des raccourcis vers les jeux', vous pouvez :
 * Choisir ou mettre le raccourcis (par défaut sur le bureau)
 * Choisir le jeu que l'on va mettre en raccourcis
 * Si le jeu choisie a des variantes on peut aussi choisir sa variante
@@ -71,7 +71,7 @@ Enregistrez votre feuille de calcul en tant que `questions.csv` et de la placer 
 
 {% include figure image_path="/assets/images/tutorial/FR/paramètres.png" alt="La partie raccouris des paremètres" %}
 
-Une fois que l'on a chosie ou mettre le raccourcis et quel jeu on veut en raccourcis, on clique sur le bouton 'Générer le raccourcis'. <br>
+Une fois que l'on a choisie ou mettre le raccourcis et quel jeu on veut en raccourcis, on clique sur le bouton 'Générer le raccourcis'. <br>
 On obtient ainsi la raccourcis du jeux choisi :
 
 {% include figure image_path="/assets/images/tutorial/shortcuts.png" alt="La partie raccouris des paremètres" %}
