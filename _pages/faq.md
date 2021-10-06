@@ -62,15 +62,15 @@ Remember to save your spreadsheet as `questions.csv` and place it in the `where-
 1. Launch GazePlay and go to settings via the blue gear.
 {% include figure image_path="/assets/images/tutorial/EN/buttonSettings.png" alt="Buton settings of GazePlay" %}
 
-2. In the 'Language settings' part then 'Create Game Shortcuts', you can:
-* Choose or put the shortcut (by default on the desktop)
-* Choose the game that we will put in shortcuts
+2. In the 'Language settings' section then 'Create Game Shortcuts', you can:
+* Choose where to put the shortcut (by default on the desktop)
+* Choose the game that we will put in shortcut
 * If the chosen game has variants, you can also choose its variant
 * The button that generates the shortcut
 
 {% include figure image_path="/assets/images/tutorial/EN/settings.png" alt="Settigs of GazePlay" %}
 
-Once we have chosen where to put the shortcuts and which game we want in shortcuts, we click on the button 'Generate the shortcuts'. <br>
+Once we have chosen where to put the shortcut and which game we want in shortcut, we click on the button 'Generate the shortcut'. <br>
 We thus obtain the shortcut of the chosen game:
 
 {% include figure image_path="/assets/images/tutorial/shortcuts.png" alt="A shotcut of a game" %}
