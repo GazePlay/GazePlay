@@ -64,17 +64,17 @@ Enregistrez votre feuille de calcul en tant que `questions.csv` et de la placer 
 {% include figure image_path="/assets/images/tutorial/FR/boutonParamètres.png" alt="Le bouton paramètre de GazePlay" %}
 
 2. Dans la partie 'Paramètre de langue' puis 'Créer des raccourcis vers les jeux', vous pouvez :
-* Choisir ou mettre le raccourcis (par défaut sur le bureau)
-* Choisir le jeu que l'on va mettre en raccourcis
-* Si le jeu choisie a des variantes on peut aussi choisir sa variante
-* Le bouton qui permet de génèrer le raccourcis
+* Choisir où mettre le raccourci (par défaut sur le bureau)
+* Choisir le jeu que l'on va mettre en raccourci
+* Si le jeu choisi a des variantes, on peut aussi choisir sa variante
+* Le bouton qui permet de générer le raccourcis
 
 {% include figure image_path="/assets/images/tutorial/FR/paramètres.png" alt="La partie raccouris des paremètres" %}
 
-Une fois que l'on a choisie ou mettre le raccourcis et quel jeu on veut en raccourcis, on clique sur le bouton 'Générer le raccourcis'. <br>
-On obtient ainsi la raccourcis du jeux choisi :
+Une fois que l'on a choisi ou mettre le raccourci et quel jeu on veut en raccourci, on clique sur le bouton 'Générer le raccourci'. <br>
+On obtient ainsi le raccourci du jeu choisi :
 
-{% include figure image_path="/assets/images/tutorial/shortcuts.png" alt="La partie raccouris des paremètres" %}
+{% include figure image_path="/assets/images/tutorial/shortcuts.png" alt="La partie raccouris des paramètres" %}
 
 ## Comment créer un raccourci sous Windows?
 1. Localisez `gazeplay-windows.bat` dans le dossier` / bin` de votre dossier d'installation de GazePlay.
