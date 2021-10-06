@@ -58,6 +58,23 @@ Remember to save your spreadsheet as `questions.csv` and place it in the `where-
 
 {% include figure image_path="/assets/images/tutorial/foldersSounds.png" alt="Mon PC" caption="Place all your sounds (for example .mp3 files) in this folder and give them the same name as the one you gave to the associated images folder." %}
 
+## How can I create a shortcut for a game?
+1. Launch GazePlay and go to settings via the blue gear.
+{% include figure image_path="/assets/images/tutorial/EN/buttonSettings.png" alt="Buton settings of GazePlay" %}
+
+2. In the 'Language settings' part then 'Create Game Shortcuts', you can:
+* Choose or put the shortcut (by default on the desktop)
+* Choose the game that we will put in shortcuts
+* If the chosen game has variants, you can also choose its variant
+* The button that generates the shortcut
+
+{% include figure image_path="/assets/images/tutorial/EN/settings.png" alt="Settigs of GazePlay" %}
+
+Once we have chosen where to put the shortcuts and which game we want in shortcuts, we click on the button 'Generate the shortcuts'. <br>
+We thus obtain the shortcut of the chosen game:
+
+{% include figure image_path="/assets/images/tutorial/shortcuts.png" alt="A shotcut of a game" %}
+
 ## How can I create a shortcut on Windows?
 1. Locate `gazeplay-windows.bat` in the `/bin` folder in your GazePlay installation folder.
 1. Right-click on `gazeplay-windows.bat` and select create a shortcut.
