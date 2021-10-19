@@ -24,7 +24,7 @@ class ConfigurationSourceTest {
     void shouldCreateFromPropertiesResource() {
         Configuration result = ConfigurationSource.createFromPropertiesResource(new File(resourcesFolder, "GazePlay.properties"));
 
-        assertEquals("eng", result.getLanguage());
+        assertEquals("fra", result.getLanguage());
     }
 
     @Test
