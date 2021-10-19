@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import mslinks.ShellLink;
 import net.gazeplay.cli.*;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -22,7 +21,6 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
-import net.gazeplay.latestnews.LatestNewsPopup;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 import net.gazeplay.ui.scenes.gamemenu.GameVariantDialog;
 import org.springframework.context.ApplicationContext;
@@ -175,7 +173,7 @@ public class GazePlayFxApp extends Application {
                         if (selectedVariantCode != null) {
                             IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
                             gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
-                        } else if (selectedGameSpec.getGameVariantGenerator() instanceof NoVariantGenerator){
+                        } else if (selectedGameSpec.getGameVariantGenerator() instanceof NoVariantGenerator) {
                             gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
                         } else {
                             GameVariantDialog dialog = new GameVariantDialog(
@@ -209,7 +207,7 @@ public class GazePlayFxApp extends Application {
 
         CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
 
-        if( displayStageAtTheEnd) {
+        if (displayStageAtTheEnd) {
             primaryStage.centerOnScreen();
             primaryStage.show();
         }
