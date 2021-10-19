@@ -32,9 +32,9 @@
         <appender-ref ref="STDOUT"/>
     </appender>
 
-    <logger name="org.springframework" level="OFF"/>
+    <logger name="org.springframework" level="INFO"/>
 
-    <root level="OFF">
+    <root level="INFO">
         <appender-ref ref="ASYNC_FILE"/>
         <appender-ref ref="ASYNC_STDOUT"/>
     </root>
