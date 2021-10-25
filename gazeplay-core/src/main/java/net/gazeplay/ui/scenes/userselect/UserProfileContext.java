@@ -112,7 +112,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
-    static List<String> findAllUsersProfiles() {
+    public static List<String> findAllUsersProfiles() {
         final File profilesDirectory = GazePlayDirectories.getProfilesDirectory();
         log.info("profilesDirectory = {}", profilesDirectory);
 

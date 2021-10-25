@@ -85,7 +85,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
         CustomButton exitButton = createExitButton(screenDimension);
-        CustomButton logoutButton = createLogoutButton(gazePlay, screenDimension);
+        //CustomButton logoutButton = createLogoutButton(gazePlay, screenDimension);
 
         ConfigurationButton configurationButton = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
 
@@ -106,12 +106,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
 
         I18NTooltip tooltipExit = new I18NTooltip(gazePlay.getTranslator(), "Exit");
-        I18NTooltip tooltipLogout = new I18NTooltip(gazePlay.getTranslator(), "Logout");
+        //I18NTooltip tooltipLogout = new I18NTooltip(gazePlay.getTranslator(), "Logout");
         I18NTooltip tooltipLogoutOptions = new I18NTooltip(gazePlay.getTranslator(), "Options");
         I18NTooltip tooltipReplay = new I18NTooltip(gazePlay.getTranslator(), "Replay");
 
         I18NTooltip.install(exitButton, tooltipExit);
-        I18NTooltip.install(logoutButton, tooltipLogout);
+        //I18NTooltip.install(logoutButton, tooltipLogout);
         I18NTooltip.install(configurationButton, tooltipLogoutOptions);
         I18NTooltip.install(replayGameButton, tooltipReplay);
 
@@ -141,7 +141,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         HBox topRightPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(topRightPane);
         topRightPane.setAlignment(Pos.TOP_CENTER);
-        topRightPane.getChildren().addAll(replayGameButton, logoutButton, exitButton);
+        topRightPane.getChildren().addAll(replayGameButton, /*logoutButton,*/ exitButton);
 
         ProgressIndicator dwellTimeIndicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, dwellTimeIndicator);
