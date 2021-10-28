@@ -15,14 +15,13 @@ class GameSpecSourceInstantiatorTest {
     void shouldInstantiateFromListOfSources() throws ClassNotFoundException {
         List<Class> classList = new ArrayList<>(List.of(
             Class.forName("net.gazeplay.games.videogrid.VideoGridGameSpecSource"),
-            Class.forName("net.gazeplay.games.order.OrderGameSpecSource"),
-            Class.forName("net.gazeplay.games.mediaPlayer.MediaPlayerGameSpecSource")
+            Class.forName("net.gazeplay.games.order.OrderGameSpecSource")
         ));
 
         GameSpecSourceInstantiator instantiator = new GameSpecSourceInstantiator();
         List<GameSpecSource> result = instantiator.instantiateGameSpecSources(classList);
 
-        assertEquals(3, result.size());
+        assertEquals(2, result.size());
     }
 
     @Test
