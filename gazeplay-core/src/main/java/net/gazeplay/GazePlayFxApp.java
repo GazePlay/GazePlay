@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import mslinks.ShellLink;
 import net.gazeplay.cli.*;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -25,6 +24,8 @@ import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.latestnews.LatestNewsPopup;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 import net.gazeplay.ui.scenes.gamemenu.GameVariantDialog;
+import net.gazeplay.ui.scenes.userselect.User;
+import net.gazeplay.ui.scenes.userselect.UserProfileContext;
 import org.springframework.context.ApplicationContext;
 
 import java.io.File;
@@ -75,7 +76,25 @@ public class GazePlayFxApp extends Application {
             if (userSelectionOptions != null) {
                 if (userSelectionOptions.getUserid() != null) {
                     showUserSelectPage = false;
-                    ActiveConfigurationContext.switchToUser(userSelectionOptions.getUserid());
+
+                    final User user = new User(userSelectionOptions.getUserid());
+
+                    if (!UserProfileContext.findAllUsersProfiles().contains(user.getName())) {
+
+                        ActiveConfigurationContext.switchToUser(user.getName());
+                        final Configuration conf = ActiveConfigurationContext.getInstance();
+                        final File userDirectory = GazePlayDirectories.getUserProfileDirectory(user.getName());
+                        final boolean userDirectoryCreated = userDirectory.mkdirs();
+                        log.debug("userDirectoryCreated = {}", userDirectoryCreated);
+
+                        conf.setUserName(user.getName());
+                        conf.setFileDir(GazePlayDirectories.getFileDirectoryUserValue(user.getName()).getAbsolutePath());
+
+                    } else {
+                        ActiveConfigurationContext.switchToUser(userSelectionOptions.getUserid());
+                    }
+
+
                 }
                 if (userSelectionOptions.isDefaultUser()) {
                     showUserSelectPage = false;
@@ -175,7 +194,7 @@ public class GazePlayFxApp extends Application {
                         if (selectedVariantCode != null) {
                             IGameVariant variant = IGameVariant.toGameVariant(selectedVariantCode);
                             gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, variant);
-                        } else if (selectedGameSpec.getGameVariantGenerator() instanceof NoVariantGenerator){
+                        } else if (selectedGameSpec.getGameVariantGenerator() instanceof NoVariantGenerator) {
                             gameMenuController.chooseAndStartNewGame(gazePlay, selectedGameSpec, null);
                         } else {
                             GameVariantDialog dialog = new GameVariantDialog(
@@ -209,7 +228,7 @@ public class GazePlayFxApp extends Application {
 
         CssUtil.setPreferredStylesheets(ActiveConfigurationContext.getInstance(), gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
 
-        if( displayStageAtTheEnd) {
+        if (displayStageAtTheEnd) {
             primaryStage.centerOnScreen();
             primaryStage.show();
         }
