@@ -64,7 +64,7 @@ public class GazePlayFxApp extends Application {
     @Override
     public void start(final Stage primaryStage) {
 
-        final Configuration mainConfig = ActiveConfigurationContext.getInstance();
+        //final Configuration mainConfig = ActiveConfigurationContext.getInstance();
         boolean displayStageAtTheEnd = true;
 
         boolean showUserSelectPage = true;
