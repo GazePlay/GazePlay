@@ -104,8 +104,6 @@ public class GazePlayFxApp extends Application {
 
         configurePrimaryStage(primaryStage);
 
-        // LatestNewsPopup.displayIfNeeded(mainConfig, gazePlay.getTranslator(), gazePlay.getCurrentScreenDimensionSupplier());
-
         gazePlay.setPrimaryScene(primaryScene);
         gazePlay.setPrimaryStage(primaryStage);
 
