@@ -21,7 +21,6 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
-import net.gazeplay.latestnews.LatestNewsPopup;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 import net.gazeplay.ui.scenes.gamemenu.GameVariantDialog;
 import net.gazeplay.ui.scenes.userselect.User;
@@ -67,7 +66,7 @@ public class GazePlayFxApp extends Application {
     @Override
     public void start(final Stage primaryStage) {
 
-        final Configuration mainConfig = ActiveConfigurationContext.getInstance();
+        //final Configuration mainConfig = ActiveConfigurationContext.getInstance();
         boolean displayStageAtTheEnd = true;
 
         boolean showUserSelectPage = true;
@@ -124,8 +123,6 @@ public class GazePlayFxApp extends Application {
         }
 
         configurePrimaryStage(primaryStage);
-
-        LatestNewsPopup.displayIfNeeded(mainConfig, gazePlay.getTranslator(), gazePlay.getCurrentScreenDimensionSupplier());
 
         gazePlay.setPrimaryScene(primaryScene);
         gazePlay.setPrimaryStage(primaryStage);
