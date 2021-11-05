@@ -67,7 +67,7 @@ public class Configuration {
 
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.tobii.toString();
-    private static final int DEFAULT_VALUE_FIXATION_LENGTH = 500;
+    private static final int DEFAULT_VALUE_FIXATION_LENGTH = 2000;
     private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
     public static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
     private static final long DEFAULT_VALUE_QUESTION_LENGTH = 5000;
