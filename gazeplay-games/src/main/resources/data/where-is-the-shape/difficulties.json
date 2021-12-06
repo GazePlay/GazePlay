@@ -1,0 +1,36 @@
+{
+  "easy": [
+    "oval",
+    "rectangle",
+    "rhombus",
+    "round",
+    "square",
+    "triangle"
+  ],
+  "normal": [
+    "arrow",
+    "crescent",
+    "cross",
+    "heart",
+    "oval",
+    "rectangle",
+    "rhombus",
+    "round",
+    "square",
+    "star",
+    "triangle"
+  ],
+  "hard": [
+    "arrow",
+    "crescent",
+    "cross",
+    "heart",
+    "oval",
+    "rectangle",
+    "rhombus",
+    "round",
+    "square",
+    "star",
+    "triangle"
+  ]
+}
