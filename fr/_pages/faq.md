@@ -35,7 +35,7 @@ Suivez ces étapes pour trouver le dossier Where Is It sur votre ordinateur et a
 
 {% include figure image_path="/assets/images/tutorial/gazeplay_folder.png" alt="Dossier GazePlay" caption="Dans votre dossier utilisateur, vous devriez trouver le dossier GazePlay. Cliquez pour l'ouvrir." %}
 
-{% include figure image_path="/assets/images/tutorial/where_is_it.png" alt="Dossier Where Is It" caption="Dans le dossier GazePlay, vous devriez trouver le dossier 'where-is-it'. Cliquez pour l'ouvrir. Dans le cas où le dossier 'where-is-it' n'existe pas, veuillez le créer et dans ce dossier veuiller créer les dossiers suivant 'images','pictos' et 'sounds' %}
+{% include figure image_path="/assets/images/tutorial/where_is_it.png" alt="Dossier Where Is It" caption="Dans le dossier GazePlay, vous devriez trouver le dossier 'where-is-it'. Cliquez pour l'ouvrir. Dans le cas où le dossier 'where-is-it' n'existe pas, veuillez le créer et dans ce dossier veuiller créer les dossiers suivant 'images','pictos' et 'sounds'" %}
 
 Avant d'ajouter vos photos, vous devrez créer un fichier `questions`.
 Pour ce faire, ouvrez un tableur, comme Microsoft Excel, LibreOffice Calc ou [Google Sheets](https://docs.google.com/spreadsheets). Ensuite, remplissez un tableau tel que l'exemple ci-dessous:
