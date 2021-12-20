@@ -34,7 +34,7 @@ Follow these steps to find the Where Is It folder on your computer, and add your
 
 {% include figure image_path="/assets/images/tutorial/gazeplay_folder.png" alt="GazePlay folder" caption="In your user folder, you should find the GazePlay folder. Click to open it." %}
 
-{% include figure image_path="/assets/images/tutorial/where_is_it.png" alt="Where Is It folder" caption="In GazePlay folder, you should find the `where-is-it` folder. Click to open it." %}
+{% include figure image_path="/assets/images/tutorial/where_is_it.png" alt="Where Is It folder" caption="In GazePlay folder, you should find the `where-is-it` folder. Click to open it. In case the folder 'where-is-it' does not exist, please create it and in this folder please create the following folders 'images','pictos' and 'sounds'" %}
 
 Before adding your photos, you'll need to create a `questions` file. 
 To do this, open some spreadsheet software, like Excel or [Google Sheets](https://docs.google.com/spreadsheets). Then, fill a table such as the example below:
