@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.MathGameVariant;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.I18NTooltip;
@@ -189,7 +190,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, chi2Info, continueButton, true);
 
         else if (stats.getCurrentGameNameCode() != null && (stats.getCurrentGameVariant() != null &&
-                (stats.getCurrentGameNameCode().contains("WhereIs")) || stats.getCurrentGameNameCode().contains("flags")))
+            (stats.getCurrentGameNameCode().contains("WhereIs")) || stats.getCurrentGameNameCode().contains("flags")))
             controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, chi2Info, continueButton, true);
 
         else
@@ -246,7 +247,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         AtomicInteger currentFormRow = new AtomicInteger(1);
 
         Text value;
+        Text value1;
         String labelValue;
+        String labelValue1;
 
         value = new Text(StatDisplayUtils.convert(stats.computeTotalElapsedDuration()));
         addToGrid(grid, currentFormRow, translator, "TotalLength", value, alignLeft);
@@ -259,6 +262,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 labelValue = "HiddenItemsShot";
             } else {
                 labelValue = "Score";
+                labelValue1 = "Nombre d'erreurs";
+                value1 = new Text(String.valueOf(stats.getNbErrors()));
+                addToGrid(grid, currentFormRow, translator, labelValue1, value1, alignLeft);
             }
 
             value = new Text(String.valueOf(stats.getNbGoalsReached()));
@@ -298,6 +304,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         if (stats instanceof ShootGamesStats && stats.getNbUnCountedGoalsReached() != 0) {
             labelValue = "UncountedShot";
             value = new Text(String.valueOf(stats.getNbUnCountedGoalsReached()));
+            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+        }
+        if (stats instanceof ExplorationGamesStats) {
+            labelValue = "HitRate";
+            value = new Text(stats.getShotRatio() + "% (" + stats.getNbGoalsReached() + "/" + stats.getNbGoalsToReach() + ")");
             addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
         }
     }

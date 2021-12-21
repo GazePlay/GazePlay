@@ -92,6 +92,9 @@ public class Stats implements GazeMotionListener {
     public int nbGoalsReached = 0;
 
     @Getter
+    public int nbErrors= 0;
+
+    @Getter
     protected int nbGoalsToReach = 0;
 
     @Setter
@@ -744,6 +747,12 @@ public class Stats implements GazeMotionListener {
         nbGoalsToReach++;
         currentRoundStartTime = System.currentTimeMillis();
         log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
+    }
+
+    public void incrementNumberOfErrors() {
+        nbErrors++;
+        currentRoundStartTime = System.currentTimeMillis();
+
     }
 
     public void incrementNumberOfGoalsToReach(int i) {
