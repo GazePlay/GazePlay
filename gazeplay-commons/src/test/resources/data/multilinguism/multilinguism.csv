@@ -256,3 +256,5 @@ BackgroundEnabled,,,,,,Background images enabled,,Fonds d'écran activé,,,,,,,,
 addNewImages,,,,,,Add new images ...,,Ajouter de nouvelles images ...,,,,,,,,,,Agregar nuevas imágenes ...,
 customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,,,
 
+NbErrors,number of errors,nombre des erreurs,
+
