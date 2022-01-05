@@ -244,7 +244,6 @@ MoreStatsSettings,,,更多统计设置,,,More Stats Settings,,Plus de Paramètre
 BetaSettings,,,测试设置,,,Beta Settings,,Paramètres en Beta,,,,,,,,,,,
 
 toTop,,,从下到上,,,from bottom to top,,du bas vers le haut,,,,,,,,,,de abajo hacia arriba,
-nbOfErrors,,,,,,number of errors,,nombre des erreurs,,,,,,,,,,,
 toBottom,,,从上到下,,,from top to bottom,,du haut vers le bas,,,,,,,,,,de arriba hacia abajo,
 toRight,,,从左到you,,,from left to right,,de gauche à droite,,,,,,,,,,de la izquierda hacia la derecha,
 toLeft,,,从右到左,,,from right to left,,de droite à gauche,,,,,,,,,,de la derecha hacia la izquierda,

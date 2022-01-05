@@ -262,7 +262,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 labelValue = "HiddenItemsShot";
             } else {
                 labelValue = "Score";
-                labelValue1 = "nbOfErrors";
+                labelValue1 = "NbOfErrors";
                 value1 = new Text(String.valueOf(stats.getNbErrors()));
                 addToGrid(grid, currentFormRow, translator, labelValue1, value1, alignLeft);
             }
