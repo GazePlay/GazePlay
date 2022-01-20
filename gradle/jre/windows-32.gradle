@@ -5,26 +5,26 @@ def zuluVersion = project.ext.zuluVersion
 def jreVersion = project.ext.jreVersion
 def jreFolder = project.ext.jreFolder
 
-def x32filename = "zulu${zuluVersion}-ca-fx-jre${jreVersion}-win_x32"
+def x86filename = "zulu${zuluVersion}-ca-fx-jre${jreVersion}-win_x86"
 
 task downloadWindowsJRE(type: Download, group: 'custom jre') {
-    src "${jreSource}/${x32filename}.zip"
-    dest new File("${downloadLocation}/jre", 'windows-x32.zip')
+    src "${jreSource}/${x86filename}.zip"
+    dest new File("${downloadLocation}/jre", 'windows-x86.zip')
     overwrite false
 }
 
 task extractWindowsJRE(dependsOn: downloadWindowsJRE, type: Copy, group: 'custom jre') {
     from zipTree(downloadWindowsJRE.dest)
-    into "${jreFolder}/windows-x32"
+    into "${jreFolder}/windows-x86"
 }
 
 task downloadAndExtractWindowsJRE(dependsOn: extractWindowsJRE, group: 'custom jre') {
     doLast {
         copy {
-            from new File(extractWindowsJRE.getDestinationDir(), x32filename)
-            into "${jreFolder}/windows-x32"
+            from new File(extractWindowsJRE.getDestinationDir(), x86filename)
+            into "${jreFolder}/windows-x86"
         }
 
-        delete "${jreFolder}/windows-x32/${x32filename}"
+        delete "${jreFolder}/windows-x86/${x86filename}"
     }
 }
