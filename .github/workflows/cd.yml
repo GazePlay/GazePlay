@@ -5,7 +5,7 @@ name: Continuous Delivery
 on:
   push:
     branches:
-      - develop
+      - master
 
 jobs:
   package:
@@ -39,7 +39,7 @@ jobs:
         with:
           name: package-artifacts
       - name: Upload to S3
-        uses: jakejarvis/s3-sync-action@develop
+        uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read
         env:
