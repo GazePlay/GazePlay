@@ -5,7 +5,7 @@ def zuluVersion = project.ext.zuluVersion
 def jreVersion = project.ext.jreVersion
 def jreFolder = project.ext.jreFolder
 
-def x32filename = "zulu${zuluVersion}-ca-fx-jre${jreVersion}-win_x32"
+def x32filename = "zulu11.54.23-ca-jre11.0.14-win_i686"
 
 task downloadWindowsJREx32(type: Download, group: 'custom jre') {
     src "${jreSource}/${x32filename}.zip"
