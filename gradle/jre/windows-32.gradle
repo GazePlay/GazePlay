@@ -7,18 +7,18 @@ def jreFolder = project.ext.jreFolder
 
 def x32filename = "zulu${zuluVersion}-ca-fx-jre${jreVersion}-win_x32"
 
-task downloadWindowsJRE(type: Download, group: 'custom jre') {
+task downloadWindowsJREx32(type: Download, group: 'custom jre') {
     src "${jreSource}/${x32filename}.zip"
     dest new File("${downloadLocation}/jre", 'windows-x32.zip')
     overwrite false
 }
 
-task extractWindowsJRE(dependsOn: downloadWindowsJRE, type: Copy, group: 'custom jre') {
+task extractWindowsJREx32(dependsOn: downloadWindowsJRE, type: Copy, group: 'custom jre') {
     from zipTree(downloadWindowsJRE.dest)
     into "${jreFolder}/windows-x32"
 }
 
-task downloadAndExtractWindowsJRE(dependsOn: extractWindowsJRE, group: 'custom jre') {
+task downloadAndExtractWindowsJREx32(dependsOn: extractWindowsJRE, group: 'custom jre') {
     doLast {
         copy {
             from new File(extractWindowsJRE.getDestinationDir(), x32filename)
