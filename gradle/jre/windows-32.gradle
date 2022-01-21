@@ -13,15 +13,15 @@ task downloadWindowsJREx32(type: Download, group: 'custom jre') {
     overwrite false
 }
 
-task extractWindowsJREx32(dependsOn: downloadWindowsJRE, type: Copy, group: 'custom jre') {
-    from zipTree(downloadWindowsJRE.dest)
+task extractWindowsJREx32(dependsOn: downloadWindowsJREx32, type: Copy, group: 'custom jre') {
+    from zipTree(downloadWindowsJREx32.dest)
     into "${jreFolder}/windows-x32"
 }
 
-task downloadAndExtractWindowsJREx32(dependsOn: extractWindowsJRE, group: 'custom jre') {
+task downloadAndExtractWindowsJREx32(dependsOn: extractWindowsJREx32, group: 'custom jre') {
     doLast {
         copy {
-            from new File(extractWindowsJRE.getDestinationDir(), x32filename)
+            from new File(extractWindowsJREx32.getDestinationDir(), x32filename)
             into "${jreFolder}/windows-x32"
         }
 
