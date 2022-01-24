@@ -263,3 +263,4 @@ defaultTasks 'clean', 'build', 'checkPMDReport'
 startScripts.enabled = false
 
 afterReleaseBuild.dependsOn generateWindowsInstallerInDocker
+afterReleaseBuild.dependsOn generateWindowsInstallerInDockerx32
