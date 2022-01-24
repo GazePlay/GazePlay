@@ -66,6 +66,7 @@ task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distributi
     dirMode 0777
 
 }
+/*
 task generateWindowsInstallerx32(dependsOn: ['unzipDistributionx32','prepareInnoSetupFilesx32'], group: 'distribution') {
     doLast {
 
@@ -133,3 +134,4 @@ task unzipDistributionx32(dependsOn: ['packageApp'], type: Copy, group: 'distrib
     fileMode 0777
     dirMode 0777
 }
+ */
