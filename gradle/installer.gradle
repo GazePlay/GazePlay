@@ -1,4 +1,4 @@
-task generateWindowsInstaller(dependsOn: ['unzipDistribution','unzipDistributionx32', 'prepareInnoSetupFiles','prepareInnoSetupFilesx32'], group: 'distribution') {
+task generateWindowsInstaller(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
     doLast {
 
         def innoSetupDir = new File("${buildDir}/innosetup")
@@ -13,11 +13,35 @@ task generateWindowsInstaller(dependsOn: ['unzipDistribution','unzipDistribution
     }
 }
 
+task generateWindowsInstallerx32(dependsOn: ['unzipDistributionx32','prepareInnoSetupFilesx32'], group: 'distribution') {
+    doLast {
+
+        def innoSetupDir = new File("${buildDir}/innosetup")
+
+        // I'm leaving this line in so we can quickly sign installers if/when we decide to do so.
+        // def signtool = "/SStandard=\"C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.18362.0\\x64\\signtool.exe sign /a /n \$qGazePlay\$q /tr http://timestamp.comodoca.com/ /d \$qGazePlay\$q \$f\""
+
+        exec {
+            commandLine "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe", "${innoSetupDir}\\setupx32.iss"
+        }
+
+    }
+}
+
 task generateWindowsInstallerInDocker(dependsOn: ['unzipDistribution','unzipDistributionx32', 'prepareInnoSetupFiles','prepareInnoSetupFilesx32'], group: 'distribution') {
     doLast {
         exec {
             workingDir rootDir
             commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setup.iss"
+        }
+    }
+}
+
+task generateWindowsInstallerInDockerx32(dependsOn: ['unzipDistributionx32','prepareInnoSetupFilesx32'], group: 'distribution') {
+    doLast {
+        exec {
+            workingDir rootDir
+            commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setupx32.iss"
         }
     }
 }
@@ -68,8 +92,8 @@ task prepareInnoSetupFilesx32(group: 'distribution') {
         innoSetupDir.mkdir()
 
         copy {
-            from("${rootDir}/gradle/innosetup/setup.iss.skel")
-            rename("setup.iss.skel", "setup.iss")
+            from("${rootDir}/gradle/innosetup/setupx32.iss.skel")
+            rename("setupx32.iss.skel", "setupx32.iss")
             expand([
                     applicationVersion: "${version}",
                     unpackedDirectory : "${project.name}-windows-x32-${version}"
