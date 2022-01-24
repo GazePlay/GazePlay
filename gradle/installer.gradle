@@ -13,22 +13,7 @@ task generateWindowsInstaller(dependsOn: ['unzipDistribution', 'prepareInnoSetup
     }
 }
 
-task generateWindowsInstallerx32(dependsOn: ['unzipDistributionx32','prepareInnoSetupFilesx32'], group: 'distribution') {
-    doLast {
-
-        def innoSetupDir = new File("${buildDir}/innosetup")
-
-        // I'm leaving this line in so we can quickly sign installers if/when we decide to do so.
-        // def signtool = "/SStandard=\"C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.18362.0\\x64\\signtool.exe sign /a /n \$qGazePlay\$q /tr http://timestamp.comodoca.com/ /d \$qGazePlay\$q \$f\""
-
-        exec {
-            commandLine "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe", "${innoSetupDir}\\setupx32.iss"
-        }
-
-    }
-}
-
-task generateWindowsInstallerInDocker(dependsOn: ['unzipDistribution','unzipDistributionx32', 'prepareInnoSetupFiles','prepareInnoSetupFilesx32'], group: 'distribution') {
+task generateWindowsInstallerInDocker(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
     doLast {
         exec {
             workingDir rootDir
@@ -36,16 +21,6 @@ task generateWindowsInstallerInDocker(dependsOn: ['unzipDistribution','unzipDist
         }
     }
 }
-
-task generateWindowsInstallerInDockerx32(dependsOn: ['unzipDistributionx32','prepareInnoSetupFilesx32'], group: 'distribution') {
-    doLast {
-        exec {
-            workingDir rootDir
-            commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setupx32.iss"
-        }
-    }
-}
-
 
 task prepareInnoSetupFiles(group: 'distribution') {
     doLast {
@@ -81,6 +56,36 @@ task prepareInnoSetupFiles(group: 'distribution') {
         copy {
             from("${rootDir}/gradle/innosetup/gazeplayicon.bmp")
             into(innoSetupDir)
+        }
+    }
+}
+task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
+    from zipTree("${buildDir}/distributions/${project.name}-windows-x64-${version}.zip")
+    into buildDir
+    fileMode 0777
+    dirMode 0777
+
+}
+task generateWindowsInstallerx32(dependsOn: ['unzipDistributionx32','prepareInnoSetupFilesx32'], group: 'distribution') {
+    doLast {
+
+        def innoSetupDir = new File("${buildDir}/innosetup")
+
+        // I'm leaving this line in so we can quickly sign installers if/when we decide to do so.
+        // def signtool = "/SStandard=\"C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.18362.0\\x64\\signtool.exe sign /a /n \$qGazePlay\$q /tr http://timestamp.comodoca.com/ /d \$qGazePlay\$q \$f\""
+
+        exec {
+            commandLine "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe", "${innoSetupDir}\\setupx32.iss"
+        }
+
+    }
+}
+
+task generateWindowsInstallerInDockerx32(dependsOn: ['unzipDistributionx32','prepareInnoSetupFilesx32'], group: 'distribution') {
+    doLast {
+        exec {
+            workingDir rootDir
+            commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setupx32.iss"
         }
     }
 }
@@ -121,14 +126,6 @@ task prepareInnoSetupFilesx32(group: 'distribution') {
             into(innoSetupDir)
         }
     }
-}
-
-task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
-    from zipTree("${buildDir}/distributions/${project.name}-windows-x64-${version}.zip")
-    into buildDir
-    fileMode 0777
-    dirMode 0777
-
 }
 task unzipDistributionx32(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
     from zipTree("${buildDir}/distributions/${project.name}-windows-x32-${version}.zip")
