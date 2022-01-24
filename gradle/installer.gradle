@@ -1,4 +1,4 @@
-task generateWindowsInstaller(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
+task generateWindowsInstaller(dependsOn: ['unzipDistribution','unzipDistributionx32', 'prepareInnoSetupFiles','prepareInnoSetupFilesx32'], group: 'distribution') {
     doLast {
 
         def innoSetupDir = new File("${buildDir}/innosetup")
@@ -13,7 +13,7 @@ task generateWindowsInstaller(dependsOn: ['unzipDistribution', 'prepareInnoSetup
     }
 }
 
-task generateWindowsInstallerInDocker(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
+task generateWindowsInstallerInDocker(dependsOn: ['unzipDistribution','unzipDistributionx32', 'prepareInnoSetupFiles','prepareInnoSetupFilesx32'], group: 'distribution') {
     doLast {
         exec {
             workingDir rootDir
@@ -34,7 +34,44 @@ task prepareInnoSetupFiles(group: 'distribution') {
             rename("setup.iss.skel", "setup.iss")
             expand([
                     applicationVersion: "${version}",
-                    unpackedDirectory : "${project.name}-windows-x64-${version}",
+                    unpackedDirectory : "${project.name}-windows-x64-${version}"
+            ])
+            into(innoSetupDir)
+        }
+
+
+        copy {
+            from("${rootDir}/gradle/templates/licence.txt")
+            expand([
+                    "version": version,
+                    "date"   : new Date().format('yyyy-MM-dd')
+            ])
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.ico")
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.bmp")
+            into(innoSetupDir)
+        }
+    }
+}
+
+task prepareInnoSetupFilesx32(group: 'distribution') {
+    doLast {
+        def innoSetupDir = new File("${buildDir}/innosetup")
+
+        innoSetupDir.mkdir()
+
+        copy {
+            from("${rootDir}/gradle/innosetup/setup.iss.skel")
+            rename("setup.iss.skel", "setup.iss")
+            expand([
+                    applicationVersion: "${version}",
                     unpackedDirectory : "${project.name}-windows-x32-${version}"
             ])
             into(innoSetupDir)
@@ -67,6 +104,9 @@ task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distributi
     into buildDir
     fileMode 0777
     dirMode 0777
+
+}
+task unzipDistributionx32(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
     from zipTree("${buildDir}/distributions/${project.name}-windows-x32-${version}.zip")
     into buildDir
     fileMode 0777
