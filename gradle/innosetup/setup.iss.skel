@@ -35,7 +35,6 @@ LicenseFile=licence.txt
 
 OutputDir=..\\distributions
 OutputBaseFilename=gazeplay-windows-x64-${applicationVersion}-installer
-OutputBaseFilenamex32=gazeplay-windows-x32-${applicationVersion}-installer
 ;Compression=lzma
 SolidCompression=yes
 

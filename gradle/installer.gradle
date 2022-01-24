@@ -22,6 +22,7 @@ task generateWindowsInstallerInDocker(dependsOn: ['unzipDistribution', 'prepareI
     }
 }
 
+
 task prepareInnoSetupFiles(group: 'distribution') {
     doLast {
         def innoSetupDir = new File("${buildDir}/innosetup")
@@ -59,12 +60,12 @@ task prepareInnoSetupFiles(group: 'distribution') {
         }
     }
 }
+
 task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
     from zipTree("${buildDir}/distributions/${project.name}-windows-x64-${version}.zip")
     into buildDir
     fileMode 0777
     dirMode 0777
-
 }
 /*
 task generateWindowsInstallerx32(dependsOn: ['unzipDistributionx32','prepareInnoSetupFilesx32'], group: 'distribution') {
