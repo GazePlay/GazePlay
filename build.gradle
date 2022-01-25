@@ -189,6 +189,20 @@ distributions {
         }
     }
 
+    windowsx32{
+        setDistributionBaseName "${project.name}-windows-x32"
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+            from("build/bin/gazeplay-windows.bat") {
+                into 'bin'
+            }
+            from("build/jre/windows-x32") {
+                into 'lib/jre'
+            }
+        }
+    }
+
     linux {
         setDistributionBaseName "${project.name}-linux-x64"
         contents {
@@ -224,6 +238,7 @@ task('downloadAndExtractLinuxDependecies').dependsOn('downloadAndExtractLinuxJRE
 
 macosDistTar.dependsOn(downloadAndExtractMacosJRE)
 windowsDistZip.dependsOn(downloadAndExtractWindowsJRE)
+windowsx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
 linuxDistTar.dependsOn(downloadAndExtractLinuxDependecies)
 
 tasks.withType(Tar){
@@ -248,3 +263,4 @@ defaultTasks 'clean', 'build', 'checkPMDReport'
 startScripts.enabled = false
 
 afterReleaseBuild.dependsOn generateWindowsInstallerInDocker
+afterReleaseBuild.dependsOn generateWindowsInstallerInDockerx32
