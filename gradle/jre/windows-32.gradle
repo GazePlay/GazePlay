@@ -1,0 +1,28 @@
+def downloadLocation = project.ext.downloadLocation
+
+def jreSource = project.ext.jreSource
+def jreFolder = project.ext.jreFolder
+
+def x32filename = "zulu11.54.23-ca-jre11.0.14-win_i686"
+
+task downloadWindowsJREx32(type: Download, group: 'custom jre') {
+    src "${jreSource}/${x32filename}.zip"
+    dest new File("${downloadLocation}/jre", 'windows-x32.zip')
+    overwrite false
+}
+
+task extractWindowsJREx32(dependsOn: downloadWindowsJREx32, type: Copy, group: 'custom jre') {
+    from zipTree(downloadWindowsJREx32.dest)
+    into "${jreFolder}/windows-x32"
+}
+
+task downloadAndExtractWindowsJREx32(dependsOn: extractWindowsJREx32, group: 'custom jre') {
+    doLast {
+        copy {
+            from new File(extractWindowsJREx32.getDestinationDir(), x32filename)
+            into "${jreFolder}/windows-x32"
+        }
+
+        delete "${jreFolder}/windows-x32/${x32filename}"
+    }
+}
