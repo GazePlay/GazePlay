@@ -3,7 +3,7 @@ def downloadLocation = project.ext.downloadLocation
 def jreSource = project.ext.jreSource
 def jreFolder = project.ext.jreFolder
 
-def x32filename = "zulu11.54.23-ca-jre11.0.14-win_i686"
+def x32filename = "zulu11.54.23-ca-fx-jre11.0.14-win_i686"
 
 task downloadWindowsJREx32(type: Download, group: 'custom jre') {
     src "${jreSource}/${x32filename}.zip"
