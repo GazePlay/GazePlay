@@ -2,16 +2,18 @@
 
 ## Prérequis
 
-Il faut avoir un compte github et un compte jetbrains. (vous pouvez les créer au fur et à mesure de l'installation)
+Il faut avoir un compte github et un compte jetbrains pour Intellij. (vous pouvez les créer au fur et à mesure de l'installation)
 <br>Précision : le compte github est gratuit, le compte jetbrains est gratuit pour les étudiants. (il faut renseigner votre adresse mail étudiante)
 
 ## Etape 1 : Installer Intellij ultimate edition 
 
-Le téléchargement d'Intellij version ultimate est ici : https://www.jetbrains.com/fr-fr/idea/download/#section=windows
-
+Le téléchargement d'Intellij **VERSION ULTIMATE** est ici : https://www.jetbrains.com/fr-fr/idea/download/#section=windows
+<br>
+Si vous ne téléchargez pas l'ultimate ça ne marchera pas car spring n'est pas pris en charge par la version classique.
 ![telechargement intellij](AssetsInstallation/DL-intellij-FR.png)
 
 Puis exécuter l'installateur et suivez la procédure d'installation.
+
 
 ## Etape 2 : Forker le projet Gazeplay
 
@@ -24,10 +26,9 @@ Puis cliquer sur le bouton fork en haut à droite de l'écran.
 ## Etape 3 : récupérer le projet forké
 
 Lancer Intellij, celui-ci vous demandera de vous connecter avec votre compte (il faut le créer si vous n'en avez pas).
+<br> Une fois connecté aller dans "get from vcs" sélectionner votre compte, puis sélectionner le projet gazeplay et cloner.
 
 ![GetFromVCS](AssetsInstallation/GetFromVCS.png)
-
-<br> Une fois connecté aller dans "get from vcs" sélectionner votre compte, puis sélectionner le projet gazeplay et cloner.
 
 ![clone](AssetsInstallation/clone.png)
 
@@ -51,6 +52,10 @@ Pour lancer le build : appuyer sur le marteau vert en haut à droite de l'écran
 
 ![build](AssetsInstallation/build.png)
 
+Si l'edit configuration n'est pas créé suite au build, redémarrer l'intellij.
+<br> Normalement on obtient ceci
+![buildsuccessfull](AssetsInstallation/editconfig.png)
+
 ## Etape 6 : lancer le projet
 
 Pour lancer le projet : appuyer sur la flèche verte en haut à droite de l'écran et gazeplay va se lancer.
@@ -59,6 +64,6 @@ Pour lancer le projet : appuyer sur la flèche verte en haut à droite de l'écr
 
 ## Vous avez terminer l'installation
 
-A partir d'ici vous avez fini l'installation, il est possible que spring ou gradle n'ai pas fais la configuration pour lancer gazeplay, relancer l'intellij et ça devrait être résolu.
+A partir d'ici vous avez fini l'installation.
 
-Si vous rencontrer d'autres soucis n'hésiter pas à contacter l'équipe.
+Si vous rencontrez des problèmes n'hésitez pas à contacter l'équipe.
