@@ -15,6 +15,7 @@ Il faut avoir:
 Le téléchargement d'Intellij **VERSION ULTIMATE** est ici : https://www.jetbrains.com/fr-fr/idea/download/#section=windows
 <br>
 Si vous ne téléchargez pas la version ultimate ça ne marchera pas car spring n'est pas pris en charge par la version classique.
+
 ![telechargement intellij](AssetsInstallation/DL-intellij-FR.png)
 
 Puis exécuter l'installateur et suivez la procédure d'installation.
