@@ -2,18 +2,22 @@
 
 ## Prérequis
 
-Il faut avoir un compte github et un compte jetbrains pour Intellij. (vous pouvez les créer au fur et à mesure de l'installation)
-<br>Précision : le compte github est gratuit, le compte jetbrains est gratuit pour les étudiants. (il faut renseigner votre adresse mail étudiante)
+Il faut avoir: 
+* un compte github.
+* un compte jetbrains pour Intellij. (vous pouvez les créer au fur et à mesure de l'installation)
+
+<br>Précision : 
+* le compte github est gratuit.
+* le compte jetbrains est gratuit pour les étudiants. (il faut renseigner votre adresse mail étudiante)
 
 ## Etape 1 : Installer Intellij ultimate edition 
 
 Le téléchargement d'Intellij **VERSION ULTIMATE** est ici : https://www.jetbrains.com/fr-fr/idea/download/#section=windows
 <br>
-Si vous ne téléchargez pas l'ultimate ça ne marchera pas car spring n'est pas pris en charge par la version classique.
+Si vous ne téléchargez pas la version ultimate ça ne marchera pas car spring n'est pas pris en charge par la version classique.
 ![telechargement intellij](AssetsInstallation/DL-intellij-FR.png)
 
 Puis exécuter l'installateur et suivez la procédure d'installation.
-
 
 ## Etape 2 : Forker le projet Gazeplay
 
@@ -26,15 +30,17 @@ Puis cliquer sur le bouton fork en haut à droite de l'écran.
 ## Etape 3 : récupérer le projet forké
 
 Lancer Intellij, celui-ci vous demandera de vous connecter avec votre compte (il faut le créer si vous n'en avez pas).
-<br> Une fois connecté aller dans "get from vcs" sélectionner votre compte, puis sélectionner le projet gazeplay et cloner.
+<br> Une fois connecté aller dans "get from vcs" sélectionner votre compte.
 
 ![GetFromVCS](AssetsInstallation/GetFromVCS.png)
+
+Puis sélectionner le projet gazeplay et cloner.
 
 ![clone](AssetsInstallation/clone.png)
 
 ## Etape 4 : télécharger le SDK azul-11
 
-Dans Intellij, il faut télécharger le SDK azul-11
+Dans Intellij, il faut télécharger le SDK azul-11.
 <br>
 Pour ce faire : file -> project structure -> SDKs -> "+" -> download SDK
 
@@ -52,13 +58,16 @@ Pour lancer le build : appuyer sur le marteau vert en haut à droite de l'écran
 
 ![build](AssetsInstallation/build.png)
 
-Si l'edit configuration n'est pas créé suite au build, redémarrer l'intellij.
-<br> Normalement on obtient ceci
+Normalement on obtient ceci.
+
 ![buildsuccessfull](AssetsInstallation/editconfig.png)
+
+Si l'edit configuration n'est pas créé suite au build, redémarrer l'intellij.
 
 ## Etape 6 : lancer le projet
 
 Pour lancer le projet : appuyer sur la flèche verte en haut à droite de l'écran et gazeplay va se lancer.
+<br> Tester de lancer au moins un jeu.
 
 ![run](AssetsInstallation/run.png)
 
