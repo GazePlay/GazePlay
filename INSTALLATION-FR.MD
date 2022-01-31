@@ -68,9 +68,10 @@ Si l'edit configuration n'est pas créé suite au build, redémarrer l'intellij.
 ## Etape 6 : lancer le projet
 
 Pour lancer le projet : appuyer sur la flèche verte en haut à droite de l'écran et gazeplay va se lancer.
-<br> Tester de lancer au moins un jeu.
 
 ![run](AssetsInstallation/run.png)
+
+Tester de lancer au moins un jeu.
 
 ## Vous avez terminer l'installation
 
