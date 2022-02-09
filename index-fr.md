@@ -7,8 +7,6 @@ permalink: /fr
 header:
   overlay_image: /assets/images/gazeplayClassicLogo.png
   actions:
-    - label: "<i class='fab fa-windows'></i> Installer pour Windows (x32)"
-      url: https://github.com/GazePlay/GazePlay/releases/latest/download/gazeplay-windows-x32-1.9.16-installer.exe
     - label: "<i class='fab fa-windows'></i> Installer pour Windows (x64)"
       url: https://github.com/GazePlay/GazePlay/releases/latest/download/gazeplay-windows-x64-1.9.16-installer.exe
     - label: "<i class='fab fa-linux'></i> Installer pour Linux"
