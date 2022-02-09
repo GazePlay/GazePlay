@@ -7,11 +7,13 @@ permalink: /
 header:
     overlay_image: /assets/images/gazeplayClassicLogo.png
     actions:
-        - label: "<i class='fas fa-download'></i> Install now"
-          url: https://github.com/GazePlay/GazePlay/releases/latest/download/GazePlayInstaller.exe
+        - label: "<i class='fas fa-download'></i> Install now (x32)<i class="fa-brands fa-windows"></i>"
+          url: https://github.com/GazePlay/GazePlay/releases/latest/download/gazeplay-windows-x32-1.9.16-installer.exe
+        - label: "<i class='fas fa-download'></i> Install now (x64) <i class="fa-brands fa-windows"></i>"
+          url: https://github.com/GazePlay/GazePlay/releases/latest/download/gazeplay-windows-x64-1.9.16-installer.exe
 excerpt: >
   Gazeplay is free and open-source software, gathering nearly 60 mini-games playable with an eye-tracker.<br />
-  <small><a href="https://github.com/GazePlay/GazePlay/releases/latest">Latest release v1.9.1</a></small>
+  <small><a href="https://github.com/GazePlay/GazePlay/releases/latest">Latest release</a></small>
 ---
 
 <iframe width="1212" height="682" src="https://www.youtube.com/embed/xGKCIiYNu2c" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
