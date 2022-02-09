@@ -7,7 +7,7 @@ permalink: /fr
 header:
   overlay_image: /assets/images/gazeplayClassicLogo.png
   actions:
-    - label: "<i class='fas fa-download'></i> Installer maintenant"
+    - label: "<i class='fa-brands fa-windows'></i> Installer maintenant (x64)"
       url: https://github.com/GazePlay/GazePlay/releases/latest/download/gazeplay-windows-x64-1.9.16-installer.exe
 excerpt: >
   GazePlay est un logiciel libre et gratuit qui rassemble plusieurs mini-jeux jouables grâce à un occulomètre (Eye-tracker).<br />
