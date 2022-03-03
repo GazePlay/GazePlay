@@ -375,4 +375,4 @@ NormalF,,,,,,Normal,,Normales,,,,,,,,,,,,
 SmallF,,,,,,Small,,Petites,,,,,,,,,,,,
 TinyF,,,,,,Tiny,,Minuscules,,,,,,,,,,,,
 
-ProgressBarSize,,,进度圈尺寸,,,Progress Bar Size,,Taille Bar de Progression,,,,,,,,,,,,
+ProgressBarSizeAndColor,,,进度圈尺寸与颜色,,,Progress Bar Size and Color,,Taille et Couleur Bar de Progression,,,,,,,,,,,,
