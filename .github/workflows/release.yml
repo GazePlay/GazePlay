@@ -59,6 +59,8 @@ jobs:
             ./build/distributions/gazeplay-macos-${{ steps.previous-tag.outputs.tag }}.tar.gz
             ./build/distributions/gazeplay-windows-x64-${{ steps.previous-tag.outputs.tag }}.zip
             ./build/distributions/gazeplay-windows-x64-${{ steps.previous-tag.outputs.tag }}-installer.exe
+            ./build/distributions/gazeplay-windows-x32-${{ steps.previous-tag.outputs.tag }}.zip
+            ./build/distributions/gazeplay-windows-x32-${{ steps.previous-tag.outputs.tag }}-installer.exe
             ./build/distributions/gazeplay-no-jre-${{ steps.previous-tag.outputs.tag }}.tar.gz
             ./build/distributions/gazeplay-no-jre-${{ steps.previous-tag.outputs.tag }}.zip
           github-token: ${{ secrets.GITHUB_TOKEN }}

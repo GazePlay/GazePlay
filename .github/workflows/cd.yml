@@ -5,7 +5,7 @@ name: Continuous Delivery
 on:
   push:
     branches:
-      - develop
+      - master
 
 jobs:
   package:
