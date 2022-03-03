@@ -374,3 +374,5 @@ HightF,,,,,,Hight,,Grandes,,,,,,,,,,,,
 NormalF,,,,,,Normal,,Normales,,,,,,,,,,,,
 SmallF,,,,,,Small,,Petites,,,,,,,,,,,,
 TinyF,,,,,,Tiny,,Minuscules,,,,,,,,,,,,
+
+ProgressBarSize,,,进度圈尺寸,,,Progress Bar Size,,Taille Bar de Progression,,,,,,,,,,,,
