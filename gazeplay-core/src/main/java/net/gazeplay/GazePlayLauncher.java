@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -35,12 +36,8 @@ public class GazePlayLauncher {
                 saveArgs("afsrGazeplay");
             }
         } catch (Exception e) {
-            try {
-                log.info("GAZEPLAY");
-                saveArgs("gazeplay");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            log.info("GAZEPLAY");
+            saveArgs("gazeplay");
         }
 
         Thread.currentThread().setName(GazePlayLauncher.class.getSimpleName() + "-main");
@@ -96,30 +93,38 @@ public class GazePlayLauncher {
         }
     }
 
-    private static void saveArgs(String args) throws IOException {
+    private static void saveArgs(String args){
 
         String os = System.getProperty("os.name").toLowerCase();
-        FileWriter myWritter = new FileWriter("argsGazeplay.txt", StandardCharsets.UTF_8);
+        FileWriter myWritter = null;
 
-        if (os.contains("nux")){
-            File myFile = new File("argsGazeplay.txt");
-            log.info("Fil args is : " + myFile);
-            myWritter = new FileWriter("argsGazeplay.txt", StandardCharsets.UTF_8);
-            myWritter.write(args);
-            myWritter.close();
-        }else if (os.contains("win")){
-            String userName = System.getProperty("user.name");
-            File myFolder = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay");
-            boolean createFolder = myFolder.mkdirs();
-            log.info("Folder created, path = " + createFolder);
-            File myFile = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt");
-            log.info("Fil args is : " + myFile);
-            myWritter = new FileWriter("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt", StandardCharsets.UTF_8);
-            myWritter.write(args);
-            myWritter.close();
-        }else {
-            log.info("OS non reconnu !");
-            myWritter.close();
+        try {
+            if (os.contains("nux")){
+                File myFile = new File("argsGazeplay.txt");
+                log.info("Fil args is : " + myFile);
+                myWritter = new FileWriter("argsGazeplay.txt", StandardCharsets.UTF_8);
+                myWritter.write(args);
+            }else if (os.contains("win")){
+                String userName = System.getProperty("user.name");
+                File myFolder = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay");
+                boolean createFolder = myFolder.mkdirs();
+                log.info("Folder created, path = " + createFolder);
+                File myFile = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt");
+                log.info("Fil args is : " + myFile);
+                myWritter = new FileWriter("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt", StandardCharsets.UTF_8);
+                myWritter.write(args);
+            }else {
+                log.info("OS non reconnu !");
+            }
+        } catch (IOException e){
+            log.info(String.valueOf(e));
+        } finally {
+            try {
+                assert myWritter != null;
+                myWritter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
