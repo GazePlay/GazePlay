@@ -29,7 +29,7 @@ import java.util.List;
 @Slf4j
 public class Target extends ProgressPortrait {
 
-    private static final int nbBall = 20;
+    private static final int nbBall = 10;
 
     private final IGameContext gameContext;
 

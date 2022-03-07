@@ -18,7 +18,7 @@ public class WhereIsTheAnimalGameVariantGenerator implements IGameVariantGenerat
             new DimensionGameVariant(2, 3),
             new DimensionGameVariant(3, 2),
             new DimensionGameVariant(3, 3),
-            new DimensionDifficultyGameVariant(1, 2, "DYNAMIC")
+            new DimensionDifficultyGameVariant(1, 2, "Dynamic")
         ));
     }
 }

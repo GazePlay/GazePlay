@@ -9,4 +9,6 @@ public class VariantSelectionOptions {
     @CommandLine.Option(names = {"-v", "--variant"})
     private String gameVariant;
 
+    @CommandLine.Option(names = {"--afsrgazeplay"}, defaultValue = "true")
+    private boolean afsrGazeplay;
 }

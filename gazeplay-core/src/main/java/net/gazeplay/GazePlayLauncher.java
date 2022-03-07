@@ -1,5 +1,6 @@
 package net.gazeplay;
 
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.VersionInfo;
@@ -13,8 +14,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
+import java.util.Locale;
 import java.util.concurrent.ThreadFactory;
 
 @Slf4j
@@ -25,6 +29,16 @@ public class GazePlayLauncher {
     public static boolean doStartBootstrapThread = true;
 
     public static void main(String[] args) {
+
+        try {
+            if (args[0].contains("afsr")){
+                log.info("AFSR GAZEPLAY");
+                saveArgs("afsrGazeplay");
+            }
+        } catch (Exception e) {
+            log.info("GAZEPLAY");
+            saveArgs("gazeplay");
+        }
 
         Thread.currentThread().setName(GazePlayLauncher.class.getSimpleName() + "-main");
         Thread.currentThread().setUncaughtExceptionHandler(new LoggingUncaughtExceptionHandler());
@@ -49,6 +63,7 @@ public class GazePlayLauncher {
     private static void initGazePlayDirectory() {
         // creation of GazePlay default folder if it does not exist.
         File gazePlayDirectory = GazePlayDirectories.getGazePlayFolder();
+        log.info("FOLDER PATH " + gazePlayDirectory);
         if (!gazePlayDirectory.exists()) {
             boolean gazePlayDirectoryCreated = gazePlayDirectory.mkdir();
             log.debug("gazePlayDirectoryCreated = " + gazePlayDirectoryCreated);
@@ -75,6 +90,32 @@ public class GazePlayLauncher {
             charset.set(null, null);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             log.error("Exception while fixing default Charset", e);
+        }
+    }
+
+    private static void saveArgs(String args){
+
+        String os = System.getProperty("os.name").toLowerCase();
+
+        try {
+            if (os.indexOf("nux") >= 0){
+                File myFile = new File("argsGazeplay.txt");
+                FileWriter myWritter = new FileWriter("argsGazeplay.txt");
+                myWritter.write(args);
+                myWritter.close();
+            }else if (os.indexOf("win") >= 0){
+                String userName = System.getProperty("user.name");
+                File myFolder = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay");
+                myFolder.mkdirs();
+                File myFile = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt");
+                FileWriter myWritter = new FileWriter("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt");
+                myWritter.write(args);
+                myWritter.close();
+            }else {
+                log.info("OS non reconnu !");
+            }
+        }catch (IOException e){
+            log.info(String.valueOf(e));
         }
     }
 
