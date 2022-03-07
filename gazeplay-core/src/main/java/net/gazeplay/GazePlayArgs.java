@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 @Slf4j
@@ -27,7 +28,7 @@ public class GazePlayArgs {
             }
 
             assert myFile != null;
-            Scanner myReader = new Scanner(myFile);
+            Scanner myReader = new Scanner(myFile, StandardCharsets.UTF_8);
             data = myReader.nextLine();
             return data;
 

@@ -17,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ThreadFactory;
 
 @Slf4j
@@ -99,7 +100,7 @@ public class GazePlayLauncher {
             if (os.contains("nux")){
                 File myFile = new File("argsGazeplay.txt");
                 log.info("Fil args is : " + myFile);
-                FileWriter myWritter = new FileWriter("argsGazeplay.txt");
+                FileWriter myWritter = new FileWriter("argsGazeplay.txt", StandardCharsets.UTF_8);
                 myWritter.write(args);
                 myWritter.close();
             }else if (os.contains("win")){
@@ -109,7 +110,7 @@ public class GazePlayLauncher {
                 log.info("Folder created, path = " + createFolder);
                 File myFile = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt");
                 log.info("Fil args is : " + myFile);
-                FileWriter myWritter = new FileWriter("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt");
+                FileWriter myWritter = new FileWriter("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt", StandardCharsets.UTF_8);
                 myWritter.write(args);
                 myWritter.close();
             }else {
