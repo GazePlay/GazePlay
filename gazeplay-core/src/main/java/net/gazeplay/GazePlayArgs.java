@@ -17,15 +17,16 @@ public class GazePlayArgs {
 
         try {
             File myFile = null;
-            if (os.indexOf("nux") >= 0){
+            if (os.contains("nux")){
                 myFile = new File("argsGazeplay.txt");
-            }else if (os.indexOf("win") >= 0){
+            }else if (os.contains("win")){
                 String userName = System.getProperty("user.name");
                 myFile = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt");
             }else {
                 log.info("Os non reconnu !");
             }
 
+            assert myFile != null;
             Scanner myReader = new Scanner(myFile);
             data = myReader.nextLine();
             return data;

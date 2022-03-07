@@ -1,6 +1,5 @@
 package net.gazeplay;
 
-import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.VersionInfo;
@@ -18,7 +17,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
-import java.util.Locale;
 import java.util.concurrent.ThreadFactory;
 
 @Slf4j
@@ -98,16 +96,19 @@ public class GazePlayLauncher {
         String os = System.getProperty("os.name").toLowerCase();
 
         try {
-            if (os.indexOf("nux") >= 0){
+            if (os.contains("nux")){
                 File myFile = new File("argsGazeplay.txt");
+                log.info("Fil args is : " + myFile);
                 FileWriter myWritter = new FileWriter("argsGazeplay.txt");
                 myWritter.write(args);
                 myWritter.close();
-            }else if (os.indexOf("win") >= 0){
+            }else if (os.contains("win")){
                 String userName = System.getProperty("user.name");
                 File myFolder = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay");
-                myFolder.mkdirs();
+                boolean createFolder = myFolder.mkdirs();
+                log.info("Folder created, path = " + createFolder);
                 File myFile = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt");
+                log.info("Fil args is : " + myFile);
                 FileWriter myWritter = new FileWriter("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt");
                 myWritter.write(args);
                 myWritter.close();

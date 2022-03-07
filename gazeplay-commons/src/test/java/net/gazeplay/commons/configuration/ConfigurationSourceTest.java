@@ -31,7 +31,7 @@ class ConfigurationSourceTest {
     void givenPropertiesFileNotFound_shouldCreateDefaultProperties() {
         Configuration result = ConfigurationSource.createFromPropertiesResource(new File(localDataFolder, "wrong.properties"));
 
-        assertEquals(200, result.getFixationLength());
+        assertEquals(2000, result.getFixationLength());
     }
 
     @Test
