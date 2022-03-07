@@ -30,6 +30,7 @@ public class GazePlayArgs {
             assert myFile != null;
             Scanner myReader = new Scanner(myFile, StandardCharsets.UTF_8);
             data = myReader.nextLine();
+            myReader.close();
             return data;
 
         } catch (Exception e) {
