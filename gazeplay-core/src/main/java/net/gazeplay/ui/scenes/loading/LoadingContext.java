@@ -6,7 +6,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.app.LogoFactory;
@@ -24,6 +23,8 @@ public class LoadingContext extends BorderPane {
         if (gazeplayType.equals("afsrGazeplay")){
             afsrGazePlayLoadindContext(gazePlay);
         }else if (gazeplayType.equals("gazeplay")){
+            gazePlayLoadingContext(gazePlay);
+        }else {
             gazePlayLoadingContext(gazePlay);
         }
     }

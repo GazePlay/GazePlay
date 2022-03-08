@@ -77,6 +77,8 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             afsrGazeplayUserProfileContext(gazePlay, screenDimension);
         }else if (gazeplayType.equals("gazeplay")){
             gazeplayUserProfileContext(gazePlay, screenDimension);
+        }else {
+            gazeplayUserProfileContext(gazePlay, screenDimension);
         }
     }
 

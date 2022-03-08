@@ -85,6 +85,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             afsrGazeplayHomeMenuScreen(gazePlay, gamesLocator);
         }else if (gazeplayType.equals("gazeplay")){
             gazeplayHomeMenuScreen(gazePlay, gamesLocator);
+        }else {
+            gazeplayHomeMenuScreen(gazePlay, gamesLocator);
         }
 
     }
