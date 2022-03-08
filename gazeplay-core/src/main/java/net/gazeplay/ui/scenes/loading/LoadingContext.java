@@ -22,8 +22,6 @@ public class LoadingContext extends BorderPane {
 
         if (gazeplayType.equals("afsrGazeplay")){
             afsrGazePlayLoadindContext(gazePlay);
-        }else if (gazeplayType.equals("gazeplay")){
-            gazePlayLoadingContext(gazePlay);
         }else {
             gazePlayLoadingContext(gazePlay);
         }
