@@ -66,8 +66,8 @@ public class Configuration {
     private static final String PROPERTY_NAME_ELEMENTSIZE = "ELEMENT_SIZE";
 
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
-    private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
-    private static final int DEFAULT_VALUE_FIXATION_LENGTH = 500;
+    private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.tobii.toString();
+    private static final int DEFAULT_VALUE_FIXATION_LENGTH = 2000;
     private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
     public static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
     private static final long DEFAULT_VALUE_QUESTION_LENGTH = 5000;
@@ -91,7 +91,7 @@ public class Configuration {
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
     private static final boolean DEFAULT_VALUE_FORCE_DISPLAY_NEWS = false;
     private static final BackgroundStyle DEFAULT_VALUE_BACKGROUND_STYLE = BackgroundStyle.DARK;
-    private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = false;
+    private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = true;
     private static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
