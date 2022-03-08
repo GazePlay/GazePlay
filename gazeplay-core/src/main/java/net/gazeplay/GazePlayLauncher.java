@@ -13,7 +13,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -93,6 +92,7 @@ public class GazePlayLauncher {
         }
     }
 
+    @SuppressWarnings("PMD")
     private static void saveArgs(String args){
 
         String os = System.getProperty("os.name").toLowerCase();
