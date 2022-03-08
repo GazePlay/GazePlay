@@ -288,7 +288,7 @@ class UserProfileContextTest {
             () -> context.createUser(mockGazePlay, choicePanel, "", imagePattern, false, false, screenDimension));
     }
 
-    @Test
+/*    @Test
     @ExpectSystemExitWithStatus(0)
     void shouldCreateExitButton() {
         UserProfileContext context = new UserProfileContext(mockGazePlay);
@@ -298,7 +298,7 @@ class UserProfileContextTest {
         CustomButton exitButton = (CustomButton) topRightPane.getChildren().get(0);
 
         exitButton.fireEvent(TestingUtils.clickOnTarget(exitButton));
-    }
+    }*/
 
     @Test
     void shouldCreateRemoveDialog() throws InterruptedException {
