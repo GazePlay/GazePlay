@@ -35,12 +35,28 @@ public class LoadingContext extends BorderPane {
             "    -fx-font-weight: bold;\n" +
             "    -fx-font-size: 25pt;\n" +
             "    -fx-font-smoothing-type: lcd;");
+        VBox logoVBox = new VBox();
+        logoVBox.setSpacing(10);
+
         logoFactory = LogoFactory.getInstance();
-        VBox stackPane = new VBox(logoFactory.createLogoAnimated(gazePlay.getPrimaryStage()), loadingLabel);
+        Node animatedLogo = logoFactory.createLogoAnimated(gazePlay.getPrimaryStage());
+
+        HBox logoHBox = new HBox();
+        logoHBox.setAlignment(Pos.CENTER);
+        logoHBox.getChildren().add(animatedLogo);
+        logoHBox.setSpacing(20);
+
+        ImageView iv = new ImageView(new Image("data/common/images/logos/Logo-AFSR.png"));
+        iv.fitHeightProperty().bind(logoHBox.heightProperty().multiply(0.7));
+        iv.setPreserveRatio(true);
+
+        logoHBox.getChildren().add(iv);
+
+        logoVBox.getChildren().addAll(logoHBox,loadingLabel);
         loadingLabel.setAlignment(Pos.CENTER);
-        stackPane.setAlignment(Pos.CENTER);
+        logoVBox.setAlignment(Pos.CENTER);
         this.setStyle("-fx-background-color: black");
-        this.setCenter(stackPane);
+        this.setCenter(logoVBox);
     }
 
     public void afsrGazePlayLoadindContext(GazePlay gazePlay){
