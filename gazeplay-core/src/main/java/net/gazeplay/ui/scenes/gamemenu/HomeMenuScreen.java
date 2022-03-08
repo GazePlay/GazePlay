@@ -93,7 +93,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
         CustomButton exitButton = createExitButton(screenDimension);
-        //CustomButton logoutButton = createLogoutButton(gazePlay, screenDimension);
+        CustomButton logoutButton = createLogoutButton(gazePlay, screenDimension);
 
         ConfigurationButton configurationButton = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
 
@@ -114,12 +114,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
 
         I18NTooltip tooltipExit = new I18NTooltip(gazePlay.getTranslator(), "Exit");
-        //I18NTooltip tooltipLogout = new I18NTooltip(gazePlay.getTranslator(), "Logout");
+        I18NTooltip tooltipLogout = new I18NTooltip(gazePlay.getTranslator(), "Logout");
         I18NTooltip tooltipLogoutOptions = new I18NTooltip(gazePlay.getTranslator(), "Options");
         I18NTooltip tooltipReplay = new I18NTooltip(gazePlay.getTranslator(), "Replay");
 
         I18NTooltip.install(exitButton, tooltipExit);
-        //I18NTooltip.install(logoutButton, tooltipLogout);
+        I18NTooltip.install(logoutButton, tooltipLogout);
         I18NTooltip.install(configurationButton, tooltipLogoutOptions);
         I18NTooltip.install(replayGameButton, tooltipReplay);
 
@@ -132,24 +132,14 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         Node logo = LogoFactory.getInstance().createLogoStatic(gazePlay.getPrimaryStage());
 
-        HBox logosBox = new HBox();
-        logosBox.getChildren().add(logo);
-        logosBox.setSpacing(20);
-        logosBox.setAlignment(Pos.CENTER);
-
-        ImageView iv = new ImageView(new Image("data/common/images/logos/Logo-AFSR.png"));
-        iv.fitHeightProperty().bind(((ImageView)logo).fitHeightProperty().multiply(0.7));
-        iv.setPreserveRatio(true);
-        logosBox.getChildren().add(iv);
-
         StackPane topLogoPane = new StackPane();
         topLogoPane.setPadding(new Insets(15, 15, 15, 15));
-        topLogoPane.getChildren().add(logosBox);
+        topLogoPane.getChildren().add(logo);
 
         HBox topRightPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(topRightPane);
         topRightPane.setAlignment(Pos.TOP_CENTER);
-        topRightPane.getChildren().addAll(replayGameButton, /*logoutButton,*/ exitButton);
+        topRightPane.getChildren().addAll(replayGameButton, logoutButton, exitButton);
 
         ProgressIndicator dwellTimeIndicator = new ProgressIndicator(0);
         Node gamePickerChoicePane = createGamePickerChoicePane(games, config, dwellTimeIndicator);

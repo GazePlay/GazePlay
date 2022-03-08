@@ -98,16 +98,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         centerCenterPane.getChildren().add(userPickerChoicePane);
 
         final BorderPane topPane = new BorderPane();
-        HBox logosBox = new HBox();
-        logosBox.getChildren().add(logo);
-        logosBox.setSpacing(20);
-
-        ImageView iv = new ImageView(new Image("data/common/images/logos/Logo-AFSR.png"));
-        iv.fitHeightProperty().bind(logosBox.heightProperty().multiply(0.5));
-        iv.setPreserveRatio(true);
-        logosBox.getChildren().add(iv);
-        logosBox.setAlignment(Pos.CENTER);
-        topPane.setCenter(logosBox);
+        topPane.setCenter(logo);
         topPane.setRight(topRightPane);
 
         root.setTop(topPane);

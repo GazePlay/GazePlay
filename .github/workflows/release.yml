@@ -1,4 +1,4 @@
-on:
+  on:
   push:
     branches:
       - master
@@ -45,7 +45,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.previous-tag.outputs.tag }}
-          release_name: GazePlay-AFSR ${{ steps.previous-tag.outputs.tag }}
+          release_name: GazePlay ${{ steps.previous-tag.outputs.tag }}
           draft: false
           prerelease: false
 
