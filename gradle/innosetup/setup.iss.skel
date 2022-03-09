@@ -20,9 +20,9 @@ AppName=GazePlay
 AppVersion=${applicationVersion}
 AppVerName=GazePlay ${applicationVersion}
 AppPublisher=Univ. Grenoble Alpes - LIG - GETALP
-AppPublisherURL=https://github.com/GazePlay/GazePlay
-AppSupportURL=https://github.com/GazePlay/GazePlay/issues
-AppUpdatesURL=https://github.com/GazePlay/GazePlay/releases
+AppPublisherURL=https://github.com/AFSR/GazePlay-AFSR
+AppSupportURL=https://github.com/AFSR/GazePlay-AFSR/issues
+AppUpdatesURL=https://github.com/AFSR/GazePlay_AFSR/releases
 
 SetupIconFile=gazeplayicon.ico
 WizardStyle=modern
