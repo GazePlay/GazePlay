@@ -60,10 +60,10 @@ public class ProgressBarControl {
         slider.setMinWidth(QuickControl.SLIDERS_MIN_WIDTH);
         slider.setMaxWidth(QuickControl.SLIDERS_PREF_WIDTH);
         slider.setPrefWidth(QuickControl.SLIDERS_MAX_WIDTH);
-        slider.setMin(0);
+        slider.setMin(15);
         slider.setMax(150);
         slider.setMajorTickUnit(30);
-        slider.setMinorTickCount(10);
+        slider.setMinorTickCount(15);
         slider.setShowTickMarks(true);
         slider.setSnapToTicks(true);
         slider.setValue(initialSizeValue);
