@@ -53,6 +53,8 @@ public class Configuration {
     private static final String PROPERTY_NAME_BACKGROUND_STYLE = "BACKGROUND_STYLE";
     private static final String PROPERTY_NAME_BACKGROUND_ENABLED = "BACKGROUND_ENABLED";
     private static final String PROPERTY_NAME_ANIMATION_SPEED_RATIO = "ANIMATION_SPEED_RATIO";
+    private static final String PROPERTY_NAME_PROGRESS_BAR_SIZE = "PROGRESS_BAR_SIZE";
+    private static final String PROPERTY_NAME_PROGRESS_BAR_COLOR = "PROGRESS_BAR_COLOR";
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
     private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
@@ -93,9 +95,11 @@ public class Configuration {
     private static final BackgroundStyle DEFAULT_VALUE_BACKGROUND_STYLE = BackgroundStyle.DARK;
     private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = true;
     private static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
+    private static final int DEFAULT_VALUE_PROGRESS_BAR_SIZE = 100;
+    private static final String DEFAULT_VALUE_PROGRESS_BAR_COLOR = "YELLOW";
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
-    private static final int DEFAULT_VALUE_ELEMENT_SIZE = 50;
+    private static final int DEFAULT_VALUE_ELEMENT_SIZE = 100;
 
     /*
     source : "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
@@ -203,6 +207,12 @@ public class Configuration {
     private final DoubleProperty animationSpeedRatioProperty;
 
     @Getter
+    private final IntegerProperty progressBarSizeProperty;
+
+    @Getter
+    private final StringProperty progressBarColorProperty;
+
+    @Getter
     private final StringProperty videoFolderProperty;
 
     @Getter
@@ -248,6 +258,8 @@ public class Configuration {
         effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
 
         animationSpeedRatioProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_ANIMATION_SPEED_RATIO, DEFAULT_VALUE_ANIMATION_SPEED_RATIO, propertyChangeListener);
+        progressBarSizeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_PROGRESS_BAR_SIZE, DEFAULT_VALUE_PROGRESS_BAR_SIZE, propertyChangeListener);
+        progressBarColorProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_PROGRESS_BAR_COLOR, DEFAULT_VALUE_PROGRESS_BAR_COLOR, propertyChangeListener);
 
         heatMapOpacityProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY, propertyChangeListener);
         heatMapColorsProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_HEATMAP_COLORS, DEFAULT_VALUE_HEATMAP_COLORS, propertyChangeListener);
@@ -346,6 +358,14 @@ public class Configuration {
 
     public Integer getFixationLength() {
         return fixationlengthProperty.getValue();
+    }
+
+    public Integer getProgressBarSize() {
+        return progressBarSizeProperty.getValue();
+    }
+
+    public String getProgressBarColor() {
+        return progressBarColorProperty.getValue();
     }
 
     public String getCssFile() {

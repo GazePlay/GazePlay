@@ -241,6 +241,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         AnimationSpeedRatioControl animationSpeedRatioControl = AnimationSpeedRatioControl.getInstance();
         FixationLengthControl fixationLengthControl = FixationLengthControl.getInstance();
         ElementSizeControl elementSizeControl = ElementSizeControl.getInstance();
+        ProgressBarControl progressBarControl = ProgressBarControl.getInstance();
 
 
         Stage primaryStage = gazePlay.getPrimaryStage();
@@ -255,8 +256,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         leftControlPane.add(musicControl.createVolumeLevelControlPane(config, gazePlay.getTranslator()), 1, 0);
         leftControlPane.add(animationSpeedRatioControl.createSpeedEffectsPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 2, 0);
         leftControlPane.add(elementSizeControl.createElementSizePane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 3, 0);
+        leftControlPane.add(progressBarControl.createProgressControlPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 5, 0);
         fixPan = fixationLengthControl.createfixationLengthPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene());
-        leftControlPane.add(fixPan, 4, 0);
+        leftControlPane.add(fixPan, 6, 0);
         leftControlPane.getChildren().forEach(node -> {
             GridPane.setVgrow(node, Priority.ALWAYS);
             GridPane.setHgrow(node, Priority.ALWAYS);
