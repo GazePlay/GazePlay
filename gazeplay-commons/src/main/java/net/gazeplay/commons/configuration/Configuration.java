@@ -99,7 +99,7 @@ public class Configuration {
     private static final String DEFAULT_VALUE_PROGRESS_BAR_COLOR = "YELLOW";
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
-    private static final int DEFAULT_VALUE_ELEMENT_SIZE = 50;
+    private static final int DEFAULT_VALUE_ELEMENT_SIZE = 100;
 
     /*
     source : "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
