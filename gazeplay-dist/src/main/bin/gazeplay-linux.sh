@@ -56,7 +56,7 @@ else
   echo "Tobii4C drivers are installed."
 fi
 
-export JAVA_CMD="java -cp \"$CLASSPATH\" ${JAVA_OPTS} net.gazeplay.GazePlayLauncher"
+export JAVA_CMD="java -cp \"$CLASSPATH\" ${JAVA_OPTS} net.gazeplay.GazePlayLauncher --afsrgazeplay"
 
 echo "Executing command line: $JAVA_CMD"
 
