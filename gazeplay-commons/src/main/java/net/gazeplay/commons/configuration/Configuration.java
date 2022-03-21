@@ -66,6 +66,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_FAVORITE_GAMES = "FAVORITE_GAMES";
     private static final String PROPERTY_NAME_HIDDEN_CATEGORIES = "HIDDEN_CATEGORIES";
     private static final String PROPERTY_NAME_ELEMENTSIZE = "ELEMENT_SIZE";
+    private static final String PROPERTY_NAME_SCREENSHOT = "SCREENSHOT";
 
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
@@ -100,6 +101,7 @@ public class Configuration {
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
     private static final int DEFAULT_VALUE_ELEMENT_SIZE = 100;
+    private static final boolean DEFAULT_VALUE_SCREENSHOT = false;
 
     /*
     source : "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
@@ -233,6 +235,9 @@ public class Configuration {
     @Getter
     private final IntegerProperty elementSizeProperty;
 
+    @Getter
+    private final BooleanProperty screenshot;
+
     private final File configFile;
 
     private final ApplicationConfig applicationConfig;
@@ -308,6 +313,7 @@ public class Configuration {
 
         elementSizeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_ELEMENTSIZE, DEFAULT_VALUE_ELEMENT_SIZE, propertyChangeListener);
 
+        screenshot = new ApplicationConfigBackedBooleanProperty(applicationConfig,PROPERTY_NAME_SCREENSHOT, DEFAULT_VALUE_SCREENSHOT, propertyChangeListener );
     }
 
     private void saveConfig() throws IOException {
