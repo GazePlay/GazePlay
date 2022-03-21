@@ -759,6 +759,7 @@ public class Stats implements GazeMotionListener {
             nbUnCountedGoalsReached++;
         } else {
             nbGoalsReached++;
+            takeScreenshotWithThread();
             this.roundsDurationReport.addRoundDuration(currentRoundDuration);
         }
         currentRoundStartTime = currentRoundEndTime;
@@ -979,5 +980,18 @@ public class Stats implements GazeMotionListener {
 
     public static void setConfigMenuOpen(boolean configMenuStatus) {
         configMenuOpen = configMenuStatus;
+    }
+
+    public void takeScreenshotWithThread(){
+
+        Thread threadScreenshot = new Thread(() -> {
+            final File todayDirectory = getGameStatsOfTheDayDirectory();
+            final String now = DateUtils.dateTimeNow();
+            final String screenShotFilePrefix = now + "-screenshot";
+            final File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
+            final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
+            saveImageAsPng(screenshotImage, screenShotFile);
+        });
+        threadScreenshot.start();
     }
 }
