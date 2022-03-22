@@ -997,7 +997,8 @@ public class Stats implements GazeMotionListener {
             Thread threadScreenshot = new Thread(() -> {
                 final File todayDirectory = getGameStatsOfTheDayDirectory();
                 final String now = DateUtils.dateTimeNow();
-                final String screenShotFilePrefix = now + "-screenshot";
+                final String nowMillis = Long.toString(currentTimeMillisScreenshot).substring(10);
+                final String screenShotFilePrefix = now + nowMillis + "-screenshot";
                 final File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
                 final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
                 saveImageAsPng(screenshotImage, screenShotFile);
