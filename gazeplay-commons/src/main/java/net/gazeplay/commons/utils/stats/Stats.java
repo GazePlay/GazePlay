@@ -88,6 +88,8 @@ public class Stats implements GazeMotionListener {
     private ArrayList<TargetAOI> targetAOIList = null;
     private double[][] heatMap;
 
+    private long currentTimeMillisScreenshot = System.currentTimeMillis();
+
     @Getter
     public int nbGoalsReached = 0;
 
@@ -505,6 +507,9 @@ public class Stats implements GazeMotionListener {
                         }
                     }
                 }
+                if(config.isScreenshotEnable() && e.getSource() == gameContextScene.getRoot()){
+                    takeScreenshotWithThread();
+                }
             };
 
             recordMouseMovements = e -> {
@@ -542,12 +547,16 @@ public class Stats implements GazeMotionListener {
                         }
                     }
                 }
+                if(config.isScreenshotEnable() && e.getSource() == gameContextScene.getRoot()){
+                    takeScreenshotWithThread();
+                }
             };
-
             gameContextScene.getRoot().addEventFilter(GazeEvent.ANY, recordGazeMovements);
             gameContextScene.getRoot().addEventFilter(MouseEvent.ANY, recordMouseMovements);
 
+
         });
+
         currentRoundStartTime = lifeCycle.getStartTime();
     }
 
@@ -752,14 +761,13 @@ public class Stats implements GazeMotionListener {
         log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
     }
 
-    public void incrementNumberOfGoalsReached() {
+    public void incrementNumberOfGoalsReached(){
         final long currentRoundEndTime = System.currentTimeMillis();
         final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
         if (currentRoundDuration < accidentalShotPreventionPeriod) {
             nbUnCountedGoalsReached++;
         } else {
             nbGoalsReached++;
-            takeScreenshotWithThread();
             this.roundsDurationReport.addRoundDuration(currentRoundDuration);
         }
         currentRoundStartTime = currentRoundEndTime;
@@ -983,15 +991,18 @@ public class Stats implements GazeMotionListener {
     }
 
     public void takeScreenshotWithThread(){
-
-        Thread threadScreenshot = new Thread(() -> {
-            final File todayDirectory = getGameStatsOfTheDayDirectory();
-            final String now = DateUtils.dateTimeNow();
-            final String screenShotFilePrefix = now + "-screenshot";
-            final File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
-            final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
-            saveImageAsPng(screenshotImage, screenShotFile);
-        });
-        threadScreenshot.start();
+        if (System.currentTimeMillis() - currentTimeMillisScreenshot > 500){
+            takeScreenShot();
+            currentTimeMillisScreenshot = System.currentTimeMillis();
+            Thread threadScreenshot = new Thread(() -> {
+                final File todayDirectory = getGameStatsOfTheDayDirectory();
+                final String now = DateUtils.dateTimeNow();
+                final String screenShotFilePrefix = now + "-screenshot";
+                final File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
+                final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
+                saveImageAsPng(screenshotImage, screenShotFile);
+            });
+            threadScreenshot.start();
+        }
     }
 }

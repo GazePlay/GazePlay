@@ -490,4 +490,6 @@ public class Configuration {
     public Integer getElementSize() {
         return elementSizeProperty.getValue();
     }
+
+    public Boolean isScreenshotEnable(){return screenshot.getValue();}
 }
