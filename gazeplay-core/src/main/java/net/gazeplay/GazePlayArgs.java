@@ -18,12 +18,17 @@ public class GazePlayArgs {
 
         try {
             File myFile = null;
-            if (os.contains("nux")){
+            if (os.contains("nux") || os.contains("mac")){
                 myFile = new File("argsGazeplay.txt");
             }else if (os.contains("win")){
                 String userName = System.getProperty("user.name");
                 myFile = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt");
-            }else {
+            }
+            /*else if(os.contains("mac")){
+                String userName = System.getProperty("user.name");
+                myFile = new File("/Users/" + userName + "/Documents/Gazeplay/argsGazeplay.txt");
+            }*/
+            else {
                 log.info("Os non reconnu !");
             }
 
