@@ -13,6 +13,10 @@ Le joueur lance une tarte à la crème sur la cible statique lorsqu'il la regard
 
 {% include figure image_path="/assets/images/games/creamPie.png" alt="image du jeu Tartes à la crème" %}
 
+Guide :
+
+- Début du guide
+
 ## Ninja !
 
 La cible suit des mouvements aléatoires et explose lorsque le joueur la regarde.
