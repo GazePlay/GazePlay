@@ -44,6 +44,7 @@ task prepareInnoSetupFiles(group: 'distribution') {
         copy {
             from("${rootDir}/gradle/templates/licence.txt")
             expand([
+                    version: "latest",
                     "date"   : new Date().format('yyyy-MM-dd')
             ])
             into(innoSetupDir)
@@ -112,6 +113,7 @@ task prepareInnoSetupFilesx32(group: 'distribution') {
         copy {
             from("${rootDir}/gradle/templates/licence.txt")
             expand([
+                    version: "latest",
                     "date"   : new Date().format('yyyy-MM-dd')
             ])
             into(innoSetupDir)
