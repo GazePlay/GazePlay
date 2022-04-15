@@ -25,7 +25,7 @@ jobs:
 
       - name: Generate Release
         run: |
-          ./gradlew --stacktrace --info generateWindowsInstallerInDocker
+          ./gradlew --stacktrace --info release
 
       - name: Get Env
         run: |
