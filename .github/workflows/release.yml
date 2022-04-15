@@ -23,14 +23,8 @@ jobs:
           ./gradlew --stacktrace --info downloadAndExtractJREs
           chmod -R 777 build/jre
 
-      - name: Generate releases
+      - name: Generate Release
         run: |
-          ./gradlew --stacktrace --info packageApp
-
-      - name: Generate Windows Installer with InnoSetup
-        run: |
-          chmod 777 build/distributions
-          chmod -R 777 build/jre
           ./gradlew --stacktrace --info generateWindowsInstallerInDocker
 
       - name: Get Env
