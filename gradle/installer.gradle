@@ -18,12 +18,9 @@ task generateWindowsInstallerInDocker(dependsOn: ['unzipDistribution', 'prepareI
         exec {
             workingDir rootDir
             commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setup.iss"
-        }
-
-        exec {
-            workingDir rootDir
             commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setupx32.iss"
         }
+
     }
 }
 
