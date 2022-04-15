@@ -12,9 +12,6 @@ task packageApp(dependsOn: ['packageAllDists',
 task scriptsForRelease(type: Copy, group: 'distribution') {
     from "${rootDir}/gazeplay-dist/src/main/bin"
     into "${rootDir}/build/bin"
-    filter(
-        ReplaceTokens, tokens: [VERSION: project.version, NAME: project.name]
-    )
 
     outputs.upToDateWhen { false } // Forces the task to rerun every time, without requiring a clean.
 }

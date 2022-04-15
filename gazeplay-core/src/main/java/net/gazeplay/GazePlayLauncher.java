@@ -133,8 +133,9 @@ public class GazePlayLauncher {
             log.info(String.valueOf(e));
         } finally {
             try {
-                assert myWritter != null;
-                myWritter.close();
+                if (myWritter != null){
+                    myWritter.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

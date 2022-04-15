@@ -11,6 +11,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
@@ -18,25 +19,40 @@ jobs:
 
       - name: Download JREs
         run: |
+          chmod +x ./gradlew
           ./gradlew --stacktrace --info downloadAndExtractJREs
           chmod -R 777 build/jre
 
-      - name: Setup Git Config
+      - name: Generate releases
         run: |
-          git config --global user.email "ci@gazeplay.net"
-          git config --global user.name "GazePlay Automation"
+          ./gradlew --stacktrace --info packageApp
 
-      - name: Run Gradle Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate Windows Installer with InnoSetup
         run: |
-          ./gradlew --stacktrace --info release -Prelease.useAutomaticVersion=true
+          chmod 777 build/distributions
+          chmod -R 777 build/jre
+          ./gradlew --stacktrace --info generateWindowsInstallerInDocker
 
-      - name: Get Previous tag
-        id: previous-tag
-        uses: WyriHaximus/github-action-get-previous-tag@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get Env
+        run: |
+          echo "REPO_NAME=${{ github.repository }}" >> $GITHUB_ENV
+          echo "REPO_BASENAME=$(basename ${{ github.repository }})" >> $GITHUB_ENV
+
+      - name: New tag
+        id: new-tag
+        run: |
+          LATEST_RELEASE_INFO=$(curl -s https://api.github.com/repos/${{ env.REPO_NAME }}/releases/latest)
+          NEW_VERSION_LINK=$(echo "$LATEST_RELEASE_INFO" | grep "browser_download_url.*${{ env.REPO_BASENAME }}*" | cut -d: -f2,3 | tr -d \")
+          NEW_VERSION=$( echo "${NEW_VERSION_LINK}" | cut -d/ -f9)
+          NEW_VERSION_NO_EXT=$( echo ${NEW_VERSION} | cut -d. -f1)
+          NEW_VERSION_NAME=$(echo "$LATEST_RELEASE_INFO" | grep "name.*${{ env.REPO_BASENAME }}*" | cut -d: -f2,3 | tr -d \" | head -n 1 | tr -d \,)
+          GET_TAG=$(echo "$NEW_VERSION_NAME" | cut -d " " -f3)
+          TAG_1=$(echo "$GET_TAG" | cut -d. -f1)
+          TAG_2=$(echo "$GET_TAG" | cut -d. -f2)
+          TAG_3=$(echo "$GET_TAG" | cut -d. -f3)
+          NEW_TAG=$(echo "$(( $TAG_3 + 1 ))")
+          TAG="${TAG_1}.${TAG_2}.${NEW_TAG}"
+          echo ::set-output name=tag::$(echo $TAG)
 
       - name: Create GitHub Release
         id: create_release
@@ -44,8 +60,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.previous-tag.outputs.tag }}
-          release_name: GazePlay ${{ steps.previous-tag.outputs.tag }}
+          tag_name: ${{ steps.new-tag.outputs.tag }}
+          release_name: ${{ env.REPO_BASENAME }} ${{ steps.new-tag.outputs.tag }}
           draft: false
           prerelease: false
 
@@ -55,12 +71,12 @@ jobs:
         with:
           release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
           files: |
-            ./build/distributions/gazeplay-linux-x64-${{ steps.previous-tag.outputs.tag }}.tar.gz
-            ./build/distributions/gazeplay-macos-${{ steps.previous-tag.outputs.tag }}.tar.gz
-            ./build/distributions/gazeplay-windows-x64-${{ steps.previous-tag.outputs.tag }}.zip
-            ./build/distributions/gazeplay-windows-x64-${{ steps.previous-tag.outputs.tag }}-installer.exe
-            ./build/distributions/gazeplay-windows-x32-${{ steps.previous-tag.outputs.tag }}.zip
-            ./build/distributions/gazeplay-windows-x32-${{ steps.previous-tag.outputs.tag }}-installer.exe
-            ./build/distributions/gazeplay-no-jre-${{ steps.previous-tag.outputs.tag }}.tar.gz
-            ./build/distributions/gazeplay-no-jre-${{ steps.previous-tag.outputs.tag }}.zip
+            ./build/distributions/gazeplay-linux-x64.tar.gz
+            ./build/distributions/gazeplay-macos.tar.gz
+            ./build/distributions/gazeplay-windows-x64.zip
+            ./build/distributions/gazeplay-windows-x64-installer.exe
+            ./build/distributions/gazeplay-windows-x32.zip
+            ./build/distributions/gazeplay-windows-x32-installer.exe
+            ./build/distributions/gazeplay-no-jre.tar.gz
+            ./build/distributions/gazeplay-no-jre.zip
           github-token: ${{ secrets.GITHUB_TOKEN }}

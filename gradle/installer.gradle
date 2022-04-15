@@ -13,11 +13,16 @@ task generateWindowsInstaller(dependsOn: ['unzipDistribution', 'prepareInnoSetup
     }
 }
 
-task generateWindowsInstallerInDocker(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
+task generateWindowsInstallerInDocker(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles', 'unzipDistributionx32','prepareInnoSetupFilesx32'], group: 'distribution') {
     doLast {
         exec {
             workingDir rootDir
             commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setup.iss"
+        }
+
+        exec {
+            workingDir rootDir
+            commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setupx32.iss"
         }
     }
 }
@@ -33,8 +38,8 @@ task prepareInnoSetupFiles(group: 'distribution') {
             from("${rootDir}/gradle/innosetup/setup.iss.skel")
             rename("setup.iss.skel", "setup.iss")
             expand([
-                    applicationVersion: "${version}",
-                    unpackedDirectory : "${project.name}-windows-x64-${version}"
+                    applicationVersion: "x64",
+                    unpackedDirectory : "${project.name}-windows"
             ])
             into(innoSetupDir)
         }
@@ -43,7 +48,7 @@ task prepareInnoSetupFiles(group: 'distribution') {
         copy {
             from("${rootDir}/gradle/templates/licence.txt")
             expand([
-                    "version": version,
+                    "version": "x64",
                     "date"   : new Date().format('yyyy-MM-dd')
             ])
             into(innoSetupDir)
@@ -62,7 +67,7 @@ task prepareInnoSetupFiles(group: 'distribution') {
 }
 
 task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
-    from zipTree("${buildDir}/distributions/${project.name}-windows-x64-${version}.zip")
+    from zipTree("${buildDir}/distributions/${project.name}-windows-x64.zip")
     into buildDir
     fileMode 0777
     dirMode 0777
@@ -102,8 +107,8 @@ task prepareInnoSetupFilesx32(group: 'distribution') {
             from("${rootDir}/gradle/innosetup/setupx32.iss.skel")
             rename("setupx32.iss.skel", "setupx32.iss")
             expand([
-                    applicationVersion: "${version}",
-                    unpackedDirectory : "${project.name}-windows-x32-${version}"
+                    applicationVersion: "x32",
+                    unpackedDirectory : "${project.name}-windows"
             ])
             into(innoSetupDir)
         }
@@ -112,7 +117,7 @@ task prepareInnoSetupFilesx32(group: 'distribution') {
         copy {
             from("${rootDir}/gradle/templates/licence.txt")
             expand([
-                    "version": version,
+                    "version": "x32",
                     "date"   : new Date().format('yyyy-MM-dd')
             ])
             into(innoSetupDir)
@@ -130,7 +135,7 @@ task prepareInnoSetupFilesx32(group: 'distribution') {
     }
 }
 task unzipDistributionx32(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
-    from zipTree("${buildDir}/distributions/${project.name}-windows-x32-${version}.zip")
+    from zipTree("${buildDir}/distributions/${project.name}-windows-x32.zip")
     into buildDir
     fileMode 0777
     dirMode 0777

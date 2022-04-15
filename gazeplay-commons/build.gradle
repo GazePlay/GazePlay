@@ -38,7 +38,7 @@ jar {
     manifest {
         attributes(
                 "Implementation-Title": project.name,
-                "Implementation-Version": project.version,
+                "Implementation-Version": "latest",
                 "Implementation-Vendor": "Univ. Grenoble Alpes - LIG - GETALP",
                 "Class-Path": configurations.runtime.collect { it.getName() }.join(' '),
                 "JavaFX-Version": javafxVersion,
