@@ -8,11 +8,11 @@ header:
   overlay_image: /assets/images/gazeplayClassicLogo.png
   actions:
     - label: "<i class='fab fa-windows'></i> Installer pour Windows (x64)"
-      url: https://github.com/GazePlay/GazePlay/releases/latest/download/gazeplay-windows-x64-1.9.21-installer.exe
+      url: https://github.com/GazePlay/GazePlay/releases/latest/download/gazeplay-windows-x64-installer.exe
     - label: "<i class='fab fa-linux'></i> Installer pour Linux"
-      url: https://github.com/GazePlay/GazePlay/releases/latest/download/gazeplay-linux-x64-1.9.21.tar.gz
+      url: https://github.com/GazePlay/GazePlay/releases/latest/download/gazeplay-linux-x64.tar.gz
     - label: "<i class='fab fa-apple'></i> Installer pour MacOS"
-      url: https://github.com/GazePlay/GazePlay/releases/latest/download/gazeplay-macos-1.9.21.tar.gz
+      url: https://github.com/GazePlay/GazePlay/releases/latest/download/gazeplay-macos.tar.gz
 excerpt: >
   GazePlay est un logiciel libre et gratuit qui rassemble plusieurs mini-jeux jouables grâce à un occulomètre (Eye-tracker).<br />
   <small><a href="https://github.com/GazePlay/GazePlay/releases/latest">Dernière version</a></small>
