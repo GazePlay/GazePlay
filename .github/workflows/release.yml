@@ -28,11 +28,23 @@ jobs:
           git config --global user.email "ci@gazeplay.net"
           git config --global user.name "GazePlay Automation"
 
-      - name: Generate Release
+      - name: Generate Releases
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ./gradlew --stacktrace --info release
+
+      - name: Rename Releases
+        run: |
+          cd ./build/distributions/
+          mv $(find gazeplay-linux-x64-*) gazeplay-linux-x64.tar.gz
+          mv $(find gazeplay-macos-*) gazeplay-macos.tar.gz
+          mv $(find gazeplay-windows-x64-*) gazeplay-windows-x64.zip
+          mv $(find gazeplay-windows-x64-*-installer-*) gazeplay-windows-x64-installer.exe
+          mv $(find gazeplay-windows-x32-*) gazeplay-windows-x32.zip
+          mv $(find gazeplay-windows-x32-*-installer-*) gazeplay-windows-x32-installer.exe
+          mv $(find gazeplay-no-jre-*.tar.gz) gazeplay-no-jre.tar.gz
+          mv $(find gazeplay-no-jre.zip-*) gazeplay-no-jre.zip
 
       - name: Get Env
         run: |
