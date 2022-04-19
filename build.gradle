@@ -254,7 +254,6 @@ distZip {
 release {
     failOnPublishNeeded = false
     failOnCommitNeeded = false
-    versionPropertyFile = 'gradle.properties'
 }
 
 mainClassName = 'net.gazeplay.GazePlayLauncher'

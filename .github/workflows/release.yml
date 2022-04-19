@@ -32,7 +32,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ./gradlew --stacktrace --info generateWindowsInstallerInDocker
+          ./gradlew --stacktrace --info release
 
       - name: Get Env
         run: |
