@@ -37,14 +37,14 @@ jobs:
       - name: Rename Releases
         run: |
           cd ./build/distributions/
-          mv $(find gazeplay-linux-x64-*) gazeplay-linux-x64.tar.gz
-          mv $(find gazeplay-macos-*) gazeplay-macos.tar.gz
-          mv $(find gazeplay-windows-x64-*) gazeplay-windows-x64.zip
-          mv $(find gazeplay-windows-x64-*-installer-*) gazeplay-windows-x64-installer.exe
-          mv $(find gazeplay-windows-x32-*) gazeplay-windows-x32.zip
-          mv $(find gazeplay-windows-x32-*-installer-*) gazeplay-windows-x32-installer.exe
-          mv $(find gazeplay-no-jre-*.tar.gz) gazeplay-no-jre.tar.gz
-          mv $(find gazeplay-no-jre.zip-*) gazeplay-no-jre.zip
+          mv gazeplay-linux-x64*.tar.gz gazeplay-linux-x64.tar.gz
+          mv gazeplay-macos*.tar.gz gazeplay-macos.tar.gz
+          mv gazeplay-windows-x64*.zip gazeplay-windows-x64.zip
+          mv gazeplay-windows-x64*installer.exe gazeplay-windows-x64-installer.exe
+          mv gazeplay-windows-x32*.zip gazeplay-windows-x32.zip
+          mv gazeplay-windows-x32*installer.exe gazeplay-windows-x32-installer.exe
+          mv gazeplay-no-jre*.tar.gz gazeplay-no-jre.tar.gz
+          mv gazeplay-no-jre*.zip gazeplay-no-jre.zip
 
       - name: Get Env
         run: |
