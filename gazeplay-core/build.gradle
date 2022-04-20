@@ -59,6 +59,7 @@ task createLicence(dependsOn: ['processResources'], type: Copy, group: 'license'
 def generatedResources = "${buildDir}/generated-resources/main"
 
 sourceSets.main.output.dir(generatedResources, builtBy: 'generateGamesCatalog')
+sourceSets.main.output.dir(generatedResources, builtBy: 'generateBeraGamesCatalog')
 
 task generateGamesCatalog {
     outputs.dir generatedResources
@@ -74,10 +75,38 @@ task generateGamesCatalog {
                             .replace('/', '.')
                             .replace('\\', '.')
                             .replace('.java', '')
+                            .replace('net.gazeplay.games.bera.BeraGameSpecSource', '')
+                            .replace('net.gazeplay.games.beraV2.BeraV2GameSpecSource', '')
                 }
                 .unique()
 
         def file = new File(generatedResources, "games-catalog.txt")
+        if (file.exists()) {
+            file.delete()
+        }
+        packages.each { file.append(it + '\n') }
+    }
+}
+
+task generateBeraGamesCatalog {
+    outputs.dir generatedResources
+
+    doLast {
+        def sourceSet = project(':gazeplay-games').sourceSets.findByName('main').java
+        def packages = sourceSet
+                .filter { it.path.endsWith('.java') }
+                .filter { it.path.contains('Bera') }
+                .filter { it.path.contains('SpecSource') }
+                .collect {
+                    it.path
+                            .substring(sourceSet.srcDirs[0].path.length() + 1)
+                            .replace('/', '.')
+                            .replace('\\', '.')
+                            .replace('.java', '')
+                }
+                .unique()
+
+        def file = new File(generatedResources, "bera-games-catalog.txt")
         if (file.exists()) {
             file.delete()
         }

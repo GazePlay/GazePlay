@@ -33,6 +33,9 @@ public class GazePlayLauncher {
             if (args[0].contains("afsr")){
                 log.info("AFSR GAZEPLAY");
                 saveArgs("afsrGazeplay");
+            } else if (args[0].contains("bera")){
+                log.info("BERA GAZEPLAY");
+                saveArgs("bera");
             }
         } catch (Exception e) {
             log.info("GAZEPLAY");

@@ -20,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
+import net.gazeplay.GazePlayArgs;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NButton;
@@ -35,6 +36,8 @@ import net.gazeplay.stats.HiddenItemsGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
 import net.gazeplay.ui.GraphicalContext;
 
+import java.awt.*;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -243,62 +246,113 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     }
 
     void addAllToGrid(Stats stats, Translator translator, GridPane grid, boolean alignLeft) {
-        AtomicInteger currentFormRow = new AtomicInteger(1);
 
-        Text value;
-        String labelValue;
+        String gazeplayType = GazePlayArgs.returnArgs();
 
-        value = new Text(StatDisplayUtils.convert(stats.computeTotalElapsedDuration()));
-        addToGrid(grid, currentFormRow, translator, "TotalLength", value, alignLeft);
+        if (gazeplayType.equals("bera")){
+            AtomicInteger currentFormRow = new AtomicInteger(0);
 
-        if (!(stats instanceof ExplorationGamesStats)) {
+            Text value;
+            String labelValue;
 
-            if (stats instanceof ShootGamesStats) {
-                labelValue = "Shots";
-            } else if (stats instanceof HiddenItemsGamesStats) {
-                labelValue = "HiddenItemsShot";
-            } else {
-                labelValue = "Score";
+            if (stats.variantType.equals("WordComprehension")){
+
+                addToGrid(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 100) + "s"), alignLeft);
+
+                addToGrid(grid, currentFormRow, translator, "PHONOLOGY", new Text(""), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "TotalPhonology", new Text(String.valueOf(stats.totalPhonology) + "/10"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsPhonology) + "/5"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsPhonology) + "/5"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsPhonology) + "/5"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsPhonology) + "/5"), alignLeft);
+
+                addToGrid(grid, currentFormRow, translator, "SEMANTIC", new Text(""), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "TotalSemantic", new Text(String.valueOf(stats.totalSemantic) + "/10"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsPhonology) + "/5"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsPhonology) + "/5"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "FrequentScoreItem", new Text(String.valueOf(stats.frequentScoreItemSemantic) + "/5"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "InfrequentScoreItem", new Text(String.valueOf(stats.infrequentScoreItemSemantic) + "/5"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsSemantic) + "/5"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreRightTargetItemsSemantic) + "/5"), alignLeft);
+
+                addToGrid(grid, currentFormRow, translator, "WORDCOMPREHENSION", new Text(""), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "TotalWordComprehension", new Text(String.valueOf(stats.totalWordComprehension) + "/20"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually) + "/20"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "Total", new Text(String.valueOf(stats.total) + "/20"), alignLeft);
+
+            }else if (stats.variantType.equals("SentenceComprehension")){
+
+                addToGrid(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 100.) + "s"), alignLeft);
+
+                addToGrid(grid, currentFormRow, translator, "MORPHOSYNTAX", new Text(""), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "TotalMorphosyntax", new Text(String.valueOf(stats.totalMorphosyntax) + "/10"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsMorphosyntax) + "/5"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsMorphosyntax) + "/5"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsMorphosyntax) + "/5"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsMorphosyntax) + "/5"), alignLeft);
+
+                addToGrid(grid, currentFormRow, translator, "SENTENCECOMPREHENSION", new Text(""), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually) + "/10"), alignLeft);
+                addToGrid(grid, currentFormRow, translator, "TotalSentenceComprehension", new Text(String.valueOf(stats.total) + "/10"), alignLeft);
+            }
+        }else {
+            AtomicInteger currentFormRow = new AtomicInteger(1);
+
+            Text value;
+            String labelValue;
+
+            value = new Text(StatDisplayUtils.convert(stats.computeTotalElapsedDuration()));
+            addToGrid(grid, currentFormRow, translator, "TotalLength", value, alignLeft);
+
+            if (!(stats instanceof ExplorationGamesStats)) {
+
+                if (stats instanceof ShootGamesStats) {
+                    labelValue = "Shots";
+                } else if (stats instanceof HiddenItemsGamesStats) {
+                    labelValue = "HiddenItemsShot";
+                } else {
+                    labelValue = "Score";
+                }
+
+                value = new Text(String.valueOf(stats.getNbGoalsReached()));
+                addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
             }
 
-            value = new Text(String.valueOf(stats.getNbGoalsReached()));
-            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-        }
+            if (stats instanceof ShootGamesStats) {
+                labelValue = "HitRate";
+                value = new Text(stats.getShotRatio() + "% (" + stats.getNbGoalsReached() + "/" + stats.getNbGoalsToReach() + ")");
+                addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+            }
 
-        if (stats instanceof ShootGamesStats) {
-            labelValue = "HitRate";
-            value = new Text(stats.getShotRatio() + "% (" + stats.getNbGoalsReached() + "/" + stats.getNbGoalsToReach() + ")");
-            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-        }
+            if (!(stats instanceof ExplorationGamesStats)) {
+                labelValue = "Length";
+                value = new Text(StatDisplayUtils.convert(stats.getRoundsTotalAdditiveDuration()));
+                addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+            }
 
-        if (!(stats instanceof ExplorationGamesStats)) {
-            labelValue = "Length";
-            value = new Text(StatDisplayUtils.convert(stats.getRoundsTotalAdditiveDuration()));
-            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-        }
+            if (!(stats instanceof ExplorationGamesStats)) {
+                labelValue = stats instanceof ShootGamesStats ? "ShotaverageLength" : "AverageLength";
+                value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationAverageDuration()));
+                addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+            }
 
-        if (!(stats instanceof ExplorationGamesStats)) {
-            labelValue = stats instanceof ShootGamesStats ? "ShotaverageLength" : "AverageLength";
-            value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationAverageDuration()));
-            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-        }
+            if (!(stats instanceof ExplorationGamesStats)) {
+                labelValue = stats instanceof ShootGamesStats ? "ShotmedianLength" : "MedianLength";
+                value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationMedianDuration()));
+                addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+            }
 
-        if (!(stats instanceof ExplorationGamesStats)) {
-            labelValue = stats instanceof ShootGamesStats ? "ShotmedianLength" : "MedianLength";
-            value = new Text(StatDisplayUtils.convert(stats.computeRoundsDurationMedianDuration()));
-            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-        }
+            if (!(stats instanceof ExplorationGamesStats)) {
+                labelValue = "StandDev";
+                value = new Text(StatDisplayUtils.convert((long) stats.computeRoundsDurationStandardDeviation()));
+                addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+            }
 
-        if (!(stats instanceof ExplorationGamesStats)) {
-            labelValue = "StandDev";
-            value = new Text(StatDisplayUtils.convert((long) stats.computeRoundsDurationStandardDeviation()));
-            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
-        }
-
-        if (stats instanceof ShootGamesStats && stats.getNbUnCountedGoalsReached() != 0) {
-            labelValue = "UncountedShot";
-            value = new Text(String.valueOf(stats.getNbUnCountedGoalsReached()));
-            addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+            if (stats instanceof ShootGamesStats && stats.getNbUnCountedGoalsReached() != 0) {
+                labelValue = "UncountedShot";
+                value = new Text(String.valueOf(stats.getNbUnCountedGoalsReached()));
+                addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+            }
         }
     }
 
@@ -346,44 +400,97 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         CustomButton continueButton,
         boolean additionButton
     ) {
-        HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
-
-        I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
-        I18NTooltip.install(homeButton, tooltipBackToMenu);
-
-        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-
-        CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
-        aoiButton.addEventHandler(
-            MouseEvent.MOUSE_CLICKED,
-            e -> gazePlay.onDisplayAOI(stats));
-
-        EventHandler<Event> viewScanPath = s -> {
-            ScanpathView scanPath = new ScanpathView(gazePlay, stats, continueButton);
-            gazePlay.onDisplayScanpath(scanPath);
-        };
-
-        CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
-        scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
 
         HBox controlButtonPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(controlButtonPane);
-        controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
 
-        if (config.getAreaOfInterestDisabledProperty().getValue())
-            controlButtonPane.getChildren().add(aoiButton);
+        String gazeplayType = GazePlayArgs.returnArgs();
 
-        if (!config.isFixationSequenceDisabled()) {
-            controlButtonPane.getChildren().add(colorBands);
-            if(additionButton)
-                controlButtonPane.getChildren().add(addInfo);
-            controlButtonPane.getChildren().add(scanPathButton);
-        }
+        if (gazeplayType.equals("bera")){
+            HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
 
-        controlButtonPane.getChildren().add(homeButton);
+            I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
+            I18NTooltip.install(homeButton, tooltipBackToMenu);
 
-        if (continueButton != null) {
-            controlButtonPane.getChildren().add(continueButton);
+            Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+
+            CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
+            aoiButton.addEventHandler(
+                MouseEvent.MOUSE_CLICKED,
+                e -> gazePlay.onDisplayAOI(stats));
+
+            EventHandler<Event> viewScanPath = s -> {
+                ScanpathView scanPath = new ScanpathView(gazePlay, stats, continueButton);
+                gazePlay.onDisplayScanpath(scanPath);
+            };
+
+            EventHandler<Event> openFile = s -> {
+                this.openFile(stats);
+            };
+
+            CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
+            scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
+
+            CustomButton openExcelButton = new CustomButton("data/common/images/excelButton.png", screenDimension);
+            openExcelButton.addEventFilter(MouseEvent.MOUSE_CLICKED, openFile);
+
+            ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(controlButtonPane);
+            controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
+
+            if (config.getAreaOfInterestDisabledProperty().getValue())
+                controlButtonPane.getChildren().add(aoiButton);
+
+            if (!config.isFixationSequenceDisabled()) {
+                controlButtonPane.getChildren().add(colorBands);
+                if(additionButton)
+                    controlButtonPane.getChildren().add(addInfo);
+                controlButtonPane.getChildren().add(scanPathButton);
+            }
+
+            controlButtonPane.getChildren().add(openExcelButton);
+            controlButtonPane.getChildren().add(homeButton);
+
+            if (continueButton != null) {
+                controlButtonPane.getChildren().add(continueButton);
+            }
+        }else {
+            HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
+
+            I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
+            I18NTooltip.install(homeButton, tooltipBackToMenu);
+
+            Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+
+            CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
+            aoiButton.addEventHandler(
+                MouseEvent.MOUSE_CLICKED,
+                e -> gazePlay.onDisplayAOI(stats));
+
+            EventHandler<Event> viewScanPath = s -> {
+                ScanpathView scanPath = new ScanpathView(gazePlay, stats, continueButton);
+                gazePlay.onDisplayScanpath(scanPath);
+            };
+
+            CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
+            scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
+
+            ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(controlButtonPane);
+            controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
+
+            if (config.getAreaOfInterestDisabledProperty().getValue())
+                controlButtonPane.getChildren().add(aoiButton);
+
+            if (!config.isFixationSequenceDisabled()) {
+                controlButtonPane.getChildren().add(colorBands);
+                if(additionButton)
+                    controlButtonPane.getChildren().add(addInfo);
+                controlButtonPane.getChildren().add(scanPathButton);
+            }
+
+            controlButtonPane.getChildren().add(homeButton);
+
+            if (continueButton != null) {
+                controlButtonPane.getChildren().add(continueButton);
+            }
         }
 
         return controlButtonPane;
@@ -392,5 +499,15 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     @Override
     public ObservableList<Node> getChildren() {
         return root.getChildren();
+    }
+
+    public void openFile(Stats stats){
+        Desktop desktop = Desktop.getDesktop();
+        try {
+            desktop.open(new File(stats.actualFile));
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

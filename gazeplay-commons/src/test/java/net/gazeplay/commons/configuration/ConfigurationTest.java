@@ -80,12 +80,12 @@ class ConfigurationTest {
     }
 
     @Test
-    void givenLocaleIsSet_shouldSetDefaultLanguage() {
+    void givenLocaleIsSetShouldSetDefaultLanguage() {
         assertEquals(Locale.CHINA.getISO3Language(), configuration.getLanguage());
     }
 
     @Test
-    void givenLocaleIsSet_shouldSetDefaultCountry() {
+    void givenLocaleIsSetShouldSetDefaultCountry() {
         assertEquals(Locale.CHINA.getCountry(), configuration.getCountry());
     }
 

@@ -42,9 +42,9 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
 
     private int score = 0;
 
-    private enum type {paper, stone, scissors}
+    private enum Type {paper, stone, scissors}
 
-    private type ennemyT;
+    private Type ennemyT;
 
     private final ReplayablePseudoRandom random;
 
@@ -156,15 +156,15 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         switch (i) {
             case 0:
                 ennemyI = new ImageView(new Image("data/paperScissorsStone/Scissors.png"));
-                ennemyT = type.scissors;
+                ennemyT = Type.scissors;
                 break;
             case 1:
                 ennemyI = new ImageView(new Image("data/paperScissorsStone/Paper.png"));
-                ennemyT = type.paper;
+                ennemyT = Type.paper;
                 break;
             case 2:
                 ennemyI = new ImageView(new Image("data/paperScissorsStone/Stone.png"));
-                ennemyT = type.stone;
+                ennemyT = Type.stone;
                 break;
             default:
                 log.info("out of bounds");
@@ -191,7 +191,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
 
         if (button == paper) {
             button.assignIndicatorUpdatable(event -> {
-                if (ennemyT == type.stone) {
+                if (ennemyT == Type.stone) {
                     gameWin();
                 } else {
                     button.disable(true);
@@ -203,7 +203,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         }
         if (button == stone) {
             button.assignIndicatorUpdatable(event -> {
-                if (ennemyT == type.scissors) {
+                if (ennemyT == Type.scissors) {
                     gameWin();
                 } else {
                     button.disable(true);
@@ -215,7 +215,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         }
         if (button == scissors) {
             button.assignIndicatorUpdatable(event -> {
-                if (ennemyT == type.paper) {
+                if (ennemyT == Type.paper) {
                     gameWin();
                 } else {
                     button.disable(true);

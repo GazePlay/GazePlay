@@ -11,4 +11,7 @@ public class VariantSelectionOptions {
 
     @CommandLine.Option(names = {"--afsrgazeplay"}, defaultValue = "true")
     private boolean afsrGazeplay;
+
+    @CommandLine.Option(names = {"--bera"}, defaultValue = "true")
+    private boolean bera;
 }

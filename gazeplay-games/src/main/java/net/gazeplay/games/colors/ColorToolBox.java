@@ -413,18 +413,18 @@ public class ColorToolBox extends Pane {
             }
         });
 
-        final Button PImageButton = new Button(translator.translate("PrintImg"));
-        PImageButton.setPrefHeight(colorizeButtonsSizePx / 2);
-        PImageButton.setOnAction((event) -> {
+        final Button pImageButton = new Button(translator.translate("PrintImg"));
+        pImageButton.setPrefHeight(colorizeButtonsSizePx / 2);
+        pImageButton.setOnAction((event) -> {
             printImage(colorsGame.getWritableImg());
         });
 
         imageChooserButton.setOpacity(1);
         imageSaverButton.setOpacity(1);
-        PImageButton.setOpacity(1);
+        pImageButton.setOpacity(1);
         bottomBox.getChildren().add(imageChooserButton);
         bottomBox.getChildren().add(imageSaverButton);
-        bottomBox.getChildren().add(PImageButton);
+        bottomBox.getChildren().add(pImageButton);
 
         return bottomBox;
     }

@@ -1,0 +1,99 @@
+; GazePlay Inno Setup Skeleton Script
+;
+; PLEASE NOTE:
+;
+; 1. This script is a SKELETON and is meant to be parsed by the Gradle
+;    task "innosetup" before handing it to the Inno Setup compiler (ISCC)
+;
+; 2. All VARIABLES with a dollar sign and curly brackets are replaced
+;    by Gradle, e.g. "applicationVersion" below
+;
+; 3. The script is COPIED to build/innosetup before its run,
+;    so all relative paths refer to this path!
+;
+; 4. All BACKSLASHES must be escaped
+;
+
+[Setup]
+AppId=GazePlayAfsr
+AppName=GazePlayAfsr
+AppVersion=${applicationVersion}
+AppVerName=GazePlayAfsr ${applicationVersion}
+AppPublisher=Univ. Grenoble Alpes - LIG - GETALP
+AppPublisherURL=https://github.com/AFSR/GazePlay-AFSR
+AppSupportURL=https://github.com/AFSR/GazePlay-AFSR/issues
+AppUpdatesURL=https://github.com/AFSR/GazePlay-AFSR/releases
+
+SetupIconFile=gazeplayicon.ico
+WizardStyle=modern
+WizardImageFile=gazeplayicon.bmp
+WizardSmallImageFile=gazeplayicon.bmp
+
+DefaultDirName={commonpf}\\GazePlayAfsr
+DefaultGroupName=GazePlayAfsr
+LicenseFile=licence.txt
+
+OutputDir=..\\distributions
+OutputBaseFilename=gazeplay-afsr-windows-x64-${applicationVersion}-installer
+;Compression=lzma
+SolidCompression=yes
+
+[Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
+
+[Files]
+Source: "gazeplayicon.ico"; DestDir: "{app}\\bin"; Flags: ignoreversion
+Source: "..\\${unpackedDirectory}\\bin\\*"; DestDir: "{app}\\bin"; Flags: ignoreversion
+Source: "..\\${unpackedDirectory}\\lib\\*"; DestDir: "{app}\\lib"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\\${unpackedDirectory}\\license\\*"; DestDir: "{app}\\license"; Flags: ignoreversion recursesubdirs createallsubdirs
+; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+
+[Icons]
+Name: "{group}\\GazePlayAfsr"; Filename: "{app}\\bin\\gazeplay-afsr-windows.bat"; IconFilename: "{app}\\bin\\gazeplayicon.ico"; Flags: runminimized
+Name: "{group}\\Uninstall GazePlayAfsr"; Filename: "{uninstallexe}"; IconFilename: "{app}\\bin\\gazeplayicon.ico"
+Name: "{commondesktop}\\GazePlayAfsr"; Filename: "{app}\\bin\\gazeplay-afsr-windows.bat"; Tasks: desktopicon; IconFilename: "{app}\\bin\\gazeplayicon.ico"
+
+[Run]
+Filename: "{app}\\bin\\gazeplay-afsr-windows.bat"; Description: "{cm:LaunchProgram,GazePlayAfsr}"; Flags: shellexec postinstall skipifsilent
+
+[Code]
+function GetUninstallString: string;
+var
+  sUnInstPath: string;
+  sUnInstallString: String;
+begin
+  Result := '';
+  sUnInstPath := ExpandConstant('Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\GazePlayAfsr_is1'); { Your App GUID/ID }
+  sUnInstallString := '';
+  if not RegQueryStringValue(HKLM, sUnInstPath, 'UninstallString', sUnInstallString) then
+    RegQueryStringValue(HKCU, sUnInstPath, 'UninstallString', sUnInstallString);
+  Result := sUnInstallString;
+end;
+
+function IsUpgrade: Boolean;
+begin
+  Result := (GetUninstallString() <> '');
+end;
+
+function InitializeSetup: Boolean;
+var
+  V: Integer;
+  iResultCode: Integer;
+  sUnInstallString: string;
+begin
+  Result := True; { in case when no previous version is found }
+  if RegValueExists(HKEY_LOCAL_MACHINE,'Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\GazePlayAfsr_is1', 'UninstallString') then  { Your App GUID/ID }
+  begin
+    V := MsgBox(ExpandConstant('An older version of GazePlayAfsr was detected. Do you want to uninstall it?'), mbInformation, MB_YESNO); { Custom Message if App installed }
+    if V = IDYES then
+    begin
+      sUnInstallString := GetUninstallString();
+      sUnInstallString :=  RemoveQuotes(sUnInstallString);
+      Exec(ExpandConstant(sUnInstallString), '', '', SW_SHOW, ewWaitUntilTerminated, iResultCode);
+      Result := True; { if you want to proceed after uninstall }
+      { Exit; //if you want to quit after uninstall }
+    end
+    else
+      Result := False; { when older version present and not uninstalled }
+  end;
+end;

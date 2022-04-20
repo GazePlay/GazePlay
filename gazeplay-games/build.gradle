@@ -12,6 +12,8 @@ dependencies {
     compile 'javax.media:jmf:2.1.1e'
     compile 'ws.schild:jave-all-deps:2.5.0'
     compile 'ws.schild:jave-core:2.5.0'
+    compile group : 'org.apache.poi', name: 'poi-ooxml', version: '4.0.0'
+
     runtime 'org.slf4j:jcl-over-slf4j:1.7.25'
     runtime 'org.slf4j:log4j-over-slf4j:1.7.25'
 

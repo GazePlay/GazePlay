@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import mslinks.ShellLink;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
+import net.gazeplay.GazePlayArgs;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.BackgroundStyle;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
@@ -182,6 +183,274 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     GridPane buildConfigGridPane(ConfigurationContext configurationContext, Translator translator) {
 
+        String gazeplayType = GazePlayArgs.returnArgs();
+        GridPane grid;
+
+        if (gazeplayType.contains("bera")){
+            grid = beraConfigGridPane(configurationContext, translator);
+        }else {
+            grid = gazeplayConfigGridPane(configurationContext, translator);
+        }
+
+        return grid;
+    }
+
+    GridPane beraConfigGridPane(ConfigurationContext configurationContext, Translator translator){
+        Configuration config = ActiveConfigurationContext.getInstance();
+
+        if ((config.getUserName()) != null && !config.getUserName().equals("")) {
+            ActiveConfigurationContext.switchToUser(config.getUserName());
+        } else {
+            ActiveConfigurationContext.switchToDefaultUser();
+        }
+
+        config = ActiveConfigurationContext.getInstance();
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(50);
+        grid.setVgap(50);
+
+        grid.getStyleClass().add("item");
+
+        AtomicInteger currentFormRow = new AtomicInteger(1);
+
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "LanguageSettings", COLON));
+        // Language settings
+        {
+            I18NText label = new I18NText(translator, "Lang", COLON);
+
+            MenuButton input = buildLanguageChooser(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
+        /*if (Utils.isWindows()) {
+            {
+                I18NText label = new I18NText(translator, "CreateShortCut", COLON);
+
+                VBox input = buildVariantShortcutMaker(config, configurationContext);
+
+                addToGrid(grid, currentFormRow, label, input);
+            }
+        }*/
+
+        // Games settings
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "BeraSettings", COLON));
+
+        {
+            I18NText label = new I18NText(translator, "TransitionTime", COLON);
+
+            Spinner<Double> input = buildSpinner(1, 3, (double) config.getTransitionTime() / 1000,
+                0.5, config.getTransitionTimeProperty());
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "ActivateAutomaticModeQuestion", COLON);
+            CheckBox input = buildCheckBox(config.getQuestionTimeEnabledProperty());
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "QuestionTime", COLON);
+
+            Spinner<Double> input = buildSpinner(1, 10, (double) config.getQuestionTime() / 1000,
+                0.5, config.getQuestionTimeProperty());
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "HorizontalImages", COLON);
+            CheckBox input = buildCheckBox(config.getColumnarImagesEnabledProperty());
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        /*{
+            I18NText label = new I18NText(translator, "QuitKey", COLON);
+
+            ChoiceBox<String> input = buildQuitKeyChooser(config);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "QuestionLength", COLON);
+
+            Spinner<Double> input = buildSpinner(0.5, 20, (double) config.getQuestionLength() / 1000,
+                0.5, config.getQuestionLengthProperty());
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "ReaskQuestionOnFail", COLON);
+
+            CheckBox input = buildCheckBox(config.getReaskQuestionOnFail());
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "EnableRewardSound", COLON);
+
+            CheckBox input = buildCheckBox(config.getEnableRewardSoundProperty());
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "Limiter Time", COLON);
+
+            HBox input = buildLimiterTime(config, translator);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "Limiter Score", COLON);
+
+            HBox input = buildLimiterScore(config, translator);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }*/
+
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "EyeTrackerSettings", COLON));
+        // Eye Tracking settings
+        {
+            I18NText label = new I18NText(translator, "EyeTracker", COLON);
+
+            ChoiceBox<EyeTracker> input = buildEyeTrackerConfigChooser(config);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "FixationLength", COLON);
+
+            Spinner<Double> input = buildSpinner(0, 10, (double) config.getFixationLength() / 1000,
+                0.1, config.getFixationlengthProperty());
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GraphicsSettings", COLON));
+        // Graphics settings
+        {
+            I18NText label = new I18NText(translator, "LayoutFile", COLON);
+
+            ChoiceBox<BuiltInUiTheme> input = buildStyleThemeChooser(config, configurationContext);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "BackgroundStyle", COLON);
+            HBox input = buildBackgroundStyleToggleGroup(config, translator);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "BackgroundEnabled", COLON);
+            CheckBox input = buildCheckBox(config.getBackgroundEnabledProperty());
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
+            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "FoldersSettings", COLON));
+        // Folders settings
+        {
+            I18NText label = new I18NText(translator, "FileDir", COLON);
+
+            Node input = buildImageChooser(config, configurationContext, translator);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "MusicFolder", COLON);
+            final Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.MUSIC);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "VideoFolder", COLON);
+            final Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.VIDEO);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "WhereIsItDirectory", COLON);
+
+            Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.WHERE_IS_IT);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "StatsSettings", COLON));
+        // Stats settings
+        addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "HeatMapSettings", COLON));
+        // HeatMap settings
+        {
+            I18NText label = new I18NText(translator, "DisableHeatMap", COLON);
+
+            CheckBox input = buildCheckBox(config.getHeatMapDisabledProperty());
+
+            addSubToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "HeatMapOpacity", COLON);
+            ChoiceBox<Double> input = buildHeatMapOpacityChoiceBox(config);
+
+            addSubToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "HeatMapColors", COLON);
+            HBox input = buildHeatMapColorHBox(config, translator);
+
+            addSubToGrid(grid, currentFormRow, label, input);
+        }
+
+        addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "AOISettings", COLON));
+        // AOI settings
+        {
+            I18NText label = new I18NText(translator, "EnableAreaOfInterest", COLON);
+
+            CheckBox input = buildCheckBox(config.getAreaOfInterestDisabledProperty());
+
+            addSubToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "EnableConvexHull", COLON);
+
+            CheckBox input = buildCheckBox(config.getConvexHullDisabledProperty());
+
+            /* REMOVE FROM HERE */
+            input.setDisable(true);
+            label.setOpacity(0.5);
+            /* TO HERE TO ENABLE CONVEX HULL FOR AOI */
+
+            addSubToGrid(grid, currentFormRow, label, input);
+        }
+        addSubCategoryTitle(grid, currentFormRow, new I18NText(translator, "MoreStatsSettings", COLON));
+        // More Stats settings
+        {
+            I18NText label = new I18NText(translator, "DisableSequence", COLON);
+
+            CheckBox input = buildCheckBox(config.getFixationSequenceDisabledProperty());
+
+            addSubToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "EnableVideoRecording", COLON);
+
+            CheckBox input = buildCheckBox(config.getVideoRecordingEnabledProperty());
+
+            addSubToGrid(grid, currentFormRow, label, input);
+        }
+
+        return grid;
+    }
+
+    GridPane gazeplayConfigGridPane(ConfigurationContext configurationContext, Translator translator){
         Configuration config = ActiveConfigurationContext.getInstance();
 
         if ((config.getUserName()) != null && !config.getUserName().equals("")) {

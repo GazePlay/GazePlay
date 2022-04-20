@@ -43,6 +43,14 @@ jobs:
           mv gazeplay-windows-x64*installer.exe gazeplay-windows-x64-installer.exe
           mv gazeplay-windows-x32*.zip gazeplay-windows-x32.zip
           mv gazeplay-windows-x32*installer.exe gazeplay-windows-x32-installer.exe
+          mv gazeplay-afsr-windows-x64*.zip gazeplay-afsr-windows-x64.zip
+          mv gazeplay-afsr-windows-x64*installer.exe gazeplay-afsr-windows-x64-installer.exe
+          mv gazeplay-afsr-windows-x32*.zip gazeplay-afsr-windows-x32.zip
+          mv gazeplay-afsr-windows-x32*installer.exe gazeplay-afsr-windows-x32-installer.exe
+          mv gazeplay-bera-windows-x64*.zip gazeplay-bera-windows-x64.zip
+          mv gazeplay-bera-windows-x64*installer.exe gazeplay-bera-windows-x64-installer.exe
+          mv gazeplay-bera-windows-x32*.zip gazeplay-bera-windows-x32.zip
+          mv gazeplay-bera-windows-x32*installer.exe gazeplay-bera-windows-x32-installer.exe
           mv gazeplay-no-jre*.tar.gz gazeplay-no-jre.tar.gz
           mv gazeplay-no-jre*.zip gazeplay-no-jre.zip
 
@@ -90,6 +98,14 @@ jobs:
             ./build/distributions/gazeplay-windows-x64-installer.exe
             ./build/distributions/gazeplay-windows-x32.zip
             ./build/distributions/gazeplay-windows-x32-installer.exe
+            ./build/distributions/gazeplay-afsr-windows-x64.zip
+            ./build/distributions/gazeplay-afsr-windows-x64-installer.exe
+            ./build/distributions/gazeplay-afsr-windows-x32.zip
+            ./build/distributions/gazeplay-afsr-windows-x32-installer.exe
+            ./build/distributions/gazeplay-bera-windows-x64.zip
+            ./build/distributions/gazeplay-bera-windows-x64-installer.exe
+            ./build/distributions/gazeplay-bera-windows-x32.zip
+            ./build/distributions/gazeplay-bera-windows-x32-installer.exe
             ./build/distributions/gazeplay-no-jre.tar.gz
             ./build/distributions/gazeplay-no-jre.zip
           github-token: ${{ secrets.GITHUB_TOKEN }}
