@@ -34,7 +34,7 @@ DefaultGroupName=GazePlayAfsr
 LicenseFile=licence.txt
 
 OutputDir=..\\distributions
-OutputBaseFilename=gazeplay-afsr-windows-x64-${applicationVersion}-installer
+OutputBaseFilename=gazeplay-afsr-windows-x32-${applicationVersion}-installer
 ;Compression=lzma
 SolidCompression=yes
 

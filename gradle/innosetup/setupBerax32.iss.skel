@@ -34,7 +34,7 @@ DefaultGroupName=GazePlayBera
 LicenseFile=licence.txt
 
 OutputDir=..\\distributions
-OutputBaseFilename=gazeplay-bera-windows-x64-${applicationVersion}-installer
+OutputBaseFilename=gazeplay-bera-windows-x32-${applicationVersion}-installer
 ;Compression=lzma
 SolidCompression=yes
 
