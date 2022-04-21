@@ -86,7 +86,7 @@ jobs:
           prerelease: false
 
       - name: Upload Gazeplay to Release
-        id: upload-assets
+        id: upload-gazeplay-assets
         uses: csexton/release-asset-action@v2
         with:
           release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
@@ -101,7 +101,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Gazeplay-AFSR to Release
-        id: upload-assets
+        id: upload-afsr-assets
         uses: csexton/release-asset-action@v2
         with:
           release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
@@ -113,7 +113,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Gazeplay-Bera to Release
-        id: upload-assets
+        id: upload-bera-assets
         uses: csexton/release-asset-action@v2
         with:
           release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
