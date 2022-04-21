@@ -51,7 +51,6 @@ jobs:
           mv gazeplay-bera-windows-x64*installer.exe gazeplay-bera-windows-x64-installer.exe
           mv gazeplay-bera-windows-x32*.zip gazeplay-bera-windows-x32.zip
           mv gazeplay-bera-windows-x32*installer.exe gazeplay-bera-windows-x32-installer.exe
-          mv gazeplay-no-jre*.tar.gz gazeplay-no-jre.tar.gz
           mv gazeplay-no-jre*.zip gazeplay-no-jre.zip
 
       - name: Get Env
@@ -106,6 +105,5 @@ jobs:
             ./build/distributions/gazeplay-bera-windows-x64-installer.exe
             ./build/distributions/gazeplay-bera-windows-x32.zip
             ./build/distributions/gazeplay-bera-windows-x32-installer.exe
-            ./build/distributions/gazeplay-no-jre.tar.gz
             ./build/distributions/gazeplay-no-jre.zip
           github-token: ${{ secrets.GITHUB_TOKEN }}
