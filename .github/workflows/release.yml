@@ -85,7 +85,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Assets to Release
+      - name: Upload Gazeplay to Release
         id: upload-assets
         uses: csexton/release-asset-action@v2
         with:
@@ -97,13 +97,29 @@ jobs:
             ./build/distributions/gazeplay-windows-x64-installer.exe
             ./build/distributions/gazeplay-windows-x32.zip
             ./build/distributions/gazeplay-windows-x32-installer.exe
+            ./build/distributions/gazeplay-no-jre.zip
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Gazeplay-AFSR to Release
+        id: upload-assets
+        uses: csexton/release-asset-action@v2
+        with:
+          release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
+          files: |
             ./build/distributions/gazeplay-afsr-windows-x64.zip
             ./build/distributions/gazeplay-afsr-windows-x64-installer.exe
             ./build/distributions/gazeplay-afsr-windows-x32.zip
             ./build/distributions/gazeplay-afsr-windows-x32-installer.exe
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Gazeplay-Bera to Release
+        id: upload-assets
+        uses: csexton/release-asset-action@v2
+        with:
+          release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
+          files: |
             ./build/distributions/gazeplay-bera-windows-x64.zip
             ./build/distributions/gazeplay-bera-windows-x64-installer.exe
             ./build/distributions/gazeplay-bera-windows-x32.zip
             ./build/distributions/gazeplay-bera-windows-x32-installer.exe
-            ./build/distributions/gazeplay-no-jre.zip
           github-token: ${{ secrets.GITHUB_TOKEN }}
