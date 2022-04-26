@@ -22,7 +22,7 @@ class DimensionGameVariantTest {
     }
 
     @Test
-    void givenTranslator_shouldTranslateLabel() {
+    void givenTranslatorShouldTranslateLabel() {
         DimensionGameVariant gameVariant = new DimensionGameVariant(123, 456);
         assertEquals("123x456", gameVariant.getLabel(translator));
     }

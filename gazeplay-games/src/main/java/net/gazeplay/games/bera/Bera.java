@@ -41,6 +41,9 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
 @Slf4j
 public class Bera implements GameLifeCycle {
 
@@ -97,10 +100,15 @@ public class Bera implements GameLifeCycle {
     public boolean reEntered = false;
     public boolean goNext = false;
 
-    public ImageView whiteSquarePicture;
-    private Timeline timelineTransition = waitForTransition();
-    private Timeline timelineQuestion = waitForQuestion();
+    public ImageView whiteCrossPicture;
+    private final Timeline timelineTransition = waitForTransition();
+    private final Timeline timelineQuestion = waitForQuestion();
+    private final Timeline timelineInput = waitForInput();
     private Long currentRoundStartTime;
+
+    MediaPlayer bipPlayer;
+    MediaPlayer orderPlayer;
+    MediaPlayer imagePlayer;
 
     public Bera(final boolean fourThree, final IGameContext gameContext, final Stats stats, final BeraGameVariant gameVariant) {
         this.gameContext = gameContext;
@@ -132,6 +140,8 @@ public class Bera implements GameLifeCycle {
     @Override
     public void launch() {
 
+        this.configAudio();
+
         this.startTimer();
 
         this.canRemoveItemManually = true;
@@ -151,6 +161,41 @@ public class Bera implements GameLifeCycle {
         gameContext.firstStart();
 
         this.startGame();
+    }
+
+    public void configAudio(){
+        Configuration config = ActiveConfigurationContext.getInstance();
+
+        String bipPath = "gazeplay-core/src/main/resources/data/common/sounds/bip.wav";
+        Media bipSound = new Media(new File(bipPath).toURI().toString());
+        this.bipPlayer = new MediaPlayer(bipSound);
+
+        String orderPath = "gazeplay-core/src/main/resources/data/common/sounds/seeTwoImages.wav";
+        Media orderSound = new Media(new File(orderPath).toURI().toString());
+        this.orderPlayer = new MediaPlayer(orderSound);
+
+        String soundsImagespath = "";
+        if (gameVariant == BeraGameVariant.WORD_COMPREHENSION){
+            soundsImagespath = "gazeplay-games/src/main/resources/data/bera/sounds/wordComprehension";
+        }else {
+            soundsImagespath = "gazeplay-games/src/main/resources/data/bera/sounds/sentenceComprehension";
+        }
+
+        File[] files = new File(soundsImagespath).listFiles();
+        assert files != null;
+        String imagePath = String.valueOf(files[this.indexFileImage]);
+        Media imageSound = new Media(new File(imagePath).toURI().toString());
+        this.imagePlayer = new MediaPlayer(imageSound);
+
+        if (config.isSoundEnabled()){
+            this.bipPlayer.setVolume(config.getSoundVolume());
+            this.orderPlayer.setVolume(config.getSoundVolume());
+            this.imagePlayer.setVolume(config.getSoundVolume());
+        }else {
+            this.bipPlayer.setVolume(0.0);
+            this.orderPlayer.setVolume(0.0);
+            this.imagePlayer.setVolume(0.0);
+        }
     }
 
     public void startTimer(){
@@ -214,6 +259,8 @@ public class Bera implements GameLifeCycle {
         gameContext.onGameStarted(2000);
 
         customInputEventHandlerKeyboard.ignoreAnyInput = false;
+
+        this.orderPlayer.play();
     }
 
     public void checkAllPictureCardChecked() {
@@ -221,11 +268,27 @@ public class Bera implements GameLifeCycle {
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
             if (!p.isAlreadySee()) {
                 check = false;
+                break;
             }
         }
         if (check) {
             this.timelineTransition.playFromStart();
         }
+    }
+
+    public Timeline waitForInput(){
+        Configuration config = ActiveConfigurationContext.getInstance();
+
+        log.info("INPUT TIME : {}", config.getDelayBeforeSelectionTime());
+
+        Timeline transition = new Timeline();
+        transition.getKeyFrames().add(new KeyFrame(new Duration(config.getDelayBeforeSelectionTime())));
+        transition.setOnFinished(event -> {
+            for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
+                p.setVisibleProgressIndicator();
+            }
+        });
+        return transition;
     }
 
     public Timeline waitForTransition(){
@@ -251,12 +314,16 @@ public class Bera implements GameLifeCycle {
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
             p.setVisibleProgressIndicator();
             p.setVisibleImagePicture(false);
+            p.setNotifImageRectangle(false);
             this.reEntered = true;
         }
-        this.createWhiteRectangle();
+        this.createWhiteCross();
 
         if (config.isQuestionTimeEnabled()){
             this.timelineQuestion.playFromStart();
+            this.imagePlayer.play();
+        }else {
+            this.imagePlayer.play();
         }
     }
 
@@ -310,17 +377,17 @@ public class Bera implements GameLifeCycle {
         List<String> resourcesFolders = new LinkedList<>();
 
         final String resourcesDirectory = this.directoryRessource;
-        String imagesDirectory = "";
+        String directory = "";
 
         if (gameVariant == BeraGameVariant.WORD_COMPREHENSION){
-            imagesDirectory = resourcesDirectory + "/wordComprehension/";
+            directory = resourcesDirectory + "/wordComprehension/";
             this.indexEndGame = 20;
         }else {
-            imagesDirectory = resourcesDirectory + "/sentenceComprehension/";
+            directory = resourcesDirectory + "/sentenceComprehension/";
             this.indexEndGame = 10;
         }
 
-        directoryName = imagesDirectory;
+        directoryName = directory;
 
         // Here we filter out any unwanted resource folders, based on the difficulty JSON file
         Set<String> difficultySet;
@@ -333,7 +400,7 @@ public class Bera implements GameLifeCycle {
             difficultySet = Collections.emptySet();
         }
 
-        Set<String> tempResourcesFolders = ResourceFileManager.getResourceFolders(imagesDirectory);
+        Set<String> tempResourcesFolders = ResourceFileManager.getResourceFolders(directory);
 
         // If nothing can be found we take the entire folder contents.
         if (!difficultySet.isEmpty()) {
@@ -468,20 +535,20 @@ public class Bera implements GameLifeCycle {
         gameContext.getChildren().addAll(error);
     }
 
-    public void createWhiteRectangle(){
+    public void createWhiteCross(){
 
-        final Image whiteSquare = new Image("data/common/images/whiteSquare.png");
-        this.whiteSquarePicture = new ImageView(whiteSquare);
+        final Image whiteSquare = new Image("data/common/images/whiteCross.png");
+        this.whiteCrossPicture = new ImageView(whiteSquare);
 
         final Region root = gameContext.getRoot();
 
-        this.whiteSquarePicture.setX((root.getWidth() / 2) - (whiteSquare.getWidth() / 2));
-        this.whiteSquarePicture.setY((root.getHeight() / 2) - (whiteSquare.getHeight() / 2));
-        this.whiteSquarePicture.setId("item");
-        this.whiteSquarePicture.setOpacity(1);
-        this.whiteSquarePicture.setVisible(true);
+        this.whiteCrossPicture.setX((root.getWidth() / 2) - (whiteSquare.getWidth() / 2));
+        this.whiteCrossPicture.setY((root.getHeight() / 2) - (whiteSquare.getHeight() / 2));
+        this.whiteCrossPicture.setId("item");
+        this.whiteCrossPicture.setOpacity(1);
+        this.whiteCrossPicture.setVisible(true);
 
-        gameContext.getChildren().addAll(this.whiteSquarePicture);
+        gameContext.getChildren().addAll(this.whiteCrossPicture);
 
         this.goNext = true;
     }
@@ -493,9 +560,12 @@ public class Bera implements GameLifeCycle {
     }
 
     public void choicePicturePair(){
-        this.whiteSquarePicture.setVisible(false);
+        this.whiteCrossPicture.setVisible(false);
+        this.bipPlayer.play();
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
+            p.hideProgressIndicator();
             p.setVisibleImagePicture(true);
+            timelineInput.playFromStart();
         }
     }
 
@@ -1002,6 +1072,77 @@ public class Bera implements GameLifeCycle {
             workbook.write(outputStream);
         } catch (Exception e){
             log.info("Creation of xlsx file don't work", e);
+        }
+    }
+
+    @SuppressWarnings("PMD")
+    public void createSaveFileBackup(){
+
+        File pathDirectory = stats.getGameStatsOfTheDayDirectory();
+        String pathFile = "backupResults.csv";
+        File statsFile = new File(pathDirectory, pathFile);
+
+        Date now = new Date();
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy 'à' HH:mm:ss");
+
+        if (gameVariant == BeraGameVariant.WORD_COMPREHENSION){
+            this.totalWordComprehension = this.scoreLeftTargetItemsPhonology +
+                this.scoreRightTargetItemsPhonology +
+                this.scoreLeftTargetItemsSemantic +
+                this.scoreRightTargetItemsSemantic;
+            this.total = this.totalWordComprehension + this.totalItemsAddedManually;
+
+            try {
+                PrintWriter out = new PrintWriter(statsFile, StandardCharsets.UTF_16);
+                out.append("\r\n");
+                out.append("Fait le ").append(formatDate.format(now)).append("\r\n");
+                out.append("\r\n");
+                out.append("PHONOLOGIE \r\n");
+                out.append(" - Total Phonologie : ").append(String.valueOf(this.totalPhonology)).append("/10 \r\n");
+                out.append(" - Score items simples : ").append(String.valueOf(this.simpleScoreItemsPhonology)).append("/5 \r\n");
+                out.append(" - Score items complexes : ").append(String.valueOf(this.complexScoreItemsPhonology)).append("/5 \r\n");
+                out.append(" - Score items cibles gauche : ").append(String.valueOf(this.scoreLeftTargetItemsPhonology)).append("/5 \r\n");
+                out.append(" - Score items cibles droite : ").append(String.valueOf(this.scoreRightTargetItemsPhonology)).append("/5 \r\n");
+                out.append("\r\n");
+                out.append("SEMANTIQUE \r\n");
+                out.append(" - Total Sémantique : ").append(String.valueOf(this.totalSemantic)).append("/10 \r\n");
+                out.append(" - Score items simples : ").append(String.valueOf(this.simpleScoreItemsSemantic)).append("/5 \r\n");
+                out.append(" - Score items complexes : ").append(String.valueOf(this.complexScoreItemsSemantic)).append("/5 \r\n");
+                out.append(" - Score items fréquents (F+) : ").append(String.valueOf(this.frequentScoreItemSemantic)).append("/5 \r\n");
+                out.append(" - Score items peu fréquents (F-) : ").append(String.valueOf(this.infrequentScoreItemSemantic)).append("/5 \r\n");
+                out.append(" - Score items cibles gauche : ").append(String.valueOf(this.scoreLeftTargetItemsSemantic)).append("/5 \r\n");
+                out.append(" - Score items cibles droite : ").append(String.valueOf(this.scoreRightTargetItemsSemantic)).append("/5 \r\n");
+                out.append("\r\n");
+                out.append("COMPREHENSION DE MOTS \r\n");
+                out.append(" - Total compréhension de mots : ").append(String.valueOf(this.totalWordComprehension)).append("/20 \r\n");
+                out.append(" - Total items ajoutés manuellement : ").append(String.valueOf(this.totalItemsAddedManually)).append("/20 \r\n");
+                out.append(" - Total compréhension de mots avec items sélectionnés manuellement : ").append(String.valueOf(this.total)).append("/20 \r\n");
+                out.close();
+            } catch (Exception e) {
+                log.info("Error creation csv for Bera stats game !");
+                e.printStackTrace();
+            }
+        }else {
+            this.total = this.totalMorphosyntax + this.totalItemsAddedManually;
+
+            try {
+                PrintWriter out = new PrintWriter(statsFile, StandardCharsets.UTF_16);
+                out.append("\r\n");
+                out.append("Fait le ").append(formatDate.format(now)).append("\r\n");
+                out.append("\r\n");
+                out.append("MORPHOSYNTAXE \r\n");
+                out.append(" - Total morphosyntaxe : ").append(String.valueOf(this.totalMorphosyntax)).append("/10 \r\n");
+                out.append(" - Score items simples : ").append(String.valueOf(this.simpleScoreItemsMorphosyntax)).append("/5 \r\n");
+                out.append(" - Score items complexes : ").append(String.valueOf(this.complexScoreItemsMorphosyntax)).append("/5 \r\n");
+                out.append(" - Score items cibles gauche : ").append(String.valueOf(this.scoreLeftTargetItemsMorphosyntax)).append("/5 \r\n");
+                out.append(" - Score items cibles droite : ").append(String.valueOf(this.scoreRightTargetItemsMorphosyntax)).append("/5 \r\n");
+                out.append(" - Total items ajoutés manuellement : ").append(String.valueOf(this.totalItemsAddedManually)).append("/10 \r\n");
+                out.append(" - Total compréhension de phrases : ").append(String.valueOf(this.total)).append("/10 \r\n");
+                out.close();
+            } catch (Exception e) {
+                log.info("Error creation csv for Bera stats game !");
+                e.printStackTrace();
+            }
         }
     }
 

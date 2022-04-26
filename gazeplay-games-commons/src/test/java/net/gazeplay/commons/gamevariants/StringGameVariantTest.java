@@ -25,7 +25,7 @@ class StringGameVariantTest {
     }
 
     @Test
-    void givenTranslator_shouldTranslateLabel() {
+    void givenTranslatorShouldTranslateLabel() {
         StringGameVariant gameVariant = new StringGameVariant("label", "value");
         assertEquals("translation", gameVariant.getLabel(translator));
         verify(translator, times(1)).translate("label");

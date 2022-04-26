@@ -24,10 +24,6 @@ public class GazePlayArgs {
                 String userName = System.getProperty("user.name");
                 myFile = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt");
             }
-            /*else if(os.contains("mac")){
-                String userName = System.getProperty("user.name");
-                myFile = new File("/Users/" + userName + "/Documents/Gazeplay/argsGazeplay.txt");
-            }*/
             else {
                 log.info("Os non reconnu !");
             }

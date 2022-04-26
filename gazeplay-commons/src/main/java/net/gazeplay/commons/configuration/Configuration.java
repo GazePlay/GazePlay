@@ -68,8 +68,12 @@ public class Configuration {
     private static final String PROPERTY_NAME_ELEMENTSIZE = "ELEMENT_SIZE";
     private static final String PROPERTY_NAME_QUESTION_TIME = "QUESTION_TIME";
     private static final String PROPERTY_NAME_TRANSITION_TIME = "TRANSITION_TIME";
+    private static final String PROPERTY_NAME_DELAY_BEFORE_SELECTION_TIME = "DELAY_BEFORE_SELECTION_TIME";
     private static final String PROPERTY_NAME_QUESTION_TIME_ENABLED = "QUESTION_TIME_ENABLED";
     private static final String PROPERTY_NAME_COLUMNAR_IMAGES_ENABLED = "COLUMNAR_IMAGES_ENABLED";
+    private static final String PROPERTY_NAME_SOUND_ENABLED = "SOUND_ENABLED";
+    private static final String PROPERTY_NAME_SOUND_VOLUME_ENABLED = "SOUND_VOLUME_ENABLED";
+    private static final String PROPERTY_NAME_FEEDBACK = "FEEDBACK";
 
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.tobii.toString();
@@ -105,9 +109,13 @@ public class Configuration {
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
     private static final int DEFAULT_VALUE_ELEMENT_SIZE = 100;
     private static final int DEFAULT_VALUE_TRANSITION_TIME = 2000;
+    private static final int DEFAULT_VALUE_DELAY_BEFORE_SELECTION_TIME = 1000;
     private static final int DEFAULT_VALUE_QUESTION_TIME = 5000;
     private static final boolean DEFAULT_VALUE_QUESTION_TIME_ENABLED = false;
     private static final boolean DEFAULT_VALUE_COLUMNAR_IMAGES_ENABLED = false;
+    private static final boolean DEFAULT_VALUE_SOUND_ENABLED = true;
+    private static final int DEFAULT_VALUE_SOUND_VOLUME = 50000;
+    private static final String DEFAULT_VALUE_FEEDBACK = Feedback.standard.toString();
 
     /*
     source : "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
@@ -248,10 +256,22 @@ public class Configuration {
     private final IntegerProperty transitionTimeProperty;
 
     @Getter
+    private final IntegerProperty delayBeforeSelectionTimeProperty;
+
+    @Getter
     private final BooleanProperty questionTimeEnabledProperty;
 
     @Getter
     private final BooleanProperty columnarImagesEnabledProperty;
+
+    @Getter
+    private final BooleanProperty soundEnabledProperty;
+
+    @Getter
+    private final IntegerProperty soundVolumeProperty;
+
+    @Getter
+    private final StringProperty feedbackProperty;
 
     private final File configFile;
 
@@ -330,8 +350,12 @@ public class Configuration {
 
         questionTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_QUESTION_TIME, DEFAULT_VALUE_QUESTION_TIME, propertyChangeListener);
         transitionTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_TRANSITION_TIME, DEFAULT_VALUE_TRANSITION_TIME, propertyChangeListener);
+        delayBeforeSelectionTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_DELAY_BEFORE_SELECTION_TIME, DEFAULT_VALUE_DELAY_BEFORE_SELECTION_TIME, propertyChangeListener);
         questionTimeEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_QUESTION_TIME_ENABLED, DEFAULT_VALUE_QUESTION_TIME_ENABLED, propertyChangeListener);
         columnarImagesEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_COLUMNAR_IMAGES_ENABLED, DEFAULT_VALUE_COLUMNAR_IMAGES_ENABLED, propertyChangeListener);
+        soundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_SOUND_ENABLED, DEFAULT_VALUE_SOUND_ENABLED, propertyChangeListener);
+        soundVolumeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_SOUND_VOLUME_ENABLED, DEFAULT_VALUE_SOUND_VOLUME, propertyChangeListener);
+        feedbackProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FEEDBACK, DEFAULT_VALUE_FEEDBACK, propertyChangeListener);
 
     }
 
@@ -514,11 +538,21 @@ public class Configuration {
         return questionTimeProperty.getValue();
     }
 
-    public Integer getTransitionTime() {
-        return transitionTimeProperty.getValue();
-    }
+    public Integer getTransitionTime() {return transitionTimeProperty.getValue(); }
+
+    public Integer getDelayBeforeSelectionTime() {return delayBeforeSelectionTimeProperty.getValue(); }
 
     public Boolean isQuestionTimeEnabled(){ return questionTimeEnabledProperty.getValue(); }
 
     public Boolean isColumnarImagesEnabled(){ return columnarImagesEnabledProperty.getValue(); }
+
+    public Boolean isSoundEnabled(){ return soundEnabledProperty.getValue(); }
+
+    public Integer getSoundVolume() {
+        return soundVolumeProperty.getValue();
+    }
+
+    public String getFeedback() {
+        return feedbackProperty.getValue();
+    }
 }

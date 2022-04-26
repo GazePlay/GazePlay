@@ -102,12 +102,12 @@ public class GazePlayLauncher {
         FileWriter myWritter = null;
 
         try {
-            if (os.contains("nux")){
+            if (os.contains("nux") || os.contains("mac")){
                 File myFile = new File("argsGazeplay.txt");
                 log.info("Fil args is : " + myFile);
                 myWritter = new FileWriter("argsGazeplay.txt", StandardCharsets.UTF_8);
                 myWritter.write(args);
-            }else if (os.contains("win") || os.contains("mac")){
+            }else if (os.contains("win")){
                 String userName = System.getProperty("user.name");
                 File myFolder = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay");
                 boolean createFolder = myFolder.mkdirs();
@@ -117,18 +117,6 @@ public class GazePlayLauncher {
                 myWritter = new FileWriter("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt", StandardCharsets.UTF_8);
                 myWritter.write(args);
             }
-            /*else if(os.contains("mac")){
-                String userName = System.getProperty("user.name");
-                File myFolder = new File("/Users/" + userName + "/Documents/Gazeplay");
-                boolean createFolder = myFolder.mkdirs();
-                log.info("Folder created, path = " + createFolder);
-                File myFile = new File("/Users/" + userName + "/Documents/Gazeplay/argsGazeplay.txt");
-                log.info("Fil args is : " + myFile);
-                myWritter = new FileWriter("/Users/" + userName + "/Documents/Gazeplay/argsGazeplay.txt", StandardCharsets.UTF_8);
-                myWritter.write(args);
-            }
-
-             */
             else{
                 log.info("OS non reconnu !");
             }

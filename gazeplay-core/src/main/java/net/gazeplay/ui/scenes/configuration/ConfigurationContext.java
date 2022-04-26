@@ -33,10 +33,7 @@ import mslinks.ShellLink;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
 import net.gazeplay.GazePlayArgs;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
-import net.gazeplay.commons.configuration.BackgroundStyle;
-import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
-import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.configuration.*;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gaze.EyeTracker;
 import net.gazeplay.commons.themes.BuiltInUiTheme;
@@ -46,12 +43,14 @@ import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.multilinguism.I18N;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
+import net.gazeplay.ui.scenes.stats.StatsContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,10 +59,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -225,17 +221,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
-        /*if (Utils.isWindows()) {
-            {
-                I18NText label = new I18NText(translator, "CreateShortCut", COLON);
-
-                VBox input = buildVariantShortcutMaker(config, configurationContext);
-
-                addToGrid(grid, currentFormRow, label, input);
-            }
-        }*/
-
-        // Games settings
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "BeraSettings", COLON));
 
         {
@@ -243,6 +228,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             Spinner<Double> input = buildSpinner(1, 3, (double) config.getTransitionTime() / 1000,
                 0.5, config.getTransitionTimeProperty());
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
+            I18NText label = new I18NText(translator, "DelayBeforeSelection", COLON);
+
+            Spinner<Double> input = buildSpinner(0, 3, (double) config.getDelayBeforeSelectionTime() / 1000,
+                0.5, config.getDelayBeforeSelectionTimeProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -266,49 +259,35 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
-        /*{
-            I18NText label = new I18NText(translator, "QuitKey", COLON);
-
-            ChoiceBox<String> input = buildQuitKeyChooser(config);
+        {
+            I18NText label = new I18NText(translator, "ActivateSound", COLON);
+            CheckBox input = buildCheckBox(config.getSoundEnabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            I18NText label = new I18NText(translator, "QuestionLength", COLON);
+            I18NText label = new I18NText(translator, "SoundVolume", COLON);
 
-            Spinner<Double> input = buildSpinner(0.5, 20, (double) config.getQuestionLength() / 1000,
-                0.5, config.getQuestionLengthProperty());
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "ReaskQuestionOnFail", COLON);
-
-            CheckBox input = buildCheckBox(config.getReaskQuestionOnFail());
+            Spinner<Double> input = buildSpinner(1, 100, (double) config.getSoundVolume() / 1000,
+                1, config.getSoundVolumeProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            I18NText label = new I18NText(translator, "EnableRewardSound", COLON);
+            I18NText label = new I18NText(translator, "Feedback", COLON);
 
-            CheckBox input = buildCheckBox(config.getEnableRewardSoundProperty());
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "Limiter Time", COLON);
-
-            HBox input = buildLimiterTime(config, translator);
+            ChoiceBox<String> input = buildFeedbackConfigChooser(config, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "SeeResult", COLON));
         {
-            I18NText label = new I18NText(translator, "Limiter Score", COLON);
+            I18NText label = new I18NText(translator, "ResultDir", COLON);
 
-            HBox input = buildLimiterScore(config, translator);
+            Node input = buildResultFolder(config, configurationContext, translator);
 
             addToGrid(grid, currentFormRow, label, input);
-        }*/
+        }
 
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "EyeTrackerSettings", COLON));
         // Eye Tracking settings
@@ -802,6 +781,39 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return spinner;
     }
 
+    static ChoiceBox<String> buildFeedbackConfigChooser(Configuration configuration, Translator translator){
+
+        String nothingLabel = translator.translate(Feedback.nothing.toString());
+        String standardLabel = translator.translate(Feedback.standard.toString());
+        String framedLabel = translator.translate(Feedback.framed.toString());
+
+        /*ChoiceBox<Feedback> feedbackBox = new ChoiceBox<>();
+        feedbackBox.getItems().addAll(Feedback.values());
+        feedbackBox.getSelectionModel().select(Feedback.valueOf(configuration.getFeedbackProperty().getValue()));*/
+
+        ChoiceBox<String> feedbackBox = new ChoiceBox<>();
+        feedbackBox.getItems().add(nothingLabel);
+        feedbackBox.getItems().add(standardLabel);
+        feedbackBox.getItems().add(framedLabel);
+        feedbackBox.getSelectionModel().select(translator.translate(configuration.getFeedbackProperty().getValue()));
+
+        feedbackBox.setPrefWidth(PREF_WIDTH);
+        feedbackBox.setPrefHeight(PREF_HEIGHT);
+
+        feedbackBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (Objects.equals(newValue, "Rien") || Objects.equals(newValue, "Nothing")){
+                configuration.getFeedbackProperty().setValue(Feedback.nothing.toString());
+            }else if (Objects.equals(newValue, "Standard")){
+                configuration.getFeedbackProperty().setValue(Feedback.standard.toString());
+            }else {
+                configuration.getFeedbackProperty().setValue(Feedback.framed.toString());
+            }
+        });
+
+        return feedbackBox;
+    }
+
+
     /**
      * Function to use to permit to user to select between several theme
      */
@@ -886,6 +898,39 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             dialog.show();
             dialog.sizeToScene();
             getGazePlay().getPrimaryStage().getScene().getRoot().setEffect(new GaussianBlur());
+        });
+
+        return selectButton;
+    }
+
+    private Node buildResultFolder(Configuration configuration,
+                                   ConfigurationContext configurationContext,
+                                   Translator translator){
+
+
+        final I18NButton selectButton = new I18NButton(translator, "SeeFolder");
+
+        selectButton.setOnAction(e -> {
+            String os = System.getProperty("os.name").toLowerCase();
+            String userName = System.getProperty("user.name");
+            String playerName = configuration.getUserNameProperty().getValue();
+            String path = "";
+
+            if (Objects.equals(playerName, "")){
+                path ="C:\\Users\\" + userName + "\\GazePlay\\statistics\\";
+            }else {
+                path ="C:\\Users\\" + userName + "\\GazePlay\\profiles\\" + playerName + "\\statistics\\";
+            }
+
+            try {
+                if (os.contains("win")){
+                    Runtime.getRuntime().exec("explorer.exe /open," + path);
+                }else {
+                    Runtime.getRuntime().exec("cmd xdg-open," + path);
+                }
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
         });
 
         return selectButton;

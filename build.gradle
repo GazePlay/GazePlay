@@ -289,6 +289,12 @@ distributions {
             from("build/bin/gazeplay-macos.sh") {
                 into 'bin'
             }
+            from("build/bin/gazeplay-afsr-macos.sh") {
+                into 'bin'
+            }
+            from("build/bin/gazeplay-bera-macos.sh") {
+                into 'bin'
+            }
             from("build/jre/macos") {
                 into 'lib/jre'
             }

@@ -24,6 +24,8 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.util.Objects;
+
 @Slf4j
 @ToString
 @Getter
@@ -113,6 +115,7 @@ class PictureCard extends Group {
 
             if (this.alreadySee) {
                 selected = true;
+                this.setNotifImageRectangle(true);
                 imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);
                 imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandlerMouse);
                 gameContext.getGazeDeviceManager().removeEventFilter(imageRectangle);
@@ -136,9 +139,15 @@ class PictureCard extends Group {
         customInputEventHandlerMouse.ignoreAnyInput = false;
     }
 
+    public void hideProgressIndicator() {
+        customInputEventHandlerMouse.ignoreAnyInput = true;
+    }
+
     public void setVisibleImagePicture(boolean value){
         this.imageRectangle.setVisible(value);
     }
+
+    public void setNotifImageRectangle(boolean value) { this.notifImageRectangle.setVisible(value); }
 
     public void newProgressIndicator() {
         this.getChildren().remove(progressIndicator);
@@ -148,8 +157,15 @@ class PictureCard extends Group {
     }
 
     public void checkedImage(){
-        notifImageRectangle.setOpacity(1);
-        notifImageRectangle.setVisible(true);
+        Configuration config = ActiveConfigurationContext.getInstance();
+
+        if (Objects.equals(config.getFeedbackProperty().getValue(), "nothing")){
+            notifImageRectangle.setOpacity(0);
+            notifImageRectangle.setVisible(false);
+        }else {
+            notifImageRectangle.setOpacity(1);
+            notifImageRectangle.setVisible(true);
+        }
     }
 
     public void removeEventHandler(){
@@ -211,6 +227,7 @@ class PictureCard extends Group {
         Timeline transition = new Timeline();
         transition.getKeyFrames().add(new KeyFrame(new Duration(config.getTransitionTime())));
         transition.setOnFinished(event -> {
+            gameInstance.createSaveFileBackup();
             gameInstance.dispose();
             gameContext.clear();
             gameInstance.launch();
@@ -251,37 +268,64 @@ class PictureCard extends Group {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        final Image image = new Image("data/common/images/blackCircle.png");
+        if (Objects.equals(config.getFeedbackProperty().getValue(), "standard")){
+            final Image image = new Image("data/common/images/blackCircle.png");
 
-        double imageWidth = image.getWidth();
-        double imageHeight = image.getHeight();
-        double imageHeightToWidthRatio = imageHeight / imageWidth;
+            double imageWidth = image.getWidth();
+            double imageHeight = image.getHeight();
+            double imageHeightToWidthRatio = imageHeight / imageWidth;
 
-        double rectangleWidth = imageRectangle.getFitWidth() / 40;
-        double rectangleHeight = imageHeightToWidthRatio * rectangleWidth;
+            double rectangleWidth = imageRectangle.getFitWidth() / 40;
+            double rectangleHeight = imageHeightToWidthRatio * rectangleWidth;
 
-        double positionX = 0;
-        double positionY = 0;
-        if (config.isColumnarImagesEnabled()){
-            positionX = imageRectangle.getX() + 5;
-            positionY = imageRectangle.getY() + 15;
+            double positionX = 0;
+            double positionY = 0;
+            if (config.isColumnarImagesEnabled()){
+                positionX = imageRectangle.getX() + 5;
+                positionY = imageRectangle.getY() + 15;
+            }else {
+                positionX = imageRectangle.getX() + 5;
+                positionY = imageRectangle.getY() + 35;
+            }
+
+            Rectangle notifImageRectangle = new Rectangle(rectangleWidth, rectangleHeight);
+            notifImageRectangle.setFill(new ImagePattern(image));
+            notifImageRectangle.setX(positionX);
+            notifImageRectangle.setY(positionY);
+            notifImageRectangle.setOpacity(0);
+            notifImageRectangle.setVisible(false);
+            return notifImageRectangle;
         }else {
-            positionX = imageRectangle.getX() + 5;
-            positionY = imageRectangle.getY() + 35;
-        }
+            final Image image = new Image("data/common/images/redFrame.png");
 
-        Rectangle notifImageRectangle = new Rectangle(rectangleWidth, rectangleHeight);
-        notifImageRectangle.setFill(new ImagePattern(image));
-        notifImageRectangle.setX(positionX);
-        notifImageRectangle.setY(positionY);
-        notifImageRectangle.setOpacity(0);
-        notifImageRectangle.setVisible(false);
-        return notifImageRectangle;
+            ImageView result = new ImageView(image);
+
+            result.setFitWidth(this.initialWidth);
+            result.setFitHeight(this.initialHeight);
+
+            double ratioX = result.getFitWidth() / image.getWidth();
+            double ratioY = result.getFitHeight() / image.getHeight();
+
+            double reducCoeff = Math.min(ratioX, ratioY);
+
+            double w = image.getWidth() * reducCoeff;
+            double h = image.getHeight() * reducCoeff;
+
+            double posY = (result.getFitHeight() - h) / 2;
+
+            Rectangle notifImageRectangle = new Rectangle(w, h);
+            notifImageRectangle.setFill(new ImagePattern(image));
+            notifImageRectangle.setX(this.initialPositionX);
+            notifImageRectangle.setY(posY);
+            notifImageRectangle.setVisible(false);
+            return notifImageRectangle;
+        }
     }
 
     private ProgressIndicator buildProgressIndicator(double parentWidth, double parentHeight) {
-        double minWidth = parentWidth / 2;
-        double minHeight = parentHeight / 2;
+        // progressIndicator 2cm de diamètre
+        double minWidth = 75;
+        double minHeight = 75;
 
         double positionX = imageRectangle.getX() + (parentWidth - minWidth) / 2;
         double positionY = imageRectangle.getY() + (parentHeight - minHeight) / 2;
