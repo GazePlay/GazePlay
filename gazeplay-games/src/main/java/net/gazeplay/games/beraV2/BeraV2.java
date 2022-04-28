@@ -41,9 +41,6 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-
 @Slf4j
 public class BeraV2 implements GameLifeCycle {
 
@@ -106,9 +103,9 @@ public class BeraV2 implements GameLifeCycle {
     private final Timeline timelineInput = waitForInput();
     private Long currentRoundStartTime;
 
-    MediaPlayer bipPlayer;
-    MediaPlayer orderPlayer;
-    MediaPlayer imagePlayer;
+    private static final String BIP_SOUND = "data/common/sounds/bip.wav";
+    private static final String SEE_TWO_IMAGES_SOUND = "data/common/sounds/seeTwoImages.wav";
+    private String IMAGE_SOUND = "";
 
     public BeraV2(final boolean fourThree, final IGameContext gameContext, final Stats stats, final BeraV2GameVariant gameVariant) {
         this.gameContext = gameContext;
@@ -121,6 +118,7 @@ public class BeraV2 implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
 
+        this.setFirstSound();
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
     }
 
@@ -134,13 +132,27 @@ public class BeraV2 implements GameLifeCycle {
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
+        this.setFirstSound();
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
+    }
+
+    public void setFirstSound(){
+        if (gameVariant == BeraV2GameVariant.WORD_COMPREHENSION_V2){
+            this.IMAGE_SOUND = "data/beraV2/sounds/wordComprehension/01-Igloo.wav";
+        }else {
+            this.IMAGE_SOUND = "data/beraV2/sounds/sentenceComprehension/01-HommeSoignerParFemme.wav";
+        }
+    }
+
+    public void playSound(String soundPath){
+        Configuration config = ActiveConfigurationContext.getInstance();
+        if (config.isSoundEnabled()){
+            gameContext.getSoundManager().add(soundPath);
+        }
     }
 
     @Override
     public void launch() {
-
-        this.configAudio();
 
         this.startTimer();
 
@@ -161,41 +173,6 @@ public class BeraV2 implements GameLifeCycle {
         gameContext.firstStart();
 
         this.startGame();
-    }
-
-    public void configAudio(){
-        Configuration config = ActiveConfigurationContext.getInstance();
-
-        String bipPath = "gazeplay-core/src/main/resources/data/common/sounds/bip.wav";
-        Media bipSound = new Media(new File(bipPath).toURI().toString());
-        this.bipPlayer = new MediaPlayer(bipSound);
-
-        String orderPath = "gazeplay-core/src/main/resources/data/common/sounds/seeTwoImages.wav";
-        Media orderSound = new Media(new File(orderPath).toURI().toString());
-        this.orderPlayer = new MediaPlayer(orderSound);
-
-        String soundsImagespath = "";
-        if (gameVariant == BeraV2GameVariant.WORD_COMPREHENSION_V2){
-            soundsImagespath = "gazeplay-games/src/main/resources/data/beraV2/sounds/wordComprehension";
-        }else {
-            soundsImagespath = "gazeplay-games/src/main/resources/data/beraV2/sounds/sentenceComprehension";
-        }
-
-        File[] files = new File(soundsImagespath).listFiles();
-        assert files != null;
-        String imagePath = String.valueOf(files[this.indexFileImage]);
-        Media imageSound = new Media(new File(imagePath).toURI().toString());
-        this.imagePlayer = new MediaPlayer(imageSound);
-
-        if (config.isSoundEnabled()){
-            this.bipPlayer.setVolume(config.getSoundVolume());
-            this.orderPlayer.setVolume(config.getSoundVolume());
-            this.imagePlayer.setVolume(config.getSoundVolume());
-        }else {
-            this.bipPlayer.setVolume(0.0);
-            this.orderPlayer.setVolume(0.0);
-            this.imagePlayer.setVolume(0.0);
-        }
     }
 
     public void startTimer(){
@@ -260,7 +237,7 @@ public class BeraV2 implements GameLifeCycle {
 
         customInputEventHandlerKeyboard.ignoreAnyInput = false;
 
-        this.orderPlayer.play();
+        this.playSound(SEE_TWO_IMAGES_SOUND);
     }
 
     public void checkAllPictureCardChecked() {
@@ -321,9 +298,9 @@ public class BeraV2 implements GameLifeCycle {
 
         if (config.isQuestionTimeEnabled()){
             this.timelineQuestion.playFromStart();
-            this.imagePlayer.play();
+            this.playSound(IMAGE_SOUND);
         }else {
-            this.imagePlayer.play();
+            this.playSound(IMAGE_SOUND);
         }
     }
 
@@ -537,7 +514,7 @@ public class BeraV2 implements GameLifeCycle {
 
     public void createWhiteCross(){
 
-        final Image whiteSquare = new Image("data/common/images/whiteSquare.png");
+        final Image whiteSquare = new Image("data/common/images/whiteCross.png");
         this.whiteCrossPicture = new ImageView(whiteSquare);
 
         final Region root = gameContext.getRoot();
@@ -556,12 +533,12 @@ public class BeraV2 implements GameLifeCycle {
     public void increaseIndexFileImage(boolean correctAnswer) {
         this.calculateStats(this.indexFileImage, correctAnswer);
         this.indexFileImage = this.indexFileImage + 1;
-
+        this.nextSound(this.indexFileImage);
     }
 
     public void choicePicturePair(){
         this.whiteCrossPicture.setVisible(false);
-        this.bipPlayer.play();
+        this.playSound(BIP_SOUND);
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
             p.hideProgressIndicator();
             p.setVisibleImagePicture(true);
@@ -781,6 +758,134 @@ public class BeraV2 implements GameLifeCycle {
             currentRoundDetails.getPictureCardList().get(0).onCorrectCardSelected();
         } else {
             currentRoundDetails.getPictureCardList().get(0).onWrongCardSelected();
+        }
+    }
+
+    private void nextSound(int index){
+        if (gameVariant == BeraV2GameVariant.WORD_COMPREHENSION_V2) {
+            switch (index) {
+
+                case 1:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/02-Main.wav";
+                    break;
+
+                case 2:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/03-Mie.wav";
+                    break;
+
+                case 3:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/04-Chou.wav";
+                    break;
+
+                case 4:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/05-Renne.wav";
+                    break;
+
+                case 5:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/06-Champ.wav";
+                    break;
+
+                case 6:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/07-Ananas.wav";
+                    break;
+
+                case 7:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/08-Chevre.wav";
+                    break;
+
+                case 8:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/09-Ceinture.wav";
+                    break;
+
+                case 9:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/10-Mat.wav";
+                    break;
+
+                case 10:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/11-Tulipe.wav";
+                    break;
+
+                case 11:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/12-Trompette.wav";
+                    break;
+
+                case 12:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/13-Pas.wav";
+                    break;
+
+                case 13:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/14-Riz.wav";
+                    break;
+
+                case 14:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/15-Fut.wav";
+                    break;
+
+                case 15:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/16-Scie.wav";
+                    break;
+
+                case 16:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/17-Vent.wav";
+                    break;
+
+                case 17:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/18-Bottes.wav";
+                    break;
+
+                case 18:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/19-Bond.wav";
+                    break;
+
+                case 19:
+                    this.IMAGE_SOUND="data/beraV2/sounds/wordComprehension/20-Oreille.wav";
+                    break;
+
+                default:
+                    break;
+            }
+        }else if (gameVariant == BeraV2GameVariant.SENTENCE_COMPREHENSION_V2){
+            switch (index){
+
+                case 1:
+                    this.IMAGE_SOUND="data/beraV2/sounds/sentenceComprehension/02-EmilieCourt.wav";
+                    break;
+
+                case 2:
+                    this.IMAGE_SOUND="data/beraV2/sounds/sentenceComprehension/03-ChatSurChaise.wav";
+                    break;
+
+                case 3:
+                    this.IMAGE_SOUND="data/beraV2/sounds/sentenceComprehension/04-ElleLit.wav";
+                    break;
+
+                case 4:
+                    this.IMAGE_SOUND="data/beraV2/sounds/sentenceComprehension/05-EnfantTireChien.wav";
+                    break;
+
+                case 5:
+                    this.IMAGE_SOUND="data/beraV2/sounds/sentenceComprehension/06-GarconPorteManteau.wav";
+                    break;
+
+                case 6:
+                    this.IMAGE_SOUND="data/beraV2/sounds/sentenceComprehension/07-EllesEcriventLettre.wav";
+                    break;
+
+                case 7:
+                    this.IMAGE_SOUND="data/beraV2/sounds/sentenceComprehension/08-BebeRecuBeaucoupPeluche.wav";
+                    break;
+
+                case 8:
+                    this.IMAGE_SOUND="data/beraV2/sounds/sentenceComprehension/09-EstContent.wav";
+                    break;
+
+                case 9:
+                    this.IMAGE_SOUND="data/beraV2/sounds/sentenceComprehension/10-ElleNourrit.wav";
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 

@@ -266,14 +266,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            I18NText label = new I18NText(translator, "SoundVolume", COLON);
-
-            Spinner<Double> input = buildSpinner(1, 100, (double) config.getSoundVolume() / 1000,
-                1, config.getSoundVolumeProperty());
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
             I18NText label = new I18NText(translator, "Feedback", COLON);
 
             ChoiceBox<String> input = buildFeedbackConfigChooser(config, translator);

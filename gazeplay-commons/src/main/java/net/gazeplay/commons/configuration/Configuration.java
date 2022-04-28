@@ -72,7 +72,6 @@ public class Configuration {
     private static final String PROPERTY_NAME_QUESTION_TIME_ENABLED = "QUESTION_TIME_ENABLED";
     private static final String PROPERTY_NAME_COLUMNAR_IMAGES_ENABLED = "COLUMNAR_IMAGES_ENABLED";
     private static final String PROPERTY_NAME_SOUND_ENABLED = "SOUND_ENABLED";
-    private static final String PROPERTY_NAME_SOUND_VOLUME_ENABLED = "SOUND_VOLUME_ENABLED";
     private static final String PROPERTY_NAME_FEEDBACK = "FEEDBACK";
 
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
@@ -114,7 +113,6 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_QUESTION_TIME_ENABLED = false;
     private static final boolean DEFAULT_VALUE_COLUMNAR_IMAGES_ENABLED = false;
     private static final boolean DEFAULT_VALUE_SOUND_ENABLED = true;
-    private static final int DEFAULT_VALUE_SOUND_VOLUME = 50000;
     private static final String DEFAULT_VALUE_FEEDBACK = Feedback.standard.toString();
 
     /*
@@ -268,9 +266,6 @@ public class Configuration {
     private final BooleanProperty soundEnabledProperty;
 
     @Getter
-    private final IntegerProperty soundVolumeProperty;
-
-    @Getter
     private final StringProperty feedbackProperty;
 
     private final File configFile;
@@ -354,7 +349,6 @@ public class Configuration {
         questionTimeEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_QUESTION_TIME_ENABLED, DEFAULT_VALUE_QUESTION_TIME_ENABLED, propertyChangeListener);
         columnarImagesEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_COLUMNAR_IMAGES_ENABLED, DEFAULT_VALUE_COLUMNAR_IMAGES_ENABLED, propertyChangeListener);
         soundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_SOUND_ENABLED, DEFAULT_VALUE_SOUND_ENABLED, propertyChangeListener);
-        soundVolumeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_SOUND_VOLUME_ENABLED, DEFAULT_VALUE_SOUND_VOLUME, propertyChangeListener);
         feedbackProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FEEDBACK, DEFAULT_VALUE_FEEDBACK, propertyChangeListener);
 
     }
@@ -547,10 +541,6 @@ public class Configuration {
     public Boolean isColumnarImagesEnabled(){ return columnarImagesEnabledProperty.getValue(); }
 
     public Boolean isSoundEnabled(){ return soundEnabledProperty.getValue(); }
-
-    public Integer getSoundVolume() {
-        return soundVolumeProperty.getValue();
-    }
 
     public String getFeedback() {
         return feedbackProperty.getValue();

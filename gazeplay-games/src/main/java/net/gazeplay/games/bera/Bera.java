@@ -41,9 +41,6 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-
 @Slf4j
 public class Bera implements GameLifeCycle {
 
@@ -106,9 +103,9 @@ public class Bera implements GameLifeCycle {
     private final Timeline timelineInput = waitForInput();
     private Long currentRoundStartTime;
 
-    MediaPlayer bipPlayer;
-    MediaPlayer orderPlayer;
-    MediaPlayer imagePlayer;
+    private static final String BIP_SOUND = "data/common/sounds/bip.wav";
+    private static final String SEE_TWO_IMAGES_SOUND = "data/common/sounds/seeTwoImages.wav";
+    private String IMAGE_SOUND = "";
 
     public Bera(final boolean fourThree, final IGameContext gameContext, final Stats stats, final BeraGameVariant gameVariant) {
         this.gameContext = gameContext;
@@ -121,6 +118,7 @@ public class Bera implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
 
+        this.setFirstSound();
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
     }
 
@@ -134,13 +132,27 @@ public class Bera implements GameLifeCycle {
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
+        this.setFirstSound();
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
+    }
+
+    public void setFirstSound(){
+        if (gameVariant == BeraGameVariant.WORD_COMPREHENSION){
+            this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/01-Riz.wav";
+        }else {
+            this.IMAGE_SOUND = "data/bera/sounds/sentenceComprehension/01-CaresseChat.wav";
+        }
+    }
+
+    public void playSound(String soundPath){
+        Configuration config = ActiveConfigurationContext.getInstance();
+        if (config.isSoundEnabled()){
+            gameContext.getSoundManager().add(soundPath);
+        }
     }
 
     @Override
     public void launch() {
-
-        this.configAudio();
 
         this.startTimer();
 
@@ -161,41 +173,6 @@ public class Bera implements GameLifeCycle {
         gameContext.firstStart();
 
         this.startGame();
-    }
-
-    public void configAudio(){
-        Configuration config = ActiveConfigurationContext.getInstance();
-
-        String bipPath = "gazeplay-core/src/main/resources/data/common/sounds/bip.wav";
-        Media bipSound = new Media(new File(bipPath).toURI().toString());
-        this.bipPlayer = new MediaPlayer(bipSound);
-
-        String orderPath = "gazeplay-core/src/main/resources/data/common/sounds/seeTwoImages.wav";
-        Media orderSound = new Media(new File(orderPath).toURI().toString());
-        this.orderPlayer = new MediaPlayer(orderSound);
-
-        String soundsImagespath = "";
-        if (gameVariant == BeraGameVariant.WORD_COMPREHENSION){
-            soundsImagespath = "gazeplay-games/src/main/resources/data/bera/sounds/wordComprehension";
-        }else {
-            soundsImagespath = "gazeplay-games/src/main/resources/data/bera/sounds/sentenceComprehension";
-        }
-
-        File[] files = new File(soundsImagespath).listFiles();
-        assert files != null;
-        String imagePath = String.valueOf(files[this.indexFileImage]);
-        Media imageSound = new Media(new File(imagePath).toURI().toString());
-        this.imagePlayer = new MediaPlayer(imageSound);
-
-        if (config.isSoundEnabled()){
-            this.bipPlayer.setVolume(config.getSoundVolume());
-            this.orderPlayer.setVolume(config.getSoundVolume());
-            this.imagePlayer.setVolume(config.getSoundVolume());
-        }else {
-            this.bipPlayer.setVolume(0.0);
-            this.orderPlayer.setVolume(0.0);
-            this.imagePlayer.setVolume(0.0);
-        }
     }
 
     public void startTimer(){
@@ -260,7 +237,7 @@ public class Bera implements GameLifeCycle {
 
         customInputEventHandlerKeyboard.ignoreAnyInput = false;
 
-        this.orderPlayer.play();
+        this.playSound(SEE_TWO_IMAGES_SOUND);
     }
 
     public void checkAllPictureCardChecked() {
@@ -321,9 +298,9 @@ public class Bera implements GameLifeCycle {
 
         if (config.isQuestionTimeEnabled()){
             this.timelineQuestion.playFromStart();
-            this.imagePlayer.play();
+            this.playSound(IMAGE_SOUND);
         }else {
-            this.imagePlayer.play();
+            this.playSound(IMAGE_SOUND);
         }
     }
 
@@ -556,12 +533,12 @@ public class Bera implements GameLifeCycle {
     public void increaseIndexFileImage(boolean correctAnswer) {
         this.calculateStats(this.indexFileImage, correctAnswer);
         this.indexFileImage = this.indexFileImage + 1;
-
+        this.nextSound(this.indexFileImage);
     }
 
     public void choicePicturePair(){
         this.whiteCrossPicture.setVisible(false);
-        this.bipPlayer.play();
+        this.playSound(BIP_SOUND);
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
             p.hideProgressIndicator();
             p.setVisibleImagePicture(true);
@@ -781,6 +758,134 @@ public class Bera implements GameLifeCycle {
             currentRoundDetails.getPictureCardList().get(0).onCorrectCardSelected();
         } else {
             currentRoundDetails.getPictureCardList().get(0).onWrongCardSelected();
+        }
+    }
+
+    private void nextSound(int index){
+        if (gameVariant == BeraGameVariant.WORD_COMPREHENSION) {
+            switch (index) {
+
+                case 1:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/02-Champ.wav";
+                    break;
+
+                case 2:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/03-Trompette.wav";
+                    break;
+
+                case 3:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/04-Mie.wav";
+                    break;
+
+                case 4:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/05-Oreille.wav";
+                    break;
+
+                case 5:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/06-Ceinture.wav";
+                    break;
+
+                case 6:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/07-Renne.wav";
+                    break;
+
+                case 7:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/08-Pas.wav";
+                    break;
+
+                case 8:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/09-Chevre.wav";
+                    break;
+
+                case 9:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/10-Bottes.wav";
+                    break;
+
+                case 10:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/11-Igloo.wav";
+                    break;
+
+                case 11:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/12-Main.wav";
+                    break;
+
+                case 12:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/13-Chou.wav";
+                    break;
+
+                case 13:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/14-Fut.wav";
+                    break;
+
+                case 14:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/15-Scie.wav";
+                    break;
+
+                case 15:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/16-Bond.wav";
+                    break;
+
+                case 16:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/17-Mat.wav";
+                    break;
+
+                case 17:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/18-Ananas.wav";
+                    break;
+
+                case 18:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/19-Tulipe.wav";
+                    break;
+
+                case 19:
+                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/20-Vent.wav";
+                    break;
+
+                default:
+                    break;
+            }
+        }else if (gameVariant == BeraGameVariant.SENTENCE_COMPREHENSION){
+            switch (index){
+
+                case 1:
+                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/02-SuiviParChien.wav";
+                    break;
+
+                case 2:
+                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/03-NicolasJoyeux.wav";
+                    break;
+
+                case 3:
+                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/04-ElleDort.wav";
+                    break;
+
+                case 4:
+                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/05-CertainsChatsGris.wav";
+                    break;
+
+                case 5:
+                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/06-RegardentTelevision.wav";
+                    break;
+
+                case 6:
+                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/07-EllePense.wav";
+                    break;
+
+                case 7:
+                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/08-FilleMangePomme.wav";
+                    break;
+
+                case 8:
+                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/09-ChienDerriereMaison.wav";
+                    break;
+
+                case 9:
+                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/10-ChienMordChat.wav";
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 

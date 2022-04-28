@@ -65,10 +65,6 @@ public class BeraPreTest implements GameLifeCycle {
     private Long currentRoundStartTime;
     private RoundDetails currentRoundDetails;
 
-    MediaPlayer bipPlayer;
-    MediaPlayer orderPlayer;
-    MediaPlayer imagePlayer;
-
     //Phonology
     private int totalPhonology = 0;
     private int simpleScoreItemsPhonology = 0;
@@ -98,17 +94,31 @@ public class BeraPreTest implements GameLifeCycle {
     public int nbCountError = 0;
     public int nbCountErrorSave = 0;
 
+    private static final String BIP_SOUND = "data/common/sounds/bip.wav";
+    private static final String SEE_TWO_IMAGES_SOUND = "data/common/sounds/seeTwoImages.wav";
+    private String IMAGE_SOUND = "";
+
     public BeraPreTest(final IGameContext gameContext, final BeraPreTestGameStats stats, final Translator translator) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.targetAOIList = new ArrayList<>();
+        this.setFirstSound();
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
+    }
+
+    public void setFirstSound(){
+            this.IMAGE_SOUND = "data/beraPreTest/sounds/01-Velo.wav";
+    }
+
+    public void playSound(String soundPath){
+        Configuration config = ActiveConfigurationContext.getInstance();
+        if (config.isSoundEnabled()){
+            gameContext.getSoundManager().add(soundPath);
+        }
     }
 
     @Override
     public void launch() {
-
-        this.configAudio();
 
         this.startTimer();
 
@@ -129,37 +139,6 @@ public class BeraPreTest implements GameLifeCycle {
         gameContext.firstStart();
 
         this.startGame();
-    }
-
-    public void configAudio(){
-        Configuration config = ActiveConfigurationContext.getInstance();
-
-        String bipPath = "gazeplay-core/src/main/resources/data/common/sounds/bip.wav";
-        Media bipSound = new Media(new File(bipPath).toURI().toString());
-        this.bipPlayer = new MediaPlayer(bipSound);
-
-        String orderPath = "gazeplay-core/src/main/resources/data/common/sounds/seeTwoImages.wav";
-        Media orderSound = new Media(new File(orderPath).toURI().toString());
-        this.orderPlayer = new MediaPlayer(orderSound);
-
-        String soundsImagespath = "";
-        soundsImagespath = "gazeplay-games/src/main/resources/data/beraPreTest/sounds";
-
-        File[] files = new File(soundsImagespath).listFiles();
-        assert files != null;
-        String imagePath = String.valueOf(files[this.indexFileImage]);
-        Media imageSound = new Media(new File(imagePath).toURI().toString());
-        this.imagePlayer = new MediaPlayer(imageSound);
-
-        if (config.isSoundEnabled()){
-            this.bipPlayer.setVolume(config.getSoundVolume());
-            this.orderPlayer.setVolume(config.getSoundVolume());
-            this.imagePlayer.setVolume(config.getSoundVolume());
-        }else {
-            this.bipPlayer.setVolume(0.0);
-            this.orderPlayer.setVolume(0.0);
-            this.imagePlayer.setVolume(0.0);
-        }
     }
 
     public void startTimer(){
@@ -224,7 +203,7 @@ public class BeraPreTest implements GameLifeCycle {
 
         customInputEventHandlerKeyboard.ignoreAnyInput = false;
 
-        this.orderPlayer.play();
+        this.playSound(SEE_TWO_IMAGES_SOUND);
     }
 
     public void checkAllPictureCardChecked() {
@@ -285,9 +264,9 @@ public class BeraPreTest implements GameLifeCycle {
 
         if (config.isQuestionTimeEnabled()){
             this.timelineQuestion.playFromStart();
-            this.imagePlayer.play();
+            this.playSound(IMAGE_SOUND);
         }else {
-            this.imagePlayer.play();
+            this.playSound(IMAGE_SOUND);
         }
     }
 
@@ -510,12 +489,12 @@ public class BeraPreTest implements GameLifeCycle {
     public void increaseIndexFileImage(boolean correctAnswer) {
         this.calculateStats(this.indexFileImage, correctAnswer);
         this.indexFileImage = this.indexFileImage + 1;
-
+        this.nextSound(this.indexFileImage);
     }
 
     public void choicePicturePair(){
         this.whiteCrossPicture.setVisible(false);
-        this.bipPlayer.play();
+        this.playSound(BIP_SOUND);
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
             p.hideProgressIndicator();
             p.setVisibleImagePicture(true);
@@ -553,6 +532,10 @@ public class BeraPreTest implements GameLifeCycle {
         } else {
             currentRoundDetails.getPictureCardList().get(0).onWrongCardSelected();
         }
+    }
+
+    private void nextSound(int index){
+        this.IMAGE_SOUND = "data/beraPreTest/sounds/02-Ours.wav";
     }
 
     private void removeItemAddedManually() {
