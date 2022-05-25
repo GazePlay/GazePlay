@@ -1,31 +1,31 @@
 dependencies {
-    implementation 'commons-io:commons-io:2.5'
-    implementation 'com.google.code.gson:gson:2.8.1'
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'org.rxtx:rxtx:2.1.7'
     implementation 'com.theeyetribe:eyetribe-java:0.9.77'
-    implementation 'ch.qos.logback:logback-classic:1.2.1'
-    implementation 'ch.qos.logback:logback-core:1.2.1'
-    implementation 'org.slf4j:slf4j-api:1.7.25'
+    implementation 'ch.qos.logback:logback-classic:1.2.11'
+    implementation 'ch.qos.logback:logback-core:1.2.11'
+    implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
-    implementation 'com.google.guava:guava:28.1-jre'
+    implementation 'com.google.guava:guava:31.1-jre'
     implementation 'com.github.GazePlay:TobiiStreamEngineForJava:5.0'
     implementation 'com.automation-remarks:video-recorder-core:2.0'
-    implementation 'com.github.vatbub:mslinks:1.0.6.1'
-    implementation 'ws.schild:jave-core:2.5.0'
-    runtimeOnly 'org.slf4j:jcl-over-slf4j:1.7.25'
-    runtimeOnly 'org.slf4j:log4j-over-slf4j:1.7.25'
-    runtimeOnly 'io.github.classgraph:classgraph:4.8.52'
+    implementation 'com.github.vatbub:mslinks:1.0.6.2'
+    implementation 'ws.schild:jave-core:3.3.1'
+    runtimeOnly 'org.slf4j:jcl-over-slf4j:1.7.36'
+    runtimeOnly 'org.slf4j:log4j-over-slf4j:1.7.36'
+    runtimeOnly 'io.github.classgraph:classgraph:4.8.146'
     implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.2.1.RELEASE'
 
-    implementation 'org.reflections:reflections:0.9.11'
+    implementation 'org.reflections:reflections:0.10.2'
 
-    implementation 'org.aeonbits.owner:owner:1.0.10'
-    implementation 'org.json:json:20200518'
+    implementation 'org.aeonbits.owner:owner:1.0.12'
+    implementation 'org.json:json:20220320'
     // https://mvnrepository.com/artifact/org.json/json
-    implementation group: 'org.json', name: 'json', version: '20200518'
+    implementation group: 'org.json', name: 'json', version: '20220320'
 
 
-    testImplementation "junit:junit:4.12"
+    testImplementation 'junit:junit:4.13.2'
     testImplementation project(':gazeplay-core').sourceSets.test.output
 }
 
