@@ -9,7 +9,7 @@ plugins {
     id 'net.researchgate.release' version '2.6.0'
     id "de.undercouch.download" version '4.0.4'
 
-    id 'org.springframework.boot' version '2.2.1.RELEASE'
+    id 'org.springframework.boot' version '2.2.2.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 }
 
@@ -21,7 +21,7 @@ boolean pmdEnabled = Boolean.parseBoolean(project.getProperties().get('pmd')) ?:
 
 logging.captureStandardOutput LogLevel.INFO
 
-ext.javafxVersion = "11.0.2"
+ext.javafxVersion = "17.0.2"
 
 apply from: "${rootDir}/gradle/package.gradle"
 apply from: "${rootDir}/gradle/installer.gradle"
@@ -75,6 +75,7 @@ subprojects {
     configurations {
         integrationTestImplementation.extendsFrom testImplementation
         integrationTestRuntime.extendsFrom testRuntime
+        runtimeOnly.canBeResolved(true)
     }
 
     javafx {
@@ -141,7 +142,7 @@ subprojects {
 
     pmd {
         ignoreFailures = true
-        rulePriority = 2
+        rulesMinimumPriority = 2
         sourceSets = [sourceSets.main, sourceSets.test]
         reportsDir = file("$project.buildDir/reports/pmd")
         ruleSets = []
@@ -152,13 +153,17 @@ subprojects {
     pmdTest.enabled = pmdEnabled
 }
 
+/*application {
+    mainClass = 'net.gazeplay.GazePlayLauncher'
+}*/
+
 dependencies {
-    runtime project(':gazeplay-core')
-    runtime project(':gazeplay-games')
-    runtime project(':gazeplay-games-commons')
-    runtime project(':gazeplay-commons')
-    runtime project(':gazeplay-melordi')
-    runtime project(':gazeplay-picto-pick')
+    runtimeOnly project(':gazeplay-core')
+    runtimeOnly project(':gazeplay-games')
+    runtimeOnly project(':gazeplay-games-commons')
+    runtimeOnly project(':gazeplay-commons')
+    runtimeOnly project(':gazeplay-melordi')
+    runtimeOnly project(':gazeplay-picto-pick')
 
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
 }
@@ -318,20 +323,36 @@ tasks.withType(Tar){
     archiveExtension.set('tar.gz')
 }
 
+//[bootJar, bootDistTar, bootDistZip]*.enabled = false
+
 distZip {
     duplicatesStrategy = 'exclude'
+    enabled = false
 }
-[bootJar, bootDistTar, bootDistZip]*.enabled = false
+
+distTar{
+    enabled = false
+}
+
+jar {
+    enabled = false
+}
+
+bootJar {
+    classifier = 'application'
+}
 
 release {
     failOnPublishNeeded = false
     failOnCommitNeeded = false
 }
 
-mainClassName = 'net.gazeplay.GazePlayLauncher'
+//mainClassName = 'net.gazeplay.GazePlayLauncher'
+
+
 
 defaultTasks 'clean', 'build', 'checkPMDReport'
-startScripts.enabled = false
+// startScripts.enabled = false
 
 afterReleaseBuild.dependsOn generateWindowsInstallerInDocker
 afterReleaseBuild.dependsOn generateWindowsInstallerInDockerx32
