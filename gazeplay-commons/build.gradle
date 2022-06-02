@@ -15,7 +15,7 @@ dependencies {
     runtimeOnly 'org.slf4j:jcl-over-slf4j:1.7.36'
     runtimeOnly 'org.slf4j:log4j-over-slf4j:1.7.36'
     runtimeOnly 'io.github.classgraph:classgraph:4.8.146'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.2.1.RELEASE'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.2.5.RELEASE'
 
     implementation 'org.reflections:reflections:0.10.2'
 
@@ -29,22 +29,20 @@ dependencies {
     testImplementation project(':gazeplay-core').sourceSets.test.output
 }
 
-test {
-    jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
-    exclude '**/VersionInfoTest.class'
-}
-
-
-
 jar {
     manifest {
         attributes(
                 "Implementation-Title": project.name,
                 "Implementation-Version": project.version,
                 "Implementation-Vendor": "Univ. Grenoble Alpes - LIG - GETALP",
-                "Class-Path": configurations.runtimeOnly.collect { it.getName() }.join(' '),
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' '),
                 "JavaFX-Version": javafxVersion,
                 "Built-By": System.properties['user.name']
         )
     }
+}
+
+test {
+    jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
+    exclude '**/VersionInfoTest.class'
 }

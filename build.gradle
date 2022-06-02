@@ -109,7 +109,8 @@ subprojects {
         testImplementation "org.mockito:mockito-core:3.12.+"
     }
 
-    sourceCompatibility = '11'
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
 
     publishing {
         publications {
@@ -327,6 +328,10 @@ tasks.withType(Tar){
 
 distZip {
     duplicatesStrategy = 'exclude'
+    enabled = false
+}
+
+bootDistTar{
     enabled = false
 }
 
