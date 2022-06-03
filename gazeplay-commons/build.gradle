@@ -12,6 +12,7 @@ dependencies {
     implementation 'com.automation-remarks:video-recorder-core:2.0'
     implementation 'com.github.vatbub:mslinks:1.0.6.2'
     implementation 'ws.schild:jave-core:3.3.1'
+    implementation 'com.mageddo.tobby-transactional-outbox:spring:1.5.1'
     runtimeOnly 'org.slf4j:jcl-over-slf4j:1.7.36'
     runtimeOnly 'org.slf4j:log4j-over-slf4j:1.7.36'
     runtimeOnly 'io.github.classgraph:classgraph:4.8.146'

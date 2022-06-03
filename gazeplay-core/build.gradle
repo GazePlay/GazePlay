@@ -16,6 +16,7 @@ dependencies {
     implementation 'ws.schild:jave-core:2.5.0'
     implementation 'io.github.classgraph:classgraph:4.8.146'
     implementation 'commons-io:commons-io:2.11.0'
+    implementation 'com.mageddo.tobby-transactional-outbox:spring:1.5.1'
     runtimeOnly 'org.slf4j:jcl-over-slf4j:1.7.36'
     runtimeOnly 'org.slf4j:log4j-over-slf4j:1.7.36'
     implementation 'org.json:json:20220320'

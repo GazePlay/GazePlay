@@ -109,7 +109,7 @@ subprojects {
         testImplementation "org.mockito:mockito-core:3.12.+"
     }
 
-    sourceCompatibility = '17'
+    sourceCompatibility = '13'
     targetCompatibility = '17'
 
     publishing {
@@ -154,17 +154,13 @@ subprojects {
     pmdTest.enabled = pmdEnabled
 }
 
-/*application {
-    mainClass = 'net.gazeplay.GazePlayLauncher'
-}*/
-
 dependencies {
-    runtimeOnly project(':gazeplay-core')
-    runtimeOnly project(':gazeplay-games')
-    runtimeOnly project(':gazeplay-games-commons')
-    runtimeOnly project(':gazeplay-commons')
-    runtimeOnly project(':gazeplay-melordi')
-    runtimeOnly project(':gazeplay-picto-pick')
+    implementation project(':gazeplay-core')
+    implementation project(':gazeplay-games')
+    implementation project(':gazeplay-games-commons')
+    implementation project(':gazeplay-commons')
+    implementation project(':gazeplay-melordi')
+    implementation project(':gazeplay-picto-pick')
 
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
 }
@@ -324,13 +320,13 @@ tasks.withType(Tar){
     archiveExtension.set('tar.gz')
 }
 
-//[bootJar, bootDistTar, bootDistZip]*.enabled = false
-
 distZip {
     duplicatesStrategy = 'exclude'
-    enabled = false
+    //enabled = false
 }
+[bootJar, bootDistTar, bootDistZip]*.enabled = false
 
+/*
 bootDistTar{
     enabled = false
 }
@@ -346,18 +342,17 @@ jar {
 bootJar {
     classifier = 'application'
 }
+*/
 
 release {
     failOnPublishNeeded = false
     failOnCommitNeeded = false
 }
 
-//mainClassName = 'net.gazeplay.GazePlayLauncher'
-
-
+mainClassName = 'net.gazeplay.GazePlayLauncher'
 
 defaultTasks 'clean', 'build', 'checkPMDReport'
-// startScripts.enabled = false
+startScripts.enabled = false
 
 afterReleaseBuild.dependsOn generateWindowsInstallerInDocker
 afterReleaseBuild.dependsOn generateWindowsInstallerInDockerx32
