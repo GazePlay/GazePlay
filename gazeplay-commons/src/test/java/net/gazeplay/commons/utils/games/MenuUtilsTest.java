@@ -33,7 +33,7 @@ class MenuUtilsTest {
     }
 
     @Test
-    void givenVersionIsUnknown_givenProfileIsDefault_shouldBuildMenuBar() {
+    void givenVersionIsUnknownGivenProfileIsDefaultShouldBuildMenuBar() {
         new MockUp<VersionInfo>() {
             @mockit.Mock
             public Optional<String> findVersionInfo(String id, boolean time) {
@@ -67,7 +67,7 @@ class MenuUtilsTest {
 //    }
 
     @Test
-    void givenLicenseFileIsFound_shouldCreateLicenseMenu() {
+    void givenLicenseFileIsFoundShouldCreateLicenseMenu() {
         MenuBar menuBar = MenuUtils.buildMenuBar();
         MenuItem license = menuBar.getMenus().get(0).getItems().get(0);
         assertTrue(license.getText().contains("test licence"));

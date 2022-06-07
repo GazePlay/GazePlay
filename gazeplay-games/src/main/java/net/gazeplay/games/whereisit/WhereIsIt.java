@@ -766,21 +766,21 @@ public class WhereIsIt implements GameLifeCycle {
     public boolean chi2decision(int tp, int fp) {
         boolean decision = false;
 
-        final ArrayList<Double> chi2_theoretic = new ArrayList<Double>();
-        chi2_theoretic.add(3.84);
-        chi2_theoretic.add(2.71);
-        chi2_theoretic.add(1.32);
-        chi2_theoretic.add(0.45);
+        final ArrayList<Double> chi2Theoretic = new ArrayList<Double>();
+        chi2Theoretic.add(3.84);
+        chi2Theoretic.add(2.71);
+        chi2Theoretic.add(1.32);
+        chi2Theoretic.add(0.45);
 
-        double chi2_obs = chi2Obs(tp, fp);
+        double chi2Obs = chi2Obs(tp, fp);
 
         log.info("tp = {}, fp = {}", tp, fp);
-        log.info("chi2_obs = {}", chi2_obs);
-        log.info("chi2_th = {}, replays = {}", chi2_theoretic, lvlReplays);
+        log.info("chi2_obs = {}", chi2Obs);
+        log.info("chi2_th = {}, replays = {}", chi2Theoretic, lvlReplays);
 
         int index = lvlReplays > 4 ?  lvlReplays - 1 : 3;
 
-        if (chi2_theoretic.get(index) <= chi2_obs)
+        if (chi2Theoretic.get(index) <= chi2Obs)
             decision = true;
 
         return decision;

@@ -118,7 +118,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         final Rectangle recJeu = new Rectangle(entiereRecX, entiereRecY, entiereRecWidth, entiereRecHeight);
         gameContext.getChildren().add(recJeu);
 
-        ChooseAnim();
+        chooseAnim();
 
         this.wallsPlacement = constructionWallMatrix();
         walls = creationLabyrinth();
@@ -126,7 +126,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         if (doAnim) {
             //The animation of the creation of the labyrinthe
             int delay = 20;     //The delay between each dig (in ms)
-            Anim(delay);
+            anim(delay);
         } else {
             // Creation of cheese
             cheese = new Cheese(entiereRecX, entiereRecY, dimension2D.getWidth() / 15, dimension2D.getHeight() / 15, this, randomGenerator);
@@ -224,80 +224,80 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
         //Goals to dig
         int nbObj = (int) (1.5 * Math.cbrt(nbBoxesColumns * nbBoxesLine));
-        int Objx, Objy;     //My goal to reach
-        int Robx, Roby;     //My digger robot
+        int objX, objY;     //My goal to reach
+        int robX, robY;     //My digger robot
         int r;              //My rand var
         int rmax = 10;      //My bond of my rand var
         int noise = (int) (Math.sqrt(nbObj));
         for (int i = 0; i < nbObj; i++) {
-            Objx = (int) (nbBoxesLine * (i % (int) (Math.sqrt(nbObj)) / (Math.sqrt(nbObj) - 2) + (randomGenerator.nextDouble() - 0.5) / noise));
-            if (Objx < 0) {
-                Objx = 0;
+            objX = (int) (nbBoxesLine * (i % (int) (Math.sqrt(nbObj)) / (Math.sqrt(nbObj) - 2) + (randomGenerator.nextDouble() - 0.5) / noise));
+            if (objX < 0) {
+                objX = 0;
             }
-            if (Objx >= nbBoxesLine) {
-                Objx = nbBoxesLine - 1;
+            if (objX >= nbBoxesLine) {
+                objX = nbBoxesLine - 1;
             }
-            Objy = (int) (nbBoxesColumns * ((int) (i / Math.sqrt(nbObj)) / (Math.sqrt(nbObj) - 2) + (randomGenerator.nextDouble() - 0.5) / noise));
-            if (Objy < 0) {
-                Objy = 0;
+            objY = (int) (nbBoxesColumns * ((int) (i / Math.sqrt(nbObj)) / (Math.sqrt(nbObj) - 2) + (randomGenerator.nextDouble() - 0.5) / noise));
+            if (objY < 0) {
+                objY = 0;
             }
-            if (Objy >= nbBoxesColumns) {
-                Objy = nbBoxesColumns - 1;
+            if (objY >= nbBoxesColumns) {
+                objY = nbBoxesColumns - 1;
             }
-            Robx = Objx;
-            Roby = Objy;
-            while (lab[Robx][Roby] == 1) {
-                Robx = randomGenerator.nextInt(nbBoxesLine);
-                Roby = randomGenerator.nextInt(nbBoxesColumns);
+            robX = objX;
+            robY = objY;
+            while (lab[robX][robY] == 1) {
+                robX = randomGenerator.nextInt(nbBoxesLine);
+                robY = randomGenerator.nextInt(nbBoxesColumns);
             }
-            while (lab[Objx][Objy] == 1) {
+            while (lab[objX][objY] == 1) {
                 r = randomGenerator.nextInt(rmax);
                 if (r == 0) {    //Je m'éloigne en x
-                    if (Robx > Objx) {
-                        if (Robx != nbBoxesLine - 1) {
-                            Robx++;
+                    if (robX > objX) {
+                        if (robX != nbBoxesLine - 1) {
+                            robX++;
                         }
                     } else {
-                        if (Robx != 0) {
-                            Robx--;
+                        if (robX != 0) {
+                            robX--;
                         }
                     }
                 } else if (r == 1) {   //Je m'éloigne en y
-                    if (Roby > Objy) {
-                        if (Roby != nbBoxesColumns - 1) {
-                            Roby++;
+                    if (robY > objY) {
+                        if (robY != nbBoxesColumns - 1) {
+                            robY++;
                         }
                     } else {
-                        if (Roby != 0) {
-                            Roby--;
+                        if (robY != 0) {
+                            robY--;
                         }
                     }
                 } else if (r < rmax / 2 + 1) {    //Je m'approche en x
-                    if (Robx > Objx) {
-                        if (Robx != 0) {
-                            Robx--;
+                    if (robX > objX) {
+                        if (robX != 0) {
+                            robX--;
                         }
                     } else {
-                        if (Robx != nbBoxesLine - 1) {
-                            Robx++;
+                        if (robX != nbBoxesLine - 1) {
+                            robX++;
                         }
                     }
                 } else {      //Je m'approche en y
-                    if (Roby > Objy) {
-                        if (Roby != 0) {
-                            Roby--;
+                    if (robY > objY) {
+                        if (robY != 0) {
+                            robY--;
                         }
                     } else {
-                        if (Roby != nbBoxesColumns - 1) {
-                            Roby++;
+                        if (robY != nbBoxesColumns - 1) {
+                            robY++;
                         }
                     }
                 }
-                if (lab[Robx][Roby] == 1) {
-                    listAnim.add(Robx);
-                    listAnim.add(Roby);
+                if (lab[robX][robY] == 1) {
+                    listAnim.add(robX);
+                    listAnim.add(robY);
                 }
-                lab[Robx][Roby] = 0;
+                lab[robX][robY] = 0;
             }
         }
 
@@ -329,10 +329,10 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         }
     }
 
-    void Anim(int delay) {
+    void anim(int delay) {
         if (!listAnim.isEmpty()) {
-            PauseTransition Wait = new PauseTransition(Duration.millis(delay));
-            Wait.setOnFinished(WaitEvent -> {
+            PauseTransition wait = new PauseTransition(Duration.millis(delay));
+            wait.setOnFinished(waitEvent -> {
                 int x = listAnim.remove(0);
                 int y = listAnim.remove(0);
                 wallsPlacement[x][y] = 0;
@@ -340,9 +340,9 @@ public class Labyrinth extends Parent implements GameLifeCycle {
                     entiereRecY + x * caseHeight, wallsPlacement[x][y], y, x);
                 walls[x][y] = g;
                 gameContext.getChildren().add(g);
-                Anim(delay);
+                anim(delay);
             });
-            Wait.play();
+            wait.play();
         } else {
             final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -364,7 +364,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         }
     }
 
-    private void ChooseAnim() {
+    private void chooseAnim() {
         doAnim = variant.getLabel().startsWith("Anime");
     }
 

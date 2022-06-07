@@ -12,6 +12,10 @@ public enum BuiltInUiTheme {
 
     SYSTEM("System", null),
 
+    AFSRGREEN("AFSR-Green", "afsr-green.css"),
+
+    AFSRPURPLE("AFSR-Purple", "afsr-purple.css"),
+
     ORANGE("Orange", "main-orange.css"),
 
     GREEN("Green", "main-green.css"),

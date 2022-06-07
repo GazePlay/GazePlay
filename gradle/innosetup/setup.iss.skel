@@ -39,7 +39,7 @@ OutputBaseFilename=gazeplay-windows-x64-${applicationVersion}-installer
 SolidCompression=yes
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
 Source: "gazeplayicon.ico"; DestDir: "{app}\\bin"; Flags: ignoreversion

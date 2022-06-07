@@ -77,11 +77,6 @@ public class LatestNewsPopup {
         Configuration config,
         Translator translator,
         Supplier<Dimension2D> screenDimensionSupplier) {
-        if (wasDisplayRecently(config) && !config.isLatestNewsDisplayForced()) {
-            // popup was already shown recently
-            // we do not want to bother the user again with this popup
-            return;
-        }
 
         LatestNewsPopup latestNewsPopup = new LatestNewsPopup(config, translator, screenDimensionSupplier);
         latestNewsPopup.loadPage();

@@ -53,6 +53,8 @@ public class Configuration {
     private static final String PROPERTY_NAME_BACKGROUND_STYLE = "BACKGROUND_STYLE";
     private static final String PROPERTY_NAME_BACKGROUND_ENABLED = "BACKGROUND_ENABLED";
     private static final String PROPERTY_NAME_ANIMATION_SPEED_RATIO = "ANIMATION_SPEED_RATIO";
+    private static final String PROPERTY_NAME_PROGRESS_BAR_SIZE = "PROGRESS_BAR_SIZE";
+    private static final String PROPERTY_NAME_PROGRESS_BAR_COLOR = "PROGRESS_BAR_COLOR";
     private static final String PROPERTY_NAME_USER_NAME = "USER_NAME";
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
     private static final String PROPERTY_NAME_QUIT_KEY = "QUIT_KEY";
@@ -64,10 +66,17 @@ public class Configuration {
     private static final String PROPERTY_NAME_FAVORITE_GAMES = "FAVORITE_GAMES";
     private static final String PROPERTY_NAME_HIDDEN_CATEGORIES = "HIDDEN_CATEGORIES";
     private static final String PROPERTY_NAME_ELEMENTSIZE = "ELEMENT_SIZE";
+    private static final String PROPERTY_NAME_QUESTION_TIME = "QUESTION_TIME";
+    private static final String PROPERTY_NAME_TRANSITION_TIME = "TRANSITION_TIME";
+    private static final String PROPERTY_NAME_DELAY_BEFORE_SELECTION_TIME = "DELAY_BEFORE_SELECTION_TIME";
+    private static final String PROPERTY_NAME_QUESTION_TIME_ENABLED = "QUESTION_TIME_ENABLED";
+    private static final String PROPERTY_NAME_COLUMNAR_IMAGES_ENABLED = "COLUMNAR_IMAGES_ENABLED";
+    private static final String PROPERTY_NAME_SOUND_ENABLED = "SOUND_ENABLED";
+    private static final String PROPERTY_NAME_FEEDBACK = "FEEDBACK";
 
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
-    private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.mouse_control.toString();
-    private static final int DEFAULT_VALUE_FIXATION_LENGTH = 500;
+    private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.tobii.toString();
+    private static final int DEFAULT_VALUE_FIXATION_LENGTH = 2000;
     private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
     public static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
     private static final long DEFAULT_VALUE_QUESTION_LENGTH = 5000;
@@ -91,11 +100,20 @@ public class Configuration {
     private static final Double DEFAULT_VALUE_EFFECTS_VOLUME = DEFAULT_VALUE_MUSIC_VOLUME;
     private static final boolean DEFAULT_VALUE_FORCE_DISPLAY_NEWS = false;
     private static final BackgroundStyle DEFAULT_VALUE_BACKGROUND_STYLE = BackgroundStyle.DARK;
-    private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = false;
+    private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = true;
     private static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
+    private static final int DEFAULT_VALUE_PROGRESS_BAR_SIZE = 100;
+    private static final String DEFAULT_VALUE_PROGRESS_BAR_COLOR = "YELLOW";
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
-    private static final int DEFAULT_VALUE_ELEMENT_SIZE = 50;
+    private static final int DEFAULT_VALUE_ELEMENT_SIZE = 100;
+    private static final int DEFAULT_VALUE_TRANSITION_TIME = 2000;
+    private static final int DEFAULT_VALUE_DELAY_BEFORE_SELECTION_TIME = 1000;
+    private static final int DEFAULT_VALUE_QUESTION_TIME = 5000;
+    private static final boolean DEFAULT_VALUE_QUESTION_TIME_ENABLED = false;
+    private static final boolean DEFAULT_VALUE_COLUMNAR_IMAGES_ENABLED = false;
+    private static final boolean DEFAULT_VALUE_SOUND_ENABLED = true;
+    private static final String DEFAULT_VALUE_FEEDBACK = Feedback.standard.toString();
 
     /*
     source : "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
@@ -203,6 +221,12 @@ public class Configuration {
     private final DoubleProperty animationSpeedRatioProperty;
 
     @Getter
+    private final IntegerProperty progressBarSizeProperty;
+
+    @Getter
+    private final StringProperty progressBarColorProperty;
+
+    @Getter
     private final StringProperty videoFolderProperty;
 
     @Getter
@@ -222,6 +246,27 @@ public class Configuration {
 
     @Getter
     private final IntegerProperty elementSizeProperty;
+
+    @Getter
+    private final IntegerProperty questionTimeProperty;
+
+    @Getter
+    private final IntegerProperty transitionTimeProperty;
+
+    @Getter
+    private final IntegerProperty delayBeforeSelectionTimeProperty;
+
+    @Getter
+    private final BooleanProperty questionTimeEnabledProperty;
+
+    @Getter
+    private final BooleanProperty columnarImagesEnabledProperty;
+
+    @Getter
+    private final BooleanProperty soundEnabledProperty;
+
+    @Getter
+    private final StringProperty feedbackProperty;
 
     private final File configFile;
 
@@ -248,6 +293,8 @@ public class Configuration {
         effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
 
         animationSpeedRatioProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_ANIMATION_SPEED_RATIO, DEFAULT_VALUE_ANIMATION_SPEED_RATIO, propertyChangeListener);
+        progressBarSizeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_PROGRESS_BAR_SIZE, DEFAULT_VALUE_PROGRESS_BAR_SIZE, propertyChangeListener);
+        progressBarColorProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_PROGRESS_BAR_COLOR, DEFAULT_VALUE_PROGRESS_BAR_COLOR, propertyChangeListener);
 
         heatMapOpacityProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY, propertyChangeListener);
         heatMapColorsProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_HEATMAP_COLORS, DEFAULT_VALUE_HEATMAP_COLORS, propertyChangeListener);
@@ -295,6 +342,14 @@ public class Configuration {
         latestNewsDisplayForced = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FORCE_DISPLAY_NEWS, DEFAULT_VALUE_FORCE_DISPLAY_NEWS, propertyChangeListener);
 
         elementSizeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_ELEMENTSIZE, DEFAULT_VALUE_ELEMENT_SIZE, propertyChangeListener);
+
+        questionTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_QUESTION_TIME, DEFAULT_VALUE_QUESTION_TIME, propertyChangeListener);
+        transitionTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_TRANSITION_TIME, DEFAULT_VALUE_TRANSITION_TIME, propertyChangeListener);
+        delayBeforeSelectionTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_DELAY_BEFORE_SELECTION_TIME, DEFAULT_VALUE_DELAY_BEFORE_SELECTION_TIME, propertyChangeListener);
+        questionTimeEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_QUESTION_TIME_ENABLED, DEFAULT_VALUE_QUESTION_TIME_ENABLED, propertyChangeListener);
+        columnarImagesEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_COLUMNAR_IMAGES_ENABLED, DEFAULT_VALUE_COLUMNAR_IMAGES_ENABLED, propertyChangeListener);
+        soundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_SOUND_ENABLED, DEFAULT_VALUE_SOUND_ENABLED, propertyChangeListener);
+        feedbackProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FEEDBACK, DEFAULT_VALUE_FEEDBACK, propertyChangeListener);
 
     }
 
@@ -346,6 +401,14 @@ public class Configuration {
 
     public Integer getFixationLength() {
         return fixationlengthProperty.getValue();
+    }
+
+    public Integer getProgressBarSize() {
+        return progressBarSizeProperty.getValue();
+    }
+
+    public String getProgressBarColor() {
+        return progressBarColorProperty.getValue();
     }
 
     public String getCssFile() {
@@ -463,5 +526,23 @@ public class Configuration {
 
     public Integer getElementSize() {
         return elementSizeProperty.getValue();
+    }
+
+    public Integer getQuestionTime() {
+        return questionTimeProperty.getValue();
+    }
+
+    public Integer getTransitionTime() {return transitionTimeProperty.getValue(); }
+
+    public Integer getDelayBeforeSelectionTime() {return delayBeforeSelectionTimeProperty.getValue(); }
+
+    public Boolean isQuestionTimeEnabled(){ return questionTimeEnabledProperty.getValue(); }
+
+    public Boolean isColumnarImagesEnabled(){ return columnarImagesEnabledProperty.getValue(); }
+
+    public Boolean isSoundEnabled(){ return soundEnabledProperty.getValue(); }
+
+    public String getFeedback() {
+        return feedbackProperty.getValue();
     }
 }

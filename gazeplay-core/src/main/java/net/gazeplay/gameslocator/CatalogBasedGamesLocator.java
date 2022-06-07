@@ -1,6 +1,7 @@
 package net.gazeplay.gameslocator;
 
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.GazePlayArgs;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -14,10 +15,16 @@ import java.util.stream.Stream;
 @Slf4j
 public class CatalogBasedGamesLocator extends AbstractGamesLocator {
 
-    private static final String catalogResourceLocation = "games-catalog.txt";
+    private static String catalogResourceLocation = "games-catalog.txt";
 
     @Override
     protected List<Class> findGameSpecSourceClasses() {
+
+        String gazeplayType = GazePlayArgs.returnArgs();
+
+        if (gazeplayType.contains("bera")){
+            catalogResourceLocation = "bera-games-catalog.txt";
+        }
 
         Stream<String> linesStream = Stream.generate(new Supplier<>() {
 

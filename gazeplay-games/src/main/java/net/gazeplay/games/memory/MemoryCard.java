@@ -54,6 +54,8 @@ public class MemoryCard extends Parent {
 
     private LevelsReport levelsReport;
 
+    private boolean mouseIsOverCard;
+
 
     public MemoryCard(final double positionX, final double positionY, final double width, final double height, final Image image, final int idc,
                       final IGameContext gameContext, final Stats stats, final Memory gameInstance, final int fixationlength, final boolean isOpen) {
@@ -107,6 +109,8 @@ public class MemoryCard extends Parent {
                 ke.consume();
             }
         });
+
+        this.mouseIsOverCard = false;
     }
 
     private ProgressIndicator createProgressIndicator(final double width, final double height) {
@@ -221,12 +225,48 @@ public class MemoryCard extends Parent {
         }
         gameInstance.nbTurnedCards = 0;
 
+        // Added, basically it runs a new timelineProgressBar when no cards are turned but the cursor is still on the card.
+        if(this.mouseIsOverCard){
+            if (timelineProgressBar != null) {
+                timelineProgressBar.stop();
+            }
+
+            progressIndicator.setOpacity(1);
+            progressIndicator.setProgress(0);
+
+            timelineProgressBar = new Timeline();
+
+            timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(this.gameContext.getConfiguration().getFixationLength()),
+                new KeyValue(progressIndicator.progressProperty(), 1)));
+
+            timelineProgressBar.setOnFinished(actionEventInside -> {
+
+                gameInstance.nbTurnedCards = gameInstance.nbTurnedCards + 1;
+                turned = true;
+                if (!isOpen) {
+                    card.setFill(new ImagePattern(image, 0, 0, 1, 1, true));
+                }
+
+                /* Update the cardAlreadyTurned for all other cards */
+                for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
+                    gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned = id;
+                }
+                progressIndicator.setOpacity(isOpen ? 0.35 : 0);
+            });
+
+
+            timelineProgressBar.play();
+        }
     }
 
     private EventHandler<Event> buildEvent() {
         return e -> {
 
             if (turned) {
+                // If the cursor was on a card and then moved away while 2 cards are being turned, the mouse is no longer above the card.
+                if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                    this.mouseIsOverCard = false;
+                }
                 return;
             }
             if (gameInstance.nbTurnedCards == 2) {
@@ -234,7 +274,7 @@ public class MemoryCard extends Parent {
             }
             /* First card */
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-
+                this.mouseIsOverCard = true;
                 if (timelineProgressBar != null) {
                     timelineProgressBar.stop();
                 }
@@ -303,11 +343,10 @@ public class MemoryCard extends Parent {
                 timelineProgressBar.play();
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-
+                this.mouseIsOverCard = false;
                 if (timelineProgressBar != null) {
                     timelineProgressBar.stop();
                 }
-
                 progressIndicator.setOpacity(0);
                 progressIndicator.setProgress(0);
             }
