@@ -32,6 +32,6 @@ public class DotToDotGameLauncher implements IGameLauncher<Stats, EnumGameVarian
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<DotToDotGameVariant> gameVariant, Stats stats, double gameSeed) {
-        return new DotToDot(gameContext,gameVariant.getEnumValue(), stats);
+        return new DotToDot(gameContext, gameVariant.getEnumValue(), stats);
     }
 }

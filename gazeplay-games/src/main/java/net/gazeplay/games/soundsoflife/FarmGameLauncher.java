@@ -14,7 +14,7 @@ import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class FarmGameLauncher implements IGameLauncher<Stats,IGameVariant> {
+public class FarmGameLauncher implements IGameLauncher<Stats, IGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new SoundsOfLifeStats(scene, "Farm");
@@ -33,7 +33,7 @@ public class FarmGameLauncher implements IGameLauncher<Stats,IGameVariant> {
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant,
-                                       Stats stats, double gameSeed) {
+                                    Stats stats, double gameSeed) {
         return new SoundsOfLife(gameContext, stats, 0, gameSeed);
     }
 }

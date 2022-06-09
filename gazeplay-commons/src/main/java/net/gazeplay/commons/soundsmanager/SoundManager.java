@@ -46,10 +46,10 @@ public class SoundManager {
     }
 
     public void clear() {
-            listOfMusicToPlay.clear();
+        listOfMusicToPlay.clear();
     }
 
-     public void add(String resource) {
-            listOfMusicToPlay.add(resource);
+    public void add(String resource) {
+        listOfMusicToPlay.add(resource);
     }
 }

@@ -179,7 +179,7 @@ public class ColorsGame implements GameLifeCycle {
 
     private void buildToolBox(final double width, final double height) {
 
-        this.colorToolBox = new ColorToolBox(this.root, this, gameContext, height/12);
+        this.colorToolBox = new ColorToolBox(this.root, this, gameContext, height / 12);
         this.root.getChildren().add(colorToolBox);
 
         // Add it here so it appears on top of the tool box

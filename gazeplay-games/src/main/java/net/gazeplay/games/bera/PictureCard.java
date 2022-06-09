@@ -143,11 +143,13 @@ class PictureCard extends Group {
         customInputEventHandlerMouse.ignoreAnyInput = true;
     }
 
-    public void setVisibleImagePicture(boolean value){
+    public void setVisibleImagePicture(boolean value) {
         this.imageRectangle.setVisible(value);
     }
 
-    public void setNotifImageRectangle(boolean value) { this.notifImageRectangle.setVisible(value); }
+    public void setNotifImageRectangle(boolean value) {
+        this.notifImageRectangle.setVisible(value);
+    }
 
     public void newProgressIndicator() {
         this.getChildren().remove(progressIndicator);
@@ -156,19 +158,19 @@ class PictureCard extends Group {
         this.getChildren().add(progressIndicator);
     }
 
-    public void checkedImage(){
+    public void checkedImage() {
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        if (Objects.equals(config.getFeedbackProperty().getValue(), "nothing")){
+        if (Objects.equals(config.getFeedbackProperty().getValue(), "nothing")) {
             notifImageRectangle.setOpacity(0);
             notifImageRectangle.setVisible(false);
-        }else {
+        } else {
             notifImageRectangle.setOpacity(1);
             notifImageRectangle.setVisible(true);
         }
     }
 
-    public void removeEventHandler(){
+    public void removeEventHandler() {
         customInputEventHandlerMouse.ignoreAnyInput = true;
     }
 
@@ -198,7 +200,7 @@ class PictureCard extends Group {
 
         gameInstance.nbCountError += 1;
 
-        if (gameInstance.nbCountError != 5){
+        if (gameInstance.nbCountError != 5) {
 
             if (gameInstance.indexFileImage == (gameInstance.indexEndGame - 1)) {
                 progressIndicator.setVisible(false);
@@ -215,13 +217,13 @@ class PictureCard extends Group {
 
                 this.waitBeforeNextRound();
             }
-        }else {
+        } else {
             progressIndicator.setVisible(false);
             this.endGame();
         }
     }
 
-    public void waitBeforeNextRound(){
+    public void waitBeforeNextRound() {
         Configuration config = ActiveConfigurationContext.getInstance();
 
         Timeline transition = new Timeline();
@@ -268,7 +270,7 @@ class PictureCard extends Group {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        if (Objects.equals(config.getFeedbackProperty().getValue(), "standard")){
+        if (Objects.equals(config.getFeedbackProperty().getValue(), "standard")) {
             final Image image = new Image("data/common/images/blackCircle.png");
 
             double imageWidth = image.getWidth();
@@ -280,10 +282,10 @@ class PictureCard extends Group {
 
             double positionX = 0;
             double positionY = 0;
-            if (config.isColumnarImagesEnabled()){
+            if (config.isColumnarImagesEnabled()) {
                 positionX = imageRectangle.getX() + 5;
                 positionY = imageRectangle.getY() + 15;
-            }else {
+            } else {
                 positionX = imageRectangle.getX() + 5;
                 positionY = imageRectangle.getY() + 35;
             }
@@ -295,7 +297,7 @@ class PictureCard extends Group {
             notifImageRectangle.setOpacity(0);
             notifImageRectangle.setVisible(false);
             return notifImageRectangle;
-        }else {
+        } else {
             final Image image = new Image("data/common/images/redFrame.png");
 
             ImageView result = new ImageView(image);

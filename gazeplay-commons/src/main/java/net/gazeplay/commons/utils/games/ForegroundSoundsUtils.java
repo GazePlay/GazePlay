@@ -29,7 +29,7 @@ public class ForegroundSoundsUtils {
             log.debug("using url");
             path = url.toString();
         }
-       // stopSound();
+        // stopSound();
         final Configuration configuration = ActiveConfigurationContext.getInstance();
         Media media = new Media(path);
         MediaPlayer soundPlayer = new MediaPlayer(media);

@@ -31,9 +31,10 @@ public class BlocsGameLauncher implements IGameLauncher<Stats, DimensionGameVari
         return new Blocs(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), true, 1, false,
             stats);
     }
+
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
-                                       DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+                                    DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
         return new Blocs(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), true, 1, false,
             stats, gameSeed);
     }

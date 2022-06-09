@@ -14,7 +14,7 @@ import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class ColorsGameLauncher implements IGameLauncher<Stats,IGameVariant> {
+public class ColorsGameLauncher implements IGameLauncher<Stats, IGameVariant> {
 
     private ColorsGamesStats gameStat;
 
@@ -39,7 +39,7 @@ public class ColorsGameLauncher implements IGameLauncher<Stats,IGameVariant> {
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant,
-                                       Stats stats, double gameSeed) {
+                                    Stats stats, double gameSeed) {
         return new ColorsGame(gameContext, gameStat, gameContext.getTranslator());
     }
 }

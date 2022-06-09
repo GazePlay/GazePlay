@@ -12,7 +12,7 @@ import java.util.LinkedList;
 
 public class RushHourStats extends SelectionGamesStats {
 
-    public RushHourStats(Scene scene)  {
+    public RushHourStats(Scene scene) {
         super(scene);
         this.gameName = "rushHour";
         setAccidentalShotPreventionPeriod(0);

@@ -34,6 +34,6 @@ class EyeTribeGazeDeviceManager extends AbstractGazeDeviceManager implements IGa
     @Override
     public void onGazeUpdate(GazeData gazeData) {
         Point2D point = new Point2D(gazeData.rawCoordinates.x, gazeData.rawCoordinates.y);
-        super.onGazeUpdate(point,"gaze");
+        super.onGazeUpdate(point, "gaze");
     }
 }

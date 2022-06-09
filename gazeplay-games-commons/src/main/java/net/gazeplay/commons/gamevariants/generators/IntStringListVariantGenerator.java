@@ -31,7 +31,7 @@ public class IntStringListVariantGenerator implements IGameVariantGenerator {
     @Override
     public Set<IGameVariant> getVariants() {
         final LinkedHashSet<IGameVariant> result = new LinkedHashSet<>();
-        for (int i=0; i<values.length; i++) {
+        for (int i = 0; i < values.length; i++) {
             result.add(new IntStringGameVariant(values[i], type[i]));
         }
         return result;

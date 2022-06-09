@@ -17,7 +17,7 @@ import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class FlagsGameLauncher implements IGameLauncher<Stats,IGameVariant> {
+public class FlagsGameLauncher implements IGameLauncher<Stats, IGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new WhereIsItStats(scene, WhereIsItGameType.FLAGS.getGameName());
@@ -36,7 +36,7 @@ public class FlagsGameLauncher implements IGameLauncher<Stats,IGameVariant> {
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant,
-                                       Stats stats, double gameSeed) {
+                                    Stats stats, double gameSeed) {
         return new WhereIsIt(WhereIsItGameType.FLAGS, 2, 2, false, gameContext, stats, gameSeed);
     }
 }

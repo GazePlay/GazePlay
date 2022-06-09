@@ -742,7 +742,9 @@ public class Stats implements GazeMotionListener {
         return savedStatsInfo;
     }
 
-    public RoundsDurationReport getRoundsDurationReport() { return roundsDurationReport;}
+    public RoundsDurationReport getRoundsDurationReport() {
+        return roundsDurationReport;
+    }
 
     public long computeRoundsDurationAverageDuration() {
         return roundsDurationReport.computeAverageLength();
@@ -926,6 +928,7 @@ public class Stats implements GazeMotionListener {
     private JsonObject buildSavedDataJSON(JsonArray data) {
         Gson gson = new GsonBuilder().create();
         JsonArray fixationSequenceArray = gson.toJsonTree(fixationSequence).getAsJsonArray();
+        JsonArray heatMapArray = gson.toJsonTree(heatMap).getAsJsonArray();
         JsonArray durationBetweenGoalsArray = gson.toJsonTree(roundsDurationReport.getDurationBetweenGoals()).getAsJsonArray();
         String screenAspectRatio = getScreenRatio();
         double sceneAspectRatio = getSceneRatio();
@@ -952,6 +955,7 @@ public class Stats implements GazeMotionListener {
 
         savedDataObj.add("fixationSequence", fixationSequenceArray);
         savedDataObj.add("coordinatesAndTimeStamp", data);
+        savedDataObj.add("heatMap", heatMapArray);
         return savedDataObj;
     }
 
@@ -989,7 +993,7 @@ public class Stats implements GazeMotionListener {
         currentGameSeed = gameSeed;
     }
 
-    public String getCurrentGameVariant(){
+    public String getCurrentGameVariant() {
         return currentGameVariant;
     }
 

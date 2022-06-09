@@ -35,7 +35,7 @@ public class OpenMemoryLettersGameLauncher implements IGameLauncher<Stats, Dimen
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
-                                       DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
+                                    DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
         return new Memory(Memory.MemoryGameType.LETTERS, gameContext, gameVariant.getWidth(),
             gameVariant.getHeight(), gameVariant.getDifficulty(), stats, true, gameSeed);
     }

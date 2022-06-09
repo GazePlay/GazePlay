@@ -14,7 +14,7 @@ import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class FrogsRaceGameLauncher implements IGameLauncher<Stats,IGameVariant> {
+public class FrogsRaceGameLauncher implements IGameLauncher<Stats, IGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new RaceGamesStats(scene, "race");
@@ -33,7 +33,7 @@ public class FrogsRaceGameLauncher implements IGameLauncher<Stats,IGameVariant> 
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant,
-                                       Stats stats, double gameSeed) {
+                                    Stats stats, double gameSeed) {
         return new Race(gameContext, stats, "race", gameSeed);
     }
 }

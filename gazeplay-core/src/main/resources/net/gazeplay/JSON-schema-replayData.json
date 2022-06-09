@@ -1,112 +1,135 @@
 {
-	"$schema": "https://json-schema.org/draft-07/schema",
-    "title": "ReplayingGameJsonSchema",
-    "description": "A data for replaying games",
-    "type": "object",
-    "properties": {
-        "gameSeed": {
-            "description": "The unique game seed",
-            "type": "number"
-        },
-        "gameName": {
-            "description": "Name of the game",
-            "type": "string"
-        },
-        "gameVariant": {
-            "description": "Variant of the game",
-            "type": [ "string", "null" ]
-        },
-        "gameStartedTime": {
-            "type": "number"
-        },
-        "screenAspectRatio": {
-          "type": "string"
-        },
-        "sceneAspectRatio": {
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "title": "ReplayingGameJsonSchema",
+  "description": "A data for replaying games",
+  "type": "object",
+  "properties": {
+    "gameSeed": {
+      "description": "The unique game seed",
+      "type": "number"
+    },
+    "gameName": {
+      "description": "Name of the game",
+      "type": "string"
+    },
+    "gameVariant": {
+      "description": "Variant of the game",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "gameStartedTime": {
+      "type": "number"
+    },
+    "screenAspectRatio": {
+      "type": "string"
+    },
+    "sceneAspectRatio": {
+      "type": "number"
+    },
+    "statsNbGoalsReached": {
+      "type": "number"
+    },
+    "statsNbGoalsToReach": {
+      "type": "number"
+    },
+    "statsNbUnCountedGoalsReached": {
+      "type": "number"
+    },
+    "lifeCycle": {
+      "type": "object",
+      "properties": {
+        "startTime": {
           "type": "number"
         },
-        "statsNbGoalsReached": {
-            "type": "number"
-        },
-        "statsNbGoalsToReach": {
-            "type": "number"
-        },
-        "statsNbUnCountedGoalsReached": {
-            "type": "number"
-        },
-        "lifeCycle": {
-        	"type": "object",
-        	"properties": {
-            	"startTime": {
-		            "type": "number"
-		        },
-		        "stopTime": {
-		            "type": "number"
-		        }
-        	},
-        	"required": ["startTime", "stopTime"]     
-        },
-        "roundsDurationReport": {
-        	"type": "object",
-        	"properties": {
-            	"totalAdditiveDuration": {
-		            "type": "number"
-		        },
-		        "durationBetweenGoals": {
-		            "type": "array",
-            		"items": {
-            			"type": "number"
-            		}
-		        }
-        	}    
-        },
-        "fixationSequence": {
-            "type": "array",
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "timeGaze": {
-                    "type": "number"
-                  },
-                  "gazeDuration": {
-                    "type": "number"
-                  },
-                  "x": {
-                    "type": "number"
-                  },
-                  "y": {
-                    "type": "number"
-                  }
-                },
-                "required": [
-                  "timeGaze",
-                  "gazeDuration",
-                  "x",
-                  "y"
-                ]
-              }
-            }         
-        },
-        "coordinatesAndTimeStamp": {
-            "type": "array",
-            "items": {
-            	"type": "object",
-            	"properties": {
-	            	"X": {
-			            "type": "number"
-			        },
-			        "Y": {
-			            "type": "number"
-			        },
-			        "time": {
-			            "type": "number"
-			        }
-            	},
-            	"required": ["X", "Y", "time"]
-            }         
+        "stopTime": {
+          "type": "number"
         }
+      },
+      "required": [
+        "startTime",
+        "stopTime"
+      ]
     },
-	"required": ["gameSeed", "gameName", "coordinatesAndTimeStamp"]
+    "roundsDurationReport": {
+      "type": "object",
+      "properties": {
+        "totalAdditiveDuration": {
+          "type": "number"
+        },
+        "durationBetweenGoals": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "fixationSequence": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "timeGaze": {
+              "type": "number"
+            },
+            "gazeDuration": {
+              "type": "number"
+            },
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "timeGaze",
+            "gazeDuration",
+            "x",
+            "y"
+          ]
+        }
+      }
+    },
+    "coordinatesAndTimeStamp": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "X": {
+            "type": "number"
+          },
+          "Y": {
+            "type": "number"
+          },
+          "time": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "X",
+          "Y",
+          "time"
+        ]
+      }
+    },
+    "heatMap": {
+      "type": "array",
+      "items" : {
+        "type": "array",
+        "items": {
+          "type": "number"
+        }
+      }
+    }
+  },
+  "required": [
+    "gameSeed",
+    "gameName",
+    "coordinatesAndTimeStamp"
+  ]
 }

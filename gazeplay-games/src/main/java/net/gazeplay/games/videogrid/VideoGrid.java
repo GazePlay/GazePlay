@@ -212,7 +212,7 @@ public class VideoGrid implements GameLifeCycle {
 
     @Override
     public void dispose() {
-        for(MediaPlayer mediaplayer: mediaPlayers){
+        for (MediaPlayer mediaplayer : mediaPlayers) {
             mediaplayer.stop();
         }
         grid.getChildren().clear();

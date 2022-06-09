@@ -282,7 +282,7 @@ public class Configuration {
         countryProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_COUNTRY, Locale.getDefault().getCountry(), propertyChangeListener);
 
         eyetrackerProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER, propertyChangeListener);
-        if (eyetrackerProperty.getValue().equals("tobii_eyeX_4C")){
+        if (eyetrackerProperty.getValue().equals("tobii_eyeX_4C")) {
             eyetrackerProperty.setValue("tobii");
         }
 
@@ -532,15 +532,25 @@ public class Configuration {
         return questionTimeProperty.getValue();
     }
 
-    public Integer getTransitionTime() {return transitionTimeProperty.getValue(); }
+    public Integer getTransitionTime() {
+        return transitionTimeProperty.getValue();
+    }
 
-    public Integer getDelayBeforeSelectionTime() {return delayBeforeSelectionTimeProperty.getValue(); }
+    public Integer getDelayBeforeSelectionTime() {
+        return delayBeforeSelectionTimeProperty.getValue();
+    }
 
-    public Boolean isQuestionTimeEnabled(){ return questionTimeEnabledProperty.getValue(); }
+    public Boolean isQuestionTimeEnabled() {
+        return questionTimeEnabledProperty.getValue();
+    }
 
-    public Boolean isColumnarImagesEnabled(){ return columnarImagesEnabledProperty.getValue(); }
+    public Boolean isColumnarImagesEnabled() {
+        return columnarImagesEnabledProperty.getValue();
+    }
 
-    public Boolean isSoundEnabled(){ return soundEnabledProperty.getValue(); }
+    public Boolean isSoundEnabled() {
+        return soundEnabledProperty.getValue();
+    }
 
     public String getFeedback() {
         return feedbackProperty.getValue();

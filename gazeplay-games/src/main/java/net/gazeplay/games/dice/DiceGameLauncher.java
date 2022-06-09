@@ -33,7 +33,7 @@ public class DiceGameLauncher implements IGameLauncher<Stats, IntGameVariant> {
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
-                                       IntGameVariant gameVariant, Stats stats, double gameSeed) {
+                                    IntGameVariant gameVariant, Stats stats, double gameSeed) {
         return new Dice(gameContext, stats, gameVariant.getNumber(), gameSeed);
     }
 

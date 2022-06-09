@@ -33,7 +33,7 @@ public class ScribbleGameLauncher implements IGameLauncher<Stats, DimensionGameV
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
-                                       DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+                                    DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
         return new DrawApplication(gameContext, stats, gameSeed);
     }
 }

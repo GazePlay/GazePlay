@@ -37,7 +37,7 @@ public class WhereIsTheLetterGameLauncher implements IGameLauncher<Stats, Dimens
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
-                                       DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+                                    DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
         return new WhereIsIt(WhereIsItGameType.LETTERS, gameVariant.getWidth(),
             gameVariant.getHeight(), false, gameContext, stats, gameSeed);
     }

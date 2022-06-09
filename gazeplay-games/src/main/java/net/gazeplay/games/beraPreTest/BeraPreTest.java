@@ -106,13 +106,13 @@ public class BeraPreTest implements GameLifeCycle {
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
     }
 
-    public void setFirstSound(){
-            this.IMAGE_SOUND = "data/beraPreTest/sounds/01-Velo.wav";
+    public void setFirstSound() {
+        this.IMAGE_SOUND = "data/beraPreTest/sounds/01-Velo.wav";
     }
 
-    public void playSound(String soundPath){
+    public void playSound(String soundPath) {
         Configuration config = ActiveConfigurationContext.getInstance();
-        if (config.isSoundEnabled()){
+        if (config.isSoundEnabled()) {
             gameContext.getSoundManager().add(soundPath);
         }
     }
@@ -141,8 +141,8 @@ public class BeraPreTest implements GameLifeCycle {
         this.startGame();
     }
 
-    public void startTimer(){
-        if (this.indexFileImage == 0){
+    public void startTimer() {
+        if (this.indexFileImage == 0) {
             currentRoundStartTime = System.currentTimeMillis();
         }
     }
@@ -219,7 +219,7 @@ public class BeraPreTest implements GameLifeCycle {
         }
     }
 
-    public Timeline waitForInput(){
+    public Timeline waitForInput() {
         Configuration config = ActiveConfigurationContext.getInstance();
 
         log.info("INPUT TIME : {}", config.getDelayBeforeSelectionTime());
@@ -234,7 +234,7 @@ public class BeraPreTest implements GameLifeCycle {
         return transition;
     }
 
-    public Timeline waitForTransition(){
+    public Timeline waitForTransition() {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -248,7 +248,7 @@ public class BeraPreTest implements GameLifeCycle {
         return transition;
     }
 
-    public void returnOnPictureCards(){
+    public void returnOnPictureCards() {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -262,15 +262,15 @@ public class BeraPreTest implements GameLifeCycle {
         }
         this.createWhiteCross();
 
-        if (config.isQuestionTimeEnabled()){
+        if (config.isQuestionTimeEnabled()) {
             this.timelineQuestion.playFromStart();
             this.playSound(IMAGE_SOUND);
-        }else {
+        } else {
             this.playSound(IMAGE_SOUND);
         }
     }
 
-    public Timeline waitForQuestion(){
+    public Timeline waitForQuestion() {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -295,7 +295,7 @@ public class BeraPreTest implements GameLifeCycle {
         stats.setTargetAOIList(targetAOIList);
     }
 
-    public void nextRound(){
+    public void nextRound() {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -402,12 +402,12 @@ public class BeraPreTest implements GameLifeCycle {
         double heightImg = 0;
         double posYImage = gameSizing.height * posY;
 
-        if (configActive.isColumnarImagesEnabled()){
+        if (configActive.isColumnarImagesEnabled()) {
             gap = gameSizing.shift + 750;
             widthImg = (gameSizing.width - 50) / 2.0;
             heightImg = gameSizing.height / 2.0;
             posYImage = gameSizing.height * posY + 50;
-        }else {
+        } else {
             gap = gameSizing.shift + 25;
             widthImg = gameSizing.width - 50;
             heightImg = gameSizing.height;
@@ -428,9 +428,9 @@ public class BeraPreTest implements GameLifeCycle {
 
         targetAOIList.add(targetAOI1);
 
-        if (configActive.isColumnarImagesEnabled()){
+        if (configActive.isColumnarImagesEnabled()) {
             posYImage = gameSizing.height / 1.5 - 100;
-        }else {
+        } else {
             posX++;
         }
 
@@ -462,13 +462,13 @@ public class BeraPreTest implements GameLifeCycle {
 
         final Text error = new Text(multilinguism.getTranslation("WII-error", language));
         final Region root = gameContext.getRoot();
-        error.setX(root.getWidth() / 2. -100);
+        error.setX(root.getWidth() / 2. - 100);
         error.setY(root.getHeight() / 2.);
         error.setId("item");
         gameContext.getChildren().addAll(error);
     }
 
-    public void createWhiteCross(){
+    public void createWhiteCross() {
 
         final Image whiteSquare = new Image("data/common/images/whiteCross.png");
         this.whiteCrossPicture = new ImageView(whiteSquare);
@@ -492,7 +492,7 @@ public class BeraPreTest implements GameLifeCycle {
         this.nextSound(this.indexFileImage);
     }
 
-    public void choicePicturePair(){
+    public void choicePicturePair() {
         this.whiteCrossPicture.setVisible(false);
         this.playSound(BIP_SOUND);
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
@@ -534,7 +534,7 @@ public class BeraPreTest implements GameLifeCycle {
         }
     }
 
-    private void nextSound(int index){
+    private void nextSound(int index) {
         this.IMAGE_SOUND = "data/beraPreTest/sounds/02-Ours.wav";
     }
 
@@ -546,13 +546,13 @@ public class BeraPreTest implements GameLifeCycle {
         }
     }
 
-    public void removeEventHandlerPictureCard(){
+    public void removeEventHandlerPictureCard() {
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
             p.removeEventHandler();
         }
     }
 
-    public void resetFromReplay(){
+    public void resetFromReplay() {
 
         //Phonology
         this.totalPhonology = 0;
@@ -585,35 +585,35 @@ public class BeraPreTest implements GameLifeCycle {
 
         stats.timeGame = System.currentTimeMillis() - this.currentRoundStartTime;
 
-            //Phonology
-            stats.totalPhonology = this.totalPhonology;
-            stats.simpleScoreItemsPhonology = this.simpleScoreItemsPhonology;
-            stats.complexScoreItemsPhonology = this.complexScoreItemsPhonology;
-            stats.scoreLeftTargetItemsPhonology = this.scoreLeftTargetItemsPhonology;
-            stats.scoreRightTargetItemsPhonology = this.scoreRightTargetItemsPhonology;
+        //Phonology
+        stats.totalPhonology = this.totalPhonology;
+        stats.simpleScoreItemsPhonology = this.simpleScoreItemsPhonology;
+        stats.complexScoreItemsPhonology = this.complexScoreItemsPhonology;
+        stats.scoreLeftTargetItemsPhonology = this.scoreLeftTargetItemsPhonology;
+        stats.scoreRightTargetItemsPhonology = this.scoreRightTargetItemsPhonology;
 
-            //Semantic
-            stats.totalSemantic = this.totalSemantic;
-            stats.simpleScoreItemsSemantic = this.simpleScoreItemsSemantic;
-            stats.complexScoreItemsSemantic = this.complexScoreItemsSemantic;
-            stats.frequentScoreItemSemantic = this.frequentScoreItemSemantic;
-            stats.infrequentScoreItemSemantic = this.infrequentScoreItemSemantic;
-            stats.scoreLeftTargetItemsSemantic = this.scoreLeftTargetItemsSemantic;
-            stats.scoreRightTargetItemsSemantic = this.scoreRightTargetItemsSemantic;
+        //Semantic
+        stats.totalSemantic = this.totalSemantic;
+        stats.simpleScoreItemsSemantic = this.simpleScoreItemsSemantic;
+        stats.complexScoreItemsSemantic = this.complexScoreItemsSemantic;
+        stats.frequentScoreItemSemantic = this.frequentScoreItemSemantic;
+        stats.infrequentScoreItemSemantic = this.infrequentScoreItemSemantic;
+        stats.scoreLeftTargetItemsSemantic = this.scoreLeftTargetItemsSemantic;
+        stats.scoreRightTargetItemsSemantic = this.scoreRightTargetItemsSemantic;
 
-            //World Comprehension
-            stats.totalWordComprehension = this.scoreLeftTargetItemsPhonology +
-                this.scoreRightTargetItemsPhonology +
-                this.scoreLeftTargetItemsSemantic +
-                this.scoreRightTargetItemsSemantic;
-            stats.totalItemsAddedManually = this.totalItemsAddedManually;
-            stats.total = this.totalWordComprehension + this.totalItemsAddedManually;
+        //World Comprehension
+        stats.totalWordComprehension = this.scoreLeftTargetItemsPhonology +
+            this.scoreRightTargetItemsPhonology +
+            this.scoreLeftTargetItemsSemantic +
+            this.scoreRightTargetItemsSemantic;
+        stats.totalItemsAddedManually = this.totalItemsAddedManually;
+        stats.total = this.totalWordComprehension + this.totalItemsAddedManually;
 
-            createFileWordComprehension();
-            createExcelWordComprehension();
+        createFileWordComprehension();
+        createExcelWordComprehension();
     }
 
-    public void createFileWordComprehension(){
+    public void createFileWordComprehension() {
         this.totalWordComprehension = this.scoreLeftTargetItemsPhonology +
             this.scoreRightTargetItemsPhonology +
             this.scoreLeftTargetItemsSemantic +
@@ -662,7 +662,7 @@ public class BeraPreTest implements GameLifeCycle {
     }
 
     @SuppressWarnings("PMD")
-    public void createExcelWordComprehension(){
+    public void createExcelWordComprehension() {
 
         File pathDirectory = stats.getGameStatsOfTheDayDirectory();
         String pathFile = pathDirectory + "\\statsBeraComprehensionMots-" + DateUtils.dateTimeNow() + ".xlsx";
@@ -715,7 +715,7 @@ public class BeraPreTest implements GameLifeCycle {
 
         try (FileOutputStream outputStream = new FileOutputStream(pathFile)) {
             workbook.write(outputStream);
-        } catch (Exception e){
+        } catch (Exception e) {
             log.info("Creation of xlsx file don't work", e);
         }
     }
@@ -727,7 +727,7 @@ public class BeraPreTest implements GameLifeCycle {
         @Override
         public void handle(KeyEvent key) {
 
-            if (key.getCode().isArrowKey() && goNext){
+            if (key.getCode().isArrowKey() && goNext) {
                 timelineQuestion.stop();
                 goNext = false;
                 choicePicturePair();

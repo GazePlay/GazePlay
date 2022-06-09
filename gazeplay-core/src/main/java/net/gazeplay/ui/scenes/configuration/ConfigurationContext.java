@@ -182,16 +182,16 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         String gazeplayType = GazePlayArgs.returnArgs();
         GridPane grid;
 
-        if (gazeplayType.contains("bera")){
+        if (gazeplayType.contains("bera")) {
             grid = beraConfigGridPane(configurationContext, translator);
-        }else {
+        } else {
             grid = gazeplayConfigGridPane(configurationContext, translator);
         }
 
         return grid;
     }
 
-    GridPane beraConfigGridPane(ConfigurationContext configurationContext, Translator translator){
+    GridPane beraConfigGridPane(ConfigurationContext configurationContext, Translator translator) {
         Configuration config = ActiveConfigurationContext.getInstance();
 
         if ((config.getUserName()) != null && !config.getUserName().equals("")) {
@@ -421,7 +421,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return grid;
     }
 
-    GridPane gazeplayConfigGridPane(ConfigurationContext configurationContext, Translator translator){
+    GridPane gazeplayConfigGridPane(ConfigurationContext configurationContext, Translator translator) {
         Configuration config = ActiveConfigurationContext.getInstance();
 
         if ((config.getUserName()) != null && !config.getUserName().equals("")) {
@@ -773,7 +773,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return spinner;
     }
 
-    static ChoiceBox<String> buildFeedbackConfigChooser(Configuration configuration, Translator translator){
+    static ChoiceBox<String> buildFeedbackConfigChooser(Configuration configuration, Translator translator) {
 
         String nothingLabel = translator.translate(Feedback.nothing.toString());
         String standardLabel = translator.translate(Feedback.standard.toString());
@@ -793,11 +793,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         feedbackBox.setPrefHeight(PREF_HEIGHT);
 
         feedbackBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (Objects.equals(newValue, "Rien") || Objects.equals(newValue, "Nothing")){
+            if (Objects.equals(newValue, "Rien") || Objects.equals(newValue, "Nothing")) {
                 configuration.getFeedbackProperty().setValue(Feedback.nothing.toString());
-            }else if (Objects.equals(newValue, "Standard")){
+            } else if (Objects.equals(newValue, "Standard")) {
                 configuration.getFeedbackProperty().setValue(Feedback.standard.toString());
-            }else {
+            } else {
                 configuration.getFeedbackProperty().setValue(Feedback.framed.toString());
             }
         });
@@ -897,7 +897,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private Node buildResultFolder(Configuration configuration,
                                    ConfigurationContext configurationContext,
-                                   Translator translator){
+                                   Translator translator) {
 
 
         final I18NButton selectButton = new I18NButton(translator, "SeeFolder");
@@ -908,16 +908,16 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             String playerName = configuration.getUserNameProperty().getValue();
             String path = "";
 
-            if (Objects.equals(playerName, "")){
-                path ="C:\\Users\\" + userName + "\\GazePlay\\statistics\\";
-            }else {
-                path ="C:\\Users\\" + userName + "\\GazePlay\\profiles\\" + playerName + "\\statistics\\";
+            if (Objects.equals(playerName, "")) {
+                path = "C:\\Users\\" + userName + "\\GazePlay\\statistics\\";
+            } else {
+                path = "C:\\Users\\" + userName + "\\GazePlay\\profiles\\" + playerName + "\\statistics\\";
             }
 
             try {
-                if (os.contains("win")){
+                if (os.contains("win")) {
                     Runtime.getRuntime().exec("explorer.exe /open," + path);
-                }else {
+                } else {
                     Runtime.getRuntime().exec("cmd xdg-open," + path);
                 }
             } catch (Exception e1) {

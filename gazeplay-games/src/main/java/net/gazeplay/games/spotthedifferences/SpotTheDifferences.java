@@ -127,13 +127,13 @@ public class SpotTheDifferences implements GameLifeCycle {
 
     private void createDifference(final double x, final double y, final double radius) {
         final Difference d1 = new Difference(gameContext, this, leftGap + x, y, radius);
-        final TargetAOI targetAOI1 = new TargetAOI(leftGap + x, y, (int)radius, System.currentTimeMillis());
+        final TargetAOI targetAOI1 = new TargetAOI(leftGap + x, y, (int) radius, System.currentTimeMillis());
         targetAOIList.add(targetAOI1);
-        d1.setTargetIdx(targetAOIList.size()-1);
+        d1.setTargetIdx(targetAOIList.size() - 1);
         final Difference d2 = new Difference(gameContext, this, rightGap + x, y, radius);
-        final TargetAOI targetAOI2 = new TargetAOI(rightGap + x, y, (int)radius, System.currentTimeMillis());
+        final TargetAOI targetAOI2 = new TargetAOI(rightGap + x, y, (int) radius, System.currentTimeMillis());
         targetAOIList.add(targetAOI2);
-        d2.setTargetIdx(targetAOIList.size()-1);
+        d2.setTargetIdx(targetAOIList.size() - 1);
         d1.setPair(d2);
         d2.setPair(d1);
     }
@@ -143,7 +143,7 @@ public class SpotTheDifferences implements GameLifeCycle {
         scoreText.setText(numberDiffFound + "/" + totalNumberDiff);
         stats.incrementNumberOfGoalsReached();
         if (numberDiffFound == totalNumberDiff) {
-            gameContext.updateScore(stats,this);
+            gameContext.updateScore(stats, this);
             gameContext.playWinTransition(200, actionEvent -> gameContext.showRoundStats(stats, this));
         }
         String soundResource = "data/spotthedifferences/ding.wav";

@@ -66,7 +66,7 @@ class Target extends Parent {
         this.imgLib = imgLib;
         this.pos = pos;
         this.dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.radius = Math.min((dimension.getWidth()/6) / (level + 1),(dimension.getHeight()/6) / (level + 1));
+        this.radius = Math.min((dimension.getWidth() / 6) / (level + 1), (dimension.getHeight() / 6) / (level + 1));
         this.timeline = new Timeline();
         this.randomGenerator = random;
 
@@ -194,7 +194,7 @@ class Target extends Parent {
             l.setLayoutY(14);
             gameContext.getChildren().add(l);
 
-            gameContext.updateScore(stats,gameInstance);
+            gameContext.updateScore(stats, gameInstance);
             gameContext.playWinTransition(0, actionEvent1 -> gameInstance.restart());
         }
     }

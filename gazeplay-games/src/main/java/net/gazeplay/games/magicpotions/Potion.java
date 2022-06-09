@@ -196,17 +196,17 @@ class Potion extends Parent {
                             .setFill(gameInstance.currentRoundDetails.getRequest().getColor());
                     } else {
                         if ((gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.YELLOW)) ||
-                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.YELLOW))){
+                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.YELLOW))) {
                             gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.ORANGE);
                         }
 
                         if ((gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.BLUE) && gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.YELLOW)) ||
-                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.BLUE) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.YELLOW))){
+                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.BLUE) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.YELLOW))) {
                             gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.GREEN);
                         }
 
                         if ((gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.BLUE)) ||
-                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.BLUE))){
+                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.BLUE))) {
                             gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.PURPLE);
                         }
                     }

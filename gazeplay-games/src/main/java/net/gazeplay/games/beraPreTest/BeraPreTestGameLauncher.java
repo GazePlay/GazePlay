@@ -20,14 +20,14 @@ public class BeraPreTestGameLauncher implements IGameLauncher<Stats, IGameVarian
     private BeraPreTestGameStats gameStats;
 
     @Override
-    public Stats createNewStats(Scene scene){
+    public Stats createNewStats(Scene scene) {
 
         gameStats = new BeraPreTestGameStats(scene);
         return gameStats;
     }
 
     @Override
-    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo){
+    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         gameStats = new BeraPreTestGameStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
         return gameStats;
     }

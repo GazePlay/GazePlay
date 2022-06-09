@@ -83,33 +83,33 @@ public class ProgressBarControl {
         return slider;
     }
 
-    public void setTextOnLabel(Label[] labels, int position){
-        for(int i=0; i< labels.length; i++){
-            if(i==position) labels[i].setText("⬤");
+    public void setTextOnLabel(Label[] labels, int position) {
+        for (int i = 0; i < labels.length; i++) {
+            if (i == position) labels[i].setText("⬤");
             else labels[i].setText("");
         }
     }
 
-    public void initializeColorLabel(Label[] labels, int position, String colorName, Configuration config){
+    public void initializeColorLabel(Label[] labels, int position, String colorName, Configuration config) {
         labels[position].setStyle("-fx-background-color: " + colorName + ";");
         labels[position].setOnMouseClicked(event -> {
             config.getProgressBarColorProperty().set(colorName);
             setTextOnLabel(labels, position);
         });
-        if(config.getProgressBarColorProperty().getValue().equals(colorName))
+        if (config.getProgressBarColorProperty().getValue().equals(colorName))
             setTextOnLabel(labels, position);
     }
 
-    public Label[] createColorLabel(Configuration config){
+    public Label[] createColorLabel(Configuration config) {
         // Sequence : Red Orange Yellow Limegreen Cyan DodgerBlue Violet
         Label[] labels = new Label[7];
-        for(int i=0; i<labels.length; i++) {
+        for (int i = 0; i < labels.length; i++) {
             labels[i] = new Label();
             labels[i].setMinSize(25, 25);
             labels[i].setAlignment(Pos.CENTER);
         }
-        for(int i=0; i<labels.length; i++){
-            switch(i) {
+        for (int i = 0; i < labels.length; i++) {
+            switch (i) {
                 case 0:
                     initializeColorLabel(labels, 0, "RED", config);
                     break;
@@ -141,6 +141,6 @@ public class ProgressBarControl {
     }
 
     public int sliderValueToSizeRatio(double value) {
-        return (int)value;
+        return (int) value;
     }
 }

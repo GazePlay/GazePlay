@@ -65,7 +65,7 @@ public class Target extends ProgressPortrait {
 
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
-                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance, final ReplayablePseudoRandom randomGenerator,final RoundsDurationReport roundsDurationReport, LevelsReport levelsReport,  int length) {
+                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance, final ReplayablePseudoRandom randomGenerator, final RoundsDurationReport roundsDurationReport, LevelsReport levelsReport, int length) {
         super(gameContext.getConfiguration().getElementSize());
 
         this.gameInstance = gameInstance;
@@ -248,10 +248,10 @@ public class Target extends ProgressPortrait {
                         if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) >= 2000) compare--;
 
                     }
-                    if (compare == 3 && length > 600){
+                    if (compare == 3 && length > 600) {
                         length -= 400;
                     }
-                    if (compare == -3 && length < 11800){
+                    if (compare == -3 && length < 11800) {
                         length += 400;
                     }
                 }

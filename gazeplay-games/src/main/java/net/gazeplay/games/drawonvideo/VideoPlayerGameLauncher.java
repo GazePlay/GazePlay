@@ -34,7 +34,7 @@ public class VideoPlayerGameLauncher implements IGameLauncher<ExplorationGamesSt
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, StringGameVariant gameVariant,
-                                       ExplorationGamesStats stats, double gameSeed) {
+                                    ExplorationGamesStats stats, double gameSeed) {
         return new VideoPlayerWithLiveFeedbackApp(gameContext, stats, gameVariant.getValue(), gameSeed);
     }
 }

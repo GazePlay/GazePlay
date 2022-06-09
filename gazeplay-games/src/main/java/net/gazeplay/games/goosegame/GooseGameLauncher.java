@@ -32,7 +32,7 @@ public class GooseGameLauncher implements IGameLauncher<GooseGameStats, IntGameV
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IntGameVariant gameVariant,
-                                       GooseGameStats stats, double gameSeed) {
+                                    GooseGameStats stats, double gameSeed) {
         return new GooseGame(gameContext, stats, gameVariant.getNumber(), gameSeed);
     }
 

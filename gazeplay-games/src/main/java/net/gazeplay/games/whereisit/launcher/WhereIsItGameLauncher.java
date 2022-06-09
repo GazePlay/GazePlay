@@ -37,7 +37,7 @@ public class WhereIsItGameLauncher implements IGameLauncher<Stats, DimensionGame
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
-                                       DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+                                    DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
         return new WhereIsIt(WhereIsItGameType.CUSTOMIZED, gameVariant.getWidth(),
             gameVariant.getHeight(), false, gameContext, stats, gameSeed);
     }

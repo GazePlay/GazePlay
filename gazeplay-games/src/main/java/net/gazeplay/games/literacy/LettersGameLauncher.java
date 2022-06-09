@@ -33,7 +33,7 @@ public class LettersGameLauncher implements IGameLauncher<Stats, DimensionGameVa
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
-                                       DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+                                    DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
         return new Letters(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats, gameSeed);
     }
 }

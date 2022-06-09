@@ -81,15 +81,15 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         String gazeplayType = GazePlayArgs.returnArgs();
 
-        if (gazeplayType.equals("afsrGazeplay")){
+        if (gazeplayType.equals("afsrGazeplay")) {
             afsrGazeplayHomeMenuScreen(gazePlay, gamesLocator);
-        }else {
+        } else {
             gazeplayHomeMenuScreen(gazePlay, gamesLocator);
         }
 
     }
 
-    public void gazeplayHomeMenuScreen(GazePlay gazePlay, GamesLocator gamesLocator){
+    public void gazeplayHomeMenuScreen(GazePlay gazePlay, GamesLocator gamesLocator) {
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
         CustomButton exitButton = createExitButton(screenDimension);
@@ -190,7 +190,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
 
-    public void afsrGazeplayHomeMenuScreen(GazePlay gazePlay, GamesLocator gamesLocator){
+    public void afsrGazeplayHomeMenuScreen(GazePlay gazePlay, GamesLocator gamesLocator) {
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
         CustomButton exitButton = createExitButton(screenDimension);
@@ -239,7 +239,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         logosBox.setAlignment(Pos.CENTER);
 
         ImageView iv = new ImageView(new Image("data/common/images/logos/Logo-AFSR.png"));
-        iv.fitHeightProperty().bind(((ImageView)logo).fitHeightProperty().multiply(0.7));
+        iv.fitHeightProperty().bind(((ImageView) logo).fitHeightProperty().multiply(0.7));
         iv.setPreserveRatio(true);
         logosBox.getChildren().add(iv);
 

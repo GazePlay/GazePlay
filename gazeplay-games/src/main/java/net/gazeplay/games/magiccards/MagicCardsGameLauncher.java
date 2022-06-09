@@ -33,7 +33,7 @@ public class MagicCardsGameLauncher implements IGameLauncher<Stats, DimensionGam
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
-                                       DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+                                    DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
         return new MagicCards(gameContext, gameVariant.getWidth(), gameVariant.getHeight(), stats, gameSeed);
     }
 }

@@ -63,7 +63,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         String gazeplayType = GazePlayArgs.returnArgs();
 
-        if (gazeplayType.equals("bera")){
+        if (gazeplayType.equals("bera")) {
             GridPane grid = new GridPane();
             grid.setAlignment(Pos.TOP_CENTER);
             grid.setHgap(50);
@@ -104,7 +104,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
 
 
-        }else {
+        } else {
             GridPane grid = new GridPane();
             grid.setAlignment(Pos.TOP_CENTER);
             grid.setHgap(100);
@@ -158,12 +158,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                         if (levelsInfo.isSelected()) {
                             centerPane.getChildren().remove(levelChart);
                             levelsInfo.setSelected(false);
-                        }
-                        else if (chi2Info.isSelected()) {
+                        } else if (chi2Info.isSelected()) {
                             centerPane.getChildren().remove(chi2Chart);
                             chi2Info.setSelected(false);
-                        }
-                        else
+                        } else
                             centerPane.getChildren().remove(lineChart);
                         centerPane.getChildren().add(areaChart);
                         centerPane.getStylesheets().add("data/common/chart.css");
@@ -181,12 +179,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                         if (colorBands.isSelected()) {
                             centerPane.getChildren().remove(areaChart);
                             colorBands.setSelected(false);
-                        }
-                        else if (chi2Info.isSelected()) {
+                        } else if (chi2Info.isSelected()) {
                             centerPane.getChildren().remove(chi2Chart);
                             chi2Info.setSelected(false);
-                        }
-                        else
+                        } else
                             centerPane.getChildren().remove(lineChart);
                         //centerPane.getChildren().remove(lineChart);
                         centerPane.getChildren().add(levelChart);
@@ -209,8 +205,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                         if (levelsInfo.isSelected()) {
                             centerPane.getChildren().remove(levelChart);
                             levelsInfo.setSelected(false);
-                        }
-                        else
+                        } else
                             centerPane.getChildren().remove(lineChart);
                         //centerPane.getChildren().remove(lineChart);
                         centerPane.getChildren().add(chi2Chart);
@@ -294,13 +289,13 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         String gazeplayType = GazePlayArgs.returnArgs();
 
-        if (gazeplayType.equals("bera")){
+        if (gazeplayType.equals("bera")) {
             AtomicInteger currentFormRow = new AtomicInteger(0);
 
             Text value;
             String labelValue;
 
-            if (stats.variantType.equals("SentenceComprehension")){
+            if (stats.variantType.equals("SentenceComprehension")) {
 
                 addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 100.) + "s"));
 
@@ -314,7 +309,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 addToGridCenter(grid, currentFormRow, translator, "SENTENCECOMPREHENSION", new Text(""));
                 addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually) + "/10"));
                 addToGridCenter(grid, currentFormRow, translator, "TotalSentenceComprehension", new Text(String.valueOf(stats.total) + "/10"));
-            }else {
+            } else {
 
                 addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 100) + "s"));
 
@@ -340,7 +335,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 addToGridCenter(grid, currentFormRow, translator, "Total", new Text(String.valueOf(stats.total) + "/20"));
 
             }
-        }else {
+        } else {
             AtomicInteger currentFormRow = new AtomicInteger(1);
 
             Text value;
@@ -407,7 +402,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         Translator translator,
         String labelText,
         Text value
-    ){
+    ) {
         final int columnIndexLabel = 16;
         final int columnIndexInput = 17;
 
@@ -474,7 +469,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         String gazeplayType = GazePlayArgs.returnArgs();
 
-        if (gazeplayType.equals("bera")){
+        if (gazeplayType.equals("bera")) {
             HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
 
             I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
@@ -519,7 +514,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             if (continueButton != null) {
                 controlButtonPane.getChildren().add(continueButton);
             }
-        }else {
+        } else {
             HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
 
             I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
@@ -548,7 +543,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             if (!config.isFixationSequenceDisabled()) {
                 controlButtonPane.getChildren().add(colorBands);
-                if(additionButton)
+                if (additionButton)
                     controlButtonPane.getChildren().add(addInfo);
                 controlButtonPane.getChildren().add(scanPathButton);
             }
@@ -568,7 +563,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         return root.getChildren();
     }
 
-    public void openFile(Stats stats){
+    public void openFile(Stats stats) {
         Desktop desktop = Desktop.getDesktop();
         try {
             desktop.open(new File(stats.actualFile));
@@ -577,12 +572,12 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    public void seeFile(String pathFile){
+    public void seeFile(String pathFile) {
         String os = System.getProperty("os.name").toLowerCase();
         try {
-            if (os.contains("win")){
+            if (os.contains("win")) {
                 Runtime.getRuntime().exec("explorer.exe /select," + pathFile);
-            }else {
+            } else {
                 Runtime.getRuntime().exec("cmd xdg-open," + pathFile);
             }
         } catch (Exception e) {

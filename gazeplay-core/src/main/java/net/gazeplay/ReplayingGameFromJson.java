@@ -459,4 +459,6 @@ class JsonFile {
     private RoundsDurationReport roundsDurationReport;
     @Getter
     private ArrayList<LinkedList<FixationPoint>> fixationSequence;
+    @Getter
+    private double[][] heatMap;
 }

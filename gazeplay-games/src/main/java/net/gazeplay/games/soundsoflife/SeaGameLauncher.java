@@ -14,7 +14,7 @@ import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class SeaGameLauncher implements IGameLauncher<Stats,IGameVariant> {
+public class SeaGameLauncher implements IGameLauncher<Stats, IGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new SoundsOfLifeStats(scene, "Sea");

@@ -33,7 +33,7 @@ public class HorsesSimplifiedGameLauncher implements IGameLauncher<Stats, IntGam
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IntGameVariant gameVariant,
-                                       Stats stats, double gameSeed) {
+                                    Stats stats, double gameSeed) {
         return new Horses(gameContext, stats, 1, gameVariant.getNumber(), gameSeed);
     }
 

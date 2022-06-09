@@ -63,7 +63,7 @@ public class Divisor implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.incrementNumberOfGoalsToReach(15);
 
-         target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
+        target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
             this.gameContext.getRandomPositionGenerator().newRandomPosition(100 + 2), isRabbit, randomGenerator);
 
         gameContext.getChildren().add(target);
@@ -88,7 +88,7 @@ public class Divisor implements GameLifeCycle {
                     public Double visitDark() {
                         return 1.d;
                     }
-            });
+                });
             imageRectangle.setOpacity(imageRectangleOpacity);
             gameContext.getChildren().add(imageRectangle);
         }

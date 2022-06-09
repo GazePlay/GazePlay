@@ -33,7 +33,7 @@ public class OrderGameLauncher implements IGameLauncher<Stats, IntGameVariant> {
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IntGameVariant gameVariant,
-                                       Stats stats, double gameSeed) {
+                                    Stats stats, double gameSeed) {
         return new Order(gameContext, gameVariant.getNumber(), stats, gameSeed);
     }
 }

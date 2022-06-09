@@ -21,7 +21,7 @@ public class DrawApplication implements GameLifeCycle {
     private final ReplayablePseudoRandom randomGenerator;
 
     public DrawApplication(IGameContext gameContext, Stats stats) {
-        this.stats  = stats;
+        this.stats = stats;
         this.gameContext = gameContext;
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
@@ -48,7 +48,7 @@ public class DrawApplication implements GameLifeCycle {
         root.maxHeightProperty().bind(scene.heightProperty());
 
 
-        Rectangle border = new Rectangle( canvas.getWidth(),canvas.getHeight());
+        Rectangle border = new Rectangle(canvas.getWidth(), canvas.getHeight());
         border.setStrokeWidth(5);
         border.setStroke(Color.WHITE);
         border.setFill(Color.BLACK);
@@ -56,13 +56,13 @@ public class DrawApplication implements GameLifeCycle {
         border.widthProperty().bind(canvas.widthProperty());
         border.heightProperty().bind(canvas.heightProperty());
 
-        root.getChildren().addAll(border,canvas);
+        root.getChildren().addAll(border, canvas);
         gameContext.getGazeDeviceManager().addEventFilter(canvas);
         gameContext.getChildren().addAll(root);
     }
 
     public DrawApplication(IGameContext gameContext, Stats stats, double gameSeed) {
-        this.stats  = stats;
+        this.stats = stats;
         this.gameContext = gameContext;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
@@ -88,7 +88,7 @@ public class DrawApplication implements GameLifeCycle {
         root.maxHeightProperty().bind(scene.heightProperty());
 
 
-        Rectangle border = new Rectangle( canvas.getWidth(),canvas.getHeight());
+        Rectangle border = new Rectangle(canvas.getWidth(), canvas.getHeight());
         border.setStrokeWidth(5);
         border.setStroke(Color.WHITE);
         border.setFill(Color.BLACK);
@@ -96,7 +96,7 @@ public class DrawApplication implements GameLifeCycle {
         border.widthProperty().bind(canvas.widthProperty());
         border.heightProperty().bind(canvas.heightProperty());
 
-        root.getChildren().addAll(border,canvas);
+        root.getChildren().addAll(border, canvas);
         gameContext.getGazeDeviceManager().addEventFilter(canvas);
         gameContext.getChildren().addAll(root);
     }

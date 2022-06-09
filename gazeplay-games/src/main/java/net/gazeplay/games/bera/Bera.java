@@ -136,17 +136,17 @@ public class Bera implements GameLifeCycle {
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
     }
 
-    public void setFirstSound(){
-        if (gameVariant == BeraGameVariant.WORD_COMPREHENSION){
+    public void setFirstSound() {
+        if (gameVariant == BeraGameVariant.WORD_COMPREHENSION) {
             this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/01-Riz.wav";
-        }else {
+        } else {
             this.IMAGE_SOUND = "data/bera/sounds/sentenceComprehension/01-CaresseChat.wav";
         }
     }
 
-    public void playSound(String soundPath){
+    public void playSound(String soundPath) {
         Configuration config = ActiveConfigurationContext.getInstance();
-        if (config.isSoundEnabled()){
+        if (config.isSoundEnabled()) {
             gameContext.getSoundManager().add(soundPath);
         }
     }
@@ -175,8 +175,8 @@ public class Bera implements GameLifeCycle {
         this.startGame();
     }
 
-    public void startTimer(){
-        if (this.indexFileImage == 0){
+    public void startTimer() {
+        if (this.indexFileImage == 0) {
             currentRoundStartTime = System.currentTimeMillis();
         }
     }
@@ -253,7 +253,7 @@ public class Bera implements GameLifeCycle {
         }
     }
 
-    public Timeline waitForInput(){
+    public Timeline waitForInput() {
         Configuration config = ActiveConfigurationContext.getInstance();
 
         log.info("INPUT TIME : {}", config.getDelayBeforeSelectionTime());
@@ -268,7 +268,7 @@ public class Bera implements GameLifeCycle {
         return transition;
     }
 
-    public Timeline waitForTransition(){
+    public Timeline waitForTransition() {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -282,7 +282,7 @@ public class Bera implements GameLifeCycle {
         return transition;
     }
 
-    public void returnOnPictureCards(){
+    public void returnOnPictureCards() {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -296,15 +296,15 @@ public class Bera implements GameLifeCycle {
         }
         this.createWhiteCross();
 
-        if (config.isQuestionTimeEnabled()){
+        if (config.isQuestionTimeEnabled()) {
             this.timelineQuestion.playFromStart();
             this.playSound(IMAGE_SOUND);
-        }else {
+        } else {
             this.playSound(IMAGE_SOUND);
         }
     }
 
-    public Timeline waitForQuestion(){
+    public Timeline waitForQuestion() {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -333,7 +333,7 @@ public class Bera implements GameLifeCycle {
         stats.setTargetAOIList(targetAOIList);
     }
 
-    public void nextRound(){
+    public void nextRound() {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -356,10 +356,10 @@ public class Bera implements GameLifeCycle {
         final String resourcesDirectory = this.directoryRessource;
         String directory = "";
 
-        if (gameVariant == BeraGameVariant.WORD_COMPREHENSION){
+        if (gameVariant == BeraGameVariant.WORD_COMPREHENSION) {
             directory = resourcesDirectory + "/wordComprehension/";
             this.indexEndGame = 20;
-        }else {
+        } else {
             directory = resourcesDirectory + "/sentenceComprehension/";
             this.indexEndGame = 10;
         }
@@ -446,12 +446,12 @@ public class Bera implements GameLifeCycle {
         double heightImg = 0;
         double posYImage = gameSizing.height * posY;
 
-        if (configActive.isColumnarImagesEnabled()){
+        if (configActive.isColumnarImagesEnabled()) {
             gap = gameSizing.shift + 750;
             widthImg = (gameSizing.width - 50) / 2.0;
             heightImg = gameSizing.height / 2.0;
             posYImage = gameSizing.height * posY + 50;
-        }else {
+        } else {
             gap = gameSizing.shift + 25;
             widthImg = gameSizing.width - 50;
             heightImg = gameSizing.height;
@@ -472,9 +472,9 @@ public class Bera implements GameLifeCycle {
 
         targetAOIList.add(targetAOI1);
 
-        if (configActive.isColumnarImagesEnabled()){
+        if (configActive.isColumnarImagesEnabled()) {
             posYImage = gameSizing.height / 1.5 - 100;
-        }else {
+        } else {
             posX++;
         }
 
@@ -506,13 +506,13 @@ public class Bera implements GameLifeCycle {
 
         final Text error = new Text(multilinguism.getTranslation("WII-error", language));
         final Region root = gameContext.getRoot();
-        error.setX(root.getWidth() / 2. -100);
+        error.setX(root.getWidth() / 2. - 100);
         error.setY(root.getHeight() / 2.);
         error.setId("item");
         gameContext.getChildren().addAll(error);
     }
 
-    public void createWhiteCross(){
+    public void createWhiteCross() {
 
         final Image whiteSquare = new Image("data/common/images/whiteCross.png");
         this.whiteCrossPicture = new ImageView(whiteSquare);
@@ -536,7 +536,7 @@ public class Bera implements GameLifeCycle {
         this.nextSound(this.indexFileImage);
     }
 
-    public void choicePicturePair(){
+    public void choicePicturePair() {
         this.whiteCrossPicture.setVisible(false);
         this.playSound(BIP_SOUND);
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
@@ -683,8 +683,8 @@ public class Bera implements GameLifeCycle {
                 default:
                     break;
             }
-        }else if (correctAnswer && !customInputEventHandlerKeyboard.ignoreAnyInput && gameVariant == BeraGameVariant.SENTENCE_COMPREHENSION){
-            switch (index){
+        } else if (correctAnswer && !customInputEventHandlerKeyboard.ignoreAnyInput && gameVariant == BeraGameVariant.SENTENCE_COMPREHENSION) {
+            switch (index) {
                 case 0:
                     this.totalMorphosyntax += 1;
                     this.simpleScoreItemsMorphosyntax += 1;
@@ -761,126 +761,126 @@ public class Bera implements GameLifeCycle {
         }
     }
 
-    private void nextSound(int index){
+    private void nextSound(int index) {
         if (gameVariant == BeraGameVariant.WORD_COMPREHENSION) {
             switch (index) {
 
                 case 1:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/02-Champ.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/02-Champ.wav";
                     break;
 
                 case 2:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/03-Trompette.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/03-Trompette.wav";
                     break;
 
                 case 3:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/04-Mie.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/04-Mie.wav";
                     break;
 
                 case 4:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/05-Oreille.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/05-Oreille.wav";
                     break;
 
                 case 5:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/06-Ceinture.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/06-Ceinture.wav";
                     break;
 
                 case 6:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/07-Renne.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/07-Renne.wav";
                     break;
 
                 case 7:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/08-Pas.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/08-Pas.wav";
                     break;
 
                 case 8:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/09-Chevre.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/09-Chevre.wav";
                     break;
 
                 case 9:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/10-Bottes.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/10-Bottes.wav";
                     break;
 
                 case 10:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/11-Igloo.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/11-Igloo.wav";
                     break;
 
                 case 11:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/12-Main.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/12-Main.wav";
                     break;
 
                 case 12:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/13-Chou.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/13-Chou.wav";
                     break;
 
                 case 13:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/14-Fut.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/14-Fut.wav";
                     break;
 
                 case 14:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/15-Scie.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/15-Scie.wav";
                     break;
 
                 case 15:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/16-Bond.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/16-Bond.wav";
                     break;
 
                 case 16:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/17-Mat.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/17-Mat.wav";
                     break;
 
                 case 17:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/18-Ananas.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/18-Ananas.wav";
                     break;
 
                 case 18:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/19-Tulipe.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/19-Tulipe.wav";
                     break;
 
                 case 19:
-                    this.IMAGE_SOUND="data/bera/sounds/wordComprehension/20-Vent.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/wordComprehension/20-Vent.wav";
                     break;
 
                 default:
                     break;
             }
-        }else if (gameVariant == BeraGameVariant.SENTENCE_COMPREHENSION){
-            switch (index){
+        } else if (gameVariant == BeraGameVariant.SENTENCE_COMPREHENSION) {
+            switch (index) {
 
                 case 1:
-                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/02-SuiviParChien.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/sentenceComprehension/02-SuiviParChien.wav";
                     break;
 
                 case 2:
-                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/03-NicolasJoyeux.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/sentenceComprehension/03-NicolasJoyeux.wav";
                     break;
 
                 case 3:
-                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/04-ElleDort.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/sentenceComprehension/04-ElleDort.wav";
                     break;
 
                 case 4:
-                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/05-CertainsChatsGris.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/sentenceComprehension/05-CertainsChatsGris.wav";
                     break;
 
                 case 5:
-                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/06-RegardentTelevision.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/sentenceComprehension/06-RegardentTelevision.wav";
                     break;
 
                 case 6:
-                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/07-EllePense.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/sentenceComprehension/07-EllePense.wav";
                     break;
 
                 case 7:
-                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/08-FilleMangePomme.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/sentenceComprehension/08-FilleMangePomme.wav";
                     break;
 
                 case 8:
-                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/09-ChienDerriereMaison.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/sentenceComprehension/09-ChienDerriereMaison.wav";
                     break;
 
                 case 9:
-                    this.IMAGE_SOUND="data/bera/sounds/sentenceComprehension/10-ChienMordChat.wav";
+                    this.IMAGE_SOUND = "data/bera/sounds/sentenceComprehension/10-ChienMordChat.wav";
                     break;
 
                 default:
@@ -897,13 +897,13 @@ public class Bera implements GameLifeCycle {
         }
     }
 
-    public void removeEventHandlerPictureCard(){
+    public void removeEventHandlerPictureCard() {
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
             p.removeEventHandler();
         }
     }
 
-    public void resetFromReplay(){
+    public void resetFromReplay() {
 
         //Phonology
         this.totalPhonology = 0;
@@ -943,7 +943,7 @@ public class Bera implements GameLifeCycle {
 
         stats.timeGame = System.currentTimeMillis() - this.currentRoundStartTime;
 
-        if (gameVariant == BeraGameVariant.WORD_COMPREHENSION){
+        if (gameVariant == BeraGameVariant.WORD_COMPREHENSION) {
 
             stats.variantType = "WordComprehension";
 
@@ -974,7 +974,7 @@ public class Bera implements GameLifeCycle {
             createFileWordComprehension();
             createExcelWordComprehension();
 
-        }else if (gameVariant == BeraGameVariant.SENTENCE_COMPREHENSION){
+        } else if (gameVariant == BeraGameVariant.SENTENCE_COMPREHENSION) {
 
             stats.variantType = "SentenceComprehension";
 
@@ -994,7 +994,7 @@ public class Bera implements GameLifeCycle {
         }
     }
 
-    public void createFileWordComprehension(){
+    public void createFileWordComprehension() {
         this.totalWordComprehension = this.scoreLeftTargetItemsPhonology +
             this.scoreRightTargetItemsPhonology +
             this.scoreLeftTargetItemsSemantic +
@@ -1042,7 +1042,7 @@ public class Bera implements GameLifeCycle {
         }
     }
 
-    public void createFileSentenceComprehension(){
+    public void createFileSentenceComprehension() {
         this.total = this.totalMorphosyntax + this.totalItemsAddedManually;
 
         File pathDirectory = stats.getGameStatsOfTheDayDirectory();
@@ -1075,7 +1075,7 @@ public class Bera implements GameLifeCycle {
     }
 
     @SuppressWarnings("PMD")
-    public void createExcelWordComprehension(){
+    public void createExcelWordComprehension() {
 
         File pathDirectory = stats.getGameStatsOfTheDayDirectory();
         String pathFile = pathDirectory + "\\statsBeraComprehensionMots-" + DateUtils.dateTimeNow() + ".xlsx";
@@ -1128,13 +1128,13 @@ public class Bera implements GameLifeCycle {
 
         try (FileOutputStream outputStream = new FileOutputStream(pathFile)) {
             workbook.write(outputStream);
-        } catch (Exception e){
+        } catch (Exception e) {
             log.info("Creation of xlsx file don't work", e);
         }
     }
 
     @SuppressWarnings("PMD")
-    public void createExcelSentenceComprehension(){
+    public void createExcelSentenceComprehension() {
 
         File pathDirectory = stats.getGameStatsOfTheDayDirectory();
         String pathFile = pathDirectory + "\\statsBeraComprehensionPhrases-" + DateUtils.dateTimeNow() + ".xlsx";
@@ -1175,13 +1175,13 @@ public class Bera implements GameLifeCycle {
 
         try (FileOutputStream outputStream = new FileOutputStream(pathFile)) {
             workbook.write(outputStream);
-        } catch (Exception e){
+        } catch (Exception e) {
             log.info("Creation of xlsx file don't work", e);
         }
     }
 
     @SuppressWarnings("PMD")
-    public void createSaveFileBackup(){
+    public void createSaveFileBackup() {
 
         File pathDirectory = stats.getGameStatsOfTheDayDirectory();
         String pathFile = "backupResults.csv";
@@ -1190,7 +1190,7 @@ public class Bera implements GameLifeCycle {
         Date now = new Date();
         SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy 'à' HH:mm:ss");
 
-        if (gameVariant == BeraGameVariant.WORD_COMPREHENSION){
+        if (gameVariant == BeraGameVariant.WORD_COMPREHENSION) {
             this.totalWordComprehension = this.scoreLeftTargetItemsPhonology +
                 this.scoreRightTargetItemsPhonology +
                 this.scoreLeftTargetItemsSemantic +
@@ -1227,7 +1227,7 @@ public class Bera implements GameLifeCycle {
                 log.info("Error creation csv for Bera stats game !");
                 e.printStackTrace();
             }
-        }else {
+        } else {
             this.total = this.totalMorphosyntax + this.totalItemsAddedManually;
 
             try {
@@ -1258,7 +1258,7 @@ public class Bera implements GameLifeCycle {
         @Override
         public void handle(KeyEvent key) {
 
-            if (key.getCode().isArrowKey() && goNext){
+            if (key.getCode().isArrowKey() && goNext) {
                 timelineQuestion.stop();
                 goNext = false;
                 choicePicturePair();

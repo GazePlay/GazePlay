@@ -16,6 +16,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.soundsmanager.SoundManager;
+
 import java.util.ArrayList;
 
 @Slf4j

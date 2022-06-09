@@ -113,7 +113,7 @@ public class WhereIsIt implements GameLifeCycle {
             stats.getChiReport().addChiObs(chi2Obs(rightDecision, wrongDecision));
             stats.getChiReport().addChiLevel(level);
             boolean randomness = chi2decision(rightDecision, wrongDecision);
-            lvlReplays ++;
+            lvlReplays++;
 
             if (randomness && rightDecision > wrongDecision) {
                 if (level < 5)
@@ -237,7 +237,7 @@ public class WhereIsIt implements GameLifeCycle {
             gameContext.getChildren().removeAll(pictogramesList);
 
             //log.debug("Adding {} pictures", currentRoundDetails.getPictureCardList().size());
-            if(currentRoundDetails != null) {
+            if (currentRoundDetails != null) {
                 gameContext.getChildren().addAll(currentRoundDetails.getPictureCardList());
 
                 for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
@@ -301,7 +301,7 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.getChildren().removeAll(pictureCardsToHide);
     }
 
-    static boolean fileIsImageFile(File file){
+    static boolean fileIsImageFile(File file) {
         try {
             String mimetype = Files.probeContentType(file.toPath());
             if (mimetype != null && mimetype.split("/")[0].equals("image")) {
@@ -329,7 +329,7 @@ public class WhereIsIt implements GameLifeCycle {
             directoryName = imagesDirectory.getPath();
             directoriesCount = WhereIsItVaildator.getNumberOfValidDirectories(config.getWhereIsItDir(), imagesFolders);
 
-        } else if( this.gameType == ANIMAL_NAME_DYNAMIC) {
+        } else if (this.gameType == ANIMAL_NAME_DYNAMIC) {
             final String resourcesDirectory = "data/" + this.gameType.getResourcesDirectoryName();
             directoryName = resourcesDirectory;
 
@@ -344,9 +344,9 @@ public class WhereIsIt implements GameLifeCycle {
 
             Set<String> tempWinnerFolders = ResourceFileManager.getResourceFolders(winnerImagesDirectory);
 
-            for (int i = 1; i < lvlDirectories.length + 1; i ++)
+            for (int i = 1; i < lvlDirectories.length + 1; i++)
                 if (level == i)
-                    resourcesFolders.addAll(ResourceFileManager.getResourceFolders(lvlDirectories[i-1]));
+                    resourcesFolders.addAll(ResourceFileManager.getResourceFolders(lvlDirectories[i - 1]));
             winnerFolders.addAll(tempWinnerFolders);
 
             directoriesCount = resourcesFolders.size();
@@ -742,23 +742,23 @@ public class WhereIsIt implements GameLifeCycle {
         firstWrong = false;
     }
 
-    public int factorial (int n) {
+    public int factorial(int n) {
         if (n == 0)
             return 1;
         else
-            return(n * factorial(n-1));
+            return (n * factorial(n - 1));
     }
 
-    public float compute(int n, int k){
-        return (float)factorial(n)/(factorial(k)*factorial(n-k));
+    public float compute(int n, int k) {
+        return (float) factorial(n) / (factorial(k) * factorial(n - k));
     }
 
-    public double binomProba(int n, int k, double p){
-        return compute(n, k) * Math.pow(p, k)*Math.pow(1-p, n-k);
+    public double binomProba(int n, int k, double p) {
+        return compute(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
     }
 
     public double chi2Obs(int tp, int fp) {
-        double[] probas = {8 * lvlReplays * binomProba(1, 1,0.5), 8 * lvlReplays * binomProba(1, 0,0.5)};
+        double[] probas = {8 * lvlReplays * binomProba(1, 1, 0.5), 8 * lvlReplays * binomProba(1, 0, 0.5)};
 
         return Math.pow(tp - probas[0], 2) / probas[0] + Math.pow(fp - probas[1], 2) / probas[1];
     }
@@ -778,7 +778,7 @@ public class WhereIsIt implements GameLifeCycle {
         log.info("chi2_obs = {}", chi2Obs);
         log.info("chi2_th = {}, replays = {}", chi2Theoretic, lvlReplays);
 
-        int index = lvlReplays > 4 ?  lvlReplays - 1 : 3;
+        int index = lvlReplays > 4 ? lvlReplays - 1 : 3;
 
         if (chi2Theoretic.get(index) <= chi2Obs)
             decision = true;

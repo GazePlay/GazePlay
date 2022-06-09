@@ -33,7 +33,7 @@ public class VideoGridGameLauncher implements IGameLauncher<Stats, DimensionGame
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
-                                       DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
+                                    DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
         return new VideoGrid(gameContext, stats, gameVariant.getWidth(), gameVariant.getHeight(), gameSeed);
     }
 }

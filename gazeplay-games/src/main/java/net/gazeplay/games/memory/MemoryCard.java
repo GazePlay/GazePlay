@@ -226,7 +226,7 @@ public class MemoryCard extends Parent {
         gameInstance.nbTurnedCards = 0;
 
         // Added, basically it runs a new timelineProgressBar when no cards are turned but the cursor is still on the card.
-        if(this.mouseIsOverCard){
+        if (this.mouseIsOverCard) {
             if (timelineProgressBar != null) {
                 timelineProgressBar.stop();
             }

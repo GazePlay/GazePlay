@@ -21,9 +21,9 @@ public class LevelsReport {
         return Collections.unmodifiableList(levelsPerRounds);
     }
 
-    public long totalLevelSum(){
+    public long totalLevelSum() {
         long total = 0;
-        for (long level: levelsPerRounds) {
+        for (long level : levelsPerRounds) {
             total += level;
         }
         return total;

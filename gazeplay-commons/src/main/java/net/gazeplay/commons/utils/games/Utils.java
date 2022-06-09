@@ -22,6 +22,7 @@ public class Utils {
 
     /**
      * Gets an InputStream to the provided resource.
+     *
      * @param resource Path to the resource
      * @return The InputStream of the resource
      */
@@ -33,6 +34,7 @@ public class Utils {
     /**
      * Provides the default GazePlay file directory. By default this will be {user.home}/GazePlay/files,
      * but can be overridden by the user in the app or in the GazePlay.properties file.
+     *
      * @return GazePlay files directory
      */
     public static String getFilesFolder() {
@@ -81,8 +83,7 @@ public class Utils {
     }
 
     /**
-     *
-     * @param tf textfield to limit the number of characters
+     * @param tf        textfield to limit the number of characters
      * @param maxLength the max number of characters allowed
      */
     public static void addTextLimiter(final TextField tf, final int maxLength) {

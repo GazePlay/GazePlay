@@ -129,8 +129,8 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         final Image yellow = new Image(imagePATH + "potionYellow.png");
         final Image blue = new Image(imagePATH + "potionBlue.png");
 
-        double imageWidth = gameDimension2D.getWidth()/9;
-        double imageHeight = gameDimension2D.getHeight()/4;
+        double imageWidth = gameDimension2D.getWidth() / 9;
+        double imageHeight = gameDimension2D.getHeight() / 4;
 
         potionRed = new Potion(gameDimension2D.getWidth() * 6 / 7 - (imageWidth + imageWidth) * 1.5,
             gameDimension2D.getHeight() - imageHeight - 10, imageWidth, imageHeight, red, Color.RED,

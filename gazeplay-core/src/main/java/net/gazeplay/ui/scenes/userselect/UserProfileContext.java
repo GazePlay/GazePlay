@@ -73,14 +73,14 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         String gazeplayType = GazePlayArgs.returnArgs();
 
-        if (gazeplayType.equals("afsrGazeplay")){
+        if (gazeplayType.equals("afsrGazeplay")) {
             afsrGazeplayUserProfileContext(gazePlay, screenDimension);
-        }else {
+        } else {
             gazeplayUserProfileContext(gazePlay, screenDimension);
         }
     }
 
-    public void gazeplayUserProfileContext(GazePlay gazePlay, Dimension2D screenDimension){
+    public void gazeplayUserProfileContext(GazePlay gazePlay, Dimension2D screenDimension) {
         final Node logo = LogoFactory.getInstance().createLogoAnimated(gazePlay.getPrimaryStage());
 
         final HBox topRightPane = new HBox();
@@ -109,7 +109,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
 
-    public void afsrGazeplayUserProfileContext(GazePlay gazePlay, Dimension2D screenDimension){
+    public void afsrGazeplayUserProfileContext(GazePlay gazePlay, Dimension2D screenDimension) {
         final Node logo = LogoFactory.getInstance().createLogoAnimated(gazePlay.getPrimaryStage());
 
         final HBox topRightPane = new HBox();

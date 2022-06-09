@@ -135,7 +135,7 @@ public class Blocs implements GameLifeCycle {
                     final Color c = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
                         @Override
                         public Color visitLight() {
-                           return Color.WHITE;
+                            return Color.WHITE;
                         }
 
                         @Override
@@ -161,7 +161,7 @@ public class Blocs implements GameLifeCycle {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
-      
+
         gameContext.setOffFixationLengthControl();
 
         gameContext.onGameStarted(2000);
@@ -242,7 +242,7 @@ public class Blocs implements GameLifeCycle {
 
                     removeAllBlocs();
 
-                    gameContext.updateScore(stats,this);
+                    gameContext.updateScore(stats, this);
 
                     gameContext.playWinTransition(0, event -> {
                         gameContext.clear();

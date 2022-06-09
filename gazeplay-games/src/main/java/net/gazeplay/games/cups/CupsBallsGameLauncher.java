@@ -33,7 +33,7 @@ public class CupsBallsGameLauncher implements IGameLauncher<Stats, IntGameVarian
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IntGameVariant gameVariant,
-                                       Stats stats, double gameSeed) {
+                                    Stats stats, double gameSeed) {
         return new CupsAndBalls(gameContext, stats, gameVariant.getNumber(), 3, gameSeed, "newGame");
     }
 }
