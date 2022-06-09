@@ -169,8 +169,11 @@ class Potion extends Parent {
     }
 
     private EventHandler<Event> buildEvent(ProgressButton progressButton) {
+
         return event -> {
             chosen = true;
+            //animation de deplacement d'une potion
+
             gameInstance.currentRoundDetails.getMixture().add(potionColor); // we add the color of the potion to our mixture
             // change opacity of potion when it has been selected once
             progressButton.disable();
@@ -215,9 +218,12 @@ class Potion extends Parent {
                     gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.BLACK);
                     break;
                 default:
+
                     throw new IllegalArgumentException("value : " + gameInstance.currentRoundDetails.getMixture().size());
             }
         };
+
+
     }
 
 }

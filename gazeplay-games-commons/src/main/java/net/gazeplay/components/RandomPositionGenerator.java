@@ -31,8 +31,8 @@ public abstract class RandomPositionGenerator {
 
         final Dimension2D dimension2D = getDimension2D();
 
-        final double minX = (dimension2D.getWidth() * ratioXLeft) + radius;
-        final double minY = (dimension2D.getHeight() * ratioYBottom) + radius;
+        final double minX = (dimension2D.getWidth() * ratioXLeft) + radius *2;
+        final double minY = (dimension2D.getHeight() * ratioYBottom) + radius *2;
 
         final double maxX = (dimension2D.getWidth() * ratioXRight) - radius * 2;
         final double maxY = (dimension2D.getHeight() * ratioYTop) - radius * 2;
@@ -44,16 +44,36 @@ public abstract class RandomPositionGenerator {
         log.debug("the maxX is ={}", maxX);
         log.debug("the maxY is ={}", maxY);
 
-        return createPosition(minX, minY, maxX, maxY);
+        return createPositionCreamPie(minX, minY, maxX, maxY);
+       // return new Position(dimension2D.getWidth()- 80,dimension2D.getHeight()- 80);
     }
 
     public Position createPosition(final double minX, final double minY, final double maxX, final double maxY) {
-        if (maxX > 0 && maxY > 0) {
-            final double positionX = randomGenerator.nextDouble(((maxX - minX + 1) + minX));
-            final double positionY = randomGenerator.nextDouble(((maxY - minY + 1) + minY));
+        final Dimension2D dimension2D = getDimension2D();
+        if ((maxX >0 && maxY >0)){
+            double positionX = randomGenerator.nextDouble(((maxX - minX + 1) + minX));
+            double positionY = randomGenerator.nextDouble(((maxY - minY + 1) + minY));
             log.debug("the posX is ={}", positionX);
             log.debug("the posY is ={}", positionY);
+            return new Position(positionX, positionY);
+        } else {
+            return new Position(minX, minY);
+        }
+    }
 
+    public Position createPositionCreamPie(final double minX, final double minY, final double maxX, final double maxY) {
+        final Dimension2D dimension2D = getDimension2D();
+        if ((maxX <= dimension2D.getWidth() - 80 && maxY <= dimension2D.getHeight() - 80) && (minX >= 80 && minY >= 80)) {
+            double positionX = randomGenerator.nextDouble(((maxX - minX + 1) + minX));
+            double positionY = randomGenerator.nextDouble(((maxY - minY + 1) + minY));
+            log.debug("the posX is ={}", positionX);
+            log.debug("the posY is ={}", positionY);
+            if (positionX < minX) {
+                positionX = minX;
+            }
+            if (positionY < minY) {
+                positionY = minY;
+            }
             return new Position(positionX, positionY);
         } else {
             return new Position(minX, minY);
