@@ -200,7 +200,4 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         potionsOnTable.add(potionYellow);
         gameContext.getChildren().addAll(potionsOnTable);
     }
-
-    public void PotionMovement(Potion P) {
-    }
 }

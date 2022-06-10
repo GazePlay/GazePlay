@@ -48,7 +48,6 @@ public abstract class RandomPositionGenerator {
     }
 
     public Position createPosition(final double minX, final double minY, final double maxX, final double maxY) {
-        final Dimension2D dimension2D = getDimension2D();
         if ((maxX >0 && maxY >0)){
             double positionX = randomGenerator.nextDouble(((maxX - minX + 1) + minX));
             double positionY = randomGenerator.nextDouble(((maxY - minY + 1) + minY));
@@ -64,7 +63,6 @@ public abstract class RandomPositionGenerator {
         final Dimension2D dimension2D = getDimension2D();
         int decalage =50;
         if ((maxX <= dimension2D.getWidth() - decalage *1.6 && maxY <= dimension2D.getHeight() - decalage *1.6) && (minX >= decalage *1.6 && minY >= decalage *1.6)) {
-      //  if ((maxX >0 && maxY >0)){
         double positionX = randomGenerator.nextDouble(((maxX - minX + 1) + minX));
             double positionY = randomGenerator.nextDouble(((maxY - minY + 1) + minY));
             log.debug("the posX is ={}", positionX);
@@ -76,9 +74,8 @@ public abstract class RandomPositionGenerator {
                 positionY = minY;
             }
             return new Position(positionX, positionY);
-        } else {
-            return new Position(minX, minY);
         }
+        return new Position(minX, minY);
     }
 
 }
