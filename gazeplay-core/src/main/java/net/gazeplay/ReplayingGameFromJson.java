@@ -17,15 +17,13 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
-import net.gazeplay.commons.utils.stats.LifeCycle;
-import net.gazeplay.commons.utils.stats.RoundsDurationReport;
-import net.gazeplay.commons.utils.stats.SavedStatsInfo;
-import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import net.gazeplay.ui.scenes.loading.LoadingContext;
@@ -52,13 +50,12 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class ReplayingGameFromJson {
 
-    private final LinkedList<Point2D> lastGazeCoordinates = new LinkedList<Point2D>();
-    private final LinkedList<Point2D> lastMouseCoordinates = new LinkedList<Point2D>();
-    int numberOfelementToDisplay = 10;
+    private final LinkedList<Point2D> lastGazeCoordinates = new LinkedList<>();
+    private final LinkedList<Point2D> lastMouseCoordinates = new LinkedList<>();
+    int numberOfElementToDisplay = 10;
 
-    private static final ArrayList<String> replayableGameList = new ArrayList<String>(
+    private static final ArrayList<String> replayableGameList = new ArrayList<>(
         Arrays.asList(
-
             //OK: really small offsets problems
             "Scribble", "Cakes", "Creampie", "WhereIsIt", "WhereIsTheAnimal", "letters",
             "WhereIsTheColor", "WhereIsTheLetter", "WhereIsTheNumber", "findodd", "flags",
@@ -66,7 +63,6 @@ public class ReplayingGameFromJson {
             "OpenMemoryNumbers", "Dice", "EggGame", "PersonalizeEggGame", "GooseGame", "MagicCards", "Opinions", "Order",
             "Horses", "Horses Simplified", "puzzle", "Farm", "Jungle", "Savanna", "CupsBalls",
             "Potions", "VideoPlayer", "VideoGrid", "bottle"
-
 
             // replay OK but the resize of the game itself is bad:
             // "SpotDifference", "MediaPlayer","Paper-Scissors-Stone",
@@ -93,7 +89,6 @@ public class ReplayingGameFromJson {
             // arranger le jeu:
             // "Pet",
             // "Room"
-
         )
     );
 
@@ -115,8 +110,10 @@ public class ReplayingGameFromJson {
     private LifeCycle lifeCycle;
     private RoundsDurationReport roundsDurationReport;
     private SavedStatsInfo savedStatsInfo;
-    private int nextTimeMouse, nextTimeGaze, prevTimeMouse, prevTimeGaze;
+    private int nextTimeMouse;
+    private int nextTimeGaze;
     private double sceneAspectRatio;
+    private ArrayList<AreaOfInterest> AOIList;
 
     private Thread workingThread;
 
@@ -173,6 +170,7 @@ public class ReplayingGameFromJson {
         sceneAspectRatio = json.getSceneAspectRatio();
         lifeCycle = json.getLifeCycle();
         roundsDurationReport = json.getRoundsDurationReport();
+        AOIList = json.getAOIList();
         String filePrefix = fileName.substring(0, fileName.lastIndexOf("-"));
         final File gazeMetricsMouseFile = new File(filePrefix + "-metricsMouse.png");
         final File gazeMetricsGazeFile = new File(filePrefix + "-metricsGaze.png");
@@ -239,7 +237,7 @@ public class ReplayingGameFromJson {
         getSpecAndVariant();
         IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
         final Scene scene = gazePlay.getPrimaryScene();
-        final Stats statsSaved = gameLauncher.createSavedStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+        final Stats statsSaved = gameLauncher.createSavedStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, AOIList, savedStatsInfo);
         GameLifeCycle currentGame = gameLauncher.replayGame(gameContext, gameVariant, statsSaved, currentGameSeed);
         gameContext.createControlPanel(gazePlay, statsSaved, currentGame, "replay");
         gameContext.createQuitShortcut(gazePlay, statsSaved, currentGame);
@@ -260,8 +258,10 @@ public class ReplayingGameFromJson {
         gameContext.getChildren().add(canvas);
 
         workingThread = new Thread(() -> {
+            List<CoordinatesTracker> movementHistory;
             gameContext.getGazeDeviceManager().setInReplayMode(true);
-            drawFixationLines(canvas, coordinatesAndTimeStamp);
+            movementHistory = drawFixationLines(canvas, coordinatesAndTimeStamp);
+            statsSaved.setMovementHistory(movementHistory);
             Platform.runLater(() -> exit(statsSaved, currentGame));
         });
         workingThread.start();
@@ -320,32 +320,31 @@ public class ReplayingGameFromJson {
         gameContext.getGazeDeviceManager().setInReplayMode(false);
     }
 
-    private void drawFixationLines(Canvas canvas, JsonArray coordinatesAndTimeStamp) {
+    private List<CoordinatesTracker> drawFixationLines(Canvas canvas, JsonArray coordinatesAndTimeStamp) {
         Dimension2D dim2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         double sceneWidth = dim2D.getWidth();
         double sceneHeight = dim2D.getHeight();
         final GraphicsContext graphics = canvas.getGraphicsContext2D();
+        List<CoordinatesTracker> movementHistory = new ArrayList<>();
         synchronized (coordinatesAndTimeStamp) {
             for (JsonElement coordinateAndTimeStamp : coordinatesAndTimeStamp) {
                 JsonObject coordinateAndTimeObj = coordinateAndTimeStamp.getAsJsonObject();
                 String nextEvent = coordinateAndTimeObj.get("event").getAsString();
                 int nextX = (int) (Double.parseDouble(coordinateAndTimeObj.get("X").getAsString()) * sceneWidth);
                 int nextY = (int) (Double.parseDouble(coordinateAndTimeObj.get("Y").getAsString()) * sceneHeight);
+                long timeInterval = Long.parseLong(coordinateAndTimeObj.get("timeInterval").getAsString());
+                movementHistory.add(new CoordinatesTracker(nextX, nextY, timeInterval, 0));
                 int delay;
                 if (nextEvent.equals("gaze")) {
-                    prevTimeGaze = nextTimeGaze;
+                    int prevTimeGaze = nextTimeGaze;
                     nextTimeGaze = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
                     delay = nextTimeGaze - prevTimeGaze;
-                    Platform.runLater(() -> {
-                        paint(graphics, canvas, nextX, nextY, "gaze");
-                    });
+                    Platform.runLater(() -> paint(graphics, canvas, nextX, nextY, "gaze"));
                 } else {
-                    prevTimeMouse = nextTimeMouse;
+                    int prevTimeMouse = nextTimeMouse;
                     nextTimeMouse = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
                     delay = nextTimeMouse - prevTimeMouse;
-                    Platform.runLater(() -> {
-                        paint(graphics, canvas, nextX, nextY, "mouse");
-                    });
+                    Platform.runLater(() -> paint(graphics, canvas, nextX, nextY, "mouse"));
                 }
                 try {
                     TimeUnit.MILLISECONDS.sleep(delay);
@@ -354,18 +353,19 @@ public class ReplayingGameFromJson {
                     break;
                 }
             }
+            return movementHistory;
         }
     }
 
     public void updateGazeTab(int nextX, int nextY) {
-        while (lastGazeCoordinates.size() >= numberOfelementToDisplay) {
+        while (lastGazeCoordinates.size() >= numberOfElementToDisplay) {
             lastGazeCoordinates.pop();
         }
         lastGazeCoordinates.add(new Point2D(nextX, nextY));
     }
 
     public void updateMouseTab(int nextX, int nextY) {
-        while (lastMouseCoordinates.size() >= numberOfelementToDisplay) {
+        while (lastMouseCoordinates.size() >= numberOfElementToDisplay) {
             lastMouseCoordinates.pop();
         }
         lastMouseCoordinates.add(new Point2D(nextX, nextY));
@@ -385,7 +385,7 @@ public class ReplayingGameFromJson {
     }
 
     private void drawReplayLine(GraphicsContext graphics, int circleSize, Color strokeColor, Color fillColor, LinkedList<Point2D> lastGazeCoordinates) {
-        Color tempStokeColor = strokeColor;
+        Color tempStokeColor;
         Point2D point;
         graphics.beginPath();
         for (int i = lastGazeCoordinates.size() - 1; i >= 0; i--) {
@@ -430,35 +430,23 @@ public class ReplayingGameFromJson {
 
 }
 
+@Getter
+@AllArgsConstructor
 class JsonFile {
-    @Getter
     private double gameSeed;
-    @Getter
     private String gameName;
-    @Getter
     private String gameVariantClass;
-    @Getter
     private String gameVariant;
-    @Getter
     private double gameStartedTime;
-    @Getter
     private String screenAspectRatio;
-    @Getter
     private double sceneAspectRatio;
-    @Getter
     private JsonArray coordinatesAndTimeStamp;
-    @Getter
     private LifeCycle lifeCycle;
-    @Getter
     private int statsNbGoalsReached;
-    @Getter
     private int statsNbGoalsToReach;
-    @Getter
     private int statsNbUnCountedGoalsReached;
-    @Getter
     private RoundsDurationReport roundsDurationReport;
-    @Getter
     private ArrayList<LinkedList<FixationPoint>> fixationSequence;
-    @Getter
     private double[][] heatMap;
+    private ArrayList<AreaOfInterest> AOIList;
 }

@@ -11,14 +11,13 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
-import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.scenes.configuration.ConfigurationContext;
 import net.gazeplay.ui.scenes.gamemenu.HomeMenuScreen;
 import net.gazeplay.ui.scenes.ingame.GameContext;
-import net.gazeplay.ui.scenes.stats.AreaOfInterest;
-import net.gazeplay.ui.scenes.stats.ScanpathView;
+import net.gazeplay.ui.scenes.stats.AreaOfInterestContext;
+import net.gazeplay.ui.scenes.stats.ScanpathContext;
 import net.gazeplay.ui.scenes.stats.StatsContext;
 import net.gazeplay.ui.scenes.userselect.UserProfileContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,12 +73,11 @@ public class GazePlay {
         statsContext.setUpOnStage(primaryScene);
     }
 
-    public void onDisplayAOI(Stats stats) {
-        AreaOfInterest areaOfInterest = new AreaOfInterest(this, stats);
+    public void onDisplayAOI(AreaOfInterestContext areaOfInterest) {
         areaOfInterest.setUpOnStage(primaryScene);
     }
 
-    public void onDisplayScanpath(ScanpathView scanPath) {
+    public void onDisplayScanpath(ScanpathContext scanPath) {
         scanPath.setUpOnStage(primaryScene);
     }
 

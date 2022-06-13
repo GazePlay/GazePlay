@@ -232,7 +232,8 @@ class StatsContextTest {
         Platform.runLater(() -> aoiButton.fireEvent(TestingUtils.clickOnTarget(aoiButton)));
         TestingUtils.waitForRunLater();
 
-        verify(mockGazePlay).onDisplayAOI(mockStats);
+        AreaOfInterestContext mockAOI = new AreaOfInterestContext(mockGazePlay, mockStats);
+        verify(mockGazePlay).onDisplayAOI(mockAOI);
 
         Platform.runLater(() -> scanPathButton.fireEvent(TestingUtils.clickOnTarget(scanPathButton)));
         TestingUtils.waitForRunLater();

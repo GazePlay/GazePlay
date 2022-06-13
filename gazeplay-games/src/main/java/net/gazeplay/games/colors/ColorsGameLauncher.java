@@ -5,14 +5,12 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.IGameVariant;
-import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.commons.utils.FixationPoint;
-import net.gazeplay.commons.utils.stats.LifeCycle;
-import net.gazeplay.commons.utils.stats.RoundsDurationReport;
-import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class ColorsGameLauncher implements IGameLauncher<Stats, IGameVariant> {
 
@@ -26,8 +24,8 @@ public class ColorsGameLauncher implements IGameLauncher<Stats, IGameVariant> {
     }
 
     @Override
-    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
-        gameStat = new ColorsGamesStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, List<AreaOfInterest> AOIList, SavedStatsInfo savedStatsInfo) {
+        gameStat = new ColorsGamesStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, AOIList, savedStatsInfo);
         return gameStat;
     }
 

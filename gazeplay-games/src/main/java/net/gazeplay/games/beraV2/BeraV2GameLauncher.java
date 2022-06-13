@@ -6,13 +6,11 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
-import net.gazeplay.commons.utils.stats.LifeCycle;
-import net.gazeplay.commons.utils.stats.RoundsDurationReport;
-import net.gazeplay.commons.utils.stats.SavedStatsInfo;
-import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class BeraV2GameLauncher implements IGameLauncher<Stats, EnumGameVariant<BeraV2GameVariant>> {
 
@@ -22,8 +20,8 @@ public class BeraV2GameLauncher implements IGameLauncher<Stats, EnumGameVariant<
     }
 
     @Override
-    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
-        return new BeraV2GameStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, List<AreaOfInterest> AOIList, SavedStatsInfo savedStatsInfo) {
+        return new BeraV2GameStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, AOIList, savedStatsInfo);
     }
 
     @Override

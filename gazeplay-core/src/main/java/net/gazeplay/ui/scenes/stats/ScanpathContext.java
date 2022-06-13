@@ -31,11 +31,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j
-public class ScanpathView extends GraphicalContext<BorderPane> {
+public class ScanpathContext extends GraphicalContext<BorderPane> {
 
-    private Color[] colors = {Color.RED, Color.BLUE};
+    private final Color[] colors = {Color.RED, Color.BLUE};
 
-    public ScanpathView(GazePlay gazePlay, Stats stats, CustomButton continueButton) {
+    public ScanpathContext(GazePlay gazePlay, Stats stats, CustomButton continueButton) {
         super(gazePlay, new BorderPane());
 
         final Pane center = buildCenterPane(stats);

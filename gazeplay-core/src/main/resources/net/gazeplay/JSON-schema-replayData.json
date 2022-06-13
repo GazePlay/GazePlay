@@ -108,22 +108,111 @@
           },
           "time": {
             "type": "number"
+          },
+          "timeInterval": {
+            "type": "number"
           }
         },
         "required": [
           "X",
           "Y",
-          "time"
+          "time",
+          "timeInterval"
         ]
       }
     },
     "heatMap": {
       "type": "array",
-      "items" : {
+      "items": {
         "type": "array",
         "items": {
           "type": "number"
         }
+      }
+    },
+    "AOIList":  {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ID": {
+            "type": "string"
+          },
+          "points": {
+            "type": "object",
+            "properties": {
+              "xValue": {
+                "type": "number"
+              },
+              "yValue": {
+                "type": "number"
+              },
+              "intervalTime": {
+                "type": "number"
+              },
+              "timeStarted": {
+                "type": "number"
+              },
+              "distance": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "xValue",
+              "yValue",
+              "intervalTime",
+              "timeStarted",
+              "distance"
+            ]
+          },
+          "fixations": {
+            "type": "number"
+          },
+          "centerX": {
+            "type": "number"
+          },
+          "centerY": {
+            "type": "number"
+          },
+          "convexPoints": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "startingIndex": {
+            "type": "number"
+          },
+          "endingIndex": {
+            "type": "number"
+          },
+          "areaStartTime": {
+            "type": "number"
+          },
+          "areaEndTime": {
+            "type": "number"
+          },
+          "timeSpent": {
+            "type": "number"
+          },
+          "TTFF": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "ID",
+          "points",
+          "fixations",
+          "centerX",
+          "centerY",
+          "convexPoints",
+          "startingIndex",
+          "endingIndex",
+          "areaStartTime",
+          "areaEndTime",
+          "timeSpent",
+          "TTFF"
+        ]
       }
     }
   },

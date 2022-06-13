@@ -26,6 +26,7 @@ import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.I18NTooltip;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
+import net.gazeplay.commons.utils.stats.ChiData;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.StatDisplayUtils;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -46,14 +47,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class StatsContext extends GraphicalContext<BorderPane> {
 
     private final String COLON = "Colon";
-
     private final double RATIO = 0.35;
 
     StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton) {
         super(gazePlay, root);
 
         final Translator translator = gazePlay.getTranslator();
-
         Locale currentLocale = translator.currentLocale();
 
         // Align right for Arabic Language
@@ -103,7 +102,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             root.setStyle(
                 "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
 
-
         } else {
             GridPane grid = new GridPane();
             grid.setAlignment(Pos.TOP_CENTER);
@@ -131,7 +129,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             I18NButton displayGazeButton = createDisplayButton("Gaze", stats, displayedMetrics);
             I18NButton displayMouseAndGazeButton = createDisplayButton("MouseAndGaze", stats, displayedMetrics);
 
-
             HBox buttonSwitchMetrics = new HBox(displayMouseButton, displayGazeButton, displayMouseAndGazeButton);
             buttonSwitchMetrics.setAlignment(Pos.CENTER);
             centerPane.getChildren().add(buttonSwitchMetrics);
@@ -148,7 +145,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 tempSequenceList.addAll(stats.getFixationSequence().get(FixationSequence.GAZE_FIXATION_SEQUENCE));
                 AreaChart<Number, Number> areaChart = StatDisplayUtils.buildAreaChart(tempSequenceList, root);
                 LineChart<String, Number> levelChart = StatDisplayUtils.buildLevelChart(stats, root);
-                TableView chi2Chart = StatDisplayUtils.buildTable(stats);
+                TableView<ChiData> chi2Chart = StatDisplayUtils.buildTable(stats);
 
                 colorBands.setTextFill(Color.WHITE);
                 colorBands.getStylesheets().add("data/common/radio.css");
@@ -161,8 +158,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                         } else if (chi2Info.isSelected()) {
                             centerPane.getChildren().remove(chi2Chart);
                             chi2Info.setSelected(false);
-                        } else
+                        } else {
                             centerPane.getChildren().remove(lineChart);
+                        }
                         centerPane.getChildren().add(areaChart);
                         centerPane.getStylesheets().add("data/common/chart.css");
                     } else {
@@ -182,8 +180,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                         } else if (chi2Info.isSelected()) {
                             centerPane.getChildren().remove(chi2Chart);
                             chi2Info.setSelected(false);
-                        } else
+                        } else {
                             centerPane.getChildren().remove(lineChart);
+                        }
                         //centerPane.getChildren().remove(lineChart);
                         centerPane.getChildren().add(levelChart);
                         centerPane.getStylesheets().add("data/common/chart.css");
@@ -205,8 +204,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                         if (levelsInfo.isSelected()) {
                             centerPane.getChildren().remove(levelChart);
                             levelsInfo.setSelected(false);
-                        } else
+                        } else {
                             centerPane.getChildren().remove(lineChart);
+                        }
                         //centerPane.getChildren().remove(lineChart);
                         centerPane.getChildren().add(chi2Chart);
                         centerPane.getStylesheets().add("data/common/table.css");
@@ -261,9 +261,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             root.setStyle(
                 "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-
         }
-
     }
 
     I18NButton createDisplayButton(String buttonName, Stats stats, ImageView metrics) {
@@ -292,47 +290,44 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         if (gazeplayType.equals("bera")) {
             AtomicInteger currentFormRow = new AtomicInteger(0);
 
-            Text value;
-            String labelValue;
-
             if (stats.variantType.equals("SentenceComprehension")) {
 
-                addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 100.) + "s"));
+                addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text((stats.timeGame / 100.) + "s"));
 
                 addToGridCenter(grid, currentFormRow, translator, "MORPHOSYNTAX", new Text(""));
-                addToGridCenter(grid, currentFormRow, translator, "TotalMorphosyntax", new Text(String.valueOf(stats.totalMorphosyntax) + "/10"));
-                addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsMorphosyntax) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsMorphosyntax) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsMorphosyntax) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsMorphosyntax) + "/5"));
+                addToGridCenter(grid, currentFormRow, translator, "TotalMorphosyntax", new Text(stats.totalMorphosyntax + "/10"));
+                addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(stats.simpleScoreItemsMorphosyntax + "/5"));
+                addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(stats.complexScoreItemsMorphosyntax + "/5"));
+                addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(stats.scoreLeftTargetItemsMorphosyntax + "/5"));
+                addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(stats.scoreLeftTargetItemsMorphosyntax + "/5"));
 
                 addToGridCenter(grid, currentFormRow, translator, "SENTENCECOMPREHENSION", new Text(""));
-                addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually) + "/10"));
-                addToGridCenter(grid, currentFormRow, translator, "TotalSentenceComprehension", new Text(String.valueOf(stats.total) + "/10"));
+                addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(stats.totalItemsAddedManually + "/10"));
+                addToGridCenter(grid, currentFormRow, translator, "TotalSentenceComprehension", new Text(stats.total + "/10"));
             } else {
 
-                addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 100) + "s"));
+                addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text((stats.timeGame / 100) + "s"));
 
                 addToGridCenter(grid, currentFormRow, translator, "PHONOLOGY", new Text(""));
-                addToGridCenter(grid, currentFormRow, translator, "TotalPhonology", new Text(String.valueOf(stats.totalPhonology) + "/10"));
-                addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsPhonology) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsPhonology) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsPhonology) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsPhonology) + "/5"));
+                addToGridCenter(grid, currentFormRow, translator, "TotalPhonology", new Text(stats.totalPhonology + "/10"));
+                addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(stats.simpleScoreItemsPhonology + "/5"));
+                addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(stats.complexScoreItemsPhonology + "/5"));
+                addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(stats.scoreLeftTargetItemsPhonology + "/5"));
+                addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(stats.scoreLeftTargetItemsPhonology + "/5"));
 
                 addToGridCenter(grid, currentFormRow, translator, "SEMANTIC", new Text(""));
-                addToGridCenter(grid, currentFormRow, translator, "TotalSemantic", new Text(String.valueOf(stats.totalSemantic) + "/10"));
-                addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsPhonology) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsPhonology) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "FrequentScoreItem", new Text(String.valueOf(stats.frequentScoreItemSemantic) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "InfrequentScoreItem", new Text(String.valueOf(stats.infrequentScoreItemSemantic) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsSemantic) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreRightTargetItemsSemantic) + "/5"));
+                addToGridCenter(grid, currentFormRow, translator, "TotalSemantic", new Text(stats.totalSemantic + "/10"));
+                addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(stats.simpleScoreItemsPhonology + "/5"));
+                addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(stats.complexScoreItemsPhonology + "/5"));
+                addToGridCenter(grid, currentFormRow, translator, "FrequentScoreItem", new Text(stats.frequentScoreItemSemantic + "/5"));
+                addToGridCenter(grid, currentFormRow, translator, "InfrequentScoreItem", new Text(stats.infrequentScoreItemSemantic + "/5"));
+                addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(stats.scoreLeftTargetItemsSemantic + "/5"));
+                addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(stats.scoreRightTargetItemsSemantic + "/5"));
 
                 addToGridCenter(grid, currentFormRow, translator, "WORDCOMPREHENSION", new Text(""));
-                addToGridCenter(grid, currentFormRow, translator, "TotalWordComprehension", new Text(String.valueOf(stats.totalWordComprehension) + "/20"));
-                addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually) + "/20"));
-                addToGridCenter(grid, currentFormRow, translator, "Total", new Text(String.valueOf(stats.total) + "/20"));
+                addToGridCenter(grid, currentFormRow, translator, "TotalWordComprehension", new Text(stats.totalWordComprehension + "/20"));
+                addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(stats.totalItemsAddedManually + "/20"));
+                addToGridCenter(grid, currentFormRow, translator, "Total", new Text(stats.total + "/20"));
 
             }
         } else {
@@ -346,13 +341,12 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             if (!(stats instanceof ExplorationGamesStats)) {
 
-                if (stats instanceof ShootGamesStats) {
+                if (stats instanceof ShootGamesStats)
                     labelValue = "Shots";
-                } else if (stats instanceof HiddenItemsGamesStats) {
+                else if (stats instanceof HiddenItemsGamesStats)
                     labelValue = "HiddenItemsShot";
-                } else {
+                else
                     labelValue = "Score";
-                }
 
                 value = new Text(String.valueOf(stats.getNbGoalsReached()));
                 addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
@@ -469,6 +463,16 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         String gazeplayType = GazePlayArgs.returnArgs();
 
+        EventHandler<Event> viewAOI = e -> {
+            AreaOfInterestContext areaOfInterest = new AreaOfInterestContext(gazePlay, stats);
+            gazePlay.onDisplayAOI(areaOfInterest);
+        };
+
+        EventHandler<Event> viewScanPath = e -> {
+            ScanpathContext scanPath = new ScanpathContext(gazePlay, stats, continueButton);
+            gazePlay.onDisplayScanpath(scanPath);
+        };
+
         if (gazeplayType.equals("bera")) {
             HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
 
@@ -477,26 +481,14 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
-            CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
-            aoiButton.addEventHandler(
-                MouseEvent.MOUSE_CLICKED,
-                e -> gazePlay.onDisplayAOI(stats));
-
-            EventHandler<Event> viewScanPath = s -> {
-                ScanpathView scanPath = new ScanpathView(gazePlay, stats, continueButton);
-                gazePlay.onDisplayScanpath(scanPath);
-            };
-
-            EventHandler<Event> openFile = s -> {
-                this.openFile(stats);
-            };
-
-            EventHandler<Event> seeFile = s -> {
-                this.seeFile(stats.actualFile);
-            };
+            CustomButton AOIButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
+            AOIButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewAOI);
 
             CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
             scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
+
+            EventHandler<Event> openFile = s -> this.openFile(stats);
+            EventHandler<Event> seeFile = s -> this.seeFile(stats.actualFile);
 
             CustomButton openExcelButton = new CustomButton("data/common/images/excelButton.png", screenDimension);
             openExcelButton.addEventFilter(MouseEvent.MOUSE_CLICKED, openFile);
@@ -511,9 +503,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             controlButtonPane.getChildren().add(openExcelButton);
             controlButtonPane.getChildren().add(homeButton);
 
-            if (continueButton != null) {
+            if (continueButton != null)
                 controlButtonPane.getChildren().add(continueButton);
-            }
         } else {
             HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
 
@@ -522,15 +513,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
-            CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
-            aoiButton.addEventHandler(
-                MouseEvent.MOUSE_CLICKED,
-                e -> gazePlay.onDisplayAOI(stats));
-
-            EventHandler<Event> viewScanPath = s -> {
-                ScanpathView scanPath = new ScanpathView(gazePlay, stats, continueButton);
-                gazePlay.onDisplayScanpath(scanPath);
-            };
+            CustomButton AOIButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
+            AOIButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewAOI);
 
             CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
             scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
@@ -539,7 +523,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
 
             if (config.getAreaOfInterestDisabledProperty().getValue())
-                controlButtonPane.getChildren().add(aoiButton);
+                controlButtonPane.getChildren().add(AOIButton);
 
             if (!config.isFixationSequenceDisabled()) {
                 controlButtonPane.getChildren().add(colorBands);
@@ -550,9 +534,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             controlButtonPane.getChildren().add(homeButton);
 
-            if (continueButton != null) {
+            if (continueButton != null)
                 controlButtonPane.getChildren().add(continueButton);
-            }
         }
 
         return controlButtonPane;
@@ -564,9 +547,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     }
 
     public void openFile(Stats stats) {
-        Desktop desktop = Desktop.getDesktop();
         try {
-            desktop.open(new File(stats.actualFile));
+            Desktop.getDesktop().open(new File(stats.actualFile));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -575,11 +557,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     public void seeFile(String pathFile) {
         String os = System.getProperty("os.name").toLowerCase();
         try {
-            if (os.contains("win")) {
-                Runtime.getRuntime().exec("explorer.exe /select," + pathFile);
-            } else {
-                Runtime.getRuntime().exec("cmd xdg-open," + pathFile);
-            }
+            Runtime.getRuntime().exec((os.contains("win") ? "explorer.exe /select," : "cmd xdg-open,") + pathFile);
         } catch (Exception e) {
             e.printStackTrace();
         }

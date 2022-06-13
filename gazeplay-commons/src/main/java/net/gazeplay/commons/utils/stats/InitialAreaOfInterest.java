@@ -5,7 +5,7 @@ import javafx.scene.shape.Shape;
 import lombok.Data;
 
 @Data
-public class InitialAreaOfInterestProps {
+public class InitialAreaOfInterest {
     private final Shape areaOfInterest;
     private final GridPane informationBox;
 }
