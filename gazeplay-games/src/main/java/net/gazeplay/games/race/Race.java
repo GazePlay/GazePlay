@@ -80,7 +80,7 @@ public class Race extends Parent implements GameLifeCycle {
         score = 0;
         gameType = type;
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
 
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         hand = new StackPane();

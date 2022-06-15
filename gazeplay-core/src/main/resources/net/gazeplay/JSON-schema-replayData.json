@@ -20,6 +20,7 @@
       ]
     },
     "gameStartedTime": {
+      "description": "Started time of the game",
       "type": "number"
     },
     "screenAspectRatio": {
@@ -34,7 +35,7 @@
     "statsNbGoalsToReach": {
       "type": "number"
     },
-    "statsNbUnCountedGoalsReached": {
+    "statsNbUncountedGoalsReached": {
       "type": "number"
     },
     "lifeCycle": {
@@ -95,29 +96,37 @@
         }
       }
     },
-    "coordinatesAndTimeStamp": {
+    "movementHistory": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "X": {
+          "xValue": {
             "type": "number"
           },
-          "Y": {
+          "yValue": {
             "type": "number"
           },
-          "time": {
+          "intervalTime": {
             "type": "number"
           },
-          "timeInterval": {
+          "timeStarted": {
+            "type": "number"
+          },
+          "event": {
+            "type": "string"
+          },
+          "distance": {
             "type": "number"
           }
         },
         "required": [
-          "X",
-          "Y",
-          "time",
-          "timeInterval"
+          "xValue",
+          "yValue",
+          "intervalTime",
+          "timeStarted",
+          "event",
+          "distance"
         ]
       }
     },
@@ -139,31 +148,38 @@
             "type": "string"
           },
           "points": {
-            "type": "object",
-            "properties": {
-              "xValue": {
-                "type": "number"
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "xValue": {
+                  "type": "number"
+                },
+                "yValue": {
+                  "type": "number"
+                },
+                "intervalTime": {
+                  "type": "number"
+                },
+                "timeStarted": {
+                  "type": "number"
+                },
+                "event": {
+                  "type": "string"
+                },
+                "distance": {
+                  "type": "number"
+                }
               },
-              "yValue": {
-                "type": "number"
-              },
-              "intervalTime": {
-                "type": "number"
-              },
-              "timeStarted": {
-                "type": "number"
-              },
-              "distance": {
-                "type": "number"
-              }
-            },
-            "required": [
-              "xValue",
-              "yValue",
-              "intervalTime",
-              "timeStarted",
-              "distance"
-            ]
+              "required": [
+                "xValue",
+                "yValue",
+                "intervalTime",
+                "timeStarted",
+                "event",
+                "distance"
+              ]
+            }
           },
           "fixations": {
             "type": "number"
@@ -186,12 +202,6 @@
           "endingIndex": {
             "type": "number"
           },
-          "areaStartTime": {
-            "type": "number"
-          },
-          "areaEndTime": {
-            "type": "number"
-          },
           "timeSpent": {
             "type": "number"
           },
@@ -208,8 +218,6 @@
           "convexPoints",
           "startingIndex",
           "endingIndex",
-          "areaStartTime",
-          "areaEndTime",
           "timeSpent",
           "TTFF"
         ]
@@ -219,6 +227,8 @@
   "required": [
     "gameSeed",
     "gameName",
-    "coordinatesAndTimeStamp"
+    "gameStartedTime",
+    "movementHistory",
+    "AOIList"
   ]
 }

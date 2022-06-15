@@ -75,7 +75,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         gameType = type;
         hand = new StackPane();
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
 
         targetFrames = new Image[6];
         targetFrames[0] = new Image("data/" + gameType + "/images/Blue.png");

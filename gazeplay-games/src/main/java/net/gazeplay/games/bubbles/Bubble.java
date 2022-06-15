@@ -43,7 +43,7 @@ public class Bubble implements GameLifeCycle {
         this.stats = stats;
         this.gameVariant = gameVariant;
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
     }
 
     public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final BubblesGameVariant gameVariant, double gameSeed) {

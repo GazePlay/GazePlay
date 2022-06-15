@@ -105,7 +105,7 @@ public class Memory implements GameLifeCycle {
         this.gameContext.startTimeLimiter();
 
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
 
         if (gameType == MemoryGameType.LETTERS) {
 

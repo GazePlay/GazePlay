@@ -58,7 +58,7 @@ public class MagicCards implements GameLifeCycle {
         gameContext.startTimeLimiter();
 
         this.random = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(random.getSeed());
+        this.stats.setCurrentGameSeed(random.getSeed());
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"), random);
     }

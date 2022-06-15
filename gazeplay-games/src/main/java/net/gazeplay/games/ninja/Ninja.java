@@ -30,7 +30,7 @@ public class Ninja implements GameLifeCycle {
         this.stats = stats;
         this.gameVariant = gameVariant;
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
         this.variantType = gameVariant.getLabel();
     }
 

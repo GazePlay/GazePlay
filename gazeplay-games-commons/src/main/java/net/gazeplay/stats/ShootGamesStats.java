@@ -9,8 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class ShootGamesStats extends Stats {
@@ -20,8 +18,18 @@ public class ShootGamesStats extends Stats {
         setAccidentalShotPreventionPeriod(100);
     }
 
-    public ShootGamesStats(final Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, List<AreaOfInterest> AOIList, SavedStatsInfo savedStatsInfo) {
-        super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, AOIList, savedStatsInfo);
+    public ShootGamesStats(final Scene scene,
+                           int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached,
+                           LifeCycle lifeCycle,
+                           RoundsDurationReport roundsDurationReport,
+                           List<List<FixationPoint>> fixationSequence,
+                           List<CoordinatesTracker> movementHistory,
+                           double[][] heatMap,
+                           List<AreaOfInterest> AOIList,
+                           SavedStatsInfo savedStatsInfo
+    ) {
+        super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, lifeCycle, roundsDurationReport,
+            fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
         setAccidentalShotPreventionPeriod(100);
     }
 
@@ -68,7 +76,7 @@ public class ShootGamesStats extends Stats {
             out.print(',');
             out.print(computeRoundsDurationStandardDeviation());
             out.print(',');
-            out.print(getNbUnCountedGoalsReached());
+            out.print(getNbUncountedGoalsReached());
             out.print(',');
             printLengthBetweenGoalsToString(out);
             out.println();
@@ -77,5 +85,4 @@ public class ShootGamesStats extends Stats {
         }
         return null;
     }
-
 }

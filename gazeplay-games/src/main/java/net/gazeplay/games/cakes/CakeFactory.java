@@ -107,7 +107,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         this.stats = stats;
         this.gameContext.startTimeLimiter();
         this.random = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(random.getSeed());
+        this.stats.setCurrentGameSeed(random.getSeed());
         centerX = dimension2D.getWidth() / 2;
         centerY = dimension2D.getHeight() / 2;
         buttonSize = dimension2D.getWidth() / 8;

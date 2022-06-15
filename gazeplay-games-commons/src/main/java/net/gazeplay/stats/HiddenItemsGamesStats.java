@@ -9,8 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class HiddenItemsGamesStats extends Stats {
@@ -19,8 +17,18 @@ public class HiddenItemsGamesStats extends Stats {
         super(scene);
     }
 
-    public HiddenItemsGamesStats(final Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, List<AreaOfInterest> AOIList, SavedStatsInfo savedStatsInfo) {
-        super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, AOIList, savedStatsInfo);
+    public HiddenItemsGamesStats(final Scene scene,
+                                 int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached,
+                                 LifeCycle lifeCycle,
+                                 RoundsDurationReport roundsDurationReport,
+                                 List<List<FixationPoint>> fixationSequence,
+                                 List<CoordinatesTracker> movementHistory,
+                                 double[][] heatMap,
+                                 List<AreaOfInterest> AOIList,
+                                 SavedStatsInfo savedStatsInfo
+    ) {
+        super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, lifeCycle, roundsDurationReport,
+            fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
     }
 
     @Override

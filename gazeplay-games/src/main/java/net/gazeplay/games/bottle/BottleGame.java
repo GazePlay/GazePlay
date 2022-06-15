@@ -68,7 +68,7 @@ public class BottleGame implements GameLifeCycle {
         gameContext.getChildren().addAll(backgroundLayer, foregroundLayer);
 
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.bottleGameStats.setGameSeed(randomGenerator.getSeed());
+        this.bottleGameStats.setCurrentGameSeed(randomGenerator.getSeed());
 
         final Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         backgroundImage.widthProperty().bind(gameContext.getRoot().widthProperty());

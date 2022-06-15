@@ -8,8 +8,6 @@ import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.commons.utils.FixationPoint;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class FollowGameLauncher implements IGameLauncher<Stats, EnumGameVariant<FollowGameVariant>> {
@@ -23,20 +21,28 @@ public class FollowGameLauncher implements IGameLauncher<Stats, EnumGameVariant<
     }
 
     @Override
-    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, List<AreaOfInterest> AOIList, SavedStatsInfo savedStatsInfo) {
-        gameStat = new FollowGamesStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, AOIList, savedStatsInfo);
+    public Stats createSavedStats(Scene scene,
+                                  int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached,
+                                  LifeCycle lifeCycle,
+                                  RoundsDurationReport roundsDurationReport,
+                                  List<List<FixationPoint>> fixationSequence,
+                                  List<CoordinatesTracker> movementHistory,
+                                  double[][] heatMap,
+                                  List<AreaOfInterest> AOIList,
+                                  SavedStatsInfo savedStatsInfo
+    ) {
+        gameStat = new FollowGamesStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, lifeCycle,
+            roundsDurationReport, fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
         return gameStat;
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, EnumGameVariant<FollowGameVariant> gameVariant,
-                                       Stats stats) {
+    public GameLifeCycle createNewGame(IGameContext gameContext, EnumGameVariant<FollowGameVariant> gameVariant, Stats stats) {
         return new Follow(gameContext, gameStat, gameVariant.getEnumValue());
     }
 
     @Override
-    public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<FollowGameVariant> gameVariant,
-                                    Stats stats, double gameSeed) {
+    public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<FollowGameVariant> gameVariant, Stats stats, double gameSeed) {
         return new Follow(gameContext, gameStat, gameVariant.getEnumValue());
     }
 }

@@ -23,7 +23,6 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.stats.ShootGamesStats;
-import net.gazeplay.ui.scenes.stats.StatsContext;
 
 import java.time.Duration;
 import java.util.LinkedList;
@@ -34,7 +33,7 @@ import static javafx.scene.chart.XYChart.Data;
 @Slf4j
 public class StatDisplayUtils {
 
-    public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
+    public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay) {
         EventHandler<Event> homeEvent = e -> closeStatsWindow();
 
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
@@ -51,7 +50,6 @@ public class StatDisplayUtils {
     }
 
     public static LineChart<String, Number> buildLineChart(Stats stats, final Region root) {
-
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
 
@@ -65,11 +63,10 @@ public class StatDisplayUtils {
         // populating the series with data
 
         final List<Long> shots;
-        if (stats instanceof ShootGamesStats) {
+        if (stats instanceof ShootGamesStats)
             shots = stats.getSortedDurationsBetweenGoals();
-        } else {
+        else
             shots = stats.getOriginalDurationsBetweenGoals();
-        }
 
         double sd = stats.computeRoundsDurationStandardDeviation();
 
@@ -122,8 +119,8 @@ public class StatDisplayUtils {
         return lineChart;
     }
 
+    @SuppressWarnings("unchecked")
     public static AreaChart<Number, Number> buildAreaChart(LinkedList<FixationPoint> points, final Region root) {
-
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
 
@@ -137,7 +134,6 @@ public class StatDisplayUtils {
         colorBands.setLegendVisible(true);
 
         if (points.size() > 0) {
-
             Series<Number, Number> xEyeCoordinates = new Series<>();
             xEyeCoordinates.setName("X coordinate");
 
@@ -163,8 +159,9 @@ public class StatDisplayUtils {
             colorBands.setMaxHeight(root.getHeight() * 0.4);
 
             return colorBands;
-        } else
+        } else {
             return null;
+        }
     }
 
     public static LineChart<String, Number> buildLevelChart(Stats stats, final Region root) {
@@ -234,6 +231,7 @@ public class StatDisplayUtils {
         return levelChart;
     }
 
+    @SuppressWarnings("unchecked")
     public static TableView<ChiData> buildTable(Stats stats) {
         TableView<ChiData> table = new TableView<>();
         table.setMaxWidth(1200);
@@ -339,7 +337,6 @@ public class StatDisplayUtils {
 
                 chart.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInAreaChartEventHandler(chart, root));
             }
-
         };
     }
 
@@ -356,7 +353,6 @@ public class StatDisplayUtils {
 
                 chart.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInLineChartEventHandler(chart, root));
             }
-
         };
     }
 
@@ -465,15 +461,14 @@ public class StatDisplayUtils {
     public static String convert(long totalTime) {
         Duration duration = Duration.ofMillis(totalTime);
 
-        // Extract the days from the duration, then take it away so we can format the rest of the string.
+        // Extract the days from the duration, then take it away, so we can format the rest of the string.
         long days = duration.toDaysPart();
         Duration durationLessDays = duration.minusDays(days);
 
         String result = "";
 
-        if (days > 0) {
+        if (days > 0)
             result += String.format("%dd ", days);
-        }
 
         return result + durationLessDays.toString()
             .substring(2)

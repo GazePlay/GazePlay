@@ -50,7 +50,7 @@ public class CupsAndBalls implements GameLifeCycle {
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
     }
 
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups, double gameSeed, String parameter) {

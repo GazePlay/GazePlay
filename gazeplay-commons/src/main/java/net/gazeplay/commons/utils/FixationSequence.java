@@ -17,8 +17,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 @Slf4j
 public class FixationSequence {
@@ -39,9 +39,9 @@ public class FixationSequence {
     @Getter
     private final WritableImage image;
     @Getter
-    private LinkedList<FixationPoint> sequence;
+    private final List<FixationPoint> sequence;
 
-    public FixationSequence(final int width, final int height, ArrayList<LinkedList<FixationPoint>> fixationPoints, int sequenceIndex) {
+    public FixationSequence(final int width, final int height, List<List<FixationPoint>> fixationPoints, int sequenceIndex) {
         this.image = new WritableImage(width, height);
         final Canvas canvas = new Canvas(width, height);
 
@@ -62,7 +62,7 @@ public class FixationSequence {
         sequence.removeIf(fixationPoint -> fixationPoint.getGazeDuration() == -1);
     }
 
-    private GraphicsContext drawFixationLines(Canvas canvas, LinkedList<FixationPoint> sequence, Color color) {
+    private GraphicsContext drawFixationLines(Canvas canvas, List<FixationPoint> sequence, Color color) {
         final GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // draw the line of the sequence
@@ -84,7 +84,7 @@ public class FixationSequence {
         return gc;
     }
 
-    private void drawFixationCircles(GraphicsContext gc, LinkedList<FixationPoint> sequence, int sequenceIndex) {
+    private void drawFixationCircles(GraphicsContext gc, List<FixationPoint> sequence, int sequenceIndex) {
         gc.setEffect(null);
         gc.setFont(sanSerifFont);
         gc.setTextAlign(TextAlignment.CENTER);
@@ -150,11 +150,11 @@ public class FixationSequence {
         }
     }
 
-    public static LinkedList<FixationPoint> vertexReduction(final LinkedList<FixationPoint> allPoints, final double tolerance) {
+    public static List<FixationPoint> vertexReduction(final List<FixationPoint> allPoints, final double tolerance) {
         double distance;
         FixationPoint pivotVertex = allPoints.get(0);
 
-        final LinkedList<FixationPoint> reducedPolyline = new LinkedList<>();
+        final List<FixationPoint> reducedPolyline = new LinkedList<>();
         reducedPolyline.add(pivotVertex);
 
         for (int i = 1; i < allPoints.size() - 1; i++) {

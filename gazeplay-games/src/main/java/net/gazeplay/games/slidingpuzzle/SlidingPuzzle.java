@@ -53,7 +53,7 @@ public class SlidingPuzzle implements GameLifeCycle {
         this.stats = stats;
         this.gameContext = gameContext;
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
 
         this.picPath = gameVariant.getEnumValue().getResourcesPath();
     }

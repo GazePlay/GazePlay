@@ -55,7 +55,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
         this.random = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(random.getSeed());
+        this.stats.setCurrentGameSeed(random.getSeed());
 
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();

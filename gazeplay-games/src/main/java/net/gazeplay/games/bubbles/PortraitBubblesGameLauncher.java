@@ -8,30 +8,37 @@ import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.*;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class PortraitBubblesGameLauncher implements IGameLauncher<Stats, EnumGameVariant<BubblesGameVariant>> {
+
     @Override
     public Stats createNewStats(final Scene scene) {
         return new BubblesGamesStats(scene);
     }
 
     @Override
-    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, List<AreaOfInterest> AOIList, SavedStatsInfo savedStatsInfo) {
-        return new BubblesGamesStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, AOIList, savedStatsInfo);
+    public Stats createSavedStats(Scene scene,
+                                  int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached,
+                                  LifeCycle lifeCycle,
+                                  RoundsDurationReport roundsDurationReport,
+                                  List<List<FixationPoint>> fixationSequence,
+                                  List<CoordinatesTracker> movementHistory,
+                                  double[][] heatMap,
+                                  List<AreaOfInterest> AOIList,
+                                  SavedStatsInfo savedStatsInfo
+    ) {
+        return new BubblesGamesStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, lifeCycle,
+            roundsDurationReport, fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
     }
 
     @Override
-    public GameLifeCycle createNewGame(final IGameContext gameContext, final EnumGameVariant<BubblesGameVariant> gameVariant,
-                                       final Stats stats) {
+    public GameLifeCycle createNewGame(final IGameContext gameContext, final EnumGameVariant<BubblesGameVariant> gameVariant, final Stats stats) {
         return new Bubble(gameContext, BubbleType.PORTRAIT, stats, gameVariant.getEnumValue());
     }
 
     @Override
-    public GameLifeCycle replayGame(final IGameContext gameContext, final EnumGameVariant<BubblesGameVariant> gameVariant,
-                                    final Stats stats, double gameSeed) {
+    public GameLifeCycle replayGame(final IGameContext gameContext, final EnumGameVariant<BubblesGameVariant> gameVariant, final Stats stats, double gameSeed) {
         return new Bubble(gameContext, BubbleType.PORTRAIT, stats, gameVariant.getEnumValue(), gameSeed);
     }
 }

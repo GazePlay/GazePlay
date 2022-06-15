@@ -382,9 +382,9 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
             }
 
-            if (stats instanceof ShootGamesStats && stats.getNbUnCountedGoalsReached() != 0) {
+            if (stats instanceof ShootGamesStats && stats.getNbUncountedGoalsReached() != 0) {
                 labelValue = "UncountedShot";
-                value = new Text(String.valueOf(stats.getNbUnCountedGoalsReached()));
+                value = new Text(String.valueOf(stats.getNbUncountedGoalsReached()));
                 addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
             }
         }
@@ -474,7 +474,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         };
 
         if (gazeplayType.equals("bera")) {
-            HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
+            HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay);
 
             I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
             I18NTooltip.install(homeButton, tooltipBackToMenu);
@@ -506,7 +506,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             if (continueButton != null)
                 controlButtonPane.getChildren().add(continueButton);
         } else {
-            HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
+            HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay);
 
             I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
             I18NTooltip.install(homeButton, tooltipBackToMenu);

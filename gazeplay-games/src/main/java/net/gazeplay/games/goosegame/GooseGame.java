@@ -73,7 +73,7 @@ public class GooseGame implements GameLifeCycle {
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         this.random = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(random.getSeed());
+        this.stats.setCurrentGameSeed(random.getSeed());
 
         // JSON file used to store the position of each square, later used for pawn movement
         final JsonParser parser = new JsonParser();

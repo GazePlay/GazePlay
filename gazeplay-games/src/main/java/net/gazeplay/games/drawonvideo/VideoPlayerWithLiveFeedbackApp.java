@@ -46,7 +46,7 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
         this.gameContext = gameContext;
 
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
 
         String videoUrl = "http://www.youtube.com/embed/" + youtubeVideoId + "?autoplay=1";
 

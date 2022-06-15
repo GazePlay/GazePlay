@@ -71,7 +71,7 @@ public class DotToDot implements GameLifeCycle {
         this.stats = stats;
         this.gameVariant = gameVariant;
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
         this.dotList = new ArrayList<>();
         this.lineList = new ArrayList<>();
         this.previous = 1;

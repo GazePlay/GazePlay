@@ -10,5 +10,6 @@ public class CoordinatesTracker {
     private final int yValue;
     private final long intervalTime;
     private final long timeStarted;
+    private final String event;
     private double distance;
 }

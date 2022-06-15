@@ -14,20 +14,16 @@ import java.util.stream.Stream;
 
 @Slf4j
 public class CatalogBasedGamesLocator extends AbstractGamesLocator {
-
     private static String catalogResourceLocation = "games-catalog.txt";
 
     @Override
     protected List<Class> findGameSpecSourceClasses() {
-
         String gazeplayType = GazePlayArgs.returnArgs();
 
-        if (gazeplayType.contains("bera")) {
+        if (gazeplayType.contains("bera"))
             catalogResourceLocation = "bera-games-catalog.txt";
-        }
 
         Stream<String> linesStream = Stream.generate(new Supplier<>() {
-
             final Scanner scanner;
 
             {
@@ -38,13 +34,8 @@ public class CatalogBasedGamesLocator extends AbstractGamesLocator {
 
             @Override
             public String get() {
-                if (scanner.hasNextLine()) {
-                    return scanner.nextLine();
-                } else {
-                    return null;
-                }
+                return scanner.hasNextLine() ? scanner.nextLine() : null;
             }
-
         });
 
         return linesStream
@@ -59,7 +50,5 @@ public class CatalogBasedGamesLocator extends AbstractGamesLocator {
             })
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
-
     }
-
 }

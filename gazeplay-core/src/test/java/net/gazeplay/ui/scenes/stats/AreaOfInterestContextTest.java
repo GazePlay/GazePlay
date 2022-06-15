@@ -18,7 +18,6 @@ import java.io.File;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -33,7 +32,6 @@ class AreaOfInterestContextTest {
     private Stats mocksStats;
 
     SavedStatsInfo statsInfo = new SavedStatsInfo(
-        new File("file1.csv"),
         new File("metricsMouse.csv"),
         new File("metricsGaze.csv"),
         new File("metricsBoth.csv"),
@@ -46,7 +44,7 @@ class AreaOfInterestContextTest {
 
     @BeforeEach
     void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mocksStats.getSavedStatsInfo()).thenReturn(statsInfo);
         when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(supplier);
     }
@@ -54,8 +52,8 @@ class AreaOfInterestContextTest {
     @Test
     void shouldCreateButtonBox() {
         List<CoordinatesTracker> coordinatesTrackers = List.of(
-            new CoordinatesTracker(100, 200, 1234, 3456),
-            new CoordinatesTracker(200, 200, 4321, 4567)
+            new CoordinatesTracker(100, 200, 1234, 3456, "mouse"),
+            new CoordinatesTracker(200, 200, 4321, 4567, "mouse")
         );
         when(mocksStats.getMovementHistory()).thenReturn(coordinatesTrackers);
 
@@ -65,26 +63,28 @@ class AreaOfInterestContextTest {
 
         assertEquals(5, result.getChildren().size());
     }
-/*
+
     @Test
-    void shouldCalculateInfoBox() {
+    void shouldCalculateAOIView() {
         List<CoordinatesTracker> coordinatesTrackers = List.of(
-            new CoordinatesTracker(100, 200, 1234, 3456),
-            new CoordinatesTracker(200, 200, 4321, 4567)
+            new CoordinatesTracker(100, 200, 1234, 3456, "mouse"),
+            new CoordinatesTracker(200, 200, 4321, 4567, "mouse"),
+            new CoordinatesTracker(300, 300, 1234, 5678, "mouse")
         );
-        when(mocksStats.getMovementHistoryWithTime()).thenReturn(coordinatesTrackers);
+        when(mocksStats.getMovementHistory()).thenReturn(coordinatesTrackers);
 
-        AreaOfInterestView areaOfInterestView = new AreaOfInterestView(mockGazePlay, mocksStats);
+        AreaOfInterestContext areaOfInterestContext = new AreaOfInterestContext(mockGazePlay, mocksStats);
 
-        Polygon currentArea = new Polygon();
-        currentArea.getPoints().addAll(1d, 1d, 2d, 1d, 2d, 3d, 1d, 3d);
-        InfoBoxProps result1 = areaOfInterestView.calculateInfoBox("id", 12.34, 1.23, 3, 300, 400, currentArea);
-        InfoBoxProps result2 = areaOfInterestView.calculateInfoBox("id", 12.34, 1.23, 3, 500, 400, currentArea);
+        Double[] convexPoints = {1d, 1d, 2d, 1d, 2d, 3d, 1d, 3d};
+        AreaOfInterest aoi1 = new AreaOfInterest("id", coordinatesTrackers, 300, 400, convexPoints, 0, 2, 1.23, 12.34);
+        AreaOfInterest aoi2 = new AreaOfInterest("id", coordinatesTrackers, 500, 400, convexPoints, 0, 2, 1.23, 12.34);
+        AreaOfInterestView aoiView1 = areaOfInterestContext.calculateAOIView(aoi1, 0);
+        AreaOfInterestView aoiView2 = areaOfInterestContext.calculateAOIView(aoi2, 0);
 
-        assertEquals(401, result1.getInfoBox().getLayoutX());
-        assertEquals(209, result2.getInfoBox().getLayoutX());
+        assertEquals(403, aoiView1.getInfoBox().getLayoutX());
+        assertEquals(207, aoiView2.getInfoBox().getLayoutX());
     }
-*/
+
     @Test
     void shouldMakeInfoBox() {
         String aoiID = "id";

@@ -88,7 +88,7 @@ class StatDisplayUtilsTest {
 
     @Test
     void shouldCreateHomeButton() {
-        final HomeButton button = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, mockStatsContext);
+        final HomeButton button = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay);
         assert button.isVisible();
     }
 
@@ -231,7 +231,7 @@ class StatDisplayUtilsTest {
     @Test
     void shouldBuildGazeMetrics() {
         final File mockFile = new File("bear.jpg");
-        final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile, mockFile, mockFile, mockFile);
+        final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile, mockFile, mockFile);
 
         when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
 
@@ -243,7 +243,7 @@ class StatDisplayUtilsTest {
     @Test
     void shouldZoomInToGazeMetrics() {
         final File mockFile = new File("bear.jpg");
-        final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile, mockFile, mockFile, mockFile);
+        final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile, mockFile, mockFile);
 
         when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
 
@@ -261,7 +261,7 @@ class StatDisplayUtilsTest {
     @Test
     void shouldZoomOutOfGazeMetrics() {
         final File mockFile = new File("bear.jpg");
-        final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile, mockFile, mockFile, mockFile);
+        final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(mockFile, mockFile, mockFile, mockFile, mockFile, mockFile);
 
         when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
 

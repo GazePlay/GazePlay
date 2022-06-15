@@ -14,8 +14,6 @@ public class AreaOfInterest {
     private final Double[] convexPoints;
     private final int startingIndex;
     private final int endingIndex;
-    private final long areaStartTime;
-    private final long areaEndTime;
     private final double timeSpent;
     private final double TTFF;
 
@@ -29,8 +27,6 @@ public class AreaOfInterest {
         final Double[] convexPoints,
         final int startingIndex,
         final int endingIndex,
-        final long areaStartTime,
-        final long areaEndTime,
         final double timeSpent,
         final double TTFF
     ) {
@@ -42,9 +38,15 @@ public class AreaOfInterest {
         this.convexPoints = convexPoints;
         this.startingIndex = startingIndex;
         this.endingIndex = endingIndex;
-        this.areaStartTime = areaStartTime;
-        this.areaEndTime = areaEndTime;
         this.timeSpent = timeSpent;
         this.TTFF = TTFF;
+    }
+
+    public long getTimeStarted() {
+        return points.get(0).getTimeStarted();
+    }
+
+    public long getTimeEnded() {
+        return points.get(points.size() - 1).getTimeStarted() + points.get(points.size() - 1).getIntervalTime();
     }
 }

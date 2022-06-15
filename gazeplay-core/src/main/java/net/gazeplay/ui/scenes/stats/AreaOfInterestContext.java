@@ -73,7 +73,7 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
     private final Pane graphicsPane;
     private Double previousInfoBoxX;
     private Double previousInfoBoxY;
-    private final ArrayList<InitialAreaOfInterest> combinedAreaList;
+    private final List<InitialAreaOfInterest> combinedAreaList;
     private final int[] areaMap;
     private boolean playing = false;
 
@@ -96,14 +96,14 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
             graphicsPane.getChildren().add(initialAreaOfInterest.getAreaOfInterest());
 
         if (stats.getTargetAOIList() != null) {
-            final ArrayList<TargetAOI> targetAOIArrayList = stats.getTargetAOIList();
+            final List<TargetAOI> targetAOIArrayList = stats.getTargetAOIList();
             long timeTargetAreaStart;
             long timeTargetAreaEnd;
             int targetAOIIterator;
             score = 0;
 
             for (int i = 0; i < AOIList.size(); i++) {
-                final long timeAreaStart = AOIList.get(i).getAreaStartTime();
+                final long timeAreaStart = AOIList.get(i).getTimeStarted();
                 double maxScore = 0;
 
                 for (targetAOIIterator = 0; targetAOIIterator < targetAOIArrayList.size(); targetAOIIterator++) {
@@ -544,15 +544,17 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
                 });
 
                 tempPolygon.setOnMouseExited(event -> {
-                    graphicsPane.getChildren().remove(currentInfoBox);
-                    finalInfoBox.setLayoutY(previousInfoBoxY);
-                    finalInfoBox.setLayoutX(previousInfoBoxX);
+                    if (!playing) {
+                        graphicsPane.getChildren().remove(currentInfoBox);
+                        finalInfoBox.setLayoutY(previousInfoBoxY);
+                        finalInfoBox.setLayoutX(previousInfoBoxX);
 
-                    final double opacity = AOIList.get(finalI).getPriority();
-                    final Color color = (areaMap[finalI] == -1) ?
-                        Color.rgb(255, 0, 0, opacity) :
-                        Color.rgb(249, 166, 2, opacity);
-                    finalTempPolygon.setFill(color);
+                        final double opacity = AOIList.get(finalI).getPriority();
+                        final Color color = (areaMap[finalI] == -1) ?
+                            Color.rgb(255, 0, 0, opacity) :
+                            Color.rgb(249, 166, 2, opacity);
+                        finalTempPolygon.setFill(color);
+                    }
                 });
 
                 int colorIterator = i % 7;

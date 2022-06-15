@@ -81,7 +81,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
     }
 
     MagicPotions(final IGameContext gameContext, final Stats stats, double gameSeed) {

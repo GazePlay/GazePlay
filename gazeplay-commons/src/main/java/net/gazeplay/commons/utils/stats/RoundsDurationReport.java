@@ -21,41 +21,31 @@ public class RoundsDurationReport {
 
     public long computeMedianDuration() {
         final int count = durationBetweenGoals.size();
-        if (count == 0) {
+        int middle = count / 2;
+
+        if (count == 0)
             return 0L;
-        }
 
         final List<Long> sortedList = new ArrayList<>(durationBetweenGoals);
         Collections.sort(sortedList);
 
-        int middle = count / 2;
-
-        if (count % 2 == 0) {// number of elements is even, median is the average of the two central numbers
-
-            middle -= 1;
-            return (sortedList.get(middle) + sortedList.get(middle + 1)) / 2;
-
-        } else {// number of elements is odd, median is the central number
-
+        if (count % 2 == 0) // number of elements is even, median is the average of the two central numbers
+            return (sortedList.get(middle - 1) + sortedList.get(middle)) / 2;
+        else // number of elements is odd, median is the central number
             return sortedList.get(middle);
-        }
     }
 
     public long computeAverageLength() {
         final int count = durationBetweenGoals.size();
-        if (count == 0) {
-            return 0L;
-        }
-        return totalAdditiveDuration / count;
+        return (count == 0) ? 0L : totalAdditiveDuration / count;
     }
 
     public double computeVariance() {
         final double average = computeAverageLength();
         double sum = 0;
         final int count = durationBetweenGoals.size();
-        for (final Long value : durationBetweenGoals) {
+        for (final Long value : durationBetweenGoals)
             sum += Math.pow((value - average), 2);
-        }
         return sum / count;
     }
 
@@ -93,5 +83,4 @@ public class RoundsDurationReport {
             out.print(',');
         }
     }
-
 }

@@ -64,7 +64,7 @@ public class VideoGrid implements GameLifeCycle {
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.config = gameContext.getConfiguration();
         this.random = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(random.getSeed());
+        this.stats.setCurrentGameSeed(random.getSeed());
         this.translate = MultilinguismFactory.getSingleton();
 
         grid = new GridPane();

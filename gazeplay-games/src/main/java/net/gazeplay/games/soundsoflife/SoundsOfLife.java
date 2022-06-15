@@ -39,7 +39,7 @@ public class SoundsOfLife implements GameLifeCycle {
         this.gameContext = gameContext;
         this.targetAOIList = new ArrayList<>();
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
 
         String path = "data/soundsoflife/";
         switch (gameVariant) {

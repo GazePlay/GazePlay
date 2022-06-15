@@ -8,16 +8,13 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import mockit.MockUp;
 import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
-import net.gazeplay.commons.utils.stats.StatDisplayUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.stats.ExplorationGamesStats;
 import net.gazeplay.stats.HiddenItemsGamesStats;
@@ -55,8 +52,7 @@ class StatsContextTest {
     @Mock
     private Stats mockStats;
 
-    private SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(
-        new File("file.csv"),
+    private final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(
         new File("file.csv"),
         new File("file.csv"),
         new File("file.csv"),
@@ -67,7 +63,7 @@ class StatsContextTest {
 
     @BeforeEach
     void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockGazePlay.getTranslator()).thenReturn(mockTranslator);
         when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(() -> new Dimension2D(1920, 1080));
         when(mockTranslator.currentLocale()).thenReturn(Locale.ENGLISH);
@@ -80,12 +76,6 @@ class StatsContextTest {
         when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
         SimpleDoubleProperty widthProperty = new SimpleDoubleProperty(100);
         ImageView metrics = spy(new ImageView("bear.jpg"));
-        new MockUp<StatDisplayUtils>() {
-            @mockit.Mock
-            public ImageView buildGazeMetrics(Stats stats, Region root) {
-                return metrics;
-            }
-        };
 
         BorderPane rootSpy = spy(new BorderPane());
         when(rootSpy.widthProperty()).thenReturn(widthProperty);
@@ -100,12 +90,6 @@ class StatsContextTest {
         when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
         SimpleDoubleProperty heightProperty = new SimpleDoubleProperty(100);
         ImageView metrics = spy(new ImageView("bear.jpg"));
-        new MockUp<StatDisplayUtils>() {
-            @mockit.Mock
-            public ImageView buildGazeMetrics(Stats stats, Region root) {
-                return metrics;
-            }
-        };
 
         BorderPane rootSpy = spy(new BorderPane());
         when(rootSpy.heightProperty()).thenReturn(heightProperty);
@@ -115,9 +99,10 @@ class StatsContextTest {
         verify(metrics).setFitHeight(200 * 0.35);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     void shouldAddAreaChartOnColorBandSelected() {
-        ArrayList<LinkedList<FixationPoint>> fixationPoints = new ArrayList<>(List.of(
+        List<List<FixationPoint>> fixationPoints = new ArrayList<>(List.of(
             new LinkedList<>(List.of(
                 new FixationPoint(1234, 2345, 30, 40),
                 new FixationPoint(4567, 1234, 40, 60)
@@ -126,19 +111,11 @@ class StatsContextTest {
                 new FixationPoint(1234, 2345, 30, 40),
                 new FixationPoint(4567, 1234, 40, 60)
             ))
-        )
-        );
+        ));
         when(mockStats.getFixationSequence()).thenReturn(fixationPoints);
 
         Configuration mockConfig = mock(Configuration.class);
         when(mockConfig.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));
-
-        new MockUp<ActiveConfigurationContext>() {
-            @mockit.Mock
-            public Configuration getInstance() {
-                return mockConfig;
-            }
-        };
 
         BorderPane root = new BorderPane();
         new StatsContext(mockGazePlay, root, mockStats, null);
@@ -167,7 +144,7 @@ class StatsContextTest {
 
         GridPane grid = new GridPane();
         ShootGamesStats stats = mock(ShootGamesStats.class);
-        when(stats.getNbUnCountedGoalsReached()).thenReturn(3);
+        when(stats.getNbUncountedGoalsReached()).thenReturn(3);
         context.addAllToGrid(stats, mockTranslator, grid, alignLeft);
 
         assertEquals(16, grid.getChildren().size());

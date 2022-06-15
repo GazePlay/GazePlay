@@ -4,9 +4,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Dimension2D;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import mockit.MockUp;
 import net.gazeplay.GazePlay;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CustomButton;
@@ -46,8 +44,7 @@ class StatsContextFactoryTest {
     @Mock
     private Configuration mockConfig;
 
-    private SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(
-        new File("file.csv"),
+    private final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(
         new File("file.csv"),
         new File("file.csv"),
         new File("file.csv"),
@@ -58,20 +55,13 @@ class StatsContextFactoryTest {
 
     @BeforeEach
     void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockGazePlay.getTranslator()).thenReturn(mockTranslator);
         when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(() -> new Dimension2D(1920, 1080));
         when(mockTranslator.currentLocale()).thenReturn(Locale.ENGLISH);
         when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
         when(mockConfig.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));
         when(mockStats.getFixationSequence()).thenReturn(new ArrayList<>(List.of(new LinkedList<>(), new LinkedList<>())));
-
-        new MockUp<ActiveConfigurationContext>() {
-            @mockit.Mock
-            public Configuration getInstance() {
-                return mockConfig;
-            }
-        };
     }
 
     @Test
