@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class AreaOfInterestView {
+    private final Polygon areaOfInterest;
     private final GridPane infoBox;
     private final Line lineToInfoBox;
-    private final Polygon areaOfInterest;
 }

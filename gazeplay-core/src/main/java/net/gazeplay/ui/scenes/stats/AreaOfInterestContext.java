@@ -48,11 +48,12 @@ import java.util.concurrent.TimeUnit;
 public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
 
     private final List<CoordinatesTracker> movementHistory;
-    private final Label timeLabel;
-    private Timeline clock;
-    private MediaPlayer player;
     private final List<AreaOfInterest> AOIList;
     private final List<AreaOfInterestView> AOIViewList;
+    private final List<AreaOfInterestCombinedView> AOICombinedViewList;
+    private final Configuration config;
+    private final Pane graphicsPane;
+    private final int[] areaMap;
 
     private final Color[] colors = new Color[]{
         Color.PURPLE,
@@ -64,19 +65,16 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
         Color.CHOCOLATE
     };
 
-    private final Configuration config;
-
+    private double score;
+    private MediaPlayer player;
+    private final Label timeLabel;
+    private Timeline clock;
     private Polygon currentAOIDisplay;
     private GridPane currentInfoBox;
     private Line currentLineToInfoBox;
-    private double score;
-    private final Pane graphicsPane;
     private Double previousInfoBoxX;
     private Double previousInfoBoxY;
-    private final List<InitialAreaOfInterest> combinedAreaList;
-    private final int[] areaMap;
     private boolean playing = false;
-
     private int iteratorAOI = 0;
 
     public AreaOfInterestContext(final GazePlay gazePlay, final Stats stats) {
@@ -86,14 +84,14 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
         AOIList = stats.getAOIList();
         config = ActiveConfigurationContext.getInstance();
         graphicsPane = new Pane();
-
         areaMap = new int[AOIList.size()];
         Arrays.fill(areaMap, -1);
 
         AOIViewList = computeAOIViewList();
-        combinedAreaList = computeConnectedArea();
-        for (final InitialAreaOfInterest initialAreaOfInterest : combinedAreaList)
-            graphicsPane.getChildren().add(initialAreaOfInterest.getAreaOfInterest());
+        AOICombinedViewList = computeAOICombinedViewList();
+
+        for (final AreaOfInterestCombinedView aoiCombinedView : AOICombinedViewList)
+            graphicsPane.getChildren().add(aoiCombinedView.getAreaOfInterest());
 
         if (stats.getTargetAOIList() != null) {
             final List<TargetAOI> targetAOIArrayList = stats.getTargetAOIList();
@@ -246,12 +244,7 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
         slowBtn5.setOnAction(e -> playButtonPressed(baseProgressRate * 5));
         slowBtn8.setOnAction(e -> playButtonPressed(baseProgressRate * 8));
         slowBtn10.setOnAction(e -> playButtonPressed(baseProgressRate * 10));
-        cancelBtn.setOnAction(e -> {
-            if (playing)
-                playing = false;
-            graphicsPane.getChildren().removeAll();
-            addAllInitialArea();
-        });
+        cancelBtn.setOnAction(e -> playing = false);
 
         final HBox buttonBox = new HBox(cancelBtn, playBtn, slowBtn5, slowBtn8, slowBtn10);
         buttonBox.setSpacing(10);
@@ -269,8 +262,8 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
     private void playButtonPressed(final double progressRate) {
         if (!playing) {
             playing = true;
-            for (final InitialAreaOfInterest areaOfInterestProps : combinedAreaList)
-                graphicsPane.getChildren().remove(areaOfInterestProps.getAreaOfInterest());
+            for (final AreaOfInterestCombinedView aoiCombinedView : AOICombinedViewList)
+                graphicsPane.getChildren().remove(aoiCombinedView.getAreaOfInterest());
             graphicsPane.getChildren().remove(currentInfoBox);
 
             if (config.isVideoRecordingEnabled()) {
@@ -297,11 +290,13 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
                 final Circle circle;
                 if (movementHistory.get(movementIndex).getIntervalTime() > 11
                     && movementHistory.get(movementIndex).getDistance() < 20) {
-                    circle = new Circle(coordinatesTracker.getXValue(), coordinatesTracker.getYValue(), 4);
+                    circle = new Circle(coordinatesTracker.getXValue() * graphicsPane.getWidth(),
+                        coordinatesTracker.getYValue() * graphicsPane.getHeight(), 4);
                     circle.setStroke(Color.LIGHTYELLOW);
                     circle.setFill(Color.ORANGERED);
                 } else {
-                    circle = new Circle(coordinatesTracker.getXValue(), coordinatesTracker.getYValue(), 3);
+                    circle = new Circle(coordinatesTracker.getXValue() * graphicsPane.getWidth(),
+                        coordinatesTracker.getYValue() * graphicsPane.getHeight(), 3);
                     circle.setStroke(Color.LIGHTGREEN);
                     circle.setFill(Color.GREEN);
                 }
@@ -323,8 +318,8 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
                             iteratorAOI++;
                         }
                     }
-
                     graphicsPane.getChildren().add(circle);
+
                     new Timer().schedule(new TimerTask() {
                         @Override
                         public void run() {
@@ -338,7 +333,10 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
                         clock.stop();
                         timeLabel.setText("");
                         playing = false;
-                        graphicsPane.getChildren().removeAll(); // Reset the view to how it was before playback started.
+                        // Reset the view to how it was before playback started.
+                        graphicsPane.getChildren().remove(currentAOIDisplay);
+                        graphicsPane.getChildren().remove(currentInfoBox);
+                        graphicsPane.getChildren().remove(currentLineToInfoBox);
                         addAllInitialArea();
                     }
                 });
@@ -347,8 +345,8 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
     }
 
     void addAllInitialArea() {
-        for (final InitialAreaOfInterest initialAreaOfInterest : combinedAreaList)
-            graphicsPane.getChildren().add(initialAreaOfInterest.getAreaOfInterest());
+        for (final AreaOfInterestCombinedView aoiCombinedView : AOICombinedViewList)
+            graphicsPane.getChildren().add(aoiCombinedView.getAreaOfInterest());
     }
 
     /**
@@ -394,7 +392,7 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
 
         infoBox.setLayoutY(centerY - 60);
         infoBox.setStyle("-fx-background-color: rgba(255,255,153, 0.4);");
-        return new AreaOfInterestView(infoBox, line, AOIPolygon);
+        return new AreaOfInterestView(AOIPolygon, infoBox, line);
     }
 
     /**
@@ -453,7 +451,9 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
         return AOIViewList;
     }
 
-    private ArrayList<InitialAreaOfInterest> computeConnectedArea() {
+    private ArrayList<AreaOfInterestCombinedView> computeAOICombinedViewList() {
+        final ArrayList<AreaOfInterestCombinedView> AOICombinedViewList = new ArrayList<>();
+
         for (int i = 0; i < AOIList.size(); i++) {
             AreaOfInterestView currentAOIView = AOIViewList.get(i);
 
@@ -483,8 +483,6 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
                 }
             }
         }
-
-        final ArrayList<InitialAreaOfInterest> listOfCombinedPolygons = new ArrayList<>();
 
         for (int i = 0; i < AOIList.size(); i++) {
             GridPane infoBox = new GridPane();
@@ -559,9 +557,10 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
 
                 int colorIterator = i % 7;
                 tempPolygon.setStroke(colors[colorIterator]);
-                listOfCombinedPolygons.add(new InitialAreaOfInterest(tempPolygon, infoBox));
+                AOICombinedViewList.add(new AreaOfInterestCombinedView(tempPolygon, infoBox));
             }
         }
-        return listOfCombinedPolygons;
+
+        return AOICombinedViewList;
     }
 }

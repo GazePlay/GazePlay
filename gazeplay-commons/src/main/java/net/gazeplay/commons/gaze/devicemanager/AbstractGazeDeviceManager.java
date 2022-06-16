@@ -7,8 +7,6 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.GazeMotionListener;
 import net.gazeplay.commons.utils.ImmutableCachingSupplier;
 import net.gazeplay.commons.utils.RobotSupplier;
@@ -41,8 +39,9 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     private final Supplier<Robot> robotSupplier = new ImmutableCachingSupplier<>(new RobotSupplier());
 
-    public AbstractGazeDeviceManager() {
+    public GazeInfos gameScene = null;
 
+    public AbstractGazeDeviceManager() {
     }
 
     @Override
@@ -62,9 +61,8 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     }
 
     private void notifyAllGazeMotionListeners(Point2D position) {
-        for (GazeMotionListener l : this.gazeMotionListeners) {
+        for (GazeMotionListener l : this.gazeMotionListeners)
             l.gazeMoved(position);
-        }
     }
 
     @Override
@@ -97,15 +95,10 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     @Override
     public void removeEventFilter(Node gs) {
         toRemove.add(gs);
-        if (gs instanceof Pane) {
-            for (Node child : ((Pane) gs).getChildren()) {
+        if (gs instanceof Pane)
+            for (Node child : ((Pane) gs).getChildren())
                 removeEventFilter(child);
-            }
-        }
     }
-
-
-    public GazeInfos gameScene = null;
 
     public void addStats(Stats stats) {
         gameScene = new GazeInfos(stats.gameContextScene.getRoot());
@@ -118,13 +111,10 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                 GazeInfos removed = shapesEventFilter.remove(new IdentityKey<>(node));
                 if (removed == null) {
                     log.warn("EventFilter to remove not found");
-                } else {
-                    if (removed.isOnGaze() || removed.isOnMouse()) {
-                        Platform.runLater(
-                            () ->
-                                removed.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, System.currentTimeMillis(), 0, 0))
-                        );
-                    }
+                } else if (removed.isOnGaze() || removed.isOnMouse()) {
+                    Platform.runLater(() ->
+                        removed.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, System.currentTimeMillis(), 0, 0))
+                    );
                 }
                 toRemove.remove(node);
             }
@@ -135,9 +125,8 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     public void removeEventHandler(Node gs) {
         synchronized (shapesEventFilter) {
             GazeInfos removed = shapesEventHandler.remove(new IdentityKey<>(gs));
-            if (removed == null) {
+            if (removed == null)
                 log.warn("EventHandler to remove not found");
-            }
         }
     }
 
@@ -173,33 +162,26 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     }
 
     void updatePosition(double positionX, double positionY, String event, Boolean isBeingReplayed) {
-
-        if (!isInReplayMode || (isInReplayMode && isBeingReplayed)) {
-
+        if (!isInReplayMode || isBeingReplayed) {
             add();
             delete();
 
             synchronized (shapesEventFilter) {
                 Collection<GazeInfos> c = shapesEventFilter.values();
-                for (GazeInfos gi : c) {
-                    if (gameScene != null && gi.getNode() != gameScene.getNode()) {
+                for (GazeInfos gi : c)
+                    if (gameScene != null && gi.getNode() != gameScene.getNode())
                         eventFire(positionX, positionY, gi, event, c);
-                    }
-                }
 
-                if (gameScene != null) {
+                if (gameScene != null)
                     eventFire(positionX, positionY, gameScene, event);
-                }
-
             }
         }
     }
 
     public boolean contains(Node node, double positionX, double positionY) {
         Point2D localPosition = node.screenToLocal(positionX, positionY);
-        if (localPosition != null) {
+        if (localPosition != null)
             return node.contains(localPosition.getX(), localPosition.getY());
-        }
         return false;
     }
 
@@ -210,44 +192,36 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     public boolean eventFire(double positionX, double positionY, GazeInfos gi, String event, Collection<GazeInfos> c) {
         Node node = gi.getNode();
-        if (!node.isDisable()) {
 
+        if (!node.isDisable()) {
             Point2D localPosition = node.screenToLocal(positionX, positionY);
 
             if (localPosition != null && contains(node, positionX, positionY)) {
                 if (event.equals("gaze")) {
                     if (gi.isOnGaze()) {
-                        Platform.runLater(
-                            () ->
-                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                        Platform.runLater(() ->
+                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), localPosition.getX(), localPosition.getY()))
                         );
                         return true;
                     } else {
-
                         gi.setOnGaze(true);
                         gi.setTime(System.currentTimeMillis());
-                        Platform.runLater(
-                            () ->
-                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                        Platform.runLater(() ->
+                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), localPosition.getX(), localPosition.getY()))
                         );
                         return true;
                     }
                 } else {
                     if (gi.isOnMouse()) {
-                        Platform.runLater(
-                            () ->
-                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-
+                        Platform.runLater(() ->
+                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), localPosition.getX(), localPosition.getY()))
                         );
                         return true;
                     } else {
-
                         gi.setOnMouse(true);
                         gi.setTime(System.currentTimeMillis());
-                        Platform.runLater(
-                            () ->
-                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-
+                        Platform.runLater(() ->
+                            node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), localPosition.getX(), localPosition.getY()))
                         );
                         return true;
                     }
@@ -258,9 +232,8 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                         gi.setOnGaze(false);
                         gi.setTime(-1);
                         if (localPosition != null) {
-                            Platform.runLater(
-                                () ->
-                                    node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                            Platform.runLater(() ->
+                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
                             );
                         }
                     }
@@ -269,18 +242,14 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                         gi.setOnMouse(false);
                         gi.setTime(-1);
                         if (localPosition != null) {
-                            Platform.runLater(
-                                () ->
-                                    node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-
+                            Platform.runLater(() ->
+                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
                             );
                         }
                     }
                 }
-
             }
         }
         return false;
     }
-
 }

@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public class CoordinatesTracker {
-    private final int xValue;
-    private final int yValue;
+    private final double xValue;
+    private final double yValue;
     private final long intervalTime;
     private final long timeStarted;
     private final String event;

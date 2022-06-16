@@ -114,8 +114,6 @@ public class ReplayingGameFromJson {
     private GameSpec selectedGameSpec;
     private IGameVariant gameVariant;
     private SavedStatsInfo savedStatsInfo;
-    private int nextTimeMouse;
-    private int nextTimeGaze;
 
     private Thread workingThread;
     private String fileName;
@@ -314,33 +312,21 @@ public class ReplayingGameFromJson {
     }
 
     private void drawFixationLines(Canvas canvas) {
-        /*Dimension2D dim2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        double sceneWidth = dim2D.getWidth();
-        double sceneHeight = dim2D.getHeight();*/
+        Dimension2D dim2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final double sceneWidth = dim2D.getWidth();
+        final double sceneHeight = dim2D.getHeight();
         final GraphicsContext graphics = canvas.getGraphicsContext2D();
-        int delay;
 
         synchronized (movementHistory) {
             for (CoordinatesTracker coordinatesTracker : movementHistory) {
-                int nextX = coordinatesTracker.getXValue();
-                int nextY = coordinatesTracker.getYValue();
-                Point2D point = new Point2D(nextX, nextY);
+                int x = (int) (coordinatesTracker.getXValue() * sceneWidth);
+                int y = (int) (coordinatesTracker.getYValue() * sceneHeight);
+                Point2D point = new Point2D(x, y);
 
-                if (coordinatesTracker.getEvent().equals("gaze")) {
-                    int prevTimeGaze = nextTimeGaze;
-                    nextTimeGaze = (int) (coordinatesTracker.getTimeStarted() - currentGameStartedTime);
-                    delay = nextTimeGaze - prevTimeGaze;
-                    Platform.runLater(() -> paint(graphics, canvas, point, "gaze"));
-                } else {
-                    int prevTimeMouse = nextTimeMouse;
-                    nextTimeMouse = (int) (coordinatesTracker.getTimeStarted() - currentGameStartedTime);
-                    delay = nextTimeMouse - prevTimeMouse;
-                    log.info("X = " + nextX + " ; Y = " + nextY);
-                    Platform.runLater(() -> paint(graphics, canvas, point, "mouse"));
-                }
+                Platform.runLater(() -> paint(graphics, canvas, point, coordinatesTracker.getEvent()));
 
                 try {
-                    TimeUnit.MILLISECONDS.sleep(delay);
+                    TimeUnit.MILLISECONDS.sleep(coordinatesTracker.getIntervalTime());
                 } catch (InterruptedException e) {
                     log.info("Game has been interrupted");
                     break;

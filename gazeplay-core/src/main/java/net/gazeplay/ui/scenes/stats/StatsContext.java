@@ -219,19 +219,18 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             HBox controlButtonPane;
 
-            if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameNameCode().equals("Ninja") && stats.getCurrentGameVariant().contains("DYNAMIC"))
+            if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null &&
+                stats.getCurrentGameNameCode().equals("Ninja") && stats.getCurrentGameVariant().contains("DYNAMIC"))
                 controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, levelsInfo, continueButton, true);
-
-            else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameVariant().contains("Dynamic") && stats.getCurrentGameNameCode().contains("Memory"))
+            else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null &&
+                stats.getCurrentGameVariant().contains("Dynamic") && stats.getCurrentGameNameCode().contains("Memory"))
                 controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, levelsInfo, continueButton, true);
-
-            else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null && stats.getCurrentGameNameCode().equals("WhereIsTheAnimal") && stats.getCurrentGameVariant().contains("DYNAMIC"))
+            else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null &&
+                stats.getCurrentGameNameCode().equals("WhereIsTheAnimal") && stats.getCurrentGameVariant().contains("DYNAMIC"))
                 controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, chi2Info, continueButton, true);
-
             else if (stats.getCurrentGameNameCode() != null && (stats.getCurrentGameVariant() != null &&
                 (stats.getCurrentGameNameCode().contains("WhereIs")) || stats.getCurrentGameNameCode().contains("flags")))
                 controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, chi2Info, continueButton, true);
-
             else
                 controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, null, continueButton, false);
 

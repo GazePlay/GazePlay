@@ -496,20 +496,22 @@ public class Stats implements GazeMotionListener {
                     final long timeToFixation = time - startTime;
                     final long timeInterval = (timeToFixation - previousTime);
                     Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
-                    final int getX = (int) toSceneCoordinate.getX();
-                    final int getY = (int) toSceneCoordinate.getY();
+                    final int x = (int) toSceneCoordinate.getX();
+                    final int y = (int) toSceneCoordinate.getY();
+                    final double xValue = x / gameContextScene.getWidth();
+                    final double yValue = y / gameContextScene.getHeight();
 
-                    if (getX > 0 && getY > 0) {
+                    if (x > 0 && y > 0) {
                         if (!config.isHeatMapDisabled())
-                            incrementHeatMap(getX, getY);
+                            incrementHeatMap(x, y);
                         if (!config.isFixationSequenceDisabled())
-                            incrementFixationSequence(getX, getY, fixationSequence.get(FixationSequence.GAZE_FIXATION_SEQUENCE));
+                            incrementFixationSequence(x, y, fixationSequence.get(FixationSequence.GAZE_FIXATION_SEQUENCE));
 
                         if (config.getAreaOfInterestDisabledProperty().getValue()) {
-                            if (getX != previousXMouse || getY != previousYMouse) {
-                                previousXMouse = getX;
-                                previousYMouse = getY;
-                                movementHistory.add(new CoordinatesTracker(getX, getY, timeInterval, time, "gaze"));
+                            if (x != previousXMouse || y != previousYMouse) {
+                                previousXMouse = x;
+                                previousYMouse = y;
+                                movementHistory.add(new CoordinatesTracker(xValue, yValue, timeInterval, time, "gaze"));
                                 movementHistoryIdx++;
                                 if (movementHistoryIdx > 1)
                                     generateAOIList(movementHistoryIdx - 1);
@@ -526,20 +528,22 @@ public class Stats implements GazeMotionListener {
                     final long timeElapsed = time - startTime;
                     final long timeInterval = (timeElapsed - previousTime);
                     Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
-                    final int getX = (int) toSceneCoordinate.getX();
-                    final int getY = (int) toSceneCoordinate.getY();
+                    final int x = (int) toSceneCoordinate.getX();
+                    final int y = (int) toSceneCoordinate.getY();
+                    final double xValue = x / gameContextScene.getWidth();
+                    final double yValue = y / gameContextScene.getHeight();
 
-                    if (getX > 0 || getY > 0) {
+                    if (x > 0 || y > 0) {
                         if (!config.isHeatMapDisabled())
-                            incrementHeatMap(getX, getY);
+                            incrementHeatMap(x, y);
                         if (!config.isFixationSequenceDisabled())
-                            incrementFixationSequence(getX, getY, fixationSequence.get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
+                            incrementFixationSequence(x, y, fixationSequence.get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
 
                         if (config.getAreaOfInterestDisabledProperty().getValue()) {
-                            if (getX != previousXGaze || getY != previousYGaze && counter == 2) {
-                                previousXGaze = getX;
-                                previousYGaze = getY;
-                                movementHistory.add(new CoordinatesTracker(getX, getY, timeInterval, time, "mouse"));
+                            if (x != previousXGaze || y != previousYGaze && counter == 2) {
+                                previousXGaze = x;
+                                previousYGaze = y;
+                                movementHistory.add(new CoordinatesTracker(xValue, yValue, timeInterval, time, "mouse"));
                                 movementHistoryIdx++;
                                 if (movementHistoryIdx > 1)
                                     generateAOIList(movementHistoryIdx - 1);
@@ -567,10 +571,12 @@ public class Stats implements GazeMotionListener {
     }
 
     private void generateAOIList(final int index) {
-        final double x1 = movementHistory.get(index).getXValue();
-        final double y1 = movementHistory.get(index).getYValue();
-        final double x2 = movementHistory.get(index - 1).getXValue();
-        final double y2 = movementHistory.get(index - 1).getYValue();
+        final double sceneWidth = gameContextScene.getWidth();
+        final double sceneHeight = gameContextScene.getHeight();
+        final double x1 = movementHistory.get(index).getXValue() * sceneWidth;
+        final double y1 = movementHistory.get(index).getYValue() * sceneHeight;
+        final double x2 = movementHistory.get(index - 1).getXValue() * sceneWidth;
+        final double y2 = movementHistory.get(index - 1).getYValue() * sceneHeight;
         final double eDistance = Math.sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
 
         if (eDistance < 150 && movementHistory.get(index).getIntervalTime() > 10) {
@@ -586,7 +592,7 @@ public class Stats implements GazeMotionListener {
 
                 for (int i = 0; i < AOITrackerList.size(); i++) {
                     CoordinatesTracker coordinate = AOITrackerList.get(i);
-                    points[i] = new Point2D(coordinate.getXValue(), coordinate.getYValue());
+                    points[i] = new Point2D(coordinate.getXValue() * sceneWidth, coordinate.getYValue() * sceneHeight);
                 }
 
                 final boolean convexHull = config.getConvexHullDisabledProperty().getValue();
@@ -602,7 +608,8 @@ public class Stats implements GazeMotionListener {
 
                 for (int i = 0; i < 8; i++) {
                     CoordinatesTracker coordinate = AOITrackerList.get(0);
-                    points[i] = new Point2D(coordinate.getXValue() + pow(-1, i) * radius, coordinate.getYValue() + pow(-1, i) * radius);
+                    points[i] = new Point2D(coordinate.getXValue() * sceneWidth + pow(-1, i) * radius,
+                        coordinate.getYValue() * sceneHeight + pow(-1, i) * radius);
                 }
 
                 final boolean convexHull = config.getConvexHullDisabledProperty().getValue();
@@ -651,8 +658,10 @@ public class Stats implements GazeMotionListener {
         if (!movementHistory.isEmpty())
             movementHistory.get(0).setDistance(0);
         for (int i = 1; i < movementHistory.size(); i++) {
-            final double x = Math.pow(movementHistory.get(i).getXValue() - movementHistory.get(i - 1).getXValue(), 2);
-            final double y = Math.pow(movementHistory.get(i).getYValue() - movementHistory.get(i - 1).getYValue(), 2);
+            final double sceneWidth = gameContextScene.getWidth();
+            final double sceneHeight = gameContextScene.getHeight();
+            final double x = Math.pow(movementHistory.get(i).getXValue() * sceneWidth - movementHistory.get(i - 1).getXValue() * sceneWidth, 2);
+            final double y = Math.pow(movementHistory.get(i).getYValue() * sceneHeight - movementHistory.get(i - 1).getYValue() * sceneHeight, 2);
             final double distance = Math.sqrt(x + y);
             movementHistory.get(i).setDistance(distance);
         }
@@ -677,8 +686,8 @@ public class Stats implements GazeMotionListener {
                 highestFixationTime = timeSpent;
 
             for (CoordinatesTracker coordinate : AOITrackerList) {
-                centerX += coordinate.getXValue();
-                centerY += coordinate.getYValue();
+                centerX += coordinate.getXValue() * gameContextScene.getWidth();
+                centerY += coordinate.getYValue() * gameContextScene.getHeight();
             }
 
             centerX /= AOITrackerList.size();
