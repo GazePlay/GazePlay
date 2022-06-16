@@ -43,14 +43,12 @@ import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.commons.utils.multilinguism.I18N;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
-import net.gazeplay.ui.scenes.stats.StatsContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -294,7 +292,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             I18NText label = new I18NText(translator, "FixationLength", COLON);
 
             Spinner<Double> input = buildSpinner(0, 10, (double) config.getFixationLength() / 1000,
-                0.1, config.getFixationlengthProperty());
+                0.1, config.getFixationLengthProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -481,7 +479,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "ReaskQuestionOnFail", COLON);
 
-            CheckBox input = buildCheckBox(config.getReaskQuestionOnFail());
+            CheckBox input = buildCheckBox(config.getReaskQuestionOnFailProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -521,7 +519,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             I18NText label = new I18NText(translator, "FixationLength", COLON);
 
             Spinner<Double> input = buildSpinner(0, 10, (double) config.getFixationLength() / 1000,
-                0.1, config.getFixationlengthProperty());
+                0.1, config.getFixationLengthProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -835,7 +833,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         themesBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             String newPropertyValue = newValue.getPreferredConfigPropertyValue();
-            configuration.getCssfileProperty().setValue(newPropertyValue);
+            configuration.getCssFileProperty().setValue(newPropertyValue);
             final GazePlay gazePlay = configurationContext.getGazePlay();
 
             CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
@@ -864,7 +862,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
             }
 
-            configuration.getCssfileProperty().setValue(newPropertyValue);
+            configuration.getCssFileProperty().setValue(newPropertyValue);
 
             scene.getStylesheets().remove(0);
             scene.getStylesheets().add("file://" + newPropertyValue);
@@ -1016,7 +1014,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     configuration.getShortcutFolderProperty().setValue(newPropertyValue);
                     break;
                 default:
-                    configuration.getFiledirProperty().setValue(newPropertyValue);
+                    configuration.getFileDirProperty().setValue(newPropertyValue);
             }
 
         });
@@ -1060,7 +1058,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 resetButton.setOnAction(
                     e -> {
                         String defaultValue = GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath();
-                        configuration.getFiledirProperty().setValue(defaultValue);
+                        configuration.getFileDirProperty().setValue(defaultValue);
                         buttonLoad.textProperty().setValue(defaultValue);
                     });
         }
@@ -1246,7 +1244,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             final String newPropertyValue = newValue.name();
-            configuration.getEyetrackerProperty().setValue(newPropertyValue);
+            configuration.getEyesTrackerProperty().setValue(newPropertyValue);
         });
 
         return choiceBox;
@@ -1507,7 +1505,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HBox hbox = new HBox();
         hbox.setSpacing(5);
 
-        CheckBox limitTime = buildCheckBox(config.getLimiterTProperty());
+        CheckBox limitTime = buildCheckBox(config.getLimiterTimeProperty());
 
         I18NText time = new I18NText(translator, "Time(seconds)");
         time.setFill(Color.WHITE);
@@ -1519,7 +1517,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         spinnerT.valueProperty().addListener((observable, oldValue, newValue) -> {
             final int newPropertyValue = spinnerT.getValue();
-            config.getLimiterTimeProperty().setValue(newPropertyValue);
+            config.getLimiterTimeValueProperty().setValue(newPropertyValue);
         });
 
         if (limitTime.isSelected()) {
@@ -1550,7 +1548,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HBox hbox = new HBox();
         hbox.setSpacing(5);
 
-        CheckBox limitScore = buildCheckBox(config.getLimiterSProperty());
+        CheckBox limitScore = buildCheckBox(config.getLimiterScoreProperty());
 
         I18NText score = new I18NText(translator, "score");
         score.setFill(Color.WHITE);
@@ -1562,7 +1560,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         spinnerS.valueProperty().addListener((observable, oldValue, newValue) -> {
             final int newPropertyValue = spinnerS.getValue();
-            config.getLimiterScoreProperty().setValue(newPropertyValue);
+            config.getLimiterScoreValueProperty().setValue(newPropertyValue);
         });
 
         if (limitScore.isSelected()) {

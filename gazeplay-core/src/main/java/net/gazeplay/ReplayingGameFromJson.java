@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.*;
@@ -94,22 +95,7 @@ public class ReplayingGameFromJson {
     private GameContext gameContext;
     private final GazePlay gazePlay;
 
-    private double currentGameSeed;
-    @Getter
-    private String currentGameName;
-    private String currentGameVariant;
-    private long currentGameStartedTime;
-    private String screenAspectRatio;
-    private double sceneAspectRatio;
-    private int nbGoalsReached;
-    private int nbGoalsToReach;
-    private int nbUncountedGoalsReached;
-    private LifeCycle lifeCycle;
-    private RoundsDurationReport roundsDurationReport;
-    private ArrayList<LinkedList<FixationPoint>> fixationSequence;
-    private ArrayList<CoordinatesTracker> movementHistory;
-    private double[][] heatMap;
-    private ArrayList<AreaOfInterest> AOIList;
+    JsonFile json;
 
     private GameSpec selectedGameSpec;
     private IGameVariant gameVariant;
@@ -123,6 +109,10 @@ public class ReplayingGameFromJson {
         this.applicationContext = applicationContext;
         this.gameContext = applicationContext.getBean(GameContext.class);
         this.gamesList = games;
+    }
+
+    public String getCurrentGameName() {
+        return json.getGameName();
     }
 
     public static boolean replayIsAllowed(String gameCode) {
@@ -156,23 +146,7 @@ public class ReplayingGameFromJson {
         }
         assert bufferedReader != null;
         Gson gson = new Gson();
-        JsonFile json = gson.fromJson(bufferedReader, JsonFile.class);
-
-        currentGameSeed = json.getGameSeed();
-        currentGameName = json.getGameName();
-        currentGameVariant = json.getGameVariant();
-        currentGameStartedTime = json.getGameStartedTime();
-        screenAspectRatio = json.getScreenAspectRatio();
-        sceneAspectRatio = json.getSceneAspectRatio();
-        nbGoalsReached = json.getStatsNbGoalsReached();
-        nbGoalsToReach = json.getStatsNbGoalsToReach();
-        nbUncountedGoalsReached = json.getStatsNbUncountedGoalsReached();
-        lifeCycle = json.getLifeCycle();
-        roundsDurationReport = json.getRoundsDurationReport();
-        fixationSequence = json.getFixationSequence();
-        movementHistory = json.getMovementHistory();
-        heatMap = json.getHeatMap();
-        AOIList = json.getAOIList();
+        json = gson.fromJson(bufferedReader, JsonFile.class);
 
         String filePrefix = fileName.substring(0, fileName.lastIndexOf("-"));
         final File gazeMetricsMouseFile = new File(filePrefix + "-metricsMouse.png");
@@ -206,6 +180,7 @@ public class ReplayingGameFromJson {
         double width = gameContext.getCurrentScreenDimensionSupplier().get().getWidth();
         double screenRatio = height / width;
 
+        double sceneAspectRatio = json.getSceneAspectRatio();
         if (sceneAspectRatio < screenRatio)
             height = gameContext.getCurrentScreenDimensionSupplier().get().getWidth() * sceneAspectRatio;
         else
@@ -220,10 +195,10 @@ public class ReplayingGameFromJson {
         gameContext = applicationContext.getBean(GameContext.class);
         gazePlay.onGameLaunch(gameContext);
         for (GameSpec gameSpec : gamesList)
-            if (currentGameName.equals(gameSpec.getGameSummary().getNameCode()))
+            if (json.getGameName().equals(gameSpec.getGameSummary().getNameCode()))
                 selectedGameSpec = gameSpec;
         for (IGameVariant variant : selectedGameSpec.getGameVariantGenerator().getVariants())
-            if (currentGameVariant.equals(variant.toString()))
+            if (json.getGameVariant().equals(variant.toString()))
                 gameVariant = variant;
     }
 
@@ -232,12 +207,26 @@ public class ReplayingGameFromJson {
         if (fileName == null)
             return;
 
+        Configuration config = ActiveConfigurationContext.getInstance();
+        config.getFixationLengthProperty().setValue(json.getConfigFixationLength());
+        config.getQuestionLengthProperty().setValue(json.getConfigQuestionLength());
+        config.getReaskQuestionOnFailProperty().setValue(json.isConfigReaskQuestionOnFail());
+        config.getLimiterScoreProperty().setValue(json.isConfigLimiterScore());
+        config.getLimiterScoreValueProperty().setValue(json.getConfigLimiterScoreValue());
+        config.getLimiterTimeProperty().setValue(json.isConfigLimiterTime());
+        config.getLimiterTimeValueProperty().setValue(json.getConfigLimiterTimeValue());
+        config.getAnimationSpeedRatioProperty().setValue(json.getConfigAnimationSpeedRatio());
+        config.getTransitionTimeProperty().setValue(json.getConfigTransitionTime());
+        config.getDelayBeforeSelectionTimeProperty().setValue(json.getConfigDelayBeforeSelectionTime());
+
         getSpecAndVariant();
         IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
         final Scene scene = gazePlay.getPrimaryScene();
-        final Stats statsSaved = gameLauncher.createSavedStats(scene, nbGoalsReached, nbGoalsToReach, nbUncountedGoalsReached,
-            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
-        GameLifeCycle currentGame = gameLauncher.replayGame(gameContext, gameVariant, statsSaved, currentGameSeed);
+        final Stats statsSaved = gameLauncher.createSavedStats(scene,
+            json.getStatsNbGoalsReached(), json.getStatsNbGoalsToReach(), json.getStatsNbUncountedGoalsReached(),
+            json.getLifeCycle(), json.getRoundsDurationReport(), json.getFixationSequence(), json.getMovementHistory(),
+            json.getHeatMap(), json.getAOIList(), savedStatsInfo);
+        GameLifeCycle currentGame = gameLauncher.replayGame(gameContext, gameVariant, statsSaved, json.getGameSeed());
         gameContext.createControlPanel(gazePlay, statsSaved, currentGame, "replay");
         gameContext.createQuitShortcut(gazePlay, statsSaved, currentGame);
         currentGame.launch();
@@ -317,20 +306,18 @@ public class ReplayingGameFromJson {
         final double sceneHeight = dim2D.getHeight();
         final GraphicsContext graphics = canvas.getGraphicsContext2D();
 
-        synchronized (movementHistory) {
-            for (CoordinatesTracker coordinatesTracker : movementHistory) {
-                int x = (int) (coordinatesTracker.getXValue() * sceneWidth);
-                int y = (int) (coordinatesTracker.getYValue() * sceneHeight);
-                Point2D point = new Point2D(x, y);
+        for (CoordinatesTracker coordinatesTracker : json.getMovementHistory()) {
+            int x = (int) (coordinatesTracker.getXValue() * sceneWidth);
+            int y = (int) (coordinatesTracker.getYValue() * sceneHeight);
+            Point2D point = new Point2D(x, y);
 
-                Platform.runLater(() -> paint(graphics, canvas, point, coordinatesTracker.getEvent()));
+            Platform.runLater(() -> paint(graphics, canvas, point, coordinatesTracker.getEvent()));
 
-                try {
-                    TimeUnit.MILLISECONDS.sleep(coordinatesTracker.getIntervalTime());
-                } catch (InterruptedException e) {
-                    log.info("Game has been interrupted");
-                    break;
-                }
+            try {
+                TimeUnit.MILLISECONDS.sleep(coordinatesTracker.getIntervalTime());
+            } catch (InterruptedException e) {
+                log.info("Game has been interrupted");
+                break;
             }
         }
     }
@@ -409,6 +396,18 @@ class JsonFile {
     private int statsNbGoalsReached;
     private int statsNbGoalsToReach;
     private int statsNbUncountedGoalsReached;
+
+    private int configFixationLength;
+    private long configQuestionLength;
+    private boolean configReaskQuestionOnFail;
+    private boolean configLimiterScore;
+    private int configLimiterScoreValue;
+    private boolean configLimiterTime;
+    private int configLimiterTimeValue;
+    private double configAnimationSpeedRatio;
+    private int configTransitionTime;
+    private int configDelayBeforeSelectionTime;
+
     private LifeCycle lifeCycle;
     private RoundsDurationReport roundsDurationReport;
     private ArrayList<LinkedList<FixationPoint>> fixationSequence;

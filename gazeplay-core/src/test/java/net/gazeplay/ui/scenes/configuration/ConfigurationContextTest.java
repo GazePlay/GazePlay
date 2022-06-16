@@ -1,6 +1,5 @@
 package net.gazeplay.ui.scenes.configuration;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -309,7 +308,7 @@ class ConfigurationContextTest {
         Scene mockScene = mock(Scene.class);
 
         when(mockConfig.getCssFile()).thenReturn("builtin:BLUE");
-        when(mockConfig.getCssfileProperty()).thenReturn(cssFileProperty);
+        when(mockConfig.getCssFileProperty()).thenReturn(cssFileProperty);
         when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
         when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
         when(mockScene.getStylesheets()).thenReturn(stylesheets);
@@ -333,7 +332,7 @@ class ConfigurationContextTest {
         Scene mockScene = mock(Scene.class);
 
         when(mockConfig.getCssFile()).thenReturn("builtin:WRONG");
-        when(mockConfig.getCssfileProperty()).thenReturn(cssFileProperty);
+        when(mockConfig.getCssFileProperty()).thenReturn(cssFileProperty);
         when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
         when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
         when(mockScene.getStylesheets()).thenReturn(stylesheets);
@@ -374,7 +373,7 @@ class ConfigurationContextTest {
         when(mockConfig.getWhereIsItDir()).thenReturn(fileDirProperty.getValue());
         when(mockConfig.getWhereIsItDirProperty()).thenReturn(fileDirProperty);
         when(mockConfig.getFileDir()).thenReturn(fileDirProperty.getValue());
-        when(mockConfig.getFiledirProperty()).thenReturn(fileDirProperty);
+        when(mockConfig.getFileDirProperty()).thenReturn(fileDirProperty);
         when(mockConfig.getMusicFolder()).thenReturn(fileDirProperty.getValue());
         when(mockConfig.getMusicFolderProperty()).thenReturn(fileDirProperty);
 
@@ -432,7 +431,7 @@ class ConfigurationContextTest {
         StringProperty eyeTrackerProperty = new SimpleStringProperty("mouse_control");
 
         when(mockConfig.getEyeTracker()).thenReturn(eyeTrackerProperty.getValue());
-        when(mockConfig.getEyetrackerProperty()).thenReturn(eyeTrackerProperty);
+        when(mockConfig.getEyesTrackerProperty()).thenReturn(eyeTrackerProperty);
 
         ChoiceBox<EyeTracker> result = ConfigurationContext.buildEyeTrackerConfigChooser(mockConfig);
 

@@ -137,7 +137,7 @@ public class Configuration {
     private final StringProperty quitKeyProperty;
 
     @Getter
-    private final StringProperty eyetrackerProperty;
+    private final StringProperty eyesTrackerProperty;
 
     @Getter
     private final StringProperty languageProperty;
@@ -146,13 +146,13 @@ public class Configuration {
     private final StringProperty countryProperty;
 
     @Getter
-    private final StringProperty filedirProperty;
+    private final StringProperty fileDirProperty;
 
     @Getter
-    private final IntegerProperty fixationlengthProperty;
+    private final IntegerProperty fixationLengthProperty;
 
     @Getter
-    private final StringProperty cssfileProperty;
+    private final StringProperty cssFileProperty;
 
     @Getter
     private final StringProperty whereIsItDirProperty;
@@ -161,22 +161,22 @@ public class Configuration {
     private final LongProperty questionLengthProperty;
 
     @Getter
-    private final BooleanProperty reaskQuestionOnFail;
+    private final BooleanProperty reaskQuestionOnFailProperty;
 
     @Getter
     private final BooleanProperty enableRewardSoundProperty;
 
     @Getter
-    private final BooleanProperty limiterSProperty;
+    private final BooleanProperty limiterScoreProperty;
 
     @Getter
-    private final BooleanProperty limiterTProperty;
+    private final BooleanProperty limiterTimeProperty;
 
     @Getter
-    private final IntegerProperty limiterTimeProperty;
+    private final IntegerProperty limiterTimeValueProperty;
 
     @Getter
-    private final IntegerProperty limiterScoreProperty;
+    private final IntegerProperty limiterScoreValueProperty;
 
     @Getter
     private final StringProperty menuButtonsOrientationProperty;
@@ -242,7 +242,7 @@ public class Configuration {
     private final StringProperty colorsDefaultImageProperty;
 
     @Getter
-    private final BooleanProperty latestNewsDisplayForced;
+    private final BooleanProperty latestNewsDisplayForcedProperty;
 
     @Getter
     private final IntegerProperty elementSizeProperty;
@@ -281,9 +281,9 @@ public class Configuration {
         languageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_LANGUAGE, Locale.getDefault().getISO3Language(), propertyChangeListener);
         countryProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_COUNTRY, Locale.getDefault().getCountry(), propertyChangeListener);
 
-        eyetrackerProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER, propertyChangeListener);
-        if (eyetrackerProperty.getValue().equals("tobii_eyeX_4C")) {
-            eyetrackerProperty.setValue("tobii");
+        eyesTrackerProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER, propertyChangeListener);
+        if (eyesTrackerProperty.getValue().equals("tobii_eyeX_4C")) {
+            eyesTrackerProperty.setValue("tobii");
         }
 
         musicVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_MUSIC_VOLUME, DEFAULT_VALUE_MUSIC_VOLUME, propertyChangeListener);
@@ -301,12 +301,12 @@ public class Configuration {
         heatMapDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_HEATMAP_DISABLED, DEFAULT_VALUE_HEATMAP_DISABLED, propertyChangeListener);
 
         enableRewardSoundProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_ENABLE_REWARD_SOUND, DEFAULT_VALUE_ENABLE_REWARD_SOUND, propertyChangeListener);
-        reaskQuestionOnFail = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_REASK_QUESTION_ON_FAIL, DEFAULT_VALUE_REASK_QUESTION_ON_FAIL, propertyChangeListener);
+        reaskQuestionOnFailProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_REASK_QUESTION_ON_FAIL, DEFAULT_VALUE_REASK_QUESTION_ON_FAIL, propertyChangeListener);
 
-        limiterSProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERS, DEFAULT_VALUE_LIMITERSCORE, propertyChangeListener);
-        limiterTProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERT, DEFAULT_VALUE_LIMITERTIME, propertyChangeListener);
-        limiterTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_TIME, DEFAULT_VALUE_LIMITER_TIME, propertyChangeListener);
-        limiterScoreProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_SCORE, DEFAULT_VALUE_LIMITER_SCORE, propertyChangeListener);
+        limiterScoreProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERS, DEFAULT_VALUE_LIMITERSCORE, propertyChangeListener);
+        limiterTimeProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITERT, DEFAULT_VALUE_LIMITERTIME, propertyChangeListener);
+        limiterTimeValueProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_TIME, DEFAULT_VALUE_LIMITER_TIME, propertyChangeListener);
+        limiterScoreValueProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_SCORE, DEFAULT_VALUE_LIMITER_SCORE, propertyChangeListener);
 
         areaOfInterestDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_AREA_OF_INTEREST_DISABLED, DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED, propertyChangeListener);
         convexHullDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_CONVEX_HULL_DISABLED, DEFAULT_VALUE_CONVEX_HULL_DISABLED, propertyChangeListener);
@@ -318,13 +318,13 @@ public class Configuration {
         backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_ENABLED, DEFAULT_VALUE_BACKGROUND_ENABLED, propertyChangeListener);
 
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
-        cssfileProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_CSSFILE, DEFAULT_VALUE_CSS_FILE, propertyChangeListener);
+        cssFileProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_CSSFILE, DEFAULT_VALUE_CSS_FILE, propertyChangeListener);
         quitKeyProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_QUIT_KEY, DEFAULT_VALUE_QUIT_KEY.toString(), propertyChangeListener);
 
         questionLengthProperty = new ApplicationConfigBackedLongProperty(applicationConfig, PROPERTY_NAME_QUESTION_LENGTH, DEFAULT_VALUE_QUESTION_LENGTH, propertyChangeListener);
-        fixationlengthProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_FIXATIONLENGTH, DEFAULT_VALUE_FIXATION_LENGTH, propertyChangeListener);
+        fixationLengthProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_FIXATIONLENGTH, DEFAULT_VALUE_FIXATION_LENGTH, propertyChangeListener);
 
-        filedirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FILEDIR, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(), propertyChangeListener);
+        fileDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FILEDIR, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(), propertyChangeListener);
         musicFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MUSIC_FOLDER, DEFAULT_VALUE_MUSIC_FOLDER, propertyChangeListener);
         videoFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_VIDEO_FOLDER, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath(), propertyChangeListener);
         shortcutFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_SHORTCUT_FOLDER, GazePlayDirectories.getShortcutDirectory().getAbsolutePath(), propertyChangeListener);
@@ -339,7 +339,7 @@ public class Configuration {
         favoriteGamesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_FAVORITE_GAMES, Sets.newLinkedHashSet(), propertyChangeListener);
         hiddenCategoriesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_HIDDEN_CATEGORIES, Sets.newLinkedHashSet(), propertyChangeListener);
 
-        latestNewsDisplayForced = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FORCE_DISPLAY_NEWS, DEFAULT_VALUE_FORCE_DISPLAY_NEWS, propertyChangeListener);
+        latestNewsDisplayForcedProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FORCE_DISPLAY_NEWS, DEFAULT_VALUE_FORCE_DISPLAY_NEWS, propertyChangeListener);
 
         elementSizeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_ELEMENTSIZE, DEFAULT_VALUE_ELEMENT_SIZE, propertyChangeListener);
 
@@ -376,7 +376,7 @@ public class Configuration {
     }
 
     public String getEyeTracker() {
-        return eyetrackerProperty.getValue();
+        return eyesTrackerProperty.getValue();
     }
 
     public String getQuitKey() {
@@ -392,15 +392,15 @@ public class Configuration {
     }
 
     public String getFileDir() {
-        return filedirProperty.getValue();
+        return fileDirProperty.getValue();
     }
 
     public void setFileDir(final String s) {
-        filedirProperty.setValue(s);
+        fileDirProperty.setValue(s);
     }
 
     public Integer getFixationLength() {
-        return fixationlengthProperty.getValue();
+        return fixationLengthProperty.getValue();
     }
 
     public Integer getProgressBarSize() {
@@ -412,7 +412,7 @@ public class Configuration {
     }
 
     public String getCssFile() {
-        return cssfileProperty.getValue();
+        return cssFileProperty.getValue();
     }
 
     public String getWhereIsItDir() {
@@ -428,23 +428,23 @@ public class Configuration {
     }
 
     public Boolean isReaskedQuestionOnFail() {
-        return reaskQuestionOnFail.getValue();
+        return reaskQuestionOnFailProperty.getValue();
     }
 
     public boolean isLimiterS() {
-        return limiterSProperty.getValue();
+        return limiterScoreProperty.getValue();
     }
 
     public boolean isLimiterT() {
-        return limiterTProperty.getValue();
-    }
-
-    public int getLimiterTime() {
         return limiterTimeProperty.getValue();
     }
 
+    public int getLimiterTime() {
+        return limiterTimeValueProperty.getValue();
+    }
+
     public int getLimiterScore() {
-        return limiterScoreProperty.getValue();
+        return limiterScoreValueProperty.getValue();
     }
 
     public String getMenuButtonsOrientation() {
@@ -517,11 +517,11 @@ public class Configuration {
     }
 
     public Boolean isLatestNewsDisplayForced() {
-        return latestNewsDisplayForced.getValue();
+        return latestNewsDisplayForcedProperty.getValue();
     }
 
     public void setFixationLength(final int fixationLength) {
-        fixationlengthProperty.setValue(fixationLength);
+        fixationLengthProperty.setValue(fixationLength);
     }
 
     public Integer getElementSize() {

@@ -38,6 +38,36 @@
     "statsNbUncountedGoalsReached": {
       "type": "number"
     },
+    "configFixationLength": {
+      "type": "number"
+    },
+    "configQuestionLength": {
+      "type": "number"
+    },
+    "configReaskQuestionOnFail":{
+      "type": "boolean"
+    },
+    "configLimiterScore": {
+      "type": "boolean"
+    },
+    "configLimiterScoreValue": {
+      "type": "number"
+    },
+    "configLimiterTime": {
+      "type": "boolean"
+    },
+    "configLimiterTimeValue": {
+      "type": "number"
+    },
+    "configAnimationSpeedRatio": {
+      "type": "number"
+    },
+    "configTransitionTime": {
+      "type": "number"
+    },
+    "configDelayBeforeSelectionTime": {
+      "type": "number"
+    },
     "lifeCycle": {
       "type": "object",
       "properties": {

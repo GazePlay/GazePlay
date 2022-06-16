@@ -44,7 +44,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -1027,6 +1026,18 @@ public class Stats implements GazeMotionListener {
         savedDataObj.addProperty("statsNbGoalsReached", nbGoalsReached);
         savedDataObj.addProperty("statsNbGoalsToReach", nbGoalsToReach);
         savedDataObj.addProperty("statsNbUncountedGoalsReached", nbUncountedGoalsReached);
+
+        savedDataObj.addProperty("configFixationLength", config.getFixationLength());
+        savedDataObj.addProperty("configQuestionLength", config.getQuestionLength());
+        savedDataObj.addProperty("configReaskQuestionOnFail", config.getReaskQuestionOnFailProperty().getValue());
+        savedDataObj.addProperty("configLimiterScore", config.getLimiterScoreProperty().getValue());
+        savedDataObj.addProperty("configLimiterScoreValue", config.getLimiterScoreValueProperty().getValue());
+        savedDataObj.addProperty("configLimiterTime", config.getLimiterTimeProperty().getValue());
+        savedDataObj.addProperty("configLimiterTimeValue", config.getLimiterTimeValueProperty().getValue());
+        savedDataObj.addProperty("configAnimationSpeedRatio", config.getAnimationSpeedRatioProperty().getValue());
+        savedDataObj.addProperty("configTransitionTime", config.getTransitionTime());
+        savedDataObj.addProperty("configDelayBeforeSelectionTime", config.getDelayBeforeSelectionTime());
+
         savedDataObj.add("lifeCycle", lifeCycleObject);
         savedDataObj.add("roundsDurationReport", roundsDurationReportObject);
         savedDataObj.add("fixationSequence", fixationSequenceArray);
