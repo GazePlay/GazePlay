@@ -93,7 +93,7 @@ subprojects {
     }
 
     spotbugsMain.enabled = spotbugsEnabled
-    spotbugsTest.enabled = spotbugsEnabled
+    spotbugsTest.enabled = false
 
     downloadLicenses {
         dependencyConfiguration = 'compileClasspath'
