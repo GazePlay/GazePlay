@@ -26,11 +26,11 @@ public class PianoGameLauncher implements IGameLauncher<ShooterGamesStats, Dimen
                                               List<List<FixationPoint>> fixationSequence,
                                               List<CoordinatesTracker> movementHistory,
                                               double[][] heatMap,
-                                              List<AreaOfInterest> AOIList,
+                                              List<AreaOfInterest> aoiList,
                                               SavedStatsInfo savedStatsInfo
     ) {
         return new ShooterGamesStats(scene, "Piano", nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached,
-            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
+            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
     }
 
     @Override

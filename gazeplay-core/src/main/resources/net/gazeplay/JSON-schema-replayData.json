@@ -169,12 +169,12 @@
         }
       }
     },
-    "AOIList":  {
+    "aoiList":  {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "ID": {
+          "aoiID": {
             "type": "string"
           },
           "points": {
@@ -235,12 +235,12 @@
           "timeSpent": {
             "type": "number"
           },
-          "TTFF": {
+          "ttff": {
             "type": "number"
           }
         },
         "required": [
-          "ID",
+          "aoiID",
           "points",
           "fixations",
           "centerX",
@@ -249,7 +249,7 @@
           "startingIndex",
           "endingIndex",
           "timeSpent",
-          "TTFF"
+          "ttff"
         ]
       }
     }
@@ -259,6 +259,6 @@
     "gameName",
     "gameStartedTime",
     "movementHistory",
-    "AOIList"
+    "aoiList"
   ]
 }

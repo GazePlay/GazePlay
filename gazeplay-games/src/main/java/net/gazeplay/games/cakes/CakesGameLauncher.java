@@ -25,11 +25,11 @@ public class CakesGameLauncher implements IGameLauncher<Stats, EnumGameVariant<C
                                   List<List<FixationPoint>> fixationSequence,
                                   List<CoordinatesTracker> movementHistory,
                                   double[][] heatMap,
-                                  List<AreaOfInterest> AOIList,
+                                  List<AreaOfInterest> aoiList,
                                   SavedStatsInfo savedStatsInfo
     ) {
         return new CakeStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, lifeCycle,
-            roundsDurationReport, fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
+            roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
     }
 
     @Override

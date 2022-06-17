@@ -431,7 +431,7 @@ class ConfigurationContextTest {
         StringProperty eyeTrackerProperty = new SimpleStringProperty("mouse_control");
 
         when(mockConfig.getEyeTracker()).thenReturn(eyeTrackerProperty.getValue());
-        when(mockConfig.getEyesTrackerProperty()).thenReturn(eyeTrackerProperty);
+        when(mockConfig.getEyeTrackerProperty()).thenReturn(eyeTrackerProperty);
 
         ChoiceBox<EyeTracker> result = ConfigurationContext.buildEyeTrackerConfigChooser(mockConfig);
 

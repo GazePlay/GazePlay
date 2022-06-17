@@ -25,11 +25,11 @@ public class SpaceGameLauncher implements IGameLauncher<SpaceGameStats, IGameVar
                                            List<List<FixationPoint>> fixationSequence,
                                            List<CoordinatesTracker> movementHistory,
                                            double[][] heatMap,
-                                           List<AreaOfInterest> AOIList,
+                                           List<AreaOfInterest> aoiList,
                                            SavedStatsInfo savedStatsInfo
     ) {
         return new SpaceGameStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, lifeCycle,
-            roundsDurationReport, fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
+            roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
     }
 
     @Override

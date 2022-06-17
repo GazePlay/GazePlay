@@ -30,11 +30,11 @@ public class OpinionsGameLauncher implements IGameLauncher<OpinionsGameStats, En
                                               List<List<FixationPoint>> fixationSequence,
                                               List<CoordinatesTracker> movementHistory,
                                               double[][] heatMap,
-                                              List<AreaOfInterest> AOIList,
+                                              List<AreaOfInterest> aoiList,
                                               SavedStatsInfo savedStatsInfo
     ) {
         return new OpinionsGameStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, lifeCycle,
-            roundsDurationReport, fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
+            roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
     }
 
     @Override

@@ -25,11 +25,11 @@ public class EggGameGameLauncher implements IGameLauncher<Stats, IntGameVariant>
                                   List<List<FixationPoint>> fixationSequence,
                                   List<CoordinatesTracker> movementHistory,
                                   double[][] heatMap,
-                                  List<AreaOfInterest> AOIList,
+                                  List<AreaOfInterest> aoiList,
                                   SavedStatsInfo savedStatsInfo
     ) {
         return new EggGameStats(scene, "egg", nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached,
-            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
+            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
     }
 
     @Override

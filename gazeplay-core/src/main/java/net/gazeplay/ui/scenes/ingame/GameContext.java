@@ -151,12 +151,12 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     @Override
     public void startScoreLimiter() {
-        limiterS = getConfiguration().isLimiterS();
+        limiterS = getConfiguration().isLimiterScoreEnabled();
     }
 
     @Override
     public void startTimeLimiter() {
-        limiterT = getConfiguration().isLimiterT();
+        limiterT = getConfiguration().isLimiterTimeEnabled();
         setLimiterAvailable();
     }
 
@@ -192,7 +192,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     @Override
     public void updateScore(Stats stats, GameLifeCycle currentGame, EventHandler<ActionEvent> onTimeLimiterEndEventHandler, EventHandler<ActionEvent> onScoreLimiterEndEventHandler) {
         if (limiterS && !limiteUsed) {
-            if (stats.getNbGoalsReached() == getConfiguration().getLimiterScore()) {
+            if (stats.getNbGoalsReached() == getConfiguration().getLimiterScoreValue()) {
                 onScoreLimiterEndEventHandler.handle(null);
                 playWinTransition(0, event -> showRoundStats(stats, currentGame));
                 limiteUsed = true;
@@ -200,7 +200,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         }
         if (limiterT && !limiteUsed) {
             stop();
-            if (time(startTime, endTime) >= getConfiguration().getLimiterTime()) {
+            if (time(startTime, endTime) >= getConfiguration().getLimiterTimeValue()) {
                 onTimeLimiterEndEventHandler.handle(null);
                 playWinTransition(0, event -> showRoundStats(stats, currentGame));
                 startTime = 0;

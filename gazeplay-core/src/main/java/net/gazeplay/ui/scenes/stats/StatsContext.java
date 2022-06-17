@@ -480,8 +480,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
-            CustomButton AOIButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
-            AOIButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewAOI);
+            CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
+            aoiButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewAOI);
 
             CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
             scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
@@ -512,8 +512,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
-            CustomButton AOIButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
-            AOIButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewAOI);
+            CustomButton aoiButton = new CustomButton("data/common/images/aoibtn.png", screenDimension);
+            aoiButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewAOI);
 
             CustomButton scanPathButton = new CustomButton("data/common/images/scanpathButton.png", screenDimension);
             scanPathButton.addEventFilter(MouseEvent.MOUSE_CLICKED, viewScanPath);
@@ -522,7 +522,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
 
             if (config.getAreaOfInterestDisabledProperty().getValue())
-                controlButtonPane.getChildren().add(AOIButton);
+                controlButtonPane.getChildren().add(aoiButton);
 
             if (!config.isFixationSequenceDisabled()) {
                 controlButtonPane.getChildren().add(colorBands);

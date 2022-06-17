@@ -210,10 +210,10 @@ public class ReplayingGameFromJson {
         Configuration config = ActiveConfigurationContext.getInstance();
         config.getFixationLengthProperty().setValue(json.getConfigFixationLength());
         config.getQuestionLengthProperty().setValue(json.getConfigQuestionLength());
-        config.getReaskQuestionOnFailProperty().setValue(json.isConfigReaskQuestionOnFail());
-        config.getLimiterScoreProperty().setValue(json.isConfigLimiterScore());
+        config.getQuestionReaskedOnFailProperty().setValue(json.isConfigReaskQuestionOnFail());
+        config.getLimiterScoreEnabledProperty().setValue(json.isConfigLimiterScore());
         config.getLimiterScoreValueProperty().setValue(json.getConfigLimiterScoreValue());
-        config.getLimiterTimeProperty().setValue(json.isConfigLimiterTime());
+        config.getLimiterTimeEnabledProperty().setValue(json.isConfigLimiterTime());
         config.getLimiterTimeValueProperty().setValue(json.getConfigLimiterTimeValue());
         config.getAnimationSpeedRatioProperty().setValue(json.getConfigAnimationSpeedRatio());
         config.getTransitionTimeProperty().setValue(json.getConfigTransitionTime());
@@ -225,7 +225,7 @@ public class ReplayingGameFromJson {
         final Stats statsSaved = gameLauncher.createSavedStats(scene,
             json.getStatsNbGoalsReached(), json.getStatsNbGoalsToReach(), json.getStatsNbUncountedGoalsReached(),
             json.getLifeCycle(), json.getRoundsDurationReport(), json.getFixationSequence(), json.getMovementHistory(),
-            json.getHeatMap(), json.getAOIList(), savedStatsInfo);
+            json.getHeatMap(), json.getAoiList(), savedStatsInfo);
         GameLifeCycle currentGame = gameLauncher.replayGame(gameContext, gameVariant, statsSaved, json.getGameSeed());
         gameContext.createControlPanel(gazePlay, statsSaved, currentGame, "replay");
         gameContext.createQuitShortcut(gazePlay, statsSaved, currentGame);
@@ -413,5 +413,5 @@ class JsonFile {
     private ArrayList<LinkedList<FixationPoint>> fixationSequence;
     private ArrayList<CoordinatesTracker> movementHistory;
     private double[][] heatMap;
-    private ArrayList<AreaOfInterest> AOIList;
+    private ArrayList<AreaOfInterest> aoiList;
 }

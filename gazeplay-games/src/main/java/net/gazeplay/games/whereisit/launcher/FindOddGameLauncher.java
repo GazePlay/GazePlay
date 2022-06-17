@@ -28,11 +28,11 @@ public class FindOddGameLauncher implements IGameLauncher<Stats, DimensionGameVa
                                   List<List<FixationPoint>> fixationSequence,
                                   List<CoordinatesTracker> movementHistory,
                                   double[][] heatMap,
-                                  List<AreaOfInterest> AOIList,
+                                  List<AreaOfInterest> aoiList,
                                   SavedStatsInfo savedStatsInfo
     ) {
         return new WhereIsItStats(scene, WhereIsItGameType.FIND_ODD.getGameName(), nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached,
-            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
+            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
     }
 
     @Override

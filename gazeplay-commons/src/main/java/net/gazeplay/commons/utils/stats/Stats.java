@@ -173,14 +173,14 @@ public class Stats implements GazeMotionListener {
     @Getter
     private double highestFixationTime = 0;
     @Getter
-    private List<AreaOfInterest> AOIList = new ArrayList<>();
+    private List<AreaOfInterest> aoiList = new ArrayList<>();
 
     private int movementHistoryIdx = 0;
-    private List<CoordinatesTracker> AOITrackerList = new ArrayList<>();
-    private final List<List<CoordinatesTracker>> AOITempList = new ArrayList<>();
-    private final List<int[]> AOIStartEndIdxList = new ArrayList<>();
-    private final List<Polygon> AOIPolygonList = new ArrayList<>();
-    private final List<Double[]> AOIPolygonPtList = new ArrayList<>();
+    private List<CoordinatesTracker> aoiTrackerList = new ArrayList<>();
+    private final List<List<CoordinatesTracker>> aoiTempList = new ArrayList<>();
+    private final List<int[]> aoiStartEndIdxList = new ArrayList<>();
+    private final List<Polygon> aoiPolygonList = new ArrayList<>();
+    private final List<Double[]> aoiPolygonPtList = new ArrayList<>();
 
     private final Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -200,11 +200,11 @@ public class Stats implements GazeMotionListener {
                  List<List<FixationPoint>> fixationSequence,
                  List<CoordinatesTracker> movementHistory,
                  double[][] heatMap,
-                 List<AreaOfInterest> AOIList,
+                 List<AreaOfInterest> aoiList,
                  SavedStatsInfo savedStatsInfo
     ) {
         this(gameContextScene, null, nbGoalsReached, nbGoalsToReach, nbUncountedGoalsReached,
-            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
+            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
     }
 
     public Stats(final Scene gameContextScene, final String gameName) {
@@ -222,7 +222,7 @@ public class Stats implements GazeMotionListener {
                  List<List<FixationPoint>> fixationSequence,
                  List<CoordinatesTracker> movementHistory,
                  double[][] heatMap,
-                 List<AreaOfInterest> AOIList,
+                 List<AreaOfInterest> aoiList,
                  SavedStatsInfo savedStatsInfo
     ) {
         this.gameContextScene = gameContextScene;
@@ -235,7 +235,7 @@ public class Stats implements GazeMotionListener {
         this.fixationSequence = fixationSequence;
         this.movementHistory = movementHistory;
         this.heatMap = heatMap;
-        this.AOIList = AOIList;
+        this.aoiList = aoiList;
         this.savedStatsInfo = savedStatsInfo;
 
         heatMapPixelSize = computeHeatMapPixelSize(gameContextScene);
@@ -580,42 +580,42 @@ public class Stats implements GazeMotionListener {
 
         if (eDistance < 150 && movementHistory.get(index).getIntervalTime() > 10) {
             if (index == 1)
-                AOITrackerList.add(movementHistory.get(0));
-            AOITrackerList.add(movementHistory.get(index));
+                aoiTrackerList.add(movementHistory.get(0));
+            aoiTrackerList.add(movementHistory.get(index));
         } else {
-            if (AOITrackerList.size() > 2) {
-                AOITempList.add(new ArrayList<>(AOITrackerList));
-                int[] startEnd = new int[]{index - AOITrackerList.size(), index};
-                AOIStartEndIdxList.add(startEnd);
-                final Point2D[] points = new Point2D[AOITrackerList.size()];
+            if (aoiTrackerList.size() > 2) {
+                aoiTempList.add(new ArrayList<>(aoiTrackerList));
+                int[] startEnd = new int[]{index - aoiTrackerList.size(), index};
+                aoiStartEndIdxList.add(startEnd);
+                final Point2D[] points = new Point2D[aoiTrackerList.size()];
 
-                for (int i = 0; i < AOITrackerList.size(); i++) {
-                    CoordinatesTracker coordinate = AOITrackerList.get(i);
+                for (int i = 0; i < aoiTrackerList.size(); i++) {
+                    CoordinatesTracker coordinate = aoiTrackerList.get(i);
                     points[i] = new Point2D(coordinate.getXValue() * sceneWidth, coordinate.getYValue() * sceneHeight);
                 }
 
                 final boolean convexHull = config.getConvexHullDisabledProperty().getValue();
                 final Double[] polygonPoints = convexHull ? calculateConvexHull(points) : calculateRectangle(points);
-                AOIPolygonPtList.add(polygonPoints);
+                aoiPolygonPtList.add(polygonPoints);
             } else if (eDistance > 700) {
-                AOITrackerList.add(movementHistory.get(index));
-                int[] startEnd = new int[]{index - AOITrackerList.size(), index};
-                AOIStartEndIdxList.add(startEnd);
-                AOITempList.add(new ArrayList<>(AOITrackerList));
+                aoiTrackerList.add(movementHistory.get(index));
+                int[] startEnd = new int[]{index - aoiTrackerList.size(), index};
+                aoiStartEndIdxList.add(startEnd);
+                aoiTempList.add(new ArrayList<>(aoiTrackerList));
                 final float radius = 15;
                 final Point2D[] points = new Point2D[8];
 
                 for (int i = 0; i < 8; i++) {
-                    CoordinatesTracker coordinate = AOITrackerList.get(0);
+                    CoordinatesTracker coordinate = aoiTrackerList.get(0);
                     points[i] = new Point2D(coordinate.getXValue() * sceneWidth + pow(-1, i) * radius,
                         coordinate.getYValue() * sceneHeight + pow(-1, i) * radius);
                 }
 
                 final boolean convexHull = config.getConvexHullDisabledProperty().getValue();
                 final Double[] polygonPoints = convexHull ? calculateConvexHull(points) : calculateRectangle(points);
-                AOIPolygonPtList.add(polygonPoints);
+                aoiPolygonPtList.add(polygonPoints);
             }
-            AOITrackerList = new ArrayList<>();
+            aoiTrackerList = new ArrayList<>();
         }
     }
 
@@ -668,39 +668,39 @@ public class Stats implements GazeMotionListener {
 
     void calculateAOIList() {
         int i;
-        for (i = 0; i < AOITempList.size(); i++) {
-            final String AOINumber = "AOI number " + (AOIList.size() + 1);
-            AOITrackerList = AOITempList.get(i);
+        for (i = 0; i < aoiTempList.size(); i++) {
+            final String AOINumber = "AOI number " + (aoiList.size() + 1);
+            aoiTrackerList = aoiTempList.get(i);
             int centerX = 0;
             int centerY = 0;
-            final int movementHistoryEndingIndex = AOIStartEndIdxList.get(i)[1];
-            final int movementHistoryStartingIndex = AOIStartEndIdxList.get(i)[0];
-            final long areaStartTime = AOITrackerList.get(0).getTimeStarted();
-            final long areaEndTime = AOITrackerList.get(AOITrackerList.size() - 1).getTimeStarted()
-                + AOITrackerList.get(AOITrackerList.size() - 1).getIntervalTime();
+            final int movementHistoryEndingIndex = aoiStartEndIdxList.get(i)[1];
+            final int movementHistoryStartingIndex = aoiStartEndIdxList.get(i)[0];
+            final long areaStartTime = aoiTrackerList.get(0).getTimeStarted();
+            final long areaEndTime = aoiTrackerList.get(aoiTrackerList.size() - 1).getTimeStarted()
+                + aoiTrackerList.get(aoiTrackerList.size() - 1).getIntervalTime();
             final double timeSpent = (areaEndTime - areaStartTime) / 1000.0;
             final double ttff = (areaStartTime - startTime) / 1000.0;
 
             if (timeSpent > highestFixationTime)
                 highestFixationTime = timeSpent;
 
-            for (CoordinatesTracker coordinate : AOITrackerList) {
+            for (CoordinatesTracker coordinate : aoiTrackerList) {
                 centerX += coordinate.getXValue() * gameContextScene.getWidth();
                 centerY += coordinate.getYValue() * gameContextScene.getHeight();
             }
 
-            centerX /= AOITrackerList.size();
-            centerY /= AOITrackerList.size();
+            centerX /= aoiTrackerList.size();
+            centerY /= aoiTrackerList.size();
 
-            final AreaOfInterest areaOfInterest = new AreaOfInterest(AOINumber, AOITrackerList, centerX, centerY,
-                AOIPolygonPtList.get(i), movementHistoryStartingIndex, movementHistoryEndingIndex, timeSpent, ttff);
-            AOIList.add(areaOfInterest);
+            final AreaOfInterest areaOfInterest = new AreaOfInterest(AOINumber, aoiTrackerList, centerX, centerY,
+                aoiPolygonPtList.get(i), movementHistoryStartingIndex, movementHistoryEndingIndex, timeSpent, ttff);
+            aoiList.add(areaOfInterest);
         }
     }
 
     void calculateAOIPriorities() {
         if (highestFixationTime != 0) {
-            for (final AreaOfInterest areaOfInterest : AOIList) {
+            for (final AreaOfInterest areaOfInterest : aoiList) {
                 final double priority = areaOfInterest.getTimeSpent() / highestFixationTime * 0.6 + 0.1;
                 areaOfInterest.setPriority(priority);
             }
@@ -1006,7 +1006,7 @@ public class Stats implements GazeMotionListener {
         JsonArray fixationSequenceArray = gson.toJsonTree(fixationSequence).getAsJsonArray();
         JsonArray movementHistoryArray = gson.toJsonTree(movementHistory).getAsJsonArray();
         JsonArray heatMapArray = gson.toJsonTree(heatMap).getAsJsonArray();
-        JsonArray AOIListArray = gson.toJsonTree(AOIList).getAsJsonArray();
+        JsonArray AOIListArray = gson.toJsonTree(aoiList).getAsJsonArray();
         JsonArray durationBetweenGoalsArray = gson.toJsonTree(roundsDurationReport.getDurationBetweenGoals()).getAsJsonArray();
 
         JsonObject lifeCycleObject = new JsonObject();
@@ -1029,10 +1029,10 @@ public class Stats implements GazeMotionListener {
 
         savedDataObj.addProperty("configFixationLength", config.getFixationLength());
         savedDataObj.addProperty("configQuestionLength", config.getQuestionLength());
-        savedDataObj.addProperty("configReaskQuestionOnFail", config.getReaskQuestionOnFailProperty().getValue());
-        savedDataObj.addProperty("configLimiterScore", config.getLimiterScoreProperty().getValue());
+        savedDataObj.addProperty("configReaskQuestionOnFail", config.getQuestionReaskedOnFailProperty().getValue());
+        savedDataObj.addProperty("configLimiterScore", config.getLimiterScoreEnabledProperty().getValue());
         savedDataObj.addProperty("configLimiterScoreValue", config.getLimiterScoreValueProperty().getValue());
-        savedDataObj.addProperty("configLimiterTime", config.getLimiterTimeProperty().getValue());
+        savedDataObj.addProperty("configLimiterTime", config.getLimiterTimeEnabledProperty().getValue());
         savedDataObj.addProperty("configLimiterTimeValue", config.getLimiterTimeValueProperty().getValue());
         savedDataObj.addProperty("configAnimationSpeedRatio", config.getAnimationSpeedRatioProperty().getValue());
         savedDataObj.addProperty("configTransitionTime", config.getTransitionTime());
@@ -1043,7 +1043,7 @@ public class Stats implements GazeMotionListener {
         savedDataObj.add("fixationSequence", fixationSequenceArray);
         savedDataObj.add("movementHistory", movementHistoryArray);
         savedDataObj.add("heatMap", heatMapArray);
-        savedDataObj.add("AOIList", AOIListArray);
+        savedDataObj.add("aoiList", AOIListArray);
 
         return savedDataObj;
     }

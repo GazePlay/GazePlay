@@ -20,7 +20,7 @@ public interface IGameLauncher<T extends Stats, V extends IGameVariant> {
                        List<List<FixationPoint>> fixationSequence,
                        List<CoordinatesTracker> movementHistory,
                        double[][] heatMap,
-                       List<AreaOfInterest> AOIList,
+                       List<AreaOfInterest> aoiList,
                        SavedStatsInfo savedStatsInfo
     );
 

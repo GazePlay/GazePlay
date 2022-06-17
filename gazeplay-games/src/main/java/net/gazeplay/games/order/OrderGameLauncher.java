@@ -25,11 +25,11 @@ public class OrderGameLauncher implements IGameLauncher<Stats, IntGameVariant> {
                                   List<List<FixationPoint>> fixationSequence,
                                   List<CoordinatesTracker> movementHistory,
                                   double[][] heatMap,
-                                  List<AreaOfInterest> AOIList,
+                                  List<AreaOfInterest> aoiList,
                                   SavedStatsInfo savedStatsInfo
     ) {
         return new OrderStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, lifeCycle,
-            roundsDurationReport, fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
+            roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
     }
 
     @Override

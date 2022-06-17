@@ -28,11 +28,11 @@ public class WhereIsItGameLauncher implements IGameLauncher<Stats, DimensionGame
                                   List<List<FixationPoint>> fixationSequence,
                                   List<CoordinatesTracker> movementHistory,
                                   double[][] heatMap,
-                                  List<AreaOfInterest> AOIList,
+                                  List<AreaOfInterest> aoiList,
                                   SavedStatsInfo savedStatsInfo
     ) {
         return new WhereIsItStats(scene, WhereIsItGameType.CUSTOMIZED.getGameName(), nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached,
-            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
+            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
     }
 
     @Override

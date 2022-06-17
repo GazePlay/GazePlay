@@ -29,11 +29,11 @@ public class BeraPreTestGameLauncher implements IGameLauncher<Stats, IGameVarian
                                   List<List<FixationPoint>> fixationSequence,
                                   List<CoordinatesTracker> movementHistory,
                                   double[][] heatMap,
-                                  List<AreaOfInterest> AOIList,
+                                  List<AreaOfInterest> aoiList,
                                   SavedStatsInfo savedStatsInfo
     ) {
         gameStats = new BeraPreTestGameStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached,
-            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
+            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
         return gameStats;
     }
 

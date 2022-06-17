@@ -137,7 +137,7 @@ class ConfigurationTest {
 
     @Test
     void shouldGetIsEnableRewardSound() {
-        assertEquals(properties.get("ENABLE_REWARD_SOUND"), configuration.isEnableRewardSound().toString());
+        assertEquals(properties.get("ENABLE_REWARD_SOUND"), configuration.isRewardSoundEnabled().toString());
     }
 
     @Test

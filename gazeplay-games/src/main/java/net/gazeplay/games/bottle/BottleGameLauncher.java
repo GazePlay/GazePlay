@@ -29,11 +29,11 @@ public class BottleGameLauncher implements IGameLauncher<BottleGameStats, IntStr
                                             List<List<FixationPoint>> fixationSequence,
                                             List<CoordinatesTracker> movementHistory,
                                             double[][] heatMap,
-                                            List<AreaOfInterest> AOIList,
+                                            List<AreaOfInterest> aoiList,
                                             SavedStatsInfo savedStatsInfo
     ) {
         return new BottleGameStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached,
-            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
+            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
     }
 
     @Override

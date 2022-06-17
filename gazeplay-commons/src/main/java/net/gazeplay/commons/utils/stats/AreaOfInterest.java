@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data
 public class AreaOfInterest {
-    private final String ID;
+    private final String aoiID;
     private final List<CoordinatesTracker> points;
     private final int fixations;
     private final int centerX;
@@ -15,7 +15,7 @@ public class AreaOfInterest {
     private final int startingIndex;
     private final int endingIndex;
     private final double timeSpent;
-    private final double TTFF;
+    private final double ttff;
 
     private double priority;
 
@@ -28,9 +28,9 @@ public class AreaOfInterest {
         final int startingIndex,
         final int endingIndex,
         final double timeSpent,
-        final double TTFF
+        final double ttff
     ) {
-        this.ID = aoiID;
+        this.aoiID = aoiID;
         this.points = points;
         this.fixations = points.size();
         this.centerX = centerX;
@@ -39,7 +39,7 @@ public class AreaOfInterest {
         this.startingIndex = startingIndex;
         this.endingIndex = endingIndex;
         this.timeSpent = timeSpent;
-        this.TTFF = TTFF;
+        this.ttff = ttff;
     }
 
     public long getTimeStarted() {

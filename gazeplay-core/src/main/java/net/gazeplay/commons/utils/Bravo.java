@@ -63,7 +63,7 @@ public class Bravo extends Rectangle {
 
     public Bravo() {
         this(defaultPictureResourceLocation, defaultSoundResourceLocation,
-            ActiveConfigurationContext.getInstance().isEnableRewardSound());
+            ActiveConfigurationContext.getInstance().isRewardSoundEnabled());
     }
 
     public Bravo(final String pictureResourceLocation, final String soundResourceLocation, final boolean enableRewardSound) {

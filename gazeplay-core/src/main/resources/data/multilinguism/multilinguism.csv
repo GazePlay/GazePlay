@@ -362,7 +362,7 @@ ConnectNumbers,,,,,,Connect numbers,,Connecter des chiffres,,,,,,,,,,,,,
 ConnectOrder,,,,,,Connect in order,,Connecter dans l'ordre,,,,,,,,,,,,,
 ConnectNumbersDynamic,,,,,,Connect in order dynamic,,Connecter des chiffres dynamique,,,,,,,,,,,,,
 ConnectOrderDynamic,,,,,,Connect in order  dynamic,,Connecter dans l'ordre  dynamique,,,,,,,,,,,,,
-
+AuthorizeDataCollect,Autorizuar për të mbledhur të dhënat e përdoruesit,تفويض لجمع بيانات المستخدم,授權收集用戶數據,Ermächtigen Sie Benutzerdaten zu sammeln,Εξουσιοδότηση συλλογής δεδομένων χρήστη,Authorize to collect user data,Valtuuta keräämään käyttäjätietoja,Autoriser à collecter les données des utilisateurs,Ovlastiti za prikupljanje korisničkih podataka,Otorisasi untuk mengumpulkan data pengguna,Autorizza a raccogliere i dati dell'utente,ユーザーデータの収集を承認する,Zezwól na zbieranie danych użytkownika,Autorizar a coletar dados do usuário,Beri kuasa untuk mengumpul data pengguna,Autoriseren om gebruikersgegevens te verzamelen,Разрешить сбор пользовательских данных,Autorizar para recopilar datos del usuario,Cho phép thu thập dữ liệu người dùng,Аўтарызаваць збор даных карыстальнікаў,उपयोगकर्ता डेटा एकत्र करने के लिए अधिकृत करें
 Easy,,,,,,Easy,,Facile,,,,,,,,,,,,
 NormalM,,,,,,Normal,,Normal,,,,,,,,,,,,
 Static,,,,,,Static,,Statique,,,,,,,,,,,,

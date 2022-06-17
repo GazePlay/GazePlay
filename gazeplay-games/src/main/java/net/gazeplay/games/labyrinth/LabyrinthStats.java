@@ -21,11 +21,11 @@ public class LabyrinthStats extends ShootGamesStats {
                           List<List<FixationPoint>> fixationSequence,
                           List<CoordinatesTracker> movementHistory,
                           double[][] heatMap,
-                          List<AreaOfInterest> AOIList,
+                          List<AreaOfInterest> aoiList,
                           SavedStatsInfo savedStatsInfo
     ) {
         super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, lifeCycle, roundsDurationReport,
-            fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
+            fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
         this.gameName = "Labyrinth";
     }
 }

@@ -26,11 +26,11 @@ public class VideoPlayerGameLauncher implements IGameLauncher<ExplorationGamesSt
                                                   List<List<FixationPoint>> fixationSequence,
                                                   List<CoordinatesTracker> movementHistory,
                                                   double[][] heatMap,
-                                                  List<AreaOfInterest> AOIList,
+                                                  List<AreaOfInterest> aoiList,
                                                   SavedStatsInfo savedStatsInfo
     ) {
         return new ExplorationGamesStats(scene, "Video Player with Feedback", nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached,
-            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, AOIList, savedStatsInfo);
+            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
     }
 
     @Override
