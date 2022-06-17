@@ -5,7 +5,7 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.8'
     id 'io.freefair.lombok' version '6.4.3'
     id 'com.github.hierynomus.license-report' version '0.16.1'
-    id 'com.github.spotbugs' version '4.7.0'
+    id 'com.github.spotbugs' version '5.0.7'
     id 'net.researchgate.release' version '2.6.0'
     id "de.undercouch.download" version '4.0.4'
 
