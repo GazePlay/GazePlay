@@ -84,7 +84,7 @@ subprojects {
     }
 
     spotbugs {
-        toolVersion = '4.0.0-beta3'
+        toolVersion = '4.7.0'
 
         //ignoreFailures = false
         //effort = "max"
