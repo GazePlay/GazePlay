@@ -669,7 +669,7 @@ public class Stats implements GazeMotionListener {
     void calculateAOIList() {
         int i;
         for (i = 0; i < aoiTempList.size(); i++) {
-            final String AOINumber = "AOI number " + (aoiList.size() + 1);
+            final String aoiNumber = "AOI number " + (aoiList.size() + 1);
             aoiTrackerList = aoiTempList.get(i);
             int centerX = 0;
             int centerY = 0;
@@ -692,7 +692,7 @@ public class Stats implements GazeMotionListener {
             centerX /= aoiTrackerList.size();
             centerY /= aoiTrackerList.size();
 
-            final AreaOfInterest areaOfInterest = new AreaOfInterest(AOINumber, aoiTrackerList, centerX, centerY,
+            final AreaOfInterest areaOfInterest = new AreaOfInterest(aoiNumber, aoiTrackerList, centerX, centerY,
                 aoiPolygonPtList.get(i), movementHistoryStartingIndex, movementHistoryEndingIndex, timeSpent, ttff);
             aoiList.add(areaOfInterest);
         }
@@ -1006,7 +1006,7 @@ public class Stats implements GazeMotionListener {
         JsonArray fixationSequenceArray = gson.toJsonTree(fixationSequence).getAsJsonArray();
         JsonArray movementHistoryArray = gson.toJsonTree(movementHistory).getAsJsonArray();
         JsonArray heatMapArray = gson.toJsonTree(heatMap).getAsJsonArray();
-        JsonArray AOIListArray = gson.toJsonTree(aoiList).getAsJsonArray();
+        JsonArray aoiListArray = gson.toJsonTree(aoiList).getAsJsonArray();
         JsonArray durationBetweenGoalsArray = gson.toJsonTree(roundsDurationReport.getDurationBetweenGoals()).getAsJsonArray();
 
         JsonObject lifeCycleObject = new JsonObject();
@@ -1043,7 +1043,7 @@ public class Stats implements GazeMotionListener {
         savedDataObj.add("fixationSequence", fixationSequenceArray);
         savedDataObj.add("movementHistory", movementHistoryArray);
         savedDataObj.add("heatMap", heatMapArray);
-        savedDataObj.add("aoiList", AOIListArray);
+        savedDataObj.add("aoiList", aoiListArray);
 
         return savedDataObj;
     }
