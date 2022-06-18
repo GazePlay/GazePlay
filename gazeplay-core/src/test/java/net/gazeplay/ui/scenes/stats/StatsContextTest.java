@@ -115,7 +115,7 @@ class StatsContextTest {
         when(mockStats.getFixationSequence()).thenReturn(fixationPoints);
 
         Configuration mockConfig = mock(Configuration.class);
-        when(mockConfig.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));
+        when(mockConfig.isAreaOfInterestDisabled()).thenReturn(true);
 
         BorderPane root = new BorderPane();
         new StatsContext(mockGazePlay, root, mockStats, null);

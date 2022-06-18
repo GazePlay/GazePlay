@@ -445,6 +445,14 @@ public class Configuration {
         return colors;
     }
 
+    public Boolean isAreaOfInterestDisabled() {
+        return areaOfInterestDisabledProperty.getValue();
+    }
+
+    public Boolean isConvexHullDisabled() {
+        return convexHullDisabledProperty.getValue();
+    }
+
     public Boolean isFixationSequenceDisabled() {
         return fixationSequenceDisabledProperty.getValue();
     }

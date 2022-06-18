@@ -41,8 +41,6 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
-//import javax.swing.text.TableView;
-
 @Slf4j
 public class StatsContext extends GraphicalContext<BorderPane> {
 
@@ -218,7 +216,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             }
 
             HBox controlButtonPane;
-
             if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null &&
                 stats.getCurrentGameNameCode().equals("Ninja") && stats.getCurrentGameVariant().contains("DYNAMIC"))
                 controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, levelsInfo, continueButton, true);
@@ -521,7 +518,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(controlButtonPane);
             controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
 
-            if (config.getAreaOfInterestDisabledProperty().getValue())
+            if (config.isAreaOfInterestDisabled())
                 controlButtonPane.getChildren().add(aoiButton);
 
             if (!config.isFixationSequenceDisabled()) {
