@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Dimension2D;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.RadioButton;
-import javafx.scene.image.ImageView;
+//import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
@@ -75,7 +75,7 @@ class StatsContextTest {
     void shouldChangeWidth() {
         when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
         SimpleDoubleProperty widthProperty = new SimpleDoubleProperty(100);
-        ImageView metrics = spy(new ImageView("bear.jpg"));
+        //ImageView metrics = spy(new ImageView("bear.jpg"));
 
         BorderPane rootSpy = spy(new BorderPane());
         when(rootSpy.widthProperty()).thenReturn(widthProperty);
@@ -89,7 +89,7 @@ class StatsContextTest {
     void shouldChangeHeight() {
         when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
         SimpleDoubleProperty heightProperty = new SimpleDoubleProperty(100);
-        ImageView metrics = spy(new ImageView("bear.jpg"));
+        //ImageView metrics = spy(new ImageView("bear.jpg"));
 
         BorderPane rootSpy = spy(new BorderPane());
         when(rootSpy.heightProperty()).thenReturn(heightProperty);
