@@ -195,7 +195,7 @@ class StatsContextTest {
         StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
 
         Configuration mockConfig = mock(Configuration.class);
-        when(mockConfig.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));
+        when(mockConfig.isAreaOfInterestDisabled()).thenReturn(true);
         when(mockConfig.isFixationSequenceDisabled()).thenReturn(false);
         RadioButton radioButton = new RadioButton();
         CustomButton button = new CustomButton("bear.jpg", 300);
