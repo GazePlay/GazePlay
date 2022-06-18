@@ -68,23 +68,22 @@ class StatsContextFactoryTest {
     void shouldCreateNewInstance() {
         StatsContext result = StatsContextFactory.newInstance(mockGazePlay, mockStats);
 
-        BorderPane pane = (BorderPane) result.getRoot().getChildren().get(1);
+        BorderPane pane = (BorderPane) result.getChildren().get(1);
         HBox box = (HBox) pane.getChildren().get(1);
 
-        assertEquals(3, result.getRoot().getChildren().size());
+        assertEquals(3, result.getChildren().size());
         assertEquals(4, box.getChildren().size());
     }
 
     @Test
     void shouldCreateNewInstanceWithContinueButton() {
         CustomButton button = new CustomButton("bear.jpg", 300);
-        StatsContext result =
-            StatsContextFactory.newInstance(mockGazePlay, mockStats, button);
+        StatsContext result = StatsContextFactory.newInstance(mockGazePlay, mockStats, button);
 
-        BorderPane pane = (BorderPane) result.getRoot().getChildren().get(1);
+        BorderPane pane = (BorderPane) result.getChildren().get(1);
         HBox box = (HBox) pane.getChildren().get(1);
 
-        assertEquals(3, result.getRoot().getChildren().size());
+        assertEquals(3, result.getChildren().size());
         assertEquals(5, box.getChildren().size());
         assertEquals(button, box.getChildren().get(4));
     }

@@ -22,10 +22,7 @@ class ConfigurationTest {
 
     private final String sep = File.separator;
     private final String localDataFolder =
-        System.getProperty("user.dir") + sep
-            + "src" + sep
-            + "test" + sep
-            + "resources" + sep;
+        System.getProperty("user.dir") + sep + "src" + sep + "test" + sep + "resources" + sep;
 
     private ApplicationConfig applicationConfig;
     private Configuration configuration;
@@ -74,7 +71,7 @@ class ConfigurationTest {
             log.debug("Error in loading test properties: ", ie);
         }
 
-        assertEquals(newPath, properties.getProperty("WHEREISITDIR"));
+        assertEquals(newPath, properties.getProperty("WHEREISIT_DIR"));
 
         configuration.getWhereIsItDirProperty().set(oldPath);
     }
@@ -117,27 +114,27 @@ class ConfigurationTest {
 
     @Test
     void shouldGetFixationLength() {
-        assertEquals(properties.get("FIXATIONLENGTH"), configuration.getFixationLength().toString());
+        assertEquals(properties.get("FIXATION_LENGTH"), configuration.getFixationLength().toString());
     }
 
     @Test
     void shouldGetCssFile() {
-        assertEquals(properties.get("CSSFILE"), configuration.getCssFile());
+        assertEquals(properties.get("CSS_FILE"), configuration.getCssFile());
     }
 
     @Test
     void shouldGetWhereIsItDir() {
-        assertEquals(properties.get("WHEREISITDIR"), configuration.getWhereIsItDir());
+        assertEquals(properties.get("WHEREISIT_DIR"), configuration.getWhereIsItDir());
     }
 
     @Test
     void shouldGetQuestionLength() {
-        assertEquals(properties.get("QUESTIONLENGTH"), Long.toString(configuration.getQuestionLength()));
+        assertEquals(properties.get("QUESTION_LENGTH"), Long.toString(configuration.getQuestionLength()));
     }
 
     @Test
     void shouldGetIsEnableRewardSound() {
-        assertEquals(properties.get("ENABLE_REWARD_SOUND"), configuration.isRewardSoundEnabled().toString());
+        assertEquals(properties.get("REWARD_SOUND_ENABLED"), configuration.isRewardSoundEnabled().toString());
     }
 
     @Test
@@ -174,7 +171,7 @@ class ConfigurationTest {
 
     @Test
     void shouldGetIsFixationSequenceDisabled() {
-        assertEquals(properties.get("FIXATIONSEQUENCE_DISABLED"), configuration.isFixationSequenceDisabled().toString());
+        assertEquals(properties.get("FIXATION_SEQUENCE_DISABLED"), configuration.isFixationSequenceDisabled().toString());
     }
 
     @Test
@@ -242,6 +239,6 @@ class ConfigurationTest {
 
     @Test
     void shouldGetIsLatestNewsDisplayForced() {
-        assertEquals(properties.get("FORCE_DISPLAY_NEWS"), configuration.isLatestNewsDisplayForced().toString());
+        assertEquals(properties.get("DISPLAY_NEWS_FORCED"), configuration.isLatestNewsDisplayForced().toString());
     }
 }
