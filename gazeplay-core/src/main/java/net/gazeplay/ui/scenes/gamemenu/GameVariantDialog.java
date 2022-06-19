@@ -107,11 +107,20 @@ public class GameVariantDialog extends Stage {
             button.setMaxWidth(primaryStage.getWidth() / 8);
             button.setMaxHeight(primaryStage.getHeight() / 8);
 
-            if ((variant instanceof DimensionDifficultyGameVariant) || (variant.toString().contains("DYNAMIC"))) {
+            if ((variant instanceof DimensionDifficultyGameVariant) || (variant.toString().contains("DYNAMIC"))  || (variant.toString().contains("OTHER"))  ) {
                 if (!choicePanes.containsKey(1)) {
                     choicePanes.put(1, createFlowPane());
                 }
                 choicePanes.get(1).getChildren().add(button);
+            } else if ((variant.toString().startsWith("AnimeSelect the caracter then look at the house box to move"))
+            )
+
+            {
+                if (!choicePanes.containsKey(1)) {
+                    choicePanes.put(1, createFlowPane());
+                }
+                choicePanes.get(1).getChildren().add(button);
+
             } else if (gameSpec.getGameSummary().getNameCode().equals("bottle")) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = ((IntStringGameVariant) variant).getStringValue();
@@ -158,7 +167,9 @@ public class GameVariantDialog extends Stage {
                 gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
                 gameSpec.getGameSummary().getNameCode().equals("bottle") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
-                gameSpec.getGameSummary().getNameCode().equals("DotToDot")) {
+                gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
+                gameSpec.getGameSummary().getNameCode().equals("Labyrinth") )
+            {
                 if (variant instanceof DimensionGameVariant) {
                     variant = new DimensionDifficultyGameVariant(((DimensionGameVariant) variant).getWidth(), ((DimensionGameVariant) variant).getHeight(), "normal");
                 }
@@ -184,7 +195,12 @@ public class GameVariantDialog extends Stage {
                         categories[2] = new RadioButton(translator.translate("NormalF"));
                         categories[1] = new RadioButton(translator.translate("SmallF"));
                         categories[0] = new RadioButton(translator.translate("TinyF"));
-                    } else {
+                    } else if(gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) {
+                        categories = new RadioButton[2];
+                        categories[0] = new RadioButton(translator.translate("Mouse & cheese"));
+                        categories[1] = new RadioButton(translator.translate("Other caracter"));
+
+                    } else{
                         categories = new RadioButton[2];
                         categories[0] = new RadioButton(translator.translate("Classic"));
                         categories[1] = new RadioButton(translator.translate("HighContrasts"));
@@ -219,9 +235,7 @@ public class GameVariantDialog extends Stage {
                 }
             };
             button.addEventHandler(MOUSE_CLICKED, event);
-
         }
-
 
         Scene scene = new Scene(sceneContentPane, Color.TRANSPARENT);
 
