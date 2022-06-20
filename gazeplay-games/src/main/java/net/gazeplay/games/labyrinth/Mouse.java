@@ -62,55 +62,55 @@ public abstract class Mouse extends Parent {
         switch (choix)
         {
             case 0:
-                Img="data/common/default/images/noBackGround/bear-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/bear.png";
                 break;
             case 1:
-                Img="data/common/default/images/noBackGround/chouette-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/chouette.png";
                 break;
             case 2:
-                Img="data/common/default/images/noBackGround/crabe-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/crabe.png";
                 break;
             case 3:
-                Img="data/common/default/images/noBackGround/dog-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/dog.png";
                 break;
             case 4:
-                Img="data/common/default/images/noBackGround/ecureuil-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/ecureuil.png";
                 break;
             case 5:
-                Img="data/common/default/images/noBackGround/elephant-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/elephant.png";
                 break;
             case 6:
-                Img="data/common/default/images/noBackGround/fox-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/fox.png";
                 break;
             case 7:
-                Img="data/common/default/images/noBackGround/giraffe-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/giraffe.png";
                 break;
             case 8:
-                Img="data/common/default/images/noBackGround/herisson-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/herisson.png";
                 break;
             case 9:
-                Img="data/common/default/images/noBackGround/hippo-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/hippo.png";
                 break;
             case 10:
-                Img="data/common/default/images/noBackGround/lion-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/lion.png";
                 break;
             case 11:
-                Img="data/common/default/images/noBackGround/meduse-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/meduse.png";
                 break;
             case 12:
-                Img="data/common/default/images/noBackGround/poulpe-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/poulpe.png";
                 break;
             case 13:
-                Img="data/common/default/images/noBackGround/renard-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/renard.png";
                 break;
             case 14:
-                Img="data/common/default/images/noBackGround/snake-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/snake.png";
                 break;
             case 15:
-                Img="data/common/default/images/noBackGround/tortue-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/tortue.png";
                 break;
             default:
-                Img="data/common/default/images/noBackGround/turtle-removebg-preview.png";
+                Img="data/common/default/images/noBackGround/turtle.png";
                 break;
         }
         return Img;

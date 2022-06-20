@@ -197,8 +197,8 @@ public class GameVariantDialog extends Stage {
                         categories[0] = new RadioButton(translator.translate("TinyF"));
                     } else if(gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) {
                         categories = new RadioButton[2];
-                        categories[0] = new RadioButton(translator.translate("Mouse & cheese"));
-                        categories[1] = new RadioButton(translator.translate("Other caracter"));
+                        categories[0] = new RadioButton(translator.translate("MouseC"));
+                        categories[1] = new RadioButton(translator.translate("OtherC"));
 
                     } else{
                         categories = new RadioButton[2];
