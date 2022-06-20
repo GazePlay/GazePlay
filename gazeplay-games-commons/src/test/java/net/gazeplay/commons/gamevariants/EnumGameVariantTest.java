@@ -29,7 +29,7 @@ class EnumGameVariantTest {
     }
 
     @Test
-    void givenTranslator_shouldTranslateLabel() {
+    void givenTranslatorShouldTranslateLabel() {
         EnumGameVariant<TestEnum> gameVariant = new EnumGameVariant<>(TestEnum.TEST1, Object::toString);
         assertEquals("translation", gameVariant.getLabel(translator));
         verify(translator, times(1)).translate("TEST1");

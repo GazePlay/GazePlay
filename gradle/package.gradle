@@ -1,6 +1,16 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-task('packageAllDists').dependsOn('linuxDistTar', 'windowsDistZip', 'macosDistTar', 'assembleNoJREDist')
+task('packageAllDists').dependsOn(
+        'linuxDistTar',
+        'windowsDistZip',
+        'windowsx32DistZip',
+        'windowsAfsrDistZip',
+        'windowsAfsrx32DistZip',
+        'windowsBeraDistZip',
+        'windowsBerax32DistZip',
+        'macosDistTar',
+        'assembleNoJREDist'
+)
 
 task packageApp(dependsOn: ['packageAllDists',
                             'downloadLicenses',
@@ -13,9 +23,8 @@ task scriptsForRelease(type: Copy, group: 'distribution') {
     from "${rootDir}/gazeplay-dist/src/main/bin"
     into "${rootDir}/build/bin"
     filter(
-        ReplaceTokens, tokens: [VERSION: project.version, NAME: project.name]
+            ReplaceTokens, tokens: [VERSION: project.version, NAME: project.name]
     )
-
     outputs.upToDateWhen { false } // Forces the task to rerun every time, without requiring a clean.
 }
 

@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SourceSetTest {
 
     @Test
-    void givenValidFile_shouldReadSuccessfully() {
+    void givenValidFileShouldReadSuccessfully() {
         try {
             new SourceSet("source-sets.json");
         } catch (FileNotFoundException fe) {
@@ -19,7 +19,7 @@ class SourceSetTest {
     }
 
     @Test
-    void givenValidFile_givenValidDifficulty_shouldReturnList() throws FileNotFoundException {
+    void givenValidFileGivenValidDifficultyShouldReturnList() throws FileNotFoundException {
         SourceSet sourceSet = new SourceSet("source-sets.json");
         Set<String> dirs = sourceSet.getResources(Difficulty.NORMAL);
 
@@ -27,7 +27,7 @@ class SourceSetTest {
     }
 
     @Test
-    void givenValidFile_givenInvalidDifficulty_shouldReturnEmptyList() throws FileNotFoundException {
+    void givenValidFileGivenInvalidDifficultyShouldReturnEmptyList() throws FileNotFoundException {
         SourceSet sourceSet = new SourceSet("source-sets.json");
         Set<String> dirs = sourceSet.getResources(Difficulty.HARD);
 
@@ -35,7 +35,7 @@ class SourceSetTest {
     }
 
     @Test
-    void givenInvalidFile_shouldThrowFileNotFoundException() {
+    void givenInvalidFileShouldThrowFileNotFoundException() {
         assertThrows(FileNotFoundException.class, () -> {
             new SourceSet("invalid-file.json");
         });

@@ -22,6 +22,9 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Card extends Parent {
 
     private static final float zoomFactor = 1.05f;
@@ -117,6 +120,7 @@ public class Card extends Parent {
         this.getChildren().add(stack);
 
         this.progressIndicator = createProgressIndicator(width, height);
+        verifyProgressBarValue();
         this.getChildren().add(this.progressIndicator);
 
         this.enterEvent = buildEvent();
@@ -132,11 +136,13 @@ public class Card extends Parent {
     }
 
     private ProgressIndicator createProgressIndicator(final double width, final double height) {
+        double finalWidth = width * 0.9 * gameContext.getConfiguration().getProgressBarSize() / 100;
+        double finalHeight = height * 0.9 * gameContext.getConfiguration().getProgressBarSize() / 100;
         final ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(card.getX() + width * 0.05);
-        indicator.setTranslateY(card.getY() + height * 0.2);
-        indicator.setMinWidth(width * 0.9);
-        indicator.setMinHeight(width * 0.9);
+        indicator.setTranslateX(card.getX() + 0.05 * width * gameContext.getConfiguration().getProgressBarSize() / 100);
+        indicator.setTranslateY(card.getY() + 0.2 * height * gameContext.getConfiguration().getProgressBarSize() / 100);
+        indicator.setMinWidth(finalWidth);
+        indicator.setMinHeight(finalHeight);
         indicator.setOpacity(0);
         return indicator;
     }
@@ -200,6 +206,7 @@ public class Card extends Parent {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
+                verifyProgressBarValue();
                 progressIndicator.setOpacity(0.4);
                 progressIndicator.setProgress(0);
 
@@ -267,5 +274,16 @@ public class Card extends Parent {
                 progressIndicator.setProgress(0);
             }
         };
+    }
+
+    private void verifyProgressBarValue() {
+        double finalSize = initWidth * 0.9 * gameContext.getConfiguration().getProgressBarSize() / 100;
+        progressIndicator.setTranslateX(card.getX() + (initWidth - finalSize) * 1.15 / 2);
+        progressIndicator.setTranslateY(card.getY() + (initHeight - finalSize) * 1.15 / 2);
+        log.info("init : {} * {}; new : {} * {}", initWidth, initHeight, finalSize, finalSize);
+        progressIndicator.setMinWidth(finalSize);
+        progressIndicator.setMinHeight(finalSize);
+
+        progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor()); // To change the color of the progress bar
     }
 }

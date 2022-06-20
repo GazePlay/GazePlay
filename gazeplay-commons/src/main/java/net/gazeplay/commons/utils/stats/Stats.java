@@ -129,6 +129,38 @@ public class Stats implements GazeMotionListener {
 
     private Long currentRoundStartTime;
 
+    public String variantType = "";
+
+    //Phonology
+    public int totalPhonology = 0;
+    public int simpleScoreItemsPhonology = 0;
+    public int complexScoreItemsPhonology = 0;
+    public int scoreLeftTargetItemsPhonology = 0;
+    public int scoreRightTargetItemsPhonology = 0;
+
+    //Semantics
+    public int totalSemantic = 0;
+    public int simpleScoreItemsSemantic = 0;
+    public int complexScoreItemsSemantic = 0;
+    public int frequentScoreItemSemantic = 0;
+    public int infrequentScoreItemSemantic = 0;
+    public int scoreLeftTargetItemsSemantic = 0;
+    public int scoreRightTargetItemsSemantic = 0;
+
+    //Morphosyntax
+    public int totalMorphosyntax = 0;
+    public int simpleScoreItemsMorphosyntax = 0;
+    public int complexScoreItemsMorphosyntax = 0;
+    public int scoreLeftTargetItemsMorphosyntax = 0;
+    public int scoreRightTargetItemsMorphosyntax = 0;
+
+    //Word comprehension
+    public int totalWordComprehension = 0;
+    public int totalItemsAddedManually = 0;
+
+    public int total = 0;
+    public long timeGame = 0;
+    public String actualFile = "";
 
     //parameters for AOI
     private int movementHistoryidx = 0;
@@ -796,7 +828,7 @@ public class Stats implements GazeMotionListener {
         return new File(outputDirectory, fileName);
     }
 
-    protected File getGameStatsOfTheDayDirectory() {
+    public File getGameStatsOfTheDayDirectory() {
         final File statsDirectory = GazePlayDirectories.getUserStatsFolder(ActiveConfigurationContext.getInstance().getUserName());
         final File gameDirectory = new File(statsDirectory, gameName);
         final File todayDirectory = new File(gameDirectory, DateUtils.today());

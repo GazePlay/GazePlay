@@ -1,3 +1,5 @@
+// -----------------------------------  Windows 64 bits  ---------------------------------------------------------- //
+
 task generateWindowsInstaller(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
     doLast {
 
@@ -19,9 +21,9 @@ task generateWindowsInstallerInDocker(dependsOn: ['unzipDistribution', 'prepareI
             workingDir rootDir
             commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setup.iss"
         }
+
     }
 }
-
 
 task prepareInnoSetupFiles(group: 'distribution') {
     doLast {
@@ -39,11 +41,10 @@ task prepareInnoSetupFiles(group: 'distribution') {
             into(innoSetupDir)
         }
 
-
         copy {
             from("${rootDir}/gradle/templates/licence.txt")
             expand([
-                    "version": version,
+                    version: version,
                     "date"   : new Date().format('yyyy-MM-dd')
             ])
             into(innoSetupDir)
@@ -63,6 +64,358 @@ task prepareInnoSetupFiles(group: 'distribution') {
 
 task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
     from zipTree("${buildDir}/distributions/${project.name}-windows-x64-${version}.zip")
+    into buildDir
+    fileMode 0777
+    dirMode 0777
+}
+
+// -----------------------------------  Windows 32 bits  ---------------------------------------------------------- //
+
+task generateWindowsInstallerx32(dependsOn: ['unzipDistributionx32','prepareInnoSetupFilesx32'], group: 'distribution') {
+    doLast {
+
+        def innoSetupDir = new File("${buildDir}/innosetup")
+
+        // I'm leaving this line in so we can quickly sign installers if/when we decide to do so.
+        // def signtool = "/SStandard=\"C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.18362.0\\x64\\signtool.exe sign /a /n \$qGazePlay\$q /tr http://timestamp.comodoca.com/ /d \$qGazePlay\$q \$f\""
+
+        exec {
+            commandLine "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe", "${innoSetupDir}\\setupx32.iss"
+        }
+
+    }
+}
+
+task generateWindowsInstallerInDockerx32(dependsOn: ['unzipDistributionx32','prepareInnoSetupFilesx32'], group: 'distribution') {
+    doLast {
+        exec {
+            workingDir rootDir
+            commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setupx32.iss"
+        }
+    }
+}
+
+task prepareInnoSetupFilesx32(group: 'distribution') {
+    doLast {
+        def innoSetupDir = new File("${buildDir}/innosetup")
+
+        innoSetupDir.mkdir()
+
+        copy {
+            from("${rootDir}/gradle/innosetup/setupx32.iss.skel")
+            rename("setupx32.iss.skel", "setupx32.iss")
+            expand([
+                    applicationVersion: "${version}",
+                    unpackedDirectory : "${project.name}-windows-x32-${version}"
+            ])
+            into(innoSetupDir)
+        }
+
+
+        copy {
+            from("${rootDir}/gradle/templates/licence.txt")
+            expand([
+                    version: version,
+                    "date"   : new Date().format('yyyy-MM-dd')
+            ])
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.ico")
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.bmp")
+            into(innoSetupDir)
+        }
+    }
+}
+task unzipDistributionx32(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
+    from zipTree("${buildDir}/distributions/${project.name}-windows-x32-${version}.zip")
+    into buildDir
+    fileMode 0777
+    dirMode 0777
+}
+
+// -----------------------------------  Windows AFSR 64 bits  ---------------------------------------------------------- //
+
+task generateWindowsAfsrInstaller(dependsOn: ['unzipAfsrDistribution', 'prepareInnoSetupFilesAfsr'], group: 'distribution') {
+    doLast {
+
+        def innoSetupDir = new File("${buildDir}/innosetup")
+
+        // I'm leaving this line in so we can quickly sign installers if/when we decide to do so.
+        // def signtool = "/SStandard=\"C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.18362.0\\x64\\signtool.exe sign /a /n \$qGazePlay\$q /tr http://timestamp.comodoca.com/ /d \$qGazePlay\$q \$f\""
+
+        exec {
+            commandLine "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe", "${innoSetupDir}\\setupAfsr.iss"
+        }
+
+    }
+}
+
+task generateWindowsAfsrInstallerInDocker(dependsOn: ['unzipAfsrDistribution', 'prepareInnoSetupFilesAfsr'], group: 'distribution') {
+    doLast {
+        exec {
+            workingDir rootDir
+            commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setupAfsr.iss"
+        }
+
+    }
+}
+
+task prepareInnoSetupFilesAfsr(group: 'distribution') {
+    doLast {
+        def innoSetupDir = new File("${buildDir}/innosetup")
+
+        innoSetupDir.mkdir()
+
+        copy {
+            from("${rootDir}/gradle/innosetup/setupAfsr.iss.skel")
+            rename("setupAfsr.iss.skel", "setupAfsr.iss")
+            expand([
+                    applicationVersion: "${version}",
+                    unpackedDirectory : "${project.name}-afsr-windows-x64-${version}"
+            ])
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/templates/licence.txt")
+            expand([
+                    version: version,
+                    "date"   : new Date().format('yyyy-MM-dd')
+            ])
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.ico")
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.bmp")
+            into(innoSetupDir)
+        }
+    }
+}
+
+task unzipAfsrDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
+    from zipTree("${buildDir}/distributions/${project.name}-afsr-windows-x64-${version}.zip")
+    into buildDir
+    fileMode 0777
+    dirMode 0777
+}
+
+// -----------------------------------  Windows AFSR 32 bits  ---------------------------------------------------------- //
+
+task generateWindowsAfsrInstallerx32(dependsOn: ['unzipAfsrDistributionx32','prepareInnoSetupFilesAfsrx32'], group: 'distribution') {
+    doLast {
+
+        def innoSetupDir = new File("${buildDir}/innosetup")
+
+        // I'm leaving this line in so we can quickly sign installers if/when we decide to do so.
+        // def signtool = "/SStandard=\"C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.18362.0\\x64\\signtool.exe sign /a /n \$qGazePlay\$q /tr http://timestamp.comodoca.com/ /d \$qGazePlay\$q \$f\""
+
+        exec {
+            commandLine "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe", "${innoSetupDir}\\setupAfsrx32.iss"
+        }
+
+    }
+}
+
+task generateWindowsAfsrInstallerInDockerx32(dependsOn: ['unzipAfsrDistributionx32','prepareInnoSetupFilesAfsrx32'], group: 'distribution') {
+    doLast {
+        exec {
+            workingDir rootDir
+            commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setupAfsrx32.iss"
+        }
+    }
+}
+
+task prepareInnoSetupFilesAfsrx32(group: 'distribution') {
+    doLast {
+        def innoSetupDir = new File("${buildDir}/innosetup")
+
+        innoSetupDir.mkdir()
+
+        copy {
+            from("${rootDir}/gradle/innosetup/setupAfsrx32.iss.skel")
+            rename("setupAfsrx32.iss.skel", "setupAfsrx32.iss")
+            expand([
+                    applicationVersion: "${version}",
+                    unpackedDirectory : "${project.name}-afsr-windows-x32-${version}"
+            ])
+            into(innoSetupDir)
+        }
+
+
+        copy {
+            from("${rootDir}/gradle/templates/licence.txt")
+            expand([
+                    version: version,
+                    "date"   : new Date().format('yyyy-MM-dd')
+            ])
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.ico")
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.bmp")
+            into(innoSetupDir)
+        }
+    }
+}
+task unzipAfsrDistributionx32(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
+    from zipTree("${buildDir}/distributions/${project.name}-afsr-windows-x32-${version}.zip")
+    into buildDir
+    fileMode 0777
+    dirMode 0777
+}
+
+// -----------------------------------  Windows Bera 64 bits  ---------------------------------------------------------- //
+
+task generateWindowsBeraInstaller(dependsOn: ['unzipBeraDistribution', 'prepareInnoSetupFilesBera'], group: 'distribution') {
+    doLast {
+
+        def innoSetupDir = new File("${buildDir}/innosetup")
+
+        // I'm leaving this line in so we can quickly sign installers if/when we decide to do so.
+        // def signtool = "/SStandard=\"C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.18362.0\\x64\\signtool.exe sign /a /n \$qGazePlay\$q /tr http://timestamp.comodoca.com/ /d \$qGazePlay\$q \$f\""
+
+        exec {
+            commandLine "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe", "${innoSetupDir}\\setupBera.iss"
+        }
+
+    }
+}
+
+task generateWindowsBeraInstallerInDocker(dependsOn: ['unzipBeraDistribution', 'prepareInnoSetupFilesBera'], group: 'distribution') {
+    doLast {
+        exec {
+            workingDir rootDir
+            commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setupBera.iss"
+        }
+
+    }
+}
+
+task prepareInnoSetupFilesBera(group: 'distribution') {
+    doLast {
+        def innoSetupDir = new File("${buildDir}/innosetup")
+
+        innoSetupDir.mkdir()
+
+        copy {
+            from("${rootDir}/gradle/innosetup/setupBera.iss.skel")
+            rename("setupBera.iss.skel", "setupBera.iss")
+            expand([
+                    applicationVersion: "${version}",
+                    unpackedDirectory : "${project.name}-bera-windows-x64-${version}"
+            ])
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/templates/licence.txt")
+            expand([
+                    version: version,
+                    "date"   : new Date().format('yyyy-MM-dd')
+            ])
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.ico")
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.bmp")
+            into(innoSetupDir)
+        }
+    }
+}
+
+task unzipBeraDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
+    from zipTree("${buildDir}/distributions/${project.name}-bera-windows-x64-${version}.zip")
+    into buildDir
+    fileMode 0777
+    dirMode 0777
+}
+
+// -----------------------------------  Windows Bera 32 bits  ---------------------------------------------------------- //
+
+task generateWindowsBeraInstallerx32(dependsOn: ['unzipBeraDistributionx32','prepareInnoSetupFilesBerax32'], group: 'distribution') {
+    doLast {
+
+        def innoSetupDir = new File("${buildDir}/innosetup")
+
+        // I'm leaving this line in so we can quickly sign installers if/when we decide to do so.
+        // def signtool = "/SStandard=\"C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.18362.0\\x64\\signtool.exe sign /a /n \$qGazePlay\$q /tr http://timestamp.comodoca.com/ /d \$qGazePlay\$q \$f\""
+
+        exec {
+            commandLine "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe", "${innoSetupDir}\\setupBerax32.iss"
+        }
+
+    }
+}
+
+task generateWindowsBeraInstallerInDockerx32(dependsOn: ['unzipBeraDistributionx32','prepareInnoSetupFilesBerax32'], group: 'distribution') {
+    doLast {
+        exec {
+            workingDir rootDir
+            commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setupBerax32.iss"
+        }
+    }
+}
+
+task prepareInnoSetupFilesBerax32(group: 'distribution') {
+    doLast {
+        def innoSetupDir = new File("${buildDir}/innosetup")
+
+        innoSetupDir.mkdir()
+
+        copy {
+            from("${rootDir}/gradle/innosetup/setupBerax32.iss.skel")
+            rename("setupBerax32.iss.skel", "setupBerax32.iss")
+            expand([
+                    applicationVersion: "${version}",
+                    unpackedDirectory : "${project.name}-bera-windows-x32-${version}"
+            ])
+            into(innoSetupDir)
+        }
+
+
+        copy {
+            from("${rootDir}/gradle/templates/licence.txt")
+            expand([
+                    version: version,
+                    "date"   : new Date().format('yyyy-MM-dd')
+            ])
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.ico")
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.bmp")
+            into(innoSetupDir)
+        }
+    }
+}
+task unzipBeraDistributionx32(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
+    from zipTree("${buildDir}/distributions/${project.name}-bera-windows-x32-${version}.zip")
     into buildDir
     fileMode 0777
     dirMode 0777

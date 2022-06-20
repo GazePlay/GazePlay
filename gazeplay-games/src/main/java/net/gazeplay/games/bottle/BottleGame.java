@@ -50,9 +50,9 @@ public class BottleGame implements GameLifeCycle {
 
     Image brokenBottle = new Image("data/bottle/broken.png");
 
-    String Stype;
+    String sTypes;
 
-    public BottleGame(IGameContext gameContext, BottleGameStats stats, int number, String Stype) {
+    public BottleGame(IGameContext gameContext, BottleGameStats stats, int number, String sTypes) {
 
         this.bottleGameStats = stats;
         this.gameContext = gameContext;
@@ -106,11 +106,11 @@ public class BottleGame implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
-        this.Stype=Stype;
+        this.sTypes=sTypes;
 
     }
 
-    public BottleGame(IGameContext gameContext, BottleGameStats stats, int number, String Stype, double gameSeed) {
+    public BottleGame(IGameContext gameContext, BottleGameStats stats, int number, String sTypes, double gameSeed) {
 
         this.bottleGameStats = stats;
         this.gameContext = gameContext;
@@ -163,7 +163,7 @@ public class BottleGame implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
-        this.Stype=Stype;
+        this.sTypes=sTypes;
 
     }
 
@@ -214,28 +214,28 @@ public class BottleGame implements GameLifeCycle {
         //Normal size
         int sizex=12;
         int sizey=6;
-        if (Stype.equals("BigB")){
+        if (sTypes.equals("BigB")){
             sizex=8;
             sizey=4;
         }
-        else if(Stype.equals("SmallB")){
+        else if(sTypes.equals("SmallB")){
             sizex=16;
             sizey=8;
         }
-        else if(Stype.equals("HighB")) {
+        else if(sTypes.equals("HighB")) {
             sizex=12;
             sizey=4;
         }
-        else if(Stype.equals("TinyB")){
+        else if(sTypes.equals("TinyB")){
             sizex=24;
             sizey=12;
         }
-        else if(!Stype.equals("NormalB") && !Stype.equals("InfinityB")){
+        else if(!sTypes.equals("NormalB") && !sTypes.equals("InfinityB")){
             //If the type is unknown, use the "Normal" settings
-            log.warn("unknown type : " + Stype + "\nThe 'Normal' settings will be use");
+            log.warn("unknown type : " + sTypes + "\nThe 'Normal' settings will be use");
         }
 
-        log.info("type : {} ; x : {} ; y : {}", Stype, sizex, sizey);
+        log.info("type : {} ; x : {} ; y : {}", sTypes, sizex, sizey);
         ProgressButton b;
         double x;
         double y;
@@ -276,7 +276,7 @@ public class BottleGame implements GameLifeCycle {
                 if (!isBroken) {
                     isBroken = true;
                     ballMovement(bo);
-                    if (Stype.equals("InfinityB")){
+                    if (sTypes.equals("InfinityB")){
                         PauseTransition reshow = new PauseTransition(Duration.millis(2500));
                         reshow.setOnFinished(e -> {
                             bo.active();
@@ -336,7 +336,7 @@ public class BottleGame implements GameLifeCycle {
         score = score + 1;
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
-        if (score == nbBottle && !Stype.equals("InfinityB")) {
+        if (score == nbBottle && !sTypes.equals("InfinityB")) {
             gameContext.playWinTransition(0, event1 -> {
                 gameContext.clear();
                 gameContext.showRoundStats(bottleGameStats, this);
