@@ -1,0 +1,60 @@
+def downloadLocation = project.ext.downloadLocation
+
+def jreSource = project.ext.jreSource
+def zuluVersion = project.ext.zuluVersion
+def jreVersion = project.ext.jreVersion
+def jreFolder = project.ext.jreFolder
+
+def filename = "zulu${zuluVersion}-ca-fx-jre${jreVersion}-macosx_aarch64"
+def jfxfilename = "javafx-sdk-17.0.2"
+
+task downloadARMJRE(type: Download, group: 'custom jre') {
+    src "${jreSource}/${filename}.tar.gz"
+    dest new File("${downloadLocation}/jre", 'arm.tar.gz')
+    overwrite true
+}
+
+task extractARMJRE(dependsOn: downloadARMJRE, type: Copy, group: 'custom jre') {
+    from tarTree(downloadARMJRE.dest)
+    into "${jreFolder}/arm"
+}
+
+task downloadOpenJFXForLibavPluginARM(type: Download, group: 'custom jre') {
+    src "https://download2.gluonhq.com/openjfx/17.0.2/openjfx-17.0.2_linux-arm32_bin-sdk.zip"
+    dest new File("${downloadLocation}/jre", 'armJFX.zip')
+    overwrite true
+}
+
+task extractOpenJFXForLibavPluginARM(dependsOn: downloadOpenJFXForLibavPluginARM, type: Copy, group: 'custom jre') {
+    from zipTree(downloadOpenJFXForLibavPluginARM.dest)
+    into "${jreFolder}/arm"
+}
+
+task downloadAndExtractOpenJFXForLibavPluginARM(dependsOn: extractOpenJFXForLibavPluginARM, group: 'custom jre') {
+    doLast {
+        copy {
+            from "${jreFolder}/arm/${jfxfilename}/lib/"
+            include "*libavplugin*"
+            into "${jreFolder}/arm/lib"
+        }
+
+        delete "${jreFolder}/arm/${jfxfilename}"
+    }
+}
+
+task downloadAndExtractARMJRE(dependsOn: extractARMJRE, group: 'custom jre') {
+    doLast {
+        copy {
+            from new File(extractARMJRE.getDestinationDir(), filename)
+            into "${jreFolder}/arm"
+        }
+
+        delete "${jreFolder}/arm/${filename}"
+    }
+}
+
+task downloadAndExtractARMJREwithLibavPlugin(dependsOn: [downloadAndExtractARMJRE, downloadAndExtractOpenJFXForLibavPluginARM], group: 'custom jre') {
+    doLast {
+        delete "${jreFolder}/arm/lib/libavplugin.so"
+    }
+}

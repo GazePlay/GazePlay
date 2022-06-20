@@ -93,6 +93,7 @@ jobs:
           files: |
             ./build/distributions/gazeplay-linux-x64.tar.gz
             ./build/distributions/gazeplay-macos.tar.gz
+            ./build/distributions/gazeplay-arm.tar.gz
             ./build/distributions/gazeplay-windows-x64.zip
             ./build/distributions/gazeplay-windows-x64-installer.exe
             ./build/distributions/gazeplay-windows-x32.zip
@@ -106,6 +107,8 @@ jobs:
         with:
           release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
           files: |
+            ./build/distributions/gazeplay-afsr-linux-x64.tar.gz
+            ./build/distributions/gazeplay-afsr-macos.tar.gz
             ./build/distributions/gazeplay-afsr-windows-x64.zip
             ./build/distributions/gazeplay-afsr-windows-x64-installer.exe
             ./build/distributions/gazeplay-afsr-windows-x32.zip
@@ -118,6 +121,8 @@ jobs:
         with:
           release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
           files: |
+            ./build/distributions/gazeplay-bera-linux-x64.tar.gz
+            ./build/distributions/gazeplay-bera-macos.tar.gz
             ./build/distributions/gazeplay-bera-windows-x64.zip
             ./build/distributions/gazeplay-bera-windows-x64-installer.exe
             ./build/distributions/gazeplay-bera-windows-x32.zip
