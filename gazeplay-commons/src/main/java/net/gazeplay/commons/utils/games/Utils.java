@@ -3,16 +3,17 @@ package net.gazeplay.commons.utils.games;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Enumeration;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.*;
 
 /**
  * Created by schwab on 23/12/2016.
@@ -41,6 +42,12 @@ public class Utils {
         final Configuration config = ActiveConfigurationContext.getInstance();
         final String filesFolder = config.getFileDir();
 
+        if (new File(filesFolder).mkdirs()){
+            log.info("Folder files created !");
+        }else {
+            log.info("Folder files already created !");
+        }
+
         log.info("filesFolder : {}", filesFolder);
         return filesFolder;
     }
@@ -55,9 +62,40 @@ public class Utils {
 
     public static File getImagesSubdirectory(final String subdirectoryName) {
         final File baseImagesDirectory = getBaseImagesDirectory();
+        createFolder(baseImagesDirectory, subdirectoryName);
         log.info("baseImagesDirectory : {}", baseImagesDirectory);
         log.info("subdirectoryName : {}", subdirectoryName);
         return new File(baseImagesDirectory, subdirectoryName);
+    }
+
+    public static void createFolder(File baseImagesDirectory, String subdirectoryName){
+        if (baseImagesDirectory.mkdirs()){
+            log.info("Folder images created !");
+        }else {
+            log.info("Folder images already created !");
+        }
+
+        if (new File(getBaseImagesDirectory() + "/" + subdirectoryName).mkdirs()){
+            addImages(subdirectoryName);
+            log.info(subdirectoryName + " created !");
+        }else {
+            log.info(subdirectoryName + " already created !");
+        }
+    }
+
+    public static void addImages(String subdirectoryName){
+        File imagesFolder = new File("gazeplay-commons/src/main/resources/images/");
+        List<File> images = List.of(imagesFolder.listFiles());
+
+        for (File image : images){
+            Path newName = Paths.get(getBaseImagesDirectory() + "/" + subdirectoryName + "/" + image.getName());
+            log.info(String.valueOf(newName));
+            try{
+                Files.copy(new File(String.valueOf(image)).toPath(), newName, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static String convertWindowsPath(String path) {

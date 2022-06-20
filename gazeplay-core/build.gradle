@@ -1,30 +1,33 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 dependencies {
-    compile 'com.github.agomezmoron:screen-recorder:0.0.3'
-    compile project(':gazeplay-commons')
-    compile project(':gazeplay-games-commons')
-    compile 'com.google.code.gson:gson:2.8.1'
-    compile 'org.rxtx:rxtx:2.1.7'
-    compile 'com.theeyetribe:eyetribe-java:0.9.77'
-    compile 'ch.qos.logback:logback-classic:1.2.1'
-    compile 'ch.qos.logback:logback-core:1.2.1'
-    compile 'org.slf4j:slf4j-api:1.7.25'
-    compile 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
-    compile 'javax.media:jmf:2.1.1e'
-    compile 'ws.schild:jave-all-deps:2.5.0'
-    compile 'ws.schild:jave-core:2.5.0'
-    runtime 'org.slf4j:jcl-over-slf4j:1.7.25'
-    runtime 'org.slf4j:log4j-over-slf4j:1.7.25'
-    compile 'org.json:json:20200518'
-    compile 'com.github.everit-org.json-schema:org.everit.json.schema:1.12.1'
-    compile 'com.github.vatbub:mslinks:1.0.6.1'
-    compile "info.picocli:picocli-spring-boot-starter:4.0.4"
+    implementation 'com.github.agomezmoron:screen-recorder:0.0.3'
+    implementation project(':gazeplay-commons')
+    implementation project(':gazeplay-games-commons')
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'org.rxtx:rxtx:2.1.7'
+    implementation 'com.theeyetribe:eyetribe-java:0.9.77'
+    implementation 'ch.qos.logback:logback-classic:1.2.11'
+    implementation 'ch.qos.logback:logback-core:1.2.11'
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
+    implementation 'javax.media:jmf:2.1.1e'
+    implementation 'ws.schild:jave-all-deps:2.5.0'
+    implementation 'ws.schild:jave-core:2.5.0'
+    implementation 'io.github.classgraph:classgraph:4.8.146'
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'com.mageddo.tobby-transactional-outbox:spring:1.5.1'
+    runtimeOnly 'org.slf4j:jcl-over-slf4j:1.7.36'
+    runtimeOnly 'org.slf4j:log4j-over-slf4j:1.7.36'
+    implementation 'org.json:json:20220320'
+    implementation 'com.github.everit-org.json-schema:org.everit.json.schema:1.12.1'
+    implementation 'com.github.vatbub:mslinks:1.0.6.2'
+    implementation 'info.picocli:picocli-spring-boot-starter:4.6.3'
 
-    runtime project(':gazeplay-games')
+    runtimeOnly project(':gazeplay-games')
 
-    testImplementation "junit:junit:4.12"
-    testImplementation "com.ginsberg:junit5-system-exit:1.0.0"
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'com.ginsberg:junit5-system-exit:1.1.2'
 }
 
 test {
@@ -38,7 +41,7 @@ jar {
                 "Implementation-Version": project.version,
                 "Implementation-Vendor": "Univ. Grenoble Alpes - LIG - GETALP",
                 "Main-Class": 'net.gazeplay.GazePlayLauncher',
-                "Class-Path": configurations.runtime.collect { it.getName() }.join(' '),
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' '),
                 "JavaFX-Version": javafxVersion,
                 "Built-By": System.properties['user.name']
         )

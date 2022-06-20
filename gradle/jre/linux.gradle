@@ -6,12 +6,12 @@ def jreVersion = project.ext.jreVersion
 def jreFolder = project.ext.jreFolder
 
 def filename = "zulu${zuluVersion}-ca-fx-jre${jreVersion}-linux_x64"
-def jfxfilename = "javafx-sdk-11.0.2"
+def jfxfilename = "javafx-sdk-17.0.2"
 
 task downloadLinuxJRE(type: Download, group: 'custom jre') {
     src "${jreSource}/${filename}.tar.gz"
     dest new File("${downloadLocation}/jre", 'linux.tar.gz')
-    overwrite false
+    overwrite true
 }
 
 task extractLinuxJRE(dependsOn: downloadLinuxJRE, type: Copy, group: 'custom jre') {
@@ -20,9 +20,9 @@ task extractLinuxJRE(dependsOn: downloadLinuxJRE, type: Copy, group: 'custom jre
 }
 
 task downloadOpenJFXForLibavPlugin(type: Download, group: 'custom jre') {
-    src "https://download2.gluonhq.com/openjfx/11.0.2/openjfx-11.0.2_linux-x64_bin-sdk.zip"
+    src "https://download2.gluonhq.com/openjfx/17.0.2/openjfx-17.0.2_linux-x64_bin-sdk.zip"
     dest new File("${downloadLocation}/jre", 'linuxJFX.zip')
-    overwrite false
+    overwrite true
 }
 
 task extractOpenJFXForLibavPlugin(dependsOn: downloadOpenJFXForLibavPlugin, type: Copy, group: 'custom jre') {

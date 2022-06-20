@@ -1,6 +1,6 @@
 ext.jreSource = 'https://cdn.azul.com/zulu/bin/'
-ext.zuluVersion = '11.35.15'
-ext.jreVersion = '11.0.5'
+ext.zuluVersion = '17.32.13'
+ext.jreVersion = '17.0.2'
 ext.jreFolder = "${buildDir}/jre"
 
 ext.downloadLocation = new File(project.repositories.mavenLocal().url).getAbsolutePath();
