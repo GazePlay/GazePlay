@@ -13,12 +13,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
-      - name: Build with Gradle (no test)
+      - name: Run Tests with Gradle
         run: ./gradlew --stacktrace --info build checkPMDReport -x test
-      - name: Set up xvfb for non headless tests
-        run: sudo apt-get install xvfb
-      - name: Run tests with Gradle
-        run: xvfb-run --auto-servernum ./gradlew --stacktrace --info test
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         if: always()
