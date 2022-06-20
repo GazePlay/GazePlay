@@ -106,7 +106,7 @@ public class ArduinoSerialCommunication implements SerialPortEventListener {
     public void sendArduino(final String s) {
 
         try {
-            log.info("Envoi : " + s);
+            log.info("Send : " + s);
             output.write(s.getBytes(StandardCharsets.UTF_8));
         } catch (final IOException e) {
             log.error("Exception", e);
@@ -121,7 +121,7 @@ public class ArduinoSerialCommunication implements SerialPortEventListener {
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 final String inputLine = input.readLine();
-                log.info("Reçoit : " + inputLine);
+                log.info("Receive : " + inputLine);
             } catch (final Exception e) {
                 log.error("error 2 " + e.toString());
             }

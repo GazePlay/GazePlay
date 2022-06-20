@@ -612,8 +612,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     }
 
     private void computeBulletPlayer() {
-        long CurrentTime = System.currentTimeMillis();
-        if (CurrentTime - startTime >= 500) {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - startTime >= 500) {
 
             final Rectangle bulletRec = new Rectangle(spaceship.getX() + spaceship.getWidth() / 2,
                 spaceship.getY() - spaceship.getHeight() / 3, spaceship.getHeight() / 12, spaceship.getHeight() / 6);
@@ -633,7 +633,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             });
 
             bulletTransition.play();
-            startTime = CurrentTime;
+            startTime = currentTime;
         }
 
         for (final Rectangle r : bulletListRec) {

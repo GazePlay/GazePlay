@@ -189,12 +189,88 @@ distributions {
         }
     }
 
+    windowsx32{
+        setDistributionBaseName "${project.name}-windows-x32"
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+            from("build/bin/gazeplay-windows.bat") {
+                into 'bin'
+            }
+            from("build/jre/windows-x32") {
+                into 'lib/jre'
+            }
+        }
+    }
+
+    windowsAfsr{
+        setDistributionBaseName "${project.name}-afsr-windows-x64"
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+            from("build/bin/gazeplay-afsr-windows.bat") {
+                into 'bin'
+            }
+            from("build/jre/windows-x64") {
+                into 'lib/jre'
+            }
+        }
+    }
+
+    windowsAfsrx32{
+        setDistributionBaseName "${project.name}-afsr-windows-x32"
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+            from("build/bin/gazeplay-afsr-windows.bat") {
+                into 'bin'
+            }
+            from("build/jre/windows-x32") {
+                into 'lib/jre'
+            }
+        }
+    }
+
+    windowsBera{
+        setDistributionBaseName "${project.name}-bera-windows-x64"
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+            from("build/bin/gazeplay-bera-windows.bat") {
+                into 'bin'
+            }
+            from("build/jre/windows-x64") {
+                into 'lib/jre'
+            }
+        }
+    }
+
+    windowsBerax32{
+        setDistributionBaseName "${project.name}-bera-windows-x32"
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+            from("build/bin/gazeplay-bera-windows.bat") {
+                into 'bin'
+            }
+            from("build/jre/windows-x32") {
+                into 'lib/jre'
+            }
+        }
+    }
+
     linux {
         setDistributionBaseName "${project.name}-linux-x64"
         contents {
             with distributions.main.contents
             from("build/reports")
             from("build/bin/gazeplay-linux.sh") {
+                into 'bin'
+            }
+            from("build/bin/gazeplay-afsr-linux.sh") {
+                into 'bin'
+            }
+            from("build/bin/gazeplay-bera-linux.sh") {
                 into 'bin'
             }
             from("build/jre/linux-x64") {
@@ -213,6 +289,12 @@ distributions {
             from("build/bin/gazeplay-macos.sh") {
                 into 'bin'
             }
+            from("build/bin/gazeplay-afsr-macos.sh") {
+                into 'bin'
+            }
+            from("build/bin/gazeplay-bera-macos.sh") {
+                into 'bin'
+            }
             from("build/jre/macos") {
                 into 'lib/jre'
             }
@@ -222,9 +304,14 @@ distributions {
 
 task('downloadAndExtractLinuxDependecies').dependsOn('downloadAndExtractLinuxJREwithLibavPlugin', 'downloadAndExtractTobiiDriversForLinux')
 
-macosDistTar.dependsOn(downloadAndExtractMacosJRE)
 windowsDistZip.dependsOn(downloadAndExtractWindowsJRE)
+windowsx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
+windowsAfsrDistZip.dependsOn(downloadAndExtractWindowsJRE)
+windowsAfsrx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
+windowsBeraDistZip.dependsOn(downloadAndExtractWindowsJRE)
+windowsBerax32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
 linuxDistTar.dependsOn(downloadAndExtractLinuxDependecies)
+macosDistTar.dependsOn(downloadAndExtractMacosJRE)
 
 tasks.withType(Tar){
     compression = Compression.GZIP
@@ -239,7 +326,6 @@ distZip {
 release {
     failOnPublishNeeded = false
     failOnCommitNeeded = false
-    versionPropertyFile = 'gradle.properties'
 }
 
 mainClassName = 'net.gazeplay.GazePlayLauncher'
@@ -248,3 +334,8 @@ defaultTasks 'clean', 'build', 'checkPMDReport'
 startScripts.enabled = false
 
 afterReleaseBuild.dependsOn generateWindowsInstallerInDocker
+afterReleaseBuild.dependsOn generateWindowsInstallerInDockerx32
+afterReleaseBuild.dependsOn generateWindowsAfsrInstallerInDocker
+afterReleaseBuild.dependsOn generateWindowsAfsrInstallerInDockerx32
+afterReleaseBuild.dependsOn generateWindowsBeraInstallerInDocker
+afterReleaseBuild.dependsOn generateWindowsBeraInstallerInDockerx32

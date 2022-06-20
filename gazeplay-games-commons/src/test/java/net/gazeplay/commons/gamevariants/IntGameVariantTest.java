@@ -22,7 +22,7 @@ class IntGameVariantTest {
     }
 
     @Test
-    void givenTranslator_shouldTranslateLabel() {
+    void givenTranslatorShouldTranslateLabel() {
         IntGameVariant gameVariant = new IntGameVariant(123);
         assertEquals("123", gameVariant.getLabel(translator));
     }
