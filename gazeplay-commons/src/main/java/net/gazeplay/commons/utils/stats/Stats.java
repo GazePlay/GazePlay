@@ -25,7 +25,6 @@ import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.HeatMap;
 import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
-import org.jetbrains.annotations.NotNull;
 import org.monte.media.Format;
 import org.monte.media.FormatKeys;
 import org.monte.media.VideoFormatKeys;
@@ -743,7 +742,7 @@ public class Stats implements GazeMotionListener {
      * @return the {@code double} array containing all X and Y values of each rectangle point in sequence
      * @see Point2D
      */
-    Double[] calculateRectangle(final Point2D @NotNull [] points) {
+    Double[] calculateRectangle(final Point2D [] points) {
         double leftPoint = points[0].getX();
         double rightPoint = points[0].getX();
         double topPoint = points[0].getY();
@@ -784,7 +783,7 @@ public class Stats implements GazeMotionListener {
      * @return the {@code double} array containing all X and Y values of each hull point in sequence
      * @see Point2D
      */
-    Double[] calculateConvexHull(final Point2D @NotNull [] points) {
+    Double[] calculateConvexHull(final Point2D [] points) {
         final int numberOfPoints = points.length;
         final ArrayList<Double> convexHullPoints = new ArrayList<>();
         final Vector<Point2D> hull = new Vector<>();
@@ -828,7 +827,7 @@ public class Stats implements GazeMotionListener {
      * and a value less than {@code 0} if the points are counterclockwise
      * @see Point2D
      */
-    int orientation(final @NotNull Point2D p1, final @NotNull Point2D p2, final @NotNull Point2D p3) {
+    int orientation(final Point2D p1, final Point2D p2, final Point2D p3) {
         final int val = (int) ((p2.getY() - p1.getY()) * (p3.getX() - p2.getX())
             - (p2.getX() - p1.getX()) * (p3.getY() - p2.getY()));
 
@@ -841,7 +840,7 @@ public class Stats implements GazeMotionListener {
      * Function used for testing purposes.
      */
     @Override
-    public void gazeMoved(final @NotNull Point2D position) {
+    public void gazeMoved(final Point2D position) {
         final int positionX = (int) position.getX();
         final int positionY = (int) position.getY();
         incrementHeatMap(positionX, positionY);

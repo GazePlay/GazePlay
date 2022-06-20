@@ -80,6 +80,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_USER_PICTURE = "USER_PICTURE";
     private static final String PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME = "LATEST_NEWS_POPUP_LAST_SHOWN_TIME";
     private static final String PROPERTY_NAME_DISPLAY_NEWS_FORCED = "DISPLAY_NEWS_FORCED";
+    private static final String PROPERTY_NAME_FIRST_OPENING = "FIRST_OPENING";
     private static final String PROPERTY_NAME_SHORTCUT_FOLDER = "SHORTCUT_FOLDER";
     private static final String PROPERTY_NAME_COLORS_DEFAULT_IMAGE = "COLORS_DEFAULT_IMAGE";
     private static final String PROPERTY_NAME_FAVORITE_GAMES = "FAVORITE_GAMES";
@@ -135,6 +136,7 @@ public class Configuration {
     private static final String DEFAULT_VALUE_USER_NAME = "";
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
     private static final boolean DEFAULT_VALUE_DISPLAY_NEWS_FORCED = false;
+    private static final boolean DEFAULT_VALUE_FIRST_OPENING = true;
     public static final String DEFAULT_VALUE_COLORS_DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
 
     /* PROPERTIES */
@@ -192,8 +194,9 @@ public class Configuration {
     @Getter private final StringProperty userPictureProperty;
     @Getter private final LongProperty latestNewsPopupShownTime;
     @Getter private final BooleanProperty latestNewsDisplayForcedProperty;
-    @Getter private final StringProperty shortcutFolderProperty;
+    @Getter private final BooleanProperty firstOpeningProperty;
     @Getter private final StringProperty colorsDefaultImageProperty;
+    @Getter private final StringProperty shortcutFolderProperty;
     @Getter private final SetProperty<String> favoriteGamesProperty;
     @Getter private final SetProperty<String> hiddenCategoriesProperty;
 
@@ -271,6 +274,7 @@ public class Configuration {
         userPictureProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_USER_PICTURE, DEFAULT_VALUE_USER_PICTURE, propertyChangeListener);
         latestNewsPopupShownTime = new ApplicationConfigBackedLongProperty(applicationConfig, PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, 0, propertyChangeListener);
         latestNewsDisplayForcedProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_DISPLAY_NEWS_FORCED, DEFAULT_VALUE_DISPLAY_NEWS_FORCED, propertyChangeListener);
+        firstOpeningProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIRST_OPENING, DEFAULT_VALUE_FIRST_OPENING, propertyChangeListener);
         shortcutFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_SHORTCUT_FOLDER, GazePlayDirectories.getShortcutDirectory().getAbsolutePath(), propertyChangeListener);
         colorsDefaultImageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_COLORS_DEFAULT_IMAGE, DEFAULT_VALUE_COLORS_DEFAULT_IMAGE, propertyChangeListener);
         favoriteGamesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_FAVORITE_GAMES, Sets.newLinkedHashSet(), propertyChangeListener);
@@ -491,6 +495,10 @@ public class Configuration {
 
     public Boolean isLatestNewsDisplayForced() {
         return latestNewsDisplayForcedProperty.getValue();
+    }
+
+    public Boolean isFirstOpening() {
+        return firstOpeningProperty.getValue();
     }
 
     public String getShortcutFolder() {

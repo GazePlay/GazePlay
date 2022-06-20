@@ -3,6 +3,7 @@ package net.gazeplay;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
@@ -64,9 +65,21 @@ public class GazePlay {
 
     public void onReturnToMenu() {
         HomeMenuScreen homeMenuScreen = applicationContext.getBean(HomeMenuScreen.class);
-
         homeMenuScreen.setUpOnStage(primaryScene);
         BackgroundMusicManager.getInstance().onEndGame();
+
+        Configuration config = ActiveConfigurationContext.getInstance();
+        if (config.isFirstOpening()) {
+            config.getFirstOpeningProperty().setValue(false);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Data collect information");
+            alert.setHeaderText(
+                "Your personal data (game statistics) is collected and sent to the development team in order to improve our services as closely as possible to your needs.\n" +
+                    "This data is not intended for public release and will remain in the private sphere of the development team.\n" +
+                    "If you do not want your personal data to be collected, you can deactivate the authorization at any time in the 'More Stats Settings' section in the 'Configuration' menu.");
+            alert.show();
+        }
     }
 
     public void onDisplayStats(StatsContext statsContext) {
