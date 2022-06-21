@@ -9,7 +9,8 @@ task('packageAllDists').dependsOn(
         'windowsBeraDistZip',
         'windowsBerax32DistZip',
         'macosDistTar',
-        'assembleNoJREDist'
+        'assembleNoJREDist',
+        'armDistTar'
 )
 
 task packageApp(dependsOn: ['packageAllDists',
