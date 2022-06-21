@@ -34,7 +34,6 @@ task downloadAndExtractOpenJFXForLibavPluginARM(dependsOn: extractOpenJFXForLiba
     doLast {
         copy {
             from "${jreFolder}/arm/${jfxfilename}/lib/"
-            include "*libavplugin*"
             into "${jreFolder}/arm/lib"
         }
 
@@ -50,11 +49,9 @@ task downloadAndExtractARMJRE(dependsOn: extractARMJRE, group: 'custom jre') {
         }
 
         delete "${jreFolder}/arm/${filename}"
+        delete "${jreFolder}/arm/lib"
     }
 }
 
 task downloadAndExtractARMJREwithLibavPlugin(dependsOn: [downloadAndExtractARMJRE, downloadAndExtractOpenJFXForLibavPluginARM], group: 'custom jre') {
-    doLast {
-        delete "${jreFolder}/arm/lib/libavplugin.so"
-    }
 }
