@@ -1,5 +1,6 @@
 package net.gazeplay.commons.utils.stats;
 
+import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -20,10 +21,16 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.stats.ShootGamesStats;
 
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,8 +40,8 @@ import static javafx.scene.chart.XYChart.Data;
 @Slf4j
 public class StatDisplayUtils {
 
-    public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay) {
-        EventHandler<Event> homeEvent = e -> closeStatsWindow();
+    public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, JsonObject savedStatsJSON, boolean inReplayMode) {
+        EventHandler<Event> homeEvent = e -> closeStatsWindow(savedStatsJSON, inReplayMode);
 
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
@@ -44,9 +51,47 @@ public class StatDisplayUtils {
         return homeButton;
     }
 
-    static void closeStatsWindow() {
+    static void closeStatsWindow(JsonObject savedStatsJSON, boolean inReplayMode) {
+        sentStatsToServer(savedStatsJSON, inReplayMode);
         Platform.exit();
         System.exit(0);
+    }
+
+    static void sentStatsToServer(JsonObject savedStatsJSON, boolean inReplayMode) {
+        if (isConnected() && ActiveConfigurationContext.getInstance().isDataCollectAuthorized() && !inReplayMode) {
+            try {
+                // URL and parameters for the connection, this particularly returns the information passed
+                URL url = new URL("https://lig-interaactionpicto.imag.fr");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoOutput(true);
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("Accept", "application/json");
+
+                // Writes the JSON parsed as string to the connection
+                DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+                out.write(savedStatsJSON.toString().getBytes(StandardCharsets.UTF_8));
+                out.close();
+                int responseCode = connection.getResponseCode();
+
+                // Creates a reader buffer to receive the response
+                InputStream in = (responseCode > 199 && responseCode < 300) ? connection.getInputStream() : connection.getErrorStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+                StringBuilder content = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    content.append(line).append("\n");
+                }
+                reader.close();
+                log.info(content.toString());
+
+                log.info("Statistic data sent to server");
+            } catch (Exception e) {
+                log.info("Statistic data not sent to server due to error\n" + e);
+            }
+        } else {
+            log.info("Statistic data not sent to server because authorization is deactivated");
+        }
     }
 
     public static LineChart<String, Number> buildLineChart(Stats stats, final Region root) {
@@ -63,10 +108,11 @@ public class StatDisplayUtils {
         // populating the series with data
 
         final List<Long> shots;
-        if (stats instanceof ShootGamesStats)
+        if (stats instanceof ShootGamesStats) {
             shots = stats.getSortedDurationsBetweenGoals();
-        else
+        } else {
             shots = stats.getOriginalDurationsBetweenGoals();
+        }
 
         double sd = stats.computeRoundsDurationStandardDeviation();
 
@@ -467,12 +513,24 @@ public class StatDisplayUtils {
 
         String result = "";
 
-        if (days > 0)
+        if (days > 0) {
             result += String.format("%dd ", days);
+        }
 
         return result + durationLessDays.toString()
             .substring(2)
             .replaceAll("(\\d[HMS])(?!$)", "$1 ")
             .toLowerCase();
+    }
+
+    private static boolean isConnected() {
+        try {
+            URL url = new URL("https://gazeplay.github.io/GazePlay/");
+            URLConnection connection = url.openConnection();
+            connection.connect();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

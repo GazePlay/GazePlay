@@ -116,8 +116,9 @@ public class WhereIsIt implements GameLifeCycle {
             lvlReplays++;
 
             if (randomness && rightDecision > wrongDecision) {
-                if (level < 5)
+                if (level < 5) {
                     level++;
+                }
                 rightDecision = 0;
                 wrongDecision = 0;
                 lvlReplays = 1;
@@ -344,9 +345,11 @@ public class WhereIsIt implements GameLifeCycle {
 
             Set<String> tempWinnerFolders = ResourceFileManager.getResourceFolders(winnerImagesDirectory);
 
-            for (int i = 1; i < lvlDirectories.length + 1; i++)
-                if (level == i)
+            for (int i = 1; i < lvlDirectories.length + 1; i++) {
+                if (level == i) {
                     resourcesFolders.addAll(ResourceFileManager.getResourceFolders(lvlDirectories[i - 1]));
+                }
+            }
             winnerFolders.addAll(tempWinnerFolders);
 
             directoriesCount = resourcesFolders.size();
@@ -743,10 +746,11 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     public int factorial(int n) {
-        if (n == 0)
+        if (n == 0) {
             return 1;
-        else
+        } else {
             return (n * factorial(n - 1));
+        }
     }
 
     public float compute(int n, int k) {
@@ -780,8 +784,9 @@ public class WhereIsIt implements GameLifeCycle {
 
         int index = lvlReplays > 4 ? lvlReplays - 1 : 3;
 
-        if (chi2Theoretic.get(index) <= chi2Obs)
+        if (chi2Theoretic.get(index) <= chi2Obs) {
             decision = true;
+        }
 
         return decision;
     }

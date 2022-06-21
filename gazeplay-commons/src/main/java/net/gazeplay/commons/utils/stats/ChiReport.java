@@ -37,10 +37,11 @@ public class ChiReport {
 
         ArrayList<String> decisions = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
-            if (chiObs >= chiTheoretical.get(i))
+            if (chiObs >= chiTheoretical.get(i)) {
                 decisions.add("good");
-            else
+            } else {
                 decisions.add("random");
+            }
         }
 
         return decisions;

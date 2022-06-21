@@ -95,8 +95,9 @@ public class DotToDot implements GameLifeCycle {
     @Override
     public void launch() {
 
-        if (!gameVariant.getLabel().contains("Dynamic"))
+        if (!gameVariant.getLabel().contains("Dynamic")) {
             level = getRandomGenerator().nextInt(8);
+        }
 
         final String path = "data/dottodot/";
         final String folder = "level" + level + "/";

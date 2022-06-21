@@ -54,14 +54,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     @Getter
     private HomeButton homeButton;
 
-    public static void updateConfigPane(final Pane configPane, Stage primaryStage) {
-        double mainHeight = primaryStage.getHeight();
-
-        final double newY = mainHeight - configPane.getHeight() - 30;
-        log.debug("translated config pane to y : {}, height : {}", newY, configPane.getHeight());
-        configPane.setTranslateY(newY);
-    }
-
     boolean limiterS = false;
     boolean limiterT = false;
     long startTime = 0;
@@ -129,14 +121,19 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         }
     }
 
-
     @Override
     public void setUpOnStage(final Scene scene) {
-
         super.setUpOnStage(scene);
-
         log.info("SETTING UP");
         updateConfigPane(configPane, getGazePlay().getPrimaryStage());
+    }
+
+    public static void updateConfigPane(final Pane configPane, Stage primaryStage) {
+        double mainHeight = primaryStage.getHeight();
+
+        final double newY = mainHeight - configPane.getHeight() - 30;
+        log.debug("translated config pane to y : {}, height : {}", newY, configPane.getHeight());
+        configPane.setTranslateY(newY);
     }
 
     public void resetBordersToFront() {
@@ -207,7 +204,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
                 limiteUsed = true;
             }
         }
-
     }
 
     private double time(double start, double end) {
@@ -219,9 +215,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         final Scene scene = gazePlay.getPrimaryScene();
 
         EventHandler<KeyEvent> buttonHandler = new EventHandler<>() {
-
             public void handle(KeyEvent event) {
-
                 exitGame(stats, gazePlay, currentGame);
                 scene.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                 scene.removeEventHandler(KeyEvent.KEY_RELEASED, this);
@@ -242,7 +236,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         FixationLengthControl fixationLengthControl = FixationLengthControl.getInstance();
         ElementSizeControl elementSizeControl = ElementSizeControl.getInstance();
         ProgressBarControl progressBarControl = ProgressBarControl.getInstance();
-
 
         Stage primaryStage = gazePlay.getPrimaryStage();
         ScrollPane scrollPane = new ScrollPane();
@@ -328,7 +321,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             GridPane.setHgrow(node, Priority.ALWAYS);
         });
 
-
         scrollPane.setContent(leftControlPane);
         menuHBox.getChildren().add(scrollPane);
 
@@ -350,12 +342,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         scrollPane.setMaxWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
 
         primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateControllPanel(scrollPane, toggleFullScreenButtonInGameScreen, primaryStage));
-
     }
 
-    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
-                                                   @NonNull GameLifeCycle currentGame) {
-
+    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats, @NonNull GameLifeCycle currentGame) {
         EventHandler<Event> homeEvent = e -> {
             root.setCursor(Cursor.WAIT); // Change cursor to wait style
             exitGame(stats, gazePlay, currentGame);
@@ -370,7 +359,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
-
         if (videoRecordingContext != null) {
             videoRecordingContext.pointersClear();
         }
@@ -378,9 +366,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         currentGame.dispose();
         ForegroundSoundsUtils.stopSound(); // to stop playing the sound of Bravo
         stats.stop();
+
         gazeDeviceManager.clear();
         gazeDeviceManager.destroy();
-
         soundManager.clear();
         soundManager.destroy();
 
@@ -398,10 +386,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             asynchronousStatsPersistTask.run();
         }
 
-        StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
-
+        StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats, false);
         this.clear();
-
         gazePlay.onDisplayStats(statsContext);
     }
 
@@ -411,23 +397,20 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public void exitReplayGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
-
         if (videoRecordingContext != null) {
             videoRecordingContext.pointersClear();
         }
 
         currentGame.dispose();
         ForegroundSoundsUtils.stopSound(); // to stop playing the sound of Bravo
+
         gazeDeviceManager.clear();
         gazeDeviceManager.destroy();
-
         soundManager.clear();
         soundManager.destroy();
 
-        StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
-
+        StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats, true);
         this.clear();
-
         gazePlay.onDisplayStats(statsContext);
     }
 
@@ -481,10 +464,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         });
 
         StatsContext statsContext = StatsContextFactory.newInstance(getGazePlay(), stats, continueButton);
-
         this.clear();
         getGazePlay().onDisplayStats(statsContext);
-
     }
 
     @Override
@@ -513,9 +494,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     /*
-     * When the game starts,
-     * the player can't select an element
-     * until the delay is over
+     * When the game starts, the player can't select an element until the delay is over
      */
     public void onGameStarted() {
     }
@@ -527,10 +506,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     public void onGameStarted(int delay) {
         gamingRoot.setDisable(true);
         PauseTransition wait = new PauseTransition(Duration.millis(delay));
-        wait.setOnFinished(waitEvent -> {
-            gamingRoot.setDisable(false);
-        });
+        wait.setOnFinished(waitEvent -> gamingRoot.setDisable(false));
         wait.play();
     }
-
 }

@@ -47,7 +47,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
     private final String COLON = "Colon";
     private final double RATIO = 0.35;
 
-    StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton) {
+    StatsContext(GazePlay gazePlay, BorderPane root, Stats stats, CustomButton continueButton, boolean inReplayMode) {
         super(gazePlay, root);
 
         final Translator translator = gazePlay.getTranslator();
@@ -72,7 +72,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             RadioButton colorBands = new RadioButton("Color Bands");
 
-            controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, null, continueButton, false);
+            controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, null, continueButton, false, false);
 
             StackPane centerStackPane = new StackPane();
 
@@ -217,19 +217,20 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             HBox controlButtonPane;
             if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null &&
-                stats.getCurrentGameNameCode().equals("Ninja") && stats.getCurrentGameVariant().contains("DYNAMIC"))
-                controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, levelsInfo, continueButton, true);
-            else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null &&
-                stats.getCurrentGameVariant().contains("Dynamic") && stats.getCurrentGameNameCode().contains("Memory"))
-                controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, levelsInfo, continueButton, true);
-            else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null &&
-                stats.getCurrentGameNameCode().equals("WhereIsTheAnimal") && stats.getCurrentGameVariant().contains("DYNAMIC"))
-                controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, chi2Info, continueButton, true);
-            else if (stats.getCurrentGameNameCode() != null && (stats.getCurrentGameVariant() != null &&
-                (stats.getCurrentGameNameCode().contains("WhereIs")) || stats.getCurrentGameNameCode().contains("flags")))
-                controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, chi2Info, continueButton, true);
-            else
-                controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, null, continueButton, false);
+                stats.getCurrentGameNameCode().equals("Ninja") && stats.getCurrentGameVariant().contains("DYNAMIC")) {
+                controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, levelsInfo, continueButton, true, inReplayMode);
+            } else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null &&
+                stats.getCurrentGameVariant().contains("Dynamic") && stats.getCurrentGameNameCode().contains("Memory")) {
+                controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, levelsInfo, continueButton, true, inReplayMode);
+            } else if (stats.getCurrentGameNameCode() != null && stats.getCurrentGameVariant() != null &&
+                stats.getCurrentGameNameCode().equals("WhereIsTheAnimal") && stats.getCurrentGameVariant().contains("DYNAMIC")) {
+                controlButtonPane = createControlButtonPane(gazePlay, stats, config, levelsInfo, chi2Info, continueButton, true, inReplayMode);
+            } else if (stats.getCurrentGameNameCode() != null && (stats.getCurrentGameVariant() != null &&
+                (stats.getCurrentGameNameCode().contains("WhereIs")) || stats.getCurrentGameNameCode().contains("flags"))) {
+                controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, chi2Info, continueButton, true, inReplayMode);
+            } else {
+                controlButtonPane = createControlButtonPane(gazePlay, stats, config, colorBands, null, continueButton, false, inReplayMode);
+            }
 
             StackPane centerStackPane = new StackPane();
             centerStackPane.getChildren().add(centerPane);
@@ -337,12 +338,13 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
             if (!(stats instanceof ExplorationGamesStats)) {
 
-                if (stats instanceof ShootGamesStats)
+                if (stats instanceof ShootGamesStats) {
                     labelValue = "Shots";
-                else if (stats instanceof HiddenItemsGamesStats)
+                } else if (stats instanceof HiddenItemsGamesStats) {
                     labelValue = "HiddenItemsShot";
-                else
+                } else {
                     labelValue = "Score";
+                }
 
                 value = new Text(String.valueOf(stats.getNbGoalsReached()));
                 addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
@@ -452,26 +454,25 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         RadioButton colorBands,
         RadioButton addInfo,
         CustomButton continueButton,
-        boolean additionButton
+        boolean additionButton,
+        boolean inReplayMode
     ) {
-
         HBox controlButtonPane = new HBox();
 
         String gazeplayType = GazePlayArgs.returnArgs();
 
         EventHandler<Event> viewAOI = e -> {
-            AreaOfInterestContext areaOfInterest = new AreaOfInterestContext(gazePlay, stats);
+            AreaOfInterestContext areaOfInterest = new AreaOfInterestContext(gazePlay, stats, inReplayMode);
             gazePlay.onDisplayAOI(areaOfInterest);
         };
 
         EventHandler<Event> viewScanPath = e -> {
-            ScanpathContext scanPath = new ScanpathContext(gazePlay, stats, continueButton);
+            ScanpathContext scanPath = new ScanpathContext(gazePlay, stats, continueButton, inReplayMode);
             gazePlay.onDisplayScanpath(scanPath);
         };
 
         if (gazeplayType.equals("bera")) {
-            HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay);
-
+            HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, stats.getSavedStatsJSON(), inReplayMode);
             I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
             I18NTooltip.install(homeButton, tooltipBackToMenu);
 
@@ -499,11 +500,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             controlButtonPane.getChildren().add(openExcelButton);
             controlButtonPane.getChildren().add(homeButton);
 
-            if (continueButton != null)
+            if (continueButton != null) {
                 controlButtonPane.getChildren().add(continueButton);
+            }
         } else {
-            HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay);
-
+            HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, stats.getSavedStatsJSON(), inReplayMode);
             I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
             I18NTooltip.install(homeButton, tooltipBackToMenu);
 
@@ -518,20 +519,23 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(controlButtonPane);
             controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
 
-            if (config.isAreaOfInterestDisabled())
+            if (config.isAreaOfInterestDisabled()) {
                 controlButtonPane.getChildren().add(aoiButton);
+            }
 
             if (!config.isFixationSequenceDisabled()) {
                 controlButtonPane.getChildren().add(colorBands);
-                if (additionButton)
+                if (additionButton) {
                     controlButtonPane.getChildren().add(addInfo);
+                }
                 controlButtonPane.getChildren().add(scanPathButton);
             }
 
             controlButtonPane.getChildren().add(homeButton);
 
-            if (continueButton != null)
+            if (continueButton != null) {
                 controlButtonPane.getChildren().add(continueButton);
+            }
         }
 
         return controlButtonPane;

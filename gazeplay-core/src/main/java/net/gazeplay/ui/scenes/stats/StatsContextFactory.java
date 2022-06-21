@@ -12,7 +12,7 @@ public class StatsContextFactory {
         @NonNull GazePlay gazePlay,
         @NonNull Stats stats
     ) {
-        return StatsContextFactory.newInstance(gazePlay, stats, null);
+        return StatsContextFactory.newInstance(gazePlay, stats, null, false);
     }
 
     public static StatsContext newInstance(
@@ -21,6 +21,24 @@ public class StatsContextFactory {
         CustomButton continueButton
     ) {
         BorderPane root = new BorderPane();
-        return new StatsContext(gazePlay, root, stats, continueButton);
+        return new StatsContext(gazePlay, root, stats, continueButton, false);
+    }
+
+    public static StatsContext newInstance(
+        @NonNull GazePlay gazePlay,
+        @NonNull Stats stats,
+        boolean inReplayMode
+    ) {
+        return StatsContextFactory.newInstance(gazePlay, stats, null, inReplayMode);
+    }
+
+    public static StatsContext newInstance(
+        @NonNull GazePlay gazePlay,
+        @NonNull Stats stats,
+        CustomButton continueButton,
+        boolean inReplayMode
+    ) {
+        BorderPane root = new BorderPane();
+        return new StatsContext(gazePlay, root, stats, continueButton, inReplayMode);
     }
 }

@@ -141,64 +141,114 @@ public class Configuration {
 
     /* PROPERTIES */
     /* Language settings */
-    @Getter private final StringProperty languageProperty;
-    @Getter private final StringProperty countryProperty;
+    @Getter
+    private final StringProperty languageProperty;
+    @Getter
+    private final StringProperty countryProperty;
     /* Games settings */
-    @Getter private final StringProperty quitKeyProperty;
-    @Getter private final LongProperty questionLengthProperty;
-    @Getter private final BooleanProperty questionReaskedOnFailProperty;
-    @Getter private final BooleanProperty rewardSoundEnabledProperty;
-    @Getter private final BooleanProperty limiterTimeEnabledProperty;
-    @Getter private final IntegerProperty limiterTimeValueProperty;
-    @Getter private final BooleanProperty limiterScoreEnabledProperty;
-    @Getter private final IntegerProperty limiterScoreValueProperty;
+    @Getter
+    private final StringProperty quitKeyProperty;
+    @Getter
+    private final LongProperty questionLengthProperty;
+    @Getter
+    private final BooleanProperty questionReaskedOnFailProperty;
+    @Getter
+    private final BooleanProperty rewardSoundEnabledProperty;
+    @Getter
+    private final BooleanProperty limiterTimeEnabledProperty;
+    @Getter
+    private final IntegerProperty limiterTimeValueProperty;
+    @Getter
+    private final BooleanProperty limiterScoreEnabledProperty;
+    @Getter
+    private final IntegerProperty limiterScoreValueProperty;
     /* Bera settings */
-    @Getter private final IntegerProperty transitionTimeProperty;
-    @Getter private final IntegerProperty delayBeforeSelectionTimeProperty;
-    @Getter private final BooleanProperty questionTimeEnabledProperty;
-    @Getter private final IntegerProperty questionTimeProperty;
-    @Getter private final BooleanProperty columnarImagesEnabledProperty;
-    @Getter private final BooleanProperty soundEnabledProperty;
-    @Getter private final StringProperty feedbackProperty;
+    @Getter
+    private final IntegerProperty transitionTimeProperty;
+    @Getter
+    private final IntegerProperty delayBeforeSelectionTimeProperty;
+    @Getter
+    private final BooleanProperty questionTimeEnabledProperty;
+    @Getter
+    private final IntegerProperty questionTimeProperty;
+    @Getter
+    private final BooleanProperty columnarImagesEnabledProperty;
+    @Getter
+    private final BooleanProperty soundEnabledProperty;
+    @Getter
+    private final StringProperty feedbackProperty;
     /* Eye-tracking settings */
-    @Getter private final StringProperty eyeTrackerProperty;
-    @Getter private final IntegerProperty fixationLengthProperty;
+    @Getter
+    private final StringProperty eyeTrackerProperty;
+    @Getter
+    private final IntegerProperty fixationLengthProperty;
     /* Graphics settings */
-    @Getter private final StringProperty cssFileProperty;
-    @Getter private final ObjectProperty<BackgroundStyle> backgroundStyleProperty;
-    @Getter private final BooleanProperty backgroundEnabledProperty;
-    @Getter private final StringProperty menuButtonsOrientationProperty;
+    @Getter
+    private final StringProperty cssFileProperty;
+    @Getter
+    private final ObjectProperty<BackgroundStyle> backgroundStyleProperty;
+    @Getter
+    private final BooleanProperty backgroundEnabledProperty;
+    @Getter
+    private final StringProperty menuButtonsOrientationProperty;
     /* Folder settings */
-    @Getter private final StringProperty fileDirProperty;
-    @Getter private final StringProperty musicFolderProperty;
-    @Getter private final StringProperty videoFolderProperty;
-    @Getter private final StringProperty whereIsItDirProperty;
+    @Getter
+    private final StringProperty fileDirProperty;
+    @Getter
+    private final StringProperty musicFolderProperty;
+    @Getter
+    private final StringProperty videoFolderProperty;
+    @Getter
+    private final StringProperty whereIsItDirProperty;
     /* Stats settings */
-    @Getter private final BooleanProperty heatMapDisabledProperty;
-    @Getter private final DoubleProperty heatMapOpacityProperty;
-    @Getter private final StringProperty heatMapColorsProperty;
-    @Getter private final BooleanProperty areaOfInterestDisabledProperty;
-    @Getter private final BooleanProperty convexHullDisabledProperty;
-    @Getter private final BooleanProperty fixationSequenceDisabledProperty;
-    @Getter private final BooleanProperty videoRecordingEnabledProperty;
-    @Getter private final BooleanProperty dataCollectAuthorizedProperty;
+    @Getter
+    private final BooleanProperty heatMapDisabledProperty;
+    @Getter
+    private final DoubleProperty heatMapOpacityProperty;
+    @Getter
+    private final StringProperty heatMapColorsProperty;
+    @Getter
+    private final BooleanProperty areaOfInterestDisabledProperty;
+    @Getter
+    private final BooleanProperty convexHullDisabledProperty;
+    @Getter
+    private final BooleanProperty fixationSequenceDisabledProperty;
+    @Getter
+    private final BooleanProperty videoRecordingEnabledProperty;
+    @Getter
+    private final BooleanProperty dataCollectAuthorizedProperty;
     /* In game settings */
-    @Getter private final DoubleProperty musicVolumeProperty;
-    @Getter private final DoubleProperty effectsVolumeProperty;
-    @Getter private final DoubleProperty animationSpeedRatioProperty;
-    @Getter private final IntegerProperty elementSizeProperty;
-    @Getter private final IntegerProperty progressBarSizeProperty;
-    @Getter private final StringProperty progressBarColorProperty;
+    @Getter
+    private final DoubleProperty musicVolumeProperty;
+    @Getter
+    private final DoubleProperty effectsVolumeProperty;
+    @Getter
+    private final DoubleProperty animationSpeedRatioProperty;
+    @Getter
+    private final IntegerProperty elementSizeProperty;
+    @Getter
+    private final IntegerProperty progressBarSizeProperty;
+    @Getter
+    private final StringProperty progressBarColorProperty;
     /* Menu settings */
-    @Getter private final StringProperty userNameProperty;
-    @Getter private final StringProperty userPictureProperty;
-    @Getter private final LongProperty latestNewsPopupShownTime;
-    @Getter private final BooleanProperty latestNewsDisplayForcedProperty;
-    @Getter private final BooleanProperty firstOpeningProperty;
-    @Getter private final StringProperty colorsDefaultImageProperty;
-    @Getter private final StringProperty shortcutFolderProperty;
-    @Getter private final SetProperty<String> favoriteGamesProperty;
-    @Getter private final SetProperty<String> hiddenCategoriesProperty;
+    @Getter
+    private final StringProperty userNameProperty;
+    @Getter
+    private final StringProperty userPictureProperty;
+    @Getter
+    private final LongProperty latestNewsPopupShownTime;
+    @Getter
+    private final BooleanProperty latestNewsDisplayForcedProperty;
+    @Getter
+    private final BooleanProperty firstOpeningProperty;
+    @Getter
+    private final StringProperty colorsDefaultImageProperty;
+    @Getter
+    private final StringProperty shortcutFolderProperty;
+    @Getter
+    private final SetProperty<String> favoriteGamesProperty;
+    @Getter
+    private final SetProperty<String> hiddenCategoriesProperty;
 
     @Getter
     @Setter
@@ -280,8 +330,9 @@ public class Configuration {
         favoriteGamesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_FAVORITE_GAMES, Sets.newLinkedHashSet(), propertyChangeListener);
         hiddenCategoriesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_HIDDEN_CATEGORIES, Sets.newLinkedHashSet(), propertyChangeListener);
 
-        if (eyeTrackerProperty.getValue().equals("tobii_eyeX_4C"))
+        if (eyeTrackerProperty.getValue().equals("tobii_eyeX_4C")) {
             eyeTrackerProperty.setValue("tobii");
+        }
         musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
         effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
     }

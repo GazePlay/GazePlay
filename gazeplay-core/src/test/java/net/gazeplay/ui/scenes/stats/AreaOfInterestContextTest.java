@@ -57,7 +57,7 @@ class AreaOfInterestContextTest {
         );
         when(mocksStats.getMovementHistory()).thenReturn(coordinatesTrackers);
 
-        AreaOfInterestContext areaOfInterestContext = new AreaOfInterestContext(mockGazePlay, mocksStats);
+        AreaOfInterestContext areaOfInterestContext = new AreaOfInterestContext(mockGazePlay, mocksStats, false);
 
         HBox result = areaOfInterestContext.createButtonBox();
 
@@ -73,7 +73,7 @@ class AreaOfInterestContextTest {
         );
         when(mocksStats.getMovementHistory()).thenReturn(coordinatesTrackers);
 
-        AreaOfInterestContext areaOfInterestContext = new AreaOfInterestContext(mockGazePlay, mocksStats);
+        AreaOfInterestContext areaOfInterestContext = new AreaOfInterestContext(mockGazePlay, mocksStats, false);
 
         Double[] convexPoints = {1d, 1d, 2d, 1d, 2d, 3d, 1d, 3d};
         AreaOfInterest aoi1 = new AreaOfInterest("id", coordinatesTrackers, 300, 400, convexPoints, 0, 2, 1.23, 12.34);

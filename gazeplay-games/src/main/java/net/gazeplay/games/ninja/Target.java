@@ -163,12 +163,14 @@ public class Target extends ProgressPortrait {
             log.debug("length = {}", length);
             log.debug("lengthR = {}, ratio = {}, distance = {}", lengthR, ratio, distance);
 
-            if (ratio != 0)
+            if (ratio != 0) {
                 finalLength = lengthR;
-            else
+            } else {
                 finalLength = (int) distance;
-        } else
+            }
+        } else {
             finalLength = length;
+        }
         final TranslateTransition translation = new TranslateTransition(
             new Duration(finalLength), this);
         translation.setByX(-this.getLayoutX() + newPosition.getX());
@@ -244,8 +246,12 @@ public class Target extends ProgressPortrait {
                 if (sizeOfList % 3 == 0 && sizeOfList != 0) {
                     for (int i = 0; i < 3; i++) {
                         log.debug("DurationBetweenGoals.get(sizeOfList - 1 - i) = {}", listOfDurationBetweenGoals.get(sizeOfList - 1 - i));
-                        if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) <= 1000) compare++;
-                        if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) >= 2000) compare--;
+                        if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) <= 1000) {
+                            compare++;
+                        }
+                        if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) >= 2000) {
+                            compare--;
+                        }
 
                     }
                     if (compare == 3 && length > 600) {

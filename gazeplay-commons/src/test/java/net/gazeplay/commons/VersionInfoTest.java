@@ -36,7 +36,7 @@ class VersionInfoTest {
     }
 
     @Test
-    void shouldFindVersion(){
+    void shouldFindVersion() {
         assertNotNull(VersionInfo.findVersionInfo());
     }
 

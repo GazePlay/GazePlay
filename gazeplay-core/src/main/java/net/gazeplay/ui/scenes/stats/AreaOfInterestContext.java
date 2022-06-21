@@ -77,7 +77,7 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
     private boolean playing = false;
     private int aoiIterator = 0;
 
-    public AreaOfInterestContext(final GazePlay gazePlay, final Stats stats) {
+    public AreaOfInterestContext(final GazePlay gazePlay, final Stats stats, boolean inReplayMode) {
         super(gazePlay, new BorderPane());
 
         movementHistory = stats.getMovementHistory();
@@ -90,8 +90,9 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
         aoiViewList = computeAOIViewList();
         aoiCombinedViewList = computeAOICombinedViewList();
 
-        for (final AreaOfInterestCombinedView aoiCombinedView : aoiCombinedViewList)
+        for (final AreaOfInterestCombinedView aoiCombinedView : aoiCombinedViewList) {
             graphicsPane.getChildren().add(aoiCombinedView.getAreaOfInterest());
+        }
 
         if (stats.getTargetAOIList() != null) {
             final List<TargetAOI> targetAOIArrayList = stats.getTargetAOIList();
@@ -114,8 +115,9 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
                         if (intersect.getBoundsInLocal().getWidth() != -1) {
                             double newMaxScore = intersect.getBoundsInLocal().getWidth() /
                                 (aoiViewList.get(i).getAreaOfInterest().getBoundsInLocal().getWidth() - 1);
-                            if (newMaxScore > maxScore)
+                            if (newMaxScore > maxScore) {
                                 maxScore = newMaxScore;
+                            }
                         }
                     }
                 }
@@ -185,10 +187,11 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
         centerPane.setAlignment(Pos.CENTER);
 
         final HBox buttonBox = createButtonBox();
-        if (stats.getTargetAOIList() != null)
+        if (stats.getTargetAOIList() != null) {
             topPane = new HBox(scoreLabel, timeLabel, region2, buttonBox);
-        else
+        } else {
             topPane = new HBox(timeLabel, region2, buttonBox);
+        }
 
         topPane.setPadding(new Insets(15, 15, 0, 15));
         topPane.setSpacing(10);
@@ -198,10 +201,11 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
 
         final EventHandler<Event> aoiEvent = e -> {
             final StatsContext statsContext;
-            statsContext = StatsContextFactory.newInstance(gazePlay, stats);
+            statsContext = StatsContextFactory.newInstance(gazePlay, stats, inReplayMode);
 
-            if (config.isVideoRecordingEnabled())
+            if (config.isVideoRecordingEnabled()) {
                 player.stop();
+            }
             this.clear();
             gazePlay.onDisplayStats(statsContext);
         };
@@ -262,8 +266,9 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
     private void playButtonPressed(final double progressRate) {
         if (!playing) {
             playing = true;
-            for (final AreaOfInterestCombinedView aoiCombinedView : aoiCombinedViewList)
+            for (final AreaOfInterestCombinedView aoiCombinedView : aoiCombinedViewList) {
                 graphicsPane.getChildren().remove(aoiCombinedView.getAreaOfInterest());
+            }
             graphicsPane.getChildren().remove(currentInfoBox);
 
             if (config.isVideoRecordingEnabled()) {
@@ -345,8 +350,9 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
     }
 
     void addAllInitialArea() {
-        for (final AreaOfInterestCombinedView aoiCombinedView : aoiCombinedViewList)
+        for (final AreaOfInterestCombinedView aoiCombinedView : aoiCombinedViewList) {
             graphicsPane.getChildren().add(aoiCombinedView.getAreaOfInterest());
+        }
     }
 
     /**
@@ -445,8 +451,9 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
     private ArrayList<AreaOfInterestView> computeAOIViewList() {
         final ArrayList<AreaOfInterestView> aoiViewList = new ArrayList<>();
 
-        for (int i = 0; i < aoiList.size(); i++)
+        for (int i = 0; i < aoiList.size(); i++) {
             aoiViewList.add(calculateAOIView(aoiList.get(i), i));
+        }
 
         return aoiViewList;
     }

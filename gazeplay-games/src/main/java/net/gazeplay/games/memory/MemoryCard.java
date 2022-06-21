@@ -161,22 +161,26 @@ public class MemoryCard extends Parent {
                 log.debug("nbOfTries = {}", gameInstance.totalNbOfTries());
                 if (sizeOfList % 3 == 0 && sizeOfList != 0) {
                     for (int i = 0; i < 3; i++) {
-                        if (gameInstance.totalNbOfTries() <= 2 * gameInstance.getLevel() && gameInstance.getNbColumns() <= 6)
+                        if (gameInstance.totalNbOfTries() <= 2 * gameInstance.getLevel() && gameInstance.getNbColumns() <= 6) {
                             compare++;
-                        if (gameInstance.totalNbOfTries() >= 2.5 * gameInstance.getLevel() && gameInstance.getNbColumns() > 2)
+                        }
+                        if (gameInstance.totalNbOfTries() >= 2.5 * gameInstance.getLevel() && gameInstance.getNbColumns() > 2) {
                             compare--;
+                        }
                     }
                     if (compare == 3) {
-                        if (gameInstance.getLevel() == 6)
+                        if (gameInstance.getLevel() == 6) {
                             gameInstance.setLevel(gameInstance.getLevel() + 2);
-                        else
+                        } else {
                             gameInstance.setLevel(gameInstance.getLevel() + 1);
+                        }
                     }
                     if (compare == -3) {
-                        if (gameInstance.getLevel() == 8)
+                        if (gameInstance.getLevel() == 8) {
                             gameInstance.setLevel(gameInstance.getLevel() - 2);
-                        else
+                        } else {
                             gameInstance.setLevel(gameInstance.getLevel() - 1);
+                        }
                     }
                     levelsReport.addRoundLevel(gameInstance.getLevel());
                 }

@@ -92,8 +92,9 @@ class UserProfileContextTest {
 
         File hiddenDir = new File(rootDir, hiddenDirectory);
         hiddenDir.mkdirs();
-        if (System.getProperty("os.name").toLowerCase().contains("win"))
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
             Files.setAttribute(hiddenDir.toPath(), "dos:hidden", true, LinkOption.NOFOLLOW_LINKS);
+        }
 
         File profileDir = new File(rootDir, profileDirectory);
         profileDir.mkdirs();

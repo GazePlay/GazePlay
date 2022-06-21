@@ -35,7 +35,7 @@ public class ScanpathContext extends GraphicalContext<BorderPane> {
 
     private final Color[] colors = {Color.RED, Color.BLUE};
 
-    public ScanpathContext(GazePlay gazePlay, Stats stats, CustomButton continueButton) {
+    public ScanpathContext(GazePlay gazePlay, Stats stats, CustomButton continueButton, boolean inReplayMode) {
         super(gazePlay, new BorderPane());
 
         final Pane center = buildCenterPane(stats);
@@ -44,7 +44,7 @@ public class ScanpathContext extends GraphicalContext<BorderPane> {
 
         HomeButton homeButton = new HomeButton(screenDimension);
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
-            StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats, continueButton);
+            StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats, continueButton, inReplayMode);
             this.clear();
             gazePlay.onDisplayStats(statsContext);
         });

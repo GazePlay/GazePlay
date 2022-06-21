@@ -121,8 +121,9 @@ public class ReplayingGameFromJson {
 
     public void pickJSONFile(String fileName) throws IOException {
         this.fileName = fileName;
-        if (fileName == null)
+        if (fileName == null) {
             return;
+        }
 
         final File replayDataFile = new File(fileName);
 
@@ -167,24 +168,27 @@ public class ReplayingGameFromJson {
         );
         File selectedFile = fileChooser.showOpenDialog(gameContext.getPrimaryStage());
         String selectedFileName = null;
-        if (selectedFile != null)
+        if (selectedFile != null) {
             selectedFileName = selectedFile.getAbsolutePath();
+        }
         return selectedFileName;
     }
 
     public void replayGame() {
-        if (fileName == null)
+        if (fileName == null) {
             return;
+        }
 
         double height = gameContext.getCurrentScreenDimensionSupplier().get().getHeight();
         double width = gameContext.getCurrentScreenDimensionSupplier().get().getWidth();
         double screenRatio = height / width;
 
         double sceneAspectRatio = json.getSceneAspectRatio();
-        if (sceneAspectRatio < screenRatio)
+        if (sceneAspectRatio < screenRatio) {
             height = gameContext.getCurrentScreenDimensionSupplier().get().getWidth() * sceneAspectRatio;
-        else
+        } else {
             width = height / sceneAspectRatio;
+        }
 
         getSpecAndVariant();
 
@@ -194,18 +198,23 @@ public class ReplayingGameFromJson {
     public void getSpecAndVariant() {
         gameContext = applicationContext.getBean(GameContext.class);
         gazePlay.onGameLaunch(gameContext);
-        for (GameSpec gameSpec : gamesList)
-            if (json.getGameName().equals(gameSpec.getGameSummary().getNameCode()))
+        for (GameSpec gameSpec : gamesList) {
+            if (json.getGameName().equals(gameSpec.getGameSummary().getNameCode())) {
                 selectedGameSpec = gameSpec;
-        for (IGameVariant variant : selectedGameSpec.getGameVariantGenerator().getVariants())
-            if (json.getGameVariant().equals(variant.toString()))
+            }
+        }
+        for (IGameVariant variant : selectedGameSpec.getGameVariantGenerator().getVariants()) {
+            if (json.getGameVariant().equals(variant.toString())) {
                 gameVariant = variant;
+            }
+        }
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void drawLines() {
-        if (fileName == null)
+        if (fileName == null) {
             return;
+        }
 
         Configuration config = ActiveConfigurationContext.getInstance();
         config.getFixationLengthProperty().setValue(json.getConfigFixationLength());
@@ -277,18 +286,21 @@ public class ReplayingGameFromJson {
         LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin, "-cp", classpath, GazePlayLauncher.class.getName()));
 
         String user = ActiveConfigurationContext.getInstance().getUserName();
-        if (user != null && !user.equals(""))
+        if (user != null && !user.equals("")) {
             commands.addAll(Arrays.asList("--user", user));
-        else
+        } else {
             commands.add("--default-user");
+        }
 
         commands.addAll(Arrays.asList("--game", selectedGameSpec.getGameSummary().getNameCode()));
 
-        if (gameVariant != null)
+        if (gameVariant != null) {
             commands.addAll(Arrays.asList("--variant", gameVariant.toString()));
+        }
 
-        if (height != 0 && width != 0)
+        if (height != 0 && width != 0) {
             commands.addAll(Arrays.asList("--height", "" + height, "--width", "" + width));
+        }
 
         commands.addAll(Arrays.asList("-json", this.fileName));
 
@@ -325,10 +337,12 @@ public class ReplayingGameFromJson {
     public void paint(GraphicsContext graphics, Canvas canvas, Point2D point, String event) {
         graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        if (event.equals("gaze"))
+        if (event.equals("gaze")) {
             updateGazeTab(point);
-        else // if (event.equals("mouse")) {
+        } else // if (event.equals("mouse")) {
+        {
             updateMouseTab(point);
+        }
 
         drawOvals(graphics);
 
@@ -336,23 +350,27 @@ public class ReplayingGameFromJson {
     }
 
     public void updateGazeTab(Point2D point) {
-        while (lastGazeCoordinates.size() >= numberOfElementToDisplay)
+        while (lastGazeCoordinates.size() >= numberOfElementToDisplay) {
             lastGazeCoordinates.pop();
+        }
         lastGazeCoordinates.add(point);
     }
 
     public void updateMouseTab(Point2D point) {
-        while (lastMouseCoordinates.size() >= numberOfElementToDisplay)
+        while (lastMouseCoordinates.size() >= numberOfElementToDisplay) {
             lastMouseCoordinates.pop();
+        }
         lastMouseCoordinates.add(point);
     }
 
     public void drawOvals(GraphicsContext graphics) {
         int circleSize = 10;
-        if (lastGazeCoordinates.size() > 0)
+        if (lastGazeCoordinates.size() > 0) {
             drawReplayLine(graphics, circleSize, Color.LIGHTBLUE, Color.DARKBLUE, lastGazeCoordinates);
-        if (lastMouseCoordinates.size() > 0)
+        }
+        if (lastMouseCoordinates.size() > 0) {
             drawReplayLine(graphics, circleSize, Color.INDIANRED, Color.DARKRED, lastMouseCoordinates);
+        }
     }
 
     private void drawReplayLine(GraphicsContext graphics, int circleSize, Color strokeColor, Color fillColor, LinkedList<Point2D> lastGazeCoordinates) {

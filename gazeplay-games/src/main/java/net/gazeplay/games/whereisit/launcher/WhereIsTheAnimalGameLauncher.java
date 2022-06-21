@@ -32,14 +32,14 @@ public class WhereIsTheAnimalGameLauncher implements IGameLauncher<Stats, Dimens
                                   SavedStatsInfo savedStatsInfo
     ) {
         return new WhereIsItStats(scene, WhereIsItGameType.ANIMAL_NAME.getGameName(), nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached,
-                lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
+            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
     }
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats) {
         return new WhereIsIt(
-                gameVariant.getDifficulty().equals("DYNAMIC") ? WhereIsItGameType.ANIMAL_NAME_DYNAMIC : WhereIsItGameType.ANIMAL_NAME,
-                gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats);
+            gameVariant.getDifficulty().equals("DYNAMIC") ? WhereIsItGameType.ANIMAL_NAME_DYNAMIC : WhereIsItGameType.ANIMAL_NAME,
+            gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats);
     }
 
     @Override

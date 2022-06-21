@@ -133,8 +133,9 @@ class PictureCard extends Group {
     private void onCorrectCardSelected(WhereIsIt gameInstance) {
         log.debug("WINNER");
 
-        if (!gameInstance.getFirstWrong())
+        if (!gameInstance.getFirstWrong()) {
             gameInstance.updateRight();
+        }
 
         gameInstance.firstRightCardSelected();
 

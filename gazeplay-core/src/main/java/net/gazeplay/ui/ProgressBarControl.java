@@ -85,8 +85,11 @@ public class ProgressBarControl {
 
     public void setTextOnLabel(Label[] labels, int position) {
         for (int i = 0; i < labels.length; i++) {
-            if (i == position) labels[i].setText("⬤");
-            else labels[i].setText("");
+            if (i == position) {
+                labels[i].setText("⬤");
+            } else {
+                labels[i].setText("");
+            }
         }
     }
 
@@ -96,8 +99,9 @@ public class ProgressBarControl {
             config.getProgressBarColorProperty().set(colorName);
             setTextOnLabel(labels, position);
         });
-        if (config.getProgressBarColorProperty().getValue().equals(colorName))
+        if (config.getProgressBarColorProperty().getValue().equals(colorName)) {
             setTextOnLabel(labels, position);
+        }
     }
 
     public Label[] createColorLabel(Configuration config) {

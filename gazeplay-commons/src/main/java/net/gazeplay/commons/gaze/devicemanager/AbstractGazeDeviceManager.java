@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 @Slf4j
 public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
+    @Getter
     private boolean isInReplayMode = false;
 
     private final List<GazeMotionListener> gazeMotionListeners = new CopyOnWriteArrayList<>();
@@ -61,8 +62,9 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     }
 
     private void notifyAllGazeMotionListeners(Point2D position) {
-        for (GazeMotionListener l : this.gazeMotionListeners)
+        for (GazeMotionListener l : this.gazeMotionListeners) {
             l.gazeMoved(position);
+        }
     }
 
     @Override
@@ -95,9 +97,11 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     @Override
     public void removeEventFilter(Node gs) {
         toRemove.add(gs);
-        if (gs instanceof Pane)
-            for (Node child : ((Pane) gs).getChildren())
+        if (gs instanceof Pane) {
+            for (Node child : ((Pane) gs).getChildren()) {
                 removeEventFilter(child);
+            }
+        }
     }
 
     public void addStats(Stats stats) {
@@ -125,8 +129,9 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     public void removeEventHandler(Node gs) {
         synchronized (shapesEventFilter) {
             GazeInfos removed = shapesEventHandler.remove(new IdentityKey<>(gs));
-            if (removed == null)
+            if (removed == null) {
                 log.warn("EventHandler to remove not found");
+            }
         }
     }
 
@@ -168,20 +173,24 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
             synchronized (shapesEventFilter) {
                 Collection<GazeInfos> c = shapesEventFilter.values();
-                for (GazeInfos gi : c)
-                    if (gameScene != null && gi.getNode() != gameScene.getNode())
+                for (GazeInfos gi : c) {
+                    if (gameScene != null && gi.getNode() != gameScene.getNode()) {
                         eventFire(positionX, positionY, gi, event, c);
+                    }
+                }
 
-                if (gameScene != null)
+                if (gameScene != null) {
                     eventFire(positionX, positionY, gameScene, event);
+                }
             }
         }
     }
 
     public boolean contains(Node node, double positionX, double positionY) {
         Point2D localPosition = node.screenToLocal(positionX, positionY);
-        if (localPosition != null)
+        if (localPosition != null) {
             return node.contains(localPosition.getX(), localPosition.getY());
+        }
         return false;
     }
 

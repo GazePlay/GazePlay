@@ -93,15 +93,17 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HBox rightControlPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(rightControlPane);
         rightControlPane.setAlignment(Pos.CENTER_RIGHT);
-        if (currentLanguageAlignmentIsLeftAligned)
+        if (currentLanguageAlignmentIsLeftAligned) {
             rightControlPane.getChildren().add(homeButton);
+        }
 
         HBox leftControlPane = new HBox();
         ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(leftControlPane);
         leftControlPane.setAlignment(Pos.CENTER_LEFT);
         // HomeButton on the Left for Arabic Language
-        if (!currentLanguageAlignmentIsLeftAligned)
+        if (!currentLanguageAlignmentIsLeftAligned) {
             leftControlPane.getChildren().add(homeButton);
+        }
 
         BorderPane bottomControlPane = new BorderPane();
         bottomControlPane.setLeft(leftControlPane);
@@ -115,8 +117,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         configTitleText.setTextAlignment(TextAlignment.CENTER);
 
         // Arabic title alignment
-        if (!currentLanguageAlignmentIsLeftAligned)
+        if (!currentLanguageAlignmentIsLeftAligned) {
             BorderPane.setAlignment(configTitleText, Pos.BOTTOM_RIGHT);
+        }
 
         root.setTop(configTitleText);
 
@@ -169,10 +172,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         String gazeplayType = GazePlayArgs.returnArgs();
         GridPane grid;
 
-        if (gazeplayType.contains("bera"))
+        if (gazeplayType.contains("bera")) {
             grid = beraConfigGridPane(configurationContext, translator);
-        else
+        } else {
             grid = gazeplayConfigGridPane(configurationContext, translator);
+        }
 
         return grid;
     }
@@ -180,10 +184,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     GridPane beraConfigGridPane(ConfigurationContext configurationContext, Translator translator) {
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        if ((config.getUserName()) != null && !config.getUserName().equals(""))
+        if ((config.getUserName()) != null && !config.getUserName().equals("")) {
             ActiveConfigurationContext.switchToUser(config.getUserName());
-        else
+        } else {
             ActiveConfigurationContext.switchToDefaultUser();
+        }
 
         config = ActiveConfigurationContext.getInstance();
 
@@ -375,10 +380,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     GridPane gazeplayConfigGridPane(ConfigurationContext configurationContext, Translator translator) {
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        if ((config.getUserName()) != null && !config.getUserName().equals(""))
+        if ((config.getUserName()) != null && !config.getUserName().equals("")) {
             ActiveConfigurationContext.switchToUser(config.getUserName());
-        else
+        } else {
             ActiveConfigurationContext.switchToDefaultUser();
+        }
 
         config = ActiveConfigurationContext.getInstance();
 
@@ -1278,8 +1284,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         musicManager.emptyPlaylist();
         musicManager.getAudioFromFolder(musicFolder);
 
-        if (wasPlaying)
+        if (wasPlaying) {
             musicManager.play();
+        }
     }
 
     static void setupNewMusicFolder(File gazePlayMusicFolder, String defaultSong) {
@@ -1503,8 +1510,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 3; i < hbox.getChildren().size(); i++) {
             stringBuilder.append(((ColorPicker) (hbox.getChildren().get(i))).getValue().toString());
-            if (i != hbox.getChildren().size() - 1)
+            if (i != hbox.getChildren().size() - 1) {
                 stringBuilder.append(",");
+            }
         }
         log.info(stringBuilder.toString());
         config.getHeatMapColorsProperty().setValue(stringBuilder.toString());

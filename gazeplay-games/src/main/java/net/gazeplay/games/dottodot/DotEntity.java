@@ -48,10 +48,11 @@ public class DotEntity extends Parent {
         this.index = index;
         this.gameVariant = gameVariant;
 
-        if (this.index == 1)
+        if (this.index == 1) {
             isFirst = true;
-        else
+        } else {
             previous = index - 1;
+        }
 
         number.setMouseTransparent(true);
         this.getChildren().addAll(this.dotShape, number, this.progressIndicator);
@@ -122,11 +123,13 @@ public class DotEntity extends Parent {
 
             if (gameVariant.getLabel().contains("Dynamic")) {
                 if (stats.nbGoalsReached > 0 && stats.nbGoalsReached % 3 == 0) {
-                    if (nextLevelDecision() && gameObject.getLevel() < 7)
+                    if (nextLevelDecision() && gameObject.getLevel() < 7) {
                         gameObject.setLevel(gameObject.getLevel() + 1);
+                    }
 
-                    if (!nextLevelDecision() && gameObject.getLevel() > 1)
+                    if (!nextLevelDecision() && gameObject.getLevel() > 1) {
                         gameObject.setLevel(gameObject.getLevel() - 1);
+                    }
                 }
             }
 
@@ -159,8 +162,9 @@ public class DotEntity extends Parent {
         int nbOfGoalsReached = stats.nbGoalsReached;
         int compare = 3;
         for (int i = 0; i < 3; i++) {
-            if (gameObject.getListOfFails().get(nbOfGoalsReached - i - 1) > 1)
+            if (gameObject.getListOfFails().get(nbOfGoalsReached - i - 1) > 1) {
                 compare--;
+            }
         }
 
         return (compare == 3);

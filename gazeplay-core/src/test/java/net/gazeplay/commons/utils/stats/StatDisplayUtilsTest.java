@@ -67,7 +67,7 @@ class StatDisplayUtilsTest {
     }
 
     void initMocks() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(gazePlay.getCurrentScreenDimensionSupplier()).thenReturn(screenDimensionSupplier);
         when(screenDimensionSupplier.get()).thenReturn(new Dimension2D(1024, 768));
@@ -88,7 +88,7 @@ class StatDisplayUtilsTest {
 
     @Test
     void shouldCreateHomeButton() {
-        final HomeButton button = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay);
+        final HomeButton button = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, null, false);
         assert button.isVisible();
     }
 

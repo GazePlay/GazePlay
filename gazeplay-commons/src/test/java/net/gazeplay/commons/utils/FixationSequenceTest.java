@@ -37,7 +37,7 @@ class FixationSequenceTest {
                 new FixationPoint(123, 50, 300, 400),
                 new FixationPoint(123, 50, 300, 400))
             ))
-    );
+        );
 
     @Test
     void shouldCreateFixationSequence() throws InterruptedException {
