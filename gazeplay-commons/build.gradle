@@ -1,37 +1,33 @@
 dependencies {
-    compile 'commons-io:commons-io:2.5'
-    compile 'com.google.code.gson:gson:2.8.1'
-    compile 'org.rxtx:rxtx:2.1.7'
-    compile 'com.theeyetribe:eyetribe-java:0.9.77'
-    compile 'ch.qos.logback:logback-classic:1.2.1'
-    compile 'ch.qos.logback:logback-core:1.2.1'
-    compile 'org.slf4j:slf4j-api:1.7.25'
-    compile 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
-    compile 'com.google.guava:guava:28.1-jre'
-    compile 'com.github.GazePlay:TobiiStreamEngineForJava:5.0'
-    compile 'com.automation-remarks:video-recorder-core:2.0'
-    compile 'com.github.vatbub:mslinks:1.0.6.1'
-    compile 'ws.schild:jave-core:2.5.0'
-    runtime 'org.slf4j:jcl-over-slf4j:1.7.25'
-    runtime 'org.slf4j:log4j-over-slf4j:1.7.25'
-    runtime 'io.github.classgraph:classgraph:4.8.52'
-    compile group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.2.1.RELEASE'
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'org.rxtx:rxtx:2.1.7'
+    implementation 'com.theeyetribe:eyetribe-java:0.9.77'
+    implementation 'ch.qos.logback:logback-classic:1.2.11'
+    implementation 'ch.qos.logback:logback-core:1.2.11'
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
+    implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'com.github.GazePlay:TobiiStreamEngineForJava:5.0'
+    implementation 'com.automation-remarks:video-recorder-core:2.0'
+    implementation 'com.github.vatbub:mslinks:1.0.6.2'
+    implementation 'ws.schild:jave-core:3.3.1'
+    implementation 'com.mageddo.tobby-transactional-outbox:spring:1.5.1'
+    runtimeOnly 'org.slf4j:jcl-over-slf4j:1.7.36'
+    runtimeOnly 'org.slf4j:log4j-over-slf4j:1.7.36'
+    runtimeOnly 'io.github.classgraph:classgraph:4.8.146'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.2.5.RELEASE'
 
-    compile 'org.reflections:reflections:0.9.11'
+    implementation 'org.reflections:reflections:0.10.2'
 
-    compile 'org.aeonbits.owner:owner:1.0.10'
-    compile 'org.json:json:20200518'
+    implementation 'org.aeonbits.owner:owner:1.0.12'
+    implementation 'org.json:json:20220320'
     // https://mvnrepository.com/artifact/org.json/json
-    compile group: 'org.json', name: 'json', version: '20200518'
+    implementation group: 'org.json', name: 'json', version: '20220320'
 
 
-    testImplementation "junit:junit:4.12"
+    testImplementation 'junit:junit:4.13.2'
     testImplementation project(':gazeplay-core').sourceSets.test.output
-}
-
-test {
-    jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
-    exclude '**/VersionInfoTest.class'
 }
 
 jar {
@@ -40,9 +36,14 @@ jar {
                 "Implementation-Title": project.name,
                 "Implementation-Version": project.version,
                 "Implementation-Vendor": "Univ. Grenoble Alpes - LIG - GETALP",
-                "Class-Path": configurations.runtime.collect { it.getName() }.join(' '),
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' '),
                 "JavaFX-Version": javafxVersion,
                 "Built-By": System.properties['user.name']
         )
     }
+}
+
+test {
+    jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
+    exclude '**/VersionInfoTest.class'
 }
