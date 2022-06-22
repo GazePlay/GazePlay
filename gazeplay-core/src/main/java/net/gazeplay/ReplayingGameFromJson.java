@@ -335,12 +335,14 @@ public class ReplayingGameFromJson {
     }
 
     public void paint(GraphicsContext graphics, Canvas canvas, Point2D point, String event) {
+        if (!gameContext.getChildren().contains(canvas)) {
+            gameContext.getChildren().add(canvas);
+        }
         graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         if (event.equals("gaze")) {
             updateGazeTab(point);
-        } else // if (event.equals("mouse")) {
-        {
+        } else { // if (event.equals("mouse")) {
             updateMouseTab(point);
         }
 
