@@ -2,7 +2,7 @@ package net.gazeplay.commons.utils.games;
 
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
+import org.reflections.scanners.Scanners;
 
 import java.io.File;
 import java.nio.file.InvalidPathException;
@@ -19,8 +19,7 @@ public class ResourceFileManager {
 
     public static Set<String> getResourcePaths(String path) {
         String packageName = path.replaceAll("[/\\\\]", ".");
-        Reflections reflections = new Reflections(packageName, new ResourcesScanner());
-
+        Reflections reflections = new Reflections(packageName, Scanners.Resources);
         return reflections.getResources(Pattern.compile(createExtensionRegex(ImageUtils.supportedFilesExtensions)));
     }
 

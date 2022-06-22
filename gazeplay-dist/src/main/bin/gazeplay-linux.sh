@@ -4,8 +4,7 @@ set -e
 
 MAIN_JAR_FILE=gazeplay-@VERSION@.jar
 
-export JAVA_OPTS="-Xms256m -Xmx1g"
-export JAVA_OPTS="$JAVA_OPTS -Dlogging.appender.console.level=OFF"
+export JAVA_OPTS="-Xms256m -Xmx1g --add-exports=javafx.base/com.sun.javafx.collections=ALL-UNNAMED -Dlogging.appender.console.level=OFF"
 
 WORKING_DIR=$(pwd)
 
@@ -35,7 +34,7 @@ echo "PATH = ${PATH}"
 
 USB_PKG_OK=$(dpkg -s tobiiusbservice | grep "install ok installed")
 
-ENGINE_PKG_OK=$(dpkg -s tobii_engine_linux | grep "install ok installed")
+ENGINE_PKG_OK=$(dpkg -s tobii-engine-linux-ben | grep "install ok installed")
 
 if [ "" = "${USB_PKG_OK}" ] || [ "" = "${ENGINE_PKG_OK}" ]
 then
@@ -59,5 +58,7 @@ fi
 export JAVA_CMD="java -cp \"$CLASSPATH\" ${JAVA_OPTS} net.gazeplay.GazePlayLauncher"
 
 echo "Executing command line: $JAVA_CMD"
+
+chmod -R 777 ${LIB_DIR}
 
 ${JAVA_CMD}
