@@ -12,7 +12,7 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**
- * @see http://java-buddy.blogspot.fr/2013/04/free-draw-on-javafx-canvas.html
+ * @see <a href="http://java-buddy.blogspot.fr/2013/04/free-draw-on-javafx-canvas.html">...</a>
  */
 public class DrawApplication implements GameLifeCycle {
 
@@ -26,7 +26,7 @@ public class DrawApplication implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
 
-        DrawBuilder drawBuilder = new DrawBuilder(randomGenerator);
+        DrawBuilder drawBuilder = new DrawBuilder(randomGenerator, false);
         drawBuilder.setColorPicker(new RainbowColorPicker());
 
         final Scene scene = gameContext.getPrimaryScene();
@@ -66,7 +66,7 @@ public class DrawApplication implements GameLifeCycle {
         this.gameContext = gameContext;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
-        DrawBuilder drawBuilder = new DrawBuilder(randomGenerator);
+        DrawBuilder drawBuilder = new DrawBuilder(randomGenerator, true);
         drawBuilder.setColorPicker(new RainbowColorPicker());
 
         final Scene scene = gameContext.getPrimaryScene();

@@ -24,6 +24,7 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     public final IGameContext gameContext;
     private final Stats stats;
+    private final boolean inReplayMode;
     public IntegerProperty size;
     private Rectangle ground;
     private boolean endOfGame = false;
@@ -44,10 +45,11 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     private int level;
 
-    public RushHour(final IGameContext gameContext, Stats stats) {
+    public RushHour(final IGameContext gameContext, Stats stats, final boolean inReplayMode) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameContext.startTimeLimiter();
+        this.inReplayMode = inReplayMode;
         level = 0;
         size = new SimpleIntegerProperty();
         gameContext.getPrimaryStage().widthProperty().addListener((observable, oldValue, newValue) -> {
@@ -2457,7 +2459,9 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     private void win() {
         endOfGame = true;
-        stats.incrementNumberOfGoalsReached();
+        if (!inReplayMode) {
+            stats.incrementNumberOfGoalsReached();
+        }
 
         gameContext.updateScore(stats, this);
         gameContext.playWinTransition(500, actionEvent -> {

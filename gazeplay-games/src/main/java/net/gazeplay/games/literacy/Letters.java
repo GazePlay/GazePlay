@@ -63,6 +63,8 @@ public class Letters implements GameLifeCycle {
 
     private final Stats stats;
 
+    private final boolean inReplayMode;
+
     @Getter
     private final String currentLanguage;
 
@@ -83,6 +85,7 @@ public class Letters implements GameLifeCycle {
         this.nbColomns = nbColumns;
 
         this.stats = stats;
+        this.inReplayMode = false;
 
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
@@ -106,6 +109,7 @@ public class Letters implements GameLifeCycle {
         this.nbColomns = nbColumns;
 
         this.stats = stats;
+        this.inReplayMode = true;
 
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
@@ -232,7 +236,7 @@ public class Letters implements GameLifeCycle {
                 }
 
                 Bloc bloc = new Bloc(j * width, i * height, width + 1, height + 1, currentLetter, mainLetter,
-                    this, stats, gameContext, fixationlength);
+                    this, stats, gameContext, fixationlength, inReplayMode);
 
                 blocs[i][j] = bloc;
 

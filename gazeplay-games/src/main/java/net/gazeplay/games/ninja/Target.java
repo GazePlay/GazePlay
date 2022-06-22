@@ -38,6 +38,8 @@ public class Target extends ProgressPortrait {
 
     private final Stats stats;
 
+    private final boolean inReplayMode;
+
     private final List<Portrait> miniBallsPortraits;
 
     private final ImageLibrary imageLibrary;
@@ -65,7 +67,9 @@ public class Target extends ProgressPortrait {
 
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
-                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance, final ReplayablePseudoRandom randomGenerator, final RoundsDurationReport roundsDurationReport, LevelsReport levelsReport, int length) {
+                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance,
+                  final ReplayablePseudoRandom randomGenerator, final RoundsDurationReport roundsDurationReport,
+                  LevelsReport levelsReport, int length, final boolean inReplayMode) {
         super(gameContext.getConfiguration().getElementSize());
 
         this.gameInstance = gameInstance;
@@ -87,6 +91,7 @@ public class Target extends ProgressPortrait {
         this.roundsDurationReport = roundsDurationReport;
         this.levelsReport = levelsReport;
         this.length = length;
+        this.inReplayMode = inReplayMode;
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
 
@@ -330,8 +335,9 @@ public class Target extends ProgressPortrait {
     }
 
     private void enter(final Event e) {
-
-        stats.incrementNumberOfGoalsReached();
+        if (!inReplayMode) {
+            stats.incrementNumberOfGoalsReached();
+        }
 
         gameContext.updateScore(stats, gameInstance);
 

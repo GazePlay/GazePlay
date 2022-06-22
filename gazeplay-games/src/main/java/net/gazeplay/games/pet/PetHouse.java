@@ -45,6 +45,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     @Getter
     private final Stats stats;
+    private final boolean inReplayMode;
     private final static int LIFE_SIZE = 18;
     private List<Circle> water;
 
@@ -94,6 +95,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
     PetHouse(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
+        this.inReplayMode = false;
 
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
@@ -132,6 +134,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
     PetHouse(final IGameContext gameContext, final Stats stats, double gameSeed) {
         this.gameContext = gameContext;
         this.stats = stats;
+        this.inReplayMode = true;
 
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
@@ -487,7 +490,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
             }
             timelines[i].play();
 
-            stats.incrementNumberOfGoalsReached();
+            if (!inReplayMode) {
+                stats.incrementNumberOfGoalsReached();
+            }
         }
     }
 

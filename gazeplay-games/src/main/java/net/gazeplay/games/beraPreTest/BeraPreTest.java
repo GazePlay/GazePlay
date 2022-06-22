@@ -52,6 +52,7 @@ public class BeraPreTest implements GameLifeCycle {
     private final String directoryRessource = "data/beraPreTest";
     private Text questionText;
     private final ArrayList<TargetAOI> targetAOIList;
+    private final boolean inReplayMode;
 
     public CustomInputEventHandlerKeyboard customInputEventHandlerKeyboard = new CustomInputEventHandlerKeyboard();
     private boolean canRemoveItemManually = true;
@@ -98,12 +99,13 @@ public class BeraPreTest implements GameLifeCycle {
     private static final String SEE_TWO_IMAGES_SOUND = "data/common/sounds/seeTwoImages.wav";
     private String IMAGE_SOUND = "";
 
-    public BeraPreTest(final IGameContext gameContext, final BeraPreTestGameStats stats, final Translator translator) {
+    public BeraPreTest(final IGameContext gameContext, final BeraPreTestGameStats stats, final Translator translator, boolean inReplayMode) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.targetAOIList = new ArrayList<>();
         this.setFirstSound();
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
+        this.inReplayMode = inReplayMode;
     }
 
     public void setFirstSound() {
@@ -413,10 +415,8 @@ public class BeraPreTest implements GameLifeCycle {
             heightImg = gameSizing.height;
         }
 
-        final PictureCard pictureCard1 = new PictureCard(
-            gameSizing.width * posX + gap,
-            posYImage, widthImg, heightImg, gameContext,
-            winnerP1, imageP1 + "", stats, this);
+        final PictureCard pictureCard1 = new PictureCard(gameSizing.width * posX + gap, posYImage, widthImg,
+            heightImg, gameContext, winnerP1, imageP1 + "", stats, this, inReplayMode);
 
         pictureCardList.add(pictureCard1);
 
@@ -434,10 +434,8 @@ public class BeraPreTest implements GameLifeCycle {
             posX++;
         }
 
-        final PictureCard pictureCard2 = new PictureCard(
-            gameSizing.width * posX + gap,
-            posYImage, widthImg, heightImg, gameContext,
-            winnerP2, imageP2 + "", stats, this);
+        final PictureCard pictureCard2 = new PictureCard(gameSizing.width * posX + gap, posYImage, widthImg,
+            heightImg, gameContext, winnerP2, imageP2 + "", stats, this, inReplayMode);
 
         pictureCardList.add(pictureCard2);
 

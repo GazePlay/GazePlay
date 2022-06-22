@@ -70,15 +70,16 @@ class SlidingPuzzleCard extends Parent {
 
     private final Stats stats;
 
+    private final boolean inReplayMode;
+
     /**
      * Use a comma Timeline object so we can stop the current animation to prevent overlapses.
      */
     private Timeline currentTimeline;
 
-
-    SlidingPuzzleCard(final int id, final double positionX, final double positionY, final double width, final double height, final String fileName,
-                      final double fixationlength, final IGameContext gameContext, final SlidingPuzzle gameInstance, final Stats stats, final double kingPosX,
-                      final double kingPosY) {
+    SlidingPuzzleCard(final int id, final double positionX, final double positionY, final double width, final double height,
+                      final String fileName, final double fixationlength, final IGameContext gameContext, final SlidingPuzzle gameInstance,
+                      final Stats stats, final double kingPosX, final double kingPosY, final boolean inReplayMode) {
         this.fixationlength = fixationlength;
         this.CardId = id;
         this.card = new Rectangle(positionX, positionY, width, height);
@@ -95,12 +96,9 @@ class SlidingPuzzleCard extends Parent {
         this.isKing = false;
         this.kingPosX = (int) kingPosX;
         this.kingPosY = (int) kingPosY;
+        this.inReplayMode = inReplayMode;
         final EventHandler<Event> enterEvent;
-        if (id != 9) {
-            enterEvent = buildEvent();
-        } else {
-            enterEvent = buildEvent2();
-        }
+        enterEvent = (id != 9) ? buildEvent() : buildEvent2();
         gameContext.getGazeDeviceManager().addEventFilter(card);
 
         this.addEventFilter(MouseEvent.ANY, enterEvent);
@@ -156,7 +154,9 @@ class SlidingPuzzleCard extends Parent {
     }
 
     private void onGameOver() {
-        stats.incrementNumberOfGoalsReached();
+        if (!inReplayMode) {
+            stats.incrementNumberOfGoalsReached();
+        }
 
         progressIndicator.setOpacity(0);
 

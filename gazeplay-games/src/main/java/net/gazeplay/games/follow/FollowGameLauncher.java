@@ -38,11 +38,11 @@ public class FollowGameLauncher implements IGameLauncher<Stats, EnumGameVariant<
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, EnumGameVariant<FollowGameVariant> gameVariant, Stats stats) {
-        return new Follow(gameContext, gameStat, gameVariant.getEnumValue());
+        return new Follow(gameContext, gameStat, gameVariant.getEnumValue(), false);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<FollowGameVariant> gameVariant, Stats stats, double gameSeed) {
-        return new Follow(gameContext, gameStat, gameVariant.getEnumValue());
+        return new Follow(gameContext, gameStat, gameVariant.getEnumValue(), true);
     }
 }

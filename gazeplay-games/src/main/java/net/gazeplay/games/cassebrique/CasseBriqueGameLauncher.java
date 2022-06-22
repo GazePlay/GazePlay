@@ -34,11 +34,11 @@ public class CasseBriqueGameLauncher implements IGameLauncher<Stats, EnumGameVar
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, EnumGameVariant<CasseBriqueGameVariant> gameVariant, Stats stats) {
-        return new CasseBrique(gameContext, stats, gameVariant.getEnumValue());
+        return new CasseBrique(gameContext, stats, gameVariant.getEnumValue(), false);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<CasseBriqueGameVariant> gameVariant, Stats stats, double gameSeed) {
-        return new CasseBrique(gameContext, stats, gameVariant.getEnumValue());
+        return new CasseBrique(gameContext, stats, gameVariant.getEnumValue(), true);
     }
 }

@@ -45,6 +45,7 @@ public class Egg extends Parent {
 
     private Timeline timelineProgressBar;
     private final Stats stats;
+    private final boolean inReplayMode;
 
     private final EventHandler<Event> enterEvent;
 
@@ -52,11 +53,11 @@ public class Egg extends Parent {
 
     private final ReplayablePseudoRandom random;
 
-    public Egg(final IGameContext gameContext, final Stats stats,
-               final EggGame gameInstance, final int fixationlength, final int numberOfTurn, final String type) {
-
+    public Egg(final IGameContext gameContext, final Stats stats, final EggGame gameInstance, final int fixationlength,
+               final int numberOfTurn, final String type, final boolean inReplayMode) {
         this.totalNumberOfTurns = numberOfTurn;
         this.gameType = type;
+        this.inReplayMode = inReplayMode;
 
         final Scene scene = gameContext.getPrimaryScene();
         final double height = scene.getHeight() / 2;
@@ -168,7 +169,9 @@ public class Egg extends Parent {
                     timelineProgressBar.setOnFinished(actionEvent -> {
 
                         if (turnNumber < totalNumberOfTurns - 1) {
-                            stats.incrementNumberOfGoalsReached();
+                            if (!inReplayMode) {
+                                stats.incrementNumberOfGoalsReached();
+                            }
                             turnNumber++;
                             cards.getChildren().get(2).setOpacity(1 - turnNumber / (float) (totalNumberOfTurns - 1));
                             stats.incrementNumberOfGoalsToReach();
@@ -184,7 +187,9 @@ public class Egg extends Parent {
                             cards.getChildren().get(1).setOpacity(0);
 
                             progressIndicator.setOpacity(0);
-                            stats.incrementNumberOfGoalsReached();
+                            if (!inReplayMode) {
+                                stats.incrementNumberOfGoalsReached();
+                            }
                             playSound(2);
 
                             final PauseTransition t = new PauseTransition(Duration.seconds(2));

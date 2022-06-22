@@ -70,6 +70,8 @@ public class ColorsGame implements GameLifeCycle {
 
     private final ColorsGamesStats stats;
 
+    private final boolean inReplayMode;
+
     private final Deque<HorizontalZone> horiZones = new ArrayDeque<>();
 
     /**
@@ -108,9 +110,10 @@ public class ColorsGame implements GameLifeCycle {
      */
     private CustomEventHandler colorizationEventHandler;
 
-    ColorsGame(final IGameContext gameContext, final ColorsGamesStats stats, final Translator translator) {
+    ColorsGame(final IGameContext gameContext, final ColorsGamesStats stats, final Translator translator, boolean inReplayMode) {
         this.gameContext = gameContext;
         this.stats = stats;
+        this.inReplayMode = inReplayMode;
 
         root = gameContext.getRoot();
 
@@ -416,7 +419,9 @@ public class ColorsGame implements GameLifeCycle {
             rectangle.setFill(this.createImagePattern(writableImg, rectangle));
             rectangle.toBack();
 
-            stats.incrementNumberOfGoalsReached();
+            if (!inReplayMode) {
+                stats.incrementNumberOfGoalsReached();
+            }
         }
     }
 

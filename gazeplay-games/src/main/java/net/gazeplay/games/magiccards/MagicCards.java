@@ -41,6 +41,8 @@ public class MagicCards implements GameLifeCycle {
 
     private final Stats stats;
 
+    private final boolean inReplayMode;
+
     private final ImageLibrary imageLibrary;
 
     private RoundDetails currentRoundDetails;
@@ -53,6 +55,7 @@ public class MagicCards implements GameLifeCycle {
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.stats = stats;
+        this.inReplayMode = false;
 
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
@@ -69,6 +72,7 @@ public class MagicCards implements GameLifeCycle {
         this.nbLines = nbLines;
         this.nbColumns = nbColumns;
         this.stats = stats;
+        this.inReplayMode = true;
 
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
@@ -167,7 +171,7 @@ public class MagicCards implements GameLifeCycle {
                 log.debug("positionX : {} ; positionY : {}", positionX, positionY);
 
                 final Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, gameContext,
-                    stats, this, fixationlength);
+                    stats, this, fixationlength, inReplayMode);
 
                 result.add(card);
                 currentCardIndex++;

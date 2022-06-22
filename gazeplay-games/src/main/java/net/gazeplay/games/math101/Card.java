@@ -60,6 +60,7 @@ public class Card extends Parent {
 
     private Timeline timelineProgressBar;
     final Stats stats;
+    private final boolean inReplayMode;
 
     final EventHandler<Event> enterEvent;
 
@@ -69,9 +70,9 @@ public class Card extends Parent {
 
     private Timeline currentTimeline;
 
-    public Card(final double positionX, final double positionY, final double width, final double height, final Image image, final boolean winner, final int value,
-                final IGameContext gameContext, final Stats stats, final Math101 gameInstance, final int fixationlength) {
-
+    public Card(final double positionX, final double positionY, final double width, final double height, final Image image,
+                final boolean winner, final int value, final IGameContext gameContext, final Stats stats,
+                final Math101 gameInstance, final int fixationlength, final boolean inReplayMode) {
         this.card = new Rectangle(positionX, positionY, width, height);
         this.card.setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
 
@@ -101,12 +102,10 @@ public class Card extends Parent {
         this.stack.getChildren().addAll(card, text);
 
         this.gameContext = gameContext;
-
         this.stats = stats;
-
         this.fixationlength = fixationlength;
-
         this.gameInstance = gameInstance;
+        this.inReplayMode = inReplayMode;
 
         this.initWidth = width;
         this.initHeight = height;
@@ -132,7 +131,6 @@ public class Card extends Parent {
 
         // Prevent null pointer exception
         currentTimeline = new Timeline();
-
     }
 
     private ProgressIndicator createProgressIndicator(final double width, final double height) {
@@ -148,7 +146,9 @@ public class Card extends Parent {
     }
 
     private void onCorrectCardSelected() {
-        stats.incrementNumberOfGoalsReached();
+        if (!inReplayMode) {
+            stats.incrementNumberOfGoalsReached();
+        }
 
         final double finalZoom = 1.15;
 

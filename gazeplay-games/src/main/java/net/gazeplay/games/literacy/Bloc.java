@@ -44,6 +44,7 @@ public class Bloc extends Parent {// Rectangle {
     final EventHandler<Event> enterEvent;
     final Stats stats;
     private final IGameContext gameContext;
+    private final boolean inReplayMode;
 
     private Timeline currentTimeline;
 
@@ -55,14 +56,15 @@ public class Bloc extends Parent {// Rectangle {
         Letters gameInstance,
         Stats stats,
         IGameContext gameContext,
-        int fixationlength
+        int fixationlength,
+        boolean inReplayMode
     ) {
 
         this.gameInstance = gameInstance;
         this.stats = stats;
         this.gameContext = gameContext;
-
         this.fixationlength = fixationlength;
+        this.inReplayMode = inReplayMode;
 
         this.width = width;
         this.height = height;
@@ -120,7 +122,9 @@ public class Bloc extends Parent {// Rectangle {
 
         if (gameInstance.currentRoundDetails.remainingCount == 1) {
             // REMOVE ALL CARDS AND REVEAL THE IMAGE
-            stats.incrementNumberOfGoalsReached();
+            if (!inReplayMode) {
+                stats.incrementNumberOfGoalsReached();
+            }
             gameInstance.removeAllBlocs();
             gameInstance.currentRoundDetails.remainingCount = 0;
         } else {

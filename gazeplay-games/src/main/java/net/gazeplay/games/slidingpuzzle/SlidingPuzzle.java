@@ -54,7 +54,7 @@ public class SlidingPuzzle implements GameLifeCycle {
         this.gameContext = gameContext;
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
-
+        this.inReplayMode = false;
         this.picPath = gameVariant.getEnumValue().getResourcesPath();
     }
 
@@ -67,7 +67,7 @@ public class SlidingPuzzle implements GameLifeCycle {
         this.stats = stats;
         this.gameContext = gameContext;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-
+        this.inReplayMode = true;
         this.picPath = gameVariant.getEnumValue().getResourcesPath();
     }
 
@@ -76,6 +76,7 @@ public class SlidingPuzzle implements GameLifeCycle {
     private static final int minHeight = 30;
 
     private final Stats stats;
+    private final boolean inReplayMode;
 
     private final IGameContext gameContext;
 
@@ -167,7 +168,6 @@ public class SlidingPuzzle implements GameLifeCycle {
     }
 
     private List<SlidingPuzzleCard> createCards(final Configuration config) {
-
         final int fixationlength = config.getFixationLength();
 
         final List<SlidingPuzzleCard> result = new ArrayList<>();
@@ -183,12 +183,11 @@ public class SlidingPuzzle implements GameLifeCycle {
 
                 if (i == 3 && j == 3) {
                     final SlidingPuzzleCard card = new SlidingPuzzleCard(counter, kingPosX, kingPosY, cardWidth, cardHeight,
-                        picPath + counter + ".png", fixationlength, gameContext, this, stats, kingPosX, kingPosY);
+                        picPath + counter + ".png", fixationlength, gameContext, this, stats, kingPosX, kingPosY, inReplayMode);
                     counter++;
                     card.setKing(true);
                     result.add(card);
                 } else {
-
                     index = randomGenerator.nextInt(coordList.size());
 
                     final double positionX = coordList.get(index).getX();
@@ -196,13 +195,12 @@ public class SlidingPuzzle implements GameLifeCycle {
                     coordList.remove(index);
 
                     final SlidingPuzzleCard card = new SlidingPuzzleCard(counter, positionX, positionY, cardWidth, cardHeight,
-                        picPath + counter + ".png", fixationlength, gameContext, this, stats, kingPosX, kingPosY);
+                        picPath + counter + ".png", fixationlength, gameContext, this, stats, kingPosX, kingPosY, inReplayMode);
                     counter++;
 
                     result.add(card);
                 }
             }
-
         }
 
         return result;

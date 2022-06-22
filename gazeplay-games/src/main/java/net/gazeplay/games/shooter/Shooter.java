@@ -54,6 +54,7 @@ public class Shooter extends Parent implements GameLifeCycle {
     private final String gameType;
 
     private final Stats stats;
+    private final boolean inReplayMode;
 
     private EventHandler<Event> enterEvent;
     private EventHandler<GazeEvent> handEventGaze;
@@ -76,6 +77,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         hand = new StackPane();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
+        this.inReplayMode = false;
 
         targetFrames = new Image[6];
         targetFrames[0] = new Image("data/" + gameType + "/images/Blue.png");
@@ -86,7 +88,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         targetFrames[5] = new Image("data/" + gameType + "/images/Flash.png");
 
         box = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
-
     }
 
     Shooter(final IGameContext gameContext, final Stats stats, final String type, double gameSeed) {
@@ -98,6 +99,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         gameType = type;
         hand = new StackPane();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+        this.inReplayMode = true;
 
         targetFrames = new Image[6];
         targetFrames[0] = new Image("data/" + gameType + "/images/Blue.png");
@@ -108,7 +110,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         targetFrames[5] = new Image("data/" + gameType + "/images/Flash.png");
 
         box = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
-
     }
 
     private Rectangle createBackground() {
@@ -437,7 +438,10 @@ public class Shooter extends Parent implements GameLifeCycle {
         t.removeEventFilter(MouseEvent.ANY, enterEvent);
         t.removeEventFilter(GazeEvent.ANY, enterEvent);
         t.getTransition().stop();
-        stats.incrementNumberOfGoalsReached();
+
+        if (!inReplayMode) {
+            stats.incrementNumberOfGoalsReached();
+        }
 
         final String cst;
         if (gameType.equals("biboule")) {

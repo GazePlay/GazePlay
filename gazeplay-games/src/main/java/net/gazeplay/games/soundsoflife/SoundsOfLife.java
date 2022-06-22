@@ -26,6 +26,7 @@ import java.util.Objects;
 public class SoundsOfLife implements GameLifeCycle {
 
     private final Stats stats;
+    private final boolean inReplayMode;
     private final ReplayablePseudoRandom randomGenerator;
 
     private final IGameContext gameContext;
@@ -40,6 +41,7 @@ public class SoundsOfLife implements GameLifeCycle {
         this.targetAOIList = new ArrayList<>();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
+        this.inReplayMode = false;
 
         String path = "data/soundsoflife/";
         switch (gameVariant) {
@@ -109,7 +111,7 @@ public class SoundsOfLife implements GameLifeCycle {
             }
 
             SoundMakingEntity entity = new SoundMakingEntity(imageView, stats, sounds, progressIndicator,
-                gameContext, gameContext.getSoundManager(), randomGenerator);
+                gameContext, gameContext.getSoundManager(), randomGenerator, inReplayMode);
             gameContext.getChildren().add(entity);
             gameContext.getGazeDeviceManager().addEventFilter(entity);
         }
@@ -123,6 +125,8 @@ public class SoundsOfLife implements GameLifeCycle {
         this.gameContext = gameContext;
         this.targetAOIList = new ArrayList<>();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+        this.inReplayMode = true;
+
         String path = "data/soundsoflife/";
         switch (gameVariant) {
             case 0:
@@ -191,7 +195,7 @@ public class SoundsOfLife implements GameLifeCycle {
             }
 
             SoundMakingEntity entity = new SoundMakingEntity(imageView, stats, sounds, progressIndicator,
-                gameContext, gameContext.getSoundManager(), randomGenerator);
+                gameContext, gameContext.getSoundManager(), randomGenerator, inReplayMode);
             gameContext.getChildren().add(entity);
             gameContext.getGazeDeviceManager().addEventFilter(entity);
         }

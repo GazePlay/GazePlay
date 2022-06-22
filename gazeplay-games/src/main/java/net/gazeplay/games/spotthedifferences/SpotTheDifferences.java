@@ -35,6 +35,7 @@ public class SpotTheDifferences implements GameLifeCycle {
 
     @Getter
     private final SpotTheDifferencesStats stats;
+    private final boolean inReplayMode;
     private final IGameContext gameContext;
     private final Dimension2D dimensions;
 
@@ -55,9 +56,10 @@ public class SpotTheDifferences implements GameLifeCycle {
     private int currentInstance;
     final ArrayList<TargetAOI> targetAOIList;
 
-    public SpotTheDifferences(final IGameContext gameContext, final SpotTheDifferencesStats stats) {
+    public SpotTheDifferences(final IGameContext gameContext, final SpotTheDifferencesStats stats, final boolean inReplayMode) {
         this.gameContext = gameContext;
         this.stats = stats;
+        this.inReplayMode = inReplayMode;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final Configuration config = gameContext.getConfiguration();
         this.currentInstance = 0;
@@ -141,7 +143,9 @@ public class SpotTheDifferences implements GameLifeCycle {
     void differenceFound() {
         numberDiffFound++;
         scoreText.setText(numberDiffFound + "/" + totalNumberDiff);
-        stats.incrementNumberOfGoalsReached();
+        if (!inReplayMode) {
+            stats.incrementNumberOfGoalsReached();
+        }
         if (numberDiffFound == totalNumberDiff) {
             gameContext.updateScore(stats, this);
             gameContext.playWinTransition(200, actionEvent -> gameContext.showRoundStats(stats, this));

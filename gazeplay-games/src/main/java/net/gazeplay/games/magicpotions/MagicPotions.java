@@ -55,6 +55,8 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
     private final MagicPotionsStats stats;
 
+    private final boolean inReplayMode;
+
     public MagicPotions.RoundDetails currentRoundDetails;
 
     private final Dimension2D gameDimension2D;
@@ -82,6 +84,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
+        this.inReplayMode = false;
     }
 
     MagicPotions(final IGameContext gameContext, final Stats stats, double gameSeed) {
@@ -92,6 +95,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+        this.inReplayMode = true;
     }
 
     @Override
@@ -134,15 +138,15 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
         potionRed = new Potion(gameDimension2D.getWidth() * 6 / 7 - (imageWidth + imageWidth) * 1.5,
             gameDimension2D.getHeight() - imageHeight - 10, imageWidth, imageHeight, red, Color.RED,
-            gameContext, stats, this, gameContext.getConfiguration().getFixationLength());
+            gameContext, stats, this, gameContext.getConfiguration().getFixationLength(), inReplayMode);
 
         potionYellow = new Potion(gameDimension2D.getWidth() * 6 / 7 - imageWidth * 1.5,
             gameDimension2D.getHeight() - imageHeight - 10, imageWidth, imageHeight, yellow,
-            Color.YELLOW, gameContext, stats, this, gameContext.getConfiguration().getFixationLength());
+            Color.YELLOW, gameContext, stats, this, gameContext.getConfiguration().getFixationLength(), inReplayMode);
 
         potionBlue = new Potion(gameDimension2D.getWidth() * 6 / 7, gameDimension2D.getHeight() - imageHeight - 10,
             imageWidth, imageHeight, blue, Color.BLUE, gameContext, stats, this,
-            gameContext.getConfiguration().getFixationLength());
+            gameContext.getConfiguration().getFixationLength(), inReplayMode);
 
         final LinkedList<Potion> potionsOnTable = new LinkedList<>();
         potionsOnTable.add(potionBlue);

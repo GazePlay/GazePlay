@@ -27,14 +27,11 @@ public class Bubble implements GameLifeCycle {
     public static final String FIX = "FIX";
 
     private final IGameContext gameContext;
-
     private final BubbleType type;
-
     private final Stats stats;
-
     private final BubblesGameVariant gameVariant;
-
     private final ReplayablePseudoRandom randomGenerator;
+    private final boolean inReplayMode;
 
     public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final BubblesGameVariant gameVariant) {
         super();
@@ -44,6 +41,7 @@ public class Bubble implements GameLifeCycle {
         this.gameVariant = gameVariant;
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
+        this.inReplayMode = false;
     }
 
     public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final BubblesGameVariant gameVariant, double gameSeed) {
@@ -52,6 +50,7 @@ public class Bubble implements GameLifeCycle {
         this.stats = stats;
         this.gameVariant = gameVariant;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+        this.inReplayMode = true;
     }
 
     void initBackground(boolean useBackgroundImage) {
@@ -94,8 +93,8 @@ public class Bubble implements GameLifeCycle {
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
         randomPositionGenerator.setRandomGenerator(randomGenerator);
         for (int i = 0; i < 10; i++) {
-            Target portrait = new Target(gameContext, randomPositionGenerator, stats,
-                Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, type);
+            Target portrait = new Target(gameContext, randomPositionGenerator, stats, Portrait.createImageLibrary(randomGenerator),
+                gameVariant, this, randomGenerator, type, inReplayMode);
             gameContext.getChildren().add(portrait);
         }
         gameContext.setLimiterAvailable();

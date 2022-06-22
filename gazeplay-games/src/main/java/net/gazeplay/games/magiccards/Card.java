@@ -54,6 +54,7 @@ public class Card extends Parent {
 
     private Timeline timelineProgressBar;
     private final Stats stats;
+    private final boolean inReplayMode;
 
     private final EventHandler<Event> enterEvent;
 
@@ -62,9 +63,9 @@ public class Card extends Parent {
      */
     private Timeline currentTimeline;
 
-    public Card(final double positionX, final double positionY, final double width, final double height, final Image image, final boolean winner,
-                final IGameContext gameContext, final Stats stats, final MagicCards gameInstance, final int fixationlength) {
-
+    public Card(final double positionX, final double positionY, final double width, final double height, final Image image,
+                final boolean winner, final IGameContext gameContext, final Stats stats, final MagicCards gameInstance,
+                final int fixationlength, final boolean inReplayMode) {
         this.card = new Rectangle(positionX, positionY, width, height);
         this.card.setFill(new ImagePattern(new Image("data/magiccards/images/red-card-game.png"), 0, 0, 1, 1, true));
 
@@ -74,6 +75,7 @@ public class Card extends Parent {
         this.gameContext = gameContext;
 
         this.stats = stats;
+        this.inReplayMode = inReplayMode;
 
         this.fixationlength = fixationlength;
 
@@ -115,7 +117,9 @@ public class Card extends Parent {
 
         final javafx.geometry.Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        stats.incrementNumberOfGoalsReached();
+        if (!inReplayMode) {
+            stats.incrementNumberOfGoalsReached();
+        }
 
         final int finalZoom = 2;
 

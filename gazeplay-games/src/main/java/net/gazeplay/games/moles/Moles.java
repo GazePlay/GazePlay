@@ -40,6 +40,8 @@ public class Moles extends Parent implements GameLifeCycle {
 
     private final Stats stats;
 
+    private final boolean inReplayMode;
+
     private int nbMolesWhacked;
 
     @Getter
@@ -71,6 +73,7 @@ public class Moles extends Parent implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
         this.variant = type;
+        this.inReplayMode = false;
     }
 
     Moles(IGameContext gameContext, Stats stats, final MolesGameVariant type, double gameSeed) {
@@ -83,6 +86,7 @@ public class Moles extends Parent implements GameLifeCycle {
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
         this.variant = type;
+        this.inReplayMode = true;
     }
 
     @Override
@@ -308,7 +312,9 @@ public class Moles extends Parent implements GameLifeCycle {
 
         nbMolesWhacked++;
         String s = "Score:" + nbMolesWhacked;
-        stats.incrementNumberOfGoalsReached();
+        if (!inReplayMode) {
+            stats.incrementNumberOfGoalsReached();
+        }
         EventHandler<ActionEvent> limiterEndEventHandler = e -> {
             minuteur.cancel();
             minuteur.purge();

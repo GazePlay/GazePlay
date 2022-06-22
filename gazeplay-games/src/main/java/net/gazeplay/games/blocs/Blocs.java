@@ -32,6 +32,7 @@ public class Blocs implements GameLifeCycle {
     private final boolean colors;
     private final float percents4Win;
     private final Stats stats;
+    private final boolean inReplayMode;
 
     private final int initCount;
 
@@ -40,13 +41,11 @@ public class Blocs implements GameLifeCycle {
 
     @Data
     public static class CurrentRoundDetails {
-
         private int remainingCount;
 
         private boolean finished;
 
         private final Bloc[][] blocs;
-
 
         CurrentRoundDetails(final int initCount, final int nbLines, final int nbColumns) {
             this.remainingCount = initCount;
@@ -72,6 +71,7 @@ public class Blocs implements GameLifeCycle {
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
+        this.inReplayMode = false;
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"), randomGenerator);
 
@@ -89,6 +89,7 @@ public class Blocs implements GameLifeCycle {
         this.percents4Win = percents4Win;
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+        this.inReplayMode = true;
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"), randomGenerator);
 
@@ -184,7 +185,6 @@ public class Blocs implements GameLifeCycle {
     }
 
     private void removeBloc(final Bloc toRemove) {
-
         if (toRemove == null) {
             return;
         }
@@ -199,7 +199,6 @@ public class Blocs implements GameLifeCycle {
 
     private EventHandler<Event> buildEvent(final IGameContext gameContext, final Stats stats, final boolean useTrail) {
         return e -> {
-
             if (e.getEventType().equals(MouseEvent.MOUSE_ENTERED)
                 || e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
 
@@ -222,7 +221,6 @@ public class Blocs implements GameLifeCycle {
 
                     for (int i = -trail; i < trail; i++) {
                         for (int j = -trail; j < trail; j++) {
-
                             if (Math.sqrt(i * i + j * j) <= trail && posX + i >= 0 && posY + j >= 0
                                 && posX + i < maxX && posY + j < maxY) {
 
@@ -238,7 +236,9 @@ public class Blocs implements GameLifeCycle {
 
                     currentRoundDetails.finished = true;
 
-                    stats.incrementNumberOfGoalsReached();
+                    if (!inReplayMode) {
+                        stats.incrementNumberOfGoalsReached();
+                    }
 
                     removeAllBlocs();
 
@@ -254,7 +254,6 @@ public class Blocs implements GameLifeCycle {
     }
 
     private static class Bloc extends Rectangle {
-
         final int posX;
         final int posY;
 
@@ -263,7 +262,5 @@ public class Blocs implements GameLifeCycle {
             this.posX = posX;
             this.posY = posY;
         }
-
     }
-
 }

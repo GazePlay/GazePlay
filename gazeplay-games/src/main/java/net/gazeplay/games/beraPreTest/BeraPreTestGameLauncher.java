@@ -39,11 +39,11 @@ public class BeraPreTestGameLauncher implements IGameLauncher<Stats, IGameVarian
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant, Stats stats) {
-        return new BeraPreTest(gameContext, gameStats, gameContext.getTranslator());
+        return new BeraPreTest(gameContext, gameStats, gameContext.getTranslator(), false);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant, Stats stats, double gameSeed) {
-        return new BeraPreTest(gameContext, gameStats, gameContext.getTranslator());
+        return new BeraPreTest(gameContext, gameStats, gameContext.getTranslator(), true);
     }
 }

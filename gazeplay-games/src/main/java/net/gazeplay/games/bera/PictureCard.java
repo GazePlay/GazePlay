@@ -33,6 +33,7 @@ class PictureCard extends Group {
 
     private final double minTime;
     private final IGameContext gameContext;
+    private final boolean inReplayMode;
     private final boolean winner;
 
     private final ImageView imageRectangle;
@@ -55,9 +56,8 @@ class PictureCard extends Group {
 
     private int valueProgressIndicator = 500;
 
-    PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
-                boolean winner, @NonNull String imagePath, @NonNull Stats stats, Bera gameInstance) {
-
+    PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, boolean winner,
+                @NonNull String imagePath, @NonNull Stats stats, Bera gameInstance, boolean inReplayMode) {
         log.info("imagePath = {}", imagePath);
 
         final Configuration config = gameContext.getConfiguration();
@@ -67,13 +67,14 @@ class PictureCard extends Group {
         this.initialPositionY = posY;
         this.initialWidth = width;
         this.initialHeight = height;
-        this.selected = false;
-        this.alreadySee = false;
-        this.winner = winner;
         this.gameContext = gameContext;
+        this.winner = winner;
+        this.imagePath = imagePath;
         this.stats = stats;
         this.gameInstance = gameInstance;
-        this.imagePath = imagePath;
+        this.inReplayMode = inReplayMode;
+        this.selected = false;
+        this.alreadySee = false;
 
         this.imageRectangle = createImageView(this.initialPositionX, this.initialPositionY, this.initialWidth, this.initialHeight, imagePath);
 
@@ -91,7 +92,6 @@ class PictureCard extends Group {
 
         this.addEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);
         this.addEventFilter(GazeEvent.ANY, customInputEventHandlerMouse);
-
     }
 
     private Timeline createProgressIndicatorTimeLine(Bera gameInstance) {
@@ -110,7 +110,6 @@ class PictureCard extends Group {
 
     private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(Bera gameInstance) {
         return actionEvent -> {
-
             log.debug("FINISHED");
 
             if (this.alreadySee) {
@@ -175,17 +174,17 @@ class PictureCard extends Group {
     }
 
     public void onCorrectCardSelected() {
-
         if (gameInstance.indexFileImage == (gameInstance.indexEndGame - 1)) {
             progressIndicator.setVisible(false);
             gameInstance.increaseIndexFileImage(true);
             this.endGame();
         } else {
-
             gameInstance.nbCountError = 0;
             gameInstance.increaseIndexFileImage(true);
 
-            stats.incrementNumberOfGoalsReached();
+            if (!inReplayMode) {
+                stats.incrementNumberOfGoalsReached();
+            }
 
             customInputEventHandlerMouse.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
@@ -197,18 +196,18 @@ class PictureCard extends Group {
     }
 
     public void onWrongCardSelected() {
-
         gameInstance.nbCountError += 1;
 
         if (gameInstance.nbCountError != 5) {
-
             if (gameInstance.indexFileImage == (gameInstance.indexEndGame - 1)) {
                 progressIndicator.setVisible(false);
                 this.endGame();
             } else {
                 gameInstance.increaseIndexFileImage(false);
 
-                stats.incrementNumberOfGoalsReached();
+                if (!inReplayMode) {
+                    stats.incrementNumberOfGoalsReached();
+                }
 
                 customInputEventHandlerMouse.ignoreAnyInput = true;
                 progressIndicator.setVisible(false);

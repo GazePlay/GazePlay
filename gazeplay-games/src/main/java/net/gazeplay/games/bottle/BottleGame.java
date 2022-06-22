@@ -28,6 +28,7 @@ public class BottleGame implements GameLifeCycle {
     private final BottleGameStats bottleGameStats;
     private final Dimension2D dimension2D;
     private final Configuration configuration;
+    private final boolean inReplayMode;
 
     private final Group backgroundLayer;
     private final Group foregroundLayer;
@@ -53,11 +54,11 @@ public class BottleGame implements GameLifeCycle {
     String sTypes;
 
     public BottleGame(IGameContext gameContext, BottleGameStats stats, int number, String sTypes) {
-
         this.bottleGameStats = stats;
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
+        this.inReplayMode = false;
 
         this.bottle = new ArrayList<>();
         this.nbBottle = number;
@@ -107,15 +108,14 @@ public class BottleGame implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
         this.sTypes = sTypes;
-
     }
 
     public BottleGame(IGameContext gameContext, BottleGameStats stats, int number, String sTypes, double gameSeed) {
-
         this.bottleGameStats = stats;
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
+        this.inReplayMode = true;
 
         this.bottle = new ArrayList<>();
         this.nbBottle = number;
@@ -164,7 +164,6 @@ public class BottleGame implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
         this.sTypes = sTypes;
-
     }
 
     @Override
@@ -309,7 +308,9 @@ public class BottleGame implements GameLifeCycle {
             bottleBreaker(bottle);
             ball.setVisible(false);
             gameContext.getSoundManager().add("data/bottle/sounds/verre.wav");
-            bottleGameStats.incrementNumberOfGoalsReached();
+            if (!inReplayMode) {
+                bottleGameStats.incrementNumberOfGoalsReached();
+            }
             updateScore();
         });
         timeline.play();

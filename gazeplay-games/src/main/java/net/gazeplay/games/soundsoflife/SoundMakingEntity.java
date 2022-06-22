@@ -27,14 +27,17 @@ public class SoundMakingEntity extends Parent {
     private final Timeline movetimeline;
     private int soundIter;
     private final Stats stats;
+    private final boolean inReplayMode;
     private final SoundManager soundManager;
 
     public SoundMakingEntity(final ImageView imageView, final Stats stats, final ArrayList<String> audioClips,
-                             final ProgressIndicator progressIndicator, final IGameContext gameContext, final SoundManager soundManager, ReplayablePseudoRandom randomGenerator) {
+                             final ProgressIndicator progressIndicator, final IGameContext gameContext,
+                             final SoundManager soundManager, ReplayablePseudoRandom randomGenerator, final boolean inReplayMode) {
         this.audioClips = audioClips;
         this.progressIndicator = progressIndicator;
         this.stats = stats;
         this.soundManager = soundManager;
+        this.inReplayMode = inReplayMode;
 
         final ReplayablePseudoRandom random = randomGenerator;
         soundIter = random.nextInt(audioClips.size());
@@ -79,6 +82,8 @@ public class SoundMakingEntity extends Parent {
 
         soundIter = (soundIter + 1) % audioClips.size();
 
-        stats.incrementNumberOfGoalsReached();
+        if (!inReplayMode) {
+            stats.incrementNumberOfGoalsReached();
+        }
     }
 }

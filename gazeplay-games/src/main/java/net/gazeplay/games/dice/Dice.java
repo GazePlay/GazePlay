@@ -143,7 +143,6 @@ public class Dice implements GameLifeCycle {
                 for (int i = 0; i < diceRollers.size(); i++) {
                     rolls[i] = diceRollers.get(i).roll(i == 0 ? action -> addUp() : null);
                 }
-                stats.incrementNumberOfGoalsReached();
             }
         }, gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);

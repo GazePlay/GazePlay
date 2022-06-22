@@ -52,6 +52,8 @@ public class Cup {
 
     private final CupsAndBalls gameInstance;
 
+    private final boolean inReplayMode;
+
     @Getter
     @Setter
     private boolean revealed = false;
@@ -69,8 +71,8 @@ public class Cup {
     @Setter
     private int actionsToDo;
 
-    public Cup(final ImageView item, final PositionCup positionCup, final IGameContext gameContext, final Stats stats, final CupsAndBalls gameInstance,
-               final int openCupSpeed) {
+    public Cup(final ImageView item, final PositionCup positionCup, final IGameContext gameContext, final Stats stats,
+               final CupsAndBalls gameInstance, final int openCupSpeed, final boolean inReplayMode) {
         this.actionsDone = 0;
         this.actionsToDo = 0;
         this.openCupSpeed = openCupSpeed;
@@ -79,23 +81,17 @@ public class Cup {
         this.widthItem = item.getFitWidth();
         this.heightItem = item.getFitHeight();
         this.positionCup = positionCup;
-
         this.gameContext = gameContext;
-
         this.stats = stats;
-
         this.gameInstance = gameInstance;
-
         this.enterEvent = buildEvent();
-
         this.progressIndicator = createProgressIndicator(item.getX(), item.getY());
+        this.inReplayMode = inReplayMode;
 
         createEvent();
-
     }
 
     public void createEvent() {
-
         this.item.addEventFilter(MouseEvent.ANY, enterEvent);
         this.item.addEventFilter(GazeEvent.ANY, enterEvent);
 
@@ -140,7 +136,9 @@ public class Cup {
     }
 
     private void onCorrectCupSelected() {
-        stats.incrementNumberOfGoalsReached();
+        if (!inReplayMode) {
+            stats.incrementNumberOfGoalsReached();
+        }
 
         progressIndicator.setOpacity(0);
 
@@ -151,17 +149,11 @@ public class Cup {
         ball.getItem().setVisible(true);
 
         revealBallTransition.setOnFinished((ActionEvent actionEvent) -> {
-            gameContext.updateScore(stats, gameInstance, event -> {
-                gameInstance.openAllIncorrectCups();
-            }, event -> {
-            });
+            gameContext.updateScore(stats, gameInstance, event -> gameInstance.openAllIncorrectCups(), event -> {});
 
             gameContext.playWinTransition(0, (ActionEvent actionEvent1) -> {
-
                 gameInstance.dispose();
-
                 gameContext.clear();
-
                 gameInstance.launch();
             });
         });
@@ -174,19 +166,16 @@ public class Cup {
         final TranslateTransition revealBallTransition = new TranslateTransition(Duration.millis(openCupSpeed), item);
 
         revealBallTransition.setByY(-ballRadius * 8);
-
         revealBallTransition.play();
     }
 
     private EventHandler<Event> buildEvent() {
         return (Event e) -> {
-
             if (revealed || actionsDone < actionsToDo - 1) {
                 return;
             }
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-
                 progressIndicator.setOpacity(1);
                 progressIndicator.setProgress(0);
 

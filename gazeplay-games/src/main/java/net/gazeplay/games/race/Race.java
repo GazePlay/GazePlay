@@ -60,6 +60,7 @@ public class Race extends Parent implements GameLifeCycle {
     private final String gameType;
 
     private final Stats stats;
+    private final boolean inReplayMode;
 
     private Point[] endPoints;
 
@@ -81,6 +82,7 @@ public class Race extends Parent implements GameLifeCycle {
         gameType = type;
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
+        this.inReplayMode = false;
 
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         hand = new StackPane();
@@ -93,8 +95,6 @@ public class Race extends Parent implements GameLifeCycle {
         racer = new Image("data/" + gameType + "/images/frogJump.gif");
         flash = new Image("data/" + gameType + "/images/Flash.png");
         cage = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
-
-
     }
 
     public Race(final IGameContext gameContext, final Stats stats, final String type, double gameSeed) {
@@ -103,6 +103,7 @@ public class Race extends Parent implements GameLifeCycle {
         score = 0;
         gameType = type;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+        this.inReplayMode = true;
 
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         hand = new StackPane();
@@ -115,8 +116,6 @@ public class Race extends Parent implements GameLifeCycle {
         racer = new Image("data/" + gameType + "/images/frogJump.gif");
         flash = new Image("data/" + gameType + "/images/Flash.png");
         cage = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
-
-
     }
 
     Rectangle createBackground() {
@@ -277,7 +276,9 @@ public class Race extends Parent implements GameLifeCycle {
                     if (!((Target) e.getTarget()).done) {
                         ((Target) e.getTarget()).done = true;
                         enter((Target) e.getTarget());
-                        stats.incrementNumberOfGoalsReached();
+                        if (!inReplayMode) {
+                            stats.incrementNumberOfGoalsReached();
+                        }
                     }
                 }
             }
@@ -481,7 +482,9 @@ public class Race extends Parent implements GameLifeCycle {
         sp.setLayoutY(y);
         sp.centerX = x;
         sp.centerY = y;
-        stats.incrementNumberOfGoalsReached();
+        if (!inReplayMode) {
+            stats.incrementNumberOfGoalsReached();
+        }
         moveCircle(sp);
     }
 

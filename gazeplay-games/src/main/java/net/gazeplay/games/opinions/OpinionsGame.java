@@ -27,6 +27,7 @@ public class OpinionsGame implements GameLifeCycle {
     private final Group backgroundLayer;
     private final Group middleLayer;
     private final OpinionsGameStats stats;
+    private final boolean inReplayMode;
 
     private final ImageLibrary backgroundImage;
     private final ImageLibrary thumbImage;
@@ -55,6 +56,7 @@ public class OpinionsGame implements GameLifeCycle {
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
+        this.inReplayMode = false;
 
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
@@ -67,7 +69,6 @@ public class OpinionsGame implements GameLifeCycle {
         gameContext.getChildren().add(foregroundLayer);
 
         this.type = type;
-
     }
 
     public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats, final OpinionsGameVariant type, double gameSeed) {
@@ -76,6 +77,7 @@ public class OpinionsGame implements GameLifeCycle {
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
+        this.inReplayMode = true;
 
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
@@ -87,12 +89,10 @@ public class OpinionsGame implements GameLifeCycle {
         gameContext.getChildren().add(foregroundLayer);
 
         this.type = type;
-
     }
 
     @Override
     public void launch() {
-
         this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
 
@@ -117,7 +117,9 @@ public class OpinionsGame implements GameLifeCycle {
             }
             background.setImage(current_picture);
             old_picture = current_picture;
-            stats.incrementNumberOfGoalsReached();
+            if (!inReplayMode) {
+                stats.incrementNumberOfGoalsReached();
+            }
         };
 
         if (type.equals(OpinionsGameVariant.OPINIONS)) {

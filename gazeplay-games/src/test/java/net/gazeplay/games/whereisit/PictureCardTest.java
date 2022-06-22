@@ -43,7 +43,7 @@ class PictureCardTest {
     void shouldCreateImageViewFromResource() {
         String resource = "images/blue/blue.jpg";
         PictureCard pictureCard = new PictureCard(2, 2, 2, 2, mockGameContext, true,
-            resource, mockStats, mockWhereIsIt);
+            resource, mockStats, mockWhereIsIt, false);
         Image image = pictureCard.getImageRectangle().getImage();
         assert image.getUrl().contains(resource);
     }
@@ -52,7 +52,7 @@ class PictureCardTest {
     void shouldCreateImageViewFromFile() {
         String resource = "file:" + System.getProperty("user.dir") + "src/test/resources/images/blue/blue.jpg";
         PictureCard pictureCard = new PictureCard(2, 2, 2, 2, mockGameContext, true,
-            resource, mockStats, mockWhereIsIt);
+            resource, mockStats, mockWhereIsIt, false);
         Image image = pictureCard.getImageRectangle().getImage();
         assert image.getUrl().contains("blue.jpg");
     }
@@ -61,7 +61,7 @@ class PictureCardTest {
     void shouldCreateErrorImageRectangle() {
         String resource = "images/blue/blue.jpg";
         PictureCard pictureCard = new PictureCard(2, 2, 2, 2, mockGameContext, true,
-            resource, mockStats, mockWhereIsIt);
+            resource, mockStats, mockWhereIsIt, false);
         assert pictureCard.getErrorImageRectangle() != null;
     }
 }

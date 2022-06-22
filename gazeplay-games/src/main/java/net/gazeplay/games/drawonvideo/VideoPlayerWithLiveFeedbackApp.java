@@ -56,7 +56,7 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
         Dimension2D videoDimension = new Dimension2D(1280, 720);
         webview.setPrefSize(videoDimension.getWidth(), videoDimension.getHeight());
 
-        DrawBuilder drawBuilder = new DrawBuilder(randomGenerator);
+        DrawBuilder drawBuilder = new DrawBuilder(randomGenerator, false);
         drawBuilder.setDrawLineWidth(64);
         drawBuilder.setColorPicker(new ProgressiveColorPicker(randomGenerator));
 
@@ -180,7 +180,7 @@ public class VideoPlayerWithLiveFeedbackApp implements GameLifeCycle {
         Dimension2D videoDimension = new Dimension2D(1280, 720);
         webview.setPrefSize(videoDimension.getWidth(), videoDimension.getHeight());
 
-        DrawBuilder drawBuilder = new DrawBuilder(randomGenerator);
+        DrawBuilder drawBuilder = new DrawBuilder(randomGenerator, true);
         drawBuilder.setDrawLineWidth(64);
         drawBuilder.setColorPicker(new ProgressiveColorPicker(randomGenerator));
 

@@ -33,6 +33,8 @@ public class Follow implements GameLifeCycle {
     @Setter
     private FollowGameVariant variant;
 
+    private final boolean inReplayMode;
+
     private final Dimension2D dimension2D;
 
     //player's position
@@ -76,11 +78,11 @@ public class Follow implements GameLifeCycle {
     private int score;
     private int scoretoreach;
 
-
-    Follow(final IGameContext gameContext, final Stats stats, final FollowGameVariant variant) {
+    Follow(final IGameContext gameContext, final Stats stats, final FollowGameVariant variant, final boolean inReplayMode) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.variant = variant;
+        this.inReplayMode = inReplayMode;
 
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -367,7 +369,9 @@ public class Follow implements GameLifeCycle {
                 } else if (map[j][i] == 2) {
                     scoretoreach++;
                     coin = new EventItem((i + 1) * sizeWw, (j + 1) * sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/coin.png")), e -> {
-                        stats.incrementNumberOfGoalsReached();
+                        if (!inReplayMode) {
+                            stats.incrementNumberOfGoalsReached();
+                        }
                         score++;
                         multigoals(); /*Maybe add a song*/
                     }, true);
@@ -403,7 +407,9 @@ public class Follow implements GameLifeCycle {
 
         {
             javafx.event.EventHandler<ActionEvent> eventwin = e -> {
-                stats.incrementNumberOfGoalsReached();
+                if (!inReplayMode) {
+                    stats.incrementNumberOfGoalsReached();
+                }
                 win();
             };
             EventItem ruby = new EventItem(2 * sizeWw, 11 * sizeWh, 3 * sizeWw, 3 * sizeWh, new ImagePattern(new Image("data/follow/ruby1RS.png")), eventwin, true);
@@ -421,7 +427,9 @@ public class Follow implements GameLifeCycle {
                 listWall.remove(grille);
                 gameContext.getChildren().remove(grille);
                 //Maybe add a song
-                stats.incrementNumberOfGoalsReached();
+                if (!inReplayMode) {
+                    stats.incrementNumberOfGoalsReached();
+                }
             };
             EventItem key = new EventItem(28 * sizeWw, 3 * sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/key.png")), eventkey, true);
             listEI.add(key);
@@ -462,7 +470,9 @@ public class Follow implements GameLifeCycle {
                 listWall.remove(doorRED);
                 gameContext.getChildren().remove(doorRED);
                 //Maybe add a song
-                stats.incrementNumberOfGoalsReached();
+                if (!inReplayMode) {
+                    stats.incrementNumberOfGoalsReached();
+                }
             };
             EventItem keyRED = new EventItem(3 * sizeWw, 7 * sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/keyred.png")), eventkeyred, true);
             listEI.add(keyRED);
@@ -486,7 +496,9 @@ public class Follow implements GameLifeCycle {
                 listWall.remove(doorGREEN2);
                 gameContext.getChildren().remove(doorGREEN2);
                 //Maybe add a sound
-                stats.incrementNumberOfGoalsReached();
+                if (!inReplayMode) {
+                    stats.incrementNumberOfGoalsReached();
+                }
             };
             EventItem keyGREEN = new EventItem((x - 3) * sizeWw, 4 * sizeWh, sizeWw, sizeWh, new ImagePattern(new Image("data/follow/keygreen.png")), eventkeygreen, true);
             listEI.add(keyGREEN);
@@ -494,7 +506,9 @@ public class Follow implements GameLifeCycle {
         }
 
         javafx.event.EventHandler<ActionEvent> eventwin = e -> {
-            stats.incrementNumberOfGoalsReached();
+            if (!inReplayMode) {
+                stats.incrementNumberOfGoalsReached();
+            }
             win();
         };
         EventItem ruby = new EventItem(2 * sizeWw, 2 * sizeWh, 2 * sizeWw, 2 * sizeWh, new ImagePattern(new Image("data/follow/ruby1RS.png")), eventwin, true);

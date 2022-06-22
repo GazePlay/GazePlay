@@ -46,6 +46,8 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private final Stats stats;
 
+    private final boolean inReplayMode;
+
     private final IGameContext gameContext;
 
     private final Instru instru;
@@ -74,6 +76,7 @@ public class Piano extends Parent implements GameLifeCycle {
         jukebox = new Jukebox(gameContext);
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
+        this.inReplayMode = false;
     }
 
     public Piano(final IGameContext gameContext, final Stats stats, double gameSeed) {
@@ -89,6 +92,7 @@ public class Piano extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(this);
         jukebox = new Jukebox(gameContext);
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+        this.inReplayMode = true;
     }
 
     private List<ImageView> buildFragments() {
@@ -317,7 +321,9 @@ public class Piano extends Parent implements GameLifeCycle {
 
                     if (precNote != -1 && tilesTab.get(precNote).arc.getFill() == Color.YELLOW) {
                         instru.noteOn(precKey);
-                        stats.incrementNumberOfGoalsReached();
+                        if (!inReplayMode) {
+                            stats.incrementNumberOfGoalsReached();
+                        }
                         double x;
                         double y;
 
@@ -438,7 +444,9 @@ public class Piano extends Parent implements GameLifeCycle {
                         }
 
                         instru.noteOn(precKey);
-                        stats.incrementNumberOfGoalsReached();
+                        if (!inReplayMode) {
+                            stats.incrementNumberOfGoalsReached();
+                        }
 
                         if (firstNote != -1) {
                             tilesTab.get(precNote).arc.setFill(tilesTab.get(precNote).color1);

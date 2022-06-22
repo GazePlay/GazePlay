@@ -21,6 +21,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 public class Divisor implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Stats stats;
+    private final boolean inReplayMode;
     private final boolean isRabbit;
     private final ReplayablePseudoRandom randomGenerator;
 
@@ -32,6 +33,7 @@ public class Divisor implements GameLifeCycle {
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
         this.gameContext.getRandomPositionGenerator().setRandomGenerator(randomGenerator);
         this.isRabbit = isRabbit;
+        this.inReplayMode = false;
     }
 
     public Divisor(final IGameContext gameContext, final Stats stats, final boolean isRabbit, double gameSeed) {
@@ -42,6 +44,7 @@ public class Divisor implements GameLifeCycle {
         this.gameContext.getRandomPositionGenerator().setRandomGenerator(randomGenerator);
         this.isRabbit = isRabbit;
         this.gameContext.startTimeLimiter();
+        this.inReplayMode = true;
     }
 
     @Override
@@ -64,7 +67,7 @@ public class Divisor implements GameLifeCycle {
         stats.incrementNumberOfGoalsToReach(15);
 
         target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
-            this.gameContext.getRandomPositionGenerator().newRandomPosition(100 + 2), isRabbit, randomGenerator);
+            this.gameContext.getRandomPositionGenerator().newRandomPosition(100 + 2), isRabbit, randomGenerator, inReplayMode);
 
         gameContext.getChildren().add(target);
         gameContext.firstStart();

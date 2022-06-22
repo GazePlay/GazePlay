@@ -30,12 +30,10 @@ public class Target extends ProgressPortrait {
     private static final int nbFragments = 10; // number of little circles after explosion
 
     private final IGameContext gameContext;
-
     private final Bubble gameInstance;
-
     private final BubblesGameVariant gameVariant;
-
     private final Stats stats;
+    private final boolean inReplayMode;
 
     private final ImageLibrary imageLibrary;
 
@@ -56,7 +54,8 @@ public class Target extends ProgressPortrait {
     private PauseTransition wait;
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
-                  final ImageLibrary imageLibrary, final BubblesGameVariant gameVariant, final Bubble gameInstance, final ReplayablePseudoRandom randomGenerator, BubbleType type) {
+                  final ImageLibrary imageLibrary, final BubblesGameVariant gameVariant, final Bubble gameInstance,
+                  final ReplayablePseudoRandom randomGenerator, BubbleType type, boolean inReplayMode) {
         super(gameContext.getConfiguration().getElementSize());
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
@@ -65,6 +64,7 @@ public class Target extends ProgressPortrait {
         this.type = type;
         this.imageLibrary = imageLibrary;
         this.gameVariant = gameVariant;
+        this.inReplayMode = inReplayMode;
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
 
@@ -122,10 +122,7 @@ public class Target extends ProgressPortrait {
     }
 
     private EventHandler<Event> buildEvent() {
-
-        return e -> {
-            enter(e);
-        };
+        return e -> enter(e);
     }
 
     private List<Circle> buildFragments(final BubbleType bubbleType) {
@@ -198,14 +195,15 @@ public class Target extends ProgressPortrait {
     }
 
     private void enter(final Event e) {
-
         if (this.gameVariant.toString().endsWith("FIX") && wait != null) {
             wait.stop();
             wait.setDuration(Duration.millis(15000 / gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue()));
             wait.play();
         }
 
-        stats.incrementNumberOfGoalsReached();
+        if (!inReplayMode) {
+            stats.incrementNumberOfGoalsReached();
+        }
 
         gameContext.updateScore(stats, gameInstance);
 
@@ -220,7 +218,6 @@ public class Target extends ProgressPortrait {
         }
 
         this.setOpacity(1);
-
     }
 
     private void createTarget() {

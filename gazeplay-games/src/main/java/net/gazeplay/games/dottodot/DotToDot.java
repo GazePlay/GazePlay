@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.geometry.Dimension2D;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -19,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -39,6 +37,8 @@ public class DotToDot implements GameLifeCycle {
     private final Stats stats;
 
     private final DotToDotGameVariant gameVariant;
+
+    private final boolean inReplayMode;
 
     @Getter
     private final ReplayablePseudoRandom randomGenerator;
@@ -65,17 +65,16 @@ public class DotToDot implements GameLifeCycle {
     private List<Integer> listOfFails = new LinkedList<>();
 
 
-    public DotToDot(final IGameContext gameContext, final DotToDotGameVariant gameVariant, final Stats stats) {
-
+    public DotToDot(final IGameContext gameContext, final DotToDotGameVariant gameVariant, final Stats stats, boolean inReplayMode) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameVariant = gameVariant;
+        this.inReplayMode = inReplayMode;
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
         this.dotList = new ArrayList<>();
         this.lineList = new ArrayList<>();
         this.previous = 1;
-
     }
 
     private void createBackground(ImageView background, Dimension2D dimensions, double scaleRatio, IGameContext gameContext) {
@@ -200,7 +199,7 @@ public class DotToDot implements GameLifeCycle {
             progressIndicator.setLayoutY(y - bigDot.getRadius() - progIndicSize / 2 + 50);
             progressIndicator.setOpacity(0);
 
-            DotEntity dot = new DotEntity(dotShape, stats, progressIndicator, number, gameContext, gameVariant, this, index);
+            DotEntity dot = new DotEntity(dotShape, stats, progressIndicator, number, gameContext, gameVariant, this, index, inReplayMode);
             dotList.add(dot);
 
             if (gameVariant.getLabel().contains("Number")) {

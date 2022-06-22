@@ -46,6 +46,8 @@ public class CakeFactory extends Parent implements GameLifeCycle {
 
     private final Stats stats;
 
+    private final boolean inReplayMode;
+
     private FadeTransition ft;
     @Getter
     public Rectangle background;
@@ -118,6 +120,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         this.variant = variant;
         buttons = new ProgressButton[6];
         this.fixationLength = gameContext.getConfiguration().getFixationLength();
+        this.inReplayMode = false;
 
         initBackground(dimension2D);
     }
@@ -139,6 +142,7 @@ public class CakeFactory extends Parent implements GameLifeCycle {
         this.variant = variant;
         buttons = new ProgressButton[6];
         this.fixationLength = gameContext.getConfiguration().getFixationLength();
+        this.inReplayMode = true;
 
         initBackground(dimension2D);
     }
@@ -280,15 +284,17 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     }
 
     private void checkGoodAnswer() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (layers[i][j] == model[i][j]) {
-                    stats.incrementNumberOfGoalsReached();
+        if (!inReplayMode) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (layers[i][j] == model[i][j]) {
+                        stats.incrementNumberOfGoalsReached();
+                    }
                 }
             }
-        }
-        if (layers[2][3] == model[2][3]) {
-            stats.incrementNumberOfGoalsReached();
+            if (layers[2][3] == model[2][3]) {
+                stats.incrementNumberOfGoalsReached();
+            }
         }
     }
 

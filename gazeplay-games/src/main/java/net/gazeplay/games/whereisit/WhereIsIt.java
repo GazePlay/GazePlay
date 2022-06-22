@@ -26,7 +26,6 @@ import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.games.WhereIsItVaildator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
-import net.gazeplay.commons.utils.stats.ChiReport;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 
@@ -65,6 +64,7 @@ public class WhereIsIt implements GameLifeCycle {
 
     private final IGameContext gameContext;
     private final Stats stats;
+    private final boolean inReplayMode;
     private RoundDetails currentRoundDetails;
     private final ReplayablePseudoRandom randomGenerator;
 
@@ -83,6 +83,7 @@ public class WhereIsIt implements GameLifeCycle {
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
+        this.inReplayMode = false;
     }
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
@@ -97,6 +98,7 @@ public class WhereIsIt implements GameLifeCycle {
         this.gameContext.startScoreLimiter();
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+        this.inReplayMode = true;
     }
 
     @Override
@@ -439,7 +441,7 @@ public class WhereIsIt implements GameLifeCycle {
 
                 final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, winnerImageIndexAmongDisplayedImages == i,
-                    randomImageFile + "", stats, this);
+                    randomImageFile + "", stats, this, inReplayMode);
 
                 final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY + 1), (int) gameSizing.height,
                     System.currentTimeMillis());
@@ -490,7 +492,8 @@ public class WhereIsIt implements GameLifeCycle {
                 // The image file needs 'file:' prepended as this will get images from a local source, not resources.
                 final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                    winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats, this);
+                    winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats,
+                    this, inReplayMode);
 
                 final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY + 1), (int) gameSizing.height,
                     System.currentTimeMillis());
@@ -539,7 +542,7 @@ public class WhereIsIt implements GameLifeCycle {
 
                 final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, winnerImageIndexAmongDisplayedImages == i,
-                    randomImageFile + "", stats, this);
+                    randomImageFile + "", stats, this, inReplayMode);
 
                 final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY + 1), (int) gameSizing.height,
                     System.currentTimeMillis());
@@ -579,7 +582,8 @@ public class WhereIsIt implements GameLifeCycle {
 
                 final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                    winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
+                    winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats,
+                    this, inReplayMode);
 
                 pictureCardList.add(pictureCard);
 
