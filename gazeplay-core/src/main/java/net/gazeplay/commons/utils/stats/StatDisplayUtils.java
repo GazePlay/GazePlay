@@ -58,39 +58,43 @@ public class StatDisplayUtils {
     }
 
     static void sentStatsToServer(JsonObject savedStatsJSON, boolean inReplayMode) {
-        if (isConnected() && ActiveConfigurationContext.getInstance().isDataCollectAuthorized() && !inReplayMode) {
-            try {
-                // URL and parameters for the connection, this particularly returns the information passed
-                URL url = new URL("https://lig-interaactionpicto.imag.fr");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoOutput(true);
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty("Content-Type", "application/json");
-                connection.setRequestProperty("Accept", "application/json");
+        if (inReplayMode) {
+            log.info("Game statistics data not sent to server: data not re-sent when replaying game");
+            return;
+        }
+        if (!ActiveConfigurationContext.getInstance().isDataCollectAuthorized()) {
+            log.info("Game statistics data not sent to server: authorization deactivated");
+            return;
+        }
+        try {
+            // URL and parameters for the connection, this particularly returns the information passed
+            URL url = new URL("https://lig-interaactionpicto.imag.fr");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Accept", "application/json");
 
-                // Writes the JSON parsed as string to the connection
-                DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-                out.write(savedStatsJSON.toString().getBytes(StandardCharsets.UTF_8));
-                out.close();
-                int responseCode = connection.getResponseCode();
+            // Writes the JSON parsed as string to the connection
+            DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+            out.write(savedStatsJSON.toString().getBytes(StandardCharsets.UTF_8));
+            out.close();
+            int responseCode = connection.getResponseCode();
 
-                // Creates a reader buffer to receive the response
-                InputStream in = (responseCode > 199 && responseCode < 300) ? connection.getInputStream() : connection.getErrorStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-                StringBuilder content = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    content.append(line).append("\n");
-                }
-                reader.close();
-                log.info(content.toString());
-
-                log.info("Statistic data sent to server");
-            } catch (Exception e) {
-                log.info("Statistic data not sent to server due to error\n" + e);
+            // Creates a reader buffer to receive the response
+            InputStream in = (responseCode > 199 && responseCode < 300) ? connection.getInputStream() : connection.getErrorStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+            StringBuilder content = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append("\n");
             }
-        } else {
-            log.info("Statistic data not sent to server because authorization is deactivated");
+            reader.close();
+
+            log.info("Game statistics data sent to server successfully");
+            log.info("Server response:\n« " + content + " »");
+        } catch (Exception e) {
+            log.info("Game statistics data not sent to server: error during transfer\n" + e);
         }
     }
 
@@ -521,16 +525,5 @@ public class StatDisplayUtils {
             .substring(2)
             .replaceAll("(\\d[HMS])(?!$)", "$1 ")
             .toLowerCase();
-    }
-
-    private static boolean isConnected() {
-        try {
-            URL url = new URL("https://gazeplay.github.io/GazePlay/");
-            URLConnection connection = url.openConnection();
-            connection.connect();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
 }

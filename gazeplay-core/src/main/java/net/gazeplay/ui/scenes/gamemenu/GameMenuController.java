@@ -177,7 +177,7 @@ public class GameMenuController {
         final Stats stats = gameLauncher.createNewStats(scene);
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
 
-        gameContext.createControlPanel(gazePlay, stats, currentGame);
+        gameContext.createControlPanel(gazePlay, stats, currentGame, false);
 
         gameContext.createQuitShortcut(gazePlay, stats, currentGame);
 

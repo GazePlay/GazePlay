@@ -236,7 +236,7 @@ public class ReplayingGameFromJson {
             json.getLifeCycle(), json.getRoundsDurationReport(), json.getFixationSequence(), json.getMovementHistory(),
             json.getHeatMap(), json.getAoiList(), savedStatsInfo);
         GameLifeCycle currentGame = gameLauncher.replayGame(gameContext, gameVariant, statsSaved, json.getGameSeed());
-        gameContext.createControlPanel(gazePlay, statsSaved, currentGame, "replay");
+        gameContext.createControlPanel(gazePlay, statsSaved, currentGame, true);
         gameContext.createQuitShortcut(gazePlay, statsSaved, currentGame);
         currentGame.launch();
 
