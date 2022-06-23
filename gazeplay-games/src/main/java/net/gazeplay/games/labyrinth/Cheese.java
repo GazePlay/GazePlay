@@ -13,21 +13,34 @@ class Cheese extends Parent {
 
     private int indexY;
     private int indexX;
+    boolean isCheese;
 
     private ReplayablePseudoRandom randomGenerator;
 
     Cheese(final double entiereRecX, final double entiereRecY, final double width, final double height, final Labyrinth gameInstance, ReplayablePseudoRandom random) {
         this.gameInstance = gameInstance;
+        this.isCheese=true;
         cheese = new Rectangle(entiereRecX, entiereRecY, width, height);
-        cheese.setFill(new ImagePattern(new Image("data/labyrinth/images/cheese.png"), 5, 5, 1, 1, true));
+        //cheese.setFill(new ImagePattern(new Image("data/labyrinth/images/cheese.png"), 5, 5, 1, 1, true));
         indexY = 0;
         indexX = 0;
         cheese.setMouseTransparent(true);
         this.randomGenerator = random;
     }
-
+    void setToHouse()
+    {
+        this.isCheese=false;
+    }
     void beginCheese() {
         moveCheese();
+        if(this.isCheese)
+        {
+            cheese.setFill(new ImagePattern(new Image("data/labyrinth/images/cheese.png"), 5, 5, 1, 1, true));
+        }
+        else
+        {
+            cheese.setFill(new ImagePattern(new Image("data/labyrinth/images/house.png"), 5, 5, 1, 1, true));
+        }
         this.getChildren().add(cheese);
     }
 
