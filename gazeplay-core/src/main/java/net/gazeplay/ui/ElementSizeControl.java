@@ -57,7 +57,7 @@ public class ElementSizeControl {
     }
 
     public Slider createElementSizeSlider(Configuration config, Label elementSizeValueLabel) {
-        final int initialElementSizeValue = config.getElementSizeProperty().getValue();
+        final int initialElementSizeValue = config.getElementSize();
 
         Slider slider = new Slider();
         slider.setMinWidth(QuickControl.SLIDERS_MIN_WIDTH);
@@ -80,7 +80,7 @@ public class ElementSizeControl {
         slider.valueProperty().addListener((observable) -> {
             String labelText = formatValue(slider.getValue());
             elementSizeValueLabel.setText(labelText);
-            config.getElementSizeProperty().set((int) slider.getValue());
+            config.setElementSize((int) slider.getValue());
         });
 
         return slider;

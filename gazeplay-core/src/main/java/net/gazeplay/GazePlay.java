@@ -70,7 +70,7 @@ public class GazePlay {
 
         Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isFirstOpening()) {
-            config.getFirstOpeningProperty().setValue(false);
+            config.setFirstOpening(false);
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Data collect information");

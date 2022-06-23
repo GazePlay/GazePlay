@@ -356,19 +356,19 @@ class ConfigurationContextTest {
 
         Map<ConfigurationContext.DirectoryType, String> answers = Map.of(
             ConfigurationContext.DirectoryType.FILE, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(),
-            ConfigurationContext.DirectoryType.WHERE_IS_IT, Configuration.DEFAULT_VALUE_WHEREISIT_DIR,
+            ConfigurationContext.DirectoryType.WHERE_IS_IT, Configuration.DEFAULT_VALUE_WHERE_IS_IT_DIR,
             ConfigurationContext.DirectoryType.MUSIC, new File(System.getProperty("user.home") + "/GazePlay/", "music").getAbsolutePath(),
             ConfigurationContext.DirectoryType.VIDEO, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath()
         );
 
-        when(mockConfig.getVideoFolder()).thenReturn(fileDirProperty.getValue());
-        when(mockConfig.getVideoFolderProperty()).thenReturn(fileDirProperty);
+        when(mockConfig.getVideoDir()).thenReturn(fileDirProperty.getValue());
+        when(mockConfig.getVideoDirProperty()).thenReturn(fileDirProperty);
         when(mockConfig.getWhereIsItDir()).thenReturn(fileDirProperty.getValue());
         when(mockConfig.getWhereIsItDirProperty()).thenReturn(fileDirProperty);
         when(mockConfig.getFileDir()).thenReturn(fileDirProperty.getValue());
         when(mockConfig.getFileDirProperty()).thenReturn(fileDirProperty);
-        when(mockConfig.getMusicFolder()).thenReturn(fileDirProperty.getValue());
-        when(mockConfig.getMusicFolderProperty()).thenReturn(fileDirProperty);
+        when(mockConfig.getMusicDir()).thenReturn(fileDirProperty.getValue());
+        when(mockConfig.getMusicDirProperty()).thenReturn(fileDirProperty);
 
         when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
         when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
@@ -474,7 +474,7 @@ class ConfigurationContextTest {
             BackgroundMusicManager.getInstance();
             result = mockMusicManager;
 
-            mockConfiguration.getMusicFolderProperty();
+            mockConfiguration.getMusicDirProperty();
             result = mockMusicFolderProperty;
         }};
 
@@ -498,7 +498,7 @@ class ConfigurationContextTest {
             BackgroundMusicManager.getInstance();
             result = mockMusicManager;
 
-            mockConfiguration.getMusicFolderProperty();
+            mockConfiguration.getMusicDirProperty();
             result = mockMusicFolderProperty;
         }};
 
@@ -523,7 +523,7 @@ class ConfigurationContextTest {
             BackgroundMusicManager.getInstance();
             result = mockMusicManager;
 
-            mockConfiguration.getMusicFolderProperty();
+            mockConfiguration.getMusicDirProperty();
             result = mockMusicFolderProperty;
         }};
 

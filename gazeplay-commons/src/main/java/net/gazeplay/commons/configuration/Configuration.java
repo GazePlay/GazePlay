@@ -35,9 +35,9 @@ public class Configuration {
     private static final String PROPERTY_NAME_QUESTION_REASKED_ON_FAIL = "QUESTION_REASKED_ON_FAIL";
     private static final String PROPERTY_NAME_REWARD_SOUND_ENABLED = "REWARD_SOUND_ENABLED";
     private static final String PROPERTY_NAME_LIMITER_TIME_ENABLED = "LIMITER_TIME_ENABLED";
-    private static final String PROPERTY_NAME_LIMITER_TIME_VALUE = "LIMITER_TIME_VALUE";
+    private static final String PROPERTY_NAME_LIMITER_TIME = "LIMITER_TIME";
     private static final String PROPERTY_NAME_LIMITER_SCORE_ENABLED = "LIMITER_SCORE_ENABLED";
-    private static final String PROPERTY_NAME_LIMITER_SCORE_VALUE = "LIMITER_SCORE_VALUE";
+    private static final String PROPERTY_NAME_LIMITER_SCORE = "LIMITER_SCORE";
     /* Bera settings */
     private static final String PROPERTY_NAME_TRANSITION_TIME = "TRANSITION_TIME";
     private static final String PROPERTY_NAME_DELAY_BEFORE_SELECTION_TIME = "DELAY_BEFORE_SELECTION_TIME";
@@ -47,18 +47,18 @@ public class Configuration {
     private static final String PROPERTY_NAME_SOUND_ENABLED = "SOUND_ENABLED";
     private static final String PROPERTY_NAME_FEEDBACK = "FEEDBACK";
     /* Eye-tracking settings */
-    private static final String PROPERTY_NAME_EYETRACKER = "EYETRACKER";
+    private static final String PROPERTY_NAME_EYE_TRACKER = "EYE_TRACKER";
     private static final String PROPERTY_NAME_FIXATION_LENGTH = "FIXATION_LENGTH";
     /* Graphics settings */
     private static final String PROPERTY_NAME_CSS_FILE = "CSS_FILE";
     private static final String PROPERTY_NAME_BACKGROUND_STYLE = "BACKGROUND_STYLE";
     private static final String PROPERTY_NAME_BACKGROUND_ENABLED = "BACKGROUND_ENABLED";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
-    /* Folder settings */
-    private static final String PROPERTY_NAME_FILEDIR = "FILEDIR";
-    private static final String PROPERTY_NAME_MUSIC_FOLDER = "MUSIC_FOLDER";
-    private static final String PROPERTY_NAME_VIDEO_FOLDER = "VIDEO_FOLDER";
-    private static final String PROPERTY_NAME_WHEREISIT_DIR = "WHEREISIT_DIR";
+    /* Directories settings */
+    private static final String PROPERTY_NAME_FILE_DIR = "FILE_DIR";
+    private static final String PROPERTY_NAME_MUSIC_DIR = "MUSIC_DIR";
+    private static final String PROPERTY_NAME_VIDEO_DIR = "VIDEO_DIR";
+    private static final String PROPERTY_NAME_WHERE_IS_IT_DIR = "WHERE_IS_IT_DIR";
     /* Stats settings */
     private static final String PROPERTY_NAME_HEATMAP_DISABLED = "HEATMAP_DISABLED";
     private static final String PROPERTY_NAME_HEATMAP_OPACITY = "HEATMAP_OPACITY";
@@ -81,7 +81,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME = "LATEST_NEWS_POPUP_LAST_SHOWN_TIME";
     private static final String PROPERTY_NAME_DISPLAY_NEWS_FORCED = "DISPLAY_NEWS_FORCED";
     private static final String PROPERTY_NAME_FIRST_OPENING = "FIRST_OPENING";
-    private static final String PROPERTY_NAME_SHORTCUT_FOLDER = "SHORTCUT_FOLDER";
+    private static final String PROPERTY_NAME_SHORTCUT_DIR = "SHORTCUT_DIR";
     private static final String PROPERTY_NAME_COLORS_DEFAULT_IMAGE = "COLORS_DEFAULT_IMAGE";
     private static final String PROPERTY_NAME_FAVORITE_GAMES = "FAVORITE_GAMES";
     private static final String PROPERTY_NAME_HIDDEN_CATEGORIES = "HIDDEN_CATEGORIES";
@@ -93,9 +93,9 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_QUESTION_REASKED_ON_FAIL = true;
     private static final boolean DEFAULT_VALUE_REWARD_SOUND_ENABLED = true;
     private static final boolean DEFAULT_VALUE_LIMITER_TIME_ENABLED = false;
-    private static final int DEFAULT_VALUE_LIMITER_TIME_VALUE = 90;
+    private static final int DEFAULT_VALUE_LIMITER_TIME = 90;
     private static final boolean DEFAULT_VALUE_LIMITER_SCORE_ENABLED = false;
-    private static final int DEFAULT_VALUE_LIMITER_SCORE_VALUE = 90;
+    private static final int DEFAULT_VALUE_LIMITER_SCORE = 90;
     /* Bera settings */
     private static final int DEFAULT_VALUE_TRANSITION_TIME = 2000;
     private static final int DEFAULT_VALUE_DELAY_BEFORE_SELECTION_TIME = 1000;
@@ -105,16 +105,16 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_SOUND_ENABLED = true;
     private static final String DEFAULT_VALUE_FEEDBACK = Feedback.standard.toString();
     /* Eye-tracking settings */
-    private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.tobii.toString();
+    private static final String DEFAULT_VALUE_EYE_TRACKER = EyeTracker.tobii.toString();
     private static final int DEFAULT_VALUE_FIXATION_LENGTH = 2000;
     /* Graphics settings */
     private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
     private static final BackgroundStyle DEFAULT_VALUE_BACKGROUND_STYLE = BackgroundStyle.DARK;
     private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = true;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
-    /* Folder settings */
-    public static final String DEFAULT_VALUE_MUSIC_FOLDER = "";
-    public static final String DEFAULT_VALUE_WHEREISIT_DIR = "";
+    /* Directories settings */
+    public static final String DEFAULT_VALUE_MUSIC_DIR = "";
+    public static final String DEFAULT_VALUE_WHERE_IS_IT_DIR = "";
     /* Stats settings */
     private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
     private static final double DEFAULT_VALUE_HEATMAP_OPACITY = 0.7;
@@ -157,11 +157,11 @@ public class Configuration {
     @Getter
     private final BooleanProperty limiterTimeEnabledProperty;
     @Getter
-    private final IntegerProperty limiterTimeValueProperty;
+    private final IntegerProperty limiterTimeProperty;
     @Getter
     private final BooleanProperty limiterScoreEnabledProperty;
     @Getter
-    private final IntegerProperty limiterScoreValueProperty;
+    private final IntegerProperty limiterScoreProperty;
     /* Bera settings */
     @Getter
     private final IntegerProperty transitionTimeProperty;
@@ -191,13 +191,13 @@ public class Configuration {
     private final BooleanProperty backgroundEnabledProperty;
     @Getter
     private final StringProperty menuButtonsOrientationProperty;
-    /* Folder settings */
+    /* Directories settings */
     @Getter
     private final StringProperty fileDirProperty;
     @Getter
-    private final StringProperty musicFolderProperty;
+    private final StringProperty musicDirProperty;
     @Getter
-    private final StringProperty videoFolderProperty;
+    private final StringProperty videoDirProperty;
     @Getter
     private final StringProperty whereIsItDirProperty;
     /* Stats settings */
@@ -244,7 +244,7 @@ public class Configuration {
     @Getter
     private final StringProperty colorsDefaultImageProperty;
     @Getter
-    private final StringProperty shortcutFolderProperty;
+    private final StringProperty shortcutDirProperty;
     @Getter
     private final SetProperty<String> favoriteGamesProperty;
     @Getter
@@ -271,9 +271,9 @@ public class Configuration {
         questionReaskedOnFailProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_QUESTION_REASKED_ON_FAIL, DEFAULT_VALUE_QUESTION_REASKED_ON_FAIL, propertyChangeListener);
         rewardSoundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_REWARD_SOUND_ENABLED, DEFAULT_VALUE_REWARD_SOUND_ENABLED, propertyChangeListener);
         limiterTimeEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITER_TIME_ENABLED, DEFAULT_VALUE_LIMITER_TIME_ENABLED, propertyChangeListener);
-        limiterTimeValueProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_TIME_VALUE, DEFAULT_VALUE_LIMITER_TIME_VALUE, propertyChangeListener);
+        limiterTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_TIME, DEFAULT_VALUE_LIMITER_TIME, propertyChangeListener);
         limiterScoreEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITER_SCORE_ENABLED, DEFAULT_VALUE_LIMITER_SCORE_ENABLED, propertyChangeListener);
-        limiterScoreValueProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_SCORE_VALUE, DEFAULT_VALUE_LIMITER_SCORE_VALUE, propertyChangeListener);
+        limiterScoreProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_SCORE, DEFAULT_VALUE_LIMITER_SCORE, propertyChangeListener);
 
         /* Bera settings */
         transitionTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_TRANSITION_TIME, DEFAULT_VALUE_TRANSITION_TIME, propertyChangeListener);
@@ -285,7 +285,7 @@ public class Configuration {
         feedbackProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FEEDBACK, DEFAULT_VALUE_FEEDBACK, propertyChangeListener);
 
         /* Eye-tracking settings */
-        eyeTrackerProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EYETRACKER, DEFAULT_VALUE_EYETRACKER, propertyChangeListener);
+        eyeTrackerProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EYE_TRACKER, DEFAULT_VALUE_EYE_TRACKER, propertyChangeListener);
         fixationLengthProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_FIXATION_LENGTH, DEFAULT_VALUE_FIXATION_LENGTH, propertyChangeListener);
 
         /* Graphics settings */
@@ -295,11 +295,11 @@ public class Configuration {
         backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_ENABLED, DEFAULT_VALUE_BACKGROUND_ENABLED, propertyChangeListener);
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
 
-        /* Folder settings */
-        fileDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FILEDIR, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(), propertyChangeListener);
-        musicFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MUSIC_FOLDER, DEFAULT_VALUE_MUSIC_FOLDER, propertyChangeListener);
-        videoFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_VIDEO_FOLDER, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath(), propertyChangeListener);
-        whereIsItDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_WHEREISIT_DIR, DEFAULT_VALUE_WHEREISIT_DIR, propertyChangeListener);
+        /* Directories settings */
+        fileDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FILE_DIR, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(), propertyChangeListener);
+        musicDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MUSIC_DIR, DEFAULT_VALUE_MUSIC_DIR, propertyChangeListener);
+        videoDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_VIDEO_DIR, GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath(), propertyChangeListener);
+        whereIsItDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_WHERE_IS_IT_DIR, DEFAULT_VALUE_WHERE_IS_IT_DIR, propertyChangeListener);
 
         /* Stats settings */
         heatMapOpacityProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_HEATMAP_OPACITY, DEFAULT_VALUE_HEATMAP_OPACITY, propertyChangeListener);
@@ -325,7 +325,7 @@ public class Configuration {
         latestNewsPopupShownTime = new ApplicationConfigBackedLongProperty(applicationConfig, PROPERTY_NAME_LATEST_NEWS_POPUP_LAST_SHOWN_TIME, 0, propertyChangeListener);
         latestNewsDisplayForcedProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_DISPLAY_NEWS_FORCED, DEFAULT_VALUE_DISPLAY_NEWS_FORCED, propertyChangeListener);
         firstOpeningProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIRST_OPENING, DEFAULT_VALUE_FIRST_OPENING, propertyChangeListener);
-        shortcutFolderProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_SHORTCUT_FOLDER, GazePlayDirectories.getShortcutDirectory().getAbsolutePath(), propertyChangeListener);
+        shortcutDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_SHORTCUT_DIR, GazePlayDirectories.getShortcutDirectory().getAbsolutePath(), propertyChangeListener);
         colorsDefaultImageProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_COLORS_DEFAULT_IMAGE, DEFAULT_VALUE_COLORS_DEFAULT_IMAGE, propertyChangeListener);
         favoriteGamesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_FAVORITE_GAMES, Sets.newLinkedHashSet(), propertyChangeListener);
         hiddenCategoriesProperty = new ApplicationConfigBackedStringSetProperty(applicationConfig, PROPERTY_NAME_HIDDEN_CATEGORIES, Sets.newLinkedHashSet(), propertyChangeListener);
@@ -346,9 +346,8 @@ public class Configuration {
     }
 
     /**
-     * when everything is using an ApplicationConfigBacked...Property,
-     * there is not need to call this method anymore,
-     * it should be called by the ApplicationConfigBacked...Property itself
+     * When everything is using an ApplicationConfigBacked...Property, there is no need to call this method anymore,
+     * it should be called by the ApplicationConfigBacked...Property itself.
      */
     @Deprecated
     public void saveConfigIgnoringExceptions() {
@@ -393,16 +392,16 @@ public class Configuration {
         return limiterTimeEnabledProperty.getValue();
     }
 
-    public int getLimiterTimeValue() {
-        return limiterTimeValueProperty.getValue();
+    public int getLimiterTime() {
+        return limiterTimeProperty.getValue();
     }
 
     public boolean isLimiterScoreEnabled() {
         return limiterScoreEnabledProperty.getValue();
     }
 
-    public int getLimiterScoreValue() {
-        return limiterScoreValueProperty.getValue();
+    public int getLimiterScore() {
+        return limiterScoreProperty.getValue();
     }
 
     /* Bera settings */
@@ -463,18 +462,18 @@ public class Configuration {
         return menuButtonsOrientationProperty.getValue();
     }
 
-    /* Folder settings */
+    /* Directories settings */
 
     public String getFileDir() {
         return fileDirProperty.getValue();
     }
 
-    public String getMusicFolder() {
-        return musicFolderProperty.getValue();
+    public String getMusicDir() {
+        return musicDirProperty.getValue();
     }
 
-    public String getVideoFolder() {
-        return videoFolderProperty.getValue();
+    public String getVideoDir() {
+        return videoDirProperty.getValue();
     }
 
     public String getWhereIsItDir() {
@@ -513,7 +512,7 @@ public class Configuration {
     }
 
     public Boolean isVideoRecordingEnabled() {
-        return getVideoRecordingEnabledProperty().getValue();
+        return videoRecordingEnabledProperty.getValue();
     }
 
     public Boolean isDataCollectAuthorized() {
@@ -521,6 +520,18 @@ public class Configuration {
     }
 
     /* In game settings */
+
+    public Double getMusicVolume() {
+        return musicVolumeProperty.getValue();
+    }
+
+    public Double getEffectsVolume() {
+        return effectsVolumeProperty.getValue();
+    }
+
+    public Double getAnimationSpeedRatio() {
+        return animationSpeedRatioProperty.getValue();
+    }
 
     public Integer getElementSize() {
         return elementSizeProperty.getValue();
@@ -552,23 +563,134 @@ public class Configuration {
         return firstOpeningProperty.getValue();
     }
 
-    public String getShortcutFolder() {
-        return shortcutFolderProperty.getValue();
+    public String getShortcutDir() {
+        return shortcutDirProperty.getValue();
+    }
+
+    public String getColorsDefaultImage() {
+        return colorsDefaultImageProperty.getValue();
     }
 
     /* SETTERS */
 
+
+    /* Language settings */
+
+    public void setLanguage(final String language) {
+        languageProperty.setValue(language);
+    }
+
+    public void setCountry(final String country) {
+        countryProperty.setValue(country);
+    }
+
+    /* Game settings */
+
+    public void setQuitKey(final String quitKey) {
+        quitKeyProperty.setValue(quitKey);
+    }
+
+    public void setQuestionLength(final long questionLength) {
+        questionLengthProperty.setValue(questionLength);
+    }
+
+    public void setQuestionReaskedOnFail(final boolean questionReaskedOnFail) {
+        questionReaskedOnFailProperty.setValue(questionReaskedOnFail);
+    }
+
+    public void setLimiterScoreEnabled(final boolean limiterScoreEnabled) {
+        limiterScoreEnabledProperty.setValue(limiterScoreEnabled);
+    }
+
+    public void setLimiterScore(final int limiterScore) {
+        limiterScoreProperty.setValue(limiterScore);
+    }
+
+    public void setLimiterTimeEnabled(final boolean limiterTimeEnabled) {
+        limiterTimeEnabledProperty.setValue(limiterTimeEnabled);
+    }
+
+    public void setLimiterTime(final int limiterTime) {
+        limiterTimeProperty.setValue(limiterTime);
+    }
+
+    /* Bera settings */
+
+    public void setFeedback(final String feedback) {
+        feedbackProperty.setValue(feedback);
+    }
+
+    /* Eye-tracking settings */
+
+    public void setEyeTracker(final String eyeTracker) {
+        eyeTrackerProperty.setValue(eyeTracker);
+    }
+
     public void setFixationLength(final int fixationLength) {
         fixationLengthProperty.setValue(fixationLength);
+    }
+
+    /* Graphics settings */
+
+    public void setCssFile(final String cssFile) {
+        cssFileProperty.setValue(cssFile);
     }
 
     public void setBackgroundStyle(final BackgroundStyle newValue) {
         backgroundStyleProperty.setValue(newValue);
     }
 
-    public void setFileDir(final String s) {
-        fileDirProperty.setValue(s);
+    public void setMenuButtonsOrientation(final String menuButtonsOrientation) {
+        menuButtonsOrientationProperty.setValue(menuButtonsOrientation);
     }
+
+    /* Directories settings */
+
+    public void setFileDir(final String fileDir) {
+        fileDirProperty.setValue(fileDir);
+    }
+
+    public void setMusicDir(final String musicDir) {
+        musicDirProperty.setValue(musicDir);
+    }
+
+    public void setVideoDir(final String videoDir) {
+        videoDirProperty.setValue(videoDir);
+    }
+
+    public void setWhereIsItDir(final String whereIsItDir) {
+        whereIsItDirProperty.setValue(whereIsItDir);
+    }
+
+    /* Stats settings */
+
+    public void setHeatMapOpacity(final double heatMapOpacity) {
+        heatMapOpacityProperty.setValue(heatMapOpacity);
+    }
+
+    public void setHeatMapColors(final String heatMapColors) {
+        heatMapColorsProperty.setValue(heatMapColors);
+    }
+
+    /* In game settings */
+
+    public void setAnimationSpeedRatio(double animationSpeedRatio) {
+        animationSpeedRatioProperty.setValue(animationSpeedRatio);
+    }
+
+    public void setElementSize(int elementSize) {
+        elementSizeProperty.setValue(elementSize);
+    }
+
+    public void setProgressBarSize(final int progressBarSize) {
+        progressBarSizeProperty.setValue(progressBarSize);
+    }
+
+    public void setProgressBarColor(final String progressBarColor) {
+        progressBarColorProperty.setValue(progressBarColor);
+    }
+
+    /* Menu settings */
 
     public void setUserName(final String newName) {
         userNameProperty.setValue(newName);
@@ -576,5 +698,17 @@ public class Configuration {
 
     public void setUserPicture(final String newPicture) {
         userPictureProperty.setValue(newPicture);
+    }
+
+    public void setFirstOpening(final boolean firstOpening) {
+        firstOpeningProperty.setValue(firstOpening);
+    }
+
+    public void setShortcutDir(final String shortcutDir) {
+        shortcutDirProperty.setValue(shortcutDir);
+    }
+
+    public void setColorsDefaultImage(final String colorsDefaultImage) {
+        colorsDefaultImageProperty.setValue(colorsDefaultImage);
     }
 }

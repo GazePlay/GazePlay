@@ -77,7 +77,7 @@ public class ProgressBarControl {
             int sizeRatioValue = sliderValueToSizeRatio(slider.getValue());
             String labelText = formatValue(sizeRatioValue);
             progressBarSizeLabel.setText(labelText);
-            config.getProgressBarSizeProperty().set(sizeRatioValue);
+            config.setProgressBarSize(sizeRatioValue);
         });
 
         return slider;
@@ -96,10 +96,10 @@ public class ProgressBarControl {
     public void initializeColorLabel(Label[] labels, int position, String colorName, Configuration config) {
         labels[position].setStyle("-fx-background-color: " + colorName + ";");
         labels[position].setOnMouseClicked(event -> {
-            config.getProgressBarColorProperty().set(colorName);
+            config.setProgressBarColor(colorName);
             setTextOnLabel(labels, position);
         });
-        if (config.getProgressBarColorProperty().getValue().equals(colorName)) {
+        if (config.getProgressBarColor().equals(colorName)) {
             setTextOnLabel(labels, position);
         }
     }

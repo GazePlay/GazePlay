@@ -57,7 +57,7 @@ public class FixationLengthControl {
     }
 
     public Slider createFixationLengthSlider(Configuration config, Label fixationLengthValueLabel) {
-        final int initialFixationLengthRatioValue = config.getFixationLengthProperty().getValue();
+        final int initialFixationLengthRatioValue = config.getFixationLength();
 
         Slider slider = new Slider();
         slider.setMinWidth(QuickControl.SLIDERS_MIN_WIDTH);
@@ -80,7 +80,7 @@ public class FixationLengthControl {
         slider.valueProperty().addListener((observable) -> {
             String labelText = formatValue(slider.getValue());
             fixationLengthValueLabel.setText(labelText);
-            config.getFixationLengthProperty().set((int) slider.getValue());
+            config.setFixationLength((int) slider.getValue());
         });
 
         return slider;

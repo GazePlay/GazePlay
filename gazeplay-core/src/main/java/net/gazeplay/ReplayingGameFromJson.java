@@ -217,16 +217,15 @@ public class ReplayingGameFromJson {
         }
 
         Configuration config = ActiveConfigurationContext.getInstance();
-        config.getFixationLengthProperty().setValue(json.getConfigFixationLength());
-        config.getQuestionLengthProperty().setValue(json.getConfigQuestionLength());
-        config.getQuestionReaskedOnFailProperty().setValue(json.isConfigReaskQuestionOnFail());
-        config.getLimiterScoreEnabledProperty().setValue(json.isConfigLimiterScore());
-        config.getLimiterScoreValueProperty().setValue(json.getConfigLimiterScoreValue());
-        config.getLimiterTimeEnabledProperty().setValue(json.isConfigLimiterTime());
-        config.getLimiterTimeValueProperty().setValue(json.getConfigLimiterTimeValue());
-        config.getAnimationSpeedRatioProperty().setValue(json.getConfigAnimationSpeedRatio());
-        config.getTransitionTimeProperty().setValue(json.getConfigTransitionTime());
-        config.getDelayBeforeSelectionTimeProperty().setValue(json.getConfigDelayBeforeSelectionTime());
+        config.setQuestionLength(json.getConfigQuestionLength());
+        config.setQuestionReaskedOnFail(json.isConfigQuestionReaskedOnFail());
+        config.setLimiterScoreEnabled(json.isConfigLimiterScoreEnabled());
+        config.setLimiterScore(json.getConfigLimiterScore());
+        config.setLimiterTimeEnabled(json.isConfigLimiterTimeEnabled());
+        config.setLimiterTime(json.getConfigLimiterTime());
+        config.setAnimationSpeedRatio(json.getConfigAnimationSpeedRatio());
+        config.setElementSize(json.getConfigElementSize());
+        config.setFixationLength(json.getConfigFixationLength());
 
         getSpecAndVariant();
         IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
@@ -417,16 +416,15 @@ class JsonFile {
     private int statsNbGoalsToReach;
     private int statsNbUncountedGoalsReached;
 
-    private int configFixationLength;
     private long configQuestionLength;
-    private boolean configReaskQuestionOnFail;
-    private boolean configLimiterScore;
-    private int configLimiterScoreValue;
-    private boolean configLimiterTime;
-    private int configLimiterTimeValue;
+    private boolean configQuestionReaskedOnFail;
+    private boolean configLimiterScoreEnabled;
+    private int configLimiterScore;
+    private boolean configLimiterTimeEnabled;
+    private int configLimiterTime;
     private double configAnimationSpeedRatio;
-    private int configTransitionTime;
-    private int configDelayBeforeSelectionTime;
+    private int configElementSize;
+    private int configFixationLength;
 
     private LifeCycle lifeCycle;
     private RoundsDurationReport roundsDurationReport;

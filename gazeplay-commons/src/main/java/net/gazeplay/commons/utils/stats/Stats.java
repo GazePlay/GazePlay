@@ -514,7 +514,7 @@ public class Stats implements GazeMotionListener {
                             incrementFixationSequence(x, y, fixationSequence.get(FixationSequence.GAZE_FIXATION_SEQUENCE));
                         }
 
-                        if (config.getAreaOfInterestDisabledProperty().getValue()) {
+                        if (config.isAreaOfInterestDisabled()) {
                             if (x != previousXMouse || y != previousYMouse) {
                                 previousXMouse = x;
                                 previousYMouse = y;
@@ -549,7 +549,7 @@ public class Stats implements GazeMotionListener {
                             incrementFixationSequence(x, y, fixationSequence.get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
                         }
 
-                        if (config.getAreaOfInterestDisabledProperty().getValue()) {
+                        if (config.isAreaOfInterestDisabled()) {
                             if (x != previousXGaze || y != previousYGaze && counter == 2) {
                                 previousXGaze = x;
                                 previousYGaze = y;
@@ -607,7 +607,7 @@ public class Stats implements GazeMotionListener {
                     points[i] = new Point2D(coordinate.getXValue() * sceneWidth, coordinate.getYValue() * sceneHeight);
                 }
 
-                final boolean convexHull = config.getConvexHullDisabledProperty().getValue();
+                final boolean convexHull = config.isConvexHullDisabled();
                 final Double[] polygonPoints = convexHull ? calculateConvexHull(points) : calculateRectangle(points);
                 aoiPolygonPtList.add(polygonPoints);
             } else if (eDistance > 700) {
@@ -624,7 +624,7 @@ public class Stats implements GazeMotionListener {
                         coordinate.getYValue() * sceneHeight + pow(-1, i) * radius);
                 }
 
-                final boolean convexHull = config.getConvexHullDisabledProperty().getValue();
+                final boolean convexHull = config.isConvexHullDisabled();
                 final Double[] polygonPoints = convexHull ? calculateConvexHull(points) : calculateRectangle(points);
                 aoiPolygonPtList.add(polygonPoints);
             }
@@ -1060,16 +1060,15 @@ public class Stats implements GazeMotionListener {
         savedStatsJSON.addProperty("statsNbGoalsToReach", nbGoalsToReach);
         savedStatsJSON.addProperty("statsNbUncountedGoalsReached", nbUncountedGoalsReached);
 
-        savedStatsJSON.addProperty("configFixationLength", config.getFixationLength());
         savedStatsJSON.addProperty("configQuestionLength", config.getQuestionLength());
-        savedStatsJSON.addProperty("configReaskQuestionOnFail", config.getQuestionReaskedOnFailProperty().getValue());
-        savedStatsJSON.addProperty("configLimiterScore", config.getLimiterScoreEnabledProperty().getValue());
-        savedStatsJSON.addProperty("configLimiterScoreValue", config.getLimiterScoreValueProperty().getValue());
-        savedStatsJSON.addProperty("configLimiterTime", config.getLimiterTimeEnabledProperty().getValue());
-        savedStatsJSON.addProperty("configLimiterTimeValue", config.getLimiterTimeValueProperty().getValue());
-        savedStatsJSON.addProperty("configAnimationSpeedRatio", config.getAnimationSpeedRatioProperty().getValue());
-        savedStatsJSON.addProperty("configTransitionTime", config.getTransitionTime());
-        savedStatsJSON.addProperty("configDelayBeforeSelectionTime", config.getDelayBeforeSelectionTime());
+        savedStatsJSON.addProperty("configQuestionReaskedOnFail", config.isQuestionReaskedOnFail());
+        savedStatsJSON.addProperty("configLimiterScoreEnabled", config.isLimiterScoreEnabled());
+        savedStatsJSON.addProperty("configLimiterScore", config.getLimiterScore());
+        savedStatsJSON.addProperty("configLimiterTimeEnabled", config.isLimiterTimeEnabled());
+        savedStatsJSON.addProperty("configLimiterTime", config.getLimiterTime());
+        savedStatsJSON.addProperty("configAnimationSpeedRatio", config.getAnimationSpeedRatio());
+        savedStatsJSON.addProperty("configElementSize", config.getElementSize());
+        savedStatsJSON.addProperty("configFixationLength", config.getFixationLength());
 
         savedStatsJSON.add("lifeCycle", lifeCycleObject);
         savedStatsJSON.add("roundsDurationReport", roundsDurationReportObject);

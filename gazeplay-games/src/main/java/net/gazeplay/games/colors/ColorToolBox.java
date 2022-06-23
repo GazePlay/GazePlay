@@ -354,7 +354,7 @@ public class ColorToolBox extends Pane {
             };
             try {
                 Files.copy(from, to.toPath(), options);
-                gameContext.getConfiguration().getColorsDefaultImageProperty().setValue(to.getAbsolutePath());
+                gameContext.getConfiguration().setColorsDefaultImage(to.getAbsolutePath());
             } catch (final IOException e) {
                 log.debug("Impossible to copy file" + imageFile.getAbsolutePath() + " to " + to.getAbsolutePath());
             }

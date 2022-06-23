@@ -62,7 +62,7 @@ class ConfigurationTest {
         String oldPath = configuration.getWhereIsItDir();
         String newPath = "some/path";
 
-        configuration.getWhereIsItDirProperty().set(newPath);
+        configuration.setWhereIsItDir(newPath);
         configuration.saveConfigIgnoringExceptions();
 
         try (InputStream is = Files.newInputStream(testProperties.toPath())) {
@@ -71,7 +71,7 @@ class ConfigurationTest {
             log.debug("Error in loading test properties: ", ie);
         }
 
-        assertEquals(newPath, properties.getProperty("WHEREISIT_DIR"));
+        assertEquals(newPath, properties.getProperty("WHERE_IS_IT_DIR"));
 
         configuration.getWhereIsItDirProperty().set(oldPath);
     }
@@ -88,7 +88,7 @@ class ConfigurationTest {
 
     @Test
     void shouldGetEyeTracker() {
-        assertEquals(properties.get("EYETRACKER"), configuration.getEyeTracker());
+        assertEquals(properties.get("EYE_TRACKER"), configuration.getEyeTracker());
     }
 
     @Test
@@ -98,7 +98,7 @@ class ConfigurationTest {
 
     @Test
     void shouldGetFileDir() {
-        assertEquals(properties.get("FILEDIR"), configuration.getFileDir());
+        assertEquals(properties.get("FILE_DIR"), configuration.getFileDir());
     }
 
     @Test
@@ -124,7 +124,7 @@ class ConfigurationTest {
 
     @Test
     void shouldGetWhereIsItDir() {
-        assertEquals(properties.get("WHEREISIT_DIR"), configuration.getWhereIsItDir());
+        assertEquals(properties.get("WHERE_IS_IT_DIR"), configuration.getWhereIsItDir());
     }
 
     @Test
@@ -154,7 +154,7 @@ class ConfigurationTest {
 
     @Test
     void shouldGetHeatMapColors() {
-        configuration.getHeatMapColorsProperty().set("0000FF,00FF00,FFFF00,FF0000");
+        configuration.setHeatMapColors("0000FF,00FF00,FFFF00,FF0000");
         List<Color> expected = List.of(
             Color.web("0000FF"),
             Color.web("00FF00"),
@@ -176,12 +176,12 @@ class ConfigurationTest {
 
     @Test
     void shouldGetMusicFolder() {
-        assertEquals(properties.get("MUSIC_FOLDER"), configuration.getMusicFolder());
+        assertEquals(properties.get("MUSIC_DIR"), configuration.getMusicDir());
     }
 
     @Test
     void shouldGetVideoFolder() {
-        assertEquals(properties.get("VIDEO_FOLDER"), configuration.getVideoFolder());
+        assertEquals(properties.get("VIDEO_DIR"), configuration.getVideoDir());
     }
 
     @Test

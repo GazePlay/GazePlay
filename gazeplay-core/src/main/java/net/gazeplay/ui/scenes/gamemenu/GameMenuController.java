@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.*;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
+import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
@@ -178,7 +180,6 @@ public class GameMenuController {
         GameLifeCycle currentGame = gameLauncher.createNewGame(gameContext, gameVariant, stats);
 
         gameContext.createControlPanel(gazePlay, stats, currentGame, false);
-
         gameContext.createQuitShortcut(gazePlay, stats, currentGame);
 
         if (selectedGameSpec.getGameSummary().getBackgroundMusicUrl() != null) {
@@ -188,13 +189,7 @@ public class GameMenuController {
 
         stats.start();
 
-        String gameVariantLabel;
-        if (gameVariant != null) {
-            gameVariantLabel = gameVariant.toString();
-        } else {
-            gameVariantLabel = null;
-        }
-
+        String gameVariantLabel = (gameVariant != null) ? gameVariant.toString() : null;
         String gameNameCode = selectedGameSpec.getGameSummary().getNameCode();
         stats.setGameVariant(gameVariantLabel, gameNameCode);
 

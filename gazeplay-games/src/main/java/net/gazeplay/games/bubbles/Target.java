@@ -252,7 +252,7 @@ public class Target extends ProgressPortrait {
         double centerX = 0;
         double centerY = 0;
 
-        final double timelength = ((maxTimeLength - minTimeLength) * randomGenerator.nextDouble() + minTimeLength) * 1000 / gameContext.getConfiguration().getAnimationSpeedRatioProperty().getValue();
+        final double timelength = ((maxTimeLength - minTimeLength) * randomGenerator.nextDouble() + minTimeLength) * 1000 / gameContext.getConfiguration().getAnimationSpeedRatio();
 
         timeline = new Timeline();
 

@@ -38,34 +38,31 @@
     "statsNbUncountedGoalsReached": {
       "type": "number"
     },
-    "configFixationLength": {
-      "type": "number"
-    },
     "configQuestionLength": {
       "type": "number"
     },
-    "configReaskQuestionOnFail":{
+    "configQuestionReaskedOnFail":{
+      "type": "boolean"
+    },
+    "configLimiterScoreEnabled": {
       "type": "boolean"
     },
     "configLimiterScore": {
-      "type": "boolean"
-    },
-    "configLimiterScoreValue": {
       "type": "number"
     },
-    "configLimiterTime": {
+    "configLimiterTimeEnabled": {
       "type": "boolean"
     },
-    "configLimiterTimeValue": {
+    "configLimiterTime": {
+      "type": "number"
+    },
+    "configElementSize": {
       "type": "number"
     },
     "configAnimationSpeedRatio": {
       "type": "number"
     },
-    "configTransitionTime": {
-      "type": "number"
-    },
-    "configDelayBeforeSelectionTime": {
+    "configFixationLength": {
       "type": "number"
     },
     "lifeCycle": {
