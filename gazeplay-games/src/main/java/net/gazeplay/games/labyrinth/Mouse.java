@@ -20,6 +20,7 @@ public abstract class Mouse extends Parent {
     private String orientation;
     public boolean souris;
     String ImageChoisie;
+    private static final Random r=new Random();
 
     int indiceX; // j
     int indiceY; // i
@@ -56,7 +57,6 @@ public abstract class Mouse extends Parent {
     }
     String getRandomCaractere()
     {
-        Random r=new Random();
         int choix = r.nextInt(17);
         String Img;
         switch (choix)
