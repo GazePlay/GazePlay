@@ -26,7 +26,6 @@ import java.util.ArrayList;
  */
 @Slf4j
 public class Target extends ProgressPortrait {
-
     private final Hand hand;
 
     final EventHandler<Event> enterEvent;
