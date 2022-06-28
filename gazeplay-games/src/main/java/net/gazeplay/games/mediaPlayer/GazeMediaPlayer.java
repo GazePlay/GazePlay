@@ -20,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
@@ -37,9 +38,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.GazeIndicator;
 import net.gazeplay.components.StackPaneButton;
-import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.File;
 import java.io.IOException;
@@ -90,9 +91,17 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         upArrow = createTextStackPaneButton("^", dimension2D.getWidth() / 5, dimension2D.getHeight() / 7);
         upArrow.getButton().setStyle("-fx-background-radius: 5em; ");
 
+      //  HBox[] buttonsAndDelete = new HBox[3];
         for (int i = 0; i < 3; i++) {
             mediaButtons[i] = new MediaButton(dimension2D.getWidth() / 4, dimension2D.getHeight() / 7);
-            this.gameContext.getGazeDeviceManager().addEventFilter( mediaButtons[i]);
+       //     Button deleteMedia = new Button();
+           // deleteMedia.setOnMouseClicked(e -> {
+            //    MediaButton buttonTarget = (MediaButton) ((HBox) ((Button) e.getTarget()).getParent() ).getChildren().get(0);
+            //    log.info("deleting mediafile {}",buttonTarget.getMediaFile().getName());
+            //    musicList.deleteMedia(buttonTarget.getMediaFile());
+           // });
+          //  buttonsAndDelete[i] = new HBox(mediaButtons[i],deleteMedia);
+            this.gameContext.getGazeDeviceManager().addEventFilter(mediaButtons[i]);
         }
 
         downArrow = createTextStackPaneButton("v", dimension2D.getWidth() / 5, dimension2D.getHeight() / 7);
@@ -148,7 +157,7 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
         window.setLayoutY(dimension2D.getHeight() / 12);
 
         this.gameContext.getChildren().add(window);
-      
+
         progressIndicator = new GazeIndicator(gameContext);
         progressIndicator.setMouseTransparent(true);
 
@@ -580,25 +589,37 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
 
     private EventHandler<ActionEvent> handlerMedia(MediaFile mf) {
         return e -> {
-
             stopMedia();
-
             final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
             final File media = new File(mf.getPath());
-            final MediaPlayer player = new MediaPlayer(new Media(media.toURI().toString()));
-            final MediaView mediaView = new MediaView(player);
-            mediaView.setFitHeight(dimension2D.getHeight() / 2);
-            mediaView.setFitWidth(dimension2D.getWidth() / 3);
+            if (media.exists()) {
+                try {
+                    final MediaPlayer player = new MediaPlayer(new Media(media.toURI().toString()));
+                    final MediaView mediaView = new MediaView(player);
+                    mediaView.setFitHeight(dimension2D.getHeight() / 2);
+                    mediaView.setFitWidth(dimension2D.getWidth() / 3);
 
-            BorderPane.setAlignment(mediaView, Pos.CENTER);
+                    BorderPane.setAlignment(mediaView, Pos.CENTER);
 
-            ((StackPane) videoRoot.getCenter()).getChildren().set(1, mediaView);
-            player.play();
-            play = true;
+                    ((StackPane) videoRoot.getCenter()).getChildren().set(1, mediaView);
+                    player.play();
+                    play = true;
 
-            musicList.setPlayingMediaIndex(musicList.getMediaList().indexOf(mf));
-            musicTitle.setText(mf.getName());
+                    musicList.setPlayingMediaIndex(musicList.getMediaList().indexOf(mf));
+                    musicTitle.setText(mf.getName());
+                } catch (MediaException me) {
+                    log.info("Media unavailable");
+                    musicList.deleteMedia(mf);
+                    musicList.previous();
+                    musicList.next();
+                }
+            } else {
+                log.info("Media unavailable");
+                musicList.deleteMedia(mf);
+                musicList.previous();
+                musicList.next();
+            }
         };
     }
 
@@ -620,19 +641,41 @@ public class GazeMediaPlayer extends Parent implements GameLifeCycle {
     private void updateMusic() {
         int index = musicList.getIndexOfFirstToDisplay();
         if (index != -1) {
-            for (int i = 0; i < 3; i++) {
-
-                MediaFile mediaFile = musicList.getMediaList().get(index);
-
-                if (mediaFile != null) {
-                    setupMedia(i, mediaFile);
-                    mediaButtons[i].setupImage();
+            if (musicList.getMediaList().size() >= 1) {
+                mediaButtons[0].setOpacity(1);
+                MediaFile mediaFile1 = musicList.getMediaList().get(index);
+                setUpButton(0, mediaFile1);
+                if (musicList.getMediaList().size() >= 2) {
+                    mediaButtons[1].setOpacity(1);
+                    index = (index + 1) % musicList.getMediaList().size();
+                    MediaFile mediaFile2 = musicList.getMediaList().get(index);
+                    setUpButton(1, mediaFile2);
+                    if (musicList.getMediaList().size() >= 3) {
+                        mediaButtons[2].setOpacity(1);
+                        index = (index + 1) % musicList.getMediaList().size();
+                        MediaFile mediaFile3 = musicList.getMediaList().get(index);
+                        setUpButton(2, mediaFile3);
+                    } else {
+                        mediaButtons[2].setOpacity(0);
+                    }
+                } else {
+                    mediaButtons[1].setOpacity(0);
+                    mediaButtons[2].setOpacity(0);
                 }
-
-                index = (index + 1) % musicList.getMediaList().size();
+            } else {
+                mediaButtons[0].setOpacity(0);
+                mediaButtons[1].setOpacity(0);
+                mediaButtons[2].setOpacity(0);
             }
         }
 
+    }
+
+    private void setUpButton(int i, MediaFile mediaFile) {
+        if (mediaFile != null) {
+            setupMedia(i, mediaFile);
+            mediaButtons[i].setupImage();
+        }
     }
 
     private void fullScreenCheck() {
