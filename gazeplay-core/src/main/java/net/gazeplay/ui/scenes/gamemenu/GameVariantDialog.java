@@ -1,3 +1,4 @@
+
 package net.gazeplay.ui.scenes.gamemenu;
 
 import javafx.event.Event;
@@ -104,7 +105,10 @@ public class GameVariantDialog extends Stage {
             button.setMaxWidth(primaryStage.getWidth() / 8);
             button.setMaxHeight(primaryStage.getHeight() / 8);
 
-            if ((variant instanceof DimensionDifficultyGameVariant && (variant.toString().contains("easy") || variant.toString().contains("Dynamic"))) || variant.toString().contains("DYNAMIC")) {
+            if ((variant instanceof DimensionDifficultyGameVariant && (variant.toString().contains("easy") || variant.toString().contains("Dynamic"))) ||
+                variant.toString().contains("DYNAMIC") ||
+                variant.toString().startsWith("AnimeSelect the caracter then look at the house box to move")
+            ) {
                 if (!choicePanes.containsKey(1)) {
                     choicePanes.put(1, createFlowPane());
                 }
@@ -155,7 +159,8 @@ public class GameVariantDialog extends Stage {
                 gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
                 gameSpec.getGameSummary().getNameCode().equals("bottle") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
-                gameSpec.getGameSummary().getNameCode().equals("DotToDot")) &&
+                gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
+                gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) &&
                 (group.getToggles().size() < 2)
             ) {
                 RadioButton[] categories;
@@ -178,6 +183,10 @@ public class GameVariantDialog extends Stage {
                     categories[2] = new RadioButton(translator.translate("NormalF"));
                     categories[1] = new RadioButton(translator.translate("SmallF"));
                     categories[0] = new RadioButton(translator.translate("TinyF"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) {
+                    categories = new RadioButton[2];
+                    categories[0] = new RadioButton(translator.translate("MouseC"));
+                    categories[1] = new RadioButton(translator.translate("OtherC"));
                 } else {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("Classic"));
@@ -228,7 +237,6 @@ public class GameVariantDialog extends Stage {
         errorDialog.show();
         errorDialog.toFront();
     }
-
 
     private FlowPane createFlowPane() {
         FlowPane newFlowPane = new FlowPane();

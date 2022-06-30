@@ -319,6 +319,19 @@ Mouse,,,,,,Mouse,,Souris,,,,,,,,,Мышка,,,Мышка,
 Gaze,,,,,,Gaze,,Regard,,,,,,,,,Взгляд,,,Погляд,
 MouseAndGaze,,,,,,Mouse and Gaze,,Souris et Regard,,,,,,,,,Мышка и взгляд,,,Мышка і погляд,
 
+MouseC,,,,,,Mouse and cheese,,Souris et frommage,,,,,,,,,,,,
+OtherC,,,,,,Other characters,,Autres personnages,,,,,,,,,,,,
+
+Look at the house box to move,,أنظر إلى المنزل لتتحرك,,,,Look at the house box to move,,Regarde la maison pour bouger,,,,,,,,,,,,
+Look the movement arrows around the character to move,,أنظر إلى الأسهم حول الشخصية لتتحرك,,,,Look the movement arrows around the character to move,,Regarde les flèches de mouvement autour du personnage pour bouger,,,,,,,,,,,,
+Look the movement arrows around the labyrinth to move the character,,أنظر إلى الأسهم حول المتاهات لتتحرك الشخصية,,,,Look the movement arrows around the labyrinth to move the character,,Regarde les flèches de mouvement autour du labyrinthe pour bouger le personnage,,,,,,,,,,,,
+Select the character then look at the house box to move,,إختر الشخصية ثم أنظر إلى المنزل لتتحرك,,,,Select the character then look at the house box to move,,Selectionne le personnage et après regarde la maison de destination pour bouger,,,,,,,,,,,,
+
+AnimeLook at the house box to move,,مع واجهة متحركة. أنظر إلى المنزل لتتحرك,,,, with animation. Look at the house box to move,,Avec animation. Regarde la maison pour bouger,,,,,,,,,,,,
+AnimeLook the movement arrows around the character to move,, مع واجهة متحركة. أنظر إلى الأسهم حول الشخصية لتتحرك,,,,with animation. Look the movement arrows around the character to move,,Avec animation. Regarde les flèches de mouvement autour du personnage pour bouger,,,,,,,,,,,,
+AnimeLook the movement arrows around the labyrinth to move the character,,مع واجهة متحركة. أنظر الى الأسهم حول المتاهات لتتحرت الشخصية,,,,with animation. Look the movement arrows around the labyrinth to move the character,,Avec animation. Regarde les flèches de mouvement autour du labyrinthe pour bouger le personnage,,,,,,,,,,,,
+AnimeSelect the character then look at the house box to move,,مع واجهة متحركة. إختر الشخصية ثم أنظر إلى المنزل لتتحرك,,,,with animation. Select the character then look at the house box to move,,Avec animation. Selectionne le personnage et après regarde la maison de destination pour bouger,,,,,,,,,,,,
+
 AnimeLook at the destination box to move,,,,,,With animation. Look at the destination box to move,,Avec animation. Regarde la boîte de destination pour bouger,,,,,,,,,С анимацией. Посмотри на нужную коробку чтобы передвинуть объект,,,З анімацыяй. Паглядзі на патрэбную скрынку каб перасунуць аб'ект,
 AnimeLook the movement arrows around the mouse to move,,,,,,With Animation. Look the movement arrows around the mouse to move,,Avec animation. Regarde les flèches de mouvement autour de la souris pour bouger,,,,,,,,,С анимацией. Смотри на стрелки вокруг мышки чтобы передвигаться,,,З анімацыяй. Паглядзі на патрэбную скрынку каб перасунуць аб'ект,
 AnimeLook the movement arrows around the labyrinth to move,,,,,,With Animation. Look the movement arrows around the labyrinth to move,,Avec animation. Regarde les flèches de mouvement autour du labyrinthe pour bouger,,,,,,,,,С анимацией. Смотри на стрелки вокруг лабиринта чтобы передвигаться,,,З анімацыяй. Глядзі на стрэлкі вакол лабірынта каб перасоўвацца,
