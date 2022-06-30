@@ -26,11 +26,10 @@ import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.stats.ShootGamesStats;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,36 +65,25 @@ public class StatDisplayUtils {
             log.info("Game statistics data not sent to server: authorization deactivated");
             return;
         }
+/*
+        String hostname = "129.88.11.107";
+        int portNumber = 30001;
+
         try {
-            // URL and parameters for the connection, this particularly returns the information passed
-            URL url = new URL("https://lig-interaactionpicto.imag.fr");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Accept", "application/json");
+            Socket socket = new Socket(hostname, portNumber);
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            // Writes the JSON parsed as string to the connection
-            DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-            out.write(savedStatsJSON.toString().getBytes(StandardCharsets.UTF_8));
-            out.close();
-            int responseCode = connection.getResponseCode();
+            out.println("TEST");
+            log.info(in.readLine());
 
-            // Creates a reader buffer to receive the response
-            InputStream in = (responseCode > 199 && responseCode < 300) ? connection.getInputStream() : connection.getErrorStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            StringBuilder content = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                content.append(line).append("\n");
-            }
-            reader.close();
+            socket.close();
 
             log.info("Game statistics data sent to server successfully");
-            log.info("Server response:\n« " + content + " »");
         } catch (Exception e) {
-            log.info("Game statistics data not sent to server: error during transfer\n" + e);
-        }
+            log.warn("Game statistics data not sent to server: error during transfer");
+            log.warn(e.getMessage());
+        }*/
     }
 
     public static LineChart<String, Number> buildLineChart(Stats stats, final Region root) {
