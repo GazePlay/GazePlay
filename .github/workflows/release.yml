@@ -38,14 +38,8 @@ jobs:
         run: |
           cd ./build/distributions/
           mv gazeplay-linux-x64*.tar.gz gazeplay-linux-x64.tar.gz
-          mv gazeplay-afsr-linux-x64*.tar.gz gazeplay-afsr-linux-x64.tar.gz
-          mv gazeplay-bera-linux-x64*.tar.gz gazeplay-bera-linux-x64.tar.gz
           mv gazeplay-macos*.tar.gz gazeplay-macos.tar.gz
-          mv gazeplay-afsr-macos*.tar.gz gazeplay-afsr-macos.tar.gz
-          mv gazeplay-bera-macos*.tar.gz gazeplay-bera-macos.tar.gz
           mv gazeplay-arm*.tar.gz gazeplay-arm.tar.gz
-          mv gazeplay-afsr-arm*.tar.gz gazeplay-afsr-arm.tar.gz
-          mv gazeplay-bera-arm*.tar.gz gazeplay-bera-arm.tar.gz
           mv gazeplay-windows-x64*.zip gazeplay-windows-x64.zip
           mv gazeplay-windows-x64*installer.exe gazeplay-windows-x64-installer.exe
           mv gazeplay-windows-x32*.zip gazeplay-windows-x32.zip
@@ -114,9 +108,6 @@ jobs:
         with:
           release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
           files: |
-            ./build/distributions/gazeplay-afsr-linux-x64.tar.gz
-            ./build/distributions/gazeplay-afsr-macos.tar.gz
-            ./build/distributions/gazeplay-afsr-arm.tar.gz
             ./build/distributions/gazeplay-afsr-windows-x64.zip
             ./build/distributions/gazeplay-afsr-windows-x64-installer.exe
             ./build/distributions/gazeplay-afsr-windows-x32.zip
@@ -129,9 +120,6 @@ jobs:
         with:
           release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
           files: |
-            ./build/distributions/gazeplay-bera-linux-x64.tar.gz
-            ./build/distributions/gazeplay-bera-macos.tar.gz
-            ./build/distributions/gazeplay-bera-arm.tar.gz
             ./build/distributions/gazeplay-bera-windows-x64.zip
             ./build/distributions/gazeplay-bera-windows-x64-installer.exe
             ./build/distributions/gazeplay-bera-windows-x32.zip

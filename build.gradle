@@ -269,37 +269,9 @@ distributions {
             from("build/bin/gazeplay-linux.sh") {
                 into 'bin'
             }
-            from("build/jre/linux-x64") {
-                into 'lib/jre'
-            }
-            from("build/tobiiDrivers") {
-                into 'tobiiDrivers'
-            }
-        }
-    }
-
-    linuxAfsr {
-        setDistributionBaseName "${project.name}-afsr-linux-x64"
-        contents {
-            with distributions.main.contents
-            from("build/reports")
             from("build/bin/gazeplay-afsr-linux.sh") {
                 into 'bin'
             }
-            from("build/jre/linux-x64") {
-                into 'lib/jre'
-            }
-            from("build/tobiiDrivers") {
-                into 'tobiiDrivers'
-            }
-        }
-    }
-
-    linuxBera {
-        setDistributionBaseName "${project.name}-bera-linux-x64"
-        contents {
-            with distributions.main.contents
-            from("build/reports")
             from("build/bin/gazeplay-bera-linux.sh") {
                 into 'bin'
             }
@@ -320,32 +292,10 @@ distributions {
             from("build/bin/gazeplay-arm.sh") {
                 into 'bin'
             }
-            from("build/jre/arm") {
-                into 'lib/jre'
-            }
-        }
-    }
-
-    armAfsr {
-        setDistributionBaseName "${project.name}-afsr-arm"
-        contents {
-            with distributions.main.contents
-            from("build/reports")
-            from("build/bin/gazeplay-afsr-arm.sh") {
+            from("build/bin/gazeplay-bera-arm.sh") {
                 into 'bin'
             }
-            from("build/jre/arm") {
-                into 'lib/jre'
-            }
-        }
-    }
-
-    armBera {
-        setDistributionBaseName "${project.name}-bera-arm"
-        contents {
-            with distributions.main.contents
-            from("build/reports")
-            from("build/bin/gazeplay-bera-arm.sh") {
+            from("build/bin/gazeplay-afsr-arm.sh") {
                 into 'bin'
             }
             from("build/jre/arm") {
@@ -362,31 +312,9 @@ distributions {
             from("build/bin/gazeplay-macos.sh") {
                 into 'bin'
             }
-            from("build/jre/macos") {
-                into 'lib/jre'
-            }
-        }
-    }
-
-    macosAfsr {
-        setDistributionBaseName "${project.name}-afsr-macos"
-        contents {
-            with distributions.main.contents
-            from("build/reports")
             from("build/bin/gazeplay-afsr-macos.sh") {
                 into 'bin'
             }
-            from("build/jre/macos") {
-                into 'lib/jre'
-            }
-        }
-    }
-
-    macosBera {
-        setDistributionBaseName "${project.name}-bera-macos"
-        contents {
-            with distributions.main.contents
-            from("build/reports")
             from("build/bin/gazeplay-bera-macos.sh") {
                 into 'bin'
             }
@@ -402,19 +330,13 @@ task('downloadAndExtractARMDependecies').dependsOn('downloadAndExtractARMJREwith
 
 windowsDistZip.dependsOn(downloadAndExtractWindowsJRE)
 windowsx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
-windowsAfsrDistZip.dependsOn(downloadAndExtractWindowsJRE)
-windowsAfsrx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
 windowsBeraDistZip.dependsOn(downloadAndExtractWindowsJRE)
 windowsBerax32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
+windowsAfsrDistZip.dependsOn(downloadAndExtractWindowsJRE)
+windowsAfsrx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
 linuxDistTar.dependsOn(downloadAndExtractLinuxDependecies)
-linuxAfsrDistTar.dependsOn(downloadAndExtractLinuxDependecies)
-linuxBeraDistTar.dependsOn(downloadAndExtractLinuxDependecies)
 macosDistTar.dependsOn(downloadAndExtractMacosJRE)
-macosAfsrDistTar.dependsOn(downloadAndExtractMacosJRE)
-macosBeraDistTar.dependsOn(downloadAndExtractMacosJRE)
 armDistTar.dependsOn(downloadAndExtractARMDependecies)
-armAfsrDistTar.dependsOn(downloadAndExtractARMDependecies)
-armBeraDistTar.dependsOn(downloadAndExtractARMDependecies)
 
 tasks.withType(Tar){
     compression = Compression.GZIP
