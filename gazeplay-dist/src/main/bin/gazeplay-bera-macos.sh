@@ -2,8 +2,7 @@
 
 set -e
 
-export JAVA_OPTS="-Xms256m -Xmx1g"
-export JAVA_OPTS="$JAVA_OPTS -Dlogging.appender.console.level=OFF"
+export JAVA_OPTS="-Xms256m -Xmx1g --add-exports=javafx.base/com.sun.javafx.collections=ALL-UNNAMED -Dlogging.appender.console.level=OFF"
 
 CLASSPATH=$(find ../lib -name "*.jar" | sort | tr '\n' ':')
 
@@ -18,5 +17,7 @@ echo "PATH = ${PATH}"
 export JAVA_CMD="java -cp \"$CLASSPATH\" ${JAVA_OPTS} net.gazeplay.GazePlayLauncher --bera"
 
 echo "Executing command line: $JAVA_CMD"
+
+chmod -R 777 ./../lib/
 
 ${JAVA_CMD}

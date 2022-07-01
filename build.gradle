@@ -3,14 +3,14 @@ plugins {
     id 'distribution'
     id 'jacoco'
     id 'org.openjfx.javafxplugin' version '0.0.8'
-    id 'io.freefair.lombok' version '4.1.4'
-    id 'com.github.hierynomus.license-report' version '0.15.0'
-    id 'com.github.spotbugs' version '2.0.0'
+    id 'io.freefair.lombok' version '6.4.3'
+    id 'com.github.hierynomus.license-report' version '0.16.1'
+    id 'com.github.spotbugs' version '5.0.7'
     id 'net.researchgate.release' version '2.6.0'
     id "de.undercouch.download" version '4.0.4'
 
-    id 'org.springframework.boot' version '2.2.1.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'org.springframework.boot' version '2.7.0'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
 // Add -PSpotBugs=false to the Gradle Command Line to not run spotbugs
@@ -21,7 +21,7 @@ boolean pmdEnabled = Boolean.parseBoolean(project.getProperties().get('pmd')) ?:
 
 logging.captureStandardOutput LogLevel.INFO
 
-ext.javafxVersion = "11.0.2"
+ext.javafxVersion = "17.0.2"
 
 apply from: "${rootDir}/gradle/package.gradle"
 apply from: "${rootDir}/gradle/installer.gradle"
@@ -75,6 +75,7 @@ subprojects {
     configurations {
         integrationTestImplementation.extendsFrom testImplementation
         integrationTestRuntime.extendsFrom testRuntime
+        runtimeOnly.canBeResolved(true)
     }
 
     javafx {
@@ -83,7 +84,7 @@ subprojects {
     }
 
     spotbugs {
-        toolVersion = '4.0.0-beta3'
+        toolVersion = '4.7.0'
 
         //ignoreFailures = false
         //effort = "max"
@@ -92,7 +93,7 @@ subprojects {
     }
 
     spotbugsMain.enabled = spotbugsEnabled
-    spotbugsTest.enabled = spotbugsEnabled
+    spotbugsTest.enabled = false
 
     downloadLicenses {
         dependencyConfiguration = 'compileClasspath'
@@ -108,7 +109,8 @@ subprojects {
         testImplementation "org.mockito:mockito-core:3.12.+"
     }
 
-    sourceCompatibility = '11'
+    sourceCompatibility = '13'
+    targetCompatibility = '17'
 
     publishing {
         publications {
@@ -141,7 +143,7 @@ subprojects {
 
     pmd {
         ignoreFailures = true
-        rulePriority = 2
+        rulesMinimumPriority = 2
         sourceSets = [sourceSets.main, sourceSets.test]
         reportsDir = file("$project.buildDir/reports/pmd")
         ruleSets = []
@@ -153,12 +155,12 @@ subprojects {
 }
 
 dependencies {
-    runtime project(':gazeplay-core')
-    runtime project(':gazeplay-games')
-    runtime project(':gazeplay-games-commons')
-    runtime project(':gazeplay-commons')
-    runtime project(':gazeplay-melordi')
-    runtime project(':gazeplay-picto-pick')
+    implementation project(':gazeplay-core')
+    implementation project(':gazeplay-games')
+    implementation project(':gazeplay-games-commons')
+    implementation project(':gazeplay-commons')
+    implementation project(':gazeplay-melordi')
+    implementation project(':gazeplay-picto-pick')
 
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
 }
@@ -282,7 +284,28 @@ distributions {
         }
     }
 
+    arm {
+        setDistributionBaseName "${project.name}-arm"
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+            from("build/bin/gazeplay-arm.sh") {
+                into 'bin'
+            }
+            from("build/bin/gazeplay-bera-arm.sh") {
+                into 'bin'
+            }
+            from("build/bin/gazeplay-afsr-arm.sh") {
+                into 'bin'
+            }
+            from("build/jre/arm") {
+                into 'lib/jre'
+            }
+        }
+    }
+
     macos {
+        setDistributionBaseName "${project.name}-macos"
         contents {
             with distributions.main.contents
             from("build/reports")
@@ -303,15 +326,17 @@ distributions {
 }
 
 task('downloadAndExtractLinuxDependecies').dependsOn('downloadAndExtractLinuxJREwithLibavPlugin', 'downloadAndExtractTobiiDriversForLinux')
+task('downloadAndExtractARMDependecies').dependsOn('downloadAndExtractARMJREwithLibavPlugin', 'downloadAndExtractTobiiDriversForLinux')
 
 windowsDistZip.dependsOn(downloadAndExtractWindowsJRE)
 windowsx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
-windowsAfsrDistZip.dependsOn(downloadAndExtractWindowsJRE)
-windowsAfsrx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
 windowsBeraDistZip.dependsOn(downloadAndExtractWindowsJRE)
 windowsBerax32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
+windowsAfsrDistZip.dependsOn(downloadAndExtractWindowsJRE)
+windowsAfsrx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
 linuxDistTar.dependsOn(downloadAndExtractLinuxDependecies)
 macosDistTar.dependsOn(downloadAndExtractMacosJRE)
+armDistTar.dependsOn(downloadAndExtractARMDependecies)
 
 tasks.withType(Tar){
     compression = Compression.GZIP
@@ -320,8 +345,27 @@ tasks.withType(Tar){
 
 distZip {
     duplicatesStrategy = 'exclude'
+    //enabled = false
 }
 [bootJar, bootDistTar, bootDistZip]*.enabled = false
+
+/*
+bootDistTar{
+    enabled = false
+}
+
+distTar{
+    enabled = false
+}
+
+jar {
+    enabled = false
+}
+
+bootJar {
+    classifier = 'application'
+}
+*/
 
 release {
     failOnPublishNeeded = false

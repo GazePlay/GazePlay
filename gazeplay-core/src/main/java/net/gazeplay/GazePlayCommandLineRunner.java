@@ -51,7 +51,7 @@ public class GazePlayCommandLineRunner implements CommandLineRunner, ExitCodeGen
 
         List<GameSpec> gameSpecs = gamesLocator.listGames(translator);
         for (GameSpec gameSpec : gameSpecs) {
-            commandLine.addSubcommand(gameSpec.getGameSummary().getNameCode(), new GameRunnerCommand(gameSpec));
+            commandLine.addSubcommand("game=" + gameSpec.getGameSummary().getNameCode(), new GameRunnerCommand(gameSpec));
         }
 
         exitCode = commandLine.execute(args);

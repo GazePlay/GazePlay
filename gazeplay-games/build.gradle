@@ -1,21 +1,24 @@
 dependencies {
-    compile 'com.github.agomezmoron:screen-recorder:0.0.3'
-    compile project(':gazeplay-commons')
-    compile project(':gazeplay-games-commons')
-    compile 'com.google.code.gson:gson:2.8.1'
-    compile 'org.rxtx:rxtx:2.1.7'
-    compile 'com.theeyetribe:eyetribe-java:0.9.77'
-    compile 'ch.qos.logback:logback-classic:1.2.1'
-    compile 'ch.qos.logback:logback-core:1.2.1'
-    compile 'org.slf4j:slf4j-api:1.7.25'
-    compile 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
-    compile 'javax.media:jmf:2.1.1e'
-    compile 'ws.schild:jave-all-deps:2.5.0'
-    compile 'ws.schild:jave-core:2.5.0'
-    compile group : 'org.apache.poi', name: 'poi-ooxml', version: '4.0.0'
+    implementation 'com.github.agomezmoron:screen-recorder:0.0.3'
+    implementation project(':gazeplay-commons')
+    implementation project(':gazeplay-games-commons')
+    implementation 'com.google.code.gson:gson:2.8.1'
+    implementation 'org.rxtx:rxtx:2.1.7'
+    implementation 'com.theeyetribe:eyetribe-java:0.9.77'
+    implementation 'ch.qos.logback:logback-classic:1.2.1'
+    implementation 'ch.qos.logback:logback-core:1.2.1'
+    implementation 'org.slf4j:slf4j-api:1.7.25'
+    implementation 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
+    implementation 'javax.media:jmf:2.1.1e'
+    implementation 'ws.schild:jave-all-deps:2.5.0'
+    implementation 'ws.schild:jave-core:2.5.0'
+    implementation group : 'org.apache.poi', name: 'poi-ooxml', version: '4.0.0'
+    implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'com.github.GazePlay:TobiiStreamEngineForJava:5.0'
+    implementation 'commons-io:commons-io:2.11.0'
 
-    runtime 'org.slf4j:jcl-over-slf4j:1.7.25'
-    runtime 'org.slf4j:log4j-over-slf4j:1.7.25'
+    runtimeOnly 'org.slf4j:jcl-over-slf4j:1.7.25'
+    runtimeOnly 'org.slf4j:log4j-over-slf4j:1.7.25'
 
     testImplementation "org.mockito:mockito-core:3.12.+"
     testImplementation "junit:junit:4.12"
@@ -33,7 +36,7 @@ jar {
                 "Implementation-Title": project.name,
                 "Implementation-Version": project.version,
                 "Implementation-Vendor": "Univ. Grenoble Alpes - LIG - GETALP",
-                "Class-Path": configurations.runtime.collect { it.getName() }.join(' '),
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' '),
                 "JavaFX-Version": javafxVersion,
                 "Built-By": System.properties['user.name']
         )
