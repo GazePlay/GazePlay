@@ -1,20 +1,25 @@
 def downloadLocation = project.ext.downloadLocation
 
-def jreSource = project.ext.jreSource
-def zuluVersion = project.ext.zuluVersion
-def jreVersion = project.ext.jreVersion
 def jreFolder = project.ext.jreFolder
 
-def filename = "zulu${zuluVersion}-ca-fx-jre${jreVersion}-macosx_aarch64"
 def jfxfilename = "javafx-sdk-17.0.2"
 
 task downloadARMJRE(type: Download, group: 'custom jre') {
-    src "${jreSource}/${filename}.tar.gz"
+    src "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.3%2B7/OpenJDK17U-jre_arm_linux_hotspot_17.0.3_7.tar.gz"
     dest new File("${downloadLocation}/jre", 'arm.tar.gz')
     overwrite true
 }
 
 task extractARMJRE(dependsOn: downloadARMJRE, type: Copy, group: 'custom jre') {
+    doLast {
+        copy {
+            from "${jreFolder}/arm/jdk-17.0.3+7-jre"
+            into "${jreFolder}/arm"
+        }
+
+        delete "${jreFolder}/arm/jdk-17.0.3+7-jre"
+    }
+
     from tarTree(downloadARMJRE.dest)
     into "${jreFolder}/arm"
 }
@@ -42,15 +47,7 @@ task downloadAndExtractOpenJFXForLibavPluginARM(dependsOn: extractOpenJFXForLiba
 }
 
 task downloadAndExtractARMJRE(dependsOn: extractARMJRE, group: 'custom jre') {
-    doLast {
-        copy {
-            from new File(extractARMJRE.getDestinationDir(), filename)
-            into "${jreFolder}/arm"
-        }
 
-        delete "${jreFolder}/arm/${filename}"
-        delete "${jreFolder}/arm/lib"
-    }
 }
 
 task downloadAndExtractARMJREwithLibavPlugin(dependsOn: [downloadAndExtractARMJRE, downloadAndExtractOpenJFXForLibavPluginARM], group: 'custom jre') {
