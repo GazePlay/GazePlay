@@ -326,6 +326,34 @@ distributions {
         }
     }
 
+    armAfsr {
+        setDistributionBaseName "${project.name}-afsr-arm"
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+            from("build/bin/gazeplay-afsr-arm.sh") {
+                into 'bin'
+            }
+            from("build/jre/arm") {
+                into 'lib/jre'
+            }
+        }
+    }
+
+    armBera {
+        setDistributionBaseName "${project.name}-bera-arm"
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+            from("build/bin/gazeplay-bera-arm.sh") {
+                into 'bin'
+            }
+            from("build/jre/arm") {
+                into 'lib/jre'
+            }
+        }
+    }
+
     macos {
         setDistributionBaseName "${project.name}-macos"
         contents {
@@ -385,6 +413,8 @@ macosDistTar.dependsOn(downloadAndExtractMacosJRE)
 macosAfsrDistTar.dependsOn(downloadAndExtractMacosJRE)
 macosBeraDistTar.dependsOn(downloadAndExtractMacosJRE)
 armDistTar.dependsOn(downloadAndExtractARMDependecies)
+armAfsrDistTar.dependsOn(downloadAndExtractARMDependecies)
+armBeraDistTar.dependsOn(downloadAndExtractARMDependecies)
 
 tasks.withType(Tar){
     compression = Compression.GZIP

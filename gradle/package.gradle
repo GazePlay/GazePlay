@@ -2,6 +2,8 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 task('packageAllDists').dependsOn(
         'linuxDistTar',
+        'linuxAfsrDistTar',
+        'linuxBeraDistTar',
         'windowsDistZip',
         'windowsx32DistZip',
         'windowsAfsrDistZip',
@@ -9,8 +11,12 @@ task('packageAllDists').dependsOn(
         'windowsBeraDistZip',
         'windowsBerax32DistZip',
         'macosDistTar',
-        'assembleNoJREDist',
-        'armDistTar'
+        'macosAfsrDistTar',
+        'macosBeraDistTar',
+        'armDistTar',
+        'armAfsrDistTar',
+        'armBeraDistTar',
+        'assembleNoJREDist'
 )
 
 task packageApp(dependsOn: ['packageAllDists',
