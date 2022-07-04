@@ -29,40 +29,40 @@
     "sceneAspectRatio": {
       "type": "number"
     },
-    "statsNbGoalsReached": {
+    "nbGoalsReached": {
       "type": "number"
     },
-    "statsNbGoalsToReach": {
+    "nbGoalsToReach": {
       "type": "number"
     },
-    "statsNbUncountedGoalsReached": {
+    "nbUncountedGoalsReached": {
       "type": "number"
     },
-    "configQuestionLength": {
+    "questionLength": {
       "type": "number"
     },
-    "configQuestionReaskedOnFail":{
+    "questionReaskedOnFail":{
       "type": "boolean"
     },
-    "configLimiterScoreEnabled": {
+    "limiterScoreEnabled": {
       "type": "boolean"
     },
-    "configLimiterScore": {
+    "limiterScore": {
       "type": "number"
     },
-    "configLimiterTimeEnabled": {
+    "limiterTimeEnabled": {
       "type": "boolean"
     },
-    "configLimiterTime": {
+    "limiterTime": {
       "type": "number"
     },
-    "configElementSize": {
+    "elementSize": {
       "type": "number"
     },
-    "configAnimationSpeedRatio": {
+    "animationSpeedRatio": {
       "type": "number"
     },
-    "configFixationLength": {
+    "fixationLength": {
       "type": "number"
     },
     "lifeCycle": {
@@ -101,10 +101,10 @@
         "items": {
           "type": "object",
           "properties": {
-            "timeGaze": {
+            "time": {
               "type": "number"
             },
-            "gazeDuration": {
+            "duration": {
               "type": "number"
             },
             "x": {
@@ -115,8 +115,8 @@
             }
           },
           "required": [
-            "timeGaze",
-            "gazeDuration",
+            "time",
+            "duration",
             "x",
             "y"
           ]
@@ -128,32 +128,32 @@
       "items": {
         "type": "object",
         "properties": {
-          "xValue": {
+          "x": {
             "type": "number"
           },
-          "yValue": {
+          "y": {
             "type": "number"
           },
-          "intervalTime": {
+          "interval": {
             "type": "number"
           },
-          "timeStarted": {
+          "start": {
             "type": "number"
           },
           "event": {
             "type": "string"
           },
-          "distance": {
+          "dist": {
             "type": "number"
           }
         },
         "required": [
-          "xValue",
-          "yValue",
-          "intervalTime",
-          "timeStarted",
+          "x",
+          "y",
+          "interval",
+          "start",
           "event",
-          "distance"
+          "dist"
         ]
       }
     },
@@ -171,44 +171,44 @@
       "items": {
         "type": "object",
         "properties": {
-          "aoiID": {
+          "id": {
             "type": "string"
           },
-          "points": {
+          "pts": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "xValue": {
+                "x": {
                   "type": "number"
                 },
-                "yValue": {
+                "y": {
                   "type": "number"
                 },
-                "intervalTime": {
+                "interval": {
                   "type": "number"
                 },
-                "timeStarted": {
+                "start": {
                   "type": "number"
                 },
                 "event": {
                   "type": "string"
                 },
-                "distance": {
+                "dist": {
                   "type": "number"
                 }
               },
               "required": [
-                "xValue",
-                "yValue",
-                "intervalTime",
-                "timeStarted",
+                "x",
+                "y",
+                "interval",
+                "start",
                 "event",
-                "distance"
+                "dist"
               ]
             }
           },
-          "fixations": {
+          "fix": {
             "type": "number"
           },
           "centerX": {
@@ -217,19 +217,19 @@
           "centerY": {
             "type": "number"
           },
-          "convexPoints": {
+          "convexPts": {
             "type": "array",
             "items": {
               "type": "number"
             }
           },
-          "startingIndex": {
+          "startIdx": {
             "type": "number"
           },
-          "endingIndex": {
+          "endIdx": {
             "type": "number"
           },
-          "timeSpent": {
+          "time": {
             "type": "number"
           },
           "ttff": {
@@ -237,15 +237,15 @@
           }
         },
         "required": [
-          "aoiID",
-          "points",
-          "fixations",
+          "id",
+          "pts",
+          "fix",
           "centerX",
           "centerY",
-          "convexPoints",
-          "startingIndex",
-          "endingIndex",
-          "timeSpent",
+          "convexPts",
+          "startIdx",
+          "endIdx",
+          "time",
           "ttff"
         ]
       }

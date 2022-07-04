@@ -24,7 +24,7 @@ public class OrderGameLauncher implements IGameLauncher<Stats, IntGameVariant> {
                                   RoundsDurationReport roundsDurationReport,
                                   List<List<FixationPoint>> fixationSequence,
                                   List<CoordinatesTracker> movementHistory,
-                                  double[][] heatMap,
+                                  int[][] heatMap,
                                   List<AreaOfInterest> aoiList,
                                   SavedStatsInfo savedStatsInfo
     ) {

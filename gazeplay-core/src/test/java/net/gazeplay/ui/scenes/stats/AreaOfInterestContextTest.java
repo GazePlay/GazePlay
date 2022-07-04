@@ -52,8 +52,8 @@ class AreaOfInterestContextTest {
     @Test
     void shouldCreateButtonBox() {
         List<CoordinatesTracker> coordinatesTrackers = List.of(
-            new CoordinatesTracker(100, 200, 1234, 3456, "mouse"),
-            new CoordinatesTracker(200, 200, 4321, 4567, "mouse")
+            new CoordinatesTracker(100, 200, 3456, 1234, 1),
+            new CoordinatesTracker(200, 200, 4567, 4321, 1)
         );
         when(mocksStats.getMovementHistory()).thenReturn(coordinatesTrackers);
 
@@ -67,17 +67,17 @@ class AreaOfInterestContextTest {
     @Test
     void shouldCalculateAOIView() {
         List<CoordinatesTracker> coordinatesTrackers = List.of(
-            new CoordinatesTracker(100, 200, 1234, 3456, "mouse"),
-            new CoordinatesTracker(200, 200, 4321, 4567, "mouse"),
-            new CoordinatesTracker(300, 300, 1234, 5678, "mouse")
+            new CoordinatesTracker(100, 200, 3456, 1234, 1),
+            new CoordinatesTracker(200, 200, 4567, 4321, 1),
+            new CoordinatesTracker(300, 300, 5678, 1234, 1)
         );
         when(mocksStats.getMovementHistory()).thenReturn(coordinatesTrackers);
 
         AreaOfInterestContext areaOfInterestContext = new AreaOfInterestContext(mockGazePlay, mocksStats, false);
 
         Double[] convexPoints = {1d, 1d, 2d, 1d, 2d, 3d, 1d, 3d};
-        AreaOfInterest aoi1 = new AreaOfInterest("id", coordinatesTrackers, 300, 400, convexPoints, 0, 2, 1.23, 12.34);
-        AreaOfInterest aoi2 = new AreaOfInterest("id", coordinatesTrackers, 500, 400, convexPoints, 0, 2, 1.23, 12.34);
+        AreaOfInterest aoi1 = new AreaOfInterest("id", 300, 400, convexPoints, 0, 2, 1.23, 12.34);
+        AreaOfInterest aoi2 = new AreaOfInterest("id", 500, 400, convexPoints, 0, 2, 1.23, 12.34);
         AreaOfInterestView aoiView1 = areaOfInterestContext.calculateAOIView(aoi1, 0);
         AreaOfInterestView aoiView2 = areaOfInterestContext.calculateAOIView(aoi2, 0);
 

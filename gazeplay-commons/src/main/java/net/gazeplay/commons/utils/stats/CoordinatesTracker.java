@@ -6,10 +6,14 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public class CoordinatesTracker {
-    private final double xValue;
-    private final double yValue;
-    private final long intervalTime;
-    private final long timeStarted;
-    private final String event;
-    private double distance;
+    private final double x;
+    private final double y;
+    private final long start;
+    private final long interval;
+    private final int event;
+    private double dist;
+
+    public String getEvent() {
+        return event == 0 ? "gaze" : "mouse";
+    }
 }

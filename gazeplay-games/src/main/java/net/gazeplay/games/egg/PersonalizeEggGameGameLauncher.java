@@ -24,7 +24,7 @@ public class PersonalizeEggGameGameLauncher implements IGameLauncher<Stats, IntG
                                   RoundsDurationReport roundsDurationReport,
                                   List<List<FixationPoint>> fixationSequence,
                                   List<CoordinatesTracker> movementHistory,
-                                  double[][] heatMap,
+                                  int[][] heatMap,
                                   List<AreaOfInterest> aoiList,
                                   SavedStatsInfo savedStatsInfo
     ) {

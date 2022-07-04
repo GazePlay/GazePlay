@@ -217,21 +217,21 @@ public class ReplayingGameFromJson {
         }
 
         Configuration config = ActiveConfigurationContext.getInstance();
-        config.setQuestionLength(json.getConfigQuestionLength());
-        config.setQuestionReaskedOnFail(json.isConfigQuestionReaskedOnFail());
-        config.setLimiterScoreEnabled(json.isConfigLimiterScoreEnabled());
-        config.setLimiterScore(json.getConfigLimiterScore());
-        config.setLimiterTimeEnabled(json.isConfigLimiterTimeEnabled());
-        config.setLimiterTime(json.getConfigLimiterTime());
-        config.setAnimationSpeedRatio(json.getConfigAnimationSpeedRatio());
-        config.setElementSize(json.getConfigElementSize());
-        config.setFixationLength(json.getConfigFixationLength());
+        config.setQuestionLength(json.getQuestionLength());
+        config.setQuestionReaskedOnFail(json.isQuestionReaskedOnFail());
+        config.setLimiterScoreEnabled(json.isLimiterScoreEnabled());
+        config.setLimiterScore(json.getLimiterScore());
+        config.setLimiterTimeEnabled(json.isLimiterTimeEnabled());
+        config.setLimiterTime(json.getLimiterTime());
+        config.setAnimationSpeedRatio(json.getAnimationSpeedRatio());
+        config.setElementSize(json.getElementSize());
+        config.setFixationLength(json.getFixationLength());
 
         getSpecAndVariant();
         IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats statsSaved = gameLauncher.createSavedStats(scene,
-            json.getStatsNbGoalsReached(), json.getStatsNbGoalsToReach(), json.getStatsNbUncountedGoalsReached(),
+            json.getNbGoalsReached(), json.getNbGoalsToReach(), json.getNbUncountedGoalsReached(),
             json.getLifeCycle(), json.getRoundsDurationReport(), json.getFixationSequence(), json.getMovementHistory(),
             json.getHeatMap(), json.getAoiList(), savedStatsInfo);
         GameLifeCycle currentGame = gameLauncher.replayGame(gameContext, gameVariant, statsSaved, json.getGameSeed());
@@ -318,14 +318,14 @@ public class ReplayingGameFromJson {
         final GraphicsContext graphics = canvas.getGraphicsContext2D();
 
         for (CoordinatesTracker coordinatesTracker : json.getMovementHistory()) {
-            int x = (int) (coordinatesTracker.getXValue() * sceneWidth);
-            int y = (int) (coordinatesTracker.getYValue() * sceneHeight);
+            int x = (int) (coordinatesTracker.getX() * sceneWidth);
+            int y = (int) (coordinatesTracker.getY() * sceneHeight);
             Point2D point = new Point2D(x, y);
 
             Platform.runLater(() -> paint(graphics, canvas, point, coordinatesTracker.getEvent()));
 
             try {
-                TimeUnit.MILLISECONDS.sleep(coordinatesTracker.getIntervalTime());
+                TimeUnit.MILLISECONDS.sleep(coordinatesTracker.getInterval());
             } catch (InterruptedException e) {
                 log.info("Game has been interrupted");
                 break;
@@ -412,24 +412,24 @@ class JsonFile {
     private long gameStartedTime;
     private String screenAspectRatio;
     private double sceneAspectRatio;
-    private int statsNbGoalsReached;
-    private int statsNbGoalsToReach;
-    private int statsNbUncountedGoalsReached;
+    private int nbGoalsReached;
+    private int nbGoalsToReach;
+    private int nbUncountedGoalsReached;
 
-    private long configQuestionLength;
-    private boolean configQuestionReaskedOnFail;
-    private boolean configLimiterScoreEnabled;
-    private int configLimiterScore;
-    private boolean configLimiterTimeEnabled;
-    private int configLimiterTime;
-    private double configAnimationSpeedRatio;
-    private int configElementSize;
-    private int configFixationLength;
+    private long questionLength;
+    private boolean questionReaskedOnFail;
+    private boolean limiterScoreEnabled;
+    private int limiterScore;
+    private boolean limiterTimeEnabled;
+    private int limiterTime;
+    private double animationSpeedRatio;
+    private int elementSize;
+    private int fixationLength;
 
     private LifeCycle lifeCycle;
     private RoundsDurationReport roundsDurationReport;
     private ArrayList<LinkedList<FixationPoint>> fixationSequence;
     private ArrayList<CoordinatesTracker> movementHistory;
-    private double[][] heatMap;
+    private int[][] heatMap;
     private ArrayList<AreaOfInterest> aoiList;
 }

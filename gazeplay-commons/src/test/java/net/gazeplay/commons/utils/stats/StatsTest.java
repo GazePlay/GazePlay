@@ -46,7 +46,7 @@ class StatsTest {
     }
 
     void initMocks() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockScene.getWidth()).thenReturn(1080d);
         when(mockScene.getHeight()).thenReturn(1920d);
     }
@@ -56,7 +56,7 @@ class StatsTest {
         when(mockScene.getHeight()).thenReturn(30.0);
         when(mockScene.getWidth()).thenReturn(60.0);
 
-        double[][] result = Stats.instantiateHeatMapData(mockScene, 3.0);
+        int[][] result = Stats.instantiateHeatMapData(mockScene, 3.0);
 
         assertEquals(10, result.length);
         assertEquals(20, result[0].length);

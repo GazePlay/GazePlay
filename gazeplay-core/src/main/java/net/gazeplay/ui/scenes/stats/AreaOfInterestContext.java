@@ -102,7 +102,7 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
             score = 0;
 
             for (int i = 0; i < aoiList.size(); i++) {
-                final long timeAreaStart = aoiList.get(i).getTimeStarted();
+                final long timeAreaStart = movementHistory.get(aoiList.get(i).getStartIdx()).getStart();
                 double maxScore = 0;
 
                 for (targetAOIIterator = 0; targetAOIIterator < targetAOIArrayList.size(); targetAOIIterator++) {
@@ -293,22 +293,22 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
             public void run() {
                 final CoordinatesTracker coordinatesTracker = movementHistory.get(movementIndex);
                 final Circle circle;
-                if (movementHistory.get(movementIndex).getIntervalTime() > 11
-                    && movementHistory.get(movementIndex).getDistance() < 20) {
-                    circle = new Circle(coordinatesTracker.getXValue() * graphicsPane.getWidth(),
-                        coordinatesTracker.getYValue() * graphicsPane.getHeight(), 4);
+                if (movementHistory.get(movementIndex).getInterval() > 11
+                    && movementHistory.get(movementIndex).getDist() < 20) {
+                    circle = new Circle(coordinatesTracker.getX() * graphicsPane.getWidth(),
+                        coordinatesTracker.getY() * graphicsPane.getHeight(), 4);
                     circle.setStroke(Color.LIGHTYELLOW);
                     circle.setFill(Color.ORANGERED);
                 } else {
-                    circle = new Circle(coordinatesTracker.getXValue() * graphicsPane.getWidth(),
-                        coordinatesTracker.getYValue() * graphicsPane.getHeight(), 3);
+                    circle = new Circle(coordinatesTracker.getX() * graphicsPane.getWidth(),
+                        coordinatesTracker.getY() * graphicsPane.getHeight(), 3);
                     circle.setStroke(Color.LIGHTGREEN);
                     circle.setFill(Color.GREEN);
                 }
 
                 Platform.runLater(() -> {
                     if (aoiIterator < aoiList.size()) {
-                        if (movementIndex == aoiList.get(aoiIterator).getStartingIndex()) {
+                        if (movementIndex == aoiList.get(aoiIterator).getStartIdx()) {
                             currentInfoBox = aoiViewList.get(aoiIterator).getInfoBox();
                             currentLineToInfoBox = aoiViewList.get(aoiIterator).getLineToInfoBox();
                             currentAOIDisplay = aoiViewList.get(aoiIterator).getAreaOfInterest();
@@ -316,7 +316,7 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
                             graphicsPane.getChildren().add(currentInfoBox);
                             graphicsPane.getChildren().add(currentLineToInfoBox);
                         }
-                        if (movementIndex == aoiList.get(aoiIterator).getEndingIndex()) {
+                        if (movementIndex == aoiList.get(aoiIterator).getEndIdx()) {
                             graphicsPane.getChildren().remove(currentAOIDisplay);
                             graphicsPane.getChildren().remove(currentInfoBox);
                             graphicsPane.getChildren().remove(currentLineToInfoBox);
@@ -346,7 +346,7 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
                     }
                 });
             }
-        }, (long) (movementHistory.get(movementIndex).getIntervalTime() * progressRate));
+        }, (long) (movementHistory.get(movementIndex).getInterval() * progressRate));
     }
 
     void addAllInitialArea() {
@@ -363,13 +363,13 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
      */
     AreaOfInterestView calculateAOIView(final AreaOfInterest areaOfInterest, int index) {
         final Polygon aoiPolygon = new Polygon();
-        aoiPolygon.getPoints().addAll(areaOfInterest.getConvexPoints());
+        aoiPolygon.getPoints().addAll(areaOfInterest.getPts());
         aoiPolygon.setFill(Color.rgb(255, 0, 0, areaOfInterest.getPriority()));
         aoiPolygon.setStroke(colors[index % 7]);
 
-        final GridPane infoBox = makeInfoBox(areaOfInterest.getAoiID(),
+        final GridPane infoBox = makeInfoBox(areaOfInterest.getId(),
             new DecimalFormat("##.###s").format(areaOfInterest.getTtff()),
-            new DecimalFormat("##.###s").format(areaOfInterest.getTimeSpent()),
+            new DecimalFormat("##.###s").format(areaOfInterest.getTime()),
             areaOfInterest.getFixations(), 0);
 
         final Dimension2D screenDimension = getGazePlay().getCurrentScreenDimensionSupplier().get();
@@ -504,9 +504,9 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
 
             if (areaMap[i] == i) {
                 tempPolygon = currentAOIView.getAreaOfInterest();
-                final String aoiID = currentAOI.getAoiID();
+                final String aoiID = currentAOI.getId();
                 double ttff = currentAOI.getTtff();
-                double timeSpent = currentAOI.getTimeSpent();
+                double timeSpent = currentAOI.getTime();
                 int fixations = currentAOI.getFixations();
                 int revisit = 1;
 
@@ -514,8 +514,8 @@ public class AreaOfInterestContext extends GraphicalContext<BorderPane> {
                     if (areaMap[j] == i) {
                         ttff += aoiList.get(j).getTtff();
                         revisit++;
-                        timeSpent += aoiList.get(j).getTimeSpent();
-                        fixations += aoiList.get(j).getTimeSpent();
+                        timeSpent += aoiList.get(j).getTime();
+                        fixations += aoiList.get(j).getTime();
                         tempPolygon = Shape.union(tempPolygon, aoiViewList.get(j).getAreaOfInterest());
                         tempPolygon.setFill(Color.rgb(249, 166, 2, 0.15));
                     }

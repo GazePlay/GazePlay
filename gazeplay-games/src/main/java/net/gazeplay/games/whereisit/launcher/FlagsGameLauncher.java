@@ -27,7 +27,7 @@ public class FlagsGameLauncher implements IGameLauncher<Stats, IGameVariant> {
                                   RoundsDurationReport roundsDurationReport,
                                   List<List<FixationPoint>> fixationSequence,
                                   List<CoordinatesTracker> movementHistory,
-                                  double[][] heatMap,
+                                  int[][] heatMap,
                                   List<AreaOfInterest> aoiList,
                                   SavedStatsInfo savedStatsInfo
     ) {

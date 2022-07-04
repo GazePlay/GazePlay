@@ -26,10 +26,6 @@ import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.stats.ShootGamesStats;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
@@ -179,8 +175,8 @@ public class StatDisplayUtils {
             yEyeCoordinates.setName("Y coordinate");
 
             for (FixationPoint p : points) {
-                xEyeCoordinates.getData().add(new Data<>(p.getTimeGaze(), p.getY()));
-                yEyeCoordinates.getData().add(new Data<>(p.getTimeGaze(), p.getX()));
+                xEyeCoordinates.getData().add(new Data<>(p.getTime(), p.getY()));
+                yEyeCoordinates.getData().add(new Data<>(p.getTime(), p.getX()));
             }
 
             colorBands.getData().addAll(xEyeCoordinates, yEyeCoordinates);

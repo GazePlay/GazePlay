@@ -107,8 +107,8 @@ public class ScanpathContext extends GraphicalContext<BorderPane> {
 
         double maxDuration = 0;
         for (final FixationPoint point : stats.getFixationSequence().get(fixationIndex)) {
-            if (maxDuration < Math.sqrt(point.getGazeDuration())) {
-                maxDuration = Math.sqrt(point.getGazeDuration());
+            if (maxDuration < Math.sqrt(point.getDuration())) {
+                maxDuration = Math.sqrt(point.getDuration());
             }
         }
 
@@ -118,12 +118,12 @@ public class ScanpathContext extends GraphicalContext<BorderPane> {
             newPoint.setOpacity(0);
             newPoint.setCenterX(p.getY());
             newPoint.setCenterY(p.getX());
-            newPoint.setRadius((40d + 50d * (Math.sqrt(p.getGazeDuration()) / finalMaxDuration)) / 2);
+            newPoint.setRadius((40d + 50d * (Math.sqrt(p.getDuration()) / finalMaxDuration)) / 2);
 
             points.add(newPoint);
 
             Text label = new Text();
-            label.setText(p.getGazeDuration() + " ms");
+            label.setText(p.getDuration() + " ms");
             label.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
             label.setStrokeWidth(2);
             label.setStroke(Color.WHITE);

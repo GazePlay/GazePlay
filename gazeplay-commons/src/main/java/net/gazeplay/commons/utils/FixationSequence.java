@@ -59,7 +59,7 @@ public class FixationSequence {
             log.error("Can't take snapshot of Fixation Sequence: ", e);
         }
 
-        sequence.removeIf(fixationPoint -> fixationPoint.getGazeDuration() == -1);
+        sequence.removeIf(fixationPoint -> fixationPoint.getDuration() == -1);
     }
 
     private GraphicsContext drawFixationLines(Canvas canvas, List<FixationPoint> sequence, Color color) {
@@ -102,8 +102,8 @@ public class FixationSequence {
 
         double maxDuration = 0;
         for (final FixationPoint point : sequence) {
-            if (maxDuration < Math.sqrt(point.getGazeDuration())) {
-                maxDuration = Math.sqrt(point.getGazeDuration());
+            if (maxDuration < Math.sqrt(point.getDuration())) {
+                maxDuration = Math.sqrt(point.getDuration());
             }
         }
 
@@ -112,7 +112,7 @@ public class FixationSequence {
             gc.setStroke(colors[sequenceIndex][1]);
             x = point.getY();
             y = point.getX();
-            duration = point.getGazeDuration();
+            duration = point.getDuration();
 
             // modify this value in order to change the number of fixation points (Johanna put 20 ; Didier 100)
             if (duration > 100) {
@@ -131,7 +131,7 @@ public class FixationSequence {
                 gc.setFill(colors[sequenceIndex][0]);
                 gc.fillText(Integer.toString(labelCount), x, y, 80);
             } else {
-                point.setGazeDuration(-1);
+                point.setDuration(-1);
             }
         }
     }
@@ -163,7 +163,7 @@ public class FixationSequence {
 
             if (distance <= tolerance) {
                 // add to the accepted vertex the duration of the reduced vertices -- to adapt the radius
-                pivotVertex.setGazeDuration(pivotVertex.getGazeDuration() + allPoints.get(i).getGazeDuration());
+                pivotVertex.setDuration(pivotVertex.getDuration() + allPoints.get(i).getDuration());
             } else {
                 reducedPolyline.add(allPoints.get(i));
                 pivotVertex = allPoints.get(i);
