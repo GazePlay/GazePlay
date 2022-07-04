@@ -107,7 +107,7 @@ public class GameVariantDialog extends Stage {
 
             if ((variant instanceof DimensionDifficultyGameVariant && (variant.toString().contains("easy") || variant.toString().contains("Dynamic"))) ||
                 variant.toString().contains("DYNAMIC") ||
-                variant.toString().startsWith("AnimeSelect the caracter then look at the house box to move")
+                variant.toString().contains("OTHER")
             ) {
                 if (!choicePanes.containsKey(1)) {
                     choicePanes.put(1, createFlowPane());
