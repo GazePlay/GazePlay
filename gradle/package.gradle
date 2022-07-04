@@ -4,11 +4,12 @@ task('packageAllDists').dependsOn(
         'linuxDistTar',
         'windowsDistZip',
         'windowsx32DistZip',
-        'windowsAfsrDistZip',
-        'windowsAfsrx32DistZip',
         'windowsBeraDistZip',
         'windowsBerax32DistZip',
+        'windowsAfsrDistZip',
+        'windowsAfsrx32DistZip',
         'macosDistTar',
+        'armDistTar',
         'assembleNoJREDist'
 )
 

@@ -39,6 +39,7 @@ jobs:
           cd ./build/distributions/
           mv gazeplay-linux-x64*.tar.gz gazeplay-linux-x64.tar.gz
           mv gazeplay-macos*.tar.gz gazeplay-macos.tar.gz
+          mv gazeplay-arm*.tar.gz gazeplay-arm.tar.gz
           mv gazeplay-windows-x64*.zip gazeplay-windows-x64.zip
           mv gazeplay-windows-x64*installer.exe gazeplay-windows-x64-installer.exe
           mv gazeplay-windows-x32*.zip gazeplay-windows-x32.zip
@@ -93,6 +94,7 @@ jobs:
           files: |
             ./build/distributions/gazeplay-linux-x64.tar.gz
             ./build/distributions/gazeplay-macos.tar.gz
+            ./build/distributions/gazeplay-arm.tar.gz
             ./build/distributions/gazeplay-windows-x64.zip
             ./build/distributions/gazeplay-windows-x64-installer.exe
             ./build/distributions/gazeplay-windows-x32.zip
