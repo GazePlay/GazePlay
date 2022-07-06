@@ -13,8 +13,7 @@ public class SoundsGameVariantGenerator implements IGameVariantGenerator {
     public Set<IGameVariant> getVariants() {
         return Sets.newLinkedHashSet(Lists.newArrayList(
             new DimensionDifficultyGameVariant(2, 2, "animals"),
-            new DimensionDifficultyGameVariant(2, 2, "nature"),
-            new DimensionDifficultyGameVariant(2, 2, "music")
+            new DimensionDifficultyGameVariant(2, 2, "random sounds")
         ));
     }
 }

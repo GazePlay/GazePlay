@@ -644,7 +644,12 @@ public class WhereIsIt implements GameLifeCycle {
             return "data/" + "where-is-the-sound" + "/sounds/" + "eng" + "/" + folder + "." + "w"
                 + "." + "eng" + ".mp3";
         }
-
+        if (this.gameType== SOUNDS){
+            return "data/" + "where-is-the-sound" + "/sounds/" + folder+".mp3";
+        }
+        if (this.gameType== SOUNDS_ANIMAL){
+            return "data/" + "where-is-the-sound-animals" + "/sounds/" + folder+".mp3";
+        }
         if (!(language.equals("fra") || language.equals("eng") || language.equals("chn"))) {
             // sound is only for English, French and Chinese
             // erase when translation is complete
@@ -659,9 +664,7 @@ public class WhereIsIt implements GameLifeCycle {
        } else {
             voice = "w";
         }
-        if (this.gameType== SOUNDS){
-            return "data/" + "where-is-the-sound" + "/sounds/" + folder+".mp3";
-        }
+
         return "data/" + this.gameType.getResourcesDirectoryName() + "/sounds/" + language + "/" + folder + "." + voice
             + "." + language + ".mp3";
     }
@@ -682,7 +685,7 @@ public class WhereIsIt implements GameLifeCycle {
             return localMultilinguism.getTranslation(folder, language);
         }
 
-        if(this.gameType == SOUNDS){
+        if(this.gameType == WhereIsItGameType.SOUNDS ||this.gameType == SOUNDS_ANIMAL ){
             return "listen to the sound";
         }
 
