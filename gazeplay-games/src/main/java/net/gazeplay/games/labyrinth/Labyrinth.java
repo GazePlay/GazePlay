@@ -182,8 +182,6 @@ public class Labyrinth extends Parent implements GameLifeCycle {
                 mouse = new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 mouse.setImage();
                 return mouse;
-
-
             case OTHER_LOOK_DESTINATION:
                 mouse = new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 cheese.setToHouse();
