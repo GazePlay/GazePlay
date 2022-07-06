@@ -5,6 +5,8 @@ main:
     url: /installation/
   - title: "FAQ"
     url: /faq/
+  - title: "Partners"
+    url: /partners/
   - title: "Contact"
     url: /contact/
   - title: "Help"
