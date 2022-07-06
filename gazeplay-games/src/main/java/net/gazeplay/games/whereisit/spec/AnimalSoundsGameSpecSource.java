@@ -10,7 +10,7 @@ public class AnimalSoundsGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("AnimalSounds").gameThumbnail("data/Thumbnails/AnimalSounds.jpg")
+            GameSummary.builder().nameCode("AnimalSounds").gameThumbnail("data/Thumbnails/AnimalSounds.png")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION).build(),
           new AnimalSoundsGameLauncher());
