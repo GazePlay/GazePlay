@@ -1,4 +1,4 @@
-package net.gazeplay.games.whereisit;
+package net.gazeplay.games.whereisit.gamevariantgenerator;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

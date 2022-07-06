@@ -4,7 +4,7 @@ import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
-import net.gazeplay.games.whereisit.WhereIsTheShapeGameVariantGenerator;
+import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsItDifficultyGameVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.WhereIsTheShapeGameLauncher;
 
 public class WhereIsTheShapeGameSpecSource implements GameSpecSource {
@@ -15,6 +15,6 @@ public class WhereIsTheShapeGameSpecSource implements GameSpecSource {
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.MEMORIZATION).build(),
-            new WhereIsTheShapeGameVariantGenerator(), new WhereIsTheShapeGameLauncher());
+            new WhereIsItDifficultyGameVariantGenerator(), new WhereIsTheShapeGameLauncher());
     }
 }

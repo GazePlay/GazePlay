@@ -4,16 +4,16 @@ import lombok.Getter;
 import net.gazeplay.commons.gamevariants.difficulty.Difficulty;
 
 public enum WhereIsItGameType {
-    ANIMAL_NAME("where-is-the-animal", "where-is-the-animal"),
-    ANIMAL_NAME_DYNAMIC("where-is-the-animal", "where-is-the-animal-dynamic"),
-    COLOR_NAME("where-is-the-color", "where-is-the-color"),
-    COLOR_NAME_EASY("where-is-the-color", "where-is-the-color", Difficulty.EASY),
+    ANIMALS("where-is-the-animal", "where-is-the-animal"),
+    ANIMALS_DYNAMIC("where-is-the-animal", "where-is-the-animal-dynamic"),
+    COLORS("where-is-the-color", "where-is-the-color"),
+    COLORS_EASY("where-is-the-color", "where-is-the-color", Difficulty.EASY),
     LETTERS("where-is-the-letter", "where-is-the-letter"),
     NUMBERS("where-is-the-number", "where-is-the-number"),
-    SHAPE_NAME("where-is-the-shape", "where-is-the-shape"),
-    SHAPE_NAME_EASY("where-is-the-shape", "where-is-the-shape", Difficulty.EASY),
-    FLAGS("find-flag", "find-flag"),
+    SHAPES("where-is-the-shape", "where-is-the-shape"),
+    SHAPES_EASY("where-is-the-shape", "where-is-the-shape", Difficulty.EASY),
     CUSTOMIZED("customized", "customized"),
+    FLAGS("find-flag", "find-flag"),
     FIND_ODD("find-the-odd-one-out", "find-the-odd-one-out");
 
     @Getter

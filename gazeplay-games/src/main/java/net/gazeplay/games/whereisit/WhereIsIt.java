@@ -26,7 +26,6 @@ import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.games.WhereIsItVaildator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
-import net.gazeplay.commons.utils.stats.ChiReport;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 
@@ -329,7 +328,7 @@ public class WhereIsIt implements GameLifeCycle {
             directoryName = imagesDirectory.getPath();
             directoriesCount = WhereIsItVaildator.getNumberOfValidDirectories(config.getWhereIsItDir(), imagesFolders);
 
-        } else if( this.gameType == ANIMAL_NAME_DYNAMIC) {
+        } else if( this.gameType == ANIMALS_DYNAMIC) {
             final String resourcesDirectory = "data/" + this.gameType.getResourcesDirectoryName();
             directoryName = resourcesDirectory;
 
@@ -504,7 +503,7 @@ public class WhereIsIt implements GameLifeCycle {
                 }
             }
 
-        } else if (this.gameType == ANIMAL_NAME_DYNAMIC) {
+        } else if (this.gameType == ANIMALS_DYNAMIC) {
             int index = random.nextInt(resourcesFolders.size());
             final String folder = resourcesFolders.remove((index) % directoriesCount);
 
@@ -646,7 +645,7 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         if (!(language.equals("fra") || language.equals("eng") || language.equals("chn")) ||
-            gameType == SHAPE_NAME || gameType == SHAPE_NAME_EASY) {
+            gameType == SHAPES || gameType == SHAPES_EASY) {
             // sound is only for English, French and Chinese erase when translation is complete
             return null;
         }
