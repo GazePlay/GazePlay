@@ -22,6 +22,7 @@ import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.difficulty.SourceSet;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.games.WhereIsItVaildator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -144,6 +145,11 @@ public class WhereIsIt implements GameLifeCycle {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
+
+        if(this.gameType== SOUNDS || this.gameType== SOUNDS_ANIMAL){
+            final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
+            backgroundMusicManager.pause();
+        }
     }
 
     private Transition createQuestionTransition(final String question, final List<Image> listOfPictos) {
@@ -186,7 +192,6 @@ public class WhereIsIt implements GameLifeCycle {
 
 
         final List<Rectangle> pictogramesList = new ArrayList<>(20); // storage of actual Pictogramm nodes in order to delete
-
         if (listOfPictos != null && !listOfPictos.isEmpty() && listOfPictos.size() <= NBMAXPICTO) {
 
             final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
@@ -244,9 +249,12 @@ public class WhereIsIt implements GameLifeCycle {
                 }
             }
             questionText.toFront();
+
             stats.notifyNewRoundReady();
+
             gameContext.onGameStarted(2000);
         });
+
         return fullAnimation;
     }
 
@@ -279,6 +287,7 @@ public class WhereIsIt implements GameLifeCycle {
         for (int i = 1; i <= numberOfImagesToDisplayPerRound; i++) {
             targetAOIList.get(targetAOIList.size() - i).setTimeEnded(endTime);
         }
+
         if (this.currentRoundDetails == null) {
             return;
         }
@@ -322,8 +331,7 @@ public class WhereIsIt implements GameLifeCycle {
             directoryName = imagesDirectory.getPath();
             directoriesCount = WhereIsItVaildator.getNumberOfValidDirectories(config.getWhereIsItDir(), imagesFolders);
 
-
-        } else if (this.gameType == ANIMAL_NAME_DYNAMIC) {
+        } else if( this.gameType == ANIMAL_NAME_DYNAMIC) {
             final String resourcesDirectory = "data/" + this.gameType.getResourcesDirectoryName();
             directoryName = resourcesDirectory;
 
@@ -338,9 +346,9 @@ public class WhereIsIt implements GameLifeCycle {
 
             Set<String> tempWinnerFolders = ResourceFileManager.getResourceFolders(winnerImagesDirectory);
 
-            for (int i = 1; i < lvlDirectories.length + 1; i++)
+            for (int i = 1; i < lvlDirectories.length + 1; i ++)
                 if (level == i)
-                    resourcesFolders.addAll(ResourceFileManager.getResourceFolders(lvlDirectories[i - 1]));
+                    resourcesFolders.addAll(ResourceFileManager.getResourceFolders(lvlDirectories[i-1]));
             winnerFolders.addAll(tempWinnerFolders);
 
             directoriesCount = resourcesFolders.size();
@@ -373,14 +381,14 @@ public class WhereIsIt implements GameLifeCycle {
                     .collect(Collectors.toSet());
             }
 
-            resourcesFolders.addAll(tempResourcesFolders); //contiens les images des ressources
+            resourcesFolders.addAll(tempResourcesFolders);
 
-            directoriesCount = resourcesFolders.size(); //contiens la taille des ressources
+            directoriesCount = resourcesFolders.size();
         }
 
         final String language = config.getLanguage();
 
-        if (directoriesCount == 0) { //si il n'ya pas d'image en ressource
+        if (directoriesCount == 0) {
             log.warn("No images found in Directory " + directoryName);
             error(language);
             return null;
@@ -396,8 +404,6 @@ public class WhereIsIt implements GameLifeCycle {
         String questionSoundPath = null;
         String question = null;
         List<Image> pictograms = null;
-
-
         if (this.gameType == FIND_ODD) {
 
             int index = random.nextInt(resourcesFolders.size());
@@ -500,7 +506,7 @@ public class WhereIsIt implements GameLifeCycle {
                 }
             }
 
-        }else if (this.gameType == ANIMAL_NAME_DYNAMIC) {
+        } else if (this.gameType == ANIMAL_NAME_DYNAMIC) {
             int index = random.nextInt(resourcesFolders.size());
             final String folder = resourcesFolders.remove((index) % directoriesCount);
 
@@ -640,16 +646,7 @@ public class WhereIsIt implements GameLifeCycle {
             }
             return "";
         }
-        if (this.gameType == CUSTOMIZED) {
-            return "data/" + "where-is-the-sound" + "/sounds/" + "eng" + "/" + folder + "." + "w"
-                + "." + "eng" + ".mp3";
-        }
-        if (this.gameType== SOUNDS){
-            return "data/" + "where-is-the-sound" + "/sounds/" + folder+".mp3";
-        }
-        if (this.gameType== SOUNDS_ANIMAL){
-            return "data/" + "where-is-the-sound-animals" + "/sounds/" + folder+".mp3";
-        }
+
         if (!(language.equals("fra") || language.equals("eng") || language.equals("chn"))) {
             // sound is only for English, French and Chinese
             // erase when translation is complete
@@ -660,11 +657,14 @@ public class WhereIsIt implements GameLifeCycle {
 
         final String voice;
         if (randomGenerator.nextDouble() > 0.5) {
-         voice = "m";
-       } else {
+            voice = "m";
+        } else {
             voice = "w";
         }
 
+        if (this.gameType==SOUNDS || this.gameType==SOUNDS_ANIMAL){
+            return "data/" + this.gameType.getResourcesDirectoryName() + "/sounds/" +  folder + ".mp3";
+        }
         return "data/" + this.gameType.getResourcesDirectoryName() + "/sounds/" + language + "/" + folder + "." + voice
             + "." + language + ".mp3";
     }
@@ -685,12 +685,11 @@ public class WhereIsIt implements GameLifeCycle {
             return localMultilinguism.getTranslation(folder, language);
         }
 
-        if(this.gameType == WhereIsItGameType.SOUNDS ||this.gameType == SOUNDS_ANIMAL ){
-            return "listen to the sound";
-        }
-
         final Multilinguism localMultilinguism = MultilinguismFactory.getForResource(gameType.getLanguageResourceLocation());
 
+        if(this.gameType== SOUNDS || this.gameType==SOUNDS_ANIMAL){
+            return localMultilinguism.getTranslation("listen", language);
+        }
         return localMultilinguism.getTranslation(folder, language);
     }
 
@@ -699,9 +698,9 @@ public class WhereIsIt implements GameLifeCycle {
         final String language = "pictos";
 
         if (this.gameType != CUSTOMIZED) {
+
             return null;
         }
-
 
         final Configuration config = gameContext.getConfiguration();
 

@@ -30,7 +30,7 @@ public class AnimalSoundsGameLauncher implements IGameLauncher<Stats,DimensionDi
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant,
                                        Stats stats) {
-            return new WhereIsIt(WhereIsItGameType.SOUNDS_ANIMAL,2,2, false, gameContext, stats);
+        return new WhereIsIt(WhereIsItGameType.SOUNDS_ANIMAL,2,2, false, gameContext, stats);
 
     }
 
