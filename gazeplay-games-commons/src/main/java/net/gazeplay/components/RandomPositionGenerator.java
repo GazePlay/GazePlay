@@ -5,6 +5,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 
+import java.util.Random;
+
 @Slf4j
 public abstract class RandomPositionGenerator {
     @Setter
@@ -73,7 +75,6 @@ public abstract class RandomPositionGenerator {
             final double positionY = randomGenerator.nextDouble(((maxY - minY + 1) + minY));
             log.debug("the posX is ={}", positionX);
             log.debug("the posY is ={}", positionY);
-
             return new Position(positionX, positionY);
         } else {
             return new Position(minX, minY);
@@ -82,8 +83,9 @@ public abstract class RandomPositionGenerator {
     public Position createPositionCreamPie(final double minX, final double minY, final double maxX, final double maxY) {
 
         if (maxX > 0 && maxY > 0) {
-            double positionX = randomGenerator.nextDouble(maxX) + minX;
-            double positionY = randomGenerator.nextDouble(maxY) + minY;
+            final Random r = new Random();
+            double positionX = r.nextDouble()*maxX + minX;
+            double positionY = r.nextDouble()*maxY + minY;
             log.debug("the posX is ={}", positionX);
             log.debug("the posY is ={}", positionY);
             if (positionX > maxX) {
