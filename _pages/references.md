@@ -8,7 +8,7 @@ GazePlay is open source, research-based software developed by students and volun
 
 ## Related projects
 
-Other [InterAACtionGroup](https://interaactionbox.afsr.fr/) projects:
+Other [InterAACtionGroup](http://interaaction.com/) projects:
 - [AugCom](https://interaactiongroup.github.io/AugCom/)
 - [InterAACtionScene](https://interaactiongroup.github.io/InterAACtionScene/)
 - [InterAACtionPlayer](https://interaactiongroup.github.io/InterAACtionPlayer/)
