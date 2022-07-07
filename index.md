@@ -21,16 +21,22 @@ excerpt: >
 <iframe width="1212" height="682" src="https://www.youtube.com/embed/xGKCIiYNu2c" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## System Requirements
+
 GazePlay works on Windows, MacOS and Linux.  
-It can be used with all Eye Trackers that allow mouse movement. These include:
-* Tobii : Tobii EyeX, I-12 and Tobii 4C (Windows)
-* Eye Tribe : Eye Tribe Tracker (Windows and MacOS)
+
+It can be used with all Eye Trackers that allow mouse movement.
+These include:
+* Tobii: Tobii EyeX, I-12 and Tobii 4C (Windows).
+* Eye Tribe: Eye Tribe Tracker (Windows and MacOS).
 
 ## Why GazePlay?
 
-Many poly-disabled people are not able to use their limbs (such as hands or feet) or their voices in a precise way. Tools and games on digital terminals are thus inaccessible to them. In many cases, gaze is the most direct way that enable them to interact.
+Many poly-disabled people are not able to use their limbs (such as hands or feet) or their voices in a precise way.
+Tools and games on digital terminals are thus inaccessible to them.
+In many cases, gaze is the most direct way that enable them to interact.
 
-Obviously, the games must remain simple and the interactions pretty direct to help individuals to understand and assimilate the consequences of their action, or we can say the consequences of their gaze in this case. We can imagine games consisting of shooting targets, bricks, card games, memory etc.
+Obviously, the games must remain simple and the interactions pretty direct to help individuals to understand and assimilate the consequences of their action, or we can say the consequences of their gaze in this case.
+We can imagine games consisting of shooting targets, bricks, card games, memory, etc.
 
 These games should offer at least two advantages to the user:
 1. Allowing them to train their gaze in order to offer them the possibility of acquiring more complex interactions.
