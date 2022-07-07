@@ -11,9 +11,9 @@ import java.util.Random;
 public abstract class RandomPositionGenerator {
     @Setter
     private ReplayablePseudoRandom randomGenerator = new ReplayablePseudoRandom();
+    private final Random r = new Random();
 
-    public RandomPositionGenerator(ReplayablePseudoRandom randomGenerator) {
-        this.randomGenerator = randomGenerator;
+    public RandomPositionGenerator(ReplayablePseudoRandom randomGenerator) { this.randomGenerator = randomGenerator;
     }
 
     public abstract Dimension2D getDimension2D();
@@ -83,7 +83,6 @@ public abstract class RandomPositionGenerator {
     public Position createPositionCreamPie(final double minX, final double minY, final double maxX, final double maxY) {
 
         if (maxX > 0 && maxY > 0) {
-            final Random r = new Random();
             double positionX = r.nextDouble()*maxX + minX;
             double positionY = r.nextDouble()*maxY + minY;
             log.debug("the posX is ={}", positionX);
