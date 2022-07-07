@@ -37,7 +37,7 @@ Grenoble Workshop on Models and Analysis of Eye Movements, Jun 2018, Grenoble, F
 
 [APF-Lab / Le HUB](https://lehub.apflab.org/) est le centre d’expertise Handicap et Nouvelles Technologies d’APF France handicap (anciennement association des paralysés de France).
 
-* Annonce de GazePlay 1.8.1 (05/11/2020) [[link](http://rnt.eklablog.com/gazeplay-nouvelle-version-1-8-1-a204089012?fbclid=IwAR3_jHMXBbp6KaeccHfbBFLlDuPI5E79YuEfQmtPSrxwZOVOHqBdobEShsg)]
+* Annonce de GazePlay 1.8.1 (05/11/2020) [[lien](http://rnt.eklablog.com/gazeplay-nouvelle-version-1-8-1-a204089012?fbclid=IwAR3_jHMXBbp6KaeccHfbBFLlDuPI5E79YuEfQmtPSrxwZOVOHqBdobEShsg)]
 * Annonce de GazePlay 1.6 (09/09/2019) [[lien](https://lehub.apflab.org/gazeplay-nouvelle-version-avec-19-nouveaux-jeux/?fbclid=IwAR0ArX9iFD0xKGM1r1aLEHTF9LXDm4MElDX4nbyKTnj_5Lh9lMGPWpX4RXY)]
 * GazePlay 2019 (16/01/2019) [[lien](http://rnt.eklablog.com/gazeplay-2019-a158370272)]
 * Annonce de GazePlay 1.3 (02/04/2018) [[lien](http://c-rnt.apf.asso.fr/2018/04/02/gazeplay-1-3-mise-a-jour-et-nouveaux-jeux/)]
