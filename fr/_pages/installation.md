@@ -24,13 +24,3 @@ Lisez notre [FAQ]({{site.baseurl}}/faq/fr) pour obtenir de l'aide.
 ### Versions précédentes
 
 Vous pouvez trouver les versions précédentes de GazePlay sur [la page des versions](https://github.com/GazePlay/GazePlay/releases).
-
-### Pour utilisateurs avancés et développeurs
-
-Vous pouvez télécharger la dernière version en développement sur notre Bucket AWS Amazon S3 :
-
-<div class="iframe_container">
-<iframe src="https://gazeplay-dist.s3.eu-west-3.amazonaws.com/index.html" style="border:0; width: 60em; height: 20em"></iframe>
-</div>
-
-(Téléchargez et utilisez à vos propres risques)
