@@ -22,16 +22,8 @@ layout: single
 
 ## They support us
 
-[Fondation Free](https://www.fondation-free.fr/).
+[Fondation Free](https://www.fondation-free.fr/): Foundation to enable everyone's access to technology.
 
 [Fondation Afnic](https://www.fondation-afnic.fr/fr/Accueil.htm): Fondation de l'Association Française pour le Nommage Internet en Coopération _(Foundation of the French Association for Internet Naming in Cooperation)_.
 
-[Klesia](https://www.klesia.fr/).
-
-## Related projects
-
-Other [InterAACtionBox](https://interaactionbox.afsr.fr/) projects:
-- [AugCom](https://interaactiongroup.github.io/AugCom/)
-- [InterAACtionScene](https://interaactiongroup.github.io/InterAACtionScene/)
-- [InterAACtionPlayer](https://interaactiongroup.github.io/InterAACtionPlayer/)
-- [InterAACtionGaze](https://interaactiongroup.github.io/interaactionGaze/)
+[Klesia](https://www.klesia.fr/partenariats-et-soutiens-aux-associations): General interest insurer.

@@ -9,7 +9,7 @@ layout: single
 GazePlay est toujours en cours d'amélioration et tout le monde peut y contribuer.
 Vous pouvez suggérer des idées ou écrire du code.
 Vous pouvez également contribuer en tant que graphiste ou informaticien / ingénieur logiciel pour créer de nouveaux jeux, améliorer ceux existants ou corriger des bugs.
-[Clonez le référentiel](https://github.com/GazePlay/GazePlay) pour commencer, ou lisez nos [Contribution Guidelines](https://github.com/GazePlay/GazePlay/blob/master/CONTRIBUTE.MD).
+[Clonez le référentiel](https://github.com/GazePlay/GazePlay) pour commencer ou lisez notre [Guide de Contribution](https://github.com/GazePlay/GazePlay/blob/master/CONTRIBUER.MD).
 
 ## Soutien
 

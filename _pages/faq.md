@@ -106,7 +106,7 @@ There you go, you've just created your own variant of the Where is it? game.
 You can create and fill in the same way as many `where-is-it` folders as you want to have lots of different variants.
 Then you just have to change the location of the folder in the configuration menu to choose the variant you want to play.
 
-Here is a complete example of a `where-it-is` folder that you can play with or get inspired to create your own variations: [example-where-it-is](/assets/example-where-is-it.zip).
+Here is a complete example of a `where-it-is` folder that you can play with or get inspired to create your own variations: <a href="https://github.com/GazePlay/GazePlay/raw/gh-pages/assets/example-where-is-it.zip" download>example-where-it-is</a>.
 
 ## How can I create a shortcut for a game?
 

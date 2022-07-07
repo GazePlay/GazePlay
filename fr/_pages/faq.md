@@ -107,7 +107,7 @@ Et voilà, vous venez de créer votre propre variante au jeu Où est-ce ?.
 Vous pouvez créer et remplir de la même manière autant de dossier `where-is-it` que vous voulez pour avoir pleins de variantes différentes.
 Il vous suffit ensuite de changer dans le menu configuration l'emplacement du dossier pour choisir la variante à laquelle vous désirez jouer.
 
-Voici un exemple complet de dossier `where-it-is` avec lequel vous pouvez jouer ou vous inspirer pour créer vos propres variantes : [example-where-it-is](/assets/example-where-is-it.zip).
+Voici un exemple complet de dossier `where-it-is` avec lequel vous pouvez jouer ou vous inspirer pour créer vos propres variantes : <a href="https://github.com/GazePlay/GazePlay/raw/gh-pages/assets/example-where-is-it.zip" download>example-where-it-is</a>.
 
 ## Comment créer le raccourci d'un jeu ?
 

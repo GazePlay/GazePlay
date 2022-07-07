@@ -8,8 +8,8 @@ layout: single
 
 GazePlay is always being improved, and anyone can contribute to it.
 You can suggest ideas or write code.
-You can also contribute as a graphic designer or a computer scienties/software engineer to create new games, improve existing ones or fix bugs.
-[Clone the repository](https://github.com/GazePlay/GazePlay) to get started, or read our [Contribution Guidelines](https://github.com/GazePlay/GazePlay/blob/master/CONTRIBUTE.MD).
+You can also contribute as a graphic designer or a computer scientist/software engineer to create new games, improve existing ones or fix bugs.
+[Clone the repository](https://github.com/GazePlay/GazePlay) to get started or read our [Contribution Guidelines](https://github.com/GazePlay/GazePlay/blob/master/CONTRIBUTING.MD).
 
 ## Support
 

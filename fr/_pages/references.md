@@ -6,6 +6,14 @@ layout: single
 
 GazePlay est un logiciel libre et gratuit, fruit de la recherche, développé par des étudiants et des bénévoles.
 
+## Autres projets
+
+Autres projets de l'[InterAACtionGroup](https://interaactionbox.afsr.fr/) :
+- [AugCom](https://interaactiongroup.github.io/AugCom/fr)
+- [InterAACtionScene](https://interaactiongroup.github.io/InterAACtionScene/fr)
+- [InterAACtionPlayer](https://interaactiongroup.github.io/InterAACtionPlayer/fr)
+- [InterAACtionGaze](https://interaactiongroup.github.io/interaactionGaze/fr)
+
 ## Références scientifiques
 
 Didier Schwab, Amela Fejza, Loïc Vial, Yann Robert.
