@@ -43,7 +43,7 @@ public class WhereIsTheColorGameLauncher implements IGameLauncher<Stats, Dimensi
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
-                                       DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
+                                    DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
         if (gameVariant.getDifficulty().equals("easy")) {
             return new WhereIsIt(WhereIsItGameType.COLORS_EASY, gameVariant.getWidth(),
                 gameVariant.getHeight(), false, gameContext, stats, gameSeed);
