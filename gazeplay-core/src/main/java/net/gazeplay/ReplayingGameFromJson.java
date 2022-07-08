@@ -65,7 +65,7 @@ public class ReplayingGameFromJson {
             "ScratchCard", "Memory", "MemoryLetters", "MemoryNumbers", "OpenMemory", "OpenMemoryLetters",
             "OpenMemoryNumbers", "Dice", "EggGame", "PersonalizeEggGame", "GooseGame", "MagicCards", "Opinions", "Order",
             "Horses", "Horses Simplified", "puzzle", "Farm", "Jungle", "Savanna", "CupsBalls",
-            "Potions", "VideoPlayer", "VideoGrid", "bottle"
+            "Potions", "VideoPlayer", "VideoGrid", "bottle", "FlowerOfNumbers"
 
 
             // replay OK but the resize of the game itself is bad:
