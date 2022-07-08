@@ -22,6 +22,7 @@ import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.difficulty.SourceSet;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.games.WhereIsItVaildator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -147,6 +148,11 @@ public class WhereIsIt implements GameLifeCycle {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
+
+        if(this.gameType== SOUNDS || this.gameType== SOUNDS_ANIMAL){
+            final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
+            backgroundMusicManager.pause();
+        }
     }
 
     private Transition createQuestionTransition(final String question, final List<Image> listOfPictos) {
@@ -184,9 +190,8 @@ public class WhereIsIt implements GameLifeCycle {
         targetAOI.setTimeEnded(timeStarted + gameContext.getConfiguration().getQuestionLength());
         targetAOIList.add(targetAOI);
 
-        final List<Rectangle> pictogramsList = new ArrayList<>(20); // storage of actual Pictogram nodes
-        // in order to delete them from the group later
-
+        final List<Rectangle> pictogramesList = new ArrayList<>(20); // storage of actual Pictogramm nodes in order to delete
+        
         if (listOfPictos != null && !listOfPictos.isEmpty() && listOfPictos.size() <= NBMAXPICTO) {
             final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
             final double screenWidth = screenDimension.getWidth();
@@ -624,6 +629,9 @@ public class WhereIsIt implements GameLifeCycle {
             voice = "w";
         }
 
+        if (this.gameType==SOUNDS || this.gameType==SOUNDS_ANIMAL){
+            return "data/" + this.gameType.getResourcesDirectoryName() + "/sounds/" +  folder + ".mp3";
+        }
         return "data/" + this.gameType.getResourcesDirectoryName() + "/sounds/" + language + "/" + folder + "." + voice
             + "." + language + ".mp3";
     }
@@ -642,6 +650,9 @@ public class WhereIsIt implements GameLifeCycle {
 
         final Multilinguism localMultilinguism = MultilinguismFactory.getForResource(gameType.getLanguageResourceLocation());
 
+        if(this.gameType== SOUNDS || this.gameType==SOUNDS_ANIMAL){
+            return localMultilinguism.getTranslation("listen", language);
+        }
         return localMultilinguism.getTranslation(folder, language);
     }
 

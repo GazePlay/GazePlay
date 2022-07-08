@@ -10,6 +10,8 @@ public enum WhereIsItGameType {
     COLOR_NAME_EASY("where-is-the-color", "where-is-the-color", Difficulty.EASY),
     LETTERS("where-is-the-letter", "where-is-the-letter"),
     NUMBERS("where-is-the-number", "where-is-the-number"),
+    SOUNDS("where-is-the-sound","where-is-the-sound"),
+    SOUNDS_ANIMAL("where-is-the-sound-animals","where-is-the-sound-animals"),
     FLAGS("find-flag", "find-flag"),
     CUSTOMIZED("customized", "customized"),
     FIND_ODD("find-the-odd-one-out", "find-the-odd-one-out");

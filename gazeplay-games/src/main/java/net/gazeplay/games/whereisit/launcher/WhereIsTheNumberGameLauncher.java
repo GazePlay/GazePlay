@@ -17,7 +17,7 @@ public class WhereIsTheNumberGameLauncher implements IGameLauncher<Stats, Dimens
 
     @Override
     public Stats createNewStats(Scene scene) {
-        return new WhereIsItStats(scene, WhereIsItGameType.NUMBERS.getGameName());
+        return new WhereIsItStats(scene, WhereIsItGameType.SOUNDS_ANIMAL.getGameName());
     }
 
     @Override

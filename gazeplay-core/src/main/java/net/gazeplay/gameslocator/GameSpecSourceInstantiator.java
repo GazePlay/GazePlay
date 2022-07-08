@@ -33,5 +33,4 @@ public class GameSpecSourceInstantiator {
             })
             .collect(Collectors.toList());
     }
-
 }
