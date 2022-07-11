@@ -1,19 +1,21 @@
 ,alb,ara,chn,deu,ell,eng,fin,fra,hrv,ind,ita,jpn,pol,por,zsm,nld,rus,spa,vnm,bel,hin
-one,një,واحد,一,eines,ένας,one,yksi,un,jedan,satu,uno,一,jeden,um,satu,een,один,una,một,адзін,एक
-two,dy,اثنين,二,zwei,δύο,two,kaksi,deux,dva,dua,due,二,dwa,dois,dua,twee,два,dos,hai,два,दो
-three,tre,ثلاثة,三,drei,τρία,three,kolme,trois,tri,tiga,tre,三,trzy,três,tiga,drie,три,tres,ba,тры,तीन
-four,katër,أربعة,四,vier,τέσσερις,four,neljä,quatre,četiri,empat,quattro,四,cztery,quatro,empat,vier,четыре,cuatro,bốn,чатыры,चार
-five,pesë,خمسة,五,fünf,πέντε,five,viisi,cinq,pet,lima,cinque,五,pięć,cinco,lima,vijf,пять,cinco,năm,пяць,पांच
-six,gjashtë,ستة,六,sechs,έξι,six,kuusi,six,šest,enam,sei,六,sześć,seis,enam,zes,шесть,seis,sáu,шэсць,छह
-seven,shtatë,سبعة,七,sieben,επτά,seven,seitsemän,sept,sedam,tujuh,Sette,七,siedem,sete,tujuh,zeven,семь,Siete,bảy,сем,सात
-eight,tetë,ثمانية,八,acht,οκτώ,eight,kahdeksan,huit,osam,delapan,otto,八,osiem,oito,lapan,acht,восемь,ocho,tám,восем,आठ
-nine,nëntë,تسع,九,neun,εννέα,nine,yhdeksän,neuf,devet,sembilan,nove,九,dziewięć,nove,sembilan,negen,девять,nueve,chín,дзевяць,नौ
-ten,dhjetë,عشرة,十,zehn,δέκα,ten,kymmenen,dix,deset,sepuluh,dieci,十,dziesięć,dez,sepuluh,tien,десять,diez,mười,дзесяць,दस
-eleven,njëmbëdhjetë,أحد عشر,十一,elf,έντεκα,eleven,yksitoista,onze,jedanaest,sebelas,undici,十一,jedenaście,onze,sebelas,elf,одиннадцать,once,mười một,адзінаццаць,ग्यारह
-twelve,dymbëdhjetë,اثني عشر,十二,zwölf,δώδεκα,twelve,kaksitoista,douze,dvanaest,dua belas,dodici,十二,dwanaście,doze,dua belas,twaalf,двенадцать,doce,mười hai,дванаццаць,बारह
-thirteen,trembëdhjetë,ثلاثة عشر,十三,dreizehn,δεκατρείς,thirteen,kolmetoista,treize,trinaest,tiga belas,tredici,十三,trzynaście,treze,tiga belas,dertien,тринадцать,trece,mười ba,трынаццаць,तेरह
-fourteen,katërmbëdhjetë,أربعة عشرة,十四,vierzehn,δεκατέσσερα,fourteen,neljätoista,quatorze,četrnaest,empat belas,quattordici,十四,czternaście,catorze,empat belas,veertien,четырнадцать,catorce,mười bốn,чатырнаццаць,चौदह
-fifteen,pesëmbëdhjetë,خمسة عشر,十五,fünfzehn,δεκαπέντε,fifteen,viisitoista,quinze,petnaest,lima belas,quindici,十五,piętnaście,quinze,lima belas,vijftien,пятнадцать,quince,mười lăm,пятнаццаць,पंद्रह
-sixteen,gjashtëmbëdhjetë,السادس عشر,十六,sechzehn,δεκαέξι,sixteen,kuusitoista,seize,šesnaest,enam belas,sedici,十六,szesnaście,dezasseis,enam belas,zestien,шестнадцать,dieciséis,mười sáu,шаснаццаць,सोलह
-seventeen,shtatëmbëdhjetë,سبعة عشر,十七,siebzehn,δεκαεπτά,seventeen,seitsemäntoista,dix-sept,sedamnaest,tujuh belas,diciassette,十七,siedemnaście,dezassete,tujuh belas,zeventien,семнадцать,diecisiete,mười bảy,семнаццаць,सत्रह
-eighteen,tetëmbëdhjetë,الثامنة عشر,十八,achtzehn,δεκαοχτώ,eighteen,kahdeksantoista,dix-huit,osamnaest,delapan belas,diciotto,十八,osiemnaście,dezoito,lapan belas,achttien,восемнадцать,dieciocho,mười tám,васемнаццаць,अठारह
+1,një,واحد,一,eines,ένας,one,yksi,un,jedan,satu,uno,一,jeden,um,satu,een,один,una,một,адзін,एक
+2,dy,اثنين,二,zwei,δύο,two,kaksi,deux,dva,dua,due,二,dwa,dois,dua,twee,два,dos,hai,два,दो
+3,tre,ثلاثة,三,drei,τρία,three,kolme,trois,tri,tiga,tre,三,trzy,três,tiga,drie,три,tres,ba,тры,तीन
+4,katër,أربعة,四,vier,τέσσερις,four,neljä,quatre,četiri,empat,quattro,四,cztery,quatro,empat,vier,четыре,cuatro,bốn,чатыры,चार
+5,pesë,خمسة,五,fünf,πέντε,five,viisi,cinq,pet,lima,cinque,五,pięć,cinco,lima,vijf,пять,cinco,năm,пяць,पांच
+6,gjashtë,ستة,六,sechs,έξι,six,kuusi,six,šest,enam,sei,六,sześć,seis,enam,zes,шесть,seis,sáu,шэсць,छह
+7,shtatë,سبعة,七,sieben,επτά,seven,seitsemän,sept,sedam,tujuh,Sette,七,siedem,sete,tujuh,zeven,семь,Siete,bảy,сем,सात
+8,tetë,ثمانية,八,acht,οκτώ,eight,kahdeksan,huit,osam,delapan,otto,八,osiem,oito,lapan,acht,восемь,ocho,tám,восем,आठ
+9,nëntë,تسع,九,neun,εννέα,nine,yhdeksän,neuf,devet,sembilan,nove,九,dziewięć,nove,sembilan,negen,девять,nueve,chín,дзевяць,नौ
+10,dhjetë,عشرة,十,zehn,δέκα,ten,kymmenen,dix,deset,sepuluh,dieci,十,dziesięć,dez,sepuluh,tien,десять,diez,mười,дзесяць,दस
+11,njëmbëdhjetë,أحد عشر,十一,elf,έντεκα,eleven,yksitoista,onze,jedanaest,sebelas,undici,十一,jedenaście,onze,sebelas,elf,одиннадцать,once,mười một,адзінаццаць,ग्यारह
+12,dymbëdhjetë,اثني عشر,十二,zwölf,δώδεκα,twelve,kaksitoista,douze,dvanaest,dua belas,dodici,十二,dwanaście,doze,dua belas,twaalf,двенадцать,doce,mười hai,дванаццаць,बारह
+13,trembëdhjetë,ثلاثة عشر,十三,dreizehn,δεκατρείς,thirteen,kolmetoista,treize,trinaest,tiga belas,tredici,十三,trzynaście,treze,tiga belas,dertien,тринадцать,trece,mười ba,трынаццаць,तेरह
+14,katërmbëdhjetë,أربعة عشرة,十四,vierzehn,δεκατέσσερα,fourteen,neljätoista,quatorze,četrnaest,empat belas,quattordici,十四,czternaście,catorze,empat belas,veertien,четырнадцать,catorce,mười bốn,чатырнаццаць,चौदह
+15,pesëmbëdhjetë,خمسة عشر,十五,fünfzehn,δεκαπέντε,fifteen,viisitoista,quinze,petnaest,lima belas,quindici,十五,piętnaście,quinze,lima belas,vijftien,пятнадцать,quince,mười lăm,пятнаццаць,पंद्रह
+16,gjashtëmbëdhjetë,السادس عشر,十六,sechzehn,δεκαέξι,sixteen,kuusitoista,seize,šesnaest,enam belas,sedici,十六,szesnaście,dezasseis,enam belas,zestien,шестнадцать,dieciséis,mười sáu,шаснаццаць,सोलह
+17,shtatëmbëdhjetë,سبعة عشر,十七,siebzehn,δεκαεπτά,seventeen,seitsemäntoista,dix-sept,sedamnaest,tujuh belas,diciassette,十七,siedemnaście,dezassete,tujuh belas,zeventien,семнадцать,diecisiete,mười bảy,семнаццаць,सत्रह
+18,tetëmbëdhjetë,الثامنة عشر,十八,achtzehn,δεκαοχτώ,eighteen,kahdeksantoista,dix-huit,osamnaest,delapan belas,diciotto,十八,osiemnaście,dezoito,lapan belas,achttien,восемнадцать,dieciocho,mười tám,васемнаццаць,अठारह
+19,nëntëmbëdhjetë,تسعة عشر,十九,neunzehn,δεκαεννέα,nineteen,yhdeksäntoista,dix-neuf,devetnaest,sembilan belas,diciannove,十九,dziewiętnaście,dezenove,Sembilan belas,negentien,девятнадцать,diecinueve,mười chín,дзевятнаццаць,उन्नीस
+20,njëzet,عشرين,二十,zwanzig,είκοσι,twenty,kaksikymmentä,vingt,dvadeset,dua puluh,venti,二十,dwadzieścia,vinte,dua puluh,twintig,двадцать,veinte,hai mươi,дваццаць,बीस
