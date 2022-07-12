@@ -88,6 +88,8 @@ public class Stats implements GazeMotionListener {
     private ArrayList<TargetAOI> targetAOIList = null;
     private double[][] heatMap;
 
+    private long currentTimeMillisScreenshot = System.currentTimeMillis();
+
     @Getter
     public int nbGoalsReached = 0;
 
@@ -537,6 +539,9 @@ public class Stats implements GazeMotionListener {
                         }
                     }
                 }
+                if (config.isScreenshotEnable() && e.getSource() == gameContextScene.getRoot()){
+                    takeScreenshotWithThread();
+                }
             };
 
             recordMouseMovements = e -> {
@@ -573,6 +578,9 @@ public class Stats implements GazeMotionListener {
                             counter++;
                         }
                     }
+                }
+                if (config.isScreenshotEnable() && e.getSource() == gameContextScene.getRoot()){
+                    takeScreenshotWithThread();
                 }
             };
 
@@ -1011,5 +1019,22 @@ public class Stats implements GazeMotionListener {
 
     public static void setConfigMenuOpen(boolean configMenuStatus) {
         configMenuOpen = configMenuStatus;
+    }
+
+    public void takeScreenshotWithThread(){
+        if (System.currentTimeMillis() - currentTimeMillisScreenshot > 500){
+            takeScreenShot();
+            currentTimeMillisScreenshot = System.currentTimeMillis();
+            Thread threadScreenshot = new Thread(() -> {
+               final File todayDirectory = getGameStatsOfTheDayDirectory();
+               final String now = DateUtils.dateTimeNow();
+               final String nowMillis = Long.toString(currentTimeMillisScreenshot).substring(10);
+               final String screenShotFilePrefix = now + nowMillis + "-screenshot";
+               final File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
+               final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
+               saveImageAsPng(screenshotImage, screenShotFile);
+            });
+            threadScreenshot.start();
+        }
     }
 }
