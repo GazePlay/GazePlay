@@ -1,4 +1,4 @@
-package net.gazeplay.games.flowernumbers;
+package net.gazeplay.games.flowerOfNumbers;
 
 import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;

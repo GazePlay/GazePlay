@@ -1,4 +1,4 @@
-package net.gazeplay.games.flowernumbers;
+package net.gazeplay.games.flowerOfNumbers;
 
 import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
