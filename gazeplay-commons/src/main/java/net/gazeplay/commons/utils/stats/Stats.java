@@ -97,6 +97,8 @@ public class Stats implements GazeMotionListener {
     private ScreenRecorder screenRecorder;
     private int[][] heatMap;
 
+    private long currentTimeMillisScreenshot = System.currentTimeMillis();
+
     @Getter
     private List<TargetAOI> targetAOIList = null;
 
@@ -528,6 +530,9 @@ public class Stats implements GazeMotionListener {
                         }
                     }
                 }
+                if (config.isScreenshotEnable() && e.getSource() == gameContextScene.getRoot()){
+                    takeScreenshotWithThread();
+                }
             };
 
             recordMouseMovements = e -> {
@@ -563,6 +568,9 @@ public class Stats implements GazeMotionListener {
                             counter++;
                         }
                     }
+                }
+                if (config.isScreenshotEnable() && e.getSource() == gameContextScene.getRoot()){
+                    takeScreenshotWithThread();
                 }
             };
 
@@ -1078,5 +1086,22 @@ public class Stats implements GazeMotionListener {
         savedStatsJSON.add("movementHistory", movementHistoryArray);
         savedStatsJSON.add("heatMap", heatMapArray);
         savedStatsJSON.add("aoiList", aoiListArray);
+    }
+
+    public void takeScreenshotWithThread(){
+        if (System.currentTimeMillis() - currentTimeMillisScreenshot > 500){
+            takeScreenShot();
+            currentTimeMillisScreenshot = System.currentTimeMillis();
+            Thread threadScreenshot = new Thread(() -> {
+               final File todayDirectory = getGameStatsOfTheDayDirectory();
+               final String now = DateUtils.dateTimeNow();
+               final String nowMillis = Long.toString(currentTimeMillisScreenshot).substring(10);
+               final String screenShotFilePrefix = now + nowMillis + "-screenshot";
+               final File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
+               final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
+               saveImageAsPng(screenshotImage, screenShotFile);
+            });
+            threadScreenshot.start();
+        }
     }
 }

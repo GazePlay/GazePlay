@@ -253,6 +253,10 @@ public class Configuration {
     @Getter
     @Setter
     private boolean mouseFree = false;
+
+    @Getter
+    private final BooleanProperty screenshot;
+
     private final File configFile;
     private final ApplicationConfig applicationConfig;
 
@@ -335,6 +339,8 @@ public class Configuration {
         }
         musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
         effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
+
+        screenshot = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_SCREENSHOT, DEFAULT_VALUE_SCREENSHOT, propertyChangeListener);
     }
 
     private void saveConfig() throws IOException {
@@ -710,5 +716,9 @@ public class Configuration {
 
     public void setColorsDefaultImage(final String colorsDefaultImage) {
         colorsDefaultImageProperty.setValue(colorsDefaultImage);
+    }
+    
+    public Boolean isScreenshotEnable(){
+        return screenshot.getValue();
     }
 }
