@@ -1,33 +1,27 @@
 package net.gazeplay.games.flowerOfNumbers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Flower {
-    private final static int wordPetalCapacity = 1;
-    private final static int petalCapacity = 4;
-
-    private final List<List<Integer>> flower;
+    private final List<int[]> flower;
     private int pistil;
 
-    Flower() {
+    public Flower() {
         flower = new ArrayList<>(Petal.values().length);
         for (Petal petal : Petal.values()) {
-            if (petal == Petal.WORDS) {
-                flower.add(new ArrayList<>(wordPetalCapacity));
-            } else {
-                flower.add(new ArrayList<>(petalCapacity));
-            }
+            flower.add(new int[petal.getCapacity()]);
         }
     }
 
     /**
-     * Initialize the flower: empty all the petal's lists and initialize the value of the pistil to 0.
+     * Initialize the flower: empty all the petal's arrays and initialize the value of the pistil to 0.
      */
-    void init() {
+    public void init() {
         pistil = 0;
-        for (List<Integer> petal : flower) {
-            petal.clear();
+        for (int[] petal : flower) {
+            Arrays.fill(petal, 0);
         }
     }
 
@@ -36,7 +30,7 @@ public class Flower {
      *
      * @return the value of the pistil
      */
-    int getPistil() {
+    public int getPistil() {
         return pistil;
     }
 
@@ -45,58 +39,79 @@ public class Flower {
      *
      * @param value the new value of the pistil
      */
-    void setPistil(int value) {
+    public void setPistil(int value) {
         pistil = value;
     }
 
     /**
-     * Return the value in the list from the specified petal at the specified index.
+     * Return the value in the array from the specified petal at the specified index.
      *
      * @param petal the petal in which get the value
      * @param index the index of the value to get
-     * @return the value on petal's list
+     * @return the value on petal's array
      */
-    int get(Petal petal, int index) {
-        return flower.get(petal.ordinal()).get(index);
+    public int get(Petal petal, int index) {
+        return flower.get(petal.ordinal())[index];
     }
 
     /**
-     * Add a value in the list from the specified petal.
+     * Add a value in the array from the specified petal at the specified index.
      *
      * @param petal the petal in which add the value
+     * @param index the index where to add the value
      * @param value the value to add
      */
-    void add(Petal petal, int value) {
-        flower.get(petal.ordinal()).add(value);
+    public void add(Petal petal, int index, int value) {
+        flower.get(petal.ordinal())[index] = value;
     }
 
     /**
-     * Remove the value in the list from the specified petal.
+     * Remove the value in the array from the specified petal at the specified index.
      *
      * @param petal the petal in which remove the value
-     * @param value the value to remove
+     * @param index the index of the value to remove
      */
-    void remove(Petal petal, int value) {
-        flower.get(petal.ordinal()).remove((Integer) value);
+    public void remove(Petal petal, int index) {
+        flower.get(petal.ordinal())[index] = 0;
     }
 
     /**
-     * Return the size of the list from the specified petal.
+     * Return the index of the first empty cell in the array from the specified petal.
+     *
+     * @param petal the petal in which get the index
+     * @return the index of the first empty cell
+     */
+    public int getIndexFirstEmptyCell(Petal petal) {
+        int index = 0;
+        while (index < petal.getCapacity() && flower.get(petal.ordinal())[index] != 0) {
+            index++;
+        }
+        return index < petal.getCapacity() ? index : -1;
+    }
+
+    /**
+     * Return the size of the array from the specified petal.
      *
      * @param petal the petal to calculate the size
-     * @return the size of it list
+     * @return the size of it array
      */
-    int size(Petal petal) {
-        return flower.get(petal.ordinal()).size();
+    private int size(Petal petal) {
+        int size = 0;
+        for (int index = 0; index < flower.get(petal.ordinal()).length; index++) {
+            if (flower.get(petal.ordinal())[index] != 0) {
+                size++;
+            }
+        }
+        return size;
     }
 
     /**
-     * Return the sum of the values in the list from the specified petal.
+     * Return the sum of the values in the array from the specified petal.
      *
      * @param petal the petal in which do the sum
-     * @return the sum of the values of it list
+     * @return the sum of the values of it array
      */
-    int getSum(Petal petal) {
+    private int getSum(Petal petal) {
         int sum = 0;
         for (int value : flower.get(petal.ordinal())) {
             sum += value;
@@ -107,24 +122,25 @@ public class Flower {
     /**
      * Return {@code true} if the specified petal is full.
      * <p>
-     * A petal is full if its list contains {@value petalCapacity} elements or {@value wordPetalCapacity} for the petal of words.
+     * A petal is full if its array contains {@code petal.getCapacity()} elements.
      *
      * @param petal the petal to check
      * @return {@code true} if the petal is full, {@code false} else
+     * @see Petal
      */
-    boolean petalIsFull(Petal petal) {
-        return size(petal) == (petal == Petal.WORDS ? wordPetalCapacity : petalCapacity);
+    public boolean petalIsFull(Petal petal) {
+        return size(petal) == petal.getCapacity();
     }
 
     /**
      * Return {@code true} if the specified petal is complete.
      * <p>
-     * A petal is complete if the sum of values in its list equals the value of the pistil.
+     * A petal is complete if the sum of values in its array equals the value of the pistil.
      *
      * @param petal the petal to check
      * @return {@code true} if the petal is complete, {@code false} else
      */
-    boolean petalIsComplete(Petal petal) {
+    public boolean petalIsComplete(Petal petal) {
         return getSum(petal) == pistil;
     }
 
@@ -132,11 +148,12 @@ public class Flower {
      * Return {@code true} if the flower is full.
      * <p>
      * The flower is full if all its petals are full,
-     * so if all petal's lists contain {@value petalCapacity} elements and {@value wordPetalCapacity} for the petal of words.
+     * so if all petal's arrays contain {@code petal.getCapacity()} elements.
      *
      * @return {@code true} if the flower is full, {@code false} else
+     * @see Petal
      */
-    boolean isFull() {
+    public boolean isFull() {
         for (Petal petal : Petal.values()) {
             if (!petalIsFull(petal)) {
                 return false;
@@ -149,11 +166,11 @@ public class Flower {
      * Return {@code true} if the flower is full.
      * <p>
      * The flower is complete if all its petals are complete,
-     * so if all sums of values in petal's lists equal the value of the pistil.
+     * so if all sums of values in petal's arrays equal the value of the pistil.
      *
      * @return {@code true} if the flower is complete, {@code false} else
      */
-    boolean isComplete() {
+    public boolean isComplete() {
         for (Petal petal : Petal.values()) {
             if (!petalIsComplete(petal)) {
                 return false;
