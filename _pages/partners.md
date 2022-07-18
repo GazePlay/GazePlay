@@ -10,7 +10,7 @@ layout: single
 
 [AFSR](https://afsr.fr/): Association Française du Syndrome de Rett _(French Rett Syndrome Association)_.
 
-[UGA](https://www.univ-grenoble-alpes.fr/english/): Université Grenoble Alpes _(Grenoble Alps University)_.
+[UGA](https://www.univ-grenoble-alpes.fr/english/): Université Grenoble Alpes _(Grenoble Alpes University)_.
 
 [LIG](https://www.liglab.fr/en): Laboratoire d'Informatique de Grenoble _(Grenoble Computer Science Laboratory)_.
 
