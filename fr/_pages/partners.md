@@ -6,7 +6,7 @@ layout: single
 
 ## Partenaires
 
-[CRNS](https://www.cnrs.fr/fr/page-daccueil) : Centre National de la Recherche Scientifique.
+[CNRS](https://www.cnrs.fr/fr/page-daccueil) : Centre National de la Recherche Scientifique.
 
 [AFSR](https://afsr.fr/) : Association Française du Syndrome de Rett.
 
