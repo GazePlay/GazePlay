@@ -43,14 +43,12 @@ import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.commons.utils.multilinguism.I18N;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
-import net.gazeplay.ui.scenes.stats.StatsContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,6 +68,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     private static final double PREF_WIDTH = 200;
 
     private static final double PREF_HEIGHT = 25;
+
+    private CssUtil cssUtil=new CssUtil();
 
     private final boolean currentLanguageAlignmentIsLeftAligned;
 
@@ -315,14 +315,20 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
+            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
+            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
             I18NText label = new I18NText(translator, "BackgroundEnabled", COLON);
             CheckBox input = buildCheckBox(config.getBackgroundEnabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
-            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
+            I18NText label = new I18NText(translator, "DarkTh", COLON);
+            HBox input = buildDarktheme(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -542,16 +548,20 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
+            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
+            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
             I18NText label = new I18NText(translator, "BackgroundEnabled", COLON);
             CheckBox input = buildCheckBox(config.getBackgroundEnabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
-            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
-
-            addToGrid(grid, currentFormRow, label, input);
+            I18NText label = new I18NText(translator, "DarkTh", COLON);
+            HBox darkTheme = buildDarktheme(config, configurationContext);
+            addToGrid(grid, currentFormRow, label, darkTheme);
         }
 
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "FoldersSettings", COLON));
@@ -1587,6 +1597,29 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         return hbox;
     }
+
+    private HBox buildDarktheme(Configuration config, ConfigurationContext configurationContext) {
+
+        HBox hbox = new HBox();
+        hbox.setSpacing(5);
+        CheckBox darkTheme = buildCheckBox(config.getBackgroundDarkTheme());
+        final GazePlay gazePlay = configurationContext.getGazePlay();
+        if (darkTheme.isSelected()) {
+            config.getBackgroundDarkTheme().setValue(true);
+        } else {
+            config.getBackgroundDarkTheme().setValue(false);
+        }
+        darkTheme.setOnAction(e -> {
+            if (!config.isBackgroundDark()) {
+
+                this.cssUtil.changeBG("data/stylesheets/base-light.css",config,gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
+            } else {
+                this.cssUtil.changeBG("data/stylesheets/base-dark.css",config, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
+            }
+        });
+            hbox.getChildren().addAll(darkTheme);
+        return hbox;
+        }
 
     private void updateHeatMapColorProperty(HBox hbox, Configuration config) {
         StringBuilder stringBuilder = new StringBuilder();

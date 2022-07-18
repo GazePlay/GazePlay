@@ -1,0 +1,141 @@
+
+.root {
+    -fx-font-size: 11pt;
+    -fx-font-family: 'sans-serif';
+    -fx-base: #ffdab9;
+    -fx-background: #fffaf0;
+}
+
+.choice-box {
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-alignment: baseline-center;
+}
+
+/* Selected item text color on the control itself */
+.choice-box > .label {
+
+    -fx-font-weight: bold;
+}
+
+/* Background color of the whole context menu*/
+.choice-box .context-menu {
+
+    -fx-font-weight: bold;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+}
+
+/* Focused item background color in the list*/
+.choice-box .menu-item:focused {
+
+    -fx-font-size: 25pt;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+}
+
+.button {
+
+    -fx-font-weight: bold;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+}
+
+#title {
+    -fx-fill: white;
+    -fx-font-size: 60;
+}
+
+#titleW {
+    -fx-fill: white;
+    -fx-font-size: 60;
+}
+
+#titleB {
+    -fx-fill: black;
+    -fx-font-size: 60;
+}
+
+#item {
+    -fx-fill: black;
+    -fx-font-size: 15;
+}
+
+.gameChooserButton {
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-border-insets: 1px;
+    -fx-border-image-insets: 10px;
+
+    -fx-background-color: rgba(0, 0, 0, 1);
+    -fx-border-width: 1px;
+    -fx-border-color: rgba(60, 63, 65, 0.7);
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 255, 0.8), 10, 0, 0, 0);
+}
+
+.gameChooserButton.gameVariation {
+}
+
+.gameChooserButtonThumbnail {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-color: rgba(60, 63, 65, 0.7);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
+}
+
+.gameChooserButtonGameTypeIndicator {
+    -fx-background-color:white;
+    -fx-background-radius: 8px;
+    -fx-border-color: rgba(60, 63, 65, 0.7);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);
+}
+
+.gameChooserButtonTitle {
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-font-smoothing-type: lcd;
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}
+
+.scroll-pane {
+    -fx-background-color: #ffdab9;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: #fffaf0;
+}
+
+.scroll-bar:horizontal, .scroll-bar:vertical{
+    -fx-background-color:transparent;
+}
+
+.increment-button, .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #ffdab9;
+    -fx-background-radius: 5em;
+}
+
+.withoutTextProgress {
+    -fx-padding: 0 0 -16 0;
+}
+
+.withoutTextProgress .percentage{
+    -fx-fill: null;
+}
+
+.selectedColorBox {
+    -fx-background-color : white;
+}
+
