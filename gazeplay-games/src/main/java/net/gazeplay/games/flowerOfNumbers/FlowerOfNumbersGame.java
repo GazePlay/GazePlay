@@ -133,18 +133,20 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
             createButton(Petal.WORDS, i + 11, 0.11, 0.16, 0.06 + i * 0.05);
         }
 
-        for (int i = 0; i < 5; i++) {
-            createButton(Petal.FINGERS, i + 1, 0.05, 0.04 + i * 0.05, 0.67);
-        }
+        createButton(Petal.FINGERS, 1, 0.0295, 0.04, 0.67);
+        createButton(Petal.FINGERS, 2, 0.0295, 0.09, 0.67);
+        createButton(Petal.FINGERS, 3, 0.0343, 0.14, 0.67);
+        createButton(Petal.FINGERS, 4, 0.0381, 0.19, 0.67);
+        createButton(Petal.FINGERS, 5, 0.0500, 0.24, 0.67);
 
         for (int i = 0; i < 3; i++) {
             createButton(Petal.DICE, i + 1, 0.05, 0.79 + i * 0.07, 0.72);
             createButton(Petal.DICE, i + 4, 0.05, 0.79 + i * 0.07, 0.85);
         }
 
-        createButton(Petal.MONEY, 1, 0.085, 0.82, 0.42);
-        createButton(Petal.MONEY, 2, 0.085, 0.92, 0.42);
-        createButton(Petal.MONEY, 5, 0.085, 0.82, 0.54);
+        createButton(Petal.MONEY, 1, 0.050, 0.82, 0.42);
+        createButton(Petal.MONEY, 2, 0.050, 0.92, 0.42);
+        createButton(Petal.MONEY, 5, 0.083, 0.82, 0.54);
         createButton(Petal.MONEY, 10, 0.085, 0.92, 0.54);
     }
 
