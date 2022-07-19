@@ -4,7 +4,7 @@ import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
-import net.gazeplay.games.whereisit.WhereIsItGameVariantGenerator;
+import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsItGameVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.WhereIsTheNumberGameLauncher;
 
 public class WhereIsTheNumberGameSpecSource implements GameSpecSource {
