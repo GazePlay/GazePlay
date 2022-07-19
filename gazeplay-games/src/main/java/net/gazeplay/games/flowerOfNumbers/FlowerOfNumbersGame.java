@@ -235,6 +235,14 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
                             disablePetal(petal, false);
                         }
                         flower.remove(petal, index);
+                        if (flower.isComplete()) {
+                            stats.incrementNumberOfGoalsReached();
+                            gameContext.updateScore(stats, this);
+                            gameContext.playWinTransition(500, winEvent -> {
+                                dispose();
+                                launch();
+                            });
+                        }
 
                         gameContext.getGazeDeviceManager().removeEventFilter(newButton);
                         gameContext.getChildren().remove(newButton);
