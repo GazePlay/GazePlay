@@ -61,7 +61,7 @@ public class ReplayingGameFromJson {
 
             //OK: really small offsets problems
             "Scribble", "Cakes", "Creampie", "WhereIsIt", "WhereIsTheAnimal", "letters",
-            "WhereIsTheColor", "WhereIsTheLetter", "WhereIsTheNumber", "findodd", "flags",
+            "WhereIsTheColor", "WhereIsTheLetter", "WhereIsTheNumber", "WhereIsTheShape", "findodd", "flags",
             "ScratchCard", "Memory", "MemoryLetters", "MemoryNumbers", "OpenMemory", "OpenMemoryLetters",
             "OpenMemoryNumbers", "Dice", "EggGame", "PersonalizeEggGame", "GooseGame", "MagicCards", "Opinions", "Order",
             "Horses", "Horses Simplified", "puzzle", "Farm", "Jungle", "Savanna", "CupsBalls",
