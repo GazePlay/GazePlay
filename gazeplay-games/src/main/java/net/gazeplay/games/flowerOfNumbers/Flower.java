@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Flower {
+    public static final int NUMBER_LIMIT = 20;
+
     private final List<int[]> flower;
     private int pistil;
 
