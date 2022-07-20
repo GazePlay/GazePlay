@@ -52,6 +52,7 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
     private final int maxWordSize;
 
     private final Flower flower;
+    private int oldPistilValue;
 
     private final int indexPistil;
     private final int startIndexAuras;
@@ -84,6 +85,7 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
 
         flower = new Flower();
         flower.init();
+        oldPistilValue = flower.getPistil();
 
         createFlower();
         indexPistil = createPistil();
@@ -96,7 +98,7 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
     public void launch() {
         gameContext.setLimiterAvailable();
 
-        flower.setPistil(random.nextInt(Flower.NUMBER_LIMIT) + 1);
+        flower.setPistil(choosePistilValue());
         log.info("value of pistil = {}", flower.getPistil());
 
         final Image image = createImageFromText(String.valueOf(flower.getPistil()), maxNumberSize);
@@ -288,6 +290,15 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         }, gameContext);
         gameContext.getGazeDeviceManager().addEventFilter(button);
         button.active();
+    }
+
+    private int choosePistilValue() {
+        int newPistilValue = oldPistilValue;
+        while (newPistilValue == oldPistilValue) {
+            newPistilValue = random.nextInt(Flower.NUMBER_LIMIT) + 1;
+        }
+        oldPistilValue = newPistilValue;
+        return newPistilValue;
     }
 
     private void checkIfPetalIsFull(final Petal petal) {
