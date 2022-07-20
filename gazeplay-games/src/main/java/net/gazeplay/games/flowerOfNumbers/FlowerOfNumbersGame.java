@@ -58,11 +58,11 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
     private final int startIndexNumbers;
     private final int startIndexOthers;
 
-    FlowerOfNumbersGame(final IGameContext gameContext, final Stats stats) {
+    public FlowerOfNumbersGame(final IGameContext gameContext, final Stats stats) {
         this(gameContext, stats, -1);
     }
 
-    FlowerOfNumbersGame(final IGameContext gameContext, final Stats stats, double gameSeed) {
+    public FlowerOfNumbersGame(final IGameContext gameContext, final Stats stats, double gameSeed) {
         this.gameContext = gameContext;
         this.stats = stats;
 
@@ -97,10 +97,10 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         gameContext.setLimiterAvailable();
 
         flower.setPistil(random.nextInt(Flower.NUMBER_LIMIT) + 1);
-        log.info("pistil = {}", flower.getPistil());
+        log.info("value of pistil = {}", flower.getPistil());
 
-        Image image = createImageFromText(String.valueOf(flower.getPistil()), maxNumberSize);
-        Rectangle pistil = (Rectangle) gameContext.getChildren().get(indexPistil);
+        final Image image = createImageFromText(String.valueOf(flower.getPistil()), maxNumberSize);
+        final Rectangle pistil = (Rectangle) gameContext.getChildren().get(indexPistil);
         pistil.setFill(new ImagePattern(image));
 
         stats.notifyNewRoundReady();
@@ -120,13 +120,14 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         }
     }
 
-    void createFlower() {
+    private void createFlower() {
         final Image image = new Image("data/flowerOfNumbers/images/flower.png");
         final Rectangle flower = createRectangle(image);
         gameContext.getChildren().add(flower);
+        log.info("flower background create successfully");
     }
 
-    int createPistil() {
+    private int createPistil() {
         final int res = gameContext.getChildren().size();
         final Image image = createImageFromText(String.valueOf(0), maxNumberSize);
         final Rectangle pistil = new Rectangle(0, 0, 10, 10);
@@ -137,21 +138,23 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         pistil.layoutXProperty().bind(widthProperty.multiply(0.50).subtract(pistil.widthProperty().divide(2)));
         pistil.layoutYProperty().bind(heightProperty.multiply(0.50).subtract(pistil.heightProperty().divide(2)));
         gameContext.getChildren().add(pistil);
+        log.info("pistil value label create successfully");
         return res;
     }
 
-    int createAura() {
+    private int createAura() {
         final int res = gameContext.getChildren().size();
         for (Petal petal : Petal.values()) {
-            final Image image = new Image("data/flowerOfNumbers/images/auras/" + petal.toString().toLowerCase() + ".png");
+            final Image image = new Image("data/flowerOfNumbers/images/auras/" + petal + ".png");
             final Rectangle aura = createRectangle(image);
             aura.setVisible(false);
             gameContext.getChildren().add(aura);
         }
+        log.info("{} aura images create successfully", Petal.values().length);
         return res;
     }
 
-    Rectangle createRectangle(Image image) {
+    private Rectangle createRectangle(final Image image) {
         final Rectangle rectangle = new Rectangle(0, 0, 10, 10);
         rectangle.setFill(new ImagePattern(image));
         rectangle.setMouseTransparent(true);
@@ -161,41 +164,46 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         return rectangle;
     }
 
-    int createNumbers() {
+    private int createNumbers() {
         final int res = gameContext.getChildren().size();
 
         createButton(Petal.DIGITS, 1, 0.035, 0.74, 0.10);
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < Petal.DIGITS.getNumberOfObjects() / 2; i++) {
             createButton(Petal.DIGITS, i + 2, 0.035, 0.79 + i * 0.05, 0.10);
             createButton(Petal.DIGITS, i + 6, 0.035, 0.79 + i * 0.05, 0.23);
         }
+        log.info("{} digit objects create successfully", Petal.DIGITS.getNumberOfObjects());
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < Petal.WORDS.getNumberOfObjects() / 2; i++) {
             createButton(Petal.WORDS, i + 1, 0.11, 0.06, 0.06 + i * 0.05);
             createButton(Petal.WORDS, i + 11, 0.11, 0.16, 0.06 + i * 0.05);
         }
+        log.info("{} word objects create successfully", Petal.WORDS.getNumberOfObjects());
 
         createButton(Petal.FINGERS, 1, 0.0295, 0.04, 0.67);
         createButton(Petal.FINGERS, 2, 0.0295, 0.09, 0.67);
         createButton(Petal.FINGERS, 3, 0.0343, 0.14, 0.67);
         createButton(Petal.FINGERS, 4, 0.0381, 0.19, 0.67);
         createButton(Petal.FINGERS, 5, 0.0500, 0.24, 0.67);
+        log.info("{} fingers objects create successfully", Petal.FINGERS.getNumberOfObjects());
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < Petal.DICE.getNumberOfObjects() / 2; i++) {
             createButton(Petal.DICE, i + 1, 0.05, 0.79 + i * 0.07, 0.72);
             createButton(Petal.DICE, i + 4, 0.05, 0.79 + i * 0.07, 0.85);
         }
+        log.info("{} die objects create successfully", Petal.DICE.getNumberOfObjects());
 
         createButton(Petal.MONEY, 1, 0.050, 0.82, 0.42);
         createButton(Petal.MONEY, 2, 0.050, 0.92, 0.42);
         createButton(Petal.MONEY, 5, 0.083, 0.82, 0.54);
         createButton(Petal.MONEY, 10, 0.085, 0.92, 0.54);
+        log.info("{} money objects create successfully", Petal.MONEY.getNumberOfObjects());
 
         return res;
     }
 
-    void createButton(Petal petal, int value, double size, double x, double y) {
-        Image image = switch (petal) {
+    private void createButton(final Petal petal, final int value, final double size, final double x, final double y) {
+        final Image image = switch (petal) {
             case DIGITS -> createImageFromText(String.valueOf(value), maxDigitSize);
             case WORDS -> createImageFromText(multilinguism.getTranslation(String.valueOf(value), config.getLanguage()), maxWordSize);
             case FINGERS -> new Image("data/flowerOfNumbers/images/fingers/fingers" + value + ".png");
@@ -203,10 +211,10 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
             case MONEY -> new Image("data/flowerOfNumbers/images/money/money" + value + ".png");
         };
 
-        ImageView view = new ImageView(image);
-        DoubleProperty minSizeProperty = image.getWidth() <= image.getHeight() ? view.fitWidthProperty() : view.fitHeightProperty();
+        final ImageView view = new ImageView(image);
+        final DoubleProperty minSizeProperty = image.getWidth() <= image.getHeight() ? view.fitWidthProperty() : view.fitHeightProperty();
 
-        ProgressButton button = new ProgressButton(false);
+        final ProgressButton button = new ProgressButton(false);
         button.setImage(view);
         button.getButton().setVisible(false);
 
@@ -219,14 +227,15 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         gameContext.getChildren().add(button);
 
         button.assignIndicatorUpdatable(buttonEvent -> {
-            int index = flower.getIndexFirstEmptyCell(petal);
+            final int index = flower.getIndexFirstEmptyCell(petal);
             flower.add(petal, index, value);
+            log.info("add value {} to {} petal", value, petal);
             checkIfPetalIsFull(petal);
             checkIfFlowerIsComplete(true, false);
 
-            ImageView newView = new ImageView(image);
+            final ImageView newView = new ImageView(image);
 
-            ProgressButton newButton = new ProgressButton(false);
+            final ProgressButton newButton = new ProgressButton(false);
             newButton.setImage(newView);
             newButton.getButton().setVisible(false);
             newButton.setDisable(true);
@@ -240,15 +249,15 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
 
             gameContext.getChildren().add(newButton);
 
-            Pair<Double, Double> pair = calculateCoordinates(petal, index);
-            double newX = pair.getKey();
-            double newY = pair.getValue();
-            Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
+            final Pair<Double, Double> pair = calculateCoordinates(petal, index);
+            final double newX = pair.getKey();
+            final double newY = pair.getValue();
+            final Dimension2D dimension = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-            KeyValue xKeyValue = new KeyValue(newButton.layoutXProperty(), dimension.getWidth() * newX - newView.getFitWidth() / 2, Interpolator.EASE_OUT);
-            KeyValue yKeyValue = new KeyValue(newButton.layoutYProperty(), dimension.getHeight() * newY - newView.getFitHeight() / 2, Interpolator.EASE_OUT);
-            KeyFrame keyFrame = new KeyFrame(new Duration(1000), xKeyValue, yKeyValue);
-            Timeline timeline = new Timeline(keyFrame);
+            final KeyValue xKeyValue = new KeyValue(newButton.layoutXProperty(), dimension.getWidth() * newX - newView.getFitWidth() / 2, Interpolator.EASE_OUT);
+            final KeyValue yKeyValue = new KeyValue(newButton.layoutYProperty(), dimension.getHeight() * newY - newView.getFitHeight() / 2, Interpolator.EASE_OUT);
+            final KeyFrame keyFrame = new KeyFrame(new Duration(1000), xKeyValue, yKeyValue);
+            final Timeline timeline = new Timeline(keyFrame);
 
             timeline.setOnFinished(timelineEvent -> {
                 newButton.layoutXProperty().bind(widthProperty.multiply(newX).subtract(newView.fitWidthProperty().divide(2)));
@@ -260,6 +269,7 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
                     newButton.setDisable(false);
 
                     newButton.assignIndicatorUpdatable(newButtonEvent -> {
+                        log.info("remove value {} of {} petal", flower.get(petal, index), petal);
                         flower.remove(petal, index);
                         checkIfPetalIsFull(petal);
                         checkIfPetalIsComplete(petal);
@@ -280,38 +290,33 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         button.active();
     }
 
-    void checkIfPetalIsFull(Petal petal) {
-        int startIndex = switch (petal) {
-            case DIGITS -> startIndexNumbers;
-            case WORDS -> startIndexNumbers + Petal.DIGITS.getNumberOfObjects();
-            case FINGERS -> startIndexNumbers + Petal.WORDS.getNumberOfObjects();
-            case DICE -> startIndexNumbers + Petal.FINGERS.getNumberOfObjects();
-            case MONEY -> startIndexNumbers + Petal.DICE.getNumberOfObjects();
-        };
-        int endIndex = switch (petal) {
-            case DIGITS -> startIndex + Petal.DIGITS.getNumberOfObjects();
-            case WORDS -> startIndex + Petal.WORDS.getNumberOfObjects();
-            case FINGERS -> startIndex + Petal.FINGERS.getNumberOfObjects();
-            case DICE -> startIndex + Petal.DICE.getNumberOfObjects();
-            case MONEY -> startIndex + Petal.MONEY.getNumberOfObjects();
-        };
-        for (int i = startIndex; i < endIndex; i++) {
-            final boolean disable = flower.petalIsFull(petal);
-            final ProgressButton button = (ProgressButton) gameContext.getChildren().get(i);
-            button.setDisable(disable);
-            button.getButton().setDisable(disable);
+    private void checkIfPetalIsFull(final Petal petal) {
+        final int startIndex = startIndexNumbers + Petal.getTotalNumberOfObjectsBeforePetal(petal);
+        final int endIndex = startIndex + petal.getNumberOfObjects();
+        final boolean isFull = flower.petalIsFull(petal);
+        for (int index = startIndex; index < endIndex; index++) {
+            final ProgressButton button = (ProgressButton) gameContext.getChildren().get(index);
+            button.setDisable(isFull);
+            button.getButton().setDisable(isFull);
+        }
+        if (isFull) {
+            log.info("{} petal is full", petal);
         }
     }
 
-    void checkIfPetalIsComplete(Petal petal) {
+    private void checkIfPetalIsComplete(final Petal petal) {
+        final boolean isComplete = flower.petalIsComplete(petal);
         final Rectangle aura = (Rectangle) gameContext.getChildren().get(startIndexAuras + petal.ordinal());
-        aura.setVisible(flower.petalIsComplete(petal));
+        aura.setVisible(isComplete);
+        if (isComplete) {
+            log.info("{} petal is complete", petal);
+        }
     }
 
-    boolean checkIfFlowerIsComplete(boolean disable, boolean win) {
+    private boolean checkIfFlowerIsComplete(final boolean disable, final boolean win) {
         if (flower.isComplete()) {
             if (disable) {
-                for (Node node : gameContext.getChildren().subList(startIndexOthers, gameContext.getChildren().size())) {
+                for (Node node : gameContext.getChildren().subList(startIndexNumbers, gameContext.getChildren().size())) {
                     if (node instanceof ProgressButton progressButton) {
                         progressButton.setDisable(true);
                         progressButton.getButton().setDisable(true);
@@ -319,11 +324,14 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
                 }
             }
             if (win) {
+                log.info("flower is complete: WIN");
                 stats.incrementNumberOfGoalsReached();
                 gameContext.updateScore(stats, this);
                 gameContext.playWinTransition(500, winEvent -> {
-                    dispose();
-                    launch();
+                    if (!gameContext.getChildren().isEmpty()) {
+                        dispose();
+                        launch();
+                    }
                 });
             }
             return true;
@@ -331,7 +339,7 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         return false;
     }
 
-    Pair<Double, Double> calculateCoordinates(Petal petal, int index) {
+    private Pair<Double, Double> calculateCoordinates(final Petal petal, final int index) {
         return switch (petal) {
             case DIGITS -> switch (index) {
                 case 0 -> new Pair<>(0.47, 0.11);
@@ -365,7 +373,7 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         };
     }
 
-    Image createImageFromText(String text, int maxTextWidth) {
+    private Image createImageFromText(final String text, final int maxTextWidth) {
         final Color color = config.getBackgroundStyle().accept(new BackgroundStyleVisitor<>() {
             @Override
             public Color visitLight() {
@@ -382,8 +390,8 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         Graphics2D g2d = image.createGraphics();
         g2d.setFont(font);
         FontMetrics fm = g2d.getFontMetrics();
-        int textWidth = fm.stringWidth(text);
-        int textHeight = fm.getHeight();
+        final int textWidth = fm.stringWidth(text);
+        final int textHeight = fm.getHeight();
         g2d.dispose();
 
         final int finalMaxTextWidth = maxTextWidth < 0 ? textWidth : maxTextWidth;
@@ -407,15 +415,15 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         return SwingFXUtils.toFXImage(image, null);
     }
 
-    int calculateMaxIntegerSize(int endValue) {
-        BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = image.createGraphics();
+    private int calculateMaxIntegerSize(final int endValue) {
+        final BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        final Graphics2D g2d = image.createGraphics();
         g2d.setFont(font);
-        FontMetrics fm = g2d.getFontMetrics();
+        final FontMetrics fm = g2d.getFontMetrics();
 
         int maxSize = -1;
-        for (int i = 1; i <= endValue; i++) {
-            int curSize = fm.stringWidth(String.valueOf(i));
+        for (int value = 1; value <= endValue; value++) {
+            final int curSize = fm.stringWidth(String.valueOf(value));
             if (curSize > maxSize) {
                 maxSize = curSize;
             }
@@ -424,17 +432,17 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
         return maxSize;
     }
 
-    int calculateMaxWordSize() {
-        BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = image.createGraphics();
+    private int calculateMaxWordSize() {
+        final BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        final Graphics2D g2d = image.createGraphics();
         g2d.setFont(font);
-        FontMetrics fm = g2d.getFontMetrics();
+        final FontMetrics fm = g2d.getFontMetrics();
 
         int maxSize = -1;
         for (Locale locale : Languages.getAllCodes()) {
             String language = locale.getLanguage();
-            for (int i = 1; i <= Petal.WORDS.getNumberOfObjects(); i++) {
-                int curSize = fm.stringWidth(multilinguism.getTranslation(String.valueOf(i), language));
+            for (int value = 1; value <= Petal.WORDS.getNumberOfObjects(); value++) {
+                final int curSize = fm.stringWidth(multilinguism.getTranslation(String.valueOf(value), language));
                 if (curSize > maxSize) {
                     maxSize = curSize;
                 }
