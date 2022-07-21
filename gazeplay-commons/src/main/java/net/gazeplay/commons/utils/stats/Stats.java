@@ -124,6 +124,7 @@ public class Stats implements GazeMotionListener {
     String currentGameVariant;
     String currentGameNameCode;
     double currentGameSeed = 0.;
+    private final boolean inReplayMode;
 
     private String directoryOfVideo;
 
@@ -202,6 +203,7 @@ public class Stats implements GazeMotionListener {
     public Stats(final Scene gameContextScene, final String gameName) {
         this.gameContextScene = gameContextScene;
         this.gameName = gameName;
+        this.inReplayMode = false;
 
         heatMapPixelSize = computeHeatMapPixelSize(gameContextScene);
     }
@@ -216,6 +218,7 @@ public class Stats implements GazeMotionListener {
         this.lifeCycle = lifeCycle;
         this.roundsDurationReport = roundsDurationReport;
         this.savedStatsInfo = savedStatsInfo;
+        this.inReplayMode = true;
 
         heatMapPixelSize = computeHeatMapPixelSize(gameContextScene);
     }
@@ -781,28 +784,34 @@ public class Stats implements GazeMotionListener {
     }
 
     public void incrementNumberOfGoalsToReach() {
-        nbGoalsToReach++;
-        currentRoundStartTime = System.currentTimeMillis();
-        log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
+        if (!inReplayMode) {
+            nbGoalsToReach++;
+            currentRoundStartTime = System.currentTimeMillis();
+            log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
+        }
     }
 
     public void incrementNumberOfGoalsToReach(int i) {
-        nbGoalsToReach += i;
-        currentRoundStartTime = System.currentTimeMillis();
-        log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
+        if (!inReplayMode) {
+            nbGoalsToReach += i;
+            currentRoundStartTime = System.currentTimeMillis();
+            log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
+        }
     }
 
     public void incrementNumberOfGoalsReached() {
-        final long currentRoundEndTime = System.currentTimeMillis();
-        final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
-        if (currentRoundDuration < accidentalShotPreventionPeriod) {
-            nbUnCountedGoalsReached++;
-        } else {
-            nbGoalsReached++;
-            this.roundsDurationReport.addRoundDuration(currentRoundDuration);
+        if (!inReplayMode) {
+            final long currentRoundEndTime = System.currentTimeMillis();
+            final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
+            if (currentRoundDuration < accidentalShotPreventionPeriod) {
+                nbUnCountedGoalsReached++;
+            } else {
+                nbGoalsReached++;
+                this.roundsDurationReport.addRoundDuration(currentRoundDuration);
+            }
+            currentRoundStartTime = currentRoundEndTime;
+            log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
         }
-        currentRoundStartTime = currentRoundEndTime;
-        log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
     }
 
     public void addRoundDuration() {
