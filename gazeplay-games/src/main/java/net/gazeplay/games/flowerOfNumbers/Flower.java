@@ -41,7 +41,7 @@ public class Flower {
      *
      * @param value the new value of the pistil
      */
-    public void setPistil(int value) {
+    public void setPistil(final int value) {
         pistil = value;
     }
 
@@ -52,7 +52,7 @@ public class Flower {
      * @param index the index of the value to get
      * @return the value on petal's array
      */
-    public int get(Petal petal, int index) {
+    public int get(final Petal petal, final int index) {
         return flower.get(petal.ordinal())[index];
     }
 
@@ -63,7 +63,7 @@ public class Flower {
      * @param index the index where to add the value
      * @param value the value to add
      */
-    public void add(Petal petal, int index, int value) {
+    public void add(final Petal petal, final int index, final int value) {
         flower.get(petal.ordinal())[index] = value;
     }
 
@@ -73,7 +73,7 @@ public class Flower {
      * @param petal the petal in which remove the value
      * @param index the index of the value to remove
      */
-    public void remove(Petal petal, int index) {
+    public void remove(final Petal petal, final int index) {
         flower.get(petal.ordinal())[index] = 0;
     }
 
@@ -83,7 +83,7 @@ public class Flower {
      * @param petal the petal in which get the index
      * @return the index of the first empty cell
      */
-    public int getIndexFirstEmptyCell(Petal petal) {
+    public int getIndexFirstEmptyCell(final Petal petal) {
         int index = 0;
         while (index < petal.getCapacity() && flower.get(petal.ordinal())[index] != 0) {
             index++;
@@ -97,7 +97,7 @@ public class Flower {
      * @param petal the petal to calculate the size
      * @return the size of it array
      */
-    private int size(Petal petal) {
+    private int size(final Petal petal) {
         int size = 0;
         for (int index = 0; index < flower.get(petal.ordinal()).length; index++) {
             if (flower.get(petal.ordinal())[index] != 0) {
@@ -113,7 +113,7 @@ public class Flower {
      * @param petal the petal in which do the sum
      * @return the sum of the values of it array
      */
-    private int getSum(Petal petal) {
+    private int getSum(final Petal petal) {
         int sum = 0;
         for (int value : flower.get(petal.ordinal())) {
             sum += value;
@@ -130,7 +130,7 @@ public class Flower {
      * @return {@code true} if the petal is full, {@code false} else
      * @see Petal
      */
-    public boolean petalIsFull(Petal petal) {
+    public boolean petalIsFull(final Petal petal) {
         return size(petal) == petal.getCapacity();
     }
 
@@ -142,7 +142,7 @@ public class Flower {
      * @param petal the petal to check
      * @return {@code true} if the petal is complete, {@code false} else
      */
-    public boolean petalIsComplete(Petal petal) {
+    public boolean petalIsComplete(final Petal petal) {
         return getSum(petal) == pistil;
     }
 

@@ -17,16 +17,29 @@ public enum Petal {
      */
     private final int capacity;
 
-    Petal(int numberOfObjects, int capacity) {
+    Petal(final int numberOfObjects, final int capacity) {
         this.numberOfObjects = numberOfObjects;
         this.capacity = capacity;
     }
 
-    int getNumberOfObjects() {
+    public int getNumberOfObjects() {
         return numberOfObjects;
     }
 
-    int getCapacity() {
+    public int getCapacity() {
         return capacity;
+    }
+
+    public static int getTotalNumberOfObjectsBeforePetal(final Petal petal) {
+        int res = 0;
+        for (int index = 0; index < petal.ordinal(); index++) {
+            res += Petal.values()[index].getNumberOfObjects();
+        }
+        return res;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString().toLowerCase();
     }
 }
