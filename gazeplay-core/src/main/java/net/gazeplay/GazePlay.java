@@ -89,6 +89,11 @@ public class GazePlay {
         configurationContext.setUpOnStage(primaryScene);
     }
 
+    public void onDisplayConfigurationManagementHomebutton() {
+        ConfigurationContext configurationContext = applicationContext.getBean(ConfigurationContext.class);
+        configurationContext.setUpOnStage(primaryScene);
+    }
+
     public void goToUserPage() {
         ActiveConfigurationContext.switchToDefaultUser();
 

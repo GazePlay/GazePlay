@@ -99,9 +99,17 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 root.setRight(sidePane);
             }
             sidePane.setBottom(controlButtonPane);
-            root.setStyle(
-                "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
 
+            if (config.isBackgroundDark()) {
+                root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
+                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
+            }
+            else {
+                root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
+                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);"+"-fx-text-fill: black;");
+            }
 
         }else {
             GridPane grid = new GridPane();
@@ -149,7 +157,13 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 LineChart<String, Number> levelChart = StatDisplayUtils.buildLevelChart(stats, root);
                 TableView chi2Chart = StatDisplayUtils.buildTable(stats);
 
-                colorBands.setTextFill(Color.WHITE);
+                if(config.isBackgroundDark())
+                {
+                    colorBands.setTextFill(Color.WHITE);
+                }
+                else {
+                    colorBands.setTextFill(Color.BLACK);
+                }
                 colorBands.getStylesheets().add("data/common/radio.css");
 
                 colorBands.setOnAction(event -> {
@@ -262,8 +276,17 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 root.setRight(sidePane);
             }
             sidePane.setBottom(controlButtonPane);
-            root.setStyle(
-                "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+
+            if (config.isBackgroundDark()) {
+                root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
+                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
+            }
+            else {
+                root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
+                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);"+"-fx-text-fill: black;");
+            }
 
         }
 

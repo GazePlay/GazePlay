@@ -165,6 +165,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HomeButton homeButton = new HomeButton(screenDimension);
 
         EventHandler<Event> homeEvent = e -> {
+            gazePlay.onDisplayConfigurationManagementHomebutton();
             if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
                 root.setCursor(Cursor.WAIT); // Change cursor to wait style
                 gazePlay.onReturnToMenu();
@@ -191,7 +192,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }else {
             grid = gazeplayConfigGridPane(configurationContext, translator);
         }
-
         return grid;
     }
 
