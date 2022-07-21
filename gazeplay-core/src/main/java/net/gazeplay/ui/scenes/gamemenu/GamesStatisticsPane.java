@@ -20,7 +20,7 @@ public class GamesStatisticsPane extends GridPane {
     @Getter
     private final Label gamesVariantsCountValueLabel;
 
-    public GamesStatisticsPane(Translator translator, List<GameSpec> games) {
+    public GamesStatisticsPane(Translator translator, List<GameSpec> games, boolean darkMode) {
         super();
         I18NLabel gamesCountLabel = new I18NLabel(translator, "games count");
         I18NLabel gamesVariantsCountLabel = new I18NLabel(translator, "games variants count");
@@ -38,8 +38,14 @@ public class GamesStatisticsPane extends GridPane {
         setHgap(30);
         setVgap(10);
 
+
         //setAllColumnsConstraints();
-        setAllLabelsStyle();
+        if(darkMode) {
+            setAllLabelsStyleDark();
+        }
+        else{
+            setAllLabelsStyleLight();
+        }
 
         final int gamesCount = games.size();
         final int variantsCount = games.stream().mapToInt(gameSpec -> gameSpec.getGameVariantGenerator().getVariants().size()).sum();
@@ -67,8 +73,18 @@ public class GamesStatisticsPane extends GridPane {
         }
     }
 
-    private void setAllLabelsStyle() {
+    private void setAllLabelsStyleDark(){
         final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;";
+        this.setStyle("-fx-background-color: black");
+        for (Node node : this.getChildren()) {
+            node.setStyle(labelStyle);
+        }
+    }
+    public void setAllLabelsStyleLight()
+    {
+        final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: black;";
+        this.setStyle("-fx-background-color: #fffaf0");
+
         for (Node node : this.getChildren()) {
             node.setStyle(labelStyle);
         }

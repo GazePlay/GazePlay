@@ -61,6 +61,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
     private final double cardHeight;
     private final double cardWidth;
 
+    Configuration config = ActiveConfigurationContext.getInstance();
     public UserProfileContext(final GazePlay gazePlay) {
         super(gazePlay, new BorderPane());
 
@@ -103,10 +104,19 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         root.setTop(topPane);
         root.setCenter(centerCenterPane);
-
-        root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
-            + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
-            + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        if (config.isBackgroundDark()) {
+            root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        }
+        else {
+            root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        }
+      //  root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
+        //    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+          //  + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
     }
 
     public void afsrGazeplayUserProfileContext(GazePlay gazePlay, Dimension2D screenDimension){
@@ -141,7 +151,6 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         root.setTop(topPane);
         root.setCenter(centerCenterPane);
-
         root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
             + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
             + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");

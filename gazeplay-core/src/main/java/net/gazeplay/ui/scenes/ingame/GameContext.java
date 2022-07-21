@@ -357,9 +357,22 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
                                                    @NonNull GameLifeCycle currentGame) {
 
         EventHandler<Event> homeEvent = e -> {
+
+            Configuration config = ActiveConfigurationContext.getInstance();
+            if (!config.isBackgroundDark()) {
+                root.setStyle("-fx-background-color: red; " + "-fx-background-radius: 8px; "
+                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+            }
+            else {
+                root.setStyle("-fx-background-color: blue; " + "-fx-background-radius: 8px; "
+                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+            }
             root.setCursor(Cursor.WAIT); // Change cursor to wait style
             exitGame(stats, gazePlay, currentGame);
             root.setCursor(Cursor.DEFAULT); // Change cursor to default style
+
         };
 
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();

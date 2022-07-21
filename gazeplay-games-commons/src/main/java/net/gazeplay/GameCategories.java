@@ -28,5 +28,4 @@ public class GameCategories {
             this.thumbnail = thumbnailResource;
         }
     }
-
 }

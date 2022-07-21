@@ -46,9 +46,12 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.gameslocator.AbstractGamesLocator;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
+import net.gazeplay.ui.scenes.gamemenu.GamesStatisticsPane;
+import net.gazeplay.ui.scenes.gamemenu.HomeMenuScreen;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,6 +81,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private GridPane gridPane;
 
+    Configuration config = ActiveConfigurationContext.getInstance();
     ConfigurationContext(GazePlay gazePlay) {
         super(gazePlay, new BorderPane());
 
@@ -655,6 +659,16 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addSubToGrid(grid, currentFormRow, label, input);
         }
 
+        if (config.isBackgroundDark()) {
+            root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        }
+        else {
+            root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        }
         return grid;
     }
 
@@ -1575,7 +1589,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             config.getLimiterScoreProperty().setValue(newPropertyValue);
         });
 
-        if (limitScore.isSelected()) {
+        if (limitScore.isSelected(
+        )) {
             score.setVisible(true);
             spinnerS.setVisible(true);
         } else {
@@ -1611,10 +1626,19 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         darkTheme.setOnAction(e -> {
             if (!config.isBackgroundDark()) {
+                this.cssUtil.changeBG("data/stylesheets/base-light.css",
+                    config,gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
+                root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
+                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
 
-                this.cssUtil.changeBG("data/stylesheets/base-light.css",config,gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
             } else {
-                this.cssUtil.changeBG("data/stylesheets/base-dark.css",config, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
+                this.cssUtil.changeBG("data/stylesheets/base-dark.css",
+                    config, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
+                root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
+                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+
             }
         });
             hbox.getChildren().addAll(darkTheme);
