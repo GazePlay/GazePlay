@@ -20,7 +20,6 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     private final IGameContext gameContext;
     private final Stats stats;
-    private final boolean inReplayMode;
     public final double fixationlength;
 
     private GameBox[][] walls;
@@ -56,7 +55,6 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         this.gameContext.startScoreLimiter();
         this.gameContext.startTimeLimiter();
         this.stats = stats;
-        this.inReplayMode = false;
 
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
@@ -84,7 +82,6 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
         this.gameContext = gameContext;
         this.stats = stats;
-        this.inReplayMode = true;
 
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
@@ -385,9 +382,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
 
     void testIfCheese(final int i, final int j) {
         if (cheese.isTheCheese(i, j)) {
-            if (!inReplayMode) {
-                stats.incrementNumberOfGoalsReached();
-            }
+            stats.incrementNumberOfGoalsReached();
             gameContext.updateScore(stats, this);
             cheese.moveCheese();
             stats.incrementNumberOfGoalsToReach();

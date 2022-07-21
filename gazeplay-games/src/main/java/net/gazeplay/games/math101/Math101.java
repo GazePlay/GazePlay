@@ -42,7 +42,6 @@ public class Math101 implements GameLifeCycle {
 
     private final Stats stats;
 
-    private final boolean inReplayMode;
 
     private final ArrayList<TargetAOI> targetAOIList;
 
@@ -70,7 +69,6 @@ public class Math101 implements GameLifeCycle {
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
-        this.inReplayMode = false;
     }
 
     public Math101(final MathGameType gameType, final IGameContext gameContext, final MathGameVariant gameVariant, final Stats stats, double gameSeed) {
@@ -86,7 +84,6 @@ public class Math101 implements GameLifeCycle {
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-        this.inReplayMode = true;
     }
 
     private static Formula generateRandomFormula(final MathGameType gameType, final int maxValue, ReplayablePseudoRandom randomGenerator) {
@@ -338,7 +335,7 @@ public class Math101 implements GameLifeCycle {
                 final TargetAOI targetAOI = new TargetAOI(positionX + cardWidth / 2.5, positionY + boxWidth / 3, (int) cardWidth / 3, System.currentTimeMillis());
                 targetAOIList.add(targetAOI);
 
-                final Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, currentValue, gameContext, stats, this, gameContext.getConfiguration().getFixationLength(), inReplayMode);
+                final Card card = new Card(positionX, positionY, cardWidth, cardHeight, image, isWinnerCard, currentValue, gameContext, stats, this, gameContext.getConfiguration().getFixationLength());
 
                 result.add(card);
                 currentCardIndex++;

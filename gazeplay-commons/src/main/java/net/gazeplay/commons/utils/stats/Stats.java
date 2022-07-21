@@ -137,6 +137,8 @@ public class Stats implements GazeMotionListener {
     String currentGameNameCode;
     @Setter
     double currentGameSeed = 0.;
+    @Getter
+    private final boolean inReplayMode;
 
     private String directoryOfVideo;
     private String nameOfVideo;
@@ -215,6 +217,7 @@ public class Stats implements GazeMotionListener {
     public Stats(final Scene gameContextScene, final String gameName) {
         this.gameContextScene = gameContextScene;
         this.gameName = gameName;
+        this.inReplayMode = false;
 
         heatMapPixelSize = computeHeatMapPixelSize(gameContextScene);
     }
@@ -242,6 +245,7 @@ public class Stats implements GazeMotionListener {
         this.heatMap = heatMap;
         this.aoiList = aoiList;
         this.savedStatsInfo = savedStatsInfo;
+        this.inReplayMode = true;
 
         heatMapPixelSize = computeHeatMapPixelSize(gameContextScene);
     }
@@ -376,28 +380,34 @@ public class Stats implements GazeMotionListener {
     /* NUMBER OF GOALS */
 
     public void incrementNumberOfGoalsToReach() {
-        nbGoalsToReach++;
-        currentRoundStartTime = System.currentTimeMillis();
-        log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
+        if (!inReplayMode) {
+            nbGoalsToReach++;
+            currentRoundStartTime = System.currentTimeMillis();
+            log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
+        }
     }
 
     public void incrementNumberOfGoalsToReach(int i) {
-        nbGoalsToReach += i;
-        currentRoundStartTime = System.currentTimeMillis();
-        log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
+        if (!inReplayMode) {
+            nbGoalsToReach += i;
+            currentRoundStartTime = System.currentTimeMillis();
+            log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
+        }
     }
 
     public void incrementNumberOfGoalsReached() {
-        final long currentRoundEndTime = System.currentTimeMillis();
-        final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
-        if (currentRoundDuration < accidentalShotPreventionPeriod) {
-            nbUncountedGoalsReached++;
-        } else {
-            nbGoalsReached++;
-            roundsDurationReport.addRoundDuration(currentRoundDuration);
+        if (!inReplayMode) {
+            final long currentRoundEndTime = System.currentTimeMillis();
+            final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
+            if (currentRoundDuration < accidentalShotPreventionPeriod) {
+                nbUncountedGoalsReached++;
+            } else {
+                nbGoalsReached++;
+                roundsDurationReport.addRoundDuration(currentRoundDuration);
+            }
+            currentRoundStartTime = currentRoundEndTime;
+            log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
         }
-        currentRoundStartTime = currentRoundEndTime;
-        log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
     }
 
     /* VIDEO RECORDING */

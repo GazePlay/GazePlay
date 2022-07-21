@@ -30,7 +30,6 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
     private final Group middleLayer;
     private final IGameContext gameContext;
     private final PaperScissorsStoneStats stats;
-    private final boolean inReplayMode;
 
     private final Rectangle shade;
     private final ProgressButton restartButton;
@@ -57,7 +56,6 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         this.configuration = gameContext.getConfiguration();
         this.random = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(random.getSeed());
-        this.inReplayMode = false;
 
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
@@ -95,7 +93,6 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
         this.random = new ReplayablePseudoRandom(gameSeed);
-        this.inReplayMode = true;
 
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
@@ -199,9 +196,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
                 } else {
                     button.disable(true);
                 }
-                if (!inReplayMode) {
-                    stats.incrementNumberOfGoalsReached();
-                }
+                stats.incrementNumberOfGoalsReached();
             }, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(paper);
             button.active();
@@ -213,9 +208,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
                 } else {
                     button.disable(true);
                 }
-                if (!inReplayMode) {
-                    stats.incrementNumberOfGoalsReached();
-                }
+                stats.incrementNumberOfGoalsReached();
             }, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(stone);
             button.active();
@@ -227,9 +220,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
                 } else {
                     button.disable(true);
                 }
-                if (!inReplayMode) {
-                    stats.incrementNumberOfGoalsReached();
-                }
+                stats.incrementNumberOfGoalsReached();
             }, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(scissors);
             button.active();

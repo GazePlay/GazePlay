@@ -34,11 +34,11 @@ public class RushHourGameLauncher implements IGameLauncher<Stats, DimensionGameV
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, DimensionGameVariant gameVariant, Stats stats) {
-        return new RushHour(gameContext, stats, false);
+        return new RushHour(gameContext, stats);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
-        return new RushHour(gameContext, stats, true);
+        return new RushHour(gameContext, stats);
     }
 }

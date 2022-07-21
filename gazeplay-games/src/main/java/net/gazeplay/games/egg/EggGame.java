@@ -14,7 +14,6 @@ public class EggGame implements GameLifeCycle {
 
     private final Stats stats;
 
-    private final boolean inReplayMode;
 
     private final int numberOfTurns;
 
@@ -26,7 +25,6 @@ public class EggGame implements GameLifeCycle {
         this.stats = stats;
         this.numberOfTurns = numOfTurns;
         this.type = type;
-        this.inReplayMode = false;
         gameContext.startTimeLimiter();
     }
 
@@ -36,7 +34,6 @@ public class EggGame implements GameLifeCycle {
         this.stats = stats;
         this.numberOfTurns = numOfTurns;
         this.type = type;
-        this.inReplayMode = true;
     }
 
     @Override
@@ -60,7 +57,7 @@ public class EggGame implements GameLifeCycle {
     }
 
     private Egg createEgg(final Configuration config) {
-        return new Egg(gameContext, stats, this, gameContext.getConfiguration().getFixationLength(), numberOfTurns, type, inReplayMode);
+        return new Egg(gameContext, stats, this, gameContext.getConfiguration().getFixationLength(), numberOfTurns, type);
     }
 
 }

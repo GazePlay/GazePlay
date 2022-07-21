@@ -34,11 +34,11 @@ public class SpotDifferencesGameLauncher implements IGameLauncher<SpotTheDiffere
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant, SpotTheDifferencesStats stats) {
-        return new SpotTheDifferences(gameContext, stats, false);
+        return new SpotTheDifferences(gameContext, stats);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant, SpotTheDifferencesStats stats, double gameSeed) {
-        return new SpotTheDifferences(gameContext, stats, true);
+        return new SpotTheDifferences(gameContext, stats);
     }
 }

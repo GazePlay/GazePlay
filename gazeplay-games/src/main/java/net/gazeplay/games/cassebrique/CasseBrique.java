@@ -29,7 +29,6 @@ public class CasseBrique implements GameLifeCycle {
     final private IGameContext gameContext;
     final private Stats stats;
     final private CasseBriqueGameVariant variant;
-    final private boolean inReplayMode;
 
     final private Dimension2D dimension2D;
 
@@ -54,11 +53,10 @@ public class CasseBrique implements GameLifeCycle {
     private boolean touchX;
     private boolean touchY;
 
-    CasseBrique(final IGameContext gameContext, final Stats stats, final CasseBriqueGameVariant variant, boolean inReplayMode) {
+    CasseBrique(final IGameContext gameContext, final Stats stats, final CasseBriqueGameVariant variant) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.variant = variant;
-        this.inReplayMode = inReplayMode;
 
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -232,9 +230,7 @@ public class CasseBrique implements GameLifeCycle {
         }
         if (touch && remove) {
             wallremovelist.add(wall);
-            if (!inReplayMode) {
-                stats.incrementNumberOfGoalsReached();
-            }
+            stats.incrementNumberOfGoalsReached();
         }
     }
 

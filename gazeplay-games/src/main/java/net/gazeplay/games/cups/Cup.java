@@ -52,7 +52,6 @@ public class Cup {
 
     private final CupsAndBalls gameInstance;
 
-    private final boolean inReplayMode;
 
     @Getter
     @Setter
@@ -72,7 +71,7 @@ public class Cup {
     private int actionsToDo;
 
     public Cup(final ImageView item, final PositionCup positionCup, final IGameContext gameContext, final Stats stats,
-               final CupsAndBalls gameInstance, final int openCupSpeed, final boolean inReplayMode) {
+               final CupsAndBalls gameInstance, final int openCupSpeed) {
         this.actionsDone = 0;
         this.actionsToDo = 0;
         this.openCupSpeed = openCupSpeed;
@@ -86,7 +85,6 @@ public class Cup {
         this.gameInstance = gameInstance;
         this.enterEvent = buildEvent();
         this.progressIndicator = createProgressIndicator(item.getX(), item.getY());
-        this.inReplayMode = inReplayMode;
 
         createEvent();
     }
@@ -136,9 +134,7 @@ public class Cup {
     }
 
     private void onCorrectCupSelected() {
-        if (!inReplayMode) {
-            stats.incrementNumberOfGoalsReached();
-        }
+        stats.incrementNumberOfGoalsReached();
 
         progressIndicator.setOpacity(0);
 

@@ -47,7 +47,7 @@ class MemoryCardTest {
         String resource = "images/blue/blue.jpg";
         Image img = new Image(resource);
         MemoryCard memoryCard = new MemoryCard(2, 2, 2, 2, img, 2,
-            mockGameContext, mockStats, mockMemory, mockConfig.getFixationLength(), true, false);
+            mockGameContext, mockStats, mockMemory, mockConfig.getFixationLength(), true);
         Image image = ((ImagePattern) memoryCard.getImageRectangle().getFill()).getImage();
         assert image.getUrl().contains(resource);
     }
@@ -57,7 +57,7 @@ class MemoryCardTest {
         String resource = "file:" + System.getProperty("user.dir") + "src/test/resources/images/blue/blue.jpg";
         Image img = new Image(resource);
         MemoryCard memoryCard = new MemoryCard(2, 2, 2, 2, img, 2,
-            mockGameContext, mockStats, mockMemory, mockConfig.getFixationLength(), true, false);
+            mockGameContext, mockStats, mockMemory, mockConfig.getFixationLength(), true);
         Image image = ((ImagePattern) memoryCard.getImageRectangle().getFill()).getImage();
         assert image.getUrl().contains("blue.jpg");
     }
@@ -67,7 +67,7 @@ class MemoryCardTest {
         String resource = "file:" + System.getProperty("user.dir") + "src/test/resources/images/blue/blue.jpg";
         Image img = new Image(resource);
         MemoryCard memoryCard = new MemoryCard(2, 2, 2, 2, img, 2,
-            mockGameContext, mockStats, mockMemory, mockConfig.getFixationLength(), false, false);
+            mockGameContext, mockStats, mockMemory, mockConfig.getFixationLength(), false);
         Image image = ((ImagePattern) memoryCard.getImageRectangle().getFill()).getImage();
         assert image.getUrl().contains("data/magiccards/images/red-card-game.png");
     }
@@ -77,7 +77,7 @@ class MemoryCardTest {
         String resource = "images/blue/blue.jpg";
         Image img = new Image(resource);
         MemoryCard memoryCard = new MemoryCard(2, 2, 2, 2, img, 2,
-            mockGameContext, mockStats, mockMemory, mockConfig.getFixationLength(), false, false);
+            mockGameContext, mockStats, mockMemory, mockConfig.getFixationLength(), false);
         Image image = ((ImagePattern) memoryCard.getImageRectangle().getFill()).getImage();
         assert image.getUrl().contains("data/magiccards/images/red-card-game.png");
     }

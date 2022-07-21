@@ -38,7 +38,6 @@ public class DotToDot implements GameLifeCycle {
 
     private final DotToDotGameVariant gameVariant;
 
-    private final boolean inReplayMode;
 
     @Getter
     private final ReplayablePseudoRandom randomGenerator;
@@ -65,11 +64,10 @@ public class DotToDot implements GameLifeCycle {
     private List<Integer> listOfFails = new LinkedList<>();
 
 
-    public DotToDot(final IGameContext gameContext, final DotToDotGameVariant gameVariant, final Stats stats, boolean inReplayMode) {
+    public DotToDot(final IGameContext gameContext, final DotToDotGameVariant gameVariant, final Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameVariant = gameVariant;
-        this.inReplayMode = inReplayMode;
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
         this.dotList = new ArrayList<>();
@@ -199,7 +197,7 @@ public class DotToDot implements GameLifeCycle {
             progressIndicator.setLayoutY(y - bigDot.getRadius() - progIndicSize / 2 + 50);
             progressIndicator.setOpacity(0);
 
-            DotEntity dot = new DotEntity(dotShape, stats, progressIndicator, number, gameContext, gameVariant, this, index, inReplayMode);
+            DotEntity dot = new DotEntity(dotShape, stats, progressIndicator, number, gameContext, gameVariant, this, index);
             dotList.add(dot);
 
             if (gameVariant.getLabel().contains("Number")) {

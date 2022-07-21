@@ -26,7 +26,7 @@ public class DrawApplication implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
 
-        DrawBuilder drawBuilder = new DrawBuilder(randomGenerator, false);
+        DrawBuilder drawBuilder = new DrawBuilder(randomGenerator);
         drawBuilder.setColorPicker(new RainbowColorPicker());
 
         final Scene scene = gameContext.getPrimaryScene();
@@ -66,7 +66,7 @@ public class DrawApplication implements GameLifeCycle {
         this.gameContext = gameContext;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
-        DrawBuilder drawBuilder = new DrawBuilder(randomGenerator, true);
+        DrawBuilder drawBuilder = new DrawBuilder(randomGenerator);
         drawBuilder.setColorPicker(new RainbowColorPicker());
 
         final Scene scene = gameContext.getPrimaryScene();

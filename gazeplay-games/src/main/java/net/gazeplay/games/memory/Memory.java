@@ -55,7 +55,6 @@ public class Memory implements GameLifeCycle {
 
     private final Stats stats;
 
-    private final boolean inReplayMode;
 
     private ImageLibrary imageLibrary;
 
@@ -105,7 +104,6 @@ public class Memory implements GameLifeCycle {
         this.nbCorrectCards = 0;
         this.nbWrongCards = 0;
         this.gameContext.startTimeLimiter();
-        this.inReplayMode = false;
 
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
@@ -143,7 +141,6 @@ public class Memory implements GameLifeCycle {
         this.nbCorrectCards = 0;
         this.nbWrongCards = 0;
         this.gameContext.startTimeLimiter();
-        this.inReplayMode = true;
 
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
@@ -271,7 +268,7 @@ public class Memory implements GameLifeCycle {
                 final Image image = images.get(id);
 
                 final MemoryCard card = new MemoryCard(positionX, positionY, cardWidth, cardHeight, image, id, gameContext,
-                    stats, this, fixationlength, isOpen, inReplayMode);
+                    stats, this, fixationlength, isOpen);
 
                 result.add(card);
             }

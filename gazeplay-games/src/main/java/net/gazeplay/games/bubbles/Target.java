@@ -33,7 +33,6 @@ public class Target extends ProgressPortrait {
     private final Bubble gameInstance;
     private final BubblesGameVariant gameVariant;
     private final Stats stats;
-    private final boolean inReplayMode;
 
     private final ImageLibrary imageLibrary;
 
@@ -55,7 +54,7 @@ public class Target extends ProgressPortrait {
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
                   final ImageLibrary imageLibrary, final BubblesGameVariant gameVariant, final Bubble gameInstance,
-                  final ReplayablePseudoRandom randomGenerator, BubbleType type, boolean inReplayMode) {
+                  final ReplayablePseudoRandom randomGenerator, BubbleType type) {
         super(gameContext.getConfiguration().getElementSize());
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
@@ -64,7 +63,6 @@ public class Target extends ProgressPortrait {
         this.type = type;
         this.imageLibrary = imageLibrary;
         this.gameVariant = gameVariant;
-        this.inReplayMode = inReplayMode;
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
 
@@ -201,9 +199,7 @@ public class Target extends ProgressPortrait {
             wait.play();
         }
 
-        if (!inReplayMode) {
-            stats.incrementNumberOfGoalsReached();
-        }
+        stats.incrementNumberOfGoalsReached();
 
         gameContext.updateScore(stats, gameInstance);
 

@@ -48,7 +48,6 @@ public class MemoryCard extends Parent {
 
     final Stats stats;
 
-    private final boolean inReplayMode;
 
     final EventHandler<Event> enterEvent;
 
@@ -61,7 +60,7 @@ public class MemoryCard extends Parent {
 
     public MemoryCard(final double positionX, final double positionY, final double width, final double height,
                       final Image image, final int idc, final IGameContext gameContext, final Stats stats,
-                      final Memory gameInstance, final int fixationlength, final boolean isOpen, final boolean inReplayMode) {
+                      final Memory gameInstance, final int fixationlength, final boolean isOpen) {
         this.isOpen = isOpen;
 
         this.card = new Rectangle(positionX, positionY, width, height);
@@ -81,7 +80,6 @@ public class MemoryCard extends Parent {
 
         this.stats = stats;
 
-        this.inReplayMode = inReplayMode;
 
         this.turned = false;
 
@@ -132,9 +130,7 @@ public class MemoryCard extends Parent {
         gameInstance.incNbCorrectCards();
         log.debug("nbCorrect = {}", gameInstance.getNbCorrectCards());
 
-        if (!inReplayMode) {
-            stats.incrementNumberOfGoalsReached();
-        }
+        stats.incrementNumberOfGoalsReached();
 
         for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
             if (gameInstance.currentRoundDetails.cardList.get(i).turned && gameInstance.currentRoundDetails.cardList.get(i).id == gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned) {

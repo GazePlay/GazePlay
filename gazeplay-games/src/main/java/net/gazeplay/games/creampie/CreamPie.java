@@ -36,7 +36,7 @@ public class CreamPie implements GameLifeCycle {
 
         hand = new Hand();
 
-        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this, false);
+        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this);
         gameContext.getChildren().add(target);
         gameContext.getChildren().add(hand);
     }
@@ -53,7 +53,7 @@ public class CreamPie implements GameLifeCycle {
 
         hand = new Hand();
 
-        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this, true);
+        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this);
     }
 
     @Override

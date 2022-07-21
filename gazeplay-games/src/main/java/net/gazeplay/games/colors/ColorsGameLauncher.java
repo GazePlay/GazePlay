@@ -38,11 +38,11 @@ public class ColorsGameLauncher implements IGameLauncher<Stats, IGameVariant> {
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant, Stats stats) {
-        return new ColorsGame(gameContext, gameStat, gameContext.getTranslator(), false);
+        return new ColorsGame(gameContext, gameStat, gameContext.getTranslator());
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant, Stats stats, double gameSeed) {
-        return new ColorsGame(gameContext, gameStat, gameContext.getTranslator(), true);
+        return new ColorsGame(gameContext, gameStat, gameContext.getTranslator());
     }
 }

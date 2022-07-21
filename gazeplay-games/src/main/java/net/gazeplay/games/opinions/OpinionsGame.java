@@ -27,7 +27,6 @@ public class OpinionsGame implements GameLifeCycle {
     private final Group backgroundLayer;
     private final Group middleLayer;
     private final OpinionsGameStats stats;
-    private final boolean inReplayMode;
 
     private final ImageLibrary backgroundImage;
     private final ImageLibrary thumbImage;
@@ -56,7 +55,6 @@ public class OpinionsGame implements GameLifeCycle {
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
-        this.inReplayMode = false;
 
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
@@ -77,7 +75,6 @@ public class OpinionsGame implements GameLifeCycle {
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
-        this.inReplayMode = true;
 
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
@@ -117,9 +114,7 @@ public class OpinionsGame implements GameLifeCycle {
             }
             background.setImage(current_picture);
             old_picture = current_picture;
-            if (!inReplayMode) {
-                stats.incrementNumberOfGoalsReached();
-            }
+            stats.incrementNumberOfGoalsReached();
         };
 
         if (type.equals(OpinionsGameVariant.OPINIONS)) {

@@ -23,7 +23,6 @@ public class CupsAndBalls implements GameLifeCycle {
 
     private final IGameContext gameContext;
     private final Stats stats;
-    private final boolean inReplayMode;
     private Ball ball;
     private final Cup[] cups;
     private final int nbCups;
@@ -52,7 +51,6 @@ public class CupsAndBalls implements GameLifeCycle {
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
-        this.inReplayMode = false;
     }
 
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups, double gameSeed, String parameter) {
@@ -68,7 +66,6 @@ public class CupsAndBalls implements GameLifeCycle {
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-        this.inReplayMode = true;
     }
 
     public CupsAndBalls(final IGameContext gameContext, final Stats stats, final int nbCups, final int nbExchanges) {
@@ -99,7 +96,7 @@ public class CupsAndBalls implements GameLifeCycle {
             cupRectangle.setY(posCup.getY());
             cupRectangle.setFitWidth(imageWidth);
             cupRectangle.setFitHeight(imageHeight);
-            cups[indexCup] = new Cup(cupRectangle, position, gameContext, stats, this, openCupSpeed, inReplayMode);
+            cups[indexCup] = new Cup(cupRectangle, position, gameContext, stats, this, openCupSpeed);
             if (indexCup == ballInCup) {
                 final long startTime = System.currentTimeMillis();
                 final TargetAOI targetAOI = new TargetAOI(posCup.getX(), posCup.getY() + imageHeight / 2, (int) ((imageWidth + imageHeight) / 3), startTime);

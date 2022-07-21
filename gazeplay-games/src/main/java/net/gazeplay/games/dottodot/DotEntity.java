@@ -28,7 +28,6 @@ public class DotEntity extends Parent {
     private Timeline progressTimeline;
     private StackPane dotShape;
     private final Stats stats;
-    private final boolean inReplayMode;
     private final DotToDotGameVariant gameVariant;
     private DotToDot gameObject;
     private final int index;
@@ -40,7 +39,7 @@ public class DotEntity extends Parent {
 
     public DotEntity(final StackPane dotShape, final Stats stats, final ProgressIndicator progressIndicator,
                      final Text number, final IGameContext gameContext, final DotToDotGameVariant gameVariant,
-                     DotToDot gameInstance, int index, final boolean inReplayMode) {
+                     DotToDot gameInstance, int index) {
         this.gameContext = gameContext;
         this.progressIndicator = progressIndicator;
         this.progressIndicator.setMouseTransparent(true);
@@ -49,7 +48,6 @@ public class DotEntity extends Parent {
         gameObject = gameInstance;
         this.index = index;
         this.gameVariant = gameVariant;
-        this.inReplayMode = inReplayMode;
 
         if (this.index == 1) {
             isFirst = true;
@@ -119,10 +117,8 @@ public class DotEntity extends Parent {
                 ((Circle) circle).setFill(Color.RED);
             });
 
-            if (!inReplayMode) {
-                stats.incrementNumberOfGoalsReached();
-                log.debug("level = {}, nbGoalsReached = {}, fails = {}", gameObject.getLevel(), stats.nbGoalsReached, gameObject.getFails());
-            }
+            stats.incrementNumberOfGoalsReached();
+            log.debug("level = {}, nbGoalsReached = {}, fails = {}", gameObject.getLevel(), stats.nbGoalsReached, gameObject.getFails());
             gameObject.getListOfFails().add(gameObject.getFails());
             gameObject.setFails(0);
 

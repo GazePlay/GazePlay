@@ -33,7 +33,6 @@ public class PictureCard extends Group {
 
     private final double minTime;
     private final IGameContext gameContext;
-    private final boolean inReplayMode;
     private final boolean winner;
 
     private final ImageView imageRectangle;
@@ -57,7 +56,7 @@ public class PictureCard extends Group {
     private int valueProgressIndicator = 500;
 
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, boolean winner,
-                @NonNull String imagePath, @NonNull Stats stats, BeraPreTest gameInstance, boolean inReplayMode) {
+                @NonNull String imagePath, @NonNull Stats stats, BeraPreTest gameInstance) {
         log.info("imagePath = {}", imagePath);
 
         final Configuration config = gameContext.getConfiguration();
@@ -72,7 +71,6 @@ public class PictureCard extends Group {
         this.winner = winner;
         this.stats = stats;
         this.gameInstance = gameInstance;
-        this.inReplayMode = inReplayMode;
         this.selected = false;
         this.alreadySee = false;
 
@@ -185,9 +183,7 @@ public class PictureCard extends Group {
             gameInstance.nbCountError = 0;
             gameInstance.increaseIndexFileImage(true);
 
-            if (!inReplayMode) {
-                stats.incrementNumberOfGoalsReached();
-            }
+            stats.incrementNumberOfGoalsReached();
 
             customInputEventHandlerMouse.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
@@ -210,9 +206,7 @@ public class PictureCard extends Group {
             } else {
                 gameInstance.increaseIndexFileImage(false);
 
-                if (!inReplayMode) {
-                    stats.incrementNumberOfGoalsReached();
-                }
+                stats.incrementNumberOfGoalsReached();
 
                 customInputEventHandlerMouse.ignoreAnyInput = true;
                 progressIndicator.setVisible(false);

@@ -60,7 +60,6 @@ public class Race extends Parent implements GameLifeCycle {
     private final String gameType;
 
     private final Stats stats;
-    private final boolean inReplayMode;
 
     private Point[] endPoints;
 
@@ -82,7 +81,6 @@ public class Race extends Parent implements GameLifeCycle {
         gameType = type;
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
-        this.inReplayMode = false;
 
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         hand = new StackPane();
@@ -103,7 +101,6 @@ public class Race extends Parent implements GameLifeCycle {
         score = 0;
         gameType = type;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-        this.inReplayMode = true;
 
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         hand = new StackPane();
@@ -276,9 +273,7 @@ public class Race extends Parent implements GameLifeCycle {
                     if (!((Target) e.getTarget()).done) {
                         ((Target) e.getTarget()).done = true;
                         enter((Target) e.getTarget());
-                        if (!inReplayMode) {
-                            stats.incrementNumberOfGoalsReached();
-                        }
+                        stats.incrementNumberOfGoalsReached();
                     }
                 }
             }
@@ -482,9 +477,7 @@ public class Race extends Parent implements GameLifeCycle {
         sp.setLayoutY(y);
         sp.centerX = x;
         sp.centerY = y;
-        if (!inReplayMode) {
-            stats.incrementNumberOfGoalsReached();
-        }
+        stats.incrementNumberOfGoalsReached();
         moveCircle(sp);
     }
 

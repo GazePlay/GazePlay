@@ -48,7 +48,6 @@ public class Horses implements GameLifeCycle {
 
     private final IGameContext gameContext;
     private final Stats stats;
-    private final boolean inReplayMode;
     private final int gameVersion;
     private final int nbPlayers;
 
@@ -89,7 +88,6 @@ public class Horses implements GameLifeCycle {
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
         this.gameVersion = gameVersion;
         this.nbPlayers = nbPlayers;
-        this.inReplayMode = false;
         diceContainer = new StackPane();
     }
 
@@ -99,7 +97,6 @@ public class Horses implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
         this.gameVersion = gameVersion;
         this.nbPlayers = nbPlayers;
-        this.inReplayMode = true;
         diceContainer = new StackPane();
     }
 
@@ -321,9 +318,7 @@ public class Horses implements GameLifeCycle {
         rollButton = new ProgressButton();
         rollButton.assignIndicatorUpdatable(event -> {
             roll();
-            if (!inReplayMode) {
-                stats.incrementNumberOfGoalsReached();
-            }
+            stats.incrementNumberOfGoalsReached();
         }, gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);
         rollButton.active();

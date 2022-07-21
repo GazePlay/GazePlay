@@ -43,7 +43,6 @@ class PictureCard extends Group {
     private final double initialPositionY;
 
     private final Stats stats;
-    private final boolean inReplayMode;
     private final String imagePath;
 
     private final ProgressIndicator progressIndicator;
@@ -56,7 +55,7 @@ class PictureCard extends Group {
     private final WhereIsIt gameInstance;
 
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, boolean winner,
-                @NonNull String imagePath, @NonNull Stats stats, WhereIsIt gameInstance, boolean inReplayMode) {
+                @NonNull String imagePath, @NonNull Stats stats, WhereIsIt gameInstance) {
         log.info("imagePath = {}", imagePath);
 
         final Configuration config = gameContext.getConfiguration();
@@ -71,7 +70,6 @@ class PictureCard extends Group {
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameInstance = gameInstance;
-        this.inReplayMode = inReplayMode;
 
         this.imagePath = imagePath;
 
@@ -140,9 +138,7 @@ class PictureCard extends Group {
 
         gameInstance.firstRightCardSelected();
 
-        if (!inReplayMode) {
-            stats.incrementNumberOfGoalsReached();
-        }
+        stats.incrementNumberOfGoalsReached();
 
         customInputEventHandler.ignoreAnyInput = true;
         progressIndicator.setVisible(false);

@@ -32,7 +32,6 @@ public class Blocs implements GameLifeCycle {
     private final boolean colors;
     private final float percents4Win;
     private final Stats stats;
-    private final boolean inReplayMode;
 
     private final int initCount;
 
@@ -71,7 +70,6 @@ public class Blocs implements GameLifeCycle {
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
-        this.inReplayMode = false;
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"), randomGenerator);
 
@@ -89,7 +87,6 @@ public class Blocs implements GameLifeCycle {
         this.percents4Win = percents4Win;
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-        this.inReplayMode = true;
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"), randomGenerator);
 
@@ -236,9 +233,7 @@ public class Blocs implements GameLifeCycle {
 
                     currentRoundDetails.finished = true;
 
-                    if (!inReplayMode) {
-                        stats.incrementNumberOfGoalsReached();
-                    }
+                    stats.incrementNumberOfGoalsReached();
 
                     removeAllBlocs();
 

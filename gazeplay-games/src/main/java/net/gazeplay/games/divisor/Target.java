@@ -35,7 +35,6 @@ import java.util.ArrayList;
 class Target extends Parent {
 
     private final Stats stats;
-    private final boolean inReplayMode;
     private final int difficulty;
     private final int level;
     private Position pos;
@@ -57,7 +56,7 @@ class Target extends Parent {
 
     public Target(final IGameContext gameContext, final Stats stats, final ImageLibrary imgLib, final int level,
                   final long start, final Divisor gameInstance, final Position pos, final boolean isRabbit,
-                  ReplayablePseudoRandom random, boolean inReplayMode) {
+                  ReplayablePseudoRandom random) {
         this.level = level;
         this.difficulty = 3;
         this.gameContext = gameContext;
@@ -71,7 +70,6 @@ class Target extends Parent {
         this.radius = Math.min((dimension.getWidth() / 6) / (level + 1), (dimension.getHeight() / 6) / (level + 1));
         this.timeline = new Timeline();
         this.randomGenerator = random;
-        this.inReplayMode = inReplayMode;
 
         this.circle = new Circle(pos.getX(), pos.getY(), this.radius);
         this.circle.setFill(new ImagePattern(this.imgLib.pickRandomImage(), 0, 0, 1, 1, true));
@@ -132,9 +130,7 @@ class Target extends Parent {
     }
 
     public void enter() {
-        if (!inReplayMode) {
-            stats.incrementNumberOfGoalsReached();
-        }
+        stats.incrementNumberOfGoalsReached();
 
         this.removeEventFilter(MouseEvent.ANY, enterEvent);
         this.removeEventFilter(GazeEvent.ANY, enterEvent);
@@ -209,7 +205,7 @@ class Target extends Parent {
         double tempY = y;
         for (int i = 0; i < 2; i++) {
             final Target target = new Target(gameContext, stats, this.imgLib, level + 1, startTime, gameInstance,
-                new Position(tempX, tempY), isRabbit, randomGenerator, inReplayMode);
+                new Position(tempX, tempY), isRabbit, randomGenerator);
 
             if (tempY + target.radius > (int) dimension.getHeight()) {
                 tempY = (int) dimension.getHeight() - (int) target.radius * 2;

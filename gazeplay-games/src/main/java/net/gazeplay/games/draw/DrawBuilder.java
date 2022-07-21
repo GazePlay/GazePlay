@@ -24,11 +24,9 @@ public class DrawBuilder {
     private int drawLineWidth = 8;
 
     Stats stats;
-    private final boolean inReplayMode;
 
-    public DrawBuilder(ReplayablePseudoRandom randomGenerator, boolean inReplayMode) {
+    public DrawBuilder(ReplayablePseudoRandom randomGenerator) {
         colorPicker = new RandomColorPicker(randomGenerator);
-        this.inReplayMode = inReplayMode;
     }
 
     public Canvas createCanvas(final Scene scene, final double coefficient, Stats stats) {
@@ -92,9 +90,7 @@ public class DrawBuilder {
     }
 
     private void changeColor(GraphicsContext graphicsContext) {
-        if (!inReplayMode) {
-            stats.incrementNumberOfGoalsReached();
-        }
+        stats.incrementNumberOfGoalsReached();
         graphicsContext.setStroke(colorPicker.pickColor());
         graphicsContext.beginPath();
     }

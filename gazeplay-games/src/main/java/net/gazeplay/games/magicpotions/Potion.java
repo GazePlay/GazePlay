@@ -54,7 +54,6 @@ class Potion extends Parent {
 
     private final MagicPotionsStats stats;
 
-    private final boolean inReplayMode;
 
     @Getter
     final EventHandler<Event> enterEvent;
@@ -63,7 +62,7 @@ class Potion extends Parent {
 
     Potion(final double positionX, final double positionY, final double width, final double height, final Image image,
            final Color color, final IGameContext gameContext, final MagicPotionsStats stats, final MagicPotions gameInstance,
-           final int fixationlength, final boolean inReplayMode) {
+           final int fixationlength) {
         final DropShadow shadow = new DropShadow();
         shadow.setColor(Color.BLACK);
         shadow.setWidth(10);
@@ -85,7 +84,6 @@ class Potion extends Parent {
         this.stats = stats;
         this.gameInstance = gameInstance;
         this.fixationLength = fixationlength;
-        this.inReplayMode = inReplayMode;
 
         currentTimeline = new Timeline();
 
@@ -116,9 +114,7 @@ class Potion extends Parent {
         gameInstance.getPotionYellow().removeEventFilter(MouseEvent.ANY,
             gameInstance.getPotionYellow().getEnterEvent());
         gameInstance.getPotionYellow().removeEventFilter(GazeEvent.ANY, gameInstance.getPotionYellow().getEnterEvent());
-        if (!inReplayMode) {
-            stats.incrementNumberOfGoalsReached();
-        }
+        stats.incrementNumberOfGoalsReached();
         currentTimeline.stop();
         currentTimeline = new Timeline();
 

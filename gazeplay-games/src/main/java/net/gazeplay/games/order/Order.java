@@ -27,7 +27,6 @@ import net.gazeplay.commons.utils.stats.Stats;
 public class Order implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Stats stats;
-    private final boolean inReplayMode;
     private int currentNum;
     private final int nbTarget;
     private final ReplayablePseudoRandom randomGenerator;
@@ -45,7 +44,6 @@ public class Order implements GameLifeCycle {
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setCurrentGameSeed(randomGenerator.getSeed());
-        this.inReplayMode = false;
     }
 
     public Order(IGameContext gameContext, int nbTarget, Stats stats, double gameSeed) {
@@ -57,7 +55,6 @@ public class Order implements GameLifeCycle {
         //this.gameContext.startScoreLimiter();
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-        this.inReplayMode = true;
     }
 
     @Override
@@ -84,9 +81,7 @@ public class Order implements GameLifeCycle {
 
         Circle c = new Circle(t.getPos().getX(), t.getPos().getY(), t.getRadius());
         if (correct) {
-            if (!inReplayMode) {
-                stats.incrementNumberOfGoalsReached();
-            }
+            stats.incrementNumberOfGoalsReached();
             c.setFill(new ImagePattern(new Image("data/order/images/success.png"), 0, 0, 1, 1, true));
         } else {
             c.setFill(new ImagePattern(new Image("data/order/images/fail.png"), 0, 0, 1, 1, true));

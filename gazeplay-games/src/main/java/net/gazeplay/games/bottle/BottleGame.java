@@ -28,7 +28,6 @@ public class BottleGame implements GameLifeCycle {
     private final BottleGameStats bottleGameStats;
     private final Dimension2D dimension2D;
     private final Configuration configuration;
-    private final boolean inReplayMode;
 
     private final Group backgroundLayer;
     private final Group foregroundLayer;
@@ -58,7 +57,6 @@ public class BottleGame implements GameLifeCycle {
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
-        this.inReplayMode = false;
 
         this.bottle = new ArrayList<>();
         this.nbBottle = number;
@@ -115,7 +113,6 @@ public class BottleGame implements GameLifeCycle {
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
-        this.inReplayMode = true;
 
         this.bottle = new ArrayList<>();
         this.nbBottle = number;
@@ -308,9 +305,7 @@ public class BottleGame implements GameLifeCycle {
             bottleBreaker(bottle);
             ball.setVisible(false);
             gameContext.getSoundManager().add("data/bottle/sounds/verre.wav");
-            if (!inReplayMode) {
-                bottleGameStats.incrementNumberOfGoalsReached();
-            }
+            bottleGameStats.incrementNumberOfGoalsReached();
             updateScore();
         });
         timeline.play();

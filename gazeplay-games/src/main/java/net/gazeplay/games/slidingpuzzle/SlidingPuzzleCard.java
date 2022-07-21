@@ -70,7 +70,6 @@ class SlidingPuzzleCard extends Parent {
 
     private final Stats stats;
 
-    private final boolean inReplayMode;
 
     /**
      * Use a comma Timeline object so we can stop the current animation to prevent overlapses.
@@ -79,7 +78,7 @@ class SlidingPuzzleCard extends Parent {
 
     SlidingPuzzleCard(final int id, final double positionX, final double positionY, final double width, final double height,
                       final String fileName, final double fixationlength, final IGameContext gameContext, final SlidingPuzzle gameInstance,
-                      final Stats stats, final double kingPosX, final double kingPosY, final boolean inReplayMode) {
+                      final Stats stats, final double kingPosX, final double kingPosY) {
         this.fixationlength = fixationlength;
         this.CardId = id;
         this.card = new Rectangle(positionX, positionY, width, height);
@@ -96,7 +95,6 @@ class SlidingPuzzleCard extends Parent {
         this.isKing = false;
         this.kingPosX = (int) kingPosX;
         this.kingPosY = (int) kingPosY;
-        this.inReplayMode = inReplayMode;
         final EventHandler<Event> enterEvent;
         enterEvent = (id != 9) ? buildEvent() : buildEvent2();
         gameContext.getGazeDeviceManager().addEventFilter(card);
@@ -154,9 +152,7 @@ class SlidingPuzzleCard extends Parent {
     }
 
     private void onGameOver() {
-        if (!inReplayMode) {
-            stats.incrementNumberOfGoalsReached();
-        }
+        stats.incrementNumberOfGoalsReached();
 
         progressIndicator.setOpacity(0);
 
