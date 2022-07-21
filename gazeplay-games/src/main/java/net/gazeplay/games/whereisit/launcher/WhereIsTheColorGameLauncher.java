@@ -6,7 +6,12 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
-import net.gazeplay.commons.utils.stats.*;
+import net.gazeplay.commons.utils.stats.AreaOfInterest;
+import net.gazeplay.commons.utils.stats.CoordinatesTracker;
+import net.gazeplay.commons.utils.stats.LifeCycle;
+import net.gazeplay.commons.utils.stats.RoundsDurationReport;
+import net.gazeplay.commons.utils.stats.SavedStatsInfo;
+import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.whereisit.WhereIsItGameType;
 import net.gazeplay.games.whereisit.WhereIsItStats;
@@ -17,7 +22,7 @@ public class WhereIsTheColorGameLauncher implements IGameLauncher<Stats, Dimensi
 
     @Override
     public Stats createNewStats(Scene scene) {
-        return new WhereIsItStats(scene, WhereIsItGameType.COLOR_NAME.getGameName());
+        return new WhereIsItStats(scene, WhereIsItGameType.COLORS.getGameName());
     }
 
     @Override
@@ -31,21 +36,21 @@ public class WhereIsTheColorGameLauncher implements IGameLauncher<Stats, Dimensi
                                   List<AreaOfInterest> aoiList,
                                   SavedStatsInfo savedStatsInfo
     ) {
-        return new WhereIsItStats(scene, WhereIsItGameType.COLOR_NAME.getGameName(), nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached,
+        return new WhereIsItStats(scene, WhereIsItGameType.COLORS.getGameName(), nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached,
             lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
     }
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats) {
         return new WhereIsIt(
-            gameVariant.getDifficulty().equals("easy") ? WhereIsItGameType.COLOR_NAME_EASY : WhereIsItGameType.COLOR_NAME,
+            gameVariant.getDifficulty().equals("easy") ? WhereIsItGameType.COLORS_EASY : WhereIsItGameType.COLORS,
             gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
         return new WhereIsIt(
-            gameVariant.getDifficulty().equals("easy") ? WhereIsItGameType.COLOR_NAME_EASY : WhereIsItGameType.COLOR_NAME,
+            gameVariant.getDifficulty().equals("easy") ? WhereIsItGameType.COLORS_EASY : WhereIsItGameType.COLORS,
             gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats, gameSeed);
     }
 }

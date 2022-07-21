@@ -6,7 +6,12 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
-import net.gazeplay.commons.utils.stats.*;
+import net.gazeplay.commons.utils.stats.AreaOfInterest;
+import net.gazeplay.commons.utils.stats.CoordinatesTracker;
+import net.gazeplay.commons.utils.stats.LifeCycle;
+import net.gazeplay.commons.utils.stats.RoundsDurationReport;
+import net.gazeplay.commons.utils.stats.SavedStatsInfo;
+import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.whereisit.WhereIsIt;
 import net.gazeplay.games.whereisit.WhereIsItGameType;
 import net.gazeplay.games.whereisit.WhereIsItStats;
@@ -17,12 +22,12 @@ public class WhereIsTheAnimalGameLauncher implements IGameLauncher<Stats, Dimens
 
     @Override
     public Stats createNewStats(Scene scene) {
-        return new WhereIsItStats(scene, WhereIsItGameType.ANIMAL_NAME.getGameName());
+        return new WhereIsItStats(scene, WhereIsItGameType.ANIMALS.getGameName());
     }
 
     @Override
     public Stats createSavedStats(Scene scene,
-                                  int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached,
+                                  int nbGoalsReached, int nbGoalsToReach, int nbUncountedGoalsReached,
                                   LifeCycle lifeCycle,
                                   RoundsDurationReport roundsDurationReport,
                                   List<List<FixationPoint>> fixationSequence,
@@ -31,19 +36,19 @@ public class WhereIsTheAnimalGameLauncher implements IGameLauncher<Stats, Dimens
                                   List<AreaOfInterest> aoiList,
                                   SavedStatsInfo savedStatsInfo
     ) {
-        return new WhereIsItStats(scene, WhereIsItGameType.ANIMAL_NAME.getGameName(), nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached,
+        return new WhereIsItStats(scene, WhereIsItGameType.ANIMALS.getGameName(), nbGoalsReached, nbGoalsToReach, nbUncountedGoalsReached,
             lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
     }
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats) {
         return new WhereIsIt(
-            gameVariant.getDifficulty().equals("DYNAMIC") ? WhereIsItGameType.ANIMAL_NAME_DYNAMIC : WhereIsItGameType.ANIMAL_NAME,
+            gameVariant.getDifficulty().equals("DYNAMIC") ? WhereIsItGameType.ANIMALS_DYNAMIC : WhereIsItGameType.ANIMALS,
             gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
-        return new WhereIsIt(WhereIsItGameType.ANIMAL_NAME, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats, gameSeed);
+        return new WhereIsIt(WhereIsItGameType.ANIMALS, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats, gameSeed);
     }
 }

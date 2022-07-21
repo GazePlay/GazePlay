@@ -530,7 +530,7 @@ public class Stats implements GazeMotionListener {
                         }
                     }
                 }
-                if (config.isScreenshotEnable() && e.getSource() == gameContextScene.getRoot()){
+                if (config.isMultipleScreenshotsEnabled() && e.getSource() == gameContextScene.getRoot()){
                     takeScreenshotWithThread();
                 }
             };
@@ -569,7 +569,7 @@ public class Stats implements GazeMotionListener {
                         }
                     }
                 }
-                if (config.isScreenshotEnable() && e.getSource() == gameContextScene.getRoot()){
+                if (config.isMultipleScreenshotsEnabled() && e.getSource() == gameContextScene.getRoot()){
                     takeScreenshotWithThread();
                 }
             };

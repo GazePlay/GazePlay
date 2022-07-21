@@ -190,8 +190,8 @@ public class WhereIsIt implements GameLifeCycle {
         targetAOI.setTimeEnded(timeStarted + gameContext.getConfiguration().getQuestionLength());
         targetAOIList.add(targetAOI);
 
-        final List<Rectangle> pictogramesList = new ArrayList<>(20); // storage of actual Pictogramm nodes in order to delete
-        
+        final List<Rectangle> pictogramsList = new ArrayList<>(20); // storage of actual Pictogramm nodes in order to delete
+
         if (listOfPictos != null && !listOfPictos.isEmpty() && listOfPictos.size() <= NBMAXPICTO) {
             final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
             final double screenWidth = screenDimension.getWidth();
@@ -326,7 +326,7 @@ public class WhereIsIt implements GameLifeCycle {
             final File imagesDirectory = new File(config.getWhereIsItDir() + "/images/");
             directoryName = imagesDirectory.getPath();
             directoriesCount = WhereIsItVaildator.getNumberOfValidDirectories(config.getWhereIsItDir(), imagesFolders);
-        } else if (this.gameType == ANIMAL_NAME_DYNAMIC) {
+        } else if (this.gameType == ANIMALS_DYNAMIC) {
             final String resourcesDirectory = "data/" + this.gameType.getResourcesDirectoryName();
             directoryName = resourcesDirectory;
 
@@ -485,7 +485,7 @@ public class WhereIsIt implements GameLifeCycle {
                     posX = 0;
                 }
             }
-        } else if (this.gameType == ANIMAL_NAME_DYNAMIC) {
+        } else if (this.gameType == ANIMALS_DYNAMIC) {
             int index = random.nextInt(resourcesFolders.size());
             final String folder = resourcesFolders.remove((index) % directoriesCount);
 
@@ -614,9 +614,9 @@ public class WhereIsIt implements GameLifeCycle {
             return "";
         }
 
-        if (!(language.equals("fra") || language.equals("eng") || language.equals("chn"))) {
-            // sound is only for English, French and Chinese
-            // erase when translation is complete
+        if (!(language.equals("fra") || language.equals("eng") || language.equals("chn")) ||
+            gameType == SHAPES || gameType == SHAPES_EASY) {
+            // sound is only for English, French and Chinese erase when translation is complete
             return null;
         }
 

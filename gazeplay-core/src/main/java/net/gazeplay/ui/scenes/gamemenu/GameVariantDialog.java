@@ -154,7 +154,8 @@ public class GameVariantDialog extends Stage {
                 choicePanes.get(0).getChildren().add(button);
             }
 
-            if ((gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
+            if ((gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
                 gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
                 gameSpec.getGameSummary().getNameCode().equals("bottle") ||
@@ -164,7 +165,8 @@ public class GameVariantDialog extends Stage {
                 (group.getToggles().size() < 2)
             ) {
                 RadioButton[] categories;
-                if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) {
+                if ((gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) ||
+                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape")) {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("NormalM"));
                     categories[1] = new RadioButton(translator.translate("Easy"));

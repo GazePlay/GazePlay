@@ -68,6 +68,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_VIDEO_RECORDING_ENABLED = "VIDEO_RECORDING_ENABLED";
     private static final String PROPERTY_NAME_FIXATION_SEQUENCE_DISABLED = "FIXATION_SEQUENCE_DISABLED";
     private static final String PROPERTY_NAME_DATA_COLLECT_AUTHORIZED = "DATA_COLLECT_AUTHORIZED";
+    private static final String PROPERTY_NAME_MULTIPLE_SCREENSHOTS_ENABLED = "MULTIPLE_SCREENSHOTS_ENABLED";
     /* In game settings */
     private static final String PROPERTY_NAME_MUSIC_VOLUME = "MUSIC_VOLUME";
     private static final String PROPERTY_NAME_EFFECTS_VOLUME = "EFFECTS_VOLUME";
@@ -124,6 +125,7 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_VIDEO_RECORDING_ENABLED = false;
     private static final boolean DEFAULT_VALUE_FIXATION_SEQUENCE_DISABLED = false;
     private static final boolean DEFAULT_VALUE_DATA_COLLECT_AUTHORIZED = true;
+    private static final boolean DEFAULT_VALUE_MULTIPLE_SCREENSHOTS_ENABLED = false;
     /* In game settings */
     public static final String DEFAULT_VALUE_BACKGROUND_MUSIC = "songidea(copycat)_0.mp3";
     public static final double DEFAULT_VALUE_MUSIC_VOLUME = 0.25d;
@@ -217,6 +219,8 @@ public class Configuration {
     private final BooleanProperty videoRecordingEnabledProperty;
     @Getter
     private final BooleanProperty dataCollectAuthorizedProperty;
+    @Getter
+    private final BooleanProperty multipleScreenshotsEnabledProperty;
     /* In game settings */
     @Getter
     private final DoubleProperty musicVolumeProperty;
@@ -253,9 +257,6 @@ public class Configuration {
     @Getter
     @Setter
     private boolean mouseFree = false;
-
-    @Getter
-    private final BooleanProperty screenshot;
 
     private final File configFile;
     private final ApplicationConfig applicationConfig;
@@ -314,6 +315,7 @@ public class Configuration {
         fixationSequenceDisabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_FIXATION_SEQUENCE_DISABLED, DEFAULT_VALUE_FIXATION_SEQUENCE_DISABLED, propertyChangeListener);
         videoRecordingEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_VIDEO_RECORDING_ENABLED, DEFAULT_VALUE_VIDEO_RECORDING_ENABLED, propertyChangeListener);
         dataCollectAuthorizedProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_DATA_COLLECT_AUTHORIZED, DEFAULT_VALUE_DATA_COLLECT_AUTHORIZED, propertyChangeListener);
+        multipleScreenshotsEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_MULTIPLE_SCREENSHOTS_ENABLED, DEFAULT_VALUE_MULTIPLE_SCREENSHOTS_ENABLED, propertyChangeListener);
 
         /* In game settings */
         musicVolumeProperty = new ApplicationConfigBackedDoubleProperty(applicationConfig, PROPERTY_NAME_MUSIC_VOLUME, DEFAULT_VALUE_MUSIC_VOLUME, propertyChangeListener);
@@ -339,8 +341,6 @@ public class Configuration {
         }
         musicVolumeProperty.addListener(new RatioChangeListener(musicVolumeProperty));
         effectsVolumeProperty.addListener(new RatioChangeListener(effectsVolumeProperty));
-
-        screenshot = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_SCREENSHOT, DEFAULT_VALUE_SCREENSHOT, propertyChangeListener);
     }
 
     private void saveConfig() throws IOException {
@@ -525,6 +525,10 @@ public class Configuration {
         return dataCollectAuthorizedProperty.getValue();
     }
 
+    public Boolean isMultipleScreenshotsEnabled() {
+        return multipleScreenshotsEnabledProperty.getValue();
+    }
+
     /* In game settings */
 
     public Double getMusicVolume() {
@@ -578,7 +582,6 @@ public class Configuration {
     }
 
     /* SETTERS */
-
 
     /* Language settings */
 
@@ -716,9 +719,5 @@ public class Configuration {
 
     public void setColorsDefaultImage(final String colorsDefaultImage) {
         colorsDefaultImageProperty.setValue(colorsDefaultImage);
-    }
-    
-    public Boolean isScreenshotEnable(){
-        return screenshot.getValue();
     }
 }

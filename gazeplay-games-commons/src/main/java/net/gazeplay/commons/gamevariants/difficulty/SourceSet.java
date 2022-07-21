@@ -22,14 +22,12 @@ public class SourceSet {
     private final JsonObject difficulties;
 
     public SourceSet(String resourceFile) throws FileNotFoundException {
-        JsonParser parser = new JsonParser();
-
         try (
             InputStream is = getClass().getClassLoader().getResourceAsStream(resourceFile);
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))
         ) {
             String contents = reader.lines().collect(Collectors.joining());
-            difficulties = (JsonObject) parser.parse(contents);
+            difficulties = (JsonObject) JsonParser.parseString(contents);
         } catch (NullPointerException | IOException e) {
             throw new FileNotFoundException(resourceFile);
         }

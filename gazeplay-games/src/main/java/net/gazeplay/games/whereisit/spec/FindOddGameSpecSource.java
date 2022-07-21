@@ -4,7 +4,7 @@ import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
-import net.gazeplay.games.whereisit.FindOddGameVariantGenerator;
+import net.gazeplay.games.whereisit.gamevariantgenerator.FindOddGameVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.FindOddGameLauncher;
 
 public class FindOddGameSpecSource implements GameSpecSource {
