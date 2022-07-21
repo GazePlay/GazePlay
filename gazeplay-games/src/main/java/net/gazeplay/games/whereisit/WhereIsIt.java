@@ -44,7 +44,6 @@ import static net.gazeplay.games.whereisit.WhereIsItGameType.*;
  */
 @Slf4j
 public class WhereIsIt implements GameLifeCycle {
-
     private static final int NBMAXPICTO = 10;
     private static final double MAXSIZEPICTO = 250;
 
@@ -149,7 +148,7 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
 
-        if(this.gameType== SOUNDS || this.gameType== SOUNDS_ANIMAL){
+        if (this.gameType == SOUNDS || this.gameType == SOUNDS_ANIMAL) {
             final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
             backgroundMusicManager.pause();
         }
@@ -174,7 +173,6 @@ public class WhereIsIt implements GameLifeCycle {
         questionText.setId(color);
 
         final Dimension2D gamePaneDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
         final double positionX = gamePaneDimension2D.getWidth() / 2 - questionText.getBoundsInParent().getWidth() * 2;
         final double positionY = gamePaneDimension2D.getHeight() / 2 - questionText.getBoundsInParent().getHeight() / 2;
 
@@ -190,7 +188,7 @@ public class WhereIsIt implements GameLifeCycle {
         targetAOI.setTimeEnded(timeStarted + gameContext.getConfiguration().getQuestionLength());
         targetAOIList.add(targetAOI);
 
-        final List<Rectangle> pictogramsList = new ArrayList<>(20); // storage of actual Pictogramm nodes in order to delete
+        final List<Rectangle> pictogramsList = new ArrayList<>(20); // storage of actual Pictogram nodes in order to delete
 
         if (listOfPictos != null && !listOfPictos.isEmpty() && listOfPictos.size() <= NBMAXPICTO) {
             final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
@@ -199,11 +197,9 @@ public class WhereIsIt implements GameLifeCycle {
             final double nbPicto = listOfPictos.size();
 
             double pictoSize = screenWidth / (nbPicto + 1);
-
             log.debug("screenWidth/(nbPicto) : {}", pictoSize);
 
             pictoSize = Math.min(pictoSize, MAXSIZEPICTO);
-
             log.debug("Picto Size: {}", pictoSize);
 
             int i = 0;
@@ -233,7 +229,6 @@ public class WhereIsIt implements GameLifeCycle {
 
         fullAnimation.setOnFinished(actionEvent -> {
             // gameContext.getChildren().remove(questionText);
-
             gameContext.getChildren().removeAll(pictogramsList);
 
             //log.debug("Adding {} pictures", currentRoundDetails.getPictureCardList().size());
@@ -338,7 +333,6 @@ public class WhereIsIt implements GameLifeCycle {
             final String imagesDirectoryLvl5 = resourcesDirectory + "/images/lvl5/";
 
             String[] lvlDirectories = {imagesDirectoryLvl1, imagesDirectoryLvl2, imagesDirectoryLvl3, imagesDirectoryLvl4, imagesDirectoryLvl5};
-
             Set<String> tempWinnerFolders = ResourceFileManager.getResourceFolders(winnerImagesDirectory);
 
             for (int i = 1; i < lvlDirectories.length + 1; i++) {
@@ -346,8 +340,8 @@ public class WhereIsIt implements GameLifeCycle {
                     resourcesFolders.addAll(ResourceFileManager.getResourceFolders(lvlDirectories[i - 1]));
                 }
             }
-            winnerFolders.addAll(tempWinnerFolders);
 
+            winnerFolders.addAll(tempWinnerFolders);
             directoriesCount = resourcesFolders.size();
         } else {
             final String resourcesDirectory = "data/" + this.gameType.getResourcesDirectoryName();
@@ -376,7 +370,6 @@ public class WhereIsIt implements GameLifeCycle {
             }
 
             resourcesFolders.addAll(tempResourcesFolders);
-
             directoriesCount = resourcesFolders.size();
         }
 
@@ -416,7 +409,6 @@ public class WhereIsIt implements GameLifeCycle {
                 }
 
                 final int numFile = random.nextInt(files.size());
-
                 final String randomImageFile = (String) files.toArray()[numFile];
 
                 if (winnerImageIndexAmongDisplayedImages == i) {
@@ -448,7 +440,6 @@ public class WhereIsIt implements GameLifeCycle {
                 int index = random.nextInt(imagesFolders.size());
                 final File folder = imagesFolders.remove((index) % directoriesCount);
                 final File[] files = getFiles(folder);
-
                 List<File> validImageFiles = new ArrayList<>();
 
                 for (File file : files) {
@@ -563,8 +554,7 @@ public class WhereIsIt implements GameLifeCycle {
                 }
             }
         }
-        return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath, question,
-            pictograms);
+        return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath, question, pictograms);
     }
 
     /**
@@ -614,8 +604,7 @@ public class WhereIsIt implements GameLifeCycle {
             return "";
         }
 
-        if (!(language.equals("fra") || language.equals("eng") || language.equals("chn")) ||
-            gameType == SHAPES || gameType == SHAPES_EASY) {
+        if (!(language.equals("fra") || language.equals("eng") || language.equals("chn"))) {
             // sound is only for English, French and Chinese erase when translation is complete
             return null;
         }
@@ -629,8 +618,8 @@ public class WhereIsIt implements GameLifeCycle {
             voice = "w";
         }
 
-        if (this.gameType==SOUNDS || this.gameType==SOUNDS_ANIMAL){
-            return "data/" + this.gameType.getResourcesDirectoryName() + "/sounds/" +  folder + ".mp3";
+        if (this.gameType == SOUNDS || this.gameType == SOUNDS_ANIMAL) {
+            return "data/" + this.gameType.getResourcesDirectoryName() + "/sounds/" + folder + ".mp3";
         }
         return "data/" + this.gameType.getResourcesDirectoryName() + "/sounds/" + language + "/" + folder + "." + voice
             + "." + language + ".mp3";
@@ -650,7 +639,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         final Multilinguism localMultilinguism = MultilinguismFactory.getForResource(gameType.getLanguageResourceLocation());
 
-        if(this.gameType== SOUNDS || this.gameType==SOUNDS_ANIMAL){
+        if (this.gameType == SOUNDS || this.gameType == SOUNDS_ANIMAL) {
             return localMultilinguism.getTranslation("listen", language);
         }
         return localMultilinguism.getTranslation(folder, language);
@@ -708,11 +697,7 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     public int factorial(int n) {
-        if (n == 0) {
-            return 1;
-        } else {
-            return (n * factorial(n - 1));
-        }
+        return n == 0 ? 1 : (n * factorial(n - 1));
     }
 
     public float compute(int n, int k) {
