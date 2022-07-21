@@ -111,7 +111,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         }
         else {
             root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
                 + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
         }
      }
