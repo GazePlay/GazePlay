@@ -186,7 +186,13 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                     }
                 });
 
-                levelsInfo.setTextFill(Color.WHITE);
+                if(config.isBackgroundDark())
+                {
+                    levelsInfo.setTextFill(Color.WHITE);
+                }
+                else {
+                    levelsInfo.setTextFill(Color.BLACK);
+                }
                 levelsInfo.getStylesheets().add("data/common/radio.css");
 
                 levelsInfo.setOnAction(event -> {
@@ -210,7 +216,14 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                     }
                 });
 
-                chi2Info.setTextFill(Color.WHITE);
+                if(config.isBackgroundDark())
+                {
+                    chi2Info.setTextFill(Color.WHITE);
+                }
+                else {
+                    chi2Info.setTextFill(Color.BLACK);
+                }
+
                 chi2Info.getStylesheets().add("data/common/radio.css");
 
                 chi2Info.setOnAction(event -> {
