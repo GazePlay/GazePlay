@@ -63,10 +63,10 @@ class StatDisplayUtilsTest {
 
     @BeforeEach
     void setup() {
-        initMocks();
+        openMocks();
     }
 
-    void initMocks() {
+    void openMocks() {
         MockitoAnnotations.openMocks(this);
 
         when(gazePlay.getCurrentScreenDimensionSupplier()).thenReturn(screenDimensionSupplier);

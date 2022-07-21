@@ -28,7 +28,7 @@ class ConfigurationButtonFactoryTest {
 
     @BeforeEach
     void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(gazePlay.getCurrentScreenDimensionSupplier()).thenReturn(screenDimensionSupplier);
         when(screenDimensionSupplier.get()).thenReturn(new Dimension2D(1024, 768));
     }

@@ -96,7 +96,7 @@ class GameContextTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         new MockUp<ActiveConfigurationContext>() {
             @mockit.Mock
             public Configuration getInstance() {

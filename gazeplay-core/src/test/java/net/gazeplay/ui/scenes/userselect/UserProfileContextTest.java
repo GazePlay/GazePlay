@@ -105,7 +105,7 @@ class UserProfileContextTest {
 
     @BeforeEach
     void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(() -> screenDimension);
         when(mockGazePlay.getPrimaryStage()).thenReturn(mockStage);
         when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);

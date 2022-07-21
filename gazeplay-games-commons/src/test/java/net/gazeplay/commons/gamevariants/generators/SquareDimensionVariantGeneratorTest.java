@@ -26,7 +26,7 @@ class SquareDimensionVariantGeneratorTest {
 
     @BeforeEach
     void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         // This simply returns whatever we pass in
         when(translator.translate(anyString())).thenAnswer((Answer<String>) invocation -> {

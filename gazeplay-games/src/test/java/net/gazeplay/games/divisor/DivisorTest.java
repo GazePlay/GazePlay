@@ -61,7 +61,7 @@ class DivisorTest {
 
     @BeforeEach
     void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockGameContext.getConfiguration()).thenReturn(mockConfiguration);
         when(mockGameContext.getGamePanelDimensionProvider()).thenReturn(mockProvider);
         when(mockGameContext.getChildren()).thenReturn(children);

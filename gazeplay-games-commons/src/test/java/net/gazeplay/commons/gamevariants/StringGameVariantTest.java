@@ -22,7 +22,7 @@ class StringGameVariantTest {
 
     @BeforeEach
     void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(translator.translate(anyString())).thenReturn("translation");
     }
 

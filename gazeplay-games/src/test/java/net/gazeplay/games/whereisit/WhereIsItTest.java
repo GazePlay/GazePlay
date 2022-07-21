@@ -37,8 +37,8 @@ class WhereIsItTest {
     private static final String FILESEPARATOR = File.separator;
 
     @BeforeEach
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
+    public void openMocks() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

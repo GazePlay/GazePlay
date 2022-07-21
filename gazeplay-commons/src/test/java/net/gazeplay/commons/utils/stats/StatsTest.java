@@ -41,11 +41,11 @@ class StatsTest {
 
     @BeforeEach
     void setUp() {
-        initMocks();
+        openMocks();
         stats = new Stats(mockScene, "testGame");
     }
 
-    void initMocks() {
+    void openMocks() {
         MockitoAnnotations.openMocks(this);
         when(mockScene.getWidth()).thenReturn(1080d);
         when(mockScene.getHeight()).thenReturn(1920d);

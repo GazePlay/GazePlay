@@ -57,7 +57,7 @@ class BackgroundMusicManagerTest {
 
     @BeforeEach
     void setup() {
-        initMocks();
+        openMocks();
         final String uri = new File(localDataFolder + "song.mp3").toURI().toString();
 
         musicManagerSpy.getAudioFromFolder(localDataFolder);
@@ -65,8 +65,8 @@ class BackgroundMusicManagerTest {
         previousVolume = musicManagerSpy.getCurrentMusic().getVolume();
     }
 
-    void initMocks() {
-        MockitoAnnotations.initMocks(this);
+    void openMocks() {
+        MockitoAnnotations.openMocks(this);
 
         musicManagerSpy = spy(new BackgroundMusicManager());
 
