@@ -26,6 +26,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 @Slf4j
@@ -56,6 +57,14 @@ public class GazePlay {
     @Autowired
     private ApplicationContext applicationContext;
 
+    HomeMenuScreen homeMenuScreen;
+    ConfigurationContext configurationContext;
+    UserProfileContext userProfileScreen;
+
+    Boolean loadedHomePage = false;
+    Boolean loadedSettingsPage = false;
+    Boolean loadedUserPage = false;
+
     public GazePlay() {
     }
 
@@ -64,7 +73,7 @@ public class GazePlay {
     }
 
     public void onReturnToMenu() {
-        HomeMenuScreen homeMenuScreen = applicationContext.getBean(HomeMenuScreen.class);
+        this.loadHomePage();
         homeMenuScreen.setUpOnStage(primaryScene);
         BackgroundMusicManager.getInstance().onEndGame();
 
@@ -95,8 +104,8 @@ public class GazePlay {
     }
 
     public void onDisplayConfigurationManagement() {
-        ConfigurationContext configurationContext = applicationContext.getBean(ConfigurationContext.class);
-        configurationContext.resetPane(this);
+        this.loadSettingsPage();
+        //configurationContext.resetPane(this);
         configurationContext.setUpOnStage(primaryScene);
     }
 
@@ -111,7 +120,7 @@ public class GazePlay {
 
         BackgroundMusicManager.onConfigurationChanged();
 
-        UserProfileContext userProfileScreen = applicationContext.getBean(UserProfileContext.class);
+        this.loadUserPage();
         userProfileScreen.setUpOnStage(primaryScene);
         primaryStage.show();
     }
@@ -133,4 +142,24 @@ public class GazePlay {
         return primaryStage.fullScreenProperty();
     }
 
+    public void loadHomePage(){
+        if (!this.loadedHomePage){
+            this.loadedHomePage = true;
+            homeMenuScreen = applicationContext.getBean(HomeMenuScreen.class);
+        }
+    }
+
+    public void loadSettingsPage(){
+        if (!this.loadedSettingsPage){
+            this.loadedSettingsPage = true;
+            configurationContext = applicationContext.getBean(ConfigurationContext.class);
+        }
+    }
+
+    public void loadUserPage(){
+        if (!this.loadedUserPage){
+            this.loadedUserPage = true;
+            userProfileScreen = applicationContext.getBean(UserProfileContext.class);
+        }
+    }
 }
