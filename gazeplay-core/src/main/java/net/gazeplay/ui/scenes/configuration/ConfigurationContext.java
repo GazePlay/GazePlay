@@ -427,6 +427,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addSubToGrid(grid, currentFormRow, label, input);
         }
+        {
+            I18NText label = new I18NText(translator, "EnableMultipleScreenshots", COLON);
+
+            CheckBox input = buildCheckBox(config.getScreenshot());
+
+            addSubToGrid(grid, currentFormRow, label, input);
+        }
 
         return grid;
     }

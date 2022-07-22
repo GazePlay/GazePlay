@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
+public
 class GameSizing {
     public final double width;
     public final double height;

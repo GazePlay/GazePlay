@@ -74,6 +74,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_COLUMNAR_IMAGES_ENABLED = "COLUMNAR_IMAGES_ENABLED";
     private static final String PROPERTY_NAME_SOUND_ENABLED = "SOUND_ENABLED";
     private static final String PROPERTY_NAME_FEEDBACK = "FEEDBACK";
+    private static final String PROPERTY_NAME_SCREENSHOT = "SCREENSHOT";
 
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.tobii.toString();
@@ -116,6 +117,7 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_COLUMNAR_IMAGES_ENABLED = false;
     private static final boolean DEFAULT_VALUE_SOUND_ENABLED = true;
     private static final String DEFAULT_VALUE_FEEDBACK = Feedback.standard.toString();
+    private static final boolean DEFAULT_VALUE_SCREENSHOT = false;
 
     /*
     source : "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
@@ -272,6 +274,9 @@ public class Configuration {
     @Getter
     private final StringProperty feedbackProperty;
 
+    @Getter
+    private final BooleanProperty screenshot;
+
     private final File configFile;
 
     private final ApplicationConfig applicationConfig;
@@ -356,6 +361,7 @@ public class Configuration {
         soundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_SOUND_ENABLED, DEFAULT_VALUE_SOUND_ENABLED, propertyChangeListener);
         feedbackProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FEEDBACK, DEFAULT_VALUE_FEEDBACK, propertyChangeListener);
 
+        screenshot = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_SCREENSHOT, DEFAULT_VALUE_SCREENSHOT, propertyChangeListener);
     }
 
     private void saveConfig() throws IOException {
@@ -533,6 +539,10 @@ public class Configuration {
 
     public Integer getElementSize() {
         return elementSizeProperty.getValue();
+    }
+
+    public Boolean isScreenshotEnable(){
+        return screenshot.getValue();
     }
 
     public Integer getQuestionTime() {

@@ -109,7 +109,7 @@ subprojects {
         testImplementation "org.mockito:mockito-core:3.12.+"
     }
 
-    sourceCompatibility = '13'
+    sourceCompatibility = '17'
     targetCompatibility = '17'
 
     publishing {
@@ -284,7 +284,28 @@ distributions {
         }
     }
 
+    arm {
+        setDistributionBaseName "${project.name}-arm"
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+            from("build/bin/gazeplay-arm.sh") {
+                into 'bin'
+            }
+            from("build/bin/gazeplay-bera-arm.sh") {
+                into 'bin'
+            }
+            from("build/bin/gazeplay-afsr-arm.sh") {
+                into 'bin'
+            }
+            from("build/jre/arm") {
+                into 'lib/jre'
+            }
+        }
+    }
+
     macos {
+        setDistributionBaseName "${project.name}-macos"
         contents {
             with distributions.main.contents
             from("build/reports")
@@ -305,15 +326,17 @@ distributions {
 }
 
 task('downloadAndExtractLinuxDependecies').dependsOn('downloadAndExtractLinuxJREwithLibavPlugin', 'downloadAndExtractTobiiDriversForLinux')
+task('downloadAndExtractARMDependecies').dependsOn('downloadAndExtractARMJREwithLibavPlugin', 'downloadAndExtractTobiiDriversForLinux')
 
 windowsDistZip.dependsOn(downloadAndExtractWindowsJRE)
 windowsx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
-windowsAfsrDistZip.dependsOn(downloadAndExtractWindowsJRE)
-windowsAfsrx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
 windowsBeraDistZip.dependsOn(downloadAndExtractWindowsJRE)
 windowsBerax32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
+windowsAfsrDistZip.dependsOn(downloadAndExtractWindowsJRE)
+windowsAfsrx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
 linuxDistTar.dependsOn(downloadAndExtractLinuxDependecies)
 macosDistTar.dependsOn(downloadAndExtractMacosJRE)
+armDistTar.dependsOn(downloadAndExtractARMDependecies)
 
 tasks.withType(Tar){
     compression = Compression.GZIP
