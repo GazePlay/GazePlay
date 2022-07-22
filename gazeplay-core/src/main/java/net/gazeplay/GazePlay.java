@@ -96,11 +96,6 @@ public class GazePlay {
         configurationContext.setUpOnStage(primaryScene);
     }
 
-    public void onDisplayConfigurationManagementHomebutton() {
-        ConfigurationContext configurationContext = applicationContext.getBean(ConfigurationContext.class);
-        configurationContext.setUpOnStage(primaryScene);
-    }
-
     public void goToUserPage() {
         ActiveConfigurationContext.switchToDefaultUser();
 
@@ -140,7 +135,14 @@ public class GazePlay {
             homeMenuScreen = applicationContext.getBean(HomeMenuScreen.class);
         }
 
-        homeMenuScreen.gazeplayHomeMenuScreen(this, gamesLocator);
+        String gazeplayType = GazePlayArgs.returnArgs();
+
+        if (gazeplayType.equals("afsrGazeplay")) {
+            homeMenuScreen.afsrGazeplayHomeMenuScreen(this, gamesLocator);
+        } else {
+            homeMenuScreen.gazeplayHomeMenuScreen(this, gamesLocator);
+        }
+
     }
 
     public void loadSettingsPage() {
