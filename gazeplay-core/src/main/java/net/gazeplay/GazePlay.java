@@ -26,7 +26,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
 import java.util.function.Supplier;
 
 @Slf4j
@@ -74,6 +73,7 @@ public class GazePlay {
     public void onReturnToMenu() {
         this.loadHomePage();
         homeMenuScreen.setUpOnStage(primaryScene);
+
         BackgroundMusicManager.getInstance().onEndGame();
     }
 
@@ -134,15 +134,17 @@ public class GazePlay {
         return primaryStage.fullScreenProperty();
     }
 
-    public void loadHomePage(){
-        if (!this.loadedHomePage){
+    public void loadHomePage() {
+        if (!this.loadedHomePage) {
             this.loadedHomePage = true;
             homeMenuScreen = applicationContext.getBean(HomeMenuScreen.class);
         }
+
+        homeMenuScreen.gazeplayHomeMenuScreen(this, gamesLocator);
     }
 
-    public void loadSettingsPage(){
-        if (!this.loadedSettingsPage){
+    public void loadSettingsPage() {
+        if (!this.loadedSettingsPage) {
             this.loadedSettingsPage = true;
             configurationContext = applicationContext.getBean(ConfigurationContext.class);
         }

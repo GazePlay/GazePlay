@@ -38,12 +38,10 @@ public class GamesStatisticsPane extends GridPane {
         setHgap(30);
         setVgap(10);
 
-
         //setAllColumnsConstraints();
-        if(darkMode) {
+        if (darkMode) {
             setAllLabelsStyleDark();
-        }
-        else{
+        } else {
             setAllLabelsStyleLight();
         }
 
@@ -73,15 +71,15 @@ public class GamesStatisticsPane extends GridPane {
         }
     }
 
-    private void setAllLabelsStyleDark(){
+    private void setAllLabelsStyleDark() {
         final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;";
         this.setStyle("-fx-background-color: black");
         for (Node node : this.getChildren()) {
             node.setStyle(labelStyle);
         }
     }
-    public void setAllLabelsStyleLight()
-    {
+
+    public void setAllLabelsStyleLight() {
         final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: black;";
         this.setStyle("-fx-background-color: #fffaf0");
 
