@@ -63,7 +63,6 @@ public class GazePlay {
 
     Boolean loadedHomePage = false;
     Boolean loadedSettingsPage = false;
-    Boolean loadedUserPage = false;
 
     public GazePlay() {
     }
@@ -108,7 +107,7 @@ public class GazePlay {
 
         BackgroundMusicManager.onConfigurationChanged();
 
-        this.loadUserPage();
+        userProfileScreen = applicationContext.getBean(UserProfileContext.class);
         userProfileScreen.setUpOnStage(primaryScene);
         primaryStage.show();
     }
@@ -141,13 +140,6 @@ public class GazePlay {
         if (!this.loadedSettingsPage){
             this.loadedSettingsPage = true;
             configurationContext = applicationContext.getBean(ConfigurationContext.class);
-        }
-    }
-
-    public void loadUserPage(){
-        if (!this.loadedUserPage){
-            this.loadedUserPage = true;
-            userProfileScreen = applicationContext.getBean(UserProfileContext.class);
         }
     }
 }
