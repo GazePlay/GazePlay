@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SourceSet {
-    private final JsonObject difficulties;
+    private final JsonObject variants;
 
     public SourceSet(String resourceFile) throws FileNotFoundException {
         try (
@@ -26,16 +26,16 @@ public class SourceSet {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))
         ) {
             String contents = reader.lines().collect(Collectors.joining());
-            difficulties = (JsonObject) JsonParser.parseString(contents);
+            variants = (JsonObject) JsonParser.parseString(contents);
         } catch (NullPointerException | IOException e) {
             throw new FileNotFoundException(resourceFile);
         }
     }
 
     public Set<String> getResources(String variant) {
-        if (difficulties.has(variant)) {
+        if (variants.has(variant)) {
             Type setType = new TypeToken<Set<String>>() {}.getType();
-            JsonElement element = difficulties.get(variant);
+            JsonElement element = variants.get(variant);
             return new Gson().fromJson(element, setType);
         } else {
             return Collections.emptySet();

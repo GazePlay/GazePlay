@@ -1,7 +1,5 @@
 package net.gazeplay.games.whereisit;
 
-//It is repeated always, it works like a charm :)
-
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Dimension2D;
@@ -346,24 +344,24 @@ public class WhereIsIt implements GameLifeCycle {
             final String imagesDirectory = resourcesDirectory + "/images/";
             directoryName = imagesDirectory;
 
-            // Here we filter out any unwanted resource folders, based on the difficulty JSON file
-            Set<String> difficultySet;
+            // Here we filter out any unwanted resource folders, based on the variants JSON file
+            Set<String> variantSet;
             try {
                 SourceSet sourceSet = new SourceSet(resourcesDirectory + "/variants.json");
-                difficultySet = (sourceSet.getResources(this.gameType.getVariant()));
+                variantSet = (sourceSet.getResources(this.gameType.getVariant()));
             } catch (FileNotFoundException fe) {
                 log.info("No difficulty file found; Reading from all directories");
-                difficultySet = Collections.emptySet();
+                variantSet = Collections.emptySet();
             }
 
             Set<String> tempResourcesFolders = ResourceFileManager.getResourceFolders(imagesDirectory);
 
             // If nothing can be found we take the entire folder contents.
-            if (!difficultySet.isEmpty()) {
-                Set<String> finalDifficultySet = difficultySet;
+            if (!variantSet.isEmpty()) {
+                Set<String> finalVariantSet = variantSet;
                 tempResourcesFolders = tempResourcesFolders
                     .parallelStream()
-                    .filter(s -> finalDifficultySet.parallelStream().anyMatch(s::contains))
+                    .filter(s -> finalVariantSet.parallelStream().anyMatch(s::contains))
                     .collect(Collectors.toSet());
             }
 
@@ -467,7 +465,6 @@ public class WhereIsIt implements GameLifeCycle {
 
                 pictureCardList.add(pictureCard);
 
-
                 if ((i + 1) % nbColumns != 0) {
                     posX++;
                 } else {
@@ -475,7 +472,6 @@ public class WhereIsIt implements GameLifeCycle {
                     posX = 0;
                 }
             }
-
         } else if (this.gameType == ANIMALS_DYNAMIC) {
             int index = random.nextInt(resourcesFolders.size());
             final String folder = resourcesFolders.remove((index) % directoriesCount);
@@ -611,12 +607,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         log.debug("language is " + language);
 
-        final String voice;
-        if (randomGenerator.nextDouble() > 0.5) {
-            voice = "m";
-        } else {
-            voice = "w";
-        }
+        final String voice = randomGenerator.nextDouble() > 0.5 ? "m" : "w";
 
         if (this.gameType == SOUNDS || this.gameType == SOUNDS_ANIMAL) {
             return "data/" + this.gameType.getResourcesDirectoryName() + "/sounds/" + folder + ".mp3";
@@ -653,17 +644,12 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         final Configuration config = gameContext.getConfiguration();
-
         final File questionFile = new File(config.getWhereIsItDir(), "questions.csv");
-
         final Multilinguism localMultilinguism = MultilinguismFactory.getForResource(questionFile.toString());
-
         final String traduction = localMultilinguism.getTranslation(folder, language);
-
         log.debug("traduction: {}", traduction);
 
         final StringTokenizer st = new StringTokenizer(traduction, ";");
-
         final List<Image> imageList = new ArrayList<>(20);
 
         while (st.hasMoreTokens()) {
@@ -719,8 +705,6 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     public boolean chi2decision(int tp, int fp) {
-        boolean decision = false;
-
         final ArrayList<Double> chi2Theoretic = new ArrayList<>();
         chi2Theoretic.add(3.84);
         chi2Theoretic.add(2.71);
@@ -735,10 +719,6 @@ public class WhereIsIt implements GameLifeCycle {
 
         int index = lvlReplays > 4 ? lvlReplays - 1 : 3;
 
-        if (chi2Theoretic.get(index) <= chi2Obs) {
-            decision = true;
-        }
-
-        return decision;
+        return chi2Theoretic.get(index) <= chi2Obs;
     }
 }

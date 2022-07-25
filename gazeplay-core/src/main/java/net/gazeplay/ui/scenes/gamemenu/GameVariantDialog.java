@@ -171,8 +171,8 @@ public class GameVariantDialog extends Stage {
                     gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape")
                 ) {
                     categories = new RadioButton[3];
-                    categories[1] = new RadioButton(translator.translate("Easy"));
-                    categories[0] = new RadioButton(translator.translate("Normal"));
+                    categories[0] = new RadioButton(translator.translate("Easy"));
+                    categories[1] = new RadioButton(translator.translate("Normal"));
                     categories[2] = new RadioButton(translator.translate("Hard"));
                 } else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                     gameSpec.getGameSummary().getNameCode().contains("Memory") ||
