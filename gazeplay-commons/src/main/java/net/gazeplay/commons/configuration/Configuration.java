@@ -52,6 +52,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_EFFECTS_VOLUME = "EFFECTS_VOLUME";
     private static final String PROPERTY_NAME_BACKGROUND_STYLE = "BACKGROUND_STYLE";
     private static final String PROPERTY_NAME_BACKGROUND_ENABLED = "BACKGROUND_ENABLED";
+    private static final String PROPERTY_NAME_BACKGROUND_DARK_THEME = "BACKGROUND_DARK_THEME";
     private static final String PROPERTY_NAME_ANIMATION_SPEED_RATIO = "ANIMATION_SPEED_RATIO";
     private static final String PROPERTY_NAME_PROGRESS_BAR_SIZE = "PROGRESS_BAR_SIZE";
     private static final String PROPERTY_NAME_PROGRESS_BAR_COLOR = "PROGRESS_BAR_COLOR";
@@ -102,6 +103,7 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_FORCE_DISPLAY_NEWS = false;
     private static final BackgroundStyle DEFAULT_VALUE_BACKGROUND_STYLE = BackgroundStyle.DARK;
     private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = true;
+    private static final boolean DEFAULT_VALUE_BACKGROUND_DARK_THEME = false;
     private static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
     private static final int DEFAULT_VALUE_PROGRESS_BAR_SIZE = 100;
     private static final String DEFAULT_VALUE_PROGRESS_BAR_COLOR = "YELLOW";
@@ -209,6 +211,8 @@ public class Configuration {
 
     @Getter
     private final BooleanProperty backgroundEnabledProperty;
+    @Getter
+    private final BooleanProperty backgroundDarkTheme;
 
     @Getter
     private final DoubleProperty musicVolumeProperty;
@@ -321,6 +325,7 @@ public class Configuration {
             new EnumMarshaller<>(),
             new EnumUnmarshaller<>(BackgroundStyle.class));
         backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_ENABLED, DEFAULT_VALUE_BACKGROUND_ENABLED, propertyChangeListener);
+        backgroundDarkTheme = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_DARK_THEME, DEFAULT_VALUE_BACKGROUND_DARK_THEME, propertyChangeListener);
 
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
         cssfileProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_CSSFILE, DEFAULT_VALUE_CSS_FILE, propertyChangeListener);
@@ -505,7 +510,9 @@ public class Configuration {
     public Boolean isBackgroundEnabled() {
         return backgroundEnabledProperty.getValue();
     }
-
+    public Boolean isBackgroundDark() {
+        return backgroundDarkTheme.getValue();
+    }
     public String getUserName() {
         return userNameProperty.getValue();
     }

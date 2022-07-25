@@ -23,6 +23,7 @@ public class LogoFactory {
         LogoCreationException(Throwable cause) {
             super(cause);
         }
+
     }
 
     public Node createLogoAnimated(Stage stage) {
@@ -61,6 +62,7 @@ public class LogoFactory {
         stage.heightProperty().addListener((observable, oldValue, newValue) -> {
             fitStaticLogo(logoView, stage);
         });
+
         return logoView;
     }
 
@@ -69,6 +71,7 @@ public class LogoFactory {
         final double preferredHeight = stage.getHeight() * 0.1d;
         logoView.setFitHeight(preferredHeight);
         logoView.setFitWidth(preferredWidth);
+
     }
 
 }

@@ -43,14 +43,15 @@ import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
-import net.gazeplay.commons.utils.multilinguism.I18N;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.gameslocator.AbstractGamesLocator;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
-import net.gazeplay.ui.scenes.stats.StatsContext;
+import net.gazeplay.ui.scenes.gamemenu.GamesStatisticsPane;
+import net.gazeplay.ui.scenes.gamemenu.HomeMenuScreen;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,12 +72,16 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private static final double PREF_HEIGHT = 25;
 
+    private CssUtil cssUtil = new CssUtil();
+
     private final boolean currentLanguageAlignmentIsLeftAligned;
 
     private IGameVariant currentSelectedVariant;
     private GameSpec currentSelectedGame;
 
     private GridPane gridPane;
+
+    Configuration config = ActiveConfigurationContext.getInstance();
 
     ConfigurationContext(GazePlay gazePlay) {
         super(gazePlay, new BorderPane());
@@ -151,9 +156,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         root.setCenter(centerCenterPane);
 
-        root.setStyle(
-            "-fx-background-color: rgba(0,0,0,1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        if (!config.isBackgroundDark()) {
+            root.setStyle(
+                "-fx-background-color: #fffaf0; -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
 
+        } else {
+            root.setStyle(
+                "-fx-background-color: rgba(0,0,0,1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+
+        }
     }
 
     HomeButton createHomeButtonInConfigurationManagementScreen(@NonNull GazePlay gazePlay) {
@@ -161,6 +172,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HomeButton homeButton = new HomeButton(screenDimension);
 
         EventHandler<Event> homeEvent = e -> {
+            gazePlay.onDisplayConfigurationManagement();
             if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
                 root.setCursor(Cursor.WAIT); // Change cursor to wait style
                 gazePlay.onReturnToMenu();
@@ -182,16 +194,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         String gazeplayType = GazePlayArgs.returnArgs();
         GridPane grid;
 
-        if (gazeplayType.contains("bera")){
+        if (gazeplayType.contains("bera")) {
             grid = beraConfigGridPane(configurationContext, translator);
-        }else {
+        } else {
             grid = gazeplayConfigGridPane(configurationContext, translator);
         }
-
         return grid;
     }
 
-    GridPane beraConfigGridPane(ConfigurationContext configurationContext, Translator translator){
+    GridPane beraConfigGridPane(ConfigurationContext configurationContext, Translator translator) {
         Configuration config = ActiveConfigurationContext.getInstance();
 
         if ((config.getUserName()) != null && !config.getUserName().equals("")) {
@@ -315,14 +326,20 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
+            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
+            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
             I18NText label = new I18NText(translator, "BackgroundEnabled", COLON);
             CheckBox input = buildCheckBox(config.getBackgroundEnabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
-            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
+            I18NText label = new I18NText(translator, "DarkTh", COLON);
+            HBox input = buildDarktheme(config, configurationContext);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -428,7 +445,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return grid;
     }
 
-    GridPane gazeplayConfigGridPane(ConfigurationContext configurationContext, Translator translator){
+    GridPane gazeplayConfigGridPane(ConfigurationContext configurationContext, Translator translator) {
         Configuration config = ActiveConfigurationContext.getInstance();
 
         if ((config.getUserName()) != null && !config.getUserName().equals("")) {
@@ -549,16 +566,20 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
+            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
+            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
             I18NText label = new I18NText(translator, "BackgroundEnabled", COLON);
             CheckBox input = buildCheckBox(config.getBackgroundEnabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
-            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
-
-            addToGrid(grid, currentFormRow, label, input);
+            I18NText label = new I18NText(translator, "DarkTh", COLON);
+            HBox darkTheme = buildDarktheme(config, configurationContext);
+            addToGrid(grid, currentFormRow, label, darkTheme);
         }
 
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "FoldersSettings", COLON));
@@ -652,6 +673,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addSubToGrid(grid, currentFormRow, label, input);
         }
 
+        if (config.isBackgroundDark()) {
+            root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        } else {
+            root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        }
         return grid;
     }
 
@@ -780,7 +810,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return spinner;
     }
 
-    static ChoiceBox<String> buildFeedbackConfigChooser(Configuration configuration, Translator translator){
+    static ChoiceBox<String> buildFeedbackConfigChooser(Configuration configuration, Translator translator) {
 
         String nothingLabel = translator.translate(Feedback.nothing.toString());
         String standardLabel = translator.translate(Feedback.standard.toString());
@@ -800,11 +830,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         feedbackBox.setPrefHeight(PREF_HEIGHT);
 
         feedbackBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (Objects.equals(newValue, "Rien") || Objects.equals(newValue, "Nothing")){
+            if (Objects.equals(newValue, "Rien") || Objects.equals(newValue, "Nothing")) {
                 configuration.getFeedbackProperty().setValue(Feedback.nothing.toString());
-            }else if (Objects.equals(newValue, "Standard")){
+            } else if (Objects.equals(newValue, "Standard")) {
                 configuration.getFeedbackProperty().setValue(Feedback.standard.toString());
-            }else {
+            } else {
                 configuration.getFeedbackProperty().setValue(Feedback.framed.toString());
             }
         });
@@ -904,7 +934,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     private Node buildResultFolder(Configuration configuration,
                                    ConfigurationContext configurationContext,
-                                   Translator translator){
+                                   Translator translator) {
 
 
         final I18NButton selectButton = new I18NButton(translator, "SeeFolder");
@@ -915,16 +945,16 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             String playerName = configuration.getUserNameProperty().getValue();
             String path = "";
 
-            if (Objects.equals(playerName, "")){
-                path ="C:\\Users\\" + userName + "\\GazePlay\\statistics\\";
-            }else {
-                path ="C:\\Users\\" + userName + "\\GazePlay\\profiles\\" + playerName + "\\statistics\\";
+            if (Objects.equals(playerName, "")) {
+                path = "C:\\Users\\" + userName + "\\GazePlay\\statistics\\";
+            } else {
+                path = "C:\\Users\\" + userName + "\\GazePlay\\profiles\\" + playerName + "\\statistics\\";
             }
 
             try {
-                if (os.contains("win")){
+                if (os.contains("win")) {
                     Runtime.getRuntime().exec("explorer.exe /open," + path);
-                }else {
+                } else {
                     Runtime.getRuntime().exec("cmd xdg-open," + path);
                 }
             } catch (Exception e1) {
@@ -1572,7 +1602,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             config.getLimiterScoreProperty().setValue(newPropertyValue);
         });
 
-        if (limitScore.isSelected()) {
+        if (limitScore.isSelected(
+        )) {
             score.setVisible(true);
             spinnerS.setVisible(true);
         } else {
@@ -1592,6 +1623,38 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         hbox.getChildren().addAll(limitScore, score, spinnerS);
 
+        return hbox;
+    }
+
+    private HBox buildDarktheme(Configuration config, ConfigurationContext configurationContext) {
+
+        HBox hbox = new HBox();
+        hbox.setSpacing(5);
+        CheckBox darkTheme = buildCheckBox(config.getBackgroundDarkTheme());
+        final GazePlay gazePlay = configurationContext.getGazePlay();
+        if (darkTheme.isSelected()) {
+            config.getBackgroundDarkTheme().setValue(true);
+        } else {
+            config.getBackgroundDarkTheme().setValue(false);
+        }
+        darkTheme.setOnAction(e -> {
+            if (!config.isBackgroundDark()) {
+                this.cssUtil.changeBG("data/stylesheets/base-light.css",
+                    config, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
+                root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
+                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+
+            } else {
+                this.cssUtil.changeBG("data/stylesheets/base-dark.css",
+                    config, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
+                root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
+                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
+                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+
+            }
+        });
+        hbox.getChildren().addAll(darkTheme);
         return hbox;
     }
 
