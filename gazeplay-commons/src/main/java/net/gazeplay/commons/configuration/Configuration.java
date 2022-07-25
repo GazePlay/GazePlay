@@ -53,6 +53,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_CSS_FILE = "CSS_FILE";
     private static final String PROPERTY_NAME_BACKGROUND_STYLE = "BACKGROUND_STYLE";
     private static final String PROPERTY_NAME_BACKGROUND_ENABLED = "BACKGROUND_ENABLED";
+    private static final String PROPERTY_NAME_BACKGROUND_DARK_THEME = "BACKGROUND_DARK_THEME";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
     /* Directories settings */
     private static final String PROPERTY_NAME_FILE_DIR = "FILE_DIR";
@@ -112,6 +113,7 @@ public class Configuration {
     private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
     private static final BackgroundStyle DEFAULT_VALUE_BACKGROUND_STYLE = BackgroundStyle.DARK;
     private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = true;
+    private static final boolean DEFAULT_VALUE_BACKGROUND_DARK_THEME = false;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
     /* Directories settings */
     public static final String DEFAULT_VALUE_MUSIC_DIR = "";
@@ -191,6 +193,8 @@ public class Configuration {
     private final ObjectProperty<BackgroundStyle> backgroundStyleProperty;
     @Getter
     private final BooleanProperty backgroundEnabledProperty;
+    @Getter
+    private final BooleanProperty backgroundDarkTheme;
     @Getter
     private final StringProperty menuButtonsOrientationProperty;
     /* Directories settings */
@@ -298,6 +302,7 @@ public class Configuration {
         backgroundStyleProperty = new ApplicationConfigBackedObjectProperty<>(applicationConfig, PROPERTY_NAME_BACKGROUND_STYLE, DEFAULT_VALUE_BACKGROUND_STYLE, propertyChangeListener,
             new EnumMarshaller<>(), new EnumUnmarshaller<>(BackgroundStyle.class));
         backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_ENABLED, DEFAULT_VALUE_BACKGROUND_ENABLED, propertyChangeListener);
+        backgroundDarkTheme = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_DARK_THEME, DEFAULT_VALUE_BACKGROUND_DARK_THEME, propertyChangeListener);
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
 
         /* Directories settings */
@@ -462,6 +467,10 @@ public class Configuration {
 
     public Boolean isBackgroundEnabled() {
         return backgroundEnabledProperty.getValue();
+    }
+
+    public Boolean isBackgroundDark() {
+        return backgroundDarkTheme.getValue();
     }
 
     public String getMenuButtonsOrientation() {

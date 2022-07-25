@@ -97,9 +97,15 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             }
             sidePane.setBottom(controlButtonPane);
 
-            root.setStyle(
-                "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-
+            if (config.isBackgroundDark()) {
+                root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
+                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
+            } else {
+                root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
+                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
+                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);"+"-fx-text-fill: black;");
+            }
         } else {
             GridPane grid = new GridPane();
             grid.setAlignment(Pos.TOP_CENTER);
@@ -145,7 +151,13 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 LineChart<String, Number> levelChart = StatDisplayUtils.buildLevelChart(stats, root);
                 TableView<ChiData> chi2Chart = StatDisplayUtils.buildTable(stats);
 
-                colorBands.setTextFill(Color.WHITE);
+                if(config.isBackgroundDark())
+                {
+                    colorBands.setTextFill(Color.WHITE);
+                }
+                else {
+                    colorBands.setTextFill(Color.BLACK);
+                }
                 colorBands.getStylesheets().add("data/common/radio.css");
 
                 colorBands.setOnAction(event -> {
@@ -167,7 +179,13 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                     }
                 });
 
-                levelsInfo.setTextFill(Color.WHITE);
+                if(config.isBackgroundDark())
+                {
+                    levelsInfo.setTextFill(Color.WHITE);
+                }
+                else {
+                    levelsInfo.setTextFill(Color.BLACK);
+                }
                 levelsInfo.getStylesheets().add("data/common/radio.css");
 
                 levelsInfo.setOnAction(event -> {
@@ -190,7 +208,14 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                     }
                 });
 
-                chi2Info.setTextFill(Color.WHITE);
+                if(config.isBackgroundDark())
+                {
+                    chi2Info.setTextFill(Color.WHITE);
+                }
+                else {
+                    chi2Info.setTextFill(Color.BLACK);
+                }
+
                 chi2Info.getStylesheets().add("data/common/radio.css");
 
                 chi2Info.setOnAction(event -> {
@@ -256,8 +281,15 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             }
             sidePane.setBottom(controlButtonPane);
 
-            root.setStyle(
-                "-fx-background-color: rgba(0, 0, 0, 1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+            if (config.isBackgroundDark()) {
+                root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
+                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
+            } else {
+                root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
+                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
+                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);"+"-fx-text-fill: black;");
+            }
         }
     }
 

@@ -46,6 +46,7 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.components.CssUtil;
+import net.gazeplay.gameslocator.AbstractGamesLocator;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
@@ -68,12 +69,16 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     private static final double PREF_WIDTH = 200;
     private static final double PREF_HEIGHT = 25;
 
+    private CssUtil cssUtil = new CssUtil();
+
     private final boolean currentLanguageAlignmentIsLeftAligned;
 
     private IGameVariant currentSelectedVariant;
     private GameSpec currentSelectedGame;
 
     private GridPane gridPane;
+
+    Configuration config = ActiveConfigurationContext.getInstance();
 
     ConfigurationContext(GazePlay gazePlay) {
         super(gazePlay, new BorderPane());
@@ -143,8 +148,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         root.setCenter(centerCenterPane);
 
-        root.setStyle(
-            "-fx-background-color: rgba(0,0,0,1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        if (!config.isBackgroundDark()) {
+            root.setStyle(
+                "-fx-background-color: #fffaf0; -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        } else {
+            root.setStyle(
+                "-fx-background-color: rgba(0,0,0,1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        }
     }
 
     HomeButton createHomeButtonInConfigurationManagementScreen(@NonNull GazePlay gazePlay) {
@@ -152,6 +162,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HomeButton homeButton = new HomeButton(screenDimension);
 
         EventHandler<Event> homeEvent = e -> {
+            gazePlay.onDisplayConfigurationManagement();
             if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
                 root.setCursor(Cursor.WAIT); // Change cursor to wait style
                 gazePlay.onReturnToMenu();
@@ -177,7 +188,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         } else {
             grid = gazeplayConfigGridPane(configurationContext, translator);
         }
-
         return grid;
     }
 
@@ -283,13 +293,18 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
+            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
+            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
             I18NText label = new I18NText(translator, "BackgroundEnabled", COLON);
             CheckBox input = buildCheckBox(config.getBackgroundEnabledProperty());
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
-            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
+            I18NText label = new I18NText(translator, "DarkTh", COLON);
+            HBox input = buildDarktheme(config, configurationContext);
             addToGrid(grid, currentFormRow, label, input);
         }
 
@@ -478,14 +493,19 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
+            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
+            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
             I18NText label = new I18NText(translator, "BackgroundEnabled", COLON);
             CheckBox input = buildCheckBox(config.getBackgroundEnabledProperty());
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            I18NText label = new I18NText(translator, "MenuOrientation", COLON);
-            ChoiceBox<GameButtonOrientation> input = buildGameButtonOrientationChooser(config);
-            addToGrid(grid, currentFormRow, label, input);
+            I18NText label = new I18NText(translator, "DarkTh", COLON);
+            HBox darkTheme = buildDarktheme(config, configurationContext);
+            addToGrid(grid, currentFormRow, label, darkTheme);
         }
 
         // Folders settings
@@ -569,6 +589,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addSubToGrid(grid, currentFormRow, label, input);
         }
 
+        if (config.isBackgroundDark()) {
+            root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        } else {
+            root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        }
         return grid;
     }
 
@@ -1486,7 +1515,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             config.setLimiterScore(newPropertyValue);
         });
 
-        if (limitScore.isSelected()) {
+        if (limitScore.isSelected(
+        )) {
             score.setVisible(true);
             spinnerS.setVisible(true);
         } else {
@@ -1506,6 +1536,38 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         hbox.getChildren().addAll(limitScore, score, spinnerS);
 
+        return hbox;
+    }
+
+    private HBox buildDarktheme(Configuration config, ConfigurationContext configurationContext) {
+
+        HBox hbox = new HBox();
+        hbox.setSpacing(5);
+        CheckBox darkTheme = buildCheckBox(config.getBackgroundDarkTheme());
+        final GazePlay gazePlay = configurationContext.getGazePlay();
+        if (darkTheme.isSelected()) {
+            config.getBackgroundDarkTheme().setValue(true);
+        } else {
+            config.getBackgroundDarkTheme().setValue(false);
+        }
+        darkTheme.setOnAction(e -> {
+            if (!config.isBackgroundDark()) {
+                this.cssUtil.changeBG("data/stylesheets/base-light.css",
+                    config, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
+                root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
+                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+
+            } else {
+                this.cssUtil.changeBG("data/stylesheets/base-dark.css",
+                    config, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
+                root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
+                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
+                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+
+            }
+        });
+        hbox.getChildren().addAll(darkTheme);
         return hbox;
     }
 

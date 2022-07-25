@@ -26,7 +26,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
 import java.util.function.Supplier;
 
 @Slf4j
@@ -63,7 +62,6 @@ public class GazePlay {
 
     Boolean loadedHomePage = false;
     Boolean loadedSettingsPage = false;
-    Boolean loadedUserPage = false;
 
     public GazePlay() {
     }
@@ -75,6 +73,7 @@ public class GazePlay {
     public void onReturnToMenu() {
         this.loadHomePage();
         homeMenuScreen.setUpOnStage(primaryScene);
+
         BackgroundMusicManager.getInstance().onEndGame();
 
         Configuration config = ActiveConfigurationContext.getInstance();
@@ -120,7 +119,7 @@ public class GazePlay {
 
         BackgroundMusicManager.onConfigurationChanged();
 
-        this.loadUserPage();
+        userProfileScreen = applicationContext.getBean(UserProfileContext.class);
         userProfileScreen.setUpOnStage(primaryScene);
         primaryStage.show();
     }
@@ -142,24 +141,26 @@ public class GazePlay {
         return primaryStage.fullScreenProperty();
     }
 
-    public void loadHomePage(){
-        if (!this.loadedHomePage){
+    public void loadHomePage() {
+        if (!this.loadedHomePage) {
             this.loadedHomePage = true;
             homeMenuScreen = applicationContext.getBean(HomeMenuScreen.class);
         }
+
+        String gazeplayType = GazePlayArgs.returnArgs();
+
+        if (gazeplayType.equals("afsrGazeplay")) {
+            homeMenuScreen.afsrGazeplayHomeMenuScreen(this, gamesLocator);
+        } else {
+            homeMenuScreen.gazeplayHomeMenuScreen(this, gamesLocator);
+        }
+
     }
 
-    public void loadSettingsPage(){
-        if (!this.loadedSettingsPage){
+    public void loadSettingsPage() {
+        if (!this.loadedSettingsPage) {
             this.loadedSettingsPage = true;
             configurationContext = applicationContext.getBean(ConfigurationContext.class);
-        }
-    }
-
-    public void loadUserPage(){
-        if (!this.loadedUserPage){
-            this.loadedUserPage = true;
-            userProfileScreen = applicationContext.getBean(UserProfileContext.class);
         }
     }
 }

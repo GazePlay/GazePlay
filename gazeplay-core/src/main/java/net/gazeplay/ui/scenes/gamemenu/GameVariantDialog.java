@@ -1,4 +1,3 @@
-
 package net.gazeplay.ui.scenes.gamemenu;
 
 import javafx.event.Event;
@@ -116,27 +115,14 @@ public class GameVariantDialog extends Stage {
             } else if (gameSpec.getGameSummary().getNameCode().equals("bottle")) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = ((IntStringGameVariant) variant).getStringValue();
-                int indexOfTheVariant;
-                switch (variantString) {
-                    case "InfinityB":
-                        indexOfTheVariant = 5;
-                        break;
-                    case "BigB":
-                        indexOfTheVariant = 4;
-                        break;
-                    case "HighB":
-                        indexOfTheVariant = 3;
-                        break;
-                    case "NormalB":
-                        indexOfTheVariant = 2;
-                        break;
-                    case "SmallB":
-                        indexOfTheVariant = 1;
-                        break;
-                    default: //case "TinyB"
-                        indexOfTheVariant = 0;
-                        break;
-                }
+                int indexOfTheVariant = switch (variantString) {
+                    case "InfinityB" -> 5;
+                    case "BigB" -> 4;
+                    case "HighB" -> 3;
+                    case "NormalB" -> 2;
+                    case "SmallB" -> 1;
+                    default -> 0;
+                };
 
                 if (!choicePanes.containsKey(indexOfTheVariant)) {
                     choicePanes.put(indexOfTheVariant, createFlowPane());
@@ -154,26 +140,28 @@ public class GameVariantDialog extends Stage {
                 choicePanes.get(0).getChildren().add(button);
             }
 
-            if ((gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape") ||
-                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
-                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
-                gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
-                gameSpec.getGameSummary().getNameCode().equals("bottle") ||
-                gameSpec.getGameSummary().getNameCode().contains("Memory") ||
+            if ((gameSpec.getGameSummary().getNameCode().equals("bottle") ||
                 gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
-                gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) &&
-                (group.getToggles().size() < 2)
+                gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
+                gameSpec.getGameSummary().getNameCode().contains("Memory") ||
+                gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape")) &&
+                group.getToggles().size() < 2
             ) {
                 RadioButton[] categories;
-                if ((gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor")) ||
-                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape")) {
+                if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
+                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape")
+                ) {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("NormalM"));
                     categories[1] = new RadioButton(translator.translate("Easy"));
-                } else if (gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
-                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
+                } else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                     gameSpec.getGameSummary().getNameCode().contains("Memory") ||
-                    gameSpec.getGameSummary().getNameCode().equals("DotToDot")) {
+                    gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
+                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal")
+                ) {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("Static"));
                     categories[1] = new RadioButton(translator.translate("Dynamic"));
