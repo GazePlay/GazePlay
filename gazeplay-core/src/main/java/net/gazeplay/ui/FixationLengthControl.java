@@ -87,7 +87,7 @@ public class FixationLengthControl {
     }
 
     public String formatValue(double fixationLengthValue) {
-        return "x" + String.format("%.2f", fixationLengthValue / 1000.0);
+        return String.format("%.2f", fixationLengthValue / 1000.0);
     }
 
     public void registerKeyHandler(@NonNull Scene primaryScene, final Slider fixationLengthRatioSlider) {
