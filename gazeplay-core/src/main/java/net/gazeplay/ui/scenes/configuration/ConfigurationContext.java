@@ -1452,7 +1452,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
         choiceBox.setPrefWidth(PREF_WIDTH);
         choiceBox.setPrefHeight(PREF_HEIGHT);
-        choiceBox.getItems().addAll("Q", "W", "E", "R", "T", "Y");
+        choiceBox.getItems().addAll("Q", "E");
         choiceBox.getSelectionModel().select(configuration.getQuitKeyProperty().getValue());
         choiceBox.getSelectionModel().selectedItemProperty()
             .addListener((observable, oldValue, newValue) -> configuration.getQuitKeyProperty().setValue(newValue));
