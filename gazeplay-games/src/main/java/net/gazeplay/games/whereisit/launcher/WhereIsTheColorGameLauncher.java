@@ -21,22 +21,22 @@ import java.util.LinkedList;
 public class WhereIsTheColorGameLauncher implements IGameLauncher<Stats, DimensionDifficultyGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
-        return new WhereIsItStats(scene, WhereIsItGameType.COLORS.getGameName());
+        return new WhereIsItStats(scene, WhereIsItGameType.COLORS_NORMAL.getGameName());
     }
 
     @Override
     public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
-        return new WhereIsItStats(scene, WhereIsItGameType.COLORS.getGameName(), nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+        return new WhereIsItStats(scene, WhereIsItGameType.COLORS_NORMAL.getGameName(), nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
                                        DimensionDifficultyGameVariant gameVariant, Stats stats) {
-        if (gameVariant.getDifficulty().equals("easy")) {
+        if (gameVariant.getVariant().equals("easy")) {
             return new WhereIsIt(WhereIsItGameType.COLORS_EASY, gameVariant.getWidth(),
                 gameVariant.getHeight(), false, gameContext, stats);
         } else {
-            return new WhereIsIt(WhereIsItGameType.COLORS, gameVariant.getWidth(),
+            return new WhereIsIt(WhereIsItGameType.COLORS_NORMAL, gameVariant.getWidth(),
                 gameVariant.getHeight(), false, gameContext, stats);
         }
     }
@@ -44,11 +44,11 @@ public class WhereIsTheColorGameLauncher implements IGameLauncher<Stats, Dimensi
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
                                     DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
-        if (gameVariant.getDifficulty().equals("easy")) {
+        if (gameVariant.getVariant().equals("easy")) {
             return new WhereIsIt(WhereIsItGameType.COLORS_EASY, gameVariant.getWidth(),
                 gameVariant.getHeight(), false, gameContext, stats, gameSeed);
         } else {
-            return new WhereIsIt(WhereIsItGameType.COLORS, gameVariant.getWidth(),
+            return new WhereIsIt(WhereIsItGameType.COLORS_NORMAL, gameVariant.getWidth(),
                 gameVariant.getHeight(), false, gameContext, stats, gameSeed);
         }
     }

@@ -349,8 +349,8 @@ public class WhereIsIt implements GameLifeCycle {
             // Here we filter out any unwanted resource folders, based on the difficulty JSON file
             Set<String> difficultySet;
             try {
-                SourceSet sourceSet = new SourceSet(resourcesDirectory + "/difficulties.json");
-                difficultySet = (sourceSet.getResources(this.gameType.getDifficulty()));
+                SourceSet sourceSet = new SourceSet(resourcesDirectory + "/variants.json");
+                difficultySet = (sourceSet.getResources(this.gameType.getVariant()));
             } catch (FileNotFoundException fe) {
                 log.info("No difficulty file found; Reading from all directories");
                 difficultySet = Collections.emptySet();
@@ -412,7 +412,7 @@ public class WhereIsIt implements GameLifeCycle {
                 if (winnerImageIndexAmongDisplayedImages == i) {
                     // TODO for now the line under is commented to avoid freeze
                     //questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
-                    question = MultilinguismFactory.getSingleton().getTranslation("findodd", config.getLanguage());
+                    question = MultilinguismFactory.getSingleton().getTranslation("FindTheOddOneOut", config.getLanguage());
                     pictograms = getPictograms(folderName);
                 }
 

@@ -4,19 +4,21 @@ import lombok.Getter;
 import net.gazeplay.commons.gamevariants.difficulty.Difficulty;
 
 public enum WhereIsItGameType {
-    ANIMALS("where-is-the-animal", "where-is-the-animal"),
-    ANIMALS_DYNAMIC("where-is-the-animal", "where-is-the-animal-dynamic"),
-    COLORS("where-is-the-color", "where-is-the-color"),
-    COLORS_EASY("where-is-the-color", "where-is-the-color", Difficulty.EASY),
-    LETTERS("where-is-the-letter", "where-is-the-letter"),
-    NUMBERS("where-is-the-number", "where-is-the-number"),
-    SHAPES("where-is-the-shape", "where-is-the-shape"),
-    SHAPES_EASY("where-is-the-shape", "where-is-the-shape", Difficulty.EASY),
-    SOUNDS("where-is-the-sound","where-is-the-sound"),
-    SOUNDS_ANIMAL("where-is-the-sound-animals","where-is-the-sound-animals"),
-    CUSTOMIZED("customized", "customized"),
-    FLAGS("find-flag", "find-flag"),
-    FIND_ODD("find-the-odd-one-out", "find-the-odd-one-out");
+    ANIMALS("whereIsTheAnimal", "whereIsTheAnimal"),
+    ANIMALS_DYNAMIC("whereIsTheAnimal", "whereIsTheAnimalDynamic"),
+    COLORS_EASY("whereIsTheColor", "whereIsTheColor", Difficulty.EASY.toString()),
+    COLORS_NORMAL("whereIsTheColor", "whereIsTheColor", Difficulty.NORMAL.toString()),
+    COLORS_HARD("whereIsTheColor", "whereIsTheColor", Difficulty.HARD.toString()),
+    FLAGS("whereIsTheFlag", "whereIsTheFlag"),
+    LETTERS("whereIsTheLetter", "whereIsTheLetter"),
+    NUMBERS("whereIsTheNumber", "whereIsTheNumber"),
+    SHAPES_EASY("whereIsTheShape", "whereIsTheShape", Difficulty.EASY.toString()),
+    SHAPES_NORMAL("whereIsTheShape", "whereIsTheShape", Difficulty.NORMAL.toString()),
+    SHAPES_HARD("whereIsTheShape", "whereIsTheShape", Difficulty.HARD.toString()),
+    SOUNDS("whereIsTheSound","whereIsTheSound"),
+    SOUNDS_ANIMAL("whereIsTheSoundAnimals","whereIsTheSoundAnimals"),
+    CUSTOMIZED("whereIsIt", "customized"),
+    FIND_ODD("findTheOddOneOut", "findTheOddOneOut");
 
     @Getter
     private final String gameName;
@@ -28,16 +30,16 @@ public enum WhereIsItGameType {
     private final String languageResourceLocation;
 
     @Getter
-    private final Difficulty difficulty;
+    private final String variant;
 
     WhereIsItGameType(String gameName, String resourcesDirectoryName) {
-        this(gameName, resourcesDirectoryName, Difficulty.NORMAL);
+        this(gameName, resourcesDirectoryName, Difficulty.NORMAL.toString());
     }
 
-    WhereIsItGameType(String gameName, String resourcesDirectoryName, Difficulty difficulty) {
+    WhereIsItGameType(String gameName, String resourcesDirectoryName, String variant) {
         this.gameName = gameName;
         this.resourcesDirectoryName = resourcesDirectoryName;
         this.languageResourceLocation = "data/" + resourcesDirectoryName + "/" + resourcesDirectoryName + ".csv";
-        this.difficulty = difficulty;
+        this.variant = variant;
     }
 }

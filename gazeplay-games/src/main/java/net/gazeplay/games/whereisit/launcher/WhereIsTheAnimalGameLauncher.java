@@ -31,7 +31,7 @@ public class WhereIsTheAnimalGameLauncher implements IGameLauncher<Stats, Dimens
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
                                        DimensionDifficultyGameVariant gameVariant, Stats stats) {
-        if (gameVariant.getDifficulty().equals("DYNAMIC")) {
+        if (gameVariant.getVariant().equals("DYNAMIC")) {
             return new WhereIsIt(WhereIsItGameType.ANIMALS_DYNAMIC, gameVariant.getWidth(),
                 gameVariant.getHeight(), false, gameContext, stats);
         } else {

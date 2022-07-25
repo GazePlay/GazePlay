@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.difficulty.Difficulty;
 import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
 import java.util.Set;
@@ -12,15 +13,20 @@ public class WhereIsItDifficultyGameVariantGenerator implements IGameVariantGene
     @Override
     public Set<IGameVariant> getVariants() {
         return Sets.newLinkedHashSet(Lists.newArrayList(
-            new DimensionDifficultyGameVariant(1, 2, "normal"),
-            new DimensionDifficultyGameVariant(2, 2, "normal"),
-            new DimensionDifficultyGameVariant(2, 3, "normal"),
-            new DimensionDifficultyGameVariant(3, 2, "normal"),
-            new DimensionDifficultyGameVariant(3, 3, "normal"),
-            new DimensionDifficultyGameVariant(1, 2, "easy"),
-            new DimensionDifficultyGameVariant(2, 2, "easy"),
-            new DimensionDifficultyGameVariant(2, 3, "easy"),
-            new DimensionDifficultyGameVariant(3, 2, "easy")
+            new DimensionDifficultyGameVariant(1, 2, Difficulty.EASY.toString()),
+            new DimensionDifficultyGameVariant(2, 2, Difficulty.EASY.toString()),
+            new DimensionDifficultyGameVariant(2, 3, Difficulty.EASY.toString()),
+            new DimensionDifficultyGameVariant(3, 2, Difficulty.EASY.toString()),
+            new DimensionDifficultyGameVariant(1, 2, Difficulty.NORMAL.toString()),
+            new DimensionDifficultyGameVariant(2, 2, Difficulty.NORMAL.toString()),
+            new DimensionDifficultyGameVariant(2, 3, Difficulty.NORMAL.toString()),
+            new DimensionDifficultyGameVariant(3, 2, Difficulty.NORMAL.toString()),
+            new DimensionDifficultyGameVariant(3, 3, Difficulty.NORMAL.toString()),
+            new DimensionDifficultyGameVariant(1, 2, Difficulty.HARD.toString()),
+            new DimensionDifficultyGameVariant(2, 2, Difficulty.HARD.toString()),
+            new DimensionDifficultyGameVariant(2, 3, Difficulty.HARD.toString()),
+            new DimensionDifficultyGameVariant(3, 2, Difficulty.HARD.toString()),
+            new DimensionDifficultyGameVariant(3, 3, Difficulty.HARD.toString())
         ));
     }
 }

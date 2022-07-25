@@ -11,7 +11,7 @@ public class WhereIsTheLetterGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("WhereIsTheLetter").gameThumbnail("data/Thumbnails/Where-is-the-Letter.png")
+            GameSummary.builder().nameCode("WhereIsTheLetter").gameThumbnail("data/Thumbnails/whereIsTheLetter.png")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LITERACY)
                 .category(GameCategories.Category.MEMORIZATION).build(),

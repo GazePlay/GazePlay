@@ -25,7 +25,6 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
-import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.IntStringGameVariant;
 import net.gazeplay.commons.ui.I18NLabel;
@@ -107,7 +106,21 @@ public class GameVariantDialog extends Stage {
             button.setMaxWidth(primaryStage.getWidth() / 8);
             button.setMaxHeight(primaryStage.getHeight() / 8);
 
-            if ((variant instanceof DimensionDifficultyGameVariant && (variant.toString().contains("easy") || variant.toString().contains("Dynamic"))) ||
+            if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape")
+            ) {
+                String difficultyString = ((DimensionDifficultyGameVariant) variant).getVariant();
+                int indexOfTheVariant = switch(difficultyString) {
+                    case "Easy" -> 0;
+                    case "Hard" -> 2;
+                    default -> 1;
+                };
+                if (!choicePanes.containsKey(indexOfTheVariant)) {
+                    choicePanes.put(indexOfTheVariant, createFlowPane());
+                }
+                choicePanes.get(indexOfTheVariant).getChildren().add(button);
+            } else if ((variant instanceof DimensionDifficultyGameVariant &&
+                (variant.toString().contains("Easy") || variant.toString().contains("Dynamic"))) ||
                 variant.toString().contains("DYNAMIC") ||
                 variant.toString().contains("OTHER")
             ) {
@@ -157,9 +170,10 @@ public class GameVariantDialog extends Stage {
                 if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
                     gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape")
                 ) {
-                    categories = new RadioButton[2];
-                    categories[0] = new RadioButton(translator.translate("NormalM"));
+                    categories = new RadioButton[3];
                     categories[1] = new RadioButton(translator.translate("Easy"));
+                    categories[0] = new RadioButton(translator.translate("Normal"));
+                    categories[2] = new RadioButton(translator.translate("Hard"));
                 } else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                     gameSpec.getGameSummary().getNameCode().contains("Memory") ||
                     gameSpec.getGameSummary().getNameCode().equals("Ninja") ||

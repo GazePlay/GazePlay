@@ -370,8 +370,8 @@ public class Bera implements GameLifeCycle {
         Set<String> difficultySet;
 
         try {
-            SourceSet sourceSet = new SourceSet(resourcesDirectory + "/difficulties.json");
-            difficultySet = (sourceSet.getResources(Difficulty.NORMAL));
+            SourceSet sourceSet = new SourceSet(resourcesDirectory + "/variants.json");
+            difficultySet = (sourceSet.getResources(Difficulty.NORMAL.toString()));
         } catch (FileNotFoundException fe) {
             log.info("No difficulty file found; Reading from all directories");
             difficultySet = Collections.emptySet();
