@@ -241,7 +241,7 @@ public class ReplayingGameFromJson {
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats statsSaved = gameLauncher.createSavedStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
         GameLifeCycle currentGame = gameLauncher.replayGame(gameContext, gameVariant, statsSaved, currentGameSeed);
-        gameContext.createControlPanel(gazePlay, statsSaved, currentGame, "replay");
+        gameContext.createControlPanel(gazePlay, statsSaved, currentGame, true);
         gameContext.createQuitShortcut(gazePlay, statsSaved, currentGame);
         currentGame.launch();
 
@@ -413,6 +413,9 @@ public class ReplayingGameFromJson {
     }
 
     public void paint(GraphicsContext graphics, Canvas canvas, int nextX, int nextY, String event) {
+        if (!gameContext.getChildren().contains(canvas)) {
+            gameContext.getChildren().add(canvas);
+        }
 
         graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
