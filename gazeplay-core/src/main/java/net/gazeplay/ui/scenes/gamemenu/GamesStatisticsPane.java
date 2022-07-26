@@ -71,7 +71,7 @@ public class GamesStatisticsPane extends GridPane {
         }
     }
 
-    private void setAllLabelsStyleDark() {
+    public void setAllLabelsStyleDark() {
         final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;";
         this.setStyle("-fx-background-color: black");
         for (Node node : this.getChildren()) {

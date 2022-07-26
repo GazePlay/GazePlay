@@ -134,15 +134,6 @@ public class GazePlay {
             this.loadedHomePage = true;
             homeMenuScreen = applicationContext.getBean(HomeMenuScreen.class);
         }
-
-        String gazeplayType = GazePlayArgs.returnArgs();
-
-        if (gazeplayType.equals("afsrGazeplay")) {
-            homeMenuScreen.afsrGazeplayHomeMenuScreen(this, gamesLocator);
-        } else {
-            homeMenuScreen.gazeplayHomeMenuScreen(this, gamesLocator);
-        }
-
     }
 
     public void loadSettingsPage() {
