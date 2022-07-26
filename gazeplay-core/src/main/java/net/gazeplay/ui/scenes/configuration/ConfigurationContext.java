@@ -46,12 +46,9 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.multilinguism.LanguageDetails;
 import net.gazeplay.commons.utils.multilinguism.Languages;
 import net.gazeplay.components.CssUtil;
-import net.gazeplay.gameslocator.AbstractGamesLocator;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
-import net.gazeplay.ui.scenes.gamemenu.GamesStatisticsPane;
-import net.gazeplay.ui.scenes.gamemenu.HomeMenuScreen;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,8 +68,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     private static final double PREF_WIDTH = 200;
 
     private static final double PREF_HEIGHT = 25;
-
-    private CssUtil cssUtil = new CssUtil();
 
     private final boolean currentLanguageAlignmentIsLeftAligned;
 
@@ -156,15 +151,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         root.setCenter(centerCenterPane);
 
-        if (!config.isBackgroundDark()) {
-            root.setStyle(
-                "-fx-background-color: #fffaf0; -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-
-        } else {
-            root.setStyle(
-                "-fx-background-color: rgba(0,0,0,1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-
-        }
+        this.changeConstrutorCss(config);
     }
 
     HomeButton createHomeButtonInConfigurationManagementScreen(@NonNull GazePlay gazePlay) {
@@ -673,15 +660,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addSubToGrid(grid, currentFormRow, label, input);
         }
 
-        if (config.isBackgroundDark()) {
-            root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-        } else {
-            root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-        }
+        this.changeGridCss(config);
         return grid;
     }
 
@@ -1632,27 +1611,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         hbox.setSpacing(5);
         CheckBox darkTheme = buildCheckBox(config.getBackgroundDarkTheme());
         final GazePlay gazePlay = configurationContext.getGazePlay();
-        if (darkTheme.isSelected()) {
-            config.getBackgroundDarkTheme().setValue(true);
-        } else {
-            config.getBackgroundDarkTheme().setValue(false);
-        }
         darkTheme.setOnAction(e -> {
-            if (!config.isBackgroundDark()) {
-                this.cssUtil.changeBG("data/stylesheets/base-light.css",
-                    config, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
-                root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
-                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
-                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-
-            } else {
-                this.cssUtil.changeBG("data/stylesheets/base-dark.css",
-                    config, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
-                root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
-                    + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
-                    + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-
-            }
+            config.getBackgroundDarkTheme().setValue(config.getBackgroundDarkTheme().getValue());
+            CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
+            this.changeConstrutorCss(config);
+            this.changeGridCss(config);
         });
         hbox.getChildren().addAll(darkTheme);
         return hbox;
@@ -1667,5 +1630,27 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         log.info(stringBuilder.toString());
         config.getHeatMapColorsProperty().setValue(stringBuilder.toString());
+    }
+
+    public void changeConstrutorCss(Configuration config){
+        if (!config.getBackgroundDarkTheme().getValue()) {
+            root.setStyle(
+                "-fx-background-color: #fffaf0; -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        } else {
+            root.setStyle(
+                "-fx-background-color: rgba(0,0,0,1); -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        }
+    }
+
+    public void changeGridCss(Configuration config){
+        if (config.getBackgroundDarkTheme().getValue()) {
+            root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        } else {
+            root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        }
     }
 }

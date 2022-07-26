@@ -36,45 +36,12 @@ public class CssUtil {
             }
         }
         stylesheets.clear();
-        if (config.isBackgroundDark()) {
+        if (config.getBackgroundDarkTheme().getValue()) {
            stylesheets.add("data/stylesheets/base-dark.css");
         }
         else {
             stylesheets.add("data/stylesheets/base-light.css");
         }
-        addMediaWidthStylesheet(stylesheets, screenDimensionSupplier);
-
-        if (styleSheetPath != null) {
-            stylesheets.add(styleSheetPath);
-        }
-
-        addStylesheets(stylesheets);
-        log.info(stylesheets.toString());
-    }
-
-    public void changeBG(String path,final Configuration config, final Scene scene, final Supplier<Dimension2D> screenDimensionSupplier)
-    {
-        final ObservableList<String> stylesheets = scene.getStylesheets();
-
-        final String cssfile = config.getCssFile();
-
-        final Optional<BuiltInUiTheme> configuredBuiltInUiTheme = BuiltInUiTheme.findFromConfigPropertyValue(cssfile);
-
-        final String styleSheetPath;
-
-        if (configuredBuiltInUiTheme.isPresent()) {
-            styleSheetPath = configuredBuiltInUiTheme.get().getStyleSheetPath();
-        } else {
-            if (cssfile == null || !new File(cssfile).exists()) {
-                styleSheetPath = BuiltInUiTheme.DEFAULT_THEME.getStyleSheetPath();
-            } else {
-                styleSheetPath = cssfile;
-            }
-        }
-        stylesheets.clear();
-
-            stylesheets.add(path);
-
         addMediaWidthStylesheet(stylesheets, screenDimensionSupplier);
 
         if (styleSheetPath != null) {
