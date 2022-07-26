@@ -107,7 +107,7 @@ class ConfigurationContextTest {
                 notDisplayedElts = 2;
             }
 
-            assertEquals(68 - notDisplayedElts, children.size());
+            assertEquals(70 - notDisplayedElts, children.size());
             assertTrue(children.get(3) instanceof MenuButton);
             assertTrue(children.get(9 - notDisplayedElts) instanceof ChoiceBox);
             assertTrue(children.get(11 - notDisplayedElts) instanceof Spinner);
@@ -128,7 +128,7 @@ class ConfigurationContextTest {
             assertTrue(children.get(61 - notDisplayedElts) instanceof CheckBox);
             assertTrue(children.get(65 - notDisplayedElts) instanceof CheckBox);
             assertTrue(children.get(67 - notDisplayedElts) instanceof CheckBox);
-
+            assertTrue(children.get(69 - notDisplayedElts) instanceof CheckBox);
         });
         TestingUtils.waitForRunLater();
 

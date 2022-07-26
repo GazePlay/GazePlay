@@ -61,6 +61,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
     private final double cardHeight;
     private final double cardWidth;
 
+    Configuration config = ActiveConfigurationContext.getInstance();
     public UserProfileContext(final GazePlay gazePlay) {
         super(gazePlay, new BorderPane());
 
@@ -73,14 +74,14 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         String gazeplayType = GazePlayArgs.returnArgs();
 
-        if (gazeplayType.equals("afsrGazeplay")){
+        if (gazeplayType.equals("afsrGazeplay")) {
             afsrGazeplayUserProfileContext(gazePlay, screenDimension);
-        }else {
+        } else {
             gazeplayUserProfileContext(gazePlay, screenDimension);
         }
     }
 
-    public void gazeplayUserProfileContext(GazePlay gazePlay, Dimension2D screenDimension){
+    public void gazeplayUserProfileContext(GazePlay gazePlay, Dimension2D screenDimension) {
         final Node logo = LogoFactory.getInstance().createLogoAnimated(gazePlay.getPrimaryStage());
 
         final HBox topRightPane = new HBox();
@@ -103,13 +104,19 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         root.setTop(topPane);
         root.setCenter(centerCenterPane);
+        if (config.isBackgroundDark()) {
+            root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        }
+        else {
+            root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
+                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
+                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
+        }
+     }
 
-        root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
-            + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
-            + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-    }
-
-    public void afsrGazeplayUserProfileContext(GazePlay gazePlay, Dimension2D screenDimension){
+    public void afsrGazeplayUserProfileContext(GazePlay gazePlay, Dimension2D screenDimension) {
         final Node logo = LogoFactory.getInstance().createLogoAnimated(gazePlay.getPrimaryStage());
 
         final HBox topRightPane = new HBox();
@@ -141,7 +148,6 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         root.setTop(topPane);
         root.setCenter(centerCenterPane);
-
         root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
             + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
             + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
@@ -549,7 +555,6 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                 final User newUser1 = createUser(gazePlay, choicePanel, tf.getText(), imagePattern, true, false, screenDimension);
 
                 if (checkNewName(newUser1.getName())) {
-
                     choicePanel.getChildren().remove(user);
                     choicePanel.getChildren().add(newUser1);
                     choicePanel.getChildren().add(user);
@@ -565,7 +570,6 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                     log.info("THE NAME OF THE NEW USER IS = {}", conf.getUserName());
 
                     if (!chooseImageButton.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
-
                         final File src = new File(chooseImageButton.getText());
                         final File dst = new File(GazePlayDirectories.getUserProfileDirectory(newUser1.getName()), src.getName());
                         copyFile(src, dst);
@@ -577,13 +581,11 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
                     dialog.close();
                     primaryStage.getScene().getRoot().setEffect(null);
-
                 } else {
                     final Text error = new Text(getGazePlay().getTranslator().translate("AlreadyUsed"));
                     error.setFill(Color.RED);
                     choicePane.getChildren().add(error);
                 }
-
             };
         } else {
             event = mouseEvent -> {
@@ -596,7 +598,6 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                 final Configuration conf = ConfigurationSource.createFromProfile(user.getName());
 
                 if (!chooseImageButton.getText().equals(getGazePlay().getTranslator().translate("ChooseImage"))) {
-
                     final File src = new File(chooseImageButton.getText());
                     final File dst = new File(GazePlayDirectories.getUserProfileDirectory(user.getName()), src.getName());
                     copyFile(src, dst);
@@ -655,8 +656,10 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         fileChooser.setTitle("Open Resource File");
         fileChooser.getExtensionFilters().addAll(
             new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.tiff"),
-            new ExtensionFilter("PNG Files", "*.png"), new ExtensionFilter("JPeg Files", "*.jpg", "*.jpeg"),
-            new ExtensionFilter("GIF Files", "*.gif"), new ExtensionFilter("BMP Files", "*.bmp"),
+            new ExtensionFilter("PNG Files", "*.png"),
+            new ExtensionFilter("JPEG Files", "*.jpg", "*.jpeg"),
+            new ExtensionFilter("GIF Files", "*.gif"),
+            new ExtensionFilter("BMP Files", "*.bmp"),
             new ExtensionFilter("TIFF Files", "*.tiff"));
         return fileChooser.showOpenDialog(primaryStage);
     }
@@ -664,9 +667,10 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
     private String getImage(final Stage primaryStage, final Button targetButton) throws IOException {
         final File selectedImageFile = chooseImageFile(primaryStage);
         String typeImage = getContentType(selectedImageFile);
-        if (!typeImage.contains("/image")) {
+        if (!typeImage.contains("image/")) {
             return null;
         }
+
         final String result = selectedImageFile.getAbsolutePath();
         try {
             final ImageView imageView = new ImageView(new Image(Files.newInputStream(selectedImageFile.toPath())));
@@ -687,5 +691,4 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             log.info("Unable to copy the profile picture");
         }
     }
-
 }

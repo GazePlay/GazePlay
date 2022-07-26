@@ -61,11 +61,11 @@ public class ReplayingGameFromJson {
 
             //OK: really small offsets problems
             "Scribble", "Cakes", "Creampie", "WhereIsIt", "WhereIsTheAnimal", "letters",
-            "WhereIsTheColor", "WhereIsTheLetter", "WhereIsTheNumber", "findodd", "flags",
+            "WhereIsTheColor", "WhereIsTheLetter", "WhereIsTheNumber", "WhereIsTheShape", "findodd", "flags",
             "ScratchCard", "Memory", "MemoryLetters", "MemoryNumbers", "OpenMemory", "OpenMemoryLetters",
             "OpenMemoryNumbers", "Dice", "EggGame", "PersonalizeEggGame", "GooseGame", "MagicCards", "Opinions", "Order",
             "Horses", "Horses Simplified", "puzzle", "Farm", "Jungle", "Savanna", "CupsBalls",
-            "Potions", "VideoPlayer", "VideoGrid", "bottle"
+            "Potions", "VideoPlayer", "VideoGrid", "bottle", "FlowerOfNumbers"
 
 
             // replay OK but the resize of the game itself is bad:
@@ -241,7 +241,7 @@ public class ReplayingGameFromJson {
         final Scene scene = gazePlay.getPrimaryScene();
         final Stats statsSaved = gameLauncher.createSavedStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
         GameLifeCycle currentGame = gameLauncher.replayGame(gameContext, gameVariant, statsSaved, currentGameSeed);
-        gameContext.createControlPanel(gazePlay, statsSaved, currentGame, "replay");
+        gameContext.createControlPanel(gazePlay, statsSaved, currentGame, true);
         gameContext.createQuitShortcut(gazePlay, statsSaved, currentGame);
         currentGame.launch();
 
@@ -413,6 +413,9 @@ public class ReplayingGameFromJson {
     }
 
     public void paint(GraphicsContext graphics, Canvas canvas, int nextX, int nextY, String event) {
+        if (!gameContext.getChildren().contains(canvas)) {
+            gameContext.getChildren().add(canvas);
+        }
 
         graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 

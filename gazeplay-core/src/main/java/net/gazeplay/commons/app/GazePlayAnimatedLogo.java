@@ -11,6 +11,8 @@ import javafx.util.Duration;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.Configuration;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,6 +32,10 @@ public class GazePlayAnimatedLogo {
             this.backImageView = backImageView;
             this.frontImageView = frontImageView;
             this.getChildren().addAll(backImageView, frontImageView);
+            Configuration config = ActiveConfigurationContext.getInstance();
+            if (!config.isBackgroundDark()) {
+                this.setStyle("-fx-background-color: #fffaf0; ");
+            }
         }
 
         public Transition createBumpTransition() {
@@ -45,6 +51,7 @@ public class GazePlayAnimatedLogo {
 
         public Transition createTiltTransition() {
             SequentialTransition tiltTransition = new SequentialTransition();
+
             //
             int angle = 25;
             RotateTransition one = new RotateTransition(Duration.millis(200), frontImageView);
@@ -66,6 +73,7 @@ public class GazePlayAnimatedLogo {
 
     public static GazePlayAnimatedLogo newInstance(int preferredHeight) {
         final HBox letters = new HBox();
+
         //String imageType = "fixed-size";
         String imageType = "flow-size";
         for (int i = 0; i <= 3; i++) {
@@ -86,7 +94,10 @@ public class GazePlayAnimatedLogo {
         BorderPane.setAlignment(letters, Pos.CENTER);
         letters.setAlignment(Pos.CENTER);
         letters.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
-
+        Configuration config = ActiveConfigurationContext.getInstance();
+        if (!config.isBackgroundDark()) {
+            letters.setStyle("-fx-background-color: #fffaf0; ");
+        }
         return new GazePlayAnimatedLogo(letters);
     }
 

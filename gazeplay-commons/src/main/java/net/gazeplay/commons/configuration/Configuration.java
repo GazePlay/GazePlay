@@ -52,6 +52,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_EFFECTS_VOLUME = "EFFECTS_VOLUME";
     private static final String PROPERTY_NAME_BACKGROUND_STYLE = "BACKGROUND_STYLE";
     private static final String PROPERTY_NAME_BACKGROUND_ENABLED = "BACKGROUND_ENABLED";
+    private static final String PROPERTY_NAME_BACKGROUND_DARK_THEME = "BACKGROUND_DARK_THEME";
     private static final String PROPERTY_NAME_ANIMATION_SPEED_RATIO = "ANIMATION_SPEED_RATIO";
     private static final String PROPERTY_NAME_PROGRESS_BAR_SIZE = "PROGRESS_BAR_SIZE";
     private static final String PROPERTY_NAME_PROGRESS_BAR_COLOR = "PROGRESS_BAR_COLOR";
@@ -73,6 +74,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_COLUMNAR_IMAGES_ENABLED = "COLUMNAR_IMAGES_ENABLED";
     private static final String PROPERTY_NAME_SOUND_ENABLED = "SOUND_ENABLED";
     private static final String PROPERTY_NAME_FEEDBACK = "FEEDBACK";
+    private static final String PROPERTY_NAME_SCREENSHOT = "SCREENSHOT";
 
     private static final KeyCode DEFAULT_VALUE_QUIT_KEY = KeyCode.Q;
     private static final String DEFAULT_VALUE_EYETRACKER = EyeTracker.tobii.toString();
@@ -101,6 +103,7 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_FORCE_DISPLAY_NEWS = false;
     private static final BackgroundStyle DEFAULT_VALUE_BACKGROUND_STYLE = BackgroundStyle.DARK;
     private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = true;
+    private static final boolean DEFAULT_VALUE_BACKGROUND_DARK_THEME = false;
     private static final double DEFAULT_VALUE_ANIMATION_SPEED_RATIO = 1;
     private static final int DEFAULT_VALUE_PROGRESS_BAR_SIZE = 100;
     private static final String DEFAULT_VALUE_PROGRESS_BAR_COLOR = "YELLOW";
@@ -114,6 +117,7 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_COLUMNAR_IMAGES_ENABLED = false;
     private static final boolean DEFAULT_VALUE_SOUND_ENABLED = true;
     private static final String DEFAULT_VALUE_FEEDBACK = Feedback.standard.toString();
+    private static final boolean DEFAULT_VALUE_SCREENSHOT = false;
 
     /*
     source : "http://pre07.deviantart.net/c66f/th/pre/i/2016/195/f/8/hatsune_miku_v4x_render_by_katrinasantiago0627-da9y7yr.png";
@@ -207,6 +211,8 @@ public class Configuration {
 
     @Getter
     private final BooleanProperty backgroundEnabledProperty;
+    @Getter
+    private final BooleanProperty backgroundDarkTheme;
 
     @Getter
     private final DoubleProperty musicVolumeProperty;
@@ -268,6 +274,9 @@ public class Configuration {
     @Getter
     private final StringProperty feedbackProperty;
 
+    @Getter
+    private final BooleanProperty screenshot;
+
     private final File configFile;
 
     private final ApplicationConfig applicationConfig;
@@ -316,6 +325,7 @@ public class Configuration {
             new EnumMarshaller<>(),
             new EnumUnmarshaller<>(BackgroundStyle.class));
         backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_ENABLED, DEFAULT_VALUE_BACKGROUND_ENABLED, propertyChangeListener);
+        backgroundDarkTheme = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_DARK_THEME, DEFAULT_VALUE_BACKGROUND_DARK_THEME, propertyChangeListener);
 
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
         cssfileProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_CSSFILE, DEFAULT_VALUE_CSS_FILE, propertyChangeListener);
@@ -351,6 +361,7 @@ public class Configuration {
         soundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_SOUND_ENABLED, DEFAULT_VALUE_SOUND_ENABLED, propertyChangeListener);
         feedbackProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FEEDBACK, DEFAULT_VALUE_FEEDBACK, propertyChangeListener);
 
+        screenshot = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_SCREENSHOT, DEFAULT_VALUE_SCREENSHOT, propertyChangeListener);
     }
 
     private void saveConfig() throws IOException {
@@ -499,7 +510,9 @@ public class Configuration {
     public Boolean isBackgroundEnabled() {
         return backgroundEnabledProperty.getValue();
     }
-
+    public Boolean isBackgroundDark() {
+        return backgroundDarkTheme.getValue();
+    }
     public String getUserName() {
         return userNameProperty.getValue();
     }
@@ -526,6 +539,10 @@ public class Configuration {
 
     public Integer getElementSize() {
         return elementSizeProperty.getValue();
+    }
+
+    public Boolean isScreenshotEnable(){
+        return screenshot.getValue();
     }
 
     public Integer getQuestionTime() {

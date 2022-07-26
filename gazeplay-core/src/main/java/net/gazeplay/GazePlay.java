@@ -56,6 +56,13 @@ public class GazePlay {
     @Autowired
     private ApplicationContext applicationContext;
 
+    HomeMenuScreen homeMenuScreen;
+    ConfigurationContext configurationContext;
+    UserProfileContext userProfileScreen;
+
+    Boolean loadedHomePage = false;
+    Boolean loadedSettingsPage = false;
+
     public GazePlay() {
     }
 
@@ -64,9 +71,9 @@ public class GazePlay {
     }
 
     public void onReturnToMenu() {
-        HomeMenuScreen homeMenuScreen = applicationContext.getBean(HomeMenuScreen.class);
-
+        this.loadHomePage();
         homeMenuScreen.setUpOnStage(primaryScene);
+
         BackgroundMusicManager.getInstance().onEndGame();
     }
 
@@ -84,8 +91,8 @@ public class GazePlay {
     }
 
     public void onDisplayConfigurationManagement() {
-        ConfigurationContext configurationContext = applicationContext.getBean(ConfigurationContext.class);
-        configurationContext.resetPane(this);
+        this.loadSettingsPage();
+        //configurationContext.resetPane(this);
         configurationContext.setUpOnStage(primaryScene);
     }
 
@@ -100,7 +107,7 @@ public class GazePlay {
 
         BackgroundMusicManager.onConfigurationChanged();
 
-        UserProfileContext userProfileScreen = applicationContext.getBean(UserProfileContext.class);
+        userProfileScreen = applicationContext.getBean(UserProfileContext.class);
         userProfileScreen.setUpOnStage(primaryScene);
         primaryStage.show();
     }
@@ -122,4 +129,26 @@ public class GazePlay {
         return primaryStage.fullScreenProperty();
     }
 
+    public void loadHomePage() {
+        if (!this.loadedHomePage) {
+            this.loadedHomePage = true;
+            homeMenuScreen = applicationContext.getBean(HomeMenuScreen.class);
+        }
+
+        String gazeplayType = GazePlayArgs.returnArgs();
+
+        if (gazeplayType.equals("afsrGazeplay")) {
+            homeMenuScreen.afsrGazeplayHomeMenuScreen(this, gamesLocator);
+        } else {
+            homeMenuScreen.gazeplayHomeMenuScreen(this, gamesLocator);
+        }
+
+    }
+
+    public void loadSettingsPage() {
+        if (!this.loadedSettingsPage) {
+            this.loadedSettingsPage = true;
+            configurationContext = applicationContext.getBean(ConfigurationContext.class);
+        }
+    }
 }

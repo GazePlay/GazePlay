@@ -23,9 +23,13 @@ WhereIsTheAnimal,Ku është kafsha?,اين هذا الحيوان؟,这个动物�
 WhereIsTheColor,Ku është ngjyra?,اين هذا اللون؟,这个颜色在哪？,Wo ist die Farbe?,Επιτυχημένες αποκαλύψεις,Where is this color?,missä on väri,Où est cette couleur ?,Gdje je ova boja?,Di manakah warna ini?,Dov'è questo colore?,このいろはドコ？,Gdzie jest ten kolor?,Onde està essa côr ?,Di manakah warna ini?,Waar is deze kleur?,Где этот цвет?,Donde ves este color?,Màu này ở đâu?,Дзе гэты колер?,
 WhereIsTheLetter,Ku është shkronja?,اين هذا الحرف؟,这个字母在哪？,,,Where is the letter?,,Où est cette lettre ?,,,Dov'è questa lettera?,,,,,Waar is de letter?,Где эта буква?,,,Дзе гэтая літара?,
 WhereIsTheNumber,Ku është numri?,اين هذا الرقم؟,这个数字在哪？,,,Where is the number?,,Où est ce nombre ?,,,Dov'è questo numero?,,,,,Waar is het cijfer?,Где эта цифра?,,,Дзе гэтая лічба?,
+WhereIsTheShape,Ku është formë?,اين هذا الشكل؟,这个形状在哪？,Wo ist diese Form?,,Where is the shape?,missä on muoto,Où est cette forme ?,Gdje je ovaj oblik?,Di manakah bentuk ini?,Dov'è questa forma?,,Gdzie jest ten kształt?,Onde está essa forma?,Di manakah bentuk ini?,Waar is het vorm?,Где эта фигура?,Donde está esta forma?,Hình dạng này ở đâu?,Дзе гэтая форма?,
 WhereIsIt,Ku është?,اين هذا؟,它在哪？,Wo ist es?,Επιτυχημένες αποκαλύψεις,Where is it ?,missä se on,Où est-ce ?,Gdje je?,Di mana ia?,Dov'è?,これはドコ？,Gdzie to jest ?,Onde é ?,Di mana ia?,Waar is het?,Где это находится?,Donde está?,Nó ở đâu?,Дзе гэта знаходзіцца?,
 flags,Luajmë me Flamujt,اين هذا العلم؟,旗子,,,Fun with Flags,,Trouve les drapeaux,,,Trova la bandiera,,,Scopri la bandiera,,Plezier met vlaggen,Найди флаг,,,Знайдзі сцяг,
+Sounds,,,,,,Find the sound source,,Trouve l'origine du son,,,,,,,,,,,
+AnimalSounds,,,,,,Guess the animal sound,,Devine le son de l'animal,,,,,,,,,,,
 StatsTitle,Statistika,احصائيات,游戏数据,Statistiken,Στατιστικά,Statistics,otsikko,Statistiques,Statistika,Statistik,Statistiche,統計,Statystyka,Estatística,Statistik,Statistieken,Статистика,Estadísticas,Số liệu thống kê,Статыстыка,
+
 
 Aver,Mesatarja,معدل,平均值,Durchschnitt,Μέση τιμή,Average,Keskiverto,Moyenne,Prosječan,Purata,Media,平均,Średni,Média,Purata,Gemiddelde,Среднее значение,Promedio,Trung bìnhь,Сярэдняе значэнне,
 Med,Mediani,متوسط,中位数,Median,Διάμεσος,Median,Mediaani,Médiane,Srednji,Median,Mediana,中央値,Sredni/Srodkowy,Mediana,Median,Mediaan,Медианное значение,Mediana,Giá trị giữa,Медыяна,
@@ -206,7 +210,7 @@ Diagonal from upper right to lower left Dynamic,,,右上角 - 左下角,,,Upper 
 Random Dynamic,,,随机,,,Random Dynamic,,Hasard Dynamique,,,,,,,,Willekeurig Dynamiek,Случайный Адаптируемый,,
 
 Dice,Zara,,色子,,,Dice,,Dés,,,Dadi,,,,,Dobbelstenen,Кости,,,Косці,
-Choose number of dices,,,选择色子数量,,,Choose number of dices,,Choisis le nombre de dès,,,,,,,,kies een aantal dobbelstenen,Выберите количество костей,,,Выберыце колькасць касцей,
+Choose number of dices,,,选择色子数量,,,Choose number of dices,,Choisis le nombre de dés,,,,,,,,kies een aantal dobbelstenen,Выберите количество костей,,,Выберыце колькасць касцей,
 stepsToHatch,,,选择孵化前步骤数量,,,Choose number of steps before hatching,,Choisis le nombre d'étapes avant l'éclosion,,,,,,,,,Выберите количество этапов до вылупления,,,Выберыце колькасць этапаў да вылучэння,
 
 letters,Gjej shkronjat,,找出字母,,,Identify The Letters,,Identifiez La Lettre,,,Trova la lettera,,,,,Zoek de letters,Определить букву,,,Вызначыць букву,
@@ -286,6 +290,7 @@ Dark,,,,,,Dark,,Sombre,,,,,,,,,Тёмный,Oscuro,,Цёмны,
 Light,,,,,,Light,,Clair,,,,,,,,,Светлый,Claro,,Светлы,
 BackgroundStyle,,,,,,Background style,,Style de fond,,,,,,,,,Стиль фона,,,Стыль фону,
 BackgroundEnabled,,,,,,Background images enabled,,Fonds d'écran activés,,,,,,,,,Активировать картинки на фоне,,,Актываваць карцінкі на фоне,
+DarkTh,,,,,,Dark Theme,,Thème sombre,,,,,,,,,,,,,
 
 addNewImages,,,,,,Add new images ...,,Ajouter de nouvelles images ...,,,,,,,,,Добавить изображения,Agregar nuevas imágenes ...,,Дадаць выявы,
 addNewImagethumbup,,,,,,Add new image happy ...,,Ajouter de nouvelles image content ...,,,,,,,,,Добавить новую счастливую картинку,Añadir nuevo contenido de la imagen ...,,Дадаць новую шчаслівую карцінку,
@@ -375,7 +380,7 @@ ConnectNumbers,,,,,,Connect numbers,,Connecter des chiffres,,,,,,,,,,,,,
 ConnectOrder,,,,,,Connect in order,,Connecter dans l'ordre,,,,,,,,,,,,,
 ConnectNumbersDynamic,,,,,,Connect in order dynamic,,Connecter des chiffres dynamique,,,,,,,,,,,,,
 ConnectOrderDynamic,,,,,,Connect in order  dynamic,,Connecter dans l'ordre  dynamique,,,,,,,,,,,,,
-
+FlowerOfNumbers,Lulja e numrave,زهرة الأرقام,数字之花,Die Blume der Zahlen,Το λουλούδι των αριθμών,The Flower of Numbers,Numeroiden kukka,La Fleur des nombres,Cvijet brojeva,Bunga Angka,Il fiore dei numeri,数字の花,Kwiat Liczb,A Flor dos Números,Bunga Bilangan,De bloem der getallen,Цветок чисел,La flor de los números,Bông hoa của những con số,Кветка лічбаў,संख्या का फूल
 Easy,,,,,,Easy,,Facile,,,,,,,,,,,,
 NormalM,,,,,,Normal,,Normal,,,,,,,,,,,,
 Static,,,,,,Static,,Statique,,,,,,,,,,,,
@@ -390,6 +395,7 @@ SmallF,,,,,,Small,,Petites,,,,,,,,,,,,
 TinyF,,,,,,Tiny,,Minuscules,,,,,,,,,,,,
 
 ProgressBarSizeAndColor,,,进度圈尺寸与颜色,,,Progress Bar Size and Color,,Taille et Couleur Bar de Progression,,,,,,,,,,,,
+EnableMultipleScreenshots,,,,,,Enable Multiple Screenshots,,Activer les Multiples Captures d'Ecran,,,,,,,,,,,,
 
 BeraSettings,,,,,,Settings for Bera games,,Paramètres pour les jeux Bera,,,,,,,,,,,,
 QuestionTime,,,,,,Time for ask the question,,Temps pour énoncer la question,,,,,,,,,,,,

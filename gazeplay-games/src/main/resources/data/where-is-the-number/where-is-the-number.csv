@@ -1,12 +1,12 @@
-,alb,ara,chn,deu,ell,eng,fra,fin,hrv,ita,ind,jpn,pol,por,zsm,nld,rus,spa,vnm
-0,,,数字0在哪里？,,,Where is the zero ?,Où est le zéro ?,,,,,,,,,,,,
-1,,,数字1在哪里？,,,Where is the one?,Où est le un ?,,,,,,,,,,,,
-2,,,数字2在哪里？,,,Where is the two?,Où est le deux ?,,,,,,,,,,,,
-3,,,数字3在哪里？,,,Where is the three?,Où est le trois ?,,,,,,,,,,,,
-4,,,数字4在哪里？,,,Where is the four?,Où est le quatre ?,,,,,,,,,,,,
-5,,,数字5在哪里？,,,Where is the five?,Où est le cinq ?,,,,,,,,,,,,
-6,,,数字6在哪里？,,,Where is the six?,Où est le six ?,,,,,,,,,,,,
-7,,,数字7在哪里？,,,Where is the seven?,Où est le sept ?,,,,,,,,,,,,
-8,,,数字8在哪里？,,,Where is the eight?,Où est le huit ?,,,,,,,,,,,,
-9,,,数字9在哪里？,,,Where is the nine?,Où est le neuf ?,,,,,,,,,,,,
-10,,,数字10在哪里？,,,Where is the ten?,Où est le dix ?,,,,,,,,,,,,
+,alb,ara,chn,deu,ell,eng,fin,fra,hrv,ita,ind,jpn,pol,por,zsm,nld,rus,spa,vnm,bel,hin
+0,Ku është zero?,اين صِفْر؟,数字0在哪里？,Wo ist die Null?,Πού είναι το μηδέν;,Where is the zero ?,Missä nolla on?,Où est le zéro ?,Gdje je nula?,Dov'è lo zero?,Where is zero?,0つはどこにありますか？,Gdzie jest zero?,Gdzie jest zero?,Di manakah nol?,Waar is de nul?,Где ноль?,¿Dónde está el cero?,Số không ở đâu?,Дзе нуль?,शून्य कहाँ है?
+1,Ku është një?,اين وَاحِد؟,数字1在哪里？,Wo ist die Eins?,Πού είναι το ένα;,Where is the one?,Missä yksi on?,Où est le un ?,Gdje je onaj?,Dov'è l'uno?,Where's one?,1つはどこにありますか？,Gdzie jest ten?,Gdzie jest jeden?,Di manakah satu?,Waar is de een?,Где один?,¿Dónde está el uno?,Số một ở đâu?,Дзе адзін?,एक कहाँ है?
+2,Ku është dy?,اين إِثنان؟,数字2在哪里？,Wo ist die Zwei?,Πού είναι τα δύο;,Where is the two?,Missä kaksi on?,Où est le deux ?,Gdje je dvoje?,Dov'è il due?,Where are two?,2つはどこにありますか？,Gdzie jest ta dwójka?,Gdzie jest dwa?,Di manakah dua?,Waar is de twee?,Где два?,¿Dónde está el dos?,Số hai ở đâu?,Дзе два?,दो कहाँ है?
+3,Ku është tre?,اين ثَلاثة؟,数字3在哪里？,Wo ist die Drei?,Πού είναι τα τρία;,Where is the three?,Missä kolme on?,Où est le trois ?,Gdje je troje?,Dov'è il tre?,Where are three?,3つはどこにありますか？,Gdzie jest ta trójka?,Gdzie jest trzy?,Di manakah tiga?,Waar is de drie?,Где три?,¿Dónde está el tres?,Số ba ở đâu?,Дзе тры?,तीन कहाँ है?
+4,Ku është katërt?,اين أرْبَعَة؟,数字4在哪里？,Wo ist die Vier?,Πού είναι τα τέσσερα;,Where is the four?,Missä neljä on?,Où est le quatre ?,Gdje je četvorica?,Dov'è il quattro?,Where are four?,4つはどこにありますか？,Gdzie jest ta czwórka?,Gdzie jest cztery?,Di manakah empat?,Waar is de vier?,Где четыре?,¿Dónde está el cuatro?,Số bốn ở đâu?,Дзе чатыры?,चार कहाँ है?
+5,Ku është pesë?,اين خَمْسة؟,数字5在哪里？,Wo ist die Fünf?,Πού είναι το πέντε;,Where is the five?,Missä viisi on?,Où est le cinq ?,Gdje je petica?,Dov'è il cinque?,Where's five?,5つはどこにありますか？,Gdzie jest ta piątka?,Gdzie jest pięć?,Di manakah lima?,Waar is de vijf?,Где пять?,¿Dónde está el cinco?,Số năm ở đâu?,Дзе пяць?,पांच कहाँ है?
+6,Ku është gjashtë?,اين سِتَّة؟,数字6在哪里？,Wo ist die Sechs?,Πού είναι το έξι;,Where is the six?,Missä kuusi on?,Où est le six ?,Gdje je šestica?,Dov'è il sei?,Where's six?,6つはどこにありますか？,Gdzie jest szóstka?,Gdzie jest sześć?,Di manakah enam?,Waar is de zes?,Где шесть?,¿Dónde está el seis?,Số sáu ở đâu?,Дзе шэсьць?,छक्का कहाँ है?
+7,Ku është shtatë?,اين سَبْعَة؟,数字7在哪里？,Wo ist die Sieben?,Πού είναι το επτά;,Where is the seven?,Missä seitsemän on?,Où est le sept ?,Gdje je sedam?,Dov'è il sette?,Where's seven?,7つはどこにありますか？,Gdzie jest siódemka?,Gdzie jest siedem?,Di manakah tujuh?,Waar is de zeven?,Где семь?,¿Dónde está el siete?,Số bảy ở đâu?,Дзе сем?,सात कहाँ है?
+8,Ku është tetë?,اين ثَمانِة؟,数字8在哪里？,Wo ist die Acht?,Πού είναι το οκτώ;,Where is the eight?,Missä kahdeksan on?,Où est le huit ?,Gdje je osmica?,Dov'è l'otto?,Where's eight?,8つはどこにありますか？,Gdzie jest ósemka?,Gdzie jest osiem?,Di manakah delapan?,Waar is de acht?,Где восемь?,¿Dónde está el ocho?,Số tám ở đâu?,Дзе восем?,आठ कहाँ है?
+9,Ku është nëntë?,اين تِسْعة؟,数字9在哪里？,Wo ist die Neun?,Πού είναι το εννιά;,Where is the nine?,Missä yhdeksän on?,Où est le neuf ?,Gdje je devetka?,Dov'è il nove?,Where's the nine?,9つはどこにありますか？,Gdzie jest dziewiątka?,Gdzie jest dziewięć?,Di manakah sembilan?,Waar is de negen?,Где девять?,¿Dónde está el nueve?,Số chín ở đâu?,Дзе дзевяць?,नौ कहाँ है?
+10,Ku është dhjetë?,اين عَشَرة؟,数字10在哪里？,Wo ist die Zehn?,Πού είναι το δέκα;,Where is the ten?,Missä kymmenen on?,Où est le dix ?,Gdje je desetka?,Dov'è il dieci?,Where's ten?,10つはどこにありますか？,Gdzie jest dziesiątka?,Gdzie jest dziesięć?,Di manakah sepuluh?,Waar is de tien?,Где десять?,¿Dónde está el diez?,Số mười ở đâu?,Дзе дзесяць?,दस कहाँ है?

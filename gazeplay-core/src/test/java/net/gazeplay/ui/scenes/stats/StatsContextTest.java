@@ -55,7 +55,7 @@ class StatsContextTest {
     @Mock
     private Stats mockStats;
 
-    private SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(
+    private final SavedStatsInfo mockSavedStatsInfo = new SavedStatsInfo(
         new File("file.csv"),
         new File("file.csv"),
         new File("file.csv"),
@@ -67,7 +67,7 @@ class StatsContextTest {
 
     @BeforeEach
     void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockGazePlay.getTranslator()).thenReturn(mockTranslator);
         when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(() -> new Dimension2D(1920, 1080));
         when(mockTranslator.currentLocale()).thenReturn(Locale.ENGLISH);
@@ -115,6 +115,7 @@ class StatsContextTest {
         verify(metrics).setFitHeight(200 * 0.35);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     void shouldAddAreaChartOnColorBandSelected() {
         ArrayList<LinkedList<FixationPoint>> fixationPoints = new ArrayList<>(List.of(
