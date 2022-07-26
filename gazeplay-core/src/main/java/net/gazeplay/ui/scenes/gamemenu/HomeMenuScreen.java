@@ -63,6 +63,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private List<Node> gameCardsList;
     private List<Node> favGameCardsList;
 
+    public GamesStatisticsPane gamesStatisticsPane;
+    public CheckBox checkBox;
+
     @Getter
     private Label errorMessageLabel;
     @Getter
@@ -124,7 +127,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         I18NTooltip.install(configurationButton, tooltipLogoutOptions);
         I18NTooltip.install(replayGameButton, tooltipReplay);
 
-        GamesStatisticsPane gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games, config.isBackgroundDark());
+        gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games, config.isBackgroundDark());
         BorderPane bottomPane = new BorderPane();
         bottomPane.setLeft(leftControlPane);
         bottomPane.setCenter(gamesStatisticsPane);
@@ -183,16 +186,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         root.setTop(topPane);
         root.setBottom(bottomPane);
         root.setCenter(centerStackPane);
-
-        if (config.isBackgroundDark()) {
-            root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
-        } else {
-            root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: black;");
-        }
     }
 
     public void afsrGazeplayHomeMenuScreen(GazePlay gazePlay, GamesLocator gamesLocator) {
@@ -229,7 +222,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         I18NTooltip.install(configurationButton, tooltipLogoutOptions);
         I18NTooltip.install(replayGameButton, tooltipReplay);
 
-        GamesStatisticsPane gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games, config.isBackgroundDark());
+        gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games, config.isBackgroundDark());
 
         BorderPane bottomPane = new BorderPane();
         bottomPane.setLeft(leftControlPane);
@@ -300,15 +293,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         root.setTop(topPane);
         root.setBottom(bottomPane);
         root.setCenter(centerStackPane);
-        if (config.isBackgroundDark()) {
-            root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
-        } else {
-            root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
-                + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
-                + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: black;");
-        }
     }
 
     @Override
@@ -513,12 +497,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         I18NText label = new I18NText(translator, category.getGameCategory());
         CheckBox categoryCheckbox = new CheckBox(label.getText());
 
-        if (!config.isBackgroundDark()) {
-            categoryCheckbox.setTextFill(Color.BLACK);
-        } else {
-            categoryCheckbox.setTextFill(Color.WHITE);
-        }
-
+        categoryCheckbox.setTextFill(Color.GRAY);
         categoryCheckbox.setSelected(!config.getHiddenCategoriesProperty().contains(category.getGameCategory()));
         categoryCheckbox.selectedProperty().addListener((o) -> {
             if (categoryCheckbox.isSelected()) {
@@ -556,14 +535,16 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        if (config.isBackgroundDark()) {
+        if (config.getBackgroundDarkTheme().getValue()) {
             root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
                 + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
                 + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
+            gamesStatisticsPane.setAllLabelsStyleDark();
         } else {
             root.setStyle("-fx-background-color: #fffaf0; " + "-fx-background-radius: 8px; "
                 + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
                 + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: black;");
+            gamesStatisticsPane.setAllLabelsStyleLight();
         }
     }
 }

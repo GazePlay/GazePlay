@@ -88,43 +88,20 @@ public class GameMenuController {
     }
 
     public static void runProcessDisplayLoadAndWaitForNewJVMDisplayed(GazePlay gazePlay, ProcessBuilder builder) {
-        File f = new File(GazePlayDirectories.getGazePlayFolder() + "/TokenLauncher");
-        try {
-            boolean success = f.createNewFile();
-            if (!success) {
-                log.info("Token laucher can't be created");
+
+        Thread displayLoadingContextThread = new Thread(() -> {
+            try {
+                Thread.sleep(6000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            log.info("Token laucher can't be created");
-            e.printStackTrace();
-        }
-        if (f.exists()) {
-            Thread displayLoadingContextThread = new Thread(() -> {
-                while (f.exists()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        break;
-                    }
-                }
-                ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
-                gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
-                gazePlay.onReturnToMenu();
-            });
-            displayLoadingContextThread.start();
-        } else {
-            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-            executor.schedule(() -> {
-                ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
-                gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
-                gazePlay.onReturnToMenu();
-                boolean deleteSuccess = f.delete();
-                if (!deleteSuccess) {
-                    log.info("Token laucher can't be deleted");
-                }
-            }, 10, TimeUnit.SECONDS);
-        }
+
+            ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
+            gazePlay.getPrimaryScene().setCursor(Cursor.DEFAULT);
+            gazePlay.onReturnToMenu();
+        });
+
+        displayLoadingContextThread.start();
 
         try {
             builder.inheritIO().start();
