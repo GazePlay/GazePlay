@@ -27,7 +27,8 @@ public enum WhereIsItGameType {
     SHAPES_NORMAL("whereIsTheShape", "whereIsTheShape", Difficulty.NORMAL.toString()),
     SHAPES_HARD("whereIsTheShape", "whereIsTheShape", Difficulty.HARD.toString()),
 
-    SOUNDS_ANIMALS("whereIsTheSoundAnimals","whereIsTheSound", "Animals"),
+    SOUNDS_ANIMALS("whereIsTheSound","whereIsTheSound", "Animals"),
+    SOUNDS_INSTRUMENTS("whereIsTheSound","whereIsTheSound", "Instruments"),
     SOUNDS_ALL("whereIsTheSound","whereIsTheSound", "AllSounds");
 
     @Getter

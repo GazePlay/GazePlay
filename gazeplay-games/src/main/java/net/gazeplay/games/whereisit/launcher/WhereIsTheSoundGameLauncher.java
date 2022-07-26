@@ -31,6 +31,7 @@ public class WhereIsTheSoundGameLauncher implements IGameLauncher<Stats,Dimensio
     public GameLifeCycle createNewGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats) {
         WhereIsItGameType gameType = switch (gameVariant.getVariant()) {
             case "Animals" -> WhereIsItGameType.SOUNDS_ANIMALS;
+            case "Instruments" -> WhereIsItGameType.SOUNDS_INSTRUMENTS;
             default -> WhereIsItGameType.SOUNDS_ALL;
         };
         return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats);
@@ -40,6 +41,7 @@ public class WhereIsTheSoundGameLauncher implements IGameLauncher<Stats,Dimensio
     public GameLifeCycle replayGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
         WhereIsItGameType gameType = switch (gameVariant.getVariant()) {
             case "Animals" -> WhereIsItGameType.SOUNDS_ANIMALS;
+            case "Instruments" -> WhereIsItGameType.SOUNDS_INSTRUMENTS;
             default -> WhereIsItGameType.SOUNDS_ALL;
         };
         return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats, gameSeed);

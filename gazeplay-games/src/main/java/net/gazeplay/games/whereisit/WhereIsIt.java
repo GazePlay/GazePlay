@@ -143,7 +143,7 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
 
-        if (this.gameType == SOUNDS_ALL || this.gameType == SOUNDS_ANIMALS) {
+        if (gameType.toString().contains("SOUNDS")) {
             final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
             backgroundMusicManager.pause();
         }
@@ -609,7 +609,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         final String voice = randomGenerator.nextDouble() > 0.5 ? "m" : "w";
 
-        if (this.gameType == SOUNDS_ALL || this.gameType == SOUNDS_ANIMALS) {
+        if (gameType.toString().contains("SOUNDS")) {
             return "data/" + this.gameType.getResourcesDirectoryName() + "/sounds/" + folder + ".mp3";
         }
         return "data/" + this.gameType.getResourcesDirectoryName() + "/sounds/" + language + "/" + folder + "." + voice
@@ -630,7 +630,7 @@ public class WhereIsIt implements GameLifeCycle {
 
         final Multilinguism localMultilinguism = MultilinguismFactory.getForResource(gameType.getLanguageResourceLocation());
 
-        if (this.gameType == SOUNDS_ALL || this.gameType == SOUNDS_ANIMALS) {
+        if (gameType.toString().contains("SOUNDS")) {
             return localMultilinguism.getTranslation("listen", language);
         }
         return localMultilinguism.getTranslation(folder, language);

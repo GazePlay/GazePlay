@@ -12,24 +12,41 @@
     "sheep",
     "snake"
   ],
+  "Instruments": [
+    "accordion",
+    "drums",
+    "flute",
+    "guitar",
+    "harp",
+    "piano",
+    "triangle",
+    "trumpet",
+    "violin"
+  ],
   "AllSounds": [
+    "accordion",
     "applause",
-    "batery",
     "bird",
     "car",
     "cat",
     "chicken",
     "cow",
     "dog",
+    "drums",
     "duck",
     "elephant",
     "flute",
     "guitar",
+    "harp",
     "lion",
+    "piano",
     "pig",
     "river",
     "sheep",
     "snake",
-    "storm"
+    "storm",
+    "triangle",
+    "trumpet",
+    "violin"
   ]
 }

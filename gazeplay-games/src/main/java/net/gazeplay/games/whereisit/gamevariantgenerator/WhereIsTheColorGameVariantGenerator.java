@@ -21,7 +21,12 @@ public class WhereIsTheColorGameVariantGenerator implements IGameVariantGenerato
             new DimensionDifficultyGameVariant(2, 2, Difficulty.NORMAL.toString()),
             new DimensionDifficultyGameVariant(2, 3, Difficulty.NORMAL.toString()),
             new DimensionDifficultyGameVariant(3, 2, Difficulty.NORMAL.toString()),
-            new DimensionDifficultyGameVariant(3, 3, Difficulty.NORMAL.toString())
+            new DimensionDifficultyGameVariant(3, 3, Difficulty.NORMAL.toString()),
+            new DimensionDifficultyGameVariant(1, 2, Difficulty.HARD.toString()),
+            new DimensionDifficultyGameVariant(2, 2, Difficulty.HARD.toString()),
+            new DimensionDifficultyGameVariant(2, 3, Difficulty.HARD.toString()),
+            new DimensionDifficultyGameVariant(3, 2, Difficulty.HARD.toString()),
+            new DimensionDifficultyGameVariant(3, 3, Difficulty.HARD.toString())
         ));
     }
 }
