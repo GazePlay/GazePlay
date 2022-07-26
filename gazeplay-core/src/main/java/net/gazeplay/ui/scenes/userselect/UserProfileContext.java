@@ -104,7 +104,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
         root.setTop(topPane);
         root.setCenter(centerCenterPane);
-        if (config.isBackgroundDark()) {
+        if (config.getBackgroundDarkTheme().getValue()) {
             root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
                 + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
                 + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
