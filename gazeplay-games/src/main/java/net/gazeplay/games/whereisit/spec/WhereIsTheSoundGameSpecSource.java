@@ -4,6 +4,7 @@ import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
+import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsTheSoundGameVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.WhereIsTheSoundGameLauncher;
 
 public class WhereIsTheSoundGameSpecSource implements GameSpecSource {
@@ -13,6 +14,6 @@ public class WhereIsTheSoundGameSpecSource implements GameSpecSource {
             GameSummary.builder().nameCode("WhereIsTheSound").gameThumbnail("data/Thumbnails/whereIsTheSound.png")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION).build(),
-            new WhereIsTheSoundGameLauncher());
+            new WhereIsTheSoundGameVariantGenerator(), new WhereIsTheSoundGameLauncher());
     }
 }

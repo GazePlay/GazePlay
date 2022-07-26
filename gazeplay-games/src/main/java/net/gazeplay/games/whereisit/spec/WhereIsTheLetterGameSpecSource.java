@@ -4,7 +4,7 @@ import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
-import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsItGameVariantGenerator;
+import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsTheLetterGameVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.WhereIsTheLetterGameLauncher;
 
 public class WhereIsTheLetterGameSpecSource implements GameSpecSource {
@@ -15,6 +15,6 @@ public class WhereIsTheLetterGameSpecSource implements GameSpecSource {
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LITERACY)
                 .category(GameCategories.Category.MEMORIZATION).build(),
-            new WhereIsItGameVariantGenerator(), new WhereIsTheLetterGameLauncher());
+            new WhereIsTheLetterGameVariantGenerator(), new WhereIsTheLetterGameLauncher());
     }
 }

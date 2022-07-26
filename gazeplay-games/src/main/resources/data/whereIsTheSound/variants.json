@@ -1,0 +1,35 @@
+{
+  "Animals": [
+    "bird",
+    "cat",
+    "chicken",
+    "cow",
+    "dog",
+    "duck",
+    "elephant",
+    "lion",
+    "pig",
+    "sheep",
+    "snake"
+  ],
+  "AllSounds": [
+    "applause",
+    "batery",
+    "bird",
+    "car",
+    "cat",
+    "chicken",
+    "cow",
+    "dog",
+    "duck",
+    "elephant",
+    "flute",
+    "guitar",
+    "lion",
+    "pig",
+    "river",
+    "sheep",
+    "snake",
+    "storm"
+  ]
+}

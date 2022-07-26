@@ -9,7 +9,7 @@ import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
 import java.util.Set;
 
-public class WhereIsItDifficultyGameVariantGenerator implements IGameVariantGenerator {
+public class WhereIsTheShapeGameVariantGenerator implements IGameVariantGenerator {
     @Override
     public Set<IGameVariant> getVariants() {
         return Sets.newLinkedHashSet(Lists.newArrayList(

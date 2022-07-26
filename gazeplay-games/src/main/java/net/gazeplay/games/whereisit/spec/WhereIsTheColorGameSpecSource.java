@@ -4,7 +4,7 @@ import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
-import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsItDifficultyGameVariantGenerator;
+import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsTheColorGameVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.WhereIsTheColorGameLauncher;
 
 public class WhereIsTheColorGameSpecSource implements GameSpecSource {
@@ -14,6 +14,6 @@ public class WhereIsTheColorGameSpecSource implements GameSpecSource {
             GameSummary.builder().nameCode("WhereIsTheColor").gameThumbnail("data/Thumbnails/whereIsTheColor.png")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION).build(),
-            new WhereIsItDifficultyGameVariantGenerator(), new WhereIsTheColorGameLauncher());
+            new WhereIsTheColorGameVariantGenerator(), new WhereIsTheColorGameLauncher());
     }
 }

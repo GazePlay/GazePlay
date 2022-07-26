@@ -74,7 +74,7 @@ class PictureCard extends Group {
 
         this.imagePath = imagePath;
 
-        if (gameInstance.getGameType() == COLORS_NORMAL || gameInstance.getGameType() == COLORS_EASY || gameInstance.getGameType() == FLAGS) {
+        if (gameInstance.getGameType() == COLORS_NORMAL || gameInstance.getGameType() == COLORS_EASY || gameInstance.getGameType() == FLAGS_ALL) {
             this.imageRectangle = createStretchedImageView(posX, posY, width, height, imagePath);
         } else {
             this.imageRectangle = createImageView(posX, posY, width, height, imagePath);

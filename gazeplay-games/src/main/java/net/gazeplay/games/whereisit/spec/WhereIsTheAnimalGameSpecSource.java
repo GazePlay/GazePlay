@@ -4,7 +4,7 @@ import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
-import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsItDynamicGameVariantGenerator;
+import net.gazeplay.games.whereisit.gamevariantgenerator.WhereIsTheAnimalGameVariantGenerator;
 import net.gazeplay.games.whereisit.launcher.WhereIsTheAnimalGameLauncher;
 
 public class WhereIsTheAnimalGameSpecSource implements GameSpecSource {
@@ -14,6 +14,6 @@ public class WhereIsTheAnimalGameSpecSource implements GameSpecSource {
             GameSummary.builder().nameCode("WhereIsTheAnimal").gameThumbnail("data/Thumbnails/whereIsTheAnimal.png")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION).build(),
-            new WhereIsItDynamicGameVariantGenerator(), new WhereIsTheAnimalGameLauncher());
+            new WhereIsTheAnimalGameVariantGenerator(), new WhereIsTheAnimalGameLauncher());
     }
 }
