@@ -20,25 +20,25 @@ import java.util.LinkedList;
 public class WhereIsTheNumberGameLauncher implements IGameLauncher<Stats, DimensionGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
-        return new WhereIsItStats(scene, WhereIsItGameType.SOUNDS_ANIMAL.getGameName());
+        return new WhereIsItStats(scene, WhereIsItGameType.NUMBERS.getGameName());
     }
 
     @Override
     public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
-        return new WhereIsItStats(scene, WhereIsItGameType.SOUNDS_ANIMAL.getGameName(), nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+        return new WhereIsItStats(scene, WhereIsItGameType.NUMBERS.getGameName(), nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
                                        DimensionGameVariant gameVariant, Stats stats) {
-        return new WhereIsIt(WhereIsItGameType.SOUNDS_ANIMAL, gameVariant.getWidth(),
+        return new WhereIsIt(WhereIsItGameType.NUMBERS, gameVariant.getWidth(),
             gameVariant.getHeight(), false, gameContext, stats);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
                                        DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
-        return new WhereIsIt(WhereIsItGameType.SOUNDS_ANIMAL, gameVariant.getWidth(),
+        return new WhereIsIt(WhereIsItGameType.NUMBERS, gameVariant.getWidth(),
             gameVariant.getHeight(), false, gameContext, stats, gameSeed);
     }
 
