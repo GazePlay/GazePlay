@@ -446,6 +446,8 @@ public class ColorToolBox extends Pane {
 
         mainPane.getChildren().clear();
 
+        this.buildAddCustomCostomColorButton();
+
         for (int i = firstColorDisplayed; i < firstColorDisplayed + NB_COLORS_DISPLAYED && i < colorBoxes.size(); ++i) {
             mainPane.getChildren().add(colorBoxes.get(i));
         }
@@ -464,8 +466,6 @@ public class ColorToolBox extends Pane {
         } else if (firstColorDisplayed - NB_COLORS_DISPLAYED < 0) {
             previousPallet.setDisable(true);
         }
-
-        this.buildAddCustomCostomColorButton();
     }
 
     private void buildAddCustomCostomColorButton() {
