@@ -504,7 +504,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         };
 
         if (gazeplayType.equals("bera")) {
-            HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, stats.getSavedStatsJSON(), inReplayMode);
+            HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, stats.getSavedStatsInfo().getReplayDataFile(), inReplayMode);
             I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
             I18NTooltip.install(homeButton, tooltipBackToMenu);
 
@@ -536,7 +536,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 controlButtonPane.getChildren().add(continueButton);
             }
         } else {
-            HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, stats.getSavedStatsJSON(), inReplayMode);
+            HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, stats.getSavedStatsInfo().getReplayDataFile(), inReplayMode);
             I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
             I18NTooltip.install(homeButton, tooltipBackToMenu);
 

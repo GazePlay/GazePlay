@@ -1,6 +1,5 @@
 package net.gazeplay.commons.utils.stats;
 
-import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -9,7 +8,11 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.chart.*;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -26,17 +29,24 @@ import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.stats.ShootGamesStats;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 import static javafx.scene.chart.XYChart.Data;
 
 @Slf4j
 public class StatDisplayUtils {
 
-    public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, JsonObject savedStatsJSON, boolean inReplayMode) {
-        EventHandler<Event> homeEvent = e -> closeStatsWindow(savedStatsJSON, inReplayMode);
+    public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, File savedStatsFile, boolean inReplayMode) {
+        EventHandler<Event> homeEvent = e -> closeStatsWindow(savedStatsFile, inReplayMode);
 
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
@@ -46,13 +56,13 @@ public class StatDisplayUtils {
         return homeButton;
     }
 
-    static void closeStatsWindow(JsonObject savedStatsJSON, boolean inReplayMode) {
-        sentStatsToServer(savedStatsJSON, inReplayMode);
+    static void closeStatsWindow(File savedStatsFile, boolean inReplayMode) {
+        sentStatsToServer(savedStatsFile, inReplayMode);
         Platform.exit();
         System.exit(0);
     }
 
-    static void sentStatsToServer(JsonObject savedStatsJSON, boolean inReplayMode) {
+    static void sentStatsToServer(File savedStatsFile, boolean inReplayMode) {
         if (inReplayMode) {
             log.info("Game statistics data not sent to server: data not re-sent when replaying game");
             return;
@@ -61,25 +71,36 @@ public class StatDisplayUtils {
             log.info("Game statistics data not sent to server: authorization deactivated");
             return;
         }
-/*
-        String hostname = "129.88.11.107";
-        int portNumber = 30001;
+
+        String hostname = "129.88.11.38";
+        int portNumber = 30000;
 
         try {
             Socket socket = new Socket(hostname, portNumber);
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            log.info("CONNECT");
 
-            out.println("TEST");
-            log.info(in.readLine());
+            String fileName = savedStatsFile.getName();
+            int fileSize = (int) savedStatsFile.length();
+            byte[] fileByte = new byte[fileSize];
 
+            OutputStream os = socket.getOutputStream();
+            PrintWriter pr = new PrintWriter(socket.getOutputStream(), true);
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(savedStatsFile));
+            Scanner in = new Scanner(socket.getInputStream());
+
+            pr.println(fileName);
+            pr.println(fileSize);
+            bis.read(fileByte, 0, fileByte.length);
+            os.write(fileByte, 0, fileByte.length);
+            log.info("<<{}>>", in.nextLine());
+            os.flush();
             socket.close();
 
             log.info("Game statistics data sent to server successfully");
         } catch (Exception e) {
             log.warn("Game statistics data not sent to server: error during transfer");
             log.warn(e.getMessage());
-        }*/
+        }
     }
 
     public static LineChart<String, Number> buildLineChart(Stats stats, final Region root) {
