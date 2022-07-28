@@ -132,8 +132,6 @@ public class ColorsGame implements GameLifeCycle {
 
         defaultImg=true;
         final Dimension2D dimensions=gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final double width = dimensions.getWidth();
-        final double height = dimensions.getHeight();
         nextButton = new ProgressButton();
 
         final ImageView nextImage = new ImageView("data/colors/images/next.png");
