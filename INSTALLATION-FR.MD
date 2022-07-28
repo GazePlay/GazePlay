@@ -53,7 +53,12 @@ Pour ce faire : file -> project structure -> Project
 
 ![mise en place azul](AssetsInstallation/DL-setAzul.png)
 
-## Etape 5 : Build le projet
+## Etape 5 : Vérifier les paramètres de Gradle
+
+Vérifier que Gradle utilise le JDK 17.0.3 ou le JDK du projet. Si ce n'est pas le cas mettez le JDK à 17.0.3.
+![gradleSettings](AssetsInstallation/gradleSettings.png)
+
+## Etape 6 : Build le projet
 
 Pour lancer le build : appuyer sur le marteau vert en haut à droite de l'écran et le build va se lancer.
 
@@ -65,7 +70,7 @@ Normalement on obtient ceci.
 
 Si l'edit configuration n'est pas créé suite au build, redémarrer l'intellij.
 
-## Etape 6 : lancer le projet
+## Etape 7 : lancer le projet
 
 Pour lancer le projet : appuyer sur la flèche verte en haut à droite de l'écran et gazeplay va se lancer.
 
