@@ -107,15 +107,19 @@ public class GameVariantDialog extends Stage {
 
             if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheLetter") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheSound")
             ) {
                 String difficultyString = ((DimensionDifficultyGameVariant) variant).getVariant();
                 int indexOfTheVariant = switch(difficultyString) {
-                    case "Easy", "AllAnimals", "Vowels", "Animals" -> 0;
-                    case "Normal", "Dynamic", "Consonants", "Instruments" -> 1;
-                    case "Hard", "AllLetters", "AllSounds" -> 2;
+                    case "Easy", "Vowels", "AllAnimals", "Animals", "MostFamous" -> 0;
+                    case "Normal", "Consonants", "Dynamic", "Instruments", "Africa" -> 1;
+                    case "Hard", "AllLetters", "AllSounds", "America" -> 2;
+                    case "Asia" -> 3;
+                    case "Europe" -> 4;
+                    case "AllFlags" -> 5;
                     default -> -1;
                 };
 
@@ -158,6 +162,7 @@ public class GameVariantDialog extends Stage {
                 gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheLetter") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheSound")) &&
@@ -176,6 +181,14 @@ public class GameVariantDialog extends Stage {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("AllAnimals"));
                     categories[1] = new RadioButton(translator.translate("Dynamic"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag")) {
+                    categories = new RadioButton[6];
+                    categories[0] = new RadioButton(translator.translate("MostFamous"));
+                    categories[1] = new RadioButton(translator.translate("Africa"));
+                    categories[2] = new RadioButton(translator.translate("America"));
+                    categories[3] = new RadioButton(translator.translate("Asia"));
+                    categories[4] = new RadioButton(translator.translate("Europe"));
+                    categories[5] = new RadioButton(translator.translate("AllFlags"));
                 } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheLetter")) {
                     categories = new RadioButton[3];
                     categories[0] = new RadioButton(translator.translate("Vowels"));

@@ -31,11 +31,27 @@ public class WhereIsTheFlagGameLauncher implements IGameLauncher<Stats, Dimensio
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats) {
-        return new WhereIsIt(WhereIsItGameType.FLAGS_ALL, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats);
+        WhereIsItGameType gameType = switch (gameVariant.getVariant()) {
+            case "MostFamous" -> WhereIsItGameType.FLAGS_MOST_FAMOUS;
+            case "Africa" -> WhereIsItGameType.FLAGS_AFRICA;
+            case "America" -> WhereIsItGameType.FLAGS_AMERICA;
+            case "Asia" -> WhereIsItGameType.FLAGS_ASIA;
+            case "Europe" -> WhereIsItGameType.FLAGS_EUROPE;
+            default -> WhereIsItGameType.FLAGS_ALL;
+        };
+        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
-        return new WhereIsIt(WhereIsItGameType.FLAGS_ALL, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats, gameSeed);
+        WhereIsItGameType gameType = switch (gameVariant.getVariant()) {
+            case "MostFamous" -> WhereIsItGameType.FLAGS_MOST_FAMOUS;
+            case "Africa" -> WhereIsItGameType.FLAGS_AFRICA;
+            case "America" -> WhereIsItGameType.FLAGS_AMERICA;
+            case "Asia" -> WhereIsItGameType.FLAGS_ASIA;
+            case "Europe" -> WhereIsItGameType.FLAGS_EUROPE;
+            default -> WhereIsItGameType.FLAGS_ALL;
+        };
+        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats, gameSeed);
     }
 }

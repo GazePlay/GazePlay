@@ -15,6 +15,11 @@ public enum WhereIsItGameType {
     COLORS_NORMAL("whereIsTheColor", "whereIsTheColor", Difficulty.NORMAL.toString()),
     COLORS_HARD("whereIsTheColor", "whereIsTheColor", Difficulty.HARD.toString()),
 
+    FLAGS_MOST_FAMOUS("whereIsTheFlag", "whereIsTheFlag", "MostFamous"),
+    FLAGS_AFRICA("whereIsTheFlag", "whereIsTheFlag", "Africa"),
+    FLAGS_AMERICA("whereIsTheFlag", "whereIsTheFlag", "America"),
+    FLAGS_ASIA("whereIsTheFlag", "whereIsTheFlag", "Asia"),
+    FLAGS_EUROPE("whereIsTheFlag", "whereIsTheFlag", "Europe"),
     FLAGS_ALL("whereIsTheFlag", "whereIsTheFlag", "AllFlags"),
 
     LETTERS_VOWELS("whereIsTheLetter", "whereIsTheLetter", "Vowels"),

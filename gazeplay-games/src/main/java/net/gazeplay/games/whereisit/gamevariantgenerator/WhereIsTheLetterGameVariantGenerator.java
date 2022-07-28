@@ -16,7 +16,6 @@ public class WhereIsTheLetterGameVariantGenerator implements IGameVariantGenerat
             new DimensionDifficultyGameVariant(2, 2, "Vowels"),
             new DimensionDifficultyGameVariant(2, 3, "Vowels"),
             new DimensionDifficultyGameVariant(3, 2, "Vowels"),
-            new DimensionDifficultyGameVariant(3, 3, "Consonants"),
             new DimensionDifficultyGameVariant(1, 2, "Consonants"),
             new DimensionDifficultyGameVariant(2, 2, "Consonants"),
             new DimensionDifficultyGameVariant(2, 3, "Consonants"),
