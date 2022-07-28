@@ -53,7 +53,13 @@ To do this: file -> project structure -> Project
 
 ![mise en place azul](AssetsInstallation/DL-setAzul.png)
 
-## Step 5 : Build the project
+## Step 5 : Check JDK on Gradle settings
+
+Check if gradle use the JDK 17.0.3 or the project JDK. If not set it here
+
+![gradle settings](AssetsInstallation/gradleSettings.png)
+
+## Step 6 : Build the project
 
 To launch the build: press the green hammer at the top right of the screen and the build will start.
 
@@ -65,7 +71,7 @@ Normally you get this.
 
 If the edit configuration is not created after the build, restart the intellij.
 
-## Step 6 : start the projet
+## Step 7 : start the projet
 
 To launch the project: press the green arrow at the top right of the screen and gazeplay will start.
 
