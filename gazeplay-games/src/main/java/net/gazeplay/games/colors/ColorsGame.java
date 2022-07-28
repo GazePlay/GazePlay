@@ -117,7 +117,9 @@ public class ColorsGame implements GameLifeCycle {
         "draw-turtle.png",
         "draw-nature.png",
         "draw-butterfly.png",
-        "draw-cake.png"};
+        "draw-cake.png",
+        "draw-rabbit.png",
+        "draw-aqua.png"};
     private int index;
     private boolean defaultImg;
     private final ProgressButton nextButton;
@@ -130,13 +132,14 @@ public class ColorsGame implements GameLifeCycle {
 
         defaultImg=true;
         final Dimension2D dimensions=gameContext.getGamePanelDimensionProvider().getDimension2D();
-
+        final double width = dimensions.getWidth();
+        final double height = dimensions.getHeight();
         nextButton = new ProgressButton();
 
         final ImageView nextImage = new ImageView("data/colors/images/next.png");
         nextImage.setFitHeight(dimensions.getHeight() / 8);
         nextImage.setFitWidth(dimensions.getHeight() / 8);
-        nextButton.setLayoutX(dimensions.getWidth() / 2.75 + nextImage.getFitWidth()/2);
+        nextButton.setLayoutX(dimensions.getWidth() -4.5*nextImage.getFitWidth());
         nextButton.setLayoutY(0.2 * nextImage.getFitHeight());
         nextButton.setImage(nextImage);
         nextButton.assignIndicatorUpdatable(event -> {changeImageNext();launch();}, gameContext);
@@ -148,7 +151,7 @@ public class ColorsGame implements GameLifeCycle {
         final ImageView prevImage = new ImageView("data/colors/images/prev.png");
         prevImage.setFitHeight(dimensions.getHeight() / 8);
         prevImage.setFitWidth(dimensions.getHeight() / 8);
-        prevButton.setLayoutX(dimensions.getWidth() / 2.75 - prevImage.getFitWidth()/2);
+        prevButton.setLayoutX(0.6 *prevImage.getFitWidth());
         prevButton.setLayoutY( 0.2 * prevImage.getFitHeight());
         prevButton.setImage(prevImage);
         prevButton.assignIndicatorUpdatable(event -> {changeImagePrev();launch();}, gameContext);
