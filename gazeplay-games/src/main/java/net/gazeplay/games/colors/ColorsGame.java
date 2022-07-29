@@ -6,10 +6,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
+import javafx.scene.image.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -24,6 +23,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.GazeIndicator;
 import net.gazeplay.components.GazeFollowerIndicator;
+import net.gazeplay.components.ProgressButton;
 
 import java.io.File;
 import java.io.IOException;
@@ -107,10 +107,57 @@ public class ColorsGame implements GameLifeCycle {
      * The colorization event handler
      */
     private CustomEventHandler colorizationEventHandler;
+    private String imageToColor [] ={"draw-flower.png",
+        "draw-cupcake.png",
+        "draw-dolphin.png",
+        "draw-apple.png",
+        "draw-home.png",
+        "draw-leaf.png",
+        "draw-sun.png",
+        "draw-turtle.png",
+        "draw-nature.png",
+        "draw-butterfly.png",
+        "draw-cake.png",
+        "draw-rabbit.png",
+        "draw-aqua.png"};
+    private int index;
+    private boolean defaultImg;
+    private final ProgressButton nextButton;
+    private final ProgressButton prevButton;
 
     ColorsGame(final IGameContext gameContext, final ColorsGamesStats stats, final Translator translator) {
         this.gameContext = gameContext;
         this.stats = stats;
+        index = 0;
+
+        defaultImg=true;
+        final Dimension2D dimensions=gameContext.getGamePanelDimensionProvider().getDimension2D();
+        nextButton = new ProgressButton();
+
+        final ImageView nextImage = new ImageView("data/colors/images/next.png");
+        nextImage.setFitHeight(dimensions.getHeight() / 8);
+        nextImage.setFitWidth(dimensions.getHeight() / 8);
+        nextButton.setLayoutX(dimensions.getWidth() -4.5*nextImage.getFitWidth());
+        nextButton.setLayoutY(0.2 * nextImage.getFitHeight());
+        nextButton.setImage(nextImage);
+        nextButton.assignIndicatorUpdatable(event -> {changeImageNext();launch();}, gameContext);
+        this.gameContext.getGazeDeviceManager().addEventFilter(nextButton);
+        nextButton.active();
+
+        prevButton= new ProgressButton();
+
+        final ImageView prevImage = new ImageView("data/colors/images/prev.png");
+        prevImage.setFitHeight(dimensions.getHeight() / 8);
+        prevImage.setFitWidth(dimensions.getHeight() / 8);
+        prevButton.setLayoutX(0.6 *prevImage.getFitWidth());
+        prevButton.setLayoutY( 0.2 * prevImage.getFitHeight());
+        prevButton.setImage(prevImage);
+        prevButton.assignIndicatorUpdatable(event -> {changeImagePrev();launch();}, gameContext);
+        this.gameContext.getGazeDeviceManager().addEventFilter(prevButton);
+        prevButton.active();
+
+
+
 
         root = gameContext.getRoot();
 
@@ -150,6 +197,8 @@ public class ColorsGame implements GameLifeCycle {
     @Override
     public void launch() {
 
+        gameContext.getChildren().add(nextButton);
+        gameContext.getChildren().add(prevButton);
         this.gazeProgressIndicator = new GazeFollowerIndicator(gameContext, root, root);
 
         this.root.getChildren().add(gazeProgressIndicator);
@@ -163,6 +212,7 @@ public class ColorsGame implements GameLifeCycle {
         buildToolBox(width, height);
 
         // log.info("Toolbox width = {}, height = {}", colorToolBox.getWidth(), colorToolBox.getHeight());
+
         buildDraw(gameContext.getConfiguration().getColorsDefaultImageProperty().getValue(), width, height);
 
         colorToolBox.getColorBoxes().forEach(ColorBox::updateHeight);
@@ -224,6 +274,44 @@ public class ColorsGame implements GameLifeCycle {
         rectangle.toBack();
     }
 
+    private void changeImageNext ()
+    {
+        String imgURL;
+
+        this.index++;
+        if(index>imageToColor.length-1){
+            index=0;
+        }
+        imgURL = imageToColor[index];
+
+        final Image img = getDrawingImage(imgURL);
+
+
+        if (!img.isError()) {
+
+            javaFXEditing(img,imgURL);
+        }
+    }
+
+    private void changeImagePrev ()
+    {
+        String imgURL;
+
+        this.index--;
+        if(index<0){
+            index=imageToColor.length-1;
+        }
+        imgURL = imageToColor[index];
+
+        final Image img = getDrawingImage(imgURL);
+
+
+        if (!img.isError()) {
+
+            javaFXEditing(img,imgURL);
+        }
+    }
+
     private Image getDrawingImage(String imgURL) {
         Image img;
         try {
@@ -233,8 +321,12 @@ public class ColorsGame implements GameLifeCycle {
             log.debug("Drawing image " + imgURL + " cannot be found");
 
             getGameContext().getConfiguration().getColorsDefaultImageProperty().set(Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE);
-
-            String defaultImgURL = Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE;
+            String defaultImgURL;
+            if(defaultImg) {
+                 defaultImgURL= Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE;;
+                defaultImg=false;
+            }
+            else {defaultImgURL ="data/colors/images/" + imageToColor[index];}
             img = new Image(defaultImgURL);
         }
         return img;
