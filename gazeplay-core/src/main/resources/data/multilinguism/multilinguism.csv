@@ -378,26 +378,31 @@ ConnectNumbersDynamic,,,,,,Connect in order dynamic,,Connecter des chiffres dyna
 ConnectOrderDynamic,,,,,,Connect in order  dynamic,,Connecter dans l'ordre  dynamique,,,,,,,,,,,,,
 FlowerOfNumbers,Lulja e numrave,زهرة الأرقام,数字之花,Die Blume der Zahlen,Το λουλούδι των αριθμών,The Flower of Numbers,Numeroiden kukka,La Fleur des nombres,Cvijet brojeva,Bunga Angka,Il fiore dei numeri,数字の花,Kwiat Liczb,A Flor dos Números,Bunga Bilangan,De bloem der getallen,Цветок чисел,La flor de los números,Bông hoa của những con số,Кветка лічбаў,संख्या का फूल
 
-Easy,,,,,,Easy,,Facile,,,,,,,,,,,,
-Normal,,,,,,Normal,,Normal,,,,,,,,,,,,
-Hard,,,,,,Hard,,Difficile,,,,,,,,,,,,
-Classic,,,,,,Classic,,Classique,,,,,,,,,,,,
-Static,,,,,,Static,,Statique,,,,,,,,,,,,
-Classic,,,,,,Classic,,Classique,,,,,,,,,,,,
-Dynamic,,,,,,Dynamic,,Dynamique,,,,,,,,,,,,
-AllAnimals,,,,,,All animals,,Tous les animaux,,,,,,,,,,,,
-MostFamous,,,,,,Most famous,,Plus connus,,,,,,,,,,,,
-Africa,,,,,,Africa,,Afrique,,,,,,,,,,,,
-America,,,,,,America,,Amérique,,,,,,,,,,,,
-Asia,,,,,,Asia,,Asie,,,,,,,,,,,,
-Europe,,,,,,Europe,,Europe,,,,,,,,,,,,
-AllFlags,,,,,,All flags,,Tous,,,,,,,,,,,,
-Vowels,,,,,,Vowels,,Voyelles,,,,,,,,,,,,
-Consonants,,,,,,Consonants,,Consonnes,,,,,,,,,,,,
-AllLetters,,,,,,All letters,,Toutes les lettres,,,,,,,,,,,,
-Animals,,,,,,Animals,,Animaux,,,,,,,,,,,,
-Instruments,,,,,,Instruments,,Instruments,,,,,,,,,,,,
-AllSounds,,,,,,All sounds,,Tous les sons,,,,,,,,,,,,
+Easy,Lehtë,سهل,简单的,Einfach,Ανετα,Easy,Helppo,Facile,Lako,Mudah,Facile,簡単,Łatwo,Fácil,Mudah,Eenvoudig,Легкий,Fácil,Dễ,лёгка,आसान
+Normal,Normale,طبيعي,普通的,Normal,Κανονικός,Normal,Normaali,Normal,Normalan,Normal,Normale,普通,Normalna,Normal,Biasalah,normaal,Обычный,Normal,Bình thường,Нармальны,सामान्य
+Hard,E vështirë,الصعب,难的,Schwer,Σκληρός,Hard,Kovaa,Difficile,teško,Keras,Difficile,難しい,Ciężko,Duro,Keras,Moeilijk,Жесткий,Difícil,Cứng,Цяжка,सख्त
+Classic,Klasike,كلاسيك,经典的,Klassisch,Κλασσικός,Classic,Klassikko,Classique,klasična,Klasik,Classico,クラシック,Klasyczny,Clássico,Klasik,Klassiek,Классический,Clásico,Cổ điển,Класіка,क्लासिक
+Static,Statike,ثابتة,静止的,Statisch,Στατικός,Static,Staattinen,Statique,Statički,Statis,Statico,静的,Statyczny,Estático,Statik,Statisch,Статический,Estático,Tĩnh,Статычны,स्थिर
+Classic,Klasike,كلاسيك,经典的,Klassisch,Κλασσικός,Classic,Klassikko,Classique,klasična,Klasik,Classico,クラシック,Klasyczny,Clássico,Klasik,Klassiek,Классический,Clásico,Cổ điển,Класіка,क्लासिक
+Dynamic,Dinamik,متحرك,动态的,Dynamisch,Δυναμικός,Dynamic,Dynaaminen,Dynamique,Dinamičan,Dinamis,Dinamico,動的,Dynamiczny,Dinâmico,Dinamik,Dynamisch,Динамический,Dinámica,Năng động,Дынамічны,गतिशील
+Farm,Fermë,مزرعة,农场,Bauernhof,Αγρόκτημα,Farm,Maatila,Ferme,Farma,Tanah pertanian,Azienda agricola,農場,Gospodarstwo rolne,Fazenda,Ladang,Boerderij,Ферма,Granja,Nông trại,Ферма,खेत
+Forest,Pyll,غابة,森林,Wald,Δάσος,Forest,Metsä,Forêt,Šuma,Hutan,foresta,森,Las,Floresta,Hutan,Woud,Лес,Bosque,Rừng,Лес,जंगल
+Savanna,Savana,السافانا,稀树草原,Savanne,Σαβάνα,Savanna,Savanni,Savane,Savana,sabana,Savana,サバンナ,Sawanna,Savana,Savana,Savanne,Саванна,Sabana,Savanna,Саванна,लंबा-चौड़ा चरागाह
+Birds,Zogjtë,طيور,鸟类,Vögel,Πουλιά,Birds,Linnut,Oiseaux,Ptice,Burung-burung,Uccelli,鳥,Ptaki,Aves,burung,Vogels,Птицы,Aves,Chim,Птушкі,पक्षियों
+Maritime,Detare,البحرية,海上,Maritim,Θαλάσσιος,Maritime,Merenkulku,Marins,pomorski,Maritim,Marittimo,海事,Morski,Marítimo,Maritim,Maritiem,морской,Marítimo,Hàng hải,Марскі,समुद्री
+AllAnimals,Të gjitha,الجميع,全部,Alle,Ολα,All,Kaikki,Tous,svi,Semua,Tutto,全て,Wszystko,Tudo,Semua,Allemaal,Все,Todos,Tất cả các,Усе,सभी
+MostFamous,Më të famshme,الأكثر شهرة,最有名,Berühmteste,Πιο διάσημα,Most famous,Kuuluisin,Plus connus,Najpoznatiji,Yang paling terkenal,Il più famoso,最も有名な,Najbardziej znany,Mais famoso,Paling terkenal,Beroemdste,Самый знаменитый,Más famoso,Nổi tiếng nhất,Самы вядомы,सबसे प्रसिद्ध
+Africa,Afrika,أفريقيا,非洲,Afrika,Αφρική,Africa,Afrikka,Afrique,Afrika,Afrika,Africa,アフリカ,Afryka,África,Afrika,Afrika,Африка,África,Châu phi,Афрыка,अफ्रीका
+America,Amerikën,أمريكا,美国,Amerika,Αμερική,America,Amerikka,Amérique,Amerika,Amerika,America,アメリカ,Ameryka,América,Amerika,Amerika,Америка,America,Châu Mỹ,Амерыка,अमेरिका
+Asia,Azia,آسيا,亚洲,Asien,Ασία,Asia,Aasia,Asie,Azija,Asia,Asia,アジア,Azja,Ásia,Asia,Azië,Азия,Asia,Châu Á,Азія,एशिया
+Europe,Evropë,أوروبا,欧洲,Europa,Ευρώπη,Europe,Euroopassa,Europe,Europa,Eropa,Europa,ヨーロッパ,Europa,Europa,Eropah,Europa,Европа,Europa,Châu Âu,Еўропа,यूरोप
+AllFlags,Të gjitha,الجميع,全部,Alle,Ολα,All,Kaikki,Tous,svi,Semua,Tutto,全て,Wszystko,Tudo,Semua,Allemaal,Все,Todos,Tất cả các,Усе,सभी
+Vowels,Zanoret,الحروف المتحركة,元音,Vokale,φωνήεντα,Vowels,Vokaalit,Voyelles,Samoglasnici,vokal,Vocali,母音,Samogłoski,Vogais,Vokal,klinkers,Гласные,vocales,Nguyên âm,Галосныя,स्वर वर्ण
+Consonants,Bashkëtingëlloret,الحروف الساكنة,辅音,Konsonanten,σύμφωνα,Consonants,Konsonantit,Consonnes,Suglasnici,konsonan,Consonanti,子音,Spółgłoski,Consoantes,konsonan,medeklinkers,Согласные буквы,consonantes,Phụ âm,Зычныя,व्यंजन
+AllLetters,Të gjitha letrat,كل الحروف,所有字母,Alle Buchstaben,Όλα τα γράμματα,All letters,Kaikki kirjaimet,Toutes les lettres,Sva slova,Semua huruf,Tutte le lettere,すべての文字,Wszystkie litery,Todas as letras,Semua huruf,Alle letters,Все буквы,todas las letras,Tất cả các chữ cái,Усе лісты,सभी अक्षर
+Animals,Kafshët,الحيوانات,动物,Tiere,Των ζώων,Animals,Eläimet,Animaux,Životinje,Hewan,Animali,動物,Zwierząt,Animais,Haiwan,Dieren,Животные,animales,Loài vật,Жывёлы,जानवरों
+Instruments,Instrumentet,الادوات,仪器,Instrumente,Οργανα,Instruments,Instrumentit,Instruments,instrumenti,Instrumen,Strumenti,楽器,Instrumenty,Instrumentos,Instrumen,instrumenten,Инструменты,Instrumentos,Dụng cụ,Інструменты,उपकरण
+AllSounds,Të gjithë tingujt,كل الأصوات,所有声音,Alle Geräusche,Όλοι οι ήχοι,All sounds,Kaikki äänet,Tous les sons,Svi zvukovi,Semua suara,Tutti i suoni,すべての音,Wszystkie dźwięki,Todos os sons,Semua bunyi,Alle geluiden,Все звуки,Todos los sonidos,Tất cả âm thanh,Усе гукі,सभी ध्वनियाँ
 
 HightContrasts,,,,,,Hight-Contrasts,,Contrastes élevés,,,,,,,,,,,,
 TinyF,,,,,,Tiny,,Minuscules,,,,,,,,,,,,

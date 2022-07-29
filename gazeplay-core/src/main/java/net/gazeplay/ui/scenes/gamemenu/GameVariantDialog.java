@@ -114,12 +114,13 @@ public class GameVariantDialog extends Stage {
             ) {
                 String difficultyString = ((DimensionDifficultyGameVariant) variant).getVariant();
                 int indexOfTheVariant = switch(difficultyString) {
-                    case "Easy", "Vowels", "AllAnimals", "Animals", "MostFamous" -> 0;
-                    case "Normal", "Consonants", "Dynamic", "Instruments", "Africa" -> 1;
-                    case "Hard", "AllLetters", "AllSounds", "America" -> 2;
-                    case "Asia" -> 3;
-                    case "Europe" -> 4;
-                    case "AllFlags" -> 5;
+                    case "Easy", "Vowels", "Farm", "Animals", "MostFamous" -> 0;
+                    case "Normal", "Consonants", "Forest", "Instruments", "Africa" -> 1;
+                    case "Hard", "AllLetters", "Savanna", "AllSounds", "America" -> 2;
+                    case "Birds", "Asia" -> 3;
+                    case "Maritime", "Europe" -> 4;
+                    case "AllAnimals", "AllFlags" -> 5;
+                    case "Dynamic" -> 6;
                     default -> -1;
                 };
 
@@ -178,9 +179,14 @@ public class GameVariantDialog extends Stage {
                     categories[1] = new RadioButton(translator.translate("Normal"));
                     categories[2] = new RadioButton(translator.translate("Hard"));
                 } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal")) {
-                    categories = new RadioButton[2];
-                    categories[0] = new RadioButton(translator.translate("AllAnimals"));
-                    categories[1] = new RadioButton(translator.translate("Dynamic"));
+                    categories = new RadioButton[7];
+                    categories[0] = new RadioButton(translator.translate("Farm"));
+                    categories[1] = new RadioButton(translator.translate("Forest"));
+                    categories[2] = new RadioButton(translator.translate("Savanna"));
+                    categories[3] = new RadioButton(translator.translate("Birds"));
+                    categories[4] = new RadioButton(translator.translate("Maritime"));
+                    categories[5] = new RadioButton(translator.translate("AllAnimals"));
+                    categories[6] = new RadioButton(translator.translate("Dynamic"));
                 } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag")) {
                     categories = new RadioButton[6];
                     categories[0] = new RadioButton(translator.translate("MostFamous"));

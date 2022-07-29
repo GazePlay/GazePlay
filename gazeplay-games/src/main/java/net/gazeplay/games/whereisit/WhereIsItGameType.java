@@ -8,6 +8,11 @@ public enum WhereIsItGameType {
 
     CUSTOMIZED("whereIsIt", "customized", "NoVariant"),
 
+    ANIMALS_FARM("whereIsTheAnimal", "whereIsTheAnimal", "Farm"),
+    ANIMALS_FOREST("whereIsTheAnimal", "whereIsTheAnimal", "Forest"),
+    ANIMALS_SAVANNA("whereIsTheAnimal", "whereIsTheAnimal", "Savanna"),
+    ANIMALS_BIRDS("whereIsTheAnimal", "whereIsTheAnimal", "Birds"),
+    ANIMALS_MARITIME("whereIsTheAnimal", "whereIsTheAnimal", "Maritime"),
     ANIMALS_ALL("whereIsTheAnimal", "whereIsTheAnimal", "AllAnimals"),
     ANIMALS_DYNAMIC("whereIsTheAnimal", "whereIsTheAnimalDynamic", "Dynamic"),
 

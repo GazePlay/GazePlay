@@ -31,6 +31,11 @@ public class WhereIsTheAnimalGameLauncher implements IGameLauncher<Stats, Dimens
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats) {
         WhereIsItGameType gameType = switch (gameVariant.getVariant()) {
+            case "Farm" -> WhereIsItGameType.ANIMALS_FARM;
+            case "Forest" -> WhereIsItGameType.ANIMALS_FOREST;
+            case "Savanna" -> WhereIsItGameType.ANIMALS_SAVANNA;
+            case "Birds" -> WhereIsItGameType.ANIMALS_BIRDS;
+            case "Maritime" -> WhereIsItGameType.ANIMALS_MARITIME;
             case "Dynamic" -> WhereIsItGameType.ANIMALS_DYNAMIC;
             default -> WhereIsItGameType.ANIMALS_ALL;
         };
@@ -40,6 +45,11 @@ public class WhereIsTheAnimalGameLauncher implements IGameLauncher<Stats, Dimens
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
         WhereIsItGameType gameType = switch (gameVariant.getVariant()) {
+            case "Farm" -> WhereIsItGameType.ANIMALS_FARM;
+            case "Forest" -> WhereIsItGameType.ANIMALS_FOREST;
+            case "Savanna" -> WhereIsItGameType.ANIMALS_SAVANNA;
+            case "Birds" -> WhereIsItGameType.ANIMALS_BIRDS;
+            case "Maritime" -> WhereIsItGameType.ANIMALS_MARITIME;
             case "Dynamic" -> WhereIsItGameType.ANIMALS_DYNAMIC;
             default -> WhereIsItGameType.ANIMALS_ALL;
         };
