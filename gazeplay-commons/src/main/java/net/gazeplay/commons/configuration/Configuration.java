@@ -141,7 +141,7 @@ public class Configuration {
     private static final String DEFAULT_VALUE_USER_PICTURE = "";
     private static final boolean DEFAULT_VALUE_DISPLAY_NEWS_FORCED = false;
     private static final boolean DEFAULT_VALUE_FIRST_OPENING = true;
-    public static final String DEFAULT_VALUE_COLORS_DEFAULT_IMAGE = "data/colors/images/coloriage-dauphins-2.gif";
+    public static final String DEFAULT_VALUE_COLORS_DEFAULT_IMAGE = "data/colors/images/draw-flower.png";
 
     /* PROPERTIES */
     /* Language settings */
