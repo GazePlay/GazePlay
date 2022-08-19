@@ -76,8 +76,8 @@ public class StatDisplayUtils {
         int portNumber = 30000;
 
         try {
+            /*
             Socket socket = new Socket(hostname, portNumber);
-            log.info("CONNECT");
 
             String fileName = savedStatsFile.getName();
             int fileSize = (int) savedStatsFile.length();
@@ -97,6 +97,8 @@ public class StatDisplayUtils {
             socket.close();
 
             log.info("Game statistics data sent to server successfully");
+            */
+            log.info("Game statistics data not sent to server yet");
         } catch (Exception e) {
             log.warn("Game statistics data not sent to server: error during transfer");
             log.warn(e.getMessage());
