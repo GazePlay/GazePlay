@@ -937,7 +937,9 @@ public class Stats implements GazeMotionListener {
     }
 
     public void takeScreenShot() {
-        gameScreenShot = gameContextScene.snapshot(null);
+        if (!inReplayMode) {
+            gameScreenShot = gameContextScene.snapshot(null);
+        }
     }
 
     private JsonObject buildSavedDataJSON(JsonArray data) {
