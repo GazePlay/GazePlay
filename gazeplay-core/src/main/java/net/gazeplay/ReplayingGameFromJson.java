@@ -69,7 +69,7 @@ public class ReplayingGameFromJson {
 
 
             // replay OK but the resize of the game itself is bad:
-            // "SpotDifference", "MediaPlayer","Paper-Scissors-Stone",
+            // "SpotDifference", "MediaPlayer","RockPaperScissors",
             //"Math101: Addition","Math101: All operations","Math101: Division",
             //"Math101: Multiplication","Math101: Substraction"
 

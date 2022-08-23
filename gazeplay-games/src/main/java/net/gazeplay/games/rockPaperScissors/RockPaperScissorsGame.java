@@ -1,4 +1,4 @@
-package net.gazeplay.games.paperScissorsStone;
+package net.gazeplay.games.rockPaperScissors;
 
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Dimension2D;
@@ -20,37 +20,37 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.components.ProgressButton;
 
 @Slf4j
-public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCycle {
+public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCycle {
 
-    private final PaperScissorsStoneStats paperScissorsStoneStats;
+    private final RockPaperScissorsStats rockPaperScissorsStats;
     private final Dimension2D dimension2D;
     private final Configuration configuration;
 
     private final Group backgroundLayer;
     private final Group middleLayer;
     private final IGameContext gameContext;
-    private final PaperScissorsStoneStats stats;
+    private final RockPaperScissorsStats stats;
 
     private final Rectangle shade;
     private final ProgressButton restartButton;
     private final Text finalScoreText;
 
-    private ProgressButton stone;
+    private ProgressButton rock;
     private ProgressButton paper;
     private ProgressButton scissors;
-    private ProgressButton ennemy;
+    private ProgressButton enemy;
 
     private int score = 0;
 
-    private enum Type {paper, stone, scissors}
+    private enum Type {rock, paper, scissors}
 
-    private Type ennemyT;
+    private Type enemyType;
 
     private final ReplayablePseudoRandom random;
 
-    public PaperScissorsStoneGame(final IGameContext gameContext, final PaperScissorsStoneStats stats) {
+    public RockPaperScissorsGame(final IGameContext gameContext, final RockPaperScissorsStats stats) {
         this.stats = stats;
-        this.paperScissorsStoneStats = stats;
+        this.rockPaperScissorsStats = stats;
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
@@ -86,9 +86,9 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
     }
 
-    public PaperScissorsStoneGame(final IGameContext gameContext, final PaperScissorsStoneStats stats, double gameSeed) {
+    public RockPaperScissorsGame(final IGameContext gameContext, final RockPaperScissorsStats stats, double gameSeed) {
         this.stats = stats;
-        this.paperScissorsStoneStats = stats;
+        this.rockPaperScissorsStats = stats;
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
@@ -135,51 +135,35 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
         Rectangle background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         background.widthProperty().bind(gameContext.getRoot().widthProperty());
         background.heightProperty().bind(gameContext.getRoot().heightProperty());
-        ImagePattern backgroundI = new ImagePattern(new Image("data/paperScissorsStone/park.png"));
+        ImagePattern backgroundI = new ImagePattern(new Image("data/rockPaperScissors/park.png"));
         background.setFill(backgroundI);
 
-        stone = new ProgressButton();
-        setUpStonePaperScissorsProgressButton(stone, "data/paperScissorsStone/Stone.png", dimension2D.getWidth() / 6 - dimension2D.getWidth() / 12);
+        rock = new ProgressButton();
+        setUpStonePaperScissorsProgressButton(rock, "data/rockPaperScissors/rock.png", dimension2D.getWidth() / 6 - dimension2D.getWidth() / 12);
 
         paper = new ProgressButton();
-        setUpStonePaperScissorsProgressButton(paper, "data/paperScissorsStone/Paper.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 12);
+        setUpStonePaperScissorsProgressButton(paper, "data/rockPaperScissors/paper.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 12);
 
         scissors = new ProgressButton();
-        setUpStonePaperScissorsProgressButton(scissors, "data/paperScissorsStone/Scissors.png", dimension2D.getWidth() * 5 / 6 - dimension2D.getWidth() / 12);
+        setUpStonePaperScissorsProgressButton(scissors, "data/rockPaperScissors/scissors.png", dimension2D.getWidth() * 5 / 6 - dimension2D.getWidth() / 12);
 
-        ennemy = new ProgressButton();
-        ennemy.setLayoutX(dimension2D.getWidth() * 1 / 2 - dimension2D.getWidth() / 12);
-        ennemy.setLayoutY(dimension2D.getHeight() / 5);
-        ennemy.getButton().setRadius(100);
-        ImageView ennemyI = new ImageView(new Image("data/paperScissorsStone/Scissors.png"));
-        int i = random.nextInt(3);
-        switch (i) {
-            case 0:
-                ennemyI = new ImageView(new Image("data/paperScissorsStone/Scissors.png"));
-                ennemyT = Type.scissors;
-                break;
-            case 1:
-                ennemyI = new ImageView(new Image("data/paperScissorsStone/Paper.png"));
-                ennemyT = Type.paper;
-                break;
-            case 2:
-                ennemyI = new ImageView(new Image("data/paperScissorsStone/Stone.png"));
-                ennemyT = Type.stone;
-                break;
-            default:
-                log.info("out of bounds");
-        }
-        ennemy.setImage(ennemyI);
+        enemy = new ProgressButton();
+        enemy.setLayoutX(dimension2D.getWidth() * 1 / 2 - dimension2D.getWidth() / 12);
+        enemy.setLayoutY(dimension2D.getHeight() / 5);
+        enemy.getButton().setRadius(100);
+        enemyType = Type.values()[random.nextInt(Type.values().length)];
+        ImageView enemyImg = new ImageView(new Image("data/rockPaperScissors/" + enemyType + ".png"));
+        enemy.setImage(enemyImg);
 
         backgroundLayer.getChildren().add(background);
-        middleLayer.getChildren().addAll(stone, paper, scissors, ennemy);
+        middleLayer.getChildren().addAll(rock, paper, scissors, enemy);
 
-        gameContext.getChildren().addAll(background, stone, paper, scissors, ennemy);
+        gameContext.getChildren().addAll(background, rock, paper, scissors, enemy);
 
         this.start();
 
-        paperScissorsStoneStats.notifyNewRoundReady();
-        gameContext.getGazeDeviceManager().addStats(paperScissorsStoneStats);
+        rockPaperScissorsStats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(rockPaperScissorsStats);
     }
 
     public void setUpStonePaperScissorsProgressButton(ProgressButton button, String imageLink, double posX) {
@@ -191,7 +175,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
 
         if (button == paper) {
             button.assignIndicatorUpdatable(event -> {
-                if (ennemyT == Type.stone) {
+                if (enemyType == Type.rock) {
                     gameWin();
                 } else {
                     button.disable(true);
@@ -201,21 +185,21 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
             gameContext.getGazeDeviceManager().addEventFilter(paper);
             button.active();
         }
-        if (button == stone) {
+        if (button == rock) {
             button.assignIndicatorUpdatable(event -> {
-                if (ennemyT == Type.scissors) {
+                if (enemyType == Type.scissors) {
                     gameWin();
                 } else {
                     button.disable(true);
                 }
                 stats.incrementNumberOfGoalsReached();
             }, gameContext);
-            gameContext.getGazeDeviceManager().addEventFilter(stone);
+            gameContext.getGazeDeviceManager().addEventFilter(rock);
             button.active();
         }
         if (button == scissors) {
             button.assignIndicatorUpdatable(event -> {
-                if (ennemyT == Type.paper) {
+                if (enemyType == Type.paper) {
                     gameWin();
                 } else {
                     button.disable(true);
@@ -230,7 +214,7 @@ public class PaperScissorsStoneGame extends AnimationTimer implements GameLifeCy
 
     private void gameWin() {
         score = score + 1;
-        stone.disable(true);
+        rock.disable(true);
         paper.disable(true);
         scissors.disable(true);
         if (score == 3) {
