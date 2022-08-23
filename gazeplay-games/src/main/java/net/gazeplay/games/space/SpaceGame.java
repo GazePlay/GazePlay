@@ -111,7 +111,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.gameContext.startTimeLimiter();
         this.gameContext.startScoreLimiter();
         this.random = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(random.getSeed());
+        this.stats.setCurrentGameSeed(random.getSeed());
 
         spaceshipImage = ImageUtils.createCustomizedImageLibrary(null, "space/spaceship", random);
         bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/biboule", random);

@@ -41,22 +41,18 @@ public class GazePlayFxApp extends Application {
     private static ReusableOptions applicationOptions;
 
     private ReusableOptions options;
-
     private GazePlay gazePlay;
-
     private GameMenuController gameMenuController;
-
     private GamesLocator gamesLocator;
-
     private Translator translator;
 
     @Override
     public void init() {
         final ApplicationContext context = applicationContext;
+
         this.options = applicationOptions;
-        //
         log.info("options = {}", options);
-        //
+
         gazePlay = context.getBean(GazePlay.class);
         gameMenuController = context.getBean(GameMenuController.class);
         gamesLocator = context.getBean(GamesLocator.class);
@@ -79,7 +75,6 @@ public class GazePlayFxApp extends Application {
                     final User user = new User(userSelectionOptions.getUserid());
 
                     if (!UserProfileContext.findAllUsersProfiles().contains(user.getName())) {
-
                         ActiveConfigurationContext.switchToUser(user.getName());
                         final Configuration conf = ActiveConfigurationContext.getInstance();
                         final File userDirectory = GazePlayDirectories.getUserProfileDirectory(user.getName());
@@ -88,12 +83,9 @@ public class GazePlayFxApp extends Application {
 
                         conf.setUserName(user.getName());
                         conf.setFileDir(GazePlayDirectories.getFileDirectoryUserValue(user.getName()).getAbsolutePath());
-
                     } else {
                         ActiveConfigurationContext.switchToUser(userSelectionOptions.getUserid());
                     }
-
-
                 }
                 if (userSelectionOptions.isDefaultUser()) {
                     showUserSelectPage = false;
@@ -151,7 +143,6 @@ public class GazePlayFxApp extends Application {
                         .filter(gameSpec -> gameSpec.getGameSummary().getNameCode().equals(searchGameNameCode))
                         .findFirst()
                         .orElseThrow(() -> new IllegalArgumentException(searchGameNameCode));
-
                     log.info("gameSpecs = {}", gameSpecs);
 
                     ReplayJsonFileOptions replayJsonFileOptions = options.getReplayJsonFileOptions();
@@ -258,5 +249,4 @@ public class GazePlayFxApp extends Application {
 
         primaryStage.setFullScreen(true);
     }
-
 }

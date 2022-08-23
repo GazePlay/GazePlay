@@ -5,7 +5,7 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
 
-public class BeraPreTestGameSpecSource implements  GameSpecSource{
+public class BeraPreTestGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(

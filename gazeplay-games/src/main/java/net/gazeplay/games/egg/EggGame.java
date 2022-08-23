@@ -14,6 +14,7 @@ public class EggGame implements GameLifeCycle {
 
     private final Stats stats;
 
+
     private final int numberOfTurns;
 
     private final String type;

@@ -54,9 +54,8 @@ class PictureCard extends Group {
 
     private final WhereIsIt gameInstance;
 
-    PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
-                boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsIt gameInstance) {
-
+    PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, boolean winner,
+                @NonNull String imagePath, @NonNull Stats stats, WhereIsIt gameInstance) {
         log.info("imagePath = {}", imagePath);
 
         final Configuration config = gameContext.getConfiguration();
@@ -133,8 +132,9 @@ class PictureCard extends Group {
     private void onCorrectCardSelected(WhereIsIt gameInstance) {
         log.debug("WINNER");
 
-        if (!gameInstance.getFirstWrong())
+        if (!gameInstance.getFirstWrong()) {
             gameInstance.updateRight();
+        }
 
         gameInstance.firstRightCardSelected();
 
@@ -206,7 +206,7 @@ class PictureCard extends Group {
         fullAnimation.getChildren().addAll(imageFadeOutTransition, errorFadeInTransition);
 
         fullAnimation.setOnFinished(actionEvent -> {
-            if (gameContext.getConfiguration().isReaskedQuestionOnFail()) {
+            if (gameContext.getConfiguration().isQuestionReaskedOnFail()) {
                 gameInstance.playQuestionSound();
             }
             customInputEventHandler.ignoreAnyInput = false;

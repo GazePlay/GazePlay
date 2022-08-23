@@ -21,9 +21,9 @@ public class LevelsReport {
         return Collections.unmodifiableList(levelsPerRounds);
     }
 
-    public long totalLevelSum(){
+    public long totalLevelSum() {
         long total = 0;
-        for (long level: levelsPerRounds) {
+        for (long level : levelsPerRounds) {
             total += level;
         }
         return total;
@@ -45,10 +45,11 @@ public class LevelsReport {
             sum += Math.pow((value - average), 2);
         }
         double result;
-        if (count == 0)
+        if (count == 0) {
             result = 0;
-        else
+        } else {
             result = sum / count;
+        }
         return result;
     }
 

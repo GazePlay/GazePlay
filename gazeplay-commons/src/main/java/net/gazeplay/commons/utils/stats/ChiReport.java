@@ -36,11 +36,12 @@ public class ChiReport {
         chiTheoretical.add(7.88);
 
         ArrayList<String> decisions = new ArrayList<>();
-        for (int i= 0; i < 6; i ++) {
-            if (chiObs >= chiTheoretical.get(i))
+        for (int i = 0; i < 6; i++) {
+            if (chiObs >= chiTheoretical.get(i)) {
                 decisions.add("good");
-            else
+            } else {
                 decisions.add("random");
+            }
         }
 
         return decisions;
@@ -50,7 +51,7 @@ public class ChiReport {
 
         ObservableList<ChiData> data = FXCollections.observableArrayList();
 
-        for (int i = 0; i < chi2PerPlayedLevel.size(); i ++) {
+        for (int i = 0; i < chi2PerPlayedLevel.size(); i++) {
             data.add(new ChiData(i, chi2PlayedLevel.get(i), chi2PerPlayedLevel.get(i),
                 decisions(chi2PerPlayedLevel.get(i)).get(5),
                 decisions(chi2PerPlayedLevel.get(i)).get(4),

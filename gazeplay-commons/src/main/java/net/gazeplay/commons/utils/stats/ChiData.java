@@ -56,7 +56,7 @@ public class ChiData {
         this.chiObs.set(chi);
     }
 
-    public final DoubleProperty chiObsProperty(){
+    public final DoubleProperty chiObsProperty() {
         return chiObs;
     }
 

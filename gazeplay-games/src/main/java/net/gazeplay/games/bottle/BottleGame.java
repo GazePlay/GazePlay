@@ -53,7 +53,6 @@ public class BottleGame implements GameLifeCycle {
     String sTypes;
 
     public BottleGame(IGameContext gameContext, BottleGameStats stats, int number, String sTypes) {
-
         this.bottleGameStats = stats;
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -68,7 +67,7 @@ public class BottleGame implements GameLifeCycle {
         gameContext.getChildren().addAll(backgroundLayer, foregroundLayer);
 
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.bottleGameStats.setGameSeed(randomGenerator.getSeed());
+        this.bottleGameStats.setCurrentGameSeed(randomGenerator.getSeed());
 
         final Rectangle backgroundImage = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         backgroundImage.widthProperty().bind(gameContext.getRoot().widthProperty());
@@ -106,12 +105,10 @@ public class BottleGame implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
-        this.sTypes=sTypes;
-
+        this.sTypes = sTypes;
     }
 
     public BottleGame(IGameContext gameContext, BottleGameStats stats, int number, String sTypes, double gameSeed) {
-
         this.bottleGameStats = stats;
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -163,8 +160,7 @@ public class BottleGame implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(restartButton);
 
-        this.sTypes=sTypes;
-
+        this.sTypes = sTypes;
     }
 
     @Override
@@ -212,25 +208,21 @@ public class BottleGame implements GameLifeCycle {
 
     private void createBottle(final int nb) {
         //Normal size
-        int sizex=12;
-        int sizey=6;
-        if (sTypes.equals("BigB")){
-            sizex=8;
-            sizey=4;
-        }
-        else if(sTypes.equals("SmallB")){
-            sizex=16;
-            sizey=8;
-        }
-        else if(sTypes.equals("HighB")) {
-            sizex=12;
-            sizey=4;
-        }
-        else if(sTypes.equals("TinyB")){
-            sizex=24;
-            sizey=12;
-        }
-        else if(!sTypes.equals("NormalB") && !sTypes.equals("InfinityB")){
+        int sizex = 12;
+        int sizey = 6;
+        if (sTypes.equals("BigB")) {
+            sizex = 8;
+            sizey = 4;
+        } else if (sTypes.equals("SmallB")) {
+            sizex = 16;
+            sizey = 8;
+        } else if (sTypes.equals("HighB")) {
+            sizex = 12;
+            sizey = 4;
+        } else if (sTypes.equals("TinyB")) {
+            sizex = 24;
+            sizey = 12;
+        } else if (!sTypes.equals("NormalB") && !sTypes.equals("InfinityB")) {
             //If the type is unknown, use the "Normal" settings
             log.warn("unknown type : " + sTypes + "\nThe 'Normal' settings will be use");
         }
@@ -253,7 +245,7 @@ public class BottleGame implements GameLifeCycle {
             } else {
                 y = dimension2D.getHeight() / 7d + dimension2D.getHeight() / 3.5;
             }
-            y = y - (dimension2D.getHeight()/sizey - dimension2D.getHeight()/6);
+            y = y - (dimension2D.getHeight() / sizey - dimension2D.getHeight() / 6);
             b = new ProgressButton();
             b.setLayoutX(x);
             b.setLayoutY(y);
@@ -276,7 +268,7 @@ public class BottleGame implements GameLifeCycle {
                 if (!isBroken) {
                     isBroken = true;
                     ballMovement(bo);
-                    if (sTypes.equals("InfinityB")){
+                    if (sTypes.equals("InfinityB")) {
                         PauseTransition reshow = new PauseTransition(Duration.millis(2500));
                         reshow.setOnFinished(e -> {
                             bo.active();

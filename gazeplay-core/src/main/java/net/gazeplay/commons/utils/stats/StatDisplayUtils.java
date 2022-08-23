@@ -8,7 +8,11 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.chart.*;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -21,23 +25,28 @@ import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.stats.ShootGamesStats;
-import net.gazeplay.ui.scenes.stats.StatsContext;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 import static javafx.scene.chart.XYChart.Data;
 
 @Slf4j
 public class StatDisplayUtils {
 
-    public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
-        EventHandler<Event> homeEvent = e -> closeStatsWindow();
+    public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, File savedStatsFile, boolean inReplayMode) {
+        EventHandler<Event> homeEvent = e -> closeStatsWindow(savedStatsFile, inReplayMode);
 
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
@@ -47,13 +56,56 @@ public class StatDisplayUtils {
         return homeButton;
     }
 
-    static void closeStatsWindow() {
+    static void closeStatsWindow(File savedStatsFile, boolean inReplayMode) {
+        sentStatsToServer(savedStatsFile, inReplayMode);
         Platform.exit();
         System.exit(0);
     }
 
-    public static LineChart<String, Number> buildLineChart(Stats stats, final Region root) {
+    static void sentStatsToServer(File savedStatsFile, boolean inReplayMode) {
+        if (inReplayMode) {
+            log.info("Game statistics data not sent to server: data not re-sent when replaying game");
+            return;
+        }
+        if (!ActiveConfigurationContext.getInstance().isDataCollectAuthorized()) {
+            log.info("Game statistics data not sent to server: authorization deactivated");
+            return;
+        }
 
+        String hostname = "129.88.11.38";
+        int portNumber = 30000;
+
+        try {
+            /*
+            Socket socket = new Socket(hostname, portNumber);
+
+            String fileName = savedStatsFile.getName();
+            int fileSize = (int) savedStatsFile.length();
+            byte[] fileByte = new byte[fileSize];
+
+            OutputStream os = socket.getOutputStream();
+            PrintWriter pr = new PrintWriter(socket.getOutputStream(), true);
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(savedStatsFile));
+            Scanner in = new Scanner(socket.getInputStream());
+
+            pr.println(fileName);
+            pr.println(fileSize);
+            bis.read(fileByte, 0, fileByte.length);
+            os.write(fileByte, 0, fileByte.length);
+            log.info("<<{}>>", in.nextLine());
+            os.flush();
+            socket.close();
+
+            log.info("Game statistics data sent to server successfully");
+            */
+            log.info("Game statistics data not sent to server yet");
+        } catch (Exception e) {
+            log.warn("Game statistics data not sent to server: error during transfer");
+            log.warn(e.getMessage());
+        }
+    }
+
+    public static LineChart<String, Number> buildLineChart(Stats stats, final Region root) {
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
 
@@ -124,8 +176,8 @@ public class StatDisplayUtils {
         return lineChart;
     }
 
+    @SuppressWarnings("unchecked")
     public static AreaChart<Number, Number> buildAreaChart(LinkedList<FixationPoint> points, final Region root) {
-
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
 
@@ -139,7 +191,6 @@ public class StatDisplayUtils {
         colorBands.setLegendVisible(true);
 
         if (points.size() > 0) {
-
             Series<Number, Number> xEyeCoordinates = new Series<>();
             xEyeCoordinates.setName("X coordinate");
 
@@ -147,8 +198,8 @@ public class StatDisplayUtils {
             yEyeCoordinates.setName("Y coordinate");
 
             for (FixationPoint p : points) {
-                xEyeCoordinates.getData().add(new Data<>(p.getTimeGaze(), p.getY()));
-                yEyeCoordinates.getData().add(new Data<>(p.getTimeGaze(), p.getX()));
+                xEyeCoordinates.getData().add(new Data<>(p.getTime(), p.getY()));
+                yEyeCoordinates.getData().add(new Data<>(p.getTime(), p.getX()));
             }
 
             colorBands.getData().addAll(xEyeCoordinates, yEyeCoordinates);
@@ -165,8 +216,9 @@ public class StatDisplayUtils {
             colorBands.setMaxHeight(root.getHeight() * 0.4);
 
             return colorBands;
-        } else
+        } else {
             return null;
+        }
     }
 
     public static LineChart<String, Number> buildLevelChart(Stats stats, final Region root) {
@@ -236,6 +288,7 @@ public class StatDisplayUtils {
         return levelChart;
     }
 
+    @SuppressWarnings("unchecked")
     public static TableView<ChiData> buildTable(Stats stats) {
         TableView<ChiData> table = new TableView<>();
         table.setMaxWidth(1200);
@@ -341,7 +394,6 @@ public class StatDisplayUtils {
 
                 chart.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInAreaChartEventHandler(chart, root));
             }
-
         };
     }
 
@@ -358,7 +410,6 @@ public class StatDisplayUtils {
 
                 chart.addEventHandler(MouseEvent.MOUSE_CLICKED, createZoomInLineChartEventHandler(chart, root));
             }
-
         };
     }
 
@@ -467,7 +518,7 @@ public class StatDisplayUtils {
     public static String convert(long totalTime) {
         Duration duration = Duration.ofMillis(totalTime);
 
-        // Extract the days from the duration, then take it away so we can format the rest of the string.
+        // Extract the days from the duration, then take it away, so we can format the rest of the string.
         long days = duration.toDaysPart();
         Duration durationLessDays = duration.minusDays(days);
 

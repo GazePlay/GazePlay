@@ -29,11 +29,11 @@ public class ForegroundSoundsUtils {
             log.debug("using url");
             path = url.toString();
         }
-       // stopSound();
+        // stopSound();
         final Configuration configuration = ActiveConfigurationContext.getInstance();
         Media media = new Media(path);
         MediaPlayer soundPlayer = new MediaPlayer(media);
-        soundPlayer.setVolume(configuration.getEffectsVolumeProperty().getValue());
+        soundPlayer.setVolume(configuration.getEffectsVolume());
         soundPlayer.volumeProperty().bindBidirectional(configuration.getEffectsVolumeProperty());
         soundPlayer.play();
         lastSoundPlayer = soundPlayer;

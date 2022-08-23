@@ -5,7 +5,6 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import org.aeonbits.owner.ConfigFactory;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -13,7 +12,6 @@ import java.util.Properties;
 
 @Slf4j
 public class ConfigurationSource {
-
     private static final File defaultProfileConfigFile = new File(GazePlayDirectories.getGazePlayFolder(), "GazePlay.properties");
 
     private static File getSpecificProfileConfigPath(final String profileId) {
@@ -51,5 +49,4 @@ public class ConfigurationSource {
             return properties;
         }
     }
-
 }

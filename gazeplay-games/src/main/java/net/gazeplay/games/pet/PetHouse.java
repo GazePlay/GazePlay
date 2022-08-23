@@ -96,7 +96,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
         this.stats = stats;
 
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
 
         setMode(INIT_MODE);
 

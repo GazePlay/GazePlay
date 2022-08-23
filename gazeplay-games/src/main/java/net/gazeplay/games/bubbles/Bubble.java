@@ -27,13 +27,9 @@ public class Bubble implements GameLifeCycle {
     public static final String FIX = "FIX";
 
     private final IGameContext gameContext;
-
     private final BubbleType type;
-
     private final Stats stats;
-
     private final BubblesGameVariant gameVariant;
-
     private final ReplayablePseudoRandom randomGenerator;
 
     public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final BubblesGameVariant gameVariant) {
@@ -43,7 +39,7 @@ public class Bubble implements GameLifeCycle {
         this.stats = stats;
         this.gameVariant = gameVariant;
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
     }
 
     public Bubble(final IGameContext gameContext, final BubbleType type, final Stats stats, final BubblesGameVariant gameVariant, double gameSeed) {
@@ -88,8 +84,8 @@ public class Bubble implements GameLifeCycle {
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
         randomPositionGenerator.setRandomGenerator(randomGenerator);
         for (int i = 0; i < 10; i++) {
-            Target portrait = new Target(gameContext, randomPositionGenerator, stats,
-                Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, type);
+            Target portrait = new Target(gameContext, randomPositionGenerator, stats, Portrait.createImageLibrary(randomGenerator),
+                gameVariant, this, randomGenerator, type);
             gameContext.getChildren().add(portrait);
         }
         gameContext.setLimiterAvailable();

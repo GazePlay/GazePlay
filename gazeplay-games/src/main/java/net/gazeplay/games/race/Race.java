@@ -80,7 +80,7 @@ public class Race extends Parent implements GameLifeCycle {
         score = 0;
         gameType = type;
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
 
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         hand = new StackPane();
@@ -93,8 +93,6 @@ public class Race extends Parent implements GameLifeCycle {
         racer = new Image("data/" + gameType + "/images/frogJump.gif");
         flash = new Image("data/" + gameType + "/images/Flash.png");
         cage = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
-
-
     }
 
     public Race(final IGameContext gameContext, final Stats stats, final String type, double gameSeed) {
@@ -115,8 +113,6 @@ public class Race extends Parent implements GameLifeCycle {
         racer = new Image("data/" + gameType + "/images/frogJump.gif");
         flash = new Image("data/" + gameType + "/images/Flash.png");
         cage = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
-
-
     }
 
     Rectangle createBackground() {

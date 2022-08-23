@@ -30,7 +30,8 @@ public class SoundMakingEntity extends Parent {
     private final SoundManager soundManager;
 
     public SoundMakingEntity(final ImageView imageView, final Stats stats, final ArrayList<String> audioClips,
-                             final ProgressIndicator progressIndicator, final IGameContext gameContext, final SoundManager soundManager, ReplayablePseudoRandom randomGenerator) {
+                             final ProgressIndicator progressIndicator, final IGameContext gameContext,
+                             final SoundManager soundManager, ReplayablePseudoRandom randomGenerator) {
         this.audioClips = audioClips;
         this.progressIndicator = progressIndicator;
         this.stats = stats;

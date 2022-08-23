@@ -9,7 +9,6 @@ import java.util.Observable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class SavedStatsInfo extends Observable {
-    private final File heatMapCsvFile;
     private final File gazeMetricsFileMouse;
     private final File gazeMetricsFileGaze;
     private final File gazeMetricsFileMouseAndGaze;
@@ -20,5 +19,4 @@ public class SavedStatsInfo extends Observable {
     public void notifyFilesReady() {
         this.notifyObservers();
     }
-
 }

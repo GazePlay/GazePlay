@@ -53,8 +53,7 @@ public class SlidingPuzzle implements GameLifeCycle {
         this.stats = stats;
         this.gameContext = gameContext;
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
-
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
         this.picPath = gameVariant.getEnumValue().getResourcesPath();
     }
 
@@ -67,7 +66,6 @@ public class SlidingPuzzle implements GameLifeCycle {
         this.stats = stats;
         this.gameContext = gameContext;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-
         this.picPath = gameVariant.getEnumValue().getResourcesPath();
     }
 
@@ -167,7 +165,6 @@ public class SlidingPuzzle implements GameLifeCycle {
     }
 
     private List<SlidingPuzzleCard> createCards(final Configuration config) {
-
         final int fixationlength = config.getFixationLength();
 
         final List<SlidingPuzzleCard> result = new ArrayList<>();
@@ -188,7 +185,6 @@ public class SlidingPuzzle implements GameLifeCycle {
                     card.setKing(true);
                     result.add(card);
                 } else {
-
                     index = randomGenerator.nextInt(coordList.size());
 
                     final double positionX = coordList.get(index).getX();
@@ -202,7 +198,6 @@ public class SlidingPuzzle implements GameLifeCycle {
                     result.add(card);
                 }
             }
-
         }
 
         return result;

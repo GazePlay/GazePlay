@@ -40,13 +40,11 @@ public class Blocs implements GameLifeCycle {
 
     @Data
     public static class CurrentRoundDetails {
-
         private int remainingCount;
 
         private boolean finished;
 
         private final Bloc[][] blocs;
-
 
         CurrentRoundDetails(final int initCount, final int nbLines, final int nbColumns) {
             this.remainingCount = initCount;
@@ -71,7 +69,7 @@ public class Blocs implements GameLifeCycle {
         this.percents4Win = percents4Win;
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
 
         imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("blocs"), randomGenerator);
 
@@ -135,7 +133,7 @@ public class Blocs implements GameLifeCycle {
                     final Color c = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
                         @Override
                         public Color visitLight() {
-                           return Color.WHITE;
+                            return Color.WHITE;
                         }
 
                         @Override
@@ -161,7 +159,7 @@ public class Blocs implements GameLifeCycle {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
-      
+
         gameContext.setOffFixationLengthControl();
 
         gameContext.onGameStarted(2000);
@@ -184,7 +182,6 @@ public class Blocs implements GameLifeCycle {
     }
 
     private void removeBloc(final Bloc toRemove) {
-
         if (toRemove == null) {
             return;
         }
@@ -199,7 +196,6 @@ public class Blocs implements GameLifeCycle {
 
     private EventHandler<Event> buildEvent(final IGameContext gameContext, final Stats stats, final boolean useTrail) {
         return e -> {
-
             if (e.getEventType().equals(MouseEvent.MOUSE_ENTERED)
                 || e.getEventType().equals(GazeEvent.GAZE_ENTERED)) {
 
@@ -222,7 +218,6 @@ public class Blocs implements GameLifeCycle {
 
                     for (int i = -trail; i < trail; i++) {
                         for (int j = -trail; j < trail; j++) {
-
                             if (Math.sqrt(i * i + j * j) <= trail && posX + i >= 0 && posY + j >= 0
                                 && posX + i < maxX && posY + j < maxY) {
 
@@ -242,7 +237,7 @@ public class Blocs implements GameLifeCycle {
 
                     removeAllBlocs();
 
-                    gameContext.updateScore(stats,this);
+                    gameContext.updateScore(stats, this);
 
                     gameContext.playWinTransition(0, event -> {
                         gameContext.clear();
@@ -254,7 +249,6 @@ public class Blocs implements GameLifeCycle {
     }
 
     private static class Bloc extends Rectangle {
-
         final int posX;
         final int posY;
 
@@ -263,7 +257,5 @@ public class Blocs implements GameLifeCycle {
             this.posX = posX;
             this.posY = posY;
         }
-
     }
-
 }

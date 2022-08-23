@@ -6,18 +6,16 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Dimension2D;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.RadioButton;
+//import javafx.scene.image.ImageView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import mockit.MockUp;
 import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
-import net.gazeplay.commons.utils.stats.StatDisplayUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.stats.ExplorationGamesStats;
 import net.gazeplay.stats.HiddenItemsGamesStats;
@@ -61,7 +59,6 @@ class StatsContextTest {
         new File("file.csv"),
         new File("file.csv"),
         new File("file.csv"),
-        new File("file.csv"),
         new File("file.csv")
     );
 
@@ -80,16 +77,10 @@ class StatsContextTest {
         when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
         SimpleDoubleProperty widthProperty = new SimpleDoubleProperty(100);
         ImageView metrics = spy(new ImageView("bear.jpg"));
-        new MockUp<StatDisplayUtils>() {
-            @mockit.Mock
-            public ImageView buildGazeMetrics(Stats stats, Region root) {
-                return metrics;
-            }
-        };
 
         BorderPane rootSpy = spy(new BorderPane());
         when(rootSpy.widthProperty()).thenReturn(widthProperty);
-        new StatsContext(mockGazePlay, rootSpy, mockStats, null);
+        new StatsContext(mockGazePlay, rootSpy, mockStats, null, false);
 
         widthProperty.set(200);
         verify(metrics).setFitWidth(200 * 0.35);
@@ -100,16 +91,10 @@ class StatsContextTest {
         when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
         SimpleDoubleProperty heightProperty = new SimpleDoubleProperty(100);
         ImageView metrics = spy(new ImageView("bear.jpg"));
-        new MockUp<StatDisplayUtils>() {
-            @mockit.Mock
-            public ImageView buildGazeMetrics(Stats stats, Region root) {
-                return metrics;
-            }
-        };
 
         BorderPane rootSpy = spy(new BorderPane());
         when(rootSpy.heightProperty()).thenReturn(heightProperty);
-        new StatsContext(mockGazePlay, rootSpy, mockStats, null);
+        new StatsContext(mockGazePlay, rootSpy, mockStats, null, false);
 
         heightProperty.set(200);
         verify(metrics).setFitHeight(200 * 0.35);
@@ -118,7 +103,7 @@ class StatsContextTest {
     @SuppressWarnings("unchecked")
     @Test
     void shouldAddAreaChartOnColorBandSelected() {
-        ArrayList<LinkedList<FixationPoint>> fixationPoints = new ArrayList<>(List.of(
+        List<List<FixationPoint>> fixationPoints = new ArrayList<>(List.of(
             new LinkedList<>(List.of(
                 new FixationPoint(1234, 2345, 30, 40),
                 new FixationPoint(4567, 1234, 40, 60)
@@ -127,22 +112,14 @@ class StatsContextTest {
                 new FixationPoint(1234, 2345, 30, 40),
                 new FixationPoint(4567, 1234, 40, 60)
             ))
-        )
-        );
+        ));
         when(mockStats.getFixationSequence()).thenReturn(fixationPoints);
 
         Configuration mockConfig = mock(Configuration.class);
-        when(mockConfig.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));
-
-        new MockUp<ActiveConfigurationContext>() {
-            @mockit.Mock
-            public Configuration getInstance() {
-                return mockConfig;
-            }
-        };
+        when(mockConfig.isAreaOfInterestDisabled()).thenReturn(true);
 
         BorderPane root = new BorderPane();
-        new StatsContext(mockGazePlay, root, mockStats, null);
+        new StatsContext(mockGazePlay, root, mockStats, null, false);
 
         BorderPane sidePane = (BorderPane) root.getCenter();
         StackPane centerStackPane = (StackPane) sidePane.getTop();
@@ -164,11 +141,11 @@ class StatsContextTest {
     @ValueSource(booleans = {true, false})
     void shouldAddAllToGridShootGames(boolean alignLeft) {
         BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
+        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null, false);
 
         GridPane grid = new GridPane();
         ShootGamesStats stats = mock(ShootGamesStats.class);
-        when(stats.getNbUnCountedGoalsReached()).thenReturn(3);
+        when(stats.getNbUncountedGoalsReached()).thenReturn(3);
         context.addAllToGrid(stats, mockTranslator, grid, alignLeft);
 
         assertEquals(16, grid.getChildren().size());
@@ -178,7 +155,7 @@ class StatsContextTest {
     @ValueSource(booleans = {true, false})
     void shouldAddAllToGridExplorationGames(boolean alignLeft) {
         BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
+        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null, false);
 
         GridPane grid = new GridPane();
         ExplorationGamesStats stats = mock(ExplorationGamesStats.class);
@@ -191,7 +168,7 @@ class StatsContextTest {
     @ValueSource(booleans = {true, false})
     void shouldAddAllToGridHiddenItemsGames(boolean alignLeft) {
         BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
+        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null, false);
 
         GridPane grid = new GridPane();
         HiddenItemsGamesStats stats = mock(HiddenItemsGamesStats.class);
@@ -204,7 +181,7 @@ class StatsContextTest {
     @ValueSource(booleans = {true, false})
     void shouldAddAllToGrid(boolean alignLeft) {
         BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
+        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null, false);
 
         GridPane grid = new GridPane();
         Stats stats = mock(Stats.class);
@@ -216,14 +193,14 @@ class StatsContextTest {
     @Test
     void shouldCreateControlButtonPane() throws InterruptedException {
         BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
+        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null, false);
 
         Configuration mockConfig = mock(Configuration.class);
-        when(mockConfig.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));
+        when(mockConfig.isAreaOfInterestDisabled()).thenReturn(true);
         when(mockConfig.isFixationSequenceDisabled()).thenReturn(false);
         RadioButton radioButton = new RadioButton();
         CustomButton button = new CustomButton("bear.jpg", 300);
-        HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, radioButton, null, button, false);
+        HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, radioButton, null, button, false, false);
 
         assertEquals(5, result.getChildren().size());
 
@@ -233,7 +210,8 @@ class StatsContextTest {
         Platform.runLater(() -> aoiButton.fireEvent(TestingUtils.clickOnTarget(aoiButton)));
         TestingUtils.waitForRunLater();
 
-        verify(mockGazePlay).onDisplayAOI(mockStats);
+        AreaOfInterestContext mockAOI = new AreaOfInterestContext(mockGazePlay, mockStats, false);
+        verify(mockGazePlay).onDisplayAOI(mockAOI);
 
         Platform.runLater(() -> scanPathButton.fireEvent(TestingUtils.clickOnTarget(scanPathButton)));
         TestingUtils.waitForRunLater();
@@ -244,13 +222,13 @@ class StatsContextTest {
     @Test
     void shouldCreateControlButtonPaneNoContinueButton() {
         BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
+        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null, false);
 
         Configuration mockConfig = mock(Configuration.class);
         when(mockConfig.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(false));
         when(mockConfig.isFixationSequenceDisabled()).thenReturn(true);
         RadioButton radioButton = new RadioButton();
-        HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, radioButton, null, null, false);
+        HBox result = context.createControlButtonPane(mockGazePlay, mockStats, mockConfig, radioButton, null, null, false, false);
 
         assertEquals(1, result.getChildren().size());
     }
@@ -258,7 +236,7 @@ class StatsContextTest {
     @Test
     void shouldGetChildren() {
         BorderPane root = new BorderPane();
-        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null);
+        StatsContext context = new StatsContext(mockGazePlay, root, mockStats, null, false);
 
         assertEquals(root.getChildren().size(), context.getChildren().size());
     }

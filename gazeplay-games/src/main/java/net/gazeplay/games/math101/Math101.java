@@ -42,6 +42,7 @@ public class Math101 implements GameLifeCycle {
 
     private final Stats stats;
 
+
     private final ArrayList<TargetAOI> targetAOIList;
 
     private final int nbLines;
@@ -67,7 +68,7 @@ public class Math101 implements GameLifeCycle {
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
     }
 
     public Math101(final MathGameType gameType, final IGameContext gameContext, final MathGameVariant gameVariant, final Stats stats, double gameSeed) {

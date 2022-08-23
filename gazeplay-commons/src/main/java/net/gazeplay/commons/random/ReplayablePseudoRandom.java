@@ -9,7 +9,8 @@ import lombok.Setter;
 
 public class ReplayablePseudoRandom {
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private double seed;
 
     public ReplayablePseudoRandom() {

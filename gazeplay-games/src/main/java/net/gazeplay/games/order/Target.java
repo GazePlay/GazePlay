@@ -42,7 +42,7 @@ public class Target extends Parent {
         this.radius = gameContext.getGamePanelDimensionProvider().getDimension2D().getWidth() / 18;
         this.fixationLength = fixLength;
 
-        this.pos = this.getInitialPosition(randomGenerator,num-1);
+        this.pos = this.getInitialPosition(randomGenerator, num - 1);
 
         final Circle cercle = new Circle(pos.getX(), pos.getY(), this.radius);
         cercle.setFill(new ImagePattern(new Image("data/order/images/target.png"), 0, 0, 1, 1, true));
@@ -65,21 +65,21 @@ public class Target extends Parent {
         };
     }
 
-    private Position getInitialPosition(ReplayablePseudoRandom randomGenerator, int numberOfCurrentTargets){
+    private Position getInitialPosition(ReplayablePseudoRandom randomGenerator, int numberOfCurrentTargets) {
         final RandomPositionGenerator randomPositionGenerator = this.gameContext.getRandomPositionGenerator();
         randomPositionGenerator.setRandomGenerator(randomGenerator);
         Position position = randomPositionGenerator.newRandomPosition(100);
-        if(numberOfCurrentTargets > 0){
+        if (numberOfCurrentTargets > 0) {
             boolean positionIsOk = false;
-            while(!positionIsOk){
+            while (!positionIsOk) {
                 positionIsOk = true;
-                for(int i = 0; i < numberOfCurrentTargets; i++) {
+                for (int i = 0; i < numberOfCurrentTargets; i++) {
                     double distance = Point2D.distance(position.getX(), position.getY(), gameInstance.getTabTarget()[i].getPos().getX(), gameInstance.getTabTarget()[i].getPos().getY());
-                   if(distance < radius*1.5){
-                       positionIsOk = false;
-                       position = randomPositionGenerator.newRandomPosition(100);
-                       break;
-                   }
+                    if (distance < radius * 1.5) {
+                        positionIsOk = false;
+                        position = randomPositionGenerator.newRandomPosition(100);
+                        break;
+                    }
                 }
             }
         }

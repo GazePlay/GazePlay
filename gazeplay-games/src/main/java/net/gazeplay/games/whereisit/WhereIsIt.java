@@ -81,7 +81,7 @@ public class WhereIsIt implements GameLifeCycle {
         this.gameContext.startScoreLimiter();
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
     }
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
@@ -300,7 +300,6 @@ public class WhereIsIt implements GameLifeCycle {
                 return true;
             }
         } catch (IOException ignored) {
-
         }
         return false;
     }
@@ -373,8 +372,8 @@ public class WhereIsIt implements GameLifeCycle {
 
         final String language = config.getLanguage();
 
-        if (directoriesCount == 0) {
-            log.warn("No images found in Directory " + directoryName);
+        if (directoriesCount == 0 || directoriesCount < numberOfImagesToDisplayPerRound) {
+            log.warn("No enough images found in Directory " + directoryName);
             error(language);
             return null;
         }
@@ -436,7 +435,6 @@ public class WhereIsIt implements GameLifeCycle {
         } else if (this.gameType == CUSTOMIZED) {
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
                 int index = random.nextInt(imagesFolders.size());
-
                 final File folder = imagesFolders.remove((index) % directoriesCount);
                 final File[] files = getFiles(folder);
                 List<File> validImageFiles = new ArrayList<>();
@@ -459,14 +457,14 @@ public class WhereIsIt implements GameLifeCycle {
                 // The image file needs 'file:' prepended as this will get images from a local source, not resources.
                 final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                    winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats, this);
+                    winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats,
+                    this);
 
                 final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY + 1), (int) gameSizing.height,
                     System.currentTimeMillis());
                 targetAOIList.add(targetAOI);
 
                 pictureCardList.add(pictureCard);
-
 
                 if ((i + 1) % nbColumns != 0) {
                     posX++;
@@ -475,7 +473,6 @@ public class WhereIsIt implements GameLifeCycle {
                     posX = 0;
                 }
             }
-
         } else if (this.gameType == ANIMALS_DYNAMIC) {
             int index = random.nextInt(resourcesFolders.size());
             final String folder = resourcesFolders.remove((index) % directoriesCount);
@@ -524,7 +521,6 @@ public class WhereIsIt implements GameLifeCycle {
 
                 final String folder = resourcesFolders.remove((index) % directoriesCount);
                 final String folderName = (new File(folder)).getName();
-
                 final Set<String> files = ResourceFileManager.getResourcePaths(folder);
                 final int numFile = random.nextInt(files.size());
                 final String randomImageFile = (String) files.toArray()[numFile];
@@ -537,7 +533,8 @@ public class WhereIsIt implements GameLifeCycle {
 
                 final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                    winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
+                    winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats,
+                    this);
 
                 pictureCardList.add(pictureCard);
 
@@ -569,9 +566,9 @@ public class WhereIsIt implements GameLifeCycle {
         // HomeUtils.home(scene, group, choiceBox, null);
 
         final Multilinguism multilinguism = MultilinguismFactory.getSingleton();
-
         final Text error = new Text(multilinguism.getTranslation("WII-error", language));
         final Region root = gameContext.getRoot();
+
         error.setX(root.getWidth() / 2. - 100);
         error.setY(root.getHeight() / 2.);
         error.setId("item");
@@ -653,17 +650,13 @@ public class WhereIsIt implements GameLifeCycle {
         }
 
         final Configuration config = gameContext.getConfiguration();
-
         final File questionFile = new File(config.getWhereIsItDir(), "questions.csv");
-
         final Multilinguism localMultilinguism = MultilinguismFactory.getForResource(questionFile.toString());
-
         final String traduction = localMultilinguism.getTranslation(folder, language);
 
         log.debug("traduction: {}", traduction);
 
         final StringTokenizer st = new StringTokenizer(traduction, ";");
-
         final List<Image> imageList = new ArrayList<>(20);
 
         while (st.hasMoreTokens()) {

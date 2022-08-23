@@ -20,7 +20,7 @@ public abstract class Mouse extends Parent {
     private String orientation;
     public boolean souris;
     String ImageChoisie;
-    private static final Random r=new Random();
+    private static final Random r = new Random();
 
     int indiceX; // j
     int indiceY; // i
@@ -32,8 +32,8 @@ public abstract class Mouse extends Parent {
 
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
-        this.souris =true;
-        this.ImageChoisie=getRandomCaractere();
+        this.souris = true;
+        this.ImageChoisie = getRandomCaractere();
         this.mouse = new Rectangle(positionX, positionY, width, height);
         this.getChildren().add(mouse);
         this.indiceX = 0;
@@ -44,73 +44,72 @@ public abstract class Mouse extends Parent {
 
     }
 
-    public void setImage ()
-    {
-        if (this.souris == true) {
+    public void setImage() {
+        if (this.souris) {
             this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseFront.png"), 5, 5, 1, 1, true));
         } else {
             this.mouse.setFill(new ImagePattern(new Image(ImageChoisie), 5, 5, 1, 1, true));
         }
     }
-    public void setRandomPersonnage(){
-        this.souris=false;
+
+    public void setRandomPersonnage() {
+        this.souris = false;
     }
-    String getRandomCaractere()
-    {
+
+    String getRandomCaractere() {
         int choix = r.nextInt(17);
         String img;
-        switch (choix)
-        {
+        switch (choix) {
             case 0:
-                img="data/common/default/images/noBackGround/bear.png";
+                img = "data/common/default/images/noBackGround/bear.png";
                 break;
             case 1:
-                img="data/common/default/images/noBackGround/chouette.png";
+                img = "data/common/default/images/noBackGround/chouette.png";
                 break;
             case 2:
-                img="data/common/default/images/noBackGround/crabe.png";
+                img = "data/common/default/images/noBackGround/crabe.png";
                 break;
             case 3:
-                img="data/common/default/images/noBackGround/dog.png";
+                img = "data/common/default/images/noBackGround/dog.png";
                 break;
             case 4:
-                img="data/common/default/images/noBackGround/ecureuil.png";
+                img = "data/common/default/images/noBackGround/ecureuil.png";
                 break;
             case 5:
-                img="data/common/default/images/noBackGround/elephant.png";
+                img = "data/common/default/images/noBackGround/elephant.png";
                 break;
             case 6:
-                img="data/common/default/images/noBackGround/fox.png";
+                img = "data/common/default/images/noBackGround/fox.png";
                 break;
             case 7:
-                img="data/common/default/images/noBackGround/giraffe.png";
+                img = "data/common/default/images/noBackGround/giraffe.png";
                 break;
             case 8:
-                img="data/common/default/images/noBackGround/herisson.png";
+                img = "data/common/default/images/noBackGround/herisson.png";
                 break;
             case 9:
-                img="data/common/default/images/noBackGround/hippo.png";
+                img = "data/common/default/images/noBackGround/hippo.png";
                 break;
             case 10:
-                img="data/common/default/images/noBackGround/lion.png";
+                img = "data/common/default/images/noBackGround/lion.png";
                 break;
             case 11:
-                img="data/common/default/images/noBackGround/meduse.png";
+                img = "data/common/default/images/noBackGround/meduse.png";
                 break;
             case 12:
-                img="data/common/default/images/noBackGround/poulpe.png";
+                img = "data/common/default/images/noBackGround/poulpe.png";
                 break;
             case 13:
-                img="data/common/default/images/noBackGround/renard.png";
+                img = "data/common/default/images/noBackGround/renard.png";
                 break;
             case 14:
-                img="data/common/default/images/noBackGround/snake.png";
+                img = "data/common/default/images/noBackGround/snake.png";
                 break;
             case 15:
-                img="data/common/default/images/noBackGround/tortue.png";
+                img = "data/common/default/images/noBackGround/tortue.png";
                 break;
             default:
-                img="data/common/default/images/noBackGround/turtle.png";
+                img = "data/common/default/images/noBackGround/turtle.png";
                 break;
         }
         return img;
@@ -121,7 +120,7 @@ public abstract class Mouse extends Parent {
     }
 
     void putInBold() {
-        if (souris == true) {
+        if (souris) {
             switch (orientation) {
                 case "back":
                     this.mouse
@@ -149,7 +148,7 @@ public abstract class Mouse extends Parent {
     }
 
     void putInLight() {
-        if (souris == true) {
+        if (souris) {
             switch (orientation) {
                 case "back":
                     this.mouse.setFill(new ImagePattern(new Image("data/labyrinth/images/mouseBack.png"), 5, 5, 1, 1, true));
@@ -173,7 +172,7 @@ public abstract class Mouse extends Parent {
     }
 
     void reOrientateMouse(final int oldColumn, final int oldRow, final int newColumn, final int newRow) {
-        if(souris ==true) {
+        if (souris) {
             putInBold();
             nbMove++;
             if (oldColumn != newColumn) {
@@ -197,8 +196,7 @@ public abstract class Mouse extends Parent {
                         .setFill(new ImagePattern(new Image("data/labyrinth/images/mouseBack.png"), 5, 5, 1, 1, true));
                 }
             }
-        }
-        else{
+        } else {
             this.mouse
                 .setFill(new ImagePattern(new Image(this.ImageChoisie), 5, 5, 1, 1, true));
         }

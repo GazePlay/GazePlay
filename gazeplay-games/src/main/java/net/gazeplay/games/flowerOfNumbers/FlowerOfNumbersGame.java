@@ -69,7 +69,7 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
 
         if (gameSeed < 0) {
             random = new ReplayablePseudoRandom();
-            this.stats.setGameSeed(random.getSeed());
+            this.stats.setCurrentGameSeed(random.getSeed());
         } else {
             random = new ReplayablePseudoRandom(gameSeed);
         }

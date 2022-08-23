@@ -53,13 +53,16 @@ class Potion extends Parent {
     private final IGameContext gameContext;
 
     private final MagicPotionsStats stats;
+
+
     @Getter
     final EventHandler<Event> enterEvent;
 
     private Timeline currentTimeline;
 
-    Potion(final double positionX, final double positionY, final double width, final double height, final Image image, final Color color,
-           final IGameContext gameContext, final MagicPotionsStats stats, final MagicPotions gameInstance, final int fixationlength) {
+    Potion(final double positionX, final double positionY, final double width, final double height, final Image image,
+           final Color color, final IGameContext gameContext, final MagicPotionsStats stats, final MagicPotions gameInstance,
+           final int fixationlength) {
         final DropShadow shadow = new DropShadow();
         shadow.setColor(Color.BLACK);
         shadow.setWidth(10);
@@ -196,17 +199,17 @@ class Potion extends Parent {
                             .setFill(gameInstance.currentRoundDetails.getRequest().getColor());
                     } else {
                         if ((gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.YELLOW)) ||
-                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.YELLOW))){
+                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.YELLOW))) {
                             gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.ORANGE);
                         }
 
                         if ((gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.BLUE) && gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.YELLOW)) ||
-                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.BLUE) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.YELLOW))){
+                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.BLUE) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.YELLOW))) {
                             gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.GREEN);
                         }
 
                         if ((gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.BLUE)) ||
-                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.BLUE))){
+                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.BLUE))) {
                             gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.PURPLE);
                         }
                     }

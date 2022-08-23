@@ -94,7 +94,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     }
 
     public void gazeplayHomeMenuScreen(GazePlay gazePlay, GamesLocator gamesLocator) {
-
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
         CustomButton exitButton = createExitButton(screenDimension);
@@ -464,13 +463,13 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             try {
                 ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getApplicationContext(), games);
                 replayingGame.pickJSONFile(replayingGame.getFileName());
-                if (ReplayingGameFromJson.replayIsAllowed(replayingGame.getCurrentGameNameCode())) {
+                if (ReplayingGameFromJson.replayIsAllowed(replayingGame.getCurrentGameName())) {
                     replayingGame.replayGame();
-                } else if (replayingGame.getCurrentGameNameCode() != null) {
+                } else if (replayingGame.getCurrentGameName() != null) {
                     Translator translator = gazePlay.getTranslator();
                     this.errorMessageLabel.setText(
                         translator.translate("SorryButReplayInvalid")
-                            .replace("{}", translator.translate(replayingGame.getCurrentGameNameCode()))
+                            .replace("{}", translator.translate(replayingGame.getCurrentGameName()))
                             .replace("\\n", "\n"));
                     this.errorMessageLabel.setTextAlignment(TextAlignment.CENTER);
                     ColorAdjust colorAdjust = new ColorAdjust();

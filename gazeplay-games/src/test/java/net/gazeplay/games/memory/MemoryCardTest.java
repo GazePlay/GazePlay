@@ -36,8 +36,8 @@ class MemoryCardTest {
     Configuration mockConfig;
 
     @BeforeEach
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
+    public void openMocks() {
+        MockitoAnnotations.openMocks(this);
         when(mockGameContext.getConfiguration()).thenReturn(mockConfig);
         when(mockConfig.getFixationLength()).thenReturn(2);
     }

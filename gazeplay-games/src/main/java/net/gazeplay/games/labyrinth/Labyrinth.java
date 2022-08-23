@@ -57,7 +57,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         this.stats = stats;
 
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
 
         this.variant = variant;
         final Configuration config = gameContext.getConfiguration();
@@ -148,83 +148,81 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         Mouse mouse;
         switch (variant) {
             case LOOK_DESTINATION:
-                mouse =new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+                mouse = new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 mouse.setImage();
                 return mouse;
             case LOOK_LOCAL_ARROWS:
-                mouse =new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+                mouse = new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 mouse.setImage();
                 return mouse;
             case LOOK_GLOBAL_ARROWS:
-                mouse=new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+                mouse = new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 mouse.setImage();
                 return mouse;
             case SELECT_THEN_LOOK_DESTINATION:
-                mouse= new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+                mouse = new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 mouse.setImage();
                 return mouse;
             case ANLOOK_DESTINATION:
-                mouse=new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+                mouse = new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 mouse.setImage();
                 return mouse;
             case ANLOOK_LOCAL_ARROWS:
-                mouse= new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+                mouse = new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 mouse.setImage();
                 return mouse;
             case ANLOOK_GLOBAL_ARROWS:
-                mouse= new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+                mouse = new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 mouse.setImage();
                 return mouse;
             case ANSELECT_THEN_LOOK_DESTINATION:
-                mouse=new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+                mouse = new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 mouse.setImage();
                 return mouse;
-
-
             case OTHER_LOOK_DESTINATION:
-                mouse =new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+                mouse = new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 cheese.setToHouse();
                 mouse.setRandomPersonnage();
                 mouse.setImage();
                 return mouse;
             case OTHER_LOOK_LOCAL_ARROWS:
-                mouse =new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+                mouse = new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 cheese.setToHouse();
                 mouse.setRandomPersonnage();
                 mouse.setImage();
                 return mouse;
             case OTHER_LOOK_GLOBAL_ARROWS:
-                mouse=new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+                mouse = new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 cheese.setToHouse();
                 mouse.setRandomPersonnage();
                 mouse.setImage();
                 return mouse;
             case OTHER_SELECT_THEN_LOOK_DESTINATION:
-                mouse= new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+                mouse = new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 cheese.setToHouse();
                 mouse.setRandomPersonnage();
                 mouse.setImage();
                 return mouse;
             case OTHER_ANLOOK_DESTINATION:
-                mouse=new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+                mouse = new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 cheese.setToHouse();
                 mouse.setRandomPersonnage();
                 mouse.setImage();
                 return mouse;
             case OTHER_ANLOOK_LOCAL_ARROWS:
-                mouse= new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+                mouse = new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 cheese.setToHouse();
                 mouse.setRandomPersonnage();
                 mouse.setImage();
                 return mouse;
             case OTHER_ANLOOK_GLOBAL_ARROWS:
-                mouse= new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+                mouse = new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 cheese.setToHouse();
                 mouse.setRandomPersonnage();
                 mouse.setImage();
                 return mouse;
             case OTHER_ANSELECT_THEN_LOOK_DESTINATION:
-                mouse=new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+                mouse = new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
                 cheese.setToHouse();
                 mouse.setRandomPersonnage();
                 mouse.setImage();
@@ -233,6 +231,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
                 throw new IllegalArgumentException("Unsupported variant ID");
         }
     }
+
     @Override
     public void dispose() {
         // TODO Auto-generated method stub

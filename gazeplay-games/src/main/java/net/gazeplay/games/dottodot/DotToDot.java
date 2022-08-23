@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.geometry.Dimension2D;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -19,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
-import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -39,6 +37,7 @@ public class DotToDot implements GameLifeCycle {
     private final Stats stats;
 
     private final DotToDotGameVariant gameVariant;
+
 
     @Getter
     private final ReplayablePseudoRandom randomGenerator;
@@ -66,16 +65,14 @@ public class DotToDot implements GameLifeCycle {
 
 
     public DotToDot(final IGameContext gameContext, final DotToDotGameVariant gameVariant, final Stats stats) {
-
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameVariant = gameVariant;
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
         this.dotList = new ArrayList<>();
         this.lineList = new ArrayList<>();
         this.previous = 1;
-
     }
 
     private void createBackground(ImageView background, Dimension2D dimensions, double scaleRatio, IGameContext gameContext) {
@@ -95,8 +92,9 @@ public class DotToDot implements GameLifeCycle {
     @Override
     public void launch() {
 
-        if (!gameVariant.getLabel().contains("Dynamic"))
+        if (!gameVariant.getLabel().contains("Dynamic")) {
             level = getRandomGenerator().nextInt(8);
+        }
 
         final String path = "data/dottodot/";
         final String folder = "level" + level + "/";

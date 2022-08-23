@@ -46,9 +46,9 @@ public class LogoFactory {
         return gazePlayAnimatedLogo.getLetters();
     }
 
-    public void stopAnimation(){
+    public void stopAnimation() {
         logoAnimatedAnimationTransition.stop();
-        if(logoAnimatedThread !=null && logoAnimatedThread.isAlive()){
+        if (logoAnimatedThread != null && logoAnimatedThread.isAlive()) {
             logoAnimatedThread.interrupt();
         }
     }

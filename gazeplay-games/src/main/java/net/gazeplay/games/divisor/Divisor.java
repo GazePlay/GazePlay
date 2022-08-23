@@ -29,7 +29,7 @@ public class Divisor implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
         this.gameContext.getRandomPositionGenerator().setRandomGenerator(randomGenerator);
         this.isRabbit = isRabbit;
     }
@@ -63,7 +63,7 @@ public class Divisor implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.incrementNumberOfGoalsToReach(15);
 
-         target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
+        target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
             this.gameContext.getRandomPositionGenerator().newRandomPosition(100 + 2), isRabbit, randomGenerator);
 
         gameContext.getChildren().add(target);
@@ -88,7 +88,7 @@ public class Divisor implements GameLifeCycle {
                     public Double visitDark() {
                         return 1.d;
                     }
-            });
+                });
             imageRectangle.setOpacity(imageRectangleOpacity);
             gameContext.getChildren().add(imageRectangle);
         }

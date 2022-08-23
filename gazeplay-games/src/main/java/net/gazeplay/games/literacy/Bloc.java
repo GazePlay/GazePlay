@@ -61,7 +61,6 @@ public class Bloc extends Parent {// Rectangle {
         this.gameInstance = gameInstance;
         this.stats = stats;
         this.gameContext = gameContext;
-
         this.fixationlength = fixationlength;
 
         this.width = width;

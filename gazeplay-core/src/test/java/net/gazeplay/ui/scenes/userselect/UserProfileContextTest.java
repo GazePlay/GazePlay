@@ -92,8 +92,9 @@ class UserProfileContextTest {
 
         File hiddenDir = new File(rootDir, hiddenDirectory);
         hiddenDir.mkdirs();
-        if (System.getProperty("os.name").toLowerCase().contains("win"))
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
             Files.setAttribute(hiddenDir.toPath(), "dos:hidden", true, LinkOption.NOFOLLOW_LINKS);
+        }
 
         File profileDir = new File(rootDir, profileDirectory);
         profileDir.mkdirs();
@@ -104,7 +105,7 @@ class UserProfileContextTest {
 
     @BeforeEach
     void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockGazePlay.getCurrentScreenDimensionSupplier()).thenReturn(() -> screenDimension);
         when(mockGazePlay.getPrimaryStage()).thenReturn(mockStage);
         when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);

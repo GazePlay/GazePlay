@@ -32,7 +32,7 @@ class SecondScreenTest {
 
     @BeforeEach
     void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         group = new Group();
         Rectangle2D screenBounds = new Rectangle2D(0, 0, 1920, 1080);

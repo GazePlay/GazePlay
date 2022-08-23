@@ -10,6 +10,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,7 +43,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -64,19 +64,29 @@ public class Stats implements GazeMotionListener {
     public final Scene gameContextScene;
     protected String gameName;
 
+    @Getter
     long startTime;
+    @Getter
+    private RoundsDurationReport roundsDurationReport = new RoundsDurationReport();
+    private Long currentRoundStartTime;
+
     int sceneCounter = 0;
+    private int counter = 0;
+    private final int scale = 1000;
     private EventHandler<MouseEvent> recordMouseMovements;
     private EventHandler<GazeEvent> recordGazeMovements;
     private LifeCycle lifeCycle = new LifeCycle();
-    private RoundsDurationReport roundsDurationReport = new RoundsDurationReport();
-    private LevelsReport levelsReport = new LevelsReport();
-    private ChiReport chiReport = new ChiReport();
-    private int counter = 0;
-    private final List<CoordinatesTracker> movementHistory = new ArrayList<>();
+
+    @Getter
+    private final LevelsReport levelsReport = new LevelsReport();
+    @Getter
+    private final ChiReport chiReport = new ChiReport();
+
+    @Getter
+    @Setter
+    private List<CoordinatesTracker> movementHistory = new ArrayList<>();
 
     private long previousTime = 0;
-
     private int previousXMouse = 0;
     private int previousYMouse = 0;
     private int previousXGaze = 0;
@@ -85,33 +95,35 @@ public class Stats implements GazeMotionListener {
     private File movieFolder;
     private final boolean convexHULL = true;
     private ScreenRecorder screenRecorder;
-    private ArrayList<TargetAOI> targetAOIList = null;
-    private double[][] heatMap;
+    private int[][] heatMap;
 
     private long currentTimeMillisScreenshot = System.currentTimeMillis();
 
     @Getter
-    public int nbGoalsReached = 0;
+    private List<TargetAOI> targetAOIList = null;
 
     @Getter
+    public int nbGoalsReached = 0;
+    @Getter
     protected int nbGoalsToReach = 0;
+    @Getter
+    private int nbUncountedGoalsReached;
 
     @Setter
     private long accidentalShotPreventionPeriod = 0;
 
     @Getter
-    private int nbUnCountedGoalsReached;
-
-    @Getter
     @Setter
     private long currentGazeTime;
-
     @Getter
     @Setter
     private long lastGazeTime;
 
     @Getter
-    private ArrayList<LinkedList<FixationPoint>> fixationSequence;
+    private List<List<FixationPoint>> fixationSequence;
+
+    @Getter
+    private JsonObject savedStatsJSON;
 
     @Getter
     private SavedStatsInfo savedStatsInfo;
@@ -119,29 +131,28 @@ public class Stats implements GazeMotionListener {
     @Getter
     private WritableImage gameScreenShot;
 
-    JsonArray coordinateData = new JsonArray();
-    private final JsonObject savedDataObj = new JsonObject();
+    @Getter
     String currentGameVariant;
+    @Getter
     String currentGameNameCode;
+    @Setter
     double currentGameSeed = 0.;
+    @Getter
     private final boolean inReplayMode;
 
     private String directoryOfVideo;
-
     private String nameOfVideo;
-
-    private Long currentRoundStartTime;
 
     public String variantType = "";
 
-    //Phonology
+    // Phonology
     public int totalPhonology = 0;
     public int simpleScoreItemsPhonology = 0;
     public int complexScoreItemsPhonology = 0;
     public int scoreLeftTargetItemsPhonology = 0;
     public int scoreRightTargetItemsPhonology = 0;
 
-    //Semantics
+    // Semantics
     public int totalSemantic = 0;
     public int simpleScoreItemsSemantic = 0;
     public int complexScoreItemsSemantic = 0;
@@ -150,14 +161,14 @@ public class Stats implements GazeMotionListener {
     public int scoreLeftTargetItemsSemantic = 0;
     public int scoreRightTargetItemsSemantic = 0;
 
-    //Morphosyntax
+    // Morphosyntax
     public int totalMorphosyntax = 0;
     public int simpleScoreItemsMorphosyntax = 0;
     public int complexScoreItemsMorphosyntax = 0;
     public int scoreLeftTargetItemsMorphosyntax = 0;
     public int scoreRightTargetItemsMorphosyntax = 0;
 
-    //Word comprehension
+    // Word comprehension
     public int totalWordComprehension = 0;
     public int totalItemsAddedManually = 0;
 
@@ -165,39 +176,42 @@ public class Stats implements GazeMotionListener {
     public long timeGame = 0;
     public String actualFile = "";
 
-    //parameters for AOI
-    private int movementHistoryidx = 0;
-    private final List<AreaOfInterestProps> allAOIList = new ArrayList<>();
-    private List<CoordinatesTracker> areaOfInterestList = new ArrayList<>();
+    // Parameters for AOI
     @Getter
-    private final List<List> allAOIListTemp = new ArrayList<>();
+    private double highestFixationTime = 0;
     @Getter
-    private final List<int[]> startAndEndIdx = new ArrayList<>();
-    @Getter
-    private final List<Polygon> allAOIListPolygon = new ArrayList<>();
-    @Getter
-    private final List<Double[]> allAOIListPolygonPt = new ArrayList<>();
-    private final double highestFixationTime = 0;
-    private final Configuration config = ActiveConfigurationContext.getInstance();
-    private int colorIterator;
-    private final javafx.scene.paint.Color[] colors = new javafx.scene.paint.Color[]{
-        javafx.scene.paint.Color.PURPLE,
-        javafx.scene.paint.Color.WHITE,
-        javafx.scene.paint.Color.PINK,
-        javafx.scene.paint.Color.ORANGE,
-        javafx.scene.paint.Color.BLUE,
-        javafx.scene.paint.Color.RED,
-        javafx.scene.paint.Color.CHOCOLATE
-    };
+    private List<AreaOfInterest> aoiList = new ArrayList<>();
 
+    private int movementHistoryIdx = 0;
+    private List<CoordinatesTracker> aoiTrackerList = new ArrayList<>();
+    private final List<List<CoordinatesTracker>> aoiTempList = new ArrayList<>();
+    private final List<int[]> aoiStartEndIdxList = new ArrayList<>();
+    private final List<Polygon> aoiPolygonList = new ArrayList<>();
+    private final List<Double[]> aoiPolygonPtList = new ArrayList<>();
+
+    private final Configuration config = ActiveConfigurationContext.getInstance();
+
+    @Setter
     private static boolean configMenuOpen = false;
+
+    /* CONSTRUCTORS */
 
     public Stats(final Scene gameContextScene) {
         this(gameContextScene, null);
     }
 
-    public Stats(final Scene gameContextScene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
-        this(gameContextScene, null, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+    public Stats(final Scene gameContextScene,
+                 int nbGoalsReached, int nbGoalsToReach, int nbUncountedGoalsReached,
+                 LifeCycle lifeCycle,
+                 RoundsDurationReport roundsDurationReport,
+                 List<List<FixationPoint>> fixationSequence,
+                 List<CoordinatesTracker> movementHistory,
+                 int[][] heatMap,
+                 List<AreaOfInterest> aoiList,
+                 SavedStatsInfo savedStatsInfo
+    ) {
+        this(gameContextScene, null, nbGoalsReached, nbGoalsToReach, nbUncountedGoalsReached,
+            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
     }
 
     public Stats(final Scene gameContextScene, final String gameName) {
@@ -208,33 +222,87 @@ public class Stats implements GazeMotionListener {
         heatMapPixelSize = computeHeatMapPixelSize(gameContextScene);
     }
 
-    public Stats(final Scene gameContextScene, final String gameName, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    public Stats(final Scene gameContextScene,
+                 final String gameName,
+                 int nbGoalsReached, int nbGoalsToReach, int nbUncountedGoalsReached,
+                 LifeCycle lifeCycle,
+                 RoundsDurationReport roundsDurationReport,
+                 List<List<FixationPoint>> fixationSequence,
+                 List<CoordinatesTracker> movementHistory,
+                 int[][] heatMap,
+                 List<AreaOfInterest> aoiList,
+                 SavedStatsInfo savedStatsInfo
+    ) {
         this.gameContextScene = gameContextScene;
         this.gameName = gameName;
         this.nbGoalsReached = nbGoalsReached;
         this.nbGoalsToReach = nbGoalsToReach;
-        this.nbUnCountedGoalsReached = nbUnCountedGoalsReached;
-        this.fixationSequence = fixationSequence;
+        this.nbUncountedGoalsReached = nbUncountedGoalsReached;
         this.lifeCycle = lifeCycle;
         this.roundsDurationReport = roundsDurationReport;
+        this.fixationSequence = fixationSequence;
+        this.movementHistory = movementHistory;
+        this.heatMap = heatMap;
+        this.aoiList = aoiList;
         this.savedStatsInfo = savedStatsInfo;
         this.inReplayMode = true;
 
         heatMapPixelSize = computeHeatMapPixelSize(gameContextScene);
     }
 
-    static double[][] instantiateHeatMapData(final Scene gameContextScene, final double heatMapPixelSize) {
-        final int heatMapWidth = (int) (gameContextScene.getHeight() / heatMapPixelSize);
-        final int heatMapHeight = (int) (gameContextScene.getWidth() / heatMapPixelSize);
-        log.info("heatMapWidth = {}, heatMapHeight = {}", heatMapWidth, heatMapHeight);
-        return new double[heatMapWidth][heatMapHeight];
+    /**
+     * @return the size of the HeatMap Pixel Size in order to avoid a too big heatmap (400 px)
+     * if maximum memory is more than 1Gb, only 200
+     */
+    double computeHeatMapPixelSize(final Scene gameContextScene) {
+        final long maxMemory = Runtime.getRuntime().maxMemory();
+        final double width = gameContextScene.getWidth();
+        final double result = width / ((maxMemory < 1024 * 1024 * 1024) ? 200 : 400); // size is less than 1Gb (2^30)
+        log.info("computeHeatMapPixelSize() : result = {}", result);
+        return result;
     }
 
-    public ArrayList<TargetAOI> getTargetAOIList() {
-        return this.targetAOIList;
+    /* GETTERS AND SETTERS */
+
+    String getScreenRatio() {
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int screenWidth = gd.getDisplayMode().getWidth();
+        int screenHeight = gd.getDisplayMode().getHeight();
+
+        int factor = getGreatestCommonFactor(screenWidth, screenHeight);
+
+        int widthRatio = screenWidth / factor;
+        int heightRatio = screenHeight / factor;
+        return widthRatio + ":" + heightRatio;
     }
 
-    public void setTargetAOIList(final ArrayList<TargetAOI> targetAOIList) {
+    double getSceneRatio() {
+        return gameContextScene.getHeight() / gameContextScene.getWidth();
+    }
+
+    public int getShotRatio() {
+        return (this.nbGoalsToReach == this.nbGoalsReached || this.nbGoalsToReach == 0) ?
+            100 : (int) ((float) this.nbGoalsReached / (float) this.nbGoalsToReach * 100.0);
+    }
+
+    public List<Long> getLevelsRounds() {
+        return levelsReport.getOriginalLevelsPerRounds();
+    }
+
+    public String getDirectoryOfVideo() {
+        return nameOfVideo;
+    }
+
+    public File getGameStatsOfTheDayDirectory() {
+        final File statsDirectory = GazePlayDirectories.getUserStatsFolder(ActiveConfigurationContext.getInstance().getUserName());
+        final File gameDirectory = new File(statsDirectory, gameName);
+        final File todayDirectory = new File(gameDirectory, DateUtils.today());
+        final boolean outputDirectoryCreated = todayDirectory.mkdirs();
+        log.info("outputDirectoryCreated = {}", outputDirectoryCreated);
+        return todayDirectory;
+    }
+
+    public void setTargetAOIList(final List<TargetAOI> targetAOIList) {
         this.targetAOIList = targetAOIList;
         for (int i = 0; i < targetAOIList.size() - 1; i++) {
             final long duration = targetAOIList.get(i).getTimeEnded() - targetAOIList.get(i).getTimeStarted();
@@ -245,6 +313,26 @@ public class Stats implements GazeMotionListener {
         }
     }
 
+    public void setGameVariant(String gameVariant, String gameNameCode) {
+        currentGameVariant = gameVariant;
+        currentGameNameCode = gameNameCode;
+    }
+
+    @SuppressWarnings("SuspiciousNameCombination")
+    public int getGreatestCommonFactor(int width, int height) {
+        return (height == 0) ? width : getGreatestCommonFactor(height, width % height);
+    }
+
+    public long computeTotalElapsedDuration() {
+        return lifeCycle.computeTotalElapsedDuration();
+    }
+
+    /* ROUND DURATION REPORT */
+
+    public void addRoundDuration() {
+        roundsDurationReport.addRoundDuration(System.currentTimeMillis() - currentRoundStartTime);
+    }
+
     public void notifyNewRoundReady() {
         currentRoundStartTime = System.currentTimeMillis();
         takeScreenShot();
@@ -252,10 +340,79 @@ public class Stats implements GazeMotionListener {
 
     public void notifyNextRound() {
         final long currentRoundEndTime = System.currentTimeMillis();
-        final long currentRoundDuration = currentRoundEndTime - this.currentRoundStartTime;
-        this.roundsDurationReport.addRoundDuration(currentRoundDuration);
+        final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
+        roundsDurationReport.addRoundDuration(currentRoundDuration);
         currentRoundStartTime = currentRoundEndTime;
     }
+
+    public long computeRoundsDurationAverageDuration() {
+        return roundsDurationReport.computeAverageLength();
+    }
+
+    public long computeRoundsDurationMedianDuration() {
+        return roundsDurationReport.computeMedianDuration();
+    }
+
+    public double computeRoundsDurationStandardDeviation() {
+        return roundsDurationReport.computeSD();
+    }
+
+    public long getRoundsTotalAdditiveDuration() {
+        return roundsDurationReport.getTotalAdditiveDuration();
+    }
+
+    public List<Long> getSortedDurationsBetweenGoals() {
+        return roundsDurationReport.getSortedDurationsBetweenGoals();
+    }
+
+    public List<Long> getOriginalDurationsBetweenGoals() {
+        return roundsDurationReport.getOriginalDurationsBetweenGoals();
+    }
+
+    protected void printLengthBetweenGoalsToString(final PrintWriter out) {
+        this.roundsDurationReport.printLengthBetweenGoalsToString(out);
+    }
+
+    public void takeScreenShot() {
+        if (!inReplayMode) {
+            gameScreenShot = gameContextScene.snapshot(null);
+        }
+    }
+    
+    /* NUMBER OF GOALS */
+
+    public void incrementNumberOfGoalsToReach() {
+        if (!inReplayMode) {
+            nbGoalsToReach++;
+            currentRoundStartTime = System.currentTimeMillis();
+            log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
+        }
+    }
+
+    public void incrementNumberOfGoalsToReach(int i) {
+        if (!inReplayMode) {
+            nbGoalsToReach += i;
+            currentRoundStartTime = System.currentTimeMillis();
+            log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
+        }
+    }
+
+    public void incrementNumberOfGoalsReached() {
+        if (!inReplayMode) {
+            final long currentRoundEndTime = System.currentTimeMillis();
+            final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
+            if (currentRoundDuration < accidentalShotPreventionPeriod) {
+                nbUncountedGoalsReached++;
+            } else {
+                nbGoalsReached++;
+                roundsDurationReport.addRoundDuration(currentRoundDuration);
+            }
+            currentRoundStartTime = currentRoundEndTime;
+            log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
+        }
+    }
+
+    /* VIDEO RECORDING */
 
     public void startVideoRecording() {
         directoryOfVideo = getGameStatsOfTheDayDirectory().toString();
@@ -336,253 +493,95 @@ public class Stats implements GazeMotionListener {
         }).start();
     }
 
-    private void generateAOIList(final int index) {
-        final double x1 = movementHistory.get(index).getXValue();
-        final double y1 = movementHistory.get(index).getYValue();
-        final double x2 = movementHistory.get(index - 1).getXValue();
-        final double y2 = movementHistory.get(index - 1).getYValue();
-        final double eDistance = Math.sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
-        if (eDistance < 150 && movementHistory.get(index).getIntervalTime() > 10) {
-            if (index == 1) {
-                areaOfInterestList.add(movementHistory.get(0));
-            }
-            areaOfInterestList.add(movementHistory.get(index));
-        } else {
-            if (areaOfInterestList.size() > 2) {
-
-                allAOIListTemp.add(new ArrayList<>(areaOfInterestList));
-                int[] startEnd = new int[]{index - areaOfInterestList.size(), index};
-                startAndEndIdx.add(startEnd);
-
-                final Point2D[] points = new Point2D[areaOfInterestList.size()];
-
-                for (int i = 0; i < areaOfInterestList.size(); i++) {
-                    CoordinatesTracker coordinate = areaOfInterestList.get(i);
-                    points[i] = new Point2D(coordinate.getXValue(), coordinate.getYValue());
-                }
-
-                final Double[] polygonPoints;
-
-                // Uncomment to use convex hull
-                // if (config.getConvexHullDisabledProperty().getValue()) {
-                // polygonPoints = calculateConvexHull(points);
-                // } else {
-                polygonPoints = calculateRectangle(points);
-                // }
-
-                final Polygon areaOfInterest = new Polygon();
-                areaOfInterest.getPoints().addAll(polygonPoints);
-                allAOIListPolygonPt.add(polygonPoints);
-
-                colorIterator = index % 7;
-                areaOfInterest.setStroke(colors[colorIterator]);
-                allAOIListPolygon.add(areaOfInterest);
-            } else if (eDistance > 700) {
-                areaOfInterestList.add(movementHistory.get(index));
-                allAOIListTemp.add(new ArrayList<>(areaOfInterestList));
-                int[] startEnd = new int[]{index - areaOfInterestList.size(), index};
-                startAndEndIdx.add(startEnd);
-                final float radius = 15;
-                final Point2D[] points = new Point2D[8];
-
-                for (int i = 0; i < 8; i++) {
-                    CoordinatesTracker coordinate = areaOfInterestList.get(0);
-                    points[i] = new Point2D(coordinate.getXValue() + pow(-1, i) * radius, coordinate.getYValue() + pow(-1, i) * radius);
-                }
-
-                final Double[] polygonPoints;
-
-                // Uncomment to use convex hull
-                // if (config.getConvexHullDisabledProperty().getValue()) {
-                //     polygonPoints = calculateConvexHull(points);
-                // } else {
-                polygonPoints = calculateRectangle(points);
-                // }
-
-                final Polygon areaOfInterest = new Polygon();
-                areaOfInterest.getPoints().addAll(polygonPoints);
-                allAOIListPolygonPt.add(polygonPoints);
-
-                colorIterator = index % 7;
-                areaOfInterest.setStroke(colors[colorIterator]);
-                allAOIListPolygon.add(areaOfInterest);
-            }
-            areaOfInterestList = new ArrayList<>();
-        }
-    }
-
-    static Double[] calculateRectangle(final Point2D[] point2D) {
-        double leftPoint = point2D[0].getX();
-        double rightPoint = point2D[0].getX();
-        double topPoint = point2D[0].getY();
-        double bottomPoint = point2D[0].getY();
-
-        for (int i = 1; i < point2D.length; i++) {
-            if (point2D[i].getX() < leftPoint) {
-                leftPoint = point2D[i].getX();
-            }
-            if (point2D[i].getX() > rightPoint) {
-                rightPoint = point2D[i].getX();
-            }
-            if (point2D[i].getY() > topPoint) {
-                topPoint = point2D[i].getY();
-            }
-            if (point2D[i].getY() < bottomPoint) {
-                bottomPoint = point2D[i].getY();
-            }
-        }
-
-        final Double[] squarePoints = new Double[8];
-        final int bias = 15;
-
-        squarePoints[0] = leftPoint - bias;
-        squarePoints[1] = topPoint + bias;
-        squarePoints[2] = rightPoint + bias;
-        squarePoints[3] = topPoint + bias;
-        squarePoints[4] = rightPoint + bias;
-        squarePoints[5] = bottomPoint - bias;
-        squarePoints[6] = leftPoint - bias;
-        squarePoints[7] = bottomPoint - bias;
-        return squarePoints;
-    }
-
-    static Double[] calculateConvexHull(final Point2D[] points) {
-        final int numberOfPoints = points.length;
-        final ArrayList<Double> convexHullPoints = new ArrayList<>();
-        final Vector<Point2D> hull = new Vector<>();
-
-        // Finding the index of the lowest X value, or left-most point, in all points.
-        int lowestValueIndex = 0;
-        for (int i = 1; i < numberOfPoints; i++) {
-            if (points[i].getX() < points[lowestValueIndex].getX()) {
-                lowestValueIndex = i;
-            }
-        }
-
-        int point = lowestValueIndex, q;
-        do {
-            hull.add(points[point]);
-            q = (point + 1) % numberOfPoints;
-            for (int i = 0; i < numberOfPoints; i++) {
-                if (orientation(points[point], points[i], points[q]) < 0) { // Checking if the points are convex.
-                    q = i;
-                }
-            }
-            point = q;
-        } while (point != lowestValueIndex);
-
-        for (final Point2D temp : hull) {
-            convexHullPoints.add(temp.getX());
-            convexHullPoints.add(temp.getY());
-        }
-
-        Double[] hullPointsArray = new Double[convexHullPoints.size()];
-        convexHullPoints.toArray(hullPointsArray);
-
-        return hullPointsArray;
-    }
-
-    static int orientation(final Point2D p1, final Point2D p2, final Point2D p3) {
-
-        final int val = (int) ((p2.getY() - p1.getY()) * (p3.getX() - p2.getX())
-            - (p2.getX() - p1.getX()) * (p3.getY() - p2.getY()));
-
-        if (val == 0) {
-            return 0;
-        }
-
-        return (val > 0) ? 1 : -1;
-    }
+    /* STATS RECORDING */
 
     public void start() {
-
         final Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isVideoRecordingEnabled()) {
             startVideoRecording();
         }
+
         lifeCycle.start(() -> {
             if (!config.isHeatMapDisabled()) {
                 heatMap = instantiateHeatMapData(gameContextScene, heatMapPixelSize);
             }
             if (!config.isFixationSequenceDisabled()) {
-                fixationSequence = new ArrayList<LinkedList<FixationPoint>>(List.of(new LinkedList<FixationPoint>(), new LinkedList<FixationPoint>()));
+                fixationSequence = new ArrayList<>(List.of(new LinkedList<>(), new LinkedList<>()));
             }
             startTime = System.currentTimeMillis();
 
             recordGazeMovements = e -> {
                 if (e.getSource() == gameContextScene.getRoot() && e.getTarget() == gameContextScene.getRoot()) {
-                    final long timeToFixation = System.currentTimeMillis() - startTime;
-                    final long timeInterval = (timeToFixation - previousTime);
+                    final long time = System.currentTimeMillis() - startTime;
+                    final long timeInterval = time - previousTime;
                     Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
-                    final int getX = (int) toSceneCoordinate.getX();
-                    final int getY = (int) toSceneCoordinate.getY();
-                    if (getX > 0 && getY > 0) {
+                    final int x = (int) toSceneCoordinate.getX();
+                    final int y = (int) toSceneCoordinate.getY();
+                    final double xValue = Math.floor(x / gameContextScene.getWidth() * scale) / scale;
+                    final double yValue = Math.floor(y / gameContextScene.getHeight() * scale) / scale;
 
-                        setJSONCoordinates(timeToFixation, getX, getY, "gaze");
-
+                    if (x > 0 && y > 0) {
                         if (!config.isHeatMapDisabled()) {
-                            incrementHeatMap(getX, getY);
+                            incrementHeatMap(x, y);
                         }
                         if (!config.isFixationSequenceDisabled()) {
-                            incrementFixationSequence(getX, getY, fixationSequence.get(FixationSequence.GAZE_FIXATION_SEQUENCE));
+                            incrementFixationSequence(x, y, fixationSequence.get(FixationSequence.GAZE_FIXATION_SEQUENCE));
                         }
 
-                        if (config.getAreaOfInterestDisabledProperty().getValue()) {
-                            if (getX != previousXMouse || getY != previousYMouse) {
-                                previousXMouse = getX;
-                                previousYMouse = getY;
-                                movementHistory
-                                    .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
-                                movementHistoryidx++;
-                                if (movementHistoryidx > 1) {
-                                    generateAOIList(movementHistoryidx - 1);
+                        if (config.isAreaOfInterestDisabled()) {
+                            if (x != previousXMouse || y != previousYMouse) {
+                                previousXMouse = x;
+                                previousYMouse = y;
+                                movementHistory.add(new CoordinatesTracker(xValue, yValue, time, timeInterval, 0));
+                                movementHistoryIdx++;
+                                if (movementHistoryIdx > 1) {
+                                    generateAOIList(movementHistoryIdx - 1);
                                 }
-                                previousTime = timeToFixation;
+                                previousTime = time;
                             }
                         }
                     }
                 }
-                if (config.isScreenshotEnable() && e.getSource() == gameContextScene.getRoot()){
+                if (config.isMultipleScreenshotsEnabled() && e.getSource() == gameContextScene.getRoot()){
                     takeScreenshotWithThread();
                 }
             };
 
             recordMouseMovements = e -> {
                 if (!configMenuOpen) {
-                    final long timeElapsedMillis = System.currentTimeMillis() - startTime;
-                    final long timeInterval = (timeElapsedMillis - previousTime);
+                    final long time = System.currentTimeMillis() - startTime;
+                    final long timeInterval = (time - previousTime);
                     Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
-                    final int getX = (int) toSceneCoordinate.getX();
-                    final int getY = (int) toSceneCoordinate.getY();
-                    if (getX > 0 || getY > 0) {
+                    final int x = (int) toSceneCoordinate.getX();
+                    final int y = (int) toSceneCoordinate.getY();
+                    final double xValue = Math.floor(x / gameContextScene.getWidth() * 1000) / 1000;
+                    final double yValue = Math.floor(y / gameContextScene.getHeight() * 1000) / 1000;
 
-                        setJSONCoordinates(timeElapsedMillis, getX, getY, "mouse");
-
+                    if (x > 0 || y > 0) {
                         if (!config.isHeatMapDisabled()) {
-                            incrementHeatMap(getX, getY);
+                            incrementHeatMap(x, y);
                         }
                         if (!config.isFixationSequenceDisabled()) {
-                            incrementFixationSequence(getX, getY, fixationSequence.get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
+                            incrementFixationSequence(x, y, fixationSequence.get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
                         }
 
-                        if (config.getAreaOfInterestDisabledProperty().getValue()) {
-                            if (getX != previousXGaze || getY != previousYGaze && counter == 2) {
-                                previousXGaze = getX;
-                                previousYGaze = getY;
-                                movementHistory
-                                    .add(new CoordinatesTracker(getX, getY, timeInterval, System.currentTimeMillis()));
-                                movementHistoryidx++;
-                                if (movementHistoryidx > 1) {
-                                    generateAOIList(movementHistoryidx - 1);
+                        if (config.isAreaOfInterestDisabled()) {
+                            if (x != previousXGaze || y != previousYGaze && counter == 2) {
+                                previousXGaze = x;
+                                previousYGaze = y;
+                                movementHistory.add(new CoordinatesTracker(xValue, yValue, time, timeInterval, 1));
+                                movementHistoryIdx++;
+                                if (movementHistoryIdx > 1) {
+                                    generateAOIList(movementHistoryIdx - 1);
                                 }
-                                previousTime = timeElapsedMillis;
+                                previousTime = time;
                                 counter = 0;
                             }
                             counter++;
                         }
                     }
                 }
-                if (config.isScreenshotEnable() && e.getSource() == gameContextScene.getRoot()){
+                if (config.isMultipleScreenshotsEnabled() && e.getSource() == gameContextScene.getRoot()){
                     takeScreenshotWithThread();
                 }
             };
@@ -594,17 +593,62 @@ public class Stats implements GazeMotionListener {
         currentRoundStartTime = lifeCycle.getStartTime();
     }
 
-    private void setJSONCoordinates(long timeElapsedMillis, int getX, int getY, String event) {
-        JsonObject coordinates = new JsonObject();
-        coordinates.addProperty("X", getX / gameContextScene.getWidth());
-        coordinates.addProperty("Y", getY / gameContextScene.getHeight());
-        coordinates.addProperty("time", timeElapsedMillis);
-        coordinates.addProperty("event", event);
-        saveCoordinates(coordinates);
+    static int[][] instantiateHeatMapData(final Scene gameContextScene, final double heatMapPixelSize) {
+        final int heatMapWidth = (int) (gameContextScene.getHeight() / heatMapPixelSize);
+        final int heatMapHeight = (int) (gameContextScene.getWidth() / heatMapPixelSize);
+        log.info("heatMapWidth = {}, heatMapHeight = {}", heatMapWidth, heatMapHeight);
+        return new int[heatMapWidth][heatMapHeight];
     }
 
-    public List<CoordinatesTracker> getMovementHistoryWithTime() {
-        return this.movementHistory;
+    private void generateAOIList(final int index) {
+        final double sceneWidth = gameContextScene.getWidth();
+        final double sceneHeight = gameContextScene.getHeight();
+        final double x1 = movementHistory.get(index).getX() * sceneWidth;
+        final double y1 = movementHistory.get(index).getY() * sceneHeight;
+        final double x2 = movementHistory.get(index - 1).getX() * sceneWidth;
+        final double y2 = movementHistory.get(index - 1).getY() * sceneHeight;
+        final double eDistance = Math.sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+
+        if (eDistance < 150 && movementHistory.get(index).getInterval() > 10) {
+            if (index == 1) {
+                aoiTrackerList.add(movementHistory.get(0));
+            }
+            aoiTrackerList.add(movementHistory.get(index));
+        } else {
+            if (aoiTrackerList.size() > 2) {
+                aoiTempList.add(new ArrayList<>(aoiTrackerList));
+                int[] startEnd = new int[]{index - aoiTrackerList.size(), index};
+                aoiStartEndIdxList.add(startEnd);
+                final Point2D[] points = new Point2D[aoiTrackerList.size()];
+
+                for (int i = 0; i < aoiTrackerList.size(); i++) {
+                    CoordinatesTracker coordinate = aoiTrackerList.get(i);
+                    points[i] = new Point2D(coordinate.getX() * sceneWidth, coordinate.getY() * sceneHeight);
+                }
+
+                final boolean convexHull = config.isConvexHullDisabled();
+                final Double[] polygonPoints = convexHull ? calculateConvexHull(points) : calculateRectangle(points);
+                aoiPolygonPtList.add(polygonPoints);
+            } else if (eDistance > 700) {
+                aoiTrackerList.add(movementHistory.get(index));
+                int[] startEnd = new int[]{index - aoiTrackerList.size(), index};
+                aoiStartEndIdxList.add(startEnd);
+                aoiTempList.add(new ArrayList<>(aoiTrackerList));
+                final float radius = 15;
+                final Point2D[] points = new Point2D[8];
+
+                for (int i = 0; i < 8; i++) {
+                    CoordinatesTracker coordinate = aoiTrackerList.get(0);
+                    points[i] = new Point2D(coordinate.getX() * sceneWidth + pow(-1, i) * radius,
+                        coordinate.getY() * sceneHeight + pow(-1, i) * radius);
+                }
+
+                final boolean convexHull = config.isConvexHullDisabled();
+                final Double[] polygonPoints = convexHull ? calculateConvexHull(points) : calculateRectangle(points);
+                aoiPolygonPtList.add(polygonPoints);
+            }
+            aoiTrackerList = new ArrayList<>();
+        }
     }
 
     public void reset() {
@@ -622,6 +666,7 @@ public class Stats implements GazeMotionListener {
         if (config.isVideoRecordingEnabled()) {
             endVideoRecording();
         }
+
         lifeCycle.stop(() -> {
             if (recordGazeMovements != null) {
                 gameContextScene.removeEventFilter(GazeEvent.ANY, recordGazeMovements);
@@ -630,272 +675,227 @@ public class Stats implements GazeMotionListener {
                 gameContextScene.removeEventFilter(MouseEvent.ANY, recordMouseMovements);
             }
         });
+
+        calculateMovementHistoryDistances();
+        calculateAOIList();
+        calculateAOIPriorities();
+        if (targetAOIList != null) {
+            calculateTargetAOIList();
+        }
     }
 
-    // function used for testing purposes
+    /* CALCULATE STATS */
+
+    /**
+     * Treating the data, post-processing to take performance constraint of during the data collection.
+     */
+    void calculateMovementHistoryDistances() {
+        if (!movementHistory.isEmpty()) {
+            movementHistory.get(0).setDist(0);
+        }
+        for (int i = 1; i < movementHistory.size(); i++) {
+            final double sceneWidth = gameContextScene.getWidth();
+            final double sceneHeight = gameContextScene.getHeight();
+            final double x = Math.pow(movementHistory.get(i).getX() * sceneWidth - movementHistory.get(i - 1).getX() * sceneWidth, 2);
+            final double y = Math.pow(movementHistory.get(i).getY() * sceneHeight - movementHistory.get(i - 1).getY() * sceneHeight, 2);
+            final double distance = Math.floor(Math.sqrt(x + y) * scale) / scale;
+            movementHistory.get(i).setDist(distance);
+        }
+    }
+
+    void calculateAOIList() {
+        int i;
+        for (i = 0; i < aoiTempList.size(); i++) {
+            final String aoiNumber = "AOI number " + (aoiList.size() + 1);
+            aoiTrackerList = aoiTempList.get(i);
+            int centerX = 0;
+            int centerY = 0;
+            final int movementHistoryStartIndex = aoiStartEndIdxList.get(i)[0];
+            final int movementHistoryEndIndex = aoiStartEndIdxList.get(i)[1];
+            final long areaStartTime = aoiTrackerList.get(0).getStart();
+            final long areaEndTime = aoiTrackerList.get(aoiTrackerList.size() - 1).getStart()
+                + aoiTrackerList.get(aoiTrackerList.size() - 1).getInterval();
+            final double timeSpent = (areaEndTime - areaStartTime) / 1000.0;
+            final double ttff = areaStartTime / 1000.0;
+
+            if (timeSpent > highestFixationTime) {
+                highestFixationTime = timeSpent;
+            }
+
+            for (CoordinatesTracker coordinate : aoiTrackerList) {
+                centerX += coordinate.getX() * gameContextScene.getWidth();
+                centerY += coordinate.getY() * gameContextScene.getHeight();
+            }
+
+            centerX /= aoiTrackerList.size();
+            centerY /= aoiTrackerList.size();
+
+            final AreaOfInterest areaOfInterest = new AreaOfInterest(aoiNumber, centerX, centerY,
+                aoiPolygonPtList.get(i), movementHistoryStartIndex, movementHistoryEndIndex, timeSpent, ttff);
+            aoiList.add(areaOfInterest);
+        }
+    }
+
+    void calculateAOIPriorities() {
+        if (highestFixationTime != 0) {
+            for (final AreaOfInterest areaOfInterest : aoiList) {
+                final double priority = areaOfInterest.getTime() / highestFixationTime * 0.6 + 0.1;
+                areaOfInterest.setPriority(Math.floor(priority * scale) / scale);
+            }
+        }
+    }
+
+    /**
+     * Creates a rectangle surrounding each Area Of Interest in the provided list.
+     * The rectangle is added as a transparent {@code Polygon} to each {@code TargetAOI}.
+     *
+     * @see Polygon
+     */
+    void calculateTargetAOIList() {
+        for (final TargetAOI targetAOI : targetAOIList) {
+            log.debug("The target is at (" + targetAOI.getXValue() + ", " + targetAOI.getYValue() + ")");
+
+            final int radius = targetAOI.getAreaRadius();
+            final Point2D[] point2D = {
+                new Point2D(targetAOI.getXValue() - 100, targetAOI.getYValue()),
+                new Point2D(targetAOI.getXValue() + radius, targetAOI.getYValue() + 100),
+                new Point2D(targetAOI.getXValue(), targetAOI.getYValue() - radius),
+                new Point2D(targetAOI.getXValue() + radius, targetAOI.getYValue() - radius)
+            };
+
+            final Double[] polygonPoints;
+            polygonPoints = calculateRectangle(point2D);
+
+            final Polygon targetArea;
+            targetArea = new Polygon();
+            targetArea.getPoints().addAll(polygonPoints);
+            targetArea.setFill(Color.rgb(255, 255, 255, 0.4));
+            targetAOI.setPolygon(targetArea);
+        }
+    }
+
+    /**
+     * Calculates a rectangle that can enclose all the points provided, with a set padding around the points.
+     *
+     * @param points the array of {@code Point2D} objects to enclose
+     * @return the {@code double} array containing all X and Y values of each rectangle point in sequence
+     * @see Point2D
+     */
+    Double[] calculateRectangle(final Point2D[] points) {
+        double leftPoint = points[0].getX();
+        double rightPoint = points[0].getX();
+        double topPoint = points[0].getY();
+        double bottomPoint = points[0].getY();
+
+        for (int i = 1; i < points.length; i++) {
+            if (points[i].getX() < leftPoint) {
+                leftPoint = points[i].getX();
+            }
+            if (points[i].getX() > rightPoint) {
+                rightPoint = points[i].getX();
+            }
+            if (points[i].getY() > topPoint) {
+                topPoint = points[i].getY();
+            }
+            if (points[i].getY() < bottomPoint) {
+                bottomPoint = points[i].getY();
+            }
+        }
+
+        final Double[] squarePoints = new Double[8];
+        final int bias = 15;
+
+        squarePoints[0] = leftPoint - bias;
+        squarePoints[1] = topPoint + bias;
+        squarePoints[2] = rightPoint + bias;
+        squarePoints[3] = topPoint + bias;
+        squarePoints[4] = rightPoint + bias;
+        squarePoints[5] = bottomPoint - bias;
+        squarePoints[6] = leftPoint - bias;
+        squarePoints[7] = bottomPoint - bias;
+        for (int i = 0; i < 8; i++) {
+            squarePoints[i] = Math.floor(squarePoints[i] * scale) / scale;
+        }
+        return squarePoints;
+    }
+
+    /**
+     * Implements Jarvis's Algorithm to calculate the points on a Convex Hull.
+     * <p>
+     * It starts by calculating the left-most point and will loop through all the points
+     * until it reaches this point again, finding the most convex points.
+     *
+     * @param points the array of {@code Point2D} objects to calculate the hull around
+     * @return the {@code double} array containing all X and Y values of each hull point in sequence
+     * @see Point2D
+     */
+    Double[] calculateConvexHull(final Point2D[] points) {
+        final int numberOfPoints = points.length;
+        final ArrayList<Double> convexHullPoints = new ArrayList<>();
+        final Vector<Point2D> hull = new Vector<>();
+
+        // Finding the index of the lowest X value, or left-most point, in all points.
+        int lowestValueIndex = 0;
+        for (int i = 1; i < numberOfPoints; i++) {
+            if (points[i].getX() < points[lowestValueIndex].getX()) {
+                lowestValueIndex = i;
+            }
+        }
+
+        int point = lowestValueIndex, q;
+        do {
+            hull.add(points[point]);
+            q = (point + 1) % numberOfPoints;
+            for (int i = 0; i < numberOfPoints; i++) {
+                if (orientation(points[point], points[i], points[q]) < 0) // Checking if the points are convex.
+                {
+                    q = i;
+                }
+            }
+            point = q;
+        } while (point != lowestValueIndex);
+
+        for (final Point2D temp : hull) {
+            convexHullPoints.add(temp.getX());
+            convexHullPoints.add(temp.getY());
+        }
+
+        Double[] hullPointsArray = new Double[convexHullPoints.size()];
+        convexHullPoints.toArray(hullPointsArray);
+
+        return hullPointsArray;
+    }
+
+    /**
+     * Determines the orientation of an ordered triplet of 2D points on a plane.
+     * The points provided can be collinear, clockwise or counterclockwise.
+     *
+     * @param p1 the first {@code Point2D}
+     * @param p2 the second {@code Point2D}
+     * @param p3 the third {@code Point2D}
+     * @return the value {@code 0} if the points are collinear;
+     * a value greater than {@code 0} if the points are clockwise;
+     * and a value less than {@code 0} if the points are counterclockwise
+     * @see Point2D
+     */
+    int orientation(final Point2D p1, final Point2D p2, final Point2D p3) {
+        final int val = (int) ((p2.getY() - p1.getY()) * (p3.getX() - p2.getX())
+            - (p2.getX() - p1.getX()) * (p3.getY() - p2.getY()));
+
+        return Integer.compare(val, 0);
+    }
+
+    /* GAZE MOVED */
+
+    /**
+     * Function used for testing purposes.
+     */
     @Override
-    public void gazeMoved(final javafx.geometry.Point2D position) {
+    public void gazeMoved(final Point2D position) {
         final int positionX = (int) position.getX();
         final int positionY = (int) position.getY();
         incrementHeatMap(positionX, positionY);
         incrementFixationSequence(positionX, positionY, fixationSequence.get(FixationSequence.GAZE_FIXATION_SEQUENCE));
-    }
-
-    static void saveImageAsPng(final BufferedImage bufferedImage, final File outputFile) {
-        try {
-            ImageIO.write(bufferedImage, "png", outputFile);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Graphics initGazeMetricsImage(BufferedImage bImage, BufferedImage screenshotImage) {
-
-        final Graphics graphics = bImage.getGraphics();
-        graphics.setColor(Color.BLACK);
-        graphics.fillRect(0, 0, bImage.getWidth(), bImage.getHeight());
-        graphics.drawImage(screenshotImage, 0, 0, null);
-
-        return graphics;
-    }
-
-    private BufferedImage newBufferImage(BufferedImage screenshotImage) {
-        return new BufferedImage(
-            screenshotImage.getWidth() + (heatMap != null ? screenshotImage.getWidth() / 20 + 10 : 0),
-            screenshotImage.getHeight(), screenshotImage.getType());
-    }
-
-
-    private void addHeatMapToMetrics(HeatMap hm, BufferedImage bImage, Graphics graphics, BufferedImage screenshotImage) {
-        BufferedImage heatmapImage = SwingFXUtils.fromFXImage(hm.getImage(), null);
-        final Kernel kernel = new Kernel(3, 3,
-            new float[]{1 / 16f, 1 / 8f, 1 / 16f, 1 / 8f, 1 / 4f, 1 / 8f, 1 / 16f, 1 / 8f, 1 / 16f});
-        final BufferedImageOp op = new ConvolveOp(kernel);
-        heatmapImage = op.filter(heatmapImage, null);
-
-        final BufferedImage keyMouse = SwingFXUtils.fromFXImage(hm.getColorKey(bImage.getWidth() / 20, bImage.getHeight() / 2),
-            null);
-
-        graphics.drawImage(heatmapImage, 0, 0, screenshotImage.getWidth(), screenshotImage.getHeight(), null);
-        graphics.drawImage(keyMouse, bImage.getWidth() - keyMouse.getWidth(), (bImage.getHeight() - keyMouse.getHeight()) / 2, null);
-    }
-
-    private void addFixationSequence(int fixationSequenceIndex, Graphics gMouseOrGaze, Graphics gMouseAndGaze, BufferedImage screenshotImage) {
-        if (this.fixationSequence.get(fixationSequenceIndex) != null && fixationSequence.get(fixationSequenceIndex).size() > 0) {
-            final FixationSequence scanpath = new FixationSequence((int) gameContextScene.getWidth(),
-                (int) gameContextScene.getHeight(), fixationSequence, fixationSequenceIndex);
-            fixationSequence.set(fixationSequenceIndex, scanpath.getSequence());
-            final BufferedImage seqImage = SwingFXUtils.fromFXImage(scanpath.getImage(), null);
-            gMouseOrGaze.drawImage(seqImage, 0, 0, screenshotImage.getWidth(), screenshotImage.getHeight(), null);
-            gMouseAndGaze.drawImage(seqImage, 0, 0, screenshotImage.getWidth(), screenshotImage.getHeight(), null);
-        }
-    }
-
-    public SavedStatsInfo saveStats() throws IOException {
-        final Configuration config = ActiveConfigurationContext.getInstance();
-
-        final File todayDirectory = getGameStatsOfTheDayDirectory();
-        final String now = DateUtils.dateTimeNow();
-        final String heatmapFilePrefix = now + "-heatmap";
-        final String gazeMetricsFilePrefixMouse = now + "-metricsMouse";
-        final String gazeMetricsFilePrefixGaze = now + "-metricsGaze";
-        final String gazeMetricsFilePrefixMouseAndGaze = now + "-metricsMouseAndGaze";
-        final String screenShotFilePrefix = now + "-screenshot";
-        final String colorBandsFilePrefix = now + "-colorBands";
-        final String replayDataFilePrefix = now + "-replayData";
-
-        final File gazeMetricsFileMouse = new File(todayDirectory, gazeMetricsFilePrefixMouse + ".png");
-        final File gazeMetricsFileGaze = new File(todayDirectory, gazeMetricsFilePrefixGaze + ".png");
-        final File gazeMetricsFileMouseAndGaze = new File(todayDirectory, gazeMetricsFilePrefixMouseAndGaze + ".png");
-        final File heatMapCsvFile = new File(todayDirectory, heatmapFilePrefix + ".csv");
-        final File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
-        final File colorBandsFile = new File(todayDirectory, colorBandsFilePrefix + ".png");
-        final File replayDataFile = new File(todayDirectory, replayDataFilePrefix + ".json");
-
-        final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
-        saveImageAsPng(screenshotImage, screenShotFile);
-
-        final BufferedImage bImageMouse = newBufferImage(screenshotImage);
-        final BufferedImage bImageGaze = newBufferImage(screenshotImage);
-        final BufferedImage bImageMouseAndGaze = newBufferImage(screenshotImage);
-
-        Graphics gMouse = initGazeMetricsImage(bImageMouse, screenshotImage);
-        Graphics gGaze = initGazeMetricsImage(bImageGaze, screenshotImage);
-        Graphics gMouseAndGaze = initGazeMetricsImage(bImageMouseAndGaze, screenshotImage);
-
-        try (BufferedWriter bf = Files.newBufferedWriter(replayDataFile.toPath(), Charset.defaultCharset())) {
-            bf.write(buildSavedDataJSON(coordinateData).toString());
-            bf.flush();
-        }
-
-        final SavedStatsInfo savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsFileMouse, gazeMetricsFileGaze, gazeMetricsFileMouseAndGaze, screenShotFile,
-            colorBandsFile, replayDataFile);
-
-        this.savedStatsInfo = savedStatsInfo;
-        if (this.heatMap != null) {
-            final HeatMap hm = new HeatMap(heatMap, config.getHeatMapOpacity(), config.getHeatMapColors());
-            addHeatMapToMetrics(hm, bImageMouse, gMouse, screenshotImage);
-            addHeatMapToMetrics(hm, bImageGaze, gGaze, screenshotImage);
-            addHeatMapToMetrics(hm, bImageMouseAndGaze, gMouseAndGaze, screenshotImage);
-            saveHeatMapAsCsv(heatMapCsvFile);
-        }
-
-        if (this.fixationSequence != null) {
-            addFixationSequence(FixationSequence.MOUSE_FIXATION_SEQUENCE, gMouse, gMouseAndGaze, screenshotImage);
-            addFixationSequence(FixationSequence.GAZE_FIXATION_SEQUENCE, gGaze, gMouseAndGaze, screenshotImage);
-        }
-
-        saveImageAsPng(bImageMouse, gazeMetricsFileMouse);
-        saveImageAsPng(bImageGaze, gazeMetricsFileGaze);
-        saveImageAsPng(bImageMouseAndGaze, gazeMetricsFileMouseAndGaze);
-
-        savedStatsInfo.notifyFilesReady();
-        return savedStatsInfo;
-    }
-
-    public RoundsDurationReport getRoundsDurationReport() { return roundsDurationReport;}
-
-    public long computeRoundsDurationAverageDuration() {
-        return roundsDurationReport.computeAverageLength();
-    }
-
-    public long getStartTime() {
-        return this.startTime;
-    }
-
-    public long computeRoundsDurationMedianDuration() {
-        return roundsDurationReport.computeMedianDuration();
-    }
-
-    public long getRoundsTotalAdditiveDuration() {
-        return roundsDurationReport.getTotalAdditiveDuration();
-    }
-
-    public long computeTotalElapsedDuration() {
-        return lifeCycle.computeTotalElapsedDuration();
-    }
-
-    public double computeRoundsDurationVariance() {
-        return roundsDurationReport.computeVariance();
-    }
-
-    public double computeRoundsDurationStandardDeviation() {
-        return roundsDurationReport.computeSD();
-    }
-
-    public void incrementNumberOfGoalsToReach() {
-        if (!inReplayMode) {
-            nbGoalsToReach++;
-            currentRoundStartTime = System.currentTimeMillis();
-            log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
-        }
-    }
-
-    public void incrementNumberOfGoalsToReach(int i) {
-        if (!inReplayMode) {
-            nbGoalsToReach += i;
-            currentRoundStartTime = System.currentTimeMillis();
-            log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
-        }
-    }
-
-    public void incrementNumberOfGoalsReached() {
-        if (!inReplayMode) {
-            final long currentRoundEndTime = System.currentTimeMillis();
-            final long currentRoundDuration = currentRoundEndTime - currentRoundStartTime;
-            if (currentRoundDuration < accidentalShotPreventionPeriod) {
-                nbUnCountedGoalsReached++;
-            } else {
-                nbGoalsReached++;
-                this.roundsDurationReport.addRoundDuration(currentRoundDuration);
-            }
-            currentRoundStartTime = currentRoundEndTime;
-            log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
-        }
-    }
-
-    public void addRoundDuration() {
-        this.roundsDurationReport.addRoundDuration(System.currentTimeMillis() - currentRoundStartTime);
-    }
-
-    public int getShotRatio() {
-        if (this.nbGoalsToReach == this.nbGoalsReached || this.nbGoalsToReach == 0) {
-            return 100;
-        } else {
-            return (int) ((float) this.nbGoalsReached / (float) this.nbGoalsToReach * 100.0);
-        }
-    }
-
-    public List<Long> getSortedDurationsBetweenGoals() {
-        return this.roundsDurationReport.getSortedDurationsBetweenGoals();
-    }
-
-    public List<Long> getOriginalDurationsBetweenGoals() {
-        return this.roundsDurationReport.getOriginalDurationsBetweenGoals();
-    }
-
-    public String getDirectoryOfVideo() {
-        return nameOfVideo;
-    }
-
-    protected File createInfoStatsFile() {
-        final File outputDirectory = getGameStatsOfTheDayDirectory();
-
-        final String fileName = DateUtils.dateTimeNow() + "-info-game.csv";
-        return new File(outputDirectory, fileName);
-    }
-
-    public File getGameStatsOfTheDayDirectory() {
-        final File statsDirectory = GazePlayDirectories.getUserStatsFolder(ActiveConfigurationContext.getInstance().getUserName());
-        final File gameDirectory = new File(statsDirectory, gameName);
-        final File todayDirectory = new File(gameDirectory, DateUtils.today());
-        final boolean outputDirectoryCreated = todayDirectory.mkdirs();
-        log.info("outputDirectoryCreated = {}", outputDirectoryCreated);
-
-        return todayDirectory;
-    }
-
-    protected void printLengthBetweenGoalsToString(final PrintWriter out) {
-        this.roundsDurationReport.printLengthBetweenGoalsToString(out);
-    }
-
-    private void saveHeatMapAsCsv(final File file) throws IOException {
-        try (PrintWriter out = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            for (final double[] doubles : heatMap) {
-                for (int j = 0; j < heatMap[0].length - 1; j++) {
-                    out.print((int) doubles[j]);
-                    out.print(", ");
-                }
-                out.print((int) doubles[doubles.length - 1]);
-                out.println("");
-            }
-        }
-    }
-
-    void incrementFixationSequence(final int x, final int y, LinkedList<FixationPoint> fixationSequence) {
-
-        final long gazeDuration;
-
-        final FixationPoint newGazePoint = new FixationPoint(System.currentTimeMillis(), 0, y, x);
-        if (fixationSequence.size() != 0) {
-            gazeDuration = newGazePoint.getTimeGaze()
-                - (fixationSequence.get(fixationSequence.size() - 1)).getTimeGaze();
-            newGazePoint.setGazeDuration(gazeDuration);
-        }
-
-        // if the new points coordinates are the same as last one's in the list then update the last fixationPoint in
-        // the list
-        // same coordinate points are a result of the eyetracker's frequency of sampling
-        if (fixationSequence.size() > 1
-            && (Math.abs(newGazePoint.getX()
-            - fixationSequence.get(fixationSequence.size() - 1).getX()) <= fixationTrail)
-            && (Math.abs(newGazePoint.getY()
-            - fixationSequence.get(fixationSequence.size() - 1).getY()) <= fixationTrail)) {
-            fixationSequence.get(fixationSequence.size() - 1)
-                .setGazeDuration(newGazePoint.getGazeDuration() + newGazePoint.getGazeDuration());
-        } else { // else add the new point in the list
-            fixationSequence.add(newGazePoint);
-        }
     }
 
     void incrementHeatMap(final int x, final int y) {
@@ -918,118 +918,186 @@ public class Stats implements GazeMotionListener {
         }
     }
 
-    /**
-     * @return the size of the HeatMap Pixel Size in order to avoid a too big heatmap (400 px) if maximum memory is more
-     * than 1Gb, only 200
-     */
-    double computeHeatMapPixelSize(final Scene gameContextScene) {
-        final long maxMemory = Runtime.getRuntime().maxMemory();
-        final double width = gameContextScene.getWidth();
-        final double result;
-        if (maxMemory < 1024 * 1024 * 1024) {
-            // size is less than 1Gb (2^30)
-            result = width / 200;
-        } else {
-            result = width / 400;
+    @SuppressWarnings("SuspiciousNameCombination")
+    void incrementFixationSequence(final int x, final int y, List<FixationPoint> fixationSequence) {
+        final long gazeDuration;
+
+        final FixationPoint newGazePoint = new FixationPoint(System.currentTimeMillis() - startTime, 0, y, x);
+        if (fixationSequence.size() != 0) {
+            gazeDuration = newGazePoint.getTime() - (fixationSequence.get(fixationSequence.size() - 1)).getTime();
+            newGazePoint.setDuration(gazeDuration);
         }
-        log.info("computeHeatMapPixelSize() : result = {}", result);
-        return result;
+
+        // if the new points coordinates are the same as last one's in the list then update the last fixationPoint in
+        // the list
+        // same coordinate points are a result of the eye-tracker's frequency of sampling
+        if (fixationSequence.size() > 1 &&
+            (Math.abs(newGazePoint.getX() - fixationSequence.get(fixationSequence.size() - 1).getX()) <= fixationTrail) &&
+            (Math.abs(newGazePoint.getY() - fixationSequence.get(fixationSequence.size() - 1).getY()) <= fixationTrail)) {
+            fixationSequence.get(fixationSequence.size() - 1)
+                .setDuration(newGazePoint.getDuration() + newGazePoint.getDuration());
+        } else { // else add the new point in the list
+            fixationSequence.add(newGazePoint);
+        }
     }
 
-    public void takeScreenShot() {
-        if (!inReplayMode) {
-            gameScreenShot = gameContextScene.snapshot(null);
+    /* SAVE STATS */
+
+    public SavedStatsInfo saveStats() throws IOException {
+        final Configuration config = ActiveConfigurationContext.getInstance();
+
+        final File todayDirectory = getGameStatsOfTheDayDirectory();
+        final String now = DateUtils.dateTimeNow();
+        final String gazeMetricsFilePrefixMouse = now + "-metricsMouse";
+        final String gazeMetricsFilePrefixGaze = now + "-metricsGaze";
+        final String gazeMetricsFilePrefixMouseAndGaze = now + "-metricsMouseAndGaze";
+        final String screenShotFilePrefix = now + "-screenshot";
+        final String colorBandsFilePrefix = now + "-colorBands";
+        final String replayDataFilePrefix = now + "-replayData";
+
+        final File gazeMetricsFileMouse = new File(todayDirectory, gazeMetricsFilePrefixMouse + ".png");
+        final File gazeMetricsFileGaze = new File(todayDirectory, gazeMetricsFilePrefixGaze + ".png");
+        final File gazeMetricsFileMouseAndGaze = new File(todayDirectory, gazeMetricsFilePrefixMouseAndGaze + ".png");
+        final File screenShotFile = new File(todayDirectory, screenShotFilePrefix + ".png");
+        final File colorBandsFile = new File(todayDirectory, colorBandsFilePrefix + ".png");
+        final File replayDataFile = new File(todayDirectory, replayDataFilePrefix + ".json");
+
+        final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
+        saveImageAsPng(screenshotImage, screenShotFile);
+
+        final BufferedImage bImageMouse = newBufferImage(screenshotImage);
+        final BufferedImage bImageGaze = newBufferImage(screenshotImage);
+        final BufferedImage bImageMouseAndGaze = newBufferImage(screenshotImage);
+
+        Graphics gMouse = initGazeMetricsImage(bImageMouse, screenshotImage);
+        Graphics gGaze = initGazeMetricsImage(bImageGaze, screenshotImage);
+        Graphics gMouseAndGaze = initGazeMetricsImage(bImageMouseAndGaze, screenshotImage);
+
+        buildSavedStatsJSON();
+        try (BufferedWriter bf = Files.newBufferedWriter(replayDataFile.toPath(), Charset.defaultCharset())) {
+            bf.write(savedStatsJSON.toString());
+            bf.flush();
+        }
+
+        savedStatsInfo = new SavedStatsInfo(gazeMetricsFileMouse, gazeMetricsFileGaze, gazeMetricsFileMouseAndGaze,
+            screenShotFile, colorBandsFile, replayDataFile);
+
+        if (this.heatMap != null) {
+            final HeatMap hm = new HeatMap(heatMap, config.getHeatMapOpacity(), config.getHeatMapColors());
+            addHeatMapToMetrics(hm, bImageMouse, gMouse, screenshotImage);
+            addHeatMapToMetrics(hm, bImageGaze, gGaze, screenshotImage);
+            addHeatMapToMetrics(hm, bImageMouseAndGaze, gMouseAndGaze, screenshotImage);
+        }
+
+        if (this.fixationSequence != null) {
+            addFixationSequence(FixationSequence.MOUSE_FIXATION_SEQUENCE, gMouse, gMouseAndGaze, screenshotImage);
+            addFixationSequence(FixationSequence.GAZE_FIXATION_SEQUENCE, gGaze, gMouseAndGaze, screenshotImage);
+        }
+
+        saveImageAsPng(bImageMouse, gazeMetricsFileMouse);
+        saveImageAsPng(bImageGaze, gazeMetricsFileGaze);
+        saveImageAsPng(bImageMouseAndGaze, gazeMetricsFileMouseAndGaze);
+
+        savedStatsInfo.notifyFilesReady();
+        return savedStatsInfo;
+    }
+
+    static void saveImageAsPng(final BufferedImage bufferedImage, final File outputFile) {
+        try {
+            ImageIO.write(bufferedImage, "png", outputFile);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private JsonObject buildSavedDataJSON(JsonArray data) {
+    public Graphics initGazeMetricsImage(BufferedImage bImage, BufferedImage screenshotImage) {
+        final Graphics graphics = bImage.getGraphics();
+        graphics.setColor(java.awt.Color.BLACK);
+        graphics.fillRect(0, 0, bImage.getWidth(), bImage.getHeight());
+        graphics.drawImage(screenshotImage, 0, 0, null);
+        return graphics;
+    }
+
+    private BufferedImage newBufferImage(BufferedImage screenshotImage) {
+        return new BufferedImage(
+            screenshotImage.getWidth() + (heatMap != null ? screenshotImage.getWidth() / 20 + 10 : 0),
+            screenshotImage.getHeight(), screenshotImage.getType());
+    }
+
+    private void addHeatMapToMetrics(HeatMap hm, BufferedImage bImage, Graphics graphics, BufferedImage screenshotImage) {
+        BufferedImage heatmapImage = SwingFXUtils.fromFXImage(hm.getImage(), null);
+        final Kernel kernel = new Kernel(3, 3,
+            new float[]{1 / 16f, 1 / 8f, 1 / 16f, 1 / 8f, 1 / 4f, 1 / 8f, 1 / 16f, 1 / 8f, 1 / 16f});
+        final BufferedImageOp op = new ConvolveOp(kernel);
+        heatmapImage = op.filter(heatmapImage, null);
+
+        final BufferedImage keyMouse = SwingFXUtils.fromFXImage(hm.getColorKey(bImage.getWidth() / 20, bImage.getHeight() / 2), null);
+
+        graphics.drawImage(heatmapImage, 0, 0, screenshotImage.getWidth(), screenshotImage.getHeight(), null);
+        graphics.drawImage(keyMouse, bImage.getWidth() - keyMouse.getWidth(), (bImage.getHeight() - keyMouse.getHeight()) / 2, null);
+    }
+
+    private void addFixationSequence(int fixationSequenceIndex, Graphics gMouseOrGaze, Graphics gMouseAndGaze, BufferedImage screenshotImage) {
+        if (this.fixationSequence.get(fixationSequenceIndex) != null && fixationSequence.get(fixationSequenceIndex).size() > 0) {
+            final FixationSequence scanpath = new FixationSequence((int) gameContextScene.getWidth(),
+                (int) gameContextScene.getHeight(), fixationSequence, fixationSequenceIndex);
+            fixationSequence.set(fixationSequenceIndex, scanpath.getSequence());
+            final BufferedImage seqImage = SwingFXUtils.fromFXImage(scanpath.getImage(), null);
+            gMouseOrGaze.drawImage(seqImage, 0, 0, screenshotImage.getWidth(), screenshotImage.getHeight(), null);
+            gMouseAndGaze.drawImage(seqImage, 0, 0, screenshotImage.getWidth(), screenshotImage.getHeight(), null);
+        }
+    }
+
+    protected File createInfoStatsFile() {
+        final File outputDirectory = getGameStatsOfTheDayDirectory();
+        final String fileName = DateUtils.dateTimeNow() + "-info-game.csv";
+        return new File(outputDirectory, fileName);
+    }
+
+    private void buildSavedStatsJSON() {
+        savedStatsJSON = new JsonObject();
+
         Gson gson = new GsonBuilder().create();
         JsonArray fixationSequenceArray = gson.toJsonTree(fixationSequence).getAsJsonArray();
+        JsonArray movementHistoryArray = gson.toJsonTree(movementHistory).getAsJsonArray();
+        JsonArray heatMapArray = gson.toJsonTree(heatMap).getAsJsonArray();
+        JsonArray aoiListArray = gson.toJsonTree(aoiList).getAsJsonArray();
         JsonArray durationBetweenGoalsArray = gson.toJsonTree(roundsDurationReport.getDurationBetweenGoals()).getAsJsonArray();
-        String screenAspectRatio = getScreenRatio();
-        double sceneAspectRatio = getSceneRatio();
-
-        savedDataObj.addProperty("gameSeed", currentGameSeed);
-        savedDataObj.addProperty("gameName", currentGameNameCode);
-        savedDataObj.addProperty("gameVariant", currentGameVariant);
-        savedDataObj.addProperty("gameStartedTime", startTime);
-        savedDataObj.addProperty("screenAspectRatio", screenAspectRatio);
-        savedDataObj.addProperty("sceneAspectRatio", sceneAspectRatio);
-        savedDataObj.addProperty("statsNbGoalsReached", nbGoalsReached);
-        savedDataObj.addProperty("statsNbGoalsToReach", nbGoalsToReach);
-        savedDataObj.addProperty("statsNbUnCountedGoalsReached", nbUnCountedGoalsReached);
 
         JsonObject lifeCycleObject = new JsonObject();
         lifeCycleObject.addProperty("startTime", lifeCycle.getStartTime());
         lifeCycleObject.addProperty("stopTime", lifeCycle.getStopTime());
-        savedDataObj.add("lifeCycle", lifeCycleObject);
 
         JsonObject roundsDurationReportObject = new JsonObject();
         roundsDurationReportObject.addProperty("totalAdditiveDuration", roundsDurationReport.getTotalAdditiveDuration());
         roundsDurationReportObject.add("durationBetweenGoals", durationBetweenGoalsArray);
-        savedDataObj.add("roundsDurationReport", roundsDurationReportObject);
 
-        savedDataObj.add("fixationSequence", fixationSequenceArray);
-        savedDataObj.add("coordinatesAndTimeStamp", data);
-        return savedDataObj;
-    }
+        savedStatsJSON.addProperty("gameSeed", currentGameSeed);
+        savedStatsJSON.addProperty("gameName", currentGameNameCode);
+        savedStatsJSON.addProperty("gameVariant", currentGameVariant);
+        savedStatsJSON.addProperty("gameStartTime", startTime);
+        savedStatsJSON.addProperty("screenAspectRatio", getScreenRatio());
+        savedStatsJSON.addProperty("sceneAspectRatio", getSceneRatio());
+        savedStatsJSON.addProperty("nbGoalsReached", nbGoalsReached);
+        savedStatsJSON.addProperty("nbGoalsToReach", nbGoalsToReach);
+        savedStatsJSON.addProperty("nbUncountedGoalsReached", nbUncountedGoalsReached);
 
-    private JsonArray saveCoordinates(JsonObject coordinates) {
-        coordinateData.add(coordinates);
-        return coordinateData;
-    }
+        savedStatsJSON.addProperty("questionLength", config.getQuestionLength());
+        savedStatsJSON.addProperty("questionReaskedOnFail", config.isQuestionReaskedOnFail());
+        savedStatsJSON.addProperty("limiterScoreEnabled", config.isLimiterScoreEnabled());
+        savedStatsJSON.addProperty("limiterScore", config.getLimiterScore());
+        savedStatsJSON.addProperty("limiterTimeEnabled", config.isLimiterTimeEnabled());
+        savedStatsJSON.addProperty("limiterTime", config.getLimiterTime());
+        savedStatsJSON.addProperty("animationSpeedRatio", config.getAnimationSpeedRatio());
+        savedStatsJSON.addProperty("elementSize", config.getElementSize());
+        savedStatsJSON.addProperty("fixationLength", config.getFixationLength());
 
-    public int greatestCommonFactor(int width, int height) {
-        return (height == 0) ? width : greatestCommonFactor(height, width % height);
-    }
-
-    String getScreenRatio() {
-        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        int screenWidth = gd.getDisplayMode().getWidth();
-        int screenHeight = gd.getDisplayMode().getHeight();
-
-        int factor = greatestCommonFactor(screenWidth, screenHeight);
-
-        int widthRatio = screenWidth / factor;
-        int heightRatio = screenHeight / factor;
-        return widthRatio + ":" + heightRatio;
-    }
-
-    double getSceneRatio() {
-        return gameContextScene.getHeight() / gameContextScene.getWidth();
-    }
-
-    public void setGameVariant(String gameVariant, String gameNameCode) {
-        currentGameVariant = gameVariant;
-        currentGameNameCode = gameNameCode;
-    }
-
-    public void setGameSeed(double gameSeed) {
-        currentGameSeed = gameSeed;
-    }
-
-    public String getCurrentGameVariant(){
-        return currentGameVariant;
-    }
-
-    public LevelsReport getLevelsReport() {
-        return levelsReport;
-    }
-
-    public List<Long> getLevelsRounds() {
-        return this.levelsReport.getOriginalLevelsPerRounds();
-    }
-
-    public String getCurrentGameNameCode() {
-        return this.currentGameNameCode;
-    }
-
-    public ChiReport getChiReport() {
-        return this.chiReport;
-    }
-
-    public static void setConfigMenuOpen(boolean configMenuStatus) {
-        configMenuOpen = configMenuStatus;
+        savedStatsJSON.add("lifeCycle", lifeCycleObject);
+        savedStatsJSON.add("roundsDurationReport", roundsDurationReportObject);
+        savedStatsJSON.add("fixationSequence", fixationSequenceArray);
+        savedStatsJSON.add("movementHistory", movementHistoryArray);
+        savedStatsJSON.add("heatMap", heatMapArray);
+        savedStatsJSON.add("aoiList", aoiListArray);
     }
 
     public void takeScreenshotWithThread(){

@@ -64,13 +64,13 @@ public class VideoGrid implements GameLifeCycle {
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.config = gameContext.getConfiguration();
         this.random = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(random.getSeed());
+        this.stats.setCurrentGameSeed(random.getSeed());
         this.translate = MultilinguismFactory.getSingleton();
 
         grid = new GridPane();
         grid.setHgap(GAP);
         grid.setVgap(GAP);
-        videoFolder = new File(config.getVideoFolder());
+        videoFolder = new File(config.getVideoDir());
         compatibleFileTypes = new ArrayList<>(Arrays.asList("mp4", "m4a", "m4v"));
 
         // Greyscale effect for out of focus videos
@@ -91,7 +91,7 @@ public class VideoGrid implements GameLifeCycle {
         grid = new GridPane();
         grid.setHgap(GAP);
         grid.setVgap(GAP);
-        videoFolder = new File(config.getVideoFolder());
+        videoFolder = new File(config.getVideoDir());
         compatibleFileTypes = new ArrayList<>(Arrays.asList("mp4", "m4a", "m4v"));
 
         // Greyscale effect for out of focus videos
@@ -212,7 +212,7 @@ public class VideoGrid implements GameLifeCycle {
 
     @Override
     public void dispose() {
-        for(MediaPlayer mediaplayer: mediaPlayers){
+        for (MediaPlayer mediaplayer : mediaPlayers) {
             mediaplayer.stop();
         }
         grid.getChildren().clear();

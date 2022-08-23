@@ -55,9 +55,8 @@ class PictureCard extends Group {
 
     private int valueProgressIndicator = 500;
 
-    PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
-                boolean winner, @NonNull String imagePath, @NonNull Stats stats, BeraV2 gameInstance) {
-
+    PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, boolean winner,
+                @NonNull String imagePath, @NonNull Stats stats, BeraV2 gameInstance) {
         log.info("imagePath = {}", imagePath);
 
         final Configuration config = gameContext.getConfiguration();
@@ -67,13 +66,13 @@ class PictureCard extends Group {
         this.initialPositionY = posY;
         this.initialWidth = width;
         this.initialHeight = height;
-        this.selected = false;
-        this.alreadySee = false;
-        this.winner = winner;
         this.gameContext = gameContext;
+        this.winner = winner;
+        this.imagePath = imagePath;
         this.stats = stats;
         this.gameInstance = gameInstance;
-        this.imagePath = imagePath;
+        this.selected = false;
+        this.alreadySee = false;
 
         this.imageRectangle = createImageView(this.initialPositionX, this.initialPositionY, this.initialWidth, this.initialHeight, imagePath);
 
@@ -91,7 +90,6 @@ class PictureCard extends Group {
 
         this.addEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);
         this.addEventFilter(GazeEvent.ANY, customInputEventHandlerMouse);
-
     }
 
     private Timeline createProgressIndicatorTimeLine(BeraV2 gameInstance) {
@@ -143,11 +141,13 @@ class PictureCard extends Group {
         customInputEventHandlerMouse.ignoreAnyInput = true;
     }
 
-    public void setVisibleImagePicture(boolean value){
+    public void setVisibleImagePicture(boolean value) {
         this.imageRectangle.setVisible(value);
     }
 
-    public void setNotifImageRectangle(boolean value) { this.notifImageRectangle.setVisible(value); }
+    public void setNotifImageRectangle(boolean value) {
+        this.notifImageRectangle.setVisible(value);
+    }
 
     public void newProgressIndicator() {
         this.getChildren().remove(progressIndicator);
@@ -156,19 +156,19 @@ class PictureCard extends Group {
         this.getChildren().add(progressIndicator);
     }
 
-    public void checkedImage(){
+    public void checkedImage() {
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        if (Objects.equals(config.getFeedbackProperty().getValue(), "nothing")){
+        if (Objects.equals(config.getFeedback(), "nothing")) {
             notifImageRectangle.setOpacity(0);
             notifImageRectangle.setVisible(false);
-        }else {
+        } else {
             notifImageRectangle.setOpacity(1);
             notifImageRectangle.setVisible(true);
         }
     }
 
-    public void removeEventHandler(){
+    public void removeEventHandler() {
         customInputEventHandlerMouse.ignoreAnyInput = true;
     }
 
@@ -198,7 +198,7 @@ class PictureCard extends Group {
 
         gameInstance.nbCountError += 1;
 
-        if (gameInstance.nbCountError != 5){
+        if (gameInstance.nbCountError != 5) {
 
             if (gameInstance.indexFileImage == (gameInstance.indexEndGame - 1)) {
                 progressIndicator.setVisible(false);
@@ -215,13 +215,13 @@ class PictureCard extends Group {
 
                 this.waitBeforeNextRound();
             }
-        }else {
+        } else {
             progressIndicator.setVisible(false);
             this.endGame();
         }
     }
 
-    public void waitBeforeNextRound(){
+    public void waitBeforeNextRound() {
         Configuration config = ActiveConfigurationContext.getInstance();
 
         Timeline transition = new Timeline();
@@ -268,7 +268,7 @@ class PictureCard extends Group {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        if (Objects.equals(config.getFeedbackProperty().getValue(), "standard")){
+        if (Objects.equals(config.getFeedback(), "standard")) {
             final Image image = new Image("data/common/images/blackCircle.png");
 
             double imageWidth = image.getWidth();
@@ -280,10 +280,10 @@ class PictureCard extends Group {
 
             double positionX = 0;
             double positionY = 0;
-            if (config.isColumnarImagesEnabled()){
+            if (config.isColumnarImagesEnabled()) {
                 positionX = imageRectangle.getX() + 5;
                 positionY = imageRectangle.getY() + 15;
-            }else {
+            } else {
                 positionX = imageRectangle.getX() + 5;
                 positionY = imageRectangle.getY() + 35;
             }
@@ -295,7 +295,7 @@ class PictureCard extends Group {
             notifImageRectangle.setOpacity(0);
             notifImageRectangle.setVisible(false);
             return notifImageRectangle;
-        }else {
+        } else {
             final Image image = new Image("data/common/images/redFrame.png");
 
             ImageView result = new ImageView(image);

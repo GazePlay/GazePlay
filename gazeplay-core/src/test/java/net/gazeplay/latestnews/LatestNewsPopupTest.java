@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 import static net.gazeplay.TestingUtils.waitForRunLater;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 @RunWith(MockitoJUnitRunner.class)
 @ExtendWith(ApplicationExtension.class)
@@ -51,7 +51,7 @@ class LatestNewsPopupTest {
 
     @BeforeEach
     void setup() {
-        initMocks(this);
+        openMocks(this);
         when(gazePlay.getCurrentScreenDimensionSupplier()).thenReturn(screenDimensionSupplier);
         when(screenDimensionSupplier.get()).thenReturn(new Dimension2D(1024, 768));
     }

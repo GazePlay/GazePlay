@@ -52,7 +52,7 @@ public class MidiReader {
 
     }
 
-    public int getTrackSize(){
+    public int getTrackSize() {
         int nbOfNotes = 0;
         int index = 0;
         long previousTick = -1;

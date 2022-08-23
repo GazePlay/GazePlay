@@ -39,13 +39,13 @@ class MusicControlTest {
 
     @BeforeEach
     void setup() {
-        initMocks();
+        openMocks();
         musicControl = new MusicControl(mockGazePlay);
         musicControl.createMusicControlPane();
         mockVolumeSlider = new Slider();
     }
 
-    void initMocks() {
+    void openMocks() {
         new MockUp<BackgroundMusicManager>() {
             @mockit.Mock
             public BackgroundMusicManager getInstance() {
@@ -53,7 +53,7 @@ class MusicControlTest {
             }
         };
 
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockGazePlay.getTranslator()).thenReturn(mockTranslator);
         when(mockTranslator.translate()).thenReturn("translation");
         when(mockMusicManager.getIsMusicChanging()).thenReturn(new SimpleBooleanProperty(false));

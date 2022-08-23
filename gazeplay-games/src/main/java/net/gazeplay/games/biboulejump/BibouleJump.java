@@ -91,7 +91,7 @@ public class BibouleJump extends AnimationTimer implements GameLifeCycle {
         this.stats = stats;
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
         this.config = gameContext.getConfiguration();
         this.variant = variant;
 

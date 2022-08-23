@@ -6,13 +6,14 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
+import net.gazeplay.commons.utils.stats.AreaOfInterest;
+import net.gazeplay.commons.utils.stats.CoordinatesTracker;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.List;
 
 public class FlowerOfNumbersGameLauncher implements IGameLauncher<Stats, IGameVariant> {
     @Override
@@ -21,8 +22,18 @@ public class FlowerOfNumbersGameLauncher implements IGameLauncher<Stats, IGameVa
     }
 
     @Override
-    public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
-        return new Stats(scene, "FlowerOfNumbers", nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+    public Stats createSavedStats(Scene scene,
+                                  int nbGoalsReached, int nbGoalsToReach, int nbUncountedGoalsReached,
+                                  LifeCycle lifeCycle,
+                                  RoundsDurationReport roundsDurationReport,
+                                  List<List<FixationPoint>> fixationSequence,
+                                  List<CoordinatesTracker> movementHistory,
+                                  int[][] heatMap,
+                                  List<AreaOfInterest> aoiList,
+                                  SavedStatsInfo savedStatsInfo
+    ) {
+        return new Stats(scene, "FlowerOfNumbers", nbGoalsReached, nbGoalsToReach, nbUncountedGoalsReached,
+            lifeCycle, roundsDurationReport, fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
     }
 
     @Override

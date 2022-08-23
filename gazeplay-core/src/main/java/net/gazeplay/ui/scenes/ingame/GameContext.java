@@ -54,14 +54,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     @Getter
     private HomeButton homeButton;
 
-    public static void updateConfigPane(final Pane configPane, Stage primaryStage) {
-        double mainHeight = primaryStage.getHeight();
-
-        final double newY = mainHeight - configPane.getHeight() - 30;
-        log.debug("translated config pane to y : {}, height : {}", newY, configPane.getHeight());
-        configPane.setTranslateY(newY);
-    }
-
     boolean limiterS = false;
     boolean limiterT = false;
     long startTime = 0;
@@ -129,14 +121,19 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         }
     }
 
-
     @Override
     public void setUpOnStage(final Scene scene) {
-
         super.setUpOnStage(scene);
-
         log.info("SETTING UP");
         updateConfigPane(configPane, getGazePlay().getPrimaryStage());
+    }
+
+    public static void updateConfigPane(final Pane configPane, Stage primaryStage) {
+        double mainHeight = primaryStage.getHeight();
+
+        final double newY = mainHeight - configPane.getHeight() - 30;
+        log.debug("translated config pane to y : {}, height : {}", newY, configPane.getHeight());
+        configPane.setTranslateY(newY);
     }
 
     public void resetBordersToFront() {
@@ -151,12 +148,12 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     @Override
     public void startScoreLimiter() {
-        limiterS = getConfiguration().isLimiterS();
+        limiterS = getConfiguration().isLimiterScoreEnabled();
     }
 
     @Override
     public void startTimeLimiter() {
-        limiterT = getConfiguration().isLimiterT();
+        limiterT = getConfiguration().isLimiterTimeEnabled();
         setLimiterAvailable();
     }
 
@@ -207,7 +204,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
                 limiteUsed = true;
             }
         }
-
     }
 
     private double time(double start, double end) {
@@ -219,9 +215,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         final Scene scene = gazePlay.getPrimaryScene();
 
         EventHandler<KeyEvent> buttonHandler = new EventHandler<>() {
-
             public void handle(KeyEvent event) {
-
                 exitGame(stats, gazePlay, currentGame);
                 scene.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                 scene.removeEventHandler(KeyEvent.KEY_RELEASED, this);
@@ -239,9 +233,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         Configuration config = ActiveConfigurationContext.getInstance();
         MusicControl musicControl = getMusicControl();
         AnimationSpeedRatioControl animationSpeedRatioControl = AnimationSpeedRatioControl.getInstance();
-        FixationLengthControl fixationLengthControl = FixationLengthControl.getInstance();
         ElementSizeControl elementSizeControl = ElementSizeControl.getInstance();
         ProgressBarControl progressBarControl = ProgressBarControl.getInstance();
+        FixationLengthControl fixationLengthControl = FixationLengthControl.getInstance();
 
         Stage primaryStage = gazePlay.getPrimaryStage();
         ScrollPane scrollPane = new ScrollPane();
@@ -274,22 +268,11 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         homeButton = inReplayMode ? createHomeButtonInGameScreenWithoutHandler(gazePlay) : createHomeButtonInGameScreen(gazePlay, stats, currentGame);
         menuHBox.getChildren().add(homeButton);
 
-        double buttonSize = primaryStage.getWidth() / 10;
-
-        if (buttonSize < GameContextFactoryBean.BUTTON_MIN_HEIGHT) {
-            buttonSize = GameContextFactoryBean.BUTTON_MIN_HEIGHT;
-        }
-
-        double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
-
-        scrollPane.setPrefWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-        scrollPane.setMinWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-        scrollPane.setMaxWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-
-        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateControllPanel(scrollPane, toggleFullScreenButtonInGameScreen, primaryStage));
+        updateControlPanel(scrollPane, toggleFullScreenButtonInGameScreen, primaryStage);
+        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateControlPanel(scrollPane, toggleFullScreenButtonInGameScreen, primaryStage));
     }
 
-    public void updateControllPanel(ScrollPane scrollPane, I18NButton toggleFullScreenButtonInGameScreen, Stage primaryStage) {
+    public void updateControlPanel(ScrollPane scrollPane, I18NButton toggleFullScreenButtonInGameScreen, Stage primaryStage) {
         double buttonSize = primaryStage.getWidth() / 10;
 
         if (buttonSize < GameContextFactoryBean.BUTTON_MIN_HEIGHT) {
@@ -303,60 +286,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         scrollPane.setMaxWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
     }
 
-    public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame, String replayMode) {
-        Configuration config = ActiveConfigurationContext.getInstance();
-        MusicControl musicControl = getMusicControl();
-        AnimationSpeedRatioControl animationSpeedRatioControl = AnimationSpeedRatioControl.getInstance();
-        FixationLengthControl fixationLengthControl = FixationLengthControl.getInstance();
-        ElementSizeControl elementSizeControl = ElementSizeControl.getInstance();
-
-        Stage primaryStage = gazePlay.getPrimaryStage();
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setFitToHeight(true);
-
-        leftControlPane = new GridPane();
-        leftControlPane.setHgap(5);
-        leftControlPane.setVgap(5);
-        leftControlPane.setAlignment(Pos.TOP_CENTER);
-        leftControlPane.add(musicControl.createMusicControlPane(), 0, 0);
-        leftControlPane.add(musicControl.createVolumeLevelControlPane(config, gazePlay.getTranslator()), 1, 0);
-        leftControlPane.add(animationSpeedRatioControl.createSpeedEffectsPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 2, 0);
-        leftControlPane.add(elementSizeControl.createElementSizePane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 3, 0);
-        fixPan = fixationLengthControl.createfixationLengthPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene());
-        leftControlPane.add(fixPan, 4, 0);
-        leftControlPane.getChildren().forEach(node -> {
-            GridPane.setVgrow(node, Priority.ALWAYS);
-            GridPane.setHgrow(node, Priority.ALWAYS);
-        });
-
-
-        scrollPane.setContent(leftControlPane);
-        menuHBox.getChildren().add(scrollPane);
-
-        I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
-        menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
-
-        homeButton = createHomeButtonInGameScreenWithoutHandler(gazePlay);
-        menuHBox.getChildren().add(homeButton);
-
-        double buttonSize = primaryStage.getWidth() / 10;
-
-        if (buttonSize < GameContextFactoryBean.BUTTON_MIN_HEIGHT) {
-            buttonSize = GameContextFactoryBean.BUTTON_MIN_HEIGHT;
-        }
-
-        double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
-        scrollPane.setPrefWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-        scrollPane.setMinWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-        scrollPane.setMaxWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-
-        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateControllPanel(scrollPane, toggleFullScreenButtonInGameScreen, primaryStage));
-
-    }
-
-    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
-                                                   @NonNull GameLifeCycle currentGame) {
-
+    public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats, @NonNull GameLifeCycle currentGame) {
         EventHandler<Event> homeEvent = e -> {
             root.setCursor(Cursor.WAIT); // Change cursor to wait style
             exitGame(stats, gazePlay, currentGame);
@@ -371,7 +301,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
-
         if (videoRecordingContext != null) {
             videoRecordingContext.pointersClear();
         }
@@ -379,9 +308,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         currentGame.dispose();
         ForegroundSoundsUtils.stopSound(); // to stop playing the sound of Bravo
         stats.stop();
+
         gazeDeviceManager.clear();
         gazeDeviceManager.destroy();
-
         soundManager.clear();
         soundManager.destroy();
 
@@ -399,10 +328,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             asynchronousStatsPersistTask.run();
         }
 
-        StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
-
+        StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats, false);
         this.clear();
-
         gazePlay.onDisplayStats(statsContext);
     }
 
@@ -412,23 +339,20 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public void exitReplayGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
-
         if (videoRecordingContext != null) {
             videoRecordingContext.pointersClear();
         }
 
         currentGame.dispose();
         ForegroundSoundsUtils.stopSound(); // to stop playing the sound of Bravo
+
         gazeDeviceManager.clear();
         gazeDeviceManager.destroy();
-
         soundManager.clear();
         soundManager.destroy();
 
-        StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
-
+        StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats, true);
         this.clear();
-
         gazePlay.onDisplayStats(statsContext);
     }
 
@@ -482,10 +406,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         });
 
         StatsContext statsContext = StatsContextFactory.newInstance(getGazePlay(), stats, continueButton);
-
         this.clear();
         getGazePlay().onDisplayStats(statsContext);
-
     }
 
     @Override
@@ -514,9 +436,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     /*
-     * When the game starts,
-     * the player can't select an element
-     * until the delay is over
+     * When the game starts, the player can't select an element until the delay is over
      */
     public void onGameStarted() {
     }
@@ -528,10 +448,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     public void onGameStarted(int delay) {
         gamingRoot.setDisable(true);
         PauseTransition wait = new PauseTransition(Duration.millis(delay));
-        wait.setOnFinished(waitEvent -> {
-            gamingRoot.setDisable(false);
-        });
+        wait.setOnFinished(waitEvent -> gamingRoot.setDisable(false));
         wait.play();
     }
-
 }

@@ -40,6 +40,7 @@ public class Moles extends Parent implements GameLifeCycle {
 
     private final Stats stats;
 
+
     private int nbMolesWhacked;
 
     @Getter
@@ -69,7 +70,7 @@ public class Moles extends Parent implements GameLifeCycle {
         gameContext.startScoreLimiter();
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
         this.variant = type;
     }
 

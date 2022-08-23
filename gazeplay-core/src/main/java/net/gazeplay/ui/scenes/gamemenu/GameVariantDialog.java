@@ -1,4 +1,3 @@
-
 package net.gazeplay.ui.scenes.gamemenu;
 
 import javafx.event.Event;
@@ -39,9 +38,7 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
 @Slf4j
 public class GameVariantDialog extends Stage {
-
     private int easymode = 0;
-
     ToggleGroup group = new ToggleGroup();
 
     public GameVariantDialog(
@@ -176,11 +173,11 @@ public class GameVariantDialog extends Stage {
                     categories[2] = new RadioButton(translator.translate("NormalF"));
                     categories[1] = new RadioButton(translator.translate("SmallF"));
                     categories[0] = new RadioButton(translator.translate("TinyF"));
-                } else if(gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) {
+                } else if (gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("MouseC"));
                     categories[1] = new RadioButton(translator.translate("OtherC"));
-                } else{
+                } else {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("Classic"));
                     categories[1] = new RadioButton(translator.translate("HighContrasts"));
@@ -238,5 +235,4 @@ public class GameVariantDialog extends Stage {
         newFlowPane.setVgap(10);
         return newFlowPane;
     }
-
 }

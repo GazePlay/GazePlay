@@ -48,6 +48,7 @@ public class MemoryCard extends Parent {
 
     final Stats stats;
 
+
     final EventHandler<Event> enterEvent;
 
     final boolean isOpen;
@@ -57,9 +58,9 @@ public class MemoryCard extends Parent {
     private boolean mouseIsOverCard;
 
 
-    public MemoryCard(final double positionX, final double positionY, final double width, final double height, final Image image, final int idc,
-                      final IGameContext gameContext, final Stats stats, final Memory gameInstance, final int fixationlength, final boolean isOpen) {
-
+    public MemoryCard(final double positionX, final double positionY, final double width, final double height,
+                      final Image image, final int idc, final IGameContext gameContext, final Stats stats,
+                      final Memory gameInstance, final int fixationlength, final boolean isOpen) {
         this.isOpen = isOpen;
 
         this.card = new Rectangle(positionX, positionY, width, height);
@@ -78,6 +79,7 @@ public class MemoryCard extends Parent {
         this.gameContext = gameContext;
 
         this.stats = stats;
+
 
         this.turned = false;
 
@@ -161,22 +163,26 @@ public class MemoryCard extends Parent {
                 log.debug("nbOfTries = {}", gameInstance.totalNbOfTries());
                 if (sizeOfList % 3 == 0 && sizeOfList != 0) {
                     for (int i = 0; i < 3; i++) {
-                        if (gameInstance.totalNbOfTries() <= 2 * gameInstance.getLevel() && gameInstance.getNbColumns() <= 6)
+                        if (gameInstance.totalNbOfTries() <= 2 * gameInstance.getLevel() && gameInstance.getNbColumns() <= 6) {
                             compare++;
-                        if (gameInstance.totalNbOfTries() >= 2.5 * gameInstance.getLevel() && gameInstance.getNbColumns() > 2)
+                        }
+                        if (gameInstance.totalNbOfTries() >= 2.5 * gameInstance.getLevel() && gameInstance.getNbColumns() > 2) {
                             compare--;
+                        }
                     }
                     if (compare == 3) {
-                        if (gameInstance.getLevel() == 6)
+                        if (gameInstance.getLevel() == 6) {
                             gameInstance.setLevel(gameInstance.getLevel() + 2);
-                        else
+                        } else {
                             gameInstance.setLevel(gameInstance.getLevel() + 1);
+                        }
                     }
                     if (compare == -3) {
-                        if (gameInstance.getLevel() == 8)
+                        if (gameInstance.getLevel() == 8) {
                             gameInstance.setLevel(gameInstance.getLevel() - 2);
-                        else
+                        } else {
                             gameInstance.setLevel(gameInstance.getLevel() - 1);
+                        }
                     }
                     levelsReport.addRoundLevel(gameInstance.getLevel());
                 }
@@ -226,7 +232,7 @@ public class MemoryCard extends Parent {
         gameInstance.nbTurnedCards = 0;
 
         // Added, basically it runs a new timelineProgressBar when no cards are turned but the cursor is still on the card.
-        if(this.mouseIsOverCard){
+        if (this.mouseIsOverCard) {
             if (timelineProgressBar != null) {
                 timelineProgressBar.stop();
             }

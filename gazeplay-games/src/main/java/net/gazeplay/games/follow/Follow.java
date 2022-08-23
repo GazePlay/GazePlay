@@ -33,6 +33,7 @@ public class Follow implements GameLifeCycle {
     @Setter
     private FollowGameVariant variant;
 
+
     private final Dimension2D dimension2D;
 
     //player's position
@@ -75,7 +76,6 @@ public class Follow implements GameLifeCycle {
     //score with coins
     private int score;
     private int scoretoreach;
-
 
     Follow(final IGameContext gameContext, final Stats stats, final FollowGameVariant variant) {
         this.gameContext = gameContext;

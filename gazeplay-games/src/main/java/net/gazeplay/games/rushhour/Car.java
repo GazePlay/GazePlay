@@ -100,11 +100,12 @@ public class Car extends Rectangle {
         this.addEventFilter(GazeEvent.GAZE_ENTERED, enterEvent);
 
         final EventHandler<Event> exitEvent = e -> {
-            Point pointerPosition = new Point();;
+            Point pointerPosition = new Point();
+            ;
             if (e.getEventType() == GazeEvent.GAZE_EXITED) {
-                pointerPosition.setLocation(((GazeEvent)e).getX(), ((GazeEvent)e).getY());
+                pointerPosition.setLocation(((GazeEvent) e).getX(), ((GazeEvent) e).getY());
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED) {
-                pointerPosition.setLocation(((MouseEvent)e).getX(), ((MouseEvent)e).getY());
+                pointerPosition.setLocation(((MouseEvent) e).getX(), ((MouseEvent) e).getY());
             }
 
             final int way = checkPos(pointerPosition);

@@ -22,14 +22,14 @@ public class LoadingContext extends BorderPane {
 
         String gazeplayType = GazePlayArgs.returnArgs();
 
-        if (gazeplayType.equals("afsrGazeplay")){
+        if (gazeplayType.equals("afsrGazeplay")) {
             afsrGazePlayLoadindContext(gazePlay);
-        }else {
+        } else {
             gazePlayLoadingContext(gazePlay);
         }
     }
 
-    public void gazePlayLoadingContext(GazePlay gazePlay){
+    public void gazePlayLoadingContext(GazePlay gazePlay) {
         //  ImageView backgroundImage = new ImageView(new Image("data/common/images/bravo.gif"));
         I18NLabel loadingLabel = new I18NLabel(gazePlay.getTranslator(), "Loading...");
         Configuration config = ActiveConfigurationContext.getInstance();
@@ -64,7 +64,7 @@ public class LoadingContext extends BorderPane {
         this.setCenter(stackPane);
     }
 
-    public void afsrGazePlayLoadindContext(GazePlay gazePlay){
+    public void afsrGazePlayLoadindContext(GazePlay gazePlay) {
         //  ImageView backgroundImage = new ImageView(new Image("data/common/images/bravo.gif"));
         I18NLabel loadingLabel = new I18NLabel(gazePlay.getTranslator(), "Loading...");
         loadingLabel.setStyle("\n" +
@@ -89,14 +89,14 @@ public class LoadingContext extends BorderPane {
 
         logoHBox.getChildren().add(iv);
 
-        logoVBox.getChildren().addAll(logoHBox,loadingLabel);
+        logoVBox.getChildren().addAll(logoHBox, loadingLabel);
         loadingLabel.setAlignment(Pos.CENTER);
         logoVBox.setAlignment(Pos.CENTER);
         this.setStyle("-fx-background-color: black");
         this.setCenter(logoVBox);
     }
 
-    public void stopAnimation(){
+    public void stopAnimation() {
         logoFactory.stopAnimation();
     }
 }

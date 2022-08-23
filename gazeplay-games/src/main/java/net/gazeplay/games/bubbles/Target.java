@@ -30,11 +30,8 @@ public class Target extends ProgressPortrait {
     private static final int nbFragments = 10; // number of little circles after explosion
 
     private final IGameContext gameContext;
-
     private final Bubble gameInstance;
-
     private final BubblesGameVariant gameVariant;
-
     private final Stats stats;
 
     private final ImageLibrary imageLibrary;
@@ -56,7 +53,8 @@ public class Target extends ProgressPortrait {
     private PauseTransition wait;
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
-                  final ImageLibrary imageLibrary, final BubblesGameVariant gameVariant, final Bubble gameInstance, final ReplayablePseudoRandom randomGenerator, BubbleType type) {
+                  final ImageLibrary imageLibrary, final BubblesGameVariant gameVariant, final Bubble gameInstance,
+                  final ReplayablePseudoRandom randomGenerator, BubbleType type) {
         super(gameContext.getConfiguration().getElementSize());
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
@@ -195,7 +193,6 @@ public class Target extends ProgressPortrait {
     }
 
     private void enter(final Event e) {
-
         if (this.gameVariant.toString().endsWith("FIX") && wait != null) {
             wait.stop();
             wait.setDuration(Duration.millis(15000 / gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue()));
@@ -217,7 +214,6 @@ public class Target extends ProgressPortrait {
         }
 
         this.setOpacity(1);
-
     }
 
     private void createTarget() {
@@ -252,7 +248,7 @@ public class Target extends ProgressPortrait {
         double centerX = 0;
         double centerY = 0;
 
-        final double timelength = ((maxTimeLength - minTimeLength) * randomGenerator.nextDouble() + minTimeLength) * 1000 / gameContext.getConfiguration().getAnimationSpeedRatioProperty().getValue();
+        final double timelength = ((maxTimeLength - minTimeLength) * randomGenerator.nextDouble() + minTimeLength) * 1000 / gameContext.getConfiguration().getAnimationSpeedRatio();
 
         timeline = new Timeline();
 

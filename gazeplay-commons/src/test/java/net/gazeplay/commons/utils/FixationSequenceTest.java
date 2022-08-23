@@ -1,9 +1,7 @@
 package net.gazeplay.commons.utils;
 
 import javafx.application.Platform;
-import javafx.scene.paint.Color;
 import net.gazeplay.TestingUtils;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -19,31 +17,27 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(ApplicationExtension.class)
 class FixationSequenceTest {
 
-    private ArrayList<LinkedList<FixationPoint>> fixationPoints =
-        new ArrayList<>( List.of (
-            new LinkedList<>(
-                List.of(
+    private final List<List<FixationPoint>> fixationPoints =
+        new ArrayList<>(List.of(
+            new LinkedList<>(List.of(
                 new FixationPoint(123, 200, 20, 40),
                 new FixationPoint(123, 200, 500, 400),
                 new FixationPoint(123, 200, 120, 150),
                 new FixationPoint(123, 50, 300, 450),
                 new FixationPoint(123, 50, 300, 400),
                 new FixationPoint(123, 50, 300, 400),
-                new FixationPoint(123, 50, 300, 400)
-                )
+                new FixationPoint(123, 50, 300, 400))
             ),
-            new LinkedList<>(
-                List.of(
-                    new FixationPoint(123, 200, 20, 40),
-                    new FixationPoint(123, 200, 500, 400),
-                    new FixationPoint(123, 200, 120, 150),
-                    new FixationPoint(123, 50, 300, 450),
-                    new FixationPoint(123, 50, 300, 400),
-                    new FixationPoint(123, 50, 300, 400),
-                    new FixationPoint(123, 50, 300, 400)
-                )
-            )
-    ));
+            new LinkedList<>(List.of(
+                new FixationPoint(123, 200, 20, 40),
+                new FixationPoint(123, 200, 500, 400),
+                new FixationPoint(123, 200, 120, 150),
+                new FixationPoint(123, 50, 300, 450),
+                new FixationPoint(123, 50, 300, 400),
+                new FixationPoint(123, 50, 300, 400),
+                new FixationPoint(123, 50, 300, 400))
+            ))
+        );
 
     @Test
     void shouldCreateFixationSequence() throws InterruptedException {

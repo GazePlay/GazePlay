@@ -27,8 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 import static javafx.scene.input.MouseEvent.MOUSE_PRESSED;
 
@@ -149,23 +147,21 @@ public class GameMenuFactory {
         gameCategoryContainer.setAlignment(Pos.BOTTOM_RIGHT);
         gameCard.setBottom(gameCategoryContainer);
         for (GameCategories.Category gameCategory : gameSummary.getCategories()) {
-            if (gameCategory.getThumbnail() != null) {
-                Image buttonGraphics = new Image(gameCategory.getThumbnail(), 50, 50, true, false);
-                ImageView imageView = new ImageView(buttonGraphics);
-                imageView.getStyleClass().add("gameChooserButtonGameTypeIndicator");
-                imageView.setPreserveRatio(true);
-                switch (orientation) {
-                    case HORIZONTAL:
-                        gameCard.heightProperty().addListener(
-                            (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 10));
-                        gameCategoryContainer.getChildren().add(imageView);
-                        break;
-                    case VERTICAL:
-                        gameCard.widthProperty().addListener(
-                            (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 10));
-                        gameCategoryContainer.getChildren().add(imageView);
-                        break;
-                }
+            Image buttonGraphics = new Image(gameCategory.getThumbnail(), 50, 50, true, false);
+            ImageView imageView = new ImageView(buttonGraphics);
+            imageView.getStyleClass().add("gameChooserButtonGameTypeIndicator");
+            imageView.setPreserveRatio(true);
+            switch (orientation) {
+                case HORIZONTAL:
+                    gameCard.heightProperty().addListener(
+                        (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 10));
+                    gameCategoryContainer.getChildren().add(imageView);
+                    break;
+                case VERTICAL:
+                    gameCard.widthProperty().addListener(
+                        (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 10));
+                    gameCategoryContainer.getChildren().add(imageView);
+                    break;
             }
         }
 
@@ -267,34 +263,19 @@ public class GameMenuFactory {
             backgroundMusicManager.pause();
         });
 
-        @Data
-        class EventState {
-            private final long time;
-            private final boolean wasFavorite;
-        }
-
-        EventHandler favoriteGameSwitchEventHandler = new EventHandler<MouseEvent>() {
-
-            private final AtomicReference<EventState> enteredState = new AtomicReference<>();
-            private final AtomicReference<EventState> exitedState = new AtomicReference<>();
-
-            @Override
-            public void handle(MouseEvent event) {
-                if (config.getFavoriteGamesProperty().contains(gameSummary.getNameCode())) {
-                    config.getFavoriteGamesProperty().remove(gameSummary.getNameCode());
-                    ColorAdjust colorAdjust = new ColorAdjust();
-                    colorAdjust.setSaturation(-1);
-                    favGamesImageView.setEffect(colorAdjust);
-                } else {
-                    config.getFavoriteGamesProperty().add(gameSummary.getNameCode());
-                    favGamesImageView.setEffect(null);
-                }
+        EventHandler<MouseEvent> favoriteGameSwitchEventHandler = e -> {
+            if (config.getFavoriteGamesProperty().contains(gameSummary.getNameCode())) {
+                config.getFavoriteGamesProperty().remove(gameSummary.getNameCode());
+                ColorAdjust colorAdjust = new ColorAdjust();
+                colorAdjust.setSaturation(-1);
+                favGamesImageView.setEffect(colorAdjust);
+            } else {
+                config.getFavoriteGamesProperty().add(gameSummary.getNameCode());
+                favGamesImageView.setEffect(null);
             }
         };
         favIconContainer.addEventFilter(MOUSE_CLICKED, favoriteGameSwitchEventHandler);
 
         return gameCard;
     }
-
-
 }

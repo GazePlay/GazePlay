@@ -3,13 +3,10 @@ package net.gazeplay.games.cups.utils;
 import javafx.scene.Scene;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.FixationPoint;
-import net.gazeplay.commons.utils.stats.LifeCycle;
-import net.gazeplay.commons.utils.stats.RoundsDurationReport;
-import net.gazeplay.commons.utils.stats.SavedStatsInfo;
+import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.stats.HiddenItemsGamesStats;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.List;
 
 @Slf4j
 public class CupsAndBallsStats extends HiddenItemsGamesStats {
@@ -19,9 +16,18 @@ public class CupsAndBallsStats extends HiddenItemsGamesStats {
         this.gameName = "cups";
     }
 
-    public CupsAndBallsStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
-        super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+    public CupsAndBallsStats(Scene scene,
+                             int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached,
+                             LifeCycle lifeCycle,
+                             RoundsDurationReport roundsDurationReport,
+                             List<List<FixationPoint>> fixationSequence,
+                             List<CoordinatesTracker> movementHistory,
+                             int[][] heatMap,
+                             List<AreaOfInterest> aoiList,
+                             SavedStatsInfo savedStatsInfo
+    ) {
+        super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, lifeCycle, roundsDurationReport,
+            fixationSequence, movementHistory, heatMap, aoiList, savedStatsInfo);
         this.gameName = "cups";
     }
-
 }

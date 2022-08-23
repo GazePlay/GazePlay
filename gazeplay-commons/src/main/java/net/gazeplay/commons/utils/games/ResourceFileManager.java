@@ -49,8 +49,9 @@ public class ResourceFileManager {
             String parent = parentPath != null ? parentPath.toString() : "";
             String filename = filenamePath != null ? filenamePath.toString() : "";
 
-            if (parent.equals("") || filename.equals(""))
+            if (parent.equals("") || filename.equals("")) {
                 return Collections.emptySet();
+            }
 
             Set<String> resources = getResourcePaths(parent);
             resources.removeIf(x -> !x.contains(filename));
@@ -69,10 +70,11 @@ public class ResourceFileManager {
         StringBuilder validExtensions = new StringBuilder();
         for (Iterator<String> it = fileExtensions.iterator(); it.hasNext(); ) {
             String extension = it.next();
-            if (it.hasNext())
+            if (it.hasNext()) {
                 validExtensions.append(extension).append("|");
-            else
+            } else {
                 validExtensions.append(extension);
+            }
         }
 
         return ".*\\.(?i)(" + validExtensions + ")";

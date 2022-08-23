@@ -75,7 +75,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         gameType = type;
         hand = new StackPane();
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
 
         targetFrames = new Image[6];
         targetFrames[0] = new Image("data/" + gameType + "/images/Blue.png");
@@ -86,7 +86,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         targetFrames[5] = new Image("data/" + gameType + "/images/Flash.png");
 
         box = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
-
     }
 
     Shooter(final IGameContext gameContext, final Stats stats, final String type, double gameSeed) {
@@ -108,7 +107,6 @@ public class Shooter extends Parent implements GameLifeCycle {
         targetFrames[5] = new Image("data/" + gameType + "/images/Flash.png");
 
         box = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
-
     }
 
     private Rectangle createBackground() {
@@ -141,7 +139,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         float angle = (float) Math
             .toDegrees(Math.atan2(target.x - (dimension2D.getWidth() / 2), -target.y + (dimension2D.getHeight())));
-        return (angle < 0) ?  angle : angle + 360;
+        return (angle < 0) ? angle : angle + 360;
     }
 
     private void initBoxTimeline() {
@@ -174,15 +172,15 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         if ((randomValue == 2) || (randomValue == 0)) {
             // Move UP
-            double multiplier = (gameType.equals("biboule")?-1:1);
+            double multiplier = (gameType.equals("biboule") ? -1 : 1);
             firstMove.getKeyFrames().add(new KeyFrame(new Duration(2000),
-                new KeyValue(box.translateYProperty(),  multiplier*(dimension2D.getHeight() / 5) , Interpolator.LINEAR)));
+                new KeyValue(box.translateYProperty(), multiplier * (dimension2D.getHeight() / 5), Interpolator.LINEAR)));
         }
 
         if ((randomValue == 1) || (randomValue == 2)) {
             // Move Left or Right
 
-            double val = (dimension2D.getWidth() / (gameType.equals("biboule") ? 2.5 : 3) );
+            double val = (dimension2D.getWidth() / (gameType.equals("biboule") ? 2.5 : 3));
 
             if (!isOnLeftSide) {
                 val = 0;
@@ -205,7 +203,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         return goesFromLeftToRight;
     }
 
-    public void clearTransition(){
+    public void clearTransition() {
         st.stop();
         st.getChildren().clear();
     }
@@ -353,10 +351,10 @@ public class Shooter extends Parent implements GameLifeCycle {
         this.gameContext.resetBordersToFront();
         iv.setMouseTransparent(true);
 
-        box.layoutXProperty().bind(imageRectangle.widthProperty().multiply(8.5/29.7).subtract(box.fitWidthProperty().divide(2)));
+        box.layoutXProperty().bind(imageRectangle.widthProperty().multiply(8.5 / 29.7).subtract(box.fitWidthProperty().divide(2)));
 
         if (gameType.equals("biboule")) {
-            box.layoutYProperty().bind(imageRectangle.heightProperty().multiply(8.5/ 21));
+            box.layoutYProperty().bind(imageRectangle.heightProperty().multiply(8.5 / 21));
             box.fitHeightProperty().bind(imageRectangle.heightProperty().divide(6.5));
         } else {// equals robot
             box.fitHeightProperty().bind(imageRectangle.heightProperty().divide(8.5));
@@ -398,8 +396,8 @@ public class Shooter extends Parent implements GameLifeCycle {
         gameContext.setOffFixationLengthControl();
     }
 
-    private void closeTimer(){
-        if(minuteur != null) {
+    private void closeTimer() {
+        if (minuteur != null) {
             minuteur.cancel();
             minuteur.purge();
         }
@@ -437,6 +435,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         t.removeEventFilter(MouseEvent.ANY, enterEvent);
         t.removeEventFilter(GazeEvent.ANY, enterEvent);
         t.getTransition().stop();
+
         stats.incrementNumberOfGoalsReached();
 
         final String cst;
@@ -445,7 +444,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         } else {// equals robot
             cst = "" + score++;
         }
-        gameContext.updateScore(stats,this);
+        gameContext.updateScore(stats, this);
 
         text.setText(cst);
 
@@ -525,11 +524,11 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         final ImageView[] targetFramesViews = new ImageView[6];
 
-        for(int i = 0; i <6 ; i++){
+        for (int i = 0; i < 6; i++) {
             targetFramesViews[i] = new ImageView(targetFrames[i]);
             setInitialSize(targetFramesViews[i]);
             target.getChildren().add(targetFramesViews[i]);
-            if(i != 0){
+            if (i != 0) {
                 targetFramesViews[i].setOpacity(0);
             }
         }
@@ -539,23 +538,23 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     private Point getRandomPoint(int random) {
 
-        switch(random){
+        switch (random) {
             case 1:
-                return new Point(0, gameContext.getRoot().heightProperty().getValue()/2);
+                return new Point(0, gameContext.getRoot().heightProperty().getValue() / 2);
             case 2:
                 return new Point(0, gameContext.getRoot().heightProperty().getValue());
             case 3:
-                return new Point(gameContext.getRoot().widthProperty().getValue()/2, 0);
+                return new Point(gameContext.getRoot().widthProperty().getValue() / 2, 0);
             case 4:
-                return new Point(gameContext.getRoot().widthProperty().getValue()/2, gameContext.getRoot().heightProperty().getValue());
+                return new Point(gameContext.getRoot().widthProperty().getValue() / 2, gameContext.getRoot().heightProperty().getValue());
             case 5:
                 return new Point(gameContext.getRoot().widthProperty().getValue(), 0);
             case 6:
-                return new Point(gameContext.getRoot().widthProperty().getValue(), gameContext.getRoot().heightProperty().getValue()/2);
+                return new Point(gameContext.getRoot().widthProperty().getValue(), gameContext.getRoot().heightProperty().getValue() / 2);
             case 7:
                 return new Point(gameContext.getRoot().widthProperty().getValue(), gameContext.getRoot().heightProperty().getValue());
             default:
-                return new Point(0,0);
+                return new Point(0, 0);
         }
     }
 
@@ -569,20 +568,19 @@ public class Shooter extends Parent implements GameLifeCycle {
         tt1.setToX(-sp.getCenterX() + randomPoint.x);
         sp.setDestination(randomPoint);
 
-            this.getChildren().get(this.getChildren().indexOf(sp)).toBack();
-            text.toBack();
-            box.toBack();
+        this.getChildren().get(this.getChildren().indexOf(sp)).toBack();
+        text.toBack();
+        box.toBack();
 
 
         final SequentialTransition seqt = new SequentialTransition();
 
-        for(int i = 1; i <5 ; i++){
+        for (int i = 1; i < 5; i++) {
             final FadeTransition toNextFrame = new FadeTransition(new Duration(timebasic / 4), sp.getChildren().get(i));
             toNextFrame.setFromValue(0);
             toNextFrame.setToValue(1);
             seqt.getChildren().add(toNextFrame);
         }
-
 
 
         final ScaleTransition st = new ScaleTransition(new Duration(timebasic), sp);

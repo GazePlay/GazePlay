@@ -10,7 +10,6 @@ import mockit.MockUp;
 import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.utils.FixationSequence;
 import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +25,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,12 +41,12 @@ class StatsTest {
 
     @BeforeEach
     void setUp() {
-        initMocks();
+        openMocks();
         stats = new Stats(mockScene, "testGame");
     }
 
-    void initMocks() {
-        MockitoAnnotations.initMocks(this);
+    void openMocks() {
+        MockitoAnnotations.openMocks(this);
         when(mockScene.getWidth()).thenReturn(1080d);
         when(mockScene.getHeight()).thenReturn(1920d);
     }
@@ -58,7 +56,7 @@ class StatsTest {
         when(mockScene.getHeight()).thenReturn(30.0);
         when(mockScene.getWidth()).thenReturn(60.0);
 
-        double[][] result = Stats.instantiateHeatMapData(mockScene, 3.0);
+        int[][] result = Stats.instantiateHeatMapData(mockScene, 3.0);
 
         assertEquals(10, result.length);
         assertEquals(20, result[0].length);
@@ -66,7 +64,7 @@ class StatsTest {
 
     @Test
     void shouldSetTargetAOIList() {
-        ArrayList<TargetAOI> testList = new ArrayList<>(List.of(
+        List<TargetAOI> testList = new ArrayList<>(List.of(
             new TargetAOI(1, 1, 2, 1000),
             new TargetAOI(2, 2, 2, 3000),
             new TargetAOI(3, 3, 2, 6000)
@@ -77,7 +75,7 @@ class StatsTest {
         testList.get(2).setTimeEnded(6000);
 
         stats.setTargetAOIList(testList);
-        ArrayList<TargetAOI> resultList = stats.getTargetAOIList();
+        List<TargetAOI> resultList = stats.getTargetAOIList();
 
         assertEquals(1500, resultList.get(0).getDuration());
         assertEquals(2500, resultList.get(1).getDuration());
@@ -86,20 +84,109 @@ class StatsTest {
 
     @Test
     void shouldSetEmptyTargetAOIList() {
-        ArrayList<TargetAOI> testList = new ArrayList<>();
+        List<TargetAOI> testList = new ArrayList<>();
 
         stats.setTargetAOIList(testList);
-        ArrayList<TargetAOI> resultList = stats.getTargetAOIList();
+        List<TargetAOI> resultList = stats.getTargetAOIList();
 
         assertEquals(testList, resultList);
     }
 
     @Test
+    void shouldCalculateRectangle() {
+        Point2D[] input = new Point2D[]{
+            new Point2D(706.0, 685.0),
+            new Point2D(710.0, 670.0),
+            new Point2D(708.0, 690.0)
+        };
+
+        Double[] expected = new Double[]{
+            706.0 - 15,
+            690.0 + 15,
+            710.0 + 15,
+            690.0 + 15,
+            710.0 + 15,
+            670.0 - 15,
+            706.0 - 15,
+            670.0 - 15
+        };
+
+        Double[] actual = stats.calculateRectangle(input);
+
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    void shouldCalculateOrientation() {
+        // Collinear
+        assertEquals(0, stats.orientation(
+            new Point2D(0, 0),
+            new Point2D(1, 1),
+            new Point2D(2, 2)
+        ));
+
+        // Clockwise
+        assertEquals(1, stats.orientation(
+            new Point2D(2, 5),
+            new Point2D(1, 2),
+            new Point2D(0, 0)
+        ));
+
+        // Counterclockwise
+        assertEquals(-1, stats.orientation(
+            new Point2D(0, 0),
+            new Point2D(1, 2),
+            new Point2D(2, 5)
+        ));
+    }
+
+    @Test
+    void shouldCalculateConvexHull() {
+        Point2D[] input = new Point2D[]{
+            new Point2D(2, 2),
+            new Point2D(2, 3),
+            new Point2D(3, 5),
+            new Point2D(1, 2),
+            new Point2D(1.25, 3),
+            new Point2D(2, 1),
+            new Point2D(4, 2)
+        };
+
+        Double[] expected = new Double[]{
+            1d, 2d, 2d, 1d, 4d, 2d, 3d, 5d, 1.25, 3d
+        };
+
+        Double[] actual = stats.calculateConvexHull(input);
+
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    void shouldCalculateTargetAOI() {
+        TargetAOI t1 = new TargetAOI(500, 500, 300, 1234);
+        TargetAOI t2 = new TargetAOI(650, 700, 200, 1234);
+
+        Double[] e1 = new Double[]{385d, 615d, 815d, 615d, 815d, 185d, 385d, 185d};
+        Double[] e2 = new Double[]{535d, 815d, 865d, 815d, 865d, 485d, 535d, 485d};
+
+        ArrayList<TargetAOI> input = new ArrayList<>(List.of(t1, t2));
+
+        stats.setTargetAOIList(input);
+        stats.calculateTargetAOIList();
+
+        Double[] r1 = new Double[8];
+        Double[] r2 = new Double[8];
+        input.get(0).getPolygon().getPoints().toArray(r1);
+        input.get(1).getPolygon().getPoints().toArray(r2);
+
+        assertArrayEquals(r1, e1);
+        assertArrayEquals(r2, e2);
+    }
+
+    @Test
     void shouldTakeScreenshotWhenNewRoundIsReady() {
         Stats statsSpy = spy(stats);
-
         statsSpy.notifyNewRoundReady();
-
         verify(statsSpy).takeScreenShot();
     }
 
@@ -274,14 +361,14 @@ class StatsTest {
 
     @Test
     void shouldIncrementNumberOfUncountedGoalsReachedByOne() throws InterruptedException {
-        int initial = stats.getNbUnCountedGoalsReached();
+        int initial = stats.getNbUncountedGoalsReached();
 
         stats.setAccidentalShotPreventionPeriod(50L);
         stats.incrementNumberOfGoalsToReach();
         Thread.sleep(20);
 
         stats.incrementNumberOfGoalsReached();
-        int result = stats.getNbUnCountedGoalsReached();
+        int result = stats.getNbUncountedGoalsReached();
 
         assertEquals(initial + 1, result);
     }

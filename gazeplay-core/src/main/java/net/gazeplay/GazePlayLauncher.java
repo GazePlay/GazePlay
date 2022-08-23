@@ -30,10 +30,10 @@ public class GazePlayLauncher {
     public static void main(String[] args) {
 
         try {
-            if (args[0].contains("afsr")){
+            if (args[0].contains("afsr")) {
                 log.info("AFSR GAZEPLAY");
                 saveArgs("afsrGazeplay");
-            } else if (args[0].contains("bera")){
+            } else if (args[0].contains("bera")) {
                 log.info("BERA GAZEPLAY");
                 saveArgs("bera");
             }
@@ -96,18 +96,18 @@ public class GazePlayLauncher {
     }
 
     @SuppressWarnings("PMD")
-    private static void saveArgs(String args){
+    private static void saveArgs(String args) {
 
         String os = System.getProperty("os.name").toLowerCase();
         FileWriter myWritter = null;
 
         try {
-            if (os.contains("nux") || os.contains("mac")){
+            if (os.contains("nux") || os.contains("mac")) {
                 File myFile = new File("argsGazeplay.txt");
                 log.info("Fil args is : " + myFile);
                 myWritter = new FileWriter("argsGazeplay.txt", StandardCharsets.UTF_8);
                 myWritter.write(args);
-            }else if (os.contains("win")){
+            } else if (os.contains("win")) {
                 String userName = System.getProperty("user.name");
                 File myFolder = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay");
                 boolean createFolder = myFolder.mkdirs();
@@ -116,15 +116,14 @@ public class GazePlayLauncher {
                 log.info("Fil args is : " + myFile);
                 myWritter = new FileWriter("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt", StandardCharsets.UTF_8);
                 myWritter.write(args);
-            }
-            else{
+            } else {
                 log.info("OS non reconnu !");
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             log.info(String.valueOf(e));
         } finally {
             try {
-                if (myWritter != null){
+                if (myWritter != null) {
                     myWritter.close();
                 }
             } catch (IOException e) {

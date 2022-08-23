@@ -32,7 +32,7 @@ class UtilsTest {
 
     @BeforeEach
     void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockConfiguration.getFileDir()).thenReturn(localDataFolder);
         new MockUp<ActiveConfigurationContext>() {
             @mockit.Mock

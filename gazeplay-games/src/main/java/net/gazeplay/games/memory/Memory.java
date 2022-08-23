@@ -55,6 +55,7 @@ public class Memory implements GameLifeCycle {
 
     private final Stats stats;
 
+
     private ImageLibrary imageLibrary;
 
     /*
@@ -105,7 +106,7 @@ public class Memory implements GameLifeCycle {
         this.gameContext.startTimeLimiter();
 
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
 
         if (gameType == MemoryGameType.LETTERS) {
 
@@ -244,8 +245,9 @@ public class Memory implements GameLifeCycle {
 
         final int fixationlength = config.getFixationLength();
 
-        if (getNbLines() > 2)
+        if (getNbLines() > 2) {
             minHeight = 10;
+        }
 
         for (int currentLineIndex = 0; currentLineIndex < nbLines; currentLineIndex++) {
             for (int currentColumnIndex = 0; currentColumnIndex < nbColumns; currentColumnIndex++) {

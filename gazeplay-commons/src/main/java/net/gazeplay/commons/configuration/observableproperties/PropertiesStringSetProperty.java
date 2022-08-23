@@ -48,15 +48,11 @@ public abstract class PropertiesStringSetProperty extends SetPropertyBase<String
 
     protected abstract String getProperty(String propertyName);
 
+    @SuppressWarnings("unchecked")
     @Override
     public ObservableSet<String> get() {
-        final SetChangeListener<String> observer = new SetChangeListener<>() {
-            @Override
-            public void onChanged(final Change<? extends String> change) {
-                PropertiesStringSetProperty.this.set((ObservableSet<String>) change.getSet());
-            }
-        };
-        //
+        final SetChangeListener<String> observer = change -> PropertiesStringSetProperty.this.set((ObservableSet<String>) change.getSet());
+
         final String propertyValue = getProperty(propertyName);
         if (propertyValue == null) {
             final ObservableSetWrapper<String> result = new ObservableSetWrapper<>(new LinkedHashSet<>(defaultValue));

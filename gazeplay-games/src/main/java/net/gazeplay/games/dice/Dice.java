@@ -44,7 +44,7 @@ public class Dice implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
         final Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.configuration = gameContext.getConfiguration();
         active = true;
@@ -143,7 +143,6 @@ public class Dice implements GameLifeCycle {
                 for (int i = 0; i < diceRollers.size(); i++) {
                     rolls[i] = diceRollers.get(i).roll(i == 0 ? action -> addUp() : null);
                 }
-                stats.incrementNumberOfGoalsReached();
             }
         }, gameContext);
         this.gameContext.getGazeDeviceManager().addEventFilter(rollButton);

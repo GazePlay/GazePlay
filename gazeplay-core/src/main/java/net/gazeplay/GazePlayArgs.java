@@ -11,20 +11,19 @@ import java.util.Scanner;
 @Component
 public class GazePlayArgs {
 
-    public static String returnArgs(){
+    public static String returnArgs() {
 
         String os = System.getProperty("os.name").toLowerCase();
         String data = "";
 
         try {
             File myFile = null;
-            if (os.contains("nux") || os.contains("mac")){
+            if (os.contains("nux") || os.contains("mac")) {
                 myFile = new File("argsGazeplay.txt");
-            }else if (os.contains("win")){
+            } else if (os.contains("win")) {
                 String userName = System.getProperty("user.name");
                 myFile = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt");
-            }
-            else {
+            } else {
                 log.info("Os non reconnu !");
             }
 

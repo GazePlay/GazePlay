@@ -43,7 +43,7 @@ public class Order implements GameLifeCycle {
         //this.gameContext.startScoreLimiter();
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
     }
 
     public Order(IGameContext gameContext, int nbTarget, Stats stats, double gameSeed) {

@@ -85,7 +85,7 @@ public class Horses implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
         this.gameVersion = gameVersion;
         this.nbPlayers = nbPlayers;
         diceContainer = new StackPane();
@@ -249,10 +249,12 @@ public class Horses implements GameLifeCycle {
         rollButton.setLayoutX(dimensions.getWidth() / 2 - rollImage.getFitWidth() / 2);
         rollButton.setLayoutY(dimensions.getHeight() / 2 - rollImage.getFitHeight() / 2);
         rollButton.setImage(rollImage);
-        if (foregroundLayer.getChildren().contains(diceContainer))
+        if (foregroundLayer.getChildren().contains(diceContainer)) {
             foregroundLayer.getChildren().remove(diceContainer);
-        if (!foregroundLayer.getChildren().contains(rollButton))
+        }
+        if (!foregroundLayer.getChildren().contains(rollButton)) {
             foregroundLayer.getChildren().add(rollButton);
+        }
     }
 
     /**

@@ -16,6 +16,7 @@ public class Ninja implements GameLifeCycle {
 
     private final Stats stats;
 
+
     private Target portrait;
 
     private final NinjaGameVariant gameVariant;
@@ -30,7 +31,7 @@ public class Ninja implements GameLifeCycle {
         this.stats = stats;
         this.gameVariant = gameVariant;
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
         this.variantType = gameVariant.getLabel();
     }
 
@@ -48,8 +49,9 @@ public class Ninja implements GameLifeCycle {
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
         randomPositionGenerator.setRandomGenerator(randomGenerator);
 
-        portrait = new Target(gameContext, randomPositionGenerator, stats,
-            Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator,stats.getRoundsDurationReport(),stats.getLevelsReport(), 3000);
+        portrait = new Target(gameContext, randomPositionGenerator, stats, Portrait.createImageLibrary(randomGenerator),
+            gameVariant, this, randomGenerator, stats.getRoundsDurationReport(), stats.getLevelsReport(),
+            3000);
         gameContext.setLimiterAvailable();
         gameContext.getChildren().add(portrait);
         stats.notifyNewRoundReady();

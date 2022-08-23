@@ -1,112 +1,261 @@
 {
-	"$schema": "https://json-schema.org/draft-07/schema",
-    "title": "ReplayingGameJsonSchema",
-    "description": "A data for replaying games",
-    "type": "object",
-    "properties": {
-        "gameSeed": {
-            "description": "The unique game seed",
-            "type": "number"
-        },
-        "gameName": {
-            "description": "Name of the game",
-            "type": "string"
-        },
-        "gameVariant": {
-            "description": "Variant of the game",
-            "type": [ "string", "null" ]
-        },
-        "gameStartedTime": {
-            "type": "number"
-        },
-        "screenAspectRatio": {
-          "type": "string"
-        },
-        "sceneAspectRatio": {
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "title": "ReplayingGameJsonSchema",
+  "description": "A data for replaying games",
+  "type": "object",
+  "properties": {
+    "gameSeed": {
+      "description": "The unique game seed",
+      "type": "number"
+    },
+    "gameName": {
+      "description": "Name of the game",
+      "type": "string"
+    },
+    "gameVariant": {
+      "description": "Variant of the game",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "gameStartedTime": {
+      "description": "Started time of the game",
+      "type": "number"
+    },
+    "screenAspectRatio": {
+      "type": "string"
+    },
+    "sceneAspectRatio": {
+      "type": "number"
+    },
+    "nbGoalsReached": {
+      "type": "number"
+    },
+    "nbGoalsToReach": {
+      "type": "number"
+    },
+    "nbUncountedGoalsReached": {
+      "type": "number"
+    },
+    "questionLength": {
+      "type": "number"
+    },
+    "questionReaskedOnFail":{
+      "type": "boolean"
+    },
+    "limiterScoreEnabled": {
+      "type": "boolean"
+    },
+    "limiterScore": {
+      "type": "number"
+    },
+    "limiterTimeEnabled": {
+      "type": "boolean"
+    },
+    "limiterTime": {
+      "type": "number"
+    },
+    "elementSize": {
+      "type": "number"
+    },
+    "animationSpeedRatio": {
+      "type": "number"
+    },
+    "fixationLength": {
+      "type": "number"
+    },
+    "lifeCycle": {
+      "type": "object",
+      "properties": {
+        "startTime": {
           "type": "number"
         },
-        "statsNbGoalsReached": {
-            "type": "number"
-        },
-        "statsNbGoalsToReach": {
-            "type": "number"
-        },
-        "statsNbUnCountedGoalsReached": {
-            "type": "number"
-        },
-        "lifeCycle": {
-        	"type": "object",
-        	"properties": {
-            	"startTime": {
-		            "type": "number"
-		        },
-		        "stopTime": {
-		            "type": "number"
-		        }
-        	},
-        	"required": ["startTime", "stopTime"]     
-        },
-        "roundsDurationReport": {
-        	"type": "object",
-        	"properties": {
-            	"totalAdditiveDuration": {
-		            "type": "number"
-		        },
-		        "durationBetweenGoals": {
-		            "type": "array",
-            		"items": {
-            			"type": "number"
-            		}
-		        }
-        	}    
-        },
-        "fixationSequence": {
-            "type": "array",
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "timeGaze": {
-                    "type": "number"
-                  },
-                  "gazeDuration": {
-                    "type": "number"
-                  },
-                  "x": {
-                    "type": "number"
-                  },
-                  "y": {
-                    "type": "number"
-                  }
-                },
-                "required": [
-                  "timeGaze",
-                  "gazeDuration",
-                  "x",
-                  "y"
-                ]
-              }
-            }         
-        },
-        "coordinatesAndTimeStamp": {
-            "type": "array",
-            "items": {
-            	"type": "object",
-            	"properties": {
-	            	"X": {
-			            "type": "number"
-			        },
-			        "Y": {
-			            "type": "number"
-			        },
-			        "time": {
-			            "type": "number"
-			        }
-            	},
-            	"required": ["X", "Y", "time"]
-            }         
+        "stopTime": {
+          "type": "number"
         }
+      },
+      "required": [
+        "startTime",
+        "stopTime"
+      ]
     },
-	"required": ["gameSeed", "gameName", "coordinatesAndTimeStamp"]
+    "roundsDurationReport": {
+      "type": "object",
+      "properties": {
+        "totalAdditiveDuration": {
+          "type": "number"
+        },
+        "durationBetweenGoals": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "fixationSequence": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "time": {
+              "type": "number"
+            },
+            "duration": {
+              "type": "number"
+            },
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "time",
+            "duration",
+            "x",
+            "y"
+          ]
+        }
+      }
+    },
+    "movementHistory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "interval": {
+            "type": "number"
+          },
+          "start": {
+            "type": "number"
+          },
+          "event": {
+            "type": "string"
+          },
+          "dist": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "x",
+          "y",
+          "interval",
+          "start",
+          "event",
+          "dist"
+        ]
+      }
+    },
+    "heatMap": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        }
+      }
+    },
+    "aoiList":  {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "pts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                },
+                "interval": {
+                  "type": "number"
+                },
+                "start": {
+                  "type": "number"
+                },
+                "event": {
+                  "type": "string"
+                },
+                "dist": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y",
+                "interval",
+                "start",
+                "event",
+                "dist"
+              ]
+            }
+          },
+          "fix": {
+            "type": "number"
+          },
+          "centerX": {
+            "type": "number"
+          },
+          "centerY": {
+            "type": "number"
+          },
+          "convexPts": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "startIdx": {
+            "type": "number"
+          },
+          "endIdx": {
+            "type": "number"
+          },
+          "time": {
+            "type": "number"
+          },
+          "ttff": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "pts",
+          "fix",
+          "centerX",
+          "centerY",
+          "convexPts",
+          "startIdx",
+          "endIdx",
+          "time",
+          "ttff"
+        ]
+      }
+    }
+  },
+  "required": [
+    "gameSeed",
+    "gameName",
+    "gameStartedTime",
+    "movementHistory",
+    "aoiList"
+  ]
 }

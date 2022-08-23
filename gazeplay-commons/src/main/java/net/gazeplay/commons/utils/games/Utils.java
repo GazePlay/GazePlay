@@ -23,6 +23,7 @@ public class Utils {
 
     /**
      * Gets an InputStream to the provided resource.
+     *
      * @param resource Path to the resource
      * @return The InputStream of the resource
      */
@@ -34,15 +35,16 @@ public class Utils {
     /**
      * Provides the default GazePlay file directory. By default this will be {user.home}/GazePlay/files,
      * but can be overridden by the user in the app or in the GazePlay.properties file.
+     *
      * @return GazePlay files directory
      */
     public static String getFilesFolder() {
         final Configuration config = ActiveConfigurationContext.getInstance();
         final String filesFolder = config.getFileDir();
 
-        if (new File(filesFolder).mkdirs()){
+        if (new File(filesFolder).mkdirs()) {
             log.info("Folder files created !");
-        }else {
+        } else {
             log.info("Folder files already created !");
         }
 
@@ -66,29 +68,29 @@ public class Utils {
         return new File(baseImagesDirectory, subdirectoryName);
     }
 
-    public static void createFolder(File baseImagesDirectory, String subdirectoryName){
-        if (baseImagesDirectory.mkdirs()){
+    public static void createFolder(File baseImagesDirectory, String subdirectoryName) {
+        if (baseImagesDirectory.mkdirs()) {
             log.info("Folder images created !");
-        }else {
+        } else {
             log.info("Folder images already created !");
         }
 
-        if (new File(getBaseImagesDirectory() + "/" + subdirectoryName).mkdirs()){
+        if (new File(getBaseImagesDirectory() + "/" + subdirectoryName).mkdirs()) {
             addImages(subdirectoryName);
             log.info(subdirectoryName + " created !");
-        }else {
+        } else {
             log.info(subdirectoryName + " already created !");
         }
     }
 
-    public static void addImages(String subdirectoryName){
+    public static void addImages(String subdirectoryName) {
         File imagesFolder = new File("gazeplay-commons/src/main/resources/images/");
         List<File> images = List.of(imagesFolder.listFiles());
 
-        for (File image : images){
+        for (File image : images) {
             Path newName = Paths.get(getBaseImagesDirectory() + "/" + subdirectoryName + "/" + image.getName());
             log.info(String.valueOf(newName));
-            try{
+            try {
                 Files.copy(new File(String.valueOf(image)).toPath(), newName, StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -119,8 +121,7 @@ public class Utils {
     }
 
     /**
-     *
-     * @param tf textfield to limit the number of characters
+     * @param tf        textfield to limit the number of characters
      * @param maxLength the max number of characters allowed
      */
     public static void addTextLimiter(final TextField tf, final int maxLength) {

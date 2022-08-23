@@ -1,9 +1,6 @@
 package net.gazeplay;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.Event;
@@ -17,15 +14,14 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
-import net.gazeplay.commons.utils.stats.LifeCycle;
-import net.gazeplay.commons.utils.stats.RoundsDurationReport;
-import net.gazeplay.commons.utils.stats.SavedStatsInfo;
-import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import net.gazeplay.ui.scenes.loading.LoadingContext;
@@ -52,14 +48,13 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class ReplayingGameFromJson {
 
-    private final LinkedList<Point2D> lastGazeCoordinates = new LinkedList<Point2D>();
-    private final LinkedList<Point2D> lastMouseCoordinates = new LinkedList<Point2D>();
-    int numberOfelementToDisplay = 10;
+    private final LinkedList<Point2D> lastGazeCoordinates = new LinkedList<>();
+    private final LinkedList<Point2D> lastMouseCoordinates = new LinkedList<>();
+    int numberOfElementToDisplay = 10;
 
-    private static final ArrayList<String> replayableGameList = new ArrayList<String>(
+    private static final ArrayList<String> replayableGameList = new ArrayList<>(
         Arrays.asList(
-
-            //OK: really small offsets problems
+            //OK: tiny offsets problems
             "Scribble", "Cakes", "Creampie", "WhereIsIt", "WhereIsTheAnimal", "letters",
             "WhereIsTheColor", "WhereIsTheLetter", "WhereIsTheNumber", "WhereIsTheShape", "findodd", "flags",
             "ScratchCard", "Memory", "MemoryLetters", "MemoryNumbers", "OpenMemory", "OpenMemoryLetters",
@@ -67,11 +62,10 @@ public class ReplayingGameFromJson {
             "Horses", "Horses Simplified", "puzzle", "Farm", "Jungle", "Savanna", "CupsBalls",
             "Potions", "VideoPlayer", "VideoGrid", "bottle", "FlowerOfNumbers"
 
-
             // replay OK but the resize of the game itself is bad:
             // "SpotDifference", "MediaPlayer","Paper-Scissors-Stone",
             //"Math101: Addition","Math101: All operations","Math101: Division",
-            //"Math101: Multiplication","Math101: Substraction"
+            //"Math101: Multiplication","Math101: Subtraction"
 
             // Replay offset was really clear here,due to the gameContext.getRoot() instead of gameContext
             // "Colorsss"
@@ -93,7 +87,6 @@ public class ReplayingGameFromJson {
             // arranger le jeu:
             // "Pet",
             // "Room"
-
         )
     );
 
@@ -101,32 +94,25 @@ public class ReplayingGameFromJson {
     private final ApplicationContext applicationContext;
     private GameContext gameContext;
     private final GazePlay gazePlay;
-    private double currentGameSeed;
-    @Getter
-    private String currentGameNameCode;
-    private String currentGameVariant;
+
+    JsonFile json;
+
     private GameSpec selectedGameSpec;
     private IGameVariant gameVariant;
-    private JsonArray coordinatesAndTimeStamp;
-    private ArrayList<LinkedList<FixationPoint>> fixationSequence;
-    private int nbGoalsReached;
-    private int nbGoalsToReach;
-    private int nbUnCountedGoalsReached;
-    private LifeCycle lifeCycle;
-    private RoundsDurationReport roundsDurationReport;
     private SavedStatsInfo savedStatsInfo;
-    private int nextTimeMouse, nextTimeGaze, prevTimeMouse, prevTimeGaze;
-    private double sceneAspectRatio;
 
     private Thread workingThread;
-
     private String fileName;
 
     public ReplayingGameFromJson(GazePlay gazePlay, ApplicationContext applicationContext, List<GameSpec> games) {
-        this.applicationContext = applicationContext;
         this.gazePlay = gazePlay;
+        this.applicationContext = applicationContext;
         this.gameContext = applicationContext.getBean(GameContext.class);
         this.gamesList = games;
+    }
+
+    public String getCurrentGameName() {
+        return json.getGameName();
     }
 
     public static boolean replayIsAllowed(String gameCode) {
@@ -161,27 +147,16 @@ public class ReplayingGameFromJson {
         }
         assert bufferedReader != null;
         Gson gson = new Gson();
-        JsonFile json = gson.fromJson(bufferedReader, JsonFile.class);
-        currentGameSeed = json.getGameSeed();
-        currentGameNameCode = json.getGameName();
-        currentGameVariant = json.getGameVariant();
-        coordinatesAndTimeStamp = json.getCoordinatesAndTimeStamp();
-        fixationSequence = json.getFixationSequence();
-        nbGoalsReached = json.getStatsNbGoalsReached();
-        nbGoalsToReach = json.getStatsNbGoalsToReach();
-        nbUnCountedGoalsReached = json.getStatsNbUnCountedGoalsReached();
-        sceneAspectRatio = json.getSceneAspectRatio();
-        lifeCycle = json.getLifeCycle();
-        roundsDurationReport = json.getRoundsDurationReport();
+        json = gson.fromJson(bufferedReader, JsonFile.class);
+
         String filePrefix = fileName.substring(0, fileName.lastIndexOf("-"));
         final File gazeMetricsMouseFile = new File(filePrefix + "-metricsMouse.png");
         final File gazeMetricsGazeFile = new File(filePrefix + "-metricsGaze.png");
         final File gazeMetricsMouseAndGazeFile = new File(filePrefix + "-metricsMouseAndGaze.png");
-        final File heatMapCsvFile = new File(filePrefix + "-heatmap.csv");
         final File screenShotFile = new File(filePrefix + "-screenshot.png");
         final File colorBandsFile = new File(filePrefix + "-colorBands.png");
-        savedStatsInfo = new SavedStatsInfo(heatMapCsvFile, gazeMetricsMouseFile, gazeMetricsGazeFile, gazeMetricsMouseAndGazeFile, screenShotFile,
-            colorBandsFile, replayDataFile);
+        savedStatsInfo = new SavedStatsInfo(gazeMetricsMouseFile, gazeMetricsGazeFile, gazeMetricsMouseAndGazeFile,
+            screenShotFile, colorBandsFile, replayDataFile);
     }
 
     public String getFileName() {
@@ -203,9 +178,12 @@ public class ReplayingGameFromJson {
         if (fileName == null) {
             return;
         }
+
         double height = gameContext.getCurrentScreenDimensionSupplier().get().getHeight();
         double width = gameContext.getCurrentScreenDimensionSupplier().get().getWidth();
         double screenRatio = height / width;
+
+        double sceneAspectRatio = json.getSceneAspectRatio();
         if (sceneAspectRatio < screenRatio) {
             height = gameContext.getCurrentScreenDimensionSupplier().get().getWidth() * sceneAspectRatio;
         } else {
@@ -221,26 +199,42 @@ public class ReplayingGameFromJson {
         gameContext = applicationContext.getBean(GameContext.class);
         gazePlay.onGameLaunch(gameContext);
         for (GameSpec gameSpec : gamesList) {
-            if (currentGameNameCode.equals(gameSpec.getGameSummary().getNameCode())) {
+            if (json.getGameName().equals(gameSpec.getGameSummary().getNameCode())) {
                 selectedGameSpec = gameSpec;
             }
         }
         for (IGameVariant variant : selectedGameSpec.getGameVariantGenerator().getVariants()) {
-            if (currentGameVariant.equals(variant.toString())) {
+            if (json.getGameVariant().equals(variant.toString())) {
                 gameVariant = variant;
             }
         }
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public void drawLines() {
         if (fileName == null) {
             return;
         }
+
+        Configuration config = ActiveConfigurationContext.getInstance();
+        config.setQuestionLength(json.getQuestionLength());
+        config.setQuestionReaskedOnFail(json.isQuestionReaskedOnFail());
+        config.setLimiterScoreEnabled(json.isLimiterScoreEnabled());
+        config.setLimiterScore(json.getLimiterScore());
+        config.setLimiterTimeEnabled(json.isLimiterTimeEnabled());
+        config.setLimiterTime(json.getLimiterTime());
+        config.setAnimationSpeedRatio(json.getAnimationSpeedRatio());
+        config.setElementSize(json.getElementSize());
+        config.setFixationLength(json.getFixationLength());
+
         getSpecAndVariant();
         IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();
         final Scene scene = gazePlay.getPrimaryScene();
-        final Stats statsSaved = gameLauncher.createSavedStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
-        GameLifeCycle currentGame = gameLauncher.replayGame(gameContext, gameVariant, statsSaved, currentGameSeed);
+        final Stats statsSaved = gameLauncher.createSavedStats(scene,
+            json.getNbGoalsReached(), json.getNbGoalsToReach(), json.getNbUncountedGoalsReached(),
+            json.getLifeCycle(), json.getRoundsDurationReport(), json.getFixationSequence(), json.getMovementHistory(),
+            json.getHeatMap(), json.getAoiList(), savedStatsInfo);
+        GameLifeCycle currentGame = gameLauncher.replayGame(gameContext, gameVariant, statsSaved, json.getGameSeed());
         gameContext.createControlPanel(gazePlay, statsSaved, currentGame, true);
         gameContext.createQuitShortcut(gazePlay, statsSaved, currentGame);
         currentGame.launch();
@@ -261,14 +255,14 @@ public class ReplayingGameFromJson {
 
         workingThread = new Thread(() -> {
             gameContext.getGazeDeviceManager().setInReplayMode(true);
-            drawFixationLines(canvas, coordinatesAndTimeStamp);
+            drawFixationLines(canvas);
             Platform.runLater(() -> exit(statsSaved, currentGame));
         });
         workingThread.start();
     }
 
     private void launchGame(final int width, final int height) {
-        Task task = new Task<Void>() {
+        Task<Void> task = new Task<>() {
             @Override
             public Void call() {
                 gazePlay.getPrimaryScene().setCursor(Cursor.WAIT);
@@ -285,9 +279,7 @@ public class ReplayingGameFromJson {
 
     public ProcessBuilder createBuilder(int height, int width) {
         String javaHome = System.getProperty("java.home");
-        String javaBin = javaHome +
-            File.separator + "bin" +
-            File.separator + "java";
+        String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
         String classpath = System.getProperty("java.class.path");
 
         LinkedList<String> commands = new LinkedList<>(Arrays.asList(javaBin, "-cp", classpath, GazePlayLauncher.class.getName()));
@@ -305,7 +297,6 @@ public class ReplayingGameFromJson {
             commands.addAll(Arrays.asList("--variant", gameVariant.toString()));
         }
 
-
         if (height != 0 && width != 0) {
             commands.addAll(Arrays.asList("--height", "" + height, "--width", "" + width));
         }
@@ -320,61 +311,60 @@ public class ReplayingGameFromJson {
         gameContext.getGazeDeviceManager().setInReplayMode(false);
     }
 
-    private void drawFixationLines(Canvas canvas, JsonArray coordinatesAndTimeStamp) {
+    private void drawFixationLines(Canvas canvas) {
         Dimension2D dim2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        double sceneWidth = dim2D.getWidth();
-        double sceneHeight = dim2D.getHeight();
+        final double sceneWidth = dim2D.getWidth();
+        final double sceneHeight = dim2D.getHeight();
         final GraphicsContext graphics = canvas.getGraphicsContext2D();
-        synchronized (coordinatesAndTimeStamp) {
-            for (JsonElement coordinateAndTimeStamp : coordinatesAndTimeStamp) {
-                JsonObject coordinateAndTimeObj = coordinateAndTimeStamp.getAsJsonObject();
-                String nextEvent = coordinateAndTimeObj.get("event").getAsString();
-                int nextX = (int) (Double.parseDouble(coordinateAndTimeObj.get("X").getAsString()) * sceneWidth);
-                int nextY = (int) (Double.parseDouble(coordinateAndTimeObj.get("Y").getAsString()) * sceneHeight);
-                int delay;
-                if (nextEvent.equals("gaze")) {
-                    prevTimeGaze = nextTimeGaze;
-                    nextTimeGaze = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
-                    delay = nextTimeGaze - prevTimeGaze;
-                    Platform.runLater(() -> {
-                        paint(graphics, canvas, nextX, nextY, "gaze");
-                    });
-                } else {
-                    prevTimeMouse = nextTimeMouse;
-                    nextTimeMouse = Integer.parseInt(coordinateAndTimeObj.get("time").getAsString());
-                    delay = nextTimeMouse - prevTimeMouse;
-                    Platform.runLater(() -> {
-                        paint(graphics, canvas, nextX, nextY, "mouse");
-                    });
-                }
-                try {
-                    TimeUnit.MILLISECONDS.sleep(delay);
-                } catch (InterruptedException e) {
-                    log.info("Game has been interrupted");
-                    break;
-                }
+
+        for (CoordinatesTracker coordinatesTracker : json.getMovementHistory()) {
+            int x = (int) (coordinatesTracker.getX() * sceneWidth);
+            int y = (int) (coordinatesTracker.getY() * sceneHeight);
+            Point2D point = new Point2D(x, y);
+
+            Platform.runLater(() -> paint(graphics, canvas, point, coordinatesTracker.getEvent()));
+
+            try {
+                TimeUnit.MILLISECONDS.sleep(coordinatesTracker.getInterval());
+            } catch (InterruptedException e) {
+                log.info("Game has been interrupted");
+                break;
             }
         }
     }
 
-    public void updateGazeTab(int nextX, int nextY) {
-        while (lastGazeCoordinates.size() >= numberOfelementToDisplay) {
-            lastGazeCoordinates.pop();
+    public void paint(GraphicsContext graphics, Canvas canvas, Point2D point, String event) {
+        if (!gameContext.getChildren().contains(canvas)) {
+            gameContext.getChildren().add(canvas);
         }
-        lastGazeCoordinates.add(new Point2D(nextX, nextY));
+        graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        if (event.equals("gaze")) {
+            updateGazeTab(point);
+        } else { // if (event.equals("mouse")) {
+            updateMouseTab(point);
+        }
+
+        drawOvals(graphics);
+
+        gameContext.getGazeDeviceManager().onSavedMovementsUpdate(point, event);
     }
 
-    public void updateMouseTab(int nextX, int nextY) {
-        while (lastMouseCoordinates.size() >= numberOfelementToDisplay) {
+    public void updateGazeTab(Point2D point) {
+        while (lastGazeCoordinates.size() >= numberOfElementToDisplay) {
+            lastGazeCoordinates.pop();
+        }
+        lastGazeCoordinates.add(point);
+    }
+
+    public void updateMouseTab(Point2D point) {
+        while (lastMouseCoordinates.size() >= numberOfElementToDisplay) {
             lastMouseCoordinates.pop();
         }
-        lastMouseCoordinates.add(new Point2D(nextX, nextY));
-
-
+        lastMouseCoordinates.add(point);
     }
 
     public void drawOvals(GraphicsContext graphics) {
-
         int circleSize = 10;
         if (lastGazeCoordinates.size() > 0) {
             drawReplayLine(graphics, circleSize, Color.LIGHTBLUE, Color.DARKBLUE, lastGazeCoordinates);
@@ -385,7 +375,7 @@ public class ReplayingGameFromJson {
     }
 
     private void drawReplayLine(GraphicsContext graphics, int circleSize, Color strokeColor, Color fillColor, LinkedList<Point2D> lastGazeCoordinates) {
-        Color tempStokeColor = strokeColor;
+        Color tempStokeColor;
         Point2D point;
         graphics.beginPath();
         for (int i = lastGazeCoordinates.size() - 1; i >= 0; i--) {
@@ -409,57 +399,37 @@ public class ReplayingGameFromJson {
         graphics.strokeOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
         graphics.setFill(fillColor);
         graphics.fillOval(point.getX() - circleSize / 2d, point.getY() - circleSize / 2d, circleSize, circleSize);
-
     }
-
-    public void paint(GraphicsContext graphics, Canvas canvas, int nextX, int nextY, String event) {
-        if (!gameContext.getChildren().contains(canvas)) {
-            gameContext.getChildren().add(canvas);
-        }
-
-        graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-        if (event.equals("gaze")) {
-            updateGazeTab(nextX, nextY);
-        } else { // if (event.equals("mouse")) {
-            updateMouseTab(nextX, nextY);
-        }
-
-        drawOvals(graphics);
-
-        Point2D point = new Point2D(nextX, nextY);
-        gameContext.getGazeDeviceManager().onSavedMovementsUpdate(point, event);
-    }
-
 }
 
+
+@Getter
+@AllArgsConstructor
 class JsonFile {
-    @Getter
     private double gameSeed;
-    @Getter
     private String gameName;
-    @Getter
-    private String gameVariantClass;
-    @Getter
     private String gameVariant;
-    @Getter
-    private double gameStartedTime;
-    @Getter
+    private long gameStartedTime;
     private String screenAspectRatio;
-    @Getter
     private double sceneAspectRatio;
-    @Getter
-    private JsonArray coordinatesAndTimeStamp;
-    @Getter
+    private int nbGoalsReached;
+    private int nbGoalsToReach;
+    private int nbUncountedGoalsReached;
+
+    private long questionLength;
+    private boolean questionReaskedOnFail;
+    private boolean limiterScoreEnabled;
+    private int limiterScore;
+    private boolean limiterTimeEnabled;
+    private int limiterTime;
+    private double animationSpeedRatio;
+    private int elementSize;
+    private int fixationLength;
+
     private LifeCycle lifeCycle;
-    @Getter
-    private int statsNbGoalsReached;
-    @Getter
-    private int statsNbGoalsToReach;
-    @Getter
-    private int statsNbUnCountedGoalsReached;
-    @Getter
     private RoundsDurationReport roundsDurationReport;
-    @Getter
     private ArrayList<LinkedList<FixationPoint>> fixationSequence;
+    private ArrayList<CoordinatesTracker> movementHistory;
+    private int[][] heatMap;
+    private ArrayList<AreaOfInterest> aoiList;
 }

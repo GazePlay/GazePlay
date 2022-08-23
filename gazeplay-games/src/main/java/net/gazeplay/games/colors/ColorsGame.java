@@ -70,6 +70,7 @@ public class ColorsGame implements GameLifeCycle {
 
     private final ColorsGamesStats stats;
 
+
     private final Deque<HorizontalZone> horiZones = new ArrayDeque<>();
 
     /**
@@ -212,8 +213,7 @@ public class ColorsGame implements GameLifeCycle {
         buildToolBox(width, height);
 
         // log.info("Toolbox width = {}, height = {}", colorToolBox.getWidth(), colorToolBox.getHeight());
-
-        buildDraw(gameContext.getConfiguration().getColorsDefaultImageProperty().getValue(), width, height);
+        buildDraw(gameContext.getConfiguration().getColorsDefaultImage(), width, height);
 
         colorToolBox.getColorBoxes().forEach(ColorBox::updateHeight);
 
@@ -229,7 +229,7 @@ public class ColorsGame implements GameLifeCycle {
 
     private void buildToolBox(final double width, final double height) {
 
-        this.colorToolBox = new ColorToolBox(this.root, this, gameContext, height/12);
+        this.colorToolBox = new ColorToolBox(this.root, this, gameContext, height / 12);
         this.root.getChildren().add(colorToolBox);
 
         // Add it here so it appears on top of the tool box
@@ -320,13 +320,15 @@ public class ColorsGame implements GameLifeCycle {
 
             log.debug("Drawing image " + imgURL + " cannot be found");
 
-            getGameContext().getConfiguration().getColorsDefaultImageProperty().set(Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE);
+            getGameContext().getConfiguration().setColorsDefaultImage(Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE);
+
             String defaultImgURL;
-            if(defaultImg) {
-                 defaultImgURL= Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE;;
-                defaultImg=false;
+            if (defaultImg) {
+                defaultImgURL = Configuration.DEFAULT_VALUE_COLORS_DEFAULT_IMAGE;
+                defaultImg = false;
+            } else {
+                defaultImgURL = "data/colors/images/" + imageToColor[index];
             }
-            else {defaultImgURL ="data/colors/images/" + imageToColor[index];}
             img = new Image(defaultImgURL);
         }
         return img;

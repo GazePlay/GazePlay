@@ -91,13 +91,12 @@ class GameContextTest {
         new File("file.csv"),
         new File("file.csv"),
         new File("file.csv"),
-        new File("file.csv"),
         new File("file.csv")
     );
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         new MockUp<ActiveConfigurationContext>() {
             @mockit.Mock
             public Configuration getInstance() {

@@ -46,6 +46,7 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private final Stats stats;
 
+
     private final IGameContext gameContext;
 
     private final Instru instru;
@@ -73,7 +74,7 @@ public class Piano extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(this);
         jukebox = new Jukebox(gameContext);
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
     }
 
     public Piano(final IGameContext gameContext, final Stats stats, double gameSeed) {

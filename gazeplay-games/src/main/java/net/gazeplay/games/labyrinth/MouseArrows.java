@@ -148,8 +148,9 @@ public abstract class MouseArrows extends Mouse {
 
                 Timeline timeline = new Timeline();
                 timeline.play();
-                if (timelineProgressBar != null)
+                if (timelineProgressBar != null) {
                     timelineProgressBar.stop();
+                }
 
                 indicatorUp.setOpacity(0);
                 indicatorUp.setProgress(0);
@@ -186,8 +187,9 @@ public abstract class MouseArrows extends Mouse {
 
                 Timeline timeline = new Timeline();
                 timeline.play();
-                if (timelineProgressBar != null)
+                if (timelineProgressBar != null) {
                     timelineProgressBar.stop();
+                }
 
                 indicatorDown.setOpacity(0);
                 indicatorDown.setProgress(0);
@@ -222,8 +224,9 @@ public abstract class MouseArrows extends Mouse {
 
                 Timeline timeline = new Timeline();
                 timeline.play();
-                if (timelineProgressBar != null)
+                if (timelineProgressBar != null) {
                     timelineProgressBar.stop();
+                }
 
                 indicatorRight.setOpacity(0);
                 indicatorRight.setProgress(0);
@@ -259,8 +262,9 @@ public abstract class MouseArrows extends Mouse {
 
                 Timeline timeline = new Timeline();
                 timeline.play();
-                if (timelineProgressBar != null)
+                if (timelineProgressBar != null) {
                     timelineProgressBar.stop();
+                }
 
                 indicatorLeft.setOpacity(0);
                 indicatorLeft.setProgress(0);

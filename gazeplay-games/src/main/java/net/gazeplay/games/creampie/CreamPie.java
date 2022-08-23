@@ -28,7 +28,7 @@ public class CreamPie implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
 
         final ImageLibrary imageLibrary = Portrait.createImageLibrary(randomGenerator);
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
@@ -54,7 +54,6 @@ public class CreamPie implements GameLifeCycle {
         hand = new Hand();
 
         target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this);
-
     }
 
     @Override

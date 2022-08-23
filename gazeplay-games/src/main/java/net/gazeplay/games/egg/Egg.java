@@ -52,9 +52,8 @@ public class Egg extends Parent {
 
     private final ReplayablePseudoRandom random;
 
-    public Egg(final IGameContext gameContext, final Stats stats,
-               final EggGame gameInstance, final int fixationlength, final int numberOfTurn, final String type) {
-
+    public Egg(final IGameContext gameContext, final Stats stats, final EggGame gameInstance, final int fixationlength,
+               final int numberOfTurn, final String type) {
         this.totalNumberOfTurns = numberOfTurn;
         this.gameType = type;
 

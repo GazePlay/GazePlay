@@ -57,7 +57,7 @@ public class OpinionsGame implements GameLifeCycle {
         this.configuration = gameContext.getConfiguration();
 
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setCurrentGameSeed(randomGenerator.getSeed());
 
         thumbImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions/thumbs"), randomGenerator);
         this.backgroundImage = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("opinions"), randomGenerator);
@@ -67,7 +67,6 @@ public class OpinionsGame implements GameLifeCycle {
         gameContext.getChildren().add(foregroundLayer);
 
         this.type = type;
-
     }
 
     public OpinionsGame(final IGameContext gameContext, final OpinionsGameStats stats, final OpinionsGameVariant type, double gameSeed) {
@@ -87,12 +86,10 @@ public class OpinionsGame implements GameLifeCycle {
         gameContext.getChildren().add(foregroundLayer);
 
         this.type = type;
-
     }
 
     @Override
     public void launch() {
-
         this.backgroundLayer.getChildren().clear();
         this.middleLayer.getChildren().clear();
 
@@ -112,9 +109,9 @@ public class OpinionsGame implements GameLifeCycle {
         old_picture = current_picture;
 
         EventHandler<Event> event = event1 -> {
-             while (old_picture.getUrl().equals(current_picture.getUrl()) && !updateScore()) {
-                    current_picture = backgroundImage.pickRandomImage();
-             }
+            while (old_picture.getUrl().equals(current_picture.getUrl()) && !updateScore()) {
+                current_picture = backgroundImage.pickRandomImage();
+            }
             background.setImage(current_picture);
             old_picture = current_picture;
             stats.incrementNumberOfGoalsReached();
@@ -196,7 +193,7 @@ public class OpinionsGame implements GameLifeCycle {
             middleLayer.getChildren().clear();
             score = 0;
         }
-        return  end;
+        return end;
     }
 
     private void createAddButtonOpinions(ProgressButton button, String link, double setLayoutX, double setLayoutY) {

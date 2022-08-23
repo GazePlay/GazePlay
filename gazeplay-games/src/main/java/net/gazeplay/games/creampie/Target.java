@@ -38,6 +38,7 @@ public class Target extends ProgressPortrait {
 
     private final Stats stats;
 
+
     private final ImageLibrary imageLibrary;
 
     private final ArrayList<TargetAOI> targetAOIList;
@@ -56,7 +57,6 @@ public class Target extends ProgressPortrait {
 
     public Target(final RandomPositionGenerator randomPositionGenerator, final Hand hand, final Stats stats, final IGameContext gameContext,
                   final ImageLibrary imageLibrary, CreamPie gameInstance) {
-
         super(gameContext.getConfiguration().getElementSize());
         this.randomPositionGenerator = randomPositionGenerator;
         this.hand = hand;
@@ -100,7 +100,6 @@ public class Target extends ProgressPortrait {
     }
 
     private void enter() {
-
         stats.incrementNumberOfGoalsReached();
         gameContext.updateScore(stats, gameInstance);
         this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);

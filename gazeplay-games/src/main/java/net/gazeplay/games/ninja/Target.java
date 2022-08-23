@@ -38,6 +38,7 @@ public class Target extends ProgressPortrait {
 
     private final Stats stats;
 
+
     private final List<Portrait> miniBallsPortraits;
 
     private final ImageLibrary imageLibrary;
@@ -65,7 +66,9 @@ public class Target extends ProgressPortrait {
 
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
-                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance, final ReplayablePseudoRandom randomGenerator,final RoundsDurationReport roundsDurationReport, LevelsReport levelsReport,  int length) {
+                  final ImageLibrary imageLibrary, final NinjaGameVariant gameVariant, final Ninja gameInstance,
+                  final ReplayablePseudoRandom randomGenerator, final RoundsDurationReport roundsDurationReport,
+                  LevelsReport levelsReport, int length) {
         super(gameContext.getConfiguration().getElementSize());
 
         this.gameInstance = gameInstance;
@@ -163,12 +166,14 @@ public class Target extends ProgressPortrait {
             log.debug("length = {}", length);
             log.debug("lengthR = {}, ratio = {}, distance = {}", lengthR, ratio, distance);
 
-            if (ratio != 0)
+            if (ratio != 0) {
                 finalLength = lengthR;
-            else
+            } else {
                 finalLength = (int) distance;
-        } else
+            }
+        } else {
             finalLength = length;
+        }
         final TranslateTransition translation = new TranslateTransition(
             new Duration(finalLength), this);
         translation.setByX(-this.getLayoutX() + newPosition.getX());
@@ -244,14 +249,18 @@ public class Target extends ProgressPortrait {
                 if (sizeOfList % 3 == 0 && sizeOfList != 0) {
                     for (int i = 0; i < 3; i++) {
                         log.debug("DurationBetweenGoals.get(sizeOfList - 1 - i) = {}", listOfDurationBetweenGoals.get(sizeOfList - 1 - i));
-                        if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) <= 1000) compare++;
-                        if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) >= 2000) compare--;
+                        if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) <= 1000) {
+                            compare++;
+                        }
+                        if (listOfDurationBetweenGoals.get(sizeOfList - 1 - i) >= 2000) {
+                            compare--;
+                        }
 
                     }
-                    if (compare == 3 && length > 600){
+                    if (compare == 3 && length > 600) {
                         length -= 400;
                     }
-                    if (compare == -3 && length < 11800){
+                    if (compare == -3 && length < 11800) {
                         length += 400;
                     }
                 }
@@ -324,7 +333,6 @@ public class Target extends ProgressPortrait {
     }
 
     private void enter(final Event e) {
-
         stats.incrementNumberOfGoalsReached();
 
         gameContext.updateScore(stats, gameInstance);

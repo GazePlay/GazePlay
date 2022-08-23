@@ -53,13 +53,14 @@ public class HeatMap {
     private final double opacity;
 
     /**
-     * Custom colors constructor, builds a heatmap from the given data, by interpolating the values through the given
+     * Custom colors' constructor, builds a heatmap from the given data, by interpolating the values through the given
      * colors.
      *
      * @param data   monitor data
      * @param colors custom colors for the heatmap, must be on order from minimum to maximum.
      */
-    public HeatMap(final double[][] data, final double opacity, final List<Color> colors) {
+    @SuppressWarnings("SuspiciousNameCombination")
+    public HeatMap(final int[][] data, final double opacity, final List<Color> colors) {
 
         this.image = new WritableImage(data[0].length, data.length);
         this.colors = colors;
@@ -68,7 +69,7 @@ public class HeatMap {
         // Computing max and min values
         minValue = Double.MAX_VALUE;
         maxValue = Double.MIN_VALUE;
-        for (final double[] datum : data) {
+        for (final int[] datum : data) {
             for (final double v : datum) {
                 if (v > maxValue) {
                     maxValue = v;
@@ -102,7 +103,7 @@ public class HeatMap {
             double compValue = minValue + subdivisionValue;
             int i = 0; // Once out of the loop, will be the index of the starting color of the interpolation
             while (i < colors.size() - 2 && value >= compValue) { // Finding the right subdivision, in order to get the
-                // colors between which the values is located
+                // colors between which the values are located
                 i++;
                 compValue += subdivisionValue;
             }

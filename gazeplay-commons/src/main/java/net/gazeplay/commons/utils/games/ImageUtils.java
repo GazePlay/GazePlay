@@ -17,6 +17,7 @@ public class ImageUtils {
     /**
      * Creates a new LazyImageLibrary for the given directory, and a fallback library containing
      * the default images from resources.
+     *
      * @param directoryFile The directory in which to search for images.
      * @return LazyImageLibrary with a Default fallback.
      */
@@ -26,7 +27,8 @@ public class ImageUtils {
 
     /**
      * Creates a new LazyImageLibrary for the given directory, with a fallback directory provided as well.
-     * @param directoryFile Primary directory to search within.
+     *
+     * @param directoryFile        Primary directory to search within.
      * @param defaultDirectoryFile Default, or fallback, directory to search within.
      * @return LazyImageLibrary with a fallback LazyImageLibrary.
      */
