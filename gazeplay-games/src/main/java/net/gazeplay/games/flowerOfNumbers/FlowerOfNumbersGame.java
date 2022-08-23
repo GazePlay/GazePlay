@@ -264,6 +264,7 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
             timeline.setOnFinished(timelineEvent -> {
                 newButton.layoutXProperty().bind(widthProperty.multiply(newX).subtract(newView.fitWidthProperty().divide(2)));
                 newButton.layoutYProperty().bind(heightProperty.multiply(newY).subtract(newView.fitHeightProperty().divide(2)));
+                stats.takeScreenShot();
 
                 checkIfPetalIsComplete(petal);
                 if (!checkIfFlowerIsComplete(false, true)) {
@@ -279,6 +280,7 @@ public class FlowerOfNumbersGame implements GameLifeCycle {
 
                         gameContext.getGazeDeviceManager().removeEventFilter(newButton);
                         gameContext.getChildren().remove(newButton);
+                        stats.takeScreenShot();
                     }, gameContext);
                     gameContext.getGazeDeviceManager().addEventFilter(newButton);
                     newButton.active();
