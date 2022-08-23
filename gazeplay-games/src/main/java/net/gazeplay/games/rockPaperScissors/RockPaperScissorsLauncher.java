@@ -21,13 +21,13 @@ public class RockPaperScissorsLauncher implements IGameLauncher<RockPaperScissor
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant, RockPaperScissorsStats stats) {
-        return new RockPaperScissorsGame(gameContext, stats);
+    public RockPaperScissorsStats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+        return new RockPaperScissorsStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 
     @Override
-    public RockPaperScissorsStats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
-        return new RockPaperScissorsStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+    public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant, RockPaperScissorsStats stats) {
+        return new RockPaperScissorsGame(gameContext, stats);
     }
 
     @Override
