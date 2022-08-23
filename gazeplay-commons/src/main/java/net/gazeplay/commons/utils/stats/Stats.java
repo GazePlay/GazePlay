@@ -373,10 +373,12 @@ public class Stats implements GazeMotionListener {
         this.roundsDurationReport.printLengthBetweenGoalsToString(out);
     }
 
-    void takeScreenShot() {
-        gameScreenShot = gameContextScene.snapshot(null);
+    public void takeScreenShot() {
+        if (!inReplayMode) {
+            gameScreenShot = gameContextScene.snapshot(null);
+        }
     }
-
+    
     /* NUMBER OF GOALS */
 
     public void incrementNumberOfGoalsToReach() {

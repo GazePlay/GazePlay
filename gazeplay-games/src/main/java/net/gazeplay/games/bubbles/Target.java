@@ -120,7 +120,7 @@ public class Target extends ProgressPortrait {
     }
 
     private EventHandler<Event> buildEvent() {
-        return e -> enter(e);
+        return this::enter;
     }
 
     private List<Circle> buildFragments(final BubbleType bubbleType) {
@@ -148,12 +148,12 @@ public class Target extends ProgressPortrait {
     }
 
     public void explose() {
+        stats.takeScreenShot();
 
         final Timeline goToCenterTimeline = new Timeline();
         final Timeline timeline = new Timeline();
 
         for (int i = 0; i < nbFragments; i++) {
-
             final Circle fragment = fragments.get(i);
 
             Position curentPosition = getCurrentCenterPositionWithTranslation();
@@ -284,9 +284,7 @@ public class Target extends ProgressPortrait {
         }
 
         if (this.gameVariant != BubblesGameVariant.FIX) {
-            timeline.setOnFinished(e -> {
-                moveTarget();
-            });
+            timeline.setOnFinished(e -> moveTarget());
         }
 
         setLayoutX(centerX);
