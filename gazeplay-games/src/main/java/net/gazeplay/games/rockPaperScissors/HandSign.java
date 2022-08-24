@@ -1,5 +1,7 @@
 package net.gazeplay.games.rockPaperScissors;
 
+import javafx.scene.image.Image;
+
 public enum HandSign {
     ROCK, PAPER, SCISSORS;
 
@@ -31,8 +33,8 @@ public enum HandSign {
         };
     }
 
-    public String getImagePath() {
-        return "data/rockPaperScissors/" + this + ".png";
+    public Image getImage() {
+        return new Image("data/rockPaperScissors/" + this + ".png");
     }
 
     @Override

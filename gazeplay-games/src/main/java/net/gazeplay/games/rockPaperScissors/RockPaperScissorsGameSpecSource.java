@@ -13,6 +13,6 @@ public class RockPaperScissorsGameSpecSource implements GameSpecSource {
             GameSummary.builder().nameCode("RockPaperScissors").gameThumbnail("data/Thumbnails/rockPaperScissors.png")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS).build(),
-            new RockPaperScissorsLauncher());
+            new RockPaperScissorsGameVariantGenerator(), new RockPaperScissorsLauncher());
     }
 }

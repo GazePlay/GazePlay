@@ -2,22 +2,28 @@ package net.gazeplay.games.rockPaperScissors;
 
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.multilinguism.Multilinguism;
+import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.components.ProgressButton;
 
 @Slf4j
@@ -25,23 +31,23 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
 
     private final IGameContext gameContext;
     private final RockPaperScissorsStats stats;
+    private final Configuration configuration;
+    private final Multilinguism multilinguism;
     private final ReplayablePseudoRandom random;
 
     private final ReadOnlyDoubleProperty widthProperty;
     private final ReadOnlyDoubleProperty heightProperty;
 
-    private final Group layout;
+    private final IntegerProperty playerScore;
+    private final IntegerProperty opponentScore;
+    private final ObjectProperty<Image> opponentImage;
 
-    private int playerScore;
-    private int opponentScore;
-    private final StringProperty playerScoreTextProperty;
-    private final StringProperty opponentScoreTextProperty;
+    private final Group layout;
+    private final ProgressButton rockButton;
+    private final ProgressButton paperButton;
+    private final ProgressButton scissorsButton;
 
     private HandSign opponentHandSign;
-    private final ObjectProperty<Image> opponentImgProperty;
-    private final ProgressButton rock;
-    private final ProgressButton paper;
-    private final ProgressButton scissors;
 
     public RockPaperScissorsGame(final IGameContext gameContext, final RockPaperScissorsStats stats) {
         this(gameContext, stats, -1);
@@ -50,6 +56,8 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
     public RockPaperScissorsGame(final IGameContext gameContext, final RockPaperScissorsStats stats, double gameSeed) {
         this.gameContext = gameContext;
         this.stats = stats;
+        this.configuration = gameContext.getConfiguration();
+        this.multilinguism = MultilinguismFactory.getSingleton();
 
         if (gameSeed < 0) {
             this.random = new ReplayablePseudoRandom();
@@ -61,6 +69,10 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         widthProperty = gameContext.getRoot().widthProperty();
         heightProperty = gameContext.getRoot().heightProperty();
 
+        playerScore = new SimpleIntegerProperty(0);
+        opponentScore = new SimpleIntegerProperty(0);
+        opponentImage = new SimpleObjectProperty<>();
+
         layout = new Group();
 
         final Rectangle background = new Rectangle(0, 0, 10, 10);
@@ -69,51 +81,34 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         background.widthProperty().bind(widthProperty);
         background.heightProperty().bind(heightProperty);
 
-        playerScore = 0;
-        opponentScore = 0;
+        final GridPane textsGridPane = createTextsGridPane();
 
-        final Text playerScoreText = new Text(0, 0, "Your score: " + playerScore);
-        playerScoreText.setFill(Color.BLACK);
-        playerScoreText.setTextAlignment(TextAlignment.LEFT);
-        playerScoreText.setFont(new Font(50));
-
-        final Text opponentScoreText = new Text(0, 0, "Opponent score: " + playerScore);
-        opponentScoreText.layoutXProperty().bind(widthProperty.subtract(opponentScoreText.wrappingWidthProperty()));
-        opponentScoreText.setFill(Color.BLACK);
-        opponentScoreText.setTextAlignment(TextAlignment.RIGHT);
-        opponentScoreText.setFont(new Font(50));
-
-        final Image opponentImg = new Image(HandSign.ROCK.getImagePath());
-        final ImageView opponentView = new ImageView(opponentImg);
+        final Image image = HandSign.ROCK.getImage();
+        final ImageView opponentView = new ImageView(image);
         final ProgressButton opponentButton = new ProgressButton(false);
         opponentButton.getButton().setVisible(false);
         opponentButton.setImage(opponentView);
+        opponentView.imageProperty().bind(opponentImage);
         opponentView.fitWidthProperty().bind(widthProperty.divide(6));
-        opponentView.fitHeightProperty().bind(widthProperty.divide(6).multiply(opponentImg.getHeight()).divide(opponentImg.getWidth()));
+        opponentView.fitHeightProperty().bind(widthProperty.divide(6).multiply(image.getHeight()).divide(image.getWidth()));
         opponentButton.layoutXProperty().bind(widthProperty.divide(2).subtract(opponentView.fitWidthProperty().divide(2)));
         opponentButton.layoutYProperty().bind(heightProperty.divide(4).subtract(opponentView.fitHeightProperty().divide(2)));
-        final DoubleProperty minSizeProperty = opponentImg.getWidth() <= opponentImg.getHeight() ? opponentView.fitWidthProperty() : opponentView.fitHeightProperty();
-        opponentButton.getButton().radiusProperty().bind(minSizeProperty.divide(2));
 
-        rock = createRockPaperScissorsProgressButton(HandSign.ROCK);
-        paper = createRockPaperScissorsProgressButton(HandSign.PAPER);
-        scissors = createRockPaperScissorsProgressButton(HandSign.SCISSORS);
+        rockButton = createRockPaperScissorsProgressButton(HandSign.ROCK);
+        paperButton = createRockPaperScissorsProgressButton(HandSign.PAPER);
+        scissorsButton = createRockPaperScissorsProgressButton(HandSign.SCISSORS);
 
-        layout.getChildren().addAll(background, playerScoreText, opponentScoreText, opponentButton, rock, paper, scissors);
-
-        playerScoreTextProperty = playerScoreText.textProperty();
-        opponentScoreTextProperty = opponentScoreText.textProperty();
-        opponentImgProperty = opponentView.imageProperty();
+        layout.getChildren().addAll(background, textsGridPane, opponentButton, rockButton, paperButton, scissorsButton);
     }
 
     @Override
     public void launch() {
         opponentHandSign = HandSign.values()[random.nextInt(HandSign.values().length)];
-        opponentImgProperty.setValue(new Image(opponentHandSign.getImagePath()));
+        opponentImage.setValue(opponentHandSign.getImage());
 
-        rock.active();
-        paper.active();
-        scissors.active();
+        rockButton.active();
+        paperButton.active();
+        scissorsButton.active();
 
         gameContext.getChildren().add(layout);
 
@@ -124,20 +119,20 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
     }
 
     private ProgressButton createRockPaperScissorsProgressButton(HandSign handSign) {
-        Image img = new Image(handSign.getImagePath());
-        ImageView view = new ImageView(img);
+        Image image = handSign.getImage();
+        ImageView view = new ImageView(image);
 
         ProgressButton button = new ProgressButton(false);
         button.getButton().setVisible(false);
         button.setImage(view);
 
         view.fitWidthProperty().bind(widthProperty.divide(6));
-        view.fitHeightProperty().bind(widthProperty.divide(6).multiply(img.getHeight()).divide(img.getWidth()));
+        view.fitHeightProperty().bind(widthProperty.divide(6).multiply(image.getHeight()).divide(image.getWidth()));
         button.layoutXProperty().bind(widthProperty.multiply(handSign.getPosX()).subtract(view.fitWidthProperty().divide(2)));
         button.layoutYProperty().bind(heightProperty.multiply(3.0 / 4.0).subtract(view.fitHeightProperty().divide(2)));
 
-        final DoubleProperty minSizeProperty = img.getWidth() <= img.getHeight() ? view.fitWidthProperty() : view.fitHeightProperty();
-        button.getButton().radiusProperty().bind(minSizeProperty.divide(2));
+        final DoubleProperty minSizeProperty = image.getWidth() <= image.getHeight() ? view.fitWidthProperty() : view.fitHeightProperty();
+        button.getButton().radiusProperty().bind(minSizeProperty.divide(3));
 
         button.assignIndicatorUpdatable(event -> {
             if (handSign.figth(opponentHandSign) >= 1) {
@@ -152,17 +147,78 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         return button;
     }
 
+    private GridPane createTextsGridPane() {
+        final String lang = configuration.getLanguage();
+        final String userName = configuration.getUserName();
+
+        final String bestOf = "BO3";
+
+        final String playoffString = multilinguism.getTranslation(bestOf, lang);
+        final String playerNameString = userName.equals("") ? multilinguism.getTranslation("Player", lang) : userName;
+        final String opponentNameString = multilinguism.getTranslation("Opponent", lang);
+        final String scoresString = multilinguism.getTranslation("Scores", lang);
+        final String colonString = multilinguism.getTranslation("Colon", lang);
+
+        final Text playoffText = new Text(playoffString);
+        final Text playerNameText = new Text(playerNameString);
+        final Text slash1Text = new Text("/");
+        final Text opponentNameText = new Text(opponentNameString);
+        final Text scoresText = new Text(scoresString + colonString);
+        final Text playerScoreText = new Text();
+        final Text slash2Text = new Text("/");
+        final Text opponentScoreText = new Text();
+
+        final Font font = new Font(35);
+
+        playoffText.setFont(font);
+        playerNameText.setFont(font);
+        slash1Text.setFont(font);
+        opponentNameText.setFont(font);
+        scoresText.setFont(font);
+        playerScoreText.setFont(font);
+        slash2Text.setFont(font);
+        opponentScoreText.setFont(font);
+
+        playerScoreText.textProperty().bind(playerScore.asString());
+        opponentScoreText.textProperty().bind(opponentScore.asString());
+
+        final GridPane textsGridPane = new GridPane();
+        textsGridPane.setPadding(new Insets(5, 0, 0, 10));
+        textsGridPane.setHgap(15);
+
+        textsGridPane.add(playoffText, 0, 0, 5, 1);
+        textsGridPane.add(playerNameText, 1, 1);
+        textsGridPane.add(slash1Text, 2, 1);
+        textsGridPane.add(opponentNameText, 3, 1);
+        textsGridPane.add(scoresText, 0, 2);
+        textsGridPane.add(playerScoreText, 1, 2);
+        textsGridPane.add(slash2Text, 2, 2);
+        textsGridPane.add(opponentScoreText, 3, 2);
+
+        GridPane.setHalignment(playoffText, HPos.LEFT);
+        GridPane.setHalignment(playerNameText, HPos.RIGHT);
+        GridPane.setHalignment(slash1Text, HPos.CENTER);
+        GridPane.setHalignment(opponentNameText, HPos.LEFT);
+        GridPane.setHalignment(scoresText, HPos.RIGHT);
+        GridPane.setHalignment(playerScoreText, HPos.RIGHT);
+        GridPane.setHalignment(slash2Text, HPos.CENTER);
+        GridPane.setHalignment(opponentScoreText, HPos.LEFT);
+
+        return textsGridPane;
+    }
+
     private void gameWin() {
-        rock.disable();
-        paper.disable();
-        scissors.disable();
+        rockButton.disable();
+        paperButton.disable();
+        scissorsButton.disable();
 
-        playerScore = playerScore + 1;
-        playerScoreTextProperty.setValue("Score: " + playerScore);
+        playerScore.setValue(playerScore.getValue() + 1);
 
-        if (playerScore == 3) {
-            gameContext.playWinTransition(0, event1 -> gameContext.showRoundStats(stats, this));
-            playerScore = 0;
+        if (playerScore.getValue() == 3) {
+            gameContext.playWinTransition(0, event1 -> {
+                playerScore.setValue(0);
+                gameContext.showRoundStats(stats, this);
+            });
         } else {
             gameContext.playWinTransition(0, event1 -> {
                 gameContext.clear();
