@@ -70,7 +70,7 @@ public class VideoGrid implements GameLifeCycle {
         grid = new GridPane();
         grid.setHgap(GAP);
         grid.setVgap(GAP);
-        videoFolder = new File(config.getVideoFolder());
+        videoFolder = new File(config.getVideoDir());
         compatibleFileTypes = new ArrayList<>(Arrays.asList("mp4", "m4a", "m4v"));
 
         // Greyscale effect for out of focus videos
@@ -91,7 +91,7 @@ public class VideoGrid implements GameLifeCycle {
         grid = new GridPane();
         grid.setHgap(GAP);
         grid.setVgap(GAP);
-        videoFolder = new File(config.getVideoFolder());
+        videoFolder = new File(config.getVideoDir());
         compatibleFileTypes = new ArrayList<>(Arrays.asList("mp4", "m4a", "m4v"));
 
         // Greyscale effect for out of focus videos

@@ -62,7 +62,7 @@ public class AnimationSpeedRatioControl {
     }
 
     public Slider createSpeedEffectSlider(Configuration config, Label speedEffectValueLabel) {
-        final double initialSpeedRatioValue = config.getAnimationSpeedRatioProperty().getValue();
+        final double initialSpeedRatioValue = config.getAnimationSpeedRatio();
 
         Slider slider = new Slider();
         slider.setMinWidth(QuickControl.SLIDERS_MIN_WIDTH);

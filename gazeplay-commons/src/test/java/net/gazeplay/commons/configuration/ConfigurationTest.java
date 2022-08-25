@@ -137,7 +137,7 @@ class ConfigurationTest {
 
     @Test
     void shouldGetIsEnableRewardSound() {
-        assertEquals(properties.get("ENABLE_REWARD_SOUND"), configuration.isEnableRewardSound().toString());
+        assertEquals(properties.get("ENABLE_REWARD_SOUND"), configuration.isRewardSoundEnabled().toString());
     }
 
     @Test
@@ -179,12 +179,12 @@ class ConfigurationTest {
 
     @Test
     void shouldGetMusicFolder() {
-        assertEquals(properties.get("MUSIC_FOLDER"), configuration.getMusicFolder());
+        assertEquals(properties.get("MUSIC_FOLDER"), configuration.getMusicDir());
     }
 
     @Test
     void shouldGetVideoFolder() {
-        assertEquals(properties.get("VIDEO_FOLDER"), configuration.getVideoFolder());
+        assertEquals(properties.get("VIDEO_FOLDER"), configuration.getVideoDir());
     }
 
     @Test
