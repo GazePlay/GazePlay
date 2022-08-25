@@ -14,26 +14,26 @@ import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class ShooterGameLauncher implements IGameLauncher<Stats,IGameVariant> {
+public class ShootTheRobotsGameLauncher implements IGameLauncher<Stats,IGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
-        return new ShooterGamesStats(scene, "biboule");
+        return new ShooterGamesStats(scene, "robot");
     }
 
     @Override
     public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
-        return new ShooterGamesStats(scene, "biboule", nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+        return new ShooterGamesStats(scene, "robot", nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant,
                                        Stats stats) {
-        return new Shooter(gameContext, stats, "biboule");
+        return new ShooterGame(gameContext, stats, "robot");
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant,
                                        Stats stats, double gameSeed) {
-        return new Shooter(gameContext, stats, "biboule", gameSeed);
+        return new ShooterGame(gameContext, stats, "robot", gameSeed);
     }
 }

@@ -115,7 +115,7 @@ public class GameVariantDialog extends Stage {
                     choicePanes.put(1, createFlowPane());
                 }
                 choicePanes.get(1).getChildren().add(button);
-            } else if (gameSpec.getGameSummary().getNameCode().equals("bottle")) {
+            } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = ((IntStringGameVariant) variant).getStringValue();
                 int indexOfTheVariant = switch (variantString) {
@@ -143,7 +143,7 @@ public class GameVariantDialog extends Stage {
                 choicePanes.get(0).getChildren().add(button);
             }
 
-            if ((gameSpec.getGameSummary().getNameCode().equals("bottle") ||
+            if ((gameSpec.getGameSummary().getNameCode().equals("Bottle") ||
                 gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                 gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
@@ -168,7 +168,7 @@ public class GameVariantDialog extends Stage {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("Static"));
                     categories[1] = new RadioButton(translator.translate("Dynamic"));
-                } else if (gameSpec.getGameSummary().getNameCode().equals("bottle")) {
+                } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
                     categories = new RadioButton[6];
                     categories[5] = new RadioButton(translator.translate("InfinityF"));
                     categories[4] = new RadioButton(translator.translate("BigF"));

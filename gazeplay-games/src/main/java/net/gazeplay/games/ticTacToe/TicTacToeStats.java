@@ -1,4 +1,4 @@
-package net.gazeplay.games.noughtsandcrosses;
+package net.gazeplay.games.ticTacToe;
 
 import javafx.scene.Scene;
 import net.gazeplay.commons.utils.FixationPoint;
@@ -10,15 +10,15 @@ import net.gazeplay.stats.ShootGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-class NaCStats extends ShootGamesStats {
+class TicTacToeStats extends ShootGamesStats {
 
-    NaCStats(Scene scene) {
+    TicTacToeStats(Scene scene) {
         super(scene);
         this.gameName = "noughts and crosses";
         setAccidentalShotPreventionPeriod(0);
     }
 
-    NaCStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    TicTacToeStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
         this.gameName = "noughts and crosses";
         setAccidentalShotPreventionPeriod(0);

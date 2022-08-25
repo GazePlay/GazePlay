@@ -1,4 +1,4 @@
-package net.gazeplay.games.noughtsandcrosses;
+package net.gazeplay.games.ticTacToe;
 
 import javafx.animation.PauseTransition;
 import javafx.geometry.Dimension2D;
@@ -19,7 +19,7 @@ import net.gazeplay.components.ProgressButton;
 
 
 @Slf4j
-public class NaC extends Parent implements GameLifeCycle {
+public class TicTacToe extends Parent implements GameLifeCycle {
 
     @Getter
     private final IGameContext gameContext;
@@ -28,7 +28,7 @@ public class NaC extends Parent implements GameLifeCycle {
 
     @Getter
     @Setter
-    private NaCGameVariant variant;
+    private TicTacToeGameVariant variant;
 
     private final Dimension2D dimension2D;
 
@@ -45,7 +45,7 @@ public class NaC extends Parent implements GameLifeCycle {
     private double zone;
 
 
-    NaC(final IGameContext gameContext, final Stats stats, final NaCGameVariant variant) {
+    TicTacToe(final IGameContext gameContext, final Stats stats, final TicTacToeGameVariant variant) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.variant = variant;
@@ -157,7 +157,7 @@ public class NaC extends Parent implements GameLifeCycle {
                     game[0][0] = 1;
                     gamebutton[0][0].setImage(crosse);
                     player1 = false;
-                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                    if (testgame() && variant.equals(TicTacToeGameVariant.IA)) {
                         robot();
                     }
                 } else {
@@ -193,7 +193,7 @@ public class NaC extends Parent implements GameLifeCycle {
                     game[0][1] = 1;
                     gamebutton[0][1].setImage(crosse);
                     player1 = false;
-                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                    if (testgame() && variant.equals(TicTacToeGameVariant.IA)) {
                         robot();
                     }
                 } else {
@@ -229,7 +229,7 @@ public class NaC extends Parent implements GameLifeCycle {
                     game[0][2] = 1;
                     gamebutton[0][2].setImage(crosse);
                     player1 = false;
-                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                    if (testgame() && variant.equals(TicTacToeGameVariant.IA)) {
                         robot();
                     }
                 } else {
@@ -266,7 +266,7 @@ public class NaC extends Parent implements GameLifeCycle {
                     game[1][0] = 1;
                     gamebutton[1][0].setImage(crosse);
                     player1 = false;
-                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                    if (testgame() && variant.equals(TicTacToeGameVariant.IA)) {
                         robot();
                     }
                 } else {
@@ -302,7 +302,7 @@ public class NaC extends Parent implements GameLifeCycle {
                     game[1][1] = 1;
                     gamebutton[1][1].setImage(crosse);
                     player1 = false;
-                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                    if (testgame() && variant.equals(TicTacToeGameVariant.IA)) {
                         robot();
                     }
                 } else {
@@ -338,7 +338,7 @@ public class NaC extends Parent implements GameLifeCycle {
                     game[1][2] = 1;
                     gamebutton[1][2].setImage(crosse);
                     player1 = false;
-                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                    if (testgame() && variant.equals(TicTacToeGameVariant.IA)) {
                         robot();
                     }
                 } else {
@@ -375,7 +375,7 @@ public class NaC extends Parent implements GameLifeCycle {
                     game[2][0] = 1;
                     gamebutton[2][0].setImage(crosse);
                     player1 = false;
-                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                    if (testgame() && variant.equals(TicTacToeGameVariant.IA)) {
                         robot();
                     }
                 } else {
@@ -411,7 +411,7 @@ public class NaC extends Parent implements GameLifeCycle {
                     game[2][1] = 1;
                     gamebutton[2][1].setImage(crosse);
                     player1 = false;
-                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                    if (testgame() && variant.equals(TicTacToeGameVariant.IA)) {
                         robot();
                     }
                 } else {
@@ -447,7 +447,7 @@ public class NaC extends Parent implements GameLifeCycle {
                     game[2][2] = 1;
                     gamebutton[2][2].setImage(crosse);
                     player1 = false;
-                    if (testgame() && variant.equals(NaCGameVariant.IA)) {
+                    if (testgame() && variant.equals(TicTacToeGameVariant.IA)) {
                         robot();
                     }
                 } else {
@@ -482,7 +482,7 @@ public class NaC extends Parent implements GameLifeCycle {
             game[0][2] * game[1][2] * game[2][2] == 8 ||
             game[0][0] * game[1][1] * game[2][2] == 8 ||
             game[0][2] * game[1][1] * game[2][0] == 8) {
-            if (variant.equals(NaCGameVariant.P2)) {
+            if (variant.equals(TicTacToeGameVariant.P2)) {
                 win();
                 return false;
             } else {
@@ -551,7 +551,7 @@ public class NaC extends Parent implements GameLifeCycle {
                     gamebutton[i][j].active();
                 }
             }
-            if (!player1 && variant.equals(NaCGameVariant.IA)) {
+            if (!player1 && variant.equals(TicTacToeGameVariant.IA)) {
                 robot();
             }
         });
