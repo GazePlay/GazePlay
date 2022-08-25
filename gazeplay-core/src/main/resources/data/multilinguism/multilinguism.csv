@@ -2,7 +2,7 @@
 bottle,,,瓶子,,,Bottle,,Bouteille,,,,,,,,,Бутылка,,,Бутэлька,
 closeWindowToContinueToGazePlay,,,关闭窗口以继续GazePlay,,,Close this window to continue to GazePlay,,Fermez cette fenêtre pour continuer vers GazePlay,,,,,,,,,Закройте это окно чтобы продолжить в GazePlay,,,Зачыніце гэта акно каб працягнуць у GazePlay,
 close,,,关闭,,,Close,,Fermer,,,,,,,,,Закрыть,,,Зачыніць,
-Colon,:,:,:,:,:,:,:,:,:,:,:,:,:,:,:,:,:,:,:,:,:
+Colon,:,:,:,:,:,:,:, :,:,:,:,:,:,:,:,:,:,:,:,:,:
 games count,,,游戏数量,,,Games count,,Nombre de jeux,,,,,,,,,Количество игр,,,Колькасць гульняў,
 games variants count,,,游戏数量（含变体）,,,Games variants count,,Nombre de variantes de jeux,,,,,,,,,Количество вариантов игр,,,Колькасць варыянтаў гульняў,
 Creampie,Tartë me krem,فطائر كريمة,奶油派,Sahnetorte,Εντοπισμός στόχου επιτυχημένες προσπάθειες,Cream pies,kermatorttu,Tartes à la crème,Krempita ,Pai krim,Torte alla crema,クリームパイ,Torty kremowe,Pastéis de nata,Pai krim,Taarten,Кремовый пирог,Tarta de crema,Bánh kem,Крэмавы пірог,
@@ -135,7 +135,7 @@ free,Lehtë,حر,简单,,,Free,,Facile,,,Facile,,,,,Gratis,Лёгкий,Fácil,,
 normal,Normal,عادي,普通,,,Normal,,Normal,,,Normale,,,,,Normaal,Нормальный,Normal,,Нармальны,
 extreme,Ekstrem,درجة قصوى,困难,,,Extreme,,Extrême,,,Estremo,,,,,Extreem,Экстримальный,Extremo,,Экстрэмальны,
 BibJump,Biboule Jump,بيبول يقذف,Biboule 跳,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,
-Score,Pikët,مجموع النقاط,得分,,,Score,,Score,,,Punteggio,,,,,Score,Результат,Puntuación,,Вынік,
+Score,Rezultati,النتيجة,得分,Spielstand,Σκορ,Score,Pisteet,Score,Rezultat,Skor,Punteggio,スコア,Wynik,Pontuação,Markah,Score,Результат,Puntuación,Điểm,Вынік,स्कोर
 Highscore,Rekord,أعلى نتيجة,最高得分,,,Highscore,,Meilleur score,,,Record !,,,,,Hoogste Score,Лучший результат,Récord,,Лепшы вынік,
 New highscore!,Rekord i ri !,نتيجة عالية جديدة,新记录！,,,New highscore!,,Nouveau meilleur score!,,,Nuovo record !,,,,,Nieuwe hoogste score!,Новый рекорд!,Niuevo récord !,,Новы рэкорд!,
 
@@ -450,4 +450,4 @@ BO7,Ndeshja më e mirë e shtatë,العب في أربع مجموعات فائز
 BO9,Ndeshja më e mirë nga nëntë,العب في خمس مجموعات فائزة,九局三胜制,Best-of-Nine-Match,Ο καλύτερος αγώνας των εννέα,Best-of-nine match,Paras yhdeksästä -ottelu,Partie en cinq manches gagnantes,Najbolje od devet utakmica,Pertandingan terbaik dari sembilan,Partita al meglio dei nove,ベストオブナインマッチ,Najlepszy z dziewięciu meczów,Partida melhor de nove,Perlawanan terbaik daripada sembilan,Best-of-nine wedstrijd,Матч до лучших из девяти,Partido al mejor de nueve,Trận đấu hay nhất trong chín,Матч лепшых з дзевяці,बेस्ट ऑफ नाइन मैच
 Player,Lojtar,لاعب,播放器,Spieler,Παίχτης,Player,Pelaaja,Joueur,Igrač,Pemain,Giocatore,プレーヤー,Gracz,Jogador,Pemain,Speler,Игрок,Jugador,Người chơi,Гулец,खिलाड़ी
 Opponent,Kundërshtari,الخصم,对手,Gegner,Αντίπαλος,Opponent,Vastustaja,Adversaire,Protivnik,Lawan,Avversario,相手,Przeciwnik,Oponente,Lawan,Tegenstander,Противник,Adversario,Phản đối,Супернік,प्रतिद्वंद्वी
-Scores,Rezultatet,درجات,分数,Ergebnisse,Βαθμολογίες,Scores,Pisteet,Scores,Rezultati,Skor,Punteggi,スコア,Wyniki,Pontuações,Markah,Scores,Результаты,Puntuaciones,Điểm,вынікі,स्कोर
+Scores,Rezultatet,درجات,分数,Spielstände,Σκορ,Scores,Pisteet,Scores,Rezultati,Skor,Punteggi,スコア,Wyniki,Pontuações,Markah,Scores,Результаты,Puntuaciones,Điểm,вынікі,स्कोर
