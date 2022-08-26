@@ -519,7 +519,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         });
 
         final Button reset = createDialogButton(
-            getGazePlay().getTranslator().translate("reset"),
+            getGazePlay().getTranslator().translate("Reset"),
             primaryStage.getHeight() / 20,
             primaryStage.getWidth() / 20
         );

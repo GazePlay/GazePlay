@@ -464,7 +464,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         if (Utils.isWindows()) {
             {
-                I18NText label = new I18NText(translator, "CreateShortCut", COLON);
+                I18NText label = new I18NText(translator, "CreateShortcut", COLON);
 
                 VBox input = buildVariantShortcutMaker(config, configurationContext);
 
@@ -1037,7 +1037,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         });
 
-        final I18NButton resetButton = new I18NButton(translator, "reset");
+        final I18NButton resetButton = new I18NButton(translator, "Reset");
 
         switch (type) {
             case WHERE_IS_IT:
@@ -1277,7 +1277,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return null;
     }
 
-
     static CheckBox buildCheckBox(BooleanProperty selectionProperty) {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(selectionProperty.getValue());
@@ -1464,7 +1463,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HBox hbox = new HBox();
         hbox.setSpacing(5);
 
-        final I18NButton resetButton = new I18NButton(translator, "reset");
+        final I18NButton resetButton = new I18NButton(translator, "Reset");
         Button plusButton = new Button("+");
         Button minusButton = new Button("-");
 
@@ -1525,7 +1524,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         CheckBox limitTime = buildCheckBox(config.getLimiterTProperty());
 
-        I18NText time = new I18NText(translator, "Time(seconds)");
+        I18NText time = new I18NText(translator, "Time", "Colon");
         time.setFill(Color.WHITE);
 
         Spinner<Integer> spinnerT = new Spinner<>(3, 180, config.getLimiterTime(), 1);
@@ -1568,7 +1567,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         CheckBox limitScore = buildCheckBox(config.getLimiterSProperty());
 
-        I18NText score = new I18NText(translator, "score");
+        I18NText score = new I18NText(translator, "Score", "Colon");
         score.setFill(Color.WHITE);
 
         Spinner<Integer> spinnerS = new Spinner<>(3, 180, config.getLimiterScore(), 1);

@@ -162,7 +162,7 @@ public class GameWhereIsItErrorPathDialog extends Stage {
             }
         );
 
-        final I18NButton resetButton = new I18NButton(translator, "reset");
+        final I18NButton resetButton = new I18NButton(translator, "Reset");
 
         resetButton.setOnAction(
             e -> {
@@ -170,7 +170,7 @@ public class GameWhereIsItErrorPathDialog extends Stage {
                 configuration.getWhereIsItDirProperty()
                     .setValue(defaultValue);
                 final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
-                whereIsItPromptLabel.setText(translator.translate("WhereIsItNotConfigDirectory"));
+                whereIsItPromptLabel.setText(translator.translate("WhereIsItDirNotConfig"));
                 whereIsItPromptLabel.setStyle(labelStyle);
                 doneButton.setDisable(true);
                 buttonLoad.textProperty().setValue(defaultValue);
@@ -178,7 +178,7 @@ public class GameWhereIsItErrorPathDialog extends Stage {
 
 
         final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;";
-        I18NLabel label = new I18NLabel(translator, "WhereIsItDirectory:");
+        I18NLabel label = new I18NLabel(translator, "ConfigWhereIsItDir", "Colon");
         label.setStyle(whereIsItLabelStyle);
 
 

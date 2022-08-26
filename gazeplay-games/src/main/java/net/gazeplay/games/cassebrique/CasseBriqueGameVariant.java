@@ -5,10 +5,10 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum CasseBriqueGameVariant {
-    BLOC("CBBLOC"),
-    SPACE("CBSPACE"),
-    ARC("CBARC"),
-    SMILEY("CBSMILEY");
+    BLOC("Bloc"),
+    SPACE("Space"),
+    ARC("Arc"),
+    SMILEY("Smiley");
 
     @Getter
     private final String label;
