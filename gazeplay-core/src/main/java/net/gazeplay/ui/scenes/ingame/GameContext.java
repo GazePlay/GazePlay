@@ -24,10 +24,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.gazeplay.GameLifeCycle;
-import net.gazeplay.GamePanelDimensionProvider;
-import net.gazeplay.GazePlay;
-import net.gazeplay.IGameContext;
+import net.gazeplay.*;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.AnimationSpeedRatioSource;
 import net.gazeplay.commons.configuration.Configuration;
@@ -53,6 +50,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     @Getter
     private HomeButton homeButton;
+
 
     public static void updateConfigPane(final Pane configPane, Stage primaryStage) {
         double mainHeight = primaryStage.getHeight();
@@ -270,8 +268,13 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
+
         homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
         menuHBox.getChildren().add(homeButton);
+
+        CustomButton restartButton = createRestartButtonInGameScreen(gazePlay,stats,currentGame);
+        menuHBox.getChildren().add(restartButton);
+
 
         double buttonSize = primaryStage.getWidth() / 10;
 
@@ -281,9 +284,10 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
 
-        scrollPane.setPrefWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-        scrollPane.setMinWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-        scrollPane.setMaxWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
+
+        scrollPane.setPrefWidth(9.9d * primaryStage.getWidth() / 10d - offset - 200);
+        scrollPane.setMinWidth(9.9d * primaryStage.getWidth() / 10d - offset - 200);
+        scrollPane.setMaxWidth(9.9d * primaryStage.getWidth() / 10d - offset -200);
 
         primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateControllPanel(scrollPane, toggleFullScreenButtonInGameScreen, primaryStage));
     }
@@ -336,6 +340,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
 
         homeButton = createHomeButtonInGameScreenWithoutHandler(gazePlay);
+
         menuHBox.getChildren().add(homeButton);
 
         double buttonSize = primaryStage.getWidth() / 10;
@@ -357,9 +362,11 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
                                                    @NonNull GameLifeCycle currentGame) {
 
         EventHandler<Event> homeEvent = e -> {
+
             root.setCursor(Cursor.WAIT); // Change cursor to wait style
-            exitGame(stats, gazePlay, currentGame);
+            exitGame(stats, gazePlay,currentGame);
             root.setCursor(Cursor.DEFAULT); // Change cursor to default style
+
         };
 
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
@@ -367,6 +374,24 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         HomeButton homeButton = new HomeButton(screenDimension);
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
         return homeButton;
+    }
+
+    public CustomButton createRestartButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
+                                                   @NonNull GameLifeCycle currentGame) {
+
+        EventHandler<Event> restartEvent = e -> {
+            exitGame(stats, gazePlay,currentGame);
+            getGazePlay().onGameLaunch(this);
+            stats.reset();
+            currentGame.launch();
+        };
+
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+
+        CustomButton restartButton = new CustomButton("data/common/images/restart-button.png",screenDimension);
+        restartButton.addEventHandler(MouseEvent.MOUSE_CLICKED, restartEvent);
+        return restartButton;
+
     }
 
     public void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
@@ -406,8 +431,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public HomeButton createHomeButtonInGameScreenWithoutHandler(@NonNull GazePlay gazePlay) {
-        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-        return new HomeButton(screenDimension);
+    Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+    return new HomeButton(screenDimension);
     }
 
     public void exitReplayGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {

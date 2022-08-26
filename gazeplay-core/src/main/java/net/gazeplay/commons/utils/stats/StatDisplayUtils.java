@@ -8,6 +8,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.TableColumn;
@@ -35,7 +36,8 @@ import static javafx.scene.chart.XYChart.Data;
 public class StatDisplayUtils {
 
     public static HomeButton createHomeButtonInStatsScreen(GazePlay gazePlay, StatsContext statsContext) {
-        EventHandler<Event> homeEvent = e -> closeStatsWindow();
+        EventHandler<Event> homeEvent = e -> {closeStatsWindow();
+        };
 
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
@@ -44,7 +46,6 @@ public class StatDisplayUtils {
 
         return homeButton;
     }
-
     static void closeStatsWindow() {
         Platform.exit();
         System.exit(0);

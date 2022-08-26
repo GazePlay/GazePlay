@@ -33,6 +33,7 @@ import net.gazeplay.stats.ExplorationGamesStats;
 import net.gazeplay.stats.HiddenItemsGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
 import net.gazeplay.ui.GraphicalContext;
+import net.gazeplay.ui.scenes.ingame.GameContext;
 
 import java.awt.*;
 import java.io.File;
@@ -477,6 +478,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         if (gazeplayType.equals("bera")){
             HomeButton homeButton = StatDisplayUtils.createHomeButtonInStatsScreen(gazePlay, this);
 
+
             I18NTooltip tooltipBackToMenu = new I18NTooltip(gazePlay.getTranslator(), "BackToMenu");
             I18NTooltip.install(homeButton, tooltipBackToMenu);
 
@@ -554,6 +556,8 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             }
 
             controlButtonPane.getChildren().add(homeButton);
+
+
 
             if (continueButton != null) {
                 controlButtonPane.getChildren().add(continueButton);

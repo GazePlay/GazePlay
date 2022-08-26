@@ -339,6 +339,7 @@ SelectVariant,,,,,,Select a Variant,,Sélectionner une Variante,,,,,,,,,,,
 SelectGame,,,,,,Select a Game,,Sélectionner un Jeu,,,,,,,,,,,
 
 BackToMenu,,,,,,Back to home menu,,Retour au menu principal,,,,,,,,,,,,
+RestartGame,,,,,,Restart the game,,Rejouer le jeu,,,,,,,,,,,,
 Exit,,,,,,Exit,,Quitter,,,,,,,,,,,,
 Logout,,,,,,Logout,,Déconnection,,,,,,,,,,,,
 Options,,,,,,Options,,Options,,,,,,,,,,,,
