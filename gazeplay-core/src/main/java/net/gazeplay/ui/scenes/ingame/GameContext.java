@@ -33,6 +33,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.I18NButton;
+import net.gazeplay.commons.ui.I18NTooltip;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
@@ -270,9 +271,13 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
 
         homeButton = createHomeButtonInGameScreen(gazePlay, stats, currentGame);
+        I18NTooltip tooltipGoToStats = new I18NTooltip(gazePlay.getTranslator(), "GoToStats");
+        I18NTooltip.install(homeButton, tooltipGoToStats);
         menuHBox.getChildren().add(homeButton);
 
         CustomButton restartButton = createRestartButtonInGameScreen(gazePlay,stats,currentGame);
+        I18NTooltip tooltipRestartTheGame = new I18NTooltip(gazePlay.getTranslator(), "RestartGame");
+        I18NTooltip.install(restartButton, tooltipRestartTheGame);
         menuHBox.getChildren().add(restartButton);
 
 
