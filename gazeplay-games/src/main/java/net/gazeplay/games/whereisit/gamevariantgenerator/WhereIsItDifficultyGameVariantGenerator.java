@@ -12,15 +12,15 @@ public class WhereIsItDifficultyGameVariantGenerator implements IGameVariantGene
     @Override
     public Set<IGameVariant> getVariants() {
         return Sets.newLinkedHashSet(Lists.newArrayList(
-            new DimensionDifficultyGameVariant(1, 2, "normal"),
-            new DimensionDifficultyGameVariant(2, 2, "normal"),
-            new DimensionDifficultyGameVariant(2, 3, "normal"),
-            new DimensionDifficultyGameVariant(3, 2, "normal"),
-            new DimensionDifficultyGameVariant(3, 3, "normal"),
-            new DimensionDifficultyGameVariant(1, 2, "easy"),
-            new DimensionDifficultyGameVariant(2, 2, "easy"),
-            new DimensionDifficultyGameVariant(2, 3, "easy"),
-            new DimensionDifficultyGameVariant(3, 2, "easy")
+            new DimensionDifficultyGameVariant(1, 2, "Normal"),
+            new DimensionDifficultyGameVariant(2, 2, "Normal"),
+            new DimensionDifficultyGameVariant(2, 3, "Normal"),
+            new DimensionDifficultyGameVariant(3, 2, "Normal"),
+            new DimensionDifficultyGameVariant(3, 3, "Normal"),
+            new DimensionDifficultyGameVariant(1, 2, "Easy"),
+            new DimensionDifficultyGameVariant(2, 2, "Easy"),
+            new DimensionDifficultyGameVariant(2, 3, "Easy"),
+            new DimensionDifficultyGameVariant(3, 2, "Easy")
         ));
     }
 }

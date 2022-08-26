@@ -1,7 +1,7 @@
 package net.gazeplay.commons.gamevariants.difficulty;
 
 public enum Difficulty {
-    EASY("easy"), NORMAL("normal"), HARD("hard");
+    EASY("Easy"), NORMAL("Normal"), HARD("Hard");
 
     private final String key;
 

@@ -107,7 +107,7 @@ public class GameVariantDialog extends Stage {
             button.setMaxWidth(primaryStage.getWidth() / 8);
             button.setMaxHeight(primaryStage.getHeight() / 8);
 
-            if ((variant instanceof DimensionDifficultyGameVariant && (variant.toString().contains("easy") || variant.toString().contains("Dynamic"))) ||
+            if ((variant instanceof DimensionDifficultyGameVariant && (variant.toString().contains("Easy") || variant.toString().contains("Dynamic"))) ||
                 variant.toString().contains("DYNAMIC") ||
                 variant.toString().contains("OTHER")
             ) {
@@ -119,11 +119,11 @@ public class GameVariantDialog extends Stage {
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = ((IntStringGameVariant) variant).getStringValue();
                 int indexOfTheVariant = switch (variantString) {
-                    case "InfinityB" -> 5;
-                    case "BigB" -> 4;
-                    case "HighB" -> 3;
-                    case "NormalB" -> 2;
-                    case "SmallB" -> 1;
+                    case "InfinityBottles" -> 5;
+                    case "BigBottles" -> 4;
+                    case "HighBottles" -> 3;
+                    case "NormalBottles" -> 2;
+                    case "SmallBottles" -> 1;
                     default -> 0;
                 };
 
@@ -158,7 +158,7 @@ public class GameVariantDialog extends Stage {
                     gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape")
                 ) {
                     categories = new RadioButton[2];
-                    categories[0] = new RadioButton(translator.translate("NormalM"));
+                    categories[0] = new RadioButton(translator.translate("Normal"));
                     categories[1] = new RadioButton(translator.translate("Easy"));
                 } else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                     gameSpec.getGameSummary().getNameCode().contains("Memory") ||
@@ -170,16 +170,16 @@ public class GameVariantDialog extends Stage {
                     categories[1] = new RadioButton(translator.translate("Dynamic"));
                 } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
                     categories = new RadioButton[6];
-                    categories[5] = new RadioButton(translator.translate("InfinityF"));
-                    categories[4] = new RadioButton(translator.translate("BigF"));
-                    categories[3] = new RadioButton(translator.translate("HightF"));
-                    categories[2] = new RadioButton(translator.translate("NormalF"));
-                    categories[1] = new RadioButton(translator.translate("SmallF"));
-                    categories[0] = new RadioButton(translator.translate("TinyF"));
+                    categories[5] = new RadioButton(translator.translate("InfinityCategory"));
+                    categories[4] = new RadioButton(translator.translate("BigSizeCategory"));
+                    categories[3] = new RadioButton(translator.translate("HighSizeCategory"));
+                    categories[2] = new RadioButton(translator.translate("NormalSizeCategory"));
+                    categories[1] = new RadioButton(translator.translate("SmallSizeCategory"));
+                    categories[0] = new RadioButton(translator.translate("TinySizeCategory"));
                 } else if(gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) {
                     categories = new RadioButton[2];
-                    categories[0] = new RadioButton(translator.translate("MouseC"));
-                    categories[1] = new RadioButton(translator.translate("OtherC"));
+                    categories[0] = new RadioButton(translator.translate("MouseCategory"));
+                    categories[1] = new RadioButton(translator.translate("OtherCategory"));
                 } else{
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("Classic"));

@@ -32,7 +32,7 @@ public class WhereIsTheShapeGameLauncher implements IGameLauncher<Stats, Dimensi
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
                                        DimensionDifficultyGameVariant gameVariant, Stats stats) {
-        if (gameVariant.getDifficulty().equals("easy")) {
+        if (gameVariant.getDifficulty().equals("Easy")) {
             return new WhereIsIt(WhereIsItGameType.SHAPES_EASY, gameVariant.getWidth(),
                 gameVariant.getHeight(), false, gameContext, stats);
         } else {
@@ -44,7 +44,7 @@ public class WhereIsTheShapeGameLauncher implements IGameLauncher<Stats, Dimensi
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
                                        DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
-        if (gameVariant.getDifficulty().equals("easy")) {
+        if (gameVariant.getDifficulty().equals("Easy")) {
             return new WhereIsIt(WhereIsItGameType.SHAPES_EASY, gameVariant.getWidth(),
                 gameVariant.getHeight(), false, gameContext, stats, gameSeed);
         } else {

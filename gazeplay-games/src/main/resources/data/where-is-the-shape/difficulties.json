@@ -1,5 +1,5 @@
 {
-  "easy": [
+  "Easy": [
     "oval",
     "rectangle",
     "rhombus",
@@ -7,7 +7,7 @@
     "square",
     "triangle"
   ],
-  "normal": [
+  "Normal": [
     "arrow",
     "crescent",
     "cross",
@@ -20,7 +20,7 @@
     "star",
     "triangle"
   ],
-  "hard": [
+  "Hard": [
     "arrow",
     "crescent",
     "cross",

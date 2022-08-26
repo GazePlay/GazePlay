@@ -1,5 +1,5 @@
 {
-  "easy": [
+  "Easy": [
     "black",
     "blue",
     "green",
@@ -7,7 +7,7 @@
     "white",
     "yellow"
   ],
-  "normal": [
+  "Normal": [
     "black",
     "blue",
     "brown",
@@ -20,7 +20,7 @@
     "white",
     "yellow"
   ],
-  "hard": [
+  "Hard": [
     "black",
     "blue",
     "brown",

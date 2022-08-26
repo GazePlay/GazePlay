@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum CakeGameVariant {
-    ONELAYER("OneLayer"),
-    THREELAYERS("ThreeLayers"),
-    THREELAYERSHIDEN("ThreeLayersHiden");
+    ONELAYER("Easy"),
+    THREELAYERS("Normal"),
+    THREELAYERSHIDEN("Hard");
 
     @Getter
     private final String label;

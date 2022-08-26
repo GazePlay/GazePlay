@@ -12,11 +12,11 @@ public class WhereIsItDynamicGameVariantGenerator implements IGameVariantGenerat
     @Override
     public Set<IGameVariant> getVariants() {
         return Sets.newLinkedHashSet(Lists.newArrayList(
-            new DimensionDifficultyGameVariant(1, 2, "normal"),
-            new DimensionDifficultyGameVariant(2, 2, "normal"),
-            new DimensionDifficultyGameVariant(2, 3, "normal"),
-            new DimensionDifficultyGameVariant(3, 2, "normal"),
-            new DimensionDifficultyGameVariant(3, 3, "normal"),
+            new DimensionDifficultyGameVariant(1, 2, "Normal"),
+            new DimensionDifficultyGameVariant(2, 2, "Normal"),
+            new DimensionDifficultyGameVariant(2, 3, "Normal"),
+            new DimensionDifficultyGameVariant(3, 2, "Normal"),
+            new DimensionDifficultyGameVariant(3, 3, "Normal"),
             new DimensionDifficultyGameVariant(1, 2, "Dynamic")
         ));
     }
