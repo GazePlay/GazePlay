@@ -46,6 +46,9 @@ public class Ladder implements GameLifeCycle {
 
     private final ImageLibrary imageLibrary;
 
+    private TranslateTransition translateTransition = new TranslateTransition();
+
+
     Ladder(IGameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
@@ -56,6 +59,7 @@ public class Ladder implements GameLifeCycle {
         progressButtons = new ArrayList<>();
         start = new Step[5];
         imageLibrary = Portrait.createImageLibrary(random);
+
     }
 
     Ladder(IGameContext gameContext, Stats stats, double gameSeed) {
@@ -68,13 +72,16 @@ public class Ladder implements GameLifeCycle {
         progressButtons = new ArrayList<>();
         start = new Step[5];
         imageLibrary = Portrait.createImageLibrary(random);
+
     }
 
     @Override
     public void launch() {
         steps.clear();
         fall.clear();
+        translateTransition.stop();
         progressButtons.clear();
+
 
         size = 10;
         cross = 3;
@@ -268,7 +275,9 @@ public class Ladder implements GameLifeCycle {
         steps.remove(step);
         fall.remove(step);
         step.ln.setStroke(Color.RED);
-        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue() / 2), player);
+        translateTransition.setDuration(Duration.seconds(gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue() / 2));
+        translateTransition.setNode(player);
+       // translateTransition = new TranslateTransition(Duration.seconds(gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue() / 2), player);
         translateTransition.setInterpolator(Interpolator.LINEAR);
         if (start) {
             translateTransition.setFromX(ecartw + step.x1 * spacew - dimension2D.getHeight() / 20);

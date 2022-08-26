@@ -374,6 +374,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         };
 
+
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
 
         HomeButton homeButton = new HomeButton(screenDimension);
@@ -562,5 +563,4 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         });
         wait.play();
     }
-
 }
