@@ -128,7 +128,7 @@ public class GameVariantDialog extends Stage {
                     choicePanes.put(indexOfTheVariant, createFlowPane());
                 }
                 choicePanes.get(indexOfTheVariant).getChildren().add(button);
-            } else if (gameSpec.getGameSummary().getNameCode().equals("bottle")) {
+            } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = ((IntStringGameVariant) variant).getStringValue();
                 int indexOfTheVariant = switch (variantString) {
