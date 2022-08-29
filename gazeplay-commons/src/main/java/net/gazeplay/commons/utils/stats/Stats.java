@@ -364,7 +364,7 @@ public class Stats implements GazeMotionListener {
                 final Double[] polygonPoints;
 
                 // Uncomment to use convex hull
-                // if (config.getConvexHullDisabledProperty().getValue()) {
+                // if (config.isConvexHullDisabled()) {
                 // polygonPoints = calculateConvexHull(points);
                 // } else {
                 polygonPoints = calculateRectangle(points);
@@ -393,7 +393,7 @@ public class Stats implements GazeMotionListener {
                 final Double[] polygonPoints;
 
                 // Uncomment to use convex hull
-                // if (config.getConvexHullDisabledProperty().getValue()) {
+                // if (config.isConvexHullDisabled()) {
                 //     polygonPoints = calculateConvexHull(points);
                 // } else {
                 polygonPoints = calculateRectangle(points);
@@ -527,7 +527,7 @@ public class Stats implements GazeMotionListener {
                             incrementFixationSequence(getX, getY, fixationSequence.get(FixationSequence.GAZE_FIXATION_SEQUENCE));
                         }
 
-                        if (config.getAreaOfInterestDisabledProperty().getValue()) {
+                        if (config.isAreaOfInterestDisabled()) {
                             if (getX != previousXMouse || getY != previousYMouse) {
                                 previousXMouse = getX;
                                 previousYMouse = getY;
@@ -542,7 +542,7 @@ public class Stats implements GazeMotionListener {
                         }
                     }
                 }
-                if (config.isScreenshotEnable() && e.getSource() == gameContextScene.getRoot()){
+                if (config.isMultipleScreenshotsEnabled() && e.getSource() == gameContextScene.getRoot()){
                     takeScreenshotWithThread();
                 }
             };
@@ -565,7 +565,7 @@ public class Stats implements GazeMotionListener {
                             incrementFixationSequence(getX, getY, fixationSequence.get(FixationSequence.MOUSE_FIXATION_SEQUENCE));
                         }
 
-                        if (config.getAreaOfInterestDisabledProperty().getValue()) {
+                        if (config.isAreaOfInterestDisabled()) {
                             if (getX != previousXGaze || getY != previousYGaze && counter == 2) {
                                 previousXGaze = getX;
                                 previousYGaze = getY;
@@ -582,7 +582,7 @@ public class Stats implements GazeMotionListener {
                         }
                     }
                 }
-                if (config.isScreenshotEnable() && e.getSource() == gameContextScene.getRoot()){
+                if (config.isMultipleScreenshotsEnabled() && e.getSource() == gameContextScene.getRoot()){
                     takeScreenshotWithThread();
                 }
             };

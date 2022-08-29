@@ -206,7 +206,7 @@ class PictureCard extends Group {
         fullAnimation.getChildren().addAll(imageFadeOutTransition, errorFadeInTransition);
 
         fullAnimation.setOnFinished(actionEvent -> {
-            if (gameContext.getConfiguration().isReaskedQuestionOnFail()) {
+            if (gameContext.getConfiguration().isQuestionReaskedOnFail()) {
                 gameInstance.playQuestionSound();
             }
             customInputEventHandler.ignoreAnyInput = false;

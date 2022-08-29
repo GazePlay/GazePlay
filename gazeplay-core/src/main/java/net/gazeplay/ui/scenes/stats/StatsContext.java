@@ -100,7 +100,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             }
             sidePane.setBottom(controlButtonPane);
 
-            if (config.isBackgroundDark()) {
+            if (config.isDarkThemeEnabled()) {
                 root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
                     + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
                     + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
@@ -157,7 +157,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 LineChart<String, Number> levelChart = StatDisplayUtils.buildLevelChart(stats, root);
                 TableView chi2Chart = StatDisplayUtils.buildTable(stats);
 
-                if(config.isBackgroundDark())
+                if(config.isDarkThemeEnabled())
                 {
                     colorBands.setTextFill(Color.WHITE);
                 }
@@ -186,7 +186,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                     }
                 });
 
-                if(config.isBackgroundDark())
+                if(config.isDarkThemeEnabled())
                 {
                     levelsInfo.setTextFill(Color.WHITE);
                 }
@@ -216,7 +216,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                     }
                 });
 
-                if(config.isBackgroundDark())
+                if(config.isDarkThemeEnabled())
                 {
                     chi2Info.setTextFill(Color.WHITE);
                 }
@@ -290,7 +290,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             }
             sidePane.setBottom(controlButtonPane);
 
-            if (config.isBackgroundDark()) {
+            if (config.isDarkThemeEnabled()) {
                 root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
                     + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
                     + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
@@ -577,7 +577,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(controlButtonPane);
             controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
 
-            if (config.getAreaOfInterestDisabledProperty().getValue())
+            if (config.isAreaOfInterestDisabled())
                 controlButtonPane.getChildren().add(aoiButton);
 
             if (!config.isFixationSequenceDisabled()) {

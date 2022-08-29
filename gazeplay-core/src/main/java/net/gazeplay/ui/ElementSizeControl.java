@@ -57,7 +57,7 @@ public class ElementSizeControl {
     }
 
     public Slider createElementSizeSlider(Configuration config, Label elementSizeValueLabel) {
-        final int initialElementSizeValue = config.getElementSizeProperty().getValue();
+        final int initialElementSizeValue = config.getElementSize();
 
         Slider slider = new Slider();
         slider.setMinWidth(QuickControl.SLIDERS_MIN_WIDTH);

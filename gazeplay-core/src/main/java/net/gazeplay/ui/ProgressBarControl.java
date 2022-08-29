@@ -96,7 +96,7 @@ public class ProgressBarControl {
             config.getProgressBarColorProperty().set(colorName);
             setTextOnLabel(labels, position);
         });
-        if(config.getProgressBarColorProperty().getValue().equals(colorName))
+        if(config.getProgressBarColor().equals(colorName))
             setTextOnLabel(labels, position);
     }
 
