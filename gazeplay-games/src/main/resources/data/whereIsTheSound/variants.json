@@ -1,0 +1,52 @@
+{
+  "Animals": [
+    "bird",
+    "cat",
+    "chicken",
+    "cow",
+    "dog",
+    "duck",
+    "elephant",
+    "lion",
+    "pig",
+    "sheep",
+    "snake"
+  ],
+  "Instruments": [
+    "accordion",
+    "drums",
+    "flute",
+    "guitar",
+    "harp",
+    "piano",
+    "triangle",
+    "trumpet",
+    "violin"
+  ],
+  "AllSounds": [
+    "accordion",
+    "applause",
+    "bird",
+    "car",
+    "cat",
+    "chicken",
+    "cow",
+    "dog",
+    "drums",
+    "duck",
+    "elephant",
+    "flute",
+    "guitar",
+    "harp",
+    "lion",
+    "piano",
+    "pig",
+    "river",
+    "sheep",
+    "snake",
+    "storm",
+    "triangle",
+    "trumpet",
+    "violin"
+  ]
+}

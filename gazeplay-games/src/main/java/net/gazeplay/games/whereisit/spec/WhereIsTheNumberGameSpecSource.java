@@ -11,7 +11,7 @@ public class WhereIsTheNumberGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("WhereIsTheNumber").gameThumbnail("data/Thumbnails/Where-is-the-Number.png")
+            GameSummary.builder().nameCode("WhereIsTheNumber").gameThumbnail("data/Thumbnails/whereIsTheNumber.png")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.LITERACY)
