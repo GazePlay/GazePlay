@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.IntStringGameVariant;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
@@ -34,6 +35,9 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
     private final Configuration configuration;
     private final Multilinguism multilinguism;
     private final ReplayablePseudoRandom random;
+
+    private final boolean visible;
+    private final int rounds;
 
     private final ReadOnlyDoubleProperty widthProperty;
     private final ReadOnlyDoubleProperty heightProperty;
@@ -49,11 +53,11 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
 
     private HandSign opponentHandSign;
 
-    public RockPaperScissorsGame(final IGameContext gameContext, final RockPaperScissorsStats stats) {
-        this(gameContext, stats, -1);
+    public RockPaperScissorsGame(final IGameContext gameContext, IntStringGameVariant gameVariant, final RockPaperScissorsStats stats) {
+        this(gameContext, gameVariant, stats, -1);
     }
 
-    public RockPaperScissorsGame(final IGameContext gameContext, final RockPaperScissorsStats stats, double gameSeed) {
+    public RockPaperScissorsGame(final IGameContext gameContext, IntStringGameVariant gameVariant, final RockPaperScissorsStats stats, double gameSeed) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.configuration = gameContext.getConfiguration();
@@ -65,6 +69,9 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         } else {
             this.random = new ReplayablePseudoRandom(gameSeed);
         }
+
+        visible = gameVariant.getStringValue().equals("Visible");
+        rounds = gameVariant.getNumber();
 
         widthProperty = gameContext.getRoot().widthProperty();
         heightProperty = gameContext.getRoot().heightProperty();
@@ -83,7 +90,7 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
 
         final GridPane textsGridPane = createTextsGridPane();
 
-        final Image image = HandSign.ROCK.getImage();
+        final Image image = new Image("data/rockPaperScissors/questionMark.png");
         final ImageView opponentView = new ImageView(image);
         final ProgressButton opponentButton = new ProgressButton(false);
         opponentButton.getButton().setVisible(false);
@@ -151,7 +158,7 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         final String lang = configuration.getLanguage();
         final String userName = configuration.getUserName();
 
-        final String bestOf = "BO3";
+        final String bestOf = (visible ? "Rounds" : "BO") + rounds;
 
         final String playoffString = multilinguism.getTranslation(bestOf, lang);
         final String playerNameString = userName.equals("") ? multilinguism.getTranslation("Player", lang) : userName;

@@ -12,14 +12,14 @@ public class RockPaperScissorsGameVariantGenerator implements IGameVariantGenera
     @Override
     public Set<IGameVariant> getVariants() {
         return Sets.newLinkedHashSet(Lists.newArrayList(
-            new IntStringGameVariant(3, "hide"),
-            new IntStringGameVariant(5, "hide"),
-            new IntStringGameVariant(7, "hide"),
-            new IntStringGameVariant(9, "hide"),
-            new IntStringGameVariant(3, "visible"),
-            new IntStringGameVariant(5, "visible"),
-            new IntStringGameVariant(7, "visible"),
-            new IntStringGameVariant(9, "visible")
+            new IntStringGameVariant(3, "Hide"),
+            new IntStringGameVariant(5, "Hide"),
+            new IntStringGameVariant(7, "Hide"),
+            new IntStringGameVariant(9, "Hide"),
+            new IntStringGameVariant(3, "Visible"),
+            new IntStringGameVariant(5, "Visible"),
+            new IntStringGameVariant(7, "Visible"),
+            new IntStringGameVariant(9, "Visible")
         ));
     }
 }
