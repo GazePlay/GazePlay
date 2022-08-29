@@ -29,13 +29,13 @@ public class MemoryLettersGameLauncher implements IGameLauncher<Stats, Dimension
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats) {
         return new Memory(Memory.MemoryGameType.LETTERS, gameContext, gameVariant.getWidth(),
-            gameVariant.getHeight(), gameVariant.getDifficulty(), stats, false);
+            gameVariant.getHeight(), gameVariant.getVariant(), stats, false);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
                                        DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
         return new Memory(Memory.MemoryGameType.LETTERS, gameContext, gameVariant.getWidth(),
-            gameVariant.getHeight(), gameVariant.getDifficulty(), stats, false, gameSeed);
+            gameVariant.getHeight(), gameVariant.getVariant(), stats, false, gameSeed);
     }
 }
