@@ -48,12 +48,12 @@
 }
 
 #titleW {
-    -fx-fill: black;
+    -fx-fill: white;
     -fx-font-size: 60;
 }
 
 #titleB {
-    -fx-fill: white;
+    -fx-fill: black;
     -fx-font-size: 60;
 }
 
