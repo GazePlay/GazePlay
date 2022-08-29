@@ -153,7 +153,7 @@ public class GameWhereIsItErrorPathDialog extends Stage {
 
                 if (WhereIsItVaildator.getNumberOfValidDirectories(newPropertyValue, imagesFolders) != 0) {
                     doneButton.setDisable(false);
-                    configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
+                    configuration.setWhereIsItDir(newPropertyValue);
                 } else {
                     final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
                     whereIsItPromptLabel.setText(translator.translate("PickedWrongDir"));
@@ -166,9 +166,8 @@ public class GameWhereIsItErrorPathDialog extends Stage {
 
         resetButton.setOnAction(
             e -> {
-                String defaultValue = Configuration.DEFAULT_VALUE_WHEREISIT_DIR;
-                configuration.getWhereIsItDirProperty()
-                    .setValue(defaultValue);
+                String defaultValue = Configuration.DEFAULT_VALUE_WHERE_IS_IT_DIR;
+                configuration.setWhereIsItDir(defaultValue);
                 final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
                 whereIsItPromptLabel.setText(translator.translate("WhereIsItNotConfigDirectory"));
                 whereIsItPromptLabel.setStyle(labelStyle);

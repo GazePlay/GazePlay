@@ -213,7 +213,7 @@ public class ColorsGame implements GameLifeCycle {
 
         // log.info("Toolbox width = {}, height = {}", colorToolBox.getWidth(), colorToolBox.getHeight());
 
-        buildDraw(gameContext.getConfiguration().getColorsDefaultImageProperty().getValue(), width, height);
+        buildDraw(gameContext.getConfiguration().getColorsDefaultImage(), width, height);
 
         colorToolBox.getColorBoxes().forEach(ColorBox::updateHeight);
 

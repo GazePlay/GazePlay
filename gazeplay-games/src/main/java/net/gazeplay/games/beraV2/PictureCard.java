@@ -159,7 +159,7 @@ class PictureCard extends Group {
     public void checkedImage(){
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        if (Objects.equals(config.getFeedbackProperty().getValue(), "nothing")){
+        if (Objects.equals(config.getFeedback(), "nothing")){
             notifImageRectangle.setOpacity(0);
             notifImageRectangle.setVisible(false);
         }else {
@@ -268,7 +268,7 @@ class PictureCard extends Group {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        if (Objects.equals(config.getFeedbackProperty().getValue(), "standard")){
+        if (Objects.equals(config.getFeedback(), "standard")){
             final Image image = new Image("data/common/images/blackCircle.png");
 
             double imageWidth = image.getWidth();

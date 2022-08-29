@@ -36,7 +36,7 @@ public class CssUtil {
             }
         }
         stylesheets.clear();
-        if (config.getBackgroundDarkTheme().getValue()) {
+        if (config.isDarkThemeEnabled()) {
            stylesheets.add("data/stylesheets/base-dark.css");
         }
         else {
