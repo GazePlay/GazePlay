@@ -25,7 +25,6 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
-import net.gazeplay.commons.gamevariants.DimensionGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.IntStringGameVariant;
 import net.gazeplay.commons.ui.I18NLabel;
@@ -39,8 +38,7 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
 @Slf4j
 public class GameVariantDialog extends Stage {
-
-    private int easymode = 0;
+    private int easyMode = 0;
 
     ToggleGroup group = new ToggleGroup();
 
@@ -107,15 +105,30 @@ public class GameVariantDialog extends Stage {
             button.setMaxWidth(primaryStage.getWidth() / 8);
             button.setMaxHeight(primaryStage.getHeight() / 8);
 
-            if ((variant instanceof DimensionDifficultyGameVariant && (variant.toString().contains("Easy") || variant.toString().contains("Dynamic"))) ||
-                variant.toString().contains("DYNAMIC") ||
-                variant.toString().contains("OTHER")
+            if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheLetter") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheSound")
             ) {
-                if (!choicePanes.containsKey(1)) {
-                    choicePanes.put(1, createFlowPane());
+                String difficultyString = ((DimensionDifficultyGameVariant) variant).getVariant();
+                int indexOfTheVariant = switch(difficultyString) {
+                    case "Easy", "Vowels", "Farm", "Animals", "MostFamous" -> 0;
+                    case "Normal", "Consonants", "Forest", "Instruments", "Africa" -> 1;
+                    case "Hard", "AllLetters", "Savanna", "AllSounds", "America" -> 2;
+                    case "Birds", "Asia" -> 3;
+                    case "Maritime", "Europe" -> 4;
+                    case "AllAnimals", "AllFlags" -> 5;
+                    case "Dynamic" -> 6;
+                    default -> -1;
+                };
+
+                if (!choicePanes.containsKey(indexOfTheVariant)) {
+                    choicePanes.put(indexOfTheVariant, createFlowPane());
                 }
-                choicePanes.get(1).getChildren().add(button);
-            } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
+                choicePanes.get(indexOfTheVariant).getChildren().add(button);
+            } else if (gameSpec.getGameSummary().getNameCode().equals("bottle")) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = ((IntStringGameVariant) variant).getStringValue();
                 int indexOfTheVariant = switch (variantString) {
@@ -150,20 +163,51 @@ public class GameVariantDialog extends Stage {
                 gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
-                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape")) &&
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheLetter") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheSound")) &&
                 group.getToggles().size() < 2
             ) {
                 RadioButton[] categories;
+
                 if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
                     gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape")
                 ) {
-                    categories = new RadioButton[2];
-                    categories[0] = new RadioButton(translator.translate("Normal"));
-                    categories[1] = new RadioButton(translator.translate("Easy"));
+                    categories = new RadioButton[3];
+                    categories[0] = new RadioButton(translator.translate("Easy"));
+                    categories[1] = new RadioButton(translator.translate("Normal"));
+                    categories[2] = new RadioButton(translator.translate("Hard"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal")) {
+                    categories = new RadioButton[7];
+                    categories[0] = new RadioButton(translator.translate("Farm"));
+                    categories[1] = new RadioButton(translator.translate("Forest"));
+                    categories[2] = new RadioButton(translator.translate("Savanna"));
+                    categories[3] = new RadioButton(translator.translate("Birds"));
+                    categories[4] = new RadioButton(translator.translate("Maritime"));
+                    categories[5] = new RadioButton(translator.translate("AllAnimals"));
+                    categories[6] = new RadioButton(translator.translate("Dynamic"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag")) {
+                    categories = new RadioButton[6];
+                    categories[0] = new RadioButton(translator.translate("MostFamous"));
+                    categories[1] = new RadioButton(translator.translate("Africa"));
+                    categories[2] = new RadioButton(translator.translate("America"));
+                    categories[3] = new RadioButton(translator.translate("Asia"));
+                    categories[4] = new RadioButton(translator.translate("Europe"));
+                    categories[5] = new RadioButton(translator.translate("AllFlags"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheLetter")) {
+                    categories = new RadioButton[3];
+                    categories[0] = new RadioButton(translator.translate("Vowels"));
+                    categories[1] = new RadioButton(translator.translate("Consonants"));
+                    categories[2] = new RadioButton(translator.translate("AllLetters"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheSound")) {
+                    categories = new RadioButton[3];
+                    categories[0] = new RadioButton(translator.translate("Animals"));
+                    categories[1] = new RadioButton(translator.translate("Instruments"));
+                    categories[2] = new RadioButton(translator.translate("AllSounds"));
                 } else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                     gameSpec.getGameSummary().getNameCode().contains("Memory") ||
-                    gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
-                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal")
+                    gameSpec.getGameSummary().getNameCode().equals("Ninja")
                 ) {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("Static"));
@@ -191,8 +235,8 @@ public class GameVariantDialog extends Stage {
                     categories[i].setToggleGroup(group);
                     bottom.getChildren().add(categories[i]);
                     categories[i].setOnAction(actionEvent -> {
-                        if (easymode != index) {
-                            easymode = index;
+                        if (easyMode != index) {
+                            easyMode = index;
                             choicePanelScroller.setContent(choicePanes.get(index));
                         }
                     });

@@ -58,15 +58,13 @@ public class ReplayingGameFromJson {
 
     private static final ArrayList<String> replayableGameList = new ArrayList<String>(
         Arrays.asList(
-
             //OK: really small offsets problems
-            "Scribble", "Cakes", "Creampie", "WhereIsIt", "WhereIsTheAnimal", "Letters",
-            "WhereIsTheColor", "WhereIsTheLetter", "WhereIsTheNumber", "WhereIsTheShape", "findodd", "flags",
-            "ScratchCard", "Memory", "MemoryLetters", "MemoryNumbers", "OpenMemory", "OpenMemoryLetters",
-            "OpenMemoryNumbers", "Dice", "EggGame", "PersonalizeEggGame", "GooseGame", "MagicCards", "Opinions", "Order",
-            "Horses", "Horses Simplified", "Puzzle", "Farm", "Jungle", "Savanna", "CupsBalls",
-            "Potions", "VideoPlayer", "VideoGrid", "Bottle", "FlowerOfNumbers"
-
+            "Bottle", "Cakes", "Creampie", "CupsBalls", "Letters", "Dice", "EggGame", "FindTheOddOneOut",
+            "FlowerOfNumbers", "GooseGame", "Horses", "Horses Simplified", "MagicCards", "Memory",
+            "MemoryLetters", "MemoryNumbers", "OpenMemory", "OpenMemoryLetters", "OpenMemoryNumbers", "Opinions",
+            "Order", "PersonalizeEggGame", "Potions", "Puzzle", "ScratchCard", "Scribble", "SoundsOfLife", "VideoGrid",
+            "VideoPlayer", "WhereIsIt", "WhereIsTheAnimal", "WhereIsTheColor", "WhereIsTheFlag", "WhereIsTheLetter",
+            "WhereIsTheNumber", "WhereIsTheShape"
 
             // replay OK but the resize of the game itself is bad:
             // "SpotDifference", "MediaPlayer","Paper-Scissors-Stone",
@@ -93,7 +91,6 @@ public class ReplayingGameFromJson {
             // arranger le jeu:
             // "Pet",
             // "Room"
-
         )
     );
 
