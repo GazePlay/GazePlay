@@ -141,12 +141,7 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         final String userName = configuration.getUserName();
 
         final ObjectProperty<Font> font = new SimpleObjectProperty<>(Font.getDefault());
-        heightProperty.addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number oldHeight, Number newHeight) {
-                font.set(Font.font(newHeight.doubleValue() / 25));
-            }
-        });
+        heightProperty.addListener((observableValue, oldHeight, newHeight) -> font.set(Font.font(newHeight.doubleValue() / 25)));
 
         final GridPane textsGridPane = new GridPane();
         textsGridPane.setPadding(new Insets(5, 0, 0, 10));
@@ -257,9 +252,9 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
                 }
 
                 switch (handSign.fight(opponentHandSign.getValue())) {
-                    case -1 -> roundLoss();
-                    case 0 -> roundDraw();
                     case 1 -> roundWin();
+                    case -1 -> roundLoss();
+                    default -> roundDraw();
                 }
             }
             stats.incrementNumberOfGoalsReached();

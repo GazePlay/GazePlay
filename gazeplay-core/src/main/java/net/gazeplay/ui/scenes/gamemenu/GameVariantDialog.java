@@ -25,6 +25,7 @@ import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
+import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.IntStringGameVariant;
 import net.gazeplay.commons.ui.I18NLabel;
@@ -113,7 +114,7 @@ public class GameVariantDialog extends Stage {
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheSound")
             ) {
                 String difficultyString = ((DimensionDifficultyGameVariant) variant).getVariant();
-                int indexOfTheVariant = switch(difficultyString) {
+                int indexOfTheVariant = switch (difficultyString) {
                     case "Easy", "Vowels", "Farm", "Animals", "MostFamous" -> 0;
                     case "Normal", "Consonants", "Forest", "Instruments", "Africa" -> 1;
                     case "Hard", "AllLetters", "Savanna", "AllSounds", "America" -> 2;
@@ -123,6 +124,13 @@ public class GameVariantDialog extends Stage {
                     case "Dynamic" -> 6;
                     default -> -1;
                 };
+
+                if (!choicePanes.containsKey(indexOfTheVariant)) {
+                    choicePanes.put(indexOfTheVariant, createFlowPane());
+                }
+                choicePanes.get(indexOfTheVariant).getChildren().add(button);
+            } else if (gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors")) {
+                int indexOfTheVariant = variant.toString().toLowerCase().contains("hide") ? 0 : 1;
 
                 if (!choicePanes.containsKey(indexOfTheVariant)) {
                     choicePanes.put(indexOfTheVariant, createFlowPane());
@@ -161,6 +169,7 @@ public class GameVariantDialog extends Stage {
                 gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
                 gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
+                gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag") ||
@@ -224,6 +233,10 @@ public class GameVariantDialog extends Stage {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("MouseC"));
                     categories[1] = new RadioButton(translator.translate("OtherC"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors")) {
+                    categories = new RadioButton[2];
+                    categories[0] = new RadioButton(translator.translate("Hide"));
+                    categories[1] = new RadioButton(translator.translate("Visible"));
                 } else {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("Classic"));
