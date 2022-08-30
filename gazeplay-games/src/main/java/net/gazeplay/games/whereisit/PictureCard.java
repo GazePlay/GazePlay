@@ -74,7 +74,7 @@ class PictureCard extends Group {
 
         this.imagePath = imagePath;
 
-        if (gameInstance.getGameType() == COLORS || gameInstance.getGameType() == COLORS_EASY || gameInstance.getGameType() == FLAGS) {
+        if (gameInstance.getGameType().toString().contains("COLORS")) {
             this.imageRectangle = createStretchedImageView(posX, posY, width, height, imagePath);
         } else {
             this.imageRectangle = createImageView(posX, posY, width, height, imagePath);
@@ -206,7 +206,7 @@ class PictureCard extends Group {
         fullAnimation.getChildren().addAll(imageFadeOutTransition, errorFadeInTransition);
 
         fullAnimation.setOnFinished(actionEvent -> {
-            if (gameContext.getConfiguration().isReaskedQuestionOnFail()) {
+            if (gameContext.getConfiguration().isQuestionReaskedOnFail()) {
                 gameInstance.playQuestionSound();
             }
             customInputEventHandler.ignoreAnyInput = false;

@@ -30,13 +30,13 @@ public class OpenMemoryNumbersGameLauncher implements IGameLauncher<Stats, Dimen
     public GameLifeCycle createNewGame(IGameContext gameContext,
                                        DimensionDifficultyGameVariant gameVariant, Stats stats) {
         return new Memory(Memory.MemoryGameType.NUMBERS, gameContext, gameVariant.getWidth(),
-            gameVariant.getHeight(), gameVariant.getDifficulty(), stats, true);
+            gameVariant.getHeight(), gameVariant.getVariant(), stats, true);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
                                        DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
         return new Memory(Memory.MemoryGameType.NUMBERS, gameContext, gameVariant.getWidth(),
-            gameVariant.getHeight(), gameVariant.getDifficulty(), stats, true, gameSeed);
+            gameVariant.getHeight(), gameVariant.getVariant(), stats, true, gameSeed);
     }
 }

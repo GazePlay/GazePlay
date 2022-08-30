@@ -14,7 +14,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class FlowerOfNumbersGameLauncher  implements IGameLauncher<Stats, IGameVariant> {
+public class FlowerOfNumbersGameLauncher implements IGameLauncher<Stats, IGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new Stats(scene, "FlowerOfNumbers");

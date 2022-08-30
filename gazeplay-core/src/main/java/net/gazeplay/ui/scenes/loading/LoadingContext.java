@@ -33,7 +33,7 @@ public class LoadingContext extends BorderPane {
         //  ImageView backgroundImage = new ImageView(new Image("data/common/images/bravo.gif"));
         I18NLabel loadingLabel = new I18NLabel(gazePlay.getTranslator(), "Loading...");
         Configuration config = ActiveConfigurationContext.getInstance();
-        if (config.isBackgroundDark()) {
+        if (config.isDarkThemeEnabled()) {
             loadingLabel.setStyle("\n" +
                 "    -fx-text-fill: white;\n" +
                 "    -fx-font-weight: bold;\n" +
@@ -54,7 +54,7 @@ public class LoadingContext extends BorderPane {
         loadingLabel.setAlignment(Pos.CENTER);
         stackPane.setAlignment(Pos.CENTER);
 
-        if (config.isBackgroundDark()) {
+        if (config.isDarkThemeEnabled()) {
             this.setStyle("-fx-background-color: black");
         }
         else {

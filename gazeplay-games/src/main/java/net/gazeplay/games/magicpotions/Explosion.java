@@ -23,7 +23,7 @@ class Explosion extends Rectangle {
 
     Explosion(final IGameContext gameContext, final Dimension2D gameDimension/* , Image expImage */) {
         super(0, 0, 0, 0);
-        this.enableRewardSound = gameContext.getConfiguration().isEnableRewardSound();
+        this.enableRewardSound = gameContext.getConfiguration().isRewardSoundEnabled();
 
         final Image img = new Image(defaultPictureResourceLocation);
         final double imgWidth = img.getWidth();

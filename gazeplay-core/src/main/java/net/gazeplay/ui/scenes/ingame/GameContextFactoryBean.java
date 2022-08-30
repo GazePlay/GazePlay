@@ -4,7 +4,6 @@ import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -51,7 +50,7 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
         ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(hbox);
 
         Configuration config = ActiveConfigurationContext.getInstance();
-        if (config.isBackgroundDark()) {
+        if (config.isDarkThemeEnabled()) {
             hbox.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
                 + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
                 + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
