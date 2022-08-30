@@ -27,11 +27,11 @@ public class RockPaperScissorsLauncher implements IGameLauncher<RockPaperScissor
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, EnumGameVariant<RockPaperScissorsGameVariant> gameVariant, RockPaperScissorsStats stats) {
-        return new RockPaperScissorsGame(gameContext, stats, gameVariant);
+        return new RockPaperScissorsGame(gameContext, stats, gameVariant.getEnumValue());
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<RockPaperScissorsGameVariant> gameVariant, RockPaperScissorsStats stats, double gameSeed) {
-        return new RockPaperScissorsGame(gameContext, stats, gameVariant, gameSeed);
+        return new RockPaperScissorsGame(gameContext, stats, gameVariant.getEnumValue(), gameSeed);
     }
 }

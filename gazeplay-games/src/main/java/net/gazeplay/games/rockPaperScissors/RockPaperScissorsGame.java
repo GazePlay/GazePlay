@@ -1,27 +1,40 @@
 package net.gazeplay.games.rockPaperScissors;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
+import javafx.beans.binding.When;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
@@ -31,8 +44,8 @@ import net.gazeplay.components.ProgressButton;
 public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCycle {
 
     private final IGameContext gameContext;
-    private final RockPaperScissorsStats stats;
     private final RockPaperScissorsGameVariant gameVariant;
+    private final RockPaperScissorsStats stats;
     private final Configuration configuration;
     private final Multilinguism multilinguism;
     private final ReplayablePseudoRandom random;
@@ -42,23 +55,25 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
 
     private final IntegerProperty playerScore;
     private final IntegerProperty opponentScore;
-    private final ObjectProperty<Image> opponentImage;
+    private final ObjectProperty<HandSign> opponentHandSign;
+    private final BooleanProperty fightWin;
+    private final BooleanProperty thumbSignalVisible;
 
     private final Group layout;
     private final ProgressButton rockButton;
     private final ProgressButton paperButton;
     private final ProgressButton scissorsButton;
+    private final SequentialTransition winLossAnimation;
+    private final PauseTransition drawAnimation;
 
-    private HandSign opponentHandSign;
-
-    public RockPaperScissorsGame(final IGameContext gameContext, final RockPaperScissorsStats stats, EnumGameVariant<RockPaperScissorsGameVariant> gameVariant) {
+    public RockPaperScissorsGame(final IGameContext gameContext, final RockPaperScissorsStats stats, RockPaperScissorsGameVariant gameVariant) {
         this(gameContext, stats, gameVariant, -1);
     }
 
-    public RockPaperScissorsGame(final IGameContext gameContext, final RockPaperScissorsStats stats, EnumGameVariant<RockPaperScissorsGameVariant> gameVariant, double gameSeed) {
+    public RockPaperScissorsGame(final IGameContext gameContext, final RockPaperScissorsStats stats, RockPaperScissorsGameVariant gameVariant, double gameSeed) {
         this.gameContext = gameContext;
         this.stats = stats;
-        this.gameVariant = gameVariant.getEnumValue();
+        this.gameVariant = gameVariant;
         this.configuration = gameContext.getConfiguration();
         this.multilinguism = MultilinguismFactory.getSingleton();
 
@@ -74,40 +89,31 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
 
         playerScore = new SimpleIntegerProperty(0);
         opponentScore = new SimpleIntegerProperty(0);
-        opponentImage = new SimpleObjectProperty<>();
+        opponentHandSign = new SimpleObjectProperty<>(HandSign.UNKNOWN);
+        fightWin = new SimpleBooleanProperty();
+        thumbSignalVisible = new SimpleBooleanProperty(false);
 
         layout = new Group();
 
-        final Rectangle background = new Rectangle(0, 0, 10, 10);
-        background.setFill(new ImagePattern(new Image("data/rockPaperScissors/park.png")));
-        background.setMouseTransparent(true);
-        background.widthProperty().bind(widthProperty);
-        background.heightProperty().bind(heightProperty);
+        createBackground();
+        final GridPane scoreTexts = createScoreTexts();
+        final Rectangle opponentButton = createOpponentHandSign();
+        final Rectangle thumbSignal = createThumbSignal();
+        rockButton = createPlayerHandSigns(HandSign.ROCK);
+        paperButton = createPlayerHandSigns(HandSign.PAPER);
+        scissorsButton = createPlayerHandSigns(HandSign.SCISSORS);
+        winLossAnimation = createWinLossAnimation(thumbSignal);
+        drawAnimation = createDrawAnimation();
 
-        final GridPane textsGridPane = createTextsGridPane();
-
-        final Image image = HandSign.UNKNOWN.getImage();
-        final ImageView opponentView = new ImageView(image);
-        final ProgressButton opponentButton = new ProgressButton(false);
-        opponentButton.getButton().setVisible(false);
-        opponentButton.setImage(opponentView);
-        opponentView.imageProperty().bind(opponentImage);
-        opponentView.fitWidthProperty().bind(widthProperty.divide(6));
-        opponentView.fitHeightProperty().bind(widthProperty.divide(6).multiply(image.getHeight()).divide(image.getWidth()));
-        opponentButton.layoutXProperty().bind(widthProperty.divide(2).subtract(opponentView.fitWidthProperty().divide(2)));
-        opponentButton.layoutYProperty().bind(heightProperty.divide(4).subtract(opponentView.fitHeightProperty().divide(2)));
-
-        rockButton = createRockPaperScissorsProgressButton(HandSign.ROCK);
-        paperButton = createRockPaperScissorsProgressButton(HandSign.PAPER);
-        scissorsButton = createRockPaperScissorsProgressButton(HandSign.SCISSORS);
-
-        layout.getChildren().addAll(background, textsGridPane, opponentButton, rockButton, paperButton, scissorsButton);
+        layout.getChildren().addAll(scoreTexts, opponentButton, rockButton, paperButton, scissorsButton, thumbSignal);
     }
 
     @Override
     public void launch() {
-        opponentHandSign = gameVariant.isVisible() ? HandSign.values()[random.nextInt(3) + 1] : HandSign.UNKNOWN;
-        opponentImage.setValue(opponentHandSign.getImage());
+        gameContext.clear();
+
+        thumbSignalVisible.setValue(false);
+        opponentHandSign.setValue(gameVariant.isVisible() ? HandSign.values()[random.nextInt(3)] : HandSign.UNKNOWN);
 
         rockButton.active();
         paperButton.active();
@@ -121,71 +127,101 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         gameContext.getGazeDeviceManager().addStats(stats);
     }
 
-    private GridPane createTextsGridPane() {
+    private void createBackground() {
+        Background background = new Background(new BackgroundImage(
+            new Image("data/rockPaperScissors/park.png"),
+            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+            new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, false, true)
+        ));
+        gameContext.getRoot().setBackground(background);
+    }
+
+    private GridPane createScoreTexts() {
         final String lang = configuration.getLanguage();
         final String userName = configuration.getUserName();
 
-        final String playoffLabel = gameVariant.getLabel();
-
-        final String playoffString = multilinguism.getTranslation(playoffLabel, lang);
-        final String playerNameString = userName.equals("") ? multilinguism.getTranslation("Player", lang) : userName;
-        final String opponentNameString = multilinguism.getTranslation("Opponent", lang);
-        final String scoresString = multilinguism.getTranslation("Scores", lang);
-        final String colonString = multilinguism.getTranslation("Colon", lang);
-
-        final Text playoffText = new Text(playoffString);
-        final Text playerNameText = new Text(playerNameString);
-        final Text slash1Text = new Text("/");
-        final Text opponentNameText = new Text(opponentNameString);
-        final Text scoresText = new Text(scoresString + colonString);
-        final Text playerScoreText = new Text();
-        final Text slash2Text = new Text("/");
-        final Text opponentScoreText = new Text();
-
-        final Font font = new Font(35);
-
-        playoffText.setFont(font);
-        playerNameText.setFont(font);
-        slash1Text.setFont(font);
-        opponentNameText.setFont(font);
-        scoresText.setFont(font);
-        playerScoreText.setFont(font);
-        slash2Text.setFont(font);
-        opponentScoreText.setFont(font);
-
-        playerScoreText.textProperty().bind(playerScore.asString());
-        opponentScoreText.textProperty().bind(opponentScore.asString());
+        final ObjectProperty<Font> font = new SimpleObjectProperty<>(Font.getDefault());
+        heightProperty.addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldHeight, Number newHeight) {
+                font.set(Font.font(newHeight.doubleValue() / 25));
+            }
+        });
 
         final GridPane textsGridPane = new GridPane();
         textsGridPane.setPadding(new Insets(5, 0, 0, 10));
         textsGridPane.setHgap(15);
 
-        textsGridPane.add(playoffText, 0, 0, 5, 1);
-        textsGridPane.add(playerNameText, 1, 1);
-        textsGridPane.add(slash1Text, 2, 1);
-        textsGridPane.add(opponentNameText, 3, 1);
-        textsGridPane.add(scoresText, 0, 2);
-        textsGridPane.add(playerScoreText, 1, 2);
-        textsGridPane.add(slash2Text, 2, 2);
-        textsGridPane.add(opponentScoreText, 3, 2);
+        final String scoresString = multilinguism.getTranslation("Scores", lang);
+        final String colonString = multilinguism.getTranslation("Colon", lang);
+        final Text scoresText = new Text(scoresString + colonString);
+        scoresText.fontProperty().bind(font);
+        textsGridPane.add(scoresText, 0, gameVariant.isVisible() ? 0 : 2);
 
-        GridPane.setHalignment(playoffText, HPos.LEFT);
-        GridPane.setHalignment(playerNameText, HPos.RIGHT);
-        GridPane.setHalignment(slash1Text, HPos.CENTER);
-        GridPane.setHalignment(opponentNameText, HPos.LEFT);
-        GridPane.setHalignment(scoresText, HPos.RIGHT);
-        GridPane.setHalignment(playerScoreText, HPos.RIGHT);
-        GridPane.setHalignment(slash2Text, HPos.CENTER);
-        GridPane.setHalignment(opponentScoreText, HPos.LEFT);
+        final Text playerScoreText = new Text();
+        playerScoreText.fontProperty().bind(font);
+        playerScoreText.textProperty().bind(playerScore.asString());
+        GridPane.setHalignment(playerScoreText, gameVariant.isVisible() ? HPos.LEFT : HPos.RIGHT);
+        textsGridPane.add(playerScoreText, 1, gameVariant.isVisible() ? 0 : 2);
+
+        final Text slash2Text = new Text("/");
+        slash2Text.fontProperty().bind(font);
+        textsGridPane.add(slash2Text, 2, gameVariant.isVisible() ? 0 : 2);
+
+        final Text opponentScoreText = new Text(Integer.toString(gameVariant.getNbRounds()));
+        opponentScoreText.fontProperty().bind(font);
+        textsGridPane.add(opponentScoreText, 3, gameVariant.isVisible() ? 0 : 2);
+
+        if (!gameVariant.isVisible()) {
+            opponentScoreText.textProperty().bind(opponentScore.asString());
+
+            final String playoffString = multilinguism.getTranslation(gameVariant.getLabel(), lang);
+            final Text playoffText = new Text(playoffString);
+            playoffText.fontProperty().bind(font);
+            textsGridPane.add(playoffText, 0, 0, 5, 1);
+
+            final String playerNameString = userName.equals("") ? multilinguism.getTranslation("Player", lang) : userName;
+            final Text playerNameText = new Text(playerNameString);
+            playerNameText.fontProperty().bind(font);
+            textsGridPane.add(playerNameText, 1, 1);
+
+            final String opponentNameString = multilinguism.getTranslation("Opponent", lang);
+            final Text opponentNameText = new Text(opponentNameString);
+            opponentNameText.fontProperty().bind(font);
+            textsGridPane.add(opponentNameText, 3, 1);
+
+            final Text slash1Text = new Text("/");
+            slash1Text.fontProperty().bind(font);
+            textsGridPane.add(slash1Text, 2, 1);
+        }
 
         return textsGridPane;
     }
 
-    private ProgressButton createRockPaperScissorsProgressButton(HandSign handSign) {
-        Image image = handSign.getImage();
-        ImageView view = new ImageView(image);
+    private Rectangle createOpponentHandSign() {
+        final Image image = HandSign.UNKNOWN.getImage();
+        final Rectangle rectangle = new Rectangle();
+        rectangle.setFill(new ImagePattern(image));
+        rectangle.fillProperty().bind(
+            new When(opponentHandSign.isEqualTo(HandSign.ROCK))
+                .then(new ImagePattern(HandSign.ROCK.getImage()))
+                .otherwise(new When(opponentHandSign.isEqualTo(HandSign.PAPER))
+                    .then(new ImagePattern(HandSign.PAPER.getImage()))
+                    .otherwise(new When(opponentHandSign.isEqualTo(HandSign.SCISSORS))
+                        .then(new ImagePattern(HandSign.SCISSORS.getImage()))
+                        .otherwise(new ImagePattern(HandSign.UNKNOWN.getImage())))));
+        rectangle.widthProperty().bind(widthProperty.divide(6));
+        rectangle.heightProperty().bind(widthProperty.divide(6).multiply(image.getHeight()).divide(image.getWidth()));
+        rectangle.layoutXProperty().bind(widthProperty.divide(2).subtract(rectangle.widthProperty().divide(2)));
+        rectangle.layoutYProperty().bind(heightProperty.divide(4).subtract(rectangle.heightProperty().divide(2)));
+        return rectangle;
+    }
 
-        ProgressButton button = new ProgressButton(false);
+    private ProgressButton createPlayerHandSigns(HandSign handSign) {
+        final Image image = handSign.getImage();
+        final ImageView view = new ImageView(image);
+
+        final ProgressButton button = new ProgressButton(false);
         button.getButton().setVisible(false);
         button.setImage(view);
 
@@ -199,7 +235,7 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
 
         button.assignIndicatorUpdatable(event -> {
             if (gameVariant.isVisible()) {
-                if (handSign.fight(opponentHandSign) >= 1) {
+                if (handSign.fight(opponentHandSign.getValue()) >= 1) {
                     rockButton.disable();
                     paperButton.disable();
                     scissorsButton.disable();
@@ -208,8 +244,7 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
                     button.disable();
                 }
             } else {
-                opponentHandSign = HandSign.values()[random.nextInt(3) + 1];
-                opponentImage.setValue(opponentHandSign.getImage());
+                opponentHandSign.setValue(HandSign.values()[random.nextInt(3)]);
 
                 if (!button.equals(rockButton)) {
                     rockButton.disable();
@@ -221,9 +256,9 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
                     scissorsButton.disable();
                 }
 
-                switch (handSign.fight(opponentHandSign)) {
+                switch (handSign.fight(opponentHandSign.getValue())) {
                     case -1 -> roundLoss();
-                    case 0 -> newRound();
+                    case 0 -> roundDraw();
                     case 1 -> roundWin();
                 }
             }
@@ -234,9 +269,53 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         return button;
     }
 
-    private void newRound() {
-        gameContext.clear();
-        launch();
+    private Rectangle createThumbSignal() {
+        final Image image = new Image("data/rockPaperScissors/thumbs-up.png");
+        final Rectangle rectangle = new Rectangle(0, 0, 10, 10);
+        rectangle.setMouseTransparent(true);
+        rectangle.setFill(new ImagePattern(image));
+        rectangle.fillProperty().bind(new When(fightWin)
+            .then(new ImagePattern(new Image("data/rockPaperScissors/thumbs-up.png")))
+            .otherwise(new ImagePattern(new Image("data/rockPaperScissors/thumbs-down.png"))));
+        rectangle.visibleProperty().bind(thumbSignalVisible);
+        rectangle.widthProperty().bind(heightProperty.divide(2).multiply(image.getWidth()).divide(image.getHeight()));
+        rectangle.heightProperty().bind(heightProperty.divide(2));
+        rectangle.layoutXProperty().bind(widthProperty.divide(2).subtract(rectangle.widthProperty().divide(2)));
+        rectangle.layoutYProperty().bind(heightProperty.divide(2).subtract(rectangle.heightProperty().divide(2)));
+        return rectangle;
+    }
+
+    private SequentialTransition createWinLossAnimation(Rectangle rectangle) {
+        final ScaleTransition transition1 = new ScaleTransition(Duration.millis(1000), rectangle);
+        transition1.setFromX(0);
+        transition1.setFromY(0);
+        transition1.setToX(1.2);
+        transition1.setToY(1.2);
+        final ScaleTransition transition2 = new ScaleTransition(Duration.millis(1000), rectangle);
+        transition2.setFromX(1.2);
+        transition2.setFromY(1.2);
+        transition2.setToX(0.3);
+        transition2.setToY(0.3);
+        final ScaleTransition transition3 = new ScaleTransition(Duration.millis(1000), rectangle);
+        transition3.setFromX(0.3);
+        transition3.setFromY(0.3);
+        transition3.setToX(1);
+        transition3.setToY(1);
+        final SequentialTransition fullTransition = new SequentialTransition(transition1, transition2, transition3);
+        fullTransition.setOnFinished(event -> {
+            if (opponentScore.getValue() == gameVariant.getNbRounds()) {
+                gameEnd();
+            } else {
+                launch();
+            }
+        });
+        return fullTransition;
+    }
+
+    private PauseTransition createDrawAnimation() {
+        final PauseTransition transition = new PauseTransition(Duration.millis(1500));
+        transition.setOnFinished(event -> launch());
+        return transition;
     }
 
     private void roundWin() {
@@ -246,23 +325,25 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
             gameContext.playWinTransition(0, event -> gameEnd());
         } else {
             if (gameVariant.isVisible()) {
-                gameContext.playWinTransition(0, event -> newRound());
+                gameContext.playWinTransition(0, event -> launch());
             } else {
-                // display thumbs-up -> at end, do:
-                newRound();
+                fightWin.setValue(true);
+                thumbSignalVisible.setValue(true);
+                winLossAnimation.play();
             }
         }
+    }
+
+    private void roundDraw() {
+        drawAnimation.play();
     }
 
     private void roundLoss() {
         opponentScore.setValue(opponentScore.getValue() + 1);
 
-        if (opponentScore.getValue() == gameVariant.getNbRounds()) {
-            gameEnd();
-        } else {
-            // display thumbs-down -> at end, do:
-            newRound();
-        }
+        fightWin.setValue(false);
+        thumbSignalVisible.setValue(true);
+        winLossAnimation.play();
     }
 
     private void gameEnd() {

@@ -3,7 +3,7 @@ package net.gazeplay.games.rockPaperScissors;
 import javafx.scene.image.Image;
 
 public enum HandSign {
-    UNKNOWN, ROCK, PAPER, SCISSORS;
+    ROCK, PAPER, SCISSORS, UNKNOWN;
 
     public int fight(HandSign opponentHandSign) {
         return switch (this) {
