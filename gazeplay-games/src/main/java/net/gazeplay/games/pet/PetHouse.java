@@ -48,7 +48,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
     private final static int LIFE_SIZE = 18;
     private List<Circle> water;
 
-    private final double handSize;
+    private double handSize;
 
     private Mypet pet;
     private HBox barsHBox;
@@ -81,10 +81,10 @@ public class PetHouse extends Parent implements GameLifeCycle {
     private boolean spoonFull = false;
 
     @Getter
-    private final Rectangle background;
+    private Rectangle background;
 
     @Getter
-    private final Rectangle zone;
+    private Rectangle zone;
 
     @Getter
     private Rectangle hand;
@@ -94,46 +94,20 @@ public class PetHouse extends Parent implements GameLifeCycle {
     PetHouse(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
-
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
-
-        setMode(INIT_MODE);
-
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        this.background.setFill(Color.BEIGE /* new ImagePattern(new Image("background.jpg")) */);
-        gameContext.getChildren().add(this.background);
-        water = new ArrayList<>();
-        rd = new Timeline();
-
-        final double facteur = (2 / 2.5) + (1 - 2 / 2.5) / 3;
-
-        zone = new Rectangle(0, 0, dimension2D.getWidth() / 1.7, facteur * dimension2D.getHeight());
-
-        zone.setFill(Color.WHITE);
-        zone.setX(dimension2D.getWidth() / 2 - dimension2D.getWidth() / (1.7 * 2));
-        zone.setY(dimension2D.getHeight() / 2 - dimension2D.getHeight() / 2.5);
-
-        handSize = (zone.getWidth() > zone.getHeight()) ? zone.getHeight() / 10 : zone.getWidth() / 10;
-
-        createHand();
-
-        createZoneEvents();
-
-        gameContext.getChildren().add(zone);
-        zone.toFront();
-
-        gameContext.getGazeDeviceManager().addEventFilter(zone);
-
-        gameContext.getChildren().add(this);
     }
 
     PetHouse(final IGameContext gameContext, final Stats stats, double gameSeed) {
         this.gameContext = gameContext;
         this.stats = stats;
-
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+    }
+
+    @Override
+    public void launch() {
+
+        gameContext.getChildren().clear();
 
         setMode(INIT_MODE);
 
@@ -164,10 +138,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(zone);
 
         gameContext.getChildren().add(this);
-    }
-
-    @Override
-    public void launch() {
 
         barsHBox = createBars();
         gameContext.getChildren().add(barsHBox);
