@@ -25,31 +25,31 @@ import java.util.Objects;
 @Slf4j
 public class SoundsOfLife implements GameLifeCycle {
 
-    private final Stats stats;
-    private final ReplayablePseudoRandom randomGenerator;
-    private final int gameVariant;
     private final IGameContext gameContext;
+    private final Stats stats;
     private final ArrayList<TargetAOI> targetAOIList;
+    private final int gameVariant;
+    private final ReplayablePseudoRandom randomGenerator;
 
-    public SoundsOfLife(IGameContext gameContext, Stats stats, int gameVariant) {
-        this.stats = stats;
-        this.gameContext = gameContext;
-        this.targetAOIList = new ArrayList<>();
-        this.gameVariant = gameVariant;
-        this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+    public SoundsOfLife(IGameContext gameContext, Stats stats, SoundsOfLifeGameVariant gameVariant) {
+        this(gameContext, stats, gameVariant, -1);
     }
 
-    public SoundsOfLife(IGameContext gameContext, Stats stats, int gameVariant, double gameSeed) {
-        this.stats = stats;
+    public SoundsOfLife(IGameContext gameContext, Stats stats, SoundsOfLifeGameVariant gameVariant, double gameSeed) {
         this.gameContext = gameContext;
+        this.stats = stats;
         this.targetAOIList = new ArrayList<>();
         this.gameVariant = gameVariant;
-        this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+        
+        if (gameSeed < 0) {
+            this.randomGenerator = new ReplayablePseudoRandom();
+            this.stats.setGameSeed(randomGenerator.getSeed());
+        } else {
+            this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+        }
     }
 
     private void createBackground(ImageView background, Dimension2D dimensions, double scaleRatio, IGameContext gameContext) {
-
         background.setFitWidth(background.getImage().getWidth() * scaleRatio);
         background.setFitHeight(background.getImage().getHeight() * scaleRatio);
 
@@ -64,26 +64,13 @@ public class SoundsOfLife implements GameLifeCycle {
 
     @Override
     public void launch() {
-
+    
         gameContext.getChildren().clear();
-
+    
         Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Configuration config = gameContext.getConfiguration();
 
-        String path = "data/soundsoflife/";
-        switch (gameVariant) {
-            case 0:
-                path += "farm/";
-                break;
-            case 1:
-                path += "jungle/";
-                break;
-            case 2:
-                path += "savanna/";
-                break;
-            default:
-                path += "sea/";
-        }
+        String path = "data/soundsoflife/" + gameVariant.toString().toLowerCase() + "/";
 
         JsonParser parser = new JsonParser();
         JsonObject jsonRoot;
@@ -142,7 +129,7 @@ public class SoundsOfLife implements GameLifeCycle {
             gameContext.getChildren().add(entity);
             gameContext.getGazeDeviceManager().addEventFilter(entity);
         }
-
+    
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();

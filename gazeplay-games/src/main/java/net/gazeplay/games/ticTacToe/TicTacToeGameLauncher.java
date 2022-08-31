@@ -1,4 +1,4 @@
-package net.gazeplay.games.noughtsandcrosses;
+package net.gazeplay.games.ticTacToe;
 
 import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
@@ -14,34 +14,34 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class NaCGameLauncher implements IGameLauncher<Stats, EnumGameVariant<NaCGameVariant>> {
+public class TicTacToeGameLauncher implements IGameLauncher<Stats, EnumGameVariant<TicTacToeGameVariant>> {
 
     @Override
     public Stats createNewStats(Scene scene) {
-        return new NaCStats(scene);
+        return new TicTacToeStats(scene);
     }
 
     @Override
     public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
-        return new NaCStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+        return new TicTacToeStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 
     @Override
     public GameLifeCycle createNewGame(
         IGameContext gameContext,
-        EnumGameVariant<NaCGameVariant> gameVariant,
+        EnumGameVariant<TicTacToeGameVariant> gameVariant,
         Stats stats
     ) {
-        return new NaC(gameContext, stats, gameVariant.getEnumValue());
+        return new TicTacToe(gameContext, stats, gameVariant.getEnumValue());
     }
 
     @Override
     public GameLifeCycle replayGame(
         IGameContext gameContext,
-        EnumGameVariant<NaCGameVariant> gameVariant,
+        EnumGameVariant<TicTacToeGameVariant> gameVariant,
         Stats stats, double gameSeed
     ) {
-        return new NaC(gameContext, stats, gameVariant.getEnumValue());
+        return new TicTacToe(gameContext, stats, gameVariant.getEnumValue());
     }
 
 }

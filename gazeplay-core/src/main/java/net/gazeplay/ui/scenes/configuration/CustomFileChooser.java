@@ -442,7 +442,7 @@ public class CustomFileChooser extends Stage {
             configuration.setFileDir(newPropertyValue);
             updateFlows();
         });
-        final I18NButton resetButton = new I18NButton(translator, "reset");
+        final I18NButton resetButton = new I18NButton(translator, "Reset");
         resetButton.setOnAction(
             e -> {
                 String defaultValue = "";

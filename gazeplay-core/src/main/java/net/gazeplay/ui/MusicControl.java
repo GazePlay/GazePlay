@@ -333,7 +333,7 @@ public class MusicControl {
         content.getChildren().addAll(line1, line2);
         content.setPrefHeight(PREF_HEIGHT);
 
-        final I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "Sound Volume");
+        final I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "Volume");
         pane.setCollapsible(false);
         pane.setContent(content);
         return pane;

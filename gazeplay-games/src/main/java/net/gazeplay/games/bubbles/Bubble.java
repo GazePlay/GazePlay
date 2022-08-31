@@ -19,12 +19,11 @@ import net.gazeplay.components.RandomPositionGenerator;
 @Slf4j
 public class Bubble implements GameLifeCycle {
 
-    public static final String DIRECTION_TOP = "toTop";
-    public static final String DIRECTION_BOTTOM = "toBottom";
-    public static final String DIRECTION_LEFT = "toLeft";
-    public static final String DIRECTION_RIGHT = "toRight";
-
-    public static final String FIX = "FIX";
+    public static final String DIRECTION_TOP = "ToTop";
+    public static final String DIRECTION_BOTTOM = "ToBottom";
+    public static final String DIRECTION_LEFT = "ToLeft";
+    public static final String DIRECTION_RIGHT = "ToRight";
+    public static final String FIX = "Fix";
 
     private final IGameContext gameContext;
 
