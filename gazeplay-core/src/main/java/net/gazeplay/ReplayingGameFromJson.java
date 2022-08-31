@@ -59,10 +59,10 @@ public class ReplayingGameFromJson {
     private static final ArrayList<String> replayableGameList = new ArrayList<String>(
         Arrays.asList(
             //OK: really small offsets problems
-            "bottle", "Cakes", "Creampie", "CupsBalls", "letters", "Dice", "EggGame", "Farm", "FindTheOddOneOut",
-            "FlowerOfNumbers", "GooseGame", "Horses", "Horses Simplified", "Jungle", "MagicCards", "Memory",
+            "Bottle", "Cakes", "Creampie", "CupsBalls", "Letters", "Dice", "EggGame", "FindTheOddOneOut",
+            "FlowerOfNumbers", "GooseGame", "Horses", "Horses Simplified", "MagicCards", "Memory",
             "MemoryLetters", "MemoryNumbers", "OpenMemory", "OpenMemoryLetters", "OpenMemoryNumbers", "Opinions",
-            "Order", "PersonalizeEggGame", "Potions", "puzzle", "Savanna", "ScratchCard", "Scribble", "VideoGrid",
+            "Order", "PersonalizeEggGame", "Potions", "Puzzle", "ScratchCard", "Scribble", "SoundsOfLife", "VideoGrid",
             "VideoPlayer", "WhereIsIt", "WhereIsTheAnimal", "WhereIsTheColor", "WhereIsTheFlag", "WhereIsTheLetter",
             "WhereIsTheNumber", "WhereIsTheShape"
 
@@ -72,12 +72,12 @@ public class ReplayingGameFromJson {
             //"Math101: Multiplication","Math101: Substraction"
 
             // Replay offset was really clear here,due to the gameContext.getRoot() instead of gameContext
-            // "Colorsss"
+            // "Coloring"
 
             // replay cursor coordinates issue, can lead to different display:
-            // "Ninja","Piano","Divisor","Lapins", "ColoredBubbles","PortraitBubbles",
+            // "Ninja","Piano","Divisor","Rabbits", "ColoredBubbles","PortraitBubbles",
             // "RushHour","FrogsRace",
-            // "WhacAmole"
+            // "WhacAMole"
 
             // replay cursor coordinates issue:
             // "Blocks",
@@ -86,7 +86,7 @@ public class ReplayingGameFromJson {
             // "BibJump", "Labyrinth",
 
             // lots of problem:
-            // "Robots","Biboule","SpaceGame",
+            // "ShootTheRobots","ShootTheBiboules","SpaceGame",
 
             // arranger le jeu:
             // "Pet",

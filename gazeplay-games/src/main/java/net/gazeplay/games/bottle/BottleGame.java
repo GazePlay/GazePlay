@@ -214,23 +214,23 @@ public class BottleGame implements GameLifeCycle {
         //Normal size
         int sizex=12;
         int sizey=6;
-        if (sTypes.equals("BigB")){
+        if (sTypes.equals("BigBottles")){
             sizex=8;
             sizey=4;
         }
-        else if(sTypes.equals("SmallB")){
+        else if(sTypes.equals("SmallBottles")){
             sizex=16;
             sizey=8;
         }
-        else if(sTypes.equals("HighB")) {
+        else if(sTypes.equals("HighBottles")) {
             sizex=12;
             sizey=4;
         }
-        else if(sTypes.equals("TinyB")){
+        else if(sTypes.equals("TinyBottles")){
             sizex=24;
             sizey=12;
         }
-        else if(!sTypes.equals("NormalB") && !sTypes.equals("InfinityB")){
+        else if(!sTypes.equals("NormalBottles") && !sTypes.equals("InfinityBottles")){
             //If the type is unknown, use the "Normal" settings
             log.warn("unknown type : " + sTypes + "\nThe 'Normal' settings will be use");
         }
@@ -276,7 +276,7 @@ public class BottleGame implements GameLifeCycle {
                 if (!isBroken) {
                     isBroken = true;
                     ballMovement(bo);
-                    if (sTypes.equals("InfinityB")){
+                    if (sTypes.equals("InfinityBottles")){
                         PauseTransition reshow = new PauseTransition(Duration.millis(2500));
                         reshow.setOnFinished(e -> {
                             bo.active();
@@ -336,7 +336,7 @@ public class BottleGame implements GameLifeCycle {
         score = score + 1;
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
-        if (score == nbBottle && !sTypes.equals("InfinityB")) {
+        if (score == nbBottle && !sTypes.equals("InfinityBottles")) {
             gameContext.playWinTransition(0, event1 -> {
                 gameContext.clear();
                 gameContext.showRoundStats(bottleGameStats, this);

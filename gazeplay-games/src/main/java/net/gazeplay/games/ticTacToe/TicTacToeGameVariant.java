@@ -1,12 +1,12 @@
-package net.gazeplay.games.noughtsandcrosses;
+package net.gazeplay.games.ticTacToe;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum NaCGameVariant {
-    P2("P2"),
-    IA("IA");
+public enum TicTacToeGameVariant {
+    P2("TwoPlayers"),
+    IA("VsComputer");
 
     @Getter
     private final String label;
