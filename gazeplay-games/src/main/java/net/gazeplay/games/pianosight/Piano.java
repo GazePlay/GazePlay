@@ -34,25 +34,25 @@ public class Piano extends Parent implements GameLifeCycle {
 
     private static final int[] NOTE_NAMES = {0, 7, 1, 8, 2, 3, 9, 4, 10, 5, 11, 6};
 
-    private final double centerX;
-    private final double centerY;
+    private double centerX;
+    private double centerY;
 
     private int firstNote;
 
     private Circle circ;
     private Circle circleTemp;
-    private final List<Tile> tilesTab;
-    private final Jukebox jukebox;
+    private List<Tile> tilesTab;
+    private Jukebox jukebox;
 
     private final Stats stats;
 
     private final IGameContext gameContext;
 
-    private final Instru instru;
+    private Instru instru;
 
     private MidiReader midiReader;
 
-    private final List<ImageView> fragments;
+    private List<ImageView> fragments;
 
     private final ReplayablePseudoRandom randomGenerator;
 
@@ -63,15 +63,6 @@ public class Piano extends Parent implements GameLifeCycle {
     public Piano(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        centerX = dimension2D.getWidth() / 2;
-        centerY = dimension2D.getHeight() / 2.2;
-        this.fragments = buildFragments();
-        this.getChildren().addAll(fragments);
-        tilesTab = new ArrayList<>();
-        instru = new Instru();
-        gameContext.getChildren().add(this);
-        jukebox = new Jukebox(gameContext);
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
     }
@@ -79,15 +70,6 @@ public class Piano extends Parent implements GameLifeCycle {
     public Piano(final IGameContext gameContext, final Stats stats, double gameSeed) {
         this.gameContext = gameContext;
         this.stats = stats;
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        centerX = dimension2D.getWidth() / 2;
-        centerY = dimension2D.getHeight() / 2.2;
-        this.fragments = buildFragments();
-        this.getChildren().addAll(fragments);
-        tilesTab = new ArrayList<>();
-        instru = new Instru();
-        gameContext.getChildren().add(this);
-        jukebox = new Jukebox(gameContext);
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
     }
 
@@ -204,9 +186,21 @@ public class Piano extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
-        this.gameContext.resetBordersToFront();
+
+        gameContext.clear();
 
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        centerX = dimension2D.getWidth() / 2;
+        centerY = dimension2D.getHeight() / 2.2;
+        this.fragments = buildFragments();
+        this.getChildren().addAll(fragments);
+        tilesTab = new ArrayList<>();
+        instru = new Instru();
+        gameContext.getChildren().add(this);
+        jukebox = new Jukebox(gameContext);
+
+        this.gameContext.resetBordersToFront();
+
         circ = new Circle(centerX, centerY, dimension2D.getHeight() / 4);
         circ.setFill(Color.BLACK);
         this.getChildren().add(circ);
@@ -274,7 +268,6 @@ public class Piano extends Parent implements GameLifeCycle {
 
     @Override
     public void dispose() {
-
     }
 
     private void createArc(final int index, final double angle, final Color color1, final Color color2, final double l, final double origin) {
