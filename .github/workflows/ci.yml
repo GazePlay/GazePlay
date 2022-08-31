@@ -26,5 +26,5 @@ jobs:
         if: always()
         with:
           name: 'Spotbugs Reports'
-          path: ./**/build/reports/
+          path: ./build/reports/
 
