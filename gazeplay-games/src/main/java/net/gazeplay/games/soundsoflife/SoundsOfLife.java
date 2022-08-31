@@ -28,7 +28,7 @@ public class SoundsOfLife implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Stats stats;
     private final ArrayList<TargetAOI> targetAOIList;
-    private final int gameVariant;
+    private final SoundsOfLifeGameVariant gameVariant;
     private final ReplayablePseudoRandom randomGenerator;
 
     public SoundsOfLife(IGameContext gameContext, Stats stats, SoundsOfLifeGameVariant gameVariant) {
