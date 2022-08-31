@@ -21,20 +21,6 @@ jobs:
           chmod +x ./gradlew
           ./gradlew --stacktrace --info spotbugsMain
 
-      - name: Upload Artifacts 3
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: "Spotbugs Reports 3"
-          path: ./gazeplay-core/build/spotbugs/
-
-      - name: Upload Artifacts 2
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: "Spotbugs Reports 2"
-          path: build/reports/spotbugs/
-
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         if: always()
