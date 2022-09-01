@@ -14,23 +14,21 @@ import java.util.LinkedList;
 
 @Slf4j
 public class SoundsOfLifeStats extends SelectionGamesStats {
-    public SoundsOfLifeStats(Scene gameContextScene, String codeName) {
+
+    public SoundsOfLifeStats(Scene gameContextScene) {
         super(gameContextScene);
-        this.gameName = codeName;
+        this.gameName = "SoundsOfLife";
     }
 
-    public SoundsOfLifeStats(Scene gameContextScene, String codeName, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    public SoundsOfLifeStats(Scene gameContextScene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         super(gameContextScene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
-        this.gameName = codeName;
+        this.gameName = "SoundsOfLife";
     }
 
     @Override
     public SavedStatsInfo saveStats() throws IOException {
-
         SavedStatsInfo statsInfo = super.saveStats();
-
         log.debug("Stats saved");
         return statsInfo;
     }
-
 }

@@ -6,10 +6,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum OpinionsGameVariant {
     OPINIONS("Opinions"),
-    ONHB("OuiNon_Haut-Bas"),
-    ONBH("OuiNon_Bas-Haut"),
-    ONGD("OuiNon_Gauche-Droite"),
-    ONDG("OuiNon_Droite-Gauche");
+    ONHB("OuiNon Haut-Bas"),
+    ONBH("OuiNon Bas-Haut"),
+    ONGD("OuiNon Gauche-Droite"),
+    ONDG("OuiNon Droite-Gauche");
 
     @Getter
     private final String label;

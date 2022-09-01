@@ -136,15 +136,15 @@ public class GameVariantDialog extends Stage {
                     choicePanes.put(indexOfTheVariant, createFlowPane());
                 }
                 choicePanes.get(indexOfTheVariant).getChildren().add(button);
-            } else if (gameSpec.getGameSummary().getNameCode().equals("bottle")) {
+            } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = ((IntStringGameVariant) variant).getStringValue();
                 int indexOfTheVariant = switch (variantString) {
-                    case "InfinityB" -> 5;
-                    case "BigB" -> 4;
-                    case "HighB" -> 3;
-                    case "NormalB" -> 2;
-                    case "SmallB" -> 1;
+                    case "InfinityBottles" -> 5;
+                    case "BigBottles" -> 4;
+                    case "HighBottles" -> 3;
+                    case "NormalBottles" -> 2;
+                    case "SmallBottles" -> 1;
                     default -> 0;
                 };
 
@@ -164,7 +164,7 @@ public class GameVariantDialog extends Stage {
                 choicePanes.get(0).getChildren().add(button);
             }
 
-            if ((gameSpec.getGameSummary().getNameCode().equals("bottle") ||
+            if ((gameSpec.getGameSummary().getNameCode().equals("Bottle") ||
                 gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                 gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
@@ -221,18 +221,18 @@ public class GameVariantDialog extends Stage {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("Static"));
                     categories[1] = new RadioButton(translator.translate("Dynamic"));
-                } else if (gameSpec.getGameSummary().getNameCode().equals("bottle")) {
+                } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
                     categories = new RadioButton[6];
-                    categories[0] = new RadioButton(translator.translate("TinyF"));
-                    categories[1] = new RadioButton(translator.translate("SmallF"));
-                    categories[2] = new RadioButton(translator.translate("NormalF"));
-                    categories[3] = new RadioButton(translator.translate("HighF"));
-                    categories[4] = new RadioButton(translator.translate("BigF"));
-                    categories[5] = new RadioButton(translator.translate("InfinityF"));
-                } else if (gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) {
+                    categories[5] = new RadioButton(translator.translate("InfinityCategory"));
+                    categories[4] = new RadioButton(translator.translate("BigSizeCategory"));
+                    categories[3] = new RadioButton(translator.translate("HighSizeCategory"));
+                    categories[2] = new RadioButton(translator.translate("NormalSizeCategory"));
+                    categories[1] = new RadioButton(translator.translate("SmallSizeCategory"));
+                    categories[0] = new RadioButton(translator.translate("TinySizeCategory"));
+                } else if(gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) {
                     categories = new RadioButton[2];
-                    categories[0] = new RadioButton(translator.translate("MouseC"));
-                    categories[1] = new RadioButton(translator.translate("OtherC"));
+                    categories[0] = new RadioButton(translator.translate("MouseCategory"));
+                    categories[1] = new RadioButton(translator.translate("OtherCategory"));
                 } else if (gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors")) {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("Hide"));

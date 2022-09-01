@@ -31,7 +31,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 @Slf4j
-public class Shooter extends Parent implements GameLifeCycle {
+public class ShooterGame extends Parent implements GameLifeCycle {
 
     private static final double MIN_RADIUS = 30.d;
 
@@ -64,7 +64,7 @@ public class Shooter extends Parent implements GameLifeCycle {
 
     private final ReplayablePseudoRandom randomGenerator;
 
-    Shooter(final IGameContext gameContext, final Stats stats, final String type) {
+    ShooterGame(final IGameContext gameContext, final Stats stats, final String type) {
         this.gameContext = gameContext;
         this.stats = stats;
         final LocalDate localDate = LocalDate.now();
@@ -78,18 +78,18 @@ public class Shooter extends Parent implements GameLifeCycle {
         this.stats.setGameSeed(randomGenerator.getSeed());
 
         targetFrames = new Image[6];
-        targetFrames[0] = new Image("data/" + gameType + "/images/Blue.png");
-        targetFrames[1] = new Image("data/" + gameType + "/images/Green.png");
-        targetFrames[2] = new Image("data/" + gameType + "/images/Yellow.png");
-        targetFrames[3] = new Image("data/" + gameType + "/images/Orange.png");
-        targetFrames[4] = new Image("data/" + gameType + "/images/Red.png");
-        targetFrames[5] = new Image("data/" + gameType + "/images/Flash.png");
+        targetFrames[0] = new Image("data/shooter/" + gameType + "/images/Blue.png");
+        targetFrames[1] = new Image("data/shooter/" + gameType + "/images/Green.png");
+        targetFrames[2] = new Image("data/shooter/" + gameType + "/images/Yellow.png");
+        targetFrames[3] = new Image("data/shooter/" + gameType + "/images/Orange.png");
+        targetFrames[4] = new Image("data/shooter/" + gameType + "/images/Red.png");
+        targetFrames[5] = new Image("data/shooter/" + gameType + "/images/Flash.png");
 
-        box = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
+        box = new ImageView(new Image("data/shooter/" + gameType + "/images/Cage.png"));
 
     }
 
-    Shooter(final IGameContext gameContext, final Stats stats, final String type, double gameSeed) {
+    ShooterGame(final IGameContext gameContext, final Stats stats, final String type, double gameSeed) {
         this.gameContext = gameContext;
         this.stats = stats;
         final LocalDate localDate = LocalDate.now();
@@ -100,14 +100,14 @@ public class Shooter extends Parent implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
         targetFrames = new Image[6];
-        targetFrames[0] = new Image("data/" + gameType + "/images/Blue.png");
-        targetFrames[1] = new Image("data/" + gameType + "/images/Green.png");
-        targetFrames[2] = new Image("data/" + gameType + "/images/Yellow.png");
-        targetFrames[3] = new Image("data/" + gameType + "/images/Orange.png");
-        targetFrames[4] = new Image("data/" + gameType + "/images/Red.png");
-        targetFrames[5] = new Image("data/" + gameType + "/images/Flash.png");
+        targetFrames[0] = new Image("data/shooter/" + gameType + "/images/Blue.png");
+        targetFrames[1] = new Image("data/shooter/" + gameType + "/images/Green.png");
+        targetFrames[2] = new Image("data/shooter/" + gameType + "/images/Yellow.png");
+        targetFrames[3] = new Image("data/shooter/" + gameType + "/images/Orange.png");
+        targetFrames[4] = new Image("data/shooter/" + gameType + "/images/Red.png");
+        targetFrames[5] = new Image("data/shooter/" + gameType + "/images/Flash.png");
 
-        box = new ImageView(new Image("data/" + gameType + "/images/Cage.png"));
+        box = new ImageView(new Image("data/shooter/" + gameType + "/images/Cage.png"));
 
     }
 
@@ -116,7 +116,7 @@ public class Shooter extends Parent implements GameLifeCycle {
         Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         imageRectangle.widthProperty().bind(gameContext.getRoot().widthProperty());
         imageRectangle.heightProperty().bind(gameContext.getRoot().heightProperty());
-        imageRectangle.setFill(new ImagePattern(new Image("data/" + gameType + "/images/Background.jpg")));
+        imageRectangle.setFill(new ImagePattern(new Image("data/shooter/" + gameType + "/images/Background.jpg")));
 
         double backgroundDefaultOpacity = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<>() {
             @Override
@@ -302,8 +302,8 @@ public class Shooter extends Parent implements GameLifeCycle {
         sc.setText(cst);
         sc.setTextFill(Color.WHITE);
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final ImageView iv1 = new ImageView(new Image("data/" + gameType + "/images/hand.png"));
-        final ImageView iv2 = new ImageView(new Image("data/" + gameType + "/images/handShot.png"));
+        final ImageView iv1 = new ImageView(new Image("data/shooter/" + gameType + "/images/hand.png"));
+        final ImageView iv2 = new ImageView(new Image("data/shooter/" + gameType + "/images/handShot.png"));
 
         final StackPane iv = new StackPane();
         final double x = dimension2D.getHeight();
@@ -451,7 +451,7 @@ public class Shooter extends Parent implements GameLifeCycle {
 
         final int r = 1 + randomGenerator.nextInt(3);
 
-        final String soundResource = "data/" + gameType + "/sounds/hand_sound" + r + ".mp3";
+        final String soundResource = "data/shooter/" + gameType + "/sounds/hand_sound" + r + ".mp3";
         gameContext.getSoundManager().add(soundResource);
 
         t.getChildren().get(5).setOpacity(1);
