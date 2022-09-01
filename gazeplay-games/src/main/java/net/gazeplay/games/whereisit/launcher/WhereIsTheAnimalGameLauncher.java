@@ -20,32 +20,40 @@ import java.util.LinkedList;
 public class WhereIsTheAnimalGameLauncher implements IGameLauncher<Stats, DimensionDifficultyGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
-        return new WhereIsItStats(scene, WhereIsItGameType.ANIMALS.getGameName());
+        return new WhereIsItStats(scene, WhereIsItGameType.ANIMALS_ALL.getGameName());
     }
 
     @Override
     public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
-        return new WhereIsItStats(scene, WhereIsItGameType.ANIMALS.getGameName(), nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+        return new WhereIsItStats(scene, WhereIsItGameType.ANIMALS_ALL.getGameName(), nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext,
-                                       DimensionDifficultyGameVariant gameVariant, Stats stats) {
-        if (gameVariant.getDifficulty().equals("DYNAMIC")) {
-            return new WhereIsIt(WhereIsItGameType.ANIMALS_DYNAMIC, gameVariant.getWidth(),
-                gameVariant.getHeight(), false, gameContext, stats);
-        } else {
-            return new WhereIsIt(WhereIsItGameType.ANIMALS, gameVariant.getWidth(),
-                gameVariant.getHeight(), false, gameContext, stats);
-        }
-
+    public GameLifeCycle createNewGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats) {
+        WhereIsItGameType gameType = switch (gameVariant.getVariant()) {
+            case "Farm" -> WhereIsItGameType.ANIMALS_FARM;
+            case "Forest" -> WhereIsItGameType.ANIMALS_FOREST;
+            case "Savanna" -> WhereIsItGameType.ANIMALS_SAVANNA;
+            case "Birds" -> WhereIsItGameType.ANIMALS_BIRDS;
+            case "Maritime" -> WhereIsItGameType.ANIMALS_MARITIME;
+            case "Dynamic" -> WhereIsItGameType.ANIMALS_DYNAMIC;
+            default -> WhereIsItGameType.ANIMALS_ALL;
+        };
+        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats);
     }
 
     @Override
-    public GameLifeCycle replayGame(IGameContext gameContext,
-                                    DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
-        return new WhereIsIt(WhereIsItGameType.ANIMALS, gameVariant.getWidth(),
-            gameVariant.getHeight(), false, gameContext, stats, gameSeed);
+    public GameLifeCycle replayGame(IGameContext gameContext, DimensionDifficultyGameVariant gameVariant, Stats stats, double gameSeed) {
+        WhereIsItGameType gameType = switch (gameVariant.getVariant()) {
+            case "Farm" -> WhereIsItGameType.ANIMALS_FARM;
+            case "Forest" -> WhereIsItGameType.ANIMALS_FOREST;
+            case "Savanna" -> WhereIsItGameType.ANIMALS_SAVANNA;
+            case "Birds" -> WhereIsItGameType.ANIMALS_BIRDS;
+            case "Maritime" -> WhereIsItGameType.ANIMALS_MARITIME;
+            case "Dynamic" -> WhereIsItGameType.ANIMALS_DYNAMIC;
+            default -> WhereIsItGameType.ANIMALS_ALL;
+        };
+        return new WhereIsIt(gameType, gameVariant.getWidth(), gameVariant.getHeight(), false, gameContext, stats, gameSeed);
     }
 
 }

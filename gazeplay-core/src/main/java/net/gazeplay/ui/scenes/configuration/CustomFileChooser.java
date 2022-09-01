@@ -385,7 +385,7 @@ public class CustomFileChooser extends Stage {
             section[i].getChildren().add(title);
         }
 
-        configuration.getFiledirProperty().addListener(e -> {
+        configuration.getFileDirProperty().addListener(e -> {
             updateFlows();
         });
 
@@ -439,10 +439,10 @@ public class CustomFileChooser extends Stage {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
             }
             buttonLoad.textProperty().setValue(newPropertyValue);
-            configuration.getFiledirProperty().setValue(newPropertyValue);
+            configuration.setFileDir(newPropertyValue);
             updateFlows();
         });
-        final I18NButton resetButton = new I18NButton(translator, "reset");
+        final I18NButton resetButton = new I18NButton(translator, "Reset");
         resetButton.setOnAction(
             e -> {
                 String defaultValue = "";
@@ -452,7 +452,7 @@ public class CustomFileChooser extends Stage {
                 } else {
                     defaultValue = GazePlayDirectories.getFileDirectoryUserValue(username).getAbsolutePath();
                 }
-                configuration.getFiledirProperty().setValue(defaultValue);
+                configuration.setFileDir(defaultValue);
                 buttonLoad.textProperty().setValue(defaultValue);
                 updateFlows();
             });

@@ -292,7 +292,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             I18NText label = new I18NText(translator, "FixationLength", COLON);
 
             Spinner<Double> input = buildSpinner(0, 10, (double) config.getFixationLength() / 1000,
-                0.1, config.getFixationlengthProperty());
+                0.1, config.getFixationLengthProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -424,7 +424,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "EnableMultipleScreenshots", COLON);
 
-            CheckBox input = buildCheckBox(config.getScreenshot());
+            CheckBox input = buildCheckBox(config.getMultipleScreenshotsEnabledProperty());
 
             addSubToGrid(grid, currentFormRow, label, input);
         }
@@ -464,7 +464,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         if (Utils.isWindows()) {
             {
-                I18NText label = new I18NText(translator, "CreateShortCut", COLON);
+                I18NText label = new I18NText(translator, "CreateShortcut", COLON);
 
                 VBox input = buildVariantShortcutMaker(config, configurationContext);
 
@@ -492,14 +492,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "ReaskQuestionOnFail", COLON);
 
-            CheckBox input = buildCheckBox(config.getReaskQuestionOnFail());
+            CheckBox input = buildCheckBox(config.getQuestionReaskedOnFailProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
         {
             I18NText label = new I18NText(translator, "EnableRewardSound", COLON);
 
-            CheckBox input = buildCheckBox(config.getEnableRewardSoundProperty());
+            CheckBox input = buildCheckBox(config.getRewardSoundEnabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -532,7 +532,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             I18NText label = new I18NText(translator, "FixationLength", COLON);
 
             Spinner<Double> input = buildSpinner(0, 10, (double) config.getFixationLength() / 1000,
-                0.1, config.getFixationlengthProperty());
+                0.1, config.getFixationLengthProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -797,24 +797,24 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         /*ChoiceBox<Feedback> feedbackBox = new ChoiceBox<>();
         feedbackBox.getItems().addAll(Feedback.values());
-        feedbackBox.getSelectionModel().select(Feedback.valueOf(configuration.getFeedbackProperty().getValue()));*/
+        feedbackBox.getSelectionModel().select(Feedback.valueOf(configuration.getFeedback()));*/
 
         ChoiceBox<String> feedbackBox = new ChoiceBox<>();
         feedbackBox.getItems().add(nothingLabel);
         feedbackBox.getItems().add(standardLabel);
         feedbackBox.getItems().add(framedLabel);
-        feedbackBox.getSelectionModel().select(translator.translate(configuration.getFeedbackProperty().getValue()));
+        feedbackBox.getSelectionModel().select(translator.translate(configuration.getFeedback()));
 
         feedbackBox.setPrefWidth(PREF_WIDTH);
         feedbackBox.setPrefHeight(PREF_HEIGHT);
 
         feedbackBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (Objects.equals(newValue, "Rien") || Objects.equals(newValue, "Nothing")) {
-                configuration.getFeedbackProperty().setValue(Feedback.nothing.toString());
+                configuration.setFeedback(Feedback.nothing.toString());
             } else if (Objects.equals(newValue, "Standard")) {
-                configuration.getFeedbackProperty().setValue(Feedback.standard.toString());
+                configuration.setFeedback(Feedback.standard.toString());
             } else {
-                configuration.getFeedbackProperty().setValue(Feedback.framed.toString());
+                configuration.setFeedback(Feedback.framed.toString());
             }
         });
 
@@ -851,7 +851,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         themesBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             String newPropertyValue = newValue.getPreferredConfigPropertyValue();
-            configuration.getCssfileProperty().setValue(newPropertyValue);
+            configuration.setCssFile(newPropertyValue);
             final GazePlay gazePlay = configurationContext.getGazePlay();
 
             CssUtil.setPreferredStylesheets(configuration, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
@@ -880,7 +880,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 newPropertyValue = Utils.convertWindowsPath(newPropertyValue);
             }
 
-            configuration.getCssfileProperty().setValue(newPropertyValue);
+            configuration.setCssFile(newPropertyValue);
 
             scene.getStylesheets().remove(0);
             scene.getStylesheets().add("file://" + newPropertyValue);
@@ -921,7 +921,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         selectButton.setOnAction(e -> {
             String os = System.getProperty("os.name").toLowerCase();
             String userName = System.getProperty("user.name");
-            String playerName = configuration.getUserNameProperty().getValue();
+            String playerName = configuration.getUserName();
             String path = "";
 
             if (Objects.equals(playerName, "")) {
@@ -964,14 +964,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 fileDir = configuration.getWhereIsItDir();
                 break;
             case MUSIC:
-                changeMusicFolder(configuration.getMusicFolder(), configuration);
-                fileDir = configuration.getMusicFolder();
+                changeMusicFolder(configuration.getMusicDir(), configuration);
+                fileDir = configuration.getMusicDir();
                 break;
             case VIDEO:
-                fileDir = configuration.getVideoFolder();
+                fileDir = configuration.getVideoDir();
                 break;
             case SHORTCUT:
-                fileDir = configuration.getShortcutFolder();
+                fileDir = configuration.getShortcutDir();
                 break;
             default:
                 fileDir = configuration.getFileDir();
@@ -988,13 +988,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     currentFolder = new File(configuration.getWhereIsItDir());
                     break;
                 case MUSIC:
-                    currentFolder = new File(configuration.getMusicFolder());
+                    currentFolder = new File(configuration.getMusicDir());
                     break;
                 case VIDEO:
-                    currentFolder = new File(configuration.getVideoFolder());
+                    currentFolder = new File(configuration.getVideoDir());
                     break;
                 case SHORTCUT:
-                    currentFolder = new File(configuration.getShortcutFolder());
+                    currentFolder = new File(configuration.getShortcutDir());
                     break;
                 default:
                     currentFolder = new File(configuration.getFileDir());
@@ -1020,47 +1020,46 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             switch (type) {
                 case WHERE_IS_IT:
-                    configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
+                    configuration.setWhereIsItDir(newPropertyValue);
                     break;
                 case MUSIC:
                     changeMusicFolder(newPropertyValue, configuration);
                     break;
                 case VIDEO:
-                    configuration.getVideoFolderProperty().setValue(newPropertyValue);
+                    configuration.setVideoDir(newPropertyValue);
                     break;
                 case SHORTCUT:
-                    configuration.getShortcutFolderProperty().setValue(newPropertyValue);
+                    configuration.setShortcutDir(newPropertyValue);
                     break;
                 default:
-                    configuration.getFiledirProperty().setValue(newPropertyValue);
+                    configuration.setFileDir(newPropertyValue);
             }
 
         });
 
-        final I18NButton resetButton = new I18NButton(translator, "reset");
+        final I18NButton resetButton = new I18NButton(translator, "Reset");
 
         switch (type) {
             case WHERE_IS_IT:
                 resetButton.setOnAction(
                     e -> {
-                        String defaultValue = Configuration.DEFAULT_VALUE_WHEREISIT_DIR;
-                        configuration.getWhereIsItDirProperty()
-                            .setValue(defaultValue);
+                        String defaultValue = Configuration.DEFAULT_VALUE_WHERE_IS_IT_DIR;
+                        configuration.setWhereIsItDir(defaultValue);
                         buttonLoad.textProperty().setValue(defaultValue);
                     });
                 break;
             case MUSIC:
                 resetButton.setOnAction(
                     e -> {
-                        changeMusicFolder(Configuration.DEFAULT_VALUE_MUSIC_FOLDER, configuration);
-                        buttonLoad.textProperty().setValue(configuration.getMusicFolderProperty().getValue());
+                        changeMusicFolder(Configuration.DEFAULT_VALUE_MUSIC_DIR, configuration);
+                        buttonLoad.textProperty().setValue(configuration.getMusicDir());
                     });
                 break;
             case VIDEO:
                 resetButton.setOnAction(
                     e -> {
                         String defaultValue = GazePlayDirectories.getVideosFilesDirectory().getAbsolutePath();
-                        configuration.getVideoFolderProperty().setValue(defaultValue);
+                        configuration.setVideoDir(defaultValue);
                         buttonLoad.textProperty().setValue(defaultValue);
                     });
                 break;
@@ -1068,7 +1067,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 resetButton.setOnAction(
                     e -> {
                         String defaultValue = GazePlayDirectories.getShortcutDirectory().getAbsolutePath();
-                        configuration.getShortcutFolderProperty().setValue(defaultValue);
+                        configuration.setShortcutDir(defaultValue);
                         buttonLoad.textProperty().setValue(defaultValue);
                     });
                 break;
@@ -1076,7 +1075,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 resetButton.setOnAction(
                     e -> {
                         String defaultValue = GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath();
-                        configuration.getFiledirProperty().setValue(defaultValue);
+                        configuration.setFileDir(defaultValue);
                         buttonLoad.textProperty().setValue(defaultValue);
                     });
         }
@@ -1163,7 +1162,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 slwithvariant.getHeader().setIconIndex(0);
 
                 try {
-                    slwithvariant.saveTo(configuration.getShortcutFolderProperty().getValue() + "\\" + gameBox.getText() + (currentSelectedVariant == null ? "" : (" - " + variantBox.getText())) + ".lnk");
+                    slwithvariant.saveTo(configuration.getShortcutDir() + "\\" + gameBox.getText() + (currentSelectedVariant == null ? "" : (" - " + variantBox.getText())) + ".lnk");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1209,10 +1208,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
                 languagesItem.setOnAction(eventMenuLanguages -> {
 
-                    configuration.getLanguageProperty().setValue(language.getLocale().getLanguage());
-                    configuration.getCountryProperty().setValue(language.getLocale().getCountry());
-                    ActiveConfigurationContext.getInstance().getLanguageProperty().setValue(language.getLocale().getLanguage());
-                    ActiveConfigurationContext.getInstance().getCountryProperty().setValue(language.getLocale().getCountry());
+                    configuration.setLanguage(language.getLocale().getLanguage());
+                    configuration.setCountry(language.getLocale().getCountry());
+                    ActiveConfigurationContext.getInstance().setLanguage(language.getLocale().getLanguage());
+                    ActiveConfigurationContext.getInstance().setCountry(language.getLocale().getCountry());
 
                     configurationContext.getGazePlay().getTranslator().notifyLanguageChanged();
 
@@ -1262,7 +1261,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             final String newPropertyValue = newValue.name();
-            configuration.getEyetrackerProperty().setValue(newPropertyValue);
+            configuration.setEyeTracker(newPropertyValue);
         });
 
         return choiceBox;
@@ -1276,7 +1275,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         return null;
     }
-
 
     static CheckBox buildCheckBox(BooleanProperty selectionProperty) {
         CheckBox checkBox = new CheckBox();
@@ -1355,7 +1353,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.setPrefHeight(PREF_HEIGHT);
         choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             final String newPropertyValue = newValue.name();
-            configuration.getMenuButtonsOrientationProperty().setValue(newPropertyValue);
+            configuration.setMenuButtonsOrientation(newPropertyValue);
         });
         return choiceBox;
     }
@@ -1374,7 +1372,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             musicFolder = gazePlayMusicFolder.getAbsolutePath();
         }
 
-        config.getMusicFolderProperty().setValue(musicFolder);
+        config.setMusicDir(musicFolder);
 
         BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
 
@@ -1432,9 +1430,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.setPrefWidth(PREF_WIDTH);
         choiceBox.setPrefHeight(PREF_HEIGHT);
         choiceBox.getItems().addAll("Q", "E");
-        choiceBox.getSelectionModel().select(configuration.getQuitKeyProperty().getValue());
+        choiceBox.getSelectionModel().select(configuration.getQuitKey());
         choiceBox.getSelectionModel().selectedItemProperty()
-            .addListener((observable, oldValue, newValue) -> configuration.getQuitKeyProperty().setValue(newValue));
+            .addListener((observable, oldValue, newValue) -> configuration.setQuitKey(newValue));
         return choiceBox;
     }
 
@@ -1447,7 +1445,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.setPrefSize(PREF_WIDTH, PREF_HEIGHT);
 
         choiceBox.getSelectionModel().selectedItemProperty()
-            .addListener((observableValue, oldValue, newValue) -> config.getHeatMapOpacityProperty().setValue(newValue));
+            .addListener((observableValue, oldValue, newValue) -> config.setHeatMapOpacity(newValue));
         return choiceBox;
     }
 
@@ -1464,7 +1462,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HBox hbox = new HBox();
         hbox.setSpacing(5);
 
-        final I18NButton resetButton = new I18NButton(translator, "reset");
+        final I18NButton resetButton = new I18NButton(translator, "Reset");
         Button plusButton = new Button("+");
         Button minusButton = new Button("-");
 
@@ -1474,7 +1472,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         resetButton.prefWidthProperty().bind(hbox.widthProperty().divide(btnCount));
 
         resetButton.setOnAction((event) -> {
-            config.getHeatMapColorsProperty().setValue(Configuration.DEFAULT_VALUE_HEATMAP_COLORS);
+            config.setHeatMapColors(Configuration.DEFAULT_VALUE_HEATMAP_COLORS);
             hbox.getChildren().remove(3, hbox.getChildren().size());
             fillHBoxWithColorPickers(hbox, config);
             minusButton.setDisable(false);
@@ -1523,9 +1521,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HBox hbox = new HBox();
         hbox.setSpacing(5);
 
-        CheckBox limitTime = buildCheckBox(config.getLimiterTProperty());
+        CheckBox limitTime = buildCheckBox(config.getLimiterTimeEnabledProperty());
 
-        I18NText time = new I18NText(translator, "Time(seconds)");
+        I18NText time = new I18NText(translator, "Time", "Colon");
         time.setFill(Color.WHITE);
 
         Spinner<Integer> spinnerT = new Spinner<>(3, 180, config.getLimiterTime(), 1);
@@ -1535,7 +1533,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         spinnerT.valueProperty().addListener((observable, oldValue, newValue) -> {
             final int newPropertyValue = spinnerT.getValue();
-            config.getLimiterTimeProperty().setValue(newPropertyValue);
+            config.setLimiterTime(newPropertyValue);
         });
 
         if (limitTime.isSelected()) {
@@ -1547,7 +1545,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         limitTime.setOnAction(e -> {
-            if (!config.isLimiterT()) {
+            if (!config.isLimiterTimeEnabled()) {
                 time.setVisible(false);
                 spinnerT.setVisible(false);
             } else {
@@ -1566,9 +1564,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         HBox hbox = new HBox();
         hbox.setSpacing(5);
 
-        CheckBox limitScore = buildCheckBox(config.getLimiterSProperty());
+        CheckBox limitScore = buildCheckBox(config.getLimiterScoreEnabledProperty());
 
-        I18NText score = new I18NText(translator, "score");
+        I18NText score = new I18NText(translator, "Score", "Colon");
         score.setFill(Color.WHITE);
 
         Spinner<Integer> spinnerS = new Spinner<>(3, 180, config.getLimiterScore(), 1);
@@ -1578,7 +1576,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         spinnerS.valueProperty().addListener((observable, oldValue, newValue) -> {
             final int newPropertyValue = spinnerS.getValue();
-            config.getLimiterScoreProperty().setValue(newPropertyValue);
+            config.setLimiterScore(newPropertyValue);
         });
 
         if (limitScore.isSelected(
@@ -1591,7 +1589,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
 
         limitScore.setOnAction(e -> {
-            if (!config.isLimiterS()) {
+            if (!config.isLimiterScoreEnabled()) {
                 score.setVisible(false);
                 spinnerS.setVisible(false);
             } else {
@@ -1609,10 +1607,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         HBox hbox = new HBox();
         hbox.setSpacing(5);
-        CheckBox darkTheme = buildCheckBox(config.getBackgroundDarkTheme());
+        CheckBox darkTheme = buildCheckBox(config.getDarkThemeEnabledProperty());
         final GazePlay gazePlay = configurationContext.getGazePlay();
         darkTheme.setOnAction(e -> {
-            config.getBackgroundDarkTheme().setValue(config.getBackgroundDarkTheme().getValue());
+            config.setDarkThemeEnabled(config.isDarkThemeEnabled());
             CssUtil.setPreferredStylesheets(config, gazePlay.getPrimaryScene(), gazePlay.getCurrentScreenDimensionSupplier());
             this.changeConstrutorCss(config);
             this.changeGridCss(config);
@@ -1629,11 +1627,11 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 stringBuilder.append(",");
         }
         log.info(stringBuilder.toString());
-        config.getHeatMapColorsProperty().setValue(stringBuilder.toString());
+        config.setHeatMapColors(stringBuilder.toString());
     }
 
     public void changeConstrutorCss(Configuration config){
-        if (!config.getBackgroundDarkTheme().getValue()) {
+        if (!config.isDarkThemeEnabled()) {
             root.setStyle(
                 "-fx-background-color: #fffaf0; -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 5px; -fx-border-color: rgba(60, 63, 65, 0.7); -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
         } else {
@@ -1643,7 +1641,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
     }
 
     public void changeGridCss(Configuration config){
-        if (config.getBackgroundDarkTheme().getValue()) {
+        if (config.isDarkThemeEnabled()) {
             root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
                 + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
                 + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");

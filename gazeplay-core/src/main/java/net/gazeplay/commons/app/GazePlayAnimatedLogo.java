@@ -33,7 +33,7 @@ public class GazePlayAnimatedLogo {
             this.frontImageView = frontImageView;
             this.getChildren().addAll(backImageView, frontImageView);
             Configuration config = ActiveConfigurationContext.getInstance();
-            if (!config.isBackgroundDark()) {
+            if (!config.isDarkThemeEnabled()) {
                 this.setStyle("-fx-background-color: #fffaf0; ");
             }
         }
@@ -95,7 +95,7 @@ public class GazePlayAnimatedLogo {
         letters.setAlignment(Pos.CENTER);
         letters.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
         Configuration config = ActiveConfigurationContext.getInstance();
-        if (!config.isBackgroundDark()) {
+        if (!config.isDarkThemeEnabled()) {
             letters.setStyle("-fx-background-color: #fffaf0; ");
         }
         return new GazePlayAnimatedLogo(letters);

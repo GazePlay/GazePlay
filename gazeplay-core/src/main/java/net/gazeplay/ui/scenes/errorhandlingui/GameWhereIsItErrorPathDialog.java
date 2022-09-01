@@ -153,7 +153,7 @@ public class GameWhereIsItErrorPathDialog extends Stage {
 
                 if (WhereIsItVaildator.getNumberOfValidDirectories(newPropertyValue, imagesFolders) != 0) {
                     doneButton.setDisable(false);
-                    configuration.getWhereIsItDirProperty().setValue(newPropertyValue);
+                    configuration.setWhereIsItDir(newPropertyValue);
                 } else {
                     final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
                     whereIsItPromptLabel.setText(translator.translate("PickedWrongDir"));
@@ -162,15 +162,14 @@ public class GameWhereIsItErrorPathDialog extends Stage {
             }
         );
 
-        final I18NButton resetButton = new I18NButton(translator, "reset");
+        final I18NButton resetButton = new I18NButton(translator, "Reset");
 
         resetButton.setOnAction(
             e -> {
-                String defaultValue = Configuration.DEFAULT_VALUE_WHEREISIT_DIR;
-                configuration.getWhereIsItDirProperty()
-                    .setValue(defaultValue);
+                String defaultValue = Configuration.DEFAULT_VALUE_WHERE_IS_IT_DIR;
+                configuration.setWhereIsItDir(defaultValue);
                 final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: red;";
-                whereIsItPromptLabel.setText(translator.translate("WhereIsItNotConfigDirectory"));
+                whereIsItPromptLabel.setText(translator.translate("WhereIsItDirNotConfig"));
                 whereIsItPromptLabel.setStyle(labelStyle);
                 doneButton.setDisable(true);
                 buttonLoad.textProperty().setValue(defaultValue);
@@ -178,7 +177,7 @@ public class GameWhereIsItErrorPathDialog extends Stage {
 
 
         final String whereIsItLabelStyle = "-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: white;";
-        I18NLabel label = new I18NLabel(translator, "WhereIsItDirectory:");
+        I18NLabel label = new I18NLabel(translator, "ConfigWhereIsItDir", "Colon");
         label.setStyle(whereIsItLabelStyle);
 
 

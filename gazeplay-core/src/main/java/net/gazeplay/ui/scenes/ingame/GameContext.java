@@ -54,6 +54,9 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     @Getter
     private HomeButton homeButton;
 
+    @Getter
+    private ReplayButton replayButton;
+
     public static void updateConfigPane(final Pane configPane, Stage primaryStage) {
         double mainHeight = primaryStage.getHeight();
 
@@ -151,12 +154,12 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     @Override
     public void startScoreLimiter() {
-        limiterS = getConfiguration().isLimiterS();
+        limiterS = getConfiguration().isLimiterScoreEnabled();
     }
 
     @Override
     public void startTimeLimiter() {
-        limiterT = getConfiguration().isLimiterT();
+        limiterT = getConfiguration().isLimiterTimeEnabled();
         setLimiterAvailable();
     }
 
@@ -274,13 +277,16 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         homeButton = inReplayMode ? createHomeButtonInGameScreenWithoutHandler(gazePlay) : createHomeButtonInGameScreen(gazePlay, stats, currentGame);
         menuHBox.getChildren().add(homeButton);
 
+        replayButton = inReplayMode ? createReplayButtonInGameScreenWithoutHandler(gazePlay) : createReplayButtonInGameScreen(gazePlay, stats, currentGame);
+        menuHBox.getChildren().add(replayButton);
+
         double buttonSize = primaryStage.getWidth() / 10;
 
         if (buttonSize < GameContextFactoryBean.BUTTON_MIN_HEIGHT) {
             buttonSize = GameContextFactoryBean.BUTTON_MIN_HEIGHT;
         }
 
-        double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
+        double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + replayButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
 
         scrollPane.setPrefWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
         scrollPane.setMinWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
@@ -296,7 +302,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             buttonSize = GameContextFactoryBean.BUTTON_MIN_HEIGHT;
         }
 
-        double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
+        double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + replayButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
 
         scrollPane.setPrefWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
         scrollPane.setMinWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
@@ -339,13 +345,16 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         homeButton = createHomeButtonInGameScreenWithoutHandler(gazePlay);
         menuHBox.getChildren().add(homeButton);
 
+        replayButton = createReplayButtonInGameScreenWithoutHandler(gazePlay);
+        menuHBox.getChildren().add(replayButton);
+
         double buttonSize = primaryStage.getWidth() / 10;
 
         if (buttonSize < GameContextFactoryBean.BUTTON_MIN_HEIGHT) {
             buttonSize = GameContextFactoryBean.BUTTON_MIN_HEIGHT;
         }
 
-        double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
+        double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + replayButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
         scrollPane.setPrefWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
         scrollPane.setMinWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
         scrollPane.setMaxWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
@@ -368,6 +377,23 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         HomeButton homeButton = new HomeButton(screenDimension);
         homeButton.addEventHandler(MouseEvent.MOUSE_CLICKED, homeEvent);
         return homeButton;
+    }
+
+    public ReplayButton createReplayButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
+                                                       @NonNull GameLifeCycle currentGame) {
+
+        EventHandler<Event> replayEvent = e -> {
+            exitGame(stats, gazePlay, currentGame);
+            getGazePlay().onGameLaunch(this);
+            stats.reset();
+            currentGame.launch();
+        };
+
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+
+        ReplayButton replayButton = new ReplayButton(screenDimension);
+        replayButton.addEventHandler(MouseEvent.MOUSE_CLICKED, replayEvent);
+        return replayButton;
     }
 
     public void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
@@ -409,6 +435,11 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     public HomeButton createHomeButtonInGameScreenWithoutHandler(@NonNull GazePlay gazePlay) {
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
         return new HomeButton(screenDimension);
+    }
+
+    public ReplayButton createReplayButtonInGameScreenWithoutHandler(@NonNull GazePlay gazePlay) {
+        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
+        return new ReplayButton(screenDimension);
     }
 
     public void exitReplayGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {

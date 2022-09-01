@@ -183,7 +183,7 @@ public class MusicControl {
         if (autoplayExecuted.compareAndSet(false, true)) {
             if (backgroundMusicManager.getPlaylist().isEmpty()) {
                 final Configuration configuration = ActiveConfigurationContext.getInstance();
-                backgroundMusicManager.getAudioFromFolder(configuration.getMusicFolder());
+                backgroundMusicManager.getAudioFromFolder(configuration.getMusicDir());
             }
             backgroundMusicManager.changeMusic(0);
             backgroundMusicManager.play();
@@ -283,7 +283,7 @@ public class MusicControl {
 
     private Slider createMediaVolumeSlider(final Configuration config) {
         final Slider slider = QuickControl.getInstance().createVolumeSlider();
-        slider.setValue(config.getMusicVolumeProperty().getValue());
+        slider.setValue(config.getMusicVolume());
         slider.valueProperty().bindBidirectional(config.getMusicVolumeProperty());
         slider.valueProperty().addListener((observable, oldValue, newValue) -> {
             BackgroundMusicManager.getInstance().setVolume(newValue.doubleValue());
@@ -293,7 +293,7 @@ public class MusicControl {
 
     private Slider createEffectsVolumeSlider(final Configuration config) {
         final Slider slider = QuickControl.getInstance().createVolumeSlider();
-        slider.setValue(config.getEffectsVolumeProperty().getValue());
+        slider.setValue(config.getEffectsVolume());
         slider.valueProperty().bindBidirectional(config.getEffectsVolumeProperty());
         return slider;
     }
@@ -333,7 +333,7 @@ public class MusicControl {
         content.getChildren().addAll(line1, line2);
         content.setPrefHeight(PREF_HEIGHT);
 
-        final I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "Sound Volume");
+        final I18NTitledPane pane = new I18NTitledPane(getGazePlay().getTranslator(), "Volume");
         pane.setCollapsible(false);
         pane.setContent(content);
         return pane;

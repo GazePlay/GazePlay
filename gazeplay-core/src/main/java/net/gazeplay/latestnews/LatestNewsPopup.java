@@ -133,7 +133,7 @@ public class LatestNewsPopup {
 
         Dimension2D screenDimension = screenDimensionSupplier.get();
 
-        CustomButton continueButton = new CustomButton("data/common/images/continue.png", screenDimension);
+        CustomButton continueButton = new CustomButton("data/common/images/replay_button.png", screenDimension);
 
         topPane.getChildren().addAll(userAgentLabel, locationUrlLabel);
         bottomPane.getChildren().addAll(closeInstructionLabel, continueButton);

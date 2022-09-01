@@ -99,7 +99,7 @@ class BackgroundMusicManagerTest {
 
     @Test
     void shouldHaveTheSameVolumeAsVolumeProperty() {
-        final double actualVolume = ActiveConfigurationContext.getInstance().getMusicVolumeProperty().getValue();
+        final double actualVolume = ActiveConfigurationContext.getInstance().getMusicVolume();
         final double currentVolume = volumeProperty.get();
         assertEquals(currentVolume, actualVolume);
     }

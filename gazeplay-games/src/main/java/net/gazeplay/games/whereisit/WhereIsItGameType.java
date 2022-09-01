@@ -4,19 +4,42 @@ import lombok.Getter;
 import net.gazeplay.commons.gamevariants.difficulty.Difficulty;
 
 public enum WhereIsItGameType {
-    ANIMALS("where-is-the-animal", "where-is-the-animal"),
-    ANIMALS_DYNAMIC("where-is-the-animal", "where-is-the-animal-dynamic"),
-    COLORS("where-is-the-color", "where-is-the-color"),
-    COLORS_EASY("where-is-the-color", "where-is-the-color", Difficulty.EASY),
-    LETTERS("where-is-the-letter", "where-is-the-letter"),
-    NUMBERS("where-is-the-number", "where-is-the-number"),
-    SHAPES("where-is-the-shape", "where-is-the-shape"),
-    SHAPES_EASY("where-is-the-shape", "where-is-the-shape", Difficulty.EASY),
-    SOUNDS("where-is-the-sound","where-is-the-sound"),
-    SOUNDS_ANIMAL("where-is-the-sound-animals","where-is-the-sound-animals"),
-    CUSTOMIZED("customized", "customized"),
-    FLAGS("find-flag", "find-flag"),
-    FIND_ODD("find-the-odd-one-out", "find-the-odd-one-out");
+    FIND_ODD("findTheOddOneOut", "findTheOddOneOut", "NoVariant"),
+
+    CUSTOMIZED("whereIsIt", "customized", "NoVariant"),
+
+    ANIMALS_FARM("whereIsTheAnimal", "whereIsTheAnimal", "Farm"),
+    ANIMALS_FOREST("whereIsTheAnimal", "whereIsTheAnimal", "Forest"),
+    ANIMALS_SAVANNA("whereIsTheAnimal", "whereIsTheAnimal", "Savanna"),
+    ANIMALS_BIRDS("whereIsTheAnimal", "whereIsTheAnimal", "Birds"),
+    ANIMALS_MARITIME("whereIsTheAnimal", "whereIsTheAnimal", "Maritime"),
+    ANIMALS_ALL("whereIsTheAnimal", "whereIsTheAnimal", "AllAnimals"),
+    ANIMALS_DYNAMIC("whereIsTheAnimal", "whereIsTheAnimalDynamic", "Dynamic"),
+
+    COLORS_EASY("whereIsTheColor", "whereIsTheColor", Difficulty.EASY.toString()),
+    COLORS_NORMAL("whereIsTheColor", "whereIsTheColor", Difficulty.NORMAL.toString()),
+    COLORS_HARD("whereIsTheColor", "whereIsTheColor", Difficulty.HARD.toString()),
+
+    FLAGS_MOST_FAMOUS("whereIsTheFlag", "whereIsTheFlag", "MostFamous"),
+    FLAGS_AFRICA("whereIsTheFlag", "whereIsTheFlag", "Africa"),
+    FLAGS_AMERICA("whereIsTheFlag", "whereIsTheFlag", "America"),
+    FLAGS_ASIA("whereIsTheFlag", "whereIsTheFlag", "Asia"),
+    FLAGS_EUROPE("whereIsTheFlag", "whereIsTheFlag", "Europe"),
+    FLAGS_ALL("whereIsTheFlag", "whereIsTheFlag", "AllFlags"),
+
+    LETTERS_VOWELS("whereIsTheLetter", "whereIsTheLetter", "Vowels"),
+    LETTERS_CONSONANTS("whereIsTheLetter", "whereIsTheLetter", "Consonants"),
+    LETTERS_ALL("whereIsTheLetter", "whereIsTheLetter", "AllLetters"),
+
+    NUMBERS("whereIsTheNumber", "whereIsTheNumber", "NoVariant"),
+
+    SHAPES_EASY("whereIsTheShape", "whereIsTheShape", Difficulty.EASY.toString()),
+    SHAPES_NORMAL("whereIsTheShape", "whereIsTheShape", Difficulty.NORMAL.toString()),
+    SHAPES_HARD("whereIsTheShape", "whereIsTheShape", Difficulty.HARD.toString()),
+
+    SOUNDS_ANIMALS("whereIsTheSound","whereIsTheSound", "Animals"),
+    SOUNDS_INSTRUMENTS("whereIsTheSound","whereIsTheSound", "Instruments"),
+    SOUNDS_ALL("whereIsTheSound","whereIsTheSound", "AllSounds");
 
     @Getter
     private final String gameName;
@@ -28,16 +51,12 @@ public enum WhereIsItGameType {
     private final String languageResourceLocation;
 
     @Getter
-    private final Difficulty difficulty;
+    private final String variant;
 
-    WhereIsItGameType(String gameName, String resourcesDirectoryName) {
-        this(gameName, resourcesDirectoryName, Difficulty.NORMAL);
-    }
-
-    WhereIsItGameType(String gameName, String resourcesDirectoryName, Difficulty difficulty) {
+    WhereIsItGameType(String gameName, String resourcesDirectoryName, String variant) {
         this.gameName = gameName;
         this.resourcesDirectoryName = resourcesDirectoryName;
         this.languageResourceLocation = "data/" + resourcesDirectoryName + "/" + resourcesDirectoryName + ".csv";
-        this.difficulty = difficulty;
+        this.variant = variant;
     }
 }

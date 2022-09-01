@@ -100,7 +100,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             }
             sidePane.setBottom(controlButtonPane);
 
-            if (config.isBackgroundDark()) {
+            if (config.isDarkThemeEnabled()) {
                 root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
                     + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
                     + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
@@ -157,7 +157,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 LineChart<String, Number> levelChart = StatDisplayUtils.buildLevelChart(stats, root);
                 TableView chi2Chart = StatDisplayUtils.buildTable(stats);
 
-                if(config.isBackgroundDark())
+                if(config.isDarkThemeEnabled())
                 {
                     colorBands.setTextFill(Color.WHITE);
                 }
@@ -186,7 +186,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                     }
                 });
 
-                if(config.isBackgroundDark())
+                if(config.isDarkThemeEnabled())
                 {
                     levelsInfo.setTextFill(Color.WHITE);
                 }
@@ -216,7 +216,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                     }
                 });
 
-                if(config.isBackgroundDark())
+                if(config.isDarkThemeEnabled())
                 {
                     chi2Info.setTextFill(Color.WHITE);
                 }
@@ -290,7 +290,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             }
             sidePane.setBottom(controlButtonPane);
 
-            if (config.isBackgroundDark()) {
+            if (config.isDarkThemeEnabled()) {
                 root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
                     + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
                     + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: white;");
@@ -338,28 +338,28 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
                 addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 100.) + "s"));
 
-                addToGridCenter(grid, currentFormRow, translator, "MORPHOSYNTAX", new Text(""));
+                addToGridCenter(grid, currentFormRow, translator, "Morphosyntax", new Text(""));
                 addToGridCenter(grid, currentFormRow, translator, "TotalMorphosyntax", new Text(String.valueOf(stats.totalMorphosyntax) + "/10"));
                 addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsMorphosyntax) + "/5"));
                 addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsMorphosyntax) + "/5"));
                 addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsMorphosyntax) + "/5"));
                 addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsMorphosyntax) + "/5"));
 
-                addToGridCenter(grid, currentFormRow, translator, "SENTENCECOMPREHENSION", new Text(""));
+                addToGridCenter(grid, currentFormRow, translator, "SentenceComprehension", new Text(""));
                 addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually) + "/10"));
                 addToGridCenter(grid, currentFormRow, translator, "TotalSentenceComprehension", new Text(String.valueOf(stats.total) + "/10"));
             }else {
 
                 addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 100) + "s"));
 
-                addToGridCenter(grid, currentFormRow, translator, "PHONOLOGY", new Text(""));
+                addToGridCenter(grid, currentFormRow, translator, "Phonology", new Text(""));
                 addToGridCenter(grid, currentFormRow, translator, "TotalPhonology", new Text(String.valueOf(stats.totalPhonology) + "/10"));
                 addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsPhonology) + "/5"));
                 addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsPhonology) + "/5"));
                 addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsPhonology) + "/5"));
                 addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsPhonology) + "/5"));
 
-                addToGridCenter(grid, currentFormRow, translator, "SEMANTIC", new Text(""));
+                addToGridCenter(grid, currentFormRow, translator, "Semantic", new Text(""));
                 addToGridCenter(grid, currentFormRow, translator, "TotalSemantic", new Text(String.valueOf(stats.totalSemantic) + "/10"));
                 addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsPhonology) + "/5"));
                 addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsPhonology) + "/5"));
@@ -368,7 +368,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsSemantic) + "/5"));
                 addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreRightTargetItemsSemantic) + "/5"));
 
-                addToGridCenter(grid, currentFormRow, translator, "WORDCOMPREHENSION", new Text(""));
+                addToGridCenter(grid, currentFormRow, translator, "WordComprehension", new Text(""));
                 addToGridCenter(grid, currentFormRow, translator, "TotalWordComprehension", new Text(String.valueOf(stats.totalWordComprehension) + "/20"));
                 addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually) + "/20"));
                 addToGridCenter(grid, currentFormRow, translator, "Total", new Text(String.valueOf(stats.total) + "/20"));
@@ -577,7 +577,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
             ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(controlButtonPane);
             controlButtonPane.setAlignment(Pos.CENTER_RIGHT);
 
-            if (config.getAreaOfInterestDisabledProperty().getValue())
+            if (config.isAreaOfInterestDisabled())
                 controlButtonPane.getChildren().add(aoiButton);
 
             if (!config.isFixationSequenceDisabled()) {

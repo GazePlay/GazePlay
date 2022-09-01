@@ -19,12 +19,11 @@ import net.gazeplay.components.RandomPositionGenerator;
 @Slf4j
 public class Bubble implements GameLifeCycle {
 
-    public static final String DIRECTION_TOP = "toTop";
-    public static final String DIRECTION_BOTTOM = "toBottom";
-    public static final String DIRECTION_LEFT = "toLeft";
-    public static final String DIRECTION_RIGHT = "toRight";
-
-    public static final String FIX = "FIX";
+    public static final String DIRECTION_TOP = "ToTop";
+    public static final String DIRECTION_BOTTOM = "ToBottom";
+    public static final String DIRECTION_LEFT = "ToLeft";
+    public static final String DIRECTION_RIGHT = "ToRight";
+    public static final String FIX = "Fix";
 
     private final IGameContext gameContext;
 
@@ -58,7 +57,7 @@ public class Bubble implements GameLifeCycle {
         if (useBackgroundImage && gameContext.getConfiguration().isBackgroundEnabled()) {
             Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
             Rectangle imageRectangle = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-            double imageRectangleOpacity = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<Double>() {
+            double imageRectangleOpacity = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<>() {
                 @Override
                 public Double visitLight() {
                     return 0.1;
@@ -72,15 +71,9 @@ public class Bubble implements GameLifeCycle {
 
             int randomWallpaperIndex = randomGenerator.nextInt(3);
             switch (randomWallpaperIndex) {
-                case 1:
-                    imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/inhabited-ocean.png")));
-                    break;
-                case 2:
-                    imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/empty-ocean.png")));
-                    break;
-                default:
-                    imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
-                    break;
+                case 1 -> imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/inhabited-ocean.png")));
+                case 2 -> imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/empty-ocean.png")));
+                default -> imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
             }
             imageRectangle.setOpacity(imageRectangleOpacity);
 

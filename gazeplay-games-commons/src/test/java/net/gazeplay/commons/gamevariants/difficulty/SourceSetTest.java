@@ -21,7 +21,7 @@ class SourceSetTest {
     @Test
     void givenValidFileGivenValidDifficultyShouldReturnList() throws FileNotFoundException {
         SourceSet sourceSet = new SourceSet("source-sets.json");
-        Set<String> dirs = sourceSet.getResources(Difficulty.NORMAL);
+        Set<String> dirs = sourceSet.getResources(Difficulty.NORMAL.toString());
 
         assertTrue(dirs.contains("grey"));
     }
@@ -29,7 +29,7 @@ class SourceSetTest {
     @Test
     void givenValidFileGivenInvalidDifficultyShouldReturnEmptyList() throws FileNotFoundException {
         SourceSet sourceSet = new SourceSet("source-sets.json");
-        Set<String> dirs = sourceSet.getResources(Difficulty.HARD);
+        Set<String> dirs = sourceSet.getResources(Difficulty.HARD.toString());
 
         assertEquals(0, dirs.size());
     }

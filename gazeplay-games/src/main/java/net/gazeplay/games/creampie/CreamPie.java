@@ -17,9 +17,9 @@ public class CreamPie implements GameLifeCycle {
 
     private final Stats stats;
 
-    private final Hand hand;
+    private Hand hand;
 
-    private final Target target;
+    private Target target;
 
     private final ReplayablePseudoRandom randomGenerator;
 
@@ -29,16 +29,6 @@ public class CreamPie implements GameLifeCycle {
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
-
-        final ImageLibrary imageLibrary = Portrait.createImageLibrary(randomGenerator);
-        final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
-        randomPositionGenerator.setRandomGenerator(randomGenerator);
-
-        hand = new Hand();
-
-        target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this);
-        gameContext.getChildren().add(target);
-        gameContext.getChildren().add(hand);
     }
 
     public CreamPie(IGameContext gameContext, Stats stats, double gameSeed) {
@@ -46,6 +36,11 @@ public class CreamPie implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+    }
+
+    @Override
+    public void launch() {
+        gameContext.getChildren().clear();
 
         final ImageLibrary imageLibrary = Portrait.createImageLibrary(randomGenerator);
         final RandomPositionGenerator randomPositionGenerator = gameContext.getRandomPositionGenerator();
@@ -54,15 +49,9 @@ public class CreamPie implements GameLifeCycle {
         hand = new Hand();
 
         target = new Target(randomPositionGenerator, hand, stats, gameContext, imageLibrary, this);
-
-    }
-
-    @Override
-    public void launch() {
-        gameContext.getChildren().clear();
-
         gameContext.getChildren().add(target);
         gameContext.getChildren().add(hand);
+
         gameContext.setLimiterAvailable();
         hand.recomputePosition();
 

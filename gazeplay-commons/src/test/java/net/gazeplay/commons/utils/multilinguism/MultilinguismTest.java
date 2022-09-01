@@ -17,14 +17,14 @@ class MultilinguismTest {
 
     @Test
     void shouldGetFrenchTranslation() {
-        String result = multilinguism.getTranslation("close", "fra");
-        assertEquals("Fermer", result);
+        String result = multilinguism.getTranslation("Exit", "fra");
+        assertEquals("Quitter", result);
     }
 
     @Test
     void shouldGetDefaultEnglishTranslation() {
-        String result = multilinguism.getTranslation("close", "wrong");
-        assertEquals("Close", result);
+        String result = multilinguism.getTranslation("Exit", "wrong");
+        assertEquals("Exit", result);
     }
 
     @Test
