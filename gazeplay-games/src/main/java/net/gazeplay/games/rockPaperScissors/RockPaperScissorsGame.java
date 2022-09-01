@@ -13,8 +13,6 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -119,6 +117,10 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
         paperButton.active();
         scissorsButton.active();
 
+        rockButton.setMouseTransparent(false);
+        paperButton.setMouseTransparent(false);
+        scissorsButton.setMouseTransparent(false);
+
         gameContext.getChildren().add(layout);
 
         this.start();
@@ -196,6 +198,7 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
     private Rectangle createOpponentHandSign() {
         final Image image = HandSign.UNKNOWN.getImage();
         final Rectangle rectangle = new Rectangle();
+        rectangle.setMouseTransparent(true);
         rectangle.setFill(new ImagePattern(image));
         rectangle.fillProperty().bind(
             new When(opponentHandSign.isEqualTo(HandSign.ROCK))
@@ -240,6 +243,7 @@ public class RockPaperScissorsGame extends AnimationTimer implements GameLifeCyc
                 }
             } else {
                 opponentHandSign.setValue(HandSign.values()[random.nextInt(3)]);
+                button.setMouseTransparent(true);
 
                 if (!button.equals(rockButton)) {
                     rockButton.disable();
