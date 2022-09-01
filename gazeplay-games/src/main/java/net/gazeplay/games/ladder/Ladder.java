@@ -38,6 +38,8 @@ public class Ladder implements GameLifeCycle {
     private double ecarth;
     private double spaceh;
 
+    private TranslateTransition translateTransition;
+
     private Rectangle player;
 
     private double radius;
@@ -74,6 +76,7 @@ public class Ladder implements GameLifeCycle {
     public void launch() {
         steps.clear();
         fall.clear();
+        translateTransition.stop();
         progressButtons.clear();
 
         size = 10;
@@ -268,7 +271,7 @@ public class Ladder implements GameLifeCycle {
         steps.remove(step);
         fall.remove(step);
         step.ln.setStroke(Color.RED);
-        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue() / 2), player);
+        translateTransition = new TranslateTransition(Duration.seconds(gameContext.getConfiguration().getAnimationSpeedRatioProperty().doubleValue() / 2), player);
         translateTransition.setInterpolator(Interpolator.LINEAR);
         if (start) {
             translateTransition.setFromX(ecartw + step.x1 * spacew - dimension2D.getHeight() / 20);

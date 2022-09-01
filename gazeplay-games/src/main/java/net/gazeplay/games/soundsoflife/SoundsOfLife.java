@@ -28,6 +28,8 @@ public class SoundsOfLife implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Stats stats;
     private final ArrayList<TargetAOI> targetAOIList;
+    private final SoundsOfLifeGameVariant gameVariant;
+    private final ReplayablePseudoRandom randomGenerator;
 
     public SoundsOfLife(IGameContext gameContext, Stats stats, SoundsOfLifeGameVariant gameVariant) {
         this(gameContext, stats, gameVariant, -1);
@@ -37,16 +39,36 @@ public class SoundsOfLife implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         this.targetAOIList = new ArrayList<>();
-        Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Configuration config = gameContext.getConfiguration();
-
-        ReplayablePseudoRandom randomGenerator;
+        this.gameVariant = gameVariant;
+        
         if (gameSeed < 0) {
-            randomGenerator = new ReplayablePseudoRandom();
+            this.randomGenerator = new ReplayablePseudoRandom();
             this.stats.setGameSeed(randomGenerator.getSeed());
         } else {
-            randomGenerator = new ReplayablePseudoRandom(gameSeed);
+            this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
         }
+    }
+
+    private void createBackground(ImageView background, Dimension2D dimensions, double scaleRatio, IGameContext gameContext) {
+        background.setFitWidth(background.getImage().getWidth() * scaleRatio);
+        background.setFitHeight(background.getImage().getHeight() * scaleRatio);
+
+        double offsetX = (dimensions.getWidth() - background.getFitWidth()) / 2;
+        double offsetY = (dimensions.getHeight() - background.getFitHeight()) / 2;
+
+        background.setX(offsetX);
+        background.setY(offsetY);
+
+        gameContext.getChildren().add(background);
+    }
+
+    @Override
+    public void launch() {
+    
+        gameContext.getChildren().clear();
+    
+        Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        Configuration config = gameContext.getConfiguration();
 
         String path = "data/soundsoflife/" + gameVariant.toString().toLowerCase() + "/";
 
@@ -107,23 +129,7 @@ public class SoundsOfLife implements GameLifeCycle {
             gameContext.getChildren().add(entity);
             gameContext.getGazeDeviceManager().addEventFilter(entity);
         }
-    }
-
-    private void createBackground(ImageView background, Dimension2D dimensions, double scaleRatio, IGameContext gameContext) {
-        background.setFitWidth(background.getImage().getWidth() * scaleRatio);
-        background.setFitHeight(background.getImage().getHeight() * scaleRatio);
-
-        double offsetX = (dimensions.getWidth() - background.getFitWidth()) / 2;
-        double offsetY = (dimensions.getHeight() - background.getFitHeight()) / 2;
-
-        background.setX(offsetX);
-        background.setY(offsetY);
-
-        gameContext.getChildren().add(background);
-    }
-
-    @Override
-    public void launch() {
+    
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();

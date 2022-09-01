@@ -12,7 +12,7 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 
 /**
- * @see http://java-buddy.blogspot.fr/2013/04/free-draw-on-javafx-canvas.html
+ * http://java-buddy.blogspot.fr/2013/04/free-draw-on-javafx-canvas.html
  */
 public class DrawApplication implements GameLifeCycle {
 
@@ -25,46 +25,17 @@ public class DrawApplication implements GameLifeCycle {
         this.gameContext = gameContext;
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
-
-        DrawBuilder drawBuilder = new DrawBuilder(randomGenerator);
-        drawBuilder.setColorPicker(new RainbowColorPicker());
-
-        final Scene scene = gameContext.getPrimaryScene();
-
-        double coefficient = 1.5;
-
-        Canvas canvas = drawBuilder.createCanvas(scene, coefficient, this.stats);
-
-        StackPane root = new StackPane();
-
-        root.setPrefWidth(scene.getWidth());
-        root.setPrefHeight(scene.getHeight());
-
-        root.prefWidthProperty().bind(scene.widthProperty());
-        root.prefHeightProperty().bind(scene.heightProperty());
-        root.minWidthProperty().bind(scene.widthProperty());
-        root.minHeightProperty().bind(scene.heightProperty());
-        root.maxWidthProperty().bind(scene.widthProperty());
-        root.maxHeightProperty().bind(scene.heightProperty());
-
-
-        Rectangle border = new Rectangle( canvas.getWidth(),canvas.getHeight());
-        border.setStrokeWidth(5);
-        border.setStroke(Color.WHITE);
-        border.setFill(Color.BLACK);
-
-        border.widthProperty().bind(canvas.widthProperty());
-        border.heightProperty().bind(canvas.heightProperty());
-
-        root.getChildren().addAll(border,canvas);
-        gameContext.getGazeDeviceManager().addEventFilter(canvas);
-        gameContext.getChildren().addAll(root);
     }
 
     public DrawApplication(IGameContext gameContext, Stats stats, double gameSeed) {
         this.stats  = stats;
         this.gameContext = gameContext;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+    }
+
+    @Override
+    public void launch() {
+        gameContext.getChildren().clear();
 
         DrawBuilder drawBuilder = new DrawBuilder(randomGenerator);
         drawBuilder.setColorPicker(new RainbowColorPicker());
@@ -99,10 +70,7 @@ public class DrawApplication implements GameLifeCycle {
         root.getChildren().addAll(border,canvas);
         gameContext.getGazeDeviceManager().addEventFilter(canvas);
         gameContext.getChildren().addAll(root);
-    }
 
-    @Override
-    public void launch() {
         gameContext.setOffFixationLengthControl();
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);

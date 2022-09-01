@@ -13,11 +13,8 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
-// Add -PSpotBugs=false to the Gradle Command Line to not run spotbugs
-boolean spotbugsEnabled = Boolean.parseBoolean(project.getProperties().get('SpotBugs')) ?: true
-
-// Add -Ppmd=false to the Gradle Command Line to not run PMD
-boolean pmdEnabled = Boolean.parseBoolean(project.getProperties().get('pmd')) ?: true
+spotbugsMain.enabled = true
+spotbugsTest.enabled = false
 
 logging.captureStandardOutput LogLevel.INFO
 
@@ -92,7 +89,7 @@ subprojects {
         excludeFilter = file("spotbugs-exclude.xml")
     }
 
-    spotbugsMain.enabled = spotbugsEnabled
+    spotbugsMain.enabled = true
     spotbugsTest.enabled = false
 
     downloadLicenses {
@@ -150,8 +147,8 @@ subprojects {
         ruleSetFiles = files(rootProject.file("pmd-ruleset.xml"))
     }
 
-    pmdMain.enabled = pmdEnabled
-    pmdTest.enabled = pmdEnabled
+    pmdMain.enabled = true
+    pmdTest.enabled = true
 }
 
 dependencies {
