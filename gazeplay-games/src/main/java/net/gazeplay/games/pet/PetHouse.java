@@ -56,7 +56,7 @@ public class PetHouse extends Parent implements GameLifeCycle {
 
     private Integer waterNeeded = 100;
 
-    public final int[] it = {LIFE_SIZE, LIFE_SIZE, LIFE_SIZE};
+    public int[] it = new int[]{LIFE_SIZE, LIFE_SIZE, LIFE_SIZE};
     private final Timeline[] timelines = {new Timeline(), new Timeline(), new Timeline()};
     private final Color[] color = {Color.DARKSEAGREEN, Color.ALICEBLUE, Color.DARKSALMON, Color.LAVENDER};
     private final String[] screen = {"park.jpg", "room.jpg", "kitchen.jpg", "shower.jpg"};
@@ -110,6 +110,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
         gameContext.getChildren().clear();
 
         setMode(INIT_MODE);
+
+        this.it = new int[]{LIFE_SIZE, LIFE_SIZE, LIFE_SIZE};
+        this.waterNeeded = 100;
 
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.background = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
@@ -203,7 +206,9 @@ public class PetHouse extends Parent implements GameLifeCycle {
     @Override
     public void dispose() {
         // TODO Auto-generated method stub
-
+        for (int i = 0; i < 3; i++){
+            timelines[i].stop();
+        }
     }
 
     private void createZoneEvents() {
@@ -324,7 +329,6 @@ public class PetHouse extends Parent implements GameLifeCycle {
                     timelines[number].stop();
                 }
             });
-
             timelines[i].play();
         }
     }
@@ -608,5 +612,4 @@ public class PetHouse extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(bowl);
 
     }
-
 }
