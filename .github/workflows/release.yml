@@ -45,6 +45,9 @@ jobs:
         run: |
           ./gradlew --stacktrace --info release
 
+      # add this for installer 32bits afsr and bera (don't forget to uncomment the lines at the very bottom of the build.gradle file at the root
+      # mv gazeplay-afsr-windows-x32*installer.exe gazeplay-afsr-windows-x32-installer.exe
+      # mv gazeplay-bera-windows-x32*installer.exe gazeplay-bera-windows-x32-installer.exe
       - name: Rename Releases
         run: |
           cd ./build/distributions/
@@ -116,6 +119,9 @@ jobs:
         uses: csexton/release-asset-action@v2
         with:
           release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
+
+          # add this to add afsr installer 32bits to the release
+          # ./build/distributions/gazeplay-afsr-windows-x32-installer.exe
           files: |
             ./build/distributions/gazeplay-afsr-windows-x64.zip
             ./build/distributions/gazeplay-afsr-windows-x64-installer.exe
@@ -127,6 +133,9 @@ jobs:
         uses: csexton/release-asset-action@v2
         with:
           release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
+
+          # add this to add bera installer 32bits to the release
+          # ./build/distributions/gazeplay-bera-windows-x32-installer.exe
           files: |
             ./build/distributions/gazeplay-bera-windows-x64.zip
             ./build/distributions/gazeplay-bera-windows-x64-installer.exe
