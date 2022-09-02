@@ -9,6 +9,17 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          android: false
+          dotnet: true
+          haskell: true
+          large-packages: true
+          swap-storage: true
+
       - name: Checkout code
         uses: actions/checkout@v2
 
