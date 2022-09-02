@@ -216,6 +216,20 @@ distributions {
         }
     }
 
+    windowsAfsrx32{
+        setDistributionBaseName "${project.name}-afsr-windows-x32"
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+            from("build/bin/gazeplay-afsr-windows.bat") {
+                into 'bin'
+            }
+            from("build/jre/windows-x32") {
+                into 'lib/jre'
+            }
+        }
+    }
+
     windowsBera{
         setDistributionBaseName "${project.name}-bera-windows-x64"
         contents {
@@ -225,6 +239,20 @@ distributions {
                 into 'bin'
             }
             from("build/jre/windows-x64") {
+                into 'lib/jre'
+            }
+        }
+    }
+
+    windowsBerax32{
+        setDistributionBaseName "${project.name}-bera-windows-x32"
+        contents {
+            with distributions.main.contents
+            from("build/reports")
+            from("build/bin/gazeplay-bera-windows.bat") {
+                into 'bin'
+            }
+            from("build/jre/windows-x32") {
                 into 'lib/jre'
             }
         }
@@ -300,7 +328,9 @@ task('downloadAndExtractARMDependecies').dependsOn('downloadAndExtractARMJREwith
 windowsDistZip.dependsOn(downloadAndExtractWindowsJRE)
 windowsx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
 windowsBeraDistZip.dependsOn(downloadAndExtractWindowsJRE)
+windowsBerax32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
 windowsAfsrDistZip.dependsOn(downloadAndExtractWindowsJRE)
+windowsAfsrx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
 linuxDistTar.dependsOn(downloadAndExtractLinuxDependecies)
 macosDistTar.dependsOn(downloadAndExtractMacosJRE)
 armDistTar.dependsOn(downloadAndExtractARMDependecies)
@@ -347,4 +377,6 @@ startScripts.enabled = false
 afterReleaseBuild.dependsOn generateWindowsInstallerInDocker
 afterReleaseBuild.dependsOn generateWindowsInstallerInDockerx32
 afterReleaseBuild.dependsOn generateWindowsAfsrInstallerInDocker
+//afterReleaseBuild.dependsOn generateWindowsAfsrInstallerInDockerx32
 afterReleaseBuild.dependsOn generateWindowsBeraInstallerInDocker
+//afterReleaseBuild.dependsOn generateWindowsBeraInstallerInDockerx32
