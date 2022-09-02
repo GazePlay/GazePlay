@@ -4,6 +4,7 @@ def jreSource = project.ext.jreSource
 def zuluVersion = project.ext.zuluVersion
 def jreVersion = project.ext.jreVersion
 def jreFolder = project.ext.jreFolder
+def jre = project.ext.jre
 
 def filename = "zulu${zuluVersion}-ca-fx-jre${jreVersion}-macosx_x64"
 
@@ -21,7 +22,7 @@ task extractMacosJRE(dependsOn: downloadMacosJRE, type: Copy, group: 'custom jre
 task downloadAndExtractMacosJRE(dependsOn: extractMacosJRE, group: 'custom jre') {
     doLast {
         copy {
-            from new File(extractMacosJRE.getDestinationDir(), filename)
+            from("${jreFolder}/macos/${filename}/zulu-${jre}.jre/Contents/Home")
             into "${jreFolder}/macos"
         }
 
