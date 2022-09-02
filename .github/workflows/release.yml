@@ -98,7 +98,7 @@ jobs:
           draft: false
           prerelease: true
 
-      - name: Upload Gazeplay to Release
+      - name: Upload Gazeplay Linux/Mac/Arm to Release
         id: upload-gazeplay-assets
         uses: csexton/release-asset-action@v2
         with:
@@ -107,6 +107,14 @@ jobs:
             ./build/distributions/gazeplay-linux-x64.tar.gz
             ./build/distributions/gazeplay-macos.tar.gz
             ./build/distributions/gazeplay-arm.tar.gz
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Gazeplay Windows to Release
+        id: upload-windows-assets
+        uses: csexton/release-asset-action@v2
+        with:
+          release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
+          files: |
             ./build/distributions/gazeplay-windows-x64.zip
             ./build/distributions/gazeplay-windows-x64-installer.exe
             ./build/distributions/gazeplay-windows-x32.zip
