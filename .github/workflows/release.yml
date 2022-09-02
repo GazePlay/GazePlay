@@ -10,16 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@main
-        with:
-          tool-cache: false
-          android: true
-          dotnet: false
-          haskell: false
-          large-packages: false
-          swap-storage: false
-
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -27,12 +17,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
-
-      - name: Download JREs
-        run: |
-          chmod +x ./gradlew
-          ./gradlew --stacktrace --info downloadAndExtractJREs
-          chmod -R 777 build/jre
 
       - name: Setup Git Config
         run: |
@@ -43,7 +27,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ./gradlew --stacktrace --info release
+          ./gradlew generateWindowsAfsrInstaller
 
       # add this for installer 32bits afsr and bera (don't forget to uncomment the lines at the very bottom of the build.gradle file at the root
       # mv gazeplay-afsr-windows-x32*installer.exe gazeplay-afsr-windows-x32-installer.exe
@@ -51,20 +35,9 @@ jobs:
       - name: Rename Releases
         run: |
           cd ./build/distributions/
-          mv gazeplay-linux-x64*.tar.gz gazeplay-linux-x64.tar.gz
-          mv gazeplay-macos*.tar.gz gazeplay-macos.tar.gz
-          mv gazeplay-arm*.tar.gz gazeplay-arm.tar.gz
-          mv gazeplay-windows-x64*.zip gazeplay-windows-x64.zip
-          mv gazeplay-windows-x64*installer.exe gazeplay-windows-x64-installer.exe
-          mv gazeplay-windows-x32*.zip gazeplay-windows-x32.zip
-          mv gazeplay-windows-x32*installer.exe gazeplay-windows-x32-installer.exe
           mv gazeplay-afsr-windows-x64*.zip gazeplay-afsr-windows-x64.zip
           mv gazeplay-afsr-windows-x64*installer.exe gazeplay-afsr-windows-x64-installer.exe
           mv gazeplay-afsr-windows-x32*.zip gazeplay-afsr-windows-x32.zip
-          mv gazeplay-bera-windows-x64*.zip gazeplay-bera-windows-x64.zip
-          mv gazeplay-bera-windows-x64*installer.exe gazeplay-bera-windows-x64-installer.exe
-          mv gazeplay-bera-windows-x32*.zip gazeplay-bera-windows-x32.zip
-          mv gazeplay-no-jre*.zip gazeplay-no-jre.zip
 
       - name: Get Env
         run: |
@@ -98,22 +71,6 @@ jobs:
           draft: false
           prerelease: true
 
-      - name: Upload Gazeplay to Release
-        id: upload-gazeplay-assets
-        uses: csexton/release-asset-action@v2
-        with:
-          release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
-          files: |
-            ./build/distributions/gazeplay-linux-x64.tar.gz
-            ./build/distributions/gazeplay-macos.tar.gz
-            ./build/distributions/gazeplay-arm.tar.gz
-            ./build/distributions/gazeplay-windows-x64.zip
-            ./build/distributions/gazeplay-windows-x64-installer.exe
-            ./build/distributions/gazeplay-windows-x32.zip
-            ./build/distributions/gazeplay-windows-x32-installer.exe
-            ./build/distributions/gazeplay-no-jre.zip
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Upload Gazeplay-AFSR to Release
         id: upload-afsr-assets
         uses: csexton/release-asset-action@v2
@@ -126,18 +83,4 @@ jobs:
             ./build/distributions/gazeplay-afsr-windows-x64.zip
             ./build/distributions/gazeplay-afsr-windows-x64-installer.exe
             ./build/distributions/gazeplay-afsr-windows-x32.zip
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Gazeplay-Bera to Release
-        id: upload-bera-assets
-        uses: csexton/release-asset-action@v2
-        with:
-          release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
-
-          # add this to add bera installer 32bits to the release
-          # ./build/distributions/gazeplay-bera-windows-x32-installer.exe
-          files: |
-            ./build/distributions/gazeplay-bera-windows-x64.zip
-            ./build/distributions/gazeplay-bera-windows-x64-installer.exe
-            ./build/distributions/gazeplay-bera-windows-x32.zip
           github-token: ${{ secrets.GITHUB_TOKEN }}

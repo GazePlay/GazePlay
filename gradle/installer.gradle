@@ -203,7 +203,7 @@ task prepareInnoSetupFilesAfsr(group: 'distribution') {
     }
 }
 
-task unzipAfsrDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
+task unzipAfsrDistribution(dependsOn: ['zipAfsrDistribution'], type: Copy, group: 'distribution') {
     from zipTree("${buildDir}/distributions/${project.name}-afsr-windows-x64-${version}.zip")
     into buildDir
     fileMode 0777

@@ -20,6 +20,18 @@ task packageApp(dependsOn: ['packageAllDists',
     tasks.findByName('packageAllDists').mustRunAfter('scriptsForRelease')
 }
 
+task('packageAfsr').dependsOn(
+        'windowsAfsrDistZip',
+        'windowsAfsrx32DistZip'
+)
+
+task zipAfsrDistribution(dependsOn: ['packageAfsr',
+                                     'downloadLicenses',
+                                     'scriptsForRelease'], group: 'distribution') {
+    tasks.findByName('packageAfsr').mustRunAfter('downloadLicenses')
+    tasks.findByName('packageAfsr').mustRunAfter('scriptsForRelease')
+}
+
 task scriptsForRelease(type: Copy, group: 'distribution') {
     from "${rootDir}/gazeplay-dist/src/main/bin"
     into "${rootDir}/build/bin"
