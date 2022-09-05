@@ -101,7 +101,11 @@ public class Ladder implements GameLifeCycle {
 
     @Override
     public void dispose() {
-        translateTransition.stop();
+        try {
+            translateTransition.stop();
+        } catch (Exception e) {
+            System.out.println("translateTransition is not running, can't stop it !");
+        }
     }
 
     private void background() {
