@@ -201,18 +201,13 @@ public class DotToDot implements GameLifeCycle {
 
             DotEntity dot = new DotEntity(dotShape, stats, progressIndicator, number, gameContext, gameVariant, this, index);
             dotList.add(dot);
-
-            if (gameVariant.getLabel().contains("Number")) {
-                gameContext.getChildren().add(dot);
-                gameContext.getGazeDeviceManager().addEventFilter(dot);
-            }
         }
 
-        if (gameVariant.getLabel().contains("Order")) {
-            gameContext.getChildren().addAll(dotList.get(0), dotList.get(1));
-            gameContext.getGazeDeviceManager().addEventFilter(dotList.get(0));
-            gameContext.getGazeDeviceManager().addEventFilter(dotList.get(1));
-        }
+        dotList.forEach(dot -> {
+            gameContext.getChildren().add(dot);
+            gameContext.getGazeDeviceManager().addEventFilter(dot);
+        });
+
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
