@@ -105,161 +105,158 @@ public class GameVariantDialog extends Stage {
             button.setMaxWidth(primaryStage.getWidth() / 8);
             button.setMaxHeight(primaryStage.getHeight() / 8);
 
-            if (variant.toString().contains("DYNAMIC") || variant.toString().contains("Dynamic")){
-                if (!choicePanes.containsKey(1)){
-                    choicePanes.put(1, createFlowPane());
-                }
-                choicePanes.get(1).getChildren().add(button);
-            }else {
-                int indexOfTheVariant = 0;
+            int indexOfTheVariant = 0;
 
-                if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
-                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
-                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag") ||
-                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheLetter") ||
-                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape") ||
-                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheSound")
-                ) {
-                    String variantString = ((DimensionDifficultyGameVariant) variant).getVariant();
-                    indexOfTheVariant = switch (variantString) {
-                        case "Easy", "Vowels", "Farm", "Animals", "MostFamous" -> 0;
-                        case "Normal", "Consonants", "Forest", "Instruments", "Africa" -> 1;
-                        case "Hard", "AllLetters", "Savanna", "AllSounds", "America" -> 2;
-                        case "Birds", "Asia" -> 3;
-                        case "Maritime", "Europe" -> 4;
-                        case "AllAnimals", "AllFlags" -> 5;
-                        case "Dynamic" -> 6;
-                        default -> -1;
-                    };
-                } else if (gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors")) {
-                    indexOfTheVariant = variant.toString().toLowerCase().contains("hide") ? 0 : 1;
-                } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
-                    button.setTextAlignment(TextAlignment.CENTER);
-                    String variantString = ((IntStringGameVariant) variant).getStringValue();
-                    indexOfTheVariant = switch (variantString) {
-                        case "InfinityBottles" -> 5;
-                        case "BigBottles" -> 4;
-                        case "HighBottles" -> 3;
-                        case "NormalBottles" -> 2;
-                        case "SmallBottles" -> 1;
-                        default -> 0;
-                    };
-                } else if (variant instanceof IntStringGameVariant) {
-                    button.setTextAlignment(TextAlignment.CENTER);
-                    indexOfTheVariant = ((IntStringGameVariant) variant).getNumber();
-                }
-
-                if (!choicePanes.containsKey(indexOfTheVariant)) {
-                    choicePanes.put(indexOfTheVariant, createFlowPane());
-                }
-                choicePanes.get(indexOfTheVariant).getChildren().add(button);
-
-                if ((gameSpec.getGameSummary().getNameCode().equals("Bottle") ||
-                    gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
-                    gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
-                    gameSpec.getGameSummary().getNameCode().contains("Memory") ||
-                    gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
-                    gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors") ||
-                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
-                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
-                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag") ||
-                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheLetter") ||
-                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape") ||
-                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheSound")) &&
-                    group.getToggles().size() < 2
-                ) {
-                    RadioButton[] categories;
-
-                    if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
-                        categories = new RadioButton[6];
-                        categories[0] = new RadioButton(translator.translate("TinySizeCategory"));
-                        categories[1] = new RadioButton(translator.translate("SmallSizeCategory"));
-                        categories[2] = new RadioButton(translator.translate("NormalSizeCategory"));
-                        categories[3] = new RadioButton(translator.translate("HighSizeCategory"));
-                        categories[4] = new RadioButton(translator.translate("BigSizeCategory"));
-                        categories[5] = new RadioButton(translator.translate("InfinityCategory"));
-                    } else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
-                        gameSpec.getGameSummary().getNameCode().contains("Memory") ||
-                        gameSpec.getGameSummary().getNameCode().equals("Ninja")
-                    ) {
-                        categories = new RadioButton[2];
-                        categories[0] = new RadioButton(translator.translate("Static"));
-                        categories[1] = new RadioButton(translator.translate("Dynamic"));
-                    } else if(gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) {
-                        categories = new RadioButton[2];
-                        categories[0] = new RadioButton(translator.translate("MouseCategory"));
-                        categories[1] = new RadioButton(translator.translate("OtherCategory"));
-                    } else if (gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors")) {
-                        categories = new RadioButton[2];
-                        categories[0] = new RadioButton(translator.translate("Hide"));
-                        categories[1] = new RadioButton(translator.translate("Visible"));
-                    } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal")) {
-                        categories = new RadioButton[7];
-                        categories[0] = new RadioButton(translator.translate("Farm"));
-                        categories[1] = new RadioButton(translator.translate("Forest"));
-                        categories[2] = new RadioButton(translator.translate("Savanna"));
-                        categories[3] = new RadioButton(translator.translate("Birds"));
-                        categories[4] = new RadioButton(translator.translate("Maritime"));
-                        categories[5] = new RadioButton(translator.translate("AllAnimals"));
-                        categories[6] = new RadioButton(translator.translate("Dynamic"));
-                    } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
-                        gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape")
-                    ) {
-                        categories = new RadioButton[3];
-                        categories[0] = new RadioButton(translator.translate("Easy"));
-                        categories[1] = new RadioButton(translator.translate("Normal"));
-                        categories[2] = new RadioButton(translator.translate("Hard"));
-                    } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag")) {
-                        categories = new RadioButton[6];
-                        categories[0] = new RadioButton(translator.translate("MostFamous"));
-                        categories[1] = new RadioButton(translator.translate("Africa"));
-                        categories[2] = new RadioButton(translator.translate("America"));
-                        categories[3] = new RadioButton(translator.translate("Asia"));
-                        categories[4] = new RadioButton(translator.translate("Europe"));
-                        categories[5] = new RadioButton(translator.translate("AllFlags"));
-                    } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheLetter")) {
-                        categories = new RadioButton[3];
-                        categories[0] = new RadioButton(translator.translate("Vowels"));
-                        categories[1] = new RadioButton(translator.translate("Consonants"));
-                        categories[2] = new RadioButton(translator.translate("AllLetters"));
-                    } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheSound")) {
-                        categories = new RadioButton[3];
-                        categories[0] = new RadioButton(translator.translate("Animals"));
-                        categories[1] = new RadioButton(translator.translate("Instruments"));
-                        categories[2] = new RadioButton(translator.translate("AllSounds"));
-                    } else {
-                        categories = new RadioButton[2];
-                        categories[0] = new RadioButton(translator.translate("Classic"));
-                        categories[1] = new RadioButton(translator.translate("HighContrasts"));
-                    }
-
-                    for (int i = 0; i < categories.length; i++) {
-                        int index = i;
-                        categories[i].setToggleGroup(group);
-                        bottom.getChildren().add(categories[i]);
-                        categories[i].setOnAction(actionEvent -> {
-                            if (easyMode != index) {
-                                easyMode = index;
-                                choicePanelScroller.setContent(choicePanes.get(index));
-                            }
-                        });
-                    }
-
-                    categories[0].setSelected(true);
-                    sceneContentPane.setBottom(bottom);
-                }
-
-                EventHandler<Event> event = mouseEvent -> {
-                    close();
-                    root.setDisable(false);
-                    if (config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
-                        whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, variant);
-                    } else {
-                        gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, variant);
-                    }
+            if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheLetter") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheSound")
+            ) {
+                String variantString = ((DimensionDifficultyGameVariant) variant).getVariant();
+                indexOfTheVariant = switch (variantString) {
+                    case "Easy", "Vowels", "Farm", "Animals", "MostFamous" -> 0;
+                    case "Normal", "Consonants", "Forest", "Instruments", "Africa" -> 1;
+                    case "Hard", "AllLetters", "Savanna", "AllSounds", "America" -> 2;
+                    case "Birds", "Asia" -> 3;
+                    case "Maritime", "Europe" -> 4;
+                    case "AllAnimals", "AllFlags" -> 5;
+                    case "Dynamic" -> 6;
+                    default -> -1;
                 };
-                button.addEventHandler(MOUSE_CLICKED, event);
+            } else if (variant.toString().contains("DYNAMIC") || variant.toString().contains("Dynamic")){
+                indexOfTheVariant = 1;
+            } else if (gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors")) {
+                indexOfTheVariant = variant.toString().toLowerCase().contains("hide") ? 0 : 1;
+            } else if (gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) {
+                indexOfTheVariant = variant.toString().toLowerCase().contains("other") ? 0 : 1;
+            } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
+                button.setTextAlignment(TextAlignment.CENTER);
+                String variantString = ((IntStringGameVariant) variant).getStringValue();
+                indexOfTheVariant = switch (variantString) {
+                    case "InfinityBottles" -> 5;
+                    case "BigBottles" -> 4;
+                    case "HighBottles" -> 3;
+                    case "NormalBottles" -> 2;
+                    case "SmallBottles" -> 1;
+                    default -> 0;
+                };
+            } else if (variant instanceof IntStringGameVariant) {
+                button.setTextAlignment(TextAlignment.CENTER);
+                indexOfTheVariant = ((IntStringGameVariant) variant).getNumber();
             }
+
+            if (!choicePanes.containsKey(indexOfTheVariant)) {
+                choicePanes.put(indexOfTheVariant, createFlowPane());
+            }
+            choicePanes.get(indexOfTheVariant).getChildren().add(button);
+
+            if ((gameSpec.getGameSummary().getNameCode().equals("Bottle") ||
+                gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
+                gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
+                gameSpec.getGameSummary().getNameCode().contains("Memory") ||
+                gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
+                gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheLetter") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape") ||
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheSound")) &&
+                group.getToggles().size() < 2
+            ) {
+                RadioButton[] categories;
+
+                if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
+                    categories = new RadioButton[6];
+                    categories[0] = new RadioButton(translator.translate("TinySizeCategory"));
+                    categories[1] = new RadioButton(translator.translate("SmallSizeCategory"));
+                    categories[2] = new RadioButton(translator.translate("NormalSizeCategory"));
+                    categories[3] = new RadioButton(translator.translate("HighSizeCategory"));
+                    categories[4] = new RadioButton(translator.translate("BigSizeCategory"));
+                    categories[5] = new RadioButton(translator.translate("InfinityCategory"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
+                    gameSpec.getGameSummary().getNameCode().contains("Memory") ||
+                    gameSpec.getGameSummary().getNameCode().equals("Ninja")
+                ) {
+                    categories = new RadioButton[2];
+                    categories[0] = new RadioButton(translator.translate("Static"));
+                    categories[1] = new RadioButton(translator.translate("Dynamic"));
+                } else if(gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) {
+                    categories = new RadioButton[2];
+                    categories[0] = new RadioButton(translator.translate("MouseCategory"));
+                    categories[1] = new RadioButton(translator.translate("OtherCategory"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors")) {
+                    categories = new RadioButton[2];
+                    categories[0] = new RadioButton(translator.translate("Hide"));
+                    categories[1] = new RadioButton(translator.translate("Visible"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal")) {
+                    categories = new RadioButton[7];
+                    categories[0] = new RadioButton(translator.translate("Farm"));
+                    categories[1] = new RadioButton(translator.translate("Forest"));
+                    categories[2] = new RadioButton(translator.translate("Savanna"));
+                    categories[3] = new RadioButton(translator.translate("Birds"));
+                    categories[4] = new RadioButton(translator.translate("Maritime"));
+                    categories[5] = new RadioButton(translator.translate("AllAnimals"));
+                    categories[6] = new RadioButton(translator.translate("Dynamic"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
+                    gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape")
+                ) {
+                    categories = new RadioButton[3];
+                    categories[0] = new RadioButton(translator.translate("Easy"));
+                    categories[1] = new RadioButton(translator.translate("Normal"));
+                    categories[2] = new RadioButton(translator.translate("Hard"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag")) {
+                    categories = new RadioButton[6];
+                    categories[0] = new RadioButton(translator.translate("MostFamous"));
+                    categories[1] = new RadioButton(translator.translate("Africa"));
+                    categories[2] = new RadioButton(translator.translate("America"));
+                    categories[3] = new RadioButton(translator.translate("Asia"));
+                    categories[4] = new RadioButton(translator.translate("Europe"));
+                    categories[5] = new RadioButton(translator.translate("AllFlags"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheLetter")) {
+                    categories = new RadioButton[3];
+                    categories[0] = new RadioButton(translator.translate("Vowels"));
+                    categories[1] = new RadioButton(translator.translate("Consonants"));
+                    categories[2] = new RadioButton(translator.translate("AllLetters"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheSound")) {
+                    categories = new RadioButton[3];
+                    categories[0] = new RadioButton(translator.translate("Animals"));
+                    categories[1] = new RadioButton(translator.translate("Instruments"));
+                    categories[2] = new RadioButton(translator.translate("AllSounds"));
+                } else {
+                    categories = new RadioButton[2];
+                    categories[0] = new RadioButton(translator.translate("Classic"));
+                    categories[1] = new RadioButton(translator.translate("HighContrasts"));
+                }
+
+                for (int i = 0; i < categories.length; i++) {
+                    int index = i;
+                    categories[i].setToggleGroup(group);
+                    bottom.getChildren().add(categories[i]);
+                    categories[i].setOnAction(actionEvent -> {
+                        if (easyMode != index) {
+                            easyMode = index;
+                            choicePanelScroller.setContent(choicePanes.get(index));
+                        }
+                    });
+                }
+
+                categories[0].setSelected(true);
+                sceneContentPane.setBottom(bottom);
+            }
+
+            EventHandler<Event> event = mouseEvent -> {
+                close();
+                root.setDisable(false);
+                if (config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
+                    whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, variant);
+                } else {
+                    gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, variant);
+                }
+            };
+            button.addEventHandler(MOUSE_CLICKED, event);
         }
 
         Scene scene = new Scene(sceneContentPane, Color.TRANSPARENT);

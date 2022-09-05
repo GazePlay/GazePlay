@@ -76,7 +76,6 @@ public class Ladder implements GameLifeCycle {
     public void launch() {
         steps.clear();
         fall.clear();
-        translateTransition.stop();
         progressButtons.clear();
 
         size = 10;
@@ -102,7 +101,7 @@ public class Ladder implements GameLifeCycle {
 
     @Override
     public void dispose() {
-
+        translateTransition.stop();
     }
 
     private void background() {
