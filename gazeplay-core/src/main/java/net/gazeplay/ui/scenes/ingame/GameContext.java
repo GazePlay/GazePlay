@@ -383,7 +383,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
                                                        @NonNull GameLifeCycle currentGame) {
 
         EventHandler<Event> replayEvent = e -> {
-            exitGame(stats, gazePlay, currentGame);
+            exitReplayGame(stats, gazePlay, currentGame);
             getGazePlay().onGameLaunch(this);
             stats.reset();
             currentGame.launch();
@@ -395,6 +395,41 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         replayButton.addEventHandler(MouseEvent.MOUSE_CLICKED, replayEvent);
         return replayButton;
     }
+
+    public void exitReplayGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
+
+        if (videoRecordingContext != null) {
+            videoRecordingContext.pointersClear();
+        }
+
+        currentGame.dispose();
+        ForegroundSoundsUtils.stopSound(); // to stop playing the sound of Bravo
+        stats.stop();
+
+        soundManager.clear();
+        soundManager.destroy();
+
+        Runnable asynchronousStatsPersistTask = () -> {
+            try {
+                stats.saveStats();
+            } catch (IOException e) {
+                log.error("Failed to save stats file", e);
+            }
+        };
+
+        if (runAsynchronousStatsPersist) {
+            AsyncUiTaskExecutor.getInstance().getExecutorService().execute(asynchronousStatsPersistTask);
+        } else {
+            asynchronousStatsPersistTask.run();
+        }
+
+        StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
+
+        this.clear();
+
+        gazePlay.onDisplayStats(statsContext);
+    }
+
 
     public void exitGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
 
@@ -442,7 +477,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         return new ReplayButton(screenDimension);
     }
 
-    public void exitReplayGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
+    public void exitReplayJsonGame(@NonNull Stats stats, @NonNull GazePlay gazePlay, @NonNull GameLifeCycle currentGame) {
 
         if (videoRecordingContext != null) {
             videoRecordingContext.pointersClear();

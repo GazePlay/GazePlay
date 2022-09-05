@@ -125,8 +125,12 @@ public class GameVariantDialog extends Stage {
                     case "Dynamic" -> 6;
                     default -> -1;
                 };
+            } else if (variant.toString().contains("DYNAMIC") || variant.toString().contains("Dynamic")){
+                indexOfTheVariant = 1;
             } else if (gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors")) {
                 indexOfTheVariant = variant.toString().toLowerCase().contains("hide") ? 0 : 1;
+            } else if (gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) {
+                indexOfTheVariant = variant.toString().toLowerCase().contains("other") ? 0 : 1;
             } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = ((IntStringGameVariant) variant).getStringValue();
