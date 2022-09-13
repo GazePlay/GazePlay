@@ -11,8 +11,8 @@ toc: true
 
 ### Readme
 <img src="../assets/images/file-text.png" alt="Logo fichier"><br>
-<a href="https://github.com/GazePlay/GazePlay/blob/gh-pages/README.md">Notre readme</a>
+<a href="https://github.com/GazePlay/GazePlay/blob/master/README.md">Notre readme</a>
 
 ### Installation
 <img src="../assets/images/logo-install.png" alt="Logo installation"><br>
-<a href="https://github.com/GazePlay/GazePlay/blob/gh-pages/INSTALLATION-FR.MD">Installation</a>
+<a href="https://github.com/GazePlay/GazePlay/blob/master/INSTALLATION-FR.MD">Installation</a>
