@@ -9,6 +9,10 @@ toc: true
 <img src="../assets/images/logo-github.png" alt="GitHub Logo "><br>
 <a href="https://github.com/GazePlay/GazePlay">Our GitHub</a>
 
-### APIs used
+### Readme
 <img src="../assets/images/file-text.png" alt="File logo"><br>
 <a href="https://github.com/GazePlay/GazePlay/blob/gh-pages/README.md">Our readme</a>
+
+### Install
+<img src="../assets/images/logo-install.png" alt="Install logo"><br>
+<a href="https://github.com/GazePlay/GazePlay/blob/gh-pages/INSTALLATION-EN.MD">Install</a>
