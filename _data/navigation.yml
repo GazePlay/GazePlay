@@ -13,3 +13,5 @@ main:
     url: /help/
   - title: "References"
     url: /references/
+  - title: "Developer"
+    url: /developer/
