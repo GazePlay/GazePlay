@@ -1,6 +1,6 @@
 ---
-title: Developer
-permalink: /developer/
+title: Developers
+permalink: /developers/
 layout: single
 toc: true
 ---

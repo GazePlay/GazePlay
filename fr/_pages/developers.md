@@ -1,6 +1,6 @@
 ---
-title: Developpeur
-permalink: /developer/fr
+title: Developpeurs
+permalink: /developers/fr
 layout: single
 toc: true
 ---
@@ -11,7 +11,7 @@ toc: true
 
 ### Readme
 <img src="../assets/images/file-text.png" alt="Logo fichier"><br>
-<a href="https://github.com/GazePlay/GazePlay/blob/master/README.md">Notre readme</a>
+<a href="https://github.com/GazePlay/GazePlay/blob/master/README(FR).md">Notre readme</a>
 
 ### Installation
 <img src="../assets/images/logo-install.png" alt="Logo installation"><br>
