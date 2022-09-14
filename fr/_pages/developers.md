@@ -16,3 +16,7 @@ toc: true
 ### Installation
 <img src="../assets/images/logo-install.png" alt="Logo installation"><br>
 <a href="https://github.com/GazePlay/GazePlay/blob/master/INSTALLATION-FR.MD">Installation</a>
+
+### Site web
+<img src="../assets/images/logo-website.png" alt="Logo website"><br>
+<a href="https://github.com/GazePlay/GazePlay/blob/master/WEBSITE-FR.MD">Notre site web</a>
