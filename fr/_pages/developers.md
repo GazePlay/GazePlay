@@ -19,4 +19,4 @@ toc: true
 
 ### Site web
 <img src="../assets/images/logo-website.png" alt="Logo website"><br>
-<a href="https://github.com/GazePlay/GazePlay/blob/master/WEBSITE-FR.MD">Notre site web</a>
+<a href="https://github.com/GazePlay/GazePlay/blob/master/WEBSITE-FR.md">Notre site web</a>
