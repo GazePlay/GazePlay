@@ -21,8 +21,8 @@ task packageApp(dependsOn: ['packageAllDists',
 }
 
 task('packageAfsr').dependsOn(
-        'windowsAfsrDistZip',
-        'windowsAfsrx32DistZip'
+        'windowsDistZip',
+        'windowsAfsrDistZip'
 )
 
 task zipAfsrDistribution(dependsOn: ['packageAfsr',

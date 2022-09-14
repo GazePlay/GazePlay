@@ -27,17 +27,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ./gradlew generateWindowsAfsrInstaller
+          ./gradlew generateWindowsAfsrInstallerInDocker
 
-      # add this for installer 32bits afsr and bera (don't forget to uncomment the lines at the very bottom of the build.gradle file at the root
-      # mv gazeplay-afsr-windows-x32*installer.exe gazeplay-afsr-windows-x32-installer.exe
-      # mv gazeplay-bera-windows-x32*installer.exe gazeplay-bera-windows-x32-installer.exe
       - name: Rename Releases
         run: |
           cd ./build/distributions/
           mv gazeplay-afsr-windows-x64*.zip gazeplay-afsr-windows-x64.zip
           mv gazeplay-afsr-windows-x64*installer.exe gazeplay-afsr-windows-x64-installer.exe
-          mv gazeplay-afsr-windows-x32*.zip gazeplay-afsr-windows-x32.zip
 
       - name: Get Env
         run: |
@@ -82,5 +78,4 @@ jobs:
           files: |
             ./build/distributions/gazeplay-afsr-windows-x64.zip
             ./build/distributions/gazeplay-afsr-windows-x64-installer.exe
-            ./build/distributions/gazeplay-afsr-windows-x32.zip
           github-token: ${{ secrets.GITHUB_TOKEN }}
