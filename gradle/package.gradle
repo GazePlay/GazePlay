@@ -20,16 +20,16 @@ task packageApp(dependsOn: ['packageAllDists',
     tasks.findByName('packageAllDists').mustRunAfter('scriptsForRelease')
 }
 
-task('packageAfsr').dependsOn(
+task('package').dependsOn(
         'windowsDistZip',
-        'windowsAfsrDistZip'
+        'assembleNoJREDist'
 )
 
-task zipAfsrDistribution(dependsOn: ['packageAfsr',
+task zipAfsrDistribution(dependsOn: ['package',
                                      'downloadLicenses',
                                      'scriptsForRelease'], group: 'distribution') {
-    tasks.findByName('packageAfsr').mustRunAfter('downloadLicenses')
-    tasks.findByName('packageAfsr').mustRunAfter('scriptsForRelease')
+    tasks.findByName('package').mustRunAfter('downloadLicenses')
+    tasks.findByName('package').mustRunAfter('scriptsForRelease')
 }
 
 task scriptsForRelease(type: Copy, group: 'distribution') {

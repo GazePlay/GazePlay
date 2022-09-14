@@ -27,13 +27,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ./gradlew generateWindowsAfsrInstallerInDocker
+          ./gradlew generateWindowsInstallerInDocker
 
       - name: Rename Releases
         run: |
           cd ./build/distributions/
-          mv gazeplay-afsr-windows-x64*.zip gazeplay-afsr-windows-x64.zip
-          mv gazeplay-afsr-windows-x64*installer.exe gazeplay-afsr-windows-x64-installer.exe
+          mv gazeplay-windows-x64*.zip gazeplay-windows-x64.zip
+          mv gazeplay-windows-x64*installer.exe gazeplay-windows-x64-installer.exe
 
       - name: Get Env
         run: |
@@ -67,8 +67,8 @@ jobs:
           draft: false
           prerelease: true
 
-      - name: Upload Gazeplay-AFSR to Release
-        id: upload-afsr-assets
+      - name: Upload Gazeplay to Release
+        id: upload-assets
         uses: csexton/release-asset-action@v2
         with:
           release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
@@ -76,6 +76,6 @@ jobs:
           # add this to add afsr installer 32bits to the release
           # ./build/distributions/gazeplay-afsr-windows-x32-installer.exe
           files: |
-            ./build/distributions/gazeplay-afsr-windows-x64.zip
-            ./build/distributions/gazeplay-afsr-windows-x64-installer.exe
+            ./build/distributions/gazeplay-windows-x64.zip
+            ./build/distributions/gazeplay-windows-x64-installer.exe
           github-token: ${{ secrets.GITHUB_TOKEN }}
