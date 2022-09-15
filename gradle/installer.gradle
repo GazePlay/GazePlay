@@ -15,7 +15,7 @@ task generateWindowsInstaller(dependsOn: ['unzipDistribution', 'prepareInnoSetup
     }
 }
 
-task generateWindowsInstallerInDocker(dependsOn: ['unzipDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
+task generateWindowsInstallerInDocker(dependsOn: ['unzipDockerDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
     doLast {
         exec {
             workingDir rootDir
@@ -62,7 +62,14 @@ task prepareInnoSetupFiles(group: 'distribution') {
     }
 }
 
-task unzipDistribution(dependsOn: ['gazeplayDistribution'], type: Copy, group: 'distribution') {
+task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distribution') {
+    from zipTree("${buildDir}/distributions/${project.name}-windows-x64-${version}.zip")
+    into buildDir
+    fileMode 0777
+    dirMode 0777
+}
+
+task unzipDockerDistribution(type: Copy, group: 'distribution') {
     from zipTree("${buildDir}/distributions/${project.name}-windows-x64-${version}.zip")
     into buildDir
     fileMode 0777

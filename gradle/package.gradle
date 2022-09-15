@@ -20,17 +20,6 @@ task packageApp(dependsOn: ['packageAllDists',
     tasks.findByName('packageAllDists').mustRunAfter('scriptsForRelease')
 }
 
-task('packageGazeplay').dependsOn(
-        'windowsDistZip'
-)
-
-task gazeplayDistribution(dependsOn: ['packageGazeplay',
-                                 'downloadLicenses',
-                                 'scriptsForRelease'], group: 'distribution') {
-    tasks.findByName('packageGazeplay').mustRunAfter('downloadLicenses')
-    tasks.findByName('packageGazeplay').mustRunAfter('scriptsForRelease')
-}
-
 task scriptsForRelease(type: Copy, group: 'distribution') {
     from "${rootDir}/gazeplay-dist/src/main/bin"
     into "${rootDir}/build/bin"
