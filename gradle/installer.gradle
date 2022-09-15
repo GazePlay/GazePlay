@@ -70,7 +70,7 @@ task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distributi
 }
 
 task unzipDockerDistribution(type: Copy, group: 'distribution') {
-    from zipTree("${buildDir}/distributions/${project.name}-windows-x64-${version}.zip")
+    from zipTree("${buildDir}/distributions/${project.name}-windows-x64-*.zip")
     into buildDir
     fileMode 0777
     dirMode 0777
