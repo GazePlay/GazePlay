@@ -62,7 +62,7 @@ task prepareInnoSetupFiles(group: 'distribution') {
     }
 }
 
-task unzipDistribution(dependsOn: ['package'], type: Copy, group: 'distribution') {
+task unzipDistribution(dependsOn: ['zipDistribution'], type: Copy, group: 'distribution') {
     from zipTree("${buildDir}/distributions/${project.name}-windows-x64-${version}.zip")
     into buildDir
     fileMode 0777

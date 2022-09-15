@@ -25,9 +25,9 @@ task('package').dependsOn(
         'assembleNoJREDist'
 )
 
-task zipAfsrDistribution(dependsOn: ['package',
-                                     'downloadLicenses',
-                                     'scriptsForRelease'], group: 'distribution') {
+task zipDistribution(dependsOn: ['package',
+                                 'downloadLicenses',
+                                 'scriptsForRelease'], group: 'distribution') {
     tasks.findByName('package').mustRunAfter('downloadLicenses')
     tasks.findByName('package').mustRunAfter('scriptsForRelease')
 }

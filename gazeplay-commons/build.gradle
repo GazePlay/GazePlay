@@ -24,6 +24,10 @@ dependencies {
     implementation 'org.json:json:20220320'
     // https://mvnrepository.com/artifact/org.json/json
     implementation group: 'org.json', name: 'json', version: '20220320'
+
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation project(':gazeplay-core').sourceSets.test.output
 }
 
 jar {
@@ -37,4 +41,9 @@ jar {
                 "Built-By": System.properties['user.name']
         )
     }
+}
+
+test {
+    jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
+    exclude '**/VersionInfoTest.class'
 }

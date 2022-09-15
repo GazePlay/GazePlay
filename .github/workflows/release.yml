@@ -24,15 +24,12 @@ jobs:
           git config --global user.email "ci@gazeplay.net"
           git config --global user.name "GazePlay Automation"
 
-      - name: Build Gradle
-        run: |
-          chmod +x gradlew
-          ./gradlew build --no-daemon
-
       - name: Generate Releases
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew generateWindowsInstallerInDocker
+        run: |
+          ./gradlew zipDistribution
+          ./gradlew generateWindowsInstallerInDocker
 
       - name: Rename Releases
         run: |
