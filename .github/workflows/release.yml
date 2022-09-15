@@ -27,7 +27,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ./gradlew --stacktrace --info generateWindowsInstallerInDocker
+          ./gradlew build
+          ./gradlew generateWindowsInstallerInDocker
 
       - name: Rename Releases
         run: |
