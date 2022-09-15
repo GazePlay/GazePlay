@@ -29,7 +29,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ./gradlew release
-          cd ./build/distribution/
+          cd ./build/distributions/
           mv gazeplay-windows-x64*.zip gazeplay-windows-x64.zip
           unzip gazeplay-windows-x64.zip
           rm -r gazeplay-windows-x64.zip
@@ -37,7 +37,7 @@ jobs:
           zip -r gazeplay-windows-x64.zip gazeplay-windows-x64
           cd ./../../
           ./gradlew generateWindowsInstallerInDocker
-          mv ./build/distribution/gazeplay-windows-x64*installer.exe ./build/distribution/gazeplay-windows-x64-installer.exe
+          mv ./build/distributions/gazeplay-windows-x64*installer.exe ./build/distributions/gazeplay-windows-x64-installer.exe
 
       - name: Get Env
         run: |
