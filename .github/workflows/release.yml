@@ -28,7 +28,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ./gradlew :releases:gazeplay:release
+          ./gradlew release
 
       - name: Rename Releases
         run: |
