@@ -374,9 +374,12 @@ mainClassName = 'net.gazeplay.GazePlayLauncher'
 defaultTasks 'clean', 'build', 'checkPMDReport'
 startScripts.enabled = false
 
-afterReleaseBuild.dependsOn generateWindowsInstallerInDocker
+task gazeplayRelease(group: 'distribution') {
+    afterReleaseBuild.dependsOn generateWindowsInstallerInDocker
+}
+
 afterReleaseBuild.dependsOn generateWindowsInstallerInDockerx32
 afterReleaseBuild.dependsOn generateWindowsAfsrInstallerInDocker
-//afterReleaseBuild.dependsOn generateWindowsAfsrInstallerInDockerx32
+afterReleaseBuild.dependsOn generateWindowsAfsrInstallerInDockerx32
 afterReleaseBuild.dependsOn generateWindowsBeraInstallerInDocker
-//afterReleaseBuild.dependsOn generateWindowsBeraInstallerInDockerx32
+afterReleaseBuild.dependsOn generateWindowsBeraInstallerInDockerx32
