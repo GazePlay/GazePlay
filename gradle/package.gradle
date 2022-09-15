@@ -21,8 +21,7 @@ task packageApp(dependsOn: ['packageAllDists',
 }
 
 task('package').dependsOn(
-        'windowsDistZip',
-        'assembleNoJREDist'
+        'windowsDistZip'
 )
 
 task zipDistribution(dependsOn: ['package',
