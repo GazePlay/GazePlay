@@ -28,7 +28,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ./gradlew zipDistribution
           ./gradlew generateWindowsInstallerInDocker
 
       - name: Rename Releases
