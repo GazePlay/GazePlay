@@ -15,16 +15,6 @@ task generateWindowsInstaller(dependsOn: ['unzipDistribution', 'prepareInnoSetup
     }
 }
 
-task generateWindowsInstallerInDocker(dependsOn: ['unzipDockerDistribution', 'prepareInnoSetupFiles'], group: 'distribution') {
-    doLast {
-        exec {
-            workingDir rootDir
-            commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setup.iss"
-        }
-
-    }
-}
-
 task prepareInnoSetupFiles(group: 'distribution') {
     doLast {
         def innoSetupDir = new File("${buildDir}/innosetup")
@@ -67,6 +57,55 @@ task unzipDistribution(dependsOn: ['packageApp'], type: Copy, group: 'distributi
     into buildDir
     fileMode 0777
     dirMode 0777
+}
+
+// -----------------------------------  Windows 64 bits Docker ---------------------------------------------------------- //
+
+task generateWindowsInstallerInDocker(dependsOn: ['unzipDockerDistribution', 'prepareInnoSetupFilesDocker'], group: 'distribution') {
+    doLast {
+        exec {
+            workingDir rootDir
+            commandLine "docker", "run", "--rm", "-i", "-v", "${buildDir}:/work", "amake/innosetup", "innosetup/setup.iss"
+        }
+
+    }
+}
+
+task prepareInnoSetupFilesDocker(group: 'distribution') {
+    doLast {
+        def innoSetupDir = new File("${buildDir}/innosetup")
+
+        innoSetupDir.mkdir()
+
+        copy {
+            from("${rootDir}/gradle/innosetup/setup.iss.skel")
+            rename("setup.iss.skel", "setup.iss")
+            expand([
+                    applicationVersion: "${version}",
+                    unpackedDirectory : "gazeplay-windows-x64"
+            ])
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/templates/licence.txt")
+            expand([
+                    version: version,
+                    "date"   : new Date().format('yyyy-MM-dd')
+            ])
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.ico")
+            into(innoSetupDir)
+        }
+
+        copy {
+            from("${rootDir}/gradle/innosetup/gazeplayicon.bmp")
+            into(innoSetupDir)
+        }
+    }
 }
 
 task unzipDockerDistribution(type: Copy, group: 'distribution') {
