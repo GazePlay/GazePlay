@@ -111,9 +111,6 @@ task prepareInnoSetupFilesDocker(group: 'distribution') {
 task unzipDockerDistribution(type: Copy, group: 'distribution') {
     from zipTree("${buildDir}/distributions/gazeplay-windows-x64.zip")
     into buildDir
-    rename { String filename ->
-        filename.replace("gazeplay-windows-x64-*", "gazeplay-windows-x64")
-    }
     fileMode 0777
     dirMode 0777
 }

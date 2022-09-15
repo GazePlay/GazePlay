@@ -30,6 +30,8 @@ jobs:
         run: |
           ./gradlew release
           mv ./build/distributions/gazeplay-windows-x64*.zip ./build/distributions/gazeplay-windows-x64.zip
+          unzip ./build/distributions/gazeplay-windows-x64.zip
+          mv ./build/distributions/gazeplay-windows-x64* ./build/distributions/gazeplay-windows-x64
           ./gradlew generateWindowsInstallerInDocker
           mv ./build/distributions/gazeplay-windows-x64*installer.exe ./build/distributions/gazeplay-windows-x64-installer.exe
 
