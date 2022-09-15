@@ -11,12 +11,14 @@ jobs:
     steps:
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
+          distribution: 'zulu'
           java-version: 17
+          cache: 'gradle'
 
       - name: Setup Git Config
         run: |
@@ -25,10 +27,6 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: 7.3.3
-
-      - name: Setup Gradle
         run: ./gradlew build
 
       - name: Generate Releases
