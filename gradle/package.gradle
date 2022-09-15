@@ -20,15 +20,15 @@ task packageApp(dependsOn: ['packageAllDists',
     tasks.findByName('packageAllDists').mustRunAfter('scriptsForRelease')
 }
 
-task('package').dependsOn(
+task('packageGazeplay').dependsOn(
         'windowsDistZip'
 )
 
-task zipDistribution(dependsOn: ['package',
+task gazeplayDistribution(dependsOn: ['packageGazeplay',
                                  'downloadLicenses',
                                  'scriptsForRelease'], group: 'distribution') {
-    tasks.findByName('package').mustRunAfter('downloadLicenses')
-    tasks.findByName('package').mustRunAfter('scriptsForRelease')
+    tasks.findByName('packageGazeplay').mustRunAfter('downloadLicenses')
+    tasks.findByName('packageGazeplay').mustRunAfter('scriptsForRelease')
 }
 
 task scriptsForRelease(type: Copy, group: 'distribution') {
