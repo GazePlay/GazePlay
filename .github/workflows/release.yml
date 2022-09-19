@@ -92,6 +92,8 @@ jobs:
           release_name: ${{ env.REPO_BASENAME }} ${{ steps.new-tag.outputs.tag }}
           draft: false
           prerelease: true
+      - name: Create output
+        id: create output
         run: echo "::set-output name=upload_url::${upload_url}"
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
