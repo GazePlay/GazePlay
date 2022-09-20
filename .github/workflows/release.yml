@@ -8,6 +8,8 @@ name: Release GazePlay
 jobs:
   create-release:
     runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
 
       - name: Free Disk Space (Ubuntu)
@@ -95,8 +97,7 @@ jobs:
       - name: Create-output
         id: create-output
         run: echo "::set-output name=upload_url::${upload_url}"
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
+
 
   upload-gazeplay-Linux-Mac-Arm-assets-release:
     needs: [create-release]
