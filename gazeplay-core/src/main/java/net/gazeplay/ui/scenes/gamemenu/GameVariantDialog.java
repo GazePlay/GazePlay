@@ -130,7 +130,7 @@ public class GameVariantDialog extends Stage {
             } else if (gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors")) {
                 indexOfTheVariant = variant.toString().toLowerCase().contains("hide") ? 0 : 1;
             } else if (gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) {
-                indexOfTheVariant = variant.toString().toLowerCase().contains("other") ? 0 : 1;
+                indexOfTheVariant = variant.toString().toLowerCase().contains("other") ? 1 : 0;
             } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = ((IntStringGameVariant) variant).getStringValue();

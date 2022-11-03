@@ -39,11 +39,11 @@ Then select the gazeplay project and clone.
 
 ![clone](AssetsInstallation/clone.png)
 
-## Step 4 : télécharger le SDK azul-11
+## Step 4 : télécharger le SDK azul-17
 
-In Intellij, you have to download the azul-11 SDK.
+In Intellij, you have to download the azul-17 SDK.
 <br>
-To do this: file -> project structure -> SDKs -> "+" -> download SDK
+To do this: file -> project structure -> SDKs -> "+" -> download JDK
 
 ![telechargement azul](AssetsInstallation/DL-azul-FR.png)
 
@@ -55,7 +55,7 @@ To do this: file -> project structure -> Project
 
 ## Step 5 : Check JDK on Gradle settings
 
-Check if gradle use the JDK 17.0.3 or the project JDK. If not set it here
+Check if gradle use the Azul JDK 17, else change it.
 
 ![gradle settings](AssetsInstallation/gradleSettings.png)
 
