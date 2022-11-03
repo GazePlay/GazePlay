@@ -29,27 +29,19 @@ public class ConfigurationSource {
     }
 
     public static Configuration createFromPropertiesResource(final File propertiesFile) {
-        Properties properties;
+        Properties properties = new Properties();
 
-        try {
+        try (InputStream inputStream = Files.newInputStream(propertiesFile.toPath())){
             log.info("Loading Properties from : {}", propertiesFile);
-            properties = loadProperties(propertiesFile);
+            properties.load(inputStream);
             log.info("Properties loaded : {}", properties);
         } catch (final IOException e) {
             log.error("Failure while loading Properties file {}", propertiesFile, e);
             properties = new Properties();
+            log.info("Properties loaded : {}", properties);
         }
 
         final ApplicationConfig applicationConfig = ConfigFactory.create(ApplicationConfig.class, properties);
         return new Configuration(propertiesFile, applicationConfig);
     }
-
-    private static Properties loadProperties(final File propertiesFile) throws IOException {
-        try (InputStream inputStream = Files.newInputStream(propertiesFile.toPath())) {
-            final Properties properties = new Properties();
-            properties.load(inputStream);
-            return properties;
-        }
-    }
-
 }
