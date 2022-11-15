@@ -12,7 +12,7 @@ public class BeraProjectGameSpecSource implements GameSpecSource {
         return new GameSpec(
             GameSummary
                 .builder()
-                .nameCode("BeraProject")
+                .nameCode("GazePlayEval2")
                 .gameThumbnail("data/Thumbnails/whereisit.png")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION)

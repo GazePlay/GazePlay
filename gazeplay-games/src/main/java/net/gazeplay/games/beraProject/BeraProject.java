@@ -21,15 +21,20 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Slf4j
@@ -45,6 +50,7 @@ public class BeraProject implements GameLifeCycle {
     private String imagesDirectoryPath = "";
     private static final String BIP_SOUND = "data/common/sounds/bip.wav";
     private static final String SEE_TWO_IMAGES_SOUND = "data/common/sounds/seeTwoImages.wav";
+    private String gameName = "GazePlayEval2";
     private String IMAGE_SOUND = "";
     private String[][] listImages;
     private String[][] listOrder;
@@ -105,7 +111,8 @@ public class BeraProject implements GameLifeCycle {
         JsonParser jsonParser = new JsonParser();
         try  (FileReader reader = new FileReader(gameDirectory)) {
             JsonObject obj = jsonParser.parse(reader).getAsJsonObject();
-            JsonArray listImages = obj.get("GameAssets").getAsJsonArray();
+            this.gameName = obj.get("GameName").getAsString();
+            JsonArray listImages = obj.get("GameImages").getAsJsonArray();
             JsonArray listOrder = obj.get("ImagesOrder").getAsJsonArray();
             JsonArray listValues = obj.get("ImagesValue").getAsJsonArray();
             JsonArray listSounds = obj.get("GameSounds").getAsJsonArray().get(0).getAsJsonArray();
@@ -366,7 +373,7 @@ public class BeraProject implements GameLifeCycle {
             imageP2 = imageTemp1;
         }
 
-        if (Objects.equals(this.listValues[this.indexFileImage][0], "Correct")) {
+        if (Objects.equals(this.listValues[this.indexFileImage][0], "True")) {
             winnerP1 = true;
             winnerP2 = false;
         } else {
@@ -530,9 +537,75 @@ public class BeraProject implements GameLifeCycle {
     public void finalStats() {
 
         stats.timeGame = System.currentTimeMillis() - this.currentRoundStartTime;
-        stats.variantType = "WordComprehension";
         stats.totalItemsAddedManually = this.totalItemsAddedManually;
         stats.total = this.totalItemsAddedManually;
+
+        createFile();
+        createExcel();
+    }
+
+    public void createFile(){
+
+        File pathDirectory = stats.getGameStatsOfTheDayDirectory();
+        String pathFile = pathDirectory + "\\" + this.gameName + "-" + DateUtils.dateTimeNow() + ".csv";
+        File statsFile = new File(pathDirectory, pathFile);
+
+        Date now = new Date();
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy 'à' HH:mm:ss");
+
+        try {
+            PrintWriter out = new PrintWriter(statsFile, StandardCharsets.UTF_16);
+            out.append("\r\n");
+            out.append("Fait le ").append(formatDate.format(now)).append("\r\n");
+            out.append("\r\n");
+            out.append("Temps de jeu : ").append(String.valueOf(stats.timeGame / 100.)).append(" secondes \r\n");
+            out.append("\r\n");
+            out.append(" - Total items ajoutés manuellement : ").append(String.valueOf(this.totalItemsAddedManually)).append("/20 \r\n");
+            out.close();
+        } catch (Exception e) {
+            log.info("Error creation csv for GazePlayEval2 stats game !");
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("PMD")
+    public void createExcel(){
+
+        File pathDirectory = stats.getGameStatsOfTheDayDirectory();
+        String pathFile = pathDirectory + "\\" + this.gameName + "-" + DateUtils.dateTimeNow() + ".xlsx";
+        this.stats.actualFile = pathFile;
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Statistiques");
+
+        Object[][] bookData = {
+            {"Temps de jeu : ", String.valueOf(stats.timeGame / 100.), "secondes"},
+            {""},
+            {" - Total items ajoutés manuellement : ", String.valueOf(this.totalItemsAddedManually), "/20"},
+        };
+
+        int rowCount = 0;
+
+        for (Object[] aBook : bookData) {
+            Row row = sheet.createRow(rowCount++);
+
+            int columnCount = 0;
+
+            for (Object field : aBook) {
+                Cell cell = row.createCell(columnCount++);
+                if (field instanceof String) {
+                    cell.setCellValue((String) field);
+                } else if (field instanceof Integer) {
+                    cell.setCellValue((Integer) field);
+                }
+            }
+        }
+
+        try (FileOutputStream outputStream = new FileOutputStream(pathFile)) {
+            workbook.write(outputStream);
+        } catch (Exception e){
+            log.info("Creation of xlsx file don't work", e);
+        }
     }
 
     private class CustomInputEventHandlerKeyboard implements EventHandler<KeyEvent> {
