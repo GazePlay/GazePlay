@@ -25,8 +25,8 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     private GameBox[][] walls;
     private int[][] wallsPlacement;
 
-    final int nbBoxesLine = 7;
-    final int nbBoxesColumns = 12;
+    final int nbBoxesLine = 4;
+    final int nbBoxesColumns = 6;
 
     final double entiereRecX;
     final double entiereRecY;
@@ -127,7 +127,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
             anim(delay);
         } else {
             // Creation of cheese
-            cheese = new Cheese(entiereRecX, entiereRecY, dimension2D.getWidth() / 15, dimension2D.getHeight() / 15, this, randomGenerator);
+            cheese = new Cheese(entiereRecX, entiereRecY, dimension2D.getWidth() / 7, dimension2D.getHeight() / 7, this, randomGenerator);
 
             mouse = createMouse();
 
@@ -409,7 +409,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
             final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
             // Creation of cheese
-            cheese = new Cheese(entiereRecX, entiereRecY, dimension2D.getWidth() / 15, dimension2D.getHeight() / 15, this, randomGenerator);
+            cheese = new Cheese(entiereRecX, entiereRecY, dimension2D.getWidth() / 7, dimension2D.getHeight() / 7, this, randomGenerator);
             mouse = createMouse();
 
             gameContext.getChildren().add(mouse);
