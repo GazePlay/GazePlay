@@ -53,9 +53,11 @@ public class GazeplayEval implements GameLifeCycle {
     private String gameName = "GazePlayEval";
     private String IMAGE_SOUND = "";
     private String[][] listImages;
+    private String[][] listImagesDescription;
     private String[][] listOrder;
     private String[][] listValues;
     private String[] listSounds;
+    private String[] listSoundsDescription;
     private final int nbLines = 1;
     private final int nbColumns = 2;
     private int nbImages = 0;
@@ -113,11 +115,13 @@ public class GazeplayEval implements GameLifeCycle {
             JsonObject obj = jsonParser.parse(reader).getAsJsonObject();
             this.gameName = obj.get("GameName").getAsString();
             JsonArray listImages = obj.get("GameImages").getAsJsonArray();
+            JsonArray listImagesDescription = obj.get("GameImagesDescription").getAsJsonArray();
             JsonArray listOrder = obj.get("ImagesOrder").getAsJsonArray();
             JsonArray listValues = obj.get("ImagesValue").getAsJsonArray();
             JsonArray listSounds = obj.get("GameSounds").getAsJsonArray().get(0).getAsJsonArray();
+            JsonArray listSoundsDescription = obj.get("GameSoundsDescription").getAsJsonArray();
             this.nbImages = obj.get("NbImages").getAsInt();
-            this.generateTabFromJson(listImages, listOrder, listValues, listSounds);
+            this.generateTabFromJson(listImages, listImagesDescription, listOrder, listValues, listSounds, listSoundsDescription);
             this.setSound();
             this.indexEndGame = this.nbImages / 2;
         } catch (IOException e) {
@@ -125,13 +129,21 @@ public class GazeplayEval implements GameLifeCycle {
         }
     }
 
-    public void generateTabFromJson(JsonArray images, JsonArray order, JsonArray values, JsonArray sounds){
+    public void generateTabFromJson(JsonArray images, JsonArray imagesDescription, JsonArray order, JsonArray values, JsonArray sounds, JsonArray soundsDescription){
         this.listImages = new String[images.size()][2];
         for (int i=0; i<images.size(); i++){
             String[] tmpImages = new String[2];
             tmpImages[0] = images.get(i).getAsJsonArray().get(0).getAsString();
             tmpImages[1] = images.get(i).getAsJsonArray().get(1).getAsString();
             this.listImages[i] = tmpImages;
+        }
+
+        this.listImagesDescription = new String[imagesDescription.size()][2];
+        for (int i=0; i<imagesDescription.size(); i++){
+            String[] tmpImagesDescription = new String[2];
+            tmpImagesDescription[0] = imagesDescription.get(i).getAsJsonArray().get(0).getAsString();
+            tmpImagesDescription[1] = imagesDescription.get(i).getAsJsonArray().get(1).getAsString();
+            this.listImagesDescription[i] = tmpImagesDescription;
         }
 
         this.listOrder = new String[order.size()][2];
@@ -153,6 +165,11 @@ public class GazeplayEval implements GameLifeCycle {
         this.listSounds = new String[sounds.size()];
         for (int i=0; i<sounds.size(); i++){
             this.listSounds[i] = sounds.get(i).getAsString();
+        }
+
+        this.listSoundsDescription = new String[soundsDescription.size()];
+        for (int i=0; i<soundsDescription.size(); i++){
+            this.listSoundsDescription[i] = soundsDescription.get(i).getAsString();
         }
     }
 
