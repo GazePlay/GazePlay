@@ -150,19 +150,19 @@ public class GameMenuFactory {
         gameCard.setBottom(gameCategoryContainer);
         for (GameCategories.Category gameCategory : gameSummary.getCategories()) {
             if (gameCategory.getThumbnail() != null) {
-                Image buttonGraphics = new Image(gameCategory.getThumbnail(), 50, 50, true, false);
+                Image buttonGraphics = new Image(gameCategory.getThumbnail(), 100, 100, true, false);
                 ImageView imageView = new ImageView(buttonGraphics);
                 imageView.getStyleClass().add("gameChooserButtonGameTypeIndicator");
                 imageView.setPreserveRatio(true);
                 switch (orientation) {
                     case HORIZONTAL:
                         gameCard.heightProperty().addListener(
-                            (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 10));
+                            (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 4));
                         gameCategoryContainer.getChildren().add(imageView);
                         break;
                     case VERTICAL:
                         gameCard.widthProperty().addListener(
-                            (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 10));
+                            (observableValue, oldValue, newValue) -> imageView.setFitWidth(newValue.doubleValue() / 4));
                         gameCategoryContainer.getChildren().add(imageView);
                         break;
                 }
