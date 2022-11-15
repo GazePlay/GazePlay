@@ -1,4 +1,4 @@
-package net.gazeplay.games.beraProject;
+package net.gazeplay.games.gazeplayEval;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -38,7 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Slf4j
-public class BeraProject implements GameLifeCycle {
+public class GazeplayEval implements GameLifeCycle {
 
     private static final int NBMAXPICTO = 10;
     private static final double MAXSIZEPICTO = 250;
@@ -50,7 +50,7 @@ public class BeraProject implements GameLifeCycle {
     private String imagesDirectoryPath = "";
     private static final String BIP_SOUND = "data/common/sounds/bip.wav";
     private static final String SEE_TWO_IMAGES_SOUND = "data/common/sounds/seeTwoImages.wav";
-    private String gameName = "GazePlayEval2";
+    private String gameName = "GazePlayEval";
     private String IMAGE_SOUND = "";
     private String[][] listImages;
     private String[][] listOrder;
@@ -76,7 +76,7 @@ public class BeraProject implements GameLifeCycle {
     public int nbCountErrorSave = 0;
     private int totalItemsAddedManually = 0;
 
-    public BeraProject(final boolean fourThree, final IGameContext gameContext, final Stats stats) {
+    public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.fourThree = fourThree;
         this.stats = stats;
@@ -91,7 +91,7 @@ public class BeraProject implements GameLifeCycle {
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
     }
 
-    public BeraProject(final boolean fourThree, final IGameContext gameContext, final Stats stats, double gameSeed) {
+    public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final Stats stats, double gameSeed) {
         this.gameContext = gameContext;
         this.fourThree = fourThree;
         this.stats = stats;

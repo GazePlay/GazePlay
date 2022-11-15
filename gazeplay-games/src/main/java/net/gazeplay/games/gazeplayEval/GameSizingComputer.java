@@ -1,4 +1,4 @@
-package net.gazeplay.games.beraProject;
+package net.gazeplay.games.gazeplayEval;
 
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;

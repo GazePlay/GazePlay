@@ -99,7 +99,7 @@ task generateBeraGamesCatalog {
         def sourceSet = project(':gazeplay-games').sourceSets.findByName('main').java
         def packages = sourceSet
                 .filter { it.path.endsWith('.java') }
-                .filter { it.path.contains('Bera') }
+                .filter { it.path.contains('Bera') || it.path.contains('GazeplayEval') }
                 .filter { it.path.contains('SpecSource') }
                 .collect {
                     it.path

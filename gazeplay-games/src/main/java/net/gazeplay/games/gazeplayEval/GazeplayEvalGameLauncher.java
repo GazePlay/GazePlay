@@ -1,4 +1,4 @@
-package net.gazeplay.games.beraProject;
+package net.gazeplay.games.gazeplayEval;
 
 import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
@@ -14,25 +14,25 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class BeraProjectGameLauncher implements IGameLauncher<Stats, IGameVariant> {
+public class GazeplayEvalGameLauncher implements IGameLauncher<Stats, IGameVariant> {
 
     @Override
     public Stats createNewStats(Scene scene) {
-        return new BeraProjectGameStats(scene);
+        return new GazeplayEvalGameStats(scene);
     }
 
     @Override
     public Stats createSavedStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
-        return new BeraProjectGameStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
+        return new GazeplayEvalGameStats(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
     }
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant, Stats stats) {
-        return new BeraProject(false, gameContext, stats);
+        return new GazeplayEval(false, gameContext, stats);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant, Stats stats, double gameSeed) {
-        return new BeraProject(false, gameContext, stats, gameSeed);
+        return new GazeplayEval(false, gameContext, stats, gameSeed);
     }
 }

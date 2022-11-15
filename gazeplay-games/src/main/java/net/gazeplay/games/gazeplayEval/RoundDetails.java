@@ -1,4 +1,4 @@
-package net.gazeplay.games.beraProject;
+package net.gazeplay.games.gazeplayEval;
 
 import javafx.scene.image.Image;
 import lombok.AllArgsConstructor;
