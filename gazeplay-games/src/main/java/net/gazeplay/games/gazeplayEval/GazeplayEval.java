@@ -23,8 +23,6 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
-import net.gazeplay.commons.utils.multilinguism.Multilinguism;
-import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 import org.apache.poi.ss.usermodel.Cell;
@@ -42,6 +40,7 @@ public class GazeplayEval implements GameLifeCycle {
 
     private static final int NBMAXPICTO = 10;
     private static final double MAXSIZEPICTO = 250;
+    private final int nbImagesPerRound = 2;
     private final IGameContext gameContext;
     private final boolean fourThree;
     private final Stats stats;
@@ -58,9 +57,11 @@ public class GazeplayEval implements GameLifeCycle {
     private String[][] listValues;
     private String[] listSounds;
     private String[] listSoundsDescription;
+    private String[] results;
     private final int nbLines = 1;
     private final int nbColumns = 2;
     private int nbImages = 0;
+    private int nbSounds = 0;
     public int indexFileImage = 0;
     public int indexEndGame = 0;
     private boolean canRemoveItemManually = true;
@@ -77,6 +78,7 @@ public class GazeplayEval implements GameLifeCycle {
     public int nbCountError = 0;
     public int nbCountErrorSave = 0;
     private int totalItemsAddedManually = 0;
+    private String outputFile = "";
 
     public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
@@ -119,11 +121,14 @@ public class GazeplayEval implements GameLifeCycle {
             JsonArray listOrder = obj.get("ImagesOrder").getAsJsonArray();
             JsonArray listValues = obj.get("ImagesValue").getAsJsonArray();
             JsonArray listSounds = obj.get("GameSounds").getAsJsonArray().get(0).getAsJsonArray();
-            JsonArray listSoundsDescription = obj.get("GameSoundsDescription").getAsJsonArray();
+            JsonArray listSoundsDescription = obj.get("GameSoundsDescription").getAsJsonArray().get(0).getAsJsonArray();
             this.nbImages = obj.get("NbImages").getAsInt();
+            this.nbSounds = obj.get("NbSounds").getAsInt();
+            this.outputFile = obj.get("Output").getAsString();
             this.generateTabFromJson(listImages, listImagesDescription, listOrder, listValues, listSounds, listSoundsDescription);
             this.setSound();
             this.indexEndGame = this.nbImages / 2;
+            this.results = new String[this.indexEndGame];
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -454,21 +459,6 @@ public class GazeplayEval implements GameLifeCycle {
             pictograms);
     }
 
-    private void error(final String language) {
-
-        gameContext.clear();
-        // HomeUtils.home(scene, group, choiceBox, null);
-
-        final Multilinguism multilinguism = MultilinguismFactory.getSingleton();
-
-        final Text error = new Text(multilinguism.getTranslation("WII-error", language));
-        final Region root = gameContext.getRoot();
-        error.setX(root.getWidth() / 2. -100);
-        error.setY(root.getHeight() / 2.);
-        error.setId("item");
-        gameContext.getChildren().addAll(error);
-    }
-
     public void createWhiteCross(){
 
         final Image whiteSquare = new Image("data/common/images/whiteCross.png");
@@ -495,6 +485,11 @@ public class GazeplayEval implements GameLifeCycle {
 
     public void increaseIndexFileImage(boolean correctAnswer) {
         //this.calculateStats(this.indexFileImage, correctAnswer);
+        if (correctAnswer){
+            this.results[this.indexFileImage] = "Correct";
+        }else {
+            this.results[this.indexFileImage] = "Incorrect";
+        }
         this.indexFileImage = this.indexFileImage + 1;
         this.setSound();
     }
@@ -557,49 +552,104 @@ public class GazeplayEval implements GameLifeCycle {
         stats.totalItemsAddedManually = this.totalItemsAddedManually;
         stats.total = this.totalItemsAddedManually;
 
-        createFile();
-        createExcel();
+        switch (this.outputFile) {
+            case "csv" -> createCsvFile();
+            case "xls" -> createExcelFile();
+            case "all" -> {
+                createCsvFile();
+                createExcelFile();
+            }
+            default -> {
+                log.info("No Output set or wrong statement");
+            }
+        }
     }
 
-    public void createFile(){
+    public String getDate(){
+        Date now = new Date();
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy 'à' HH:mm:ss");
+
+        return formatDate.format(now);
+    }
+
+    public void createCsvFile(){
 
         File pathDirectory = stats.getGameStatsOfTheDayDirectory();
         String pathFile = pathDirectory + "\\" + this.gameName + "-" + DateUtils.dateTimeNow() + ".csv";
         File statsFile = new File(pathDirectory, pathFile);
 
-        Date now = new Date();
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy 'à' HH:mm:ss");
-
         try {
             PrintWriter out = new PrintWriter(statsFile, StandardCharsets.UTF_16);
             out.append("\r\n");
-            out.append("Fait le ").append(formatDate.format(now)).append("\r\n");
+            out.append("Game name : ").append(this.gameName).append("\r\n");
+            out.append("Do on ").append(this.getDate()).append("\r\n");
+            out.append("Game time : ").append(String.valueOf(stats.timeGame / 100.)).append(" seconds \r\n");
+            out.append("Number of images : ").append(String.valueOf(this.nbImages)).append("\r\n");
+            out.append("Number of sounds : ").append(String.valueOf(this.nbSounds)).append("\r\n");
+            out.append("Number of items added manually : ").append(String.valueOf(this.totalItemsAddedManually)).append("\r\n");
             out.append("\r\n");
-            out.append("Temps de jeu : ").append(String.valueOf(stats.timeGame / 100.)).append(" secondes \r\n");
-            out.append("\r\n");
-            out.append(" - Total items ajoutés manuellement : ").append(String.valueOf(this.totalItemsAddedManually)).append("/20 \r\n");
+            for (int i=0; i<this.indexEndGame; i++){
+                out.append("Round ").append(String.valueOf(i+1)).append("\r\n");
+                for (int j=0; j<this.nbImagesPerRound; j++){
+                    out.append("- Image ").append(String.valueOf(j+1)).append(" name file -> ").append(this.listImages[i][j]).append("\r\n");
+                    out.append("- Image ").append(String.valueOf(j+1)).append(" description -> ").append(this.listImagesDescription[i][j]).append("\r\n");
+                }
+                out.append("- Sound use -> ").append(this.listSounds[i]).append("\r\n");
+                out.append("- Sound description -> ").append(this.listSoundsDescription[i]).append("\r\n");
+                out.append("- Result is -> ").append(this.results[i]).append("\r\n");
+                out.append("\r\n");
+            }
             out.close();
         } catch (Exception e) {
-            log.info("Error creation csv for GazePlayEval2 stats game !");
+            log.info("Error creation csv for GazePlay Eval stats game !");
             e.printStackTrace();
         }
     }
 
     @SuppressWarnings("PMD")
-    public void createExcel(){
+    public void createExcelFile(){
 
         File pathDirectory = stats.getGameStatsOfTheDayDirectory();
         String pathFile = pathDirectory + "\\" + this.gameName + "-" + DateUtils.dateTimeNow() + ".xlsx";
         this.stats.actualFile = pathFile;
 
         XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("Statistiques");
+        XSSFSheet sheet = workbook.createSheet(this.gameName);
 
-        Object[][] bookData = {
-            {"Temps de jeu : ", String.valueOf(stats.timeGame / 100.), "secondes"},
-            {""},
-            {" - Total items ajoutés manuellement : ", String.valueOf(this.totalItemsAddedManually), "/20"},
-        };
+        Object[][] bookData = new Object[(this.indexEndGame*(5 + 2*this.nbImagesPerRound))+6][2];
+
+        bookData[0] = new Object[]{"Game name : ", this.gameName};
+        bookData[1] = new Object[]{"Do on : ", this.getDate()};
+        bookData[2] = new Object[]{"Game time : ", stats.timeGame / 100. + " seconds"};
+        bookData[3] = new Object[]{"Number of images : ", String.valueOf(this.nbImages)};
+        bookData[4] = new Object[]{"Number of sounds : ", String.valueOf(this.nbSounds)};
+        bookData[5] = new Object[]{"Number of items added manually : ", String.valueOf(this.totalItemsAddedManually)};
+
+        int nbElems = (this.nbImagesPerRound * 2) + 3;
+        int round = 1;
+        int indexImage = 0;
+        int nextImages = 0;
+
+        for (int i=6; i<this.indexEndGame+6; i=i+nbElems+2){
+            bookData[i] = new Object[]{"", ""};
+            bookData[i+1] = new Object[]{"Round " + round, ""};
+
+            for (int j=(i+2); j<this.nbImagesPerRound+(i+2); j=j+2){
+                for (int k=0; k<this.nbImagesPerRound; k++){
+                    bookData[j + nextImages] = new Object[]{"- Image " + (indexImage+k+1) + " name file -> ", this.listImages[indexImage][k]};
+                    bookData[j+1 + nextImages] = new Object[]{"- Image " + (indexImage+k+1) + " description -> ", this.listImagesDescription[indexImage][k]};
+                    nextImages += 2;
+                }
+
+                bookData[j + nextImages] = new Object[]{"- Sound use -> ", this.listSounds[indexImage]};
+                bookData[j + nextImages +1] = new Object[]{"- Sound description -> ", this.listSoundsDescription[indexImage]};
+                bookData[j + nextImages +2] = new Object[]{"- Result is -> ", this.results[indexImage]};
+
+                indexImage += 1;
+            }
+
+            round += 1;
+        }
 
         int rowCount = 0;
 
@@ -621,7 +671,8 @@ public class GazeplayEval implements GameLifeCycle {
         try (FileOutputStream outputStream = new FileOutputStream(pathFile)) {
             workbook.write(outputStream);
         } catch (Exception e){
-            log.info("Creation of xlsx file don't work", e);
+            log.info("Error creation xls for GazePlay Eval stats game !");
+            e.printStackTrace();
         }
     }
 
