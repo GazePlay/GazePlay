@@ -289,7 +289,7 @@ public class Bera implements GameLifeCycle {
         log.info("QUESTION TIME ENABLED : {}", config.isQuestionTimeEnabled());
 
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
-            p.setVisibleProgressIndicator();
+            p.hideProgressIndicator();
             p.setVisibleImagePicture(false);
             p.setNotifImageRectangle(false);
             this.reEntered = true;
