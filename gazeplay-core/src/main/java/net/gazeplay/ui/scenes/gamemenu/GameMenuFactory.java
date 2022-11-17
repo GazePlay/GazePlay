@@ -178,12 +178,12 @@ public class GameMenuFactory {
         switch (orientation) {
             case HORIZONTAL:
                 gameCard.heightProperty().addListener(
-                    (observableValue, oldValue, newValue) -> recordAllowedLabelCircle.setRadius(newValue.doubleValue() / 40));
+                    (observableValue, oldValue, newValue) -> recordAllowedLabelCircle.setRadius(newValue.doubleValue() / 15));
                 gameCategoryContainer.getChildren().add(recordAllowedLabelCircle);
                 break;
             case VERTICAL:
                 gameCard.widthProperty().addListener(
-                    (observableValue, oldValue, newValue) -> recordAllowedLabelCircle.setRadius(newValue.doubleValue() / 40));
+                    (observableValue, oldValue, newValue) -> recordAllowedLabelCircle.setRadius(newValue.doubleValue() / 15));
                 gameCategoryContainer.getChildren().add(recordAllowedLabelCircle);
                 break;
         }
