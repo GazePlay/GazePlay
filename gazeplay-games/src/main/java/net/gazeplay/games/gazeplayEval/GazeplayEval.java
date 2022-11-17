@@ -113,7 +113,7 @@ public class GazeplayEval implements GameLifeCycle {
     public void loadGame(){
         File gameDirectory = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "game/game.json");
         JsonParser jsonParser = new JsonParser();
-        try  (FileReader reader = new FileReader(gameDirectory)) {
+        try  (FileReader reader = new FileReader(gameDirectory, StandardCharsets.UTF_8)) {
             JsonObject obj = jsonParser.parse(reader).getAsJsonObject();
             this.gameName = obj.get("GameName").getAsString();
             JsonArray listImages = obj.get("GameImages").getAsJsonArray();
@@ -323,7 +323,7 @@ public class GazeplayEval implements GameLifeCycle {
         log.info("QUESTION TIME ENABLED : {}", config.isQuestionTimeEnabled());
 
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
-            p.setVisibleProgressIndicator();
+            p.hideProgressIndicator();
             p.setVisibleImagePicture(false);
             p.setNotifImageRectangle(false);
             this.reEntered = true;
@@ -364,7 +364,6 @@ public class GazeplayEval implements GameLifeCycle {
     }
     RoundDetails pickAndBuildRandomPictures(final int numberOfImagesToDisplayPerRound, final int winnerImageIndexAmongDisplayedImages) {
 
-        final Configuration config = gameContext.getConfiguration();
         Configuration configActive = ActiveConfigurationContext.getInstance();
 
         int posX = 0;
@@ -575,7 +574,7 @@ public class GazeplayEval implements GameLifeCycle {
     public void createCsvFile(){
 
         File pathDirectory = stats.getGameStatsOfTheDayDirectory();
-        String pathFile = pathDirectory + "\\" + this.gameName + "-" + DateUtils.dateTimeNow() + ".csv";
+        String pathFile = this.gameName + "-" + DateUtils.dateTimeNow() + ".csv";
         File statsFile = new File(pathDirectory, pathFile);
 
         try {
@@ -629,12 +628,13 @@ public class GazeplayEval implements GameLifeCycle {
         int round = 1;
         int indexImage = 0;
         int nextImages = 0;
+        int start = 6;
 
-        for (int i=6; i<this.indexEndGame+6; i=i+nbElems+2){
-            bookData[i] = new Object[]{"", ""};
-            bookData[i+1] = new Object[]{"Round " + round, ""};
+        for (int i=0; i<this.indexEndGame; i++){
+            bookData[start] = new Object[]{"", ""};
+            bookData[start+1] = new Object[]{"Round " + round, ""};
 
-            for (int j=(i+2); j<this.nbImagesPerRound+(i+2); j=j+2){
+            for (int j=(start+2); j<this.nbImagesPerRound+(start+2); j=j+2){
                 for (int k=0; k<this.nbImagesPerRound; k++){
                     bookData[j + nextImages] = new Object[]{"- Image " + (indexImage+k+1) + " name file -> ", this.listImages[indexImage][k]};
                     bookData[j+1 + nextImages] = new Object[]{"- Image " + (indexImage+k+1) + " description -> ", this.listImagesDescription[indexImage][k]};
@@ -649,6 +649,8 @@ public class GazeplayEval implements GameLifeCycle {
             }
 
             round += 1;
+            start = start + nbElems + 2;
+            nextImages = 0;
         }
 
         int rowCount = 0;

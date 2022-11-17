@@ -204,6 +204,7 @@ class PictureCard extends Group {
 
             if (gameInstance.indexFileImage == (gameInstance.indexEndGame - 1)) {
                 progressIndicator.setVisible(false);
+                gameInstance.increaseIndexFileImage(false);
                 this.endGame();
             } else {
                 gameInstance.increaseIndexFileImage(false);
