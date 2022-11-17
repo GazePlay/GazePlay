@@ -66,8 +66,8 @@ public class DotEntity extends Parent {
             progressTimeline.playFromStart();
         };
 
-        this.dotShape.addEventFilter(MouseEvent.MOUSE_ENTERED, enterHandler);
-        this.dotShape.addEventFilter(GazeEvent.GAZE_ENTERED, enterHandler);
+        this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterHandler);
+        this.addEventFilter(GazeEvent.GAZE_ENTERED, enterHandler);
 
         final EventHandler<Event> exitHandler = (Event event) -> {
             progressTimeline.stop();
@@ -75,8 +75,8 @@ public class DotEntity extends Parent {
             this.progressIndicator.setProgress(0);
         };
 
-        this.dotShape.addEventFilter(MouseEvent.MOUSE_EXITED, exitHandler);
-        this.dotShape.addEventFilter(GazeEvent.GAZE_EXITED, exitHandler);
+        this.addEventFilter(MouseEvent.MOUSE_EXITED, exitHandler);
+        this.addEventFilter(GazeEvent.GAZE_EXITED, exitHandler);
     }
 
     double getXValue() {
@@ -89,11 +89,6 @@ public class DotEntity extends Parent {
 
     public void drawTheLine() {
         if (previous == gameObject.getPrevious()) {
-            if (gameVariant.getLabel().contains("Order")
-                && !gameContext.getChildren().contains(gameObject.getDotList().get(index))) {
-                gameObject.positioningDot(gameObject.getDotList().get(index));
-
-            }
 
             nextDot(gameObject.getDotList().get(index - 2).getXValue(), gameObject.getDotList().get(index - 2).getYValue(),
                 gameObject.getDotList().get(index - 1).getXValue(), gameObject.getDotList().get(index - 1).getYValue());
