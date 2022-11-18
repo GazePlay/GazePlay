@@ -27,10 +27,12 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -111,7 +113,7 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public void loadGame(){
-        File gameDirectory = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "game/game.json");
+        File gameDirectory = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "game/config.json");
         JsonParser jsonParser = new JsonParser();
         try  (FileReader reader = new FileReader(gameDirectory, StandardCharsets.UTF_8)) {
             JsonObject obj = jsonParser.parse(reader).getAsJsonObject();
@@ -120,8 +122,8 @@ public class GazeplayEval implements GameLifeCycle {
             JsonArray listImagesDescription = obj.get("GameImagesDescription").getAsJsonArray();
             JsonArray listOrder = obj.get("ImagesOrder").getAsJsonArray();
             JsonArray listValues = obj.get("ImagesValue").getAsJsonArray();
-            JsonArray listSounds = obj.get("GameSounds").getAsJsonArray().get(0).getAsJsonArray();
-            JsonArray listSoundsDescription = obj.get("GameSoundsDescription").getAsJsonArray().get(0).getAsJsonArray();
+            JsonArray listSounds = obj.get("GameSounds").getAsJsonArray();
+            JsonArray listSoundsDescription = obj.get("GameSoundsDescription").getAsJsonArray();
             this.nbImages = obj.get("NbImages").getAsInt();
             this.nbSounds = obj.get("NbSounds").getAsInt();
             this.outputFile = obj.get("Output").getAsString();
@@ -297,6 +299,7 @@ public class GazeplayEval implements GameLifeCycle {
         transition.setOnFinished(event -> {
             for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
                 p.setVisibleProgressIndicator();
+                p.resetMovedCursorOrGaze();
             }
         });
         return transition;
