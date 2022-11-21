@@ -232,7 +232,6 @@ class PictureCard extends Group {
         Timeline transition = new Timeline();
         transition.getKeyFrames().add(new KeyFrame(new Duration(config.getTransitionTime())));
         transition.setOnFinished(event -> {
-            //gameInstance.createSaveFileBackup();
             gameInstance.dispose();
             gameContext.clear();
             gameInstance.launch();
