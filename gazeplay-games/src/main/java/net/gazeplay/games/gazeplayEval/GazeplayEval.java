@@ -587,6 +587,8 @@ public class GazeplayEval implements GameLifeCycle {
     public void finalStats() {
 
         stats.timeGame = System.currentTimeMillis() - this.currentRoundStartTime;
+        stats.nameScores = this.listNameScores;
+        stats.scores = this.scores.clone();
         stats.totalItemsAddedManually = this.totalItemsAddedManually;
 
         switch (this.outputFile) {
@@ -612,11 +614,11 @@ public class GazeplayEval implements GameLifeCycle {
     public void createCsvFile(){
 
         File pathDirectory = stats.getGameStatsOfTheDayDirectory();
-        String pathFile = this.gameName + "-" + DateUtils.dateTimeNow() + ".csv";
-        File statsFile = new File(pathDirectory, pathFile);
+        String pathFile = pathDirectory + "\\" + this.gameName + "-" + DateUtils.dateTimeNow() + ".csv";
+        this.stats.actualFile = pathFile;
 
         try {
-            PrintWriter out = new PrintWriter(statsFile, StandardCharsets.UTF_16);
+            PrintWriter out = new PrintWriter(pathFile, StandardCharsets.UTF_16);
             out.append("\r\n");
             out.append("Game name : ").append(this.gameName).append("\r\n");
             out.append("Do on ").append(this.getDate()).append("\r\n");

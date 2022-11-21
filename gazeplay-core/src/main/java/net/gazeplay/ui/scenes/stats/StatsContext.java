@@ -371,7 +371,10 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 addToGridCenter(grid, currentFormRow, translator, "Total", new Text(String.valueOf(stats.total) + "/20"));
 
             }else {
-
+                addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually)));
+                for (int i=0; i<stats.nameScores.length; i++){
+                    addToGridCenterNoTranslator(grid, currentFormRow, new Text("- " + stats.nameScores[i] + " : "), new Text(String.valueOf(stats.scores[i])));
+                }
             }
         }else {
             AtomicInteger currentFormRow = new AtomicInteger(1);
@@ -447,6 +450,27 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         final int currentRowIndex = currentFormRow.incrementAndGet();
 
         I18NText label = new I18NText(translator, labelText, COLON);
+
+        label.setId("item");
+        value.setId("item");
+
+        grid.add(label, columnIndexLabel, currentRowIndex);
+        grid.add(value, columnIndexInput, currentRowIndex);
+
+        GridPane.setHalignment(label, HPos.LEFT);
+        GridPane.setHalignment(value, HPos.LEFT);
+    }
+
+    private void addToGridCenterNoTranslator(
+        GridPane grid,
+        AtomicInteger currentFormRow,
+        Text label,
+        Text value
+    ){
+        final int columnIndexLabel = 16;
+        final int columnIndexInput = 17;
+
+        final int currentRowIndex = currentFormRow.incrementAndGet();
 
         label.setId("item");
         value.setId("item");
