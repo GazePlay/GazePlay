@@ -263,6 +263,7 @@ public class Bera implements GameLifeCycle {
         transition.setOnFinished(event -> {
             for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
                 p.setVisibleProgressIndicator();
+                p.resetMovedCursorOrGaze();
             }
         });
         return transition;
