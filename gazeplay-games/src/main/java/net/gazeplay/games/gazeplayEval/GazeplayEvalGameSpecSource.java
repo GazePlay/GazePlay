@@ -17,6 +17,6 @@ public class GazeplayEvalGameSpecSource implements GameSpecSource {
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION)
                 .build(),
-            new GazeplayEvalGameLauncher());
+            new GazeplayEvalVariantGenerator(), new GazeplayEvalGameLauncher());
     }
 }

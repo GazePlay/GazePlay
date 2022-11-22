@@ -371,9 +371,11 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 addToGridCenter(grid, currentFormRow, translator, "Total", new Text(String.valueOf(stats.total) + "/20"));
 
             }else {
-                addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually)));
-                for (int i=0; i<stats.nameScores.length; i++){
-                    addToGridCenterNoTranslator(grid, currentFormRow, new Text("- " + stats.nameScores[i] + " : "), new Text(String.valueOf(stats.scores[i])));
+                if (stats.nameScores != null){
+                    addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually)));
+                    for (int i=0; i<stats.nameScores.length; i++){
+                        addToGridCenterNoTranslator(grid, currentFormRow, new Text("- " + stats.nameScores[i] + " : "), new Text(String.valueOf(stats.scores[i])));
+                    }
                 }
             }
         }else {

@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.GazeplayEvalGameVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -35,6 +36,7 @@ class PictureCard extends Group {
 
     private final double minTime;
     private final IGameContext gameContext;
+    private final GazeplayEvalGameVariant gameVariant;
     private final boolean winner;
 
     private final ImageView imageRectangle;
@@ -57,7 +59,7 @@ class PictureCard extends Group {
 
     private int valueProgressIndicator = 500;
 
-    PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
+    PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, @NonNull GazeplayEvalGameVariant gameVariant,
                 boolean winner, @NonNull String imagePath, @NonNull Stats stats, GazeplayEval gameInstance) {
 
         log.info("imagePath = {}", imagePath);
@@ -73,6 +75,7 @@ class PictureCard extends Group {
         this.alreadySee = false;
         this.winner = winner;
         this.gameContext = gameContext;
+        this.gameVariant = gameVariant;
         this.stats = stats;
         this.gameInstance = gameInstance;
         this.imagePath = imagePath;
@@ -245,7 +248,7 @@ class PictureCard extends Group {
                                       @NonNull String imagePath) {
 
         String indexImage = String.valueOf(gameInstance.indexFileImage + 1);
-        File file = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "\\game\\images\\0"+ indexImage + "\\" + imagePath);
+        File file = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "\\game\\" +  this.gameVariant.getNameGame() + "\\images\\0"+ indexImage + "\\" + imagePath);
         final Image image = new Image(file.toURI().toString());
 
         ImageView result = new ImageView(image);

@@ -20,6 +20,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.GazeplayEvalGameVariant;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
@@ -42,11 +43,11 @@ public class GazeplayEval implements GameLifeCycle {
     private static final double MAXSIZEPICTO = 250;
     private final int nbImagesPerRound = 2;
     private final IGameContext gameContext;
+    private final GazeplayEvalGameVariant gameVariant;
     private final boolean fourThree;
     private final Stats stats;
     private final ArrayList<TargetAOI> targetAOIList;
     private final ReplayablePseudoRandom randomGenerator;
-    private String imagesDirectoryPath = "";
     private static final String BIP_SOUND = "data/common/sounds/bip.wav";
     private static final String SEE_TWO_IMAGES_SOUND = "data/common/sounds/seeTwoImages.wav";
     private String gameName = "GazePlayEval";
@@ -84,8 +85,9 @@ public class GazeplayEval implements GameLifeCycle {
     private int totalItemsAddedManually = 0;
     private String outputFile = "";
 
-    public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final Stats stats) {
+    public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats) {
         this.gameContext = gameContext;
+        this.gameVariant = gameVariant;
         this.fourThree = fourThree;
         this.stats = stats;
         this.targetAOIList = new ArrayList<>();
@@ -93,21 +95,20 @@ public class GazeplayEval implements GameLifeCycle {
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
-        this.imagesDirectoryPath = System.getProperties().getProperty("user.home") + "/GazePlay/files/game/images";
 
         this.loadGame();
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
     }
 
-    public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final Stats stats, double gameSeed) {
+    public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats, double gameSeed) {
         this.gameContext = gameContext;
+        this.gameVariant = gameVariant;
         this.fourThree = fourThree;
         this.stats = stats;
         this.targetAOIList = new ArrayList<>();
         this.gameContext.startScoreLimiter();
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-        this.imagesDirectoryPath = System.getProperties().getProperty("user.home") + "/GazePlay/files/game/images";
 
         this.loadGame();
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
@@ -115,7 +116,7 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public void loadGame(){
-        File gameDirectory = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "game/config.json");
+        File gameDirectory = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "/game/" + this.gameVariant.getNameGame() + "/config.json");
         JsonParser jsonParser = new JsonParser();
         try  (FileReader reader = new FileReader(gameDirectory, StandardCharsets.UTF_8)) {
             JsonObject obj = jsonParser.parse(reader).getAsJsonObject();
@@ -205,7 +206,7 @@ public class GazeplayEval implements GameLifeCycle {
 
     public void setSound(){
         if (this.indexFileImage < this.indexEndGame){
-            final String directorySounds = GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "/game/sounds/";
+            final String directorySounds = GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "/game/" + this.gameVariant.getNameGame() + "/sounds/";
             this.IMAGE_SOUND = directorySounds + this.listSounds[this.indexFileImage];
         }
     }
@@ -449,7 +450,7 @@ public class GazeplayEval implements GameLifeCycle {
 
         final PictureCard pictureCard1 = new PictureCard(
             gameSizing.width * posX + gap,
-            posYImage, widthImg, heightImg, gameContext,
+            posYImage, widthImg, heightImg, gameContext, gameVariant,
             winnerP1, imageP1 + "", stats, this);
 
         pictureCardList.add(pictureCard1);
@@ -470,7 +471,7 @@ public class GazeplayEval implements GameLifeCycle {
 
         final PictureCard pictureCard2 = new PictureCard(
             gameSizing.width * posX + gap,
-            posYImage, widthImg, heightImg, gameContext,
+            posYImage, widthImg, heightImg, gameContext, gameVariant,
             winnerP2, imageP2 + "", stats, this);
 
         pictureCardList.add(pictureCard2);

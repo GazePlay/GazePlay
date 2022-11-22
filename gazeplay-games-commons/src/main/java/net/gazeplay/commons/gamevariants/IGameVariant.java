@@ -1,6 +1,10 @@
 package net.gazeplay.commons.gamevariants;
 
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
+
+import java.io.File;
+import java.util.Objects;
 
 /**
  * This is a basically marker interface, but it comes also with a label in order to recognise it by a text label
@@ -37,8 +41,15 @@ public interface IGameVariant {
                     return null;
                 }
             default:
+                File directoryPath = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "game");
+                String[] content = directoryPath.list();
+
+                for (String s : content) {
+                    if (Objects.equals(s, split[0])) {
+                        return new GazeplayEvalGameVariant(split[0]);
+                    }
+                }
                 return null;
         }
     }
-
 }

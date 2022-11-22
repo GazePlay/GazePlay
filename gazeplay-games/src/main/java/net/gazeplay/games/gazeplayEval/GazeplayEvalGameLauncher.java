@@ -1,10 +1,12 @@
 package net.gazeplay.games.gazeplayEval;
 
 import javafx.scene.Scene;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
-import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.GazeplayEvalGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -14,7 +16,9 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class GazeplayEvalGameLauncher implements IGameLauncher<Stats, IGameVariant> {
+@Slf4j
+@RequiredArgsConstructor
+public class GazeplayEvalGameLauncher implements IGameLauncher<Stats, GazeplayEvalGameVariant> {
 
     @Override
     public Stats createNewStats(Scene scene) {
@@ -27,12 +31,12 @@ public class GazeplayEvalGameLauncher implements IGameLauncher<Stats, IGameVaria
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant, Stats stats) {
-        return new GazeplayEval(false, gameContext, stats);
+    public GameLifeCycle createNewGame(IGameContext gameContext, GazeplayEvalGameVariant gameVariant, Stats stats) {
+        return new GazeplayEval(false, gameContext, gameVariant, stats);
     }
 
     @Override
-    public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant, Stats stats, double gameSeed) {
-        return new GazeplayEval(false, gameContext, stats, gameSeed);
+    public GameLifeCycle replayGame(IGameContext gameContext, GazeplayEvalGameVariant gameVariant, Stats stats, double gameSeed) {
+        return new GazeplayEval(false, gameContext, gameVariant, stats, gameSeed);
     }
 }
