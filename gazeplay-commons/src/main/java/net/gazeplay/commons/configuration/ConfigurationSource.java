@@ -29,11 +29,11 @@ public class ConfigurationSource {
     }
 
     public static Configuration createFromPropertiesResource(final File propertiesFile) {
-        Properties properties = new Properties();
+        Properties properties;
 
-        try (InputStream inputStream = Files.newInputStream(propertiesFile.toPath())){
+        try {
             log.info("Loading Properties from : {}", propertiesFile);
-            properties.load(inputStream);
+            properties = loadProperties(propertiesFile);
             log.info("Properties loaded : {}", properties);
         } catch (final IOException e) {
             log.error("Failure while loading Properties file {}", propertiesFile, e);
@@ -43,5 +43,13 @@ public class ConfigurationSource {
 
         final ApplicationConfig applicationConfig = ConfigFactory.create(ApplicationConfig.class, properties);
         return new Configuration(propertiesFile, applicationConfig);
+    }
+
+    private static Properties loadProperties(final File propertiesFile) throws IOException {
+        try (InputStream inputStream = Files.newInputStream(propertiesFile.toPath())) {
+            final Properties properties = new Properties();
+            properties.load(inputStream);
+            return properties;
+        }
     }
 }

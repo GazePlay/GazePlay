@@ -81,6 +81,7 @@ task generateGamesCatalog {
                             .replace('net.gazeplay.games.bera.BeraGameSpecSource', '')
                             .replace('net.gazeplay.games.beraV2.BeraV2GameSpecSource', '')
                             .replace('net.gazeplay.games.beraPreTest.BeraPreTestGameSpecSource', '')
+                            .replace('net.gazeplay.games.gazeplayEval.GazeplayEvalGameSpecSource', '')
                 }
                 .unique()
 

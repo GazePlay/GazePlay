@@ -26,7 +26,6 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-
 import java.util.concurrent.atomic.AtomicReference;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;

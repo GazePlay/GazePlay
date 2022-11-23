@@ -21,8 +21,10 @@ public class GazeplayEvalVariantGenerator implements IGameVariantGenerator {
 
         ArrayList<GazeplayEvalGameVariant> game = Lists.newArrayList();
 
-        for (int i=0; i<content.length; i++){
-            game.add(i, new GazeplayEvalGameVariant(content[i]));
+        if (content != null && content.length > 0){
+            for (int i=0; i<content.length; i++){
+                game.add(i, new GazeplayEvalGameVariant(content[i]));
+            }
         }
 
         return Sets.newLinkedHashSet(game);
