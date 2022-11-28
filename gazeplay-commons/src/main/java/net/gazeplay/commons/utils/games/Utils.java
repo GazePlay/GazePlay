@@ -78,6 +78,12 @@ public class Utils {
         }else {
             log.info(subdirectoryName + " already created !");
         }
+
+        if (new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "/game/").mkdirs()){
+            log.info("Folder game created !");
+        }else {
+            log.info("Folder game already created !");
+        }
     }
 
     public static String convertWindowsPath(String path) {

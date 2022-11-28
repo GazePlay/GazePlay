@@ -341,6 +341,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
+            I18NText label = new I18NText(translator, "ImportGame", COLON);
+
+            Node input = buildImportGame(config, configurationContext, translator);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
             I18NText label = new I18NText(translator, "MusicFolder", COLON);
             final Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.MUSIC);
 
@@ -901,6 +908,22 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         final Button selectButton = new Button("select");
         Stage dialog = new CustomFileChooser(configuration, configurationContext, translator, getGazePlay());
+
+        selectButton.setOnAction(e -> {
+            dialog.show();
+            dialog.sizeToScene();
+            getGazePlay().getPrimaryStage().getScene().getRoot().setEffect(new GaussianBlur());
+        });
+
+        return selectButton;
+    }
+
+    private Node buildImportGame(Configuration configuration,
+                                 ConfigurationContext configurationContext,
+                                 Translator translator){
+
+        final Button selectButton = new Button("Import");
+        Stage dialog = new ImportGame(configuration, configurationContext, translator, getGazePlay());
 
         selectButton.setOnAction(e -> {
             dialog.show();
