@@ -45,7 +45,7 @@ public class ImportGame extends Stage {
 
     private FlowPane flowPanes = new FlowPane();
 
-    private String folder = "games";
+    private String folder = "evals";
 
     ImportGame(Configuration configuration,
                ConfigurationContext configurationContext,
@@ -66,7 +66,7 @@ public class ImportGame extends Stage {
         this.initStyle(StageStyle.UTILITY);
         this.setOnCloseRequest(
             windowEvent -> primaryStage.getScene().getRoot().setEffect(null));
-        this.setTitle(translator.translate("importGameChooser"));
+        this.setTitle(translator.translate("importEvalChooser"));
         this.toFront();
 
         buildCustomColorDialog();
@@ -84,7 +84,7 @@ public class ImportGame extends Stage {
         Group group = new Group();
         StackPane section;
         Color colors = Color.BLUEVIOLET;
-        String imagePath = "data/common/images/games.png";
+        String imagePath = "data/common/images/eval.png";
 
         HBox input = buildImportGameChooser();
         input.setPadding(new Insets(20, 0, 20, 0));
@@ -169,10 +169,10 @@ public class ImportGame extends Stage {
     }
 
     private I18NButton createAddButton() {
-        I18NButton add = new I18NButton(translator, "addNewGames");
+        I18NButton add = new I18NButton(translator, "addNewEval");
         add.setPrefHeight(10);
         add.setOnAction(e -> {
-            String folderPath = configuration.getFileDir() + "\\game\\";
+            String folderPath = configuration.getFileDir() + "\\evals\\";
             File dir = new File(folderPath);
             if (dir.mkdirs() || dir.exists()) {
                 FileChooser fileChooser = new FileChooser();
@@ -228,7 +228,7 @@ public class ImportGame extends Stage {
 
     private HBox buildImportGameChooser() {
         final HBox pane = new HBox(5);
-        String fileDir = configuration.getFileDir() + "\\game\\";
+        String fileDir = configuration.getFileDir() + "\\evals\\";
         Button buttonLoad = new Button(fileDir);
 
         buttonLoad.setOnAction(arg0 -> {
@@ -259,7 +259,7 @@ public class ImportGame extends Stage {
     private void updateFlow() {
         flowPanes.getChildren().clear();
 
-        File directoryPath = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "game");
+        File directoryPath = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "evals");
         String[] content = directoryPath.list();
 
         if (content != null){
@@ -304,7 +304,7 @@ public class ImportGame extends Stage {
 
 
         EventHandler<Event> yesEventHandler = event -> {
-            File directoryPath = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "game");
+            File directoryPath = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "evals");
             File gameToDelete = new File(directoryPath + "/" + nameGame);
             try {
                 if (Desktop.getDesktop().moveToTrash(gameToDelete)) {

@@ -41,7 +41,7 @@ public interface IGameVariant {
                     return null;
                 }
             default:
-                File directoryPath = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "game");
+                File directoryPath = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "evals");
                 String[] content = directoryPath.list();
 
                 for (String s : content) {

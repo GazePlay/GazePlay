@@ -16,7 +16,7 @@ public class GazeplayEvalVariantGenerator implements IGameVariantGenerator {
     @Override
     public Set<IGameVariant> getVariants() {
 
-        File directoryPath = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "game");
+        File directoryPath = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "evals");
         String[] content = directoryPath.list();
 
         ArrayList<GazeplayEvalGameVariant> game = Lists.newArrayList();

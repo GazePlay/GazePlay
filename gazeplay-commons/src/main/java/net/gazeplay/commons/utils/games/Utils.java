@@ -79,10 +79,10 @@ public class Utils {
             log.info(subdirectoryName + " already created !");
         }
 
-        if (new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "/game/").mkdirs()){
-            log.info("Folder game created !");
+        if (new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "/evals/").mkdirs()){
+            log.info("Folder evals created !");
         }else {
-            log.info("Folder game already created !");
+            log.info("Folder evals already created !");
         }
     }
 
