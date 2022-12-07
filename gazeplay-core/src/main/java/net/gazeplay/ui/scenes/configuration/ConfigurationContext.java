@@ -906,7 +906,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                                    ConfigurationContext configurationContext,
                                    Translator translator) {
 
-        final Button selectButton = new Button("select");
+        final I18NButton selectButton = new I18NButton(translator, "Select");
         Stage dialog = new CustomFileChooser(configuration, configurationContext, translator, getGazePlay());
 
         selectButton.setOnAction(e -> {
@@ -922,16 +922,16 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                                  ConfigurationContext configurationContext,
                                  Translator translator){
 
-        final Button selectButton = new Button("Import");
+        final I18NButton importButton = new I18NButton(translator, "Import");
         Stage dialog = new ImportGame(configuration, configurationContext, translator, getGazePlay());
 
-        selectButton.setOnAction(e -> {
+        importButton.setOnAction(e -> {
             dialog.show();
             dialog.sizeToScene();
             getGazePlay().getPrimaryStage().getScene().getRoot().setEffect(new GaussianBlur());
         });
 
-        return selectButton;
+        return importButton;
     }
 
     private Node buildResultFolder(Configuration configuration,
