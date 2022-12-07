@@ -54,8 +54,7 @@ public class GazeplayEval implements GameLifeCycle {
     private String IMAGE_SOUND = "";
     private String[][] listImages;
     private String[][] listImagesDescription;
-    private String[][] listOrder;
-    private String[][] listValues;
+    private String[] listValues;
     private String[] listSounds;
     private String[] listSoundsDescription;
     private String[] listNameScores;
@@ -63,6 +62,7 @@ public class GazeplayEval implements GameLifeCycle {
     private String[] listCalculScores;
     private String[] resultsChoiceImages;
     private int[] scores;
+    private int[] scoreValue;
     private final int nbLines = 1;
     private final int nbColumns = 2;
     private int nbImages = 0;
@@ -120,87 +120,49 @@ public class GazeplayEval implements GameLifeCycle {
         JsonParser jsonParser = new JsonParser();
         try  (FileReader reader = new FileReader(gameDirectory, StandardCharsets.UTF_8)) {
             JsonObject obj = jsonParser.parse(reader).getAsJsonObject();
-            this.gameName = obj.get("GameName").getAsString();
-            JsonArray listImages = obj.get("Images").getAsJsonArray();
-            JsonArray listImagesDescription = obj.get("ImagesDescription").getAsJsonArray();
-            JsonArray listOrder = obj.get("ImagesOrder").getAsJsonArray();
-            JsonArray listValues = obj.get("ImagesValue").getAsJsonArray();
-            JsonArray listSounds = obj.get("Sounds").getAsJsonArray();
-            JsonArray listSoundsDescription = obj.get("SoundsDescription").getAsJsonArray();
-            JsonArray listNamesScores = obj.get("NameScores").getAsJsonArray();
-            JsonArray listTagScores = obj.get("TagScores").getAsJsonArray();
-            JsonArray listCalculScores = obj.get("CalculScores").getAsJsonArray();
-            this.nbImages = obj.get("NbImages").getAsInt();
-            this.nbSounds = obj.get("NbSounds").getAsInt();
+            this.gameName = obj.get("EvalName").getAsString();
+            JsonArray scores = obj.get("Scores").getAsJsonArray();
+            JsonArray assets = obj.get("Assets").getAsJsonArray();
             this.outputFile = obj.get("Output").getAsString();
-            this.generateTabFromJson(listImages, listImagesDescription, listOrder, listValues, listSounds, listSoundsDescription, listNamesScores, listTagScores, listCalculScores);
+            this.nbImages = this.nbSounds = assets.size();
+            this.generateTabFromJson(scores, assets);
             this.setSound();
-            this.indexEndGame = this.nbImages / 2;
+            this.indexEndGame = this.nbImages;
             this.resultsChoiceImages = new String[this.indexEndGame];
-            this.scores = new int[listNamesScores.size()];
+            this.scores = new int[scores.size()];
             Arrays.fill(this.scores, 0);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void generateTabFromJson(JsonArray images, JsonArray imagesDescription, JsonArray order, JsonArray values, JsonArray sounds, JsonArray soundsDescription, JsonArray nameScores, JsonArray tagScores, JsonArray calculScores){
+    public void generateTabFromJson(JsonArray scores, JsonArray assets){
 
-        this.listImages = new String[images.size()][2];
-        for (int i=0; i<images.size(); i++){
-            String[] tmpImages = new String[2];
-            tmpImages[0] = images.get(i).getAsJsonArray().get(0).getAsString();
-            tmpImages[1] = images.get(i).getAsJsonArray().get(1).getAsString();
-            this.listImages[i] = tmpImages;
+        this.listImages = new String[assets.size()][2];
+        this.listImagesDescription = new String[assets.size()][2];
+        this.listValues = new String[assets.size()];
+        this.listSounds = new String[assets.size()];
+        this.listSoundsDescription = new String[assets.size()];
+        this.listCalculScores = new String[assets.size()];
+
+        for (int i=0; i<assets.size(); i++){
+            this.listImages[i] = new String[]{assets.get(i).getAsJsonArray().get(0).getAsString(), assets.get(i).getAsJsonArray().get(2).getAsString()};
+            this.listImagesDescription[i] = new String[]{assets.get(i).getAsJsonArray().get(1).getAsString(), assets.get(i).getAsJsonArray().get(3).getAsString()};
+            this.listValues[i] = assets.get(i).getAsJsonArray().get(6).getAsString();
+            this.listSounds[i] = assets.get(i).getAsJsonArray().get(4).getAsString();
+            this.listSoundsDescription[i] = assets.get(i).getAsJsonArray().get(5).getAsString();
+            this.listCalculScores[i] = assets.get(i).getAsJsonArray().get(7).getAsString();
         }
 
-        this.listImagesDescription = new String[imagesDescription.size()][2];
-        for (int i=0; i<imagesDescription.size(); i++){
-            String[] tmpImagesDescription = new String[2];
-            tmpImagesDescription[0] = imagesDescription.get(i).getAsJsonArray().get(0).getAsString();
-            tmpImagesDescription[1] = imagesDescription.get(i).getAsJsonArray().get(1).getAsString();
-            this.listImagesDescription[i] = tmpImagesDescription;
-        }
 
-        this.listOrder = new String[order.size()][2];
-        for (int i=0; i<order.size(); i++){
-            String[] tmpOrder = new String[2];
-            tmpOrder[0] = order.get(i).getAsJsonArray().get(0).getAsString();
-            tmpOrder[1] = order.get(i).getAsJsonArray().get(1).getAsString();
-            this.listOrder[i] = tmpOrder;
-        }
+        this.listNameScores = new String[scores.size()];
+        this.listTagScores = new String[scores.size()];
+        this.scoreValue = new int[scores.size()];
 
-        this.listValues = new String[values.size()][2];
-        for (int i=0; i<values.size(); i++){
-            String[] tmpValues = new String[2];
-            tmpValues[0] = values.get(i).getAsJsonArray().get(0).getAsString();
-            tmpValues[1] = values.get(i).getAsJsonArray().get(1).getAsString();
-            this.listValues[i] = tmpValues;
-        }
-
-        this.listSounds = new String[sounds.size()];
-        for (int i=0; i<sounds.size(); i++){
-            this.listSounds[i] = sounds.get(i).getAsString();
-        }
-
-        this.listSoundsDescription = new String[soundsDescription.size()];
-        for (int i=0; i<soundsDescription.size(); i++){
-            this.listSoundsDescription[i] = soundsDescription.get(i).getAsString();
-        }
-
-        this.listNameScores = new String[nameScores.size()];
-        for (int i=0; i<nameScores.size(); i++){
-            this.listNameScores[i] = nameScores.get(i).getAsString();
-        }
-
-        this.listTagScores = new String[tagScores.size()];
-        for (int i=0; i<tagScores.size(); i++){
-            this.listTagScores[i] = tagScores.get(i).getAsString();
-        }
-
-        this.listCalculScores = new String[calculScores.size()];
-        for (int i=0; i<calculScores.size(); i++){
-            this.listCalculScores[i] = calculScores.get(i).getAsString();
+        for (int i=0; i<scores.size(); i++){
+            this.listNameScores[i] = scores.get(i).getAsJsonArray().get(0).getAsString();
+            this.listTagScores[i] = scores.get(i).getAsJsonArray().get(1).getAsString();
+            this.scoreValue[i] = scores.get(i).getAsJsonArray().get(2).getAsInt();
         }
     }
 
@@ -399,9 +361,6 @@ public class GazeplayEval implements GameLifeCycle {
         boolean winnerP1;
         boolean winnerP2;
 
-        String imageP1 = "";
-        String imageP2 = "";
-
         final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree)
             .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
 
@@ -410,26 +369,15 @@ public class GazeplayEval implements GameLifeCycle {
         String question = null;
         List<Image> pictograms = null;
 
-        String imageTemp1 = this.listImages[this.indexFileImage][0];
-        String imageTemp2 = this.listImages[this.indexFileImage][1];
+        String imageP1 = this.listImages[this.indexFileImage][0];
+        String imageP2 = this.listImages[this.indexFileImage][1];
 
-        if (Objects.equals(this.listValues[this.indexFileImage][0], "True")) {
+        if (Objects.equals(this.listValues[this.indexFileImage], "First")) {
             winnerP1 = true;
             winnerP2 = false;
         } else {
             winnerP1 = false;
             winnerP2 = true;
-        }
-
-        if (Objects.equals(this.listOrder[this.indexFileImage][0], "First")) {
-            imageP1 = imageTemp1;
-            imageP2 = imageTemp2;
-
-        } else {
-            imageP1 = imageTemp2;
-            imageP2 = imageTemp1;
-            winnerP1 = !winnerP1;
-            winnerP2 = !winnerP2;
         }
 
         double gap = 0;
@@ -527,7 +475,7 @@ public class GazeplayEval implements GameLifeCycle {
     public void calculScores(){
         for (int i=0; i<this.listTagScores.length; i++){
             if (this.listCalculScores[this.indexFileImage].contains(this.listTagScores[i])){
-                this.scores[i] += 1;
+                this.scores[i] += this.scoreValue[i];
             }
         }
     }
