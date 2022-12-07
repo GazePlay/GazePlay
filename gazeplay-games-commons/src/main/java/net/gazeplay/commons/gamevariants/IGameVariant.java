@@ -44,11 +44,14 @@ public interface IGameVariant {
                 File directoryPath = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "evals");
                 String[] content = directoryPath.list();
 
-                for (String s : content) {
-                    if (Objects.equals(s, split[0])) {
-                        return new GazeplayEvalGameVariant(split[0]);
+                if (content != null){
+                    for (String s : content) {
+                        if (Objects.equals(s, split[0])) {
+                            return new GazeplayEvalGameVariant(split[0]);
+                        }
                     }
                 }
+
                 return null;
         }
     }
