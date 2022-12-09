@@ -28,14 +28,26 @@ Here are the default paths to the `GazePlay` folder depending on your operating 
 
 ### Adding custom images
 
-In a folder of your choice, create a folder called `images`.
+#### From GazePlay options
 
-`images` can have 3 sub-folders:
-* `portraits`: images used by creampie, ninja and portrait bubbles. Images should be small (300×300 pixels).
+In `GazePlay`, go to the options via the blue gear.<br>
+
+{% include figure image_path="/assets/images/tutorial/imgFolder.png" alt="Image Folder Option" caption="Scroll down to the `File Directory` option and click the `select` button." %}
+
+{% include figure image_path="/assets/images/tutorial/WindowsAddImage.png" alt="Add image window" caption="Choose the category then add your image." %}
+
+#### By hand
+
+Go to the `GazePlay` folder, then to the `files` folder, then to `images`.<br>
+If it doesn't exist then create it.
+
+In the `images` folder create 3 subfolders:
+* `blocks`: images used by block and scratch card games. Choose large images, preferably the same size as the screen.
 * `magiccards`: images used by magic cards. You can use all image sizes.
-* `blocs`: images used by blocks and scratchcard. Choose big images, preferably the same size as the screen.
+* `opinions`: images used by the game opinion. You can use all image sizes.
+* `portraits`: images used by creampie, ninja and bubble games. Images should be small (300×300 pixels).
 
-You can change the image folder within GazePlay in the configuration menu, so you can have as many image folders as you like.
+Put the desired images in it to appear in GazePlay games.
 
 ### Adding custom games to _Where Is It?_
 

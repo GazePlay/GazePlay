@@ -29,14 +29,26 @@ Voici les chemins d'accès par défaut au dossier `GazePlay` selon votre systèm
 
 ### Ajout d'images personnalisées
 
-Dans un dossier de votre choix, créez un dossier appelé `images`.
+#### Depuis les options de GazePlay
 
-`images` peut avoir 3 sous-dossiers :
-* `portraits` : images utilisées par les creampie, les ninja et les bulles de portraits. Les images doivent être petites (300×300 pixels).
+Dans `GazePlay`, aller dans les options via l'engrenage bleu.<br>
+
+{% include figure image_path="/assets/images/tutorial/imgFolder.png" alt="Option dossier image" caption="Descendre jusqu'à l'option `Répertoire des fichiers` et cliquer sur le bouton `select`." %}
+
+{% include figure image_path="/assets/images/tutorial/WindowsAddImage.png" alt="Fenêtre ajout image" caption="Choisir la catégorie puis ajouter son image." %}
+
+#### A la main
+
+Aller dans le dossier `GazePlay`, ensuite dans le dossier `files` puis  dans `images`.<br>
+Si celui-ci n'existe pas alors créer le.
+
+Dans le dossier `images` créer 3 sous-dossiers :
+* `blocs` : images utilisées par les jeux blocs et carte à gratter. Choisissez de grandes images, de préférence de la même taille que l'écran.
 * `magiccards` : images utilisées par les cartes magiques. Vous pouvez utiliser toutes les tailles d'image.
-* `blocs` : images utilisées par les blocs et la carte à gratter. Choisissez de grandes images, de préférence de la même taille que l'écran.
+* `opinions` : images utilisées par le jeu opinion. Vous pouvez utiliser toutes les tailles d'image.
+* `portraits` : images utilisées par les jeux creampie, ninja et bulles. Les images doivent être petites (300×300 pixels).
 
-Vous pouvez modifier le dossier d'images dans GazePlay dans le menu de configuration, afin d'avoir autant de dossiers d'images que vous le souhaitez.
+Mettre les images souhaitées dedans pour qu'ils apparaissent dans les jeux GazePlay.
 
 ### Ajout de jeux personnalisés à _Où est-ce ?_
 
