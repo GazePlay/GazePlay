@@ -63,6 +63,7 @@ public class GazeplayEval implements GameLifeCycle {
     private String[] resultsChoiceImages;
     private int[] scores;
     private int[] scoreValue;
+    private int[] maxValue;
     private final int nbLines = 1;
     private final int nbColumns = 2;
     private int nbImages = 0;
@@ -124,10 +125,11 @@ public class GazeplayEval implements GameLifeCycle {
             JsonArray scores = obj.get("Scores").getAsJsonArray();
             JsonArray assets = obj.get("Assets").getAsJsonArray();
             this.outputFile = obj.get("Output").getAsString();
-            this.nbImages = this.nbSounds = assets.size();
+            this.nbImages = assets.size();
+            this.nbSounds = assets.size();
             this.generateTabFromJson(scores, assets);
-            this.setSound();
             this.indexEndGame = this.nbImages;
+            this.setSound();
             this.resultsChoiceImages = new String[this.indexEndGame];
             this.scores = new int[scores.size()];
             Arrays.fill(this.scores, 0);
@@ -158,11 +160,13 @@ public class GazeplayEval implements GameLifeCycle {
         this.listNameScores = new String[scores.size()];
         this.listTagScores = new String[scores.size()];
         this.scoreValue = new int[scores.size()];
+        this.maxValue = new int[scores.size()];
 
         for (int i=0; i<scores.size(); i++){
             this.listNameScores[i] = scores.get(i).getAsJsonArray().get(0).getAsString();
             this.listTagScores[i] = scores.get(i).getAsJsonArray().get(1).getAsString();
             this.scoreValue[i] = scores.get(i).getAsJsonArray().get(2).getAsInt();
+            this.maxValue[i] = scores.get(i).getAsJsonArray().get(3).getAsInt();
         }
     }
 
@@ -473,9 +477,12 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public void calculScores(){
+        String[] tmp = this.listCalculScores[this.indexFileImage].split(",");
         for (int i=0; i<this.listTagScores.length; i++){
-            if (this.listCalculScores[this.indexFileImage].contains(this.listTagScores[i])){
-                this.scores[i] += this.scoreValue[i];
+            for (String s : tmp) {
+                if (s.equals(this.listTagScores[i])) {
+                    this.scores[i] += this.scoreValue[i];
+                }
             }
         }
     }
@@ -538,6 +545,7 @@ public class GazeplayEval implements GameLifeCycle {
         stats.timeGame = System.currentTimeMillis() - this.currentRoundStartTime;
         stats.nameScores = this.listNameScores;
         stats.scores = this.scores.clone();
+        stats.maxScores = this.maxValue;
         stats.totalItemsAddedManually = this.totalItemsAddedManually;
 
         switch (this.outputFile) {
@@ -589,7 +597,7 @@ public class GazeplayEval implements GameLifeCycle {
             }
             out.append("Scores ").append("\r\n");
             for (int k=0; k<this.listNameScores.length; k++){
-                out.append("- ").append(this.listNameScores[k]).append(" -> ").append(String.valueOf(this.scores[k])).append("\r\n");
+                out.append("- ").append(this.listNameScores[k]).append(" -> ").append(String.valueOf(this.scores[k])).append(" / ").append(String.valueOf(this.maxValue[k])).append("\r\n");
             }
             out.close();
         } catch (Exception e) {
@@ -648,7 +656,7 @@ public class GazeplayEval implements GameLifeCycle {
         bookData[start] = new Object[]{"", ""};
         bookData[start+1] = new Object[]{"Scores"};
         for (int l=0; l<this.listNameScores.length; l++){
-            bookData[start+2+l] = new Object[]{"- " + this.listNameScores[l] + " -> ", this.scores[l]};
+            bookData[start+2+l] = new Object[]{"- " + this.listNameScores[l] + " -> ", this.scores[l] + " / " + this.maxValue[l]};
         }
 
         int rowCount = 0;

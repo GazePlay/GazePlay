@@ -168,6 +168,7 @@ public class Stats implements GazeMotionListener {
     //Gazeplay Eval
     public String[] nameScores;
     public int[] scores;
+    public int[] maxScores;
 
     //parameters for AOI
     private int movementHistoryidx = 0;

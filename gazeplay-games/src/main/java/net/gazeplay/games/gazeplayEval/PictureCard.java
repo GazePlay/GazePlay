@@ -49,7 +49,7 @@ class PictureCard extends Group {
     private final double initialPositionY;
 
     private final Stats stats;
-    private final String imagePath;
+    private final String imageName;
     private final PictureCard.CustomInputEventHandlerMouse customInputEventHandlerMouse;
     private final GazeplayEval gameInstance;
     private ProgressIndicator progressIndicator;
@@ -60,9 +60,9 @@ class PictureCard extends Group {
     private int valueProgressIndicator = 500;
 
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, @NonNull GazeplayEvalGameVariant gameVariant,
-                boolean winner, @NonNull String imagePath, @NonNull Stats stats, GazeplayEval gameInstance) {
+                boolean winner, @NonNull String imageName, @NonNull Stats stats, GazeplayEval gameInstance) {
 
-        log.info("imagePath = {}", imagePath);
+        log.info("imagePath = {}", imageName);
 
         final Configuration config = gameContext.getConfiguration();
 
@@ -78,9 +78,9 @@ class PictureCard extends Group {
         this.gameVariant = gameVariant;
         this.stats = stats;
         this.gameInstance = gameInstance;
-        this.imagePath = imagePath;
+        this.imageName = imageName;
 
-        this.imageRectangle = createImageView(this.initialPositionX, this.initialPositionY, this.initialWidth, this.initialHeight, imagePath);
+        this.imageRectangle = createImageView(this.initialPositionX, this.initialPositionY, this.initialWidth, this.initialHeight, imageName);
 
         this.progressIndicator = buildProgressIndicator(this.initialWidth, this.initialHeight);
 
@@ -245,10 +245,10 @@ class PictureCard extends Group {
     }
 
     private ImageView createImageView(double posX, double posY, double width, double height,
-                                      @NonNull String imagePath) {
+                                      @NonNull String imageName) {
 
         String indexImage = String.valueOf(gameInstance.indexFileImage + 1);
-        File file = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "\\evals\\" +  this.gameVariant.getNameGame() + "\\images\\0"+ indexImage + "\\" + imagePath);
+        File file = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "\\evals\\" +  this.gameVariant.getNameGame() + "\\images\\" + imageName);
         final Image image = new Image(file.toURI().toString());
 
         ImageView result = new ImageView(image);
@@ -391,7 +391,7 @@ class PictureCard extends Group {
 
         private void onEntered() {
             this.moved = true;
-            log.info("ENTERED {}", imagePath);
+            log.info("ENTERED {}", imageName);
 
             progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
 
@@ -405,7 +405,7 @@ class PictureCard extends Group {
             if (!this.moved){
 
                 this.moved = true;
-                log.info("ENTERED {}", imagePath);
+                log.info("ENTERED {}", imageName);
 
                 progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
 
@@ -417,7 +417,7 @@ class PictureCard extends Group {
         }
 
         private void onExited() {
-            log.info("EXITED {}", imagePath);
+            log.info("EXITED {}", imageName);
 
             progressIndicatorAnimationTimeLine.stop();
 
