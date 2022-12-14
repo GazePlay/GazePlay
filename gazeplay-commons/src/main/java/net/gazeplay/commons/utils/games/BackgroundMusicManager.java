@@ -474,11 +474,11 @@ public class BackgroundMusicManager {
 
         try {
             InputStream defaultMusicTrack = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
-            Files.copy(defaultMusicTrack,
-                Paths.get(new File(gazePlayMusicFolder, Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC).getAbsolutePath()),
-                StandardCopyOption.REPLACE_EXISTING);
-        } catch (NullPointerException ne) {
-            log.debug(String.format("Could not find %s: %s", resourcePath, ne.toString()));
+            if (defaultMusicTrack != null){
+                Files.copy(defaultMusicTrack,
+                    Paths.get(new File(gazePlayMusicFolder, Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC).getAbsolutePath()),
+                    StandardCopyOption.REPLACE_EXISTING);
+            }
         } catch (IOException ie) {
             log.debug(String.format("Could not copy file at %s to %s: %s", resourcePath, gazePlayMusicFolder, ie.toString()));
         }
