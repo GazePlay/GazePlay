@@ -247,7 +247,6 @@ class PictureCard extends Group {
     private ImageView createImageView(double posX, double posY, double width, double height,
                                       @NonNull String imageName) {
 
-        String indexImage = String.valueOf(gameInstance.indexFileImage + 1);
         File file = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "\\evals\\" +  this.gameVariant.getNameGame() + "\\images\\" + imageName);
         final Image image = new Image(file.toURI().toString());
 
