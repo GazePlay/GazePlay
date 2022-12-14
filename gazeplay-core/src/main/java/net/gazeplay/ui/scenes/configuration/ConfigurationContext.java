@@ -341,6 +341,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
+            I18NText label = new I18NText(translator, "ImportEval", COLON);
+
+            Node input = buildImportGame(config, configurationContext, translator);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
             I18NText label = new I18NText(translator, "MusicFolder", COLON);
             final Node input = buildDirectoryChooser(config, configurationContext, translator, DirectoryType.MUSIC);
 
@@ -899,7 +906,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                                    ConfigurationContext configurationContext,
                                    Translator translator) {
 
-        final Button selectButton = new Button("select");
+        final I18NButton selectButton = new I18NButton(translator, "Select");
         Stage dialog = new CustomFileChooser(configuration, configurationContext, translator, getGazePlay());
 
         selectButton.setOnAction(e -> {
@@ -909,6 +916,22 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         });
 
         return selectButton;
+    }
+
+    private Node buildImportGame(Configuration configuration,
+                                 ConfigurationContext configurationContext,
+                                 Translator translator){
+
+        final I18NButton importButton = new I18NButton(translator, "Import");
+        Stage dialog = new ImportGame(configuration, configurationContext, translator, getGazePlay());
+
+        importButton.setOnAction(e -> {
+            dialog.show();
+            dialog.sizeToScene();
+            getGazePlay().getPrimaryStage().getScene().getRoot().setEffect(new GaussianBlur());
+        });
+
+        return importButton;
     }
 
     private Node buildResultFolder(Configuration configuration,
@@ -1376,13 +1399,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
 
-        boolean wasPlaying = musicManager.isPlaying();
-
         musicManager.emptyPlaylist();
         musicManager.getAudioFromFolder(musicFolder);
 
-        if (wasPlaying)
-            musicManager.play();
     }
 
     static void setupNewMusicFolder(File gazePlayMusicFolder, String defaultSong) {

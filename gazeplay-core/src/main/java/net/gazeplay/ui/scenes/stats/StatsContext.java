@@ -331,9 +331,6 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         if (gazeplayType.equals("bera")){
             AtomicInteger currentFormRow = new AtomicInteger(0);
 
-            Text value;
-            String labelValue;
-
             if (stats.variantType.equals("SentenceComprehension")){
 
                 addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 100.) + "s"));
@@ -348,7 +345,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 addToGridCenter(grid, currentFormRow, translator, "SentenceComprehension", new Text(""));
                 addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually) + "/10"));
                 addToGridCenter(grid, currentFormRow, translator, "TotalSentenceComprehension", new Text(String.valueOf(stats.total) + "/10"));
-            }else {
+            }else if (stats.variantType.equals("WordComprehension")){
 
                 addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 100) + "s"));
 
@@ -373,6 +370,13 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually) + "/20"));
                 addToGridCenter(grid, currentFormRow, translator, "Total", new Text(String.valueOf(stats.total) + "/20"));
 
+            }else {
+                if (stats.nameScores != null){
+                    addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually)));
+                    for (int i=0; i<stats.nameScores.length; i++){
+                        addToGridCenterNoTranslator(grid, currentFormRow, new Text("- " + stats.nameScores[i] + " : "), new Text(stats.scores[i] + " / " + stats.maxScores[i]));
+                    }
+                }
             }
         }else {
             AtomicInteger currentFormRow = new AtomicInteger(1);
@@ -448,6 +452,27 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         final int currentRowIndex = currentFormRow.incrementAndGet();
 
         I18NText label = new I18NText(translator, labelText, COLON);
+
+        label.setId("item");
+        value.setId("item");
+
+        grid.add(label, columnIndexLabel, currentRowIndex);
+        grid.add(value, columnIndexInput, currentRowIndex);
+
+        GridPane.setHalignment(label, HPos.LEFT);
+        GridPane.setHalignment(value, HPos.LEFT);
+    }
+
+    private void addToGridCenterNoTranslator(
+        GridPane grid,
+        AtomicInteger currentFormRow,
+        Text label,
+        Text value
+    ){
+        final int columnIndexLabel = 16;
+        final int columnIndexInput = 17;
+
+        final int currentRowIndex = currentFormRow.incrementAndGet();
 
         label.setId("item");
         value.setId("item");

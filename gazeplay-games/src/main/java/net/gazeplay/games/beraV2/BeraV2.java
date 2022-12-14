@@ -263,6 +263,7 @@ public class BeraV2 implements GameLifeCycle {
         transition.setOnFinished(event -> {
             for (final net.gazeplay.games.beraV2.PictureCard p : currentRoundDetails.getPictureCardList()) {
                 p.setVisibleProgressIndicator();
+                p.resetMovedCursorOrGaze();
             }
         });
         return transition;

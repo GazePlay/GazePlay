@@ -74,25 +74,15 @@ public class Utils {
         }
 
         if (new File(getBaseImagesDirectory() + "/" + subdirectoryName).mkdirs()){
-            addImages(subdirectoryName);
             log.info(subdirectoryName + " created !");
         }else {
             log.info(subdirectoryName + " already created !");
         }
-    }
 
-    public static void addImages(String subdirectoryName){
-        File imagesFolder = new File("gazeplay-commons/src/main/resources/images/");
-        List<File> images = List.of(imagesFolder.listFiles());
-
-        for (File image : images){
-            Path newName = Paths.get(getBaseImagesDirectory() + "/" + subdirectoryName + "/" + image.getName());
-            log.info(String.valueOf(newName));
-            try{
-                Files.copy(new File(String.valueOf(image)).toPath(), newName, StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "/evals/").mkdirs()){
+            log.info("Folder evals created !");
+        }else {
+            log.info("Folder evals already created !");
         }
     }
 

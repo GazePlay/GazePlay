@@ -11,7 +11,7 @@ def filename = "zulu${zuluVersion}-ca-fx-jre${jreVersion}-macosx_x64"
 task downloadMacosJRE(type: Download, group: 'custom jre') {
     src "${jreSource}/${filename}.tar.gz"
     dest new File("${downloadLocation}/jre", 'macos.tar.gz')
-    overwrite true
+    overwrite false
 }
 
 task extractMacosJRE(dependsOn: downloadMacosJRE, type: Copy, group: 'custom jre') {
