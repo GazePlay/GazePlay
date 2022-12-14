@@ -229,6 +229,7 @@ public class BeraPreTest implements GameLifeCycle {
         transition.setOnFinished(event -> {
             for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
                 p.setVisibleProgressIndicator();
+                p.resetMovedCursorOrGaze();
             }
         });
         return transition;

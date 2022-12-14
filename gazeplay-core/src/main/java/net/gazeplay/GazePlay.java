@@ -73,7 +73,6 @@ public class GazePlay {
     public void onReturnToMenu() {
         this.loadHomePage();
         homeMenuScreen.setUpOnStage(primaryScene);
-
         BackgroundMusicManager.getInstance().onEndGame();
     }
 
@@ -132,6 +131,7 @@ public class GazePlay {
     public void loadHomePage() {
         if (!this.loadedHomePage) {
             this.loadedHomePage = true;
+            BackgroundMusicManager.getInstance().checkDefaultMusic();
             homeMenuScreen = applicationContext.getBean(HomeMenuScreen.class);
         }
     }

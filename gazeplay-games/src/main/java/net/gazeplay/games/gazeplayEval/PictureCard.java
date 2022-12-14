@@ -1,4 +1,4 @@
-package net.gazeplay.games.beraV2;
+package net.gazeplay.games.gazeplayEval;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -21,9 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.GazeplayEvalGameVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.io.File;
 import java.util.Objects;
 
 @Slf4j
@@ -33,6 +36,7 @@ class PictureCard extends Group {
 
     private final double minTime;
     private final IGameContext gameContext;
+    private final GazeplayEvalGameVariant gameVariant;
     private final boolean winner;
 
     private final ImageView imageRectangle;
@@ -45,9 +49,9 @@ class PictureCard extends Group {
     private final double initialPositionY;
 
     private final Stats stats;
-    private final String imagePath;
-    private final CustomInputEventHandlerMouse customInputEventHandlerMouse;
-    private final BeraV2 gameInstance;
+    private final String imageName;
+    private final PictureCard.CustomInputEventHandlerMouse customInputEventHandlerMouse;
+    private final GazeplayEval gameInstance;
     private ProgressIndicator progressIndicator;
     private Timeline progressIndicatorAnimationTimeLine;
     private boolean selected;
@@ -55,10 +59,10 @@ class PictureCard extends Group {
 
     private int valueProgressIndicator = 500;
 
-    PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
-                boolean winner, @NonNull String imagePath, @NonNull Stats stats, BeraV2 gameInstance) {
+    PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, @NonNull GazeplayEvalGameVariant gameVariant,
+                boolean winner, @NonNull String imageName, @NonNull Stats stats, GazeplayEval gameInstance) {
 
-        log.info("imagePath = {}", imagePath);
+        log.info("imagePath = {}", imageName);
 
         final Configuration config = gameContext.getConfiguration();
 
@@ -71,11 +75,12 @@ class PictureCard extends Group {
         this.alreadySee = false;
         this.winner = winner;
         this.gameContext = gameContext;
+        this.gameVariant = gameVariant;
         this.stats = stats;
         this.gameInstance = gameInstance;
-        this.imagePath = imagePath;
+        this.imageName = imageName;
 
-        this.imageRectangle = createImageView(this.initialPositionX, this.initialPositionY, this.initialWidth, this.initialHeight, imagePath);
+        this.imageRectangle = createImageView(this.initialPositionX, this.initialPositionY, this.initialWidth, this.initialHeight, imageName);
 
         this.progressIndicator = buildProgressIndicator(this.initialWidth, this.initialHeight);
 
@@ -85,7 +90,7 @@ class PictureCard extends Group {
         this.getChildren().add(progressIndicator);
         this.getChildren().add(notifImageRectangle);
 
-        customInputEventHandlerMouse = new CustomInputEventHandlerMouse();
+        customInputEventHandlerMouse = new PictureCard.CustomInputEventHandlerMouse();
 
         gameContext.getGazeDeviceManager().addEventFilter(imageRectangle);
 
@@ -94,7 +99,7 @@ class PictureCard extends Group {
 
     }
 
-    private Timeline createProgressIndicatorTimeLine(BeraV2 gameInstance) {
+    private Timeline createProgressIndicatorTimeLine(GazeplayEval gameInstance) {
         Timeline result = new Timeline();
 
         result.getKeyFrames()
@@ -108,7 +113,7 @@ class PictureCard extends Group {
         return result;
     }
 
-    private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(BeraV2 gameInstance) {
+    private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(GazeplayEval gameInstance) {
         return actionEvent -> {
 
             log.debug("FINISHED");
@@ -204,6 +209,7 @@ class PictureCard extends Group {
 
             if (gameInstance.indexFileImage == (gameInstance.indexEndGame - 1)) {
                 progressIndicator.setVisible(false);
+                gameInstance.increaseIndexFileImage(false);
                 this.endGame();
             } else {
                 gameInstance.increaseIndexFileImage(false);
@@ -229,7 +235,6 @@ class PictureCard extends Group {
         Timeline transition = new Timeline();
         transition.getKeyFrames().add(new KeyFrame(new Duration(config.getTransitionTime())));
         transition.setOnFinished(event -> {
-            gameInstance.createSaveFileBackup();
             gameInstance.dispose();
             gameContext.clear();
             gameInstance.launch();
@@ -240,9 +245,10 @@ class PictureCard extends Group {
     }
 
     private ImageView createImageView(double posX, double posY, double width, double height,
-                                      @NonNull String imagePath) {
+                                      @NonNull String imageName) {
 
-        final Image image = new Image(imagePath);
+        File file = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "\\evals\\" +  this.gameVariant.getNameGame() + "\\images\\" + imageName);
+        final Image image = new Image(file.toURI().toString());
 
         ImageView result = new ImageView(image);
 
@@ -384,7 +390,7 @@ class PictureCard extends Group {
 
         private void onEntered() {
             this.moved = true;
-            log.info("ENTERED {}", imagePath);
+            log.info("ENTERED {}", imageName);
 
             progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
 
@@ -398,7 +404,7 @@ class PictureCard extends Group {
             if (!this.moved){
 
                 this.moved = true;
-                log.info("ENTERED {}", imagePath);
+                log.info("ENTERED {}", imageName);
 
                 progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
 
@@ -410,7 +416,7 @@ class PictureCard extends Group {
         }
 
         private void onExited() {
-            log.info("EXITED {}", imagePath);
+            log.info("EXITED {}", imageName);
 
             progressIndicatorAnimationTimeLine.stop();
 
@@ -421,6 +427,4 @@ class PictureCard extends Group {
         }
 
     }
-
 }
-

@@ -149,6 +149,8 @@ public class PictureCard extends Group{
 
     public void setNotifImageRectangle(boolean value) { this.notifImageRectangle.setVisible(value); }
 
+    public void resetMovedCursorOrGaze(){ customInputEventHandlerMouse.moved = false; }
+
     public void newProgressIndicator() {
         this.getChildren().remove(progressIndicator);
         this.valueProgressIndicator = 2000;
@@ -358,6 +360,7 @@ public class PictureCard extends Group{
          * in progress
          */
         private boolean ignoreAnyInput = false;
+        private boolean moved = false;
 
         @Override
         public void handle(Event e) {
@@ -371,12 +374,15 @@ public class PictureCard extends Group{
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
                 onEntered();
+            } else if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_MOVED){
+                onEnteredOnceWhileMoved();
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
                 onExited();
             }
         }
 
         private void onEntered() {
+            this.moved = true;
             log.info("ENTERED {}", imagePath);
 
             progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
@@ -387,6 +393,21 @@ public class PictureCard extends Group{
             progressIndicatorAnimationTimeLine.playFromStart();
         }
 
+        private void onEnteredOnceWhileMoved(){
+            if (!this.moved){
+
+                this.moved = true;
+                log.info("ENTERED {}", imagePath);
+
+                progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
+
+                progressIndicator.setProgress(0);
+                progressIndicator.setVisible(true);
+
+                progressIndicatorAnimationTimeLine.playFromStart();
+            }
+        }
+
         private void onExited() {
             log.info("EXITED {}", imagePath);
 
@@ -394,6 +415,8 @@ public class PictureCard extends Group{
 
             progressIndicator.setVisible(false);
             progressIndicator.setProgress(0);
+
+            this.moved = false;
         }
 
     }

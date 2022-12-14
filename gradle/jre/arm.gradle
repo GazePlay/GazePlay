@@ -7,7 +7,7 @@ def jfxfilename = "javafx-sdk-17.0.2"
 task downloadARMJRE(type: Download, group: 'custom jre') {
     src "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.3%2B7/OpenJDK17U-jre_arm_linux_hotspot_17.0.3_7.tar.gz"
     dest new File("${downloadLocation}/jre", 'arm.tar.gz')
-    overwrite true
+    overwrite false
 }
 
 task extractARMJRE(dependsOn: downloadARMJRE, type: Copy, group: 'custom jre') {
@@ -27,7 +27,7 @@ task extractARMJRE(dependsOn: downloadARMJRE, type: Copy, group: 'custom jre') {
 task downloadOpenJFXForLibavPluginARM(type: Download, group: 'custom jre') {
     src "https://download2.gluonhq.com/openjfx/17.0.2/openjfx-17.0.2_linux-arm32_bin-sdk.zip"
     dest new File("${downloadLocation}/jre", 'armJFX.zip')
-    overwrite true
+    overwrite false
 }
 
 task extractOpenJFXForLibavPluginARM(dependsOn: downloadOpenJFXForLibavPluginARM, type: Copy, group: 'custom jre') {

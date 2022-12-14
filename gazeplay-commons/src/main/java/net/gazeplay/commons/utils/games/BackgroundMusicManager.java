@@ -14,15 +14,15 @@ import net.gazeplay.commons.threads.GroupingThreadFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -450,5 +450,37 @@ public class BackgroundMusicManager {
 
     public ReadOnlyBooleanProperty getIsMusicChanging() {
         return isMusicChanging.getReadOnlyProperty();
+    }
+
+    public void checkDefaultMusic(){
+        if (new File(GazePlayDirectories.getGazePlayFolder() + "/music/").mkdirs()){
+            log.info("Folder music created !");
+            this.addDefaultSong();
+        }else {
+            log.info("Folder music already created !");
+            String[] files = new File(GazePlayDirectories.getGazePlayFolder() + "/music/").list();
+            assert files != null;
+            if (files.length == 0){
+                this.addDefaultSong();
+            }
+        }
+    }
+
+    public void addDefaultSong(){
+
+        File gazePlayFolder = GazePlayDirectories.getGazePlayFolder();
+        File gazePlayMusicFolder = new File(gazePlayFolder, "music");
+        String resourcePath = "data/home/sounds/" + Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC;
+
+        try {
+            InputStream defaultMusicTrack = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourcePath);
+            if (defaultMusicTrack != null){
+                Files.copy(defaultMusicTrack,
+                    Paths.get(new File(gazePlayMusicFolder, Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC).getAbsolutePath()),
+                    StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException ie) {
+            log.debug(String.format("Could not copy file at %s to %s: %s", resourcePath, gazePlayMusicFolder, ie.toString()));
+        }
     }
 }

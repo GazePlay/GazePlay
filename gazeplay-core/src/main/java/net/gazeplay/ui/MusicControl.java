@@ -186,7 +186,6 @@ public class MusicControl {
                 backgroundMusicManager.getAudioFromFolder(configuration.getMusicDir());
             }
             backgroundMusicManager.changeMusic(0);
-            backgroundMusicManager.play();
 
             // We need to manually set the music title for the first set up
             setMusicTitle(musicName);
