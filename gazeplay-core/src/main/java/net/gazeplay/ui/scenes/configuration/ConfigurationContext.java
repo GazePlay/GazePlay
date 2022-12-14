@@ -1399,13 +1399,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         BackgroundMusicManager musicManager = BackgroundMusicManager.getInstance();
 
-        boolean wasPlaying = musicManager.isPlaying();
-
         musicManager.emptyPlaylist();
         musicManager.getAudioFromFolder(musicFolder);
 
-        if (wasPlaying)
-            musicManager.play();
     }
 
     static void setupNewMusicFolder(File gazePlayMusicFolder, String defaultSong) {
