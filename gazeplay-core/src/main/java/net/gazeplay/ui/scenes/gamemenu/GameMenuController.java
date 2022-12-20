@@ -58,7 +58,13 @@ public class GameMenuController {
                 IGameVariant onlyGameVariant = variants.iterator().next();
                 chooseAndStartNewGameProcess(gazePlay, gameSpec, onlyGameVariant);
             } else {
-                chooseAndStartNewGameProcess(gazePlay, gameSpec, null);
+                root.setEffect(new BoxBlur());
+                root.setDisable(true);
+                ErrorVariantDialog dialog = new ErrorVariantDialog(gazePlay, gazePlay.getPrimaryStage(), root, "NoEvalsFound");
+                dialog.setTitle(gameName);
+                dialog.show();
+                dialog.toFront();
+                dialog.setAlwaysOnTop(true);
             }
         }
     }

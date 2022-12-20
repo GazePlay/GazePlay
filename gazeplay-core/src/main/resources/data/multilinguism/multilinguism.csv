@@ -12,10 +12,8 @@ Literacy games,Lojëra shkrim-leximi,ألعاب محو الأمية,Гульні
 Multimedia,Multimedia,الوسائط المتعددة,Мультымедыя,多媒体,Multimedia,Πολυμέσα,Multimedia,Multimedia,Multimedia,मल्टीमीडिया,Multimedija,Multimedia,Multimedia,マルチメディア,Multimedia,Multimedialne,Multimídia,Мультимедия,Multimedia,Đa phương tiện,Multimedia
 
 # GAMES
-BeraPreTest,,,,,,,Bera test,,Bera test,,,,,,,,,,,,
-BeraV1,,,,,,,Bera version 1,,Bera version 1,,,,,,,,,,,,
-BeraV2,,,,,,,Bera version 2,,Bera version 2,,,,,,,,,,,,
-GazePlayEval,,,,,,,GazePlay Eval ,,GazePlay Eval ,,,,,,,,,,,,
+GazePlayEval,,,,,,,Launch an evaluation,,Lancer une évaluation,,,,,,,,,,,,
+GazePlayEvalTest,,,,,,,Test your configuration,,Tester sa configuration,,,,,,,,,,,,
 BibJump,Biboule Jump,بيبول يقذف,Скачок Бібуль,比布尔跳,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,Biboule Jump,बिबौल जंप,Biboule Jump,Biboule Jump,Biboule Jump,ビブールジャンプ,Biboule Jump,Biboule Jump,Biboule Jump,Бибул Прыжок,Biboule Jump,Biboule Jump,Biboule Jump
 Blocks,Blloqe,مكعبات,Блокі,色块,Blöcke,Επιτυχημένες αποκαλύψεις,Blocks,kappaleet,Blocs,ब्लाकों,Blokovi,Blok,Blocchi,ブロック,Blokken,Bloki,Bloco,Блоки,Bloques,Các hình khối,Blok
 Bottle,Shishe,زجاجة,Бутэлька,瓶子,Flasche,Μπουκάλι,Bottle,Pullo,Bouteille,बोतल,Boca,Botol,Bottiglia,ボトル,Fles,Butelka,Garrafa,Бутылка,Botella,Chai,Botol
@@ -96,6 +94,7 @@ Choose the video,,,,,,,Choose the video,,Choisie la vidéo,,,,,,,,,,,,
 cups,tasa,كؤوس,кубкі,,,,cups,,gobelets,,,,tazze,,Bekers,,,чашки,tazas,,
 players,,,гульцы,玩家,,,players,,joueurs,,,,,,spelers,,,игроки,,,
 targets,shënjestra,أهداف,мэты,目标,,,targets,,objectifs,,,,bersagli,,Doelen,,,цели,objetivos,,
+NoEvalsFound,,,,,,,No evaluations found !,,Pas d'évaluations trouvées !,,,,,,,,,,,,
 
 # VARIANT CATEGORIES
 Static,,,,,,,Static,,Statique,,,,,,,,,,,,

@@ -51,6 +51,7 @@ public class GazeplayEval implements GameLifeCycle {
     private static final String BIP_SOUND = "data/common/sounds/bip.wav";
     private static final String SEE_TWO_IMAGES_SOUND = "data/common/sounds/seeTwoImages.wav";
     private String gameName = "GazePlayEval";
+    private Boolean isAnonymous = false;
     private String IMAGE_SOUND = "";
     private String[][] listImages;
     private String[][] listImagesDescription;
@@ -61,6 +62,7 @@ public class GazeplayEval implements GameLifeCycle {
     private String[] listTagScores;
     private String[] listCalculScores;
     private String[] resultsChoiceImages;
+    private String[] userProfil;
     private int[] scores;
     private int[] scoreValue;
     private int[] maxValue;
@@ -127,6 +129,7 @@ public class GazeplayEval implements GameLifeCycle {
             this.outputFile = obj.get("Output").getAsString();
             this.nbImages = assets.size();
             this.nbSounds = assets.size();
+            this.generateUser(obj);
             this.generateTabFromJson(scores, assets);
             this.indexEndGame = this.nbImages;
             this.setSound();
@@ -135,6 +138,17 @@ public class GazeplayEval implements GameLifeCycle {
             Arrays.fill(this.scores, 0);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void generateUser(JsonObject obj){
+        this.isAnonymous = Boolean.valueOf(obj.get("Anonymous").getAsString());
+        if (!this.isAnonymous){
+            JsonArray user = obj.get("Profil").getAsJsonArray();
+            this.userProfil = new String[user.size()];
+            for (int i=0; i<user.size(); i++){
+                this.userProfil[i] = user.get(i).getAsString();
+            }
         }
     }
 
@@ -577,22 +591,32 @@ public class GazeplayEval implements GameLifeCycle {
         try {
             PrintWriter out = new PrintWriter(pathFile, StandardCharsets.UTF_16);
             out.append("\r\n");
-            out.append("Game name : ").append(this.gameName).append("\r\n");
-            out.append("Do on ").append(this.getDate()).append("\r\n");
-            out.append("Game time : ").append(String.valueOf(stats.timeGame / 100.)).append(" seconds \r\n");
-            out.append("Number of images : ").append(String.valueOf(this.nbImages)).append("\r\n");
-            out.append("Number of sounds : ").append(String.valueOf(this.nbSounds)).append("\r\n");
-            out.append("Number of items added manually : ").append(String.valueOf(this.totalItemsAddedManually)).append("\r\n");
+            out.append("Nom de l'évaluation : ").append(this.gameName).append("\r\n");
+            out.append("Fait le ").append(this.getDate()).append("\r\n");
+            out.append("Temps de l'évaluation : ").append(String.valueOf(stats.timeGame / 100.)).append(" secondes \r\n");
+            out.append("Nombre d'images: ").append(String.valueOf(this.nbImages)).append("\r\n");
+            out.append("Number de sons : ").append(String.valueOf(this.nbSounds)).append("\r\n");
+            out.append("Nombre d'items ajoutés manuellement : ").append(String.valueOf(this.totalItemsAddedManually)).append("\r\n");
             out.append("\r\n");
+            if (!this.isAnonymous){
+                out.append("Profil de la personne : ").append("\r\n");
+                out.append("Nom : ").append(this.userProfil[0]).append("\r\n");
+                out.append("Prénom : ").append(this.userProfil[1]).append("\r\n");
+                out.append("Genre : ").append(this.userProfil[2]).append("\r\n");
+                out.append("Age : ").append(this.userProfil[3]).append("\r\n");
+                out.append("Date de naissance : ").append(this.userProfil[4]).append("\r\n");
+                out.append("Lieu de naissance : ").append(this.userProfil[5]).append("\r\n");
+                out.append("\r\n");
+            }
             for (int i=0; i<this.indexEndGame; i++){
-                out.append("Round ").append(String.valueOf(i+1)).append("\r\n");
+                out.append("Item ").append(String.valueOf(i+1)).append("\r\n");
                 for (int j=0; j<this.nbImagesPerRound; j++){
-                    out.append("- Image name file -> ").append(this.listImages[i][j]).append("\r\n");
-                    out.append("- Image description -> ").append(this.listImagesDescription[i][j]).append("\r\n");
+                    out.append("- Nom de l'image -> ").append(this.listImages[i][j]).append("\r\n");
+                    out.append("- Description de l'image -> ").append(this.listImagesDescription[i][j]).append("\r\n");
                 }
-                out.append("- Sound use -> ").append(this.listSounds[i]).append("\r\n");
-                out.append("- Sound description -> ").append(this.listSoundsDescription[i]).append("\r\n");
-                out.append("- Result is -> ").append(this.resultsChoiceImages[i]).append("\r\n");
+                out.append("- Son utilisé -> ").append(this.listSounds[i]).append("\r\n");
+                out.append("- Description du son -> ").append(this.listSoundsDescription[i]).append("\r\n");
+                out.append("- Résultat -> ").append(this.resultsChoiceImages[i]).append("\r\n");
                 out.append("\r\n");
             }
             out.append("Scores ").append("\r\n");
@@ -618,38 +642,50 @@ public class GazeplayEval implements GameLifeCycle {
 
         Object[][] bookData = new Object[(this.indexEndGame*(5 + 2*this.nbImagesPerRound)) + 8 + this.listNameScores.length][2];
 
-        bookData[0] = new Object[]{"Game name : ", this.gameName};
-        bookData[1] = new Object[]{"Do on : ", this.getDate()};
-        bookData[2] = new Object[]{"Game time : ", stats.timeGame / 100. + " seconds"};
-        bookData[3] = new Object[]{"Number of images : ", String.valueOf(this.nbImages)};
-        bookData[4] = new Object[]{"Number of sounds : ", String.valueOf(this.nbSounds)};
-        bookData[5] = new Object[]{"Number of items added manually : ", String.valueOf(this.totalItemsAddedManually)};
-
         int nbElems = (this.nbImagesPerRound * 2) + 3;
-        int round = 1;
+        int item = 1;
         int indexImage = 0;
         int nextImages = 0;
         int start = 6;
 
+        bookData[0] = new Object[]{"Nom de l'évaluation : ", this.gameName};
+        bookData[1] = new Object[]{"Fait le : ", this.getDate()};
+        bookData[2] = new Object[]{"Temps de l'évaluation: ", stats.timeGame / 100. + " secondes"};
+        bookData[3] = new Object[]{"Nombre d'images : ", String.valueOf(this.nbImages)};
+        bookData[4] = new Object[]{"Nombre de sons : ", String.valueOf(this.nbSounds)};
+        bookData[5] = new Object[]{"Nombre d'items ajoutés manuellement : ", String.valueOf(this.totalItemsAddedManually)};
+
+        if (!this.isAnonymous){
+            bookData[6] = new Object[]{"", ""};
+            bookData[7] = new Object[]{"Profil de la personne : ", ""};
+            bookData[8] = new Object[]{"Nom : ", this.userProfil[0]};
+            bookData[9] = new Object[]{"Prénom : ", this.userProfil[1]};
+            bookData[10] = new Object[]{"Genre : ", this.userProfil[2]};
+            bookData[11] = new Object[]{"Age : ", this.userProfil[3]};
+            bookData[12] = new Object[]{"Date de naissance : ", this.userProfil[4]};
+            bookData[13] = new Object[]{"Lieu de naissance : ", this.userProfil[5]};
+            start = 14;
+        }
+
         for (int i=0; i<this.indexEndGame; i++){
             bookData[start] = new Object[]{"", ""};
-            bookData[start+1] = new Object[]{"Round " + round, ""};
+            bookData[start+1] = new Object[]{"Item " + item, ""};
 
             for (int j=(start+2); j<this.nbImagesPerRound+(start+2); j=j+2){
                 for (int k=0; k<this.nbImagesPerRound; k++){
-                    bookData[j + nextImages] = new Object[]{"- Image name file -> ", this.listImages[indexImage][k]};
-                    bookData[j+1 + nextImages] = new Object[]{"- Image description -> ", this.listImagesDescription[indexImage][k]};
+                    bookData[j + nextImages] = new Object[]{"- Nom de l'image -> ", this.listImages[indexImage][k]};
+                    bookData[j+1 + nextImages] = new Object[]{"- Description de l'image -> ", this.listImagesDescription[indexImage][k]};
                     nextImages += 2;
                 }
 
-                bookData[j + nextImages] = new Object[]{"- Sound use -> ", this.listSounds[indexImage]};
-                bookData[j + nextImages +1] = new Object[]{"- Sound description -> ", this.listSoundsDescription[indexImage]};
-                bookData[j + nextImages +2] = new Object[]{"- Result is -> ", this.resultsChoiceImages[indexImage]};
+                bookData[j + nextImages] = new Object[]{"- Son utilisé -> ", this.listSounds[indexImage]};
+                bookData[j + nextImages +1] = new Object[]{"- Description du son -> ", this.listSoundsDescription[indexImage]};
+                bookData[j + nextImages +2] = new Object[]{"- Résultat -> ", this.resultsChoiceImages[indexImage]};
 
                 indexImage += 1;
             }
 
-            round += 1;
+            item += 1;
             start = start + nbElems + 2;
             nextImages = 0;
         }
