@@ -72,7 +72,9 @@ public class Bubble implements GameLifeCycle {
             int randomWallpaperIndex = randomGenerator.nextInt(3);
             switch (randomWallpaperIndex) {
                 case 1 -> imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/inhabited-ocean.png")));
+                    break;
                 case 2 -> imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/empty-ocean.png")));
+                    break;
                 default -> imageRectangle.setFill(new ImagePattern(new Image("data/bubble/images/underwater-treasures.jpg")));
             }
             imageRectangle.setOpacity(imageRectangleOpacity);
