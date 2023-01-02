@@ -343,7 +343,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "ImportEval", COLON);
 
-            Node input = buildImportGame(config, configurationContext, translator);
+            Node input = buildImportEvals(config, configurationContext, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -918,7 +918,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         return selectButton;
     }
 
-    private Node buildImportGame(Configuration configuration,
+    private Node buildImportEvals(Configuration configuration,
                                  ConfigurationContext configurationContext,
                                  Translator translator){
 

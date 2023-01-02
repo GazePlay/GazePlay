@@ -43,6 +43,7 @@ public class GameMenuController {
         @NonNull GameSpec gameSpec,
         String gameName
     ) {
+        String gazeplayType = GazePlayArgs.returnArgs();
         Collection<IGameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
         if (variants.size() > 1) {
             root.setEffect(new BoxBlur());
@@ -52,13 +53,25 @@ public class GameMenuController {
             dialog.show();
             dialog.toFront();
             dialog.setAlwaysOnTop(true);
-
+        } else if (!gazeplayType.equals("bera")) {
+            if (variants.size() == 1) {
+                IGameVariant onlyGameVariant = variants.iterator().next();
+                chooseAndStartNewGameProcess(gazePlay, gameSpec, onlyGameVariant);
+            }else {
+                chooseAndStartNewGameProcess(gazePlay, gameSpec, null);
+            }
         } else {
             if (variants.size() == 1) {
                 IGameVariant onlyGameVariant = variants.iterator().next();
                 chooseAndStartNewGameProcess(gazePlay, gameSpec, onlyGameVariant);
             } else {
-                chooseAndStartNewGameProcess(gazePlay, gameSpec, null);
+                root.setEffect(new BoxBlur());
+                root.setDisable(true);
+                ErrorVariantDialog dialog = new ErrorVariantDialog(gazePlay, gazePlay.getPrimaryStage(), root, "NoEvalsFound");
+                dialog.setTitle(gameName);
+                dialog.show();
+                dialog.toFront();
+                dialog.setAlwaysOnTop(true);
             }
         }
     }

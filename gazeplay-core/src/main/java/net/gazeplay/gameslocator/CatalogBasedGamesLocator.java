@@ -23,7 +23,7 @@ public class CatalogBasedGamesLocator extends AbstractGamesLocator {
         String gazeplayType = GazePlayArgs.returnArgs();
 
         if (gazeplayType.contains("bera")){
-            catalogResourceLocation = "bera-games-catalog.txt";
+            catalogResourceLocation = "evals-catalog.txt";
         }
 
         Stream<String> linesStream = Stream.generate(new Supplier<>() {

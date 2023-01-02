@@ -62,7 +62,7 @@ task createLicence(dependsOn: ['processResources'], type: Copy, group: 'license'
 def generatedResources = "${buildDir}/generated-resources/main"
 
 sourceSets.main.output.dir(generatedResources, builtBy: 'generateGamesCatalog')
-sourceSets.main.output.dir(generatedResources, builtBy: 'generateBeraGamesCatalog')
+sourceSets.main.output.dir(generatedResources, builtBy: 'generateEvalsCatalog')
 
 task generateGamesCatalog {
     outputs.dir generatedResources
@@ -78,9 +78,7 @@ task generateGamesCatalog {
                             .replace('/', '.')
                             .replace('\\', '.')
                             .replace('.java', '')
-                            .replace('net.gazeplay.games.bera.BeraGameSpecSource', '')
-                            .replace('net.gazeplay.games.beraV2.BeraV2GameSpecSource', '')
-                            .replace('net.gazeplay.games.beraPreTest.BeraPreTestGameSpecSource', '')
+                            .replace('net.gazeplay.games.gazeplayEvalTest.BeraPreTestGameSpecSource', '')
                             .replace('net.gazeplay.games.gazeplayEval.GazeplayEvalGameSpecSource', '')
                 }
                 .unique()
@@ -93,14 +91,14 @@ task generateGamesCatalog {
     }
 }
 
-task generateBeraGamesCatalog {
+task generateEvalsCatalog {
     outputs.dir generatedResources
 
     doLast {
         def sourceSet = project(':gazeplay-games').sourceSets.findByName('main').java
         def packages = sourceSet
                 .filter { it.path.endsWith('.java') }
-                .filter { it.path.contains('Bera') || it.path.contains('GazeplayEval') }
+                .filter { it.path.contains('GazeplayEval') }
                 .filter { it.path.contains('SpecSource') }
                 .collect {
                     it.path
@@ -111,7 +109,7 @@ task generateBeraGamesCatalog {
                 }
                 .unique()
 
-        def file = new File(generatedResources, "bera-games-catalog.txt")
+        def file = new File(generatedResources, "evals-catalog.txt")
         if (file.exists()) {
             file.delete()
         }

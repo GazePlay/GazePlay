@@ -106,6 +106,9 @@ public class GazePlay {
 
         BackgroundMusicManager.onConfigurationChanged();
 
+        this.loadedHomePage = false;
+        this.loadedSettingsPage = false;
+
         userProfileScreen = applicationContext.getBean(UserProfileContext.class);
         userProfileScreen.setUpOnStage(primaryScene);
         primaryStage.show();
@@ -132,6 +135,7 @@ public class GazePlay {
         if (!this.loadedHomePage) {
             this.loadedHomePage = true;
             BackgroundMusicManager.getInstance().checkDefaultMusic();
+            this.loadSettingsPage();
             homeMenuScreen = applicationContext.getBean(HomeMenuScreen.class);
         }
     }

@@ -162,7 +162,7 @@ public class BackgroundMusicManager {
         }
     }
 
-    private void changeCurrentMusic() {
+    public void changeCurrentMusic() {
         if (playlist.isEmpty()) {
             return;
         }
@@ -453,23 +453,23 @@ public class BackgroundMusicManager {
     }
 
     public void checkDefaultMusic(){
-        if (new File(GazePlayDirectories.getGazePlayFolder() + "/music/").mkdirs()){
+        File defaultPath = GazePlayDirectories.getGazePlayFolder();
+        if (new File(defaultPath + "/music/").mkdirs()){
             log.info("Folder music created !");
-            this.addDefaultSong();
+            this.addDefaultSong(defaultPath);
         }else {
             log.info("Folder music already created !");
-            String[] files = new File(GazePlayDirectories.getGazePlayFolder() + "/music/").list();
+            String[] files = new File(defaultPath + "/music/").list();
             assert files != null;
             if (files.length == 0){
-                this.addDefaultSong();
+                this.addDefaultSong(defaultPath);
             }
         }
     }
 
-    public void addDefaultSong(){
+    public void addDefaultSong(File path){
 
-        File gazePlayFolder = GazePlayDirectories.getGazePlayFolder();
-        File gazePlayMusicFolder = new File(gazePlayFolder, "music");
+        File gazePlayMusicFolder = new File(path, "music");
         String resourcePath = "data/home/sounds/" + Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC;
 
         try {
