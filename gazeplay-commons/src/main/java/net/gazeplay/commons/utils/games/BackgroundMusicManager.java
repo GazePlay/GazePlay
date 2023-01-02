@@ -453,23 +453,46 @@ public class BackgroundMusicManager {
     }
 
     public void checkDefaultMusic(){
-        if (new File(GazePlayDirectories.getGazePlayFolder() + "/music/").mkdirs()){
+        File defaultPath = GazePlayDirectories.getGazePlayFolder();
+        if (new File(defaultPath + "/music/").mkdirs()){
             log.info("Folder music created !");
-            this.addDefaultSong();
+            this.addDefaultSong(defaultPath);
         }else {
             log.info("Folder music already created !");
-            String[] files = new File(GazePlayDirectories.getGazePlayFolder() + "/music/").list();
+            String[] files = new File(defaultPath + "/music/").list();
             assert files != null;
             if (files.length == 0){
-                this.addDefaultSong();
+                this.addDefaultSong(defaultPath);
+            }
+        }
+        this.checkDefaultMusicOnUser(defaultPath);
+    }
+
+    public void checkDefaultMusicOnUser(File path){
+        File profilesPath = new File(path + "/profiles/");
+        if (profilesPath.exists()){
+            String[] users = profilesPath.list();
+            assert users != null;
+            for (String user : users){
+                File userPath = new File(path + "/profiles/" + user);
+                if (new File(userPath + "/music/").mkdirs()){
+                    log.info("Folder music created !");
+                    this.addDefaultSong(userPath);
+                }else {
+                    log.info("Folder music already created !");
+                    String[] files = new File(userPath + "/music/").list();
+                    assert files != null;
+                    if (files.length == 0){
+                        this.addDefaultSong(userPath);
+                    }
+                }
             }
         }
     }
 
-    public void addDefaultSong(){
+    public void addDefaultSong(File path){
 
-        File gazePlayFolder = GazePlayDirectories.getGazePlayFolder();
-        File gazePlayMusicFolder = new File(gazePlayFolder, "music");
+        File gazePlayMusicFolder = new File(path, "music");
         String resourcePath = "data/home/sounds/" + Configuration.DEFAULT_VALUE_BACKGROUND_MUSIC;
 
         try {
