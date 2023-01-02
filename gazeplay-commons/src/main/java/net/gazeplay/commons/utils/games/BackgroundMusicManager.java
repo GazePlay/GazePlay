@@ -162,7 +162,7 @@ public class BackgroundMusicManager {
         }
     }
 
-    private void changeCurrentMusic() {
+    public void changeCurrentMusic() {
         if (playlist.isEmpty()) {
             return;
         }
@@ -463,29 +463,6 @@ public class BackgroundMusicManager {
             assert files != null;
             if (files.length == 0){
                 this.addDefaultSong(defaultPath);
-            }
-        }
-        this.checkDefaultMusicOnUser(defaultPath);
-    }
-
-    public void checkDefaultMusicOnUser(File path){
-        File profilesPath = new File(path + "/profiles/");
-        if (profilesPath.exists()){
-            String[] users = profilesPath.list();
-            assert users != null;
-            for (String user : users){
-                File userPath = new File(path + "/profiles/" + user);
-                if (new File(userPath + "/music/").mkdirs()){
-                    log.info("Folder music created !");
-                    this.addDefaultSong(userPath);
-                }else {
-                    log.info("Folder music already created !");
-                    String[] files = new File(userPath + "/music/").list();
-                    assert files != null;
-                    if (files.length == 0){
-                        this.addDefaultSong(userPath);
-                    }
-                }
             }
         }
     }
