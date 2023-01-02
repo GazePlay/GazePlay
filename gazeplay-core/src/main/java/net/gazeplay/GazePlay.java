@@ -106,6 +106,8 @@ public class GazePlay {
 
         BackgroundMusicManager.onConfigurationChanged();
 
+        this.loadedHomePage = false;
+
         userProfileScreen = applicationContext.getBean(UserProfileContext.class);
         userProfileScreen.setUpOnStage(primaryScene);
         primaryStage.show();
