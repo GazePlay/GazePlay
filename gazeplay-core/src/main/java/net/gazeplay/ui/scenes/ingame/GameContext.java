@@ -308,60 +308,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         scrollPane.setMaxWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
     }
 
-    public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame, String replayMode) {
-        Configuration config = ActiveConfigurationContext.getInstance();
-        MusicControl musicControl = getMusicControl();
-        AnimationSpeedRatioControl animationSpeedRatioControl = AnimationSpeedRatioControl.getInstance();
-        FixationLengthControl fixationLengthControl = FixationLengthControl.getInstance();
-        ElementSizeControl elementSizeControl = ElementSizeControl.getInstance();
-
-        Stage primaryStage = gazePlay.getPrimaryStage();
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setFitToHeight(true);
-
-        leftControlPane = new GridPane();
-        leftControlPane.setHgap(5);
-        leftControlPane.setVgap(5);
-        leftControlPane.setAlignment(Pos.TOP_CENTER);
-        leftControlPane.add(musicControl.createMusicControlPane(), 0, 0);
-        leftControlPane.add(musicControl.createVolumeLevelControlPane(config, gazePlay.getTranslator()), 1, 0);
-        leftControlPane.add(animationSpeedRatioControl.createSpeedEffectsPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 2, 0);
-        leftControlPane.add(elementSizeControl.createElementSizePane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 3, 0);
-        fixPan = fixationLengthControl.createfixationLengthPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene());
-        leftControlPane.add(fixPan, 4, 0);
-        leftControlPane.getChildren().forEach(node -> {
-            GridPane.setVgrow(node, Priority.ALWAYS);
-            GridPane.setHgrow(node, Priority.ALWAYS);
-        });
-
-
-        scrollPane.setContent(leftControlPane);
-        menuHBox.getChildren().add(scrollPane);
-
-        I18NButton toggleFullScreenButtonInGameScreen = createToggleFullScreenButtonInGameScreen(gazePlay);
-        menuHBox.getChildren().add(toggleFullScreenButtonInGameScreen);
-
-        homeButton = createHomeButtonInGameScreenWithoutHandler(gazePlay);
-        menuHBox.getChildren().add(homeButton);
-
-        replayButton = createReplayButtonInGameScreenWithoutHandler(gazePlay);
-        menuHBox.getChildren().add(replayButton);
-
-        double buttonSize = primaryStage.getWidth() / 10;
-
-        if (buttonSize < GameContextFactoryBean.BUTTON_MIN_HEIGHT) {
-            buttonSize = GameContextFactoryBean.BUTTON_MIN_HEIGHT;
-        }
-
-        double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + replayButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
-        scrollPane.setPrefWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-        scrollPane.setMinWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-        scrollPane.setMaxWidth(9.9d * primaryStage.getWidth() / 10d - offset - 100);
-
-        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> updateControllPanel(scrollPane, toggleFullScreenButtonInGameScreen, primaryStage));
-
-    }
-
     public HomeButton createHomeButtonInGameScreen(@NonNull GazePlay gazePlay, @NonNull Stats stats,
                                                    @NonNull GameLifeCycle currentGame) {
 
@@ -386,6 +332,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             getGazePlay().onGameLaunch(this);
             stats.reset();
             currentGame.launch();
+            soundManager.init();
         };
 
         Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
