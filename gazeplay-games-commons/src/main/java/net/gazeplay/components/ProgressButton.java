@@ -67,6 +67,15 @@ public class ProgressButton extends StackPane {
         this.button.setDisable(true);
     }
 
+    public void styleProgressIndicator(IGameContext gameContext){
+        indicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+    }
+
+    public void sizeProgressIndicator(IGameContext gameContext){
+        indicator.setMinHeight(getButton().getRadius() * gameContext.getConfiguration().getProgressBarSize() / 50);
+        indicator.setMinWidth(getButton().getRadius() * gameContext.getConfiguration().getProgressBarSize() / 50);
+    }
+
     public void setImage(final ImageView img) {
         image = img;
         image.setMouseTransparent(true);
@@ -150,6 +159,8 @@ public class ProgressButton extends StackPane {
         final Event e1 = new Event(pb, pb, GazeEvent.ANY);
 
         enterButtonHandler = e -> {
+            sizeProgressIndicator(gameContext);
+            styleProgressIndicator(gameContext);
             if (inuse) {
                 indicator.setProgress(0);
                 indicator.setOpacity(0.5);

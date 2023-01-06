@@ -180,7 +180,8 @@ public class Piano extends Parent implements GameLifeCycle {
         }
 
         if (firstNote != -1) {
-            tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
+            tilesTab.get(firstNote).arc.setFill(Color.ORANGE
+            );
         }
     }
 
@@ -308,7 +309,8 @@ public class Piano extends Parent implements GameLifeCycle {
                         firstNote = index1;
                     }
 
-                    if (precNote != -1 && tilesTab.get(precNote).arc.getFill() == Color.YELLOW) {
+                    if (precNote != -1 && tilesTab.get(precNote).arc.getFill() == Color.ORANGE
+                    ) {
                         instru.noteOn(precKey);
                         stats.incrementNumberOfGoalsReached();
                         double x;
@@ -332,13 +334,16 @@ public class Piano extends Parent implements GameLifeCycle {
                         }
                         explose(x, y);
                         if (firstNote != -1) {
-                            if (tilesTab.get(firstNote).arc.getFill() == Color.YELLOW) {
+                            if (tilesTab.get(firstNote).arc.getFill() == Color.ORANGE
+                            ) {
                                 tilesTab.get(precNote).arc.setFill(color2);
-                                circleTemp.setFill(Color.YELLOW);
+                                circleTemp.setFill(Color.ORANGE
+                                );
                                 circleTemp.setOpacity(1);
                             } else {
                                 tilesTab.get(precNote).arc.setFill(color2);
-                                tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
+                                tilesTab.get(firstNote).arc.setFill(Color.ORANGE
+                                );
                             }
 
                         } else {
@@ -405,7 +410,8 @@ public class Piano extends Parent implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         final EventHandler<Event> circleEvent = e -> {
-            if (circleTemp.getFill() == Color.YELLOW) {
+            if (circleTemp.getFill() == Color.ORANGE
+            ) {
                 if (firstNote != -1) {
                     this.progressIndicator = createProgressIndicator(12, 2.3, dimension2D);
 
@@ -438,7 +444,8 @@ public class Piano extends Parent implements GameLifeCycle {
                             circleTemp.setFill(Color.BLACK);
                             circleTemp.setOpacity(0);
                             if (firstNote != -1) {
-                                tilesTab.get(firstNote).arc.setFill(Color.YELLOW);
+                                tilesTab.get(firstNote).arc.setFill(Color.ORANGE
+                                );
                             } else {
                                 tilesTab.get(firstNote).arc.setFill(tilesTab.get(precNote).color1);
                             }
