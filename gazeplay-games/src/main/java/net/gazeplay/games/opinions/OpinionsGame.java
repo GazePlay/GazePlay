@@ -126,7 +126,7 @@ public class OpinionsGame implements GameLifeCycle {
             thumbDown = new ProgressButton();
             createAddButtonOpinions(thumbDown, "data/opinions/thumbs/thumbdown.png", dimension2D.getWidth() * 18 / 20, dimension2D.getHeight() * 2 / 5);
 
-            thumbDown.assignIndicator(event, configuration.getFixationLength());
+            thumbDown.assignIndicatorUpdatable(event, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(thumbDown);
             thumbDown.active();
 
@@ -134,7 +134,7 @@ public class OpinionsGame implements GameLifeCycle {
             createAddButtonOpinions(noCare, "data/opinions/thumbs/nocare.png", dimension2D.getWidth() / 2 - dimension2D.getWidth() / 20, 0);
 
 
-            noCare.assignIndicator(event, configuration.getFixationLength());
+            noCare.assignIndicatorUpdatable(event, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(noCare);
             noCare.active();
 
@@ -142,7 +142,7 @@ public class OpinionsGame implements GameLifeCycle {
             createAddButtonOpinions(thumbUp, "data/opinions/thumbs/thumbup.png", 0, dimension2D.getHeight() * 2 / 5);
 
 
-            thumbUp.assignIndicator(event, configuration.getFixationLength());
+            thumbUp.assignIndicatorUpdatable(event, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(thumbUp);
             thumbUp.active();
 
@@ -169,11 +169,11 @@ public class OpinionsGame implements GameLifeCycle {
                 createAddButtonOpinions(Non, "data/opinions/thumbs/error.png", 0, dimension2D.getHeight() * 2 / 5);
             }
 
-            Oui.assignIndicator(event, configuration.getFixationLength());
+            Oui.assignIndicatorUpdatable(event, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(Oui);
             Oui.active();
 
-            Non.assignIndicator(event, configuration.getFixationLength());
+            Non.assignIndicatorUpdatable(event, gameContext);
             gameContext.getGazeDeviceManager().addEventFilter(Non);
             Non.active();
 

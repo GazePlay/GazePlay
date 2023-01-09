@@ -61,9 +61,9 @@ public class ProgressBarControl {
         slider.setMaxWidth(QuickControl.SLIDERS_PREF_WIDTH);
         slider.setPrefWidth(QuickControl.SLIDERS_MAX_WIDTH);
         slider.setMin(15);
-        slider.setMax(150);
-        slider.setMajorTickUnit(30);
-        slider.setMinorTickCount(15);
+        slider.setMax(100);
+        slider.setMajorTickUnit(10);
+        slider.setMinorTickCount(5);
         slider.setShowTickMarks(true);
         slider.setSnapToTicks(true);
         slider.setValue(initialSizeValue);
@@ -109,28 +109,14 @@ public class ProgressBarControl {
             labels[i].setAlignment(Pos.CENTER);
         }
         for(int i=0; i<labels.length; i++){
-            switch(i) {
-                case 0:
-                    initializeColorLabel(labels, 0, "RED", config);
-                    break;
-                case 1:
-                    initializeColorLabel(labels, 1, "ORANGE", config);
-                    break;
-                case 2:
-                    initializeColorLabel(labels, 2, "YELLOW", config);
-                    break;
-                case 3:
-                    initializeColorLabel(labels, 3, "LIMEGREEN", config);
-                    break;
-                case 4:
-                    initializeColorLabel(labels, 4, "CYAN", config);
-                    break;
-                case 5:
-                    initializeColorLabel(labels, 5, "DODGERBLUE", config);
-                    break;
-                default:
-                    initializeColorLabel(labels, 6, "VIOLET", config);
-                    break;
+            switch (i) {
+                case 0 -> initializeColorLabel(labels, 0, "RED", config);
+                case 1 -> initializeColorLabel(labels, 1, "ORANGE", config);
+                case 2 -> initializeColorLabel(labels, 2, "YELLOW", config);
+                case 3 -> initializeColorLabel(labels, 3, "LIMEGREEN", config);
+                case 4 -> initializeColorLabel(labels, 4, "CYAN", config);
+                case 5 -> initializeColorLabel(labels, 5, "DODGERBLUE", config);
+                default -> initializeColorLabel(labels, 6, "VIOLET", config);
             }
         }
         return labels;

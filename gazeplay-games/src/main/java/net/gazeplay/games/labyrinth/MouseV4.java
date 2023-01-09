@@ -89,6 +89,7 @@ public class MouseV4 extends Mouse {
 
             if (conditionToMove(e)) {
                 final GameBox gb = (GameBox) e.getSource();
+                gb.verifyProgressBarValue(gameContext);
                 gb.getIndicator().setOpacity(0);
                 reOrientateMouse(indiceX, indiceY, gb.numCol, gb.numRow);
                 putInBold();
@@ -122,6 +123,8 @@ public class MouseV4 extends Mouse {
 
             if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)
                 && !isSelectioned) {
+
+                indicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 indicator.setOpacity(1);
                 indicator.setProgress(0);
 

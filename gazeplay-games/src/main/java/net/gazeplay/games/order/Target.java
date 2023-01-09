@@ -87,6 +87,7 @@ public class Target extends Parent {
     }
 
     private void enter() {
+        progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
         progressIndicator.setOpacity(1);
         progressIndicator.setProgress(0);
         timelineProgressBar = new Timeline();

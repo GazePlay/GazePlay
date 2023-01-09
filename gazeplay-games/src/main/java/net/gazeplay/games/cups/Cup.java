@@ -187,6 +187,7 @@ public class Cup {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
+                this.verifyProgressBarValue();
                 progressIndicator.setOpacity(1);
                 progressIndicator.setProgress(0);
 
@@ -223,5 +224,11 @@ public class Cup {
 
     public void increaseActionsDone() {
         actionsDone++;
+    }
+
+    private void verifyProgressBarValue() {
+        progressIndicator.setMinWidth(gameContext.getConfiguration().getProgressBarSize() / 100.0);
+        progressIndicator.setMinHeight(gameContext.getConfiguration().getProgressBarSize() / 100.0);
+        progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
     }
 }

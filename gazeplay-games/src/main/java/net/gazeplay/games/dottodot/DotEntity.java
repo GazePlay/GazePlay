@@ -62,6 +62,7 @@ public class DotEntity extends Parent {
 
             progressTimeline.setOnFinished(e -> drawTheLine());
 
+            this.verifyProgressBarValue();
             this.progressIndicator.setOpacity(1);
             progressTimeline.playFromStart();
         };
@@ -159,5 +160,11 @@ public class DotEntity extends Parent {
         }
 
         return (compare == 3);
+    }
+
+    private void verifyProgressBarValue() {
+        progressIndicator.setMinWidth(gameContext.getConfiguration().getProgressBarSize() / 100.0);
+        progressIndicator.setMinHeight(gameContext.getConfiguration().getProgressBarSize() / 100.0);
+        progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor()); // To change the color of the progress bar
     }
 }

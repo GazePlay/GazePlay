@@ -76,6 +76,7 @@ public class RushHour extends Parent implements GameLifeCycle {
         size = new SimpleIntegerProperty();
 
         final ProgressIndicator pi = new ProgressIndicator(0);
+        pi.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
         pi.setMouseTransparent(true);
         IntegerProperty.readOnlyIntegerProperty(size).addListener((observable, oldValue, newValue) -> {
             pi.setPrefSize(newValue.intValue(), newValue.intValue());

@@ -387,6 +387,8 @@ public class PictureCard extends Group{
 
             progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
 
+            progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
+
             progressIndicator.setProgress(0);
             progressIndicator.setVisible(true);
 
