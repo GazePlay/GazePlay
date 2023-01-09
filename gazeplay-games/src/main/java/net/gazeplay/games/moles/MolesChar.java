@@ -142,6 +142,7 @@ public class MolesChar extends Parent {
             /* If the mole is out and touched */
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
 
+                progressIndicatorMoles.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 progressIndicatorMoles.setOpacity(1);
                 progressIndicatorMoles.toFront();
                 progressIndicatorMoles.setProgress(0);

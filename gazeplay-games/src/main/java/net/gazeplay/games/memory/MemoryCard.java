@@ -279,6 +279,7 @@ public class MemoryCard extends Parent {
                     timelineProgressBar.stop();
                 }
 
+                progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 progressIndicator.setOpacity(1);
                 progressIndicator.setProgress(0);
 

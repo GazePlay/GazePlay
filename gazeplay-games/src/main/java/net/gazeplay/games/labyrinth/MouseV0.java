@@ -62,6 +62,7 @@ public class MouseV0 extends Mouse {
             if ((e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED)) {
                 final GameBox gb = (GameBox) e.getSource();
 
+                gb.verifyProgressBarValue(gameContext);
                 gb.getIndicator().setOpacity(1);
                 gb.getIndicator().setProgress(0);
 

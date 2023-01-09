@@ -126,6 +126,7 @@ public abstract class MouseArrows extends Mouse {
 
             if (indiceY - 1 >= 0 && gameInstance.isFreeForMouse(indiceY - 1, indiceX) && isActivated(e)) {
 
+                indicatorUp.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 indicatorUp.setOpacity(1);
                 indicatorUp.setProgress(0);
                 timelineProgressBar = new Timeline();
@@ -163,6 +164,7 @@ public abstract class MouseArrows extends Mouse {
             if (indiceY + 1 < gameInstance.nbBoxesLine && gameInstance.isFreeForMouse(indiceY + 1, indiceX)
                 && isActivated(e)) {
 
+                indicatorDown.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 indicatorDown.setOpacity(1);
                 indicatorDown.setProgress(0);
                 timelineProgressBar = new Timeline();
@@ -200,6 +202,7 @@ public abstract class MouseArrows extends Mouse {
             if (indiceX + 1 < gameInstance.nbBoxesColumns && gameInstance.isFreeForMouse(indiceY, indiceX + 1)
                 && isActivated(e)) {
 
+                indicatorRight.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 indicatorRight.setOpacity(1);
                 indicatorRight.setProgress(0);
                 timelineProgressBar = new Timeline();
@@ -237,6 +240,7 @@ public abstract class MouseArrows extends Mouse {
 
             if (indiceX - 1 >= 0 && gameInstance.isFreeForMouse(indiceY, indiceX - 1) && isActivated(e)) {
 
+                indicatorLeft.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 indicatorLeft.setOpacity(1);
                 indicatorLeft.setProgress(0);
                 timelineProgressBar = new Timeline();

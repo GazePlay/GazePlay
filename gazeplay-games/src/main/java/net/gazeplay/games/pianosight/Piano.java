@@ -180,8 +180,7 @@ public class Piano extends Parent implements GameLifeCycle {
         }
 
         if (firstNote != -1) {
-            tilesTab.get(firstNote).arc.setFill(Color.ORANGE
-            );
+            tilesTab.get(firstNote).arc.setFill(Color.ORANGE);
         }
     }
 
@@ -288,6 +287,7 @@ public class Piano extends Parent implements GameLifeCycle {
 
                 this.progressIndicator = createProgressIndicator(index, size, dimension2D);
 
+                progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 progressIndicator.setMouseTransparent(true);
                 progressIndicator.setOpacity(1);
                 progressIndicator.setProgress(0);
