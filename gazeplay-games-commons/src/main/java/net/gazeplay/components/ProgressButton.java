@@ -67,6 +67,15 @@ public class ProgressButton extends StackPane {
         this.button.setDisable(true);
     }
 
+    public void styleProgressIndicator(IGameContext gameContext){
+        indicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+    }
+
+    public void sizeProgressIndicator(IGameContext gameContext){
+        indicator.setMinHeight(getButton().getRadius() * gameContext.getConfiguration().getProgressBarSize() / 50);
+        indicator.setMinWidth(getButton().getRadius() * gameContext.getConfiguration().getProgressBarSize() / 50);
+    }
+
     public void setImage(final ImageView img) {
         image = img;
         image.setMouseTransparent(true);
@@ -99,50 +108,6 @@ public class ProgressButton extends StackPane {
         });
     }
 
-    public ProgressIndicator assignIndicator(final EventHandler<Event> enterEvent, final int fixationLength) {
-        indicator.setMouseTransparent(true);
-        indicator.setOpacity(0);
-        final ProgressButton pb = this;
-        final Event e1 = new Event(pb, pb, GazeEvent.ANY);
-
-        enterButtonHandler = e -> {
-            if (inuse) {
-                indicator.setProgress(0);
-                indicator.setOpacity(0.5);
-
-                timelineProgressBar.stop();
-                timelineProgressBar.getKeyFrames().clear();
-
-                timelineProgressBar.setDelay(new Duration(300));
-
-                timelineProgressBar.getKeyFrames().add(new KeyFrame(
-                    new Duration(fixationLength),
-                    new KeyValue(indicator.progressProperty(), 1)
-                ));
-
-                timelineProgressBar.onFinishedProperty().set(actionEvent -> {
-                    indicator.setOpacity(0);
-                    if (enterEvent != null) {
-                        enterEvent.handle(e1);
-                    }
-                });
-                timelineProgressBar.play();
-            }
-        };
-
-        exitButtonHandler = e -> {
-            if (inuse) {
-                timelineProgressBar.stop();
-                indicator.setOpacity(0);
-                indicator.setProgress(0);
-            }
-        };
-
-        active2();
-
-        return indicator;
-    }
-
     public ProgressIndicator assignIndicatorUpdatable(final EventHandler<Event> enterEvent, final IGameContext gameContext) {
         indicator.setMouseTransparent(true);
         indicator.setOpacity(0);
@@ -150,6 +115,8 @@ public class ProgressButton extends StackPane {
         final Event e1 = new Event(pb, pb, GazeEvent.ANY);
 
         enterButtonHandler = e -> {
+            sizeProgressIndicator(gameContext);
+            styleProgressIndicator(gameContext);
             if (inuse) {
                 indicator.setProgress(0);
                 indicator.setOpacity(0.5);

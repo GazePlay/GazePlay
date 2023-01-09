@@ -326,6 +326,7 @@ class PictureCard extends Group {
         private void onEntered() {
             log.info("ENTERED {}", imagePath);
 
+            progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
             progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
 
             progressIndicator.setProgress(0);

@@ -394,6 +394,7 @@ class PictureCard extends Group {
 
             progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
 
+            progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
             progressIndicator.setProgress(0);
             progressIndicator.setVisible(true);
 

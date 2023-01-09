@@ -78,7 +78,7 @@ task generateGamesCatalog {
                             .replace('/', '.')
                             .replace('\\', '.')
                             .replace('.java', '')
-                            .replace('net.gazeplay.games.gazeplayEvalTest.BeraPreTestGameSpecSource', '')
+                            .replace('net.gazeplay.games.gazeplayEvalTest.GazeplayEvalTestGameSpecSource', '')
                             .replace('net.gazeplay.games.gazeplayEval.GazeplayEvalGameSpecSource', '')
                 }
                 .unique()

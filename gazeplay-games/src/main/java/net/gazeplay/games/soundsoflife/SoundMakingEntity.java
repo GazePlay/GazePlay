@@ -53,6 +53,7 @@ public class SoundMakingEntity extends Parent {
                 new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(progressIndicator.progressProperty(), 1)));
             progressTimeline.setOnFinished(e -> selected());
 
+            progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
             progressIndicator.setOpacity(1);
             progressTimeline.playFromStart();
         };

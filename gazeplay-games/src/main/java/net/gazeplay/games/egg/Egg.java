@@ -157,6 +157,7 @@ public class Egg extends Parent {
 
                 if (turnNumber < totalNumberOfTurns) {
 
+                    this.verifyProgressBarValue();
                     progressIndicator.setOpacity(0.5);
                     progressIndicator.setProgress(0);
 
@@ -225,4 +226,7 @@ public class Egg extends Parent {
         gameContext.getSoundManager().add(soundResource);
     }
 
+    private void verifyProgressBarValue() {
+        progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor()); // To change the color of the progress bar
+    }
 }

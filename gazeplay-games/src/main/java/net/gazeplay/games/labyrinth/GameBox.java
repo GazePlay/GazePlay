@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 import lombok.Setter;
+import net.gazeplay.IGameContext;
 
 public class GameBox extends Parent {
 
@@ -77,4 +78,7 @@ public class GameBox extends Parent {
         return indicator;
     }
 
+    public void verifyProgressBarValue(IGameContext gameContext) {
+        indicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+    }
 }

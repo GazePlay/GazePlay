@@ -191,6 +191,7 @@ class SlidingPuzzleCard extends Parent {
                 && (e.getEventType() == MouseEvent.MOUSE_ENTERED
                 || e.getEventType() == GazeEvent.GAZE_ENTERED) && checkIfNeighbor()) {
 
+                progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 progressIndicator.setOpacity(0.7);
                 progressIndicator.setProgress(0);
 

@@ -84,6 +84,7 @@ public class Car extends Rectangle {
         log.debug("" + x + " " + y + " " + l + " " + h + " " + c);
 
         final EventHandler<Event> enterEvent = e -> {
+            pi.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
             pi.setLayoutX(getX() + getWidth() / 2 - pi.getWidth() / 2);
             pi.setLayoutY(getY() + getHeight() / 2 - pi.getHeight() / 2);
             pi.setOpacity(1);
