@@ -13,6 +13,6 @@ public class GazeplayEvalTestGameSpecSource implements  GameSpecSource{
                 .gameThumbnail("data/Thumbnails/whereIsIt.png")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION).build(),
-            new GazeplayEvalTestGameLauncher());
+            new GazeplayEvalTestVariantGenerator(), new GazeplayEvalTestGameLauncher());
     }
 }
