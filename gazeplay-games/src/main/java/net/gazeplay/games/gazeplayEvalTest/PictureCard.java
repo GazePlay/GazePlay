@@ -386,12 +386,11 @@ public class PictureCard extends Group{
             log.info("ENTERED {}", imagePath);
 
             progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
-
-            progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
-
+            progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+            progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
+            progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
             progressIndicator.setProgress(0);
             progressIndicator.setVisible(true);
-
             progressIndicatorAnimationTimeLine.playFromStart();
         }
 
@@ -402,10 +401,11 @@ public class PictureCard extends Group{
                 log.info("ENTERED {}", imagePath);
 
                 progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
-
+                progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+                progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
+                progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
                 progressIndicator.setProgress(0);
                 progressIndicator.setVisible(true);
-
                 progressIndicatorAnimationTimeLine.playFromStart();
             }
         }

@@ -247,7 +247,8 @@ class PictureCard extends Group {
     private ImageView createImageView(double posX, double posY, double width, double height,
                                       @NonNull String imageName) {
 
-        File file = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "\\evals\\" +  this.gameVariant.getNameGame() + "\\images\\" + imageName);
+        Configuration config = ActiveConfigurationContext.getInstance();
+        File file = new File(config.getFileDir() + "\\evals\\" +  this.gameVariant.getNameGame() + "\\images\\" + imageName);
         final Image image = new Image(file.toURI().toString());
 
         ImageView result = new ImageView(image);
@@ -393,11 +394,11 @@ class PictureCard extends Group {
             log.info("ENTERED {}", imageName);
 
             progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
-
             progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+            progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
+            progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
             progressIndicator.setProgress(0);
             progressIndicator.setVisible(true);
-
             progressIndicatorAnimationTimeLine.playFromStart();
         }
 
@@ -408,10 +409,11 @@ class PictureCard extends Group {
                 log.info("ENTERED {}", imageName);
 
                 progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
-
+                progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+                progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
+                progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
                 progressIndicator.setProgress(0);
                 progressIndicator.setVisible(true);
-
                 progressIndicatorAnimationTimeLine.playFromStart();
             }
         }

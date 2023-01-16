@@ -119,7 +119,8 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public void loadGame(){
-        File gameDirectory = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "/evals/" + this.gameVariant.getNameGame() + "/config.json");
+        Configuration config = ActiveConfigurationContext.getInstance();
+        File gameDirectory = new File(config.getFileDir() + "\\evals\\" + this.gameVariant.getNameGame() + "\\config.json");
         JsonParser jsonParser = new JsonParser();
         try  (FileReader reader = new FileReader(gameDirectory, StandardCharsets.UTF_8)) {
             JsonObject obj = jsonParser.parse(reader).getAsJsonObject();
@@ -186,7 +187,8 @@ public class GazeplayEval implements GameLifeCycle {
 
     public void setSound(){
         if (this.indexFileImage < this.indexEndGame){
-            final String directorySounds = GazePlayDirectories.getDefaultFileDirectoryDefaultValue() + "/evals/" + this.gameVariant.getNameGame() + "/sounds/";
+            Configuration config = ActiveConfigurationContext.getInstance();
+            final String directorySounds = config.getFileDir() + "/evals/" + this.gameVariant.getNameGame() + "/sounds/";
             this.IMAGE_SOUND = directorySounds + this.listSounds[this.indexFileImage];
         }
     }

@@ -1,5 +1,7 @@
 package net.gazeplay.commons.gamevariants;
 
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
@@ -41,7 +43,8 @@ public interface IGameVariant {
                     return null;
                 }
             default:
-                File directoryPath = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "evals");
+                Configuration config = ActiveConfigurationContext.getInstance();
+                File directoryPath = new File(config.getFileDir() + "\\evals\\");
                 String[] content = directoryPath.list();
 
                 if (content != null){

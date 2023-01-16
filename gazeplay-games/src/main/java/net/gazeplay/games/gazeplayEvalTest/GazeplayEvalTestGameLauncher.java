@@ -5,6 +5,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 
+import net.gazeplay.commons.gamevariants.GazeplayEvalGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
@@ -15,7 +16,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class GazeplayEvalTestGameLauncher implements IGameLauncher<Stats, IGameVariant> {
+public class GazeplayEvalTestGameLauncher implements IGameLauncher<Stats, GazeplayEvalGameVariant> {
 
     private GazeplayEvalTestGameStats gameStats;
 
@@ -33,13 +34,13 @@ public class GazeplayEvalTestGameLauncher implements IGameLauncher<Stats, IGameV
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, IGameVariant gameVariant,
+    public GameLifeCycle createNewGame(IGameContext gameContext, GazeplayEvalGameVariant gameVariant,
                                        Stats stats) {
         return new GazePlayEvalTest(gameContext, gameStats, gameContext.getTranslator());
     }
 
     @Override
-    public GameLifeCycle replayGame(IGameContext gameContext, IGameVariant gameVariant,
+    public GameLifeCycle replayGame(IGameContext gameContext, GazeplayEvalGameVariant gameVariant,
                                     Stats stats, double gameSeed) {
         return new GazePlayEvalTest(gameContext, gameStats, gameContext.getTranslator());
     }

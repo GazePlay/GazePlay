@@ -34,6 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 @Slf4j
 public class ImportGame extends Stage {
@@ -183,7 +184,11 @@ public class ImportGame extends Stage {
                     fileChooser.showOpenMultipleDialog(this);
                 if (files != null) {
                     for (File f : files) {
-                        unzipFile(f.getPath(), folderPath);
+                        try {
+                            unzipFile(f.getPath(), folderPath);
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
                 }
             } else {
@@ -194,36 +199,50 @@ public class ImportGame extends Stage {
         return add;
     }
 
-    private void unzipFile(String zipFile, String destDir) {
+    private void unzipFile(String zipFile, String destDir) throws IOException {
 
-        Path zipFilePath = Path.of(zipFile);
-        Path targetDir = Path.of(destDir);
+        final File destDirectory = new File(destDir);
+        final byte[] buffer = new byte[1024];
+        final ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
+        ZipEntry zipEntry = zis.getNextEntry();
+        while (zipEntry != null) {
+            final File newUnzipFile = newUnzipFile(destDirectory, zipEntry);
+            if (zipEntry.isDirectory()) {
+                if (!newUnzipFile.isDirectory() && !newUnzipFile.mkdirs()) {
+                    throw new IOException("Failed to create directory " + newUnzipFile);
+                }
+            } else {
+                File parent = newUnzipFile.getParentFile();
+                if (!parent.isDirectory() && !parent.mkdirs()) {
+                    throw new IOException("Failed to create directory " + parent);
+                }
 
-        try (ZipFile zip = new ZipFile(zipFilePath.toFile())){
-            Enumeration<? extends  ZipEntry> entries = zip.entries();
-
-            while (entries.hasMoreElements()){
-                ZipEntry entry = entries.nextElement();
-                File f = new File(targetDir.resolve(Path.of(entry.getName())).toString());
-
-                if (entry.isDirectory()){
-                    if (!f.isDirectory() && !f.mkdirs()){
-                        throw new IOException("failed to create directory " + f);
+                try (FileOutputStream fos = new FileOutputStream(newUnzipFile)) {
+                    int len;
+                    while ((len = zis.read(buffer)) > 0) {
+                        fos.write(buffer, 0, len);
                     }
-                }else {
-                    File parent = f.getParentFile();
-                    if (!parent.isDirectory() && !parent.mkdirs()){
-                        throw new IOException("failed to create directory " + f);
-                    }
-
-                    try(InputStream in = zip.getInputStream(entry)){
-                        Files.copy(in, f.toPath());
-                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            zipEntry = zis.getNextEntry();
         }
+        zis.closeEntry();
+        zis.close();
+    }
+
+    public static File newUnzipFile(File destinationDir, ZipEntry zipEntry) throws IOException {
+        File destFile = new File(destinationDir, zipEntry.getName());
+
+        String destDirPath = destinationDir.getCanonicalPath();
+        String destFilePath = destFile.getCanonicalPath();
+
+        if (!destFilePath.startsWith(destDirPath + File.separator)) {
+            throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
+        }
+
+        return destFile;
     }
 
     private HBox buildImportGameChooser() {
@@ -259,7 +278,7 @@ public class ImportGame extends Stage {
     private void updateFlow() {
         flowPanes.getChildren().clear();
 
-        File directoryPath = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "evals");
+        File directoryPath = new File(configuration.getFileDir() + "\\evals\\");
         String[] content = directoryPath.list();
 
         if (content != null){
@@ -304,24 +323,11 @@ public class ImportGame extends Stage {
 
 
         EventHandler<Event> yesEventHandler = event -> {
-            File directoryPath = new File(GazePlayDirectories.getDefaultFileDirectoryDefaultValue(), "evals");
+            File directoryPath = new File(configuration.getFileDir() + "\\evals\\");
             File gameToDelete = new File(directoryPath + "/" + nameGame);
-            try {
-                if (Desktop.getDesktop().moveToTrash(gameToDelete)) {
-                    flowPanes.getChildren().remove(preview);
-                } else {
-                    log.info("the file {} can't be moved to trash", gameToDelete);
-                }
-            } catch (Exception e) {
-                log.info("the file {} can't be moved to trash", gameToDelete);
-            } finally {
-                if (gameToDelete.delete()) {
-                    flowPanes.getChildren().remove(preview);
-                } else {
-                    log.info("the file {} can't be deleted", gameToDelete);
-                }
-            }
+            deleteGame(gameToDelete);
             closeDialog(dialog);
+            updateFlow();
         };
 
         final Button yes = createAnswerButton("YesRemove", yesEventHandler);
@@ -347,6 +353,26 @@ public class ImportGame extends Stage {
         final Scene scene = new Scene(choicePanelScroller, Color.TRANSPARENT);
         dialog.setScene(scene);
         return dialog;
+    }
+
+    public static void deleteGame(File directory) {
+
+        if(directory.isDirectory()) {
+            File[] files = directory.listFiles();
+
+            if(files != null) {
+                for(File file : files) {
+                    deleteGame(file);
+                }
+            }
+        }
+
+        if(directory.delete()) {
+            System.out.println(directory + " is deleted");
+        }
+        else {
+            System.out.println("Directory not deleted");
+        }
     }
 
     private void closeDialog(Stage dialog) {
