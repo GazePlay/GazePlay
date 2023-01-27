@@ -17,6 +17,8 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.Utils;
@@ -59,12 +61,14 @@ public class Piano extends Parent implements GameLifeCycle {
     private ProgressIndicator progressIndicator;
 
     private Timeline timelineProgressBar;
+    private Configuration config;
 
     public Piano(final IGameContext gameContext, final Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
+        this.config = ActiveConfigurationContext.getInstance();
     }
 
     public Piano(final IGameContext gameContext, final Stats stats, double gameSeed) {
@@ -180,7 +184,7 @@ public class Piano extends Parent implements GameLifeCycle {
         }
 
         if (firstNote != -1) {
-            tilesTab.get(firstNote).arc.setFill(Color.ORANGE);
+            tilesTab.get(firstNote).arc.setFill(config.getTileColors());
         }
     }
 
@@ -309,7 +313,7 @@ public class Piano extends Parent implements GameLifeCycle {
                         firstNote = index1;
                     }
 
-                    if (precNote != -1 && tilesTab.get(precNote).arc.getFill() == Color.ORANGE
+                    if (precNote != -1 && tilesTab.get(precNote).arc.getFill() == config.getTileColors()
                     ) {
                         instru.noteOn(precKey);
                         stats.incrementNumberOfGoalsReached();
@@ -334,15 +338,15 @@ public class Piano extends Parent implements GameLifeCycle {
                         }
                         explose(x, y);
                         if (firstNote != -1) {
-                            if (tilesTab.get(firstNote).arc.getFill() == Color.ORANGE
+                            if (tilesTab.get(firstNote).arc.getFill() == config.getTileColors()
                             ) {
                                 tilesTab.get(precNote).arc.setFill(color2);
-                                circleTemp.setFill(Color.ORANGE
+                                circleTemp.setFill(config.getTileColors()
                                 );
                                 circleTemp.setOpacity(1);
                             } else {
                                 tilesTab.get(precNote).arc.setFill(color2);
-                                tilesTab.get(firstNote).arc.setFill(Color.ORANGE
+                                tilesTab.get(firstNote).arc.setFill(config.getTileColors()
                                 );
                             }
 
@@ -410,7 +414,7 @@ public class Piano extends Parent implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         final EventHandler<Event> circleEvent = e -> {
-            if (circleTemp.getFill() == Color.ORANGE
+            if (circleTemp.getFill() == config.getTileColors()
             ) {
                 if (firstNote != -1) {
                     this.progressIndicator = createProgressIndicator(12, 2.3, dimension2D);
@@ -444,7 +448,7 @@ public class Piano extends Parent implements GameLifeCycle {
                             circleTemp.setFill(Color.BLACK);
                             circleTemp.setOpacity(0);
                             if (firstNote != -1) {
-                                tilesTab.get(firstNote).arc.setFill(Color.ORANGE
+                                tilesTab.get(firstNote).arc.setFill(config.getTileColors()
                                 );
                             } else {
                                 tilesTab.get(firstNote).arc.setFill(tilesTab.get(precNote).color1);

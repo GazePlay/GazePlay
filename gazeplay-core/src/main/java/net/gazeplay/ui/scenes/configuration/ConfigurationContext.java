@@ -524,6 +524,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
+        {
+            I18NText label = new I18NText(translator, "PianoTileColors", COLON);
+
+            HBox input = buildTileColorHBox(config);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
 
 
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "EyeTrackerSettings", COLON));
@@ -1477,6 +1484,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
+    private void chooseColorPianoTile(HBox hbox, Configuration config) {
+        ColorPicker colorPicker = new ColorPicker(config.getTileColors());
+        colorPicker.valueProperty()
+            .addListener((observableValue, color1, t1) -> updateTileColorProperty(hbox, config));
+        hbox.getChildren().add(colorPicker);
+    }
+
     HBox buildHeatMapColorHBox(Configuration config, Translator translator) {
         HBox hbox = new HBox();
         hbox.setSpacing(5);
@@ -1531,6 +1545,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         } else if (hbox.getChildren().size() <= 5) {
             minusButton.setDisable(true);
         }
+
+        return hbox;
+    }
+
+    HBox buildTileColorHBox(Configuration config) {
+        HBox hbox = new HBox();
+        hbox.setSpacing(5);
+
+        chooseColorPianoTile(hbox, config);
 
         return hbox;
     }
@@ -1647,6 +1670,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         log.info(stringBuilder.toString());
         config.setHeatMapColors(stringBuilder.toString());
+    }
+
+    private void updateTileColorProperty(HBox hbox, Configuration config) {
+        config.setTileColors(((ColorPicker) (hbox.getChildren().get(0))).getValue().toString());
     }
 
     public void changeConstrutorCss(Configuration config){

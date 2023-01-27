@@ -64,6 +64,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_HEATMAP_DISABLED = "HEATMAP_DISABLED";
     private static final String PROPERTY_NAME_HEATMAP_OPACITY = "HEATMAP_OPACITY";
     private static final String PROPERTY_NAME_HEATMAP_COLORS = "HEATMAP_COLORS";
+    private static final String PROPERTY_NAME_TILE_COLORS = "TILE_COLORS";
     private static final String PROPERTY_NAME_AREA_OF_INTEREST_DISABLED = "AREA_OF_INTEREST_DISABLED";
     private static final String PROPERTY_NAME_CONVEX_HULL_DISABLED = "CONVEX_HULL_DISABLED";
     private static final String PROPERTY_NAME_VIDEO_RECORDING_ENABLED = "VIDEO_RECORDING_ENABLED";
@@ -122,6 +123,7 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
     private static final double DEFAULT_VALUE_HEATMAP_OPACITY = 0.7;
     public static final String DEFAULT_VALUE_HEATMAP_COLORS = "0000FF,00FF00,FFFF00,FF0000";
+    public static final String DEFAULT_VALUE_TILE_COLORS = "FFA500";
     private static final boolean DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED = false;
     private static final boolean DEFAULT_VALUE_CONVEX_HULL_DISABLED = false;
     private static final boolean DEFAULT_VALUE_VIDEO_RECORDING_ENABLED = false;
@@ -214,6 +216,8 @@ public class Configuration {
     @Getter
     private final StringProperty heatMapColorsProperty;
     @Getter
+    private final StringProperty tileColorsProperty;
+    @Getter
     private final BooleanProperty areaOfInterestDisabledProperty;
     @Getter
     private final BooleanProperty convexHullDisabledProperty;
@@ -283,6 +287,7 @@ public class Configuration {
         limiterTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_TIME, DEFAULT_VALUE_LIMITER_TIME, propertyChangeListener);
         limiterScoreEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITER_SCORE_ENABLED, DEFAULT_VALUE_LIMITER_SCORE_ENABLED, propertyChangeListener);
         limiterScoreProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_SCORE, DEFAULT_VALUE_LIMITER_SCORE, propertyChangeListener);
+        tileColorsProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_TILE_COLORS, DEFAULT_VALUE_TILE_COLORS, propertyChangeListener);
 
         /* Bera settings */
         transitionTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_TRANSITION_TIME, DEFAULT_VALUE_TRANSITION_TIME, propertyChangeListener);
@@ -514,6 +519,10 @@ public class Configuration {
         return colors;
     }
 
+    public Color getTileColors(){
+        return Color.web(tileColorsProperty.getValue());
+    }
+
     public Boolean isAreaOfInterestDisabled() {
         return areaOfInterestDisabledProperty.getValue();
     }
@@ -693,6 +702,10 @@ public class Configuration {
 
     public void setHeatMapColors(final String heatMapColors) {
         heatMapColorsProperty.setValue(heatMapColors);
+    }
+
+    public void setTileColors(final String tileColors){
+        tileColorsProperty.setValue(tileColors);
     }
 
     /* In game settings */
