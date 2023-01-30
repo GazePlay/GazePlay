@@ -289,6 +289,7 @@ ReaskQuestionOnFail,,,Задаць пытанне зноў калі няправ
 EnableRewardSound,Aktivizo audion për shpërblimet,تفعيل الصوت (احسنت),Ўключыць гук ўзнагароджання,打开奖励音效,Aktiviere den Sound Bravo,Ενεργοποίηση ήχου ανταμοιβής,Enable Reward sound,sallia palkkioääni,Activer le son « bravo »,,Aktiviraj zvuk za,Dayakan bunyi Ganjaran,Attiva suono ricompensa,,Activeer beloningsgeluid,Włącz dźwięk nagrody,Activar o som a « Bravo »,Включить звук вознаграждения,Activar el sonido Bravo,Bật tiếng,Dayakan bunyi Ganjaran
 Limiter Time,,,Абмежавальнік часу,时间限制器,,,Time Limiter,,Limiteur de Temps,,,,,,,,,Ограничитель времени,,,
 Limiter Score,,,Абмежавальнік выніку,分数限制器,,,Score Limiter,,Limiteur de Score,,,,,,,,,Ограничитель счёта,,,
+PianoTileColors,,,,,,,Panio tile color,,Couleur tuile piano,,,,,,,,,,,,
 Score,,,вынік,分数,,,Score,,Score,,,,,,,,,счёт,,,
 Time,,,Час (у секундах),时间 (秒),,,Time (seconds),,Temps (secondes),,,,,,,,,Время (в секундах),,,
 
