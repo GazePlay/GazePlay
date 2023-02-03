@@ -13,6 +13,6 @@ public class PianoGameSpecSource implements GameSpecSource {
                 .category(GameCategories.Category.ACTION_REACTION)
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MULTIMEDIA).build(),
-            new PianoGameLauncher());
+            new PianoGameVariantGenerator(), new PianoGameLauncher());
     }
 }
