@@ -135,7 +135,7 @@ class PictureCard extends Group {
                 this.alreadySee = true;
                 customInputEventHandlerMouse.ignoreAnyInput = true;
                 this.newProgressIndicator();
-                gameInstance.checkAllPictureCardChecked();
+                //gameInstance.checkAllPictureCardChecked();
             }
         };
     }
@@ -181,7 +181,7 @@ class PictureCard extends Group {
 
     public void onCorrectCardSelected() {
 
-        if (gameInstance.indexFileImage == (gameInstance.indexEndGame - 1)) {
+        /*if (gameInstance.indexFileImage == (gameInstance.indexEndGame - 1)) {
             progressIndicator.setVisible(false);
             gameInstance.increaseIndexFileImage(true);
             this.endGame();
@@ -198,12 +198,12 @@ class PictureCard extends Group {
             gameContext.updateScore(stats, gameInstance);
 
             this.waitBeforeNextRound();
-        }
+        }*/
     }
 
     public void onWrongCardSelected() {
 
-        gameInstance.nbCountError += 1;
+        /*gameInstance.nbCountError += 1;
 
         if (gameInstance.nbCountError != 5){
 
@@ -226,7 +226,7 @@ class PictureCard extends Group {
         }else {
             progressIndicator.setVisible(false);
             this.endGame();
-        }
+        }*/
     }
 
     public void waitBeforeNextRound(){
@@ -240,7 +240,7 @@ class PictureCard extends Group {
             gameInstance.launch();
         });
 
-        gameInstance.removeEventHandlerPictureCard();
+       // gameInstance.removeEventHandlerPictureCard();
         transition.playFromStart();
     }
 
@@ -351,13 +351,13 @@ class PictureCard extends Group {
 
     public void endGame() {
 
-        progressIndicator.setVisible(false);
+        /*progressIndicator.setVisible(false);
         gameInstance.finalStats();
         gameContext.updateScore(stats, gameInstance);
         gameInstance.resetFromReplay();
         gameInstance.dispose();
         gameContext.clear();
-        gameContext.showRoundStats(stats, gameInstance);
+        gameContext.showRoundStats(stats, gameInstance);*/
     }
 
     private class CustomInputEventHandlerMouse implements EventHandler<Event> {
