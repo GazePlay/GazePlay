@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PianoGameVariant {
     FREEPLAY("Freeplay"),
-    NORMAL("Play with instructions");
+    NORMAL("PlayWithInstructions");
     @Getter
     private final String label;
 }
