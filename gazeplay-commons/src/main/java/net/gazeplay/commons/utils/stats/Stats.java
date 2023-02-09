@@ -103,7 +103,7 @@ public class Stats implements GazeMotionListener {
     private int nbUnCountedGoalsReached;
 
     @Getter
-    private int nbMistakes = 0;
+    private int nbMistakes = -1;
 
     @Getter
     @Setter
@@ -617,7 +617,7 @@ public class Stats implements GazeMotionListener {
 
     public void reset() {
         nbGoalsReached = 0;
-        nbMistakes = 0;
+        nbMistakes = -1;
         nbGoalsToReach = 0;
         accidentalShotPreventionPeriod = 0;
 
@@ -974,6 +974,7 @@ public class Stats implements GazeMotionListener {
         savedDataObj.addProperty("statsNbGoalsReached", nbGoalsReached);
         savedDataObj.addProperty("statsNbGoalsToReach", nbGoalsToReach);
         savedDataObj.addProperty("statsNbUnCountedGoalsReached", nbUnCountedGoalsReached);
+        savedDataObj.addProperty("statsNbMistakes", nbMistakes);
 
         JsonObject lifeCycleObject = new JsonObject();
         lifeCycleObject.addProperty("startTime", lifeCycle.getStartTime());

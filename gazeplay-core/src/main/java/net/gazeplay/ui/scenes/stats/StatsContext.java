@@ -402,7 +402,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
             }
 
-            if(stats instanceof SelectionGamesStats){
+            if(stats instanceof SelectionGamesStats && stats.getNbMistakes() > -1){
                 labelValue = "Mistakes";
                 value = new Text(String.valueOf(stats.getNbMistakes()));
                 addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
