@@ -103,6 +103,9 @@ public class Stats implements GazeMotionListener {
     private int nbUnCountedGoalsReached;
 
     @Getter
+    private int nbMistakes = 0;
+
+    @Getter
     @Setter
     private long currentGazeTime;
 
@@ -614,6 +617,7 @@ public class Stats implements GazeMotionListener {
 
     public void reset() {
         nbGoalsReached = 0;
+        nbMistakes = 0;
         nbGoalsToReach = 0;
         accidentalShotPreventionPeriod = 0;
 
@@ -816,6 +820,13 @@ public class Stats implements GazeMotionListener {
             }
             currentRoundStartTime = currentRoundEndTime;
             log.debug("The number of goals is " + nbGoalsToReach + "and the number shots is " + nbGoalsReached);
+        }
+    }
+
+    public void incrementNumberOfMistakes() {
+        if (!inReplayMode) {
+            nbMistakes++;
+            log.debug("The number of mistakes is " + nbMistakes);
         }
     }
 
