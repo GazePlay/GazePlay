@@ -37,7 +37,7 @@ class PictureCard extends Group {
     private final double minTime;
     private final IGameContext gameContext;
     private final GazeplayEvalGameVariant gameVariant;
-    private final boolean winner;
+    private final String winner;
 
     private final ImageView imageRectangle;
     private final Rectangle notifImageRectangle;
@@ -56,11 +56,12 @@ class PictureCard extends Group {
     private Timeline progressIndicatorAnimationTimeLine;
     private boolean selected;
     private boolean alreadySee;
-
-    private int valueProgressIndicator = 500;
+    private int valueProgressIndicator = 2000;
+    private double valueTranslateX = 0;
+    private double valueTranslateY = 0;
 
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, @NonNull GazeplayEvalGameVariant gameVariant,
-                boolean winner, @NonNull String imageName, @NonNull Stats stats, GazeplayEval gameInstance) {
+                String winner, @NonNull String imageName, Integer fixationLength, @NonNull Stats stats, GazeplayEval gameInstance) {
 
         log.info("imagePath = {}", imageName);
 
@@ -79,6 +80,7 @@ class PictureCard extends Group {
         this.stats = stats;
         this.gameInstance = gameInstance;
         this.imageName = imageName;
+        this.valueProgressIndicator = fixationLength;
 
         this.imageRectangle = createImageView(this.initialPositionX, this.initialPositionY, this.initialWidth, this.initialHeight, imageName);
 
@@ -116,32 +118,34 @@ class PictureCard extends Group {
     private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(GazeplayEval gameInstance) {
         return actionEvent -> {
 
-            log.debug("FINISHED");
+            selected = true;
+            this.setNotifImageRectangle(true);
+            imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);
+            imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandlerMouse);
+            gameContext.getGazeDeviceManager().removeEventFilter(imageRectangle);
+            this.checkedImage();
+            customInputEventHandlerMouse.ignoreAnyInput = true;
+            progressIndicator.setVisible(false);
 
-            if (this.alreadySee) {
-                selected = true;
-                this.setNotifImageRectangle(true);
-                imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);
-                imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandlerMouse);
-                gameContext.getGazeDeviceManager().removeEventFilter(imageRectangle);
-                if (winner) {
-                    onCorrectCardSelected();
-                } else {
-                    // bad card
-                    onWrongCardSelected();
-                }
-            } else {
-                this.checkedImage();
-                this.alreadySee = true;
-                customInputEventHandlerMouse.ignoreAnyInput = true;
-                this.newProgressIndicator();
-                //gameInstance.checkAllPictureCardChecked();
+            if (Objects.equals(winner, "True")){
+                this.onCardSelected("True");
+            } else if (Objects.equals(winner, "False")) {
+                this.onCardSelected("False");
+            }else {
+                this.onCardSelected("null");
+            }
+            if (gameInstance.checkAllPictureCardChecked()){
+                this.waitBeforeNextRound();
             }
         };
     }
 
     public void setVisibleProgressIndicator() {
-        customInputEventHandlerMouse.ignoreAnyInput = false;
+        if (this.valueProgressIndicator > 0){
+            customInputEventHandlerMouse.ignoreAnyInput = false;
+        }else {
+            customInputEventHandlerMouse.ignoreAnyInput = true;
+        }
     }
 
     public void hideProgressIndicator() {
@@ -155,13 +159,6 @@ class PictureCard extends Group {
     public void setNotifImageRectangle(boolean value) { this.notifImageRectangle.setVisible(value); }
 
     public void resetMovedCursorOrGaze(){ customInputEventHandlerMouse.moved = false; }
-
-    public void newProgressIndicator() {
-        this.getChildren().remove(progressIndicator);
-        this.valueProgressIndicator = 2000;
-        this.progressIndicator = buildProgressIndicator(initialWidth, initialHeight);
-        this.getChildren().add(progressIndicator);
-    }
 
     public void checkedImage(){
         Configuration config = ActiveConfigurationContext.getInstance();
@@ -179,54 +176,10 @@ class PictureCard extends Group {
         customInputEventHandlerMouse.ignoreAnyInput = true;
     }
 
-    public void onCorrectCardSelected() {
-
-        /*if (gameInstance.indexFileImage == (gameInstance.indexEndGame - 1)) {
-            progressIndicator.setVisible(false);
-            gameInstance.increaseIndexFileImage(true);
-            this.endGame();
-        } else {
-
-            gameInstance.nbCountError = 0;
-            gameInstance.increaseIndexFileImage(true);
-
-            stats.incrementNumberOfGoalsReached();
-
-            customInputEventHandlerMouse.ignoreAnyInput = true;
-            progressIndicator.setVisible(false);
-
-            gameContext.updateScore(stats, gameInstance);
-
-            this.waitBeforeNextRound();
-        }*/
-    }
-
-    public void onWrongCardSelected() {
-
-        /*gameInstance.nbCountError += 1;
-
-        if (gameInstance.nbCountError != 5){
-
-            if (gameInstance.indexFileImage == (gameInstance.indexEndGame - 1)) {
-                progressIndicator.setVisible(false);
-                gameInstance.increaseIndexFileImage(false);
-                this.endGame();
-            } else {
-                gameInstance.increaseIndexFileImage(false);
-
-                stats.incrementNumberOfGoalsReached();
-
-                customInputEventHandlerMouse.ignoreAnyInput = true;
-                progressIndicator.setVisible(false);
-
-                gameContext.updateScore(stats, gameInstance);
-
-                this.waitBeforeNextRound();
-            }
-        }else {
-            progressIndicator.setVisible(false);
-            this.endGame();
-        }*/
+    public void onCardSelected(String value) {
+        gameInstance.calculScores(value);
+        stats.incrementNumberOfGoalsReached();
+        gameContext.updateScore(stats, gameInstance);
     }
 
     public void waitBeforeNextRound(){
@@ -235,12 +188,15 @@ class PictureCard extends Group {
         Timeline transition = new Timeline();
         transition.getKeyFrames().add(new KeyFrame(new Duration(config.getTransitionTime())));
         transition.setOnFinished(event -> {
-            gameInstance.dispose();
-            gameContext.clear();
-            gameInstance.launch();
+            if(gameInstance.increaseIndexFileImage()){
+                this.endGame();
+            }else {
+                gameInstance.dispose();
+                gameContext.clear();
+                gameInstance.launch();
+            }
         });
-
-       // gameInstance.removeEventHandlerPictureCard();
+        gameInstance.removeEventHandlerPictureCard();
         transition.playFromStart();
     }
 
@@ -263,6 +219,9 @@ class PictureCard extends Group {
 
         double w = image.getWidth() * reducCoeff;
         double h = image.getHeight() * reducCoeff;
+
+        this.valueTranslateX = (result.getFitWidth() - w) / 2;
+        this.valueTranslateY = (result.getFitHeight() - h) / 2;
 
         result.setX(posX);
         result.setY(posY);
@@ -287,20 +246,12 @@ class PictureCard extends Group {
             double rectangleWidth = imageRectangle.getFitWidth() / 40;
             double rectangleHeight = imageHeightToWidthRatio * rectangleWidth;
 
-            double positionX = 0;
-            double positionY = 0;
-            if (config.isColumnarImagesEnabled()){
-                positionX = imageRectangle.getX() + 5;
-                positionY = imageRectangle.getY() + 15;
-            }else {
-                positionX = imageRectangle.getX() + 5;
-                positionY = imageRectangle.getY() + 35;
-            }
-
             Rectangle notifImageRectangle = new Rectangle(rectangleWidth, rectangleHeight);
             notifImageRectangle.setFill(new ImagePattern(image));
-            notifImageRectangle.setX(positionX);
-            notifImageRectangle.setY(positionY);
+            notifImageRectangle.setX(this.initialPositionX);
+            notifImageRectangle.setY(this.initialPositionY);
+            notifImageRectangle.setTranslateX(this.valueTranslateX);
+            notifImageRectangle.setTranslateY(this.valueTranslateY);
             notifImageRectangle.setOpacity(0);
             notifImageRectangle.setVisible(false);
             return notifImageRectangle;
@@ -320,12 +271,12 @@ class PictureCard extends Group {
             double w = image.getWidth() * reducCoeff;
             double h = image.getHeight() * reducCoeff;
 
-            double posY = (result.getFitHeight() - h) / 2;
-
             Rectangle notifImageRectangle = new Rectangle(w, h);
             notifImageRectangle.setFill(new ImagePattern(image));
             notifImageRectangle.setX(this.initialPositionX);
-            notifImageRectangle.setY(posY);
+            notifImageRectangle.setY(this.initialPositionY);
+            notifImageRectangle.setTranslateX((result.getFitWidth() - w) / 2);
+            notifImageRectangle.setTranslateY((result.getFitHeight() - h) / 2);
             notifImageRectangle.setVisible(false);
             return notifImageRectangle;
         }
@@ -351,13 +302,13 @@ class PictureCard extends Group {
 
     public void endGame() {
 
-        /*progressIndicator.setVisible(false);
+        progressIndicator.setVisible(false);
         gameInstance.finalStats();
         gameContext.updateScore(stats, gameInstance);
         gameInstance.resetFromReplay();
         gameInstance.dispose();
         gameContext.clear();
-        gameContext.showRoundStats(stats, gameInstance);*/
+        gameContext.showRoundStats(stats, gameInstance);
     }
 
     private class CustomInputEventHandlerMouse implements EventHandler<Event> {

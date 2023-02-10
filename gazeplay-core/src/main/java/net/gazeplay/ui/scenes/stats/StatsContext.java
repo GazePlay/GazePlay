@@ -330,54 +330,12 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         if (gazeplayType.equals("bera")){
             AtomicInteger currentFormRow = new AtomicInteger(0);
-
-            if (stats.variantType.equals("SentenceComprehension")){
-
-                addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 100.) + "s"));
-
-                addToGridCenter(grid, currentFormRow, translator, "Morphosyntax", new Text(""));
-                addToGridCenter(grid, currentFormRow, translator, "TotalMorphosyntax", new Text(String.valueOf(stats.totalMorphosyntax) + "/10"));
-                addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsMorphosyntax) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsMorphosyntax) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsMorphosyntax) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsMorphosyntax) + "/5"));
-
-                addToGridCenter(grid, currentFormRow, translator, "SentenceComprehension", new Text(""));
-                addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually) + "/10"));
-                addToGridCenter(grid, currentFormRow, translator, "TotalSentenceComprehension", new Text(String.valueOf(stats.total) + "/10"));
-            }else if (stats.variantType.equals("WordComprehension")){
-
-                addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 100) + "s"));
-
-                addToGridCenter(grid, currentFormRow, translator, "Phonology", new Text(""));
-                addToGridCenter(grid, currentFormRow, translator, "TotalPhonology", new Text(String.valueOf(stats.totalPhonology) + "/10"));
-                addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsPhonology) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsPhonology) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsPhonology) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsPhonology) + "/5"));
-
-                addToGridCenter(grid, currentFormRow, translator, "Semantic", new Text(""));
-                addToGridCenter(grid, currentFormRow, translator, "TotalSemantic", new Text(String.valueOf(stats.totalSemantic) + "/10"));
-                addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsPhonology) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsPhonology) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "FrequentScoreItem", new Text(String.valueOf(stats.frequentScoreItemSemantic) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "InfrequentScoreItem", new Text(String.valueOf(stats.infrequentScoreItemSemantic) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsSemantic) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreRightTargetItemsSemantic) + "/5"));
-
-                addToGridCenter(grid, currentFormRow, translator, "WordComprehension", new Text(""));
-                addToGridCenter(grid, currentFormRow, translator, "TotalWordComprehension", new Text(String.valueOf(stats.totalWordComprehension) + "/20"));
-                addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually) + "/20"));
-                addToGridCenter(grid, currentFormRow, translator, "Total", new Text(String.valueOf(stats.total) + "/20"));
-
-            }else {
-                if (stats.nameScores != null){
+                if (!stats.nameScores.isEmpty()){
                     addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually)));
-                    for (int i=0; i<stats.nameScores.length; i++){
-                        addToGridCenterNoTranslator(grid, currentFormRow, new Text("- " + stats.nameScores[i] + " : "), new Text(stats.scores[i] + " / " + stats.maxScores[i]));
+                    for (int i=0; i<stats.nameScores.size(); i++){
+                        addToGridCenterNoTranslator(grid, currentFormRow, new Text("- " + stats.nameScores.get(i) + " : "), new Text(String.valueOf(stats.scores.get(i))));
                     }
                 }
-            }
         }else {
             AtomicInteger currentFormRow = new AtomicInteger(1);
 
