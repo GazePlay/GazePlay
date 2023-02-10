@@ -63,8 +63,11 @@ public class Divisor implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(stats);
         stats.incrementNumberOfGoalsToReach(15);
 
+        Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        double radius = Math.min((dimension2D.getWidth()/6),(dimension2D.getHeight()/6));
+
          target = new Target(gameContext, stats, imageLibrary, 0, System.currentTimeMillis(), this,
-            this.gameContext.getRandomPositionGenerator().newRandomPosition(100 + 2), isRabbit, randomGenerator);
+            this.gameContext.getRandomPositionGenerator().newRandomPosition(radius+10), isRabbit, randomGenerator);
 
         gameContext.getChildren().add(target);
         gameContext.firstStart();
