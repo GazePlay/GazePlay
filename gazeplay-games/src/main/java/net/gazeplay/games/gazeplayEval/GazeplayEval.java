@@ -53,6 +53,7 @@ public class GazeplayEval implements GameLifeCycle {
     private String[][] gameRules;
     private int[] rows;
     private int[] cols;
+    private int[] nbImages;
     private int[] nbGoodImages;
     private String[][] listImages;
     private String[][] listGoodImages;
@@ -147,6 +148,7 @@ public class GazeplayEval implements GameLifeCycle {
         this.listImages = new String[this.gameRules.length][];
         this.listGoodImages = new String[this.gameRules.length][];
         this.listSounds = new String[this.gameRules.length];
+        this.nbImages = new int[this.gameRules.length];
         this.nbGoodImages = new int[this.gameRules.length];
         this.listLengthFixation = new int[this.gameRules.length];
         this.listScores = new String[this.gameRules.length][];
@@ -168,42 +170,48 @@ public class GazeplayEval implements GameLifeCycle {
             this.listImages[i] = tmpImages;
 
             //List sounds
+            log.info("Sound = " + this.gameRules[i][nbImage+2]);
             this.listSounds[i] = this.gameRules[i][nbImage+2];
 
+            //Number images to see
+            log.info("Nb image to see = " + this.gameRules[i][nbImage+3]);
+            this.nbImages[i] = Integer.parseInt(this.gameRules[i][nbImage+3]);
+
             //Number good images
-            this.nbGoodImages[i] = Integer.parseInt(this.gameRules[i][nbImage+3]);
+            log.info("Nb good image = " + this.gameRules[i][nbImage+4]);
+            this.nbGoodImages[i] = Integer.parseInt(this.gameRules[i][nbImage+4]);
 
             //List good images
             String[] tmpGoodImage = new String[this.nbGoodImages[i]];
             for (int k=0; k<this.nbGoodImages[i]; k++){
-                tmpGoodImage[k] = this.gameRules[i][nbImage+4+k];
+                tmpGoodImage[k] = this.gameRules[i][nbImage+5+k];
             }
             this.listGoodImages[i] = tmpGoodImage;
 
             //Fixation length
-            if (Objects.equals(this.gameRules[i][nbImage+4+this.nbGoodImages[i]], "null")){
+            if (Objects.equals(this.gameRules[i][nbImage+5+this.nbGoodImages[i]], "null")){
                 this.listLengthFixation[i] = 0;
             }else {
-                this.listLengthFixation[i] = Integer.parseInt(this.gameRules[i][nbImage+4+this.nbGoodImages[i]]);
+                this.listLengthFixation[i] = Integer.parseInt(this.gameRules[i][nbImage+5+this.nbGoodImages[i]]);
             }
 
             //Scores
-            int nbScore = (this.gameRules[i].length - (nbImage+4+this.nbGoodImages[i]) - 1) / 3;
+            int nbScore = (this.gameRules[i].length - (nbImage+5+this.nbGoodImages[i]) - 1) / 3;
             String[] tmpListScores = new String[nbScore];
             int[] tmpScoreGoodAnswer = new int[nbScore];
             int[] tmpScoreWrongAnswer = new int[nbScore];
             int tmpIndexScores = 0;
             for (int l=0; l<nbScore; l++){
-                tmpListScores[l] = this.gameRules[i][nbImage+4+this.nbGoodImages[i]+1+tmpIndexScores];
-                if (Objects.equals(this.gameRules[i][nbImage+4+this.nbGoodImages[i]+2+tmpIndexScores], "null")){
+                tmpListScores[l] = this.gameRules[i][nbImage+5+this.nbGoodImages[i]+1+tmpIndexScores];
+                if (Objects.equals(this.gameRules[i][nbImage+5+this.nbGoodImages[i]+2+tmpIndexScores], "null")){
                     tmpScoreGoodAnswer[l] = 0;
                 }else {
-                    tmpScoreGoodAnswer[l] = Integer.parseInt(this.gameRules[i][nbImage+4+this.nbGoodImages[i]+2+tmpIndexScores]);
+                    tmpScoreGoodAnswer[l] = Integer.parseInt(this.gameRules[i][nbImage+5+this.nbGoodImages[i]+2+tmpIndexScores]);
                 }
-                if (Objects.equals(this.gameRules[i][nbImage+4+this.nbGoodImages[i]+3+tmpIndexScores], "null")){
+                if (Objects.equals(this.gameRules[i][nbImage+5+this.nbGoodImages[i]+3+tmpIndexScores], "null")){
                     tmpScoreWrongAnswer[l] = 0;
                 }else {
-                    tmpScoreWrongAnswer[l] = Integer.parseInt(this.gameRules[i][nbImage+4+this.nbGoodImages[i]+3+tmpIndexScores]);
+                    tmpScoreWrongAnswer[l] = Integer.parseInt(this.gameRules[i][nbImage+5+this.nbGoodImages[i]+3+tmpIndexScores]);
                 }
                 tmpIndexScores += 3;
             }
@@ -211,11 +219,17 @@ public class GazeplayEval implements GameLifeCycle {
             this.scoreGoodAnswer[i] = tmpScoreGoodAnswer;
             this.scoreWrongAnswer[i] = tmpScoreWrongAnswer;
         }
-        this.calculateNbScore();
-    }
-
-    public void calculateNbScore(){
-        String
+        /*log.info("---TEST ROWS--- = " + Arrays.toString(this.rows));
+        log.info("---TEST COLS--- = " + Arrays.toString(this.cols));
+        log.info("---TEST IMG--- = " + Arrays.deepToString(this.listImages));
+        log.info("---TEST GIMG--- = " + Arrays.deepToString(this.listGoodImages));
+        log.info("---TEST LSON--- = " + Arrays.toString(this.listSounds));
+        log.info("---TEST NI--- = " + Arrays.toString(this.nbImages));
+        log.info("---TEST NBGI--- = " + Arrays.toString(this.nbGoodImages));
+        log.info("---TEST LF--- = " + Arrays.toString(this.listLengthFixation));
+        log.info("---TEST LS--- = " + Arrays.deepToString(this.listScores));
+        log.info("---TEST SGA--- = " + Arrays.deepToString(this.scoreGoodAnswer));
+        log.info("---TEST SWA--- = " + Arrays.deepToString(this.scoreWrongAnswer));*/
     }
 
     public void setSound(){
@@ -311,7 +325,7 @@ public class GazeplayEval implements GameLifeCycle {
 
     public boolean checkAllPictureCardChecked() {
         this.nbImageSee++;
-        return this.nbImageSee == this.nbGoodImages[this.indexFileImage];
+        return this.nbImageSee == this.nbImages[this.indexFileImage];
     }
 
     public Timeline waitForInput(){
@@ -384,6 +398,9 @@ public class GazeplayEval implements GameLifeCycle {
             if (Objects.equals(this.listImages[this.indexFileImage][i], "null")){
                 this.incrementPos();
             } else {
+                log.info("---TEST ---" + this.valueImage(this.listImages[this.indexFileImage][i]));
+                log.info("---TEST ---" + this.listImages[this.indexFileImage][i]);
+                log.info("---TEST ---" + this.listLengthFixation[this.indexFileImage]);
                 pictureCardList.add(new PictureCard(
                     gameSizing.width * posX,
                     gameSizing.height * posY + 10,
@@ -428,6 +445,7 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public void calculScores(String value){
+        log.info("---TEST CV---" + value);
         if (!Objects.equals(value, "null")) {
             for (int i = 0; i < this.listScores[this.indexFileImage].length; i++) {
                 if (this.listNameScores.contains(this.listScores[this.indexFileImage][i])) {
@@ -667,17 +685,15 @@ public class GazeplayEval implements GameLifeCycle {
         @Override
         public void handle(KeyEvent key) {
 
-            if (key.getCode().isArrowKey() && goNext){
-                ignoreAnyInput = true;
-                timelineQuestion.stop();
-                next("null");
-            }
-
             if (ignoreAnyInput) {
                 return;
             }
 
-            if (key.getCode().getChar().equals("X")) {
+            if (key.getCode().isArrowKey() && goNext){
+                ignoreAnyInput = true;
+                timelineQuestion.stop();
+                next("null");
+            } else if (key.getCode().getChar().equals("X")) {
                 ignoreAnyInput = true;
                 timelineQuestion.stop();
                 next("True");

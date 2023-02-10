@@ -141,11 +141,8 @@ class PictureCard extends Group {
     }
 
     public void setVisibleProgressIndicator() {
-        if (this.valueProgressIndicator > 0){
-            customInputEventHandlerMouse.ignoreAnyInput = false;
-        }else {
-            customInputEventHandlerMouse.ignoreAnyInput = true;
-        }
+        log.info("---TEST IAI--- = " + this.valueProgressIndicator);
+        customInputEventHandlerMouse.ignoreAnyInput = this.valueProgressIndicator == 0;
     }
 
     public void hideProgressIndicator() {
