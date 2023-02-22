@@ -30,6 +30,7 @@ import net.gazeplay.*;
 import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
@@ -65,7 +66,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     public GamesStatisticsPane gamesStatisticsPane;
     public CheckBox checkBox;
-
+    private ScrollPane choicePanelScroller;
+    private CustomButton upArrowButton;
+    private CustomButton downArrowButton;
     @Getter
     private Label errorMessageLabel;
     @Getter
@@ -100,6 +103,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         CustomButton exitButton = createExitButton(screenDimension);
         CustomButton logoutButton = createLogoutButton(gazePlay, screenDimension);
 
+        upArrowButton = createUpArrowButton(screenDimension);
+        downArrowButton = createDownArrowButton(screenDimension);
+
         ConfigurationButton configurationButton = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
 
         Configuration config = ActiveConfigurationContext.getInstance();
@@ -116,7 +122,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
 
         CustomButton replayGameButton = createReplayGameButton(gazePlay, screenDimension, games);
-
 
         I18NTooltip tooltipExit = new I18NTooltip(gazePlay.getTranslator(), "Exit");
         I18NTooltip tooltipLogout = new I18NTooltip(gazePlay.getTranslator(), "Logout");
@@ -174,6 +179,15 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         centerStackPane.getChildren().add(centerPanel);
         centerStackPane.getChildren().add(errorMessage);
 
+        VBox arrowsPaneV = new VBox();
+        arrowsPaneV.setAlignment(Pos.TOP_CENTER);
+        arrowsPaneV.setSpacing(500);
+        arrowsPaneV.getChildren().add(upArrowButton);
+        arrowsPaneV.getChildren().add(downArrowButton);
+
+        BorderPane arrowMenu = new BorderPane();
+        arrowMenu.setCenter(arrowsPaneV);
+
         errorMessage.setOnMouseClicked((event) -> {
             final Timeline opacityTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(errorMessage.opacityProperty(), 0, Interpolator.EASE_OUT)));
@@ -184,9 +198,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         errorMessage.setOpacity(0);
         errorMessage.setMouseTransparent(true);
+
         root.setTop(topPane);
         root.setBottom(bottomPane);
         root.setCenter(centerStackPane);
+        root.setRight(arrowMenu);
     }
 
     public void afsrGazeplayHomeMenuScreen(GazePlay gazePlay, GamesLocator gamesLocator) {
@@ -194,6 +210,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         CustomButton exitButton = createExitButton(screenDimension);
         //CustomButton logoutButton = createLogoutButton(gazePlay, screenDimension);
+
+        upArrowButton = createUpArrowButton(screenDimension);
+        downArrowButton = createDownArrowButton(screenDimension);
 
         ConfigurationButton configurationButton = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
 
@@ -280,6 +299,14 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         centerStackPane.getChildren().add(centerPanel);
         centerStackPane.getChildren().add(errorMessage);
 
+        VBox arrowsPane = new VBox();
+        arrowsPane.setAlignment(Pos.CENTER);
+        arrowsPane.getChildren().add(upArrowButton);
+        arrowsPane.getChildren().add(downArrowButton);
+
+        BorderPane arrowMenu = new BorderPane();
+        arrowMenu.setCenter(arrowsPane);
+
         errorMessage.setOnMouseClicked((event) -> {
             final Timeline opacityTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(errorMessage.opacityProperty(), 0, Interpolator.EASE_OUT)));
@@ -294,6 +321,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         root.setTop(topPane);
         root.setBottom(bottomPane);
         root.setCenter(centerStackPane);
+        root.setRight(arrowMenu);
     }
 
     @Override
@@ -318,7 +346,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         choicePanel.getChildren().addAll(gameCardsList);
 
-        ScrollPane choicePanelScroller = new ScrollPane(choicePanel);
+        choicePanelScroller = new ScrollPane(choicePanel);
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
 
@@ -341,7 +369,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             final GameButtonPane gameCard = createGameCard(config, gameSpec, translator, gameButtonOrientation, dwellTimeIndicator);
             gameCardsList.add(gameCard);
         }
-
         return gameCardsList;
     }
 
@@ -456,6 +483,20 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         CustomButton logoutButton = new CustomButton("data/common/images/logout.png", screenDimension);
         logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> gazePlay.goToUserPage());
         return logoutButton;
+    }
+
+    private CustomButton createUpArrowButton(Dimension2D screenDimension){
+        CustomButton upArrowButton = new CustomButton("data/common/images/arrow-up.png", screenDimension);
+        upArrowButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.1));
+        upArrowButton.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.1));
+        return upArrowButton;
+    }
+
+    private CustomButton createDownArrowButton(Dimension2D screenDimension){
+        CustomButton downArrowButton = new CustomButton("data/common/images/arrow-down.png", screenDimension);
+        downArrowButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.1));
+        downArrowButton.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.1));
+        return downArrowButton;
     }
 
     private CustomButton createReplayGameButton(GazePlay gazePlay, Dimension2D screenDimension, List<GameSpec> games) {
