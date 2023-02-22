@@ -31,6 +31,7 @@ import net.gazeplay.commons.utils.stats.StatDisplayUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.stats.ExplorationGamesStats;
 import net.gazeplay.stats.HiddenItemsGamesStats;
+import net.gazeplay.stats.SelectionGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
 import net.gazeplay.ui.GraphicalContext;
 
@@ -398,6 +399,12 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 }
 
                 value = new Text(String.valueOf(stats.getNbGoalsReached()));
+                addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
+            }
+
+            if(stats instanceof SelectionGamesStats && stats.getNbMistakes() > -1){
+                labelValue = "Mistakes";
+                value = new Text(String.valueOf(stats.getNbMistakes()));
                 addToGrid(grid, currentFormRow, translator, labelValue, value, alignLeft);
             }
 

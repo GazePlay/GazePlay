@@ -103,6 +103,9 @@ public class Stats implements GazeMotionListener {
     private int nbUnCountedGoalsReached;
 
     @Getter
+    private int nbMistakes = -1;
+
+    @Getter
     @Setter
     private long currentGazeTime;
 
@@ -614,6 +617,7 @@ public class Stats implements GazeMotionListener {
 
     public void reset() {
         nbGoalsReached = 0;
+        nbMistakes = -1;
         nbGoalsToReach = 0;
         accidentalShotPreventionPeriod = 0;
 
@@ -819,6 +823,13 @@ public class Stats implements GazeMotionListener {
         }
     }
 
+    public void incrementNumberOfMistakes() {
+        if (!inReplayMode) {
+            nbMistakes++;
+            log.debug("The number of mistakes is " + nbMistakes);
+        }
+    }
+
     public void addRoundDuration() {
         this.roundsDurationReport.addRoundDuration(System.currentTimeMillis() - currentRoundStartTime);
     }
@@ -963,6 +974,7 @@ public class Stats implements GazeMotionListener {
         savedDataObj.addProperty("statsNbGoalsReached", nbGoalsReached);
         savedDataObj.addProperty("statsNbGoalsToReach", nbGoalsToReach);
         savedDataObj.addProperty("statsNbUnCountedGoalsReached", nbUnCountedGoalsReached);
+        savedDataObj.addProperty("statsNbMistakes", nbMistakes);
 
         JsonObject lifeCycleObject = new JsonObject();
         lifeCycleObject.addProperty("startTime", lifeCycle.getStartTime());
