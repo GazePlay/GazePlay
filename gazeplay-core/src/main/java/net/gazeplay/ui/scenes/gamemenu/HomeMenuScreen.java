@@ -69,6 +69,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private ScrollPane choicePanelScroller;
     private CustomButton upArrowButton;
     private CustomButton downArrowButton;
+    private CustomButton MiddleUpArrowButton;
+    private CustomButton MiddleDownArrowButton;
     @Getter
     private Label errorMessageLabel;
     @Getter
@@ -139,6 +141,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         bottomPane.setCenter(gamesStatisticsPane);
         bottomPane.setRight(rightControlPane);
 
+        VBox botPane = new VBox();
+        botPane.setAlignment(Pos.CENTER);
+        MiddleDownArrowButton = createDownArrowButton(screenDimension);
+        botPane.getChildren().add(MiddleDownArrowButton);
+        botPane.getChildren().add(bottomPane);
+
         Node logo = LogoFactory.getInstance().createLogoStatic(gazePlay.getPrimaryStage());
 
         StackPane topLogoPane = new StackPane();
@@ -164,7 +172,13 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topPane.setTop(menuBar);
         topPane.setRight(topRightPane);
         topPane.setCenter(topLogoPane);
-        topPane.setBottom(buildFilterByCategory(config, gazePlay.getTranslator(), dwellTimeIndicator));
+
+        VBox topBotPane = new VBox();
+        topBotPane.setAlignment(Pos.CENTER);
+        MiddleUpArrowButton = createUpArrowButton(screenDimension);
+        topBotPane.getChildren().add(buildFilterByCategory(config, gazePlay.getTranslator(), dwellTimeIndicator));
+        topBotPane.getChildren().add(MiddleUpArrowButton);
+        topPane.setBottom(topBotPane);
 
         //gamesStatisticsPane.refreshPreferredSize();
 
@@ -200,7 +214,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         errorMessage.setMouseTransparent(true);
 
         root.setTop(topPane);
-        root.setBottom(bottomPane);
+        root.setBottom(botPane);
         root.setCenter(centerStackPane);
         root.setRight(arrowMenu);
     }
