@@ -64,8 +64,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     public GamesStatisticsPane gamesStatisticsPane;
     public CheckBox checkBox;
     private ScrollPane choicePanelScroller;
-    private CustomButton upArrowButton;
-    private CustomButton downArrowButton;
     private CustomButton MiddleUpArrowButton;
     private CustomButton MiddleDownArrowButton;
     @Getter
@@ -101,9 +99,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         CustomButton exitButton = createExitButton(screenDimension);
         CustomButton logoutButton = createLogoutButton(gazePlay, screenDimension);
-
-        upArrowButton = createUpArrowButton(screenDimension);
-        downArrowButton = createDownArrowButton(screenDimension);
 
         ConfigurationButton configurationButton = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
 
@@ -214,15 +209,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         centerStackPane.getChildren().add(centerPanel);
         centerStackPane.getChildren().add(errorMessage);
 
-        VBox arrowsPaneV = new VBox();
-        arrowsPaneV.setAlignment(Pos.TOP_CENTER);
-        arrowsPaneV.setSpacing(500);
-        arrowsPaneV.getChildren().add(upArrowButton);
-        arrowsPaneV.getChildren().add(downArrowButton);
-
-        BorderPane arrowMenu = new BorderPane();
-        arrowMenu.setCenter(arrowsPaneV);
-
         errorMessage.setOnMouseClicked((event) -> {
             final Timeline opacityTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
                 new KeyValue(errorMessage.opacityProperty(), 0, Interpolator.EASE_OUT)));
@@ -237,7 +223,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         root.setTop(topPane);
         root.setBottom(bottomPane);
         root.setCenter(centerStackPane);
-        //root.setRight(arrowMenu);
     }
 
     public void afsrGazeplayHomeMenuScreen(GazePlay gazePlay, GamesLocator gamesLocator) {
@@ -245,9 +230,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         CustomButton exitButton = createExitButton(screenDimension);
         //CustomButton logoutButton = createLogoutButton(gazePlay, screenDimension);
-
-        upArrowButton = createUpArrowButton(screenDimension);
-        downArrowButton = createDownArrowButton(screenDimension);
 
         ConfigurationButton configurationButton = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
 
@@ -279,10 +261,26 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games, config.isDarkThemeEnabled());
 
+        MiddleDownArrowButton = createDownArrowButton(screenDimension);
+        VBox downArrowPane = new VBox();
+        downArrowPane.setAlignment(Pos.CENTER);
+        downArrowPane.getChildren().add(MiddleDownArrowButton);
+        AnimationTimer scrollDownTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.002);
+            }
+        };
+        downArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
+        downArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
+        downArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
+        downArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
+
         BorderPane bottomPane = new BorderPane();
         bottomPane.setLeft(leftControlPane);
         bottomPane.setCenter(gamesStatisticsPane);
         bottomPane.setRight(rightControlPane);
+        bottomPane.setTop(downArrowPane);
 
         Node logo = LogoFactory.getInstance().createLogoStatic(gazePlay.getPrimaryStage());
 
@@ -315,11 +313,31 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         final MenuBar menuBar = MenuUtils.buildMenuBar();
 
+        MiddleUpArrowButton = createUpArrowButton(screenDimension);
+        VBox upArrowPane = new VBox();
+        upArrowPane.setAlignment(Pos.CENTER);
+        upArrowPane.getChildren().add(MiddleUpArrowButton);
+        AnimationTimer scrollUpTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.002);
+            }
+        };
+        upArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
+        upArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
+        upArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
+        upArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
+
+        VBox topBotPane = new VBox();
+        topBotPane.setAlignment(Pos.CENTER);
+        topBotPane.getChildren().add(buildFilterByCategory(config, gazePlay.getTranslator(), dwellTimeIndicator));
+        topBotPane.getChildren().add(upArrowPane);
+
         BorderPane topPane = new BorderPane();
         topPane.setTop(menuBar);
         topPane.setRight(topRightPane);
         topPane.setCenter(topLogoPane);
-        topPane.setBottom(buildFilterByCategory(config, gazePlay.getTranslator(), dwellTimeIndicator));
+        topPane.setBottom(topBotPane);
 
         //gamesStatisticsPane.refreshPreferredSize();
 
@@ -333,14 +351,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         errorMessage.getChildren().addAll(errorBackground, errorMessageLabel);
         centerStackPane.getChildren().add(centerPanel);
         centerStackPane.getChildren().add(errorMessage);
-
-        VBox arrowsPane = new VBox();
-        arrowsPane.setAlignment(Pos.CENTER);
-        arrowsPane.getChildren().add(upArrowButton);
-        arrowsPane.getChildren().add(downArrowButton);
-
-        BorderPane arrowMenu = new BorderPane();
-        arrowMenu.setCenter(arrowsPane);
 
         errorMessage.setOnMouseClicked((event) -> {
             final Timeline opacityTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
@@ -356,7 +366,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         root.setTop(topPane);
         root.setBottom(bottomPane);
         root.setCenter(centerStackPane);
-        root.setRight(arrowMenu);
     }
 
     @Override
@@ -522,15 +531,15 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private CustomButton createUpArrowButton(Dimension2D screenDimension){
         CustomButton upArrowButton = new CustomButton("data/common/images/arrow-up.png", screenDimension);
-        upArrowButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.1));
-        upArrowButton.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.1));
+        //upArrowButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.1));
+        //upArrowButton.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.1));
         return upArrowButton;
     }
 
     private CustomButton createDownArrowButton(Dimension2D screenDimension){
         CustomButton downArrowButton = new CustomButton("data/common/images/arrow-down.png", screenDimension);
-        downArrowButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.1));
-        downArrowButton.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.1));
+        //downArrowButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.1));
+        //downArrowButton.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.1));
         return downArrowButton;
     }
 
