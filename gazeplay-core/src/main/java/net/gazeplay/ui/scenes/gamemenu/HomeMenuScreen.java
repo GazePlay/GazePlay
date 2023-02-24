@@ -1,9 +1,6 @@
 package net.gazeplay.ui.scenes.gamemenu;
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -136,16 +133,27 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         I18NTooltip.install(replayGameButton, tooltipReplay);
 
         gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games, config.isDarkThemeEnabled());
+
+        MiddleDownArrowButton = createDownArrowButton(screenDimension);
+        VBox downArrowPane = new VBox();
+        downArrowPane.setAlignment(Pos.CENTER);
+        downArrowPane.getChildren().add(MiddleDownArrowButton);
+        AnimationTimer scrollDownTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.002);
+            }
+        };
+        downArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
+        downArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
+        downArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
+        downArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
+
         BorderPane bottomPane = new BorderPane();
         bottomPane.setLeft(leftControlPane);
         bottomPane.setCenter(gamesStatisticsPane);
         bottomPane.setRight(rightControlPane);
-
-        VBox botPane = new VBox();
-        botPane.setAlignment(Pos.CENTER);
-        MiddleDownArrowButton = createDownArrowButton(screenDimension);
-        botPane.getChildren().add(MiddleDownArrowButton);
-        botPane.getChildren().add(bottomPane);
+        bottomPane.setTop(downArrowPane);
 
         Node logo = LogoFactory.getInstance().createLogoStatic(gazePlay.getPrimaryStage());
 
@@ -168,18 +176,31 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
         final MenuBar menuBar = MenuUtils.buildMenuBar();
 
+        MiddleUpArrowButton = createUpArrowButton(screenDimension);
+        VBox upArrowPane = new VBox();
+        upArrowPane.setAlignment(Pos.CENTER);
+        upArrowPane.getChildren().add(MiddleUpArrowButton);
+        AnimationTimer scrollUpTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.002);
+            }
+        };
+        upArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
+        upArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
+        upArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
+        upArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
+
+        VBox topBotPane = new VBox();
+        topBotPane.setAlignment(Pos.CENTER);
+        topBotPane.getChildren().add(buildFilterByCategory(config, gazePlay.getTranslator(), dwellTimeIndicator));
+        topBotPane.getChildren().add(upArrowPane);
+
         BorderPane topPane = new BorderPane();
         topPane.setTop(menuBar);
         topPane.setRight(topRightPane);
         topPane.setCenter(topLogoPane);
-
-        VBox topBotPane = new VBox();
-        topBotPane.setAlignment(Pos.CENTER);
-        MiddleUpArrowButton = createUpArrowButton(screenDimension);
-        topBotPane.getChildren().add(buildFilterByCategory(config, gazePlay.getTranslator(), dwellTimeIndicator));
-        topBotPane.getChildren().add(MiddleUpArrowButton);
         topPane.setBottom(topBotPane);
-
         //gamesStatisticsPane.refreshPreferredSize();
 
         StackPane centerStackPane = new StackPane();
@@ -214,9 +235,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         errorMessage.setMouseTransparent(true);
 
         root.setTop(topPane);
-        root.setBottom(botPane);
+        root.setBottom(bottomPane);
         root.setCenter(centerStackPane);
-        root.setRight(arrowMenu);
+        //root.setRight(arrowMenu);
     }
 
     public void afsrGazeplayHomeMenuScreen(GazePlay gazePlay, GamesLocator gamesLocator) {
