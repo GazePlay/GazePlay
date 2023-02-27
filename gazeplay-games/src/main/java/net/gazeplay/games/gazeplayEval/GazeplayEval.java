@@ -55,6 +55,7 @@ public class GazeplayEval implements GameLifeCycle {
     private String IMAGE_SOUND = "";
     private String[][] listImages;
     private String[][] listImagesDescription;
+    private long[][] timeImages;
     private String[] listValues;
     private String[] listSounds;
     private String[] listSoundsDescription;
@@ -157,6 +158,7 @@ public class GazeplayEval implements GameLifeCycle {
 
         this.listImages = new String[assets.size()][2];
         this.listImagesDescription = new String[assets.size()][2];
+        this.timeImages = new long[assets.size()][2];
         this.listValues = new String[assets.size()];
         this.listSounds = new String[assets.size()];
         this.listSoundsDescription = new String[assets.size()];
@@ -419,7 +421,7 @@ public class GazeplayEval implements GameLifeCycle {
         final PictureCard pictureCard1 = new PictureCard(
             gameSizing.width * posX + gap,
             posYImage, widthImg, heightImg, gameContext, gameVariant,
-            winnerP1, imageP1 + "", stats, this);
+            winnerP1, imageP1 + "", stats, this, 0);
 
         pictureCardList.add(pictureCard1);
 
@@ -440,7 +442,7 @@ public class GazeplayEval implements GameLifeCycle {
         final PictureCard pictureCard2 = new PictureCard(
             gameSizing.width * posX + gap,
             posYImage, widthImg, heightImg, gameContext, gameVariant,
-            winnerP2, imageP2 + "", stats, this);
+            winnerP2, imageP2 + "", stats, this, 1);
 
         pictureCardList.add(pictureCard2);
 
@@ -481,15 +483,21 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public void increaseIndexFileImage(boolean correctAnswer) {
-        //this.calculateStats(this.indexFileImage, correctAnswer);
         if (correctAnswer){
             this.resultsChoiceImages[this.indexFileImage] = "Correct";
             this.calculScores();
         }else {
             this.resultsChoiceImages[this.indexFileImage] = "Incorrect";
         }
+        this.getTimer();
         this.indexFileImage = this.indexFileImage + 1;
         this.setSound();
+    }
+
+    public void getTimer(){
+        for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
+            this.timeImages[this.indexFileImage][p.imgIndex] = p.timeImg;
+        }
     }
 
     public void calculScores(){

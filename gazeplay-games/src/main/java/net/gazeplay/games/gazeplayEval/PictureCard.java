@@ -56,11 +56,14 @@ class PictureCard extends Group {
     private Timeline progressIndicatorAnimationTimeLine;
     private boolean selected;
     private boolean alreadySee;
-
     private int valueProgressIndicator = 500;
+    public long timeImg = 0;
+    public Chrono chrono;
+    public int imgIndex;
+
 
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, @NonNull GazeplayEvalGameVariant gameVariant,
-                boolean winner, @NonNull String imageName, @NonNull Stats stats, GazeplayEval gameInstance) {
+                boolean winner, @NonNull String imageName, @NonNull Stats stats, GazeplayEval gameInstance, int imgIndex) {
 
         log.info("imagePath = {}", imageName);
 
@@ -79,6 +82,8 @@ class PictureCard extends Group {
         this.stats = stats;
         this.gameInstance = gameInstance;
         this.imageName = imageName;
+        this.imgIndex = imgIndex;
+        this.chrono = new Chrono();
 
         this.imageRectangle = createImageView(this.initialPositionX, this.initialPositionY, this.initialWidth, this.initialHeight, imageName);
 
@@ -393,6 +398,7 @@ class PictureCard extends Group {
             this.moved = true;
             log.info("ENTERED {}", imageName);
 
+            chrono.start();
             progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
             progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
             progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
@@ -408,6 +414,7 @@ class PictureCard extends Group {
                 this.moved = true;
                 log.info("ENTERED {}", imageName);
 
+                chrono.start();
                 progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
                 progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
@@ -422,11 +429,12 @@ class PictureCard extends Group {
             log.info("EXITED {}", imageName);
 
             progressIndicatorAnimationTimeLine.stop();
-
             progressIndicator.setVisible(false);
             progressIndicator.setProgress(0);
 
             this.moved = false;
+            chrono.stop();
+            timeImg += chrono.getDureeMs();
         }
 
     }
