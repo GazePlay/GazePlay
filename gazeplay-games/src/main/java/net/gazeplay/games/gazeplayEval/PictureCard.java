@@ -37,7 +37,6 @@ class PictureCard extends Group {
     private final double minTime;
     private final IGameContext gameContext;
     private final GazeplayEvalGameVariant gameVariant;
-    private final String winner;
 
     private final ImageView imageRectangle;
     private final Rectangle notifImageRectangle;
@@ -56,12 +55,12 @@ class PictureCard extends Group {
     private Timeline progressIndicatorAnimationTimeLine;
     private boolean selected;
     private boolean alreadySee;
-    private int valueProgressIndicator = 2000;
+    private double valueProgressIndicator = 2000;
     private double valueTranslateX = 0;
     private double valueTranslateY = 0;
 
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, @NonNull GazeplayEvalGameVariant gameVariant,
-                String winner, @NonNull String imageName, Integer fixationLength, @NonNull Stats stats, GazeplayEval gameInstance) {
+                @NonNull String imageName, Double fixationLength, @NonNull Stats stats, GazeplayEval gameInstance) {
 
         log.info("imagePath = {}", imageName);
 
@@ -74,7 +73,6 @@ class PictureCard extends Group {
         this.initialHeight = height;
         this.selected = false;
         this.alreadySee = false;
-        this.winner = winner;
         this.gameContext = gameContext;
         this.gameVariant = gameVariant;
         this.stats = stats;
@@ -127,13 +125,7 @@ class PictureCard extends Group {
             customInputEventHandlerMouse.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
 
-            if (Objects.equals(winner, "True")){
-                this.onCardSelected("True");
-            } else if (Objects.equals(winner, "False")) {
-                this.onCardSelected("False");
-            }else {
-                this.onCardSelected("null");
-            }
+            this.onCardSelected();
             if (gameInstance.checkAllPictureCardChecked()){
                 this.waitBeforeNextRound();
             }
@@ -141,7 +133,6 @@ class PictureCard extends Group {
     }
 
     public void setVisibleProgressIndicator() {
-        log.info("---TEST IAI--- = " + this.valueProgressIndicator);
         customInputEventHandlerMouse.ignoreAnyInput = this.valueProgressIndicator == 0;
     }
 
@@ -173,8 +164,8 @@ class PictureCard extends Group {
         customInputEventHandlerMouse.ignoreAnyInput = true;
     }
 
-    public void onCardSelected(String value) {
-        gameInstance.calculScores(value);
+    public void onCardSelected() {
+        gameInstance.calculScores();
         stats.incrementNumberOfGoalsReached();
         gameContext.updateScore(stats, gameInstance);
     }
