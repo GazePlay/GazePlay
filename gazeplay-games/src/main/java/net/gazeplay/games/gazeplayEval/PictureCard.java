@@ -398,7 +398,9 @@ class PictureCard extends Group {
             this.moved = true;
             log.info("ENTERED {}", imageName);
 
-            chrono.start();
+            if (alreadySee){
+                chrono.start();
+            }
             progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
             progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
             progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
@@ -414,7 +416,9 @@ class PictureCard extends Group {
                 this.moved = true;
                 log.info("ENTERED {}", imageName);
 
-                chrono.start();
+                if (alreadySee){
+                    chrono.start();
+                }
                 progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
                 progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
@@ -433,8 +437,11 @@ class PictureCard extends Group {
             progressIndicator.setProgress(0);
 
             this.moved = false;
-            chrono.stop();
-            timeImg += chrono.getDureeMs();
+
+            if (alreadySee){
+                chrono.stop();
+                timeImg += chrono.getDureeMs();
+            }
         }
 
     }

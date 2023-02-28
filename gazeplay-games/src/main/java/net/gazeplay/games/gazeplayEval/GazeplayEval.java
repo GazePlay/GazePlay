@@ -171,6 +171,7 @@ public class GazeplayEval implements GameLifeCycle {
             this.listSounds[i] = assets.get(i).getAsJsonArray().get(4).getAsString();
             this.listSoundsDescription[i] = assets.get(i).getAsJsonArray().get(5).getAsString();
             this.listCalculScores[i] = assets.get(i).getAsJsonArray().get(7).getAsString();
+            this.timeImages[i] = new long[]{0, 0};
         }
 
 
@@ -185,6 +186,7 @@ public class GazeplayEval implements GameLifeCycle {
             this.scoreValue[i] = scores.get(i).getAsJsonArray().get(2).getAsInt();
             this.maxValue[i] = scores.get(i).getAsJsonArray().get(3).getAsInt();
         }
+
     }
 
     public void setSound(){
@@ -623,6 +625,7 @@ public class GazeplayEval implements GameLifeCycle {
                 for (int j=0; j<this.nbImagesPerRound; j++){
                     out.append("- Nom de l'image -> ").append(this.listImages[i][j]).append("\r\n");
                     out.append("- Description de l'image -> ").append(this.listImagesDescription[i][j]).append("\r\n");
+                    out.append("- Temps passé à regarder l'image -> ").append(String.valueOf(this.timeImages[i][j])).append("\r\n");
                 }
                 out.append("- Son utilisé -> ").append(this.listSounds[i]).append("\r\n");
                 out.append("- Description du son -> ").append(this.listSoundsDescription[i]).append("\r\n");
@@ -684,7 +687,8 @@ public class GazeplayEval implements GameLifeCycle {
             for (int j=(start+2); j<this.nbImagesPerRound+(start+2); j=j+2){
                 for (int k=0; k<this.nbImagesPerRound; k++){
                     bookData[j + nextImages] = new Object[]{"- Nom de l'image -> ", this.listImages[indexImage][k]};
-                    bookData[j+1 + nextImages] = new Object[]{"- Description de l'image -> ", this.listImagesDescription[indexImage][k]};
+                    //bookData[j+1 + nextImages] = new Object[]{"- Description de l'image -> ", this.listImagesDescription[indexImage][k]};
+                    bookData[j+1 + nextImages] = new Object[]{"- Temps passé à regardé l'image -> ", this.timeImages[indexImage][k]};
                     nextImages += 2;
                 }
 
