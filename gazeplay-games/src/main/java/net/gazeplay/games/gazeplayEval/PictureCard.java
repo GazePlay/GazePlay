@@ -27,6 +27,8 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -57,7 +59,7 @@ class PictureCard extends Group {
     private boolean selected;
     private boolean alreadySee;
     private int valueProgressIndicator = 500;
-    public long timeImg = 0;
+    public List<Long> timeImg = new ArrayList<>();
     public Chrono chrono;
     public int imgIndex;
 
@@ -125,6 +127,8 @@ class PictureCard extends Group {
 
             if (this.alreadySee) {
                 selected = true;
+                this.chrono.stop();
+                this.timeImg.add(chrono.getDureeMs());
                 this.setNotifImageRectangle(true);
                 imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);
                 imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandlerMouse);
@@ -440,7 +444,7 @@ class PictureCard extends Group {
 
             if (alreadySee){
                 chrono.stop();
-                timeImg += chrono.getDureeMs();
+                timeImg.add(chrono.getDureeMs());
             }
         }
 

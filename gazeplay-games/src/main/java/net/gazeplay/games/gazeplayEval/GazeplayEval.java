@@ -55,7 +55,7 @@ public class GazeplayEval implements GameLifeCycle {
     private String IMAGE_SOUND = "";
     private String[][] listImages;
     private String[][] listImagesDescription;
-    private long[][] timeImages;
+    private long[][][] timeImages;
     private String[] listValues;
     private String[] listSounds;
     private String[] listSoundsDescription;
@@ -158,7 +158,7 @@ public class GazeplayEval implements GameLifeCycle {
 
         this.listImages = new String[assets.size()][2];
         this.listImagesDescription = new String[assets.size()][2];
-        this.timeImages = new long[assets.size()][2];
+        this.timeImages = new long[assets.size()][2][];
         this.listValues = new String[assets.size()];
         this.listSounds = new String[assets.size()];
         this.listSoundsDescription = new String[assets.size()];
@@ -171,7 +171,8 @@ public class GazeplayEval implements GameLifeCycle {
             this.listSounds[i] = assets.get(i).getAsJsonArray().get(4).getAsString();
             this.listSoundsDescription[i] = assets.get(i).getAsJsonArray().get(5).getAsString();
             this.listCalculScores[i] = assets.get(i).getAsJsonArray().get(7).getAsString();
-            this.timeImages[i] = new long[]{0, 0};
+            this.timeImages[i][0] = new long[]{0};
+            this.timeImages[i][1] = new long[]{0};
         }
 
 
@@ -186,7 +187,6 @@ public class GazeplayEval implements GameLifeCycle {
             this.scoreValue[i] = scores.get(i).getAsJsonArray().get(2).getAsInt();
             this.maxValue[i] = scores.get(i).getAsJsonArray().get(3).getAsInt();
         }
-
     }
 
     public void setSound(){
@@ -498,7 +498,11 @@ public class GazeplayEval implements GameLifeCycle {
 
     public void getTimer(){
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
-            this.timeImages[this.indexFileImage][p.imgIndex] = p.timeImg;
+            long[] tmpTimeImages = new long[p.timeImg.size()];
+            for (int i=0; i<p.timeImg.size(); i++){
+                tmpTimeImages[i] = p.timeImg.get(i);
+            }
+            this.timeImages[this.indexFileImage][p.imgIndex] = tmpTimeImages;
         }
     }
 
@@ -623,13 +627,21 @@ public class GazeplayEval implements GameLifeCycle {
             for (int i=0; i<this.indexEndGame; i++){
                 out.append("Item ").append(String.valueOf(i+1)).append("\r\n");
                 for (int j=0; j<this.nbImagesPerRound; j++){
-                    out.append("- Nom de l'image -> ").append(this.listImages[i][j]).append("\r\n");
-                    out.append("- Description de l'image -> ").append(this.listImagesDescription[i][j]).append("\r\n");
-                    out.append("- Temps passé à regarder l'image -> ").append(String.valueOf(this.timeImages[i][j])).append("\r\n");
+                    out.append("- Image ").append(String.valueOf(j+1)).append("\r\n");
+                    out.append("  - Nom de l'image -> ").append(this.listImages[i][j]).append("\r\n");
+                    out.append("  - Temps passé à regarder l'image -> ").append("\r\n");
+                    out.append("  - Temps image -> ");
+                    for (int k=0; k<this.timeImages[i][j].length; k++){
+                        out.append(String.valueOf(this.timeImages[i][j][k])).append(" ms");
+                        if (k<(this.timeImages[i][j].length - 1)){
+                            out.append(" -> ");
+                        }
+                    }
+                    out.append("\r\n");
                 }
-                out.append("- Son utilisé -> ").append(this.listSounds[i]).append("\r\n");
-                out.append("- Description du son -> ").append(this.listSoundsDescription[i]).append("\r\n");
-                out.append("- Résultat -> ").append(this.resultsChoiceImages[i]).append("\r\n");
+                out.append("- Son ").append("\r\n");
+                out.append("  - Son utilisé -> ").append(this.listSounds[i]).append("\r\n");
+                out.append("  - Résultat -> ").append(this.resultsChoiceImages[i]).append("\r\n");
                 out.append("\r\n");
             }
             out.append("Scores ").append("\r\n");
@@ -688,7 +700,7 @@ public class GazeplayEval implements GameLifeCycle {
                 for (int k=0; k<this.nbImagesPerRound; k++){
                     bookData[j + nextImages] = new Object[]{"- Nom de l'image -> ", this.listImages[indexImage][k]};
                     //bookData[j+1 + nextImages] = new Object[]{"- Description de l'image -> ", this.listImagesDescription[indexImage][k]};
-                    bookData[j+1 + nextImages] = new Object[]{"- Temps passé à regardé l'image -> ", this.timeImages[indexImage][k]};
+                    bookData[j+1 + nextImages] = new Object[]{"- Temps passé à regardé l'image -> ", this.getTimeForXlsx(i, k)};
                     nextImages += 2;
                 }
 
@@ -732,6 +744,17 @@ public class GazeplayEval implements GameLifeCycle {
             log.info("Error creation xls for GazePlay Eval stats game !");
             e.printStackTrace();
         }
+    }
+
+    public String getTimeForXlsx(int indexItem, int indexImg){
+        String value = "";
+        for (int i=0; i<this.timeImages[indexItem][indexImg].length; i++){
+            value += this.timeImages[indexItem][indexImg][i] + " ms";
+            if (i<(this.timeImages[indexItem][indexImg].length - 1)){
+                value += " -> ";
+            }
+        }
+        return value;
     }
 
     private class CustomInputEventHandlerKeyboard implements EventHandler<KeyEvent> {
