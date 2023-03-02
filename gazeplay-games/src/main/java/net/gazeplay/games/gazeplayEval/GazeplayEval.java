@@ -629,7 +629,6 @@ public class GazeplayEval implements GameLifeCycle {
                 for (int j=0; j<this.nbImagesPerRound; j++){
                     out.append("- Image ").append(String.valueOf(j+1)).append("\r\n");
                     out.append("  - Nom de l'image -> ").append(this.listImages[i][j]).append("\r\n");
-                    out.append("  - Temps passé à regarder l'image -> ").append("\r\n");
                     out.append("  - Temps image -> ");
                     for (int k=0; k<this.timeImages[i][j].length; k++){
                         out.append(String.valueOf(this.timeImages[i][j][k])).append(" ms");
