@@ -251,7 +251,9 @@ public class MemoryCard extends Parent {
                 for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
                     gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned = id;
                 }
-                progressIndicator.setOpacity(isOpen ? 0.35 : 0);
+                //Need to set progress to 1 manually because with fixationLength = 0 progress stays at 0
+                progressIndicator.setProgress(1);
+                progressIndicator.setOpacity(isOpen ? 0.5 : 0);
             });
 
 
@@ -301,7 +303,9 @@ public class MemoryCard extends Parent {
                         for (int i = 0; i < gameInstance.currentRoundDetails.cardList.size(); i++) {
                             gameInstance.currentRoundDetails.cardList.get(i).cardAlreadyTurned = id;
                         }
-                        progressIndicator.setOpacity(isOpen ? 0.35 : 0);
+                        //Need to set progress to 1 manually because with fixationLength = 0 progress stays at 0
+                        progressIndicator.setProgress(1);
+                        progressIndicator.setOpacity(isOpen ? 0.5 : 0);
 
                     } else { /* 2nd card */
                         gameInstance.nbTurnedCards = gameInstance.nbTurnedCards + 1;
