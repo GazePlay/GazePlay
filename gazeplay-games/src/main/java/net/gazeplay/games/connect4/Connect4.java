@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.scene.Group;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -101,10 +102,11 @@ public class Connect4 implements GameLifeCycle {
 
         // Create columnPicker
         for(int i=0; i<nbColumns; i++){
+            Group group = new Group();
             Rectangle topRectangle = new Rectangle(gridXOffset + i*cellSize,0,cellSize,gridYOffset);
             topRectangle.setFill(Color.color(Math.random(), Math.random(), Math.random()));
             int tempi = i;
-            topRectangle.addEventFilter(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+            group.addEventFilter(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     //Progress Indicator
@@ -112,6 +114,7 @@ public class Connect4 implements GameLifeCycle {
                     progressIndicator.setTranslateY(gridYOffset/2);
                     progressIndicator.setProgress(0);
                     progressIndicator.setOpacity(1);
+                    group.getChildren().add(progressIndicator);
 
                     progressTimeline = new Timeline();
                     progressTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(progressIndicator.progressProperty(), 1)));
@@ -124,19 +127,19 @@ public class Connect4 implements GameLifeCycle {
                 }
             });
 
-            topRectangle.addEventFilter(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+            group.addEventFilter(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
                         progressTimeline.stop();
                         progressIndicator.setOpacity(0);
+                        group.getChildren().remove(progressIndicator);
                     }
             });
 
             columnPicker.add(topRectangle);
-            topPane.getChildren().add(topRectangle);
+            group.getChildren().add(topRectangle);
+            topPane.getChildren().add(group);
         }
-
-        topPane.getChildren().add(progressIndicator);
 
         // Resize events
 //        mainPane.heightProperty().addListener((obs, oldVal, newVal) -> {
@@ -245,6 +248,7 @@ public class Connect4 implements GameLifeCycle {
         }
 
         if(checkVictory()!=0){
+            gameContext.playWinTransition(50, e -> restart());
             System.out.println("Player "+(checkVictory()==1 ? "RED":"ORANGE")+" won");
             // TODO currentPlayer won
         }
@@ -272,6 +276,14 @@ public class Connect4 implements GameLifeCycle {
             }
         }
         return 0;
+    }
+
+    private void restart(){
+        gameContext.endWinTransition();
+        clearGrid();
+        launch();
+        updateGrid();
+        currentPlayer = 1;
     }
 
 }
