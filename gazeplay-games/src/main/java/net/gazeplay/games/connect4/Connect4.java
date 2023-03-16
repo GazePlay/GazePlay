@@ -3,6 +3,7 @@ package net.gazeplay.games.connect4;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.control.ProgressIndicator;
@@ -87,12 +88,12 @@ public class Connect4 implements GameLifeCycle {
         for(int i=0; i<nbColumns; i++){
             Rectangle topRectangle = new Rectangle(gridXOffset + i*cellSize,0,cellSize,gridYOffset);
             topRectangle.setFill(Color.color(Math.random(), Math.random(), Math.random()));
-            int fi = i;
+            int tempi = i;
             topRectangle.addEventFilter(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     //Progress Indicator
-                    progressIndicator.setTranslateX(gridXOffset+fi*cellSize);
+                    progressIndicator.setTranslateX(gridXOffset+tempi*cellSize);
                     progressIndicator.setTranslateY(gridYOffset/2);
                     progressIndicator.setProgress(0);
                     progressIndicator.setOpacity(1);
@@ -101,8 +102,7 @@ public class Connect4 implements GameLifeCycle {
                     progressTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(progressIndicator.progressProperty(), 1)));
                     progressTimeline.setOnFinished(actionEvent -> {
                         progressIndicator.setOpacity(0);
-                        putToken(fi);
-                        updateGrid();
+                        putToken(tempi);
                     });
 
                     progressTimeline.play();
@@ -202,11 +202,30 @@ public class Connect4 implements GameLifeCycle {
         int j = nbRows-1;
         while(j>=0){
             if(grid[column][j]==0){
+
+                // Update the grid
                 grid[column][j]=currentPlayer;
+
+                // Play animation
+                double radius = cellSize*0.4;
+                double centerx = gridXOffset + (column+0.5)*cellSize;
+                double centery = -0.5*cellSize;
+                Circle c = new Circle(centerx,centery,radius);
+                c.setFill(currentPlayer == 1 ? player1Color:player2Color);
+                gridPane.getChildren().add(c);
+
+                TranslateTransition transition = new TranslateTransition();
+                transition.setDuration(Duration.millis(1000.0/(nbRows-j)));
+                transition.setNode(c);
+
+                transition.setByY((j+1)*cellSize);
+                transition.setOnFinished(e -> updateGrid());
+                transition.play();
                 break;
             }
             j--;
         }
+
         if(checkVictory()!=0){
             System.out.println("Player "+(checkVictory()==1 ? "RED":"ORANGE")+" won");
             // TODO currentPlayer won
