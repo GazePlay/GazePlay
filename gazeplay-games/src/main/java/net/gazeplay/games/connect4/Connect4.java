@@ -24,27 +24,31 @@ public class Connect4 implements GameLifeCycle {
     private final Stats stats;
     private final IGameContext gameContext;
 
+    // Parameters
     private final int nbRows = 6;
     private final int nbColumns = 7;
     private final Color player1Color = Color.RED;
     private final Color player2Color = Color.ORANGE;
     private final Color grid1Color = Color.BLUE;
+    private double fallingDuration = 300.0;
 
+    // Grid management
+    private int[][] grid;
     private double gridWidth;
     private double gridHeight;
     private double gridXOffset;
     private double gridYOffset;
     private double cellSize;
 
+    // Display
     private Timeline progressTimeline;
     private ProgressIndicator progressIndicator;
     private ArrayList<Rectangle> columnPicker;
     private Rectangle gridRectangle;
-    private int[][] grid;
-
     private Pane gridPane;
     private Pane topPane;
 
+    // Game management
     private int currentPlayer;
 
     Connect4(final IGameContext gameContext, final Stats stats){
@@ -68,6 +72,17 @@ public class Connect4 implements GameLifeCycle {
 
         gridPane = new Pane();
         mainPane.setCenter(gridPane);
+
+//        // For dev purposes
+//        Slider slider = new Slider(0,2000,10);
+//        slider.valueProperty().addListener(new ChangeListener<Number>() {
+//            @Override
+//            public void changed(ObservableValue<? extends Number> observableValue, Number oldVal, Number newVal) {
+//                fallingDuration = (double) newVal;
+//                System.out.println("falling duration : "+fallingDuration);
+//            }
+//        });
+//        mainPane.setLeft(slider);
 
         topPane = new Pane();
         mainPane.setTop(topPane);
@@ -215,11 +230,14 @@ public class Connect4 implements GameLifeCycle {
                 gridPane.getChildren().add(c);
 
                 TranslateTransition transition = new TranslateTransition();
-                transition.setDuration(Duration.millis(1000.0/(nbRows-j)));
+                transition.setDuration(Duration.millis(fallingDuration/nbRows*(j+1)));
                 transition.setNode(c);
 
                 transition.setByY((j+1)*cellSize);
-                transition.setOnFinished(e -> updateGrid());
+                transition.setOnFinished(e -> {
+                    updateGrid();
+                    gameContext.getSoundManager().add("data/connect4/sounds/tokenFalling.wav");
+                });
                 transition.play();
                 break;
             }
