@@ -4,18 +4,24 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
@@ -50,14 +56,14 @@ public class Connect4 implements GameLifeCycle {
     private Pane topPane;
 
     // Game management
-    private int currentPlayer;
+    private IntegerProperty currentPlayer;
 
     Connect4(final IGameContext gameContext, final Stats stats){
         this.stats = stats;
         this.gameContext = gameContext;
         grid = new int[nbColumns][nbRows];
         columnPicker = new ArrayList<>();
-        currentPlayer = 1;
+        currentPlayer = new SimpleIntegerProperty(1);
     }
 
     Connect4(final IGameContext gameContext, final Stats stats, double gameSeed){
@@ -68,11 +74,31 @@ public class Connect4 implements GameLifeCycle {
     @Override
     public void launch() {
 
+        updateSize();
+
         BorderPane mainPane = new BorderPane();
         gameContext.getChildren().add(mainPane);
 
         gridPane = new Pane();
         mainPane.setCenter(gridPane);
+
+        // Right pane
+        VBox rightPane = new VBox();
+        mainPane.setRight(rightPane);
+        rightPane.setAlignment(Pos.CENTER);
+
+        Label currentPlayerLabel = new I18NLabel(gameContext.getTranslator(), "CurrentPlayer");
+        currentPlayerLabel.setTextFill(Color.WHITE);
+        currentPlayerLabel.setFont(new Font(30));
+        rightPane.getChildren().add(currentPlayerLabel);
+
+        Circle currentPlayerCircle = new Circle();
+        currentPlayerCircle.setRadius(cellSize*0.75);
+        currentPlayerCircle.setFill(player1Color);
+        rightPane.getChildren().add(currentPlayerCircle);
+        currentPlayer.addListener(observable -> {
+            currentPlayerCircle.setFill(currentPlayer.getValue() == 1 ? player1Color:player2Color);
+        });
 
 //        // For dev purposes
 //        Slider slider = new Slider(0,2000,10);
@@ -89,8 +115,7 @@ public class Connect4 implements GameLifeCycle {
         mainPane.setTop(topPane);
 
         // Create grid rectangle
-        updateSize();
-        gridRectangle = new Rectangle();
+        gridRectangle = new Rectangle(gridXOffset, 0, gridWidth, gridHeight);
         gridRectangle.setFill(grid1Color);
         gridPane.getChildren().add(gridRectangle);
 
@@ -184,10 +209,10 @@ public class Connect4 implements GameLifeCycle {
 
     public void updateGrid(){
         // Resize grid
-        gridRectangle.setTranslateX(gridXOffset);
-        gridRectangle.setTranslateY(0);
-        gridRectangle.setWidth(gridWidth);
-        gridRectangle.setHeight(gridHeight);
+//        gridRectangle.setTranslateX(gridXOffset);
+//        gridRectangle.setTranslateY(0);
+//        gridRectangle.setWidth(gridWidth);
+//        gridRectangle.setHeight(gridHeight);
 
         // Create tokens
         Color color;
@@ -222,14 +247,14 @@ public class Connect4 implements GameLifeCycle {
             if(grid[column][j]==0){
 
                 // Update the grid
-                grid[column][j]=currentPlayer;
+                grid[column][j]=currentPlayer.getValue();
 
                 // Play animation
                 double radius = cellSize*0.4;
                 double centerx = gridXOffset + (column+0.5)*cellSize;
                 double centery = -0.5*cellSize;
                 Circle c = new Circle(centerx,centery,radius);
-                c.setFill(currentPlayer == 1 ? player1Color:player2Color);
+                c.setFill(currentPlayer.getValue() == 1 ? player1Color:player2Color);
                 gridPane.getChildren().add(c);
 
                 TranslateTransition transition = new TranslateTransition();
@@ -252,7 +277,7 @@ public class Connect4 implements GameLifeCycle {
             System.out.println("Player "+(checkVictory()==1 ? "RED":"ORANGE")+" won");
             // TODO currentPlayer won
         }
-        currentPlayer = 1 + currentPlayer%2;
+        currentPlayer.set(1 + currentPlayer.getValue()%2);
     }
 
     public int checkVictory(){
@@ -283,7 +308,7 @@ public class Connect4 implements GameLifeCycle {
         clearGrid();
         launch();
         updateGrid();
-        currentPlayer = 1;
+        currentPlayer.setValue(1);
     }
 
 }

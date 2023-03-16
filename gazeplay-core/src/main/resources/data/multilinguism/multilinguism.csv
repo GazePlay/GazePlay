@@ -455,6 +455,9 @@ Differences found,Ndryshimet e gjetura,,Знойдзеныя адрозненн�
 Highscore,Rekord,أعلى نتيجة,Лепшы вынік,最高得分,,,Highscore,,Meilleur score,,,,Record !,,Hoogste Score,,,Лучший результат,Récord,,
 New highscore!,Rekord i ri !,نتيجة عالية جديدة,Новы рэкорд!,新记录！,,,New highscore!,,Nouveau meilleur score!,,,,Nuovo record !,,Nieuwe hoogste score!,,,Новый рекорд!,Niuevo récord !,,
 
+# CONNECT4 GAME
+CurrentPlayer,,,,,,,Current player :,,Joueur actuel :,,,,,,,,,,,,
+
 # ERROR MESSAGES
 WII-error,Verifikim i direktorisë “Ku është?”,تثبت من دليل اللعبة اين هذا؟,"Праверце тэчку для гульні ""Дзе гэта?""",查找《它在哪》游戏目录,Überprüfen Spielverzeichnis « Wo ist es? »,Ελέγξτε «Πού είναι;,Check « Where is it? » Game directory,Tarkista «Missä se on? » Pelihakemisto,Vérifiez le répertoire du jeu « Où est-ce ? ».,,Provjeri,Semak « Di mana? » Arahan permainan,"Controllo cartella di gioco ""Dov'è?""""ontroll ",,Controleer de « Waar is het » Spel bestandslocatie,Sprawdź «Gdzie to jest? » Katalog gier,*Verifique «Onde está?,"Проверьте папку для игры ""Где это?""","Verifica el directorio del juego ""¿Donde está?""""erifica el di ",Kiểm tra Thư mục game,Semak «Di mana? » Arahan permainan
 File %s is not supported,,,Файл %s не падыходзіць па тыпу,不支持文件 %s ,,,File %s is not supported,,Le fichier %s n'est pas compatible,,,,,,Bestand %s wordt niet ondersteund,,,Файл %s не подходит по типу,,,
