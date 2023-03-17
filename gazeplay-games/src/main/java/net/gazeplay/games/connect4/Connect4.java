@@ -8,6 +8,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
@@ -90,10 +91,11 @@ public class Connect4 implements GameLifeCycle {
         Label currentPlayerLabel = new I18NLabel(gameContext.getTranslator(), "CurrentPlayer");
         currentPlayerLabel.setTextFill(Color.WHITE);
         currentPlayerLabel.setFont(new Font(30));
+        currentPlayerLabel.setPadding(new Insets(0,50,0,50));
         rightPane.getChildren().add(currentPlayerLabel);
 
         Circle currentPlayerCircle = new Circle();
-        currentPlayerCircle.setRadius(cellSize*0.75);
+        currentPlayerCircle.setRadius(cellSize*0.6);
         currentPlayerCircle.setFill(player1Color);
         rightPane.getChildren().add(currentPlayerCircle);
         currentPlayer.addListener(observable -> {
@@ -135,8 +137,10 @@ public class Connect4 implements GameLifeCycle {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     //Progress Indicator
-                    progressIndicator.setTranslateX(gridXOffset+tempi*cellSize);
-                    progressIndicator.setTranslateY(gridYOffset/2);
+                    double progressSize = Math.min(topRectangle.getHeight(), topRectangle.getWidth());
+                    progressIndicator.setTranslateX(gridXOffset+topRectangle.getWidth()*tempi+(topRectangle.getWidth()-progressSize)/2);
+                    progressIndicator.setTranslateY((topRectangle.getHeight()-progressSize)/2);
+                    progressIndicator.setMinSize(progressSize,progressSize);
                     progressIndicator.setProgress(0);
                     progressIndicator.setOpacity(1);
                     group.getChildren().add(progressIndicator);
@@ -183,11 +187,11 @@ public class Connect4 implements GameLifeCycle {
 
     public void updateSize(){
         Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        cellSize = Math.min(dimension2D.getWidth()*0.8/nbColumns, dimension2D.getHeight()*0.7/nbRows);
+        cellSize = Math.min(dimension2D.getWidth()*0.8/nbColumns, dimension2D.getHeight()*0.85/nbRows);
         gridWidth = cellSize*nbColumns;
         gridHeight = cellSize*nbRows;
         gridXOffset = (dimension2D.getWidth() - gridWidth)/2;
-        gridYOffset = (dimension2D.getHeight() - gridHeight - 50);
+        gridYOffset = dimension2D.getHeight()-gridHeight;
     }
 
     public void updateColumnPicker(){
@@ -252,7 +256,7 @@ public class Connect4 implements GameLifeCycle {
                 // Play animation
                 double radius = cellSize*0.4;
                 double centerx = gridXOffset + (column+0.5)*cellSize;
-                double centery = -0.5*cellSize;
+                double centery = 0.5*cellSize;
                 Circle c = new Circle(centerx,centery,radius);
                 c.setFill(currentPlayer.getValue() == 1 ? player1Color:player2Color);
                 gridPane.getChildren().add(c);
