@@ -265,7 +265,7 @@ public class Connect4 implements GameLifeCycle {
                 transition.setDuration(Duration.millis(fallingDuration/nbRows*(j+1)));
                 transition.setNode(c);
 
-                transition.setByY((j+1)*cellSize);
+                transition.setByY(j*cellSize);
                 transition.setOnFinished(e -> {
                     updateGrid();
                     gameContext.getSoundManager().add("data/connect4/sounds/tokenFalling.wav");
