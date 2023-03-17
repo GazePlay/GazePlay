@@ -51,9 +51,9 @@ public class Connect4 implements GameLifeCycle {
     // Display
     private Timeline progressTimeline;
     private ProgressIndicator progressIndicator;
-    private ArrayList<Rectangle> columnPicker;
+    private ArrayList<Rectangle> topRectangles;
     private Rectangle gridRectangle;
-    private Pane gridPane;
+    private Pane centerPane;
     private Pane topPane;
 
     // Game management
@@ -63,7 +63,7 @@ public class Connect4 implements GameLifeCycle {
         this.stats = stats;
         this.gameContext = gameContext;
         grid = new int[nbColumns][nbRows];
-        columnPicker = new ArrayList<>();
+        topRectangles = new ArrayList<>();
         currentPlayer = new SimpleIntegerProperty(1);
     }
 
@@ -80,9 +80,6 @@ public class Connect4 implements GameLifeCycle {
         BorderPane mainPane = new BorderPane();
         gameContext.getChildren().add(mainPane);
 
-        gridPane = new Pane();
-        mainPane.setCenter(gridPane);
-
         // Right pane
         VBox rightPane = new VBox();
         mainPane.setRight(rightPane);
@@ -90,36 +87,25 @@ public class Connect4 implements GameLifeCycle {
 
         Label currentPlayerLabel = new I18NLabel(gameContext.getTranslator(), "CurrentPlayer");
         currentPlayerLabel.setTextFill(Color.WHITE);
-        currentPlayerLabel.setFont(new Font(30));
-        currentPlayerLabel.setPadding(new Insets(0,50,0,50));
+        currentPlayerLabel.setFont(new Font(25));
+        currentPlayerLabel.setPadding(new Insets(0,40,0,40));
         rightPane.getChildren().add(currentPlayerLabel);
 
         Circle currentPlayerCircle = new Circle();
-        currentPlayerCircle.setRadius(cellSize*0.6);
+        currentPlayerCircle.setRadius(cellSize*0.5);
         currentPlayerCircle.setFill(player1Color);
         rightPane.getChildren().add(currentPlayerCircle);
         currentPlayer.addListener(observable -> {
             currentPlayerCircle.setFill(currentPlayer.getValue() == 1 ? player1Color:player2Color);
         });
 
-//        // For dev purposes
-//        Slider slider = new Slider(0,2000,10);
-//        slider.valueProperty().addListener(new ChangeListener<Number>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Number> observableValue, Number oldVal, Number newVal) {
-//                fallingDuration = (double) newVal;
-//                System.out.println("falling duration : "+fallingDuration);
-//            }
-//        });
-//        mainPane.setLeft(slider);
+        // Center pane
+        centerPane = new Pane();
+        mainPane.setCenter(centerPane);
 
-        topPane = new Pane();
-        mainPane.setTop(topPane);
-
-        // Create grid rectangle
         gridRectangle = new Rectangle(gridXOffset, 0, gridWidth, gridHeight);
         gridRectangle.setFill(grid1Color);
-        gridPane.getChildren().add(gridRectangle);
+        centerPane.getChildren().add(gridRectangle);
 
         // Create progress indicator
         progressIndicator = new ProgressIndicator(0);
@@ -127,7 +113,11 @@ public class Connect4 implements GameLifeCycle {
         progressIndicator.setOpacity(0);
         progressIndicator.setMinSize(cellSize,cellSize);
 
-        // Create columnPicker
+        // Top pane
+        topPane = new Pane();
+        mainPane.setTop(topPane);
+
+        // Create top rectangles
         for(int i=0; i<nbColumns; i++){
             Group group = new Group();
             Rectangle topRectangle = new Rectangle(gridXOffset + i*cellSize,0,cellSize,gridYOffset);
@@ -165,19 +155,22 @@ public class Connect4 implements GameLifeCycle {
                     }
             });
 
-            columnPicker.add(topRectangle);
+            topRectangles.add(topRectangle);
             group.getChildren().add(topRectangle);
             topPane.getChildren().add(group);
         }
 
         // Resize events
-//        mainPane.heightProperty().addListener((obs, oldVal, newVal) -> {
-//            updateSize();
-//            updateGrid();
-//            updateColumnPicker();
-//        });
+        gameContext.getPrimaryScene().widthProperty().addListener(e -> {
+            updateSize();
+            resize();
+        });
+        gameContext.getPrimaryScene().heightProperty().addListener(e -> {
+            updateSize();
+            resize();
+        });
 
-        updateGrid();
+        drawTokens();
     }
 
     @Override
@@ -194,12 +187,25 @@ public class Connect4 implements GameLifeCycle {
         gridYOffset = dimension2D.getHeight()-gridHeight;
     }
 
-    public void updateColumnPicker(){
-        for (int i = 0; i < columnPicker.size(); i++) {
-            columnPicker.get(i).setTranslateX(gridXOffset + i*cellSize);
-            columnPicker.get(i).setTranslateY(0);
-            columnPicker.get(i).setWidth(cellSize);
-            columnPicker.get(i).setHeight(gridYOffset);
+    private void resize(){
+        // Clear grid
+        centerPane.getChildren().clear();
+
+        // Resize grid rectangle
+        gridRectangle.setHeight(gridHeight);
+        gridRectangle.setWidth(gridWidth);
+        gridRectangle.setX(gridXOffset);
+        gridRectangle.setY(0);
+        centerPane.getChildren().add(gridRectangle);
+
+        // Resize grid token
+        drawTokens();
+
+        // Resize top rectangles
+        for (int i = 0; i < topRectangles.size(); i++) {
+            topRectangles.get(i).setX(gridXOffset + i*cellSize);
+            topRectangles.get(i).setWidth(cellSize);
+            topRectangles.get(i).setHeight(gridYOffset);
         }
     }
 
@@ -211,14 +217,7 @@ public class Connect4 implements GameLifeCycle {
         }
     }
 
-    public void updateGrid(){
-        // Resize grid
-//        gridRectangle.setTranslateX(gridXOffset);
-//        gridRectangle.setTranslateY(0);
-//        gridRectangle.setWidth(gridWidth);
-//        gridRectangle.setHeight(gridHeight);
-
-        // Create tokens
+    public void drawTokens(){
         Color color;
         for(int i = 0; i<nbColumns; i++){
             for(int j = 0; j<nbRows; j++){
@@ -240,7 +239,7 @@ public class Connect4 implements GameLifeCycle {
                 double centery = (j+0.5)*cellSize;
                 Circle c = new Circle(centerx,centery,radius);
                 c.setFill(color);
-                gridPane.getChildren().add(c);
+                centerPane.getChildren().add(c);
             }
         }
     }
@@ -249,7 +248,6 @@ public class Connect4 implements GameLifeCycle {
         int j = nbRows-1;
         while(j>=0){
             if(grid[column][j]==0){
-
                 // Update the grid
                 grid[column][j]=currentPlayer.getValue();
 
@@ -259,7 +257,7 @@ public class Connect4 implements GameLifeCycle {
                 double centery = 0.5*cellSize;
                 Circle c = new Circle(centerx,centery,radius);
                 c.setFill(currentPlayer.getValue() == 1 ? player1Color:player2Color);
-                gridPane.getChildren().add(c);
+                centerPane.getChildren().add(c);
 
                 TranslateTransition transition = new TranslateTransition();
                 transition.setDuration(Duration.millis(fallingDuration/nbRows*(j+1)));
@@ -267,7 +265,7 @@ public class Connect4 implements GameLifeCycle {
 
                 transition.setByY(j*cellSize);
                 transition.setOnFinished(e -> {
-                    updateGrid();
+                    drawTokens();
                     gameContext.getSoundManager().add("data/connect4/sounds/tokenFalling.wav");
                 });
                 transition.play();
@@ -278,9 +276,8 @@ public class Connect4 implements GameLifeCycle {
 
         if(checkVictory()!=0){
             gameContext.playWinTransition(50, e -> restart());
-            System.out.println("Player "+(checkVictory()==1 ? "RED":"ORANGE")+" won");
-            // TODO currentPlayer won
         }
+
         currentPlayer.set(1 + currentPlayer.getValue()%2);
     }
 
@@ -311,7 +308,7 @@ public class Connect4 implements GameLifeCycle {
         gameContext.endWinTransition();
         clearGrid();
         launch();
-        updateGrid();
+        drawTokens();
         currentPlayer.setValue(1);
     }
 
