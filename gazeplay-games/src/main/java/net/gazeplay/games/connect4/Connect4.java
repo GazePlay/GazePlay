@@ -26,6 +26,7 @@ import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Connect4 implements GameLifeCycle {
 
@@ -126,32 +127,36 @@ public class Connect4 implements GameLifeCycle {
             group.addEventFilter(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    //Progress Indicator
-                    double progressSize = Math.min(topRectangle.getHeight(), topRectangle.getWidth());
-                    progressIndicator.setTranslateX(gridXOffset+topRectangle.getWidth()*tempi+(topRectangle.getWidth()-progressSize)/2);
-                    progressIndicator.setTranslateY((topRectangle.getHeight()-progressSize)/2);
-                    progressIndicator.setMinSize(progressSize,progressSize);
-                    progressIndicator.setProgress(0);
-                    progressIndicator.setOpacity(1);
-                    group.getChildren().add(progressIndicator);
+                    if(currentPlayer.getValue()==1 && getPossiblePlays().contains(tempi)) {
+                        //Progress Indicator
+                        double progressSize = Math.min(topRectangle.getHeight(), topRectangle.getWidth());
+                        progressIndicator.setTranslateX(gridXOffset + topRectangle.getWidth() * tempi + (topRectangle.getWidth() - progressSize) / 2);
+                        progressIndicator.setTranslateY((topRectangle.getHeight() - progressSize) / 2);
+                        progressIndicator.setMinSize(progressSize, progressSize);
+                        progressIndicator.setProgress(0);
+                        progressIndicator.setOpacity(1);
+                        group.getChildren().add(progressIndicator);
 
-                    progressTimeline = new Timeline();
-                    progressTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(progressIndicator.progressProperty(), 1)));
-                    progressTimeline.setOnFinished(actionEvent -> {
-                        progressIndicator.setOpacity(0);
-                        putToken(tempi);
-                    });
+                        progressTimeline = new Timeline();
+                        progressTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(progressIndicator.progressProperty(), 1)));
+                        progressTimeline.setOnFinished(actionEvent -> {
+                            progressIndicator.setOpacity(0);
+                            putToken(tempi);
+                        });
 
-                    progressTimeline.play();
+                        progressTimeline.play();
+                    }
                 }
             });
 
             group.addEventFilter(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        progressTimeline.stop();
-                        progressIndicator.setOpacity(0);
-                        group.getChildren().remove(progressIndicator);
+                        if(currentPlayer.getValue()==1) {
+                            progressTimeline.stop();
+                            progressIndicator.setOpacity(0);
+                            group.getChildren().remove(progressIndicator);
+                        }
                     }
             });
 
@@ -279,7 +284,32 @@ public class Connect4 implements GameLifeCycle {
         }
 
         currentPlayer.set(1 + currentPlayer.getValue()%2);
+
+        if(currentPlayer.getValue() == 2){
+            Timeline timeline = new Timeline();
+            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(1000)));
+            timeline.setOnFinished(e -> playIA());
+            timeline.play();
+        }
     }
+
+    private void playIA(){
+        Random r = new Random();
+        int play = r.nextInt(getPossiblePlays().size());
+        play = getPossiblePlays().get(play);
+        putToken(play);
+    }
+
+    private ArrayList<Integer> getPossiblePlays(){
+        ArrayList<Integer> plays = new ArrayList<>();
+        for(int i = 0; i<nbColumns; i++) {
+            if(grid[i][0]==0){
+                plays.add(i);
+            }
+        }
+        return plays;
+    }
+
 
     public int checkVictory(){
         int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
