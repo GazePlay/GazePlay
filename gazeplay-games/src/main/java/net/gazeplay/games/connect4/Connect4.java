@@ -51,7 +51,6 @@ public class Connect4 implements GameLifeCycle {
 
     // Display
     private Timeline progressTimeline;
-    private ProgressIndicator progressIndicator;
     private ArrayList<Rectangle> topRectangles;
     private Rectangle gridRectangle;
     private Pane centerPane;
@@ -108,42 +107,47 @@ public class Connect4 implements GameLifeCycle {
         gridRectangle.setFill(grid1Color);
         centerPane.getChildren().add(gridRectangle);
 
-        // Create progress indicator
-        progressIndicator = new ProgressIndicator(0);
-        progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
-        progressIndicator.setOpacity(0);
-        progressIndicator.setMinSize(cellSize,cellSize);
-
         // Top pane
         topPane = new Pane();
         mainPane.setTop(topPane);
 
         // Create top rectangles
         for(int i=0; i<nbColumns; i++){
-            Group group = new Group();
-            Rectangle topRectangle = new Rectangle(gridXOffset + i*cellSize,0,cellSize,gridYOffset);
-            topRectangle.setFill(Color.color(Math.random(), Math.random(), Math.random()));
             int tempi = i;
+
+            Rectangle topRectangle = new Rectangle(gridXOffset + i*cellSize,0,cellSize,gridYOffset);
+            topRectangle.setFill(i%2==0 ? player1Color:player2Color);
+            topRectangles.add(topRectangle);
+
+            ProgressIndicator pi = new ProgressIndicator(0);
+            pi.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+            pi.setOpacity(0);
+
+            Group group = new Group();
+            group.getChildren().add(topRectangle);
+            group.getChildren().add(pi);
+            topPane.getChildren().add(group);
+
             group.addEventFilter(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     if(currentPlayer.getValue()==1 && getPossiblePlays().contains(tempi)) {
                         //Progress Indicator
                         double progressSize = Math.min(topRectangle.getHeight(), topRectangle.getWidth());
-                        progressIndicator.setTranslateX(gridXOffset + topRectangle.getWidth() * tempi + (topRectangle.getWidth() - progressSize) / 2);
-                        progressIndicator.setTranslateY((topRectangle.getHeight() - progressSize) / 2);
-                        progressIndicator.setMinSize(progressSize, progressSize);
-                        progressIndicator.setProgress(0);
-                        progressIndicator.setOpacity(1);
-                        group.getChildren().add(progressIndicator);
+                        pi.setTranslateX(gridXOffset + topRectangle.getWidth() * tempi + (topRectangle.getWidth() - progressSize) / 2);
+                        pi.setTranslateY((topRectangle.getHeight() - progressSize) / 2);
+                        pi.setMinSize(progressSize, progressSize);
+                        pi.setManaged(true);
+                        pi.setProgress(0);
+                        pi.setOpacity(1);
 
                         progressTimeline = new Timeline();
-                        progressTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(progressIndicator.progressProperty(), 1)));
+                        progressTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(pi.progressProperty(), 1)));
                         progressTimeline.setOnFinished(actionEvent -> {
-                            progressIndicator.setOpacity(0);
+                            pi.setMinSize(0, 0);
+                            pi.setOpacity(0);
                             putToken(tempi);
                         });
-
                         progressTimeline.play();
                     }
                 }
@@ -154,15 +158,11 @@ public class Connect4 implements GameLifeCycle {
                     public void handle(MouseEvent mouseEvent) {
                         if(currentPlayer.getValue()==1) {
                             progressTimeline.stop();
-                            progressIndicator.setOpacity(0);
-                            group.getChildren().remove(progressIndicator);
+                            pi.setMinSize(0, 0);
+                            pi.setOpacity(0);
                         }
                     }
             });
-
-            topRectangles.add(topRectangle);
-            group.getChildren().add(topRectangle);
-            topPane.getChildren().add(group);
         }
 
         // Resize events
@@ -176,6 +176,8 @@ public class Connect4 implements GameLifeCycle {
         });
 
         drawTokens();
+
+        stats.notifyNewRoundReady();
     }
 
     @Override
@@ -337,7 +339,6 @@ public class Connect4 implements GameLifeCycle {
     private void restart(){
         gameContext.endWinTransition();
         clearGrid();
-        launch();
         drawTokens();
         currentPlayer.setValue(1);
     }
