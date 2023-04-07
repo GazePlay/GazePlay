@@ -36,12 +36,12 @@ public class Connect4 implements GameLifeCycle {
     private final IGameContext gameContext;
 
     // Parameters
-    private final int nbRows = 6;
-    private final int nbColumns = 7;
+    private final static int nbRows = 6;
+    private final static int nbColumns = 7;
     private final Color player1Color = Color.RED;
     private final Color player2Color = Color.YELLOW;
     private final Color grid1Color = Color.BLUE;
-    private final double fallingDuration = 300.0;
+    private final static double fallingDuration = 300.0;
 
     // Grid management
     private int[][] grid;
@@ -61,11 +61,14 @@ public class Connect4 implements GameLifeCycle {
     // Game management
     private IntegerProperty currentPlayer;
 
+    private Random r;
+
     Connect4(final IGameContext gameContext, final Stats stats, Connect4GameVariant gameVariant){
         this.stats = stats;
         this.gameContext = gameContext;
         grid = new int[nbColumns][nbRows];
         topRectangles = new ArrayList<>();
+        r = new Random();
         if(gameVariant==Connect4GameVariant.PLAYERSTART){
             currentPlayer = new SimpleIntegerProperty(1);
         }else{
@@ -78,6 +81,7 @@ public class Connect4 implements GameLifeCycle {
         this.gameContext = gameContext;
         grid = new int[nbColumns][nbRows];
         topRectangles = new ArrayList<>();
+        r = new Random();
         if(gameVariant==Connect4GameVariant.PLAYERSTART){
             currentPlayer = new SimpleIntegerProperty(1);
         }else{
@@ -323,10 +327,8 @@ public class Connect4 implements GameLifeCycle {
     }
 
     private void playIA(){
-        Random r = new Random();
-        int play = r.nextInt(getPossiblePlays().size());
-        play = getPossiblePlays().get(play);
-        putToken(play);
+        ArrayList<Integer> plays = getPossiblePlays();
+        putToken(plays.get(r.nextInt(plays.size())));
     }
 
     private ArrayList<Integer> getPossiblePlays(){
