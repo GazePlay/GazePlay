@@ -37,9 +37,9 @@ public class Connect4 implements GameLifeCycle {
     private final int nbRows = 6;
     private final int nbColumns = 7;
     private final Color player1Color = Color.RED;
-    private final Color player2Color = Color.ORANGE;
+    private final Color player2Color = Color.YELLOW;
     private final Color grid1Color = Color.BLUE;
-    private double fallingDuration = 300.0;
+    private final double fallingDuration = 300.0;
 
     // Grid management
     private int[][] grid;
@@ -145,6 +145,8 @@ public class Connect4 implements GameLifeCycle {
                         progressTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(pi.progressProperty(), 1)));
                         progressTimeline.setOnFinished(actionEvent -> {
                             pi.setMinSize(0, 0);
+                            pi.setTranslateX(0);
+                            pi.setTranslateY(0);
                             pi.setOpacity(0);
                             putToken(tempi);
                         });
@@ -159,6 +161,8 @@ public class Connect4 implements GameLifeCycle {
                         if(currentPlayer.getValue()==1) {
                             progressTimeline.stop();
                             pi.setMinSize(0, 0);
+                            pi.setTranslateX(0);
+                            pi.setTranslateY(0);
                             pi.setOpacity(0);
                         }
                     }
@@ -283,16 +287,17 @@ public class Connect4 implements GameLifeCycle {
 
         if(checkVictory()!=0){
             gameContext.playWinTransition(50, e -> restart());
+        }else{
+            currentPlayer.set(1 + currentPlayer.getValue()%2);
+
+            if(currentPlayer.getValue() == 2){
+                Timeline timeline = new Timeline();
+                timeline.getKeyFrames().add(new KeyFrame(Duration.millis(1000)));
+                timeline.setOnFinished(e -> playIA());
+                timeline.play();
+            }
         }
 
-        currentPlayer.set(1 + currentPlayer.getValue()%2);
-
-        if(currentPlayer.getValue() == 2){
-            Timeline timeline = new Timeline();
-            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(1000)));
-            timeline.setOnFinished(e -> playIA());
-            timeline.play();
-        }
     }
 
     private void playIA(){
@@ -312,7 +317,7 @@ public class Connect4 implements GameLifeCycle {
         return plays;
     }
 
-
+    // Returns 0 if nobody won, 1 if player 1 won; 2 if player 2 won
     public int checkVictory(){
         int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
         for (int[] d : directions) {
