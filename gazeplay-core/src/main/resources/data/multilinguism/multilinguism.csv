@@ -218,6 +218,8 @@ Savanna,,,Саванна,稀树草原,,,Savanna,,Savane,,,,,,Savanne,,,Сава�
 Sea,,,Мора,,,,Sea,,Mer,,,,,,,,,Море,,,
 Freeplay,,,,,,,Freeplay,,Jeu libre,,,,,,,,,,,,
 PlayWithInstructions,,,,,,,Play by following instructions,,Jouer en suivant les instructions,,,,,,,,,,,,
+PlayerStart,,,,,,,Play first,,Jouer en premier,,,,,,,,,,,,
+AiStart,,,,,,,Play second,,Jouer en second,,,,,,,,,,,,
 
 # CONTEXT TITLES
 ConfigTitle,Konfigurimi,ترتيب,Канфігурацыя,恭喜你！,Konfiguration,Διαμόρφωση,Configuration,asetuksen nimi,Configuration,विन्यास,Konfiguracija,Konfigurasi,Configurazione,構成,Configuratie,Konfiguracja,Configuraçaô,Конфигурация,Configuración,Tùy chỉnh,Konfigurasi

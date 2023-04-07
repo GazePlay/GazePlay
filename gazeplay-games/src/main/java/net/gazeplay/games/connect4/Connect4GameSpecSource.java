@@ -13,6 +13,6 @@ public class Connect4GameSpecSource  implements GameSpecSource {
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.ACTION_REACTION) .build(),
-                new Connect4GameLauncher());
+                new Connect4GameVariantGenerator(), new Connect4GameLauncher());
     }
 }

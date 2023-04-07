@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
@@ -22,6 +23,7 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.utils.stats.Stats;
 
@@ -59,17 +61,28 @@ public class Connect4 implements GameLifeCycle {
     // Game management
     private IntegerProperty currentPlayer;
 
-    Connect4(final IGameContext gameContext, final Stats stats){
+    Connect4(final IGameContext gameContext, final Stats stats, Connect4GameVariant gameVariant){
         this.stats = stats;
         this.gameContext = gameContext;
         grid = new int[nbColumns][nbRows];
         topRectangles = new ArrayList<>();
-        currentPlayer = new SimpleIntegerProperty(1);
+        if(gameVariant==Connect4GameVariant.PLAYERSTART){
+            currentPlayer = new SimpleIntegerProperty(1);
+        }else{
+            currentPlayer = new SimpleIntegerProperty(2);
+        }
     }
 
-    Connect4(final IGameContext gameContext, final Stats stats, double gameSeed){
+    Connect4(final IGameContext gameContext, final Stats stats, Connect4GameVariant gameVariant,  double gameSeed){
         this.stats = stats;
         this.gameContext = gameContext;
+        grid = new int[nbColumns][nbRows];
+        topRectangles = new ArrayList<>();
+        if(gameVariant==Connect4GameVariant.PLAYERSTART){
+            currentPlayer = new SimpleIntegerProperty(1);
+        }else{
+            currentPlayer = new SimpleIntegerProperty(2);
+        }
     }
 
     @Override
@@ -116,7 +129,7 @@ public class Connect4 implements GameLifeCycle {
             int tempi = i;
 
             Rectangle topRectangle = new Rectangle(gridXOffset + i*cellSize,0,cellSize,gridYOffset);
-            topRectangle.setFill(i%2==0 ? player1Color:player2Color);
+            topRectangle.setFill(i%2==0 ? Color.GREEN:Color.LIME);
             topRectangles.add(topRectangle);
 
             ProgressIndicator pi = new ProgressIndicator(0);
@@ -128,9 +141,9 @@ public class Connect4 implements GameLifeCycle {
             group.getChildren().add(pi);
             topPane.getChildren().add(group);
 
-            group.addEventFilter(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+            EventHandler<Event> enterEvent = new EventHandler<Event>() {
                 @Override
-                public void handle(MouseEvent mouseEvent) {
+                public void handle(Event event) {
                     if(currentPlayer.getValue()==1 && getPossiblePlays().contains(tempi)) {
                         //Progress Indicator
                         double progressSize = Math.min(topRectangle.getHeight(), topRectangle.getWidth());
@@ -153,20 +166,25 @@ public class Connect4 implements GameLifeCycle {
                         progressTimeline.play();
                     }
                 }
-            });
+            };
 
-            group.addEventFilter(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent mouseEvent) {
-                        if(currentPlayer.getValue()==1) {
-                            progressTimeline.stop();
-                            pi.setMinSize(0, 0);
-                            pi.setTranslateX(0);
-                            pi.setTranslateY(0);
-                            pi.setOpacity(0);
-                        }
+            EventHandler<Event> exitEvent = new EventHandler<Event>(){
+                @Override
+                public void handle(Event event) {
+                    if(currentPlayer.getValue()==1) {
+                        progressTimeline.stop();
+                        pi.setMinSize(0, 0);
+                        pi.setTranslateX(0);
+                        pi.setTranslateY(0);
+                        pi.setOpacity(0);
                     }
-            });
+                }
+            };
+
+            group.addEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
+            group.addEventHandler(MouseEvent.MOUSE_EXITED, exitEvent);
+            group.addEventHandler(GazeEvent.GAZE_ENTERED, enterEvent);
+            group.addEventHandler(GazeEvent.GAZE_EXITED, exitEvent);
         }
 
         // Resize events
@@ -182,6 +200,10 @@ public class Connect4 implements GameLifeCycle {
         drawTokens();
 
         stats.notifyNewRoundReady();
+
+        if(currentPlayer.getValue()==2){
+            playIA();
+        }
     }
 
     @Override
