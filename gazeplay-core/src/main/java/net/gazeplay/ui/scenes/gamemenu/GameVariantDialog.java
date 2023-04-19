@@ -23,6 +23,7 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.IntGameVariant;
 import net.gazeplay.commons.gamevariants.IntStringGameVariant;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
@@ -129,14 +130,13 @@ public class GameVariantDialog extends Stage {
                 indexOfTheVariant = variant.toString().toLowerCase().contains("other") ? 1 : 0;
             } else if(gameSpec.getGameSummary().getNameCode().equals("RushHour")){
                 button.setTextAlignment(TextAlignment.CENTER);
-                String variantString = ((IntStringGameVariant) variant).getStringValue();
-                System.out.println("variant string value : " + variantString);
+                int variantString = ((IntGameVariant) variant).getNumber();
                 indexOfTheVariant = switch(variantString){
-                    case "Niveau30-33" -> 5;
-                    case "Niveau24-29" -> 4;
-                    case "Niveau18-23" -> 3;
-                    case "Niveau12-17" -> 2;
-                    case "Niveau6-11" -> 1;
+                    case 30,31,32,33-> 5;
+                    case 24,25,26,27,28,29 -> 4;
+                    case 18,19,20,21,22,23 -> 3;
+                    case 12,13,14,15,16,17 -> 2;
+                    case 6,7,8,9,10,11 -> 1;
                     default -> 0;
                 };
 
