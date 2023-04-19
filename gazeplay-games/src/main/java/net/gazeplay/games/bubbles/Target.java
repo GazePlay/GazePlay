@@ -8,6 +8,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
@@ -19,6 +20,7 @@ import net.gazeplay.components.ProgressPortrait;
 import net.gazeplay.components.RandomPositionGenerator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -38,6 +40,7 @@ public class Target extends ProgressPortrait {
     private final Stats stats;
 
     private final ImageLibrary imageLibrary;
+    private final ArrayList<Bubble.Bloc> blocs;
 
     private final ReplayablePseudoRandom randomGenerator;
     private final ReplayablePseudoRandom randomFragmentsGenerator = new ReplayablePseudoRandom();
@@ -56,11 +59,12 @@ public class Target extends ProgressPortrait {
     private PauseTransition wait;
 
     public Target(final IGameContext gameContext, final RandomPositionGenerator randomPositionGenerator, final Stats stats,
-                  final ImageLibrary imageLibrary, final BubblesGameVariant gameVariant, final Bubble gameInstance, final ReplayablePseudoRandom randomGenerator, BubbleType type) {
+                  final ImageLibrary imageLibrary, final BubblesGameVariant gameVariant, final Bubble gameInstance, final ReplayablePseudoRandom randomGenerator, BubbleType type, ArrayList<Bubble.Bloc> blocs) {
         super(gameContext.getConfiguration().getElementSize());
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
         this.randomGenerator = new ReplayablePseudoRandom();
+        this.blocs = blocs;
         this.stats = stats;
         this.type = type;
         this.imageLibrary = imageLibrary;
@@ -155,6 +159,9 @@ public class Target extends ProgressPortrait {
         final Timeline goToCenterTimeline = new Timeline();
         final Timeline timeline = new Timeline();
 
+
+
+
         for (int i = 0; i < nbFragments; i++) {
             final Circle fragment = fragments.get(i);
 
@@ -191,6 +198,14 @@ public class Target extends ProgressPortrait {
         } else {
             final String soundResource = "data/bubble/sounds/Blop-Mark_DiAngelo-79054334.mp3";
             gameContext.getSoundManager().add(soundResource);
+        }
+
+        if (blocs != null){
+            if (blocs.size() != 0){
+                Collections.shuffle(blocs);
+                blocs.get(0).setOpacity(0);
+                blocs.remove(0);
+            }
         }
     }
 
@@ -295,6 +310,19 @@ public class Target extends ProgressPortrait {
         setLayoutY(centerY);
 
         timeline.play();
+    }
+
+    private static class Bloc extends Rectangle {
+
+        final int posX;
+        final int posY;
+
+        Bloc(final double x, final double y, final double width, final double height, final int posX, final int posY) {
+            super(x, y, width, height);
+            this.posX = posX;
+            this.posY = posY;
+        }
+
     }
 
 }
