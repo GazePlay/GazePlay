@@ -7,8 +7,8 @@ import net.gazeplay.commons.gamevariants.IntGameVariant;
 import net.gazeplay.commons.gamevariants.IntStringGameVariant;
 import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class RushHourGameVariant implements IGameVariantGenerator {
 
@@ -20,7 +20,10 @@ public class RushHourGameVariant implements IGameVariantGenerator {
         for (int i = 1; i <= 33; i++){
             gameVariants.add(new IntGameVariant(i));
         }
-        return gameVariants;
+
+        return gameVariants.stream()
+            .sorted(Comparator.comparing(IGameVariant::toString))
+            .collect(Collectors.toCollection(LinkedHashSet::new));
         /*
         return Sets.newLinkedHashSet(Lists.newArrayList(
             new IntStringGameVariant(1, "Niveau1-5"),
