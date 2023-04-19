@@ -189,12 +189,12 @@ public class GameVariantDialog extends Stage {
                 }else if(gameSpec.getGameSummary().getNameCode().equals("RushHour")){
                     categories = new RadioButton[6];
 
-                    categories[0] = new RadioButton("Niveau 1-5");
-                    categories[1] = new RadioButton("Niveau 6-11");
-                    categories[2] = new RadioButton("Niveau 12-17");
-                    categories[3] = new RadioButton("Niveau 18-23");
-                    categories[4] = new RadioButton("Niveau 24-29");
-                    categories[5] = new RadioButton("Niveau 30-33");
+                    categories[0] = new RadioButton(translator.translate("Niveau1-5"));
+                    categories[1] = new RadioButton(translator.translate("Niveau6-11"));
+                    categories[2] = new RadioButton(translator.translate("Niveau12-17"));
+                    categories[3] = new RadioButton(translator.translate("Niveau18-23"));
+                    categories[4] = new RadioButton(translator.translate("Niveau24-29"));
+                    categories[5] = new RadioButton(translator.translate("Niveau30-33"));
                     System.out.println("categories length : "+categories.length);
 
                 }else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
