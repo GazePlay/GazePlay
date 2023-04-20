@@ -1,4 +1,4 @@
-package net.gazeplay.games.CooperativeGame;
+package net.gazeplay.games.cooperativeGame;
 
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.IntGameVariant;
@@ -17,7 +17,7 @@ public class CooperativeGameVariantGenerator implements IGameVariantGenerator {
 
         Set<IGameVariant> gameVariants = new HashSet<>();
 
-        for (int i = 1; i <= 1; i++) {
+        for (int i = 1; i <= 17; i++) {
             gameVariants.add(new IntGameVariant(i));
         }
 

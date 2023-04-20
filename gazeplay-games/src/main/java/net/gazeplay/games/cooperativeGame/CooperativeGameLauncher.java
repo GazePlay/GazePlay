@@ -1,4 +1,4 @@
-package net.gazeplay.games.CooperativeGame;
+package net.gazeplay.games.cooperativeGame;
 
 import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
@@ -10,7 +10,6 @@ import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.rushhour.RushHour;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -23,7 +22,7 @@ public class CooperativeGameLauncher implements IGameLauncher<Stats, IntGameVari
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, IntGameVariant gameVariant, Stats stats) {
-        return  new CooperativeGame(gameContext, stats, gameVariant.getNumber());
+        return new CooperativeGame(gameContext, stats, gameVariant.getNumber());
     }
 
     @Override

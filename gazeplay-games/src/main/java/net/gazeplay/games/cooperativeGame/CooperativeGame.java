@@ -1,9 +1,9 @@
-package net.gazeplay.games.CooperativeGame;
+package net.gazeplay.games.cooperativeGame;
 
+import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.gamevariants.IntGameVariant;
 import net.gazeplay.commons.utils.stats.Stats;
 
 
@@ -22,20 +22,26 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
     }
 
 
+
     @Override
     public void launch() {
         this.endOfLevel = false;
         gameContext.setLimiterAvailable();
-
-        cat = createCat();
-        gameContext.getChildren().add(cat);
-        gameContext.start();
+        setLevel(level);
+        gameContext.firstStart();
+        System.out.println("cat posX:" + cat.cat.getX());
 
 
     }
 
-    private Cat createCat(){
-        return new CatMovement(10, 10, 50,50,gameContext,stats,this);
+    private void setLevel(final int i){
+
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final double width = dimension2D.getWidth() / 7;
+        final double height = dimension2D.getHeight() / 7;
+        this.cat = new CatMovement(width*2, height*2, width+1,height+1,gameContext,stats,this);
+        gameContext.getChildren().add(this.cat);
+        this.cat.toFront();
     }
 
     @Override

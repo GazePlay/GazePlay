@@ -1,4 +1,4 @@
-package net.gazeplay.games.CooperativeGame;
+package net.gazeplay.games.cooperativeGame;
 
 import javafx.scene.Scene;
 import net.gazeplay.stats.SelectionGamesStats;

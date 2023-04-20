@@ -1,11 +1,10 @@
-package net.gazeplay.games.CooperativeGame;
+package net.gazeplay.games.cooperativeGame;
 
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.labyrinth.Labyrinth;
 
 
 public abstract class Cat extends Parent {
@@ -20,7 +19,7 @@ public abstract class Cat extends Parent {
     public Cat(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext, final Stats stats,
                final CooperativeGame gameInstance){
         this.cat = new Rectangle(positionX, positionY, width, height);
-        this.cat.setFill(Color.BLACK);
+        this.cat.setFill(Color.WHITE);
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
         this.positionX = positionX;

@@ -173,6 +173,8 @@ public class GameVariantDialog extends Stage {
             }
             choicePanes.get(indexOfTheVariant).getChildren().add(button);
 
+            System.out.println("nameGame : "+ gameSpec.getGameSummary().getNameCode());
+
             if ((gameSpec.getGameSummary().getNameCode().equals("Bottle") ||
                 gameSpec.getGameSummary().getNameCode().equals("RushHour") ||
                 gameSpec.getGameSummary().getNameCode().equals("CooperativeGame") ||
@@ -211,9 +213,12 @@ public class GameVariantDialog extends Stage {
 
                 }else if(gameSpec.getGameSummary().getNameCode().equals("CooperativeGame")){
 
-                    categories = new RadioButton[6];
+                    categories = new RadioButton[3];
 
                     categories[0] = new RadioButton(translator.translate("Niveau1-5"));
+                    categories[1] = new RadioButton(translator.translate("Niveau6-11"));
+                    categories[2] = new RadioButton(translator.translate("Niveau12-17"));
+
 
                 }else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                     gameSpec.getGameSummary().getNameCode().contains("Memory") ||
