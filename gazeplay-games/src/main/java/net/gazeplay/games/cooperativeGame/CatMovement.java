@@ -1,97 +1,154 @@
 package net.gazeplay.games.cooperativeGame;
 
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.Event;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import javafx.scene.input.KeyEvent;
 
-import java.util.ArrayList;
-
 /**
- * Class for managing the movement of the cat character in the cooperative game.
+ * Class for managing the movement of the hitbox character in the cooperative game.
  * This class inherits from the Cat class.
  */
 public class CatMovement extends Cat{
 
-    private Timeline timelineProgressBar;
+
+    private Timeline timeline;
+    private KeyCode lastDirection = null;
+    private AnimationTimer animationTimer;
+    private double dirX = 0;
+    private double dirY = 0;
 
     /**
-     * Constructor for creating a CatMovement object with an initial position, size, game context,
-     * stats, cooperative game instance, speed, and a list of obstacles.
-     *
-     * @param positionX initial X position of the cat
-     * @param positionY initial Y position of the cat
-     * @param width width of the cat
-     * @param height height of the cat
-     * @param gameContext context of the game
-     * @param stats statistics for the game
-     * @param gameInstance instance of the cooperative game
-     * @param speed speed of the cat's movement
-     * @param obstacles list of obstacles
+     * Constructor for the CatMovement class, which controls the movement of the cat character.
+     * @param positionX the starting X position of the cat
+     * @param positionY the starting Y position of the cat
+     * @param width the width of the cat hitbox
+     * @param height the height of the cat hitbox
+     * @param gameContext the game context containing information about the game environment
+     * @param stats the game statistics tracker
+     * @param gameInstance the game instance
+     * @param speed the speed at which the cat moves
+     * @param isACat boolean indicating whether this instance is a cat or not
      */
-    public CatMovement(double positionX, double positionY, double width, double height, IGameContext gameContext, Stats stats, CooperativeGame gameInstance, float speed, ArrayList<Rectangle> obstacles) {
-        super(positionX, positionY, width, height, gameContext, stats, gameInstance, speed, obstacles);
+    public CatMovement(double positionX, double positionY, double width, double height, IGameContext gameContext, Stats stats, CooperativeGame gameInstance, double speed, boolean isACat) {
+        super(positionX, positionY, width, height, gameContext, stats, gameInstance, speed, isACat );
 
-        gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, key-> {
-            if (key.getCode() == KeyCode.UP || key.getCode() == KeyCode.DOWN || key.getCode() == KeyCode.LEFT || key.getCode() == KeyCode.RIGHT) {
+        // Set up key event listeners to handle cat movement
+        if (isACat){
+            // Add a key pressed event filter to the primary game scene to handle movement
+            gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, key-> {
+                if (key.getCode() == KeyCode.UP || key.getCode() == KeyCode.DOWN || key.getCode() == KeyCode.LEFT || key.getCode() == KeyCode.RIGHT) {
 
-                switch (key.getCode()) {
-                    case UP -> {
-                        if (!willCollideWithAnObstacle(obstacles, "up")) {
-                            this.cat.setY(this.cat.getY() - speed);
+                    // Set the direction of movement based on the key pressed
+                    switch (key.getCode()) {
+                        case UP -> {
+                            dirY = -speed;
+                            lastDirection = KeyCode.UP;
                         }
-                    }
-                    case DOWN -> {
-                        if (!willCollideWithAnObstacle(obstacles, "down")) {
-                            this.cat.setY(this.cat.getY() + speed);
+                        case DOWN -> {
+                            dirY = speed;
+                            lastDirection = KeyCode.DOWN;
                         }
-                    }
-                    case LEFT -> {
-                        if (!willCollideWithAnObstacle(obstacles, "left")) {
-                            this.cat.setX(this.cat.getX() - speed);
+                        case LEFT -> {
+                            dirX = -speed;
+                            lastDirection = KeyCode.LEFT;
                         }
-                    }
-                    case RIGHT -> {
-                        if (!willCollideWithAnObstacle(obstacles, "right")) {
-                            this.cat.setX(this.cat.getX() + speed);
+                        case RIGHT -> {
+                            dirX = speed;
+                            lastDirection = KeyCode.RIGHT;
+                        }
+                        default -> {
+                            break;
                         }
                     }
                 }
+            });
+
+            // Add a key released event filter to the primary game scene to handle stopping movement
+            gameContext.getPrimaryScene().setOnKeyReleased(event -> {
+                switch (event.getCode()) {
+                    case UP -> dirY = 0;
+                    case DOWN -> dirY = 0;
+                    case LEFT -> dirX = 0;
+                    case RIGHT -> dirX = 0;
+                    default -> {
+                    }
+                }
+            });
+
+            // Set the last direction of movement to null if the cat is not currently moving
+            if (dirX == 0 && dirY == 0) {
+                lastDirection = null;
             }
-        });
+
+            // Create a new animation timer to handle movement
+            animationTimer = new AnimationTimer() {
+                @Override
+                public void handle(long now) {
+                    // Move the cat if it is currently moving and will not collide with an obstacle
+                    if (dirX != 0 || dirY != 0) {
+                        if (!gameInstance.willCollideWithAnObstacle(lastDirection.toString().toLowerCase(), speed, hitbox)) {
+                            hitbox.setX(hitbox.getX() + dirX);
+                            hitbox.setY(hitbox.getY() + dirY);
+                        }
+                    }
+                }
+            };
+
+            // Start the animation timer
+            animationTimer.start();
+        }
     }
 
-    /**
-     * Method to check if the cat will collide with an obstacle in a given direction.
-     *
-     * @param obstacles list of obstacles
-     * @param direction direction to check for collision
-     * @return true if the cat will collide with an obstacle, false otherwise
-     */
-    private boolean willCollideWithAnObstacle(ArrayList<Rectangle> obstacles, String direction){
+    public CatMovement(double positionX, double positionY, double width, double height, IGameContext gameContext, Stats stats, CooperativeGame gameInstance, double speed, boolean isACat, Rectangle target) {
+        super(positionX, positionY, width, height, gameContext, stats, gameInstance, speed, isACat, target);
 
-        double nextX = this.cat.getX();
-        double nextY = this.cat.getY();
-
-        switch (direction) {
-            case "left" -> nextX -= speed;
-            case "right" -> nextX += speed;
-            case "up" -> nextY -= speed;
-            case "down" -> nextY += speed;
+        if (!isACat){
+            followCatWithAnimation();
         }
+    }
 
-        for (Rectangle obstacle : obstacles) {
-            if (nextX < obstacle.getX() + obstacle.getWidth() && nextX + this.cat.getWidth() > obstacle.getX()
-                && nextY < obstacle.getY() + obstacle.getHeight() && nextY + this.cat.getHeight() > obstacle.getY()) {
-                return true;
+    private void followCatWithAnimation() {
+
+        animationTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                if (hitbox.getX() < target.getX()) {
+                    if (!gameInstance.willCollideWithAnObstacle("right", speed, hitbox)) {
+                        hitbox.setX(hitbox.getX() + speed);
+                    }
+                } else if (hitbox.getX() > target.getX()) {
+                    if (!gameInstance.willCollideWithAnObstacle("left", speed, hitbox)) {
+                        hitbox.setX(hitbox.getX() - speed);
+                    }
+                }
+
+                if (hitbox.getY() < target.getY()) {
+                    if (!gameInstance.willCollideWithAnObstacle("down", speed, hitbox)) {
+                        hitbox.setY(hitbox.getY() + speed);
+                    }
+                } else if (hitbox.getY() > target.getY()) {
+                    if (!gameInstance.willCollideWithAnObstacle("up", speed, hitbox)) {
+                        hitbox.setY(hitbox.getY() - speed);
+                    }
+                }
             }
-        }
+        };
 
-        return false;
+
+
+        animationTimer.start();
+
+
+
     }
 }

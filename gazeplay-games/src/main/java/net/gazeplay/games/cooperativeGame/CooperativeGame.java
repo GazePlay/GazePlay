@@ -15,16 +15,19 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
 
     private final IGameContext gameContext;
     private final Stats stats;
-    private boolean endOfLevel;
+    protected boolean endOfLevel;
     private Cat cat;
     private int level;
+    private Rectangle gamelle;
     private ArrayList<Rectangle> obstacles;
+    private ArrayList<Cat> dogs;
 
     public CooperativeGame(final IGameContext gameContext, Stats stats, int level){
         this.gameContext = gameContext;
         this.stats = stats;
         this.level = level;
         this.obstacles = new ArrayList<>();
+        this.dogs = new ArrayList<>();
     }
 
 
@@ -32,6 +35,9 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
         this.endOfLevel = false;
+        this.obstacles.clear();
+        this.dogs.clear();
+
         gameContext.setLimiterAvailable();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         Rectangle background = new Rectangle(0,0,dimension2D.getWidth(),dimension2D.getHeight());
@@ -40,19 +46,63 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         initGameBox();
         setLevel(level);
         gameContext.firstStart();
-        System.out.println("cat posX:" + cat.cat.getX());
 
 
     }
 
     private void setLevel(final int i){
 
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        this.level = i;
+        System.out.println("level : " + i);
 
-        this.cat = new CatMovement(100, 100, 75,75,gameContext,stats,this, 10, this.obstacles);
-        gameContext.getChildren().add(this.cat.cat);
 
-        this.cat.cat.toFront();
+        if (this.level == 1){
+            this.cat = new CatMovement(100, 100, 75,75,gameContext,stats,this, 10, true);
+            Cat dog = new CatMovement(300, 600, 75, 75, gameContext, stats, this, 1, false, this.cat.hitbox);
+
+            gamelle = new Rectangle(400,100, 100, 100);
+            gamelle.setFill(Color.GREEN);
+
+            obstacles.add(dog.hitbox);
+            this.dogs.add(dog);
+
+            gameContext.getChildren().add(this.cat.hitbox);
+            gameContext.getChildren().add(dog.hitbox);
+            gameContext.getChildren().add(gamelle);
+
+
+            this.cat.hitbox.toFront();
+            dog.hitbox.toFront();
+            gamelle.toFront();
+
+
+        }else if (this.level == 2){
+
+            this.cat = new CatMovement(200, 200, 75,75,gameContext,stats,this, 10, true);
+            Cat dog = new CatMovement(300, 600, 75, 75, gameContext, stats, this, 1, false, this.cat.hitbox);
+            Cat dog2 = new CatMovement(500, 450, 75, 75, gameContext, stats, this, 1, false, this.cat.hitbox);
+
+            gamelle = new Rectangle(450,100, 150, 150);
+            gamelle.setFill(Color.GREEN);
+
+            obstacles.add(dog.hitbox);
+            obstacles.add(dog2.hitbox);
+            this.dogs.add(dog);
+            this.dogs.add(dog2);
+
+
+
+            gameContext.getChildren().add(this.cat.hitbox);
+            gameContext.getChildren().add(dog.hitbox);
+            gameContext.getChildren().add(dog2.hitbox);
+            gameContext.getChildren().add(gamelle);
+
+            this.cat.hitbox.toFront();
+            dog.hitbox.toFront();
+            gamelle.toFront();
+        }
+        this.obstacles.add(this.gamelle);
+        this.obstacles.add(this.cat.hitbox);
     }
 
     @Override
@@ -89,4 +139,68 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         }
 
     }
+
+    /**
+     * Method to check if the object will collide with an obstacle in a given direction.
+     *
+     * @param direction direction to check for collision
+     * @param object object that has to be checked
+     * @param speed speed of the object
+     * @return true if the object will collide with an obstacle, false otherwise
+     */
+    protected boolean willCollideWithAnObstacle(String direction, double speed, Rectangle object){
+
+        double nextX = object.getX();
+        double nextY = object.getY();
+
+        switch (direction) {
+            case "left" -> nextX -= speed;
+            case "right" -> nextX += speed;
+            case "up" -> nextY -= speed;
+            case "down" -> nextY += speed;
+        }
+
+        for (Rectangle obstacle : obstacles) {
+            if (!obstacle.equals(object)){
+                if (nextX < obstacle.getX() + obstacle.getWidth() && nextX +  object.getWidth() > obstacle.getX()
+                    && nextY < obstacle.getY() + obstacle.getHeight() && nextY +  object.getHeight() > obstacle.getY()) {
+                    if (this.cat.hitbox.equals(object) && gamelle.equals(obstacle)){
+                        if (!endOfLevel){
+                            endOfGame(true);
+                        }
+                    }else{
+                        for (Cat dog : this.dogs) {
+                            if (dog.hitbox.equals(object) && this.cat.hitbox.equals(obstacle)) {
+                                if (!endOfLevel) {
+                                    endOfGame(false);
+                                }
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    protected void endOfGame(boolean win){
+        endOfLevel = true;
+        if(win){
+            stats.incrementNumberOfGoalsReached();
+            gameContext.updateScore(stats, this);
+            gameContext.playWinTransition(500, actionEvent -> {
+                this.level++;
+                dispose();
+                launch();
+            });
+        }else{
+            dispose();
+            launch();
+        }
+    }
+
+
 }

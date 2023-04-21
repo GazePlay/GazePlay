@@ -6,27 +6,38 @@ import javafx.scene.shape.Rectangle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.util.ArrayList;
-
 
 public abstract class Cat extends Parent {
 
 
-    protected final Rectangle cat;
+    protected final Rectangle hitbox;
     protected final IGameContext gameContext;
     protected final CooperativeGame gameInstance;
-    protected float speed;
-    protected final ArrayList<Rectangle> obstacles;
+    protected double speed;
+    protected boolean isACat;
+    protected Rectangle target;
+
 
 
     public Cat(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext, final Stats stats,
-               final CooperativeGame gameInstance, float speed, ArrayList<Rectangle> obstacles){
-        this.cat = new Rectangle(positionX, positionY, width, height);
-        this.cat.setFill(Color.BLACK);
+               final CooperativeGame gameInstance, double speed, boolean isACat){
+        this.hitbox = new Rectangle(positionX, positionY, width, height);
+        this.hitbox.setFill(Color.BLACK);
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
         this.speed = speed;
-        this.obstacles = obstacles;
+        this.isACat = isACat;
+    }
+
+    public Cat(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext, final Stats stats,
+               final CooperativeGame gameInstance, double speed, boolean isACat, Rectangle target){
+        this.hitbox = new Rectangle(positionX, positionY, width, height);
+        this.hitbox.setFill(Color.YELLOW);
+        this.gameContext = gameContext;
+        this.gameInstance = gameInstance;
+        this.speed = speed;
+        this.isACat = isACat;
+        this.target = target;
     }
 
 
