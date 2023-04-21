@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import net.gazeplay.IGameContext;
@@ -23,7 +24,8 @@ public class CatMovement extends Cat{
 
     private Timeline timeline;
     private KeyCode lastDirection = null;
-    private AnimationTimer animationTimer;
+    private AnimationTimer animationTimerCat;
+
     private double dirX = 0;
     private double dirY = 0;
 
@@ -42,6 +44,8 @@ public class CatMovement extends Cat{
     public CatMovement(double positionX, double positionY, double width, double height, IGameContext gameContext, Stats stats, CooperativeGame gameInstance, double speed, boolean isACat) {
         super(positionX, positionY, width, height, gameContext, stats, gameInstance, speed, isACat );
 
+
+
         // Set up key event listeners to handle cat movement
         if (isACat){
             // Add a key pressed event filter to the primary game scene to handle movement
@@ -51,6 +55,7 @@ public class CatMovement extends Cat{
                     // Set the direction of movement based on the key pressed
                     switch (key.getCode()) {
                         case UP -> {
+
                             dirY = -speed;
                             lastDirection = KeyCode.UP;
                         }
@@ -66,6 +71,7 @@ public class CatMovement extends Cat{
                             dirX = speed;
                             lastDirection = KeyCode.RIGHT;
                         }
+
                         default -> {
                             break;
                         }
@@ -91,21 +97,25 @@ public class CatMovement extends Cat{
             }
 
             // Create a new animation timer to handle movement
-            animationTimer = new AnimationTimer() {
+            animationTimerCat = new AnimationTimer() {
                 @Override
                 public void handle(long now) {
-                    // Move the cat if it is currently moving and will not collide with an obstacle
-                    if (dirX != 0 || dirY != 0) {
-                        if (!gameInstance.willCollideWithAnObstacle(lastDirection.toString().toLowerCase(), speed, hitbox)) {
-                            hitbox.setX(hitbox.getX() + dirX);
-                            hitbox.setY(hitbox.getY() + dirY);
+                    if (!gameInstance.endOfLevel){
+                        // Move the cat if it is currently moving and will not collide with an obstacle
+                        if (dirX != 0 || dirY != 0) {
+                            if (!gameInstance.willCollideWithAnObstacle(lastDirection.toString().toLowerCase(), speed, hitbox)) {
+                                hitbox.setX(hitbox.getX() + dirX);
+                                hitbox.setY(hitbox.getY() + dirY);
+                            }
                         }
+                    }else{
+                        animationTimerCat.stop();
                     }
                 }
             };
 
             // Start the animation timer
-            animationTimer.start();
+            animationTimerCat.start();
         }
     }
 
@@ -113,13 +123,56 @@ public class CatMovement extends Cat{
         super(positionX, positionY, width, height, gameContext, stats, gameInstance, speed, isACat, target);
 
         if (!isACat){
-            followCatWithAnimation();
+
+            AnimationTimer animationTimerDog = new AnimationTimer() {
+                double speedSave = speed;
+                @Override
+                public void handle(long now) {
+                    if (!gameInstance.endOfLevel){
+                        if (hitbox.getX() < target.getX()) {
+                            if (!gameInstance.willCollideWithAnObstacle("right", speedSave, hitbox)) {
+                                hitbox.setX(hitbox.getX() + speedSave);
+                            }
+                        } else if (hitbox.getX() > target.getX()) {
+                            if (!gameInstance.willCollideWithAnObstacle("left", speedSave, hitbox)) {
+                                hitbox.setX(hitbox.getX() - speedSave);
+                            }
+                        }
+
+                        if (hitbox.getY() < target.getY()) {
+                            if (!gameInstance.willCollideWithAnObstacle("down", speedSave, hitbox)) {
+                                hitbox.setY(hitbox.getY() + speedSave);
+                            }
+                        } else if (hitbox.getY() > target.getY()) {
+                            if (!gameInstance.willCollideWithAnObstacle("up", speedSave, hitbox)) {
+                                hitbox.setY(hitbox.getY() - speedSave);
+                            }
+                        }
+
+                        if(gameInstance.mouse.getX() < hitbox.getX() + hitbox.getWidth() && gameInstance.mouse.getX() + gameInstance.mouse.getWidth() > hitbox.getX()
+                            && gameInstance.mouse.getY() < hitbox.getY() + hitbox.getHeight() && gameInstance.mouse.getY() +  gameInstance.mouse.getHeight() > hitbox.getY()) {
+                            speedSave = 0;
+                        }else{
+                            speedSave = speed;
+                        }
+                    }else{
+                        this.stop();
+                    }
+
+                }
+            };
+            animationTimerDog.start();
+
+            gameContext.getPrimaryScene().setOnMouseMoved(mouseEvent ->{
+                gameInstance.mouse = new Rectangle(mouseEvent.getX(),mouseEvent.getY(), hitbox.getWidth()/4,hitbox.getHeight()/4);
+            });
+
         }
     }
 
-    private void followCatWithAnimation() {
+   /* private void followCatWithAnimation() {
 
-        animationTimer = new AnimationTimer() {
+        animationTimerDog = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 if (hitbox.getX() < target.getX()) {
@@ -143,12 +196,6 @@ public class CatMovement extends Cat{
                 }
             }
         };
-
-
-
-        animationTimer.start();
-
-
-
-    }
+        animationTimerDog.start();
+    }*/
 }
