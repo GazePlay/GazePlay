@@ -48,6 +48,7 @@ public class CatMovement extends Cat{
 
         // Set up key event listeners to handle cat movement
         if (isACat){
+
             // Add a key pressed event filter to the primary game scene to handle movement
             gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, key-> {
                 if (key.getCode() == KeyCode.UP || key.getCode() == KeyCode.DOWN || key.getCode() == KeyCode.LEFT || key.getCode() == KeyCode.RIGHT) {
@@ -82,10 +83,8 @@ public class CatMovement extends Cat{
             // Add a key released event filter to the primary game scene to handle stopping movement
             gameContext.getPrimaryScene().setOnKeyReleased(event -> {
                 switch (event.getCode()) {
-                    case UP -> dirY = 0;
-                    case DOWN -> dirY = 0;
-                    case LEFT -> dirX = 0;
-                    case RIGHT -> dirX = 0;
+                    case UP, DOWN -> dirY = 0;
+                    case LEFT, RIGHT -> dirX = 0;
                     default -> {
                     }
                 }
@@ -149,8 +148,7 @@ public class CatMovement extends Cat{
                             }
                         }
 
-                        if(gameInstance.mouse.getX() < hitbox.getX() + hitbox.getWidth() && gameInstance.mouse.getX() + gameInstance.mouse.getWidth() > hitbox.getX()
-                            && gameInstance.mouse.getY() < hitbox.getY() + hitbox.getHeight() && gameInstance.mouse.getY() +  gameInstance.mouse.getHeight() > hitbox.getY()) {
+                        if(gameInstance.isCollidingWithASpecificObstacle(gameInstance.mouse,hitbox)) {
                             speedSave = 0;
                         }else{
                             speedSave = speed;
@@ -170,32 +168,5 @@ public class CatMovement extends Cat{
         }
     }
 
-   /* private void followCatWithAnimation() {
 
-        animationTimerDog = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                if (hitbox.getX() < target.getX()) {
-                    if (!gameInstance.willCollideWithAnObstacle("right", speed, hitbox)) {
-                        hitbox.setX(hitbox.getX() + speed);
-                    }
-                } else if (hitbox.getX() > target.getX()) {
-                    if (!gameInstance.willCollideWithAnObstacle("left", speed, hitbox)) {
-                        hitbox.setX(hitbox.getX() - speed);
-                    }
-                }
-
-                if (hitbox.getY() < target.getY()) {
-                    if (!gameInstance.willCollideWithAnObstacle("down", speed, hitbox)) {
-                        hitbox.setY(hitbox.getY() + speed);
-                    }
-                } else if (hitbox.getY() > target.getY()) {
-                    if (!gameInstance.willCollideWithAnObstacle("up", speed, hitbox)) {
-                        hitbox.setY(hitbox.getY() - speed);
-                    }
-                }
-            }
-        };
-        animationTimerDog.start();
-    }*/
 }

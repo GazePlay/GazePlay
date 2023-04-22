@@ -166,11 +166,13 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
             case "down" -> nextY += speed;
         }
 
+        Rectangle futurePos = new Rectangle(nextX,nextY, object.getWidth(), object.getHeight());
+
+
 
         for (Rectangle obstacle : obstacles) {
             if (!obstacle.equals(object)){
-                if (nextX < obstacle.getX() + obstacle.getWidth() && nextX +  object.getWidth() > obstacle.getX()
-                    && nextY < obstacle.getY() + obstacle.getHeight() && nextY +  object.getHeight() > obstacle.getY()) {
+                if (isCollidingWithASpecificObstacle(futurePos,obstacle)) {
 
                     if (this.cat.hitbox.equals(object) && gamelle.equals(obstacle)){
                         if (!endOfLevel){
@@ -184,7 +186,6 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
                                     break;
                                 }
                             }
-
                         }
                     }
 
@@ -194,6 +195,12 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         }
 
         return false;
+    }
+    protected boolean isCollidingWithASpecificObstacle(Rectangle object1, Rectangle object2){
+
+        return object1.getX() < object2.getX() + object2.getWidth() && object1.getX() + object1.getWidth() > object2.getX()
+            && object1.getY() < object2.getY() + object2.getHeight() && object1.getY() + object1.getHeight() > object2.getY();
+
     }
 
     protected void endOfGame(boolean win){
