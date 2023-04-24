@@ -27,6 +27,8 @@ public class Interrupteur {
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
         this.isInterrupteurActivated = false;
+
+
     }
 
 

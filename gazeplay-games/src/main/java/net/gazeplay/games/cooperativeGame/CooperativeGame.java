@@ -76,8 +76,8 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
 
 
         if (this.level == 1){
-            this.cat = new CatMovement(100, 100, 75,75,gameContext,stats,this, 10, true);
-            Cat dog = new CatMovement(300, 600, 75, 75, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            this.cat = new Cat(100, 100, 75,75,gameContext,stats,this, 10, true);
+            Cat dog = new Cat(300, 600, 75, 75, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
 
             gamelle = new Rectangle(400,100, 100, 100);
             gamelle.setFill(Color.GREEN);
@@ -97,9 +97,9 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
 
         }else if (this.level == 2){
 
-            this.cat = new CatMovement(200, 200, 75,75,gameContext,stats,this, 10, true);
-            Cat dog = new CatMovement(800, 600, 75, 75, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            Cat dog2 = new CatMovement(1000, 450, 75, 75, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            this.cat = new Cat(200, 200, 75,75,gameContext,stats,this, 10, true);
+            Cat dog = new Cat(800, 600, 75, 75, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            Cat dog2 = new Cat(1000, 450, 75, 75, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
             gamelle = new Rectangle(1050,700, 100, 100);
             gamelle.setFill(Color.GREEN);
 
