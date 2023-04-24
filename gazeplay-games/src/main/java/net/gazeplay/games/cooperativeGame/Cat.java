@@ -7,9 +7,11 @@ import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
 
@@ -26,6 +28,8 @@ public class Cat extends Parent {
     private AnimationTimer animationTimerCat;
     private double dirX = 0;
     private double dirY = 0;
+    private final EventHandler<Event> enterEvent;
+
 
 
 
@@ -37,6 +41,7 @@ public class Cat extends Parent {
         this.gameInstance = gameInstance;
         this.speed = speed;
         this.isACat = isACat;
+        this.enterEvent = null;
 
         // Set up key event listeners to handle cat movement
         if (isACat){
@@ -166,9 +171,22 @@ public class Cat extends Parent {
                 gameInstance.mouse.setY(mouseEvent.getY());
             });
 
-            gameContext.getGazeDeviceManager().addEventFilter(this);
 
         }
+
+        this.enterEvent = buildEvent();
+        gameContext.getGazeDeviceManager().addEventFilter(this);
+        this.addEventFilter(GazeEvent.ANY, enterEvent);
+
+    }
+
+    private EventHandler<Event> buildEvent() {
+
+        return e -> {
+            if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                System.out.println("gaze entered");
+            }
+        };
     }
 
 
