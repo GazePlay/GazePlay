@@ -84,11 +84,15 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         }else if (this.level == 2){
 
             this.cat = new CatMovement(200, 200, 75,75,gameContext,stats,this, 10, true);
-            Cat dog = new CatMovement(300, 600, 75, 75, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            Cat dog2 = new CatMovement(500, 450, 75, 75, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-
-            gamelle = new Rectangle(450,100, 150, 150);
+            Cat dog = new CatMovement(800, 600, 75, 75, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            Cat dog2 = new CatMovement(1000, 450, 75, 75, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            gamelle = new Rectangle(1050,700, 100, 100);
             gamelle.setFill(Color.GREEN);
+
+            Interrupteur interrupteur = new Interrupteur();
+            interrupteur.setInterrupteur(new Rectangle(600,600,75,75));
+            interrupteur.createDoorAroundAnObject(gamelle);
+
 
             obstacles.add(dog.hitbox);
             obstacles.add(dog2.hitbox);
@@ -101,6 +105,12 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
             gameContext.getChildren().add(dog.hitbox);
             gameContext.getChildren().add(dog2.hitbox);
             gameContext.getChildren().add(gamelle);
+            for (int k = 0; k < interrupteur.getPortes().size(); k++){
+                interrupteur.getPortes().get(k).setFill(Color.BLACK);
+                obstacles.add(interrupteur.getPortes().get(k));
+                gameContext.getChildren().add(interrupteur.getPortes().get(k));
+                interrupteur.getPortes().get(k).toFront();
+            }
 
             this.cat.hitbox.toFront();
             dog.hitbox.toFront();
