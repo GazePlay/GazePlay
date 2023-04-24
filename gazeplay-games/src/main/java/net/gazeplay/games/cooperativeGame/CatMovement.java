@@ -4,6 +4,7 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -25,6 +26,7 @@ public class CatMovement extends Cat{
     private Timeline timeline;
     private KeyCode lastDirection = null;
     private AnimationTimer animationTimerCat;
+    private EventHandler<Event> enterEvent = null;
 
     private double dirX = 0;
     private double dirY = 0;
@@ -161,12 +163,32 @@ public class CatMovement extends Cat{
             };
             animationTimerDog.start();
 
+            enterEvent = buildEvent();
+
             gameContext.getPrimaryScene().setOnMouseMoved(mouseEvent ->{
                 gameInstance.mouse = new Rectangle(mouseEvent.getX(),mouseEvent.getY(), hitbox.getWidth()/4,hitbox.getHeight()/4);
             });
 
+            gameContext.getGazeDeviceManager().addEventFilter(this);
+
         }
+
     }
 
+        private EventHandler<Event> buildEvent() {
+
+            return e -> {
+
+                if (e.getEventType() == GazeEvent.GAZE_ENTERED){
+                    System.out.println("gaze entered");
+                }
+
+                if (e.getEventType() == GazeEvent.GAZE_EXITED){
+                    System.out.println("gaze exited");
+                }
+
+
+            };
+        }
 
 }

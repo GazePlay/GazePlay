@@ -1,6 +1,7 @@
 package net.gazeplay.games.cooperativeGame;
 
 import javafx.scene.shape.Rectangle;
+import net.gazeplay.IGameContext;
 
 import java.util.ArrayList;
 
@@ -8,15 +9,24 @@ public class Interrupteur {
 
     private Rectangle interrupteur;
     private ArrayList<Rectangle> portes;
+    private boolean isInterrupteurActivated;
+    private IGameContext gameContext;
+    private CooperativeGame gameInstance;
 
 
-    public Interrupteur(Rectangle interrupteur, ArrayList<Rectangle> portes){
+    public Interrupteur(Rectangle interrupteur, ArrayList<Rectangle> portes, IGameContext gameContext, CooperativeGame gameInstance){
         this.interrupteur = interrupteur;
         this.portes = portes;
+        this.gameContext = gameContext;
+        this.gameInstance = gameInstance;
+        this.isInterrupteurActivated = false;
     }
 
-    public Interrupteur(){
+    public Interrupteur(IGameContext gameContext, CooperativeGame gameInstance){
         this.portes = new ArrayList<>();
+        this.gameContext = gameContext;
+        this.gameInstance = gameInstance;
+        this.isInterrupteurActivated = false;
     }
 
 
@@ -61,4 +71,6 @@ public class Interrupteur {
     public void setPortes(ArrayList<Rectangle> portes) {
         this.portes = portes;
     }
+
+
 }
