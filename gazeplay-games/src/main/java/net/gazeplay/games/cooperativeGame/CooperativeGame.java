@@ -8,7 +8,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -28,7 +27,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
     private Cat cat;
     private int level;
     private Rectangle gamelle;
-    protected Rectangle mouse;
+
     private double dogSpeed;
     private ArrayList<Rectangle> obstacles;
 
@@ -40,7 +39,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         this.level = level;
         this.obstacles = new ArrayList<>();
         this.dogs = new ArrayList<>();
-        this.mouse = new Rectangle(0,0,25,25);
+
     }
 
 
@@ -57,7 +56,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
 
         Rectangle background = new Rectangle(0,0,dimension2D.getWidth(),dimension2D.getHeight());
         background.setFill(Color.WHITE);
-
+        gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.getChildren().add(background);
         initGameBox();
         setLevel(level);
@@ -103,8 +102,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
             gamelle = new Rectangle(1050,700, 100, 100);
             gamelle.setFill(Color.GREEN);
 
-            Interrupteur interrupteur = new Interrupteur(gameContext,this);
-            interrupteur.setInterrupteur(new Rectangle(600,600,75,75));
+            Interrupteur interrupteur = new Interrupteur(new Rectangle(600,600,75,75),gameContext,this);
             interrupteur.createDoorAroundAnObject(gamelle);
             interrupteur.getInterrupteur().setFill(Color.RED);
 
@@ -120,19 +118,23 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
             gameContext.getChildren().add(dog2.hitbox);
             gameContext.getChildren().add(gamelle);
             gameContext.getChildren().add(interrupteur.getInterrupteur());
+
             this.obstacles.add(interrupteur.getInterrupteur());
+
             for (int k = 0; k < interrupteur.getPortes().size(); k++){
                 interrupteur.getPortes().get(k).setFill(Color.BLACK);
                 obstacles.add(interrupteur.getPortes().get(k));
                 gameContext.getChildren().add(interrupteur.getPortes().get(k));
                 interrupteur.getPortes().get(k).toFront();
             }
-            interrupteur.getInterrupteur().toFront();
+
+
             this.cat.hitbox.toFront();
             dog.hitbox.toFront();
             dog2.hitbox.toFront();
             gamelle.toFront();
         }
+
         this.obstacles.add(this.gamelle);
         this.obstacles.add(this.cat.hitbox);
     }

@@ -29,6 +29,7 @@ public class Cat extends Parent {
     private double dirX = 0;
     private double dirY = 0;
     private final EventHandler<Event> enterEvent;
+    private boolean canMove;
 
 
 
@@ -125,38 +126,36 @@ public class Cat extends Parent {
         this.speed = speed;
         this.isACat = isACat;
         this.target = target;
+        this.canMove = true;
 
         if (!isACat){
 
             AnimationTimer animationTimerDog = new AnimationTimer() {
-                double speedSave = speed;
+
                 @Override
                 public void handle(long now) {
                     if (!gameInstance.endOfLevel){
-                        if (hitbox.getX() < target.getX()) {
-                            if (!gameInstance.willCollideWithAnObstacle("right", speedSave, hitbox)) {
-                                hitbox.setX(hitbox.getX() + speedSave);
-                            }
-                        } else if (hitbox.getX() > target.getX()) {
-                            if (!gameInstance.willCollideWithAnObstacle("left", speedSave, hitbox)) {
-                                hitbox.setX(hitbox.getX() - speedSave);
-                            }
-                        }
+                        if (canMove){
 
-                        if (hitbox.getY() < target.getY()) {
-                            if (!gameInstance.willCollideWithAnObstacle("down", speedSave, hitbox)) {
-                                hitbox.setY(hitbox.getY() + speedSave);
+                            if (hitbox.getX() < target.getX()) {
+                                if (!gameInstance.willCollideWithAnObstacle("right", speed, hitbox)) {
+                                    hitbox.setX(hitbox.getX() + speed);
+                                }
+                            } else if (hitbox.getX() > target.getX()) {
+                                if (!gameInstance.willCollideWithAnObstacle("left", speed, hitbox)) {
+                                    hitbox.setX(hitbox.getX() - speed);
+                                }
                             }
-                        } else if (hitbox.getY() > target.getY()) {
-                            if (!gameInstance.willCollideWithAnObstacle("up", speedSave, hitbox)) {
-                                hitbox.setY(hitbox.getY() - speedSave);
-                            }
-                        }
 
-                        if(gameInstance.isCollidingWithASpecificObstacle(gameInstance.mouse,hitbox)) {
-                            speedSave = 0;
-                        }else{
-                            speedSave = speed;
+                            if (hitbox.getY() < target.getY()) {
+                                if (!gameInstance.willCollideWithAnObstacle("down", speed, hitbox)) {
+                                    hitbox.setY(hitbox.getY() + speed);
+                                }
+                            } else if (hitbox.getY() > target.getY()) {
+                                if (!gameInstance.willCollideWithAnObstacle("up", speed, hitbox)) {
+                                    hitbox.setY(hitbox.getY() - speed);
+                                }
+                            }
                         }
                     }else{
                         this.stop();
@@ -165,26 +164,24 @@ public class Cat extends Parent {
                 }
             };
             animationTimerDog.start();
-
-            gameContext.getPrimaryScene().setOnMouseMoved(mouseEvent ->{
-                gameInstance.mouse.setX(mouseEvent.getX());
-                gameInstance.mouse.setY(mouseEvent.getY());
-            });
-
-
         }
 
         this.enterEvent = buildEvent();
-        gameContext.getGazeDeviceManager().addEventFilter(this);
-        this.addEventFilter(GazeEvent.ANY, enterEvent);
+        gameContext.getGazeDeviceManager().addEventFilter(hitbox);
+        this.hitbox.addEventFilter(GazeEvent.ANY, enterEvent);
+        this.hitbox.addEventFilter(MouseEvent.ANY, enterEvent);
 
     }
 
     private EventHandler<Event> buildEvent() {
-
         return e -> {
-            if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                System.out.println("gaze entered");
+            if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                this.hitbox.setFill(Color.BLUE);
+                this.canMove = false;
+            }
+            if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
+                this.hitbox.setFill(Color.YELLOW);
+                this.canMove = true;
             }
         };
     }
