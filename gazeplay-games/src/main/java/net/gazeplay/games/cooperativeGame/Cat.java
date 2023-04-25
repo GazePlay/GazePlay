@@ -25,6 +25,8 @@ public class Cat extends Parent {
     protected boolean isACat;
     protected Rectangle target;
     private KeyCode lastDirection = null;
+    private KeyCode horizontalDirection = null;
+    private KeyCode verticalDirection = null;
     private AnimationTimer animationTimerCat;
     private double dirX = 0;
     private double dirY = 0;
@@ -56,23 +58,24 @@ public class Cat extends Parent {
                         case UP -> {
 
                             dirY = -speed;
-                            lastDirection = KeyCode.UP;
+                            verticalDirection = KeyCode.UP;
                         }
                         case DOWN -> {
                             dirY = speed;
-                            lastDirection = KeyCode.DOWN;
+                            verticalDirection = KeyCode.DOWN;
+
                         }
                         case LEFT -> {
                             dirX = -speed;
-                            lastDirection = KeyCode.LEFT;
+                            horizontalDirection = KeyCode.LEFT;
                         }
                         case RIGHT -> {
                             dirX = speed;
-                            lastDirection = KeyCode.RIGHT;
+                            horizontalDirection = KeyCode.RIGHT;
                         }
 
                         default -> {
-                            break;
+
                         }
                     }
                 }
@@ -81,8 +84,14 @@ public class Cat extends Parent {
             // Add a key released event filter to the primary game scene to handle stopping movement
             gameContext.getPrimaryScene().setOnKeyReleased(event -> {
                 switch (event.getCode()) {
-                    case UP, DOWN -> dirY = 0;
-                    case LEFT, RIGHT -> dirX = 0;
+                    case UP, DOWN -> {
+                        dirY = 0;
+                        verticalDirection = null;
+                    }
+                    case LEFT, RIGHT -> {
+                        dirX = 0;
+                        horizontalDirection = null;
+                    }
                     default -> {
                     }
                 }
@@ -90,7 +99,8 @@ public class Cat extends Parent {
 
             // Set the last direction of movement to null if the cat is not currently moving
             if (dirX == 0 && dirY == 0) {
-                lastDirection = null;
+                verticalDirection = null;
+                horizontalDirection = null;
             }
 
             // Create a new animation timer to handle movement
@@ -99,10 +109,20 @@ public class Cat extends Parent {
                 public void handle(long now) {
                     if (!gameInstance.endOfLevel){
                         // Move the cat if it is currently moving and will not collide with an obstacle
+
                         if (dirX != 0 || dirY != 0) {
-                            if (!gameInstance.willCollideWithAnObstacle(lastDirection.toString().toLowerCase(), speed, hitbox)) {
-                                hitbox.setX(hitbox.getX() + dirX);
+                            if (verticalDirection != null && horizontalDirection == null && !gameInstance.willCollideWithAnObstacle(verticalDirection.toString().toLowerCase(), speed, hitbox)){
                                 hitbox.setY(hitbox.getY() + dirY);
+                            }else if (horizontalDirection != null && verticalDirection == null && !gameInstance.willCollideWithAnObstacle(horizontalDirection.toString().toLowerCase(), speed, hitbox)){
+                                hitbox.setX(hitbox.getX() + dirX);
+                            } else if (verticalDirection != null && horizontalDirection != null){
+
+                                if (!gameInstance.willCollideWithAnObstacle(verticalDirection.toString().toLowerCase(), speed, hitbox)){
+                                    hitbox.setY(hitbox.getY() + dirY);
+                                }
+                                if (!gameInstance.willCollideWithAnObstacle(horizontalDirection.toString().toLowerCase(), speed, hitbox)){
+                                    hitbox.setX(hitbox.getX() + dirX);
+                                }
                             }
                         }
                     }else{
