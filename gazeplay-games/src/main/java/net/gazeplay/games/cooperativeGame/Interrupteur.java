@@ -38,13 +38,16 @@ public class Interrupteur extends Parent {
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
         this.isInterrupteurActivated = false;
-        this.progressIndicator = createProgressIndicator(120, 120);
+        this.progressIndicator = createProgressIndicator(150, 150);
         gameContext.getChildren().add(this.progressIndicator);
-        this.progressIndicator.toFront();
         this.enterEvent = buildEvent();
         gameContext.getGazeDeviceManager().addEventFilter(this.interrupteur);
         this.interrupteur.addEventFilter(GazeEvent.ANY, enterEvent);
         this.interrupteur.addEventFilter(MouseEvent.ANY, enterEvent);
+        gameContext.getChildren().add(this.interrupteur);
+
+        this.progressIndicator.toFront();
+        this.interrupteur.setFill(Color.RED);
     }
 
     private ProgressIndicator createProgressIndicator(final double width, final double height) {

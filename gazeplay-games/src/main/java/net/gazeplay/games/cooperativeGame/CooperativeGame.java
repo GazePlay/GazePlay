@@ -28,8 +28,9 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
     private int level;
     private Rectangle gamelle;
 
-    private double dogSpeed;
+
     private ArrayList<Rectangle> obstacles;
+    private ArrayList<Interrupteur> interrupteurs;
 
     private ArrayList<Cat> dogs;
 
@@ -39,7 +40,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         this.level = level;
         this.obstacles = new ArrayList<>();
         this.dogs = new ArrayList<>();
-
+        this.interrupteurs = new ArrayList<>();
     }
 
 
@@ -50,6 +51,8 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
     public void launch() {
         this.endOfLevel = false;
         this.obstacles.clear();
+        this.dogs.clear();
+        this.interrupteurs.clear();
 
         gameContext.setLimiterAvailable();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -63,80 +66,186 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         gameContext.firstStart();
 
 
-
     }
 
     private void setLevel(final int i){
 
         this.level = i;
         System.out.println("level : " + i);
-        this.dogs.clear();
-        this.dogSpeed = 3;
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        double dogSpeed = 3;
+        int widthCat = 100;
+        int heightCat = 100;
+        int widthDog = 125;
+        int heightDog = 125;
+        int widthInterrupteur = 125;
+        int heightInterrupteur = 125;
+        this.cat = new Cat(0, 0, widthCat,heightCat,gameContext,stats,this, 10, true);
+
 
 
         if (this.level == 1){
-            this.cat = new Cat(100, 100, 75,75,gameContext,stats,this, 10, true);
-            Cat dog = new Cat(300, 600, 75, 75, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            this.cat.hitbox.setX(100);
+            this.cat.hitbox.setY(100);
 
-            gamelle = new Rectangle(400,100, 100, 100);
-            gamelle.setFill(Color.GREEN);
+            Cat dog = new Cat(900, dimension2D.getHeight()-500, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
 
-            obstacles.add(dog.hitbox);
+            gamelle = new Rectangle(dimension2D.getWidth()-300,dimension2D.getHeight()-200, 100, 100);
             this.dogs.add(dog);
 
-            gameContext.getChildren().add(this.cat.hitbox);
-            gameContext.getChildren().add(dog.hitbox);
-            gameContext.getChildren().add(gamelle);
-
-
-            this.cat.hitbox.toFront();
-            dog.hitbox.toFront();
-            gamelle.toFront();
-
-
         }else if (this.level == 2){
+            this.cat = new Cat(150, 150, widthCat,heightCat,gameContext,stats,this, 10, true);
+            Cat dog = new Cat(800, 600, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            Cat dog2 = new Cat(1000, 450, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
 
-            this.cat = new Cat(200, 200, 75,75,gameContext,stats,this, 10, true);
-            Cat dog = new Cat(800, 600, 75, 75, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            Cat dog2 = new Cat(1000, 450, 75, 75, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
-            gamelle = new Rectangle(1050,700, 100, 100);
-            gamelle.setFill(Color.GREEN);
+            gamelle = new Rectangle(dimension2D.getWidth()-350,dimension2D.getHeight()-250, 100, 100);
 
-            Interrupteur interrupteur = new Interrupteur(new Rectangle(600,600,75,75),gameContext,this);
-            interrupteur.createDoorAroundAnObject(gamelle);
-            interrupteur.getInterrupteur().setFill(Color.RED);
-
-            obstacles.add(dog.hitbox);
-            obstacles.add(dog2.hitbox);
             this.dogs.add(dog);
             this.dogs.add(dog2);
 
 
 
-            gameContext.getChildren().add(this.cat.hitbox);
-            gameContext.getChildren().add(dog.hitbox);
-            gameContext.getChildren().add(dog2.hitbox);
-            gameContext.getChildren().add(gamelle);
-            gameContext.getChildren().add(interrupteur.getInterrupteur());
 
+
+        }else if (this.level == 3){
+            this.cat.hitbox.setX(150);
+            this.cat.hitbox.setY(150);
+            Cat dog = new Cat(800, 600, widthDog, heightDog, gameContext, stats, this, dogSpeed+2, false, this.cat.hitbox);
+            Cat dog2 = new Cat(1000, 450, widthDog, heightDog, gameContext, stats, this, dogSpeed+2, false, this.cat.hitbox);
+
+            gamelle = new Rectangle(dimension2D.getWidth()-350,dimension2D.getHeight()-250, 100, 100);
+
+            this.dogs.add(dog);
+            this.dogs.add(dog2);
+
+
+
+
+
+        }else if (this.level == 4){
+            this.cat.hitbox.setX(200);
+            this.cat.hitbox.setY(200);
+            Cat dog = new Cat(800, 600, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            Cat dog2 = new Cat(1000, 450, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            gamelle = new Rectangle(dimension2D.getWidth()-300,dimension2D.getHeight()-600, 100, 100);
+
+            Interrupteur interrupteur = new Interrupteur(new Rectangle(600,600,widthInterrupteur,heightInterrupteur),gameContext,this);
+            interrupteur.createDoorAroundAnObject(gamelle);
+
+            this.dogs.add(dog);
+            this.dogs.add(dog2);
+
+            this.interrupteurs.add(interrupteur);
+
+
+        }else if (this.level == 5){
+            this.cat.hitbox.setX(200);
+            this.cat.hitbox.setY(200);
+            Cat dog = new Cat(200, 600, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            Cat dog2 = new Cat(1100, 460, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            gamelle = new Rectangle(dimension2D.getWidth()-300,dimension2D.getHeight()-650, 100, 100);
+
+            Interrupteur interrupteur = new Interrupteur(new Rectangle(400,600,widthInterrupteur,heightInterrupteur),gameContext,this);
+            interrupteur.getPortes().add(new Rectangle(dimension2D.getWidth()/2,0, 50,dimension2D.getHeight()));
+
+            this.dogs.add(dog);
+            this.dogs.add(dog2);
+
+            this.interrupteurs.add(interrupteur);
+
+
+        }else if (this.level == 6){
+
+            this.cat.hitbox.setX(200);
+            this.cat.hitbox.setY(200);
+            Cat dog = new Cat(200, 600, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            Cat dog2 = new Cat(1100, 460, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            gamelle = new Rectangle(dimension2D.getWidth()-300,dimension2D.getHeight()-400, 100, 100);
+
+            Interrupteur interrupteur = new Interrupteur(new Rectangle(400,600,widthInterrupteur,heightInterrupteur),gameContext,this);
+            interrupteur.getPortes().add(new Rectangle(dimension2D.getWidth()/2,0, 50,dimension2D.getHeight()));
+
+            Interrupteur interrupteur2 = new Interrupteur(new Rectangle(dimension2D.getWidth()-400,dimension2D.getHeight()-900,widthInterrupteur,heightInterrupteur),gameContext,this);
+            interrupteur2.createDoorAroundAnObject(gamelle);
+
+
+            this.dogs.add(dog);
+            this.dogs.add(dog2);
+
+            this.interrupteurs.add(interrupteur);
+            this.interrupteurs.add(interrupteur2);
+
+
+        }else if (this.level == 7){
+            this.cat.hitbox.setX(250);
+            this.cat.hitbox.setY(200);
+            Cat dog = new Cat(1100, 300, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            Cat dog2 = new Cat(500, dimension2D.getHeight()-300, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            gamelle = new Rectangle(dimension2D.getWidth()-300,dimension2D.getHeight()-200, 100, 100);
+
+            Interrupteur interrupteur = new Interrupteur(new Rectangle(dimension2D.getWidth()-300,200,widthInterrupteur,heightInterrupteur),gameContext,this);
+            interrupteur.getPortes().add(new Rectangle(0,dimension2D.getHeight()/2, dimension2D.getWidth(),50));
+
+            this.dogs.add(dog);
+            this.dogs.add(dog2);
+
+            this.interrupteurs.add(interrupteur);
+
+
+        }else if(this.level == 8){
+            this.cat.hitbox.setX(250);
+            this.cat.hitbox.setY(200);
+            Cat dog = new Cat(1100, 300, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            Cat dog2 = new Cat(500, dimension2D.getHeight()-300, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            gamelle = new Rectangle(dimension2D.getWidth()-300,dimension2D.getHeight()-200, 100, 100);
+
+            Interrupteur interrupteur = new Interrupteur(new Rectangle(dimension2D.getWidth()-300,200,widthInterrupteur,heightInterrupteur),gameContext,this);
+            interrupteur.getPortes().add(new Rectangle(0,dimension2D.getHeight()/2, dimension2D.getWidth(),50));
+
+            Interrupteur interrupteur2 = new Interrupteur(new Rectangle(300,dimension2D.getHeight()-300,widthInterrupteur,heightInterrupteur),gameContext,this);
+            interrupteur2.createDoorAroundAnObject(gamelle);
+
+            this.dogs.add(dog);
+            this.dogs.add(dog2);
+
+            this.interrupteurs.add(interrupteur);
+            this.interrupteurs.add(interrupteur2);
+        }
+
+
+
+
+
+
+
+        this.gamelle.setFill(Color.GREEN);
+        gameContext.getChildren().add(this.gamelle);
+        gameContext.getChildren().add(this.cat.hitbox);
+        this.obstacles.add(this.cat.hitbox);
+        this.obstacles.add(this.gamelle);
+        this.cat.hitbox.toFront();
+        this.gamelle.toFront();
+
+
+        for (Interrupteur interrupteur : this.interrupteurs) {
             this.obstacles.add(interrupteur.getInterrupteur());
-
             for (int k = 0; k < interrupteur.getPortes().size(); k++){
                 interrupteur.getPortes().get(k).setFill(Color.BLACK);
                 obstacles.add(interrupteur.getPortes().get(k));
                 gameContext.getChildren().add(interrupteur.getPortes().get(k));
                 interrupteur.getPortes().get(k).toFront();
             }
-
-
-            this.cat.hitbox.toFront();
-            dog.hitbox.toFront();
-            dog2.hitbox.toFront();
-            gamelle.toFront();
         }
 
-        this.obstacles.add(this.gamelle);
-        this.obstacles.add(this.cat.hitbox);
+        for (Cat dog : this.dogs) {
+            this.obstacles.add(dog.hitbox);
+            dog.hitbox.toFront();
+            gameContext.getChildren().add(dog.hitbox);
+        }
+
+
+
     }
 
     @Override
