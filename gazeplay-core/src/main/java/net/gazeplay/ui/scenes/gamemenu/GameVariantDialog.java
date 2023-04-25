@@ -6,10 +6,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -26,12 +23,12 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gamevariants.IntGameVariant;
 import net.gazeplay.commons.gamevariants.IntStringGameVariant;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
 import net.gazeplay.ui.scenes.errorhandlingui.GameWhereIsItErrorPathDialog;
-
 import java.util.HashMap;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
@@ -131,6 +128,18 @@ public class GameVariantDialog extends Stage {
                 indexOfTheVariant = variant.toString().toLowerCase().contains("hide") ? 0 : 1;
             } else if (gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) {
                 indexOfTheVariant = variant.toString().toLowerCase().contains("other") ? 1 : 0;
+            } else if(gameSpec.getGameSummary().getNameCode().equals("RushHour")){
+                button.setTextAlignment(TextAlignment.CENTER);
+                int variantString = ((IntGameVariant) variant).getNumber();
+                indexOfTheVariant = switch(variantString){
+                    case 30,31,32,33-> 5;
+                    case 24,25,26,27,28,29 -> 4;
+                    case 18,19,20,21,22,23 -> 3;
+                    case 12,13,14,15,16,17 -> 2;
+                    case 6,7,8,9,10,11 -> 1;
+                    default -> 0;
+                };
+
             } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = ((IntStringGameVariant) variant).getStringValue();
@@ -153,6 +162,7 @@ public class GameVariantDialog extends Stage {
             choicePanes.get(indexOfTheVariant).getChildren().add(button);
 
             if ((gameSpec.getGameSummary().getNameCode().equals("Bottle") ||
+                gameSpec.getGameSummary().getNameCode().equals("RushHour") ||
                 gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                 gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
@@ -176,7 +186,18 @@ public class GameVariantDialog extends Stage {
                     categories[3] = new RadioButton(translator.translate("HighSizeCategory"));
                     categories[4] = new RadioButton(translator.translate("BigSizeCategory"));
                     categories[5] = new RadioButton(translator.translate("InfinityCategory"));
-                } else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
+                }else if(gameSpec.getGameSummary().getNameCode().equals("RushHour")){
+                    categories = new RadioButton[6];
+
+                    categories[0] = new RadioButton(translator.translate("Niveau1-5"));
+                    categories[1] = new RadioButton(translator.translate("Niveau6-11"));
+                    categories[2] = new RadioButton(translator.translate("Niveau12-17"));
+                    categories[3] = new RadioButton(translator.translate("Niveau18-23"));
+                    categories[4] = new RadioButton(translator.translate("Niveau24-29"));
+                    categories[5] = new RadioButton(translator.translate("Niveau30-33"));
+                    System.out.println("categories length : "+categories.length);
+
+                }else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                     gameSpec.getGameSummary().getNameCode().contains("Memory") ||
                     gameSpec.getGameSummary().getNameCode().equals("Ninja")
                 ) {
@@ -247,14 +268,25 @@ public class GameVariantDialog extends Stage {
                 sceneContentPane.setBottom(bottom);
             }
 
+
             EventHandler<Event> event = mouseEvent -> {
-                close();
-                root.setDisable(false);
-                if (config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
-                    whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, variant);
-                } else {
-                    gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, variant);
-                }
+                /*if (gameSpec.getGameSummary().getNameCode().equals("Ninja") && variant.toString().equals("EnumGameVariant:net.gazeplay.games.ninja.NinjaGameVariant:LEVEL")){
+                    TextInputDialog dialog = new TextInputDialog("1");
+                    dialog.setTitle("Choose a level");
+                    dialog.setHeaderText("Choose a level:");
+                    dialog.setContentText("level:");
+                    Optional<String> result = dialog.showAndWait();
+                    result.ifPresent(level -> {
+                    });*/
+                //}else{
+                    close();
+                    root.setDisable(false);
+                    if (config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
+                        whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, variant);
+                    } else {
+                        gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, variant);
+                    }
+                //}
             };
             button.addEventHandler(MOUSE_CLICKED, event);
         }

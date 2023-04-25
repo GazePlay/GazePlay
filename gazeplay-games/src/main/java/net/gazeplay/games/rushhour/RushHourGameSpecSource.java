@@ -12,6 +12,6 @@ public class RushHourGameSpecSource implements GameSpecSource {
             GameSummary.builder().nameCode("RushHour").gameThumbnail("data/Thumbnails/rushHour.png")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS).build(),
-            new RushHourGameLauncher());
+            new RushHourGameVariant(), new RushHourGameLauncher());
     }
 }

@@ -5,6 +5,8 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
 import net.gazeplay.commons.gamevariants.DimensionGameVariant;
+import net.gazeplay.commons.gamevariants.IntGameVariant;
+import net.gazeplay.commons.gamevariants.IntStringGameVariant;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.pet.PetStats;
 import net.gazeplay.commons.utils.FixationPoint;
@@ -15,7 +17,7 @@ import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class RushHourGameLauncher implements IGameLauncher<Stats, DimensionGameVariant> {
+public class RushHourGameLauncher implements IGameLauncher<Stats, IntGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new RushHourStats(scene);
@@ -28,14 +30,14 @@ public class RushHourGameLauncher implements IGameLauncher<Stats, DimensionGameV
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext,
-                                       DimensionGameVariant gameVariant, Stats stats) {
-        return new RushHour(gameContext, stats);
+                                       IntGameVariant gameVariant, Stats stats) {
+        return new RushHour(gameContext, stats, gameVariant.getNumber());
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext,
-                                       DimensionGameVariant gameVariant, Stats stats, double gameSeed) {
-        return new RushHour(gameContext, stats);
+                                    IntGameVariant gameVariant, Stats stats, double gameSeed) {
+        return new RushHour(gameContext, stats, gameVariant.getNumber());
     }
 
 }
