@@ -67,6 +67,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(background);
         setLevel(level);
         initGameBox();
+        stats.notifyNewRoundReady();
         gameContext.firstStart();
 
 
