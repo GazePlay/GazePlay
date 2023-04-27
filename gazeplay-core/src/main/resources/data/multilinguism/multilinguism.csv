@@ -83,6 +83,7 @@ WhereIsTheNumber,Ku është numri?,اين الرقم؟,Дзе нумар?,号码
 WhereIsTheShape,Ku është forma?,اين الشكل؟,Дзе форма?,形状在哪里？,Wo ist die Form?,Πού είναι το σχήμα;,Where is the shape?,Missä muoto on?,Où est la forme ?,आकृति कहाँ है?,Gdje je oblik?,Dimana bentuknya?,Dov'è la forma?,形はどこ？,Waar is de vorm?,Gdzie jest kształt?,Onde está a forma?,Где форма?,¿Dónde está la forma?,Hình dạng ở đâu?,Di manakah bentuknya?
 WhereIsTheSound,Çfarë është ky tingull?,ما هذا الصوت؟,Што гэта за гук?,这是什么声音？,Was ist das für ein Geräusch?,Τι είναι αυτός ο ήχος;,What is this sound?,Mikä tämä ääni on?,Quel est ce son ?,यह ध्वनि क्या है?,Kakav je ovo zvuk?,Suara apa ini?,Cos'è questo suono?,この音は何ですか？,Wat is dit geluid?,Co to za dźwięk?,O que é esse som?,Что это за звук?,¿Qué es este sonido?,Đây là âm thanh gì?,Apakah bunyi ini?
 Connect4,,,,,,,Connect 4,,Puissance 4,,,,,,,,,,,,
+TrainSwitches,,,,,,,Train Switches,,Aiguillages,,,,,,,,,,,,
 
 # VARIANT CHOOSE TEXTS
 Choose Game Variant,Zgjidhni një variant të lojës,اختر نوع اللعبة,Выберыце варыянт гульні,选择游戏变体,Wähle eine Spielvariante,Επιλέξτε μια παραλλαγή παιχνιδιού,Choose a Game Variant,Valitse peliversio,Choisissez une variante de jeu,एक गेम प्रकार चुनें,Odaberite varijantu igre,Pilih varian permainan,Scegli una variante di gioco,ゲームのバリエーションを選択してください,Kies een spelvariant,Wybierz wariant gry,Escolha uma variante de jogo,Выберите вариант игры,Elige una variante del juego,Chọn một biến thể trò chơi,Pilih varian permainan
@@ -220,6 +221,9 @@ Freeplay,,,,,,,Freeplay,,Jeu libre,,,,,,,,,,,,
 PlayWithInstructions,,,,,,,Play by following instructions,,Jouer en suivant les instructions,,,,,,,,,,,,
 PlayerStart,,,,,,,Play first,,Jouer en premier,,,,,,,,,,,,
 AiStart,,,,,,,Play second,,Jouer en second,,,,,,,,,,,,
+PauseTrain,,,,,,,Game is paused when a train reach a switch,,Le jeu se met en pause lorsqu'un train arrive à un aiguillage,,,,,,,,,,,,
+InfiniteTrain,,,,,,,No time limit : trains are sent again if they reach the wrong station,,Pas de limite de temps : les trains sont réenvoyés lorsqu'ils atteignent la mauvaise gare,,,,,,,,,,,,
+UniquesTrain,,,,,,,There is only one train at a time,,Il n'y a qu'un seul train à la fois,,,,,,,,,,,,
 
 # CONTEXT TITLES
 ConfigTitle,Konfigurimi,ترتيب,Канфігурацыя,恭喜你！,Konfiguration,Διαμόρφωση,Configuration,asetuksen nimi,Configuration,विन्यास,Konfiguracija,Konfigurasi,Configurazione,構成,Configuratie,Konfiguracja,Configuraçaô,Конфигурация,Configuración,Tùy chỉnh,Konfigurasi
