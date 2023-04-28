@@ -1,3 +1,9 @@
+/**
+
+ The Cat class represents a cat in the cooperative game.
+ It extends the JavaFX Parent class and contains methods for moving the cat based on user input and
+ for moving the cat automatically towards a target if it is not a player-controlled cat.
+ */
 package net.gazeplay.games.cooperativeGame;
 
 import javafx.animation.AnimationTimer;
@@ -17,28 +23,110 @@ import net.gazeplay.commons.utils.stats.Stats;
 public class Cat extends Parent {
 
 
+    /**
+     * The hitbox for the cat object
+     */
     protected final Rectangle hitbox;
+
+    /**
+     * The game context
+     */
     protected final IGameContext gameContext;
+
+    /**
+     * The game instance
+     */
     protected final CooperativeGame gameInstance;
+
+    /**
+     * The speed of the cat
+     */
     protected double speed;
+
+    /**
+     * A boolean indicating whether the cat is a player-controlled cat
+     */
     protected boolean isACat;
+
+    /**
+     * The target rectangle for the cat to move towards if it is not a player-controlled cat
+     */
     protected Rectangle target;
+
+    /**
+     * The horizontal direction of the cat's movement
+     */
     private KeyCode horizontalDirection;
+
+    /**
+     * The vertical direction of the cat's movement
+     */
     private KeyCode verticalDirection;
+
+    /**
+     * The animation timer for the cat's movement
+     */
     private AnimationTimer animationTimerCat;
+
+    /**
+     * The current X direction of movement
+     */
     private double dirX = 0;
+
+    /**
+     * The current Y direction of movement
+     */
     private double dirY = 0;
+
+    /**
+     * The enter event handler for the cat
+     */
     private final EventHandler<Event> enterEvent;
+
+    /**
+     * A boolean indicating whether the cat can currently move
+     */
     private boolean canMove;
+
+    /**
+     * The current X speed of movement
+     */
     private double currentSpeedX;
+
+    /**
+     * The current Y speed of movement
+     */
     private double currentSpeedY;
-    private double acceleration;
+
+    /**
+     * The acceleration of the cat's movement
+     */
+    protected double acceleration;
+
+    /**
+     * The initial X position of the cat
+     */
     protected double initPosX;
+
+    /**
+     * The initial Y position of the cat
+     */
     protected double initPosY;
 
 
 
-
+    /**
+     * Constructs a new Cat object with the specified position, dimensions, game context, stats, game instance, speed, and player-controlled flag.
+     * @param positionX The X position of the cat
+     * @param positionY The Y position of the cat
+     * @param width The width of the cat
+     * @param height The height of the cat
+     * @param gameContext The game context
+     * @param stats The game stats
+     * @param gameInstance The game instance
+     * @param speed2 The speed of the cat
+     * @param isACat A boolean indicating whether the cat is player-controlled
+     */
     public Cat(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext, final Stats stats,
                final CooperativeGame gameInstance, double speed2, boolean isACat){
         this.hitbox = new Rectangle(positionX, positionY, width, height);
@@ -158,14 +246,14 @@ public class Cat extends Parent {
 
     }
 
+
     public Cat(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext, final Stats stats,
                final CooperativeGame gameInstance, double speed2, boolean isACat, Rectangle target){
+
         this.hitbox = new Rectangle(positionX, positionY, width, height);
         this.hitbox.setFill(Color.YELLOW);
-
         this.initPosX = positionX;
         this.initPosY = positionY;
-
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
         this.speed = speed2;

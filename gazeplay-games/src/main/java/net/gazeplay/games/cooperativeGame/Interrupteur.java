@@ -29,7 +29,7 @@ public class Interrupteur extends Parent {
     private final EventHandler<Event> enterEvent;
     private final ProgressIndicator progressIndicator;
     private Timeline timelineProgressBar;
-    private double slow;
+    private final double slow;
     private final ImagePattern offButton;
     private final ImagePattern onButton;
 

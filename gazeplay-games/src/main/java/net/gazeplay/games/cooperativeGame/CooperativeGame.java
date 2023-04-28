@@ -1,3 +1,8 @@
+/**
+ * The CooperativeGame class represents a cooperative game in which the player controls a cat to complete levels.
+ * The objective of the game is for the cat to reach its food dish without being caught by the pursuing dogs. If the cat is caught by a dog, the level restarts.
+ * The game is implemented as a JavaFX application and extends the Parent class.
+ */
 package net.gazeplay.games.cooperativeGame;
 
 import javafx.geometry.Dimension2D;
@@ -10,25 +15,69 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 
-
 public class CooperativeGame extends Parent implements GameLifeCycle {
 
+    /**
+     * The game context for the current game instance.
+     */
     private final IGameContext gameContext;
+
+    /**
+     * The game statistics for the current game instance.
+     */
     private final Stats stats;
+
+    /**
+     * A flag indicating whether the current level has ended.
+     */
     protected boolean endOfLevel;
+
+    /**
+     * The cat controlled by the player.
+     */
     protected Cat cat;
+
+    /**
+     * The current level of the game.
+     */
     private int level;
+
+    /**
+     * The cat's food dish in the game.
+     */
     private Rectangle gamelle;
 
-
+    /**
+     * The obstacles in the game that the cat and other moving object must navigate around.
+     */
     private ArrayList<Rectangle> obstacles;
+
+    /**
+     * The switches in the game that the cat can activate to open doors or move walls.
+     */
     private ArrayList<Interrupteur> interrupteurs;
 
+    /**
+     * The walls in the game that the cat must navigate around.
+     */
     private ArrayList<Rectangle> walls;
+
+    /**
+     * The moving walls in the game that the cat must navigate around.
+     */
     private ArrayList<MovingWall> wallsMoving;
 
+    /**
+     * The dogs in the game that pursue the cat.
+     */
     protected ArrayList<Cat> dogs;
 
+    /**
+     * Constructs a new CooperativeGame instance with the specified game context, statistics, and level.
+     * @param gameContext the game context for the new game instance
+     * @param stats the game statistics for the new game instance
+     * @param level the level for the new game instance
+     */
     public CooperativeGame(final IGameContext gameContext, Stats stats, int level){
         this.gameContext = gameContext;
         this.stats = stats;
@@ -44,6 +93,12 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
 
 
 
+    /**
+     * Launches a new level of the game by resetting the obstacles, dogs, and walls,
+     * setting the end of the level to false, adding the stats to the gaze device manager,
+     * creating a new background rectangle, initializing the game box,
+     * notifying that a new round is ready, and starting the game.
+     */
     @Override
     public void launch() {
         this.endOfLevel = false;
@@ -54,7 +109,6 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         this.wallsMoving.clear();
         gameContext.setLimiterAvailable();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
         Rectangle background = new Rectangle(0,0,dimension2D.getWidth(),dimension2D.getHeight());
         background.setFill(Color.WHITE);
         gameContext.getGazeDeviceManager().addStats(stats);
@@ -63,9 +117,8 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         initGameBox();
         stats.notifyNewRoundReady();
         gameContext.firstStart();
-
-
     }
+
 
     private void setLevel(final int i){
 
@@ -441,10 +494,18 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
 
 
 
+
+    /**
+     * Initializes the game box by creating and adding four wall obstacles to the game panel.
+     * The walls are black and are positioned at the edges of the game panel to prevent the cat from leaving the playing area.
+     * The walls are also added to the game's list of obstacles.
+     */
     private void initGameBox(){
 
+        // Get the dimensions of the game panel from the game context
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
+        // Create and position the four wall obstacles
         Rectangle upWall = new Rectangle(0,0,dimension2D.getWidth(),50);
         upWall.setFill(Color.BLACK);
 
@@ -457,11 +518,13 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         Rectangle rightWall = new Rectangle(dimension2D.getWidth()-50,0,50,dimension2D.getHeight());
         rightWall.setFill(Color.BLACK);
 
+        // Add the wall obstacles to the game's list of obstacles
         this.obstacles.add(upWall);
         this.obstacles.add(downWall);
         this.obstacles.add(leftWall);
         this.obstacles.add(rightWall);
 
+        // Add the wall obstacles to the game panel
         gameContext.getChildren().add(upWall);
         gameContext.getChildren().add(downWall);
         gameContext.getChildren().add(leftWall);
@@ -478,6 +541,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
      * @return true if the object will collide with an obstacle, false otherwise
      */
     protected boolean willCollideWithAnObstacle(String direction, double speed, Rectangle object) {
+        // Calculate the next position of the object based on the given direction and speed
         double nextX = object.getX();
         double nextY = object.getY();
         switch (direction) {
@@ -487,18 +551,24 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
             case "down" -> nextY += speed;
         }
         Rectangle futurePos = new Rectangle(nextX, nextY, object.getWidth(), object.getHeight());
+
+        // Check if the object collides with any of the obstacles
         for (Rectangle obstacle : obstacles) {
+            // If the object is the same as the obstacle, skip the current iteration
             if (obstacle.equals(object)) {
                 continue;
             }
             if (isCollidingWithASpecificObstacle(futurePos, obstacle)) {
-
+                // If the object collides with an obstacle, check the type of the obstacle
                 if (obstacle instanceof MovingWall movingWall){
+                    // If the obstacle is a moving wall and it has to reset the pos of the cat, check for collision with the object and dogs
                     if (movingWall.resetPos && isCollidingWithASpecificObstacle(movingWall,futurePos)){
                         if (object.equals(this.cat.hitbox)){
+                            // If the object is the cat and if it collides with the moving wall, game over and return true
                             endOfGame(false);
                             return true;
                         }else{
+                            // If the object is a dog and if it collides with the moving wall, reset its position and return true
                             for (Cat dog : this.dogs) {
                                 if (dog.hitbox.equals(object)){
                                     if (isCollidingWithASpecificObstacle(movingWall, futurePos)) {
@@ -513,18 +583,13 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
                     }
                 }
                 if (this.cat.hitbox.equals(object) && gamelle.equals(obstacle)) {
+                    // If the object is the cat and if it collides with the gamelle, the cat win and return true
                     if (!endOfLevel) {
                         endOfGame(true);
                         return true;
                     }
-                } else if (this.cat.hitbox.equals(object)) {
-                    for (MovingWall wallMoving : wallsMoving) {
-                        if (wallMoving.equals(obstacle) && wallMoving.resetPos && isCollidingWithASpecificObstacle(object, wallMoving)) {
-                            endOfGame(false);
-                            return true;
-                        }
-                    }
                 } else {
+                    // If the object is a dog and it collides with the cat, end the game and return true
                     for (Cat dog : this.dogs) {
                         if (dog.hitbox.equals(object) && this.cat.hitbox.equals(obstacle)) {
                             if (!endOfLevel) {
@@ -534,6 +599,8 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
                         }
                     }
                 }
+
+                // We add this for loop to avoid that when we don't move, the moving wall ignores the collisions
                 for (MovingWall wallMoving : wallsMoving) {
                     if (object.equals(wallMoving) && wallMoving.resetPos) {
                         if (isCollidingWithASpecificObstacle(wallMoving, this.cat.hitbox)) {
@@ -555,6 +622,13 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         }
         return false;
     }
+
+    /**
+     * Determines whether two rectangles are colliding with each other.
+     * @param object1 the first rectangle to check for collision
+     * @param object2 the second rectangle to check for collision against
+     * @return true if the two rectangles are colliding, false otherwise
+     */
     protected boolean isCollidingWithASpecificObstacle(Rectangle object1, Rectangle object2){
 
         return object1.getX() < object2.getX() + object2.getWidth() && object1.getX() + object1.getWidth() > object2.getX()
@@ -562,17 +636,25 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
 
     }
 
+
+    /**
+     Method to handle the end of the game.
+     @param win true if the game is won, false otherwise
+     */
     protected void endOfGame(boolean win){
         endOfLevel = true;
         if(win){
+            // Increment the number of goals reached and update the score
             stats.incrementNumberOfGoalsReached();
             gameContext.updateScore(stats, this);
+            // Play a win transition and launch the next level
             gameContext.playWinTransition(500, actionEvent -> {
                 this.level++;
                 dispose();
                 launch();
             });
         }else{
+            // Launch the same level again in case of a loss
             dispose();
             launch();
         }
