@@ -29,6 +29,7 @@ public class Interrupteur extends Parent {
     private final EventHandler<Event> enterEvent;
     private final ProgressIndicator progressIndicator;
     private Timeline timelineProgressBar;
+    private double slow;
     private final ImagePattern offButton;
     private final ImagePattern onButton;
 
@@ -52,6 +53,7 @@ public class Interrupteur extends Parent {
         this.progressIndicator.addEventFilter(GazeEvent.ANY, enterEvent);
         this.progressIndicator.addEventFilter(MouseEvent.ANY, enterEvent);
         this.progressIndicator.toFront();
+        this.slow = 0.7;
         gameContext.getChildren().add(this.progressIndicator);
     }
 
@@ -68,7 +70,11 @@ public class Interrupteur extends Parent {
     private EventHandler<Event> buildEvent() {
         return e -> {
             if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                System.out.println("entered");
+
+                for (Cat dog : gameInstance.dogs){
+                    dog.speed = dog.speed * slow;
+                    System.out.println("entered : " + dog.speed);
+                }
 
                 progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 progressIndicator.setOpacity(1);
@@ -107,6 +113,11 @@ public class Interrupteur extends Parent {
                 timelineProgressBar.play();
             }
             if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
+
+                for (Cat dog : gameInstance.dogs){
+                    dog.speed = dog.speed / slow;
+                    System.out.println("exited : " + dog.speed);
+                }
                 timelineProgressBar.stop();
                 progressIndicator.setOpacity(0);
                 progressIndicator.setProgress(0);
