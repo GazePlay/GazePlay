@@ -1,19 +1,11 @@
 package net.gazeplay.games.cooperativeGame;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
@@ -24,7 +16,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Stats stats;
     protected boolean endOfLevel;
-    private Cat cat;
+    protected Cat cat;
     private int level;
     private Rectangle gamelle;
 
@@ -32,9 +24,10 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
     private ArrayList<Rectangle> obstacles;
     private ArrayList<Interrupteur> interrupteurs;
 
-    private ArrayList<Rectangle> murs;
+    private ArrayList<Rectangle> walls;
+    private ArrayList<MovingWall> wallsMoving;
 
-    private ArrayList<Cat> dogs;
+    protected ArrayList<Cat> dogs;
 
     public CooperativeGame(final IGameContext gameContext, Stats stats, int level){
         this.gameContext = gameContext;
@@ -43,7 +36,8 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         this.obstacles = new ArrayList<>();
         this.dogs = new ArrayList<>();
         this.interrupteurs = new ArrayList<>();
-        this.murs = new ArrayList<>();
+        this.walls = new ArrayList<>();
+        this.wallsMoving = new ArrayList<>();
     }
 
 
@@ -56,8 +50,8 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         this.obstacles.clear();
         this.dogs.clear();
         this.interrupteurs.clear();
-        this.murs.clear();
-
+        this.walls.clear();
+        this.wallsMoving.clear();
         gameContext.setLimiterAvailable();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -84,11 +78,11 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         int heightCat = 100;
         int widthDog = 125;
         int heightDog = 125;
-        int widthInterrupteur = 125;
+        int widthInterrupteur = 150;
         int heightInterrupteur = 125;
+
+
         this.cat = new Cat(0, 0, widthCat,heightCat,gameContext,stats,this, 10, true);
-
-
 
         if (this.level == 1){
             this.cat.hitbox.setX(100);
@@ -100,7 +94,8 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
             this.dogs.add(dog);
 
         }else if (this.level == 2){
-            this.cat = new Cat(150, 150, widthCat,heightCat,gameContext,stats,this, 10, true);
+            this.cat.hitbox.setX(150);
+            this.cat.hitbox.setY(150);
             Cat dog = new Cat(800, 600, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
             Cat dog2 = new Cat(1000, 450, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
 
@@ -229,8 +224,8 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
 
             this.dogs.add(dog);
             this.dogs.add(dog2);
-            this.murs.add(mur);
-            this.murs.add(mur2);
+            this.walls.add(mur);
+            this.walls.add(mur2);
 
         }else if(this.level == 10){
             this.cat.hitbox.setX(250);
@@ -245,8 +240,8 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
 
             this.dogs.add(dog);
             this.dogs.add(dog2);
-            this.murs.add(mur);
-            this.murs.add(mur2);
+            this.walls.add(mur);
+            this.walls.add(mur2);
         }else if(this.level == 11){
             this.cat.hitbox.setX(250);
             this.cat.hitbox.setY(200);
@@ -266,8 +261,8 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
 
             this.dogs.add(dog);
             this.dogs.add(dog2);
-            this.murs.add(mur);
-            this.murs.add(mur2);
+            this.walls.add(mur);
+            this.walls.add(mur2);
             this.interrupteurs.add(interrupteur);
             this.interrupteurs.add(interrupteur2);
 
@@ -290,14 +285,58 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
 
             this.dogs.add(dog);
             this.dogs.add(dog2);
-            this.murs.add(mur);
-            this.murs.add(mur2);
+            this.walls.add(mur);
+            this.walls.add(mur2);
             this.interrupteurs.add(interrupteur);
             this.interrupteurs.add(interrupteur2);
+        }else if (level == 13){
+            this.cat.hitbox.setX(250);
+            this.cat.hitbox.setY(200);
+            Cat dog = new Cat(dimension2D.getWidth()-300, dimension2D.getHeight()-500, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            gamelle = new Rectangle(dimension2D.getWidth()-300,dimension2D.getHeight()-200, 100, 100);
+            MovingWall wallMoving = new MovingWall(dimension2D.getWidth()/2,50,50,200,this,gameContext,true);
+            wallMoving.animationVertical(wallMoving.getY(),dimension2D.getHeight()-50);
+            this.wallsMoving.add(wallMoving);
+            this.dogs.add(dog);
+        }else if (level == 14){
+            this.cat.hitbox.setX(250);
+            this.cat.hitbox.setY(200);
+            Cat dog = new Cat(dimension2D.getWidth()-300, dimension2D.getHeight()-500, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            gamelle = new Rectangle(dimension2D.getWidth()-300,dimension2D.getHeight()-200, 100, 100);
+            MovingWall wallMoving = new MovingWall(dimension2D.getWidth()/2,50,50,200,this,gameContext,true);
+            wallMoving.animationVertical(wallMoving.getY(),dimension2D.getHeight()/2);
+            MovingWall wallMoving2 = new MovingWall(dimension2D.getWidth()/2,dimension2D.getHeight()-250,50,200,this,gameContext,true);
+            wallMoving2.animationVertical(wallMoving2.getY(),dimension2D.getHeight()/2);
+            System.out.println(wallMoving2);
+            System.out.println(dimension2D.getHeight()/2);
+            this.wallsMoving.add(wallMoving);
+            this.wallsMoving.add(wallMoving2);
+            this.dogs.add(dog);
+        }else if (level == 15){
+
+            this.cat.hitbox.setX(250);
+            this.cat.hitbox.setY(200);
+            Cat dog = new Cat(dimension2D.getWidth()-300, dimension2D.getHeight()-500, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            gamelle = new Rectangle(dimension2D.getWidth()-300,dimension2D.getHeight()-200, 100, 100);
+            MovingWall wallMoving = new MovingWall(dimension2D.getWidth()/2,50,50,200,this,gameContext,true);
+            wallMoving.animationVertical(wallMoving.getY(),dimension2D.getHeight()/2);
+            MovingWall wallMoving2 = new MovingWall(dimension2D.getWidth()/2,dimension2D.getHeight()-250,50,200,this,gameContext,true);
+            wallMoving2.animationVertical(wallMoving2.getY(),dimension2D.getHeight()/2);
+            MovingWall wallMoving3 = new MovingWall(50,dimension2D.getHeight()/2,200,50,this,gameContext,true);
+            wallMoving3.animationHorizontal(wallMoving3.getX(),dimension2D.getWidth()/2);
+            MovingWall wallMoving4 = new MovingWall(dimension2D.getWidth()-250, dimension2D.getHeight()/2,200,50,this,gameContext,true);
+            wallMoving4.animationHorizontal(wallMoving4.getX(),dimension2D.getWidth()/2+50);
+
+
+            this.wallsMoving.add(wallMoving);
+            this.wallsMoving.add(wallMoving2);
+            this.wallsMoving.add(wallMoving3);
+            this.wallsMoving.add(wallMoving4);
+            this.dogs.add(dog);
         }
 
 
-
+        this.cat.initPos();
 
 
         this.gamelle.setFill(Color.GREEN);
@@ -324,11 +363,18 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
             gameContext.getChildren().add(dog.hitbox);
         }
 
-        for (Rectangle mur : this.murs){
+        for (Rectangle mur : this.walls){
             mur.setFill(Color.BLACK);
             this.obstacles.add(mur);
             mur.toFront();
             gameContext.getChildren().add(mur);
+        }
+
+        for(Rectangle wallMoving: this.wallsMoving){
+            wallMoving.setFill(Color.RED);
+            this.obstacles.add(wallMoving);
+            wallMoving.toFront();
+            gameContext.getChildren().add(wallMoving);
         }
 
 
@@ -368,8 +414,6 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(leftWall);
         gameContext.getChildren().add(rightWall);
 
-
-
     }
 
     /**
@@ -380,46 +424,82 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
      * @param speed speed of the object
      * @return true if the object will collide with an obstacle, false otherwise
      */
-    protected boolean willCollideWithAnObstacle(String direction, double speed, Rectangle object){
-
+    protected boolean willCollideWithAnObstacle(String direction, double speed, Rectangle object) {
         double nextX = object.getX();
         double nextY = object.getY();
-
         switch (direction) {
             case "left" -> nextX -= speed;
             case "right" -> nextX += speed;
             case "up" -> nextY -= speed;
             case "down" -> nextY += speed;
         }
-
-        Rectangle futurePos = new Rectangle(nextX,nextY, object.getWidth(), object.getHeight());
-
-
-
+        Rectangle futurePos = new Rectangle(nextX, nextY, object.getWidth(), object.getHeight());
         for (Rectangle obstacle : obstacles) {
-            if (!obstacle.equals(object)){
-                if (isCollidingWithASpecificObstacle(futurePos,obstacle)) {
+            if (obstacle.equals(object)) {
+                continue;
+            }
+            if (isCollidingWithASpecificObstacle(futurePos, obstacle)) {
 
-                    if (this.cat.hitbox.equals(object) && gamelle.equals(obstacle)){
-                        if (!endOfLevel){
-                            endOfGame(true);
-                        }
-                    }else{
-                        for (Cat dog : this.dogs) {
-                            if (dog.hitbox.equals(object) && this.cat.hitbox.equals(obstacle)) {
-                                if (!endOfLevel) {
-                                    endOfGame(false);
-                                    break;
+                if (obstacle instanceof MovingWall movingWall){
+                    if (movingWall.resetPos && isCollidingWithASpecificObstacle(movingWall,futurePos)){
+                        if (object.equals(this.cat.hitbox)){
+                            endOfGame(false);
+                            return true;
+                        }else{
+                            for (Cat dog : this.dogs) {
+                                if (dog.hitbox.equals(object)){
+                                    if (isCollidingWithASpecificObstacle(movingWall, futurePos)) {
+                                        dog.hitbox.setX(dog.initPosX);
+                                        dog.hitbox.setY(dog.initPosY);
+                                        return true;
+
+                                    }
                                 }
                             }
                         }
                     }
-
-                    return true;
                 }
+                if (this.cat.hitbox.equals(object) && gamelle.equals(obstacle)) {
+                    if (!endOfLevel) {
+                        endOfGame(true);
+                        return true;
+                    }
+                } else if (this.cat.hitbox.equals(object)) {
+                    for (MovingWall wallMoving : wallsMoving) {
+                        if (wallMoving.equals(obstacle) && wallMoving.resetPos && isCollidingWithASpecificObstacle(object, wallMoving)) {
+                            endOfGame(false);
+                            return true;
+                        }
+                    }
+                } else {
+                    for (Cat dog : this.dogs) {
+                        if (dog.hitbox.equals(object) && this.cat.hitbox.equals(obstacle)) {
+                            if (!endOfLevel) {
+                                endOfGame(false);
+                                return true;
+                            }
+                        }
+                    }
+                }
+                for (MovingWall wallMoving : wallsMoving) {
+                    if (object.equals(wallMoving) && wallMoving.resetPos) {
+                        if (isCollidingWithASpecificObstacle(wallMoving, this.cat.hitbox)) {
+                            endOfGame(false);
+                            return true;
+                        } else {
+                            for (Cat dog : this.dogs) {
+                                if (isCollidingWithASpecificObstacle(wallMoving, dog.hitbox)) {
+                                    dog.hitbox.setX(dog.initPosX);
+                                    dog.hitbox.setY(dog.initPosY);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                return true;
             }
         }
-
         return false;
     }
     protected boolean isCollidingWithASpecificObstacle(Rectangle object1, Rectangle object2){
@@ -444,6 +524,8 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
             launch();
         }
     }
+
+
 
 
 }

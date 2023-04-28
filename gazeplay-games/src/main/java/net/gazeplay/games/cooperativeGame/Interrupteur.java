@@ -1,5 +1,6 @@
 package net.gazeplay.games.cooperativeGame;
 
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -8,8 +9,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -23,12 +24,13 @@ public class Interrupteur extends Parent {
     private Rectangle interrupteur;
     private ArrayList<Rectangle> portes;
     private boolean isInterrupteurActivated;
-    private IGameContext gameContext;
-    private CooperativeGame gameInstance;
+    private final IGameContext gameContext;
+    private final CooperativeGame gameInstance;
     private final EventHandler<Event> enterEvent;
     private final ProgressIndicator progressIndicator;
     private Timeline timelineProgressBar;
-
+    private final ImagePattern offButton;
+    private final ImagePattern onButton;
 
 
 
@@ -41,13 +43,16 @@ public class Interrupteur extends Parent {
         this.progressIndicator = createProgressIndicator(150, 150);
         gameContext.getChildren().add(this.progressIndicator);
         this.enterEvent = buildEvent();
+        gameContext.getChildren().add(this.interrupteur);
+        this.offButton = new ImagePattern(new Image("data/cooperativeGame/pushButtonOff.png"));
+        this.onButton = new ImagePattern(new Image("data/cooperativeGame/pushButtonOn.png"));
+        this.progressIndicator.toFront();
+        this.interrupteur.maxHeight(interrupteur.getHeight());
+        this.interrupteur.maxWidth(interrupteur.getWidth());
+        this.interrupteur.setFill(offButton);
         gameContext.getGazeDeviceManager().addEventFilter(this.interrupteur);
         this.interrupteur.addEventFilter(GazeEvent.ANY, enterEvent);
         this.interrupteur.addEventFilter(MouseEvent.ANY, enterEvent);
-        gameContext.getChildren().add(this.interrupteur);
-
-        this.progressIndicator.toFront();
-        this.interrupteur.setFill(Color.RED);
     }
 
     private ProgressIndicator createProgressIndicator(final double width, final double height) {
@@ -55,7 +60,7 @@ public class Interrupteur extends Parent {
         indicator.setTranslateX(interrupteur.getX() + width * 0.05);
         indicator.setTranslateY(interrupteur.getY() + height * 0.2);
         indicator.setMinWidth(width * 0.9);
-        indicator.setMinHeight(width * 0.9);
+        indicator.setMinHeight(height * 0.9);
         indicator.setOpacity(0);
         return indicator;
     }
@@ -63,7 +68,7 @@ public class Interrupteur extends Parent {
     private EventHandler<Event> buildEvent() {
         return e -> {
             if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                this.interrupteur.setFill(Color.BLUE);
+
                 progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 progressIndicator.setOpacity(1);
                 progressIndicator.setProgress(0);
@@ -75,20 +80,32 @@ public class Interrupteur extends Parent {
                         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
                     if (!this.isInterrupteurActivated){
                         this.isInterrupteurActivated = true;
+                        this.interrupteur.setFill(onButton);
                         for (Rectangle porte : portes) {
                             porte.setX(porte.getX() + dimension2D.getWidth() + 100);
                         }
                     }else{
                         this.isInterrupteurActivated = false;
+                        this.interrupteur.setFill(offButton);
                         for (Rectangle porte : portes) {
                             porte.setX(porte.getX()-dimension2D.getWidth() - 100);
+                            if (gameInstance.isCollidingWithASpecificObstacle(porte,gameInstance.cat.hitbox)){
+                                gameInstance.endOfGame(false);
+                                break;
+                            }else{
+                                for (Cat dog: gameInstance.dogs){
+                                    if (gameInstance.isCollidingWithASpecificObstacle(porte,dog.hitbox)){
+                                        dog.hitbox.setX(dog.initPosX);
+                                        dog.hitbox.setY(dog.initPosY);
+                                    }
+                                }
+                            }
                         }
                     }
                 });
                 timelineProgressBar.play();
             }
             if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
-                this.interrupteur.setFill(Color.RED);
                 timelineProgressBar.stop();
                 progressIndicator.setOpacity(0);
                 progressIndicator.setProgress(0);

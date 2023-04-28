@@ -1,7 +1,6 @@
 package net.gazeplay.games.cooperativeGame;
 
 import javafx.animation.AnimationTimer;
-import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
@@ -24,34 +23,44 @@ public class Cat extends Parent {
     protected double speed;
     protected boolean isACat;
     protected Rectangle target;
-    private KeyCode lastDirection = null;
-    private KeyCode horizontalDirection = null;
-    private KeyCode verticalDirection = null;
+    private KeyCode horizontalDirection;
+    private KeyCode verticalDirection;
     private AnimationTimer animationTimerCat;
     private double dirX = 0;
     private double dirY = 0;
     private final EventHandler<Event> enterEvent;
     private boolean canMove;
+    private double currentSpeedX;
+    private double currentSpeedY;
+    private double acceleration;
+    protected double initPosX;
+    protected double initPosY;
 
 
 
 
     public Cat(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext, final Stats stats,
-               final CooperativeGame gameInstance, double speed, boolean isACat){
+               final CooperativeGame gameInstance, double speed2, boolean isACat){
         this.hitbox = new Rectangle(positionX, positionY, width, height);
         this.hitbox.setFill(Color.BLACK);
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
-        this.speed = speed;
+        this.speed = speed2;
         this.isACat = isACat;
         this.enterEvent = null;
+        this.acceleration = 0.6;
+        this.currentSpeedX = 0;
+        this.currentSpeedY = 0;
 
         // Set up key event listeners to handle cat movement
         if (isACat){
 
+
             // Add a key pressed event filter to the primary game scene to handle movement
             gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, key-> {
                 if (key.getCode() == KeyCode.UP || key.getCode() == KeyCode.DOWN || key.getCode() == KeyCode.LEFT || key.getCode() == KeyCode.RIGHT) {
+
+
 
                     // Set the direction of movement based on the key pressed
                     switch (key.getCode()) {
@@ -59,6 +68,7 @@ public class Cat extends Parent {
 
                             dirY = -speed;
                             verticalDirection = KeyCode.UP;
+
                         }
                         case DOWN -> {
                             dirY = speed;
@@ -68,10 +78,13 @@ public class Cat extends Parent {
                         case LEFT -> {
                             dirX = -speed;
                             horizontalDirection = KeyCode.LEFT;
+
                         }
                         case RIGHT -> {
                             dirX = speed;
                             horizontalDirection = KeyCode.RIGHT;
+
+
                         }
 
                         default -> {
@@ -84,23 +97,47 @@ public class Cat extends Parent {
             // Add a key released event filter to the primary game scene to handle stopping movement
             gameContext.getPrimaryScene().setOnKeyReleased(event -> {
                 switch (event.getCode()) {
-                    case UP, DOWN -> {
-                        dirY = 0;
-                        verticalDirection = null;
+
+                    case UP -> {
+                        if (verticalDirection != KeyCode.DOWN){
+                            dirY = 0;
+                            verticalDirection = null;
+                            currentSpeedY = 0;
+                        }
                     }
-                    case LEFT, RIGHT -> {
-                        dirX = 0;
-                        horizontalDirection = null;
+                    case DOWN -> {
+                        if (verticalDirection != KeyCode.UP){
+                            dirY = 0;
+                            verticalDirection = null;
+                            currentSpeedY = 0;
+                        }
+                    }
+                    case LEFT -> {
+                        if (horizontalDirection != KeyCode.RIGHT){
+                            dirX = 0;
+                            currentSpeedX = 0;
+                            horizontalDirection = null;
+                        }
+                    }
+                    case RIGHT -> {
+                        if (horizontalDirection != KeyCode.LEFT){
+                            dirX = 0;
+                            currentSpeedX = 0;
+                            horizontalDirection = null;
+                        }
                     }
                     default -> {
                     }
                 }
+
             });
 
             // Set the last direction of movement to null if the cat is not currently moving
             if (dirX == 0 && dirY == 0) {
                 verticalDirection = null;
                 horizontalDirection = null;
+                currentSpeedX = 0;
+                currentSpeedY = 0;
             }
 
             // Create a new animation timer to handle movement
@@ -108,23 +145,7 @@ public class Cat extends Parent {
                 @Override
                 public void handle(long now) {
                     if (!gameInstance.endOfLevel){
-                        // Move the cat if it is currently moving and will not collide with an obstacle
-
-                        if (dirX != 0 || dirY != 0) {
-                            if (verticalDirection != null && horizontalDirection == null && !gameInstance.willCollideWithAnObstacle(verticalDirection.toString().toLowerCase(), speed, hitbox)){
-                                hitbox.setY(hitbox.getY() + dirY);
-                            }else if (horizontalDirection != null && verticalDirection == null && !gameInstance.willCollideWithAnObstacle(horizontalDirection.toString().toLowerCase(), speed, hitbox)){
-                                hitbox.setX(hitbox.getX() + dirX);
-                            } else if (verticalDirection != null && horizontalDirection != null){
-
-                                if (!gameInstance.willCollideWithAnObstacle(verticalDirection.toString().toLowerCase(), speed, hitbox)){
-                                    hitbox.setY(hitbox.getY() + dirY);
-                                }
-                                if (!gameInstance.willCollideWithAnObstacle(horizontalDirection.toString().toLowerCase(), speed, hitbox)){
-                                    hitbox.setX(hitbox.getX() + dirX);
-                                }
-                            }
-                        }
+                        catMove();
                     }else{
                         animationTimerCat.stop();
                     }
@@ -138,12 +159,16 @@ public class Cat extends Parent {
     }
 
     public Cat(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext, final Stats stats,
-               final CooperativeGame gameInstance, double speed, boolean isACat, Rectangle target){
+               final CooperativeGame gameInstance, double speed2, boolean isACat, Rectangle target){
         this.hitbox = new Rectangle(positionX, positionY, width, height);
         this.hitbox.setFill(Color.YELLOW);
+
+        this.initPosX = positionX;
+        this.initPosY = positionY;
+
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
-        this.speed = speed;
+        this.speed = speed2;
         this.isACat = isACat;
         this.target = target;
         this.canMove = true;
@@ -206,5 +231,75 @@ public class Cat extends Parent {
         };
     }
 
+    private void catMove(){
+
+        // Move the cat if it is currently moving and will not collide with an obstacle
+        if (dirX != 0 || dirY != 0) {
+            if (verticalDirection != null && verticalDirection == KeyCode.UP){
+                if (currentSpeedY > 0){
+                    currentSpeedY = -1;
+                }
+                if (currentSpeedY > dirY){
+                    currentSpeedY -= acceleration;
+                }
+            }
+            if (verticalDirection != null && verticalDirection == KeyCode.DOWN){
+                if (currentSpeedY < 0){
+                    currentSpeedY = 1;
+                }
+                if (currentSpeedY < dirY){
+                    currentSpeedY += acceleration;
+                }
+            }
+            if (horizontalDirection != null && horizontalDirection == KeyCode.LEFT){
+
+                if (currentSpeedX > 0){
+                    currentSpeedX = -1;
+                }
+                if (currentSpeedX > dirX){
+                    currentSpeedX -= acceleration;
+                }
+            }
+            if (horizontalDirection != null && horizontalDirection == KeyCode.RIGHT){
+
+                if (currentSpeedX < 0){
+                    currentSpeedX = 1;
+                }
+                if (currentSpeedX < dirX){
+                    currentSpeedX += acceleration;
+                }
+            }
+
+            if (verticalDirection != null && horizontalDirection == null && !gameInstance.willCollideWithAnObstacle(verticalDirection.toString().toLowerCase(), speed, hitbox)){
+
+                hitbox.setY(hitbox.getY() + currentSpeedY);
+
+            }else if (horizontalDirection != null && verticalDirection == null && !gameInstance.willCollideWithAnObstacle(horizontalDirection.toString().toLowerCase(), speed, hitbox)){
+
+                hitbox.setX(hitbox.getX() + currentSpeedX);
+
+            } else if (verticalDirection != null && horizontalDirection != null){
+
+
+
+                if (!gameInstance.willCollideWithAnObstacle(verticalDirection.toString().toLowerCase(), speed, hitbox)){
+
+                        hitbox.setY(hitbox.getY() + currentSpeedY);
+                }
+                if (!gameInstance.willCollideWithAnObstacle(horizontalDirection.toString().toLowerCase(), speed, hitbox)){
+
+                    hitbox.setX(hitbox.getX() + currentSpeedX);
+                }
+
+            }
+
+        }
+
+    }
+
+    public void initPos(){
+        this.initPosX = this.hitbox.getX();
+        this.initPosY = this.hitbox.getY();
+    }
 
 }
