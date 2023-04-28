@@ -294,8 +294,10 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
             this.cat.hitbox.setY(200);
             Cat dog = new Cat(dimension2D.getWidth()-300, dimension2D.getHeight()-500, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
             gamelle = new Rectangle(dimension2D.getWidth()-300,dimension2D.getHeight()-200, 100, 100);
-            MovingWall wallMoving = new MovingWall(dimension2D.getWidth()/2,50,50,200,this,gameContext,true);
+
+            MovingWall wallMoving = new MovingWall(dimension2D.getWidth()/2,50,50,200,this,gameContext,true,5);
             wallMoving.animationVertical(wallMoving.getY(),dimension2D.getHeight()-50);
+
             this.wallsMoving.add(wallMoving);
             this.dogs.add(dog);
         }else if (level == 14){
@@ -303,12 +305,12 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
             this.cat.hitbox.setY(200);
             Cat dog = new Cat(dimension2D.getWidth()-300, dimension2D.getHeight()-500, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
             gamelle = new Rectangle(dimension2D.getWidth()-300,dimension2D.getHeight()-200, 100, 100);
-            MovingWall wallMoving = new MovingWall(dimension2D.getWidth()/2,50,50,200,this,gameContext,true);
+
+            MovingWall wallMoving = new MovingWall(dimension2D.getWidth()/2,50,50,200,this,gameContext,true,5);
             wallMoving.animationVertical(wallMoving.getY(),dimension2D.getHeight()/2);
-            MovingWall wallMoving2 = new MovingWall(dimension2D.getWidth()/2,dimension2D.getHeight()-250,50,200,this,gameContext,true);
+            MovingWall wallMoving2 = new MovingWall(dimension2D.getWidth()/2,dimension2D.getHeight()-250,50,200,this,gameContext,true,5);
             wallMoving2.animationVertical(wallMoving2.getY(),dimension2D.getHeight()/2);
-            System.out.println(wallMoving2);
-            System.out.println(dimension2D.getHeight()/2);
+
             this.wallsMoving.add(wallMoving);
             this.wallsMoving.add(wallMoving2);
             this.dogs.add(dog);
@@ -316,29 +318,77 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
 
             this.cat.hitbox.setX(250);
             this.cat.hitbox.setY(200);
-            Cat dog = new Cat(dimension2D.getWidth()-300, dimension2D.getHeight()-500, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            Cat dog = new Cat(dimension2D.getWidth()-300, dimension2D.getHeight()-350, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
             gamelle = new Rectangle(dimension2D.getWidth()-300,dimension2D.getHeight()-200, 100, 100);
-            MovingWall wallMoving = new MovingWall(dimension2D.getWidth()/2,50,50,200,this,gameContext,true);
+            MovingWall wallMoving = new MovingWall(dimension2D.getWidth()/2,50,50,200,this,gameContext,true,5);
             wallMoving.animationVertical(wallMoving.getY(),dimension2D.getHeight()/2);
-            MovingWall wallMoving2 = new MovingWall(dimension2D.getWidth()/2,dimension2D.getHeight()-250,50,200,this,gameContext,true);
+            MovingWall wallMoving2 = new MovingWall(dimension2D.getWidth()/2,dimension2D.getHeight()-250,50,200,this,gameContext,true,5);
             wallMoving2.animationVertical(wallMoving2.getY(),dimension2D.getHeight()/2);
-            MovingWall wallMoving3 = new MovingWall(50,dimension2D.getHeight()/2,200,50,this,gameContext,true);
+            MovingWall wallMoving3 = new MovingWall(50,dimension2D.getHeight()/2,200,50,this,gameContext,true,5);
             wallMoving3.animationHorizontal(wallMoving3.getX(),dimension2D.getWidth()/2);
-            MovingWall wallMoving4 = new MovingWall(dimension2D.getWidth()-250, dimension2D.getHeight()/2,200,50,this,gameContext,true);
+            MovingWall wallMoving4 = new MovingWall(dimension2D.getWidth()-250, dimension2D.getHeight()/2,200,50,this,gameContext,true,5);
             wallMoving4.animationHorizontal(wallMoving4.getX(),dimension2D.getWidth()/2+50);
-
 
             this.wallsMoving.add(wallMoving);
             this.wallsMoving.add(wallMoving2);
             this.wallsMoving.add(wallMoving3);
             this.wallsMoving.add(wallMoving4);
             this.dogs.add(dog);
+        }else if (level == 16){
+            this.cat.hitbox.setX(250);
+            this.cat.hitbox.setY(200);
+            Cat dog = new Cat(dimension2D.getWidth()-300, dimension2D.getHeight()-450, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            Cat dog2 = new Cat(250, dimension2D.getHeight()-250, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            gamelle = new Rectangle(dimension2D.getWidth()-300,dimension2D.getHeight()-200, 100, 100);
+
+            Interrupteur interrupteur = new Interrupteur(new Rectangle(dimension2D.getWidth()-350,200,widthInterrupteur,heightInterrupteur),gameContext,this);
+            interrupteur.createDoorAroundAnObject(gamelle);
+
+
+            MovingWall wallMoving = new MovingWall(dimension2D.getWidth()/2,50,50,200,this,gameContext,true,5);
+            wallMoving.animationVertical(wallMoving.getY(),dimension2D.getHeight()/2);
+            MovingWall wallMoving2 = new MovingWall(dimension2D.getWidth()/2,dimension2D.getHeight()-250,50,200,this,gameContext,true,5);
+            wallMoving2.animationVertical(wallMoving2.getY(),dimension2D.getHeight()/2);
+            MovingWall wallMoving3 = new MovingWall(50,dimension2D.getHeight()/2,200,50,this,gameContext,true,5);
+            wallMoving3.animationHorizontal(wallMoving3.getX(),dimension2D.getWidth()/2);
+            MovingWall wallMoving4 = new MovingWall(dimension2D.getWidth()-250, dimension2D.getHeight()/2,200,50,this,gameContext,true,5);
+            wallMoving4.animationHorizontal(wallMoving4.getX(),dimension2D.getWidth()/2+50);
+
+            this.interrupteurs.add(interrupteur);
+            this.wallsMoving.add(wallMoving);
+            this.wallsMoving.add(wallMoving2);
+            this.wallsMoving.add(wallMoving3);
+            this.wallsMoving.add(wallMoving4);
+            this.dogs.add(dog);
+            this.dogs.add(dog2);
+        }else if (level == 17){
+            this.cat.hitbox.setX(250);
+            this.cat.hitbox.setY(200);
+
+            Cat dog = new Cat(dimension2D.getWidth()-600, 250, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            Cat dog2 = new Cat(dimension2D.getWidth()/2, dimension2D.getHeight()-250, widthDog, heightDog, gameContext, stats, this, dogSpeed, false, this.cat.hitbox);
+            gamelle = new Rectangle(dimension2D.getWidth()-300,dimension2D.getHeight()-200, 100, 100);
+
+            Interrupteur interrupteur = new Interrupteur(new Rectangle(dimension2D.getWidth()-350,200,widthInterrupteur,heightInterrupteur),gameContext,this);
+            interrupteur.createDoorAroundAnObject(gamelle);
+            Interrupteur interrupteur2 = new Interrupteur(new Rectangle(250,dimension2D.getHeight()-200,widthInterrupteur,heightInterrupteur),gameContext,this);
+            interrupteur2.createDoorAroundAnObject(gamelle);
+
+
+            MovingWall wallMoving = new MovingWall(50,dimension2D.getHeight()/2,400,50,this,gameContext,true,10);
+            wallMoving.animationHorizontal(wallMoving.getX(),dimension2D.getWidth()-50);
+
+            this.interrupteurs.add(interrupteur);
+            this.interrupteurs.add(interrupteur2);
+            this.wallsMoving.add(wallMoving);
+
+            this.dogs.add(dog);
+            this.dogs.add(dog2);
         }
 
 
+
         this.cat.initPos();
-
-
         this.gamelle.setFill(Color.GREEN);
         gameContext.getChildren().add(this.gamelle);
         gameContext.getChildren().add(this.cat.hitbox);

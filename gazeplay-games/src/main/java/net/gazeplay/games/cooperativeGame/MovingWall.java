@@ -21,9 +21,10 @@ public class MovingWall extends Rectangle {
     protected boolean resetPos;
     private final IGameContext gameContext;
     private final EventHandler<Event> enterEvent;
+    private float speed;
 
 
-    MovingWall(final double x, final double y, final double width, final double height, CooperativeGame gameInstance, IGameContext gameContext, boolean resetPos) {
+    MovingWall(final double x, final double y, final double width, final double height, CooperativeGame gameInstance, IGameContext gameContext, boolean resetPos, float speed) {
         super(x, y, width, height);
         this.direction = true;
         this.gameInstance = gameInstance;
@@ -31,6 +32,7 @@ public class MovingWall extends Rectangle {
         this.gameContext = gameContext;
         this.verticalTimeline = new Timeline();
         this.horizontalTimeline = new Timeline();
+        this.speed = speed;
         this.enterEvent = buildEvent();
         gameContext.getGazeDeviceManager().addEventFilter(this);
         this.addEventFilter(GazeEvent.ANY, enterEvent);
@@ -52,8 +54,8 @@ public class MovingWall extends Rectangle {
         double finalFromY = fromY;
         verticalTimeline = new Timeline(new KeyFrame(Duration.millis(16), event -> {
             if (this.direction){
-                gameInstance.willCollideWithAnObstacle("down",5,this);
-                gameInstance.willCollideWithAnObstacle("up",5,this);
+                gameInstance.willCollideWithAnObstacle("down",this.speed,this);
+                gameInstance.willCollideWithAnObstacle("up",this.speed,this);
                 if (frombottom){
                     if (this.getY() + this.getHeight() >= finalToY+getHeight()) {
                         this.direction = false;
@@ -63,14 +65,14 @@ public class MovingWall extends Rectangle {
                         this.direction = false;
                     }
                 }
-                this.setY(this.getY() + 5);
+                this.setY(this.getY() + this.speed);
             } else {
-                gameInstance.willCollideWithAnObstacle("up",5,this);
-                gameInstance.willCollideWithAnObstacle("down",5,this);
+                gameInstance.willCollideWithAnObstacle("up",this.speed,this);
+                gameInstance.willCollideWithAnObstacle("down",this.speed,this);
                 if (this.getY() <= finalFromY) {
                     this.direction = true;
                 }
-                this.setY(this.getY() - 5);
+                this.setY(this.getY() - this.speed);
             }
         }));
         verticalTimeline.setCycleCount(Animation.INDEFINITE);
@@ -93,8 +95,8 @@ public class MovingWall extends Rectangle {
         horizontalTimeline = new Timeline(new KeyFrame(Duration.millis(16), event -> {
             if (this.direction){
 
-                gameInstance.willCollideWithAnObstacle("right",5,this);
-                gameInstance.willCollideWithAnObstacle("left",5,this);
+                gameInstance.willCollideWithAnObstacle("right",this.speed,this);
+                gameInstance.willCollideWithAnObstacle("left",this.speed,this);
 
                 if (fromRight){
                     if (this.getX() + this.getWidth() >= finalToX+getWidth()){
@@ -106,15 +108,15 @@ public class MovingWall extends Rectangle {
                     }
                 }
 
-                this.setX(this.getX()+5);
+                this.setX(this.getX()+this.speed);
             }else{
-                gameInstance.willCollideWithAnObstacle("right",5,this);
-                gameInstance.willCollideWithAnObstacle("left",5,this);
+                gameInstance.willCollideWithAnObstacle("right",this.speed,this);
+                gameInstance.willCollideWithAnObstacle("left",this.speed,this);
 
                 if (this.getX() <= finalFromX){
                     this.direction = true;
                 }
-                this.setX(this.getX()-5);
+                this.setX(this.getX()-this.speed);
             }
         }));
         horizontalTimeline.setCycleCount(Animation.INDEFINITE);
@@ -123,15 +125,20 @@ public class MovingWall extends Rectangle {
 
     private EventHandler<Event> buildEvent() {
         return e -> {
-            if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                this.setFill(Color.BLUE);
-                verticalTimeline.pause();
-                horizontalTimeline.pause();
-            }
-            if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
-                this.setFill(Color.RED);
-                horizontalTimeline.play();
-                verticalTimeline.play();
+            if (gameInstance.endOfLevel){
+                verticalTimeline.stop();
+                horizontalTimeline.stop();
+            }else{
+                if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                    this.setFill(Color.BLUE);
+                    verticalTimeline.pause();
+                    horizontalTimeline.pause();
+                }
+                if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
+                    this.setFill(Color.RED);
+                    horizontalTimeline.play();
+                    verticalTimeline.play();
+                }
             }
         };
     }
