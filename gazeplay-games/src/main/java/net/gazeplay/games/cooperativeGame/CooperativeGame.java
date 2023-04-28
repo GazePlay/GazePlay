@@ -384,17 +384,20 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
 
             this.dogs.add(dog);
             this.dogs.add(dog2);
+        }else{
+            this.level = 1;
+            dispose();
+            launch();
+            return;
         }
 
-
-
         this.cat.initPos();
+        this.obstacles.add(this.cat.hitbox);
+        this.cat.hitbox.toFront();
+        gameContext.getChildren().add(this.cat.hitbox);
         this.gamelle.setFill(Color.GREEN);
         gameContext.getChildren().add(this.gamelle);
-        gameContext.getChildren().add(this.cat.hitbox);
-        this.obstacles.add(this.cat.hitbox);
         this.obstacles.add(this.gamelle);
-        this.cat.hitbox.toFront();
         this.gamelle.toFront();
 
 
