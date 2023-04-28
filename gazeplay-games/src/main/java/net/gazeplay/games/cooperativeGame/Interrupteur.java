@@ -40,27 +40,27 @@ public class Interrupteur extends Parent {
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
         this.isInterrupteurActivated = false;
-        this.progressIndicator = createProgressIndicator(150, 150);
-        gameContext.getChildren().add(this.progressIndicator);
-        this.enterEvent = buildEvent();
-        gameContext.getChildren().add(this.interrupteur);
         this.offButton = new ImagePattern(new Image("data/cooperativeGame/pushButtonOff.png"));
         this.onButton = new ImagePattern(new Image("data/cooperativeGame/pushButtonOn.png"));
-        this.progressIndicator.toFront();
         this.interrupteur.maxHeight(interrupteur.getHeight());
         this.interrupteur.maxWidth(interrupteur.getWidth());
         this.interrupteur.setFill(offButton);
-        gameContext.getGazeDeviceManager().addEventFilter(this.interrupteur);
-        this.interrupteur.addEventFilter(GazeEvent.ANY, enterEvent);
-        this.interrupteur.addEventFilter(MouseEvent.ANY, enterEvent);
+        gameContext.getChildren().add(this.interrupteur);
+        this.enterEvent = buildEvent();
+        this.progressIndicator = createProgressIndicator(interrupteur.getWidth(), interrupteur.getHeight());
+        gameContext.getGazeDeviceManager().addEventFilter(this.progressIndicator);
+        this.progressIndicator.addEventFilter(GazeEvent.ANY, enterEvent);
+        this.progressIndicator.addEventFilter(MouseEvent.ANY, enterEvent);
+        this.progressIndicator.toFront();
+        gameContext.getChildren().add(this.progressIndicator);
     }
 
     private ProgressIndicator createProgressIndicator(final double width, final double height) {
         final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(interrupteur.getX() + width * 0.05);
         indicator.setTranslateY(interrupteur.getY() + height * 0.2);
-        indicator.setMinWidth(width * 0.9);
-        indicator.setMinHeight(height * 0.9);
+        indicator.setMinWidth(width * 0.95);
+        indicator.setMinHeight(height * 0.95);
         indicator.setOpacity(0);
         return indicator;
     }
@@ -68,6 +68,7 @@ public class Interrupteur extends Parent {
     private EventHandler<Event> buildEvent() {
         return e -> {
             if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                System.out.println("entered");
 
                 progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 progressIndicator.setOpacity(1);
