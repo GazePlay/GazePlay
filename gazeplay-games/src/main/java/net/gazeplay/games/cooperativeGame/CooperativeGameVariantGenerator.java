@@ -22,7 +22,7 @@ public class CooperativeGameVariantGenerator implements IGameVariantGenerator {
         }
 
         return gameVariants.stream()
-            .sorted(Comparator.comparing(IGameVariant::toString))
+            .sorted(Comparator.comparingInt(v -> ((IntGameVariant) v).getNumber()))
             .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 }

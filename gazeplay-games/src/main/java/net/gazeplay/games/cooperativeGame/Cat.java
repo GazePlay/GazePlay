@@ -10,10 +10,12 @@ import javafx.animation.AnimationTimer;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
@@ -143,7 +145,7 @@ public class Cat extends Parent {
         // Set up key event listeners to handle cat movement
         if (isACat){
 
-
+            this.hitbox.setFill(new ImagePattern(new Image("data/cooperativeGame/chat.png")));
             // Add a key pressed event filter to the primary game scene to handle movement
             gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, key-> {
                 if (key.getCode() == KeyCode.UP || key.getCode() == KeyCode.DOWN || key.getCode() == KeyCode.LEFT || key.getCode() == KeyCode.RIGHT) {
@@ -217,7 +219,6 @@ public class Cat extends Parent {
                     default -> {
                     }
                 }
-
             });
 
             // Set the last direction of movement to null if the cat is not currently moving
@@ -262,6 +263,8 @@ public class Cat extends Parent {
         this.canMove = true;
 
         if (!isACat){
+
+            this.hitbox.setFill(new ImagePattern(new Image("data/cooperativeGame/chien.png")));
 
             AnimationTimer animationTimerDog = new AnimationTimer() {
 
@@ -309,11 +312,9 @@ public class Cat extends Parent {
     private EventHandler<Event> buildEvent() {
         return e -> {
             if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                this.hitbox.setFill(Color.BLUE);
                 this.canMove = false;
             }
             if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
-                this.hitbox.setFill(Color.YELLOW);
                 this.canMove = true;
             }
         };
@@ -323,6 +324,8 @@ public class Cat extends Parent {
 
         // Move the cat if it is currently moving and will not collide with an obstacle
         if (dirX != 0 || dirY != 0) {
+            boolean canMoveVertically,canMoveHorizontally;
+
             if (verticalDirection != null && verticalDirection == KeyCode.UP){
                 if (currentSpeedY > 0){
                     currentSpeedY = -1;
@@ -358,27 +361,14 @@ public class Cat extends Parent {
                 }
             }
 
-            if (verticalDirection != null && horizontalDirection == null && !gameInstance.willCollideWithAnObstacle(verticalDirection.toString().toLowerCase(), speed, hitbox)){
+            canMoveVertically = verticalDirection != null && !gameInstance.willCollideWithAnObstacle(verticalDirection.toString().toLowerCase(), speed, hitbox);
+            canMoveHorizontally = horizontalDirection != null && !gameInstance.willCollideWithAnObstacle(horizontalDirection.toString().toLowerCase(), speed, hitbox);
 
+            if (canMoveVertically) {
                 hitbox.setY(hitbox.getY() + currentSpeedY);
-
-            }else if (horizontalDirection != null && verticalDirection == null && !gameInstance.willCollideWithAnObstacle(horizontalDirection.toString().toLowerCase(), speed, hitbox)){
-
+            }
+            if (canMoveHorizontally) {
                 hitbox.setX(hitbox.getX() + currentSpeedX);
-
-            } else if (verticalDirection != null && horizontalDirection != null){
-
-
-
-                if (!gameInstance.willCollideWithAnObstacle(verticalDirection.toString().toLowerCase(), speed, hitbox)){
-
-                        hitbox.setY(hitbox.getY() + currentSpeedY);
-                }
-                if (!gameInstance.willCollideWithAnObstacle(horizontalDirection.toString().toLowerCase(), speed, hitbox)){
-
-                    hitbox.setX(hitbox.getX() + currentSpeedX);
-                }
-
             }
 
         }

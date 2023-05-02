@@ -48,7 +48,7 @@ public class Interrupteur extends Parent {
         this.interrupteur.setFill(offButton);
         gameContext.getChildren().add(this.interrupteur);
         this.enterEvent = buildEvent();
-        this.progressIndicator = createProgressIndicator(interrupteur.getWidth(), interrupteur.getHeight());
+        this.progressIndicator = createProgressIndicator(interrupteur.getWidth()+10, interrupteur.getHeight()+10);
         gameContext.getGazeDeviceManager().addEventFilter(this.progressIndicator);
         this.progressIndicator.addEventFilter(GazeEvent.ANY, enterEvent);
         this.progressIndicator.addEventFilter(MouseEvent.ANY, enterEvent);
@@ -61,8 +61,8 @@ public class Interrupteur extends Parent {
         final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(interrupteur.getX() + width * 0.05);
         indicator.setTranslateY(interrupteur.getY() + height * 0.2);
-        indicator.setMinWidth(width * 0.95);
-        indicator.setMinHeight(height * 0.95);
+        indicator.setMinWidth(width);
+        indicator.setMinHeight(height);
         indicator.setOpacity(0);
         return indicator;
     }
