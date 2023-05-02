@@ -129,8 +129,8 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         double dogSpeed = 3;
-        int widthCat = 120;
-        int heightCat = 120;
+        int widthCat = 125;
+        int heightCat = 125;
         int widthDog = 125;
         int heightDog = 125;
         int widthInterrupteur = 130;
@@ -138,7 +138,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         int widthGamelle = 120;
         int heightGamelle = 80;
 
-        this.cat = new Cat(0, 0, widthCat,heightCat,gameContext,stats,this, 10, true);
+        this.cat = new Cat(0, 0, widthCat,heightCat,gameContext,stats,this, 10, true,null);
         this.gamelle = new Rectangle(1000,1000,widthGamelle,heightGamelle);
 
         if (this.level == 1){
@@ -349,6 +349,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
             this.walls.add(mur2);
             this.interrupteurs.add(interrupteur);
             this.interrupteurs.add(interrupteur2);
+
         }else if (level == 13){
             this.cat.hitbox.setX(250);
             this.cat.hitbox.setY(200);

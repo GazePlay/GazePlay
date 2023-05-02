@@ -73,7 +73,6 @@ public class Interrupteur extends Parent {
 
                 for (Cat dog : gameInstance.dogs){
                     dog.speed = dog.speed * slow;
-                    System.out.println("entered : " + dog.speed);
                 }
 
                 progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
@@ -116,7 +115,6 @@ public class Interrupteur extends Parent {
 
                 for (Cat dog : gameInstance.dogs){
                     dog.speed = dog.speed / slow;
-                    System.out.println("exited : " + dog.speed);
                 }
                 timelineProgressBar.stop();
                 progressIndicator.setOpacity(0);

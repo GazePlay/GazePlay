@@ -118,7 +118,7 @@ public class Cat extends Parent {
 
 
     /**
-     * Constructs a new Cat object with the specified position, dimensions, game context, stats, game instance, speed, and player-controlled flag.
+     * Constructs a new Cat or a Dog object with the specified position, dimensions, game context, stats, game instance, speed, player-controlled flag and the target.
      * @param positionX The X position of the cat
      * @param positionY The Y position of the cat
      * @param width The width of the cat
@@ -127,23 +127,24 @@ public class Cat extends Parent {
      * @param stats The game stats
      * @param gameInstance The game instance
      * @param speed2 The speed of the cat
-     * @param isACat A boolean indicating whether the cat is player-controlled
+     * @param isACat A boolean indicating whether the object is a cat or a dog
+     * @param target A target that the dog will follow
      */
     public Cat(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext, final Stats stats,
-               final CooperativeGame gameInstance, double speed2, boolean isACat){
+               final CooperativeGame gameInstance, double speed2, boolean isACat, Rectangle target){
         this.hitbox = new Rectangle(positionX, positionY, width, height);
-        this.hitbox.setFill(Color.BLACK);
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
         this.speed = speed2;
         this.isACat = isACat;
-        this.enterEvent = null;
         this.acceleration = 0.6;
         this.currentSpeedX = 0;
         this.currentSpeedY = 0;
 
         // Set up key event listeners to handle cat movement
         if (isACat){
+            this.enterEvent = null;
+            this.target = null;
 
             this.hitbox.setFill(new ImagePattern(new Image("data/cooperativeGame/chat.png")));
             // Add a key pressed event filter to the primary game scene to handle movement
@@ -243,28 +244,11 @@ public class Cat extends Parent {
 
             // Start the animation timer
             animationTimerCat.start();
-        }
-
-    }
-
-
-    public Cat(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext, final Stats stats,
-               final CooperativeGame gameInstance, double speed2, boolean isACat, Rectangle target){
-
-        this.hitbox = new Rectangle(positionX, positionY, width, height);
-        this.hitbox.setFill(Color.YELLOW);
-        this.initPosX = positionX;
-        this.initPosY = positionY;
-        this.gameContext = gameContext;
-        this.gameInstance = gameInstance;
-        this.speed = speed2;
-        this.isACat = isACat;
-        this.target = target;
-        this.canMove = true;
-
-        if (!isACat){
+        } else{
 
             this.hitbox.setFill(new ImagePattern(new Image("data/cooperativeGame/chien.png")));
+            this.target = target;
+            this.canMove = true;
 
             AnimationTimer animationTimerDog = new AnimationTimer() {
 
@@ -272,26 +256,7 @@ public class Cat extends Parent {
                 public void handle(long now) {
                     if (!gameInstance.endOfLevel){
                         if (canMove){
-
-                            if (hitbox.getX() < target.getX()) {
-                                if (!gameInstance.willCollideWithAnObstacle("right", speed, hitbox)) {
-                                    hitbox.setX(hitbox.getX() + speed);
-                                }
-                            } else if (hitbox.getX() > target.getX()) {
-                                if (!gameInstance.willCollideWithAnObstacle("left", speed, hitbox)) {
-                                    hitbox.setX(hitbox.getX() - speed);
-                                }
-                            }
-
-                            if (hitbox.getY() < target.getY()) {
-                                if (!gameInstance.willCollideWithAnObstacle("down", speed, hitbox)) {
-                                    hitbox.setY(hitbox.getY() + speed);
-                                }
-                            } else if (hitbox.getY() > target.getY()) {
-                                if (!gameInstance.willCollideWithAnObstacle("up", speed, hitbox)) {
-                                    hitbox.setY(hitbox.getY() - speed);
-                                }
-                            }
+                            dogMove();
                         }
                     }else{
                         this.stop();
@@ -300,12 +265,12 @@ public class Cat extends Parent {
                 }
             };
             animationTimerDog.start();
+            this.enterEvent = buildEvent();
+            gameContext.getGazeDeviceManager().addEventFilter(hitbox);
+            this.hitbox.addEventFilter(GazeEvent.ANY, enterEvent);
+            this.hitbox.addEventFilter(MouseEvent.ANY, enterEvent);
         }
 
-        this.enterEvent = buildEvent();
-        gameContext.getGazeDeviceManager().addEventFilter(hitbox);
-        this.hitbox.addEventFilter(GazeEvent.ANY, enterEvent);
-        this.hitbox.addEventFilter(MouseEvent.ANY, enterEvent);
 
     }
 
@@ -319,6 +284,8 @@ public class Cat extends Parent {
             }
         };
     }
+
+
 
     private void catMove(){
 
@@ -373,6 +340,28 @@ public class Cat extends Parent {
 
         }
 
+    }
+
+    public void dogMove(){
+        if (hitbox.getX() < target.getX()) {
+            if (!gameInstance.willCollideWithAnObstacle("right", speed, hitbox)) {
+                hitbox.setX(hitbox.getX() + speed);
+            }
+        } else if (hitbox.getX() > target.getX()) {
+            if (!gameInstance.willCollideWithAnObstacle("left", speed, hitbox)) {
+                hitbox.setX(hitbox.getX() - speed);
+            }
+        }
+
+        if (hitbox.getY() < target.getY()) {
+            if (!gameInstance.willCollideWithAnObstacle("down", speed, hitbox)) {
+                hitbox.setY(hitbox.getY() + speed);
+            }
+        } else if (hitbox.getY() > target.getY()) {
+            if (!gameInstance.willCollideWithAnObstacle("up", speed, hitbox)) {
+                hitbox.setY(hitbox.getY() - speed);
+            }
+        }
     }
 
     public void initPos(){
