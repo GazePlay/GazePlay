@@ -88,7 +88,7 @@ public class Cat extends Parent {
     /**
      * A boolean indicating whether the cat can currently move
      */
-    private boolean canMove;
+    protected boolean canMove;
 
     /**
      * The current X speed of movement
@@ -142,7 +142,7 @@ public class Cat extends Parent {
         this.currentSpeedY = 0;
 
         // Set up key event listeners to handle cat movement
-        if (isACat){
+        if (isACat && target == null){
             this.enterEvent = null;
             this.target = null;
 
@@ -244,11 +244,29 @@ public class Cat extends Parent {
 
             // Start the animation timer
             animationTimerCat.start();
+        } else if (isACat && target != null){
+            this.hitbox.setFill(new ImagePattern(new Image("data/cooperativeGame/chat.png")));
+            this.target = target;
+            AnimationTimer animationTimerCat = new AnimationTimer() {
+                @Override
+                public void handle(long now) {
+                    if (!gameInstance.endOfLevel){
+                        dogMove();
+                    }else{
+                        this.stop();
+                    }
+                }
+            };
+            animationTimerCat.start();
+            this.enterEvent = buildEvent();
+            gameContext.getPrimaryScene().addEventFilter(GazeEvent.ANY, enterEvent);
+            gameContext.getPrimaryScene().addEventFilter(MouseEvent.ANY, enterEvent);
         } else{
 
             this.hitbox.setFill(new ImagePattern(new Image("data/cooperativeGame/chien.png")));
             this.target = target;
             this.canMove = true;
+            initPos();
 
             AnimationTimer animationTimerDog = new AnimationTimer() {
 
@@ -276,15 +294,52 @@ public class Cat extends Parent {
 
     private EventHandler<Event> buildEvent() {
         return e -> {
-            if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                this.canMove = false;
-            }
-            if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
-                this.canMove = true;
+            if (!gameInstance.keyboard){
+                if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                    this.canMove = false;
+                }
+                if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
+                    this.canMove = true;
+                }
+            }else{
+                if (e.getEventType() == GazeEvent.GAZE_MOVED && this.isACat && this.target != null){
+                    this.target.setX(((GazeEvent)e).getX());
+                    this.target.setY(((GazeEvent)e).getY());
+                }else if (e.getEventType() == MouseEvent.MOUSE_MOVED && this.isACat && this.target != null){
+                    this.target.setX(((MouseEvent)e).getX());
+                    this.target.setY(((MouseEvent)e).getY());
+
+                }
             }
         };
     }
 
+    public void dogMove(){
+        double dx = target.getX() - hitbox.getX();
+        double dy = target.getY() - hitbox.getY();
+        double distance = Math.sqrt(dx * dx + dy * dy);
+        if(distance > speed) {
+            double vx = dx / distance * speed;
+            double vy = dy / distance * speed;
+            String directionX = vx > 0 ? "right" : "left";
+            String directionY = vy > 0 ? "down" : "up";
+            if(Math.abs(vx) > Math.abs(vy)) {
+                if(!gameInstance.willCollideWithAnObstacle(directionX, speed, hitbox)) {
+                    hitbox.setX(hitbox.getX() + vx);
+                }
+                if(!gameInstance.willCollideWithAnObstacle(directionY, speed, hitbox)) {
+                    hitbox.setY(hitbox.getY() + vy);
+                }
+            } else {
+                if(!gameInstance.willCollideWithAnObstacle(directionY, speed, hitbox)) {
+                    hitbox.setY(hitbox.getY() + vy);
+                }
+                if(!gameInstance.willCollideWithAnObstacle(directionX, speed, hitbox)) {
+                    hitbox.setX(hitbox.getX() + vx);
+                }
+            }
+        }
+    }
 
 
     private void catMove(){
@@ -342,27 +397,6 @@ public class Cat extends Parent {
 
     }
 
-    public void dogMove(){
-        if (hitbox.getX() < target.getX()) {
-            if (!gameInstance.willCollideWithAnObstacle("right", speed, hitbox)) {
-                hitbox.setX(hitbox.getX() + speed);
-            }
-        } else if (hitbox.getX() > target.getX()) {
-            if (!gameInstance.willCollideWithAnObstacle("left", speed, hitbox)) {
-                hitbox.setX(hitbox.getX() - speed);
-            }
-        }
-
-        if (hitbox.getY() < target.getY()) {
-            if (!gameInstance.willCollideWithAnObstacle("down", speed, hitbox)) {
-                hitbox.setY(hitbox.getY() + speed);
-            }
-        } else if (hitbox.getY() > target.getY()) {
-            if (!gameInstance.willCollideWithAnObstacle("up", speed, hitbox)) {
-                hitbox.setY(hitbox.getY() - speed);
-            }
-        }
-    }
 
     public void initPos(){
         this.initPosX = this.hitbox.getX();

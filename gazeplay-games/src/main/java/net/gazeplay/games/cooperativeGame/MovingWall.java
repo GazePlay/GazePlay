@@ -22,6 +22,7 @@ public class MovingWall extends Rectangle {
     private final IGameContext gameContext;
     private final EventHandler<Event> enterEvent;
     private float speed;
+    protected boolean canMove;
 
 
     MovingWall(final double x, final double y, final double width, final double height, CooperativeGame gameInstance, IGameContext gameContext, boolean resetPos, float speed) {
@@ -33,6 +34,7 @@ public class MovingWall extends Rectangle {
         this.verticalTimeline = new Timeline();
         this.horizontalTimeline = new Timeline();
         this.speed = speed;
+        this.canMove = true;
         this.enterEvent = buildEvent();
         gameContext.getGazeDeviceManager().addEventFilter(this);
         this.addEventFilter(GazeEvent.ANY, enterEvent);
@@ -53,26 +55,28 @@ public class MovingWall extends Rectangle {
         double finalToY = toY;
         double finalFromY = fromY;
         verticalTimeline = new Timeline(new KeyFrame(Duration.millis(16), event -> {
-            if (this.direction){
-                gameInstance.willCollideWithAnObstacle("down",this.speed,this);
-                gameInstance.willCollideWithAnObstacle("up",this.speed,this);
-                if (frombottom){
-                    if (this.getY() + this.getHeight() >= finalToY+getHeight()) {
-                        this.direction = false;
+            if (canMove){
+                if (this.direction){
+                    gameInstance.willCollideWithAnObstacle("down",this.speed,this);
+                    gameInstance.willCollideWithAnObstacle("up",this.speed,this);
+                    if (frombottom){
+                        if (this.getY() + this.getHeight() >= finalToY+getHeight()) {
+                            this.direction = false;
+                        }
+                    }else{
+                        if (this.getY() + this.getHeight() >= finalToY) {
+                            this.direction = false;
+                        }
                     }
-                }else{
-                    if (this.getY() + this.getHeight() >= finalToY) {
-                        this.direction = false;
+                    this.setY(this.getY() + this.speed);
+                } else {
+                    gameInstance.willCollideWithAnObstacle("up",this.speed,this);
+                    gameInstance.willCollideWithAnObstacle("down",this.speed,this);
+                    if (this.getY() <= finalFromY) {
+                        this.direction = true;
                     }
+                    this.setY(this.getY() - this.speed);
                 }
-                this.setY(this.getY() + this.speed);
-            } else {
-                gameInstance.willCollideWithAnObstacle("up",this.speed,this);
-                gameInstance.willCollideWithAnObstacle("down",this.speed,this);
-                if (this.getY() <= finalFromY) {
-                    this.direction = true;
-                }
-                this.setY(this.getY() - this.speed);
             }
         }));
         verticalTimeline.setCycleCount(Animation.INDEFINITE);
@@ -93,31 +97,36 @@ public class MovingWall extends Rectangle {
         double finalToX = toX;
         double finalFromX = fromX;
         horizontalTimeline = new Timeline(new KeyFrame(Duration.millis(16), event -> {
-            if (this.direction){
+            if (canMove){
 
-                gameInstance.willCollideWithAnObstacle("right",this.speed,this);
-                gameInstance.willCollideWithAnObstacle("left",this.speed,this);
+                if (this.direction){
 
-                if (fromRight){
-                    if (this.getX() + this.getWidth() >= finalToX+getWidth()){
-                        this.direction = false;
+                    gameInstance.willCollideWithAnObstacle("right",this.speed,this);
+                    gameInstance.willCollideWithAnObstacle("left",this.speed,this);
+
+                    if (fromRight){
+                        if (this.getX() + this.getWidth() >= finalToX+getWidth()){
+                            this.direction = false;
+                        }
+                    }else{
+                        if (this.getX() + this.getWidth() >= finalToX){
+                            this.direction = false;
+                        }
                     }
+
+                    this.setX(this.getX()+this.speed);
                 }else{
-                    if (this.getX() + this.getWidth() >= finalToX){
-                        this.direction = false;
+                    gameInstance.willCollideWithAnObstacle("right",this.speed,this);
+                    gameInstance.willCollideWithAnObstacle("left",this.speed,this);
+
+                    if (this.getX() <= finalFromX){
+                        this.direction = true;
                     }
+                    this.setX(this.getX()-this.speed);
                 }
 
-                this.setX(this.getX()+this.speed);
-            }else{
-                gameInstance.willCollideWithAnObstacle("right",this.speed,this);
-                gameInstance.willCollideWithAnObstacle("left",this.speed,this);
-
-                if (this.getX() <= finalFromX){
-                    this.direction = true;
-                }
-                this.setX(this.getX()-this.speed);
             }
+
         }));
         horizontalTimeline.setCycleCount(Animation.INDEFINITE);
         horizontalTimeline.play();
@@ -128,16 +137,15 @@ public class MovingWall extends Rectangle {
             if (gameInstance.endOfLevel){
                 verticalTimeline.stop();
                 horizontalTimeline.stop();
+                this.canMove = false;
             }else{
                 if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
                     this.setFill(Color.BLUE);
-                    verticalTimeline.pause();
-                    horizontalTimeline.pause();
+                    this.canMove = false;
                 }
                 if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
                     this.setFill(Color.RED);
-                    horizontalTimeline.play();
-                    verticalTimeline.play();
+                    this.canMove = true;
                 }
             }
         };

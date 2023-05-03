@@ -5,6 +5,7 @@
  */
 package net.gazeplay.games.cooperativeGame;
 
+import javafx.animation.Animation;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
@@ -57,7 +58,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
     /**
      * The switches in the game that the cat can activate to open doors or move walls.
      */
-    private ArrayList<Interrupteur> interrupteurs;
+    protected ArrayList<Interrupteur> interrupteurs;
 
     /**
      * The walls in the game that the cat must navigate around.
@@ -67,12 +68,15 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
     /**
      * The moving walls in the game that the cat must navigate around.
      */
-    private ArrayList<MovingWall> wallsMoving;
+    protected ArrayList<MovingWall> wallsMoving;
 
     /**
      * The dogs in the game that pursue the cat.
      */
     protected ArrayList<Cat> dogs;
+
+    protected boolean keyboard;
+    private boolean isKeyPressed;
 
     /**
      * Constructs a new CooperativeGame instance with the specified game context, statistics, and level.
@@ -80,7 +84,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
      * @param stats the game statistics for the new game instance
      * @param level the level for the new game instance
      */
-    public CooperativeGame(final IGameContext gameContext, Stats stats, int level){
+    public CooperativeGame(final IGameContext gameContext, Stats stats, int level, boolean keyboard){
         this.gameContext = gameContext;
         this.stats = stats;
         this.level = level;
@@ -89,6 +93,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         this.interrupteurs = new ArrayList<>();
         this.walls = new ArrayList<>();
         this.wallsMoving = new ArrayList<>();
+        this.keyboard = keyboard;
     }
 
 
@@ -119,6 +124,79 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         initGameBox();
         stats.notifyNewRoundReady();
         gameContext.firstStart();
+
+        if (keyboard){
+
+            gameContext.getPrimaryScene().setOnKeyPressed(keyEvent -> {
+                if (!isKeyPressed){
+
+                    switch (keyEvent.getCode()) {
+                        case A -> {
+                            isKeyPressed = true;
+                            if (!this.dogs.isEmpty()) {
+                                Cat nearestDog = getNearestDogFromCat(this.dogs);
+                                if (nearestDog != null) {
+                                    nearestDog.canMove = false;
+                                }
+                            }
+                        }
+                        case Z -> {
+                            isKeyPressed = true;
+                            if (!this.interrupteurs.isEmpty()){
+                                Interrupteur nearestInterrupteur = getNearestInterrupteurFromCat(this.interrupteurs);
+                                if (nearestInterrupteur != null){
+                                    nearestInterrupteur.initTimerInterrupteur();
+                                }
+                            }
+                        }
+                        case E -> {
+                            isKeyPressed = true;
+                            if (!this.wallsMoving.isEmpty()){
+                                MovingWall nearestMovingWall = getNearestWallMovingFromCat(this.wallsMoving);
+                                if (nearestMovingWall != null){
+                                    nearestMovingWall.canMove = false;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            gameContext.getPrimaryScene().setOnKeyReleased(keyEvent -> {
+                switch (keyEvent.getCode()) {
+                    case A -> {
+                        isKeyPressed = false;
+                        if (!this.dogs.isEmpty()) {
+                            for (Cat dog : this.dogs) {
+                                dog.canMove = true;
+                            }
+                        }
+                    }
+                    case Z -> {
+                        isKeyPressed = false;
+                        if (!this.interrupteurs.isEmpty()){
+                            for (Interrupteur interrupteur : this.interrupteurs) {
+                                try{
+                                    if (interrupteur.timelineProgressBar.getStatus() == Animation.Status.RUNNING){
+                                        interrupteur.stopTimerInterrupteur();
+                                    }
+                                }catch (Exception ignored){
+
+                                }
+                            }
+                        }
+                    }
+                    case E -> {
+                        isKeyPressed = false;
+                        if (!this.wallsMoving.isEmpty()){
+                            for (MovingWall wallMoving : this.wallsMoving) {
+                                wallMoving.canMove = true;
+                            }
+                        }
+                    }
+                }
+            });
+        }
     }
 
 
@@ -128,7 +206,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         System.out.println("level : " + i);
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        double dogSpeed = 3;
+        double dogSpeed = 3.5;
         int widthCat = 125;
         int heightCat = 125;
         int widthDog = 125;
@@ -138,7 +216,11 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         int widthGamelle = 120;
         int heightGamelle = 80;
 
-        this.cat = new Cat(0, 0, widthCat,heightCat,gameContext,stats,this, 10, true,null);
+        if (!keyboard){
+            this.cat = new Cat(0, 0, widthCat,heightCat,gameContext,stats,this, 10, true,null);
+        }else{
+            this.cat = new Cat(0,0,widthCat,heightCat,gameContext,stats,this,8,true, new Rectangle(0,0,1,1));
+        }
         this.gamelle = new Rectangle(1000,1000,widthGamelle,heightGamelle);
 
         if (this.level == 1){
@@ -671,6 +753,58 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
     }
 
 
+
+
+
+    private Cat getNearestDogFromCat(ArrayList<Cat> nbDog) {
+        Cat nearest = null;
+        double minDistance = Double.MAX_VALUE;
+
+        for (Cat rect : nbDog) {
+            double distance = distance(this.cat.hitbox, rect.hitbox);
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearest = rect;
+            }
+        }
+
+        return nearest;
+    }
+    private Interrupteur getNearestInterrupteurFromCat(ArrayList<Interrupteur> nbInterrupteurs) {
+        Interrupteur nearest = null;
+        double minDistance = Double.MAX_VALUE;
+
+        for (Interrupteur rect : nbInterrupteurs) {
+            double distance = distance(this.cat.hitbox, rect.getInterrupteur());
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearest = rect;
+            }
+        }
+
+        return nearest;
+    }
+
+    private MovingWall getNearestWallMovingFromCat(ArrayList<MovingWall> nbMovingWalls) {
+        MovingWall nearest = null;
+        double minDistance = Double.MAX_VALUE;
+
+        for (MovingWall rect : nbMovingWalls) {
+            double distance = distance(this.cat.hitbox, rect);
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearest = rect;
+            }
+        }
+
+        return nearest;
+    }
+
+    private double distance(Rectangle rect1, Rectangle rect2) {
+        double dx = rect2.getX() - rect1.getX();
+        double dy = rect2.getY() - rect1.getY();
+        return Math.sqrt(dx*dx + dy*dy);
+    }
 
 
 }

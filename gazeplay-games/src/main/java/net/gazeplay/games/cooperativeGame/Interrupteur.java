@@ -28,7 +28,7 @@ public class Interrupteur extends Parent {
     private final CooperativeGame gameInstance;
     private final EventHandler<Event> enterEvent;
     private final ProgressIndicator progressIndicator;
-    private Timeline timelineProgressBar;
+    protected Timeline timelineProgressBar;
     private final double slow;
     private final ImagePattern offButton;
     private final ImagePattern onButton;
@@ -69,60 +69,67 @@ public class Interrupteur extends Parent {
 
     private EventHandler<Event> buildEvent() {
         return e -> {
-            if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-
-                for (Cat dog : gameInstance.dogs){
-                    dog.speed = dog.speed * slow;
+            if (!gameInstance.keyboard){
+                if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                    initTimerInterrupteur();
                 }
-
-                progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
-                progressIndicator.setOpacity(1);
-                progressIndicator.setProgress(0);
-                timelineProgressBar = new Timeline();
-                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
-                    new KeyValue(progressIndicator.progressProperty(), 1)));
-
-                timelineProgressBar.setOnFinished(actionEvent -> {
-                        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-                    if (!this.isInterrupteurActivated){
-                        this.isInterrupteurActivated = true;
-                        this.interrupteur.setFill(onButton);
-                        for (Rectangle porte : portes) {
-                            porte.setX(porte.getX() + dimension2D.getWidth() + 100);
-                        }
-                    }else{
-                        this.isInterrupteurActivated = false;
-                        this.interrupteur.setFill(offButton);
-                        for (Rectangle porte : portes) {
-                            porte.setX(porte.getX()-dimension2D.getWidth() - 100);
-                            if (gameInstance.isCollidingWithASpecificObstacle(porte,gameInstance.cat.hitbox)){
-                                gameInstance.endOfGame(false);
-                                break;
-                            }else{
-                                for (Cat dog: gameInstance.dogs){
-                                    if (gameInstance.isCollidingWithASpecificObstacle(porte,dog.hitbox)){
-                                        dog.hitbox.setX(dog.initPosX);
-                                        dog.hitbox.setY(dog.initPosY);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-                timelineProgressBar.play();
-            }
-            if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
-
-                for (Cat dog : gameInstance.dogs){
-                    dog.speed = dog.speed / slow;
+                if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
+                    stopTimerInterrupteur();
                 }
-                timelineProgressBar.stop();
-                progressIndicator.setOpacity(0);
-                progressIndicator.setProgress(0);
             }
         };
     }
 
+    protected void stopTimerInterrupteur(){
+        timelineProgressBar.stop();
+        progressIndicator.setOpacity(0);
+        progressIndicator.setProgress(0);
+        for (Cat dog : gameInstance.dogs){
+            dog.speed = dog.speed / slow;
+        }
+    }
+
+    protected void initTimerInterrupteur(){
+        for (Cat dog : gameInstance.dogs){
+            dog.speed = dog.speed * slow;
+        }
+
+        progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+        progressIndicator.setOpacity(1);
+        progressIndicator.setProgress(0);
+        timelineProgressBar = new Timeline();
+        timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
+            new KeyValue(progressIndicator.progressProperty(), 1)));
+
+        timelineProgressBar.setOnFinished(actionEvent -> {
+            final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+            if (!this.isInterrupteurActivated){
+                this.isInterrupteurActivated = true;
+                this.interrupteur.setFill(onButton);
+                for (Rectangle porte : portes) {
+                    porte.setX(porte.getX() + dimension2D.getWidth() + 100);
+                }
+            }else{
+                this.isInterrupteurActivated = false;
+                this.interrupteur.setFill(offButton);
+                for (Rectangle porte : portes) {
+                    porte.setX(porte.getX()-dimension2D.getWidth() - 100);
+                    if (gameInstance.isCollidingWithASpecificObstacle(porte,gameInstance.cat.hitbox)){
+                        gameInstance.endOfGame(false);
+                        break;
+                    }else{
+                        for (Cat dog: gameInstance.dogs){
+                            if (gameInstance.isCollidingWithASpecificObstacle(porte,dog.hitbox)){
+                                dog.hitbox.setX(dog.initPosX);
+                                dog.hitbox.setY(dog.initPosY);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        timelineProgressBar.play();
+    }
 
 
     public void createDoorAroundAnObject(Rectangle object){
