@@ -6,6 +6,7 @@
 package net.gazeplay.games.cooperativeGame;
 
 import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
@@ -78,6 +79,8 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
     protected boolean keyboard;
     private boolean isKeyPressed;
 
+    protected boolean gameTimerEnded;
+
     /**
      * Constructs a new CooperativeGame instance with the specified game context, statistics, and level.
      * @param gameContext the game context for the new game instance
@@ -94,6 +97,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         this.walls = new ArrayList<>();
         this.wallsMoving = new ArrayList<>();
         this.keyboard = keyboard;
+        this.gameTimerEnded = false;
     }
 
 
@@ -124,37 +128,41 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         initGameBox();
         stats.notifyNewRoundReady();
         gameContext.firstStart();
+        this.gameTimerEnded = false;
 
         if (keyboard){
 
-            gameContext.getPrimaryScene().setOnKeyPressed(keyEvent -> {
-                if (!isKeyPressed){
 
-                    switch (keyEvent.getCode()) {
-                        case A -> {
-                            isKeyPressed = true;
-                            if (!this.dogs.isEmpty()) {
-                                Cat nearestDog = getNearestDogFromCat(this.dogs);
-                                if (nearestDog != null) {
-                                    nearestDog.canMove = false;
+            gameContext.getPrimaryScene().setOnKeyPressed(keyEvent -> {
+                if (gameTimerEnded){
+                    if (!isKeyPressed){
+
+                        switch (keyEvent.getCode()) {
+                            case A -> {
+                                isKeyPressed = true;
+                                if (!this.dogs.isEmpty()) {
+                                    Cat nearestDog = getNearestDogFromCat(this.dogs);
+                                    if (nearestDog != null) {
+                                        nearestDog.canMove = false;
+                                    }
                                 }
                             }
-                        }
-                        case Z -> {
-                            isKeyPressed = true;
-                            if (!this.interrupteurs.isEmpty()){
-                                Interrupteur nearestInterrupteur = getNearestInterrupteurFromCat(this.interrupteurs);
-                                if (nearestInterrupteur != null){
-                                    nearestInterrupteur.initTimerInterrupteur();
+                            case Z -> {
+                                isKeyPressed = true;
+                                if (!this.interrupteurs.isEmpty()){
+                                    Interrupteur nearestInterrupteur = getNearestInterrupteurFromCat(this.interrupteurs);
+                                    if (nearestInterrupteur != null){
+                                        nearestInterrupteur.initTimerInterrupteur();
+                                    }
                                 }
                             }
-                        }
-                        case E -> {
-                            isKeyPressed = true;
-                            if (!this.wallsMoving.isEmpty()){
-                                MovingWall nearestMovingWall = getNearestWallMovingFromCat(this.wallsMoving);
-                                if (nearestMovingWall != null){
-                                    nearestMovingWall.canMove = false;
+                            case E -> {
+                                isKeyPressed = true;
+                                if (!this.wallsMoving.isEmpty()){
+                                    MovingWall nearestMovingWall = getNearestWallMovingFromCat(this.wallsMoving);
+                                    if (nearestMovingWall != null){
+                                        nearestMovingWall.canMove = false;
+                                    }
                                 }
                             }
                         }
@@ -163,34 +171,35 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
             });
 
             gameContext.getPrimaryScene().setOnKeyReleased(keyEvent -> {
-                switch (keyEvent.getCode()) {
-                    case A -> {
-                        isKeyPressed = false;
-                        if (!this.dogs.isEmpty()) {
-                            for (Cat dog : this.dogs) {
-                                dog.canMove = true;
-                            }
-                        }
-                    }
-                    case Z -> {
-                        isKeyPressed = false;
-                        if (!this.interrupteurs.isEmpty()){
-                            for (Interrupteur interrupteur : this.interrupteurs) {
-                                try{
-                                    if (interrupteur.timelineProgressBar.getStatus() == Animation.Status.RUNNING){
-                                        interrupteur.stopTimerInterrupteur();
-                                    }
-                                }catch (Exception ignored){
-
+                if (gameTimerEnded){
+                    switch (keyEvent.getCode()) {
+                        case A -> {
+                            isKeyPressed = false;
+                            if (!this.dogs.isEmpty()) {
+                                for (Cat dog : this.dogs) {
+                                    dog.canMove = true;
                                 }
                             }
                         }
-                    }
-                    case E -> {
-                        isKeyPressed = false;
-                        if (!this.wallsMoving.isEmpty()){
-                            for (MovingWall wallMoving : this.wallsMoving) {
-                                wallMoving.canMove = true;
+                        case Z -> {
+                            isKeyPressed = false;
+                            if (!this.interrupteurs.isEmpty()){
+                                for (Interrupteur interrupteur : this.interrupteurs) {
+
+                                    if (interrupteur.timelineProgressBar != null && interrupteur.timelineProgressBar.getStatus() == Animation.Status.RUNNING ){
+                                        interrupteur.stopTimerInterrupteur();
+                                    }
+
+                                }
+                            }
+
+                        }
+                        case E -> {
+                            isKeyPressed = false;
+                            if (!this.wallsMoving.isEmpty()){
+                                for (MovingWall wallMoving : this.wallsMoving) {
+                                    wallMoving.canMove = true;
+                                }
                             }
                         }
                     }
@@ -203,7 +212,6 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
     private void setLevel(final int i){
 
         this.level = i;
-        System.out.println("level : " + i);
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         double dogSpeed = 3.5;
@@ -576,6 +584,8 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         }
 
 
+        initGameTimer(3);
+
 
     }
 
@@ -806,5 +816,27 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         return Math.sqrt(dx*dx + dy*dy);
     }
 
+
+    private void initGameTimer(int sec) {
+        AnimationTimer gameTimer = new AnimationTimer() {
+            int nbframe = 0;
+            int nbSec = 0;
+            @Override
+            public void handle(long now) {
+
+                if (nbframe <= 60){
+                    nbframe++;
+                }else{
+                    nbSec++;
+                    if (nbSec == sec){
+                        gameTimerEnded = true;
+                    }
+                    nbframe = 0;
+                }
+
+            }
+        };
+        gameTimer.start();
+    }
 
 }

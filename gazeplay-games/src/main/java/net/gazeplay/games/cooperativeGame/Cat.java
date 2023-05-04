@@ -7,6 +7,8 @@
 package net.gazeplay.games.cooperativeGame;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
@@ -17,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -148,6 +151,7 @@ public class Cat extends Parent {
 
             this.hitbox.setFill(new ImagePattern(new Image("data/cooperativeGame/chat.png")));
             // Add a key pressed event filter to the primary game scene to handle movement
+
             gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, key-> {
                 if (key.getCode() == KeyCode.UP || key.getCode() == KeyCode.DOWN || key.getCode() == KeyCode.LEFT || key.getCode() == KeyCode.RIGHT) {
 
@@ -234,30 +238,40 @@ public class Cat extends Parent {
             animationTimerCat = new AnimationTimer() {
                 @Override
                 public void handle(long now) {
-                    if (!gameInstance.endOfLevel){
-                        catMove();
-                    }else{
-                        animationTimerCat.stop();
+
+                    if (gameInstance.gameTimerEnded){
+                        if (!gameInstance.endOfLevel){
+                            catMove();
+                        }else{
+                            animationTimerCat.stop();
+                        }
                     }
                 }
             };
 
+
             // Start the animation timer
             animationTimerCat.start();
+
+
         } else if (isACat && target != null){
             this.hitbox.setFill(new ImagePattern(new Image("data/cooperativeGame/chat.png")));
             this.target = target;
+
             AnimationTimer animationTimerCat = new AnimationTimer() {
                 @Override
                 public void handle(long now) {
-                    if (!gameInstance.endOfLevel){
-                        dogMove();
-                    }else{
-                        this.stop();
+                    if (gameInstance.gameTimerEnded){
+                        if (!gameInstance.endOfLevel){
+                            dogMove();
+                        }else{
+                            this.stop();
+                        }
                     }
                 }
             };
             animationTimerCat.start();
+
             this.enterEvent = buildEvent();
             gameContext.getPrimaryScene().addEventFilter(GazeEvent.ANY, enterEvent);
             gameContext.getPrimaryScene().addEventFilter(MouseEvent.ANY, enterEvent);
@@ -268,21 +282,25 @@ public class Cat extends Parent {
             this.canMove = true;
             initPos();
 
+
             AnimationTimer animationTimerDog = new AnimationTimer() {
 
                 @Override
                 public void handle(long now) {
-                    if (!gameInstance.endOfLevel){
-                        if (canMove){
-                            dogMove();
+                    if (gameInstance.gameTimerEnded){
+                        if (!gameInstance.endOfLevel){
+                            if (canMove){
+                                dogMove();
+                            }
+                        }else{
+                            this.stop();
                         }
-                    }else{
-                        this.stop();
                     }
 
                 }
             };
             animationTimerDog.start();
+
             this.enterEvent = buildEvent();
             gameContext.getGazeDeviceManager().addEventFilter(hitbox);
             this.hitbox.addEventFilter(GazeEvent.ANY, enterEvent);

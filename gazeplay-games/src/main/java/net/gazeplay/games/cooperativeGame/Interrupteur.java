@@ -33,6 +33,8 @@ public class Interrupteur extends Parent {
     private final ImagePattern offButton;
     private final ImagePattern onButton;
 
+    private boolean gameTimerEnded;
+
 
 
     public Interrupteur(Rectangle interrupteur, IGameContext gameContext, CooperativeGame gameInstance){
@@ -43,8 +45,6 @@ public class Interrupteur extends Parent {
         this.isInterrupteurActivated = false;
         this.offButton = new ImagePattern(new Image("data/cooperativeGame/pushButtonOff.png"));
         this.onButton = new ImagePattern(new Image("data/cooperativeGame/pushButtonOn.png"));
-        this.interrupteur.maxHeight(interrupteur.getHeight());
-        this.interrupteur.maxWidth(interrupteur.getWidth());
         this.interrupteur.setFill(offButton);
         gameContext.getChildren().add(this.interrupteur);
         this.enterEvent = buildEvent();
@@ -53,6 +53,7 @@ public class Interrupteur extends Parent {
         this.progressIndicator.addEventFilter(GazeEvent.ANY, enterEvent);
         this.progressIndicator.addEventFilter(MouseEvent.ANY, enterEvent);
         this.progressIndicator.toFront();
+        this.gameTimerEnded = false;
         this.slow = 0.7;
         gameContext.getChildren().add(this.progressIndicator);
     }
@@ -69,27 +70,32 @@ public class Interrupteur extends Parent {
 
     private EventHandler<Event> buildEvent() {
         return e -> {
-            if (!gameInstance.keyboard){
-                if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                    initTimerInterrupteur();
-                }
-                if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
-                    stopTimerInterrupteur();
+            if (gameInstance.gameTimerEnded){
+                if (!gameInstance.keyboard){
+                    if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                        initTimerInterrupteur();
+                    }
+                    if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
+                        stopTimerInterrupteur();
+                    }
                 }
             }
         };
     }
 
     protected void stopTimerInterrupteur(){
-        timelineProgressBar.stop();
-        progressIndicator.setOpacity(0);
-        progressIndicator.setProgress(0);
-        for (Cat dog : gameInstance.dogs){
-            dog.speed = dog.speed / slow;
+        if (timelineProgressBar != null){
+            timelineProgressBar.stop();
+            progressIndicator.setOpacity(0);
+            progressIndicator.setProgress(0);
+            for (Cat dog : gameInstance.dogs){
+                dog.speed = dog.speed / slow;
+            }
         }
     }
 
     protected void initTimerInterrupteur(){
+
         for (Cat dog : gameInstance.dogs){
             dog.speed = dog.speed * slow;
         }
@@ -127,8 +133,14 @@ public class Interrupteur extends Parent {
                     }
                 }
             }
+
+            if (gameInstance.keyboard){
+                stopTimerInterrupteur();
+            }
+
         });
         timelineProgressBar.play();
+
     }
 
 
@@ -149,13 +161,6 @@ public class Interrupteur extends Parent {
         this.portes.add(rightDoor);
         this.portes.add(downDoor);
     }
-
-
-
-
-
-
-
 
     public Rectangle getInterrupteur() {
         return interrupteur;

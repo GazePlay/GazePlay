@@ -134,18 +134,20 @@ public class MovingWall extends Rectangle {
 
     private EventHandler<Event> buildEvent() {
         return e -> {
-            if (gameInstance.endOfLevel){
-                verticalTimeline.stop();
-                horizontalTimeline.stop();
-                this.canMove = false;
-            }else{
-                if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                    this.setFill(Color.BLUE);
+            if (gameInstance.gameTimerEnded){
+                if (gameInstance.endOfLevel){
+                    verticalTimeline.stop();
+                    horizontalTimeline.stop();
                     this.canMove = false;
-                }
-                if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
-                    this.setFill(Color.RED);
-                    this.canMove = true;
+                }else{
+                    if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                        this.setFill(Color.BLUE);
+                        this.canMove = false;
+                    }
+                    if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
+                        this.setFill(Color.RED);
+                        this.canMove = true;
+                    }
                 }
             }
         };
