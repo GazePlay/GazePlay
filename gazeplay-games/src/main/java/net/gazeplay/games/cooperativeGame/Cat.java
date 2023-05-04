@@ -7,8 +7,6 @@
 package net.gazeplay.games.cooperativeGame;
 
 import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
@@ -16,10 +14,8 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -145,6 +141,8 @@ public class Cat extends Parent {
         this.currentSpeedY = 0;
 
         // Set up key event listeners to handle cat movement
+
+        // If the cat is playable with keyboard
         if (isACat && target == null){
             this.enterEvent = null;
             this.target = null;
@@ -254,10 +252,11 @@ public class Cat extends Parent {
             animationTimerCat.start();
 
 
-        } else if (isACat && target != null){
+        } else if (isACat && target != null){ // If the cat is not playable with a keyboard
             this.hitbox.setFill(new ImagePattern(new Image("data/cooperativeGame/chat.png")));
             this.target = target;
 
+            // Start moving after the game timer ended.
             AnimationTimer animationTimerCat = new AnimationTimer() {
                 @Override
                 public void handle(long now) {
@@ -275,14 +274,14 @@ public class Cat extends Parent {
             this.enterEvent = buildEvent();
             gameContext.getPrimaryScene().addEventFilter(GazeEvent.ANY, enterEvent);
             gameContext.getPrimaryScene().addEventFilter(MouseEvent.ANY, enterEvent);
-        } else{
+        } else{ //If it's a dog
 
             this.hitbox.setFill(new ImagePattern(new Image("data/cooperativeGame/chien.png")));
             this.target = target;
             this.canMove = true;
             initPos();
 
-
+            // Start moving after the game timer ended.
             AnimationTimer animationTimerDog = new AnimationTimer() {
 
                 @Override
@@ -312,7 +311,8 @@ public class Cat extends Parent {
 
     private EventHandler<Event> buildEvent() {
         return e -> {
-            if (!gameInstance.keyboard){
+            if (!gameInstance.catNotKeyboard){
+                //dogs has to be watched to be stopped
                 if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
                     this.canMove = false;
                 }
@@ -320,6 +320,7 @@ public class Cat extends Parent {
                     this.canMove = true;
                 }
             }else{
+                //The cursor has to be tracked so the cat can follow it
                 if (e.getEventType() == GazeEvent.GAZE_MOVED && this.isACat && this.target != null){
                     this.target.setX(((GazeEvent)e).getX());
                     this.target.setY(((GazeEvent)e).getY());
@@ -332,16 +333,37 @@ public class Cat extends Parent {
         };
     }
 
+
+    /**
+     * Moves the dog towards its target.
+     * If the distance to the target is greater than the dog's speed,
+     * the dog moves a distance equal to its speed towards the target.
+     * If the distance is less than or equal to the dog's speed, the dog moves to the target.
+     * The dog's movement is checked against any obstacles to prevent collisions.
+     */
     public void dogMove(){
+        // Get the difference in x and y positions between the dog and its target
         double dx = target.getX() - hitbox.getX();
         double dy = target.getY() - hitbox.getY();
+
+        // Calculate the distance between the dog and its target using Pythagorean theorem
         double distance = Math.sqrt(dx * dx + dy * dy);
+
+        // Move the dog towards its target if it's not already at the target
         if(distance > speed) {
+            // Calculate the velocity vector (vx, vy) needed to move towards the target
             double vx = dx / distance * speed;
             double vy = dy / distance * speed;
+
+            // Determine the direction of movement in the x and y axes
             String directionX = vx > 0 ? "right" : "left";
             String directionY = vy > 0 ? "down" : "up";
+
+            // Move the dog in the direction with the largest velocity component first
             if(Math.abs(vx) > Math.abs(vy)) {
+
+                // Move the dog in the x direction first
+                // Check if the dog will collide with an obstacle before moving it
                 if(!gameInstance.willCollideWithAnObstacle(directionX, speed, hitbox)) {
                     hitbox.setX(hitbox.getX() + vx);
                 }
@@ -349,6 +371,8 @@ public class Cat extends Parent {
                     hitbox.setY(hitbox.getY() + vy);
                 }
             } else {
+                // Move the dog in the y direction first
+                // Check if the dog will collide with an obstacle before moving it
                 if(!gameInstance.willCollideWithAnObstacle(directionY, speed, hitbox)) {
                     hitbox.setY(hitbox.getY() + vy);
                 }
@@ -360,12 +384,18 @@ public class Cat extends Parent {
     }
 
 
+
+    /**
+     * Moves the cat in the current direction if it will not collide with an obstacle.
+     * The movement of the cat is affected by the acceleration and speed values.
+     */
     private void catMove(){
 
         // Move the cat if it is currently moving and will not collide with an obstacle
         if (dirX != 0 || dirY != 0) {
             boolean canMoveVertically,canMoveHorizontally;
 
+            // Calculate current speed for vertical and horizontal directions
             if (verticalDirection != null && verticalDirection == KeyCode.UP){
                 if (currentSpeedY > 0){
                     currentSpeedY = -1;
@@ -401,9 +431,11 @@ public class Cat extends Parent {
                 }
             }
 
+            // Check if the cat can move vertically and horizontally without colliding with an obstacle
             canMoveVertically = verticalDirection != null && !gameInstance.willCollideWithAnObstacle(verticalDirection.toString().toLowerCase(), speed, hitbox);
             canMoveHorizontally = horizontalDirection != null && !gameInstance.willCollideWithAnObstacle(horizontalDirection.toString().toLowerCase(), speed, hitbox);
 
+            // Move the cat in the specified direction
             if (canMoveVertically) {
                 hitbox.setY(hitbox.getY() + currentSpeedY);
             }

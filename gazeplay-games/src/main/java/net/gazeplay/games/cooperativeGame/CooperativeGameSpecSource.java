@@ -9,9 +9,8 @@ public class CooperativeGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("CooperativeGame").gameThumbnail("data/Thumbnails/rushHour.png")
-                .category(GameCategories.Category.SELECTION)
-                .category(GameCategories.Category.LOGIC_MATHS).build(),
+            GameSummary.builder().nameCode("CooperativeGame").gameThumbnail("data/Thumbnails/chasedownChallenge.png")
+                .category(GameCategories.Category.ACTION_REACTION).build(),
             new CooperativeGameVariantGenerator(), new CooperativeGameLauncher());
     }
 }

@@ -1,6 +1,5 @@
 package net.gazeplay.games.cooperativeGame;
 
-import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -19,24 +18,77 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 import java.util.ArrayList;
 
+/**
+ * A class representing a switch that can activate or deactivate connected doors.
+ */
 public class Interrupteur extends Parent {
 
+    /**
+     The main interrupteur rectangle object that players can interact with.
+     */
     private Rectangle interrupteur;
+
+    /**
+     A list of associated portes rectangles that will be opened when the interrupteur is activated.
+     */
     private ArrayList<Rectangle> portes;
+
+    /**
+     A boolean flag indicating whether the interrupteur is currently activated or not.
+     */
     private boolean isInterrupteurActivated;
+
+    /**
+     The game context in which the interrupteur object exists.
+     */
     private final IGameContext gameContext;
+
+    /**
+     The instance of the cooperative game that this interrupteur object is a part of.
+     */
     private final CooperativeGame gameInstance;
+
+    /**
+     The event handler that will be triggered when the interrupteur is gazed at or clicked on.
+     */
     private final EventHandler<Event> enterEvent;
+
+    /**
+     A progress indicator that displays the amount of time remaining until the interrupteur is activated.
+     */
     private final ProgressIndicator progressIndicator;
+
+    /**
+     A timeline object that controls the progress bar animation.
+     */
     protected Timeline timelineProgressBar;
+
+    /**
+     A factor that determines the rate at which the interrupteur activation progresses.
+     */
     private final double slow;
+
+    /**
+     The image pattern of the interrupteur button when it is in the "off" state.
+     */
     private final ImagePattern offButton;
+
+    /**
+     The image pattern of the interrupteur button when it is in the "on" state.
+     */
     private final ImagePattern onButton;
 
-    private boolean gameTimerEnded;
 
 
 
+
+    /**
+     * Creates a new Interrupteur object with the given parameters.
+     *
+     * @param interrupteur the rectangle representing the switch
+     * @param gameContext the game context in which the switch is located
+     * @param gameInstance the instance of the cooperative game
+     */
     public Interrupteur(Rectangle interrupteur, IGameContext gameContext, CooperativeGame gameInstance){
         this.interrupteur = interrupteur;
         this.portes = new ArrayList<>();
@@ -53,11 +105,17 @@ public class Interrupteur extends Parent {
         this.progressIndicator.addEventFilter(GazeEvent.ANY, enterEvent);
         this.progressIndicator.addEventFilter(MouseEvent.ANY, enterEvent);
         this.progressIndicator.toFront();
-        this.gameTimerEnded = false;
         this.slow = 0.7;
         gameContext.getChildren().add(this.progressIndicator);
     }
 
+
+    /**
+     Creates a new ProgressIndicator with the given width and height, and sets its properties.
+     @param width the width of the ProgressIndicator
+     @param height the height of the ProgressIndicator
+     @return the created ProgressIndicator
+     */
     private ProgressIndicator createProgressIndicator(final double width, final double height) {
         final ProgressIndicator indicator = new ProgressIndicator(0);
         indicator.setTranslateX(interrupteur.getX() + width * 0.05);
@@ -71,13 +129,17 @@ public class Interrupteur extends Parent {
     private EventHandler<Event> buildEvent() {
         return e -> {
             if (gameInstance.gameTimerEnded){
-                if (!gameInstance.keyboard){
-                    if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-                        initTimerInterrupteur();
+                if (!gameInstance.endOfLevel){
+                    if (!gameInstance.catNotKeyboard){
+                        if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                            initTimerInterrupteur();
+                        }
+                        if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
+                            stopTimerInterrupteur();
+                        }
                     }
-                    if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
-                        stopTimerInterrupteur();
-                    }
+                }else{
+                    stopTimerInterrupteur();
                 }
             }
         };
@@ -108,18 +170,23 @@ public class Interrupteur extends Parent {
             new KeyValue(progressIndicator.progressProperty(), 1)));
 
         timelineProgressBar.setOnFinished(actionEvent -> {
+
             final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
             if (!this.isInterrupteurActivated){
+                // Move the doors out of bounds
                 this.isInterrupteurActivated = true;
                 this.interrupteur.setFill(onButton);
                 for (Rectangle porte : portes) {
-                    porte.setX(porte.getX() + dimension2D.getWidth() + 100);
+                    porte.setX(porte.getX() + dimension2D.getWidth() + 500);
                 }
             }else{
                 this.isInterrupteurActivated = false;
                 this.interrupteur.setFill(offButton);
+
+                // Move the doors to their initial position
                 for (Rectangle porte : portes) {
-                    porte.setX(porte.getX()-dimension2D.getWidth() - 100);
+                    porte.setX(porte.getX()-dimension2D.getWidth() - 500);
                     if (gameInstance.isCollidingWithASpecificObstacle(porte,gameInstance.cat.hitbox)){
                         gameInstance.endOfGame(false);
                         break;
@@ -134,7 +201,7 @@ public class Interrupteur extends Parent {
                 }
             }
 
-            if (gameInstance.keyboard){
+            if (gameInstance.catNotKeyboard){
                 stopTimerInterrupteur();
             }
 
@@ -144,17 +211,25 @@ public class Interrupteur extends Parent {
     }
 
 
+    /**
+     * Creates doors around a given object by creating 4 rectangles representing each side of the door.
+     * Adds the rectangles to the list of doors.
+     * @param object the object around which the doors are created
+     */
     public void createDoorAroundAnObject(Rectangle object){
 
+        // Define the width and height of the doors
         double width = 50;
         double height = 50;
 
+        // Create 4 rectangles representing the doors around the object
         Rectangle leftDoor = new Rectangle(object.getX()-width*2, object.getY()-height/2, width,object.getHeight()+height);
         Rectangle rightDoor = new Rectangle(object.getX()+object.getWidth()+width, object.getY()-height/2, width,object.getHeight()+height);
 
         Rectangle upDoor = new Rectangle(object.getX()-width*2, object.getY()-height-height/2, object.getWidth()+width*3+width, height);
         Rectangle downDoor = new Rectangle(object.getX()-width*2, object.getY()+object.getHeight()+height/2, object.getWidth()+width*3+width, height);
 
+        // Add the rectangles to the list of doors
 
         this.portes.add(upDoor);
         this.portes.add(leftDoor);

@@ -76,9 +76,19 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
      */
     protected ArrayList<Cat> dogs;
 
-    protected boolean keyboard;
+    /**
+     * Specifies if the cat is playable with keyboard or not
+     */
+    protected boolean catNotKeyboard;
+
+    /**
+     * Specifies if a key is pressed
+     */
     private boolean isKeyPressed;
 
+    /**
+     * Specifies if the game timer has ended or not
+     */
     protected boolean gameTimerEnded;
 
     /**
@@ -87,7 +97,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
      * @param stats the game statistics for the new game instance
      * @param level the level for the new game instance
      */
-    public CooperativeGame(final IGameContext gameContext, Stats stats, int level, boolean keyboard){
+    public CooperativeGame(final IGameContext gameContext, Stats stats, int level, boolean catNotKeyboard){
         this.gameContext = gameContext;
         this.stats = stats;
         this.level = level;
@@ -96,7 +106,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         this.interrupteurs = new ArrayList<>();
         this.walls = new ArrayList<>();
         this.wallsMoving = new ArrayList<>();
-        this.keyboard = keyboard;
+        this.catNotKeyboard = catNotKeyboard;
         this.gameTimerEnded = false;
     }
 
@@ -105,21 +115,24 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
 
 
     /**
-     * Launches a new level of the game by resetting the obstacles, dogs, and walls,
+     * Launches a new level of the game by resetting the obstacles, switches, dogs, and walls,
      * setting the end of the level to false, adding the stats to the gaze device manager,
      * creating a new background rectangle, initializing the game box,
      * notifying that a new round is ready, and starting the game.
      */
     @Override
     public void launch() {
-        this.endOfLevel = false;
+        //Clear all arrayLists
         this.obstacles.clear();
         this.dogs.clear();
         this.interrupteurs.clear();
         this.walls.clear();
         this.wallsMoving.clear();
-        gameContext.setLimiterAvailable();
+
+        this.endOfLevel = false;
+
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        gameContext.setLimiterAvailable();
         Rectangle background = new Rectangle(0,0,dimension2D.getWidth(),dimension2D.getHeight());
         background.setFill(Color.WHITE);
         gameContext.getGazeDeviceManager().addStats(stats);
@@ -130,38 +143,43 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         gameContext.firstStart();
         this.gameTimerEnded = false;
 
-        if (keyboard){
 
-
+        if (catNotKeyboard){
             gameContext.getPrimaryScene().setOnKeyPressed(keyEvent -> {
                 if (gameTimerEnded){
-                    if (!isKeyPressed){
+                    if (!endOfLevel){
+                        if (!isKeyPressed){
 
-                        switch (keyEvent.getCode()) {
-                            case A -> {
-                                isKeyPressed = true;
-                                if (!this.dogs.isEmpty()) {
-                                    Cat nearestDog = getNearestDogFromCat(this.dogs);
-                                    if (nearestDog != null) {
-                                        nearestDog.canMove = false;
+                            // Perform different actions depending on the pressed key
+                            switch (keyEvent.getCode()) {
+                                // If the A key is pressed, stop the nearest dog
+                                case A -> {
+                                    isKeyPressed = true;
+                                    if (!this.dogs.isEmpty()) {
+                                        Cat nearestDog = getNearestDogFromCat(this.dogs);
+                                        if (nearestDog != null) {
+                                            nearestDog.canMove = false;
+                                        }
                                     }
                                 }
-                            }
-                            case Z -> {
-                                isKeyPressed = true;
-                                if (!this.interrupteurs.isEmpty()){
-                                    Interrupteur nearestInterrupteur = getNearestInterrupteurFromCat(this.interrupteurs);
-                                    if (nearestInterrupteur != null){
-                                        nearestInterrupteur.initTimerInterrupteur();
+                                // If the Z key is pressed, activate the nearest interrupteur
+                                case Z -> {
+                                    isKeyPressed = true;
+                                    if (!this.interrupteurs.isEmpty()){
+                                        Interrupteur nearestInterrupteur = getNearestInterrupteurFromCat(this.interrupteurs);
+                                        if (nearestInterrupteur != null){
+                                            nearestInterrupteur.initTimerInterrupteur();
+                                        }
                                     }
                                 }
-                            }
-                            case E -> {
-                                isKeyPressed = true;
-                                if (!this.wallsMoving.isEmpty()){
-                                    MovingWall nearestMovingWall = getNearestWallMovingFromCat(this.wallsMoving);
-                                    if (nearestMovingWall != null){
-                                        nearestMovingWall.canMove = false;
+                                // If the E key is pressed, stop the nearest movingWall
+                                case E -> {
+                                    isKeyPressed = true;
+                                    if (!this.wallsMoving.isEmpty()){
+                                        MovingWall nearestMovingWall = getNearestWallMovingFromCat(this.wallsMoving);
+                                        if (nearestMovingWall != null){
+                                            nearestMovingWall.canMove = false;
+                                        }
                                     }
                                 }
                             }
@@ -172,33 +190,38 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
 
             gameContext.getPrimaryScene().setOnKeyReleased(keyEvent -> {
                 if (gameTimerEnded){
-                    switch (keyEvent.getCode()) {
-                        case A -> {
-                            isKeyPressed = false;
-                            if (!this.dogs.isEmpty()) {
-                                for (Cat dog : this.dogs) {
-                                    dog.canMove = true;
-                                }
-                            }
-                        }
-                        case Z -> {
-                            isKeyPressed = false;
-                            if (!this.interrupteurs.isEmpty()){
-                                for (Interrupteur interrupteur : this.interrupteurs) {
-
-                                    if (interrupteur.timelineProgressBar != null && interrupteur.timelineProgressBar.getStatus() == Animation.Status.RUNNING ){
-                                        interrupteur.stopTimerInterrupteur();
+                    if (!endOfLevel){
+                        switch (keyEvent.getCode()) {
+                            // If the A key is released, let the dogs move again
+                            case A -> {
+                                isKeyPressed = false;
+                                if (!this.dogs.isEmpty()) {
+                                    for (Cat dog : this.dogs) {
+                                        dog.canMove = true;
                                     }
-
                                 }
                             }
+                            // If the Z key is released, stop the timers of all switches
+                            case Z -> {
+                                isKeyPressed = false;
+                                if (!this.interrupteurs.isEmpty()){
+                                    for (Interrupteur interrupteur : this.interrupteurs) {
 
-                        }
-                        case E -> {
-                            isKeyPressed = false;
-                            if (!this.wallsMoving.isEmpty()){
-                                for (MovingWall wallMoving : this.wallsMoving) {
-                                    wallMoving.canMove = true;
+                                        if (interrupteur.timelineProgressBar != null && interrupteur.timelineProgressBar.getStatus() == Animation.Status.RUNNING ){
+                                            interrupteur.stopTimerInterrupteur();
+                                        }
+
+                                    }
+                                }
+
+                            }
+                            // If the E key is released, let the movingWall move again
+                            case E -> {
+                                isKeyPressed = false;
+                                if (!this.wallsMoving.isEmpty()){
+                                    for (MovingWall wallMoving : this.wallsMoving) {
+                                        wallMoving.canMove = true;
+                                    }
                                 }
                             }
                         }
@@ -215,6 +238,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         double dogSpeed = 3.5;
+
         int widthCat = 125;
         int heightCat = 125;
         int widthDog = 125;
@@ -224,11 +248,12 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
         int widthGamelle = 120;
         int heightGamelle = 80;
 
-        if (!keyboard){
+        if (!catNotKeyboard){
             this.cat = new Cat(0, 0, widthCat,heightCat,gameContext,stats,this, 10, true,null);
         }else{
             this.cat = new Cat(0,0,widthCat,heightCat,gameContext,stats,this,8,true, new Rectangle(0,0,1,1));
         }
+
         this.gamelle = new Rectangle(1000,1000,widthGamelle,heightGamelle);
 
         if (this.level == 1){
@@ -663,7 +688,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
             if (isCollidingWithASpecificObstacle(futurePos, obstacle)) {
                 // If the object collides with an obstacle, check the type of the obstacle
                 if (obstacle instanceof MovingWall movingWall){
-                    // If the obstacle is a moving wall and it has to reset the pos of the cat, check for collision with the object and dogs
+                    // If the obstacle is a moving wall, and it has to reset the pos of the cat, check for collision with the object and dogs
                     if (movingWall.resetPos && isCollidingWithASpecificObstacle(movingWall,futurePos)){
                         if (object.equals(this.cat.hitbox)){
                             // If the object is the cat and if it collides with the moving wall, game over and return true
@@ -691,7 +716,7 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
                         return true;
                     }
                 } else {
-                    // If the object is a dog and it collides with the cat, end the game and return true
+                    // If the object is a dog, and it collides with the cat, end the game and return true
                     for (Cat dog : this.dogs) {
                         if (dog.hitbox.equals(object) && this.cat.hitbox.equals(obstacle)) {
                             if (!endOfLevel) {
@@ -765,77 +790,125 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
 
 
 
-
+    /**
+     * Returns the nearest Cat object to the current Cat object, from a given list of Cat objects.
+     *
+     * @param nbDog the list of Cat objects to search from (they represent the dogs)
+     * @return the nearest Cat object, or null if the list is empty
+     */
     private Cat getNearestDogFromCat(ArrayList<Cat> nbDog) {
         Cat nearest = null;
         double minDistance = Double.MAX_VALUE;
 
         for (Cat rect : nbDog) {
+            // Calculate the distance between the current Cat object and the current Cat in the list (dog)
             double distance = distance(this.cat.hitbox, rect.hitbox);
+
+            // If the distance is less than the current minimum distance, update the nearest Cat object and minimum distance
             if (distance < minDistance) {
                 minDistance = distance;
                 nearest = rect;
             }
         }
 
+        // Return the nearest Cat object
         return nearest;
     }
+
+    /**
+     * Returns the nearest Interrupteur object to the current Cat object, from a given list of Interrupteur objects.
+     *
+     * @param nbInterrupteurs the list of Interrupteur objects to search from
+     * @return the nearest Interrupteur object, or null if the list is empty
+     */
     private Interrupteur getNearestInterrupteurFromCat(ArrayList<Interrupteur> nbInterrupteurs) {
         Interrupteur nearest = null;
         double minDistance = Double.MAX_VALUE;
 
         for (Interrupteur rect : nbInterrupteurs) {
+            // Calculate the distance between the current Interrupteur object and the current Interrupteur in the list
             double distance = distance(this.cat.hitbox, rect.getInterrupteur());
+
+            // If the distance is less than the current minimum distance, update the nearest Interrupteur object and minimum distance
             if (distance < minDistance) {
                 minDistance = distance;
                 nearest = rect;
             }
         }
-
+        // Return the nearest Interrupteur object
         return nearest;
     }
 
+
+    /**
+     * Returns the nearest MovingWall object to the current Cat object, from a given list of MovingWall objects.
+     *
+     * @param nbMovingWalls the list of MovingWall objects to search from
+     * @return the nearest MovingWall object, or null if the list is empty
+     */
     private MovingWall getNearestWallMovingFromCat(ArrayList<MovingWall> nbMovingWalls) {
         MovingWall nearest = null;
         double minDistance = Double.MAX_VALUE;
 
         for (MovingWall rect : nbMovingWalls) {
+            // Calculate the distance between the current Cat object and the current MovingWall in the list
             double distance = distance(this.cat.hitbox, rect);
+
+            // If the distance is less than the current minimum distance, update the nearest MovingWall object and minimum distance
             if (distance < minDistance) {
                 minDistance = distance;
                 nearest = rect;
             }
         }
 
+        // Return the nearest MovingWall object
         return nearest;
     }
 
+
+    /**
+     * Calculates and returns the distance between two rectangles.
+     *
+     * @param rect1 the first rectangle
+     * @param rect2 the second rectangle
+     * @return the distance between the two rectangles
+     */
     private double distance(Rectangle rect1, Rectangle rect2) {
         double dx = rect2.getX() - rect1.getX();
         double dy = rect2.getY() - rect1.getY();
+
+        // Calculate the distance using the Pythagorean theorem
         return Math.sqrt(dx*dx + dy*dy);
     }
 
 
+    /**
+     * Initializes an animation timer that counts the number of seconds specified by the 'sec' parameter.
+     *
+     * @param sec the number of seconds the timer should count
+     */
     private void initGameTimer(int sec) {
         AnimationTimer gameTimer = new AnimationTimer() {
             int nbframe = 0;
             int nbSec = 0;
+
             @Override
             public void handle(long now) {
-
-                if (nbframe <= 60){
+                // Increase the number of frames
+                if (nbframe <= 60) {
                     nbframe++;
-                }else{
+                } else { // If one second has passed, increase the number of seconds
                     nbSec++;
-                    if (nbSec == sec){
+                    // If the number of seconds equals 'sec', set the 'gameTimerEnded' flag to true
+                    if (nbSec == sec) {
                         gameTimerEnded = true;
                     }
+                    // Reset the number of frames
                     nbframe = 0;
                 }
-
             }
         };
+        // Start the animation timer
         gameTimer.start();
     }
 
