@@ -46,7 +46,7 @@ public class Interrupteur extends Parent {
     /**
      The instance of the cooperative game that this interrupteur object is a part of.
      */
-    private final CooperativeGame gameInstance;
+    private final SprintFinish gameInstance;
 
     /**
      The event handler that will be triggered when the interrupteur is gazed at or clicked on.
@@ -89,7 +89,7 @@ public class Interrupteur extends Parent {
      * @param gameContext the game context in which the switch is located
      * @param gameInstance the instance of the cooperative game
      */
-    public Interrupteur(Rectangle interrupteur, IGameContext gameContext, CooperativeGame gameInstance){
+    public Interrupteur(Rectangle interrupteur, IGameContext gameContext, SprintFinish gameInstance){
         this.interrupteur = interrupteur;
         this.portes = new ArrayList<>();
         this.gameContext = gameContext;

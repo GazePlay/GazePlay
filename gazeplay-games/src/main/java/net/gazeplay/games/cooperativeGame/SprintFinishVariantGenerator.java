@@ -10,7 +10,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class CooperativeGameVariantGenerator implements IGameVariantGenerator {
+public class SprintFinishVariantGenerator implements IGameVariantGenerator {
 
     @Override
     public Set<IGameVariant> getVariants() {

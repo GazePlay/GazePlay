@@ -5,12 +5,13 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
 
-public class CooperativeGameSpecSource implements GameSpecSource {
+public class SprintFinishMouseSpecSource implements GameSpecSource {
+
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("CooperativeGame").gameThumbnail("data/Thumbnails/chasedownChallenge.png")
+            GameSummary.builder().nameCode("SprintFinishMouse").gameThumbnail("data/Thumbnails/SprintToTheFinish.png")
                 .category(GameCategories.Category.ACTION_REACTION).build(),
-            new CooperativeGameVariantGenerator(), new CooperativeGameLauncher());
+            new SprintFinishVariantGenerator(), new SprintFinishMouseLauncher());
     }
 }

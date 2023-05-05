@@ -140,7 +140,7 @@ public class GameVariantDialog extends Stage {
                     default -> 0;
                 };
 
-            } else if(gameSpec.getGameSummary().getNameCode().equals("CooperativeGame")){
+            } else if(gameSpec.getGameSummary().getNameCode().equals("SprintFinish")){
                 button.setTextAlignment(TextAlignment.CENTER);
                 int variantString = ((IntGameVariant) variant).getNumber();
                 indexOfTheVariant = switch(variantString){
@@ -152,7 +152,7 @@ public class GameVariantDialog extends Stage {
                     default -> 0;
                 };
 
-            }else if(gameSpec.getGameSummary().getNameCode().equals("CooperativeGameKeyboard")){
+            }else if(gameSpec.getGameSummary().getNameCode().equals("SprintFinishMouse")){
                 button.setTextAlignment(TextAlignment.CENTER);
                 int variantString = ((IntGameVariant) variant).getNumber();
                 indexOfTheVariant = switch(variantString){
@@ -189,8 +189,8 @@ public class GameVariantDialog extends Stage {
 
             if ((gameSpec.getGameSummary().getNameCode().equals("Bottle") ||
                 gameSpec.getGameSummary().getNameCode().equals("RushHour") ||
-                gameSpec.getGameSummary().getNameCode().equals("CooperativeGame") ||
-                gameSpec.getGameSummary().getNameCode().equals("CooperativeGameKeyboard") ||
+                gameSpec.getGameSummary().getNameCode().equals("SprintFinish") ||
+                gameSpec.getGameSummary().getNameCode().equals("SprintFinishMouse") ||
                 gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                 gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
@@ -224,7 +224,7 @@ public class GameVariantDialog extends Stage {
                     categories[4] = new RadioButton(translator.translate("Niveau24-29"));
                     categories[5] = new RadioButton(translator.translate("Niveau30-33"));
 
-                }else if(gameSpec.getGameSummary().getNameCode().equals("CooperativeGame")){
+                }else if(gameSpec.getGameSummary().getNameCode().equals("SprintFinish")){
 
                     categories = new RadioButton[3];
 
@@ -235,7 +235,7 @@ public class GameVariantDialog extends Stage {
 
 
 
-                }else if(gameSpec.getGameSummary().getNameCode().equals("CooperativeGameKeyboard")){
+                }else if(gameSpec.getGameSummary().getNameCode().equals("SprintFinishMouse")){
 
                     categories = new RadioButton[3];
 

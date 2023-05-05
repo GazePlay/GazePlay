@@ -1,5 +1,5 @@
 /**
- * The CooperativeGame class represents a cooperative game in which the player controls a cat to complete levels.
+ * The SprintFinish class represents a cooperative game in which the player controls a cat to complete levels.
  * The objective of the game is for the cat to reach its food dish without being caught by the pursuing dogs. If the cat is caught by a dog, the level restarts.
  * The game is implemented as a JavaFX application and extends the Parent class.
  */
@@ -19,7 +19,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 
-public class CooperativeGame extends Parent implements GameLifeCycle {
+public class SprintFinish extends Parent implements GameLifeCycle {
 
     /**
      * The game context for the current game instance.
@@ -92,12 +92,12 @@ public class CooperativeGame extends Parent implements GameLifeCycle {
     protected boolean gameTimerEnded;
 
     /**
-     * Constructs a new CooperativeGame instance with the specified game context, statistics, and level.
+     * Constructs a new SprintFinish instance with the specified game context, statistics, and level.
      * @param gameContext the game context for the new game instance
      * @param stats the game statistics for the new game instance
      * @param level the level for the new game instance
      */
-    public CooperativeGame(final IGameContext gameContext, Stats stats, int level, boolean catNotKeyboard){
+    public SprintFinish(final IGameContext gameContext, Stats stats, int level, boolean catNotKeyboard){
         this.gameContext = gameContext;
         this.stats = stats;
         this.level = level;

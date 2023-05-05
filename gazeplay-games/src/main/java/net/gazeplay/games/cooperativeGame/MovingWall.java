@@ -21,7 +21,7 @@ public class MovingWall extends Rectangle {
     private boolean direction;
 
     /** The cooperative game instance. */
-    private final CooperativeGame gameInstance;
+    private final SprintFinish gameInstance;
 
     /** The timeline for vertical movement. */
     private Timeline verticalTimeline;
@@ -29,7 +29,7 @@ public class MovingWall extends Rectangle {
     /** The timeline for horizontal movement. */
     private Timeline horizontalTimeline;
 
-    /** Indicates whether the wall should reset to its original position after reaching the end. */
+    /** Indicates whether the wall should reset the object it collide with. */
     protected boolean resetPos;
 
     /** The game context in which the wall is present. */
@@ -45,7 +45,7 @@ public class MovingWall extends Rectangle {
     protected boolean canMove;
 
 
-    MovingWall(final double x, final double y, final double width, final double height, CooperativeGame gameInstance, IGameContext gameContext, boolean resetPos, float speed) {
+    MovingWall(final double x, final double y, final double width, final double height, SprintFinish gameInstance, IGameContext gameContext, boolean resetPos, float speed) {
         super(x, y, width, height);
         this.direction = true;
         this.gameInstance = gameInstance;

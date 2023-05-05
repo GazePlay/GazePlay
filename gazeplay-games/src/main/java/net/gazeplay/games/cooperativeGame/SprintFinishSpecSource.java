@@ -5,13 +5,12 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.GameSpecSource;
 import net.gazeplay.GameSummary;
 
-public class CooperativeGameKeyboardSpecSource implements GameSpecSource {
-
+public class SprintFinishSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("CooperativeGameKeyboard").gameThumbnail("data/Thumbnails/chasedownChallenge.png")
+            GameSummary.builder().nameCode("SprintFinish").gameThumbnail("data/Thumbnails/SprintToTheFinish.png")
                 .category(GameCategories.Category.ACTION_REACTION).build(),
-            new CooperativeGameVariantGenerator(), new CooperativeGameKeyboardLauncher());
+            new SprintFinishVariantGenerator(), new SprintFinishLauncher());
     }
 }

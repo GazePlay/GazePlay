@@ -37,7 +37,7 @@ public class Cat extends Parent {
     /**
      * The game instance
      */
-    protected final CooperativeGame gameInstance;
+    protected final SprintFinish gameInstance;
 
     /**
      * The speed of the cat
@@ -130,7 +130,7 @@ public class Cat extends Parent {
      * @param target A target that the dog will follow
      */
     public Cat(final double positionX, final double positionY, final double width, final double height, final IGameContext gameContext, final Stats stats,
-               final CooperativeGame gameInstance, double speed2, boolean isACat, Rectangle target){
+               final SprintFinish gameInstance, double speed2, boolean isACat, Rectangle target){
         this.hitbox = new Rectangle(positionX, positionY, width, height);
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;

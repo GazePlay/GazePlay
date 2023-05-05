@@ -10,17 +10,17 @@ import net.gazeplay.stats.SelectionGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class CooperativeGameStats extends SelectionGamesStats {
+public class SprintFinishStats extends SelectionGamesStats {
 
-    public CooperativeGameStats(Scene gameContextScene) {
+    public SprintFinishStats(Scene gameContextScene) {
         super(gameContextScene);
-        this.gameName = "CooperativeGame";
+        this.gameName = "SprintFinish";
         setAccidentalShotPreventionPeriod(0);
     }
 
-    public CooperativeGameStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
+    public SprintFinishStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
-        this.gameName = "CooperativeGame";
+        this.gameName = "SprintFinish";
         setAccidentalShotPreventionPeriod(0);
     }
 }
