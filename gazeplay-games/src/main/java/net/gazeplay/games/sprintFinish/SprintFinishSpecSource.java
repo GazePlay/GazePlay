@@ -1,4 +1,4 @@
-package net.gazeplay.games.cooperativeGame;
+package net.gazeplay.games.sprintFinish;
 
 import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;

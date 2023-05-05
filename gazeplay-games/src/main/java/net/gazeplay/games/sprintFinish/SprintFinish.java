@@ -3,7 +3,7 @@
  * The objective of the game is for the cat to reach its food dish without being caught by the pursuing dogs. If the cat is caught by a dog, the level restarts.
  * The game is implemented as a JavaFX application and extends the Parent class.
  */
-package net.gazeplay.games.cooperativeGame;
+package net.gazeplay.games.sprintFinish;
 
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
@@ -572,7 +572,7 @@ public class SprintFinish extends Parent implements GameLifeCycle {
         this.obstacles.add(this.cat.hitbox);
         this.cat.hitbox.toFront();
 
-        this.gamelle.setFill(new ImagePattern(new Image("data/cooperativeGame/gamelle.png")));
+        this.gamelle.setFill(new ImagePattern(new Image("data/sprintFinish/gamelle.png")));
         gameContext.getChildren().add(this.cat.hitbox);
         gameContext.getChildren().add(this.gamelle);
         this.obstacles.add(this.gamelle);

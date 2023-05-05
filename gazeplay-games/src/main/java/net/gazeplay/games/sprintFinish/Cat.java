@@ -4,7 +4,7 @@
  It extends the JavaFX Parent class and contains methods for moving the cat based on user input and
  for moving the cat automatically towards a target if it is not a player-controlled cat.
  */
-package net.gazeplay.games.cooperativeGame;
+package net.gazeplay.games.sprintFinish;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.Event;
@@ -147,7 +147,7 @@ public class Cat extends Parent {
             this.enterEvent = null;
             this.target = null;
 
-            this.hitbox.setFill(new ImagePattern(new Image("data/cooperativeGame/chat.png")));
+            this.hitbox.setFill(new ImagePattern(new Image("data/sprintFinish/chat.png")));
             // Add a key pressed event filter to the primary game scene to handle movement
 
             gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, key-> {
@@ -253,7 +253,7 @@ public class Cat extends Parent {
 
 
         } else if (isACat && target != null){ // If the cat is not playable with a keyboard
-            this.hitbox.setFill(new ImagePattern(new Image("data/cooperativeGame/chat.png")));
+            this.hitbox.setFill(new ImagePattern(new Image("data/sprintFinish/chat.png")));
             this.target = target;
 
             // Start moving after the game timer ended.
@@ -276,7 +276,7 @@ public class Cat extends Parent {
             gameContext.getPrimaryScene().addEventFilter(MouseEvent.ANY, enterEvent);
         } else{ //If it's a dog
 
-            this.hitbox.setFill(new ImagePattern(new Image("data/cooperativeGame/chien.png")));
+            this.hitbox.setFill(new ImagePattern(new Image("data/sprintFinish/chien.png")));
             this.target = target;
             this.canMove = true;
             initPos();

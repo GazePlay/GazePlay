@@ -1,4 +1,4 @@
-package net.gazeplay.games.cooperativeGame;
+package net.gazeplay.games.sprintFinish;
 
 import javafx.scene.Scene;
 import net.gazeplay.commons.utils.FixationPoint;

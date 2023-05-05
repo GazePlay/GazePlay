@@ -1,4 +1,4 @@
-package net.gazeplay.games.cooperativeGame;
+package net.gazeplay.games.sprintFinish;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -95,8 +95,8 @@ public class Interrupteur extends Parent {
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
         this.isInterrupteurActivated = false;
-        this.offButton = new ImagePattern(new Image("data/cooperativeGame/pushButtonOff.png"));
-        this.onButton = new ImagePattern(new Image("data/cooperativeGame/pushButtonOn.png"));
+        this.offButton = new ImagePattern(new Image("data/sprintFinish/pushButtonOff.png"));
+        this.onButton = new ImagePattern(new Image("data/sprintFinish/pushButtonOn.png"));
         this.interrupteur.setFill(offButton);
         gameContext.getChildren().add(this.interrupteur);
         this.enterEvent = buildEvent();
