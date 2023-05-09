@@ -11,7 +11,7 @@ import net.gazeplay.IGameContext;
 public class Player extends Parent {
 
     protected Rectangle hitbox;
-    private double speed;
+    private final double speed;
     private final IGameContext gameContext;
     private final SurviveAgainstRobots gameInstance;
     private KeyCode horizontalDirection, verticalDirection;
@@ -27,12 +27,12 @@ public class Player extends Parent {
      * The current Y speed of movement
      */
     private double currentSpeedY;
-    private double acceleration;
+    private final double acceleration;
 
 
-    private AnimationTimer playerAnimationMovement;
-    private double freqShoot;
-    private double bulletSpeed;
+    protected AnimationTimer playerAnimationMovement;
+    private final double freqShoot;
+    private final double bulletSpeed;
 
     public Player(Rectangle hitbox, double speed, IGameContext gameContext, SurviveAgainstRobots gameInstance, double freqShoot) {
         this.hitbox = hitbox;
@@ -41,7 +41,7 @@ public class Player extends Parent {
         this.gameInstance = gameInstance;
         this.acceleration = 0.5;
         this.freqShoot = freqShoot;
-        this.bulletSpeed = this.speed *1.2;
+        this.bulletSpeed = this.speed *1.8;
 
         initKey();
 

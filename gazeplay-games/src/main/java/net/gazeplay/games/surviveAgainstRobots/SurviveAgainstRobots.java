@@ -1,5 +1,6 @@
 package net.gazeplay.games.surviveAgainstRobots;
 
+import javafx.animation.AnimationTimer;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
@@ -9,6 +10,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
@@ -16,9 +18,14 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
     private final IGameContext gameContext;
     private final Stats stats;
     private ArrayList<Rectangle> obstacles;
+    private ArrayList<Robot> robots;
     private final SurviveAgainstRobotsVariant gameVariant;
 
     protected Player player;
+    private int scorePoint;
+    private int nbMaxRobot;
+    private AnimationTimer timerGame;
+
 
 
     public SurviveAgainstRobots(final IGameContext gameContext, SurviveAgainstRobotsVariant gameVariant, Stats stats){
@@ -26,26 +33,103 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         this.stats = stats;
         this.gameVariant = gameVariant;
         this.obstacles = new ArrayList<>();
+        this.robots = new ArrayList<>();
+        this.scorePoint = 1;
+        this.nbMaxRobot = 1;
     }
 
     public void startGame(){
 
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         this.player = new Player(new Rectangle(500,500,100,100),10,gameContext,this, 0.5);
 
         this.player.hitbox.setFill(Color.BLACK);
         gameContext.getChildren().add(this.player.hitbox);
         this.player.hitbox.toFront();
+        this.obstacles.add(this.player.hitbox);
 
-        System.out.println("size of obstacles" + obstacles.size());
 
+
+        timerGame = new AnimationTimer() {
+
+            int nbframes = 0;
+            int nbSecond = 0;
+            int scoreIncrementRobot = 20;
+            @Override
+            public void handle(long now) {
+
+                nbframes++;
+                if (nbframes == 60){
+                    nbframes = 0;
+                    nbSecond++;
+                    if (nbSecond % 3 == 0){
+                        scorePoint++;
+                    }
+                    if (robots.size() < nbMaxRobot){
+                        createRobot();
+                    }
+                }
+
+                if (scorePoint > scoreIncrementRobot){
+                    if (nbMaxRobot < 4){
+                        nbMaxRobot++;
+                    }
+                    scoreIncrementRobot+=20;
+                }
+
+
+
+            }
+        };
+        timerGame.start();
     }
 
+    private void onRobotKilled(Rectangle robot){
+        if (robot instanceof Robot){
+            gameContext.getChildren().remove(robot);
+            obstacles.remove(robot);
+            robots.remove(robot);
+        }
+        scorePoint++;
+    }
+
+    private void createRobot(){
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        double x;
+        double y;
+        Random randomPosX = new Random();
+        x = randomPosX.nextDouble(200,dimension2D.getWidth()-200);
+        y = randomPosX.nextDouble(200,dimension2D.getHeight()-200);
+        Rectangle verifPos = new Rectangle(x,y,100,100);
+
+        for (Robot value : robots) {
+            if (isCollidingWithASpecificObstacle(verifPos, value)) {
+                createRobot();
+                return;
+            }
+        }
+        if (isCollidingWithASpecificObstacle(this.player.hitbox,verifPos)){
+            createRobot();
+        }else{
+            Robot robot = new Robot(x,y,100,100,5,gameContext,this);
+            robots.add(robot);
+            this.obstacles.add(robot);
+            gameContext.getChildren().add(robot);
+        }
+
+    }
 
     @Override
     public void launch() {
 
         this.obstacles.clear();
-
+        this.robots.clear();
+        if (this.timerGame != null){
+            this.timerGame.stop();
+        }
+        if (this.player != null){
+            this.player.playerAnimationMovement.stop();
+        }
 
 
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -63,7 +147,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
     @Override
     public void dispose() {
-
+        gameContext.getChildren().clear();
     }
 
     /**
@@ -141,6 +225,16 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
                         gameContext.getChildren().remove(object);
                     }
 
+                    if (obstacle instanceof Robot){
+                        onRobotKilled(obstacle);
+                    }
+
+                }
+
+                if (object instanceof Robot || obstacle instanceof Robot){
+                    if (obstacle == player.hitbox || object == player.hitbox){
+                        endOfGame();
+                    }
                 }
 
 
@@ -162,6 +256,12 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
         return object1.getX() < object2.getX() + object2.getWidth() && object1.getX() + object1.getWidth() > object2.getX()
             && object1.getY() < object2.getY() + object2.getHeight() && object1.getY() + object1.getHeight() > object2.getY();
+
+    }
+
+    protected void endOfGame(){
+        dispose();
+        launch();
 
     }
 }

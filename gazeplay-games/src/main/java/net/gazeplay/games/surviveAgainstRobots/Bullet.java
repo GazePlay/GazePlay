@@ -16,7 +16,6 @@ public class Bullet extends Rectangle {
     private SurviveAgainstRobots gameInstance;
     private IGameContext gameContext;
     private boolean isDestroyed;
-    private double x,y,width,height;
     public Bullet(double x, double y, double width, double height, double speed, SurviveAgainstRobots gameInstance, IGameContext gameContext) {
         super(x, y, width, height);
         setFill(Color.RED);
