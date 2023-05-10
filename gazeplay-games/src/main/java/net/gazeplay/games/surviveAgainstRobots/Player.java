@@ -39,6 +39,7 @@ public class Player extends Parent {
     private final double bulletSpeed;
     private Rectangle target;
     private final EventHandler<Event> enterEvent;
+    protected boolean isDead;
 
     public Player(Rectangle hitbox, double speed, IGameContext gameContext, SurviveAgainstRobots gameInstance, double freqShoot, Rectangle target) {
         this.hitbox = hitbox;
@@ -47,7 +48,7 @@ public class Player extends Parent {
         this.gameInstance = gameInstance;
         this.acceleration = 0.5;
         this.freqShoot = freqShoot;
-
+        this.isDead = false;
 
         if (target != null){
             this.bulletSpeed = (this.speed+5) *1.8;
@@ -65,22 +66,29 @@ public class Player extends Parent {
                 int nbframe = 0;
                 @Override
                 public void handle(long now) {
-                    if (target==null){
-                        playerMove();
-                    }else{
-                        playerMoveMouse();
-                    }
-                    nbframe++;
-                    if (nbframe == 60*freqShoot){
-                        nbframe = 0;
-                    }
-                    if (nbframe == 0){
-                        if (target == null){
-                            automaticShoot();
-                        }else{
-                            automaticShootMouse();
-                            hitbox.toFront();
+                    if (!isDead){
+                        if (!gameContext.getChildren().contains(hitbox)){
+                            isDead = true;
                         }
+                        if (target==null){
+                            playerMove();
+                        }else{
+                            playerMoveMouse();
+                        }
+                        nbframe++;
+                        if (nbframe == 60*freqShoot){
+                            nbframe = 0;
+                        }
+                        if (nbframe == 0){
+                            if (target == null){
+                                automaticShoot();
+                            }else{
+                                automaticShootMouse();
+                                hitbox.toFront();
+                            }
+                        }
+                    }else{
+                        stop();
                     }
                 }
             };

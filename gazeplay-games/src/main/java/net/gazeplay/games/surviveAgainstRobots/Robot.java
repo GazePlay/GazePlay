@@ -1,7 +1,10 @@
 package net.gazeplay.games.surviveAgainstRobots;
 
 import javafx.animation.AnimationTimer;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import net.gazeplay.IGameContext;
 
@@ -23,6 +26,9 @@ public class Robot extends Rectangle {
     private boolean canShoot;
     private double freqShoot;
     private double bulletSpeed;
+    private final ImagePattern robotShooter = new ImagePattern(new Image("data/surviveAgainstRobots/Red.png"));
+    private final ImagePattern robotClassic = new ImagePattern(new Image("data/surviveAgainstRobots/Orange.png"));
+
     public Robot(double x, double y, double width, double height, double speed, IGameContext gameContext, SurviveAgainstRobots gameInstance, boolean canShoot) {
         super(x, y, width, height);
         this.speed = speed;
@@ -32,8 +38,11 @@ public class Robot extends Rectangle {
         this.isDestroyed = false;
         this.bulletSpeed = 5;
         this.freqShoot = 1.2;
-
-        this.setFill(Color.RED);
+        if (canShoot){
+            this.setFill(robotShooter);
+        }else{
+            this.setFill(robotClassic);
+        }
         AnimationTimer robotAnimation = new AnimationTimer() {
 
             int nbframes = 0;
@@ -43,6 +52,7 @@ public class Robot extends Rectangle {
                 if (!isDestroyed){
                     moveRobot();
                 }else{
+
                     stop();
                 }
                 if (nbframes == 120){
@@ -54,14 +64,16 @@ public class Robot extends Rectangle {
                 nbframes++;
 
                 nbframeShoot++;
-                if (canShoot){
-                    if (nbframeShoot == 60*freqShoot){
-                        nbframeShoot = 0;
-                    }
-                    if (nbframeShoot == 0){
-                        automaticShoot();
-                    }
+                if (!isDestroyed){
+                    if (canShoot){
+                        if (nbframeShoot == 60*freqShoot){
+                            nbframeShoot = 0;
+                        }
+                        if (nbframeShoot == 0){
+                            automaticShoot();
+                        }
 
+                    }
                 }
 
             }

@@ -6,7 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import net.gazeplay.GameLifeCycle;
@@ -31,6 +33,8 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
     private AnimationTimer timerGame;
 
     private final boolean isMouseEnable;
+
+    private final ImagePattern death = new ImagePattern(new Image("data/surviveAgainstRobots/Flash.png"));
 
 
 
@@ -114,12 +118,13 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
     private void onRobotKilled(Rectangle robot){
         if (robot instanceof Robot){
-            gameContext.getChildren().remove(robot);
             obstacles.remove(robot);
             robots.remove(robot);
         }
         scorePoint+=5;
     }
+
+
 
     private void createRobot(){
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -138,7 +143,6 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
             res = randomShoot.nextInt(0,6);
         }else{
             res = randomShoot.nextInt(0,4);
-
         }
         System.out.println("res = " + res);
 
@@ -280,18 +284,18 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
                     if (obstacle instanceof Robot){
                         if (object.getId().compareToIgnoreCase("playerBullet") == 0){
-                            onRobotKilled(obstacle);
+                            playDeathAnimation(1,obstacle);
                         }
                     }
 
                     if (obstacle == player.hitbox && object.getId().compareToIgnoreCase("robotBullet") == 0){
-                        endOfGame();
+                        playDeathAnimation(1,player.hitbox);
                     }
                 }
 
                 if (object instanceof Robot || obstacle instanceof Robot){
                     if (obstacle == player.hitbox || object == player.hitbox){
-                        endOfGame();
+                        playDeathAnimation(1,player.hitbox);
                     }
                 }
 
@@ -315,6 +319,40 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         return object1.getX() < object2.getX() + object2.getWidth() && object1.getX() + object1.getWidth() > object2.getX()
             && object1.getY() < object2.getY() + object2.getHeight() && object1.getY() + object1.getHeight() > object2.getY();
 
+    }
+
+    private void playDeathAnimation(int deathDuration, Rectangle object){
+        Rectangle death = new Rectangle(object.getX(),object.getY(),object.getWidth(),object.getHeight());
+        death.setFill(this.death);
+        gameContext.getChildren().add(death);
+        gameContext.getChildren().remove(object);
+
+        if (object instanceof Robot){
+            onRobotKilled(object);
+        }
+
+        AnimationTimer deathAnimation = new AnimationTimer() {
+            int nbframes = 0;
+            int nbSeconds = 0;
+            @Override
+            public void handle(long now) {
+
+                if (nbframes == 60){
+                    nbframes = 0;
+                    nbSeconds++;
+                }
+                if (nbSeconds == deathDuration){
+                    gameContext.getChildren().remove(death);
+                    if (object == player.hitbox){
+                        endOfGame();
+                    }
+                    stop();
+                }
+
+                nbframes++;
+            }
+        };
+        deathAnimation.start();
     }
 
     protected void endOfGame(){
