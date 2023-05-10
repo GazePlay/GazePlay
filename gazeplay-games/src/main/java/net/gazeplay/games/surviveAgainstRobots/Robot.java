@@ -20,15 +20,24 @@ public class Robot extends Rectangle {
     private String directionHorizontal;
     private String directionVertical;
     protected boolean isDestroyed;
-    public Robot(double x, double y, double width, double height, double speed, IGameContext gameContext, SurviveAgainstRobots gameInstance) {
+    private boolean canShoot;
+    private double freqShoot;
+    private double bulletSpeed;
+    public Robot(double x, double y, double width, double height, double speed, IGameContext gameContext, SurviveAgainstRobots gameInstance, boolean canShoot) {
         super(x, y, width, height);
         this.speed = speed;
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
+        this.canShoot = canShoot;
         this.isDestroyed = false;
+        this.bulletSpeed = 5;
+        this.freqShoot = 0.5;
+
         this.setFill(Color.RED);
         AnimationTimer robotAnimation = new AnimationTimer() {
+
             int nbframes = 0;
+            int nbframeShoot = 0;
             @Override
             public void handle(long now) {
                 if (!isDestroyed){
@@ -43,6 +52,19 @@ public class Robot extends Rectangle {
                     nbframes = 0;
                 }
                 nbframes++;
+
+                if (canShoot){
+                    if (nbframeShoot == 60*freqShoot){
+                        nbframeShoot = 0;
+                    }
+                    if (nbframeShoot == 0){
+                        System.out.println("automaticShoot");
+                        automaticShoot();
+                    }
+
+                    nbframeShoot++;
+                }
+
             }
         };
 
@@ -147,5 +169,15 @@ public class Robot extends Rectangle {
         }else{
             directionVertical = null;
         }
+    }
+
+    private void automaticShoot(){
+        double x = this.getX() + this.getWidth() / 2;
+        double y = this.getY() + this.getHeight() / 2;
+        Bullet bullet = new Bullet(x, y, 10, 10, bulletSpeed,gameInstance, gameContext);
+        bullet.setId("robotBullet");
+
+        gameContext.getChildren().add(bullet);
+        bullet.startMovingMouse(gameInstance.player.hitbox);
     }
 }

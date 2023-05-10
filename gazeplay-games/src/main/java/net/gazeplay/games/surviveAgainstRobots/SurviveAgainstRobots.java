@@ -3,8 +3,12 @@ package net.gazeplay.games.surviveAgainstRobots;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -26,22 +30,31 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
     private int nbMaxRobot;
     private AnimationTimer timerGame;
 
+    private final boolean isMouseEnable;
 
 
-    public SurviveAgainstRobots(final IGameContext gameContext, SurviveAgainstRobotsVariant gameVariant, Stats stats){
+
+    public SurviveAgainstRobots(final IGameContext gameContext, SurviveAgainstRobotsVariant gameVariant, Stats stats, boolean isMouseEnable){
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameVariant = gameVariant;
         this.obstacles = new ArrayList<>();
         this.robots = new ArrayList<>();
         this.scorePoint = 1;
-        this.nbMaxRobot = 1;
+        this.nbMaxRobot = 0;
+        this.isMouseEnable = isMouseEnable;
     }
 
     public void startGame(){
 
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        this.player = new Player(new Rectangle(500,500,100,100),10,gameContext,this, 0.5);
+        if (!isMouseEnable){
+            this.player = new Player(new Rectangle(500,500,100,100),10,gameContext,this, 0.5, null);
+        }else{
+            Rectangle target = new Rectangle(0,0,10,10);
+            this.player = new Player(new Rectangle(500,500,100,100),5,gameContext,this, 0.5,
+                target);
+        }
 
         this.player.hitbox.setFill(Color.BLACK);
         gameContext.getChildren().add(this.player.hitbox);
@@ -50,11 +63,23 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
 
 
+
+        Label score = new Label();
+        score.setLayoutX(50);
+        score.setLayoutY(50);
+        score.setFont(new Font("Arial", 50));
+        score.toFront();
+        score.setText("Score : ");
+        score.setStyle("-fx-text-fill: gray ;");
+        score.setOpacity(0.8);
+        gameContext.getChildren().add(score);
+
         timerGame = new AnimationTimer() {
 
             int nbframes = 0;
             int nbSecond = 0;
-            int scoreIncrementRobot = 20;
+            int scoreIncrementRobot = 40;
+            int nbRobot = 1;
             @Override
             public void handle(long now) {
 
@@ -65,16 +90,19 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
                     if (nbSecond % 3 == 0){
                         scorePoint++;
                     }
-                    if (robots.size() < nbMaxRobot){
+                    if (robots.size() < nbRobot){
                         createRobot();
                     }
                 }
 
+                if (nbframes == 10){
+                    score.setText("Score : " + scorePoint);
+                }
                 if (scorePoint > scoreIncrementRobot){
-                    if (nbMaxRobot < 4){
-                        nbMaxRobot++;
+                    if (nbRobot < nbMaxRobot){
+                        nbRobot++;
                     }
-                    scoreIncrementRobot+=20;
+                    scoreIncrementRobot+=40;
                 }
 
 
@@ -90,7 +118,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
             obstacles.remove(robot);
             robots.remove(robot);
         }
-        scorePoint++;
+        scorePoint+=5;
     }
 
     private void createRobot(){
@@ -98,9 +126,21 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         double x;
         double y;
         Random randomPosX = new Random();
+        Random randomShoot = new Random();
         x = randomPosX.nextDouble(200,dimension2D.getWidth()-200);
         y = randomPosX.nextDouble(200,dimension2D.getHeight()-200);
-        Rectangle verifPos = new Rectangle(x,y,100,100);
+        Rectangle verifPos = new Rectangle(x,y,500,500);
+
+        int res;
+        if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_EASY) == 0){
+            res = 0;
+        }else if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_NORMAL) == 0){
+            res = randomShoot.nextInt(0,5);
+        }else{
+            res = randomShoot.nextInt(0,3);
+            res = 2;
+        }
+        System.out.println("res = " + res);
 
         for (Robot value : robots) {
             if (isCollidingWithASpecificObstacle(verifPos, value)) {
@@ -111,7 +151,14 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         if (isCollidingWithASpecificObstacle(this.player.hitbox,verifPos)){
             createRobot();
         }else{
-            Robot robot = new Robot(x,y,100,100,5,gameContext,this);
+
+            Robot robot;
+            if (res == 2){
+                robot = new Robot(x,y,100,100,5,gameContext,this,true);
+            }else{
+                robot = new Robot(x,y,100,100,5,gameContext,this,false);
+            }
+
             robots.add(robot);
             this.obstacles.add(robot);
             gameContext.getChildren().add(robot);
@@ -129,6 +176,16 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         }
         if (this.player != null){
             this.player.playerAnimationMovement.stop();
+        }
+        this.scorePoint = 1;
+
+
+        if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_EASY) == 0){
+            nbMaxRobot = 3;
+        }else if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_NORMAL) == 0){
+            nbMaxRobot = 5;
+        }else if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_HARD) == 0){
+            nbMaxRobot = 7;
         }
 
 
@@ -218,6 +275,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
 
             if (isCollidingWithASpecificObstacle(futurePos, obstacle)) {
+
                 if (object instanceof Bullet){
                     if (obstacle == player.hitbox){
                         continue;

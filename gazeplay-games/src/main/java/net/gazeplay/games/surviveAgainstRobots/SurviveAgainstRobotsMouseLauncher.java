@@ -14,7 +14,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class SurviveAgainstRobotsLauncher implements IGameLauncher<Stats, EnumGameVariant<SurviveAgainstRobotsVariant>> {
+public class SurviveAgainstRobotsMouseLauncher implements IGameLauncher<Stats, EnumGameVariant<SurviveAgainstRobotsVariant>> {
 
     @Override
     public Stats createNewStats(Scene scene) {
@@ -23,7 +23,7 @@ public class SurviveAgainstRobotsLauncher implements IGameLauncher<Stats, EnumGa
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, EnumGameVariant<SurviveAgainstRobotsVariant> gameVariant, Stats stats) {
-        return new SurviveAgainstRobots(gameContext,gameVariant.getEnumValue(),stats, false);
+        return new SurviveAgainstRobots(gameContext,gameVariant.getEnumValue(),stats,true);
     }
 
     @Override
@@ -33,6 +33,7 @@ public class SurviveAgainstRobotsLauncher implements IGameLauncher<Stats, EnumGa
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<SurviveAgainstRobotsVariant> gameVariant, Stats stats, double gameSeed) {
-        return new SurviveAgainstRobots(gameContext,gameVariant.getEnumValue(),stats, false);
+        return new SurviveAgainstRobots(gameContext,gameVariant.getEnumValue(),stats,true);
     }
+
 }

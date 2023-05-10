@@ -6,8 +6,9 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum SurviveAgainstRobotsVariant {
-    KEYBOARD("Keyboard"),
-    MOUSE("Mouse");
+    DIFFICULTY_EASY("Easy"),
+    DIFFICULTY_NORMAL("Normal"),
+    DIFFICULTY_HARD("Hard");
 
     @Getter
     private final String label;
