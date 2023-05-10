@@ -151,20 +151,19 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
         if (isCollidingWithASpecificObstacle(this.player.hitbox,verifPos)){
             createRobot();
-        }else{
-
-            Robot robot;
-            if (res == 2){
-                robot = new Robot(x,y,100,100,5,gameContext,this,true);
-            }else{
-                robot = new Robot(x,y,100,100,5,gameContext,this,false);
-            }
-
-            robots.add(robot);
-            this.obstacles.add(robot);
-            gameContext.getChildren().add(robot);
+            return;
         }
 
+        Robot robot;
+        if (res == 2){
+            robot = new Robot(x,y,100,100,5,gameContext,this,true);
+        }else{
+            robot = new Robot(x,y,100,100,5,gameContext,this,false);
+        }
+
+        robots.add(robot);
+        this.obstacles.add(robot);
+        gameContext.getChildren().add(robot);
     }
 
     @Override
