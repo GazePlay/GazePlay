@@ -31,7 +31,7 @@ public class Robot extends Rectangle {
         this.canShoot = canShoot;
         this.isDestroyed = false;
         this.bulletSpeed = 5;
-        this.freqShoot = 0.5;
+        this.freqShoot = 1.2;
 
         this.setFill(Color.RED);
         AnimationTimer robotAnimation = new AnimationTimer() {
@@ -53,16 +53,15 @@ public class Robot extends Rectangle {
                 }
                 nbframes++;
 
+                nbframeShoot++;
                 if (canShoot){
                     if (nbframeShoot == 60*freqShoot){
                         nbframeShoot = 0;
                     }
                     if (nbframeShoot == 0){
-                        System.out.println("automaticShoot");
                         automaticShoot();
                     }
 
-                    nbframeShoot++;
                 }
 
             }

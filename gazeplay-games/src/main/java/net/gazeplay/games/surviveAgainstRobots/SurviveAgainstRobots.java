@@ -135,10 +135,10 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_EASY) == 0){
             res = 0;
         }else if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_NORMAL) == 0){
-            res = randomShoot.nextInt(0,5);
+            res = randomShoot.nextInt(0,6);
         }else{
-            res = randomShoot.nextInt(0,3);
-            res = 2;
+            res = randomShoot.nextInt(0,4);
+
         }
         System.out.println("res = " + res);
 
@@ -148,6 +148,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
                 return;
             }
         }
+
         if (isCollidingWithASpecificObstacle(this.player.hitbox,verifPos)){
             createRobot();
         }else{
@@ -179,14 +180,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         }
         this.scorePoint = 1;
 
-
-        if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_EASY) == 0){
-            nbMaxRobot = 3;
-        }else if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_NORMAL) == 0){
-            nbMaxRobot = 5;
-        }else if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_HARD) == 0){
-            nbMaxRobot = 7;
-        }
+        nbMaxRobot = 3;
 
 
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -277,16 +271,23 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
             if (isCollidingWithASpecificObstacle(futurePos, obstacle)) {
 
                 if (object instanceof Bullet){
-                    if (obstacle == player.hitbox){
+                    if (obstacle == player.hitbox && object.getId().compareToIgnoreCase("playerBullet") == 0 ){
+                        continue;
+                    }else if (object.getId().compareToIgnoreCase("robotBullet") == 0 && obstacle instanceof Robot){
                         continue;
                     }else{
                         gameContext.getChildren().remove(object);
                     }
 
                     if (obstacle instanceof Robot){
-                        onRobotKilled(obstacle);
+                        if (object.getId().compareToIgnoreCase("playerBullet") == 0){
+                            onRobotKilled(obstacle);
+                        }
                     }
 
+                    if (obstacle == player.hitbox && object.getId().compareToIgnoreCase("robotBullet") == 0){
+                        endOfGame();
+                    }
                 }
 
                 if (object instanceof Robot || obstacle instanceof Robot){
