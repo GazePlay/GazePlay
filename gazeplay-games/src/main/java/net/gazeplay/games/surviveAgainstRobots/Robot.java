@@ -13,7 +13,7 @@ import java.util.Random;
 public class Robot extends Rectangle {
 
 
-    private final double speed;
+    protected double speed;
     private final IGameContext gameContext;
     private final SurviveAgainstRobots gameInstance;
     /*private final String MOUVEMENT_UP = "up";

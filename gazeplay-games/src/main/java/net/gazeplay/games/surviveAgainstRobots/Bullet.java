@@ -13,10 +13,10 @@ import net.gazeplay.IGameContext;
 
 public class Bullet extends Rectangle {
     private final double speed;
-    private SurviveAgainstRobots gameInstance;
+    private final SurviveAgainstRobots gameInstance;
     private double directionX;
     private double directionY;
-    private IGameContext gameContext;
+    private final IGameContext gameContext;
     private boolean isDestroyed;
     public Bullet(double x, double y, double width, double height, double speed, SurviveAgainstRobots gameInstance, IGameContext gameContext) {
         super(x, y, width, height);
@@ -77,9 +77,7 @@ public class Bullet extends Rectangle {
 
                 // Check for collision of the ball with an obstacle (wall)
                 if (gameInstance.willCollideWithAnObstacle("up", speed, this) ||
-                    gameInstance.willCollideWithAnObstacle("down", speed, this) ||
-                    gameInstance.willCollideWithAnObstacle("left", speed, this) ||
-                    gameInstance.willCollideWithAnObstacle("right", speed, this) ){
+                    gameInstance.willCollideWithAnObstacle("down", speed, this)){
                     // Set the ball as destroyed if it hits an obstacle
                     isDestroyed = true;
                 }

@@ -23,16 +23,18 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
     private final IGameContext gameContext;
     private final Stats stats;
-    private ArrayList<Rectangle> obstacles;
-    private ArrayList<Robot> robots;
+    protected ArrayList<Rectangle> obstacles;
+    protected ArrayList<Robot> robots;
     private final SurviveAgainstRobotsVariant gameVariant;
 
     protected Player player;
     private int scorePoint;
     private int nbMaxRobot;
     private AnimationTimer timerGame;
+    protected ArrayList<Bonus> bonuses;
 
     private final boolean isMouseEnable;
+    protected double robotSpeed;
 
     private final ImagePattern death = new ImagePattern(new Image("data/surviveAgainstRobots/Flash.png"));
 
@@ -44,9 +46,11 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         this.gameVariant = gameVariant;
         this.obstacles = new ArrayList<>();
         this.robots = new ArrayList<>();
+        this.bonuses = new ArrayList<>();
         this.scorePoint = 1;
         this.nbMaxRobot = 0;
         this.isMouseEnable = isMouseEnable;
+        this.robotSpeed = 3;
     }
 
     public void startGame(){
@@ -117,6 +121,13 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
     }
 
     private void onRobotKilled(Rectangle robot){
+        Random random = new Random();
+        int bonusrand = random.nextInt(0,10);
+
+        if (bonusrand == 1){
+            Bonus bonus = new Bonus(robot.getX(),robot.getY(),100,100,this,gameContext);
+            bonuses.add(bonus);
+        }
         if (robot instanceof Robot){
             obstacles.remove(robot);
             robots.remove(robot);
@@ -130,44 +141,51 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         double x;
         double y;
+        double widthRange;
+        double heightRange;
         Random randomPosX = new Random();
         Random randomShoot = new Random();
+
+        boolean isValid = true;
+
+
         x = randomPosX.nextDouble(200,dimension2D.getWidth()-200);
         y = randomPosX.nextDouble(200,dimension2D.getHeight()-200);
-        Rectangle verifPos = new Rectangle(x,y,500,500);
-
-        int res;
-        if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_EASY) == 0){
-            res = 0;
-        }else if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_NORMAL) == 0){
-            res = randomShoot.nextInt(0,6);
-        }else{
-            res = randomShoot.nextInt(0,4);
+        widthRange = 100;
+        heightRange = 100;
+        Rectangle range = new Rectangle(x,y,widthRange,heightRange);
+        Rectangle playerZone = new Rectangle(player.hitbox.getX() - 200, player.hitbox.getY() - 200, 600, 600);
+        if (isCollidingWithASpecificObstacle(playerZone,range)) {
+            isValid = false;
         }
-        System.out.println("res = " + res);
 
-        for (Robot value : robots) {
-            if (isCollidingWithASpecificObstacle(verifPos, value)) {
-                createRobot();
-                return;
+        if (isValid){
+            if (isCollidingWithAnObstacle(range)){
+                isValid = false;
             }
         }
 
-        if (isCollidingWithASpecificObstacle(this.player.hitbox,verifPos)){
-            createRobot();
-            return;
-        }
-
-        Robot robot;
-        if (res == 2){
-            robot = new Robot(x,y,100,100,5,gameContext,this,true);
+        if (isValid){
+            Robot robot;
+            int res;
+            if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_EASY) == 0){
+                res = 0;
+            }else if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_NORMAL) == 0){
+                res = randomShoot.nextInt(0,6);
+            }else{
+                res = randomShoot.nextInt(0,4);
+            }
+            if (res == 2){
+                robot = new Robot(range.getX(), range.getY(), 100, 100, robotSpeed, gameContext, this, true);
+            }else{
+                robot = new Robot(range.getX() , range.getY(), 100, 100, robotSpeed, gameContext, this, false);
+            }
+            robots.add(robot);
+            this.obstacles.add(robot);
+            gameContext.getChildren().add(robot);
         }else{
-            robot = new Robot(x,y,100,100,5,gameContext,this,false);
+            createRobot();
         }
-
-        robots.add(robot);
-        this.obstacles.add(robot);
-        gameContext.getChildren().add(robot);
     }
 
     @Override
@@ -181,6 +199,13 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         if (this.player != null){
             this.player.playerAnimationMovement.stop();
         }
+        for (Bonus bonus : bonuses){
+            if (bonus.timer != null){
+                bonus.timer.stop();
+            }
+        }
+        bonuses.clear();
+
         this.scorePoint = 1;
 
         nbMaxRobot = 3;
@@ -274,6 +299,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
             if (isCollidingWithASpecificObstacle(futurePos, obstacle)) {
 
                 if (object instanceof Bullet){
+
                     if (obstacle == player.hitbox && object.getId().compareToIgnoreCase("playerBullet") == 0 ){
                         continue;
                     }else if (object.getId().compareToIgnoreCase("robotBullet") == 0 && obstacle instanceof Robot){
@@ -282,9 +308,16 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
                         gameContext.getChildren().remove(object);
                     }
 
-                    if (obstacle instanceof Robot){
-                        if (object.getId().compareToIgnoreCase("playerBullet") == 0){
+                    if (object.getId().compareToIgnoreCase("playerBullet") == 0){
+                        if (obstacle instanceof Robot){
                             playDeathAnimation(1,obstacle);
+                        }
+                        if (obstacle instanceof Bonus){
+                            for (Bonus bonus : bonuses) {
+                                if (bonus == obstacle) {
+                                    bonus.isDestroyed = true;
+                                }
+                            }
                         }
                     }
 
@@ -299,6 +332,17 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
                     }
                 }
 
+                if (object == player.hitbox){
+                    if (obstacle instanceof Bonus){
+                        for (Bonus bonus : bonuses) {
+                            if (bonus == obstacle) {
+                                bonus.isDestroyed = true;
+                            }
+                        }
+                    }
+                }
+
+
 
                 return true;
             }
@@ -306,6 +350,15 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         return false;
     }
 
+
+    protected boolean isCollidingWithAnObstacle(Rectangle object){
+        for (Rectangle obstacle : obstacles) {
+            if (isCollidingWithASpecificObstacle(object, obstacle)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     /**
