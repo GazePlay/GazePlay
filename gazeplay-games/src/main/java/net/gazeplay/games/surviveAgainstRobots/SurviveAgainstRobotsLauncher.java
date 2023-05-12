@@ -23,7 +23,7 @@ public class SurviveAgainstRobotsLauncher implements IGameLauncher<Stats, EnumGa
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, EnumGameVariant<SurviveAgainstRobotsVariant> gameVariant, Stats stats) {
-        return new SurviveAgainstRobots(gameContext,gameVariant.getEnumValue(),stats, false);
+        return new SurviveAgainstRobots(gameContext,gameVariant.getEnumValue(),stats, false,false);
     }
 
     @Override
@@ -33,6 +33,6 @@ public class SurviveAgainstRobotsLauncher implements IGameLauncher<Stats, EnumGa
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<SurviveAgainstRobotsVariant> gameVariant, Stats stats, double gameSeed) {
-        return new SurviveAgainstRobots(gameContext,gameVariant.getEnumValue(),stats, false);
+        return new SurviveAgainstRobots(gameContext,gameVariant.getEnumValue(),stats, false,false);
     }
 }

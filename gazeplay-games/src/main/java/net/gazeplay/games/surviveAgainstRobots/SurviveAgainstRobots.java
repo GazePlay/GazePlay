@@ -17,7 +17,10 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 import java.util.Random;
-
+/**
+ * A class representing a game of surviving against robots.
+ * This class extends the Parent class and implements the GameLifeCycle interface.
+ */
 public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
 
@@ -38,9 +41,19 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
     private final ImagePattern death = new ImagePattern(new Image("data/surviveAgainstRobots/Flash.png"));
 
+    protected boolean automaticShoot;
 
 
-    public SurviveAgainstRobots(final IGameContext gameContext, SurviveAgainstRobotsVariant gameVariant, Stats stats, boolean isMouseEnable){
+    /**
+     * Constructs a new SurviveAgainstRobots object with the specified parameters.
+     *
+     * @param gameContext   an object of type IGameContext
+     * @param gameVariant   an object of type SurviveAgainstRobotsVariant
+     * @param stats         an object of type Stats
+     * @param isMouseEnable a boolean representing whether the mouse is enabled
+     * @param automaticShoot a boolean representing whether automatic shooting is enabled
+     */
+    public SurviveAgainstRobots(final IGameContext gameContext, SurviveAgainstRobotsVariant gameVariant, Stats stats, boolean isMouseEnable, boolean automaticShoot){
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameVariant = gameVariant;
@@ -51,27 +64,33 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         this.nbMaxRobot = 0;
         this.isMouseEnable = isMouseEnable;
         this.robotSpeed = 3;
+        this.automaticShoot = automaticShoot;
+
     }
 
+    /**
+     * Starts the game by initializing the player, adding the player's hitbox to the game context's children,
+     * creating a score label, and setting up an animation timer for the game.
+     */
     public void startGame(){
 
+        // Get the game panel's dimensions from the game context
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        // Create a new player instance depending on whether the mouse is enabled or not
         if (!isMouseEnable){
-            this.player = new Player(new Rectangle(500,500,100,100),10,gameContext,this, 0.5, null);
-        }else{
+            this.player = new Player(new Rectangle(500,500,100,85),8,gameContext,this, 0.5, null);
+        } else {
             Rectangle target = new Rectangle(0,0,10,10);
-            this.player = new Player(new Rectangle(500,500,100,100),5,gameContext,this, 0.5,
-                target);
+            this.player = new Player(new Rectangle(500,500,100,85),5,gameContext,this, 0.5, target);
         }
 
-        this.player.hitbox.setFill(Color.BLACK);
+        // Add the player's hitbox to the game context's children and obstacles list
         gameContext.getChildren().add(this.player.hitbox);
         this.player.hitbox.toFront();
         this.obstacles.add(this.player.hitbox);
 
-
-
-
+        // Create and add the score label to the game context's children
         Label score = new Label();
         score.setLayoutX(50);
         score.setLayoutY(50);
@@ -82,12 +101,14 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         score.setOpacity(0.8);
         gameContext.getChildren().add(score);
 
+        // Set up an animation timer to handle game logic and update the score label
         timerGame = new AnimationTimer() {
 
             int nbframes = 0;
             int nbSecond = 0;
             int scoreIncrementRobot = 40;
             int nbRobot = 1;
+
             @Override
             public void handle(long now) {
 
@@ -112,31 +133,45 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
                     }
                     scoreIncrementRobot+=40;
                 }
-
-
-
             }
         };
+
+        // Start the game's animation timer
         timerGame.start();
     }
 
+    /**
+     * Triggered when a robot is killed by the player
+     * @param robot the robot that has been killed
+     */
     private void onRobotKilled(Rectangle robot){
+        // Generate a random number between 0 and 10
         Random random = new Random();
         int bonusrand = random.nextInt(0,10);
 
+        // If the random number is 1, create a new bonus
         if (bonusrand == 1){
             Bonus bonus = new Bonus(robot.getX(),robot.getY(),100,100,this,gameContext);
             bonuses.add(bonus);
         }
+
+        // Remove the obstacle and robot from their respective lists
         if (robot instanceof Robot){
             obstacles.remove(robot);
             robots.remove(robot);
         }
+
+        // Increase the score by 5
         scorePoint+=5;
     }
 
 
 
+    /**
+     * Create a new Robot instance and add it to the game.
+     * The robot's position is randomly generated, but is ensured not to collide with any existing obstacles or the player's zone.
+     * The robot's shooting ability is also randomly determined based on the game variant.
+     */
     private void createRobot(){
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         double x;
@@ -148,7 +183,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
         boolean isValid = true;
 
-
+        // Generate a random position for the robot, ensuring it doesn't collide with the player's zone
         x = randomPosX.nextDouble(200,dimension2D.getWidth()-200);
         y = randomPosX.nextDouble(200,dimension2D.getHeight()-200);
         widthRange = 100;
@@ -159,6 +194,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
             isValid = false;
         }
 
+        // Check if the robot's position collides with any existing obstacle
         if (isValid){
             if (isCollidingWithAnObstacle(range)){
                 isValid = false;
@@ -168,6 +204,8 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         if (isValid){
             Robot robot;
             int res;
+
+            // Determine the robot's shooting ability based on the game variant
             if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_EASY) == 0){
                 res = 0;
             }else if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_NORMAL) == 0){
@@ -175,6 +213,8 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
             }else{
                 res = randomShoot.nextInt(0,4);
             }
+
+            // Create the robot and add it to the game
             if (res == 2){
                 robot = new Robot(range.getX(), range.getY(), 100, 100, robotSpeed, gameContext, this, true);
             }else{
@@ -184,13 +224,22 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
             this.obstacles.add(robot);
             gameContext.getChildren().add(robot);
         }else{
+            // Try again if the robot's position is invalid
             createRobot();
         }
     }
 
+
+    /**
+     * Resets the game and launches a new round.
+     * Clears obstacles, robots, bonuses, and stops existing timers and animations.
+     * Initializes a new game board, sets the maximum number of robots, and starts the game.
+     * Notifies the stats object that a new round is ready and initializes the gaze device manager.
+     */
     @Override
     public void launch() {
 
+        // Clear obstacles, robots, bonuses, and stop existing timers and animations
         this.obstacles.clear();
         this.robots.clear();
         if (this.timerGame != null){
@@ -206,11 +255,11 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         }
         bonuses.clear();
 
+        // Reset score and maximum number of robots
         this.scorePoint = 1;
-
         nbMaxRobot = 3;
 
-
+        // Initialize game board and start game
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         gameContext.setLimiterAvailable();
         Rectangle background = new Rectangle(0,0,dimension2D.getWidth(), dimension2D.getHeight());
@@ -220,6 +269,8 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(background);
         initGameBox();
         startGame();
+
+        // Notify stats object that a new round is ready and initialize gaze device manager
         stats.notifyNewRoundReady();
         gameContext.firstStart();
     }
@@ -374,6 +425,13 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
     }
 
+
+
+    /**
+     * Plays a death animation for a given object with a given duration.
+     * @param deathDuration the duration of the death animation in seconds
+     * @param object the object that needs to play the death animation
+     */
     private void playDeathAnimation(int deathDuration, Rectangle object){
         Rectangle death = new Rectangle(object.getX(),object.getY(),object.getWidth(),object.getHeight());
         death.setFill(this.death);
@@ -406,6 +464,42 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
             }
         };
         deathAnimation.start();
+    }
+
+
+
+    /**
+     * Finds and returns the nearest Robot to the Player.
+     * @return the nearest Robot to the Player
+     */
+    protected Robot getNearestRobotFromPlayer(){
+        Robot nearestRobot = null;
+        double minDistance = Double.MAX_VALUE;
+
+        for (Robot robot: robots){
+            double distance = distance(this.player.hitbox,robot);
+
+            if (distance < minDistance){
+                minDistance = distance;
+                nearestRobot = robot;
+            }
+        }
+        return nearestRobot;
+    }
+
+    /**
+     * Calculates and returns the distance between two rectangles.
+     *
+     * @param rect1 the first rectangle
+     * @param rect2 the second rectangle
+     * @return the distance between the two rectangles
+     */
+    private double distance(Rectangle rect1, Rectangle rect2) {
+        double dx = rect2.getX() - rect1.getX();
+        double dy = rect2.getY() - rect1.getY();
+
+        // Calculate the distance using the Pythagorean theorem
+        return Math.sqrt(dx*dx + dy*dy);
     }
 
     protected void endOfGame(){

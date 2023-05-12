@@ -5,6 +5,9 @@ import javafx.scene.paint.ImagePattern;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * An enum class representing the different types of bonuses in the Survive Against Robots game.
+ */
 @RequiredArgsConstructor
 public enum BonusEnum {
     SLOW("Slow bonus", new ImagePattern(new Image("data/surviveAgainstRobots/slow.png")));

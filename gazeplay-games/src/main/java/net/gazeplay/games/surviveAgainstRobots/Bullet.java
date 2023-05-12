@@ -11,6 +11,10 @@ import javafx.util.Duration;
 import net.gazeplay.IGameContext;
 
 
+/**
+ * This class represents a bullet object in the game. A bullet is a rectangular shape that moves in a certain direction with a given speed.
+ * It is created with a specified position, size, speed, and associated game instance and game context.
+ */
 public class Bullet extends Rectangle {
     private final double speed;
     private final SurviveAgainstRobots gameInstance;
@@ -18,6 +22,17 @@ public class Bullet extends Rectangle {
     private double directionY;
     private final IGameContext gameContext;
     private boolean isDestroyed;
+
+    /**
+     Creates a new Bullet object with the specified position, size, speed, game instance and game context.
+     @param x the x position of the bullet.
+     @param y the y position of the bullet.
+     @param width the width of the bullet.
+     @param height the height of the bullet.
+     @param speed the speed at which the bullet will move.
+     @param gameInstance the instance of the game that the bullet belongs to.
+     @param gameContext the context of the game that the bullet belongs to.
+     */
     public Bullet(double x, double y, double width, double height, double speed, SurviveAgainstRobots gameInstance, IGameContext gameContext) {
         super(x, y, width, height);
         setFill(Color.RED);
@@ -28,6 +43,10 @@ public class Bullet extends Rectangle {
 
     }
 
+    /**
+     * Starts the movement of the bullet in the specified direction
+     * @param direction the direction in which the bullet should move
+     */
     public void startMoving(KeyCode direction) {
 
         Timeline animation = new Timeline(new KeyFrame(Duration.millis(16), event -> {
@@ -55,7 +74,16 @@ public class Bullet extends Rectangle {
     }
 
 
-    public void startMovingMouse(Rectangle target){
+
+    /**
+     * Starts the movement of the bullet towards the target.
+     * The direction and speed of the bullet are calculated based on the difference between the target
+     * rectangle and the current position of the bullet. The bullet is then moved towards the target
+     * by updating its x and y coordinates according to the direction calculated earlier.
+     * If the bullet collides with an obstacle, it is destroyed and the animation stops.
+     * @param target the rectangle representing the target towards which the bullet will be directed
+     */
+    public void startMovingTowardTarget(Rectangle target){
         // Calculate the difference in position between the mouse and the ball
         double dx = target.getX() - (getX() + getWidth() / 2);
         double dy = target.getY() - (getY() + getHeight() / 2);
