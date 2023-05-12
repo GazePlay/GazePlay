@@ -49,7 +49,11 @@ public class Bullet extends Rectangle {
      */
     public void startMoving(KeyCode direction) {
 
+
         Timeline animation = new Timeline(new KeyFrame(Duration.millis(16), event -> {
+            if (!gameContext.getChildren().contains(this)){
+                isDestroyed = true;
+            }
             if (!isDestroyed){
                 if (direction == KeyCode.UP) {
                     setY(getY() - speed);
@@ -97,6 +101,9 @@ public class Bullet extends Rectangle {
 
         // Define the animation for the ball movement
         Timeline animation = new Timeline(new KeyFrame(Duration.millis(16), event -> {
+            if (!gameContext.getChildren().contains(this)){
+                isDestroyed = true;
+            }
             // Check if the ball has not been destroyed
             if (!isDestroyed){
                 // Move the ball according to the direction calculated earlier
@@ -113,10 +120,10 @@ public class Bullet extends Rectangle {
         }));
         animation.setCycleCount(Animation.INDEFINITE);
         animation.play();
-
         // Stop the animation if the ball is destroyed
         if (isDestroyed){
             animation.stop();
         }
+
     }
 }
