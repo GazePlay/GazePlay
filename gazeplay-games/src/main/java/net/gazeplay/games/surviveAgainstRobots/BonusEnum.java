@@ -10,10 +10,11 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public enum BonusEnum {
-    SLOW("Slow bonus", new ImagePattern(new Image("data/surviveAgainstRobots/slow.png")));
+
+    FIRERATE("FireRate Bonus", new ImagePattern(new Image("data/surviveAgainstRobots/bonus/fire.png"))),
+    SLOW("Slow bonus", new ImagePattern(new Image("data/surviveAgainstRobots/bonus/slow.png")));
     //AUTOTARGET("Auto-target bonus", new ImagePattern(new Image("autotarget.png"))),
     //SPEED("Speed bonus", new ImagePattern(new Image("speed.png")));
-
     @Getter
     private final String name;
 

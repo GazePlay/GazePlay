@@ -38,6 +38,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
     private final boolean isMouseEnable;
     protected double robotSpeed;
+    protected double playerFireRate;
 
     private final ImagePattern death = new ImagePattern(new Image("data/surviveAgainstRobots/Flash.png"));
 
@@ -65,7 +66,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         this.isMouseEnable = isMouseEnable;
         this.robotSpeed = 3;
         this.automaticShoot = automaticShoot;
-
+        this.playerFireRate = 0.5;
     }
 
     /**
@@ -79,10 +80,10 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
         // Create a new player instance depending on whether the mouse is enabled or not
         if (!isMouseEnable){
-            this.player = new Player(new Rectangle(500,500,100,85),8,gameContext,this, 0.5, null);
+            this.player = new Player(new Rectangle(500,500,100,85),8,gameContext,this, playerFireRate, null);
         } else {
             Rectangle target = new Rectangle(0,0,10,10);
-            this.player = new Player(new Rectangle(500,500,100,85),5,gameContext,this, 0.5, target);
+            this.player = new Player(new Rectangle(500,500,100,85),5,gameContext,this, playerFireRate, target);
         }
 
         // Add the player's hitbox to the game context's children and obstacles list

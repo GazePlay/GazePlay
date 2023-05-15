@@ -28,7 +28,7 @@ public class Player extends Parent {
     private double currentSpeedY;
     private final double acceleration;
     protected AnimationTimer playerAnimationMovement;
-    private final double freqShoot;
+    protected double freqShoot;
     private final double bulletSpeed;
     private Rectangle target;
     private final EventHandler<Event> enterEvent;
@@ -42,16 +42,16 @@ public class Player extends Parent {
      * @param speed the speed of the player
      * @param gameContext the context of the game
      * @param gameInstance the instance of the game
-     * @param freqShoot the frequency of the player's shooting
+     * @param freqShoot2 the frequency of the player's shooting
      * @param target the target of the player
      */
-    public Player(Rectangle hitbox, double speed, IGameContext gameContext, SurviveAgainstRobots gameInstance, double freqShoot, Rectangle target) {
+    public Player(Rectangle hitbox, double speed, IGameContext gameContext, SurviveAgainstRobots gameInstance, double freqShoot2, Rectangle target) {
         this.hitbox = hitbox;
         this.speed = speed;
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
         this.acceleration = 0.5;
-        this.freqShoot = freqShoot;
+        this.freqShoot = freqShoot2;
         this.isDead = false;
         pickImagePlayer();
 
@@ -80,8 +80,10 @@ public class Player extends Parent {
                         }else{
                             playerMoveMouse();
                         }
-                        nbframe++;
+
                         if (nbframe == 60*freqShoot){
+                            nbframe = 0;
+                        }else if (nbframe == 60){
                             nbframe = 0;
                         }
                         if (nbframe == 0){
@@ -95,6 +97,7 @@ public class Player extends Parent {
                                 hitbox.toFront();
                             }
                         }
+                        nbframe++;
                     }else{
                         stop();
                     }

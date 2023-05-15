@@ -74,6 +74,8 @@ public class Bonus extends Rectangle {
                 if (isDestroyed && !isStopped){
                     if (bonusEnum == BonusEnum.SLOW){
                         applySlow();
+                    }else if (bonusEnum == BonusEnum.FIRERATE){
+                        applyFireRate();
                     }
                 }
                 // stop bonus if it exceeds its duration
@@ -104,7 +106,7 @@ public class Bonus extends Rectangle {
                 }
                 // stop bonus and apply slow effect if it has exceeded its duration
                 if (isStopped){
-                    applySlow();
+                    removeBonusEffect(bonusEnum);
                     removeObject();
                     stop();
                 }
@@ -135,11 +137,29 @@ public class Bonus extends Rectangle {
                 }
             }
         }
-        if (isStopped){
+    }
+
+    private void applyFireRate(){
+        double playerFireRate = gameInstance.playerFireRate;
+        if (isDestroyed && !isStopped){
+            if (playerFireRate == gameInstance.player.freqShoot){
+                gameInstance.player.freqShoot = 0.25;
+            }
+        }
+    }
+
+    private void removeBonusEffect(BonusEnum bonusEnum){
+        if (bonusEnum == BonusEnum.SLOW){
+            double robotSpeed = gameInstance.robotSpeed;
             for (Robot robot : gameInstance.robots){
                 if (robot.speed != robotSpeed){
                     robot.speed = robot.speed / slowfactor;
                 }
+            }
+        }else if (bonusEnum == BonusEnum.FIRERATE){
+            double playerFireRate = gameInstance.playerFireRate;
+            if (playerFireRate != gameInstance.player.freqShoot){
+                gameInstance.player.freqShoot = 0.5;
             }
         }
     }
