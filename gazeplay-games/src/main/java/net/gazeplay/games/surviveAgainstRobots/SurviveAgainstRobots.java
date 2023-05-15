@@ -42,6 +42,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
     private final ImagePattern death = new ImagePattern(new Image("data/surviveAgainstRobots/Flash.png"));
 
     protected boolean automaticShoot;
+    protected boolean isShieldEnabled;
 
 
     /**
@@ -65,6 +66,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         this.robotSpeed = 3;
         this.automaticShoot = automaticShoot;
         this.playerFireRate = 0.5;
+        this.isShieldEnabled = false;
     }
 
     /**
@@ -147,7 +149,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
     private void onRobotKilled(Rectangle robot){
         // Generate a random number between 0 and 10
         Random random = new Random();
-        int bonusrand = random.nextInt(0,10);
+        int bonusrand = random.nextInt(0,3);
 
         // If the random number is 1, create a new bonus
         if (bonusrand == 1){
@@ -376,13 +378,13 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
                         }
                     }
 
-                    if (obstacle == player.hitbox && object.getId().compareToIgnoreCase("robotBullet") == 0){
+                    if (obstacle == player.hitbox && !isShieldEnabled && object.getId().compareToIgnoreCase("robotBullet") == 0){
                         playDeathAnimation(1,player.hitbox);
                     }
                 }
 
                 if (object instanceof Robot || obstacle instanceof Robot){
-                    if (obstacle == player.hitbox || object == player.hitbox){
+                    if ((obstacle == player.hitbox || object == player.hitbox) && !isShieldEnabled ){
                         playDeathAnimation(1,player.hitbox);
                     }
                 }
@@ -445,7 +447,9 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         if (object instanceof Robot){
             onRobotKilled(object);
         }
-
+        if (object == player.hitbox){
+            obstacles.remove(player.hitbox);
+        }
         AnimationTimer deathAnimation = new AnimationTimer() {
             int nbframes = 0;
             int nbSeconds = 0;

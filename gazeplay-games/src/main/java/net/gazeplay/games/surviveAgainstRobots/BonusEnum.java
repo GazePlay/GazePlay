@@ -11,7 +11,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum BonusEnum {
 
-    FIRERATE("FireRate Bonus", new ImagePattern(new Image("data/surviveAgainstRobots/bonus/fire.png"))),
+    FIRERATE("FireRate bonus", new ImagePattern(new Image("data/surviveAgainstRobots/bonus/fire.png"))),
+    SHIELD("Shield bonus", new ImagePattern(new Image("data/surviveAgainstRobots/bonus/shield.png"))),
     SLOW("Slow bonus", new ImagePattern(new Image("data/surviveAgainstRobots/bonus/slow.png")));
     //AUTOTARGET("Auto-target bonus", new ImagePattern(new Image("autotarget.png"))),
     //SPEED("Speed bonus", new ImagePattern(new Image("speed.png")));
