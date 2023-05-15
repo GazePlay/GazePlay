@@ -104,7 +104,7 @@ public class Bonus extends Rectangle {
                         nbSeconds = 0;
                     }
                 }
-                // stop bonus and apply slow effect if it has exceeded its duration
+                // stop bonus and remove effect if it has exceeded its duration
                 if (isStopped){
                     removeBonusEffect(bonusEnum);
                     removeObject();
@@ -126,7 +126,7 @@ public class Bonus extends Rectangle {
     /**
      * Applies a slow effect to the robots in the game by adjusting their speed based on the slow factor.
      * If the bonus is destroyed but not stopped, the robots with the same speed as the initial speed will have their speed reduced by the slow factor.
-     * If the bonus is stopped, the robots with a speed different than the initial speed will have their speed restored to the initial speed by dividing it by the slow factor.
+     * If the bonus is stopped, the robots with a speed different from the initial speed will have their speed restored to the initial speed by dividing it by the slow factor.
      */
     private void applySlow(){
         double robotSpeed = gameInstance.robotSpeed;

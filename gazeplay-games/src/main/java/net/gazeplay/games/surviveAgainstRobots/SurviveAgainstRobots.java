@@ -31,7 +31,6 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
     private final SurviveAgainstRobotsVariant gameVariant;
 
     protected Player player;
-    private int scorePoint;
     private int nbMaxRobot;
     private AnimationTimer timerGame;
     protected ArrayList<Bonus> bonuses;
@@ -61,7 +60,6 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         this.obstacles = new ArrayList<>();
         this.robots = new ArrayList<>();
         this.bonuses = new ArrayList<>();
-        this.scorePoint = 1;
         this.nbMaxRobot = 0;
         this.isMouseEnable = isMouseEnable;
         this.robotSpeed = 3;
@@ -118,7 +116,8 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
                     nbframes = 0;
                     nbSecond++;
                     if (nbSecond % 3 == 0){
-                        scorePoint++;
+                        stats.incrementNumberOfGoalsReached();
+                        gameContext.updateScore(stats, SurviveAgainstRobots.this);
                     }
                     if (robots.size() < nbRobot){
                         createRobot();
@@ -126,9 +125,9 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
                 }
 
                 if (nbframes == 10){
-                    score.setText("Score : " + scorePoint);
+                    score.setText("Score : " + stats.getNbGoalsReached());
                 }
-                if (scorePoint > scoreIncrementRobot){
+                if (stats.getNbGoalsReached() > scoreIncrementRobot){
                     if (nbRobot < nbMaxRobot){
                         nbRobot++;
                     }
@@ -163,7 +162,11 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         }
 
         // Increase the score by 5
-        scorePoint+=5;
+        for (int i = 0; i <= 5;i++){
+            stats.incrementNumberOfGoalsReached();
+        }
+
+        gameContext.updateScore(stats, this);
     }
 
 
@@ -257,7 +260,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         bonuses.clear();
 
         // Reset score and maximum number of robots
-        this.scorePoint = 1;
+        this.stats.reset();
         nbMaxRobot = 3;
 
         // Initialize game board and start game

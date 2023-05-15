@@ -9,7 +9,7 @@ public class SurviveAgainstRobotsMouseSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("SurviveAgainstRobotsMouse").gameThumbnail("data/Thumbnails/RushHour.png")
+            GameSummary.builder().nameCode("SurviveAgainstRobotsMouse").gameThumbnail("data/Thumbnails/SurviveAgainstRobots.png")
                 .category(GameCategories.Category.ACTION_REACTION).build(),
             new SurviveAgainstRobotsVariantGenerator(), new SurviveAgainstRobotsMouseLauncher());
     }
