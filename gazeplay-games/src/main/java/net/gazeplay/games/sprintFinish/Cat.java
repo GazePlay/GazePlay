@@ -343,8 +343,8 @@ public class Cat extends Parent {
      */
     public void dogMove(){
         // Get the difference in x and y positions between the dog and its target
-        double dx = target.getX() - hitbox.getX();
-        double dy = target.getY() - hitbox.getY();
+        double dx = target.getX() - hitbox.getX()-hitbox.getWidth()/2;
+        double dy = target.getY() - hitbox.getY()- hitbox.getHeight()/2;
 
         // Calculate the distance between the dog and its target using Pythagorean theorem
         double distance = Math.sqrt(dx * dx + dy * dy);
