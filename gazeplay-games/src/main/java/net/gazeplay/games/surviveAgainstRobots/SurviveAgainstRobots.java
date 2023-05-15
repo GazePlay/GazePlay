@@ -149,7 +149,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
     private void onRobotKilled(Rectangle robot){
         // Generate a random number between 0 and 10
         Random random = new Random();
-        int bonusrand = random.nextInt(0,3);
+        int bonusrand = random.nextInt(0,7);
 
         // If the random number is 1, create a new bonus
         if (bonusrand == 1){
