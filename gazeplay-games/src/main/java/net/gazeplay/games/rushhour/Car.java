@@ -45,6 +45,8 @@ public class Car extends Rectangle {
     private final ProgressIndicator pi;
 
     private boolean selected = false;
+    private boolean timerRunning = false;
+
 
     /**
      * Creates a new instance of a Car with the size and direction.
@@ -95,12 +97,19 @@ public class Car extends Rectangle {
                     new KeyValue(pi.progressProperty(), 1)));
             timelineProgressBar.play();
             timelineProgressBar.setOnFinished(actionEvent -> setSelected(true));
+            timerRunning = true;
         };
 
         this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterEvent);
         this.addEventFilter(GazeEvent.GAZE_ENTERED, enterEvent);
 
+
         final EventHandler<Event> exitEvent = e -> {
+            if (timerRunning) {
+                timelineProgressBar.stop();
+                pi.setProgress(0);
+                timerRunning = false;
+            }
             Point pointerPosition = new Point();;
             if (e.getEventType() == GazeEvent.GAZE_EXITED) {
                 pointerPosition.setLocation(((GazeEvent)e).getX(), ((GazeEvent)e).getY());
@@ -113,11 +122,8 @@ public class Car extends Rectangle {
                 moveTo(way);
             }
             intersect = false;
-            // }
 
             if (!selected) {
-                timelineProgressBar.stop();
-                pi.setProgress(0);
                 pi.setOpacity(0);
             }
         };
