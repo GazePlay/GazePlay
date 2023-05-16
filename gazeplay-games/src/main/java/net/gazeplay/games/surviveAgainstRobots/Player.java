@@ -346,6 +346,9 @@ public class Player extends Parent {
                     dirY = speed;
                     verticalDirection = KeyCode.DOWN;
                 }
+                default -> {
+
+                }
             }
         });
 
@@ -379,6 +382,9 @@ public class Player extends Parent {
                         currentSpeedY = 0;
                         dirY = 0;
                     }
+                }
+                default -> {
+
                 }
             }
         });

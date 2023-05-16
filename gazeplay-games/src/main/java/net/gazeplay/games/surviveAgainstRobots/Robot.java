@@ -19,11 +19,9 @@ public class Robot extends Rectangle {
     private String directionHorizontal;
     private String directionVertical;
     protected boolean isDestroyed;
-    private boolean canShoot;
+    private final boolean canShoot;
     private final double freqShoot;
     private final double bulletSpeed;
-    private final ImagePattern robotShooter = new ImagePattern(new Image("data/surviveAgainstRobots/robots/Red.png"));
-    private final ImagePattern robotClassic = new ImagePattern(new Image("data/surviveAgainstRobots/robots/Orange.png"));
 
 
     /**
@@ -35,20 +33,22 @@ public class Robot extends Rectangle {
      * @param speed the speed of the robot
      * @param gameContext the game context to which the robot belongs
      * @param gameInstance the instance of the game
-     * @param canShoot a boolean indicating whether the robot can shoot or not
+     * @param canShoot2 a boolean indicating whether the robot can shoot or not
      */
-    public Robot(double x, double y, double width, double height, double speed, IGameContext gameContext, SurviveAgainstRobots gameInstance, boolean canShoot) {
+    public Robot(double x, double y, double width, double height, double speed, IGameContext gameContext, SurviveAgainstRobots gameInstance, boolean canShoot2) {
         super(x, y, width, height);
         this.speed = speed;
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
-        this.canShoot = canShoot;
+        this.canShoot = canShoot2;
         this.isDestroyed = false;
         this.bulletSpeed = 5;
         this.freqShoot = 1.2;
         if (canShoot){
+            ImagePattern robotShooter = new ImagePattern(new Image("data/surviveAgainstRobots/robots/Red.png"));
             this.setFill(robotShooter);
         }else{
+            ImagePattern robotClassic = new ImagePattern(new Image("data/surviveAgainstRobots/robots/Orange.png"));
             this.setFill(robotClassic);
         }
 

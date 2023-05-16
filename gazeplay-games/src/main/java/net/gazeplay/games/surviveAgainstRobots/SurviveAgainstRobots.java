@@ -512,7 +512,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
     protected void endOfGame(){
         dispose();
-        launch();
+        gameContext.showRoundStats(stats,this);
 
     }
 }
