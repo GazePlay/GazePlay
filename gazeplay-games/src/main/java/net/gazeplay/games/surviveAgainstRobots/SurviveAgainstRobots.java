@@ -75,8 +75,6 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
      */
     public void startGame(){
 
-        // Get the game panel's dimensions from the game context
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         // Create a new player instance depending on whether the mouse is enabled or not
         if (!isMouseEnable){
@@ -149,7 +147,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
     private void onRobotKilled(Rectangle robot){
         // Generate a random number between 0 and 10
         Random random = new Random();
-        int bonusrand = random.nextInt(0,7);
+        int bonusrand = random.nextInt(0,3);
 
         // If the random number is 1, create a new bonus
         if (bonusrand == 1){

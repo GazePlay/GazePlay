@@ -1,8 +1,16 @@
 package net.gazeplay.games.surviveAgainstRobots;
 
+import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.geometry.Dimension2D;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.util.Duration;
 import net.gazeplay.IGameContext;
 
 import java.util.Random;
@@ -18,6 +26,9 @@ public class Bonus extends Rectangle {
     private final IGameContext gameContext;
     protected AnimationTimer timer;
     private final double slowfactor;
+    private int nbSeconds;
+    private final Label timerlabel;
+    private final Rectangle bonusIcon;
 
     /**
      Constructs a new Bonus object with the specified coordinates, dimensions, game instance, and game context.
@@ -36,6 +47,10 @@ public class Bonus extends Rectangle {
         this.spawningDuration = 8;
         this.gameContext = gameContext;
         this.slowfactor = 0.5;
+        this.timerlabel = new Label();
+        timerlabel.setFont(new Font("Arial", 30));
+        timerlabel.setStyle("-fx-text-fill: black ;");
+        this.bonusIcon = new Rectangle(getWidth(),getHeight());
         generateRandomBonus();
     }
 
@@ -63,13 +78,24 @@ public class Bonus extends Rectangle {
         gameInstance.obstacles.add(this);
 
         // define animation timer to handle bonus effect and duration
+        nbSeconds = 0;
         timer = new AnimationTimer() {
             int nbframes = 0;
-            int nbSeconds = 0;
             boolean switchSprite = false;
+            boolean isTimerlabelActivated = false;
             boolean resetTimer = false;
             @Override
             public void handle(long now) {
+                // increment timer's seconds and frames counters
+                if (nbframes == 60){
+                    nbframes = 0;
+                    if (isTimerlabelActivated){
+                        updateTimerLabel();
+                    }
+                    nbSeconds++;
+                }
+                nbframes++;
+
                 // apply bonus effect if it is destroyed
                 if (isDestroyed && !isStopped){
                     if (bonusEnum == BonusEnum.SLOW){
@@ -81,7 +107,7 @@ public class Bonus extends Rectangle {
                     }
                 }
                 // stop bonus if it exceeds its duration
-                if (this.nbSeconds == spawningDuration){
+                if (nbSeconds == spawningDuration){
                     isStopped = true;
                 }
 
@@ -104,6 +130,8 @@ public class Bonus extends Rectangle {
                     if (!resetTimer){
                         resetTimer = true;
                         nbSeconds = 0;
+                        showBonusTimer(bonusEnum);
+                        isTimerlabelActivated = true;
                     }
                 }
                 // stop bonus and remove effect if it has exceeded its duration
@@ -112,17 +140,62 @@ public class Bonus extends Rectangle {
                     removeObject();
                     stop();
                 }
-                // increment timer's seconds and frames counters
-                if (nbframes == 60){
-                    nbframes = 0;
-                    nbSeconds++;
-                }
-                    nbframes++;
+
             }
         };
         timer.start();
     }
 
+    private void showBonusTimer(BonusEnum bonusEnum){
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        for (int i = 0; i < gameContext.getChildren().size(); i++){
+
+            if (gameContext.getChildren().get(i) instanceof Rectangle){
+                if (gameContext.getChildren().get(i).getId() != null && gameContext.getChildren().get(i).getId().equals(bonusEnum.getName())){
+                    gameContext.getChildren().remove(gameContext.getChildren().get(i));
+                }
+            }
+            if (gameContext.getChildren().get(i) instanceof Label){
+                if (gameContext.getChildren().get(i).getId() != null && gameContext.getChildren().get(i).getId().equals(bonusEnum.getName())){
+                    gameContext.getChildren().remove(gameContext.getChildren().get(i));
+                }
+            }
+        }
+
+        if (!gameContext.getChildren().contains(bonusIcon)){
+            bonusIcon.setFill(bonusEnum.getImagePattern());
+            if (bonusEnum == BonusEnum.SLOW){
+                bonusIcon.setX(dimension2D.getWidth()-400);
+            }else if (bonusEnum == BonusEnum.SHIELD){
+                bonusIcon.setX(dimension2D.getWidth()-300);
+            }else if (bonusEnum == BonusEnum.FIRERATE){
+                bonusIcon.setX(dimension2D.getWidth()-200);
+            }
+            bonusIcon.setId(bonusEnum.getName());
+            bonusIcon.setY(20);
+            bonusIcon.setOpacity(0.8);
+            gameContext.getChildren().add(bonusIcon);
+        }
+        if (!gameContext.getChildren().contains(timerlabel)){
+            timerlabel.toFront();
+            timerlabel.setLayoutX(bonusIcon.getX() + bonusIcon.getWidth()/2);
+            timerlabel.setId(bonusEnum.getName());
+            timerlabel.setLayoutY(bonusIcon.getY() + bonusIcon.getHeight());
+            gameContext.getChildren().add(timerlabel);
+        }
+    }
+
+    private void updateTimerLabel(){
+        int timeleft = (int)spawningDuration-nbSeconds-1;
+        if (timeleft == 0){
+            gameContext.getChildren().remove(timerlabel);
+            gameContext.getChildren().remove(bonusIcon);
+        }else{
+            timerlabel.setText(String.valueOf(timeleft));
+        }
+
+    }
 
 
     /**
