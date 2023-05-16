@@ -2,6 +2,7 @@ package net.gazeplay.games.trainSwitches;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -57,6 +58,10 @@ public class Switch {
         group.getChildren().clear();
         group.getChildren().add(circle);
         group.getChildren().add(curves.get(outputSelected));
+    }
+
+    public Point2D getCenter(){
+        return new Point2D(curves.get(outputSelected).controlXProperty().get(), curves.get(outputSelected).controlYProperty().get());
     }
 
     public boolean isInside(double x, double y){
