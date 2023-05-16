@@ -86,18 +86,22 @@ public class Car extends Rectangle {
         log.debug("" + x + " " + y + " " + l + " " + h + " " + c);
 
         final EventHandler<Event> enterEvent = e -> {
-            pi.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
-            pi.setLayoutX(getX() + getWidth() / 2 - pi.getWidth() / 2);
-            pi.setLayoutY(getY() + getHeight() / 2 - pi.getHeight() / 2);
-            pi.setOpacity(1);
-            pi.toFront();
-            timelineProgressBar = new Timeline();
-            timelineProgressBar.getKeyFrames()
-                .add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
-                    new KeyValue(pi.progressProperty(), 1)));
-            timelineProgressBar.play();
-            timelineProgressBar.setOnFinished(actionEvent -> setSelected(true));
-            timerRunning = true;
+            if (!selected){
+                pi.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+                pi.setLayoutX(getX() + getWidth() / 2 - pi.getWidth() / 2);
+                pi.setLayoutY(getY() + getHeight() / 2 - pi.getHeight() / 2);
+                pi.setOpacity(1);
+                pi.toFront();
+                timelineProgressBar = new Timeline();
+                timelineProgressBar.getKeyFrames()
+                    .add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
+                        new KeyValue(pi.progressProperty(), 1)));
+                timelineProgressBar.play();
+                timelineProgressBar.setOnFinished(actionEvent -> setSelected(true));
+                timerRunning = true;
+            }else{
+                pi.setOpacity(0);
+            }
         };
 
         this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterEvent);
