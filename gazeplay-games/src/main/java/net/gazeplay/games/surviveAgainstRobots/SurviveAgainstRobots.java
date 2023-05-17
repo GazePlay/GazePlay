@@ -145,9 +145,9 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
      * @param robot the robot that has been killed
      */
     private void onRobotKilled(Rectangle robot){
-        // Generate a random number between 0 and 10
+        // Generate a random number between 0 and 6
         Random random = new Random();
-        int bonusrand = random.nextInt(0,3);
+        int bonusrand = random.nextInt(0,6);
 
         // If the random number is 1, create a new bonus
         if (bonusrand == 1){
