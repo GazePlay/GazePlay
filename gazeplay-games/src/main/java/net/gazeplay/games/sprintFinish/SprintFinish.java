@@ -182,6 +182,9 @@ public class SprintFinish extends Parent implements GameLifeCycle {
                                         }
                                     }
                                 }
+                                default -> {
+
+                                }
                             }
                         }
                     }
@@ -223,6 +226,9 @@ public class SprintFinish extends Parent implements GameLifeCycle {
                                         wallMoving.canMove = true;
                                     }
                                 }
+                            }
+                            default -> {
+
                             }
                         }
                     }
@@ -676,6 +682,9 @@ public class SprintFinish extends Parent implements GameLifeCycle {
             case "right" -> nextX += speed;
             case "up" -> nextY -= speed;
             case "down" -> nextY += speed;
+            default -> {
+
+            }
         }
         Rectangle futurePos = new Rectangle(nextX, nextY, object.getWidth(), object.getHeight());
 
