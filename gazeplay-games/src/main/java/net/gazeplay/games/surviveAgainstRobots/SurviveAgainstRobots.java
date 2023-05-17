@@ -1,16 +1,21 @@
 package net.gazeplay.games.surviveAgainstRobots;
 
+import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -267,7 +272,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         gameContext.setLimiterAvailable();
         Rectangle background = new Rectangle(0,0,dimension2D.getWidth(), dimension2D.getHeight());
-        background.setFill(Color.WHITE);
+        background.setFill(new ImagePattern(new Image("data/surviveAgainstRobots/background/background.png")));
 
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.getChildren().add(background);
@@ -296,16 +301,16 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
 
         // Create and position the four wall obstacles
         Rectangle upWall = new Rectangle(0,0,dimension2D.getWidth(),50);
-        upWall.setFill(Color.BLACK);
+        upWall.setFill(Color.TRANSPARENT);
 
         Rectangle downWall = new Rectangle(0,dimension2D.getHeight()-50,dimension2D.getWidth(),50);
-        downWall.setFill(Color.BLACK);
+        downWall.setFill(Color.TRANSPARENT);
 
         Rectangle leftWall = new Rectangle(0,0,50,dimension2D.getHeight());
-        leftWall.setFill(Color.BLACK);
+        leftWall.setFill(Color.TRANSPARENT);
 
         Rectangle rightWall = new Rectangle(dimension2D.getWidth()-50,0,50,dimension2D.getHeight());
-        rightWall.setFill(Color.BLACK);
+        rightWall.setFill(Color.TRANSPARENT);
 
         // Add the wall obstacles to the game's list of obstacles
         this.obstacles.add(upWall);

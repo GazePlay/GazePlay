@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PlayerEnum {
 
-    BLUE(new ImagePattern(new Image("data/surviveAgainstRobots/player/Blue.png"))),
     RED(new ImagePattern(new Image("data/surviveAgainstRobots/player/Red.png"))),
     GREEN(new ImagePattern(new Image("data/surviveAgainstRobots/player/Green.png"))),
     ORANGE(new ImagePattern(new Image("data/surviveAgainstRobots/player/Orange.png"))),

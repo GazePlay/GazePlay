@@ -10,7 +10,7 @@ public class SurviveAgainstRobotsAutomaticSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("SurviveAgainstRobotsAutomatic").gameThumbnail("data/Thumbnails/SurviveAgainstRobots.png")
+            GameSummary.builder().nameCode("SurviveAgainstRobotsAutomatic").gameThumbnail("data/Thumbnails/surviveAgainstRobots.png")
                 .category(GameCategories.Category.ACTION_REACTION).build(),
             new SurviveAgainstRobotsVariantGenerator(), new SurviveAgainstRobotsAutomaticLauncher());
     }
