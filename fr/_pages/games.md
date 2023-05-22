@@ -383,3 +383,18 @@ Lisez plusieurs vidéos en les regardant pour les lire.
 Joue tes propres vidéos ou celles-ci depuis YouTube.
 
 {% include figure image_path="/assets/images/games/gazeMedia.png" alt="Image du jeu Media player." %}
+
+
+## Survivre contre les robots
+
+Survivez contre des vagues de robots en vous déplaçant et en tirant en utilisant les flèches directionnelles. N’hésitez pas à ramasser des bonus pour vous aider à survivre !
+
+{% include figure image_path="/assets/images/games/surviveAgainstRobots.png" alt="Image du jeu Survivre contre les robots." %}
+
+## Sprint jusqu'à l'arrivée
+
+Sprint to the finish is a cooperative game for two players.
+* Clavier version : Le joueur 1 utilise les flèches directionnelles pour se déplacer et atteindre la ligne d'arrivée, tandis que le joueur 2 doit surveiller les ennemis qui se déplacent en les regardants ou en utilisant la souris ce qui permettra de les immobiliser et utiliser des interrupteurs pour aider le joueur 1.
+* Souris/Regard version : Le joueur 1 se déplace en utilisant les mouvements de ses yeux et doit atteindre la ligne d'arrivée, tandis que le joueur 2 utilise les touches « A » pour immobiliser les ennemis, « Z » pour actionner les interrupteurs et « E » pour immobiliser les murs qui se déplacent et aider le joueur 1.
+
+{% include figure image_path="/assets/images/games/sprintToTheFinish.png" alt="Image of the game Sprint to the finish." %}

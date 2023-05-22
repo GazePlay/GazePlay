@@ -391,7 +391,7 @@ Survive waves of robots by moving and shooting using the directional arrows. Fee
 
 ## Sprint to the finish
 Sprint to the finish is a cooperative game for two players. 
-Keyboard version : Player 1 uses directional arrows to move and reach the finish line, while player 2 has to watch the moving enemies by looking at them or using the mouse to stop them and use switches to help player 1.
-Mouse/Gaze version : Player 1 moves using his eye movements and must reach the finish line, while Player 2 uses the "A" keys to stop enemies, "Z" to activate switches and "E" to stop moving walls and help Player 1.
+* Keyboard version : Player 1 uses directional arrows to move and reach the finish line, while player 2 has to watch the moving enemies by looking at them or using the mouse to stop them and use switches to help player 1.
+* Mouse/Gaze version : Player 1 moves using his eye movements and must reach the finish line, while Player 2 uses the "A" keys to stop enemies, "Z" to activate switches and "E" to stop moving walls and help Player 1.
 
 {% include figure image_path="/assets/images/games/sprintToTheFinish.png" alt="Image of the game Sprint to the finish." %}
