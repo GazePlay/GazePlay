@@ -10,18 +10,15 @@ import java.util.ArrayList;
 
 public class Switch {
 
-    private Section inputPath;
-    private ArrayList<Section> outputPaths;
+    private final ArrayList<Section> outputSections;
     private int outputSelected;
-
-    private ArrayList<QuadCurve> curves;
+    private final ArrayList<QuadCurve> curves;
 
     public IntegerProperty radius;
-
-    private Group group;
+    private final Group group;
 
     public Switch() {
-        outputPaths = new ArrayList<>();
+        outputSections = new ArrayList<>();
         curves = new ArrayList<>();
         group = new Group();
         outputSelected = 0;
@@ -33,11 +30,7 @@ public class Switch {
     }
 
     public void addOutput(Section section){
-        outputPaths.add(section);
-    }
-
-    public void setInput(Section section){
-        inputPath = section;
+        outputSections.add(section);
     }
 
     public void changeOutputSelected(){
@@ -69,7 +62,7 @@ public class Switch {
     }
 
     public Section getOutput(){
-        return outputPaths.get(outputSelected);
+        return outputSections.get(outputSelected);
     }
 
 }

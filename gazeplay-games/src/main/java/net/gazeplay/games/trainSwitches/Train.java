@@ -13,18 +13,12 @@ public class Train {
         shape = new ImageView(new Image("data/trainSwitches/images/"+color+"Loco.png"));
         shape.setPreserveRatio(true);
         shape.setMouseTransparent(true);
-        switch (direction){
-            case "up":
-                shape.setRotate(90);
-                break;
-            case "down":
-                shape.setRotate(-90);
-                break;
-            case "right":
-                shape.setScaleX(-1);
-                break;
-            default:
-                break;
+        switch (direction) {
+            case "up" -> shape.setRotate(90);
+            case "down" -> shape.setRotate(-90);
+            case "right" -> shape.setScaleX(-1);
+            default -> {
+            }
         }
     }
 

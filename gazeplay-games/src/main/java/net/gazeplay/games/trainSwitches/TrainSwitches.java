@@ -39,27 +39,27 @@ public class TrainSwitches implements GameLifeCycle {
     private final ArrayList<String> colors;
     private final ArrayList<Station> stations;
     private final ArrayList<PathTransition> transitions;
-    private Train trainWaiting;
-    private Switch switchWaiting;
-    private Timer sendTrainTimer;
     private final Random random;
+    private Timer sendTrainTimer;
+    private final int delayBetweenTrains = 5000;
     private int levelWidth;
     private int levelHeight;
-    private String direction;
-    private int trainCount;
+    private String initialTrainDirection;
+    private int trainToSend;
     private int trainSent;
-    private final double MAXSPEED = 2;
+    private Instant lastTrainSentInstant;
+    private Instant lastTimerStoppedInstant;
+
+    // For pause variant
+    private Train trainWaiting;
+    private Switch switchWaiting;
+
+    // UI
     private final double XOFFSET = 100;
     private final double YOFFSET = 100;
-    private final int DELAY = 5000;
-    private Instant lastTrainInstant;
-    private Instant timerEndInstant;
-
-    // Pane
-    private BorderPane borderPane;
-    private Pane gamePane;
     private final ProgressIndicator progressIndicator;
     private Timeline progressTimeline;
+    private Pane mainPane;
     private I18NButton resumeButton;
     private Label trainCountLabel;
 
@@ -76,7 +76,6 @@ public class TrainSwitches implements GameLifeCycle {
         progressIndicator = new ProgressIndicator(0);
         progressIndicator.setOpacity(0);
         progressIndicator.setMouseTransparent(true);
-        trainSent = 0;
         gameContext.getConfiguration().setAnimationSpeedRatio(3);
     }
 
@@ -84,26 +83,25 @@ public class TrainSwitches implements GameLifeCycle {
     public void launch() {
 
         trainSent = 0;
-
         gameContext.getRoot().setBackground(new Background(new BackgroundImage(new Image("data/trainSwitches/images/grassBackground.jpg"),null,null,null,null)));
 
-        borderPane = new BorderPane();
+        BorderPane borderPane = new BorderPane();
         gameContext.getChildren().add(borderPane);
 
-        gamePane = new Pane();
+        mainPane = new Pane();
         //gamePane.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        borderPane.setCenter(gamePane);
+        borderPane.setCenter(mainPane);
 
         initLevel();
         for (Section section : sections) {
-            gamePane.getChildren().add(section.getPath());
+            mainPane.getChildren().add(section.getPath());
         }
         for (Station station : stations) {
-            gamePane.getChildren().add(station.getShape());
+            mainPane.getChildren().add(station.getShape());
         }
         for (Switch aSwitch : switches) {
             aSwitch.updateShape();
-            gamePane.getChildren().add(aSwitch.getGroup());
+            mainPane.getChildren().add(aSwitch.getGroup());
         }
 
         HBox botBox = new HBox();
@@ -112,7 +110,7 @@ public class TrainSwitches implements GameLifeCycle {
         //botBox.setBorder(new Border(new BorderStroke(Color.ORANGE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         borderPane.setBottom(botBox);
 
-        trainCountLabel = new Label("Trains : 0/"+trainCount);
+        trainCountLabel = new Label("Trains : 0/"+ trainToSend);
         //trainCountLabel.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         trainCountLabel.setTextFill(Color.WHITE);
         trainCountLabel.setFont(new Font(60));
@@ -122,7 +120,6 @@ public class TrainSwitches implements GameLifeCycle {
         resumeButton = new I18NButton(gameContext.getTranslator(), "ResumeButton");
         resumeButton.setVisible(false);
         //resumeButton.setBorder(new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        //resumeButton.setPadding(new Insets(20,0,0,0));
         resumeButton.setMaxHeight(500);
         resumeButton.setMinWidth(500);
         resumeButton.setMaxWidth(500);
@@ -137,13 +134,18 @@ public class TrainSwitches implements GameLifeCycle {
         sendTrainTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                startTrainTask();
+                sendTrain();
             }
-        }, 5000, DELAY);
+        }, 5000, delayBetweenTrains);
 
         gameContext.getChildren().add(progressIndicator);
         stats.notifyNewRoundReady();
         gameContext.start();
+    }
+
+    @Override
+    public void dispose() {
+        gameContext.clear();
     }
 
     public void resume(){
@@ -151,21 +153,21 @@ public class TrainSwitches implements GameLifeCycle {
             for (PathTransition transition : transitions) {
                 transition.play();
             }
-            launchTrain(switchWaiting.getOutput(), trainWaiting);
+            launchTrainOnSection(switchWaiting.getOutput(), trainWaiting);
             resumeButton.setVisible(false);
             sendTrainTimer = new Timer();
-            long delay = java.time.Duration.between(lastTrainInstant, timerEndInstant).toMillis();
-            if(delay>DELAY){
-                delay = 0;
+            long elapsed = java.time.Duration.between(lastTrainSentInstant, lastTimerStoppedInstant).toMillis();
+            if(elapsed> delayBetweenTrains){
+                elapsed = 0;
             }else{
-                delay = DELAY - delay;
+                elapsed = delayBetweenTrains - elapsed;
             }
             sendTrainTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    startTrainTask();
+                    sendTrain();
                 }
-            }, delay, DELAY);
+            }, elapsed, delayBetweenTrains);
         }
     }
 
@@ -186,24 +188,24 @@ public class TrainSwitches implements GameLifeCycle {
         progressTimeline.play();
     }
 
-    public void startTrainTask(){
-        lastTrainInstant = Instant.now();
-        if(trainSent>=trainCount){
+    public void sendTrain(){
+        lastTrainSentInstant = Instant.now();
+        if(trainSent>= trainToSend){
             sendTrainTimer.cancel();
         }else{
             Platform.runLater(() -> {
                 Train train = createTrain(colors.get(random.nextInt(colors.size())));
-                gamePane.getChildren().add(train.getShape());
-                launchTrain(sections.get(0), train);
+                mainPane.getChildren().add(train.getShape());
+                launchTrainOnSection(sections.get(0), train);
                 trainSent++;
-                trainCountLabel.setText("Trains: "+trainSent+"/"+trainCount);
+                trainCountLabel.setText("Trains: "+trainSent+"/"+ trainToSend);
             });
         }
     }
 
-    public void launchTrain(Section section, Train train){
+    public void launchTrainOnSection(Section section, Train train){
         PathTransition pathTransition = new PathTransition();
-        pathTransition.setDuration(Duration.seconds(section.getSize()/(gameContext.getConfiguration().getAnimationSpeedRatio()/(10.0/MAXSPEED))));
+        pathTransition.setDuration(Duration.seconds(section.getSize()/(gameContext.getConfiguration().getAnimationSpeedRatio()/(10.0/2))));
         pathTransition.setNode(train.getShape());
         pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
         pathTransition.setPath(section.getPath());
@@ -223,14 +225,14 @@ public class TrainSwitches implements GameLifeCycle {
                     switchWaiting = aSwitch;
                     resumeButton.setVisible(true);
                     sendTrainTimer.cancel();
-                    timerEndInstant = Instant.now();
+                    lastTimerStoppedInstant = Instant.now();
                 }else{
                     // Launch train on new section
-                    launchTrain(aSwitch.getOutput(), train);
+                    launchTrainOnSection(aSwitch.getOutput(), train);
                 }
             }else if(station!=null){
                 // Train is at a station
-                gamePane.getChildren().remove(train.getShape());
+                mainPane.getChildren().remove(train.getShape());
                 ImageView img;
                 if(train.getColor().equals(station.getColor())){
                     // Train reached correct station
@@ -257,17 +259,12 @@ public class TrainSwitches implements GameLifeCycle {
         pathTransition.play();
     }
 
-    @Override
-    public void dispose() {
-        gameContext.clear();
-    }
-
     public void initLevel(){
 
         levelWidth = 5;
         levelHeight = 3;
-        trainCount = 10;
-        direction = "right";
+        trainToSend = 10;
+        initialTrainDirection = "right";
 
         Switch s1 = createSwitch();
         s1.addCurve(createCurve(4, 0.75,4,1.25,4,1));
@@ -277,7 +274,6 @@ public class TrainSwitches implements GameLifeCycle {
         p1.getPath().getElements().add(createMoveTo(0, 0));
         p1.getPath().getElements().add(createLineTo(4, 0));
         p1.getPath().getElements().add(createLineTo(4, 1));
-        s1.setInput(p1);
 
         Section p2 = createSection(2);
         p2.getPath().getElements().add(createMoveTo(4, 1));
@@ -295,7 +291,6 @@ public class TrainSwitches implements GameLifeCycle {
         Switch s2 = createSwitch();
         s2.addCurve(createCurve(1.25, 2,1,1.75,1,2));
         s2.addCurve(createCurve(1.25, 2,0.75,2,1,2));
-        s2.setInput(p3);
 
         Section p4 = createSection(1);
         p4.getPath().getElements().add(createMoveTo(1, 2));
@@ -344,7 +339,7 @@ public class TrainSwitches implements GameLifeCycle {
     }
 
     public Train createTrain(String color){
-        Train train = new Train(color, direction);
+        Train train = new Train(color, initialTrainDirection);
         train.getShape().fitWidthProperty().bind(gameContext.getPrimaryScene().widthProperty().divide(levelWidth).divide(2));
         train.getShape().fitHeightProperty().bind(gameContext.getPrimaryScene().heightProperty().divide(levelHeight).divide(2));
         return train;
@@ -366,9 +361,9 @@ public class TrainSwitches implements GameLifeCycle {
 
     public Switch createSwitch(){
         Switch s = new Switch();
-        s.getGroup().addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEvent -> enterHandle(s));
+        s.getGroup().addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEvent -> enterSwitchHandle(s));
         s.getGroup().addEventHandler(MouseEvent.MOUSE_EXITED, mouseEvent -> exitHandle());
-        s.getGroup().addEventHandler(GazeEvent.GAZE_ENTERED, gazeEvent -> enterHandle(s));
+        s.getGroup().addEventHandler(GazeEvent.GAZE_ENTERED, gazeEvent -> enterSwitchHandle(s));
         s.getGroup().addEventHandler(GazeEvent.GAZE_EXITED, gazeEvent -> exitHandle());
 
         s.radius.bind(gameContext.getPrimaryScene().heightProperty().divide(levelHeight).divide(4));
@@ -376,7 +371,7 @@ public class TrainSwitches implements GameLifeCycle {
         return s;
     }
 
-    public void enterHandle(Switch s){
+    public void enterSwitchHandle(Switch s){
         progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
         progressIndicator.setMinSize(gameContext.getConfiguration().getProgressBarSize(), gameContext.getConfiguration().getProgressBarSize());
         progressIndicator.setLayoutX(s.getCenter().getX()-progressIndicator.getWidth()/2);
