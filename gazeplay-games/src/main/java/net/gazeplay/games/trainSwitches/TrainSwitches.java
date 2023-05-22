@@ -34,6 +34,8 @@ public class TrainSwitches implements GameLifeCycle {
     private final Stats stats;
 
     // Game
+    private final static int DELAY_BETWEEN_TRAINS = 5000;
+    private final static int MAXSPEED = 2;
     private final ArrayList<Section> sections;
     private final ArrayList<Switch> switches;
     private final ArrayList<String> colors;
@@ -41,7 +43,6 @@ public class TrainSwitches implements GameLifeCycle {
     private final ArrayList<PathTransition> transitions;
     private final Random random;
     private Timer sendTrainTimer;
-    private final static int delayBetweenTrains = 5000;
     private int levelWidth;
     private int levelHeight;
     private String initialTrainDirection;
@@ -136,12 +137,11 @@ public class TrainSwitches implements GameLifeCycle {
         }
 
         sendTrainTimer = new Timer();
-        sendTrainTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sendTrain();
-            }
-        }, 5000, delayBetweenTrains);
+        if(gameVariant==TrainSwitchesGameVariant.uniqueTrain){
+            sendTrainTimer.schedule(getSendTrainTask(), 5000);
+        }else{
+            sendTrainTimer.schedule(getSendTrainTask(), 5000, DELAY_BETWEEN_TRAINS);
+        }
 
         gameContext.getChildren().add(progressIndicator);
         stats.notifyNewRoundReady();
@@ -167,17 +167,12 @@ public class TrainSwitches implements GameLifeCycle {
             resumeButton.setVisible(false);
             sendTrainTimer = new Timer();
             long elapsed = java.time.Duration.between(lastTrainSentInstant, lastTimerStoppedInstant).toMillis();
-            if(elapsed> delayBetweenTrains){
+            if(elapsed> DELAY_BETWEEN_TRAINS){
                 elapsed = 0;
             }else{
-                elapsed = delayBetweenTrains - elapsed;
+                elapsed = DELAY_BETWEEN_TRAINS - elapsed;
             }
-            sendTrainTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    sendTrain();
-                }
-            }, elapsed, delayBetweenTrains);
+            sendTrainTimer.schedule(getSendTrainTask(), elapsed, DELAY_BETWEEN_TRAINS);
         }
     }
 
@@ -198,24 +193,9 @@ public class TrainSwitches implements GameLifeCycle {
         progressTimeline.play();
     }
 
-    public void sendTrain(){
-        lastTrainSentInstant = Instant.now();
-        if(trainSent>= trainToSend){
-            sendTrainTimer.cancel();
-            lastTimerStoppedInstant = Instant.now();
-        }else{
-            Platform.runLater(() -> {
-                Train train = createTrain(colors.get(random.nextInt(colors.size())));
-                mainPane.getChildren().add(train.getShape());
-                launchTrainOnSection(sections.get(0), train);
-                trainSent++;
-            });
-        }
-    }
-
     public void launchTrainOnSection(Section section, Train train){
         PathTransition pathTransition = new PathTransition();
-        pathTransition.setDuration(Duration.seconds(section.getSize()/(gameContext.getConfiguration().getAnimationSpeedRatio()/(10.0/2))));
+        pathTransition.setDuration(Duration.seconds(section.getSize()/(gameContext.getConfiguration().getAnimationSpeedRatio()/(10.0/MAXSPEED))));
         pathTransition.setNode(train.getShape());
         pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
         pathTransition.setPath(section.getPath());
@@ -257,20 +237,19 @@ public class TrainSwitches implements GameLifeCycle {
                         // If trains are already all sent, restart a timer
                         if (trainSent >= trainToSend++){
                             long startDelay = java.time.Duration.between(lastTimerStoppedInstant, Instant.now()).toMillis();
-                            if(startDelay>=delayBetweenTrains){
+                            if(startDelay>= DELAY_BETWEEN_TRAINS){
                                 startDelay = 0;
                             }else{
-                                startDelay = delayBetweenTrains-startDelay;
+                                startDelay = DELAY_BETWEEN_TRAINS -startDelay;
                             }
                             sendTrainTimer = new Timer();
-                            sendTrainTimer.schedule(new TimerTask() {
-                                @Override
-                                public void run() {
-                                    sendTrain();
-                                }
-                            }, startDelay, delayBetweenTrains);
+                            sendTrainTimer.schedule(getSendTrainTask(), startDelay, DELAY_BETWEEN_TRAINS);
                         }
                     }
+                }
+                if(gameVariant==TrainSwitchesGameVariant.uniqueTrain){
+                    sendTrainTimer = new Timer();
+                    sendTrainTimer.schedule(getSendTrainTask(), 0);
                 }
                 trainReachedStation++;
                 trainCountLabel.setText("Score: "+trainCorrect+"/"+trainReachedStation);
@@ -288,6 +267,26 @@ public class TrainSwitches implements GameLifeCycle {
         });
         transitions.add(pathTransition);
         pathTransition.play();
+    }
+
+    public TimerTask getSendTrainTask(){
+        return new TimerTask() {
+            @Override
+            public void run() {
+                lastTrainSentInstant = Instant.now();
+                if(trainSent>= trainToSend){
+                    sendTrainTimer.cancel();
+                    lastTimerStoppedInstant = Instant.now();
+                }else{
+                    Platform.runLater(() -> {
+                        Train train = createTrain(colors.get(random.nextInt(colors.size())));
+                        mainPane.getChildren().add(train.getShape());
+                        launchTrainOnSection(sections.get(0), train);
+                        trainSent++;
+                    });
+                }
+            }
+        };
     }
 
     public void initLevel(){
