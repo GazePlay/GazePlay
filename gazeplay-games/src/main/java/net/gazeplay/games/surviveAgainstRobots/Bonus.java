@@ -30,6 +30,7 @@ public class Bonus extends Rectangle {
     private int nbSeconds;
     private final Label timerlabel;
     private final Rectangle bonusIcon;
+    private double slowTolerance = 0.0001;
 
     /**
      Constructs a new Bonus object with the specified coordinates, dimensions, game instance, and game context.
@@ -209,7 +210,7 @@ public class Bonus extends Rectangle {
         double robotSpeed = gameInstance.robotSpeed;
         if(isDestroyed && !isStopped){
             for (Robot robot : gameInstance.robots){
-                if (robot.speed == robotSpeed){
+                if (Math.abs(robot.speed - robotSpeed) < slowTolerance){
                     robot.speed = robot.speed * slowfactor;
                 }
             }
@@ -219,7 +220,7 @@ public class Bonus extends Rectangle {
     private void applyFireRate(){
         double playerFireRate = gameInstance.playerFireRate;
         if (isDestroyed && !isStopped){
-            if (playerFireRate == gameInstance.player.freqShoot){
+            if (Math.abs(playerFireRate - gameInstance.player.freqShoot) < slowTolerance){
                 gameInstance.player.freqShoot = 0.25;
             }
         }
@@ -236,13 +237,13 @@ public class Bonus extends Rectangle {
         if (bonusEnum == BonusEnum.SLOW){
             double robotSpeed = gameInstance.robotSpeed;
             for (Robot robot : gameInstance.robots){
-                if (robot.speed != robotSpeed){
+                if (Math.abs(robot.speed - robotSpeed) > slowTolerance){
                     robot.speed = robot.speed / slowfactor;
                 }
             }
         }else if (bonusEnum == BonusEnum.FIRERATE){
             double playerFireRate = gameInstance.playerFireRate;
-            if (playerFireRate != gameInstance.player.freqShoot){
+            if (Math.abs(playerFireRate - gameInstance.player.freqShoot) > slowTolerance){
                 gameInstance.player.freqShoot = 0.5;
             }
         }else if (bonusEnum == BonusEnum.SHIELD){
