@@ -34,6 +34,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
     protected ArrayList<Rectangle> obstacles;
     protected ArrayList<Robot> robots;
     private final SurviveAgainstRobotsVariant gameVariant;
+    private final SurviveAgainstRobotsMouseVariant gameVariantMouse;
 
     protected Player player;
     private int nbMaxRobot;
@@ -41,6 +42,7 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
     protected ArrayList<Bonus> bonuses;
 
     private final boolean isMouseEnable;
+    private Random random;
     protected double robotSpeed;
     protected double playerFireRate;
 
@@ -57,9 +59,8 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
      * @param gameVariant   an object of type SurviveAgainstRobotsVariant
      * @param stats         an object of type Stats
      * @param isMouseEnable a boolean representing whether the mouse is enabled
-     * @param automaticShoot a boolean representing whether automatic shooting is enabled
      */
-    public SurviveAgainstRobots(final IGameContext gameContext, SurviveAgainstRobotsVariant gameVariant, Stats stats, boolean isMouseEnable, boolean automaticShoot){
+    public SurviveAgainstRobots(final IGameContext gameContext, SurviveAgainstRobotsVariant gameVariant, SurviveAgainstRobotsMouseVariant gameVariantMouse, Stats stats, boolean isMouseEnable){
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameVariant = gameVariant;
@@ -69,9 +70,32 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         this.nbMaxRobot = 0;
         this.isMouseEnable = isMouseEnable;
         this.robotSpeed = 3;
-        this.automaticShoot = automaticShoot;
         this.playerFireRate = 0.5;
         this.isShieldEnabled = false;
+        this.random = new Random();
+        this.gameVariantMouse = gameVariantMouse;
+
+        if (gameVariant != null){
+            if(gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_EASY_AUTO_KEYBOARD) == 0 ||
+                gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_NORMAL_AUTO_KEYBOARD) == 0 ||
+                gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_HARD_AUTO_KEYBOARD) == 0
+            ){
+                this.automaticShoot = true;
+            }else{
+                this.automaticShoot = false;
+            }
+        }else if (gameVariantMouse != null){
+            if (gameVariantMouse.compareTo(SurviveAgainstRobotsMouseVariant.DIFFICULTY_EASY_AUTO_MOUSE) == 0 ||
+                gameVariantMouse.compareTo(SurviveAgainstRobotsMouseVariant.DIFFICULTY_NORMAL_AUTO_MOUSE) == 0 ||
+                gameVariantMouse.compareTo(SurviveAgainstRobotsMouseVariant.DIFFICULTY_HARD_AUTO_MOUSE) == 0){
+                this.automaticShoot = true;
+            }else{
+                this.automaticShoot = false;
+            }
+        }
+
+
+
     }
 
     /**
@@ -151,7 +175,6 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
      */
     private void onRobotKilled(Rectangle robot){
         // Generate a random number between 0 and 6
-        Random random = new Random();
         int bonusrand = random.nextInt(0,6);
 
         // If the random number is 1, create a new bonus
@@ -187,14 +210,12 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
         double y;
         double widthRange;
         double heightRange;
-        Random randomPosX = new Random();
-        Random randomShoot = new Random();
 
         boolean isValid = true;
 
         // Generate a random position for the robot, ensuring it doesn't collide with the player's zone
-        x = randomPosX.nextDouble(200,dimension2D.getWidth()-200);
-        y = randomPosX.nextDouble(200,dimension2D.getHeight()-200);
+        x = random.nextDouble(200,dimension2D.getWidth()-200);
+        y = random.nextDouble(200,dimension2D.getHeight()-200);
         widthRange = 100;
         heightRange = 100;
         Rectangle range = new Rectangle(x,y,widthRange,heightRange);
@@ -215,13 +236,32 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
             int res;
 
             // Determine the robot's shooting ability based on the game variant
-            if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_EASY) == 0){
-                res = 0;
-            }else if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_NORMAL) == 0){
-                res = randomShoot.nextInt(0,6);
+            if (gameVariant != null){
+                if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_EASY_KEYBOARD) == 0 ||
+                    gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_EASY_AUTO_KEYBOARD) == 0){
+                    res = 0;
+                }else if (gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_NORMAL_KEYBOARD) == 0 ||
+                        gameVariant.compareTo(SurviveAgainstRobotsVariant.DIFFICULTY_NORMAL_AUTO_KEYBOARD) == 0
+                ){
+                    res = random.nextInt(0,6);
+                }else{
+                    res = random.nextInt(0,4);
+                }
+            }else if(gameVariantMouse != null){
+                if (gameVariantMouse.compareTo(SurviveAgainstRobotsMouseVariant.DIFFICULTY_EASY_MOUSE) == 0 ||
+                    gameVariantMouse.compareTo(SurviveAgainstRobotsMouseVariant.DIFFICULTY_EASY_AUTO_MOUSE) == 0){
+                    res = 0;
+                }else if (gameVariantMouse.compareTo(SurviveAgainstRobotsMouseVariant.DIFFICULTY_NORMAL_MOUSE) == 0 ||
+                    gameVariantMouse.compareTo(SurviveAgainstRobotsMouseVariant.DIFFICULTY_NORMAL_AUTO_MOUSE) == 0
+                ){
+                    res = random.nextInt(0,6);
+                }else{
+                    res = random.nextInt(0,4);
+                }
             }else{
-                res = randomShoot.nextInt(0,4);
+                res = 0;
             }
+
 
             // Create the robot and add it to the game
             if (res == 2){
@@ -345,6 +385,9 @@ public class SurviveAgainstRobots extends Parent implements GameLifeCycle {
             case "right" -> nextX += speed;
             case "up" -> nextY -= speed;
             case "down" -> nextY += speed;
+            default -> {
+
+            }
         }
         Rectangle futurePos = new Rectangle(nextX, nextY, object.getWidth(), object.getHeight());
 

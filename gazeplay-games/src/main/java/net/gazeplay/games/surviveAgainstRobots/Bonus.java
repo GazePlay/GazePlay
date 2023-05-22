@@ -26,6 +26,7 @@ public class Bonus extends Rectangle {
     private final IGameContext gameContext;
     protected AnimationTimer timer;
     private final double slowfactor;
+    private Random random;
     private int nbSeconds;
     private final Label timerlabel;
     private final Rectangle bonusIcon;
@@ -48,6 +49,7 @@ public class Bonus extends Rectangle {
         this.gameContext = gameContext;
         this.slowfactor = 0.5;
         this.timerlabel = new Label();
+        this.random = new Random();
         timerlabel.setFont(new Font("Arial", 30));
         timerlabel.setStyle("-fx-text-fill: black ;");
         this.bonusIcon = new Rectangle(getWidth(),getHeight());
@@ -59,7 +61,7 @@ public class Bonus extends Rectangle {
      * Generates a random bonus from the BonusEnum values and starts a timer for its effect.
      */
     private void generateRandomBonus() {
-        int randomIndex = new Random().nextInt(BonusEnum.values().length);
+        int randomIndex = random.nextInt(BonusEnum.values().length);
         BonusEnum bonus = BonusEnum.values()[randomIndex];
 
         startTimerWithEffect(bonus);

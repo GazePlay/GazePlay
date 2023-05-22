@@ -34,6 +34,8 @@ public class Player extends Parent {
     private final EventHandler<Event> enterEvent;
     protected boolean isDead;
 
+    private Random random;
+
 
     /**
      * Constructs a new player object with the given parameters.
@@ -53,6 +55,7 @@ public class Player extends Parent {
         this.acceleration = 0.5;
         this.freqShoot = freqShoot2;
         this.isDead = false;
+        this.random = new Random();
         pickImagePlayer();
 
         if (target != null){
@@ -395,7 +398,7 @@ public class Player extends Parent {
      * this method pick a random image for the player
      */
     private void pickImagePlayer(){
-        int randomIndex = new Random().nextInt(PlayerEnum.values().length);
+        int randomIndex = random.nextInt(PlayerEnum.values().length);
         PlayerEnum bonus = PlayerEnum.values()[randomIndex];
         this.hitbox.setFill(bonus.getImage());
     }

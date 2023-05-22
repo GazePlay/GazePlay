@@ -483,7 +483,18 @@ Niveau30-33,,,,,,, Level 30-33 ,, Niveau 30-33 ,,,,,,,,,,,,
 
 # Survive Against Robot game
 SurviveAgainstRobots,,,,,,, Survive Against Robots ,, Survivre contre des robots ,,,,,,,,,,,,
-SurviveAgainstRobotsAutomatic,,,,,,, Survive Against Robots (Automatic) ,, Survivre contre des robots (Automatique) ,,,,,,,,,,,,
-SurviveAgainstRobotsAutomaticMouse,,,,,,, Survive Against Robots (Automatic mouse) ,, Survivre contre des robots (Automatique souris) ,,,,,,,,,,,,
 SurviveAgainstRobotsMouse,,,,,,, Survive Against Robots (Mouse) ,, Survivre contre des robots (Souris) ,,,,,,,,,,,,
+Easy_AUTO_KEYBOARD,,,,,,, Easy auto keyboard ,, Facile auto clavier ,,,,,,,,,,,,
+Normal_AUTO_KEYBOARD,,,,,,, Normal auto keyboard ,, Normal auto clavier ,,,,,,,,,,,,
+Hard_AUTO_KEYBOARD,,,,,,, Hard auto keyboard ,, Difficile auto clavier ,,,,,,,,,,,,
+Easy_KEYBOARD,,,,,,, Easy keyboard ,, Facile clavier ,,,,,,,,,,,,
+Normal_KEYBOARD,,,,,,, Normal keyboard ,, Normal clavier ,,,,,,,,,,,,
+Hard_KEYBOARD,,,,,,, Hard keyboard ,, Difficile clavier ,,,,,,,,,,,,
+
+Easy_AUTO_MOUSE,,,,,,, Easy auto mouse ,, Facile auto souris ,,,,,,,,,,,,
+Normal_AUTO_MOUSE,,,,,,, Normal auto mouse ,, Normal auto souris ,,,,,,,,,,,,
+Hard_AUTO_MOUSE,,,,,,, Hard auto mouse ,, Difficile auto souris ,,,,,,,,,,,,
+Easy_MOUSE,,,,,,, Easy mouse ,, Facile souris ,,,,,,,,,,,,
+Normal_MOUSE,,,,,,, Normal mouse ,, Normal souris ,,,,,,,,,,,,
+Hard_MOUSE,,,,,,, Hard mouse ,, Difficile souris ,,,,,,,,,,,,
 

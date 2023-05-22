@@ -22,6 +22,7 @@ public class Robot extends Rectangle {
     private final boolean canShoot;
     private final double freqShoot;
     private final double bulletSpeed;
+    private Random random;
 
 
     /**
@@ -44,6 +45,7 @@ public class Robot extends Rectangle {
         this.isDestroyed = false;
         this.bulletSpeed = 5;
         this.freqShoot = 1.2;
+        this.random = new Random();
         if (canShoot){
             ImagePattern robotShooter = new ImagePattern(new Image("data/surviveAgainstRobots/robots/Red.png"));
             this.setFill(robotShooter);
@@ -179,7 +181,7 @@ public class Robot extends Rectangle {
      * Sets the directionHorizontal and directionVertical fields accordingly.
      */
     private void generateDirection(){
-        Random random = new Random();
+
         int dirHorizontal = random.nextInt(0,3);
         int dirVertical = random.nextInt(0,3);
 

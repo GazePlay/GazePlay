@@ -21,10 +21,7 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
-import net.gazeplay.commons.gamevariants.IGameVariant;
-import net.gazeplay.commons.gamevariants.IntGameVariant;
-import net.gazeplay.commons.gamevariants.IntStringGameVariant;
+import net.gazeplay.commons.gamevariants.*;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
@@ -151,7 +148,25 @@ public class GameVariantDialog extends Stage {
                     case "SmallBottles" -> 1;
                     default -> 0;
                 };
-            } else if (variant instanceof IntStringGameVariant) {
+            } else if (gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobots")){
+                button.setTextAlignment(TextAlignment.CENTER);
+                String variantString = String.valueOf(((EnumGameVariant<?>) variant).getEnumValue());
+                indexOfTheVariant = switch (variantString) {
+                    case "DIFFICULTY_EASY_AUTO_KEYBOARD", "DIFFICULTY_NORMAL_AUTO_KEYBOARD", "DIFFICULTY_HARD_AUTO_KEYBOARD" -> 1;
+                    default -> 0;
+                };
+            } else if (gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobotsMouse")){
+                button.setTextAlignment(TextAlignment.CENTER);
+                String variantString = String.valueOf(((EnumGameVariant<?>) variant).getEnumValue());
+                System.out.println("variant robots: " + variantString);
+                indexOfTheVariant = switch (variantString) {
+                    case "DIFFICULTY_EASY_AUTO_MOUSE", "DIFFICULTY_NORMAL_AUTO_MOUSE", "DIFFICULTY_HARD_AUTO_MOUSE" -> 1;
+                    default -> 0;
+                };
+            }
+
+
+            else if (variant instanceof IntStringGameVariant) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 indexOfTheVariant = ((IntStringGameVariant) variant).getNumber();
             }
@@ -166,6 +181,8 @@ public class GameVariantDialog extends Stage {
                 gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                 gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
+                gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobots") ||
+                gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobotsMouse") ||
                 gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
                 gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
@@ -197,6 +214,14 @@ public class GameVariantDialog extends Stage {
                     categories[5] = new RadioButton(translator.translate("Niveau30-33"));
                     System.out.println("categories length : "+categories.length);
 
+                }else if(gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobots")){
+                    categories = new RadioButton[2];
+                    categories[0] = new RadioButton("Normal");
+                    categories[1] = new RadioButton("Auto");
+                } else if(gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobotsMouse")){
+                    categories = new RadioButton[2];
+                    categories[0] = new RadioButton("Normal");
+                    categories[1] = new RadioButton("Auto");
                 }else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                     gameSpec.getGameSummary().getNameCode().contains("Memory") ||
                     gameSpec.getGameSummary().getNameCode().equals("Ninja")
