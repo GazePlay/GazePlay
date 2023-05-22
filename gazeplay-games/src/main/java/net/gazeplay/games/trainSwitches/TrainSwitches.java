@@ -131,7 +131,9 @@ public class TrainSwitches implements GameLifeCycle {
         resumeButton.addEventFilter(GazeEvent.GAZE_EXITED, gazeEvent -> exitHandle());
         resumeButton.addEventFilter(MouseEvent.MOUSE_ENTERED, mouseEvent -> resumeEnterHandle());
         resumeButton.addEventFilter(MouseEvent.MOUSE_EXITED, mouseEvent -> exitHandle());
-        botBox.getChildren().add(resumeButton);
+        if(gameVariant==TrainSwitchesGameVariant.pauseTrain){
+            botBox.getChildren().add(resumeButton);
+        }
 
         sendTrainTimer = new Timer();
         sendTrainTimer.schedule(new TimerTask() {
@@ -149,6 +151,11 @@ public class TrainSwitches implements GameLifeCycle {
     @Override
     public void dispose() {
         gameContext.clear();
+        sections.clear();
+        switches.clear();
+        colors.clear();
+        stations.clear();
+        transitions.clear();
     }
 
     public void resume(){
@@ -195,6 +202,7 @@ public class TrainSwitches implements GameLifeCycle {
         lastTrainSentInstant = Instant.now();
         if(trainSent>= trainToSend){
             sendTrainTimer.cancel();
+            lastTimerStoppedInstant = Instant.now();
         }else{
             Platform.runLater(() -> {
                 Train train = createTrain(colors.get(random.nextInt(colors.size())));
@@ -245,6 +253,24 @@ public class TrainSwitches implements GameLifeCycle {
                     // Train reached wrong station
                     gameContext.getSoundManager().add("data/trainSwitches/sounds/wrong.mp3");
                     img = new ImageView(new Image("data/trainSwitches/images/cross.png"));
+                    if(gameVariant==TrainSwitchesGameVariant.infiniteTrain){
+                        // If trains are already all sent, restart a timer
+                        if (trainSent >= trainToSend++){
+                            long startDelay = java.time.Duration.between(lastTimerStoppedInstant, Instant.now()).toMillis();
+                            if(startDelay>=delayBetweenTrains){
+                                startDelay = 0;
+                            }else{
+                                startDelay = delayBetweenTrains-startDelay;
+                            }
+                            sendTrainTimer = new Timer();
+                            sendTrainTimer.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    sendTrain();
+                                }
+                            }, startDelay, delayBetweenTrains);
+                        }
+                    }
                 }
                 trainReachedStation++;
                 trainCountLabel.setText("Score: "+trainCorrect+"/"+trainReachedStation);
