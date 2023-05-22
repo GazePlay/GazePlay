@@ -41,6 +41,7 @@ public class TrainSwitches implements GameLifeCycle {
     private int levelHeight;
     private String direction;
     private int trainCount;
+    private int trainSent;
     private final double MAXSPEED = 2;
     private final double XOFFSET = 100;
     private final double YOFFSET = 100;
@@ -65,11 +66,16 @@ public class TrainSwitches implements GameLifeCycle {
         progressIndicator = new ProgressIndicator(0);
         progressIndicator.setOpacity(0);
         progressIndicator.setMouseTransparent(true);
+        trainSent = 0;
         gameContext.getConfiguration().setAnimationSpeedRatio(3);
     }
 
     @Override
     public void launch() {
+
+        trainSent = 0;
+
+        gameContext.getRoot().setBackground(new Background(new BackgroundImage(new Image("data/trainSwitches/images/grassBackground.jpg"),null,null,null,null)));
 
         borderPane = new BorderPane();
         gameContext.getChildren().add(borderPane);
@@ -288,14 +294,15 @@ public class TrainSwitches implements GameLifeCycle {
     public void enterHandle(Switch s){
         progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
         progressIndicator.setMinSize(gameContext.getConfiguration().getProgressBarSize(), gameContext.getConfiguration().getProgressBarSize());
-        progressIndicator.setTranslateX(s.getCenter().getX()-progressIndicator.getWidth()/2);
-        progressIndicator.setTranslateY(s.getCenter().getY()-progressIndicator.getHeight()/2);
+        progressIndicator.setLayoutX(s.getCenter().getX()-progressIndicator.getWidth()/2);
+        progressIndicator.setLayoutY(s.getCenter().getY()-progressIndicator.getHeight()/2);
         progressIndicator.setProgress(0);
         progressIndicator.setOpacity(1);
 
         progressTimeline = new Timeline();
         progressTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),new KeyValue(progressIndicator.progressProperty(), 1)));
         progressTimeline.setOnFinished(actionEvent -> {
+            gameContext.getSoundManager().add("data/trainSwitches/sounds/click.mp3");
             progressIndicator.setOpacity(0);
             s.changeOutputSelected();
             s.updateShape();

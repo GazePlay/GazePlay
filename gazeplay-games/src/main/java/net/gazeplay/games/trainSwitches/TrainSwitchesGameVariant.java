@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum TrainSwitchesGameVariant {
+    basicTrain("ClassicTrain"),
     pauseTrain("PauseTrain"),
     infiniteTrain("InfiniteTrain"),
     uniqueTrain("UniquesTrain");

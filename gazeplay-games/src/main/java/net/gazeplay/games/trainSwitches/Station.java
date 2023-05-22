@@ -28,7 +28,7 @@ public class Station {
     }
 
     public boolean isInside(double x, double y){
-        return Math.abs(x - (shape.getX() + shape.getFitWidth()/2))<=10 && Math.abs(y - (shape.getY() + shape.getFitHeight()/2))<=10;
+        return Math.abs(x - (shape.getX() + shape.getFitWidth()/2))<=50 && Math.abs(y - (shape.getY() + shape.getFitHeight()/2))<=50;
     }
 
 }

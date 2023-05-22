@@ -65,7 +65,7 @@ public class Switch {
     }
 
     public boolean isInside(double x, double y){
-        return Math.abs(x - curves.get(outputSelected).controlXProperty().get())<=10 && Math.abs(y - curves.get(outputSelected).controlYProperty().get())<=10;
+        return Math.abs(x - curves.get(outputSelected).controlXProperty().get())<=50 && Math.abs(y - curves.get(outputSelected).controlYProperty().get())<=50;
     }
 
     public Section getOutput(){

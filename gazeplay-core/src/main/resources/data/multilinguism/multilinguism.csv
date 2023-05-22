@@ -221,9 +221,10 @@ Freeplay,,,,,,,Freeplay,,Jeu libre,,,,,,,,,,,,
 PlayWithInstructions,,,,,,,Play by following instructions,,Jouer en suivant les instructions,,,,,,,,,,,,
 PlayerStart,,,,,,,Play first,,Jouer en premier,,,,,,,,,,,,
 AiStart,,,,,,,Play second,,Jouer en second,,,,,,,,,,,,
+ClassicTrain,,,,,,,Classic,,Classique,,,,,,,,,,,,
 PauseTrain,,,,,,,Game is paused when a train reach a switch,,Le jeu se met en pause lorsqu'un train arrive à un aiguillage,,,,,,,,,,,,
-InfiniteTrain,,,,,,,No time limit : trains are sent again if they reach the wrong station,,Pas de limite de temps : les trains sont réenvoyés lorsqu'ils atteignent la mauvaise gare,,,,,,,,,,,,
-UniquesTrain,,,,,,,There is only one train at a time,,Il n'y a qu'un seul train à la fois,,,,,,,,,,,,
+InfiniteTrain,,,,,,,Trains are sent again if they reach the wrong station,,Les trains sont réenvoyés lorsqu'ils atteignent la mauvaise gare,,,,,,,,,,,,
+UniquesTrain,,,,,,,Only one train at a time,,Un seul train à la fois,,,,,,,,,,,,
 
 # CONTEXT TITLES
 ConfigTitle,Konfigurimi,ترتيب,Канфігурацыя,恭喜你！,Konfiguration,Διαμόρφωση,Configuration,asetuksen nimi,Configuration,विन्यास,Konfiguracija,Konfigurasi,Configurazione,構成,Configuratie,Konfiguracja,Configuraçaô,Конфигурация,Configuración,Tùy chỉnh,Konfigurasi
