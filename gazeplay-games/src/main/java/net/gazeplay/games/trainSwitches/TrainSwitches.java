@@ -41,12 +41,14 @@ public class TrainSwitches implements GameLifeCycle {
     private final ArrayList<PathTransition> transitions;
     private final Random random;
     private Timer sendTrainTimer;
-    private final int delayBetweenTrains = 5000;
+    private final static int delayBetweenTrains = 5000;
     private int levelWidth;
     private int levelHeight;
     private String initialTrainDirection;
     private int trainToSend;
     private int trainSent;
+    private int trainCorrect;
+    private int trainReachedStation;
     private Instant lastTrainSentInstant;
     private Instant lastTimerStoppedInstant;
 
@@ -55,8 +57,8 @@ public class TrainSwitches implements GameLifeCycle {
     private Switch switchWaiting;
 
     // UI
-    private final double XOFFSET = 100;
-    private final double YOFFSET = 100;
+    private final static double XOFFSET = 100;
+    private final static double YOFFSET = 100;
     private final ProgressIndicator progressIndicator;
     private Timeline progressTimeline;
     private Pane mainPane;
@@ -83,6 +85,7 @@ public class TrainSwitches implements GameLifeCycle {
     public void launch() {
 
         trainSent = 0;
+        trainCorrect = 0;
         gameContext.getRoot().setBackground(new Background(new BackgroundImage(new Image("data/trainSwitches/images/grassBackground.jpg"),null,null,null,null)));
 
         BorderPane borderPane = new BorderPane();
@@ -110,7 +113,7 @@ public class TrainSwitches implements GameLifeCycle {
         //botBox.setBorder(new Border(new BorderStroke(Color.ORANGE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         borderPane.setBottom(botBox);
 
-        trainCountLabel = new Label("Trains : 0/"+ trainToSend);
+        trainCountLabel = new Label("Score : 0/0");
         //trainCountLabel.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         trainCountLabel.setTextFill(Color.WHITE);
         trainCountLabel.setFont(new Font(60));
@@ -198,7 +201,6 @@ public class TrainSwitches implements GameLifeCycle {
                 mainPane.getChildren().add(train.getShape());
                 launchTrainOnSection(sections.get(0), train);
                 trainSent++;
-                trainCountLabel.setText("Trains: "+trainSent+"/"+ trainToSend);
             });
         }
     }
@@ -236,6 +238,7 @@ public class TrainSwitches implements GameLifeCycle {
                 ImageView img;
                 if(train.getColor().equals(station.getColor())){
                     // Train reached correct station
+                    trainCorrect++;
                     gameContext.getSoundManager().add("data/trainSwitches/sounds/correct.mp3");
                     img = new ImageView(new Image("data/trainSwitches/images/check.png"));
                 }else{
@@ -243,6 +246,8 @@ public class TrainSwitches implements GameLifeCycle {
                     gameContext.getSoundManager().add("data/trainSwitches/sounds/wrong.mp3");
                     img = new ImageView(new Image("data/trainSwitches/images/cross.png"));
                 }
+                trainReachedStation++;
+                trainCountLabel.setText("Score: "+trainCorrect+"/"+trainReachedStation);
                 gameContext.getChildren().add(img);
                 img.setPreserveRatio(true);
                 img.setFitWidth(station.getShape().getFitWidth());
@@ -316,43 +321,43 @@ public class TrainSwitches implements GameLifeCycle {
 
     public MoveTo createMoveTo(int x, int y){
         MoveTo moveTo = new MoveTo();
-        moveTo.xProperty().bind(gameContext.getPrimaryScene().widthProperty().divide(levelWidth).multiply(x).add(XOFFSET));
-        moveTo.yProperty().bind(gameContext.getPrimaryScene().heightProperty().divide(levelHeight).multiply(y).add(YOFFSET));
+        moveTo.xProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(x).add(XOFFSET));
+        moveTo.yProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(y).add(YOFFSET));
         return moveTo;
     }
 
     public LineTo createLineTo(int x, int y){
         LineTo lineTo = new LineTo();
-        lineTo.xProperty().bind(gameContext.getPrimaryScene().widthProperty().divide(levelWidth).multiply(x).add(XOFFSET));
-        lineTo.yProperty().bind(gameContext.getPrimaryScene().heightProperty().divide(levelHeight).multiply(y).add(YOFFSET));
+        lineTo.xProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(x).add(XOFFSET));
+        lineTo.yProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(y).add(YOFFSET));
         return lineTo;
     }
 
     public void createStation(String color, int x, int y){
         Station station = new Station(color);
         colors.add(color);
-        station.getShape().fitWidthProperty().bind(gameContext.getPrimaryScene().widthProperty().divide(levelWidth).divide(2));
-        station.getShape().fitHeightProperty().bind(gameContext.getPrimaryScene().heightProperty().divide(levelHeight).divide(2));
-        station.getShape().xProperty().bind(gameContext.getPrimaryScene().widthProperty().divide(levelWidth).multiply(x).add(XOFFSET).subtract(station.getShape().fitWidthProperty().divide(2)));
-        station.getShape().yProperty().bind(gameContext.getPrimaryScene().heightProperty().divide(levelHeight).multiply(y).add(YOFFSET).subtract(station.getShape().fitHeightProperty().divide(2)));
+        station.getShape().fitWidthProperty().bind(gameContext.getRoot().widthProperty().divide(levelWidth).divide(2));
+        station.getShape().fitHeightProperty().bind(gameContext.getRoot().heightProperty().divide(levelHeight).divide(2));
+        station.getShape().xProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(x).add(XOFFSET).subtract(station.getShape().fitWidthProperty().divide(2)));
+        station.getShape().yProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(y).add(YOFFSET).subtract(station.getShape().fitHeightProperty().divide(2)));
         stations.add(station);
     }
 
     public Train createTrain(String color){
         Train train = new Train(color, initialTrainDirection);
-        train.getShape().fitWidthProperty().bind(gameContext.getPrimaryScene().widthProperty().divide(levelWidth).divide(2));
-        train.getShape().fitHeightProperty().bind(gameContext.getPrimaryScene().heightProperty().divide(levelHeight).divide(2));
+        train.getShape().fitWidthProperty().bind(gameContext.getRoot().widthProperty().divide(levelWidth).divide(2));
+        train.getShape().fitHeightProperty().bind(gameContext.getRoot().heightProperty().divide(levelHeight).divide(2));
         return train;
     }
 
     public QuadCurve createCurve(double startx, double starty, double endx, double endy, double ctrlx, double ctrly){
         QuadCurve curve = new QuadCurve();
-        curve.startXProperty().bind(gameContext.getPrimaryScene().widthProperty().divide(levelWidth).multiply(startx).add(XOFFSET));
-        curve.startYProperty().bind(gameContext.getPrimaryScene().heightProperty().divide(levelHeight).multiply(starty).add(YOFFSET));
-        curve.endXProperty().bind(gameContext.getPrimaryScene().widthProperty().divide(levelWidth).multiply(endx).add(XOFFSET));
-        curve.endYProperty().bind(gameContext.getPrimaryScene().heightProperty().divide(levelHeight).multiply(endy).add(YOFFSET));
-        curve.controlXProperty().bind(gameContext.getPrimaryScene().widthProperty().divide(levelWidth).multiply(ctrlx).add(XOFFSET));
-        curve.controlYProperty().bind(gameContext.getPrimaryScene().heightProperty().divide(levelHeight).multiply(ctrly).add(YOFFSET));
+        curve.startXProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(startx).add(XOFFSET));
+        curve.startYProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(starty).add(YOFFSET));
+        curve.endXProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(endx).add(XOFFSET));
+        curve.endYProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(endy).add(YOFFSET));
+        curve.controlXProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(ctrlx).add(XOFFSET));
+        curve.controlYProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(ctrly).add(YOFFSET));
         curve.setStroke(Color.BEIGE);
         curve.setFill(Color.TRANSPARENT);
         curve.setStrokeWidth(20);
@@ -366,7 +371,7 @@ public class TrainSwitches implements GameLifeCycle {
         s.getGroup().addEventHandler(GazeEvent.GAZE_ENTERED, gazeEvent -> enterSwitchHandle(s));
         s.getGroup().addEventHandler(GazeEvent.GAZE_EXITED, gazeEvent -> exitHandle());
 
-        s.radius.bind(gameContext.getPrimaryScene().heightProperty().divide(levelHeight).divide(4));
+        s.radius.bind(gameContext.getRoot().heightProperty().divide(levelHeight).divide(4));
         switches.add(s);
         return s;
     }
