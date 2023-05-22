@@ -787,7 +787,11 @@ public class SprintFinish extends Parent implements GameLifeCycle {
             gameContext.playWinTransition(500, actionEvent -> {
                 this.level++;
                 dispose();
-                gameContext.showRoundStats(stats, this);
+                if (this.level % 6 == 0){
+                    gameContext.showRoundStats(stats, this);
+                }else{
+                    launch();
+                }
             });
         }else{
             // Launch the same level again in case of a loss
