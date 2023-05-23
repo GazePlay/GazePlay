@@ -45,6 +45,8 @@ public class TrainSwitches implements GameLifeCycle {
     private Timer sendTrainTimer;
     private int levelWidth;
     private int levelHeight;
+    private int caveX;
+    private int caveY;
     private String initialTrainDirection;
     private int trainToSend;
     private int trainSent;
@@ -107,6 +109,7 @@ public class TrainSwitches implements GameLifeCycle {
             mainPane.getChildren().add(aSwitch.getGroup());
         }
 
+        // Bottom box
         HBox botBox = new HBox();
         botBox.setAlignment(Pos.CENTER);
         botBox.setPadding(new Insets(20,0,0,0));
@@ -132,6 +135,16 @@ public class TrainSwitches implements GameLifeCycle {
             botBox.getChildren().add(resumeButton);
         }
 
+        // Cave image
+        ImageView caveImg = new ImageView(new Image("data/trainSwitches/images/cave.png"));
+        caveImg.setPreserveRatio(true);
+        caveImg.fitWidthProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(1.5));
+        caveImg.fitHeightProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(1.5));
+        caveImg.xProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(caveX).add(XOFFSET).subtract(caveImg.fitWidthProperty().divide(2)));
+        caveImg.yProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(caveY).add(YOFFSET).subtract(caveImg.fitHeightProperty().divide(1.5)));
+        mainPane.getChildren().add(caveImg);
+
+        // Timer to send train
         sendTrainTimer = new Timer();
         if(gameVariant==TrainSwitchesGameVariant.uniqueTrain){
             sendTrainTimer.schedule(getSendTrainTask(), 5000);
@@ -293,6 +306,8 @@ public class TrainSwitches implements GameLifeCycle {
         trainToSend = 10;
         initialTrainDirection = "right";
 
+        caveX = 0;
+        caveY = 0;
         Section p1 = createSection(0,0,5);
         p1.add(createLineTo(4, 0));
         p1.add(createLineTo(4, 1));
@@ -336,6 +351,8 @@ public class TrainSwitches implements GameLifeCycle {
         trainToSend = 10;
         initialTrainDirection = "left";
 
+        caveX = 6;
+        caveY = 4;
         Section p1 = createSection(6,4, 3);
         p1.add(createLineTo(3,4));
 
