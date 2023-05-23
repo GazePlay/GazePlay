@@ -35,6 +35,7 @@ public class TrainSwitches implements GameLifeCycle {
 
     // Game
     private final static int DELAY_BETWEEN_TRAINS = 5000;
+    private final static int INITIAL_DELAY = 5000;
     private final static int MAXSPEED = 2;
     private final ArrayList<Section> sections;
     private final ArrayList<Switch> switches;
@@ -87,6 +88,9 @@ public class TrainSwitches implements GameLifeCycle {
     @Override
     public void launch() {
 
+        stats.notifyNewRoundReady();
+        gameContext.start();
+
         trainSent = 0;
         trainCorrect = 0;
         gameContext.getRoot().setBackground(new Background(new BackgroundImage(new Image("data/trainSwitches/images/grassBackground.jpg"),null,null,null,null)));
@@ -118,7 +122,7 @@ public class TrainSwitches implements GameLifeCycle {
         trainCountLabel = new Label("Score : 0/0");
         trainCountLabel.setTextFill(Color.WHITE);
         trainCountLabel.setFont(new Font(60));
-        trainCountLabel.setPadding(new Insets(0,50,0,0));
+        //trainCountLabel.setPadding(new Insets(0,50,0,0));
         botBox.getChildren().add(trainCountLabel);
 
         resumeButton = new I18NButton(gameContext.getTranslator(), "ResumeButton");
@@ -144,26 +148,60 @@ public class TrainSwitches implements GameLifeCycle {
         caveImg.yProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(caveY).add(YOFFSET).subtract(caveImg.fitHeightProperty().divide(1.5)));
         mainPane.getChildren().add(caveImg);
 
+        // Initial countdown
+        StackPane stackPane = new StackPane();
+        stackPane.layoutXProperty().bind(gameContext.getRoot().widthProperty().subtract(stackPane.widthProperty()).divide(2));
+        stackPane.layoutYProperty().bind(gameContext.getRoot().heightProperty().subtract(stackPane.heightProperty()).divide(2));
+        mainPane.getChildren().add(stackPane);
+
+        Circle countdownCircle = new Circle();
+        countdownCircle.setFill(Color.ORANGE);
+        countdownCircle.setRadius(200);
+
+        Label countdownLabel = new Label(Integer.toString(INITIAL_DELAY/1000));
+        countdownLabel.setFont(new Font(100));
+
+        stackPane.getChildren().addAll(countdownCircle, countdownLabel);
+
+        Timeline t1 = new Timeline(new KeyFrame(Duration.seconds(1),
+            e -> countdownLabel.setText(Integer.toString(Integer.parseInt(countdownLabel.getText())-1)),
+            new KeyValue(countdownCircle.opacityProperty(), 0),
+            new KeyValue(countdownCircle.radiusProperty(), 0),
+            new KeyValue(countdownLabel.opacityProperty(), 0)
+        ));
+        t1.setCycleCount(INITIAL_DELAY/1000);
+        t1.play();
+
+        Timeline t2 = new Timeline(new KeyFrame(Duration.seconds((INITIAL_DELAY/1000.0) - 2),
+            new KeyValue(countdownCircle.fillProperty(), Color.GREEN),
+            new KeyValue(stackPane.translateXProperty(), caveImg.xProperty().divide(2.5).get()),
+            new KeyValue(stackPane.translateYProperty(), caveImg.yProperty().divide(2.5).get())
+        ));
+        t2.setDelay(Duration.seconds(2));
+        t2.play();
+
         // Timer to send train
         sendTrainTimer = new Timer();
         if(gameVariant==TrainSwitchesGameVariant.uniqueTrain){
-            sendTrainTimer.schedule(getSendTrainTask(), 5000);
+            sendTrainTimer.schedule(getSendTrainTask(), INITIAL_DELAY);
         }else{
-            sendTrainTimer.schedule(getSendTrainTask(), 5000, DELAY_BETWEEN_TRAINS);
+            sendTrainTimer.schedule(getSendTrainTask(), INITIAL_DELAY, DELAY_BETWEEN_TRAINS);
         }
 
         gameContext.getChildren().add(progressIndicator);
-        stats.notifyNewRoundReady();
-        gameContext.start();
     }
 
     @Override
     public void dispose() {
+        sendTrainTimer.cancel();
         gameContext.clear();
         sections.clear();
         switches.clear();
         colors.clear();
         stations.clear();
+        for (PathTransition transition : transitions) {
+            transition.stop();
+        }
         transitions.clear();
     }
 
