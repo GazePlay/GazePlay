@@ -1,8 +1,9 @@
 package net.gazeplay.games.trainSwitches;
 
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -16,6 +17,8 @@ public class Switch {
 
     public IntegerProperty radius;
     private final Group group;
+    private final DoubleProperty xcenter;
+    private final DoubleProperty ycenter;
 
     public Switch() {
         outputSections = new ArrayList<>();
@@ -23,6 +26,8 @@ public class Switch {
         group = new Group();
         outputSelected = 0;
         radius = new SimpleIntegerProperty(50);
+        xcenter = new SimpleDoubleProperty(0);
+        ycenter = new SimpleDoubleProperty(0);
     }
 
     public void addCurve(QuadCurve curve){
@@ -44,8 +49,8 @@ public class Switch {
     public void updateShape(){
         Circle circle = new Circle(50);
         circle.setFill(Color.GREEN);
-        circle.centerXProperty().bind(curves.get(outputSelected).controlXProperty());
-        circle.centerYProperty().bind(curves.get(outputSelected).controlYProperty());
+        circle.centerXProperty().bind(xcenter);
+        circle.centerYProperty().bind(ycenter);
         circle.radiusProperty().bind(radius);
 
         group.getChildren().clear();
@@ -53,16 +58,21 @@ public class Switch {
         group.getChildren().add(curves.get(outputSelected));
     }
 
-    public Point2D getCenter(){
-        return new Point2D(curves.get(outputSelected).controlXProperty().get(), curves.get(outputSelected).controlYProperty().get());
-    }
-
     public boolean isInside(double x, double y){
-        return Math.abs(x - curves.get(outputSelected).controlXProperty().get())<=50 && Math.abs(y - curves.get(outputSelected).controlYProperty().get())<=50;
+        return Math.abs(x - xcenter.get())<=50 && Math.abs(y - ycenter.get())<=50;
     }
 
     public Section getOutput(){
         return outputSections.get(outputSelected);
+    }
+    public Section getOutput(int index){
+        return outputSections.get(index);
+    }
+    public DoubleProperty xProperty() {
+        return xcenter;
+    }
+    public DoubleProperty yProperty() {
+        return ycenter;
     }
 
 }

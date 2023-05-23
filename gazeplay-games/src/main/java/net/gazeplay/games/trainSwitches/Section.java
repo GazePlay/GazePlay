@@ -2,10 +2,11 @@ package net.gazeplay.games.trainSwitches;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
+import javafx.scene.shape.PathElement;
 
 public class Section {
 
-    private Path path;
+    private final Path path;
     private double size;
 
     public Section(double size){
@@ -15,12 +16,15 @@ public class Section {
         path.setStrokeWidth(20);
     }
 
-    public Path getPath() {
-        return path;
+    public Section(){
+        size = 2;
+        path = new Path();
+        path.setStroke(Color.GREEN);
+        path.setStrokeWidth(20);
     }
 
-    public void setPath(Path path) {
-        this.path = path;
+    public Path getPath() {
+        return path;
     }
 
     public double getSize() {
@@ -29,5 +33,9 @@ public class Section {
 
     public void setSize(double size) {
         this.size = size;
+    }
+
+    public void add(PathElement elem){
+        path.getElements().add(elem);
     }
 }

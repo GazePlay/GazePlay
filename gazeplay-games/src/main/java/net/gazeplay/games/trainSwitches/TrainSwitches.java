@@ -93,10 +93,9 @@ public class TrainSwitches implements GameLifeCycle {
         gameContext.getChildren().add(borderPane);
 
         mainPane = new Pane();
-        //gamePane.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         borderPane.setCenter(mainPane);
 
-        initLevel();
+        initLevel2();
         for (Section section : sections) {
             mainPane.getChildren().add(section.getPath());
         }
@@ -111,11 +110,9 @@ public class TrainSwitches implements GameLifeCycle {
         HBox botBox = new HBox();
         botBox.setAlignment(Pos.CENTER);
         botBox.setPadding(new Insets(20,0,0,0));
-        //botBox.setBorder(new Border(new BorderStroke(Color.ORANGE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         borderPane.setBottom(botBox);
 
         trainCountLabel = new Label("Score : 0/0");
-        //trainCountLabel.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         trainCountLabel.setTextFill(Color.WHITE);
         trainCountLabel.setFont(new Font(60));
         trainCountLabel.setPadding(new Insets(0,50,0,0));
@@ -123,7 +120,6 @@ public class TrainSwitches implements GameLifeCycle {
 
         resumeButton = new I18NButton(gameContext.getTranslator(), "ResumeButton");
         resumeButton.setVisible(false);
-        //resumeButton.setBorder(new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         resumeButton.setMaxHeight(500);
         resumeButton.setMinWidth(500);
         resumeButton.setMaxWidth(500);
@@ -207,6 +203,7 @@ public class TrainSwitches implements GameLifeCycle {
             if(aSwitch!=null){
                 // Train is at a switch
                 if(gameVariant==TrainSwitchesGameVariant.pauseTrain){
+                    // TODO add minimum time between pause ?
                     // Pause all trains
                     for (PathTransition transition : transitions) {
                         transition.pause();
@@ -296,69 +293,173 @@ public class TrainSwitches implements GameLifeCycle {
         trainToSend = 10;
         initialTrainDirection = "right";
 
-        Switch s1 = createSwitch();
-        s1.addCurve(createCurve(4, 0.75,4,1.25,4,1));
-        s1.addCurve(createCurve(4, 0.75,3.75,1,4,1));
+        Section p1 = createSection(0,0,5);
+        p1.add(createLineTo(4, 0));
+        p1.add(createLineTo(4, 1));
 
-        Section p1 = createSection(5);
-        p1.getPath().getElements().add(createMoveTo(0, 0));
-        p1.getPath().getElements().add(createLineTo(4, 0));
-        p1.getPath().getElements().add(createLineTo(4, 1));
+        // S1
+        Switch s1 = createSwitch(4,1);
+        s1.addCurve(createCurve(4,1,"up","down"));
+        s1.addCurve(createCurve(4,1,"up","left"));
 
-        Section p2 = createSection(2);
-        p2.getPath().getElements().add(createMoveTo(4, 1));
-        p2.getPath().getElements().add(createLineTo(4, 2));
-        p2.getPath().getElements().add(createLineTo(3, 2));
-        s1.addOutput(p2);
+        s1.getOutput(0).setSize(2);
+        s1.getOutput(0).add(createLineTo(4,2));
+        s1.getOutput(0).add(createLineTo(3,2));
 
-        Section p3 = createSection(4);
-        p3.getPath().getElements().add(createMoveTo(4, 1));
-        p3.getPath().getElements().add(createLineTo(2, 1));
-        p3.getPath().getElements().add(createLineTo(2, 2));
-        p3.getPath().getElements().add(createLineTo(1, 2));
-        s1.addOutput(p3);
+        s1.getOutput(1).setSize(4);
+        s1.getOutput(1).add(createLineTo(2, 1));
+        s1.getOutput(1).add(createLineTo(2, 2));
+        s1.getOutput(1).add(createLineTo(1, 2));
 
-        Switch s2 = createSwitch();
-        s2.addCurve(createCurve(1.25, 2,1,1.75,1,2));
-        s2.addCurve(createCurve(1.25, 2,0.75,2,1,2));
+        // S2
+        Switch s2 = createSwitch(1,2);
+        s2.addCurve(createCurve(1,2,"right","up"));
+        s2.addCurve(createCurve(1,2,"right","left"));
 
-        Section p4 = createSection(1);
-        p4.getPath().getElements().add(createMoveTo(1, 2));
-        p4.getPath().getElements().add(createLineTo(1, 1));
-        s2.addOutput(p4);
+        s2.getOutput(0).setSize(1);
+        s2.getOutput(0).add(createLineTo(1, 1));
 
-        Section p5 = createSection(2);
-        p5.getPath().getElements().add(createMoveTo(1, 2));
-        p5.getPath().getElements().add(createLineTo(0, 2));
-        p5.getPath().getElements().add(createLineTo(0, 1));
-        s2.addOutput(p5);
+        s2.getOutput(1).setSize(2);
+        s2.getOutput(1).add(createLineTo(0, 2));
+        s2.getOutput(1).add(createLineTo(0, 1));
 
-        createStation("blue", 0, 1);
+        // Stations
+        createStation("lightblue", 0, 1);
         createStation("white", 1, 1);
         createStation("yellow", 3, 2);
     }
 
-    public Section createSection(double size){
+    public void initLevel2(){
+
+        levelWidth = 7;
+        levelHeight = 5;
+        trainToSend = 10;
+        initialTrainDirection = "left";
+
+        Section p1 = createSection(6,4, 3);
+        p1.add(createLineTo(3,4));
+
+        // S1
+        Switch s1 = createSwitch(3,4);
+
+        s1.addCurve(createCurve(3,4,"right","up"));
+        s1.getOutput(0).setSize(2);
+        s1.getOutput(0).add(createLineTo(3,3));
+        s1.getOutput(0).add(createLineTo(4,3));
+
+        s1.addCurve(createCurve(3,4,"right","left"));
+        s1.getOutput(1).setSize(2);
+        s1.getOutput(1).add(createLineTo(2,4));
+        s1.getOutput(1).add(createLineTo(2,3));
+
+        // S2
+        Switch s2 = createSwitch(2,3);
+
+        s2.addCurve(createCurve(2,3,"down","up"));
+        s2.getOutput(0).setSize(2);
+        s2.getOutput(0).add(createLineTo(2,1));
+
+        s2.addCurve(createCurve(2,3,"down","left"));
+        s2.getOutput(1).setSize(3);
+        s2.getOutput(1).add(createLineTo(0,3));
+        s2.getOutput(1).add(createLineTo(0,2));
+
+        // S3
+        Switch s3 = createSwitch(0,2);
+
+        s3.addCurve(createCurve(0,2,"down","up"));
+        s3.getOutput(0).setSize(1);
+        s3.getOutput(0).add(createLineTo(0,1));
+
+        s3.addCurve(createCurve(0,2,"down","right"));
+        s3.getOutput(1).setSize(1);
+        s3.getOutput(1).add(createLineTo(1,2));
+
+        // S4
+        Switch s4 = createSwitch(2,1);
+
+        s4.addCurve(createCurve(2,1,"down","up"));
+        s4.getOutput(0).setSize(1);
+        s4.getOutput(0).add(createLineTo(2,0));
+
+        s4.addCurve(createCurve(2,1,"down","left"));
+        s4.getOutput(1).setSize(1);
+        s4.getOutput(1).add(createLineTo(1,1));
+
+        // S5
+        Switch s5 = createSwitch(4,3);
+
+        s5.addCurve(createCurve(4,3,"left","up"));
+        s5.getOutput(0).setSize(2);
+        s5.getOutput(0).add(createLineTo(4,1));
+
+        s5.addCurve(createCurve(4,3,"left","right"));
+        s5.getOutput(1).setSize(3);
+        s5.getOutput(1).add(createLineTo(6,3));
+        s5.getOutput(1).add(createLineTo(6,2));
+
+        // S6
+        Switch s6 = createSwitch(4,1);
+
+        s6.addCurve(createCurve(4,1,"down","up"));
+        s6.getOutput(0).setSize(1);
+        s6.getOutput(0).add(createLineTo(4,0));
+
+        s6.addCurve(createCurve(4,1,"down","left"));
+        s6.getOutput(1).setSize(1);
+        s6.getOutput(1).add(createLineTo(3,1));
+
+        // S7
+        Switch s7 = createSwitch(6,2);
+
+        s7.addCurve(createCurve(6,2,"down","up"));
+        s7.getOutput(0).setSize(1);
+        s7.getOutput(0).add(createLineTo(6,1));
+
+        s7.addCurve(createCurve(6,2,"down","left"));
+        s7.getOutput(1).setSize(1);
+        s7.getOutput(1).add(createLineTo(5,2));
+
+        // Stations
+        createStation("lightblue", 0, 1);
+        createStation("white", 1, 2);
+        createStation("yellow", 1, 1);
+        createStation("green", 2, 0);
+        createStation("purple", 3, 1);
+        createStation("pink", 5, 2);
+        createStation("black", 6, 1);
+        createStation("red", 4, 0);
+    }
+
+    public Section createSection(double startx, double starty, double size){
         Section section = new Section(size);
+        section.add(createMoveTo(startx, starty));
         sections.add(section);
         return section;
     }
 
-    public MoveTo createMoveTo(int x, int y){
+    public Section createSection(double startx, double starty){
+        Section section = new Section();
+        section.add(createMoveTo(startx, starty));
+        sections.add(section);
+        return section;
+    }
+
+    public MoveTo createMoveTo(double x, double y){
         MoveTo moveTo = new MoveTo();
         moveTo.xProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(x).add(XOFFSET));
         moveTo.yProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(y).add(YOFFSET));
         return moveTo;
     }
 
-    public LineTo createLineTo(int x, int y){
+    public LineTo createLineTo(double x, double y){
         LineTo lineTo = new LineTo();
         lineTo.xProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(x).add(XOFFSET));
         lineTo.yProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(y).add(YOFFSET));
         return lineTo;
     }
 
-    public void createStation(String color, int x, int y){
+    public void createStation(String color, double x, double y){
         Station station = new Station(color);
         colors.add(color);
         station.getShape().fitWidthProperty().bind(gameContext.getRoot().widthProperty().divide(levelWidth).divide(2));
@@ -375,28 +476,68 @@ public class TrainSwitches implements GameLifeCycle {
         return train;
     }
 
-    public QuadCurve createCurve(double startx, double starty, double endx, double endy, double ctrlx, double ctrly){
+    public QuadCurve createCurve(int x, int y, String input, String output){
         QuadCurve curve = new QuadCurve();
-        curve.startXProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(startx).add(XOFFSET));
-        curve.startYProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(starty).add(YOFFSET));
-        curve.endXProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(endx).add(XOFFSET));
-        curve.endYProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(endy).add(YOFFSET));
-        curve.controlXProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(ctrlx).add(XOFFSET));
-        curve.controlYProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(ctrly).add(YOFFSET));
         curve.setStroke(Color.BEIGE);
         curve.setFill(Color.TRANSPARENT);
         curve.setStrokeWidth(20);
+        curve.controlXProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(x).add(XOFFSET));
+        curve.controlYProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(y).add(YOFFSET));
+
+        double addx = 0;
+        double addy = 0;
+        switch (input){
+            case "up" -> {
+                addy = -0.25;
+            }
+            case "down" -> {
+                addy = 0.25;
+            }
+            case "left" -> {
+                addx = -0.25;
+            }
+            case "right" -> {
+                addx = 0.25;
+            }
+            default -> {}
+        }
+        curve.startXProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(x+addx).add(XOFFSET));
+        curve.startYProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(y+addy).add(YOFFSET));
+
+        addx = 0;
+        addy = 0;
+        switch (output){
+            case "up" -> {
+                addy = -0.25;
+            }
+            case "down" -> {
+                addy = 0.25;
+            }
+            case "left" -> {
+                addx = -0.25;
+            }
+            case "right" -> {
+                addx = 0.25;
+            }
+            default -> {}
+        }
+        curve.endXProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(x+addx).add(XOFFSET));
+        curve.endYProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(y+addy).add(YOFFSET));
+
         return curve;
     }
 
-    public Switch createSwitch(){
+    public Switch createSwitch(double x, double y){
         Switch s = new Switch();
         s.getGroup().addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEvent -> enterSwitchHandle(s));
         s.getGroup().addEventHandler(MouseEvent.MOUSE_EXITED, mouseEvent -> exitHandle());
         s.getGroup().addEventHandler(GazeEvent.GAZE_ENTERED, gazeEvent -> enterSwitchHandle(s));
         s.getGroup().addEventHandler(GazeEvent.GAZE_EXITED, gazeEvent -> exitHandle());
-
+        s.xProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(x).add(XOFFSET));
+        s.yProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(y).add(YOFFSET));
         s.radius.bind(gameContext.getRoot().heightProperty().divide(levelHeight).divide(4));
+        s.addOutput(createSection(x,y));
+        s.addOutput(createSection(x,y));
         switches.add(s);
         return s;
     }
@@ -404,8 +545,8 @@ public class TrainSwitches implements GameLifeCycle {
     public void enterSwitchHandle(Switch s){
         progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
         progressIndicator.setMinSize(gameContext.getConfiguration().getProgressBarSize(), gameContext.getConfiguration().getProgressBarSize());
-        progressIndicator.setLayoutX(s.getCenter().getX()-progressIndicator.getWidth()/2);
-        progressIndicator.setLayoutY(s.getCenter().getY()-progressIndicator.getHeight()/2);
+        progressIndicator.setLayoutX(s.xProperty().get()-progressIndicator.getWidth()/2);
+        progressIndicator.setLayoutY(s.yProperty().get()-progressIndicator.getHeight()/2);
         progressIndicator.setProgress(0);
         progressIndicator.setOpacity(1);
 

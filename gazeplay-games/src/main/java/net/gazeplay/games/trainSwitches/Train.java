@@ -17,6 +17,10 @@ public class Train {
             case "up" -> shape.setRotate(90);
             case "down" -> shape.setRotate(-90);
             case "right" -> shape.setScaleX(-1);
+            case "left" -> {
+                shape.setScaleX(-1);
+                shape.setScaleY(-1);
+            }
             default -> {
             }
         }
