@@ -21,10 +21,7 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
-import net.gazeplay.commons.gamevariants.IGameVariant;
-import net.gazeplay.commons.gamevariants.IntGameVariant;
-import net.gazeplay.commons.gamevariants.IntStringGameVariant;
+import net.gazeplay.commons.gamevariants.*;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
@@ -140,7 +137,17 @@ public class GameVariantDialog extends Stage {
                     default -> 0;
                 };
 
-            } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
+            } else if (gameSpec.getGameSummary().getNameCode().equals("Simon")){
+                button.setTextAlignment(TextAlignment.CENTER);
+                String variantString = String.valueOf(((EnumGameVariant<?>) variant).getEnumValue());
+                indexOfTheVariant = switch(variantString){
+                    case "MODE2" -> 1;
+                    case "EASY_MULTIPLAYER", "NORMAL_MULTIPLAYER", "HARD_MULTIPLAYER" -> 2;
+                    default -> 0;
+                };
+
+
+            }else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = ((IntStringGameVariant) variant).getStringValue();
                 indexOfTheVariant = switch (variantString) {
@@ -167,6 +174,7 @@ public class GameVariantDialog extends Stage {
                 gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
                 gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
+                gameSpec.getGameSummary().getNameCode().equals("Simon") ||
                 gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
@@ -196,6 +204,13 @@ public class GameVariantDialog extends Stage {
                     categories[4] = new RadioButton(translator.translate("Niveau24-29"));
                     categories[5] = new RadioButton(translator.translate("Niveau30-33"));
                     System.out.println("categories length : "+categories.length);
+
+                }else if (gameSpec.getGameSummary().getNameCode().equals("Simon")){
+                    categories = new RadioButton[3];
+                    categories[0] = new RadioButton("Classic");
+                    categories[1] = new RadioButton("Simon Copy");
+                    categories[2] = new RadioButton("Multiplayer");
+
 
                 }else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                     gameSpec.getGameSummary().getNameCode().contains("Memory") ||

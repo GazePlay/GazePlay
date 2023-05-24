@@ -9,25 +9,59 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class Simon  extends Parent implements GameLifeCycle {
 
 
     private IGameContext gameContext;
     private Stats stats;
     private SimonGameVariant gameVariant;
+    protected ArrayList<String> computerSequence;
+    protected ArrayList<String> playerSequence;
+    private final ArrayList<String> notes;
 
     public Simon(final IGameContext gameContext, final Stats stats, SimonGameVariant gameVariant){
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameVariant = gameVariant;
+        this.computerSequence = new ArrayList<>();
+        this.playerSequence = new ArrayList<>();
+        this.notes = new ArrayList<>();
+        notes.add("vert");
+        notes.add("rouge");
+        notes.add("jaune");
+        notes.add("bleu");
     }
-
-
 
     public void startGame(){
 
         Borne borne = new Borne(gameContext,this);
+        if (gameVariant.equals(SimonGameVariant.EASY_CLASSIC)  || gameVariant.equals(SimonGameVariant.EASY_MULTIPLAYER)){
+            borne.secondsReset = 10;
+        }else if (gameVariant.equals(SimonGameVariant.NORMAL_CLASSIC) || gameVariant.equals(SimonGameVariant.NORMAL_MULTIPLAYER)){
+            borne.secondsReset = 8;
+        }else if (gameVariant.equals(SimonGameVariant.HARD_CLASSIC)  || gameVariant.equals(SimonGameVariant.HARD_MULTIPLAYER)){
+            borne.secondsReset = 6;
+        }
+        if (!gameVariant.equals(SimonGameVariant.MODE2)){
+            addNoteToComputerSequence();
+        }else{
+            borne.simonCopy = true;
+        }
 
+        if (gameVariant.equals(SimonGameVariant.EASY_MULTIPLAYER) || gameVariant.equals(SimonGameVariant.NORMAL_MULTIPLAYER) || gameVariant.equals(SimonGameVariant.HARD_MULTIPLAYER)){
+            borne.multiplayer = true;
+        }
+
+
+    }
+
+    protected void addNoteToComputerSequence(){
+
+        Collections.shuffle(notes);
+        computerSequence.add(notes.get(0));
     }
 
     @Override
@@ -50,6 +84,11 @@ public class Simon  extends Parent implements GameLifeCycle {
 
     @Override
     public void dispose() {
+        gameContext.getChildren().clear();
+    }
 
+    public void endGame(){
+        dispose();
+        gameContext.showRoundStats(stats,this);
     }
 }

@@ -10,7 +10,6 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
@@ -22,17 +21,18 @@ public class Bouton extends Arc {
     private EventHandler<Event> enterEvent;
     private ProgressIndicator progressIndicator;
     private Timeline timelineProgressBar;
-    private String pos;
+    protected String note;
+    protected boolean isActivated;
 
-    public Bouton(double centerX, double centerY, double radiusX, double radiusY, double startAngle, double length, IGameContext gameContext, Simon gameInstance, String pos) {
+    public Bouton(double centerX, double centerY, double radiusX, double radiusY, double startAngle, double length, IGameContext gameContext, Simon gameInstance, String note) {
         super(centerX, centerY, radiusX, radiusY, startAngle, length);
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
-        this.pos = pos;
+        this.note = note;
         setType(ArcType.ROUND);
         this.enterEvent = buildEvent();
         this.progressIndicator = createProgressIndicator(150,150);
-
+        this.isActivated = true;
         this.gameContext.getGazeDeviceManager().addEventFilter(this);
         this.addEventFilter(GazeEvent.ANY, enterEvent);
         this.addEventFilter(MouseEvent.ANY, enterEvent);
@@ -44,20 +44,20 @@ public class Bouton extends Arc {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final ProgressIndicator indicator = new ProgressIndicator(0);
 
-        switch (pos) {
-            case "topleft" -> {
+        switch (note) {
+            case "vert" -> {
                 indicator.setTranslateX(dimension2D.getWidth() / 2 - 250);
                 indicator.setTranslateY(dimension2D.getHeight() / 2 - 250);
             }
-            case "topright" -> {
+            case "rouge" -> {
                 indicator.setTranslateX(dimension2D.getWidth() / 2 + 150);
                 indicator.setTranslateY(dimension2D.getHeight() / 2 - 250);
             }
-            case "bottomleft" -> {
+            case "jaune" -> {
                 indicator.setTranslateX(dimension2D.getWidth() / 2 - 250);
                 indicator.setTranslateY(dimension2D.getHeight() / 2 + 150);
             }
-            case "bottomright" -> {
+            case "bleu" -> {
                 indicator.setTranslateX(dimension2D.getWidth() / 2 + 150);
                 indicator.setTranslateY(dimension2D.getHeight() / 2 + 150);
             }
@@ -73,9 +73,13 @@ public class Bouton extends Arc {
 
     private EventHandler<Event> buildEvent(){
         return e->{
-            if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED){
-                initTimer();
-            }else if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
+            if (isActivated){
+                if (e.getEventType() == GazeEvent.GAZE_ENTERED || e.getEventType() == MouseEvent.MOUSE_ENTERED){
+                    initTimer();
+                } else if (e.getEventType() == GazeEvent.GAZE_EXITED || e.getEventType() == MouseEvent.MOUSE_EXITED){
+                    stopTimer();
+                }
+            }else{
                 stopTimer();
             }
         };
@@ -101,9 +105,12 @@ public class Bouton extends Arc {
             new KeyValue(progressIndicator.progressProperty(), 1)));
 
         timelineProgressBar.setOnFinished(actionEvent -> {
-            System.out.println("oof");
+            System.out.println(note);
+            gameInstance.playerSequence.add(note);
         });
 
         timelineProgressBar.play();
     }
+
+
 }
