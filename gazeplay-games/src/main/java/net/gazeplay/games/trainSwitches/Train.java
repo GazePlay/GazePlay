@@ -1,16 +1,31 @@
 package net.gazeplay.games.trainSwitches;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
+import java.util.ArrayList;
 
 public class Train {
 
     private final String color;
     private final ImageView shape;
+    private final ArrayList<Image> images;
+    private int index;
 
     public Train(String color, String direction) {
         this.color = color;
-        shape = new ImageView(new Image("data/trainSwitches/images/"+color+"Loco.png"));
+        index = 0;
+        images = new ArrayList<>();
+        images.add(new Image("data/trainSwitches/images/"+color+"Loco.png"));
+        images.add(new Image("data/trainSwitches/images/"+color+"Loco2.png"));
+        shape = new ImageView(images.get(index));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(300), actionEvent -> shape.setImage(images.get(index++%images.size()))));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+
         shape.setPreserveRatio(true);
         shape.setMouseTransparent(true);
         switch (direction) {
