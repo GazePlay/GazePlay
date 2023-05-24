@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TrainSwitches implements GameLifeCycle {
 
@@ -36,6 +37,7 @@ public class TrainSwitches implements GameLifeCycle {
     // Game
     private final static int DELAY_BETWEEN_TRAINS = 5000;
     private final static int INITIAL_DELAY = 5000;
+    private final static int PAUSE_DELAY = 500;
     private final static int MAXSPEED = 2;
     private final ArrayList<Section> sections;
     private final ArrayList<Switch> switches;
@@ -53,12 +55,13 @@ public class TrainSwitches implements GameLifeCycle {
     private int trainSent;
     private int trainCorrect;
     private int trainReachedStation;
+    // For pause variant
     private Instant lastTrainSentInstant;
     private Instant lastTimerStoppedInstant;
-
-    // For pause variant
+    private Instant lastResumeInstant;
     private Train trainWaiting;
     private Switch switchWaiting;
+    private AtomicBoolean isPaused;
 
     // UI
     private final static double XOFFSET = 100;
@@ -93,6 +96,9 @@ public class TrainSwitches implements GameLifeCycle {
 
         trainSent = 0;
         trainCorrect = 0;
+        trainReachedStation = 0;
+        isPaused = new AtomicBoolean();
+        lastResumeInstant = Instant.now();
         gameContext.getRoot().setBackground(new Background(new BackgroundImage(new Image("data/trainSwitches/images/grassBackground.jpg"),null,null,null,null)));
 
         BorderPane borderPane = new BorderPane();
@@ -116,13 +122,12 @@ public class TrainSwitches implements GameLifeCycle {
         // Bottom box
         HBox botBox = new HBox();
         botBox.setAlignment(Pos.CENTER);
-        botBox.setPadding(new Insets(20,0,0,0));
         borderPane.setBottom(botBox);
 
         trainCountLabel = new Label("Score : 0/0");
         trainCountLabel.setTextFill(Color.WHITE);
         trainCountLabel.setFont(new Font(60));
-        //trainCountLabel.setPadding(new Insets(0,50,0,0));
+        trainCountLabel.setPadding(new Insets(0,50,0,0));
         botBox.getChildren().add(trainCountLabel);
 
         resumeButton = new I18NButton(gameContext.getTranslator(), "ResumeButton");
@@ -206,21 +211,21 @@ public class TrainSwitches implements GameLifeCycle {
     }
 
     public void resume(){
-        if(gameVariant==TrainSwitchesGameVariant.pauseTrain) {
-            for (PathTransition transition : transitions) {
-                transition.play();
-            }
-            launchTrainOnSection(switchWaiting.getOutput(), trainWaiting);
-            resumeButton.setVisible(false);
-            sendTrainTimer = new Timer();
-            long elapsed = java.time.Duration.between(lastTrainSentInstant, lastTimerStoppedInstant).toMillis();
-            if(elapsed> DELAY_BETWEEN_TRAINS){
-                elapsed = 0;
-            }else{
-                elapsed = DELAY_BETWEEN_TRAINS - elapsed;
-            }
-            sendTrainTimer.schedule(getSendTrainTask(), elapsed, DELAY_BETWEEN_TRAINS);
+        lastResumeInstant = Instant.now();
+        for (PathTransition transition : transitions) {
+            transition.play();
         }
+        isPaused.set(false);
+        launchTrainOnSection(switchWaiting.getOutput(), trainWaiting);
+        resumeButton.setVisible(false);
+        sendTrainTimer = new Timer();
+        long elapsed = java.time.Duration.between(lastTrainSentInstant, lastTimerStoppedInstant).toMillis();
+        if(elapsed> DELAY_BETWEEN_TRAINS){
+            elapsed = 0;
+        }else{
+            elapsed = DELAY_BETWEEN_TRAINS - elapsed;
+        }
+        sendTrainTimer.schedule(getSendTrainTask(), elapsed, DELAY_BETWEEN_TRAINS);
     }
 
     public void resumeEnterHandle(){
@@ -253,8 +258,7 @@ public class TrainSwitches implements GameLifeCycle {
             Station station = getStation(train.getShape().getTranslateX()+train.getShape().getFitWidth()/2, train.getShape().getTranslateY()+train.getShape().getFitHeight()/2);
             if(aSwitch!=null){
                 // Train is at a switch
-                if(gameVariant==TrainSwitchesGameVariant.pauseTrain){
-                    // TODO add minimum time between pause ?
+                if(gameVariant==TrainSwitchesGameVariant.pauseTrain && java.time.Duration.between(lastResumeInstant, Instant.now()).toMillis()>PAUSE_DELAY && isPaused.compareAndSet(false, true)){
                     // Pause all trains
                     for (PathTransition transition : transitions) {
                         transition.pause();
@@ -314,7 +318,9 @@ public class TrainSwitches implements GameLifeCycle {
             }
         });
         transitions.add(pathTransition);
-        pathTransition.play();
+        if(!isPaused.get()){
+            pathTransition.play();
+        }
     }
 
     public TimerTask getSendTrainTask(){
@@ -328,8 +334,8 @@ public class TrainSwitches implements GameLifeCycle {
                 }else{
                     Platform.runLater(() -> {
                         Train train = createTrain(colors.get(random.nextInt(colors.size())));
-                        mainPane.getChildren().add(train.getShape());
                         launchTrainOnSection(sections.get(0), train);
+                        mainPane.getChildren().add(train.getShape());
                         trainSent++;
                     });
                 }
