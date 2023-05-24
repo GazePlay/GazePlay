@@ -10,6 +10,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
@@ -71,6 +73,7 @@ public class TrainSwitches implements GameLifeCycle {
     private Pane mainPane;
     private I18NButton resumeButton;
     private Label trainCountLabel;
+    private final MediaPlayer player;
 
     TrainSwitches(final IGameContext gameContext, TrainSwitchesGameVariant gameVariant, final Stats stats){
         this.gameContext = gameContext;
@@ -86,6 +89,9 @@ public class TrainSwitches implements GameLifeCycle {
         progressIndicator.setOpacity(0);
         progressIndicator.setMouseTransparent(true);
         gameContext.getConfiguration().setAnimationSpeedRatio(3);
+        player = new MediaPlayer(new Media(ClassLoader.getSystemResource("data/trainSwitches/sounds/train.mp3").toString()));
+        player.volumeProperty().bind(gameContext.getConfiguration().getEffectsVolumeProperty());
+        player.setCycleCount(MediaPlayer.INDEFINITE);
     }
 
     @Override
@@ -217,6 +223,7 @@ public class TrainSwitches implements GameLifeCycle {
         }
         isPaused.set(false);
         launchTrainOnSection(switchWaiting.getOutput(), trainWaiting);
+        player.play();
         resumeButton.setVisible(false);
         sendTrainTimer = new Timer();
         long elapsed = java.time.Duration.between(lastTrainSentInstant, lastTimerStoppedInstant).toMillis();
@@ -268,12 +275,16 @@ public class TrainSwitches implements GameLifeCycle {
                     resumeButton.setVisible(true);
                     sendTrainTimer.cancel();
                     lastTimerStoppedInstant = Instant.now();
+                    player.pause();
                 }else{
                     // Launch train on new section
                     launchTrainOnSection(aSwitch.getOutput(), train);
                 }
             }else if(station!=null){
                 // Train is at a station
+                if(transitions.isEmpty()){
+                    player.stop();
+                }
                 stats.incrementNumberOfGoalsToReach();
                 mainPane.getChildren().remove(train.getShape());
                 ImageView img;
@@ -323,6 +334,9 @@ public class TrainSwitches implements GameLifeCycle {
         transitions.add(pathTransition);
         if(!isPaused.get()){
             pathTransition.play();
+            if(player.getStatus()!= MediaPlayer.Status.PLAYING){
+                player.play();
+            }
         }
     }
 
@@ -337,6 +351,7 @@ public class TrainSwitches implements GameLifeCycle {
                 }else{
                     Platform.runLater(() -> {
                         Train train = createTrain(colors.get(random.nextInt(colors.size())));
+                        gameContext.getSoundManager().add("data/trainSwitches/sounds/whistle.mp3");
                         launchTrainOnSection(sections.get(0), train);
                         mainPane.getChildren().add(train.getShape());
                         trainSent++;
