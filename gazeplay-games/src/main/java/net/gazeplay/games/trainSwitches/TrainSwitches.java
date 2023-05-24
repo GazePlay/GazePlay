@@ -37,7 +37,7 @@ public class TrainSwitches implements GameLifeCycle {
     // Game
     private final static int DELAY_BETWEEN_TRAINS = 5000;
     private final static int INITIAL_DELAY = 5000;
-    private final static int PAUSE_DELAY = 500;
+    private final static int PAUSE_DELAY = 200;
     private final static int MAXSPEED = 2;
     private final ArrayList<Section> sections;
     private final ArrayList<Switch> switches;
@@ -274,15 +274,18 @@ public class TrainSwitches implements GameLifeCycle {
                 }
             }else if(station!=null){
                 // Train is at a station
+                stats.incrementNumberOfGoalsToReach();
                 mainPane.getChildren().remove(train.getShape());
                 ImageView img;
                 if(train.getColor().equals(station.getColor())){
                     // Train reached correct station
+                    stats.incrementNumberOfGoalsReached();
                     trainCorrect++;
                     gameContext.getSoundManager().add("data/trainSwitches/sounds/correct.mp3");
                     img = new ImageView(new Image("data/trainSwitches/images/check.png"));
                 }else{
                     // Train reached wrong station
+                    stats.incrementNumberOfMistakes();
                     gameContext.getSoundManager().add("data/trainSwitches/sounds/wrong.mp3");
                     img = new ImageView(new Image("data/trainSwitches/images/cross.png"));
                     if(gameVariant==TrainSwitchesGameVariant.infiniteTrain){
