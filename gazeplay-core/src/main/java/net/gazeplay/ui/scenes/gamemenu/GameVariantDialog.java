@@ -129,6 +129,7 @@ public class GameVariantDialog extends Stage {
                 indexOfTheVariant = switch (variantNumber){
                     case 3 -> 0;
                     case 8 -> 1;
+                    case 13 -> 2;
                     default -> 0;
                 };
             } else if (gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors")) {
@@ -254,9 +255,10 @@ public class GameVariantDialog extends Stage {
                     categories[1] = new RadioButton(translator.translate("Instruments"));
                     categories[2] = new RadioButton(translator.translate("AllSounds"));
                 } else if (gameSpec.getGameSummary().getNameCode().equals("TrainSwitches")){
-                    categories = new RadioButton[2];
+                    categories = new RadioButton[3];
                     categories[0] = new RadioButton("3 "+translator.translate("Stations"));
                     categories[1] = new RadioButton("8 "+translator.translate("Stations"));
+                    categories[2] = new RadioButton("13 "+translator.translate("Stations"));
                 } else {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("Classic"));

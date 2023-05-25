@@ -19,7 +19,11 @@ public class TrainSwitchesGameVariantGenerator implements IGameVariantGenerator 
             new IntStringGameVariant(8, "ClassicTrain"),
             new IntStringGameVariant(8, "PauseTrain"),
             new IntStringGameVariant(8, "InfiniteTrain"),
-            new IntStringGameVariant(8, "UniqueTrain")
+            new IntStringGameVariant(8, "UniqueTrain"),
+            new IntStringGameVariant(13, "ClassicTrain"),
+            new IntStringGameVariant(13, "PauseTrain"),
+            new IntStringGameVariant(13, "InfiniteTrain"),
+            new IntStringGameVariant(13, "UniqueTrain")
         ));
     }
 }
