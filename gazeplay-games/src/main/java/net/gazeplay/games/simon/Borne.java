@@ -6,6 +6,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 import javafx.scene.shape.Circle;
@@ -29,70 +31,104 @@ public class Borne extends Parent {
     private boolean resetComputerAnimation;
     protected boolean multiplayer;
     protected boolean simonCopy;
+    private int nbNotePlayer = 1;
+    protected int nbNoteMax;
+    private final ImageView right, wrong;
     private int i = 0;
+    private boolean lastNotePlayer;
     public Borne(IGameContext gameContext, Simon gameInstance){
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
         this.boutons = new ArrayList<>();
-
-
-        this.computerPlay = true;
-
+        this.nbNoteMax = 0;
         this.radius = 400;
         this.resetComputerAnimation = false;
         this.nbSecond = 0;
         this.multiplayer = false;
-        this.simonCopy = false;
+        this.right = new ImageView(new Image("data/simonGame/right.png"));
+        this.wrong = new ImageView(new Image("data/simonGame/wrong.png"));
 
         initBorne();
 
-        timeBeforeResetComputerAnimation = new AnimationTimer() {
-            int nbframes = 0;
-            @Override
-            public void handle(long now) {
-                if (nbframes == 60){
-                    nbframes = 0;
-                    nbSecond++;
-                    System.out.println(secondsReset);
-                    System.out.println(nbSecond);
-                    if (nbSecond == secondsReset){
-                        resetComputerAnimation = true;
-                    }
-                }
-                nbframes++;
-            }
-        };
-        timeBeforeResetComputerAnimation.start();
 
+    }
+
+
+
+
+    protected void generateBorne(){
+
+
+
+        if (this.simonCopy){
+            this.computerPlay = false;
+        }else{
+            this.computerPlay = true;
+        }
+        /*
+        if (!simonCopy){
+            timeBeforeResetComputerAnimation = new AnimationTimer() {
+                int nbframes = 0;
+                @Override
+                public void handle(long now) {
+                    if (nbframes == 60){
+                        nbframes = 0;
+                        nbSecond++;
+                        if (nbSecond == secondsReset){
+                            resetComputerAnimation = true;
+                        }
+                    }
+                    nbframes++;
+                }
+            };
+            timeBeforeResetComputerAnimation.start();
+        }
+*/
         nextNote = true;
+        lastNotePlayer = false;
         computerPlayAnimation = new Timeline(new KeyFrame(Duration.millis(16), event -> {
 
 
-            if (computerPlay){
+            if (computerPlay){ //Le robot joue
                 disableAllBoutons();
-                while(i < gameInstance.computerSequence.size() && nextNote){
-                    String note = gameInstance.computerSequence.get(i);
-                    for (Bouton bouton : boutons){
-                        if (note.compareToIgnoreCase(bouton.note) == 0){
-                            playSongAnimation(bouton);
-                            i++;
-                            break;
+                Timeline waitForLastNote = new Timeline(new KeyFrame(new Duration(3000)));
+                waitForLastNote.setOnFinished(actionEvent -> {
+                    lastNotePlayer = true;
+                    waitForLastNote.stop();
+                });
+                waitForLastNote.play();
+                if (lastNotePlayer){
+                    while(i < gameInstance.computerSequence.size() && nextNote){ //Parcours des notes du robots
+                        String note = gameInstance.computerSequence.get(i);
+                        for (Bouton bouton : boutons){                          //Parcours des boutons à appuyer
+                            if (note.compareToIgnoreCase(bouton.couleur) == 0){
+                                playSongAnimation(bouton);
+                                i++;
+                                break;
+                            }
                         }
                     }
                 }
-                nbSecond = 0;
+                nbSecond = 0; //Rénitialisation du timer qui doit reset l'animation dans le cas où le joueur met trop de temps
             }
-            if(i == gameInstance.computerSequence.size()){
+            if(i == gameInstance.computerSequence.size()){ //Si le robot à finit de jouer son animation, c'est au tour du joueur de jouer
                 computerPlay = false;
+                lastNotePlayer = false;
                 if (nextNote){
                     activateAllBoutons();
                 }
             }
 
-            if (gameInstance.playerSequence.size() == gameInstance.computerSequence.size() || resetComputerAnimation){
-                resetComputerAnimationClassic();
+            if (!simonCopy){
+                if (gameInstance.playerSequence.size() == gameInstance.computerSequence.size() || resetComputerAnimation){
+                    resetComputerAnimationClassic();
+                }
+            } else if (gameInstance.playerSequence.size() == nbNotePlayer){
+
+                resetComputerAnimationCopy();
             }
-            if (gameInstance.computerSequence.size() == 33){
+            if (gameInstance.computerSequence.size() == nbNoteMax){
+                computerPlayAnimation.stop();
                 gameInstance.endGame();
             }
         }));
@@ -100,6 +136,32 @@ public class Borne extends Parent {
         computerPlayAnimation.setCycleCount(Animation.INDEFINITE);
         computerPlayAnimation.play();
     }
+
+    private void resetComputerAnimationCopy(){
+        boolean verifIncrement = false;
+
+        if (gameInstance.computerSequence.size() == 0){
+            verifIncrement = true;
+        }else{
+            ArrayList<String> comp = new ArrayList<>(gameInstance.playerSequence);
+            comp.remove(comp.size()-1);
+            if (comp.equals(gameInstance.computerSequence)){
+                verifIncrement = true;
+            }
+        }
+        if (verifIncrement){
+            gameInstance.computerSequence.add(gameInstance.playerSequence.get(gameInstance.playerSequence.size()-1));
+            nbNotePlayer++;
+        }
+        playSuccessAnimation(verifIncrement);
+
+        gameInstance.playerSequence.clear();
+
+        i = 0;
+        computerPlay = true;
+        resetComputerAnimation = false;
+    }
+
 
     private void resetComputerAnimationClassic(){
         boolean increment = gameInstance.playerSequence.equals(gameInstance.computerSequence);
@@ -112,15 +174,32 @@ public class Borne extends Parent {
             gameInstance.addNoteToComputerSequence();
             System.out.println(gameInstance.computerSequence.size());
         }
+        playSuccessAnimation(increment);
         i = 0;
         computerPlay = true;
         resetComputerAnimation = false;
     }
 
+    private void playSuccessAnimation(boolean win){
+        if (win){
+            this.right.setOpacity(1);
+        }else{
+            this.wrong.setOpacity(1);
+        }
+        Timeline animation = new Timeline(new KeyFrame(new Duration(2000)));
+
+        animation.setOnFinished(actionEvent ->{
+            this.right.setOpacity(0);
+            this.wrong.setOpacity(0);
+        });
+        animation.play();
+    }
+
     private void playSongAnimation(Bouton bouton){
-        System.out.println("playsong for : " + bouton.note);
+        System.out.println("playsong for : " + bouton.couleur);
         nextNote = false;
         bouton.isActivated = false;
+        gameInstance.playSound(bouton.note);
         Timeline animation = new Timeline(new KeyFrame(new Duration(2000)));
         bouton.setOpacity(0.6);
         animation.setOnFinished(actionEvent -> {
@@ -174,20 +253,36 @@ public class Borne extends Parent {
         }
         gameContext.getChildren().addAll(rectangleCenter,lineVertical,lineHorizontal);
 
+
+
+        this.right.setX(dimension2D.getWidth()/2-80);
+        this.wrong.setX(dimension2D.getWidth()/2-80);
+        this.right.setY(dimension2D.getHeight()/2-80);
+        this.wrong.setY(dimension2D.getHeight()/2-80);
+
+        this.right.prefWidth(200);
+        this.wrong.prefWidth(200);
+        this.right.prefHeight(200);
+        this.wrong.prefHeight(200);
+
+        this.right.setOpacity(0);
+        this.wrong.setOpacity(0);
+        gameContext.getChildren().addAll(this.right,this.wrong);
+
     }
 
     private void initBoutons(){
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        Bouton topRight = new Bouton(dimension2D.getWidth()/2,dimension2D.getHeight()/2,radius,radius,0,90,gameContext,gameInstance, "rouge");
+        Bouton topRight = new Bouton(dimension2D.getWidth()/2,dimension2D.getHeight()/2,radius-5,radius-5,0,90,gameContext,gameInstance, "rouge",gameInstance.musicNotes.get(0));
         topRight.setFill(Color.RED);
 
-        Bouton topLeft = new Bouton(dimension2D.getWidth()/2,dimension2D.getHeight()/2,radius,radius,90,90,gameContext,gameInstance, "vert");
+        Bouton topLeft = new Bouton(dimension2D.getWidth()/2,dimension2D.getHeight()/2,radius-5,radius-5,90,90,gameContext,gameInstance, "vert",gameInstance.musicNotes.get(1));
         topLeft.setFill(Color.web("2FDF3C"));
 
-        Bouton bottomLeft = new Bouton(dimension2D.getWidth()/2,dimension2D.getHeight()/2,radius,radius,180,90,gameContext,gameInstance,"jaune");
+        Bouton bottomLeft = new Bouton(dimension2D.getWidth()/2,dimension2D.getHeight()/2,radius-5,radius-5,180,90,gameContext,gameInstance,"jaune",gameInstance.musicNotes.get(2));
         bottomLeft.setFill(Color.YELLOW);
 
-        Bouton bottomRight = new Bouton(dimension2D.getWidth()/2,dimension2D.getHeight()/2,radius,radius,270,90,gameContext,gameInstance,"bleu");
+        Bouton bottomRight = new Bouton(dimension2D.getWidth()/2,dimension2D.getHeight()/2,radius-5,radius-5,270,90,gameContext,gameInstance,"bleu",gameInstance.musicNotes.get(3));
         bottomRight.setFill(Color.web("2FB4DF"));
 
         this.boutons.add(topRight);

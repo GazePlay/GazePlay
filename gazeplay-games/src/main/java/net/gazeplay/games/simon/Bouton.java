@@ -21,13 +21,15 @@ public class Bouton extends Arc {
     private EventHandler<Event> enterEvent;
     private ProgressIndicator progressIndicator;
     private Timeline timelineProgressBar;
-    protected String note;
+    protected String couleur;
     protected boolean isActivated;
+    protected String note;
 
-    public Bouton(double centerX, double centerY, double radiusX, double radiusY, double startAngle, double length, IGameContext gameContext, Simon gameInstance, String note) {
+    public Bouton(double centerX, double centerY, double radiusX, double radiusY, double startAngle, double length, IGameContext gameContext, Simon gameInstance, String couleur, String note) {
         super(centerX, centerY, radiusX, radiusY, startAngle, length);
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
+        this.couleur = couleur;
         this.note = note;
         setType(ArcType.ROUND);
         this.enterEvent = buildEvent();
@@ -44,7 +46,7 @@ public class Bouton extends Arc {
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final ProgressIndicator indicator = new ProgressIndicator(0);
 
-        switch (note) {
+        switch (couleur) {
             case "vert" -> {
                 indicator.setTranslateX(dimension2D.getWidth() / 2 - 250);
                 indicator.setTranslateY(dimension2D.getHeight() / 2 - 250);
@@ -86,7 +88,9 @@ public class Bouton extends Arc {
     }
     private void stopTimer(){
         if (timelineProgressBar != null){
-            this.setOpacity(1);
+            if (!this.isDisabled()){
+                this.setOpacity(1);
+            }
             timelineProgressBar.stop();
             progressIndicator.setOpacity(0);
             progressIndicator.setProgress(0);
@@ -105,8 +109,9 @@ public class Bouton extends Arc {
             new KeyValue(progressIndicator.progressProperty(), 1)));
 
         timelineProgressBar.setOnFinished(actionEvent -> {
-            System.out.println(note);
-            gameInstance.playerSequence.add(note);
+            System.out.println(couleur);
+            gameInstance.playSound(note);
+            gameInstance.playerSequence.add(couleur);
         });
 
         timelineProgressBar.play();
