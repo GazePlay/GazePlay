@@ -124,6 +124,13 @@ public class GameVariantDialog extends Stage {
                 };
             } else if (variant.toString().contains("DYNAMIC") || variant.toString().contains("Dynamic")){
                 indexOfTheVariant = 1;
+            } else if(gameSpec.getGameSummary().getNameCode().equals("TrainSwitches")){
+                int variantNumber = ((IntStringGameVariant) variant).getNumber();
+                indexOfTheVariant = switch (variantNumber){
+                    case 3 -> 0;
+                    case 8 -> 1;
+                    default -> 0;
+                };
             } else if (gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors")) {
                 indexOfTheVariant = variant.toString().toLowerCase().contains("hide") ? 0 : 1;
             } else if (gameSpec.getGameSummary().getNameCode().equals("Labyrinth")) {
@@ -139,7 +146,6 @@ public class GameVariantDialog extends Stage {
                     case 6,7,8,9,10,11 -> 1;
                     default -> 0;
                 };
-
             } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = ((IntStringGameVariant) variant).getStringValue();
@@ -173,7 +179,8 @@ public class GameVariantDialog extends Stage {
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheFlag") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheLetter") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape") ||
-                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheSound")) &&
+                gameSpec.getGameSummary().getNameCode().equals("WhereIsTheSound") ||
+                gameSpec.getGameSummary().getNameCode().equals("TrainSwitches")) &&
                 group.getToggles().size() < 2
             ) {
                 RadioButton[] categories;
@@ -246,6 +253,10 @@ public class GameVariantDialog extends Stage {
                     categories[0] = new RadioButton(translator.translate("Animals"));
                     categories[1] = new RadioButton(translator.translate("Instruments"));
                     categories[2] = new RadioButton(translator.translate("AllSounds"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("TrainSwitches")){
+                    categories = new RadioButton[2];
+                    categories[0] = new RadioButton("3 "+translator.translate("Stations"));
+                    categories[1] = new RadioButton("8 "+translator.translate("Stations"));
                 } else {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton(translator.translate("Classic"));

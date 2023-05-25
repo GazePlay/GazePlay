@@ -224,7 +224,8 @@ AiStart,,,,,,,Play second,,Jouer en second,,,,,,,,,,,,
 ClassicTrain,,,,,,,Classic,,Classique,,,,,,,,,,,,
 PauseTrain,,,,,,,Game is paused when a train reach a switch,,Le jeu se met en pause lorsqu'un train arrive à un aiguillage,,,,,,,,,,,,
 InfiniteTrain,,,,,,,Trains are sent again if they reach the wrong station,,Les trains sont réenvoyés lorsqu'ils atteignent la mauvaise gare,,,,,,,,,,,,
-UniquesTrain,,,,,,,Only one train at a time,,Un seul train à la fois,,,,,,,,,,,,
+UniqueTrain,,,,,,,Only one train at a time,,Un seul train à la fois,,,,,,,,,,,,
+Stations,,,,,,,Stations,,Gares,,,,,,,,,,,,
 
 # CONTEXT TITLES
 ConfigTitle,Konfigurimi,ترتيب,Канфігурацыя,恭喜你！,Konfiguration,Διαμόρφωση,Configuration,asetuksen nimi,Configuration,विन्यास,Konfiguracija,Konfigurasi,Configurazione,構成,Configuratie,Konfiguracja,Configuraçaô,Конфигурация,Configuración,Tùy chỉnh,Konfigurasi

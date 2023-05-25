@@ -4,7 +4,7 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
-import net.gazeplay.commons.gamevariants.EnumGameVariant;
+import net.gazeplay.commons.gamevariants.IntStringGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -14,15 +14,15 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class TrainSwitchesGameLauncher implements IGameLauncher<Stats, EnumGameVariant<TrainSwitchesGameVariant>> {
+public class TrainSwitchesGameLauncher implements IGameLauncher<Stats, IntStringGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new TrainSwitchesStats(scene);
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, EnumGameVariant<TrainSwitchesGameVariant> gameVariant, Stats stats) {
-        return new TrainSwitches(gameContext, gameVariant.getEnumValue(), stats);
+    public GameLifeCycle createNewGame(IGameContext gameContext, IntStringGameVariant gameVariant, Stats stats) {
+        return new TrainSwitches(gameContext, stats, gameVariant.getNumber(), gameVariant.getStringValue());
     }
 
     @Override
@@ -31,7 +31,7 @@ public class TrainSwitchesGameLauncher implements IGameLauncher<Stats, EnumGameV
     }
 
     @Override
-    public GameLifeCycle replayGame(IGameContext gameContext, EnumGameVariant<TrainSwitchesGameVariant> gameVariant, Stats stats, double gameSeed) {
-        return new TrainSwitches(gameContext, gameVariant.getEnumValue(), stats);
+    public GameLifeCycle replayGame(IGameContext gameContext, IntStringGameVariant gameVariant, Stats stats, double gameSeed) {
+        return new TrainSwitches(gameContext, stats, gameVariant.getNumber(), gameVariant.getStringValue());
     }
 }

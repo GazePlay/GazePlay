@@ -33,7 +33,8 @@ public class TrainSwitches implements GameLifeCycle {
 
     // Context
     private final IGameContext gameContext;
-    private final TrainSwitchesGameVariant gameVariant;
+    private final int level;
+    private final String variantType;
     private final Stats stats;
 
     // Game
@@ -75,9 +76,11 @@ public class TrainSwitches implements GameLifeCycle {
     private Label trainCountLabel;
     private final MediaPlayer player;
 
-    TrainSwitches(final IGameContext gameContext, TrainSwitchesGameVariant gameVariant, final Stats stats){
+    TrainSwitches(final IGameContext gameContext, final Stats stats, int level, String variantType){
         this.gameContext = gameContext;
-        this.gameVariant = gameVariant;
+        this.level = level;
+        System.out.println("level " + level);
+        this.variantType = variantType;
         this.stats = stats;
         random = new Random();
         sections = new ArrayList<>();
@@ -113,7 +116,7 @@ public class TrainSwitches implements GameLifeCycle {
         mainPane = new Pane();
         borderPane.setCenter(mainPane);
 
-        initLevel2();
+        initLevel(level);
         for (Section section : sections) {
             mainPane.getChildren().add(section.getPath());
         }
@@ -146,7 +149,7 @@ public class TrainSwitches implements GameLifeCycle {
         resumeButton.addEventFilter(GazeEvent.GAZE_EXITED, gazeEvent -> exitHandle());
         resumeButton.addEventFilter(MouseEvent.MOUSE_ENTERED, mouseEvent -> resumeEnterHandle());
         resumeButton.addEventFilter(MouseEvent.MOUSE_EXITED, mouseEvent -> exitHandle());
-        if(gameVariant==TrainSwitchesGameVariant.pauseTrain){
+        if(variantType.equals("PauseTrain")){
             botBox.getChildren().add(resumeButton);
         }
 
@@ -193,7 +196,7 @@ public class TrainSwitches implements GameLifeCycle {
 
         // Timer to send train
         sendTrainTimer = new Timer();
-        if(gameVariant==TrainSwitchesGameVariant.uniqueTrain){
+        if(variantType.equals("UniqueTrain")){
             sendTrainTimer.schedule(getSendTrainTask(), INITIAL_DELAY);
         }else{
             sendTrainTimer.schedule(getSendTrainTask(), INITIAL_DELAY, DELAY_BETWEEN_TRAINS);
@@ -265,7 +268,7 @@ public class TrainSwitches implements GameLifeCycle {
             Station station = getStation(train.getShape().getTranslateX()+train.getShape().getFitWidth()/2, train.getShape().getTranslateY()+train.getShape().getFitHeight()/2);
             if(aSwitch!=null){
                 // Train is at a switch
-                if(gameVariant==TrainSwitchesGameVariant.pauseTrain && java.time.Duration.between(lastResumeInstant, Instant.now()).toMillis()>PAUSE_DELAY && isPaused.compareAndSet(false, true)){
+                if(variantType.equals("PauseTrain") && java.time.Duration.between(lastResumeInstant, Instant.now()).toMillis()>PAUSE_DELAY && isPaused.compareAndSet(false, true)){
                     // Pause all trains
                     for (PathTransition transition : transitions) {
                         transition.pause();
@@ -299,7 +302,7 @@ public class TrainSwitches implements GameLifeCycle {
                     stats.incrementNumberOfMistakes();
                     gameContext.getSoundManager().add("data/trainSwitches/sounds/wrong.mp3");
                     img = new ImageView(new Image("data/trainSwitches/images/cross.png"));
-                    if(gameVariant==TrainSwitchesGameVariant.infiniteTrain){
+                    if(variantType.equals("InfiniteTrain")){
                         // If trains are already all sent, restart a timer
                         if (trainSent >= trainToSend++){
                             long startDelay = java.time.Duration.between(lastTimerStoppedInstant, Instant.now()).toMillis();
@@ -313,7 +316,7 @@ public class TrainSwitches implements GameLifeCycle {
                         }
                     }
                 }
-                if(gameVariant==TrainSwitchesGameVariant.uniqueTrain){
+                if(variantType.equals("UniqueTrain")){
                     sendTrainTimer = new Timer();
                     sendTrainTimer.schedule(getSendTrainTask(), 0);
                 }
@@ -359,155 +362,6 @@ public class TrainSwitches implements GameLifeCycle {
                 }
             }
         };
-    }
-
-    public void initLevel(){
-
-        levelWidth = 5;
-        levelHeight = 3;
-        trainToSend = 10;
-        initialTrainDirection = "right";
-
-        caveX = 0;
-        caveY = 0;
-        Section p1 = createSection(0,0,5);
-        p1.add(createLineTo(4, 0));
-        p1.add(createLineTo(4, 1));
-
-        // S1
-        Switch s1 = createSwitch(4,1);
-        s1.addCurve(createCurve(4,1,"up","down"));
-        s1.addCurve(createCurve(4,1,"up","left"));
-
-        s1.getOutput(0).setSize(2);
-        s1.getOutput(0).add(createLineTo(4,2));
-        s1.getOutput(0).add(createLineTo(3,2));
-
-        s1.getOutput(1).setSize(4);
-        s1.getOutput(1).add(createLineTo(2, 1));
-        s1.getOutput(1).add(createLineTo(2, 2));
-        s1.getOutput(1).add(createLineTo(1, 2));
-
-        // S2
-        Switch s2 = createSwitch(1,2);
-        s2.addCurve(createCurve(1,2,"right","up"));
-        s2.addCurve(createCurve(1,2,"right","left"));
-
-        s2.getOutput(0).setSize(1);
-        s2.getOutput(0).add(createLineTo(1, 1));
-
-        s2.getOutput(1).setSize(2);
-        s2.getOutput(1).add(createLineTo(0, 2));
-        s2.getOutput(1).add(createLineTo(0, 1));
-
-        // Stations
-        createStation("lightblue", 0, 1);
-        createStation("white", 1, 1);
-        createStation("yellow", 3, 2);
-    }
-
-    public void initLevel2(){
-
-        levelWidth = 7;
-        levelHeight = 5;
-        trainToSend = 10;
-        initialTrainDirection = "left";
-
-        caveX = 6;
-        caveY = 4;
-        Section p1 = createSection(6,4, 3);
-        p1.add(createLineTo(3,4));
-
-        // S1
-        Switch s1 = createSwitch(3,4);
-
-        s1.addCurve(createCurve(3,4,"right","up"));
-        s1.getOutput(0).setSize(2);
-        s1.getOutput(0).add(createLineTo(3,3));
-        s1.getOutput(0).add(createLineTo(4,3));
-
-        s1.addCurve(createCurve(3,4,"right","left"));
-        s1.getOutput(1).setSize(2);
-        s1.getOutput(1).add(createLineTo(2,4));
-        s1.getOutput(1).add(createLineTo(2,3));
-
-        // S2
-        Switch s2 = createSwitch(2,3);
-
-        s2.addCurve(createCurve(2,3,"down","up"));
-        s2.getOutput(0).setSize(2);
-        s2.getOutput(0).add(createLineTo(2,1));
-
-        s2.addCurve(createCurve(2,3,"down","left"));
-        s2.getOutput(1).setSize(3);
-        s2.getOutput(1).add(createLineTo(0,3));
-        s2.getOutput(1).add(createLineTo(0,2));
-
-        // S3
-        Switch s3 = createSwitch(0,2);
-
-        s3.addCurve(createCurve(0,2,"down","up"));
-        s3.getOutput(0).setSize(1);
-        s3.getOutput(0).add(createLineTo(0,1));
-
-        s3.addCurve(createCurve(0,2,"down","right"));
-        s3.getOutput(1).setSize(1);
-        s3.getOutput(1).add(createLineTo(1,2));
-
-        // S4
-        Switch s4 = createSwitch(2,1);
-
-        s4.addCurve(createCurve(2,1,"down","up"));
-        s4.getOutput(0).setSize(1);
-        s4.getOutput(0).add(createLineTo(2,0));
-
-        s4.addCurve(createCurve(2,1,"down","left"));
-        s4.getOutput(1).setSize(1);
-        s4.getOutput(1).add(createLineTo(1,1));
-
-        // S5
-        Switch s5 = createSwitch(4,3);
-
-        s5.addCurve(createCurve(4,3,"left","up"));
-        s5.getOutput(0).setSize(2);
-        s5.getOutput(0).add(createLineTo(4,1));
-
-        s5.addCurve(createCurve(4,3,"left","right"));
-        s5.getOutput(1).setSize(3);
-        s5.getOutput(1).add(createLineTo(6,3));
-        s5.getOutput(1).add(createLineTo(6,2));
-
-        // S6
-        Switch s6 = createSwitch(4,1);
-
-        s6.addCurve(createCurve(4,1,"down","up"));
-        s6.getOutput(0).setSize(1);
-        s6.getOutput(0).add(createLineTo(4,0));
-
-        s6.addCurve(createCurve(4,1,"down","left"));
-        s6.getOutput(1).setSize(1);
-        s6.getOutput(1).add(createLineTo(3,1));
-
-        // S7
-        Switch s7 = createSwitch(6,2);
-
-        s7.addCurve(createCurve(6,2,"down","up"));
-        s7.getOutput(0).setSize(1);
-        s7.getOutput(0).add(createLineTo(6,1));
-
-        s7.addCurve(createCurve(6,2,"down","left"));
-        s7.getOutput(1).setSize(1);
-        s7.getOutput(1).add(createLineTo(5,2));
-
-        // Stations
-        createStation("lightblue", 0, 1);
-        createStation("white", 1, 2);
-        createStation("yellow", 1, 1);
-        createStation("green", 2, 0);
-        createStation("purple", 3, 1);
-        createStation("pink", 5, 2);
-        createStation("black", 6, 1);
-        createStation("red", 4, 0);
     }
 
     public Section createSection(double startx, double starty, double size){
@@ -661,6 +515,163 @@ public class TrainSwitches implements GameLifeCycle {
             }
         }
         return null;
+    }
+
+    public void initLevel(int level){
+        switch (level){
+            case 3 -> initLevel3();
+            case 8 -> initLevel8();
+            default -> initLevel3();
+        }
+    }
+
+    public void initLevel3(){
+
+        levelWidth = 5;
+        levelHeight = 3;
+        trainToSend = 10;
+        initialTrainDirection = "right";
+
+        caveX = 0;
+        caveY = 0;
+        Section p1 = createSection(0,0,5);
+        p1.add(createLineTo(4, 0));
+        p1.add(createLineTo(4, 1));
+
+        // S1
+        Switch s1 = createSwitch(4,1);
+        s1.addCurve(createCurve(4,1,"up","down"));
+        s1.addCurve(createCurve(4,1,"up","left"));
+
+        s1.getOutput(0).setSize(2);
+        s1.getOutput(0).add(createLineTo(4,2));
+        s1.getOutput(0).add(createLineTo(3,2));
+
+        s1.getOutput(1).setSize(4);
+        s1.getOutput(1).add(createLineTo(2, 1));
+        s1.getOutput(1).add(createLineTo(2, 2));
+        s1.getOutput(1).add(createLineTo(1, 2));
+
+        // S2
+        Switch s2 = createSwitch(1,2);
+        s2.addCurve(createCurve(1,2,"right","up"));
+        s2.addCurve(createCurve(1,2,"right","left"));
+
+        s2.getOutput(0).setSize(1);
+        s2.getOutput(0).add(createLineTo(1, 1));
+
+        s2.getOutput(1).setSize(2);
+        s2.getOutput(1).add(createLineTo(0, 2));
+        s2.getOutput(1).add(createLineTo(0, 1));
+
+        // Stations
+        createStation("lightblue", 0, 1);
+        createStation("white", 1, 1);
+        createStation("yellow", 3, 2);
+    }
+
+    public void initLevel8(){
+
+        levelWidth = 7;
+        levelHeight = 5;
+        trainToSend = 10;
+        initialTrainDirection = "left";
+
+        caveX = 6;
+        caveY = 4;
+        Section p1 = createSection(6,4, 3);
+        p1.add(createLineTo(3,4));
+
+        // S1
+        Switch s1 = createSwitch(3,4);
+
+        s1.addCurve(createCurve(3,4,"right","up"));
+        s1.getOutput(0).setSize(2);
+        s1.getOutput(0).add(createLineTo(3,3));
+        s1.getOutput(0).add(createLineTo(4,3));
+
+        s1.addCurve(createCurve(3,4,"right","left"));
+        s1.getOutput(1).setSize(2);
+        s1.getOutput(1).add(createLineTo(2,4));
+        s1.getOutput(1).add(createLineTo(2,3));
+
+        // S2
+        Switch s2 = createSwitch(2,3);
+
+        s2.addCurve(createCurve(2,3,"down","up"));
+        s2.getOutput(0).setSize(2);
+        s2.getOutput(0).add(createLineTo(2,1));
+
+        s2.addCurve(createCurve(2,3,"down","left"));
+        s2.getOutput(1).setSize(3);
+        s2.getOutput(1).add(createLineTo(0,3));
+        s2.getOutput(1).add(createLineTo(0,2));
+
+        // S3
+        Switch s3 = createSwitch(0,2);
+
+        s3.addCurve(createCurve(0,2,"down","up"));
+        s3.getOutput(0).setSize(1);
+        s3.getOutput(0).add(createLineTo(0,1));
+
+        s3.addCurve(createCurve(0,2,"down","right"));
+        s3.getOutput(1).setSize(1);
+        s3.getOutput(1).add(createLineTo(1,2));
+
+        // S4
+        Switch s4 = createSwitch(2,1);
+
+        s4.addCurve(createCurve(2,1,"down","up"));
+        s4.getOutput(0).setSize(1);
+        s4.getOutput(0).add(createLineTo(2,0));
+
+        s4.addCurve(createCurve(2,1,"down","left"));
+        s4.getOutput(1).setSize(1);
+        s4.getOutput(1).add(createLineTo(1,1));
+
+        // S5
+        Switch s5 = createSwitch(4,3);
+
+        s5.addCurve(createCurve(4,3,"left","up"));
+        s5.getOutput(0).setSize(2);
+        s5.getOutput(0).add(createLineTo(4,1));
+
+        s5.addCurve(createCurve(4,3,"left","right"));
+        s5.getOutput(1).setSize(3);
+        s5.getOutput(1).add(createLineTo(6,3));
+        s5.getOutput(1).add(createLineTo(6,2));
+
+        // S6
+        Switch s6 = createSwitch(4,1);
+
+        s6.addCurve(createCurve(4,1,"down","up"));
+        s6.getOutput(0).setSize(1);
+        s6.getOutput(0).add(createLineTo(4,0));
+
+        s6.addCurve(createCurve(4,1,"down","left"));
+        s6.getOutput(1).setSize(1);
+        s6.getOutput(1).add(createLineTo(3,1));
+
+        // S7
+        Switch s7 = createSwitch(6,2);
+
+        s7.addCurve(createCurve(6,2,"down","up"));
+        s7.getOutput(0).setSize(1);
+        s7.getOutput(0).add(createLineTo(6,1));
+
+        s7.addCurve(createCurve(6,2,"down","left"));
+        s7.getOutput(1).setSize(1);
+        s7.getOutput(1).add(createLineTo(5,2));
+
+        // Stations
+        createStation("lightblue", 0, 1);
+        createStation("white", 1, 2);
+        createStation("yellow", 1, 1);
+        createStation("green", 2, 0);
+        createStation("purple", 3, 1);
+        createStation("pink", 5, 2);
+        createStation("black", 6, 1);
+        createStation("red", 4, 0);
     }
 
 }
