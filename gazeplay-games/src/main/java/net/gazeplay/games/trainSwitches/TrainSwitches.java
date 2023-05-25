@@ -131,9 +131,10 @@ public class TrainSwitches implements GameLifeCycle {
         // Bottom box
         HBox botBox = new HBox();
         botBox.setAlignment(Pos.CENTER);
+        botBox.setPadding(new Insets(20,0,0,0));
         borderPane.setBottom(botBox);
 
-        trainCountLabel = new Label("Score : 0/0");
+        trainCountLabel = new Label();
         trainCountLabel.setTextFill(Color.WHITE);
         trainCountLabel.setFont(new Font(60));
         trainCountLabel.setPadding(new Insets(0,50,0,0));

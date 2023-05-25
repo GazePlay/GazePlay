@@ -52,6 +52,8 @@ public class Switch {
         circle.centerXProperty().bind(xcenter);
         circle.centerYProperty().bind(ycenter);
         circle.radiusProperty().bind(radius);
+        circle.setStroke(Color.RED);
+        circle.setStrokeWidth(5);
 
         group.getChildren().clear();
         group.getChildren().add(circle);
