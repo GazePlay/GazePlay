@@ -72,14 +72,13 @@ task generateGamesCatalog {
         def packages = sourceSet
                 .filter { it.path.endsWith('.java') }
                 .filter { it.path.contains('SpecSource') }
+                .filter { !it.path.contains('GazeplayEval')}
                 .collect {
                     it.path
                             .substring(sourceSet.srcDirs[0].path.length() + 1)
                             .replace('/', '.')
                             .replace('\\', '.')
                             .replace('.java', '')
-                            .replace('net.gazeplay.games.gazeplayEvalTest.GazeplayEvalTestGameSpecSource', '')
-                            .replace('net.gazeplay.games.gazeplayEval.GazeplayEvalGameSpecSource', '')
                 }
                 .unique()
 
