@@ -471,7 +471,6 @@ EnableGazeMouse,Aktivizo mouse,تشغيل مظاهات الفارة البصري
 free,Lehtë,حر,Лёгкі,简单,,,Free,,Facile,,,,Facile,,Gratis,,,Лёгкий,Fácil,,
 Utilities,Utilities,,Утыліты,工具,,,Utilities,,Utilitaires,,,,Utilities,,,,,Утилиты,,,
 
-
 # Rush Hour level | Sprint to the finish selection
 Niveau1-5,,,,,,, Level 1-5 ,, Niveau 1-5 ,,,,,,,,,,,,
 Niveau6-11,,,,,,, Level 6-11 ,, Niveau 6-5 ,,,,,,,,,,,,
@@ -480,9 +479,23 @@ Niveau18-23,,,,,,, Level 18-23 ,, Niveau 18-23 ,,,,,,,,,,,,
 Niveau24-29,,,,,,, Level 24-29 ,, Niveau 24-29 ,,,,,,,,,,,,
 Niveau30-33,,,,,,, Level 30-33 ,, Niveau 30-33 ,,,,,,,,,,,,
 
+# Survive Against Robot game
+SurviveAgainstRobots,,,,,,, Survive Against Robots ,, Survivre contre des robots ,,,,,,,,,,,,
+SurviveAgainstRobotsMouse,,,,,,, Survive Against Robots (Mouse) ,, Survivre contre des robots (Souris) ,,,,,,,,,,,,
+Easy_AUTO_KEYBOARD,,,,,,, Easy auto keyboard ,, Facile auto clavier ,,,,,,,,,,,,
+Normal_AUTO_KEYBOARD,,,,,,, Normal auto keyboard ,, Normal auto clavier ,,,,,,,,,,,,
+Hard_AUTO_KEYBOARD,,,,,,, Hard auto keyboard ,, Difficile auto clavier ,,,,,,,,,,,,
+Easy_KEYBOARD,,,,,,, Easy keyboard ,, Facile clavier ,,,,,,,,,,,,
+Normal_KEYBOARD,,,,,,, Normal keyboard ,, Normal clavier ,,,,,,,,,,,,
+Hard_KEYBOARD,,,,,,, Hard keyboard ,, Difficile clavier ,,,,,,,,,,,,
 
+Easy_AUTO_MOUSE,,,,,,, Easy auto mouse ,, Facile auto souris ,,,,,,,,,,,,
+Normal_AUTO_MOUSE,,,,,,, Normal auto mouse ,, Normal auto souris ,,,,,,,,,,,,
+Hard_AUTO_MOUSE,,,,,,, Hard auto mouse ,, Difficile auto souris ,,,,,,,,,,,,
+Easy_MOUSE,,,,,,, Easy mouse ,, Facile souris ,,,,,,,,,,,,
+Normal_MOUSE,,,,,,, Normal mouse ,, Normal souris ,,,,,,,,,,,,
+Hard_MOUSE,,,,,,, Hard mouse ,, Difficile souris ,,,,,,,,,,,,
 
 # Sprint to the finish name
-
 SprintFinish,,,,,,, Sprint jusqu'à l'arrivée ,, Sprint to the finish ,,,,,,,,,,,,
 SprintFinishMouse,,,,,,, Sprint jusqu'à l'arrivée (Souris/Yeux) ,, Sprint to the finish (Mouse/Gaze) ,,,,,,,,,,,,
