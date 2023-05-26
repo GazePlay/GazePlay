@@ -14,8 +14,7 @@ public class Switch {
     private final ArrayList<Section> outputSections;
     private int outputSelected;
     private final ArrayList<QuadCurve> curves;
-
-    public IntegerProperty radius;
+    private final IntegerProperty radius;
     private final Group group;
     private final DoubleProperty xcenter;
     private final DoubleProperty ycenter;
@@ -46,6 +45,7 @@ public class Switch {
         return group;
     }
 
+    // Update the switch shape
     public void updateShape(){
         Circle circle = new Circle(50);
         circle.setFill(Color.GREEN);
@@ -60,6 +60,7 @@ public class Switch {
         group.getChildren().add(curves.get(outputSelected));
     }
 
+    // Return true if the coord are close enough(50 pixels) to the center of the switch
     public boolean isInside(double x, double y){
         return Math.abs(x - xcenter.get())<=50 && Math.abs(y - ycenter.get())<=50;
     }
@@ -76,5 +77,7 @@ public class Switch {
     public DoubleProperty yProperty() {
         return ycenter;
     }
-
+    public IntegerProperty radiusProperty() {
+        return radius;
+    }
 }

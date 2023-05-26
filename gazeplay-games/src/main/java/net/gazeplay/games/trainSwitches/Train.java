@@ -15,8 +15,10 @@ public class Train {
     private final ArrayList<Image> images;
     private int index;
 
-    public Train(String color, String direction) {
-        this.color = color;
+    public Train(TrainColors trainColor, String direction) {
+        this.color = trainColor.toString();
+
+        // Create a small animation for the train consisting of 2 images
         index = 0;
         images = new ArrayList<>();
         images.add(new Image("data/trainSwitches/images/"+color+"Loco.png"));

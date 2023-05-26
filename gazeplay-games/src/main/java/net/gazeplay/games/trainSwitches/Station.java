@@ -8,8 +8,8 @@ public class Station {
     private final String color;
     private final ImageView shape;
 
-    public Station(String color) {
-        this.color = color;
+    public Station(TrainColors trainColor) {
+        this.color = trainColor.toString();
         shape = new ImageView(new Image("data/trainSwitches/images/"+color+"Station.png"));
     }
 
@@ -21,6 +21,7 @@ public class Station {
         return shape;
     }
 
+    // Return true if the coord are close enough (50 pixels) to the center of the station
     public boolean isInside(double x, double y){
         return Math.abs(x - (shape.getX() + shape.getFitWidth()/2))<=50 && Math.abs(y - (shape.getY() + shape.getFitHeight()/2))<=50;
     }
