@@ -95,6 +95,7 @@ public class TrainSwitches implements GameLifeCycle {
         player = new MediaPlayer(new Media(ClassLoader.getSystemResource("data/trainSwitches/sounds/train.mp3").toString()));
         player.volumeProperty().bind(gameContext.getConfiguration().getEffectsVolumeProperty());
         player.setCycleCount(MediaPlayer.INDEFINITE);
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override
@@ -151,6 +152,7 @@ public class TrainSwitches implements GameLifeCycle {
         resumeButton.addEventFilter(GazeEvent.GAZE_EXITED, gazeEvent -> exitHandle());
         resumeButton.addEventFilter(MouseEvent.MOUSE_ENTERED, mouseEvent -> resumeEnterHandle());
         resumeButton.addEventFilter(MouseEvent.MOUSE_EXITED, mouseEvent -> exitHandle());
+        gameContext.getGazeDeviceManager().addEventFilter(resumeButton);
         if(variantType.equals("PauseTrain")){
             botBox.getChildren().add(resumeButton);
         }
@@ -358,19 +360,18 @@ public class TrainSwitches implements GameLifeCycle {
         return new TimerTask() {
             @Override
             public void run() {
+            Platform.runLater(() -> {
                 lastTrainSentInstant = Instant.now();
-                if(trainSent>= trainToSend){
+                Train train = createTrain(colors.get(random.nextInt(colors.size())));
+                gameContext.getSoundManager().add("data/trainSwitches/sounds/whistle.mp3");
+                launchTrainOnSection(sections.get(0), train);
+                mainPane.getChildren().add(train.getShape());
+                trainSent++;
+                if(trainSent >= trainToSend){
                     sendTrainTimer.cancel();
                     lastTimerStoppedInstant = Instant.now();
-                }else{
-                    Platform.runLater(() -> {
-                        Train train = createTrain(colors.get(random.nextInt(colors.size())));
-                        gameContext.getSoundManager().add("data/trainSwitches/sounds/whistle.mp3");
-                        launchTrainOnSection(sections.get(0), train);
-                        mainPane.getChildren().add(train.getShape());
-                        trainSent++;
-                    });
                 }
+            });
             }
         };
     }
@@ -474,10 +475,11 @@ public class TrainSwitches implements GameLifeCycle {
 
     private Switch createSwitch(double x, double y){
         Switch s = new Switch();
-        s.getGroup().addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEvent -> enterSwitchHandle(s));
-        s.getGroup().addEventHandler(MouseEvent.MOUSE_EXITED, mouseEvent -> exitHandle());
-        s.getGroup().addEventHandler(GazeEvent.GAZE_ENTERED, gazeEvent -> enterSwitchHandle(s));
-        s.getGroup().addEventHandler(GazeEvent.GAZE_EXITED, gazeEvent -> exitHandle());
+        s.getGroup().addEventFilter(MouseEvent.MOUSE_ENTERED, mouseEvent -> enterSwitchHandle(s));
+        s.getGroup().addEventFilter(MouseEvent.MOUSE_EXITED, mouseEvent -> exitHandle());
+        s.getGroup().addEventFilter(GazeEvent.GAZE_ENTERED, gazeEvent -> enterSwitchHandle(s));
+        s.getGroup().addEventFilter(GazeEvent.GAZE_EXITED, gazeEvent -> exitHandle());
+        gameContext.getGazeDeviceManager().addEventFilter(s.getGroup());
         s.xProperty().bind(gameContext.getRoot().widthProperty().subtract(XOFFSET).divide(levelWidth).multiply(x).add(XOFFSET));
         s.yProperty().bind(gameContext.getRoot().heightProperty().subtract(YOFFSET).divide(levelHeight).multiply(y).add(YOFFSET));
         s.radiusProperty().bind(gameContext.getRoot().heightProperty().divide(levelHeight).divide(4));
