@@ -471,15 +471,13 @@ EnableGazeMouse,Aktivizo mouse,تشغيل مظاهات الفارة البصري
 free,Lehtë,حر,Лёгкі,简单,,,Free,,Facile,,,,Facile,,Gratis,,,Лёгкий,Fácil,,
 Utilities,Utilities,,Утыліты,工具,,,Utilities,,Utilitaires,,,,Utilities,,,,,Утилиты,,,
 
-
-# Rush Hour level selection
+# Rush Hour level | Sprint to the finish selection
 Niveau1-5,,,,,,, Level 1-5 ,, Niveau 1-5 ,,,,,,,,,,,,
 Niveau6-11,,,,,,, Level 6-11 ,, Niveau 6-5 ,,,,,,,,,,,,
 Niveau12-17,,,,,,, Level 12-17 ,, Niveau 12-17 ,,,,,,,,,,,,
 Niveau18-23,,,,,,, Level 18-23 ,, Niveau 18-23 ,,,,,,,,,,,,
 Niveau24-29,,,,,,, Level 24-29 ,, Niveau 24-29 ,,,,,,,,,,,,
 Niveau30-33,,,,,,, Level 30-33 ,, Niveau 30-33 ,,,,,,,,,,,,
-
 
 # Survive Against Robot game
 SurviveAgainstRobots,,,,,,, Survive Against Robots ,, Survivre contre des robots ,,,,,,,,,,,,
@@ -498,3 +496,6 @@ Easy_MOUSE,,,,,,, Easy mouse ,, Facile souris ,,,,,,,,,,,,
 Normal_MOUSE,,,,,,, Normal mouse ,, Normal souris ,,,,,,,,,,,,
 Hard_MOUSE,,,,,,, Hard mouse ,, Difficile souris ,,,,,,,,,,,,
 
+# Sprint to the finish name
+SprintFinish,,,,,,, Sprint jusqu'à l'arrivée ,, Sprint to the finish ,,,,,,,,,,,,
+SprintFinishMouse,,,,,,, Sprint jusqu'à l'arrivée (Souris/Yeux) ,, Sprint to the finish (Mouse/Gaze) ,,,,,,,,,,,,

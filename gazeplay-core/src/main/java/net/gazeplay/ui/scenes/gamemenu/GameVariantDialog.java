@@ -137,6 +137,30 @@ public class GameVariantDialog extends Stage {
                     default -> 0;
                 };
 
+            } else if(gameSpec.getGameSummary().getNameCode().equals("SprintFinish")){
+                button.setTextAlignment(TextAlignment.CENTER);
+                int variantString = ((IntGameVariant) variant).getNumber();
+                indexOfTheVariant = switch(variantString){
+                    case 30,31,32,33-> 5;
+                    case 24,25,26,27,28,29 -> 4;
+                    case 18,19,20,21,22,23 -> 3;
+                    case 12,13,14,15,16,17 -> 2;
+                    case 6,7,8,9,10,11 -> 1;
+                    default -> 0;
+                };
+
+            }else if(gameSpec.getGameSummary().getNameCode().equals("SprintFinishMouse")){
+                button.setTextAlignment(TextAlignment.CENTER);
+                int variantString = ((IntGameVariant) variant).getNumber();
+                indexOfTheVariant = switch(variantString){
+                    case 30,31,32,33-> 5;
+                    case 24,25,26,27,28,29 -> 4;
+                    case 18,19,20,21,22,23 -> 3;
+                    case 12,13,14,15,16,17 -> 2;
+                    case 6,7,8,9,10,11 -> 1;
+                    default -> 0;
+                };
+
             } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = ((IntStringGameVariant) variant).getStringValue();
@@ -176,8 +200,12 @@ public class GameVariantDialog extends Stage {
             }
             choicePanes.get(indexOfTheVariant).getChildren().add(button);
 
+            System.out.println("nameGame : "+ gameSpec.getGameSummary().getNameCode());
+
             if ((gameSpec.getGameSummary().getNameCode().equals("Bottle") ||
                 gameSpec.getGameSummary().getNameCode().equals("RushHour") ||
+                gameSpec.getGameSummary().getNameCode().equals("SprintFinish") ||
+                gameSpec.getGameSummary().getNameCode().equals("SprintFinishMouse") ||
                 gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                 gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
@@ -212,8 +240,6 @@ public class GameVariantDialog extends Stage {
                     categories[3] = new RadioButton(translator.translate("Niveau18-23"));
                     categories[4] = new RadioButton(translator.translate("Niveau24-29"));
                     categories[5] = new RadioButton(translator.translate("Niveau30-33"));
-                    System.out.println("categories length : "+categories.length);
-
                 }else if(gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobots")){
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton("Normal");
@@ -222,7 +248,17 @@ public class GameVariantDialog extends Stage {
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton("Normal");
                     categories[1] = new RadioButton("Auto");
-                }else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
+                }else if(gameSpec.getGameSummary().getNameCode().equals("SprintFinish")){
+                    categories = new RadioButton[3];
+                    categories[0] = new RadioButton(translator.translate("Niveau1-5"));
+                    categories[1] = new RadioButton(translator.translate("Niveau6-11"));
+                    categories[2] = new RadioButton(translator.translate("Niveau12-17"));
+                }else if(gameSpec.getGameSummary().getNameCode().equals("SprintFinishMouse")){
+                    categories = new RadioButton[3];
+                    categories[0] = new RadioButton(translator.translate("Niveau1-5"));
+                    categories[1] = new RadioButton(translator.translate("Niveau6-11"));
+                    categories[2] = new RadioButton(translator.translate("Niveau12-17"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                     gameSpec.getGameSummary().getNameCode().contains("Memory") ||
                     gameSpec.getGameSummary().getNameCode().equals("Ninja")
                 ) {

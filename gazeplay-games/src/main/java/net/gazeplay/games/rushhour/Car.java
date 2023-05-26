@@ -45,6 +45,8 @@ public class Car extends Rectangle {
     private final ProgressIndicator pi;
 
     private boolean selected = false;
+    private boolean timerRunning = false;
+
 
     /**
      * Creates a new instance of a Car with the size and direction.
@@ -84,23 +86,34 @@ public class Car extends Rectangle {
         log.debug("" + x + " " + y + " " + l + " " + h + " " + c);
 
         final EventHandler<Event> enterEvent = e -> {
-            pi.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
-            pi.setLayoutX(getX() + getWidth() / 2 - pi.getWidth() / 2);
-            pi.setLayoutY(getY() + getHeight() / 2 - pi.getHeight() / 2);
-            pi.setOpacity(1);
-            pi.toFront();
-            timelineProgressBar = new Timeline();
-            timelineProgressBar.getKeyFrames()
-                .add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
-                    new KeyValue(pi.progressProperty(), 1)));
-            timelineProgressBar.play();
-            timelineProgressBar.setOnFinished(actionEvent -> setSelected(true));
+            if (!selected){
+                pi.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+                pi.setLayoutX(getX() + getWidth() / 2 - pi.getWidth() / 2);
+                pi.setLayoutY(getY() + getHeight() / 2 - pi.getHeight() / 2);
+                pi.setOpacity(1);
+                pi.toFront();
+                timelineProgressBar = new Timeline();
+                timelineProgressBar.getKeyFrames()
+                    .add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
+                        new KeyValue(pi.progressProperty(), 1)));
+                timelineProgressBar.play();
+                timelineProgressBar.setOnFinished(actionEvent -> setSelected(true));
+                timerRunning = true;
+            }else{
+                pi.setOpacity(0);
+            }
         };
 
         this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterEvent);
         this.addEventFilter(GazeEvent.GAZE_ENTERED, enterEvent);
 
+
         final EventHandler<Event> exitEvent = e -> {
+            if (timerRunning) {
+                timelineProgressBar.stop();
+                pi.setProgress(0);
+                timerRunning = false;
+            }
             Point pointerPosition = new Point();;
             if (e.getEventType() == GazeEvent.GAZE_EXITED) {
                 pointerPosition.setLocation(((GazeEvent)e).getX(), ((GazeEvent)e).getY());
@@ -113,11 +126,8 @@ public class Car extends Rectangle {
                 moveTo(way);
             }
             intersect = false;
-            // }
 
             if (!selected) {
-                timelineProgressBar.stop();
-                pi.setProgress(0);
                 pi.setOpacity(0);
             }
         };
