@@ -381,7 +381,22 @@ Play your own videos or these from YouTube.
 
 {% include figure image_path="/assets/images/games/gazeMedia.png" alt="Image of the game Media Player." %}
 
+## Train Switches
 
+Guide the trains to the station matching their color by activating the switches with your eyes. <br>
+Several variants are available to simplify the game:
+* Pause : The game pauses when a train arrives at a switch.
+* Train sent again : Trains are sent again later if they reach the wrong station.
+* One train at a time : There is only one train at a time.
+
+{% include figure image_path="/assets/images/games/trainSwitches.png" alt="Image du jeu Aiguillages." %}
+
+## Connect 4
+
+Align 4 tokens to win the game!<br>
+Place a token by looking at the top of the column.
+
+{% include figure image_path="/assets/images/games/connect4.png" alt="Image of the Connect 4 game." %}
 
 ## Survive Against Robots
 
