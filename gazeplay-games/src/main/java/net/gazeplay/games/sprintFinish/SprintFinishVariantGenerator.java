@@ -1,23 +1,23 @@
-package net.gazeplay.games.rushhour;
+package net.gazeplay.games.sprintFinish;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.IntGameVariant;
-import net.gazeplay.commons.gamevariants.IntStringGameVariant;
 import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class RushHourGameVariant implements IGameVariantGenerator {
+public class SprintFinishVariantGenerator implements IGameVariantGenerator {
 
     @Override
     public Set<IGameVariant> getVariants() {
 
         Set<IGameVariant> gameVariants = new HashSet<>();
 
-        for (int i = 1; i <= 33; i++) {
+        for (int i = 1; i <= 17; i++) {
             gameVariants.add(new IntGameVariant(i));
         }
 

@@ -21,10 +21,7 @@ import net.gazeplay.GameSpec;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gamevariants.DimensionDifficultyGameVariant;
-import net.gazeplay.commons.gamevariants.IGameVariant;
-import net.gazeplay.commons.gamevariants.IntGameVariant;
-import net.gazeplay.commons.gamevariants.IntStringGameVariant;
+import net.gazeplay.commons.gamevariants.*;
 import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.components.CssUtil;
@@ -65,6 +62,7 @@ public class GameVariantDialog extends Stage {
         choicePanelScroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
         final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: black;";
+
         I18NLabel chooseVariantPromptLabel = new I18NLabel(gazePlay.getTranslator(), chooseVariantPromptLabelTextKey);
         chooseVariantPromptLabel.setStyle(labelStyle);
 
@@ -86,6 +84,7 @@ public class GameVariantDialog extends Stage {
         bottom.setSpacing(50);
 
         for (IGameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
+
             Button button = new Button(variant.getLabel(translator));
             button.getStyleClass().add("gameChooserButton");
             button.getStyleClass().add("gameVariation");
@@ -103,6 +102,9 @@ public class GameVariantDialog extends Stage {
             button.setMaxHeight(primaryStage.getHeight() / 8);
 
             int indexOfTheVariant = 0;
+            if ((gameSpec.getGameSummary().getNameCode().equals("EggGame") || gameSpec.getGameSummary().getNameCode().equals("PersonalizeEggGame")) && variant instanceof IntStringGameVariant eggVariant){
+                button.setText(String.valueOf(eggVariant.getNumber()));
+            }
 
             if (gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
@@ -147,6 +149,28 @@ public class GameVariantDialog extends Stage {
                     case 6,7,8,9,10,11 -> 1;
                     default -> 0;
                 };
+            } else if(gameSpec.getGameSummary().getNameCode().equals("SprintFinish")){
+                button.setTextAlignment(TextAlignment.CENTER);
+                int variantString = ((IntGameVariant) variant).getNumber();
+                indexOfTheVariant = switch(variantString){
+                    case 30,31,32,33-> 5;
+                    case 24,25,26,27,28,29 -> 4;
+                    case 18,19,20,21,22,23 -> 3;
+                    case 12,13,14,15,16,17 -> 2;
+                    case 6,7,8,9,10,11 -> 1;
+                    default -> 0;
+                };
+            } else if(gameSpec.getGameSummary().getNameCode().equals("SprintFinishMouse")){
+                button.setTextAlignment(TextAlignment.CENTER);
+                int variantString = ((IntGameVariant) variant).getNumber();
+                indexOfTheVariant = switch(variantString){
+                    case 30,31,32,33-> 5;
+                    case 24,25,26,27,28,29 -> 4;
+                    case 18,19,20,21,22,23 -> 3;
+                    case 12,13,14,15,16,17 -> 2;
+                    case 6,7,8,9,10,11 -> 1;
+                    default -> 0;
+                };
             } else if (gameSpec.getGameSummary().getNameCode().equals("Bottle")) {
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = ((IntStringGameVariant) variant).getStringValue();
@@ -156,6 +180,28 @@ public class GameVariantDialog extends Stage {
                     case "HighBottles" -> 3;
                     case "NormalBottles" -> 2;
                     case "SmallBottles" -> 1;
+                    default -> 0;
+                };
+            } else if (gameSpec.getGameSummary().getNameCode().equals("EggGame") || gameSpec.getGameSummary().getNameCode().equals("PersonalizeEggGame")) {
+                button.setTextAlignment(TextAlignment.CENTER);
+                String variantString = ((IntStringGameVariant) variant).getStringValue();
+                indexOfTheVariant = switch (variantString) {
+                    case "ImageShrink" -> 1;
+                    default -> 0;
+                };
+            } else if (gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobots")){
+                button.setTextAlignment(TextAlignment.CENTER);
+                String variantString = String.valueOf(((EnumGameVariant<?>) variant).getEnumValue());
+                indexOfTheVariant = switch (variantString) {
+                    case "DIFFICULTY_EASY_AUTO_KEYBOARD", "DIFFICULTY_NORMAL_AUTO_KEYBOARD", "DIFFICULTY_HARD_AUTO_KEYBOARD" -> 1;
+                    default -> 0;
+                };
+            } else if (gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobotsMouse")){
+                button.setTextAlignment(TextAlignment.CENTER);
+                String variantString = String.valueOf(((EnumGameVariant<?>) variant).getEnumValue());
+                System.out.println("variant robots: " + variantString);
+                indexOfTheVariant = switch (variantString) {
+                    case "DIFFICULTY_EASY_AUTO_MOUSE", "DIFFICULTY_NORMAL_AUTO_MOUSE", "DIFFICULTY_HARD_AUTO_MOUSE" -> 1;
                     default -> 0;
                 };
             } else if (variant instanceof IntStringGameVariant) {
@@ -168,11 +214,19 @@ public class GameVariantDialog extends Stage {
             }
             choicePanes.get(indexOfTheVariant).getChildren().add(button);
 
+            System.out.println("nameGame : "+ gameSpec.getGameSummary().getNameCode());
+
             if ((gameSpec.getGameSummary().getNameCode().equals("Bottle") ||
+                gameSpec.getGameSummary().getNameCode().equals("EggGame") ||
+                gameSpec.getGameSummary().getNameCode().equals("PersonalizeEggGame") ||
                 gameSpec.getGameSummary().getNameCode().equals("RushHour") ||
+                gameSpec.getGameSummary().getNameCode().equals("SprintFinish") ||
+                gameSpec.getGameSummary().getNameCode().equals("SprintFinishMouse") ||
                 gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                 gameSpec.getGameSummary().getNameCode().equals("Labyrinth") ||
                 gameSpec.getGameSummary().getNameCode().contains("Memory") ||
+                gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobots") ||
+                gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobotsMouse") ||
                 gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
                 gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
@@ -194,7 +248,12 @@ public class GameVariantDialog extends Stage {
                     categories[3] = new RadioButton(translator.translate("HighSizeCategory"));
                     categories[4] = new RadioButton(translator.translate("BigSizeCategory"));
                     categories[5] = new RadioButton(translator.translate("InfinityCategory"));
-                }else if(gameSpec.getGameSummary().getNameCode().equals("RushHour")){
+                }else if (gameSpec.getGameSummary().getNameCode().equals("EggGame") || gameSpec.getGameSummary().getNameCode().equals("PersonalizeEggGame")) {
+                    categories = new RadioButton[2];
+                    categories[0] = new RadioButton(translator.translate("Classic"));
+                    categories[1] = new RadioButton(translator.translate("ImageShrink"));
+
+                } else if(gameSpec.getGameSummary().getNameCode().equals("RushHour")){
                     categories = new RadioButton[6];
 
                     categories[0] = new RadioButton(translator.translate("Niveau1-5"));
@@ -203,9 +262,25 @@ public class GameVariantDialog extends Stage {
                     categories[3] = new RadioButton(translator.translate("Niveau18-23"));
                     categories[4] = new RadioButton(translator.translate("Niveau24-29"));
                     categories[5] = new RadioButton(translator.translate("Niveau30-33"));
-                    System.out.println("categories length : "+categories.length);
-
-                }else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
+                }else if(gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobots")){
+                    categories = new RadioButton[2];
+                    categories[0] = new RadioButton("Normal");
+                    categories[1] = new RadioButton("Auto");
+                } else if(gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobotsMouse")){
+                    categories = new RadioButton[2];
+                    categories[0] = new RadioButton("Normal");
+                    categories[1] = new RadioButton("Auto");
+                }else if(gameSpec.getGameSummary().getNameCode().equals("SprintFinish")){
+                    categories = new RadioButton[3];
+                    categories[0] = new RadioButton(translator.translate("Niveau1-5"));
+                    categories[1] = new RadioButton(translator.translate("Niveau6-11"));
+                    categories[2] = new RadioButton(translator.translate("Niveau12-17"));
+                }else if(gameSpec.getGameSummary().getNameCode().equals("SprintFinishMouse")){
+                    categories = new RadioButton[3];
+                    categories[0] = new RadioButton(translator.translate("Niveau1-5"));
+                    categories[1] = new RadioButton(translator.translate("Niveau6-11"));
+                    categories[2] = new RadioButton(translator.translate("Niveau12-17"));
+                } else if (gameSpec.getGameSummary().getNameCode().equals("DotToDot") ||
                     gameSpec.getGameSummary().getNameCode().contains("Memory") ||
                     gameSpec.getGameSummary().getNameCode().equals("Ninja")
                 ) {
