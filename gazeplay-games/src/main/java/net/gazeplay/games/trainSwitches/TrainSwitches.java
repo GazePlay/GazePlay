@@ -74,7 +74,9 @@ public class TrainSwitches implements GameLifeCycle {
     private Pane mainPane;
     private I18NButton resumeButton;
     private Label trainCountLabel;
-    private final MediaPlayer player;
+    private final MediaPlayer trainSoundPlayer;
+    private int stopwatchSeconds;
+    private Timer stopwatchTimer;
 
     public TrainSwitches(final IGameContext gameContext, final Stats stats, int level, String variantType){
         this.gameContext = gameContext;
@@ -92,9 +94,9 @@ public class TrainSwitches implements GameLifeCycle {
         progressIndicator.setOpacity(0);
         progressIndicator.setMouseTransparent(true);
         gameContext.getConfiguration().setAnimationSpeedRatio(3);
-        player = new MediaPlayer(new Media(ClassLoader.getSystemResource("data/trainSwitches/sounds/train.mp3").toString()));
-        player.volumeProperty().bind(gameContext.getConfiguration().getEffectsVolumeProperty());
-        player.setCycleCount(MediaPlayer.INDEFINITE);
+        trainSoundPlayer = new MediaPlayer(new Media(ClassLoader.getSystemResource("data/trainSwitches/sounds/train.mp3").toString()));
+        trainSoundPlayer.volumeProperty().bind(gameContext.getConfiguration().getEffectsVolumeProperty());
+        trainSoundPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         gameContext.getGazeDeviceManager().addStats(stats);
     }
 
@@ -137,7 +139,6 @@ public class TrainSwitches implements GameLifeCycle {
         borderPane.setBottom(botBox);
 
         trainCountLabel = new Label();
-        trainCountLabel.setTextFill(Color.WHITE);
         trainCountLabel.setFont(new Font(60));
         trainCountLabel.setPadding(new Insets(0,50,0,0));
         botBox.getChildren().add(trainCountLabel);
@@ -156,6 +157,27 @@ public class TrainSwitches implements GameLifeCycle {
         if(variantType.equals("PauseTrain")){
             botBox.getChildren().add(resumeButton);
         }
+
+        Label stopwatchLabel = new Label();
+        stopwatchLabel.setPadding(new Insets(0,0,0,50));
+        stopwatchLabel.setFont(new Font(60));
+        botBox.getChildren().add(stopwatchLabel);
+
+        stopwatchSeconds = 0;
+        stopwatchTimer = new Timer();
+        stopwatchTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(new TimerTask() {
+                    @Override
+                    public void run() {
+                        stopwatchSeconds++;
+                        stopwatchLabel.setText(stopwatchSeconds/60+":"+((stopwatchSeconds%60)<10 ? "0":"")+stopwatchSeconds%60);
+                    }
+                });
+
+            }
+        }, INITIAL_DELAY, 1000);
 
         // Cave image
         ImageView caveImg = new ImageView(new Image("data/trainSwitches/images/cave.png"));
@@ -234,7 +256,7 @@ public class TrainSwitches implements GameLifeCycle {
 
         // Launch the train that triggerred the pause
         launchTrainOnSection(switchWaiting.getOutput(), trainWaiting);
-        player.play();
+        trainSoundPlayer.play();
         resumeButton.setVisible(false);
 
         // Restart a timer to send train with the right delay
@@ -289,16 +311,12 @@ public class TrainSwitches implements GameLifeCycle {
                     resumeButton.setVisible(true);
                     sendTrainTimer.cancel();
                     lastTimerStoppedInstant = Instant.now();
-                    player.pause();
+                    trainSoundPlayer.pause();
                 }else{
                     // Launch train on new section
                     launchTrainOnSection(aSwitch.getOutput(), train);
                 }
             }else if(station!=null){ // Train is at a station
-                // Stop the train sound if the train is the last on the scene
-                if(transitions.isEmpty()){
-                    player.stop();
-                }
                 stats.incrementNumberOfGoalsToReach();
                 mainPane.getChildren().remove(train.getShape());
                 ImageView img;
@@ -318,19 +336,26 @@ public class TrainSwitches implements GameLifeCycle {
                             if(startDelay>= DELAY_BETWEEN_TRAINS){
                                 startDelay = 0;
                             }else{
-                                startDelay = DELAY_BETWEEN_TRAINS -startDelay;
+                                startDelay = DELAY_BETWEEN_TRAINS - startDelay;
                             }
                             sendTrainTimer = new Timer();
                             sendTrainTimer.schedule(getSendTrainTask(), startDelay, DELAY_BETWEEN_TRAINS);
                         }
                     }
                 }
-                if(variantType.equals("UniqueTrain")){
+                if(variantType.equals("UniqueTrain") && trainSent < trainToSend){
                     sendTrainTimer = new Timer();
                     sendTrainTimer.schedule(getSendTrainTask(), 0);
                 }
                 trainReachedStation++;
                 trainCountLabel.setText("Score: "+trainCorrect+"/"+trainReachedStation);
+
+                // Game is finished
+                if(trainReachedStation >= trainToSend){
+                    trainSoundPlayer.stop();
+                    stopwatchTimer.cancel();
+                    gameContext.playWinTransition(50, actionEvent1 -> gameContext.endWinTransition());
+                }
 
                 // Draw checkmark or cross to show if train reached correct station
                 gameContext.getChildren().add(img);
@@ -349,8 +374,8 @@ public class TrainSwitches implements GameLifeCycle {
         if(!isPaused.get()){
             pathTransition.play();
             // Start train sound if not already playing
-            if(player.getStatus()!= MediaPlayer.Status.PLAYING){
-                player.play();
+            if(trainSoundPlayer.getStatus()!= MediaPlayer.Status.PLAYING){
+                trainSoundPlayer.play();
             }
         }
     }
@@ -360,18 +385,20 @@ public class TrainSwitches implements GameLifeCycle {
         return new TimerTask() {
             @Override
             public void run() {
-            Platform.runLater(() -> {
-                lastTrainSentInstant = Instant.now();
-                Train train = createTrain(colors.get(random.nextInt(colors.size())));
-                gameContext.getSoundManager().add("data/trainSwitches/sounds/whistle.mp3");
-                launchTrainOnSection(sections.get(0), train);
-                mainPane.getChildren().add(train.getShape());
-                trainSent++;
-                if(trainSent >= trainToSend){
-                    sendTrainTimer.cancel();
-                    lastTimerStoppedInstant = Instant.now();
+                if(trainSent < trainToSend) {
+                    Platform.runLater(() -> {
+                        lastTrainSentInstant = Instant.now();
+                        Train train = createTrain(colors.get(random.nextInt(colors.size())));
+                        gameContext.getSoundManager().add("data/trainSwitches/sounds/whistle.mp3");
+                        launchTrainOnSection(sections.get(0), train);
+                        mainPane.getChildren().add(train.getShape());
+                        trainSent++;
+                        if (trainSent >= trainToSend) {
+                            sendTrainTimer.cancel();
+                            lastTimerStoppedInstant = Instant.now();
+                        }
+                    });
                 }
-            });
             }
         };
     }
