@@ -11,9 +11,7 @@ public enum SimonGameVariant {
     NORMAL_CLASSIC("Normal"),
     HARD_CLASSIC("Hard"),
     MODE2("Simon copy you"),
-    EASY_MULTIPLAYER("Easy multiplayer"),
-    NORMAL_MULTIPLAYER("Normal multiplayer"),
-    HARD_MULTIPLAYER("Hard multiplayer");
+    MODE3("Multiplayer");
 
     @Getter
     private final String label;

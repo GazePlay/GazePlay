@@ -32,15 +32,15 @@ public class Simon  extends Parent implements GameLifeCycle {
         this.playerSequence = new ArrayList<>();
         this.couleurs = new ArrayList<>();
         this.musicNotes = new ArrayList<>();
-        couleurs.add("vert");
-        couleurs.add("rouge");
-        couleurs.add("jaune");
-        couleurs.add("bleu");
     }
 
     @Override
     public void launch() {
         this.stats.reset();
+        this.computerSequence.clear();
+        this.playerSequence.clear();
+        this.couleurs.clear();
+        this.musicNotes.clear();
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         gameContext.setLimiterAvailable();
         Rectangle background = new Rectangle(0,0,dimension2D.getWidth(),dimension2D.getHeight());
@@ -85,17 +85,20 @@ public class Simon  extends Parent implements GameLifeCycle {
     }
     public void startGame(){
 
+        couleurs.add("vert");
+        couleurs.add("rouge");
+        couleurs.add("jaune");
+        couleurs.add("bleu");
         Borne borne = new Borne(gameContext,this);
         borne.nbNoteMax = 33;
-        if (gameVariant.equals(SimonGameVariant.EASY_CLASSIC)  || gameVariant.equals(SimonGameVariant.EASY_MULTIPLAYER)){
+        if (gameVariant.equals(SimonGameVariant.EASY_CLASSIC)){
             borne.secondsReset = 11;
             borne.nbNoteMax = 10;
-        }else if (gameVariant.equals(SimonGameVariant.NORMAL_CLASSIC) || gameVariant.equals(SimonGameVariant.NORMAL_MULTIPLAYER)){
+        }else if (gameVariant.equals(SimonGameVariant.NORMAL_CLASSIC)){
             borne.secondsReset = 8;
             borne.nbNoteMax = 22;
-        }else if (gameVariant.equals(SimonGameVariant.HARD_CLASSIC)  || gameVariant.equals(SimonGameVariant.HARD_MULTIPLAYER)){
+        }else if (gameVariant.equals(SimonGameVariant.HARD_CLASSIC)){
             borne.secondsReset = 6;
-            borne.nbNoteMax = 33;
         }
         if (!gameVariant.equals(SimonGameVariant.MODE2)){
             addNoteToComputerSequence();
@@ -103,7 +106,7 @@ public class Simon  extends Parent implements GameLifeCycle {
             borne.simonCopy = true;
         }
 
-        if (gameVariant.equals(SimonGameVariant.EASY_MULTIPLAYER) || gameVariant.equals(SimonGameVariant.NORMAL_MULTIPLAYER) || gameVariant.equals(SimonGameVariant.HARD_MULTIPLAYER)){
+        if (gameVariant.equals(SimonGameVariant.MODE3)){
             borne.multiplayer = true;
         }
         borne.generateBorne();

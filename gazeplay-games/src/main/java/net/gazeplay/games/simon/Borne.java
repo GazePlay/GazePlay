@@ -6,12 +6,14 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import net.gazeplay.IGameContext;
 
@@ -36,6 +38,9 @@ public class Borne extends Parent {
     private final ImageView right, wrong;
     private int i = 0;
     private boolean lastNotePlayer;
+    private Label labelPlayers;
+    private boolean player1,player2,turn;
+
     public Borne(IGameContext gameContext, Simon gameInstance){
         this.gameContext = gameContext;
         this.gameInstance = gameInstance;
@@ -53,9 +58,6 @@ public class Borne extends Parent {
 
     }
 
-
-
-
     protected void generateBorne(){
 
 
@@ -65,6 +67,22 @@ public class Borne extends Parent {
         }else{
             this.computerPlay = true;
         }
+
+        if (multiplayer){
+            labelPlayers = new Label();
+            labelPlayers.setFont(new Font("Arial",50));
+            labelPlayers.toFront();
+            labelPlayers.setText("Player 1 turn");
+            labelPlayers.setStyle("-fx-text-fill: gray ;");
+            gameContext.getChildren().add(labelPlayers);
+            this.player1 = true;
+            this.player2 = true;
+            this.turn = true;
+        }
+
+
+
+
         /*
         if (!simonCopy){
             timeBeforeResetComputerAnimation = new AnimationTimer() {
@@ -91,6 +109,14 @@ public class Borne extends Parent {
 
             if (computerPlay){ //Le robot joue
                 disableAllBoutons();
+                if(multiplayer){
+
+                    if (turn && player1){ //player 1 turn
+                        labelPlayers.setText(gameContext.getTranslator().translate("Player 1 turn"));
+                    }else if(!turn && player2){ //player 2 turn
+                        labelPlayers.setText(gameContext.getTranslator().translate("Player 2 turn"));
+                    }
+                }
                 Timeline waitForLastNote = new Timeline(new KeyFrame(new Duration(3000)));
                 waitForLastNote.setOnFinished(actionEvent -> {
                     lastNotePlayer = true;
@@ -98,9 +124,9 @@ public class Borne extends Parent {
                 });
                 waitForLastNote.play();
                 if (lastNotePlayer){
-                    while(i < gameInstance.computerSequence.size() && nextNote){ //Parcours des notes du robots
+                    while(i < gameInstance.computerSequence.size() && nextNote){
                         String note = gameInstance.computerSequence.get(i);
-                        for (Bouton bouton : boutons){                          //Parcours des boutons à appuyer
+                        for (Bouton bouton : boutons){
                             if (note.compareToIgnoreCase(bouton.couleur) == 0){
                                 playSongAnimation(bouton);
                                 i++;
@@ -127,7 +153,11 @@ public class Borne extends Parent {
 
                 resetComputerAnimationCopy();
             }
-            if (gameInstance.computerSequence.size() == nbNoteMax){
+
+            if (multiplayer && !player1 && !player2){
+                computerPlayAnimation.stop();
+                gameInstance.endGame();
+            }else if (!multiplayer && gameInstance.computerSequence.size() == nbNoteMax){
                 computerPlayAnimation.stop();
                 gameInstance.endGame();
             }
@@ -174,6 +204,25 @@ public class Borne extends Parent {
             gameInstance.addNoteToComputerSequence();
             System.out.println(gameInstance.computerSequence.size());
         }
+
+        System.out.println("player 1 : " + player1);
+        System.out.println("player 2 : " + player2);
+
+        System.out.println("turn : " + turn);
+
+        if (!increment){
+            if (turn){
+                player1 = false;
+            }else{
+                player2 = false;
+            }
+        }
+        if (turn && player2){
+            turn = false;
+        }else if (!turn && player1){
+            turn = true;
+        }
+
         playSuccessAnimation(increment);
         i = 0;
         computerPlay = true;

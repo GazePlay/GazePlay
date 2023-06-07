@@ -142,7 +142,7 @@ public class GameVariantDialog extends Stage {
                 String variantString = String.valueOf(((EnumGameVariant<?>) variant).getEnumValue());
                 indexOfTheVariant = switch(variantString){
                     case "MODE2" -> 1;
-                    case "EASY_MULTIPLAYER", "NORMAL_MULTIPLAYER", "HARD_MULTIPLAYER" -> 2;
+                    case "MODE3" -> 2;
                     default -> 0;
                 };
 
