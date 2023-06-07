@@ -86,6 +86,7 @@ public class Simon  extends Parent implements GameLifeCycle {
     public void startGame(){
 
         Borne borne = new Borne(gameContext,this);
+        borne.nbNoteMax = 33;
         if (gameVariant.equals(SimonGameVariant.EASY_CLASSIC)  || gameVariant.equals(SimonGameVariant.EASY_MULTIPLAYER)){
             borne.secondsReset = 11;
             borne.nbNoteMax = 10;
