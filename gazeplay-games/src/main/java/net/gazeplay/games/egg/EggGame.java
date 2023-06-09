@@ -17,22 +17,25 @@ public class EggGame implements GameLifeCycle {
     private final int numberOfTurns;
 
     private final String type;
+    private final String modeImage;
 
-    public EggGame(final IGameContext gameContext, final Stats stats, final int numOfTurns, final String type) {
+    public EggGame(final IGameContext gameContext, final Stats stats, final int numOfTurns, final String type, final String modeImage) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
         this.numberOfTurns = numOfTurns;
         this.type = type;
+        this.modeImage = modeImage;
         gameContext.startTimeLimiter();
     }
 
-    public EggGame(final IGameContext gameContext, final Stats stats, final int numOfTurns, final String type, double gameSeed) {
+    public EggGame(final IGameContext gameContext, final Stats stats, final int numOfTurns, final String type, double gameSeed, final String modeImage) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
         this.numberOfTurns = numOfTurns;
         this.type = type;
+        this.modeImage = modeImage;
     }
 
     @Override
@@ -56,7 +59,7 @@ public class EggGame implements GameLifeCycle {
     }
 
     private Egg createEgg(final Configuration config) {
-        return new Egg(gameContext, stats, this, gameContext.getConfiguration().getFixationLength(), numberOfTurns, type);
+        return new Egg(gameContext, stats, this, gameContext.getConfiguration().getFixationLength(), numberOfTurns, type, modeImage);
     }
 
 }

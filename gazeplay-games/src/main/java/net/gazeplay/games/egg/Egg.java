@@ -51,10 +51,11 @@ public class Egg extends Parent {
     private ImageLibrary imageLibrary;
 
     private final ReplayablePseudoRandom random;
+    private final String modeImage;
 
     public Egg(final IGameContext gameContext, final Stats stats,
-               final EggGame gameInstance, final int fixationlength, final int numberOfTurn, final String type) {
-
+               final EggGame gameInstance, final int fixationlength, final int numberOfTurn, final String type, final String modeImage) {
+        this.modeImage = modeImage;
         this.totalNumberOfTurns = numberOfTurn;
         this.gameType = type;
 
@@ -108,7 +109,7 @@ public class Egg extends Parent {
         image3.widthProperty().bind(image3.heightProperty().multiply(3d).divide(4d));
         image3.xProperty().bind(scene.widthProperty().divide(2d).subtract(image3.widthProperty().divide(2d)));
         image3.yProperty().bind(scene.heightProperty().divide(2d).subtract(image3.heightProperty().divide(2d)));
-
+        image3.setOpacity(0);
 
         this.cards.getChildren().addAll(image3, image2, image1);
 
@@ -172,6 +173,12 @@ public class Egg extends Parent {
                             stats.incrementNumberOfGoalsReached();
                             turnNumber++;
                             cards.getChildren().get(2).setOpacity(1 - turnNumber / (float) (totalNumberOfTurns - 1));
+                            if (modeImage.compareToIgnoreCase("ImageShrink") == 0){
+                                cards.getChildren().get(2).setScaleX(cards.getChildren().get(2).getScaleX() * 0.9);
+                                cards.getChildren().get(2).setScaleY(cards.getChildren().get(2).getScaleY() * 0.9);
+                                cards.getChildren().get(1).setScaleX(cards.getChildren().get(1).getScaleX() * 0.9);
+                                cards.getChildren().get(1).setScaleY(cards.getChildren().get(1).getScaleY() * 0.9);
+                            }
                             stats.incrementNumberOfGoalsToReach();
                             playSound(1);
 
@@ -183,6 +190,7 @@ public class Egg extends Parent {
                             that.removeEventFilter(GazeEvent.ANY, enterEvent);
 
                             cards.getChildren().get(1).setOpacity(0);
+                            cards.getChildren().get(0).setOpacity(1);
 
                             progressIndicator.setOpacity(0);
                             stats.incrementNumberOfGoalsReached();
