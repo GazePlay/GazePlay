@@ -308,6 +308,8 @@ BackgroundStyle,,,Стыль фону,,,,Background style,,Style de fond,,,,,,,,
 MenuOrientation,Orientimi i menusë (nevojitet rinisja e lojës),إتجاه القائمة,Становішча меню (перазапусціце гульню для актывацыі),菜单方向,Menüorientierung (erfordert Neustart des Spiels),Μενού προσανατολισμού (επανεκκίνηση του παιχνιδιού για να τεθεί σε ισχύ),Menu Orientation (restart game to take effect),valikon suunta,Orientation du menu (nécessite de relancer le jeu),,Orjentacijski meni (restartiraj igru za aktivaciju),Orientasi Menu (memulakan semula permainan untuk berkuatkuasa),Orientazione del menù (è richiesto il riavvio del gioco),,Richting menu (herstart nodig voor activering),Orientacja menu (uruchom ponownie grę),orientacaõ domens,Положение меню (перезапустите игру для активации),Orientación del menú (requiere reiniciar el juego),Phương ngang/dọc của menu (Khởi động lại để có hiệu lực),Orientasi Menu (memulakan semula permainan untuk berkuatkuasa)
 BackgroundEnabled,,,Актываваць карцінкі на фоне,,,,Background images enabled,,Fonds d'écran activés,,,,,,,,,Активировать картинки на фоне,,,
 DarkTh,,,,,,,Dark Theme,,Thème sombre,,,,,,,,,,,,
+BackgroundColor,,,,,,,Background Color,,Couleur de fond,,,,,,,,,,,,
+Color,,,,,,,Color,,Couleur,,,,,,,,,,,,
 Dark,,,Цёмны,,,,Dark,,Sombre,,,,,,,,,Тёмный,Oscuro,,
 Light,,,Светлы,,,,Light,,Clair,,,,,,,,,Светлый,Claro,,
 

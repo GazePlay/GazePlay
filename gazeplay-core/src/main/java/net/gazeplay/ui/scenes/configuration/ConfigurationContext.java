@@ -2,6 +2,7 @@ package net.gazeplay.ui.scenes.configuration;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -527,7 +528,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "PianoTileColors", COLON);
 
-            HBox input = buildTileColorHBox(config);
+            HBox input = chooseColorHBox(config.getTileColorsProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -581,6 +582,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             I18NText label = new I18NText(translator, "DarkTh", COLON);
             HBox darkTheme = buildDarktheme(config, configurationContext);
             addToGrid(grid, currentFormRow, label, darkTheme);
+        }
+        {
+            I18NText label = new I18NText(translator, "BackgroundColor", COLON);
+
+            HBox input = chooseColorHBox(config.getBackgroundColorProperty());
+
+            addToGrid(grid, currentFormRow, label, input);
         }
 
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "FoldersSettings", COLON));
@@ -1484,11 +1492,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
-    private void chooseColorPianoTile(HBox hbox, Configuration config) {
-        ColorPicker colorPicker = new ColorPicker(config.getTileColors());
-        colorPicker.valueProperty()
-            .addListener((observableValue, color1, t1) -> updateTileColorProperty(hbox, config));
-        hbox.getChildren().add(colorPicker);
+    private HBox chooseColorHBox(StringProperty property){
+        HBox hBox = new HBox();
+        hBox.setSpacing(5);
+        ColorPicker colorPicker = new ColorPicker(Color.web(property.getValue()));
+        colorPicker.valueProperty().addListener((observableValue, color, t1) -> property.setValue(colorPicker.getValue().toString()));
+        hBox.getChildren().add(colorPicker);
+        return hBox;
     }
 
     HBox buildHeatMapColorHBox(Configuration config, Translator translator) {
@@ -1545,15 +1555,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         } else if (hbox.getChildren().size() <= 5) {
             minusButton.setDisable(true);
         }
-
-        return hbox;
-    }
-
-    HBox buildTileColorHBox(Configuration config) {
-        HBox hbox = new HBox();
-        hbox.setSpacing(5);
-
-        chooseColorPianoTile(hbox, config);
 
         return hbox;
     }
