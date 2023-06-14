@@ -111,7 +111,22 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
         gamingRoot.minHeightProperty().bind(primaryStage.heightProperty());
 
         Configuration config = ActiveConfigurationContext.getInstance();
+        //TO BE USED WITH DARK/LIGHT BACKGROUND SETTINGS
+        /*Color color = config.getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+            @Override
+            public Color visitLight() {
+                return Color.LIGHTGREY;
+            }
+
+            @Override
+            public Color visitDark() {
+                return Color.BLACK;
+            }
+        });*/
+
+        // TO BE USED WITH COLORED BACKGROUND SETTINGS
         Color color = Color.web(config.getBackgroundColorProperty().getValue());
+
         gamingRoot.setBackground(new Background(new BackgroundFill(color, null, null)));
 
         HBox controlPanel = createControlPanel();

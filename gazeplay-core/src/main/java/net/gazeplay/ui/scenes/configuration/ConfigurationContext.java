@@ -562,8 +562,16 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            I18NText label = new I18NText(translator, "BackgroundStyle", COLON);
-            HBox input = buildBackgroundStyleToggleGroup(config, translator);
+            // TO BE USED WITH DARK/LIGHT BACKGROUND SETTINGS
+//            I18NText label = new I18NText(translator, "BackgroundStyle", COLON);
+//            HBox input = buildBackgroundStyleToggleGroup(config, translator);
+//
+//            addToGrid(grid, currentFormRow, label, input);
+
+            // TO BE USED WITH COLORED BACKGROUND SETTINGS
+            I18NText label = new I18NText(translator, "BackgroundColor", COLON);
+
+            HBox input = chooseColorHBox(config.getBackgroundColorProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -582,13 +590,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             I18NText label = new I18NText(translator, "DarkTh", COLON);
             HBox darkTheme = buildDarktheme(config, configurationContext);
             addToGrid(grid, currentFormRow, label, darkTheme);
-        }
-        {
-            I18NText label = new I18NText(translator, "BackgroundColor", COLON);
-
-            HBox input = chooseColorHBox(config.getBackgroundColorProperty());
-
-            addToGrid(grid, currentFormRow, label, input);
         }
 
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "FoldersSettings", COLON));
