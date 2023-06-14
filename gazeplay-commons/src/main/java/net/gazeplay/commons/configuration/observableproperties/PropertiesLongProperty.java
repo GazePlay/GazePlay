@@ -45,6 +45,7 @@ public abstract class PropertiesLongProperty extends LongPropertyBase {
         log.info("Set property {} to {}", propertyName, value);
         setProperty(propertyName, Long.toString(value));
         propertyChangeListener.propertyChange(new PropertyChangeEvent(this, propertyName, null, value));
+        fireValueChangedEvent();
     }
 
 }
