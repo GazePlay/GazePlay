@@ -22,7 +22,7 @@ public class TrainSwitchesGameLauncher implements IGameLauncher<Stats, IntString
 
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, IntStringGameVariant gameVariant, Stats stats) {
-        return new TrainSwitches(gameContext, stats, gameVariant.getNumber(), gameVariant.getStringValue());
+        return new TrainSwitches(gameContext, stats, gameVariant.getNumber(), gameVariant.getStringValue(), gameVariant.getNumber2());
     }
 
     @Override
@@ -32,6 +32,6 @@ public class TrainSwitchesGameLauncher implements IGameLauncher<Stats, IntString
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, IntStringGameVariant gameVariant, Stats stats, double gameSeed) {
-        return new TrainSwitches(gameContext, stats, gameVariant.getNumber(), gameVariant.getStringValue());
+        return new TrainSwitches(gameContext, stats, gameVariant.getNumber(), gameVariant.getStringValue(), gameVariant.getNumber2());
     }
 }

@@ -33,6 +33,7 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 @Slf4j
 public class GameVariantDialog extends Stage {
     private int easyMode = 0;
+    private TextField numberField;
 
     ToggleGroup group = new ToggleGroup();
 
@@ -55,11 +56,28 @@ public class GameVariantDialog extends Stage {
         HashMap<Integer, FlowPane> choicePanes = new HashMap<>();
         choicePanes.put(0, createFlowPane());
 
+        VBox centerPane = new VBox();
+        centerPane.setAlignment(Pos.CENTER);
         ScrollPane choicePanelScroller = new ScrollPane();
         choicePanelScroller.setContent(choicePanes.get(0));
         choicePanelScroller.setFitToWidth(true);
         choicePanelScroller.setFitToHeight(true);
         choicePanelScroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        centerPane.getChildren().add(choicePanelScroller);
+
+        if(gameSpec.getGameSummary().getNameCode().equals("TrainSwitches")){
+            HBox numberBox = new HBox();
+            numberBox.setSpacing(20);
+            numberBox.setAlignment(Pos.CENTER);
+            centerPane.getChildren().add(numberBox);
+
+            I18NLabel numberLabel = new I18NLabel(gazePlay.getTranslator(), "NumberOfTrains");
+            numberBox.getChildren().add(numberLabel);
+
+            numberField = new TextField();
+            numberField.setText("10");
+            numberBox.getChildren().add(numberField);
+        }
 
         final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: black;";
 
@@ -72,7 +90,7 @@ public class GameVariantDialog extends Stage {
 
         BorderPane sceneContentPane = new BorderPane();
         sceneContentPane.setTop(topPane);
-        sceneContentPane.setCenter(choicePanelScroller);
+        sceneContentPane.setCenter(centerPane);
 
         final Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -371,6 +389,13 @@ public class GameVariantDialog extends Stage {
                     root.setDisable(false);
                     if (config.getWhereIsItDir().equals("") && gameSpec.getGameSummary().getNameCode().equals("WhereIsIt")) {
                         whereIsItErrorHandling(gazePlay, gameMenuController, gameSpec, root, variant);
+                    } else if (gameSpec.getGameSummary().getNameCode().equals("TrainSwitches")) {
+                        IntStringGameVariant v = (IntStringGameVariant) variant;
+                        int numberOfTrains = 10;
+                        numberOfTrains = Integer.parseInt(numberField.getText());
+                        System.out.println("Nombred de trains"+numberOfTrains);
+                        v.setNumber2(numberOfTrains);
+                        gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, v);
                     } else {
                         gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, variant);
                     }

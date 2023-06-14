@@ -77,12 +77,13 @@ public class TrainSwitches implements GameLifeCycle {
     private int stopwatchSeconds;
     private Timer stopwatchTimer;
 
-    public TrainSwitches(final IGameContext gameContext, final Stats stats, int level, String variantType){
+    public TrainSwitches(final IGameContext gameContext, final Stats stats, int level, String variantType, int numberOfTrains){
         this.gameContext = gameContext;
         this.level = level;
         System.out.println("level " + level);
         this.variantType = variantType;
         this.stats = stats;
+        trainToSend = numberOfTrains;
         random = new Random();
         sections = new ArrayList<>();
         switches = new ArrayList<>();
@@ -594,7 +595,6 @@ public class TrainSwitches implements GameLifeCycle {
         levelWidth = 5;
         levelHeight = 3;
         // Number of trains to send
-        trainToSend = 10;
         // Direction of the train when it's coming out of the cave
         initialTrainDirection = "right";
         // Position of the cave
@@ -647,7 +647,6 @@ public class TrainSwitches implements GameLifeCycle {
 
         levelWidth = 7;
         levelHeight = 5;
-        trainToSend = 10;
         initialTrainDirection = "left";
         caveX = 6;
         caveY = 4;
@@ -751,7 +750,6 @@ public class TrainSwitches implements GameLifeCycle {
 
         levelWidth = 7;
         levelHeight = 5;
-        trainToSend = 10;
         initialTrainDirection = "right";
         caveX = 0;
         caveY = 2;
