@@ -38,10 +38,9 @@ public class TrainSwitches implements GameLifeCycle {
     private final Stats stats;
 
     // Game
-    private final static int DELAY_BETWEEN_TRAINS = 5000;
+    private static int DELAY_BETWEEN_TRAINS = 3000;
     private final static int INITIAL_DELAY = 5000;
-    private final static int PAUSE_DELAY = 200;
-    private final static int MAXSPEED = 2;
+    private final static int PAUSE_DELAY = 3000;
     private final ArrayList<Section> sections;
     private final ArrayList<Switch> switches;
     private final ArrayList<TrainColors> colors;
@@ -93,7 +92,7 @@ public class TrainSwitches implements GameLifeCycle {
         progressIndicator = new ProgressIndicator(0);
         progressIndicator.setOpacity(0);
         progressIndicator.setMouseTransparent(true);
-        gameContext.getConfiguration().setAnimationSpeedRatio(3);
+        gameContext.getConfiguration().setAnimationSpeedRatio(0.75);
         trainSoundPlayer = new MediaPlayer(new Media(ClassLoader.getSystemResource("data/trainSwitches/sounds/train.mp3").toString()));
         trainSoundPlayer.volumeProperty().bind(gameContext.getConfiguration().getEffectsVolumeProperty());
         trainSoundPlayer.setCycleCount(MediaPlayer.INDEFINITE);
@@ -111,6 +110,7 @@ public class TrainSwitches implements GameLifeCycle {
         trainReachedStation = 0;
         isPaused = new AtomicBoolean();
         lastResumeInstant = Instant.now();
+        lastTrainSentInstant = Instant.now();
         gameContext.getRoot().setBackground(new Background(new BackgroundImage(new Image("data/trainSwitches/images/background.png"),null,null,null,null)));
 
         BorderPane borderPane = new BorderPane();
@@ -221,6 +221,23 @@ public class TrainSwitches implements GameLifeCycle {
         t2.setDelay(Duration.seconds(2));
         t2.play();
 
+        // Change train speed
+        gameContext.getConfiguration().getAnimationSpeedRatioProperty().addListener((observableValue, oldValue, newValue) -> {
+            for (PathTransition transition : transitions) {
+                transition.setRate(newValue.doubleValue());
+            }
+
+            DELAY_BETWEEN_TRAINS = (int) (3000 / newValue.doubleValue());
+
+            if(!isPaused.get()){
+                sendTrainTimer.cancel();
+                sendTrainTimer = new Timer();
+                long initialDelay = DELAY_BETWEEN_TRAINS - java.time.Duration.between(lastTrainSentInstant, Instant.now()).toMillis();
+                if (initialDelay<0) initialDelay=0;
+                sendTrainTimer.schedule(getSendTrainTask(), initialDelay, DELAY_BETWEEN_TRAINS);
+            }
+        });
+
         // Timer to send train
         sendTrainTimer = new Timer();
         if(variantType.equals("UniqueTrain")){
@@ -235,6 +252,7 @@ public class TrainSwitches implements GameLifeCycle {
     @Override
     public void dispose() {
         sendTrainTimer.cancel();
+        stopwatchTimer.cancel();
         gameContext.clear();
         sections.clear();
         switches.clear();
@@ -291,7 +309,8 @@ public class TrainSwitches implements GameLifeCycle {
     // Launch a train on a section
     private void launchTrainOnSection(Section section, Train train){
         PathTransition pathTransition = new PathTransition();
-        pathTransition.setDuration(Duration.seconds(section.getSize()/(gameContext.getConfiguration().getAnimationSpeedRatio()/(10.0/MAXSPEED))));
+        pathTransition.setDuration(Duration.seconds(section.getSize()));
+        pathTransition.setRate(gameContext.getConfiguration().getAnimationSpeedRatio());
         pathTransition.setNode(train.getShape());
         pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
         pathTransition.setPath(section.getPath());
@@ -386,8 +405,8 @@ public class TrainSwitches implements GameLifeCycle {
             @Override
             public void run() {
                 if(trainSent < trainToSend) {
+                    lastTrainSentInstant = Instant.now();
                     Platform.runLater(() -> {
-                        lastTrainSentInstant = Instant.now();
                         Train train = createTrain(colors.get(random.nextInt(colors.size())));
                         gameContext.getSoundManager().add("data/trainSwitches/sounds/whistle.mp3");
                         launchTrainOnSection(sections.get(0), train);
