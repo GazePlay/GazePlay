@@ -167,6 +167,14 @@ public class GameVariantDialog extends Stage {
                     case 6,7,8,9,10,11 -> 1;
                     default -> 0;
                 };
+            } else if (gameSpec.getGameSummary().getNameCode().equals("Simon")){
+                button.setTextAlignment(TextAlignment.CENTER);
+                String variantString = String.valueOf(((EnumGameVariant<?>) variant).getEnumValue());
+                indexOfTheVariant = switch(variantString){
+                    case "MODE2" -> 1;
+                    case "MODE3" -> 2;
+                    default -> 0;
+                };
             } else if(gameSpec.getGameSummary().getNameCode().equals("SprintFinish")){
                 button.setTextAlignment(TextAlignment.CENTER);
                 int variantString = ((IntGameVariant) variant).getNumber();
@@ -246,6 +254,7 @@ public class GameVariantDialog extends Stage {
                 gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobots") ||
                 gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobotsMouse") ||
                 gameSpec.getGameSummary().getNameCode().equals("Ninja") ||
+                gameSpec.getGameSummary().getNameCode().equals("Simon") ||
                 gameSpec.getGameSummary().getNameCode().equals("RockPaperScissors") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheAnimal") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheColor") ||
@@ -280,6 +289,14 @@ public class GameVariantDialog extends Stage {
                     categories[3] = new RadioButton(translator.translate("Niveau18-23"));
                     categories[4] = new RadioButton(translator.translate("Niveau24-29"));
                     categories[5] = new RadioButton(translator.translate("Niveau30-33"));
+
+                    System.out.println("categories length : "+categories.length);
+
+                }else if (gameSpec.getGameSummary().getNameCode().equals("Simon")){
+                    categories = new RadioButton[3];
+                    categories[0] = new RadioButton("Classic");
+                    categories[1] = new RadioButton("Simon Copy");
+                    categories[2] = new RadioButton("Multiplayer");
                 }else if(gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobots")){
                     categories = new RadioButton[2];
                     categories[0] = new RadioButton("Normal");

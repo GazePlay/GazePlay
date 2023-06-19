@@ -492,6 +492,13 @@ Niveau18-23,,,,,,, Level 18-23 ,, Niveau 18-23 ,,,,,,,,,,,,
 Niveau24-29,,,,,,, Level 24-29 ,, Niveau 24-29 ,,,,,,,,,,,,
 Niveau30-33,,,,,,, Level 30-33 ,, Niveau 30-33 ,,,,,,,,,,,,
 
+# Simon Game
+Simon,,,,,,, Simon ,, Simon ,,,,,,,,,,,,
+Simon copy you,,,,,,, Simon copies you ,, Simon te copie ,,,,,,,,,,,,
+Multiplayer,,,,,,, Multiplayer ,, Multijoueur ,,,,,,,,,,,,
+Player 1 turn,,,,,,, Player 1 turn ,, Tour du joueur 1 ,,,,,,,,,,,,
+Player 2 turn,,,,,,, Player 2 turn ,, Tour du joueur 2 ,,,,,,,,,,,,
+
 # Survive Against Robot game
 SurviveAgainstRobots,,,,,,, Survive Against Robots ,, Survivre contre des robots ,,,,,,,,,,,,
 SurviveAgainstRobotsMouse,,,,,,, Survive Against Robots (Gaze) ,, Survivre contre des robots (Regard) ,,,,,,,,,,,,
