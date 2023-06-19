@@ -63,6 +63,8 @@ public class Bouton extends Arc {
                 indicator.setTranslateX(dimension2D.getWidth() / 2 + 150);
                 indicator.setTranslateY(dimension2D.getHeight() / 2 + 150);
             }
+            default -> {
+            }
         }
 
         indicator.setMouseTransparent(true);

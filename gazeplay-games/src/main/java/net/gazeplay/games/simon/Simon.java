@@ -92,14 +92,14 @@ public class Simon  extends Parent implements GameLifeCycle {
         Borne borne = new Borne(gameContext,this);
         borne.nbNoteMax = 33;
         if (gameVariant.equals(SimonGameVariant.EASY_CLASSIC)){
-            borne.secondsReset = 11;
+            //borne.secondsReset = 11;
             borne.nbNoteMax = 10;
         }else if (gameVariant.equals(SimonGameVariant.NORMAL_CLASSIC)){
-            borne.secondsReset = 8;
+            //borne.secondsReset = 8;
             borne.nbNoteMax = 22;
-        }else if (gameVariant.equals(SimonGameVariant.HARD_CLASSIC)){
+        }/*else if (gameVariant.equals(SimonGameVariant.HARD_CLASSIC)){
             borne.secondsReset = 6;
-        }
+        }*/
         if (!gameVariant.equals(SimonGameVariant.MODE2)){
             addNoteToComputerSequence();
         }else{

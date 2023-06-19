@@ -25,11 +25,11 @@ public class Borne extends Parent {
     private final ArrayList<Bouton> boutons;
     private final double radius;
     private Timeline computerPlayAnimation;
-    private AnimationTimer timeBeforeResetComputerAnimation;
+    //private AnimationTimer timeBeforeResetComputerAnimation;
     private boolean computerPlay;
     private boolean nextNote;
-    protected int secondsReset;
-    private int nbSecond;
+   // protected int secondsReset;
+   // private int nbSecond;
     private boolean resetComputerAnimation;
     protected boolean multiplayer;
     protected boolean simonCopy;
@@ -48,7 +48,7 @@ public class Borne extends Parent {
         this.nbNoteMax = 0;
         this.radius = 400;
         this.resetComputerAnimation = false;
-        this.nbSecond = 0;
+        //this.nbSecond = 0;
         this.multiplayer = false;
         this.right = new ImageView(new Image("data/simonGame/right.png"));
         this.wrong = new ImageView(new Image("data/simonGame/wrong.png"));
@@ -135,7 +135,7 @@ public class Borne extends Parent {
                         }
                     }
                 }
-                nbSecond = 0; //Rénitialisation du timer qui doit reset l'animation dans le cas où le joueur met trop de temps
+                //nbSecond = 0; //Rénitialisation du timer qui doit reset l'animation dans le cas où le joueur met trop de temps
             }
             if(i == gameInstance.computerSequence.size()){ //Si le robot à finit de jouer son animation, c'est au tour du joueur de jouer
                 computerPlay = false;
