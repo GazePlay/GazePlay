@@ -112,6 +112,7 @@ public class Bouton extends Arc {
             System.out.println(couleur);
             gameInstance.playSound(note);
             gameInstance.playerSequence.add(couleur);
+            stopTimer();
         });
 
         timelineProgressBar.play();
