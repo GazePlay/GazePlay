@@ -16,7 +16,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
-import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
 import net.gazeplay.commons.soundsmanager.SoundsManagerFactory;
@@ -112,7 +111,8 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
         gamingRoot.minHeightProperty().bind(primaryStage.heightProperty());
 
         Configuration config = ActiveConfigurationContext.getInstance();
-        Color color = config.getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
+        //TO BE USED WITH DARK/LIGHT BACKGROUND SETTINGS
+        /*Color color = config.getBackgroundStyle().accept(new BackgroundStyleVisitor<Color>() {
             @Override
             public Color visitLight() {
                 return Color.LIGHTGREY;
@@ -122,7 +122,11 @@ public class GameContextFactoryBean implements FactoryBean<GameContext> {
             public Color visitDark() {
                 return Color.BLACK;
             }
-        });
+        });*/
+
+        // TO BE USED WITH COLORED BACKGROUND SETTINGS
+        Color color = Color.web(config.getBackgroundColorProperty().getValue());
+
         gamingRoot.setBackground(new Background(new BackgroundFill(color, null, null)));
 
         HBox controlPanel = createControlPanel();

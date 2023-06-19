@@ -7,10 +7,10 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextAlignment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.ui.I18NLabel;
 import net.gazeplay.commons.ui.I18NTitledPane;
 import net.gazeplay.commons.ui.Translator;
 
@@ -24,7 +24,7 @@ public class ProgressBarControl {
 
     public TitledPane createProgressControlPane(Configuration config, Translator translator, Scene primaryScene) {
         Label progressBarSizeLabel = new Label("");
-        Label colorStringLabel = new Label("Color");
+        I18NLabel colorStringLabel = new I18NLabel(translator, "Color");
         Label[] colorLabels = this.createColorLabel(config);
         progressBarSizeLabel.setMinWidth(ICON_SIZE);
         Slider progressBarSizeSlider = createProgressBarSizeSlider(config, progressBarSizeLabel);
