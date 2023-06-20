@@ -10,20 +10,25 @@ import static net.gazeplay.games.TowerDefense.Map.*;
 
 public class ResizableCanvas extends Canvas {
 
+    private final GraphicsContext gc;
     private final int[][] map;
     private final ArrayList<Enemy> enemies;
+    private final ArrayList<Tower> towers;
+    private final ArrayList<Projectile> projectiles;
     private int tileWidth;
     private int tileHeight;
 
-    public ResizableCanvas(int[][] map, ArrayList<Enemy> enemies) {
+    public ResizableCanvas(int[][] map, ArrayList<Enemy> enemies, ArrayList<Tower> towers, ArrayList<Projectile> projectiles) {
+        gc = getGraphicsContext2D();
         this.map = map;
         this.enemies = enemies;
+        this.towers = towers;
+        this.projectiles = projectiles;
         widthProperty().addListener(evt -> draw());
         heightProperty().addListener(evt -> draw());
     }
 
     public void draw() {
-        GraphicsContext gc = getGraphicsContext2D();
         gc.clearRect(0,0, getWidth(), getHeight());
 
         tileWidth = (int) (getWidth()/map[0].length);
@@ -31,9 +36,10 @@ public class ResizableCanvas extends Canvas {
 
         drawTerrain();
         drawEnemies();
+        drawTowers();
+        drawProjectiles();
     }
     private void drawTerrain(){
-        GraphicsContext gc = getGraphicsContext2D();
         for (int row = 0; row < map.length; row++) {
             for (int col = 0; col < map[0].length; col++) {
                 switch (map[row][col]){
@@ -62,10 +68,24 @@ public class ResizableCanvas extends Canvas {
     }
 
     private void drawEnemies(){
-        GraphicsContext gc = getGraphicsContext2D();
         gc.setFill(Color.RED);
         for (Enemy enemy : enemies) {
             gc.fillRect(enemy.getX(), enemy.getY(), tileWidth, tileHeight);
+        }
+
+    }
+
+    private void drawTowers(){
+        gc.setFill(Color.AQUA);
+        for (Tower tower : towers) {
+            gc.fillOval(tower.getX(),tower.getY(), tileWidth, tileHeight);
+        }
+    }
+
+    private void drawProjectiles(){
+        gc.setFill(Color.WHITE);
+        for (Projectile projectile : projectiles) {
+            gc.fillOval(projectile.getX(), projectile.getY(), projectile.getSize(), projectile.getSize());
         }
     }
 

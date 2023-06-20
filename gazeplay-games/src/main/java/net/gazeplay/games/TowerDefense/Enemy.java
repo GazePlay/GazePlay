@@ -1,5 +1,8 @@
 package net.gazeplay.games.TowerDefense;
 
+import javafx.geometry.Point2D;
+import javafx.scene.shape.Rectangle;
+
 import static net.gazeplay.games.TowerDefense.Map.END;
 import static net.gazeplay.games.TowerDefense.Map.ROAD;
 
@@ -20,7 +23,6 @@ public class Enemy {
     }
 
     public void move(){
-
         double newX = x + speedX;
         if(speedX > 0){
             newX += map.getTileWidth();
@@ -37,7 +39,8 @@ public class Enemy {
         } else if (map.getTile(newX, newY)==END){
             // Reached the end
         } else {
-            // Change direction
+            //// Change direction
+            // Need to finish moving to the tile entirely
             if(speedX>0){
                 x = Math.ceil(x/map.getTileWidth())*map.getTileWidth();
             }
@@ -51,6 +54,7 @@ public class Enemy {
                 y = Math.floor(y/map.getTileHeight())*map.getTileHeight();
             }
 
+            // Choose new direction
             if(speedX!=0){
                 speedY = Math.abs(speedX);
                 speedX = 0;
@@ -73,5 +77,13 @@ public class Enemy {
 
     public double getY() {
         return y;
+    }
+
+    public Rectangle getHitbox() {
+        return new Rectangle(x,y,map.getTileWidth(), map.getTileHeight());
+    }
+
+    public Point2D getCenter(){
+        return new Point2D(x+getHitbox().getWidth()/2, y+getHitbox().getHeight()/2);
     }
 }

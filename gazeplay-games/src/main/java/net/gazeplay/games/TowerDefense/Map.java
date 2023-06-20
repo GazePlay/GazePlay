@@ -1,5 +1,9 @@
 package net.gazeplay.games.TowerDefense;
 
+import javafx.geometry.Point2D;
+
+import java.util.ArrayList;
+
 public class Map {
 
     static final int START = 8;
@@ -15,12 +19,13 @@ public class Map {
     private double screenHeight;
     private int tileWidth;
     private int tileHeight;
-
     private int startCol;
     private int startRow;
+    private ArrayList<Point2D> turretsTiles;
 
 
     public Map(int level){
+        turretsTiles = new ArrayList<>();
         initLevel(level);
     }
 
@@ -42,6 +47,8 @@ public class Map {
                 if(map[row][col]==START){
                     startCol = col;
                     startRow = row;
+                } else if (map[row][col]==TURRET){
+                    turretsTiles.add(new Point2D(col, row));
                 }
             }
         }
@@ -65,6 +72,10 @@ public class Map {
 
     public int[][] getMap(){
         return  map;
+    }
+
+    public ArrayList<Point2D> getTurretsTiles() {
+        return turretsTiles;
     }
 
     public int getTile(double x, double y){
