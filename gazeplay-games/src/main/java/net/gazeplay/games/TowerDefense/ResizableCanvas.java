@@ -68,9 +68,18 @@ public class ResizableCanvas extends Canvas {
     }
 
     private void drawEnemies(){
-        gc.setFill(Color.RED);
         for (Enemy enemy : enemies) {
+            gc.setFill(Color.RED);
             gc.fillRect(enemy.getX(), enemy.getY(), tileWidth, tileHeight);
+
+            // Draw Health bar
+            gc.setFill(Color.WHITE);
+            double height = tileHeight/5;
+            double offset = 0;
+            gc.fillRect(enemy.getX(), enemy.getY() - (height+offset), tileWidth, height);
+
+            gc.setFill(Color.GREEN);
+            gc.fillRect(enemy.getX(), enemy.getY() - (height+offset), tileWidth*enemy.getRelativeHeath(), height);
         }
 
     }

@@ -90,10 +90,10 @@ public class Map {
 
     public int getTileAbove(double x, double y){
         int row = (int) (y/tileHeight) - 1;
-        if(row<0){
+        int col = (int) (x/tileWidth);
+        if(row<0 || row>=nbRows || col<0 || col>=nbCols){
             return GRASS;
         }
-        int col = (int) (x/tileWidth);
 
         return map[row][col];
     }
@@ -101,7 +101,7 @@ public class Map {
     public int getTileLeft(double x, double y){
         int row = (int) (y/tileHeight);
         int col = (int) (x/tileWidth) - 1;
-        if(col<0){
+        if(row<0 || row>=nbRows || col<0 || col>=nbCols){
             return GRASS;
         }
 

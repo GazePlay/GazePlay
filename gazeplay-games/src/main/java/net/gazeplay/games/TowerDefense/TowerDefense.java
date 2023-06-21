@@ -4,6 +4,8 @@ import javafx.animation.*;
 import javafx.geometry.Point2D;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -151,17 +153,24 @@ public class TowerDefense implements GameLifeCycle {
     }
 
     private void checkColisions() {
-        for (Enemy enemy : enemies) {
-            ListIterator<Projectile> iter = projectiles.listIterator();
-            while (iter.hasNext()) {
-                Projectile proj = iter.next();
+
+        ListIterator<Enemy> enemyIter = enemies.listIterator();
+        while (enemyIter.hasNext()) {
+            Enemy enemy = enemyIter.next();
+            ListIterator<Projectile> projIter = projectiles.listIterator();
+            while (projIter.hasNext()) {
+                Projectile proj = projIter.next();
                 if (enemy.getHitbox().contains(proj.getX(), proj.getY())) {
-                    iter.remove();
+                    projIter.remove();
                     // Enemy lose HP
+                    enemy.loseHP(proj.getDamage());
+                    if (enemy.getHealth() <= 0) {
+                        enemyIter.remove();
+                    }
                 }
-                if(proj.getX()<0 || proj.getX()>canvas.getWidth() || proj.getY()<0 || proj.getY()>canvas.getHeight()){
+                if (proj.getX() < 0 || proj.getX() > canvas.getWidth() || proj.getY() < 0 || proj.getY() > canvas.getHeight()) {
                     //Projectil out of screen
-                    iter.remove();
+                    projIter.remove();
                 }
             }
         }

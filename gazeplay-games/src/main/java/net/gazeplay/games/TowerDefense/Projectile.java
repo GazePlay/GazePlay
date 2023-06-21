@@ -7,13 +7,15 @@ public class Projectile {
     private double size;
     private double speedX;
     private double speedY;
+    private double damage;
 
-    Projectile(double x, double y, double speedX, double speedY, double size){
+    Projectile(double x, double y, double speedX, double speedY, double size, double damage){
         this.x = x;
         this.y = y;
         this.size = size;
         this.speedX = speedX;
         this.speedY = speedY;
+        this.damage = damage;
     }
 
     public void move(){
@@ -31,5 +33,9 @@ public class Projectile {
 
     public double getSize() {
         return size;
+    }
+
+    public double getDamage() {
+        return damage;
     }
 }

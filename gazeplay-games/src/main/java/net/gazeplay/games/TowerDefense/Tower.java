@@ -10,6 +10,9 @@ public class Tower {
     private double x;
     private double y;
     private double fireRate;
+    private double damage;
+    private double projSpeed;
+    private double projSize;
     private ArrayList<Projectile> projectiles;
     private ArrayList<Enemy> enemies;
     private int tick;
@@ -23,6 +26,9 @@ public class Tower {
         tick = 0;
 
         fireRate = 30;
+        damage = 5;
+        projSpeed = 5;
+        projSize = 10;
         range = new Circle(x,y,200);
     }
 
@@ -42,7 +48,6 @@ public class Tower {
             if(target!=null){
                 tick = 0;
                 Point2D tc = target.getCenter();
-                double speed = 5;
 
                 double tx = (tc.getX() - x);
                 double ty = (tc.getY() - y);
@@ -50,7 +55,7 @@ public class Tower {
                 double xratio = tx/(Math.abs(tx)+Math.abs(ty));
                 double yratio = ty/(Math.abs(tx)+Math.abs(ty));
 
-                projectiles.add(new Projectile(x, y, xratio*speed, yratio*speed, 10));
+                projectiles.add(new Projectile(x, y, xratio*projSpeed, yratio*projSpeed, projSize, damage));
             }
         }
     }

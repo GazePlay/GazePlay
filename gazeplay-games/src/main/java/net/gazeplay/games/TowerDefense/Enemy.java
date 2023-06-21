@@ -13,11 +13,15 @@ public class Enemy {
     private double y;
     private double speedX;
     private double speedY;
+    private double maxHealth;
+    private double currentHealth;
 
     public Enemy(Map map){
         this.map = map;
         this.x = map.getStartX();
         this.y = map.getStartY();
+        maxHealth = 100;
+        currentHealth = maxHealth;
         speedX = 1;
         speedY = 0;
     }
@@ -85,5 +89,17 @@ public class Enemy {
 
     public Point2D getCenter(){
         return new Point2D(x+getHitbox().getWidth()/2, y+getHitbox().getHeight()/2);
+    }
+
+    public double getRelativeHeath(){
+        return currentHealth/maxHealth;
+    }
+
+    public void loseHP(double value){
+        currentHealth -= value;
+    }
+
+    public double getHealth(){
+        return currentHealth;
     }
 }
