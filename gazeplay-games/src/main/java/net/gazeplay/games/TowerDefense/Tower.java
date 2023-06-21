@@ -1,35 +1,41 @@
 package net.gazeplay.games.TowerDefense;
 
+import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Point2D;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.Ellipse;
 
 import java.util.ArrayList;
 
 public class Tower {
 
+    private final DoubleProperty tileWidth;
+    private final DoubleProperty tileHeight;
     private double x;
     private double y;
     private double fireRate;
     private double damage;
     private double projSpeed;
     private double projSize;
-    private ArrayList<Projectile> projectiles;
-    private ArrayList<Enemy> enemies;
+    private int range;
+    private final ArrayList<Projectile> projectiles;
+    private final ArrayList<Enemy> enemies;
     private int tick;
-    private Circle range;
 
-    public Tower(double x, double y, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies){
+    public Tower(double x, double y, DoubleProperty tileWidth, DoubleProperty tileHeight, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies){
         this.x = x;
         this.y = y;
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
         this.projectiles = projectiles;
         this.enemies = enemies;
         tick = 0;
 
         fireRate = 30;
         damage = 5;
-        projSpeed = 5;
-        projSize = 10;
-        range = new Circle(x,y,200);
+        // In tile unit
+        projSpeed = 0.1;
+        projSize = 0.2;
+        range = 3;
     }
 
     public double getX() {
@@ -47,22 +53,25 @@ public class Tower {
             Enemy target = findEnemyInRange();
             if(target!=null){
                 tick = 0;
-                Point2D tc = target.getCenter();
+                Point2D targetCoord = target.getCenter();
 
-                double tx = (tc.getX() - x);
-                double ty = (tc.getY() - y);
+                double startX = x+tileWidth.get()/2;
+                double startY = y+tileHeight.get()/2;
+                double tx = (targetCoord.getX() - startX);
+                double ty = (targetCoord.getY() -startY);
 
                 double xratio = tx/(Math.abs(tx)+Math.abs(ty));
                 double yratio = ty/(Math.abs(tx)+Math.abs(ty));
 
-                projectiles.add(new Projectile(x, y, xratio*projSpeed, yratio*projSpeed, projSize, damage));
+                projectiles.add(new Projectile(startX, startY, xratio*projSpeed*tileWidth.get(), yratio*projSpeed*tileHeight.get(), projSize*tileWidth.get(), damage));
             }
         }
     }
 
     public Enemy findEnemyInRange(){
         for (Enemy enemy : enemies) {
-            if(range.contains(enemy.getCenter())){
+            Ellipse ellipse = new Ellipse(x+tileWidth.get()/2, y+tileHeight.get()/2, range*tileWidth.get(), range*tileHeight.get());
+            if(ellipse.contains(enemy.getCenter())){
                 return enemy;
             }
         }

@@ -1,5 +1,6 @@
 package net.gazeplay.games.TowerDefense;
 
+import javafx.beans.property.DoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -10,17 +11,19 @@ import static net.gazeplay.games.TowerDefense.Map.*;
 
 public class ResizableCanvas extends Canvas {
 
+    private final DoubleProperty tileWidth;
+    private final DoubleProperty tileHeight;
     private final GraphicsContext gc;
     private final int[][] map;
     private final ArrayList<Enemy> enemies;
     private final ArrayList<Tower> towers;
     private final ArrayList<Projectile> projectiles;
-    private int tileWidth;
-    private int tileHeight;
 
-    public ResizableCanvas(int[][] map, ArrayList<Enemy> enemies, ArrayList<Tower> towers, ArrayList<Projectile> projectiles) {
+    public ResizableCanvas(int[][] map, DoubleProperty tileWidth, DoubleProperty tileHeight, ArrayList<Enemy> enemies, ArrayList<Tower> towers, ArrayList<Projectile> projectiles) {
         gc = getGraphicsContext2D();
         this.map = map;
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
         this.enemies = enemies;
         this.towers = towers;
         this.projectiles = projectiles;
@@ -30,9 +33,6 @@ public class ResizableCanvas extends Canvas {
 
     public void draw() {
         gc.clearRect(0,0, getWidth(), getHeight());
-
-        tileWidth = (int) (getWidth()/map[0].length);
-        tileHeight = (int) (getHeight()/map.length);
 
         drawTerrain();
         drawEnemies();
@@ -62,7 +62,7 @@ public class ResizableCanvas extends Canvas {
                         gc.setFill(Color.LIME);
                         break;
                 }
-                gc.fillRect(tileWidth*col,tileHeight*row,tileWidth, tileHeight);
+                gc.fillRect(tileWidth.get()*col,tileHeight.get()*row, tileWidth.get(), tileHeight.get());
             }
         }
     }
@@ -70,24 +70,23 @@ public class ResizableCanvas extends Canvas {
     private void drawEnemies(){
         for (Enemy enemy : enemies) {
             gc.setFill(Color.RED);
-            gc.fillRect(enemy.getX(), enemy.getY(), tileWidth, tileHeight);
+            gc.fillRect(enemy.getX(), enemy.getY(), tileWidth.get(), tileHeight.get());
 
             // Draw Health bar
             gc.setFill(Color.WHITE);
-            double height = tileHeight/5;
+            double height = tileHeight.get()/5;
             double offset = 0;
-            gc.fillRect(enemy.getX(), enemy.getY() - (height+offset), tileWidth, height);
+            gc.fillRect(enemy.getX(), enemy.getY() - (height+offset), tileWidth.get(), height);
 
             gc.setFill(Color.GREEN);
-            gc.fillRect(enemy.getX(), enemy.getY() - (height+offset), tileWidth*enemy.getRelativeHeath(), height);
+            gc.fillRect(enemy.getX(), enemy.getY() - (height+offset), tileWidth.get()*enemy.getRelativeHeath(), height);
         }
-
     }
 
     private void drawTowers(){
         gc.setFill(Color.AQUA);
         for (Tower tower : towers) {
-            gc.fillOval(tower.getX(),tower.getY(), tileWidth, tileHeight);
+            gc.fillOval(tower.getX(),tower.getY(), tileWidth.get(), tileHeight.get());
         }
     }
 
@@ -98,19 +97,4 @@ public class ResizableCanvas extends Canvas {
         }
     }
 
-    @Override
-    public boolean isResizable() {
-        return true;
-    }
-
-    @Override
-    public double prefWidth(double height) {
-        return getWidth();
-    }
-
-    @Override
-    public double prefHeight(double width) {
-        return getHeight();
-    }
-    
 }

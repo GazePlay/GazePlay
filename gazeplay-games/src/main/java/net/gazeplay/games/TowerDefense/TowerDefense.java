@@ -1,11 +1,11 @@
 package net.gazeplay.games.TowerDefense;
 
 import javafx.animation.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -27,6 +27,9 @@ public class TowerDefense implements GameLifeCycle {
     private ProgressIndicator progressIndicator;
     private Timeline progressTimeline;
 
+    private DoubleProperty tileWidth;
+    private DoubleProperty tileHeight;
+
     TowerDefense(final IGameContext gameContext, final Stats stats){
         this.gameContext = gameContext;
         this.stats = stats;
@@ -35,21 +38,19 @@ public class TowerDefense implements GameLifeCycle {
         towers = new ArrayList<>();
         projectiles = new ArrayList<>();
         map = new Map(1);
-        canvas = new ResizableCanvas(map.getMap(), enemies, towers, projectiles);
+
+        tileWidth = new SimpleDoubleProperty();
+        tileHeight = new SimpleDoubleProperty();
+        tileWidth.bind(gameContext.getRoot().widthProperty().divide(map.getNbCols()));
+        tileHeight.bind(gameContext.getRoot().heightProperty().divide(map.getNbRows()));
+
+        canvas = new ResizableCanvas(map.getMap(),tileWidth, tileHeight, enemies, towers, projectiles);
+        canvas.heightProperty().bind(gameContext.getRoot().heightProperty());
+        canvas.widthProperty().bind(gameContext.getRoot().widthProperty());
         gameContext.getRoot().getChildren().add(canvas);
 
-        gameContext.getRoot().heightProperty().addListener((observableValue, oldVal, newVal) -> {
-            canvas.setHeight(newVal.doubleValue());
-            map.setScreenHeight(newVal.doubleValue());
-        });
-
-        gameContext.getRoot().widthProperty().addListener((observableValue, oldVal, newVal) -> {
-            canvas.setWidth(newVal.doubleValue());
-            map.setScreenWidth(newVal.doubleValue());
-        });
-
         gameContext.getRoot().addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-            enemies.add(new Enemy(map));
+            createEnemy();
         });
 
         progressIndicator = new ProgressIndicator(0);
@@ -62,12 +63,12 @@ public class TowerDefense implements GameLifeCycle {
         gameContext.getRoot().addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
             boolean inside = false;
             for (Point2D turretsTile : map.getTurretsTiles()) {
-                double turretX = turretsTile.getX()*map.getTileWidth();
-                double turretY = turretsTile.getY()*map.getTileHeight();
-                if(event.getX() >= turretX && event.getX() <= (turretsTile.getX()+1)*map.getTileWidth() && event.getY() >= turretY && event.getY() <= (turretsTile.getY()+1)*map.getTileHeight()){
+                double turretX = turretsTile.getX()*tileWidth.get();
+                double turretY = turretsTile.getY()*tileHeight.get();
+                if(event.getX() >= turretX && event.getX() <= (turretsTile.getX()+1)*tileWidth.get() && event.getY() >= turretY && event.getY() <= (turretsTile.getY()+1)*tileHeight.get()){
                     inside = true;
                     if(progressTimeline.getStatus()!= Animation.Status.RUNNING){
-                        progressIndicator.setMinSize(map.getTileWidth(), map.getTileHeight());
+                        progressIndicator.setMinSize(tileWidth.get(), tileHeight.get());
                         progressIndicator.relocate(turretX, turretY);
                         progressIndicator.setProgress(0);
                         progressIndicator.setVisible(true);
@@ -76,7 +77,7 @@ public class TowerDefense implements GameLifeCycle {
                             progressIndicator.setVisible(false);
                             int index = getTower(turretX, turretY);
                             if(index==-1){
-                                towers.add(new Tower(turretX, turretY, projectiles, enemies));
+                                createTower(turretX, turretY);
                             }else{
                                 towers.remove(index);
                             }
@@ -107,7 +108,7 @@ public class TowerDefense implements GameLifeCycle {
 
                 // Spawn enemies
                 if(enemies.isEmpty()){
-                    enemies.add(new Enemy(map));
+                    createEnemy();
                 }
 
                 // Enemies movement
@@ -142,6 +143,16 @@ public class TowerDefense implements GameLifeCycle {
         gameContext.clear();
     }
 
+    private void createTower(double x, double y){
+        Tower tower = new Tower(x, y, tileWidth, tileHeight, projectiles, enemies);
+        towers.add(tower);
+    }
+
+    private void createEnemy(){
+        Enemy enemy = new Enemy(map,map.getStartCol()*tileWidth.get(), map.getStartRow()*tileHeight.get(), tileWidth, tileHeight);
+        enemies.add(enemy);
+    }
+
     private int getTower(double x, double y){
         int index = -1;
         for (int i = 0; i < towers.size(); i++) {
@@ -153,7 +164,6 @@ public class TowerDefense implements GameLifeCycle {
     }
 
     private void checkColisions() {
-
         ListIterator<Enemy> enemyIter = enemies.listIterator();
         while (enemyIter.hasNext()) {
             Enemy enemy = enemyIter.next();

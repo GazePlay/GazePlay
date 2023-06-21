@@ -1,5 +1,6 @@
 package net.gazeplay.games.TowerDefense;
 
+import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
@@ -8,18 +9,23 @@ import static net.gazeplay.games.TowerDefense.Map.ROAD;
 
 public class Enemy {
 
+    private final DoubleProperty tileWidth;
+    private final DoubleProperty tileHeight;
     private final Map map;
     private double x;
     private double y;
     private double speedX;
     private double speedY;
-    private double maxHealth;
+    private final double maxHealth;
     private double currentHealth;
 
-    public Enemy(Map map){
+    public Enemy(Map map, double x, double y, DoubleProperty tileWidth, DoubleProperty tileHeight){
         this.map = map;
-        this.x = map.getStartX();
-        this.y = map.getStartY();
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
+        this.x = x;
+        this.y = y;
+
         maxHealth = 100;
         currentHealth = maxHealth;
         speedX = 1;
@@ -29,46 +35,50 @@ public class Enemy {
     public void move(){
         double newX = x + speedX;
         if(speedX > 0){
-            newX += map.getTileWidth();
+            newX += tileWidth.get();
         }
         double newY = y + speedY;
         if(speedY > 0){
-            newY += map.getTileHeight();
+            newY += tileHeight.get();
         }
 
-        if(map.getTile(newX, newY)==ROAD){
+        int col = (int) (newX/tileWidth.get());
+        int row = (int) (newY/tileHeight.get());
+        if(map.getTile(col, row)==ROAD){
             // Continue in the same direction
             x += speedX;
             y += speedY;
-        } else if (map.getTile(newX, newY)==END){
+        } else if (map.getTile(col, row)==END){
             // Reached the end
         } else {
             //// Change direction
             // Need to finish moving to the tile entirely
             if(speedX>0){
-                x = Math.ceil(x/map.getTileWidth())*map.getTileWidth();
+                x = Math.ceil(x/tileWidth.get())*tileWidth.get();
             }
             if(speedX<0){
-                x = Math.floor(x/map.getTileWidth())*map.getTileWidth();
+                x = Math.floor(x/tileWidth.get())*tileWidth.get();
             }
             if(speedY>0){
-                y =  Math.ceil(y/map.getTileHeight())*map.getTileHeight();
+                y =  Math.ceil(y/tileHeight.get())*tileHeight.get();
             }
             if(speedY<0){
-                y = Math.floor(y/map.getTileHeight())*map.getTileHeight();
+                y = Math.floor(y/tileHeight.get())*tileHeight.get();
             }
 
+            col = (int) (x/tileWidth.get());
+            row = (int) (y/tileHeight.get());
             // Choose new direction
             if(speedX!=0){
                 speedY = Math.abs(speedX);
                 speedX = 0;
-                if(map.getTileAbove(x, y)==ROAD){
+                if(map.getTileAbove(col, row)==ROAD){
                     speedY = -speedY;
                 }
             } else if (speedY!=0){
                 speedX = Math.abs(speedY);
                 speedY = 0;
-                if(map.getTileLeft(x, y)==ROAD){
+                if(map.getTileLeft(col, row)==ROAD){
                     speedX = -speedX;
                 }
             }
@@ -84,11 +94,11 @@ public class Enemy {
     }
 
     public Rectangle getHitbox() {
-        return new Rectangle(x,y,map.getTileWidth(), map.getTileHeight());
+        return new Rectangle(x,y,tileWidth.get(), tileHeight.get());
     }
 
     public Point2D getCenter(){
-        return new Point2D(x+getHitbox().getWidth()/2, y+getHitbox().getHeight()/2);
+        return new Point2D(x+tileWidth.get()/2, y+tileHeight.get()/2);
     }
 
     public double getRelativeHeath(){
@@ -102,4 +112,5 @@ public class Enemy {
     public double getHealth(){
         return currentHealth;
     }
+
 }

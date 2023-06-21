@@ -15,13 +15,9 @@ public class Map {
     private int [][] map;
     private int nbCols;
     private int nbRows;
-    private double screenWidth;
-    private double screenHeight;
-    private int tileWidth;
-    private int tileHeight;
     private int startCol;
     private int startRow;
-    private ArrayList<Point2D> turretsTiles;
+    private final ArrayList<Point2D> turretsTiles;
 
 
     public Map(int level){
@@ -78,9 +74,23 @@ public class Map {
         return turretsTiles;
     }
 
-    public int getTile(double x, double y){
-        int row = (int) (y/tileHeight);
-        int col = (int) (x/tileWidth);
+    public int getTile(int col, int row){
+        if(row<0 || row>=nbRows || col<0 || col>=nbCols){
+            return GRASS;
+        }
+        return map[row][col];
+    }
+
+    public int getTileAbove(int col, int row){
+        row = row - 1;
+        if(row<0 || row>=nbRows || col<0 || col>=nbCols){
+            return GRASS;
+        }
+        return map[row][col];
+    }
+
+    public int getTileLeft(int col, int row){
+        col = col - 1;
         if(row<0 || row>=nbRows || col<0 || col>=nbCols){
             return GRASS;
         }
@@ -88,50 +98,19 @@ public class Map {
         return map[row][col];
     }
 
-    public int getTileAbove(double x, double y){
-        int row = (int) (y/tileHeight) - 1;
-        int col = (int) (x/tileWidth);
-        if(row<0 || row>=nbRows || col<0 || col>=nbCols){
-            return GRASS;
-        }
-
-        return map[row][col];
+    public int getStartCol() {
+        return startCol;
     }
 
-    public int getTileLeft(double x, double y){
-        int row = (int) (y/tileHeight);
-        int col = (int) (x/tileWidth) - 1;
-        if(row<0 || row>=nbRows || col<0 || col>=nbCols){
-            return GRASS;
-        }
-
-        return map[row][col];
+    public int getStartRow() {
+        return startRow;
     }
 
-    public double getStartX() {
-        return startCol*tileWidth;
+    public int getNbCols() {
+        return nbCols;
     }
 
-    public double getStartY() {
-        return startRow*tileHeight;
+    public int getNbRows() {
+        return nbRows;
     }
-
-    public int getTileWidth() {
-        return tileWidth;
-    }
-
-    public int getTileHeight() {
-        return tileHeight;
-    }
-
-    public void setScreenWidth(double screenWidth) {
-        this.screenWidth = screenWidth;
-        tileWidth = (int) (screenWidth/nbCols);
-    }
-
-    public void setScreenHeight(double screenHeight) {
-        this.screenHeight = screenHeight;
-        tileHeight = (int) (screenHeight/nbRows);
-    }
-
 }
