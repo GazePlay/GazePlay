@@ -16,8 +16,10 @@ public class Enemy {
     private double y;
     private double speedX;
     private double speedY;
-    private final double maxHealth;
+    private double maxHealth;
     private double currentHealth;
+    private double reward;
+    private boolean reachedEnd;
 
     public Enemy(Map map, double x, double y, DoubleProperty tileWidth, DoubleProperty tileHeight){
         this.map = map;
@@ -25,9 +27,11 @@ public class Enemy {
         this.tileHeight = tileHeight;
         this.x = x;
         this.y = y;
+        reachedEnd = false;
 
-        maxHealth = 100;
+        maxHealth = 50;
         currentHealth = maxHealth;
+        reward = 5;
         speedX = 1;
         speedY = 0;
     }
@@ -50,6 +54,7 @@ public class Enemy {
             y += speedY;
         } else if (map.getTile(col, row)==END){
             // Reached the end
+            reachedEnd = true;
         } else {
             //// Change direction
             // Need to finish moving to the tile entirely
@@ -113,4 +118,16 @@ public class Enemy {
         return currentHealth;
     }
 
+    public double getReward() {
+        return reward;
+    }
+
+    public boolean reachedEnd() {
+        return reachedEnd;
+    }
+
+    public void multiplyHealth(double multiplier){
+        maxHealth = maxHealth*multiplier;
+        currentHealth = maxHealth;
+    }
 }

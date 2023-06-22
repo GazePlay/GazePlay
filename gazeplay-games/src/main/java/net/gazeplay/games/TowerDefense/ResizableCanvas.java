@@ -86,7 +86,8 @@ public class ResizableCanvas extends Canvas {
     private void drawTowers(){
         gc.setFill(Color.AQUA);
         for (Tower tower : towers) {
-            gc.fillOval(tower.getX(),tower.getY(), tileWidth.get(), tileHeight.get());
+            //gc.fillOval(tower.getX(),tower.getY(), tileWidth.get(), tileHeight.get());
+            gc.fillOval(tower.getCol()*tileWidth.get(),tower.getRow()*tileHeight.get(), tileWidth.get(), tileHeight.get());
         }
     }
 

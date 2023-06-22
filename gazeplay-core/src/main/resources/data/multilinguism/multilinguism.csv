@@ -503,3 +503,6 @@ Hard_MOUSE,,,,,,, Hard mouse ,, Difficile souris ,,,,,,,,,,,,
 # Sprint to the finish name
 SprintFinish,,,,,,, Sprint jusqu'à l'arrivée ,, Sprint to the finish ,,,,,,,,,,,,
 SprintFinishMouse,,,,,,, Sprint jusqu'à l'arrivée (Souris/Yeux) ,, Sprint to the finish (Mouse/Gaze) ,,,,,,,,,,,,
+
+# Tower Defense
+SendWave,,,,,,, Envoyer la vague suivante ,, Send next wave ,,,,,,,,,,,,

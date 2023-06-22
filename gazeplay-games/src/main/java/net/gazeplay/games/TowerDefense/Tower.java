@@ -20,10 +20,14 @@ public class Tower {
     private final ArrayList<Projectile> projectiles;
     private final ArrayList<Enemy> enemies;
     private int tick;
+    private int col;
+    private int row;
 
     public Tower(double x, double y, DoubleProperty tileWidth, DoubleProperty tileHeight, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies){
         this.x = x;
         this.y = y;
+        col = (int) (x/tileWidth.get());
+        row = (int) (y/tileHeight.get());
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
         this.projectiles = projectiles;
@@ -46,6 +50,14 @@ public class Tower {
         return y;
     }
 
+    public int getCol() {
+        return col;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
     public void fire(){
         tick++;
 
@@ -55,22 +67,22 @@ public class Tower {
                 tick = 0;
                 Point2D targetCoord = target.getCenter();
 
-                double startX = x+tileWidth.get()/2;
-                double startY = y+tileHeight.get()/2;
+                double startX = col*tileWidth.get() + tileWidth.get()/2;
+                double startY = row*tileHeight.get() + tileHeight.get()/2;
                 double tx = (targetCoord.getX() - startX);
                 double ty = (targetCoord.getY() -startY);
 
                 double xratio = tx/(Math.abs(tx)+Math.abs(ty));
                 double yratio = ty/(Math.abs(tx)+Math.abs(ty));
 
-                projectiles.add(new Projectile(startX, startY, xratio*projSpeed*tileWidth.get(), yratio*projSpeed*tileHeight.get(), projSize*tileWidth.get(), damage));
+                projectiles.add(new Projectile(col*tileWidth.get()+tileWidth.get()/2, row*tileHeight.get()+tileHeight.get()/2, xratio*projSpeed*tileWidth.get(), yratio*projSpeed*tileHeight.get(), projSize*tileWidth.get(), damage));
             }
         }
     }
 
     public Enemy findEnemyInRange(){
+        Ellipse ellipse = new Ellipse(col*tileWidth.get()+tileWidth.get()/2, row*tileHeight.get()+tileHeight.get()/2, range*tileWidth.get(), range*tileHeight.get());
         for (Enemy enemy : enemies) {
-            Ellipse ellipse = new Ellipse(x+tileWidth.get()/2, y+tileHeight.get()/2, range*tileWidth.get(), range*tileHeight.get());
             if(ellipse.contains(enemy.getCenter())){
                 return enemy;
             }
