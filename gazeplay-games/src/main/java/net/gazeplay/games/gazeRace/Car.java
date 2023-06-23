@@ -33,7 +33,7 @@ public class Car extends Rectangle {
                 if (nbframes == 60){
                     nbframes = 0;
                 }
-                gameInstance.willCollideWithAnObstacle(direction,speed,Car.this);
+
                 if (!isDestroyed){
 
 

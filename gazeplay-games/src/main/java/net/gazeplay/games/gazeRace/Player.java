@@ -155,6 +155,8 @@ public class Player extends Rectangle {
                     this.setX(this.getX() + vx);
                 }
             }
+        }else{
+            gameInstance.willCollideWithAnObstacle(" ", speed, this);
         }
     }
 

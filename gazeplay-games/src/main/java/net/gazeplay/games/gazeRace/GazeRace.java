@@ -27,11 +27,12 @@ public class GazeRace extends Parent implements GameLifeCycle {
     private Rectangle rightDeathBarrier;
     private final ImagePattern death = new ImagePattern(new Image("data/gazeRace/Flash.png"));
 
+
     private Player player;
     protected double mphGeneral;
     private Random random;
     private AnimationTimer generalAnimation;
-    private Enum<GazeRaceVariant> gameVariant;
+    private final Enum<GazeRaceVariant> gameVariant;
 
     public GazeRace(IGameContext gameContext, Stats stats, Enum<GazeRaceVariant> gameVariant){
         this.gameContext = gameContext;
@@ -45,6 +46,8 @@ public class GazeRace extends Parent implements GameLifeCycle {
 
 
     private void startGame(){
+        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
 
 
         this.player = new Player(300,300,100,100,this,gameContext,5,3);
@@ -61,6 +64,7 @@ public class GazeRace extends Parent implements GameLifeCycle {
             int nbCar = 0;
             @Override
             public void handle(long now) {
+
 
 
                 updateSpeedObject();
@@ -84,6 +88,10 @@ public class GazeRace extends Parent implements GameLifeCycle {
         generalAnimation.start();
 
     }
+
+
+
+
     private void updateSpeedObject(){
         for (Car car : cars){
             car.speed = mphGeneral;
@@ -111,7 +119,7 @@ public class GazeRace extends Parent implements GameLifeCycle {
             }
             if (direction.compareToIgnoreCase("left") == 0){
                 x = random.nextDouble(dimension2D.getWidth()+250,dimension2D.getWidth()+1000);
-                y = random.nextDouble(dimension2D.getHeight()/2+50,dimension2D.getHeight()-100);
+                y = random.nextDouble(dimension2D.getHeight()/2+50,dimension2D.getHeight()-125);
             }else if (direction.compareToIgnoreCase("right") == 0){
                 x = random.nextDouble(-1000,-250);
                 y = random.nextDouble(100,dimension2D.getHeight()/2-50);
@@ -164,6 +172,9 @@ public class GazeRace extends Parent implements GameLifeCycle {
         this.cars.clear();
         this.random = new Random();
         this.mphGeneral = 5;
+        if (generalAnimation != null){
+            generalAnimation.stop();
+        }
 
         if (this.player != null){
             this.player.playerAnimationMovement.stop();
@@ -201,7 +212,8 @@ public class GazeRace extends Parent implements GameLifeCycle {
             case "up" -> nextY -= speed;
             case "down" -> nextY += speed;
             default -> {
-
+                nextX += speed;
+                nextY += speed;
             }
         }
         Rectangle futurePos = new Rectangle(nextX, nextY, object.getWidth(), object.getHeight());
@@ -215,12 +227,9 @@ public class GazeRace extends Parent implements GameLifeCycle {
 
             if (isCollidingWithASpecificObstacle(futurePos, obstacle)) {
                 if (object == player || obstacle == player){
-                    if (obstacle instanceof Car car){
+                    if (obstacle instanceof Car){
                         if (!player.isInvincible){
                             player.startTimerInvincible();
-                            car.isDestroyed = true;
-                            cars.remove(car);
-                            obstacles.remove(car);
                             playDeathAnimation(1,obstacle);
                             player.health--;
                             mphGeneral = 5;
@@ -236,10 +245,7 @@ public class GazeRace extends Parent implements GameLifeCycle {
 
                 if (object instanceof Car car){
                     if (obstacle.equals(leftDeathBarrier) || obstacle.equals(rightDeathBarrier)){
-                        car.isDestroyed = true;
-                        gameContext.getChildren().remove(object);
-                        cars.remove(car);
-                        obstacles.remove(car);
+                        playDeathAnimation(1,car);
 
                     }
                 }
@@ -259,6 +265,12 @@ public class GazeRace extends Parent implements GameLifeCycle {
 
         if (object == player){
             obstacles.remove(player);
+        }
+
+        if(object instanceof Car car){
+            car.isDestroyed = true;
+            cars.remove(car);
+            obstacles.remove(car);
         }
         AnimationTimer deathAnimation = new AnimationTimer() {
             int nbframes = 0;
@@ -348,4 +360,8 @@ public class GazeRace extends Parent implements GameLifeCycle {
             && object1.getY() < object2.getY() + object2.getHeight() && object1.getY() + object1.getHeight() > object2.getY();
 
     }
+
+
+
 }
+
