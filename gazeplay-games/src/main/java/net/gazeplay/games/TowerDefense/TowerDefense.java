@@ -115,12 +115,6 @@ public class TowerDefense implements GameLifeCycle {
             sendWaveTimeline.stop();
         });
 
-        ////
-        waveButton.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-            createWave();
-        });
-        ////
-
         progressIndicator = new ProgressIndicator(0);
         progressIndicator.setVisible(false);
         gameContext.getRoot().getChildren().add(progressIndicator);
@@ -146,7 +140,7 @@ public class TowerDefense implements GameLifeCycle {
                                 progressIndicator.setVisible(false);
                                 int index = getTower(turretX, turretY);
                                 if (index == -1) {
-                                    createTower(turretX, turretY);
+                                    createTower((int) turretsTile.getX(), (int) turretsTile.getY());
                                 } else {
                                     towers.remove(index);
                                 }
@@ -208,24 +202,24 @@ public class TowerDefense implements GameLifeCycle {
         gameContext.clear();
     }
 
-    private void createTower(double x, double y){
-        Tower tower = new Tower(x, y, tileWidth, tileHeight, projectiles, enemies);
+    private void createTower(int col, int row){
+        Tower tower = new Tower(col, row, tileWidth, tileHeight, projectiles, enemies);
         money.set(money.get() - TOWER_COST);
 
         // Play little animation
         ImageView image = new ImageView(new Image("data/TowerDefense/moneyLoss.png"));
         image.setFitWidth(tileWidth.get()/2);
         image.setFitHeight(tileHeight.get()/2);
-        image.setTranslateX(tower.getX());
-        image.setTranslateY(tower.getY());
+        image.setTranslateX(tower.getCol()*tileWidth.get());
+        image.setTranslateY(tower.getRow()*tileHeight.get());
 
         FadeTransition ft = new FadeTransition(Duration.millis(1500), image);
         ft.setFromValue(1);
         ft.setToValue(0);
 
         TranslateTransition tt = new TranslateTransition(Duration.millis(1500), image);
-        tt.setFromY(tower.getY());
-        tt.setToY(tower.getY()+tileHeight.get()/2);
+        tt.setFromY(tower.getRow()*tileHeight.get());
+        tt.setToY(tower.getRow()*tileHeight.get() + tileHeight.get()/2);
 
         ft.play();
         tt.play();
@@ -237,7 +231,7 @@ public class TowerDefense implements GameLifeCycle {
     private int getTower(double x, double y){
         int index = -1;
         for (int i = 0; i < towers.size(); i++) {
-            if(Math.abs(towers.get(i).getX()-x)<=10 && Math.abs(towers.get(i).getY()-y)<=10){
+            if(Math.abs(towers.get(i).getCol()*tileWidth.get()-x)<=10 && Math.abs(towers.get(i).getRow()*tileWidth.get()-y)<=10){
                 index = i;
             }
         }
@@ -251,8 +245,8 @@ public class TowerDefense implements GameLifeCycle {
             ListIterator<Projectile> projIter = projectiles.listIterator();
             while (projIter.hasNext()) {
                 Projectile proj = projIter.next();
-                if (enemy.getHitbox().contains(proj.getX(), proj.getY())) {
-                    // Enemy lose HP, projectil disapear
+                if(enemy.getHitbox().intersects(proj.getHitbox().getBoundsInLocal())) {
+                    // Enemy lose HP, projectile disappear
                     projIter.remove();
                     enemy.loseHP(proj.getDamage());
                     if (enemy.getHealth() <= 0) {
@@ -264,23 +258,23 @@ public class TowerDefense implements GameLifeCycle {
                         ImageView image = new ImageView(new Image("data/TowerDefense/moneyGain.png"));
                         image.setFitWidth(tileWidth.get()/2);
                         image.setFitHeight(tileHeight.get()/2);
-                        image.setTranslateX(enemy.getX());
-                        image.setTranslateY(enemy.getCenter().getY());
+                        image.setTranslateX(enemy.getX()*tileWidth.get());
+                        image.setTranslateY(enemy.getCenter().getY()*tileHeight.get());
 
                         FadeTransition ft = new FadeTransition(Duration.millis(1500), image);
                         ft.setFromValue(1);
                         ft.setToValue(0);
 
                         TranslateTransition tt = new TranslateTransition(Duration.millis(1500), image);
-                        tt.setFromY(enemy.getCenter().getY());
-                        tt.setToY(enemy.getY());
+                        tt.setFromY(enemy.getCenter().getY()*tileHeight.get());
+                        tt.setToY(enemy.getY()*tileHeight.get());
 
                         ft.play();
                         tt.play();
                         gameContext.getChildren().add(image);
                     }
                 }
-                if (proj.getX() < 0 || proj.getX() > canvas.getWidth() || proj.getY() < 0 || proj.getY() > canvas.getHeight()) {
+                if (proj.getX() < 0 || proj.getX()*tileWidth.get() > canvas.getWidth() || proj.getY() < 0 || proj.getY()*tileHeight.get() > canvas.getHeight()) {
                     //Projectile out of screen
                     projIter.remove();
                 }
@@ -336,7 +330,7 @@ public class TowerDefense implements GameLifeCycle {
         if (enemiesSent < enemyCount && enemySpawnTick >= enemySpawnTickLimit){
             enemySpawnTick = 0;
             enemiesSent++;
-            Enemy enemy = new Enemy(map,map.getStartCol()*tileWidth.get(), map.getStartRow()*tileHeight.get(), tileWidth, tileHeight);
+            Enemy enemy = new Enemy(map, map.getStartCol(), map.getStartRow(), tileWidth, tileHeight);
             enemy.multiplyHealth(enemyHealthMultiplier);
             enemies.add(enemy);
         }else{

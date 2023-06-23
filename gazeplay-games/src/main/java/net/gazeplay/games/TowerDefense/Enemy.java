@@ -32,22 +32,22 @@ public class Enemy {
         maxHealth = 50;
         currentHealth = maxHealth;
         reward = 5;
-        speedX = 1;
+        speedX = 1.0/60;
         speedY = 0;
     }
 
     public void move(){
         double newX = x + speedX;
         if(speedX > 0){
-            newX += tileWidth.get();
+            newX += 1;
         }
         double newY = y + speedY;
         if(speedY > 0){
-            newY += tileHeight.get();
+            newY += 1;
         }
 
-        int col = (int) (newX/tileWidth.get());
-        int row = (int) (newY/tileHeight.get());
+        int col = (int) newX;
+        int row = (int) newY;
         if(map.getTile(col, row)==ROAD){
             // Continue in the same direction
             x += speedX;
@@ -59,31 +59,29 @@ public class Enemy {
             //// Change direction
             // Need to finish moving to the tile entirely
             if(speedX>0){
-                x = Math.ceil(x/tileWidth.get())*tileWidth.get();
+                x = Math.ceil(x);
             }
             if(speedX<0){
-                x = Math.floor(x/tileWidth.get())*tileWidth.get();
+                x = Math.floor(x);
             }
             if(speedY>0){
-                y =  Math.ceil(y/tileHeight.get())*tileHeight.get();
+                y =  Math.ceil(y);
             }
             if(speedY<0){
-                y = Math.floor(y/tileHeight.get())*tileHeight.get();
+                y = Math.floor(y);
             }
 
-            col = (int) (x/tileWidth.get());
-            row = (int) (y/tileHeight.get());
             // Choose new direction
             if(speedX!=0){
                 speedY = Math.abs(speedX);
                 speedX = 0;
-                if(map.getTileAbove(col, row)==ROAD){
+                if(map.getTileAbove((int) x, (int) y)==ROAD){
                     speedY = -speedY;
                 }
             } else if (speedY!=0){
                 speedX = Math.abs(speedY);
                 speedY = 0;
-                if(map.getTileLeft(col, row)==ROAD){
+                if(map.getTileLeft((int) x, (int) y)==ROAD){
                     speedX = -speedX;
                 }
             }
@@ -99,11 +97,11 @@ public class Enemy {
     }
 
     public Rectangle getHitbox() {
-        return new Rectangle(x,y,tileWidth.get(), tileHeight.get());
+        return new Rectangle(x, y, 1, 1);
     }
 
     public Point2D getCenter(){
-        return new Point2D(x+tileWidth.get()/2, y+tileHeight.get()/2);
+        return new Point2D(x + 0.5, y + 0.5);
     }
 
     public double getRelativeHeath(){

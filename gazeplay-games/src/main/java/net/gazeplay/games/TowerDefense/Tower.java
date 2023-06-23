@@ -10,8 +10,6 @@ public class Tower {
 
     private final DoubleProperty tileWidth;
     private final DoubleProperty tileHeight;
-    private double x;
-    private double y;
     private double fireRate;
     private double damage;
     private double projSpeed;
@@ -23,11 +21,9 @@ public class Tower {
     private int col;
     private int row;
 
-    public Tower(double x, double y, DoubleProperty tileWidth, DoubleProperty tileHeight, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies){
-        this.x = x;
-        this.y = y;
-        col = (int) (x/tileWidth.get());
-        row = (int) (y/tileHeight.get());
+    public Tower(int col, int row, DoubleProperty tileWidth, DoubleProperty tileHeight, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies){
+        this.col = col;
+        this.row = row;
         this.tileWidth = tileWidth;
         this.tileHeight = tileHeight;
         this.projectiles = projectiles;
@@ -37,17 +33,9 @@ public class Tower {
         fireRate = 30;
         damage = 5;
         // In tile unit
-        projSpeed = 0.1;
+        projSpeed = 3.0/60;
         projSize = 0.2;
         range = 3;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
     }
 
     public int getCol() {
@@ -67,21 +55,21 @@ public class Tower {
                 tick = 0;
                 Point2D targetCoord = target.getCenter();
 
-                double startX = col*tileWidth.get() + tileWidth.get()/2;
-                double startY = row*tileHeight.get() + tileHeight.get()/2;
-                double tx = (targetCoord.getX() - startX);
-                double ty = (targetCoord.getY() -startY);
+                double startX = col + 0.5;
+                double startY = row + 0.5;
+                double tx = targetCoord.getX() - startX;
+                double ty = targetCoord.getY() - startY;
 
                 double xratio = tx/(Math.abs(tx)+Math.abs(ty));
                 double yratio = ty/(Math.abs(tx)+Math.abs(ty));
 
-                projectiles.add(new Projectile(col*tileWidth.get()+tileWidth.get()/2, row*tileHeight.get()+tileHeight.get()/2, xratio*projSpeed*tileWidth.get(), yratio*projSpeed*tileHeight.get(), projSize*tileWidth.get(), damage));
+                projectiles.add(new Projectile(startX, startY, xratio*projSpeed, yratio*projSpeed, projSize, damage));
             }
         }
     }
 
     public Enemy findEnemyInRange(){
-        Ellipse ellipse = new Ellipse(col*tileWidth.get()+tileWidth.get()/2, row*tileHeight.get()+tileHeight.get()/2, range*tileWidth.get(), range*tileHeight.get());
+        Ellipse ellipse = new Ellipse(col+0.5, row+0.5, range, range);
         for (Enemy enemy : enemies) {
             if(ellipse.contains(enemy.getCenter())){
                 return enemy;

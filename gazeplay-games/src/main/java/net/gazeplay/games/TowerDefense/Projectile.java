@@ -1,5 +1,7 @@
 package net.gazeplay.games.TowerDefense;
 
+import javafx.scene.shape.Circle;
+
 public class Projectile {
 
     private double x;
@@ -37,5 +39,9 @@ public class Projectile {
 
     public double getDamage() {
         return damage;
+    }
+
+    public Circle getHitbox(){
+        return new Circle(x,y,size);
     }
 }
