@@ -32,6 +32,8 @@ import net.gazeplay.commons.utils.stats.Stats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
@@ -283,33 +285,35 @@ public class GameMenuFactory {
         progressIndicator = new ProgressIndicator(0);
         progressIndicator.setOpacity(0);
         gameCard.addEventFilter(GazeEvent.GAZE_ENTERED, (GazeEvent e) ->{
-            progressIndicator.toFront();
-            if (!thumbpane.getChildren().contains(progressIndicator)){
-                thumbpane.getChildren().add(progressIndicator);
-            }
-            progressIndicator.setMinWidth(90);
-            progressIndicator.setMinHeight(90);
-
-            progressIndicator.setStyle(" -fx-progress-color: " + config.getProgressBarColor());
-            progressIndicator.setOpacity(1);
-            progressIndicator.setProgress(0);
-
-            if (timelineProgressBar != null){
-                timelineProgressBar.stop();
-            }
-            timelineProgressBar = new Timeline();
-            timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(config.getFixationLength()),
-                new KeyValue(progressIndicator.progressProperty(), 1)));
-
-            timelineProgressBar.setOnFinished(actionEvent -> {
-                if (!favGamesImageView.isHover()){
-                    gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName);
+            if (!Objects.equals(config.getEyeTracker(), "mouse_control")){
+                progressIndicator.toFront();
+                if (!thumbpane.getChildren().contains(progressIndicator)){
+                    thumbpane.getChildren().add(progressIndicator);
                 }
-                final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
-                backgroundMusicManager.pause();
-                stopTimerPI();
-            });
-            timelineProgressBar.play();
+                progressIndicator.setMinWidth(90);
+                progressIndicator.setMinHeight(90);
+
+                progressIndicator.setStyle(" -fx-progress-color: " + config.getProgressBarColor());
+                progressIndicator.setOpacity(1);
+                progressIndicator.setProgress(0);
+
+                if (timelineProgressBar != null){
+                    timelineProgressBar.stop();
+                }
+                timelineProgressBar = new Timeline();
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(config.getFixationLength()),
+                    new KeyValue(progressIndicator.progressProperty(), 1)));
+
+                timelineProgressBar.setOnFinished(actionEvent -> {
+                    if (!favGamesImageView.isHover()){
+                        gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName);
+                    }
+                    final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
+                    backgroundMusicManager.pause();
+                    stopTimerPI();
+                });
+                timelineProgressBar.play();
+            }
         });
 
         gameCard.addEventFilter(GazeEvent.GAZE_EXITED, (GazeEvent y) ->{
