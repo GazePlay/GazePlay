@@ -5,12 +5,16 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
@@ -122,39 +126,37 @@ public class TowerDefense implements GameLifeCycle {
         progressTimeline = new Timeline();
         progressTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(progressIndicator.progressProperty(), 1)));
 
-        gameContext.getRoot().addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
-            if(money.get()>=TOWER_COST) {
-                boolean inside = false;
-                for (Point2D turretsTile : map.getTurretsTiles()) {
+        for (Point2D turretsTile : map.getTurretsTiles()) {
+            Rectangle rectangle = new Rectangle();
+            rectangle.xProperty().bind(tileWidth.multiply(turretsTile.getX()));
+            rectangle.yProperty().bind(tileHeight.multiply(turretsTile.getY()));
+            rectangle.widthProperty().bind(tileWidth);
+            rectangle.heightProperty().bind(tileHeight);
+
+            rectangle.setOpacity(0);
+            rectangle.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+                if(money.get()>=TOWER_COST){
                     double turretX = turretsTile.getX() * tileWidth.get();
                     double turretY = turretsTile.getY() * tileHeight.get();
-                    if (event.getX() >= turretX && event.getX() <= (turretsTile.getX() + 1) * tileWidth.get() && event.getY() >= turretY && event.getY() <= (turretsTile.getY() + 1) * tileHeight.get()) {
-                        inside = true;
-                        if (progressTimeline.getStatus() != Animation.Status.RUNNING) {
-                            progressIndicator.setMinSize(tileWidth.get(), tileHeight.get());
-                            progressIndicator.relocate(turretX, turretY);
-                            progressIndicator.setProgress(0);
-                            progressIndicator.setVisible(true);
+                    progressIndicator.setMinSize(tileWidth.get(), tileHeight.get());
+                    progressIndicator.relocate(turretX, turretY);
+                    progressIndicator.setProgress(0);
+                    progressIndicator.setVisible(true);
 
-                            progressTimeline.setOnFinished(actionEvent -> {
-                                progressIndicator.setVisible(false);
-                                int index = getTower(turretX, turretY);
-                                if (index == -1) {
-                                    createTower((int) turretsTile.getX(), (int) turretsTile.getY());
-                                } else {
-                                    towers.remove(index);
-                                }
-                            });
-                            progressTimeline.play();
-                        }
-                    }
+                    progressTimeline.setOnFinished(actionEvent -> {
+                        progressIndicator.setVisible(false);
+                        createTowerSelection((int) turretsTile.getX(), (int) turretsTile.getY());
+                    });
+                    progressTimeline.play();
                 }
-                if (!inside) {
-                    progressTimeline.stop();
-                    progressIndicator.setVisible(false);
-                }
-            }
-        });
+
+            });
+            rectangle.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
+                progressTimeline.stop();
+                progressIndicator.setVisible(false);
+            });
+            gameContext.getChildren().add(rectangle);
+        }
     }
 
     @Override
@@ -339,6 +341,120 @@ public class TowerDefense implements GameLifeCycle {
         if(enemiesSent >= enemyCount){
             waveButton.setVisible(true);
         }
+    }
+
+    private void createTowerSelection(int col, int row){
+
+        Group group = new Group();
+        gameContext.getChildren().add(group);
+
+        double MainCircleRadius = 2;
+        double TowerIconRadius = (MainCircleRadius-0.5)/2;
+
+        Ellipse ellipse = new Ellipse((col+0.5)*tileWidth.get(), (row+0.5)*tileHeight.get(), MainCircleRadius*tileWidth.get(), MainCircleRadius*tileHeight.get());
+        ellipse.setFill(Color.MEDIUMSLATEBLUE);
+        ellipse.setOpacity(0.75);
+        group.getChildren().add(ellipse);
+
+        ProgressIndicator towerPi = new ProgressIndicator(0);
+        towerPi.setVisible(false);
+        towerPi.setMouseTransparent(true);
+        towerPi.setMinSize(TowerIconRadius*2*tileWidth.get(), TowerIconRadius*2*tileHeight.get());
+
+        Timeline placeTowerTimeline = new Timeline();
+        placeTowerTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(towerPi.progressProperty(), 1)));
+        placeTowerTimeline.setOnFinished(event -> {
+            createTower(col, row);
+            group.getChildren().clear();
+            gameContext.getChildren().remove(group);
+        });
+
+        // Above
+        Ellipse t1 = new Ellipse((col+0.5)*tileWidth.get(), (row + 0.5 - 2*TowerIconRadius)*tileHeight.get(), TowerIconRadius*tileWidth.get(), TowerIconRadius*tileHeight.get());
+        t1.setFill(Color.AZURE);
+        group.getChildren().add(t1);
+        t1.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+            towerPi.relocate((col+0.5-TowerIconRadius)*tileWidth.get(), (row + 0.5 - 3*TowerIconRadius)*tileHeight.get());
+            towerPi.setProgress(0);
+            towerPi.setVisible(true);
+            placeTowerTimeline.play();
+        });
+        t1.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
+            towerPi.setVisible(false);
+            placeTowerTimeline.stop();
+        });
+
+        // Under
+        Ellipse t2 = new Ellipse((col+0.5)*tileWidth.get(), (row + 0.5 + 2*TowerIconRadius)*tileHeight.get(), TowerIconRadius*tileWidth.get(), TowerIconRadius*tileHeight.get());
+        t2.setFill(Color.RED);
+        group.getChildren().add(t2);
+        t2.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+            towerPi.relocate((col+0.5-TowerIconRadius)*tileWidth.get(), (row + 0.5 + TowerIconRadius)*tileHeight.get());
+            towerPi.setProgress(0);
+            towerPi.setVisible(true);
+            placeTowerTimeline.play();
+        });
+        t2.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
+            towerPi.setVisible(false);
+            placeTowerTimeline.stop();
+        });
+
+        // Left
+        Ellipse t3 = new Ellipse((col + 0.5 - 2*TowerIconRadius)*tileWidth.get(), (row+0.5)*tileHeight.get(), TowerIconRadius*tileWidth.get(), TowerIconRadius*tileHeight.get());
+        t3.setFill(Color.GREEN);
+        group.getChildren().add(t3);
+        t3.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+            towerPi.relocate((col + 0.5 - 3*TowerIconRadius)*tileWidth.get(), (row+0.5-TowerIconRadius)*tileHeight.get());
+            towerPi.setProgress(0);
+            towerPi.setVisible(true);
+            placeTowerTimeline.play();
+        });
+        t3.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
+            towerPi.setVisible(false);
+            placeTowerTimeline.stop();
+        });
+
+        // Right
+        Ellipse t4 = new Ellipse((col + 0.5 + 2*TowerIconRadius)*tileWidth.get(), (row+0.5)*tileHeight.get(), TowerIconRadius*tileWidth.get(), TowerIconRadius*tileHeight.get());
+        t4.setFill(Color.PURPLE);
+        group.getChildren().add(t4);
+        t4.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+            towerPi.relocate((col + 0.5 + TowerIconRadius)*tileWidth.get(), (row+0.5-TowerIconRadius)*tileHeight.get());
+            towerPi.setProgress(0);
+            towerPi.setVisible(true);
+            placeTowerTimeline.play();
+        });
+        t4.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
+            towerPi.setVisible(false);
+            placeTowerTimeline.stop();
+        });
+
+        ProgressIndicator exitPi = new ProgressIndicator(0);
+        exitPi.setMouseTransparent(true);
+        exitPi.setMinSize(tileWidth.get(), tileHeight.get());
+        exitPi.relocate(col*tileWidth.get(), row*tileHeight.get());
+
+        Timeline exitTl = new Timeline();
+        exitTl.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(exitPi.progressProperty(), 1)));
+        exitTl.setOnFinished(event1 -> {
+            group.getChildren().clear();
+            gameContext.getChildren().remove(group);
+        });
+
+        group.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
+            exitPi.setProgress(0);
+            exitPi.setVisible(true);
+            exitTl.play();
+        });
+
+        group.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+            exitPi.setVisible(false);
+            exitTl.stop();
+        });
+
+        group.getChildren().add(towerPi);
+        group.getChildren().add(exitPi);
+
     }
 
 }
