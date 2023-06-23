@@ -273,6 +273,7 @@ public class GameMenuFactory {
                 break;
         }
 
+        gazeDeviceManager.addEventFilter(gameCard);
         gameCard.addEventFilter(MOUSE_PRESSED, (MouseEvent e) -> {
             if (!favGamesImageView.isHover()) {
                 gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName);
@@ -281,12 +282,10 @@ public class GameMenuFactory {
             backgroundMusicManager.pause();
         });
 
-
-        if (gazeDeviceManager != null){
-            gazeDeviceManager.addEventFilter(gameCard);
-            progressIndicator = new ProgressIndicator(0);
-            progressIndicator.setOpacity(0);
-            gameCard.addEventFilter(GazeEvent.GAZE_ENTERED, (GazeEvent e) ->{
+        progressIndicator = new ProgressIndicator(0);
+        progressIndicator.setOpacity(0);
+        gameCard.addEventFilter(GazeEvent.GAZE_ENTERED, (GazeEvent e) ->{
+            if (!Objects.equals(config.getEyeTracker(), "mouse_control")){
                 progressIndicator.toFront();
                 if (!thumbpane.getChildren().contains(progressIndicator)){
                     thumbpane.getChildren().add(progressIndicator);
@@ -314,13 +313,12 @@ public class GameMenuFactory {
                     stopTimerPI();
                 });
                 timelineProgressBar.play();
+            }
+        });
 
-            });
-
-            gameCard.addEventFilter(GazeEvent.GAZE_EXITED, (GazeEvent y) ->{
-                stopTimerPI();
-            });
-        }
+        gameCard.addEventFilter(GazeEvent.GAZE_EXITED, (GazeEvent y) ->{
+            stopTimerPI();
+        });
 
 
 

@@ -47,7 +47,6 @@ import net.gazeplay.ui.GraphicalContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.SortedSet;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -153,26 +152,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.002);
             }
         };
-
-        if (!Objects.equals(config.getEyeTracker(), "mouse_control")){
-            stats = new Stats(gazePlay.getPrimaryScene());
-
-            CurrentScreenPositionSupplierFactoryBean test = new CurrentScreenPositionSupplierFactoryBean();
-            test.setGazePlay(gazePlay);
-
-            gazeDeviceManager = new TobiiGazeDeviceManager();
-            gazeDeviceManager.init(gazePlay.getCurrentScreenDimensionSupplier(), test.getObject());
-            gazeDeviceManager.addStats(stats);
-            gazeDeviceManager.addEventFilter(downArrowPane);
-            downArrowPane.addEventFilter(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
-            downArrowPane.addEventFilter(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
-        }else{
-            gazeDeviceManager = null;
-        }
-
-
+        gazeDeviceManager.addEventFilter(downArrowPane);
         downArrowPane.addEventFilter(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
         downArrowPane.addEventFilter(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
+        downArrowPane.addEventFilter(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
+        downArrowPane.addEventFilter(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
 
         BorderPane bottomPane = new BorderPane();
         bottomPane.setLeft(leftControlPane);
@@ -211,14 +195,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.002);
             }
         };
-
-        if (gazeDeviceManager != null){
-            gazeDeviceManager.addEventFilter(upArrowPane);
-            upArrowPane.addEventFilter(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
-            upArrowPane.addEventFilter(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
-        }
+        gazeDeviceManager.addEventFilter(upArrowPane);
         upArrowPane.addEventFilter(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
         upArrowPane.addEventFilter(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
+        upArrowPane.addEventFilter(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
+        upArrowPane.addEventFilter(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
 
 
         VBox topBotPane = new VBox();
@@ -307,24 +288,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
         };
 
-        if (!Objects.equals(config.getEyeTracker(), "mouse_control")){
-            stats = new Stats(gazePlay.getPrimaryScene());
-
-            CurrentScreenPositionSupplierFactoryBean test = new CurrentScreenPositionSupplierFactoryBean();
-            test.setGazePlay(gazePlay);
-
-            gazeDeviceManager = new TobiiGazeDeviceManager();
-            gazeDeviceManager.init(gazePlay.getCurrentScreenDimensionSupplier(), test.getObject());
-            gazeDeviceManager.addStats(stats);
-
-            gazeDeviceManager.addEventFilter(downArrowPane);
-            downArrowPane.addEventFilter(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
-            downArrowPane.addEventFilter(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
-        }else{
-            gazeDeviceManager = null;
-        }
-            downArrowPane.addEventFilter(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
-            downArrowPane.addEventFilter(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
+        gazeDeviceManager.addEventFilter(downArrowPane);
+        downArrowPane.addEventFilter(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
+        downArrowPane.addEventFilter(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
+        downArrowPane.addEventFilter(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
+        downArrowPane.addEventFilter(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
 
 
         BorderPane bottomPane = new BorderPane();
@@ -375,16 +343,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             }
         };
 
-
-        if (gazeDeviceManager != null){
-            gazeDeviceManager.addEventFilter(upArrowPane);
-            upArrowPane.addEventFilter(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
-            upArrowPane.addEventFilter(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
-        }
-
-
+        gazeDeviceManager.addEventFilter(upArrowPane);
         upArrowPane.addEventFilter(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
         upArrowPane.addEventFilter(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
+        upArrowPane.addEventFilter(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
+        upArrowPane.addEventFilter(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
 
         VBox topBotPane = new VBox();
         topBotPane.setAlignment(Pos.CENTER);
