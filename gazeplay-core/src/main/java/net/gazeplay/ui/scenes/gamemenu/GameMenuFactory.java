@@ -1,28 +1,33 @@
 package net.gazeplay.ui.scenes.gamemenu;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Duration;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.*;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.gaze.devicemanager.TobiiGazeDeviceManager;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import net.gazeplay.commons.utils.stats.Stats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -43,9 +48,12 @@ public class GameMenuFactory {
 
     @Autowired
     private ApplicationContext applicationContext;
-
     @Autowired
     private GameMenuController gameMenuController;
+
+    private ProgressIndicator progressIndicator;
+    private Timeline timelineProgressBar;
+    private Stats stats;
 
     public GameButtonPane createGameButton(
         @NonNull final GazePlay gazePlay,
@@ -53,11 +61,13 @@ public class GameMenuFactory {
         @NonNull final Configuration config,
         @NonNull final Translator translator,
         @NonNull final GameSpec gameSpec,
-        @NonNull final GameButtonOrientation orientation
+        @NonNull final GameButtonOrientation orientation,
+        TobiiGazeDeviceManager gazeDeviceManager
     ) {
 
         final GameSummary gameSummary = gameSpec.getGameSummary();
         final String gameName = translator.translate(gameSummary.getNameCode());
+        Pane thumbpane = new Pane();
 
         final Image heartIcon;
         heartIcon = new Image("data/common/images/heart_filled.png");
@@ -97,7 +107,6 @@ public class GameMenuFactory {
                 break;
         }
 
-
         gameCard.getStyleClass().add("button");
 
         double thumbnailBorderSize = 28d;
@@ -111,7 +120,8 @@ public class GameMenuFactory {
             ImageView imageView = new ImageView(buttonGraphics);
             imageView.getStyleClass().add("gameChooserButtonThumbnail");
             imageView.setPreserveRatio(true);
-            thumbnailContainer.setCenter(imageView);
+            thumbpane.getChildren().add(imageView);
+            thumbnailContainer.setCenter(thumbpane);
 
             double imageSizeRatio = buttonGraphics.getWidth() / buttonGraphics.getHeight();
 
@@ -258,12 +268,49 @@ public class GameMenuFactory {
                 break;
         }
 
-        gameCard.addEventHandler(MOUSE_PRESSED, (MouseEvent e) -> {
+        gazeDeviceManager.addEventFilter(gameCard);
+        gameCard.addEventFilter(MOUSE_PRESSED, (MouseEvent e) -> {
             if (!favGamesImageView.isHover()) {
                 gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName);
             }
             final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
             backgroundMusicManager.pause();
+        });
+
+        progressIndicator = new ProgressIndicator(0);
+        progressIndicator.setOpacity(0);
+        gameCard.addEventFilter(GazeEvent.GAZE_ENTERED, (GazeEvent e) ->{
+            progressIndicator.toFront();
+            if (!thumbpane.getChildren().contains(progressIndicator)){
+                thumbpane.getChildren().add(progressIndicator);
+            }
+            progressIndicator.setMinWidth(90);
+            progressIndicator.setMinHeight(90);
+
+            progressIndicator.setStyle(" -fx-progress-color: " + config.getProgressBarColor());
+            progressIndicator.setOpacity(1);
+            progressIndicator.setProgress(0);
+
+            if (timelineProgressBar != null){
+                timelineProgressBar.stop();
+            }
+            timelineProgressBar = new Timeline();
+            timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(config.getFixationLength()),
+                new KeyValue(progressIndicator.progressProperty(), 1)));
+
+            timelineProgressBar.setOnFinished(actionEvent -> {
+                if (!favGamesImageView.isHover()){
+                    gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName);
+                }
+                final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
+                backgroundMusicManager.pause();
+                stopTimerPI();
+            });
+            timelineProgressBar.play();
+        });
+
+        gameCard.addEventFilter(GazeEvent.GAZE_EXITED, (GazeEvent y) ->{
+            stopTimerPI();
         });
 
         @Data
@@ -295,5 +342,12 @@ public class GameMenuFactory {
         return gameCard;
     }
 
+    private void stopTimerPI(){
+        if (timelineProgressBar != null){
+            timelineProgressBar.stop();
+            progressIndicator.setOpacity(0);
+            progressIndicator.setProgress(0);
 
+        }
+    }
 }
