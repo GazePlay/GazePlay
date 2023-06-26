@@ -55,6 +55,7 @@ public class TowerDefense implements GameLifeCycle {
     private int enemiesSent;
     private int enemySpawnTickLimit = 120;
     private int enemySpawnTick;
+    private Image basicTowerImageView;
 
     TowerDefense(final IGameContext gameContext, final Stats stats){
         this.gameContext = gameContext;
@@ -67,6 +68,7 @@ public class TowerDefense implements GameLifeCycle {
         money = new SimpleDoubleProperty(START_MONEY);
         life = START_LIFE;
         waveCount = 0;
+        basicTowerImageView = new Image("data/TowerDefense/basicTower.png");
 
         tileWidth = new SimpleDoubleProperty(gameContext.getRoot().getWidth());
         tileHeight = new SimpleDoubleProperty(gameContext.getRoot().getHeight());
@@ -348,10 +350,9 @@ public class TowerDefense implements GameLifeCycle {
         Group group = new Group();
         gameContext.getChildren().add(group);
 
-        double MainCircleRadius = 2;
-        double TowerIconRadius = (MainCircleRadius-0.5)/2;
+        double mainCircleRadius = 2;
 
-        Ellipse ellipse = new Ellipse((col+0.5)*tileWidth.get(), (row+0.5)*tileHeight.get(), MainCircleRadius*tileWidth.get(), MainCircleRadius*tileHeight.get());
+        Ellipse ellipse = new Ellipse((col+0.5)*tileWidth.get(), (row+0.5)*tileHeight.get(), mainCircleRadius*tileWidth.get(), mainCircleRadius*tileHeight.get());
         ellipse.setFill(Color.MEDIUMSLATEBLUE);
         ellipse.setOpacity(0.75);
         group.getChildren().add(ellipse);
@@ -359,7 +360,7 @@ public class TowerDefense implements GameLifeCycle {
         ProgressIndicator towerPi = new ProgressIndicator(0);
         towerPi.setVisible(false);
         towerPi.setMouseTransparent(true);
-        towerPi.setMinSize(TowerIconRadius*2*tileWidth.get(), TowerIconRadius*2*tileHeight.get());
+        towerPi.setMinSize((mainCircleRadius - 0.5)*tileWidth.get(), (mainCircleRadius - 0.5)*tileHeight.get());
 
         Timeline placeTowerTimeline = new Timeline();
         placeTowerTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(towerPi.progressProperty(), 1)));
@@ -370,61 +371,73 @@ public class TowerDefense implements GameLifeCycle {
         });
 
         // Above
-        Ellipse t1 = new Ellipse((col+0.5)*tileWidth.get(), (row + 0.5 - 2*TowerIconRadius)*tileHeight.get(), TowerIconRadius*tileWidth.get(), TowerIconRadius*tileHeight.get());
-        t1.setFill(Color.AZURE);
-        group.getChildren().add(t1);
-        t1.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
-            towerPi.relocate((col+0.5-TowerIconRadius)*tileWidth.get(), (row + 0.5 - 3*TowerIconRadius)*tileHeight.get());
+        ImageView topTower = new ImageView(basicTowerImageView);
+        topTower.setFitWidth((mainCircleRadius - 0.5)*tileWidth.get());
+        topTower.setFitHeight((mainCircleRadius - 0.5)*tileHeight.get());
+        topTower.setX((col + 0.5) * tileWidth.get() - topTower.getFitWidth()/2);
+        topTower.setY((row + 0.5 - mainCircleRadius) * tileHeight.get());
+        group.getChildren().add(topTower);
+        topTower.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+            towerPi.relocate(topTower.getX(), topTower.getY());
             towerPi.setProgress(0);
             towerPi.setVisible(true);
             placeTowerTimeline.play();
         });
-        t1.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
+        topTower.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
             towerPi.setVisible(false);
             placeTowerTimeline.stop();
         });
 
         // Under
-        Ellipse t2 = new Ellipse((col+0.5)*tileWidth.get(), (row + 0.5 + 2*TowerIconRadius)*tileHeight.get(), TowerIconRadius*tileWidth.get(), TowerIconRadius*tileHeight.get());
-        t2.setFill(Color.RED);
-        group.getChildren().add(t2);
-        t2.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
-            towerPi.relocate((col+0.5-TowerIconRadius)*tileWidth.get(), (row + 0.5 + TowerIconRadius)*tileHeight.get());
+        ImageView downTower = new ImageView(basicTowerImageView);
+        downTower.setFitWidth((mainCircleRadius - 0.5)*tileWidth.get());
+        downTower.setFitHeight((mainCircleRadius - 0.5)*tileHeight.get());
+        downTower.setX((col + 0.5) * tileWidth.get() - downTower.getFitWidth()/2);
+        downTower.setY((row + 1) * tileHeight.get());
+        group.getChildren().add(downTower);
+        downTower.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+            towerPi.relocate(downTower.getX(), downTower.getY());
             towerPi.setProgress(0);
             towerPi.setVisible(true);
             placeTowerTimeline.play();
         });
-        t2.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
+        downTower.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
             towerPi.setVisible(false);
             placeTowerTimeline.stop();
         });
 
         // Left
-        Ellipse t3 = new Ellipse((col + 0.5 - 2*TowerIconRadius)*tileWidth.get(), (row+0.5)*tileHeight.get(), TowerIconRadius*tileWidth.get(), TowerIconRadius*tileHeight.get());
-        t3.setFill(Color.GREEN);
-        group.getChildren().add(t3);
-        t3.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
-            towerPi.relocate((col + 0.5 - 3*TowerIconRadius)*tileWidth.get(), (row+0.5-TowerIconRadius)*tileHeight.get());
+        ImageView leftTower = new ImageView(basicTowerImageView);
+        leftTower.setFitWidth((mainCircleRadius - 0.5)*tileWidth.get());
+        leftTower.setFitHeight((mainCircleRadius - 0.5)*tileHeight.get());
+        leftTower.setX((col + 0.5 - mainCircleRadius) * tileWidth.get());
+        leftTower.setY((row + 0.5)* tileHeight.get() - leftTower.getFitHeight()/2);
+        group.getChildren().add(leftTower);
+        leftTower.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+            towerPi.relocate(leftTower.getX(), leftTower.getY());
             towerPi.setProgress(0);
             towerPi.setVisible(true);
             placeTowerTimeline.play();
         });
-        t3.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
+        leftTower.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
             towerPi.setVisible(false);
             placeTowerTimeline.stop();
         });
 
         // Right
-        Ellipse t4 = new Ellipse((col + 0.5 + 2*TowerIconRadius)*tileWidth.get(), (row+0.5)*tileHeight.get(), TowerIconRadius*tileWidth.get(), TowerIconRadius*tileHeight.get());
-        t4.setFill(Color.PURPLE);
-        group.getChildren().add(t4);
-        t4.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
-            towerPi.relocate((col + 0.5 + TowerIconRadius)*tileWidth.get(), (row+0.5-TowerIconRadius)*tileHeight.get());
+        ImageView rightTower = new ImageView(basicTowerImageView);
+        rightTower.setFitWidth((mainCircleRadius - 0.5)*tileWidth.get());
+        rightTower.setFitHeight((mainCircleRadius - 0.5)*tileHeight.get());
+        rightTower.setX((col + 1) * tileWidth.get());
+        rightTower.setY((row + 0.5)* tileHeight.get() - rightTower.getFitHeight()/2);
+        group.getChildren().add(rightTower);
+        rightTower.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+            towerPi.relocate(rightTower.getX(), rightTower.getY());
             towerPi.setProgress(0);
             towerPi.setVisible(true);
             placeTowerTimeline.play();
         });
-        t4.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
+        rightTower.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
             towerPi.setVisible(false);
             placeTowerTimeline.stop();
         });

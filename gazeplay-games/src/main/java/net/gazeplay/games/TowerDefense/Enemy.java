@@ -32,6 +32,7 @@ public class Enemy {
         maxHealth = 50;
         currentHealth = maxHealth;
         reward = 5;
+        // In Tile/tick
         speedX = 1.0/60;
         speedY = 0;
     }
@@ -127,5 +128,19 @@ public class Enemy {
     public void multiplyHealth(double multiplier){
         maxHealth = maxHealth*multiplier;
         currentHealth = maxHealth;
+    }
+
+    public double getRotation() {
+        double rotation = 0;
+        if(speedX>0){
+            rotation = 0;
+        }else if (speedX<0){
+            rotation = 180;
+        }else if (speedY<0){
+            rotation = -90;
+        }else if (speedY>0){
+            rotation = 90;
+        }
+        return rotation;
     }
 }

@@ -20,6 +20,7 @@ public class Tower {
     private int tick;
     private int col;
     private int row;
+    private double rotation;
 
     public Tower(int col, int row, DoubleProperty tileWidth, DoubleProperty tileHeight, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies){
         this.col = col;
@@ -29,11 +30,12 @@ public class Tower {
         this.projectiles = projectiles;
         this.enemies = enemies;
         tick = 0;
+        rotation = 0;
 
         fireRate = 30;
         damage = 5;
         // In tile unit
-        projSpeed = 3.0/60;
+        projSpeed = 5.0/60;
         projSize = 0.2;
         range = 3;
     }
@@ -47,23 +49,27 @@ public class Tower {
     }
 
     public void fire(){
-        tick++;
+        Enemy target = findEnemyInRange();
+        if(target!=null){
+            double towerCenterX = col + 0.5;
+            double towerCenterY = row + 0.5;
 
-        if(tick>=fireRate){
-            Enemy target = findEnemyInRange();
-            if(target!=null){
+            Point2D targetCenter = target.getCenter();
+
+            double tx = targetCenter.getX() - towerCenterX;
+            double ty = targetCenter.getY() - towerCenterY;
+
+            // Aim at enemy
+            rotation = Math.toDegrees(Math.atan2(ty, tx)) + 90;
+
+            // Fire a projectile
+            if(tick++>=fireRate){
                 tick = 0;
-                Point2D targetCoord = target.getCenter();
-
-                double startX = col + 0.5;
-                double startY = row + 0.5;
-                double tx = targetCoord.getX() - startX;
-                double ty = targetCoord.getY() - startY;
 
                 double xratio = tx/(Math.abs(tx)+Math.abs(ty));
                 double yratio = ty/(Math.abs(tx)+Math.abs(ty));
 
-                projectiles.add(new Projectile(startX, startY, xratio*projSpeed, yratio*projSpeed, projSize, damage));
+                projectiles.add(new Projectile(towerCenterX, towerCenterY, xratio*projSpeed, yratio*projSpeed, projSize, damage));
             }
         }
     }
@@ -76,6 +82,10 @@ public class Tower {
             }
         }
         return null;
+    }
+
+    public double getRotation() {
+        return rotation;
     }
 
 }
