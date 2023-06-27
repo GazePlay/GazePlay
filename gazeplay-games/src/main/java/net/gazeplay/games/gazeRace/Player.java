@@ -3,6 +3,8 @@ package net.gazeplay.games.gazeRace;
 import javafx.animation.AnimationTimer;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.effect.Light;
+import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -23,9 +25,9 @@ public class Player extends Rectangle {
     protected boolean isInvincible;
     protected AnimationTimer playerAnimationMovement;
     //private ImagePattern playerImage = new ImagePattern(new Image(""));
+    private boolean direction;
 
-
-    public Player(double x, double y, double width, double height,  GazeRace gameInstance, IGameContext gameContext, double speed, int health) {
+    public Player(double x, double y, double width, double height,  GazeRace gameInstance, IGameContext gameContext, double speed, int health, boolean direction) {
         super(x, y, width, height);
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
@@ -34,8 +36,22 @@ public class Player extends Rectangle {
         this.health = health;
         this.isDead = false;
         this.isInvincible = false;
+        this.direction = direction;
+        if (direction){
+            setFill(new ImagePattern(new Image("data/gazeRace/carH.png")));
+        }else{
+            setFill(new ImagePattern(new Image("data/gazeRace/carV.png")));
+        }
 
-        this.setFill(Color.WHITE);
+        final Lighting lighting = new Lighting();
+        lighting.setDiffuseConstant(100.0);
+        lighting.setSpecularConstant(0.0);
+        lighting.setSpecularExponent(0.0);
+        lighting.setSurfaceScale(0.0);
+        lighting.setLight(new Light.Distant(30, 30, Color.BLUE));
+
+        this.setEffect(lighting);
+
         this.enterEvent = buildEvent();
         gameContext.getPrimaryScene().addEventFilter(GazeEvent.ANY, enterEvent);
         gameContext.getPrimaryScene().addEventFilter(MouseEvent.ANY, enterEvent);
@@ -85,7 +101,11 @@ public class Player extends Rectangle {
                         setFill(Color.TRANSPARENT);
                         blink = false;
                     }else{
-                        setFill(Color.WHITE);
+                        if (direction){
+                            setFill(new ImagePattern(new Image("data/gazeRace/carH.png")));
+                        }else{
+                            setFill(new ImagePattern(new Image("data/gazeRace/carV.png")));
+                        }
                         blink = true;
                     }
                 }
@@ -93,7 +113,11 @@ public class Player extends Rectangle {
 
                 if (nbSecond == 4){
                     isInvincible = false;
-                    setFill(Color.WHITE);
+                    if (direction){
+                        setFill(new ImagePattern(new Image("data/gazeRace/carH.png")));
+                    }else{
+                        setFill(new ImagePattern(new Image("data/gazeRace/carV.png")));
+                    }
                     stop();
                 }
 
