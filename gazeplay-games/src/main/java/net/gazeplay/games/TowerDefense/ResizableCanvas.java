@@ -162,7 +162,7 @@ public class ResizableCanvas extends Canvas {
                     gc.drawImage(missileImage, -tileWidth.get()/2, -tileHeight.get()/2, tileWidth.get(), tileHeight.get());
                     gc.restore();
                 }else{
-                    gc.drawImage(explosionImage, 96*((Missile) projectile).getFrameIndex(), 0, 96,96, projectile.getX()*tileWidth.get(), projectile.getY()*tileHeight.get(), tileHeight.get(), tileWidth.get());
+                    gc.drawImage(explosionImage, 96*((Missile) projectile).getFrameIndex(), 0, 96,96, projectile.getX()*tileWidth.get(), projectile.getY()*tileHeight.get(), tileHeight.get()*1.5, tileWidth.get()*1.5);
                 }
             }else{
                 gc.fillOval(projectile.getX()*tileWidth.get(), projectile.getY()*tileHeight.get(), projectile.getSize()*tileHeight.get(), projectile.getSize()*tileWidth.get());

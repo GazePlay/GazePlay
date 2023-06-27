@@ -3,6 +3,8 @@ package net.gazeplay.games.TowerDefense;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
@@ -20,6 +22,7 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
@@ -68,6 +71,7 @@ public class TowerDefense implements GameLifeCycle {
     TowerDefense(final IGameContext gameContext, final Stats stats){
         this.gameContext = gameContext;
         this.stats = stats;
+        gameContext.getGazeDeviceManager().addStats(stats);
 
         enemies = new ArrayList<>();
         towers = new ArrayList<>();
@@ -119,18 +123,25 @@ public class TowerDefense implements GameLifeCycle {
         tileWidth.addListener(observable -> waveButton.setStyle("-fx-font-size: "+tileWidth.get()/2+";-fx-font-family: 'Agency FB'"));
         topBar.getChildren().add(waveButton);
 
-        waveButton.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+        EventHandler<Event> enterWaveButtonHandler = event -> {
             waveButtonPi.setMinSize(tileWidth.get(), tileHeight.get());
             waveButtonPi.relocate(waveButton.getLayoutX()+waveButton.getWidth()/2-waveButtonPi.getWidth()/2, waveButton.getLayoutY());
             waveButtonPi.setProgress(0);
             waveButtonPi.setVisible(true);
             sendWaveTimeline.play();
-        });
+        };
 
-        waveButton.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
+        waveButton.addEventFilter(MouseEvent.MOUSE_ENTERED, enterWaveButtonHandler);
+        waveButton.addEventFilter(GazeEvent.GAZE_ENTERED, enterWaveButtonHandler);
+
+        EventHandler<Event> exitWaveButtonHandler = event -> {
             waveButtonPi.setVisible(false);
             sendWaveTimeline.stop();
-        });
+        };
+
+        waveButton.addEventFilter(MouseEvent.MOUSE_EXITED, exitWaveButtonHandler);
+        waveButton.addEventFilter(GazeEvent.GAZE_EXITED, exitWaveButtonHandler);
+        gameContext.getGazeDeviceManager().addEventFilter(waveButton);
 
         progressIndicator = new ProgressIndicator(0);
         progressIndicator.setVisible(false);
@@ -139,15 +150,21 @@ public class TowerDefense implements GameLifeCycle {
         progressTimeline = new Timeline();
         progressTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(progressIndicator.progressProperty(), 1)));
 
+        EventHandler<Event> exitTurretTileHandler = event -> {
+            progressTimeline.stop();
+            progressIndicator.setVisible(false);
+        };
+
         for (Point2D turretsTile : map.getTurretsTiles()) {
             Rectangle rectangle = new Rectangle();
-            rectangle.xProperty().bind(tileWidth.multiply(turretsTile.getX()));
-            rectangle.yProperty().bind(tileHeight.multiply(turretsTile.getY()));
-            rectangle.widthProperty().bind(tileWidth);
-            rectangle.heightProperty().bind(tileHeight);
+            rectangle.xProperty().bind(tileWidth.multiply(turretsTile.getX()-0.5));
+            rectangle.yProperty().bind(tileHeight.multiply(turretsTile.getY()-0.5));
+            rectangle.widthProperty().bind(tileWidth.multiply(1.5));
+            rectangle.heightProperty().bind(tileHeight.multiply(1.5));
 
             rectangle.setOpacity(0);
-            rectangle.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+
+            EventHandler<Event> enterTurretTileHandler = event -> {
                 double turretX = turretsTile.getX() * tileWidth.get();
                 double turretY = turretsTile.getY() * tileHeight.get();
                 progressIndicator.setMinSize(tileWidth.get(), tileHeight.get());
@@ -160,13 +177,20 @@ public class TowerDefense implements GameLifeCycle {
                     createTowerSelection((int) turretsTile.getX(), (int) turretsTile.getY());
                 });
                 progressTimeline.play();
-            });
-            rectangle.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
-                progressTimeline.stop();
-                progressIndicator.setVisible(false);
-            });
+            };
+
+            rectangle.addEventFilter(MouseEvent.MOUSE_ENTERED, enterTurretTileHandler);
+            rectangle.addEventFilter(GazeEvent.GAZE_ENTERED, enterTurretTileHandler);
+
+            rectangle.addEventFilter(MouseEvent.MOUSE_EXITED, exitTurretTileHandler);
+            rectangle.addEventFilter(GazeEvent.GAZE_EXITED, exitTurretTileHandler);
+
+            gameContext.getGazeDeviceManager().addEventFilter(rectangle);
+
             gameContext.getChildren().add(rectangle);
         }
+
+
     }
 
     @Override
@@ -273,7 +297,7 @@ public class TowerDefense implements GameLifeCycle {
                         }else{
                             if(((Missile) proj).isActive()){
                                 ((Missile) proj).setActive(false);
-                                Circle explosionRadius = new Circle(proj.getX()+proj.getSize()/2, proj.getY()+proj.getSize()/2, 1);
+                                Circle explosionRadius = new Circle(proj.getX()+proj.getSize()/2, proj.getY()+proj.getSize()/2, 1.5);
                                 explosions.add(explosionRadius);
                             }
                         }
@@ -415,7 +439,7 @@ public class TowerDefense implements GameLifeCycle {
         Group group = new Group();
         gameContext.getChildren().add(group);
 
-        double mainCircleRadius = 2;
+        double mainCircleRadius = 2.5;
 
         Ellipse ellipse = new Ellipse((col+0.5)*tileWidth.get(), (row+0.5)*tileHeight.get(), mainCircleRadius*tileWidth.get(), mainCircleRadius*tileHeight.get());
         ellipse.setFill(Color.MEDIUMSLATEBLUE);
@@ -430,6 +454,11 @@ public class TowerDefense implements GameLifeCycle {
         Timeline placeTowerTimeline = new Timeline();
         placeTowerTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(towerPi.progressProperty(), 1)));
 
+        EventHandler<Event> exitTowerHandler = event -> {
+            towerPi.setVisible(false);
+            placeTowerTimeline.stop();
+        };
+
         // Above
         ImageView topTower = new ImageView(basicTowerImage);
         topTower.setFitWidth((mainCircleRadius - 0.5)*tileWidth.get());
@@ -437,7 +466,8 @@ public class TowerDefense implements GameLifeCycle {
         topTower.setX((col + 0.5) * tileWidth.get() - topTower.getFitWidth()/2);
         topTower.setY((row + 0.5 - mainCircleRadius) * tileHeight.get());
         group.getChildren().add(topTower);
-        topTower.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+
+        EventHandler<Event> enterTopTowerHandler = event -> {
             towerPi.relocate(topTower.getX(), topTower.getY());
             towerPi.setProgress(0);
             towerPi.setVisible(true);
@@ -447,11 +477,15 @@ public class TowerDefense implements GameLifeCycle {
                 gameContext.getChildren().remove(group);
             });
             placeTowerTimeline.play();
-        });
-        topTower.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
-            towerPi.setVisible(false);
-            placeTowerTimeline.stop();
-        });
+        };
+
+        topTower.addEventFilter(MouseEvent.MOUSE_ENTERED, enterTopTowerHandler);
+        topTower.addEventFilter(GazeEvent.GAZE_ENTERED, enterTopTowerHandler);
+
+        topTower.addEventFilter(MouseEvent.MOUSE_EXITED, exitTowerHandler);
+        topTower.addEventFilter(GazeEvent.GAZE_EXITED, exitTowerHandler);
+
+        gameContext.getGazeDeviceManager().addEventFilter(topTower);
 
         // Under
         ImageView downTower = new ImageView(doubleTowerImage);
@@ -460,7 +494,8 @@ public class TowerDefense implements GameLifeCycle {
         downTower.setX((col + 0.5) * tileWidth.get() - downTower.getFitWidth()/2);
         downTower.setY((row + 1) * tileHeight.get());
         group.getChildren().add(downTower);
-        downTower.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+
+        EventHandler<Event> enterDownTowerHandler = event -> {
             towerPi.relocate(downTower.getX(), downTower.getY());
             towerPi.setProgress(0);
             towerPi.setVisible(true);
@@ -470,11 +505,15 @@ public class TowerDefense implements GameLifeCycle {
                 gameContext.getChildren().remove(group);
             });
             placeTowerTimeline.play();
-        });
-        downTower.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
-            towerPi.setVisible(false);
-            placeTowerTimeline.stop();
-        });
+        };
+
+        downTower.addEventFilter(MouseEvent.MOUSE_ENTERED, enterDownTowerHandler);
+        downTower.addEventFilter(GazeEvent.GAZE_ENTERED, enterDownTowerHandler);
+
+        downTower.addEventFilter(MouseEvent.MOUSE_EXITED, exitTowerHandler);
+        downTower.addEventFilter(GazeEvent.GAZE_EXITED, exitTowerHandler);
+
+        gameContext.getGazeDeviceManager().addEventFilter(downTower);
 
         // Left
         ImageView leftTower = new ImageView(missileTowerImage);
@@ -483,7 +522,8 @@ public class TowerDefense implements GameLifeCycle {
         leftTower.setX((col + 0.5 - mainCircleRadius) * tileWidth.get());
         leftTower.setY((row + 0.5)* tileHeight.get() - leftTower.getFitHeight()/2);
         group.getChildren().add(leftTower);
-        leftTower.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+
+        EventHandler<Event> enterLeftTowerHandler = event -> {
             towerPi.relocate(leftTower.getX(), leftTower.getY());
             towerPi.setProgress(0);
             towerPi.setVisible(true);
@@ -493,11 +533,15 @@ public class TowerDefense implements GameLifeCycle {
                 gameContext.getChildren().remove(group);
             });
             placeTowerTimeline.play();
-        });
-        leftTower.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
-            towerPi.setVisible(false);
-            placeTowerTimeline.stop();
-        });
+        };
+
+        leftTower.addEventFilter(MouseEvent.MOUSE_ENTERED, enterLeftTowerHandler);
+        leftTower.addEventFilter(GazeEvent.GAZE_ENTERED, enterLeftTowerHandler);
+
+        leftTower.addEventFilter(MouseEvent.MOUSE_EXITED, exitTowerHandler);
+        leftTower.addEventFilter(GazeEvent.GAZE_EXITED, exitTowerHandler);
+
+        gameContext.getGazeDeviceManager().addEventFilter(leftTower);
 
         // Right
         ImageView rightTower = new ImageView(canonTowerImage);
@@ -506,23 +550,29 @@ public class TowerDefense implements GameLifeCycle {
         rightTower.setX((col + 1) * tileWidth.get());
         rightTower.setY((row + 0.5)* tileHeight.get() - rightTower.getFitHeight()/2);
         group.getChildren().add(rightTower);
-        rightTower.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+
+        EventHandler<Event> enterRightTowerHandler = event -> {
             towerPi.relocate(rightTower.getX(), rightTower.getY());
             towerPi.setProgress(0);
             towerPi.setVisible(true);
             placeTowerTimeline.setOnFinished(eve -> {
-                createTower(col, row, CANON_TOWER);
+                createTower(col, row, BASIC_TOWER);
                 group.getChildren().clear();
                 gameContext.getChildren().remove(group);
             });
             placeTowerTimeline.play();
-        });
-        rightTower.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
-            towerPi.setVisible(false);
-            placeTowerTimeline.stop();
-        });
+        };
+
+        rightTower.addEventFilter(MouseEvent.MOUSE_ENTERED, enterRightTowerHandler);
+        rightTower.addEventFilter(GazeEvent.GAZE_ENTERED, enterRightTowerHandler);
+
+        rightTower.addEventFilter(MouseEvent.MOUSE_EXITED, exitTowerHandler);
+        rightTower.addEventFilter(GazeEvent.GAZE_EXITED, exitTowerHandler);
+
+        gameContext.getGazeDeviceManager().addEventFilter(rightTower);
 
         ProgressIndicator exitPi = new ProgressIndicator(0);
+        exitPi.setVisible(false);
         exitPi.setMouseTransparent(true);
         exitPi.setMinSize(tileWidth.get(), tileHeight.get());
         exitPi.relocate(col*tileWidth.get(), row*tileHeight.get());
@@ -534,16 +584,31 @@ public class TowerDefense implements GameLifeCycle {
             gameContext.getChildren().remove(group);
         });
 
-        group.addEventFilter(MouseEvent.MOUSE_EXITED, event -> {
+        EventHandler<Event> exitGroupHandler = event -> {
             exitPi.setProgress(0);
             exitPi.setVisible(true);
             exitTl.play();
-        });
+        };
 
-        group.addEventFilter(MouseEvent.MOUSE_ENTERED, event -> {
+        EventHandler<Event> enterGroupHandler = event -> {
             exitPi.setVisible(false);
             exitTl.stop();
-        });
+        };
+
+        // Bigger rectangle to work better with eye-tracking
+        Rectangle rect = new Rectangle((col-2)*tileWidth.get(),(row-2)*tileHeight.get(),tileWidth.get()*5, tileHeight.get()*5);
+        rect.setOpacity(0);
+        rect.setMouseTransparent(true);
+        gameContext.getChildren().add(rect);
+
+        group.addEventFilter(MouseEvent.MOUSE_ENTERED, enterGroupHandler);
+        rect.addEventFilter(GazeEvent.GAZE_ENTERED, enterGroupHandler);
+
+        group.addEventFilter(MouseEvent.MOUSE_EXITED, exitGroupHandler);
+        rect.addEventFilter(GazeEvent.GAZE_EXITED, exitGroupHandler);
+
+        gameContext.getGazeDeviceManager().addEventFilter(rect);
+        gameContext.getGazeDeviceManager().addEventFilter(group);
 
         group.getChildren().add(towerPi);
         group.getChildren().add(exitPi);
