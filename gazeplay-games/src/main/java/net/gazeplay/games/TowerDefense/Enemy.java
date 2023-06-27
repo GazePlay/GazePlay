@@ -4,8 +4,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
-import static net.gazeplay.games.TowerDefense.Map.END;
-import static net.gazeplay.games.TowerDefense.Map.ROAD;
+import static net.gazeplay.games.TowerDefense.Map.*;
 
 public class Enemy {
 
@@ -98,7 +97,7 @@ public class Enemy {
     }
 
     public Rectangle getHitbox() {
-        return new Rectangle(x, y, 1, 1);
+        return new Rectangle(x + 0.3, y + 0.3, 0.4, 0.4);
     }
 
     public Point2D getCenter(){
@@ -142,5 +141,13 @@ public class Enemy {
             rotation = 90;
         }
         return rotation;
+    }
+
+    public double getSpeedX() {
+        return speedX;
+    }
+
+    public double getSpeedY() {
+        return speedY;
     }
 }

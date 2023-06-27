@@ -20,6 +20,10 @@ public class ResizableCanvas extends Canvas {
     private final ArrayList<Tower> towers;
     private final ArrayList<Projectile> projectiles;
     private final Image basicTowerImage;
+    private final Image doubleTowerImage;
+    private final Image missileTowerImage;
+    private final Image canonTowerImage;
+    private final Image missileImage;
     private final Image basicEnemyImage;
     private final Image dirtImage;
     private final Image grassImage;
@@ -27,6 +31,7 @@ public class ResizableCanvas extends Canvas {
     private final Image castleImage;
     private final Image arrow1Image;
     private final Image arrow2Image;
+    private final Image explosionImage;
     private int arrowTick;
     public ResizableCanvas(int[][] map, DoubleProperty tileWidth, DoubleProperty tileHeight, ArrayList<Enemy> enemies, ArrayList<Tower> towers, ArrayList<Projectile> projectiles) {
         gc = getGraphicsContext2D();
@@ -38,7 +43,12 @@ public class ResizableCanvas extends Canvas {
         arrowTick = 0;
         this.projectiles = projectiles;
         basicTowerImage = new Image("data/TowerDefense/basicTower.png");
+        doubleTowerImage = new Image("data/TowerDefense/doubleTower.png");
+        missileTowerImage = new Image("data/TowerDefense/missileTower.png");
+        canonTowerImage = new Image("data/TowerDefense/canonTower.png");
         basicEnemyImage = new Image("data/TowerDefense/basicEnemy.png");
+        explosionImage = new Image("data/TowerDefense/explosion.png");
+        missileImage = new Image("data/TowerDefense/missile.png");
         dirtImage = new Image("data/TowerDefense/dirt.png");
         grassImage = new Image("data/TowerDefense/grass.png");
         towerBaseImage = new Image("data/TowerDefense/towerBase.png");
@@ -95,8 +105,11 @@ public class ResizableCanvas extends Canvas {
             gc.rotate(enemy.getRotation());
             gc.drawImage(basicEnemyImage, -tileWidth.get()/2, -tileHeight.get()/2, tileWidth.get(), tileHeight.get());
             gc.restore();
-//            gc.setFill(Color.RED);
-//            gc.fillRect(x, y, tileWidth.get(), tileHeight.get());
+
+            // Show Hitbox
+//            Rectangle rect = enemy.getHitbox();
+//            gc.setStroke(Color.RED);
+//            gc.strokeRect(rect.getX()*tileWidth.get(), rect.getY()*tileHeight.get(), rect.getWidth()*tileWidth.get(), rect.getHeight()*tileHeight.get());
 
             // Draw Health bar
             gc.setFill(Color.WHITE);
@@ -111,11 +124,20 @@ public class ResizableCanvas extends Canvas {
     private void drawTowers(){
         gc.setFill(Color.AQUA);
         for (Tower tower : towers) {
-            //gc.fillOval(tower.getCol()*tileWidth.get(),tower.getRow()*tileHeight.get(), tileWidth.get(), tileHeight.get());
             gc.save();
             gc.translate((tower.getCol()+0.5)*tileWidth.get(),(tower.getRow()+0.5)*tileHeight.get());
             gc.rotate(tower.getRotation());
-            gc.drawImage(basicTowerImage, -tileWidth.get()/2, -tileHeight.get()/2,tileWidth.get(), tileHeight.get());
+            Image towerImage = basicTowerImage;
+            if(tower instanceof BasicTower){
+                towerImage = basicTowerImage;
+            } else if (tower instanceof DoubleTower) {
+                towerImage = doubleTowerImage;
+            } else if (tower instanceof MissileTower) {
+                towerImage = missileTowerImage;
+            } else if (tower instanceof CanonTower) {
+                towerImage = canonTowerImage;
+            }
+            gc.drawImage(towerImage, -tileWidth.get()/2, -tileHeight.get()/2,tileWidth.get(), tileHeight.get());
             gc.restore();
         }
     }
@@ -123,7 +145,28 @@ public class ResizableCanvas extends Canvas {
     private void drawProjectiles(){
         gc.setFill(Color.WHITE);
         for (Projectile projectile : projectiles) {
-            gc.fillOval(projectile.getX()*tileWidth.get(), projectile.getY()*tileHeight.get(), projectile.getSize()*tileHeight.get(), projectile.getSize()*tileWidth.get());
+            if(projectile instanceof Missile){
+                if(((Missile) projectile).isActive()){
+                    // Show Hitbox
+//                    Bounds rect = projectile.getHitbox().getBoundsInLocal();
+//                    gc.setStroke(Color.RED);
+//                    gc.save();
+//                    gc.translate((rect.getMinX()+rect.getWidth()/2)*tileWidth.get(), (rect.getMinY()+rect.getHeight()/2)*tileHeight.get());
+//                    gc.rotate(((Missile) projectile).getRotation());
+//                    gc.strokeRect(-rect.getWidth()*tileWidth.get()/2, -rect.getHeight()*tileHeight.get()/2, rect.getWidth()*tileWidth.get(), rect.getHeight()*tileHeight.get());
+//                    gc.restore();
+
+                    gc.save();
+                    gc.translate((projectile.getX()+0.5)*tileWidth.get(), (projectile.getY()+0.5)*tileHeight.get());
+                    gc.rotate(((Missile) projectile).getRotation());
+                    gc.drawImage(missileImage, -tileWidth.get()/2, -tileHeight.get()/2, tileWidth.get(), tileHeight.get());
+                    gc.restore();
+                }else{
+                    gc.drawImage(explosionImage, 96*((Missile) projectile).getFrameIndex(), 0, 96,96, projectile.getX()*tileWidth.get(), projectile.getY()*tileHeight.get(), tileHeight.get(), tileWidth.get());
+                }
+            }else{
+                gc.fillOval(projectile.getX()*tileWidth.get(), projectile.getY()*tileHeight.get(), projectile.getSize()*tileHeight.get(), projectile.getSize()*tileWidth.get());
+            }
         }
     }
 
