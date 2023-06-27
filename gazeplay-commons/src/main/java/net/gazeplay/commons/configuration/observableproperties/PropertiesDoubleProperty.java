@@ -45,6 +45,7 @@ public abstract class PropertiesDoubleProperty extends DoublePropertyBase {
         log.info("Set property {} to {}", propertyName, value);
         setProperty(propertyName, Double.toString(value));
         propertyChangeListener.propertyChange(new PropertyChangeEvent(this, propertyName, null, value));
+        fireValueChangedEvent();
     }
 
 }

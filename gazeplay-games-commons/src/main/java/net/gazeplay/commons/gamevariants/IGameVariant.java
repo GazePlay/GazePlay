@@ -3,7 +3,6 @@ package net.gazeplay.commons.gamevariants;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.games.GazePlayDirectories;
 
 import java.io.File;
 import java.util.Objects;
@@ -25,7 +24,11 @@ public interface IGameVariant {
             case "IntGameVariant":
                 return new IntGameVariant(Integer.parseInt(split[1]));
             case "IntStringGameVariant":
-                return new IntStringGameVariant(Integer.parseInt(split[1]), split[2]);
+                if(split.length>=4){
+                    return new IntStringGameVariant(Integer.parseInt(split[1]), split[2], Integer.parseInt(split[3]));
+                }else{
+                    return new IntStringGameVariant(Integer.parseInt(split[1]), split[2]);
+                }
             case "DimensionGameVariant":
                 return new DimensionGameVariant(Integer.parseInt(split[1]), Integer.parseInt(split[2]));
             case "MathGameVariant":

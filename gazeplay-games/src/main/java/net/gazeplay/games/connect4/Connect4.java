@@ -74,6 +74,7 @@ public class Connect4 implements GameLifeCycle {
         }else{
             currentPlayer = new SimpleIntegerProperty(2);
         }
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     Connect4(final IGameContext gameContext, final Stats stats, Connect4GameVariant gameVariant,  double gameSeed){
@@ -87,6 +88,7 @@ public class Connect4 implements GameLifeCycle {
         }else{
             currentPlayer = new SimpleIntegerProperty(2);
         }
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override
@@ -137,6 +139,7 @@ public class Connect4 implements GameLifeCycle {
             topRectangles.add(topRectangle);
 
             ProgressIndicator pi = new ProgressIndicator(0);
+            pi.setMouseTransparent(true);
             pi.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
             pi.setOpacity(0);
 
@@ -154,16 +157,15 @@ public class Connect4 implements GameLifeCycle {
                         pi.setTranslateX(gridXOffset + topRectangle.getWidth() * tempi + (topRectangle.getWidth() - progressSize) / 2);
                         pi.setTranslateY((topRectangle.getHeight() - progressSize) / 2);
                         pi.setMinSize(progressSize, progressSize);
-                        pi.setManaged(true);
                         pi.setProgress(0);
                         pi.setOpacity(1);
 
+                        if(progressTimeline!=null){
+                            progressTimeline.stop();
+                        }
                         progressTimeline = new Timeline();
                         progressTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(pi.progressProperty(), 1)));
                         progressTimeline.setOnFinished(actionEvent -> {
-                            pi.setMinSize(0, 0);
-                            pi.setTranslateX(0);
-                            pi.setTranslateY(0);
                             pi.setOpacity(0);
                             putToken(tempi);
                         });
@@ -172,23 +174,18 @@ public class Connect4 implements GameLifeCycle {
                 }
             };
 
-            EventHandler<Event> exitEvent = new EventHandler<Event>(){
-                @Override
-                public void handle(Event event) {
-                    if(currentPlayer.getValue()==1) {
-                        progressTimeline.stop();
-                        pi.setMinSize(0, 0);
-                        pi.setTranslateX(0);
-                        pi.setTranslateY(0);
-                        pi.setOpacity(0);
-                    }
+            EventHandler<Event> exitEvent = event -> {
+                if(progressTimeline!=null){
+                    progressTimeline.stop();
                 }
+                pi.setOpacity(0);
             };
 
-            group.addEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
-            group.addEventHandler(MouseEvent.MOUSE_EXITED, exitEvent);
-            group.addEventHandler(GazeEvent.GAZE_ENTERED, enterEvent);
-            group.addEventHandler(GazeEvent.GAZE_EXITED, exitEvent);
+            group.addEventFilter(MouseEvent.MOUSE_ENTERED, enterEvent);
+            group.addEventFilter(MouseEvent.MOUSE_EXITED, exitEvent);
+            group.addEventFilter(GazeEvent.GAZE_ENTERED, enterEvent);
+            group.addEventFilter(GazeEvent.GAZE_EXITED, exitEvent);
+            gameContext.getGazeDeviceManager().addEventFilter(group);
         }
 
         // Resize events
