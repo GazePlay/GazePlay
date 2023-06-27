@@ -1,15 +1,20 @@
 package net.gazeplay.games.gazeRace;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.RotateTransition;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.surviveAgainstRobots.SurviveAgainstRobots;
 
 
 import java.util.ArrayList;
@@ -60,6 +65,17 @@ public class GazeRace extends Parent implements GameLifeCycle {
         this.colors.add(Color.YELLOW);
         this.colors.add(Color.MAGENTA);
         Collections.shuffle(colors);
+
+        // Create and add the score label to the game context's children
+        Label score = new Label();
+        score.setLayoutX(50);
+        score.setLayoutY(50);
+        score.setFont(new Font("Arial", 50));
+        score.toFront();
+        score.setText("Score : 0");
+        score.setStyle("-fx-text-fill: gray ;");
+        score.setOpacity(0.8);
+        gameContext.getChildren().add(score);
 
         if (gameVariant.equals(GazeRaceVariant.HORIZONTAL)){
             this.player = new Player(300,300,125,75,this,gameContext,7,3, true);
@@ -134,14 +150,21 @@ public class GazeRace extends Parent implements GameLifeCycle {
                         generateCar();
                     }
                 }
+                if (nbframes == 10){
+                    score.setText("Score : " + stats.getNbGoalsReached());
+                }
 
 
                 if (nbframes == 60){
                     nbSecond++;
-                    if (mphGeneral >= 10.5){
+                    if (mphGeneral <= 15){
                         mphGeneral += 0.2;
                     }
-                    mphGeneral += 0.2;
+                    System.out.println(mphGeneral);
+                    if (nbSecond % 3 == 0){
+                        stats.incrementNumberOfGoalsReached();
+                        gameContext.updateScore(stats, GazeRace.this);
+                    }
                     updateSpeedObject();
                     nbframes = 0;
                 }
@@ -226,7 +249,6 @@ public class GazeRace extends Parent implements GameLifeCycle {
                 isValid = false;
             }
         }else if (gameVariant.equals(GazeRaceVariant.VERTICAL)){
-            System.out.println("vertical");
             widthRange = 75;
             heightRange = 125;
 
@@ -339,6 +361,10 @@ public class GazeRace extends Parent implements GameLifeCycle {
                             player.startTimerInvincible();
                             playDeathAnimation(1,obstacle);
                             player.health--;
+                            RotateTransition rotateTransition = new RotateTransition(Duration.seconds(1), player);
+                            rotateTransition.setByAngle(360); // Angle de rotation (360 degrés dans ce cas)
+                            rotateTransition.play();
+
                             mphGeneral = 5;
                             if (player.health == 0){
                                 playDeathAnimation(1,player);
