@@ -55,6 +55,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_BACKGROUND_ENABLED = "BACKGROUND_ENABLED";
     private static final String PROPERTY_NAME_DARK_THEME_ENABLED = "DARK_THEME_ENABLED";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
+    private static final String PROPERTY_NAME_BACKGROUND_COLOR = "BACKGROUND_COLOR";
     /* Directories settings */
     private static final String PROPERTY_NAME_FILE_DIR = "FILE_DIR";
     private static final String PROPERTY_NAME_MUSIC_DIR = "MUSIC_DIR";
@@ -116,6 +117,7 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = true;
     private static final boolean DEFAULT_VALUE_DARK_THEME_ENABLED = false;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
+    private static final String DEFAULT_VALUE_BACKGROUND_COLOR = "BLACK";
     /* Directories settings */
     public static final String DEFAULT_VALUE_MUSIC_DIR = "";
     public static final String DEFAULT_VALUE_WHERE_IS_IT_DIR = "";
@@ -197,6 +199,8 @@ public class Configuration {
     private final BooleanProperty backgroundEnabledProperty;
     @Getter
     private final BooleanProperty darkThemeEnabledProperty;
+    @Getter
+    private final StringProperty backgroundColorProperty;
     @Getter
     private final StringProperty menuButtonsOrientationProperty;
     /* Directories settings */
@@ -309,6 +313,7 @@ public class Configuration {
         backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_ENABLED, DEFAULT_VALUE_BACKGROUND_ENABLED, propertyChangeListener);
         darkThemeEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_DARK_THEME_ENABLED, DEFAULT_VALUE_DARK_THEME_ENABLED, propertyChangeListener);
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
+        backgroundColorProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_COLOR, DEFAULT_VALUE_BACKGROUND_COLOR, propertyChangeListener);
 
         /* Directories settings */
         fileDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FILE_DIR, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(), propertyChangeListener);

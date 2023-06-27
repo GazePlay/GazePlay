@@ -59,6 +59,7 @@ public class MolesChar extends Parent {
     private final int timeMoleStayOut = 2500;
 
     public final EventHandler<Event> enterEvent;
+    private int bonk;
 
     @Setter
     private int TargetAOIListIndex;
@@ -117,6 +118,8 @@ public class MolesChar extends Parent {
         this.getChildren().add(mole);
         this.mole.opacityProperty().set(0);
 
+        bonk = 0;
+
     }
 
     private ProgressIndicator createProgressIndicatorMoles() {
@@ -156,6 +159,7 @@ public class MolesChar extends Parent {
                     canTouched = false;
 
                     if (!touched && out) {
+                        gameContext.getSoundManager().add("data/whackmole/sounds/"+(bonk++%2==0 ? "bonk1.wav":"bonk2.wav"));
                         gameInstance.oneMoleWhacked();
                         touched = true;
                         goIn();

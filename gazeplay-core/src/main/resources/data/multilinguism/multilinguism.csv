@@ -83,6 +83,7 @@ WhereIsTheNumber,Ku është numri?,اين الرقم؟,Дзе нумар?,号码
 WhereIsTheShape,Ku është forma?,اين الشكل؟,Дзе форма?,形状在哪里？,Wo ist die Form?,Πού είναι το σχήμα;,Where is the shape?,Missä muoto on?,Où est la forme ?,आकृति कहाँ है?,Gdje je oblik?,Dimana bentuknya?,Dov'è la forma?,形はどこ？,Waar is de vorm?,Gdzie jest kształt?,Onde está a forma?,Где форма?,¿Dónde está la forma?,Hình dạng ở đâu?,Di manakah bentuknya?
 WhereIsTheSound,Çfarë është ky tingull?,ما هذا الصوت؟,Што гэта за гук?,这是什么声音？,Was ist das für ein Geräusch?,Τι είναι αυτός ο ήχος;,What is this sound?,Mikä tämä ääni on?,Quel est ce son ?,यह ध्वनि क्या है?,Kakav je ovo zvuk?,Suara apa ini?,Cos'è questo suono?,この音は何ですか？,Wat is dit geluid?,Co to za dźwięk?,O que é esse som?,Что это за звук?,¿Qué es este sonido?,Đây là âm thanh gì?,Apakah bunyi ini?
 Connect4,,,,,,,Connect 4,,Puissance 4,,,,,,,,,,,,
+TrainSwitches,,,,,,,Train Switches,,Aiguillages,,,,,,,,,,,,
 TowerDefense,,,,,,,Tower Defense,,Tower Defense,,,,,,,,,,,,
 
 # VARIANT CHOOSE TEXTS
@@ -97,6 +98,7 @@ cups,tasa,كؤوس,кубкі,,,,cups,,gobelets,,,,tazze,,Bekers,,,чашки,ta
 players,,,гульцы,玩家,,,players,,joueurs,,,,,,spelers,,,игроки,,,
 targets,shënjestra,أهداف,мэты,目标,,,targets,,objectifs,,,,bersagli,,Doelen,,,цели,objetivos,,
 NoEvalsFound,,,,,,,No evaluations found !,,Pas d'évaluations trouvées !,,,,,,,,,,,,
+NumberOfTrains,,,,,,,Number of trains,,Nombre de trains,,,,,,,,,,,,
 
 # VARIANT CATEGORIES
 Static,,,,,,,Static,,Statique,,,,,,,,,,,,
@@ -221,6 +223,11 @@ Freeplay,,,,,,,Freeplay,,Jeu libre,,,,,,,,,,,,
 PlayWithInstructions,,,,,,,Play by following instructions,,Jouer en suivant les instructions,,,,,,,,,,,,
 PlayerStart,,,,,,,Play first,,Jouer en premier,,,,,,,,,,,,
 AiStart,,,,,,,Play second,,Jouer en second,,,,,,,,,,,,
+ClassicTrain,,,,,,,Classic,,Classique,,,,,,,,,,,,
+PauseTrain,,,,,,,Game is paused when a train reach a switch,,Le jeu se met en pause lorsqu'un train arrive à un aiguillage,,,,,,,,,,,,
+InfiniteTrain,,,,,,,Trains are sent again if they reach the wrong station,,Les trains sont réenvoyés lorsqu'ils atteignent la mauvaise gare,,,,,,,,,,,,
+UniqueTrain,,,,,,,Only one train at a time,,Un seul train à la fois,,,,,,,,,,,,
+Stations,,,,,,,Stations,,Gares,,,,,,,,,,,,
 
 # CONTEXT TITLES
 ConfigTitle,Konfigurimi,ترتيب,Канфігурацыя,恭喜你！,Konfiguration,Διαμόρφωση,Configuration,asetuksen nimi,Configuration,विन्यास,Konfiguracija,Konfigurasi,Configurazione,構成,Configuratie,Konfiguracja,Configuraçaô,Конфигурация,Configuración,Tùy chỉnh,Konfigurasi
@@ -309,6 +316,8 @@ BackgroundStyle,,,Стыль фону,,,,Background style,,Style de fond,,,,,,,,
 MenuOrientation,Orientimi i menusë (nevojitet rinisja e lojës),إتجاه القائمة,Становішча меню (перазапусціце гульню для актывацыі),菜单方向,Menüorientierung (erfordert Neustart des Spiels),Μενού προσανατολισμού (επανεκκίνηση του παιχνιδιού για να τεθεί σε ισχύ),Menu Orientation (restart game to take effect),valikon suunta,Orientation du menu (nécessite de relancer le jeu),,Orjentacijski meni (restartiraj igru za aktivaciju),Orientasi Menu (memulakan semula permainan untuk berkuatkuasa),Orientazione del menù (è richiesto il riavvio del gioco),,Richting menu (herstart nodig voor activering),Orientacja menu (uruchom ponownie grę),orientacaõ domens,Положение меню (перезапустите игру для активации),Orientación del menú (requiere reiniciar el juego),Phương ngang/dọc của menu (Khởi động lại để có hiệu lực),Orientasi Menu (memulakan semula permainan untuk berkuatkuasa)
 BackgroundEnabled,,,Актываваць карцінкі на фоне,,,,Background images enabled,,Fonds d'écran activés,,,,,,,,,Активировать картинки на фоне,,,
 DarkTh,,,,,,,Dark Theme,,Thème sombre,,,,,,,,,,,,
+BackgroundColor,,,,,,,Background Color,,Couleur de fond,,,,,,,,,,,,
+Color,,,,,,,Color,,Couleur,,,,,,,,,,,,
 Dark,,,Цёмны,,,,Dark,,Sombre,,,,,,,,,Тёмный,Oscuro,,
 Light,,,Светлы,,,,Light,,Clair,,,,,,,,,Светлый,Claro,,
 
@@ -461,6 +470,9 @@ New highscore!,Rekord i ri !,نتيجة عالية جديدة,Новы рэко�
 # CONNECT4 GAME
 CurrentPlayer,,,,,,,Current player :,,Joueur actuel :,,,,,,,,,,,,
 
+# TRAIN GAME
+ResumeButton,,,,,,,Resume the game,,Reprendre le jeu,,,,,,,,,,,,
+
 # ERROR MESSAGES
 WII-error,Verifikim i direktorisë “Ku është?”,تثبت من دليل اللعبة اين هذا؟,"Праверце тэчку для гульні ""Дзе гэта?""",查找《它在哪》游戏目录,Überprüfen Spielverzeichnis « Wo ist es? »,Ελέγξτε «Πού είναι;,Check « Where is it? » Game directory,Tarkista «Missä se on? » Pelihakemisto,Vérifiez le répertoire du jeu « Où est-ce ? ».,,Provjeri,Semak « Di mana? » Arahan permainan,"Controllo cartella di gioco ""Dov'è?""""ontroll ",,Controleer de « Waar is het » Spel bestandslocatie,Sprawdź «Gdzie to jest? » Katalog gier,*Verifique «Onde está?,"Проверьте папку для игры ""Где это?""","Verifica el directorio del juego ""¿Donde está?""""erifica el di ",Kiểm tra Thư mục game,Semak «Di mana? » Arahan permainan
 File %s is not supported,,,Файл %s не падыходзіць па тыпу,不支持文件 %s ,,,File %s is not supported,,Le fichier %s n'est pas compatible,,,,,,Bestand %s wordt niet ondersteund,,,Файл %s не подходит по типу,,,
@@ -483,9 +495,16 @@ Niveau18-23,,,,,,, Level 18-23 ,, Niveau 18-23 ,,,,,,,,,,,,
 Niveau24-29,,,,,,, Level 24-29 ,, Niveau 24-29 ,,,,,,,,,,,,
 Niveau30-33,,,,,,, Level 30-33 ,, Niveau 30-33 ,,,,,,,,,,,,
 
+# Simon Game
+Simon,,,,,,, Simon ,, Simon ,,,,,,,,,,,,
+Simon copy you,,,,,,, Simon copies you ,, Simon te copie ,,,,,,,,,,,,
+Multiplayer,,,,,,, Multiplayer ,, Multijoueur ,,,,,,,,,,,,
+Player 1 turn,,,,,,, Player 1 turn ,, Tour du joueur 1 ,,,,,,,,,,,,
+Player 2 turn,,,,,,, Player 2 turn ,, Tour du joueur 2 ,,,,,,,,,,,,
+
 # Survive Against Robot game
 SurviveAgainstRobots,,,,,,, Survive Against Robots ,, Survivre contre des robots ,,,,,,,,,,,,
-SurviveAgainstRobotsMouse,,,,,,, Survive Against Robots (Mouse) ,, Survivre contre des robots (Souris) ,,,,,,,,,,,,
+SurviveAgainstRobotsMouse,,,,,,, Survive Against Robots (Gaze) ,, Survivre contre des robots (Regard) ,,,,,,,,,,,,
 Easy_AUTO_KEYBOARD,,,,,,, Easy auto keyboard ,, Facile auto clavier ,,,,,,,,,,,,
 Normal_AUTO_KEYBOARD,,,,,,, Normal auto keyboard ,, Normal auto clavier ,,,,,,,,,,,,
 Hard_AUTO_KEYBOARD,,,,,,, Hard auto keyboard ,, Difficile auto clavier ,,,,,,,,,,,,
@@ -501,8 +520,8 @@ Normal_MOUSE,,,,,,, Normal mouse ,, Normal souris ,,,,,,,,,,,,
 Hard_MOUSE,,,,,,, Hard mouse ,, Difficile souris ,,,,,,,,,,,,
 
 # Sprint to the finish name
-SprintFinish,,,,,,, Sprint jusqu'à l'arrivée ,, Sprint to the finish ,,,,,,,,,,,,
-SprintFinishMouse,,,,,,, Sprint jusqu'à l'arrivée (Souris/Yeux) ,, Sprint to the finish (Mouse/Gaze) ,,,,,,,,,,,,
+SprintFinish,,,,,,, Sprint to the finish ,, Sprint jusqu'à l'arrivée ,,,,,,,,,,,,
+SprintFinishMouse,,,,,,, Sprint to the finish (Gaze) ,, Sprint jusqu'à l'arrivée (Regard) ,,,,,,,,,,,,
 
 # Tower Defense
 SendWave,,,,,,, Envoyer la vague suivante ,, Send next wave ,,,,,,,,,,,,
