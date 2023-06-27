@@ -270,14 +270,14 @@ public class GazeRace extends Parent implements GameLifeCycle {
             Car car;
             if (gameVariant.equals(GazeRaceVariant.HORIZONTAL)){
 
-                car = new Car(x,y,widthRange,heightRange,gameContext,this,mphGeneral,direction,colors.get(0), gameVariant);
+                car = new Car(x,y,widthRange,heightRange,mphGeneral,direction,colors.get(0), gameVariant);
 
             }else{
 
                 if (x > dimension2D.getWidth()/2+50 && x < dimension2D.getWidth()){
-                    car = new Car(x,y,widthRange,heightRange,gameContext,this,mphGeneral,"up",colors.get(0), gameVariant);
+                    car = new Car(x,y,widthRange,heightRange,mphGeneral,"up",colors.get(0), gameVariant);
                 }else{
-                    car = new Car(x,y,widthRange,heightRange,gameContext,this,mphGeneral,"down",colors.get(0), gameVariant);
+                    car = new Car(x,y,widthRange,heightRange,mphGeneral,"down",colors.get(0), gameVariant);
                 }
             }
 

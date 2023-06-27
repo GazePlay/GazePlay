@@ -13,15 +13,13 @@ import java.util.ArrayList;
 
 public class Car extends Rectangle {
 
-    private IGameContext gameContext;
-    private GazeRace gameInstance;
+
     protected boolean isDestroyed;
     private String direction;
     protected double speed;
-    public Car(double x, double y, double width, double height, IGameContext gameContext, GazeRace gameInstance, double speed, String direction, Color c, Enum<GazeRaceVariant> gameVariant) {
+    public Car(double x, double y, double width, double height, double speed, String direction, Color c, Enum<GazeRaceVariant> gameVariant) {
         super(x, y, width, height);
-        this.gameContext = gameContext;
-        this.gameInstance = gameInstance;
+
         this.isDestroyed = false;
         this.speed = speed;
         this.direction = direction;
