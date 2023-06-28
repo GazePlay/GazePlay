@@ -7,12 +7,12 @@ public class Projectile {
 
     private double x;
     private double y;
-    private double size;
+    private final double size;
     private double speedX;
     private double speedY;
     private double damage;
 
-    Projectile(double x, double y, double speedX, double speedY, double size, double damage){
+    public Projectile(double x, double y, double speedX, double speedY, double size, double damage){
         this.x = x;
         this.y = y;
         this.size = size;
@@ -43,6 +43,6 @@ public class Projectile {
     }
 
     public Shape getHitbox(){
-        return new Circle(x,y,size);
+        return new Circle(x, y, size);
     }
 }

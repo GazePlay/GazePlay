@@ -1,6 +1,5 @@
 package net.gazeplay.games.TowerDefense;
 
-import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 
@@ -8,22 +7,18 @@ import static net.gazeplay.games.TowerDefense.Map.*;
 
 public class Enemy {
 
-    private final DoubleProperty tileWidth;
-    private final DoubleProperty tileHeight;
     private final Map map;
+    private final double reward;
     private double x;
     private double y;
     private double speedX;
     private double speedY;
     private double maxHealth;
     private double currentHealth;
-    private double reward;
     private boolean reachedEnd;
 
-    public Enemy(Map map, double x, double y, DoubleProperty tileWidth, DoubleProperty tileHeight){
+    public Enemy(Map map, double x, double y){
         this.map = map;
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
         this.x = x;
         this.y = y;
         reachedEnd = false;
@@ -31,6 +26,7 @@ public class Enemy {
         maxHealth = 50;
         currentHealth = maxHealth;
         reward = 5;
+
         // In Tile/tick
         speedX = 1.0/60;
         speedY = 0;
@@ -48,6 +44,7 @@ public class Enemy {
 
         int col = (int) newX;
         int row = (int) newY;
+        // Check if next tile is a ROAD
         if(map.getTile(col, row)==ROAD){
             // Continue in the same direction
             x += speedX;

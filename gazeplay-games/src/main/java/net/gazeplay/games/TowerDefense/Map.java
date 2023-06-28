@@ -12,13 +12,12 @@ public class Map {
     static final int ROAD = 1;
     static final int TURRET = 2;
 
+    private final ArrayList<Point2D> turretsTiles;
     private int [][] map;
     private int nbCols;
     private int nbRows;
     private int startCol;
     private int startRow;
-    private final ArrayList<Point2D> turretsTiles;
-
 
     public Map(int level){
         turretsTiles = new ArrayList<>();
@@ -26,13 +25,9 @@ public class Map {
     }
 
     private void initLevel(int level){
-        switch (level){
-            case 1:
-                initLevel1();
-                break;
-            default:
-                initLevel1();
-                break;
+        switch (level) {
+            case 1 -> initLevel1();
+            default -> initLevel1();
         }
 
         nbRows = map.length;
@@ -51,6 +46,7 @@ public class Map {
     }
 
     private void initLevel1(){
+        // Look at the static variables above to understand the map
         map = new int[][] {
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0,0,},
             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,},
@@ -66,10 +62,6 @@ public class Map {
         };
     }
 
-    public int[][] getMap(){
-        return  map;
-    }
-
     public ArrayList<Point2D> getTurretsTiles() {
         return turretsTiles;
     }
@@ -83,19 +75,12 @@ public class Map {
 
     public int getTileAbove(int col, int row){
         row = row - 1;
-        if(row<0 || row>=nbRows || col<0 || col>=nbCols){
-            return GRASS;
-        }
-        return map[row][col];
+        return getTile(col, row);
     }
 
     public int getTileLeft(int col, int row){
         col = col - 1;
-        if(row<0 || row>=nbRows || col<0 || col>=nbCols){
-            return GRASS;
-        }
-
-        return map[row][col];
+        return getTile(col, row);
     }
 
     public int getStartCol() {

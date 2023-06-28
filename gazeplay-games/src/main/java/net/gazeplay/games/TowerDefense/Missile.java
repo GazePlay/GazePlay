@@ -7,11 +7,12 @@ public class Missile extends Projectile {
 
     private int frameIndex;
     private int tick;
-    private final int animationTickLimit = 5;
     private boolean isActive;
-    private double rotation;
+    private final double rotation;
+
     Missile(double x, double y, double speedX, double speedY, double rotation, double damage) {
         super(x, y, speedX, speedY, 1, damage);
+        tick = 0;
         frameIndex = 0;
         isActive = true;
         this.rotation = rotation;
@@ -22,7 +23,7 @@ public class Missile extends Projectile {
         if(isActive){
             super.move();
         }else{
-            if(tick++>=animationTickLimit){
+            if(tick++>=5){
                 frameIndex++;
                 tick = 0;
             }

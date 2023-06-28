@@ -1,24 +1,26 @@
 package net.gazeplay.games.TowerDefense;
 
 import javafx.geometry.Point2D;
-import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
 
 public abstract class Tower {
 
     protected double fireTickLimit;
-    protected double damage;
-    protected double projSpeed;
-    protected double projSize;
-    protected int range;
-    protected double cost;
-    protected final ArrayList<Projectile> projectiles;
-    private final ArrayList<Enemy> enemies;
     protected int tick;
     protected final int col;
     protected final int row;
+
+    protected double damage;
+    protected double projSpeed;
+    protected double projSize;
     protected double rotation;
+    protected double cost;
+    protected int range;
+
+    protected final ArrayList<Projectile> projectiles;
+    private final ArrayList<Enemy> enemies;
 
     public Tower(int col, int row, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies){
         this.col = col;
@@ -28,28 +30,20 @@ public abstract class Tower {
         tick = 0;
         rotation = 0;
 
+        // Tower characteristics
         fireTickLimit = 40;
         damage = 5;
         cost = 25;
-        // In Tile/tick
-        projSpeed = 5.0/60;
+        projSpeed = 5.0/60; // In Tile/tick
         projSize = 0.2;
         range = 3;
-    }
-
-    public int getCol() {
-        return col;
-    }
-
-    public int getRow() {
-        return row;
     }
 
     public void fire(){
         Enemy target = findEnemyInRange();
         if(target!=null){
-            double towerCenterX = col + 0.5;
-            double towerCenterY = row + 0.5;
+            double towerCenterX = getCenter().getX();
+            double towerCenterY = getCenter().getY();
 
             Point2D targetCenter = target.getCenter();
 
@@ -80,9 +74,9 @@ public abstract class Tower {
     }
 
     private Enemy findEnemyInRange(){
-        Ellipse ellipse = new Ellipse(col+0.5, row+0.5, range, range);
+        Circle circle = new Circle(getCenter().getX(), getCenter().getY(), range);
         for (Enemy enemy : enemies) {
-            if(ellipse.contains(enemy.getCenter())){
+            if(circle.contains(enemy.getCenter())){
                 return enemy;
             }
         }
@@ -92,8 +86,9 @@ public abstract class Tower {
     public double getRotation() {
         return rotation;
     }
+
     public Point2D getProjectileStart(){
-        return new Point2D(col+0.5, row+0.5);
+        return getCenter();
     }
 
     public void resetTick(){
@@ -102,6 +97,18 @@ public abstract class Tower {
 
     public void createProjectile(double x, double y, double speedX, double speedY, double size, double damage){
         projectiles.add(new Projectile(x, y, speedX, speedY, size, damage));
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public Point2D getCenter(){
+        return new Point2D(col + 0.5, row + 0.5);
     }
 
 }

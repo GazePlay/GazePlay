@@ -17,10 +17,11 @@ public class DoubleTower extends Tower {
 
     @Override
     public Point2D getProjectileStart() {
+        // To alternate between 2 barrels
         double centerX = col+0.5;
         double centerY = row+0.5;
 
-        double projX = centerX + (shootLeft ? 0.1:-0.1);
+        double projX = centerX + (shootLeft ? 0.15:-0.15);
         double projY = centerY;
 
         double rota = Math.toRadians(rotation);
