@@ -20,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -38,14 +37,15 @@ public class TowerDefense implements GameLifeCycle {
 
     // UI ELEMENTS
     private final GameCanvas canvas;
-    private final I18NButton sendWaveButton;
+    private I18NButton sendWaveButton;
     private final DoubleProperty tileWidth;
     private final DoubleProperty tileHeight;
-    private final Label lifeLabel;
-    private final Label moneyLabel;
-    private final Label waveCountLabel;
+    private Label lifeLabel;
+    private Label moneyLabel;
+    private Label waveCountLabel;
     private ProgressIndicator towerPi;
     private Timeline placeTowerTimeline;
+    private AnimationTimer gameLoop;
 
     // GAME VARIABLES
     private final ArrayList<Enemy> enemies;
@@ -94,11 +94,6 @@ public class TowerDefense implements GameLifeCycle {
         life = new SimpleIntegerProperty(START_LIFE);
         waveCount = new SimpleIntegerProperty(0);
 
-        enemyHealthMultiplier = 0;
-        enemiesToSend = 0;
-        enemiesSent = 0;
-        enemySpawnTick = 0;
-
         basicTowerImage = new Image("data/TowerDefense/basicTower.png");
         doubleTowerImage = new Image("data/TowerDefense/doubleTower.png");
         missileTowerImage = new Image("data/TowerDefense/missileTower.png");
@@ -114,6 +109,20 @@ public class TowerDefense implements GameLifeCycle {
         canvas = new GameCanvas(tileWidth, tileHeight, map, enemies, towers, projectiles);
         canvas.heightProperty().bind(gameContext.getRoot().heightProperty());
         canvas.widthProperty().bind(gameContext.getRoot().widthProperty());
+
+        gameContext.getGazeDeviceManager().addStats(stats);
+    }
+
+    @Override
+    public void launch() {
+        money.set(START_MONEY);
+        life.set(START_LIFE);
+        waveCount.set(0);
+        enemyHealthMultiplier = 0;
+        enemiesToSend = 0;
+        enemiesSent = 0;
+        enemySpawnTick = 0;
+
         gameContext.getChildren().add(canvas);
 
         // TOPBAR
@@ -145,6 +154,7 @@ public class TowerDefense implements GameLifeCycle {
         sendWaveTimeline.setOnFinished(event -> createWave());
 
         sendWaveButton = new I18NButton(gameContext.getTranslator(), "SendWave");
+        sendWaveButton.setStyle("-fx-font-size: "+tileWidth.get()/2+";-fx-font-family: 'Agency FB'");
         tileWidth.addListener(observable -> sendWaveButton.setStyle("-fx-font-size: "+tileWidth.get()/2+";-fx-font-family: 'Agency FB'"));
         topBar.getChildren().add(sendWaveButton);
 
@@ -215,15 +225,7 @@ public class TowerDefense implements GameLifeCycle {
             gameContext.getChildren().add(rectangle);
         }
 
-    }
-
-    @Override
-    public void launch() {
-
-        gameContext.start();
-        stats.notifyNewRoundReady();
-
-        AnimationTimer gameLoop = new AnimationTimer() {
+        gameLoop = new AnimationTimer() {
             @Override
             public void handle(long l) {
 
@@ -253,13 +255,19 @@ public class TowerDefense implements GameLifeCycle {
             }
         };
 
+        gameContext.start();
+        stats.notifyNewRoundReady();
         gameLoop.start();
 
     }
 
     @Override
     public void dispose() {
+        gameLoop.stop();
         gameContext.clear();
+        enemies.clear();
+        towers.clear();
+        projectiles.clear();
     }
 
     private void createTower(int col, int row, int type){
@@ -403,7 +411,8 @@ public class TowerDefense implements GameLifeCycle {
     private Label createLabel(String text, String imagePath){
         Label label = new Label(text);
         System.out.println(tileWidth.get());
-        tileWidth.addListener(observable -> label.setFont(new Font("Agency FB", tileWidth.divide(2).get())));
+        tileWidth.addListener(observable -> label.setStyle("-fx-font-size: "+tileWidth.get()/2+";-fx-font-family: 'Agency FB'"));
+        label.setStyle("-fx-font-size: "+tileWidth.get()/2+";-fx-font-family: 'Agency FB'");
         ImageView image = new ImageView(new Image(imagePath));
         image.fitWidthProperty().bind(tileWidth);
         image.fitHeightProperty().bind(tileHeight);
