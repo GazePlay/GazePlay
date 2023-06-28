@@ -68,6 +68,7 @@ public class TowerDefense implements GameLifeCycle {
     private final Image canonTowerImage;
     private final Image moneyGainImage;
     private final Image moneyLossImage;
+    private final Image sellTowerImage;
 
     // CONSTANTS
     private final static int EXPLOSION_DAMAGE = 5;
@@ -101,6 +102,7 @@ public class TowerDefense implements GameLifeCycle {
         canonTowerImage = new Image("data/TowerDefense/canonTower.png");
         moneyLossImage = new Image("data/TowerDefense/moneyLoss.png");
         moneyGainImage = new Image("data/TowerDefense/moneyGain.png");
+        sellTowerImage = new Image("data/TowerDefense/sellTower.png");
 
         tileWidth = new SimpleDoubleProperty();
         tileHeight = new SimpleDoubleProperty();
@@ -195,6 +197,7 @@ public class TowerDefense implements GameLifeCycle {
 
         for (Point2D turretsTile : map.getTurretsTiles()) {
             Rectangle rectangle = new Rectangle();
+            rectangle.setViewOrder(-1);
             rectangle.xProperty().bind(tileWidth.multiply(turretsTile.getX()-0.5));
             rectangle.yProperty().bind(tileHeight.multiply(turretsTile.getY()-0.5));
             rectangle.widthProperty().bind(tileWidth.multiply(2));
@@ -482,10 +485,14 @@ public class TowerDefense implements GameLifeCycle {
 
         placeTowerTimeline = new Timeline();
 
-        createTowerIcon(BASIC_TOWER, col, row, mainCircleRadius, group);
-        createTowerIcon(MISSILE_TOWER, col, row, mainCircleRadius, group);
-        createTowerIcon(CANON_TOWER, col, row, mainCircleRadius, group);
-        createTowerIcon(DOUBLE_TOWER, col, row, mainCircleRadius, group);
+        if(getTower(col, row)!=null){
+            createSellIcon(col, row, mainCircleRadius, group);
+        }else{
+            createTowerIcon(BASIC_TOWER, col, row, mainCircleRadius, group);
+            createTowerIcon(MISSILE_TOWER, col, row, mainCircleRadius, group);
+            createTowerIcon(CANON_TOWER, col, row, mainCircleRadius, group);
+            createTowerIcon(DOUBLE_TOWER, col, row, mainCircleRadius, group);
+        }
 
         //// Close the tower selection when looking away
         ProgressIndicator exitPi = new ProgressIndicator(0);
@@ -568,6 +575,7 @@ public class TowerDefense implements GameLifeCycle {
             }
         }
 
+        tower.setPickOnBounds(true);
         group.getChildren().add(tower);
 
         EventHandler<Event> enterRightTowerHandler = event -> {
@@ -596,6 +604,48 @@ public class TowerDefense implements GameLifeCycle {
         tower.addEventFilter(MouseEvent.MOUSE_EXITED, exitTowerHandler);
         tower.addEventFilter(GazeEvent.GAZE_EXITED, exitTowerHandler);
         gameContext.getGazeDeviceManager().addEventFilter(tower);
+    }
+
+    private void createSellIcon(int col, int row, double mainCircleRadius, Group group){
+        ImageView sellIcon = new ImageView(sellTowerImage);
+        sellIcon.setPickOnBounds(true);
+        sellIcon.setFitWidth((mainCircleRadius - 0.5) * tileWidth.get());
+        sellIcon.setFitHeight((mainCircleRadius - 0.5) * tileHeight.get());
+        sellIcon.setX((col + 0.5) * tileWidth.get() - sellIcon.getFitWidth() / 2);
+        sellIcon.setY((row + 0.5 - mainCircleRadius) * tileHeight.get());
+
+        group.getChildren().add(sellIcon);
+
+        EventHandler<Event> enterRightTowerHandler = event -> {
+            towerPi.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+            towerPi.relocate(sellIcon.getX(), sellIcon.getY());
+            towerPi.setProgress(0);
+            towerPi.setVisible(true);
+
+            placeTowerTimeline = new Timeline();
+            placeTowerTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(towerPi.progressProperty(), 1)));
+            placeTowerTimeline.setOnFinished(eve -> {
+                Tower tower = getTower(col, row);
+                if(tower!=null){
+                    money.set(money.get()+tower.cost);
+                    towers.remove(tower);
+                }
+                group.getChildren().clear();
+                gameContext.getChildren().remove(group);
+            });
+            placeTowerTimeline.play();
+        };
+
+        EventHandler<Event> exitTowerHandler = event -> {
+            towerPi.setVisible(false);
+            placeTowerTimeline.stop();
+        };
+
+        sellIcon.addEventFilter(MouseEvent.MOUSE_ENTERED, enterRightTowerHandler);
+        sellIcon.addEventFilter(GazeEvent.GAZE_ENTERED, enterRightTowerHandler);
+        sellIcon.addEventFilter(MouseEvent.MOUSE_EXITED, exitTowerHandler);
+        sellIcon.addEventFilter(GazeEvent.GAZE_EXITED, exitTowerHandler);
+        gameContext.getGazeDeviceManager().addEventFilter(sellIcon);
     }
 
 }
