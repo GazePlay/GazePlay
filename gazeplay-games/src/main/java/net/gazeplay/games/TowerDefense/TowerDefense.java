@@ -45,6 +45,7 @@ public class TowerDefense implements GameLifeCycle {
     private Label waveCountLabel;
     private ProgressIndicator towerPi;
     private Timeline placeTowerTimeline;
+    private Timeline createTowerSelectionTimeline;
     private AnimationTimer gameLoop;
 
     // GAME VARIABLES
@@ -150,7 +151,6 @@ public class TowerDefense implements GameLifeCycle {
         gameContext.getChildren().add(waveButtonPi);
 
         Timeline sendWaveTimeline = new Timeline();
-        sendWaveTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(waveButtonPi.progressProperty(), 1)));
         sendWaveTimeline.setOnFinished(event -> createWave());
 
         sendWaveButton = new I18NButton(gameContext.getTranslator(), "SendWave");
@@ -159,10 +159,14 @@ public class TowerDefense implements GameLifeCycle {
         topBar.getChildren().add(sendWaveButton);
 
         EventHandler<Event> enterWaveButtonHandler = event -> {
+            waveButtonPi.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
             waveButtonPi.setMinSize(tileWidth.get(), tileHeight.get());
             waveButtonPi.relocate(sendWaveButton.getLayoutX()+ sendWaveButton.getWidth()/2-waveButtonPi.getWidth()/2, sendWaveButton.getLayoutY());
             waveButtonPi.setProgress(0);
             waveButtonPi.setVisible(true);
+
+            sendWaveTimeline.getKeyFrames().clear();
+            sendWaveTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(waveButtonPi.progressProperty(), 1)));
             sendWaveTimeline.play();
         };
 
@@ -184,9 +188,6 @@ public class TowerDefense implements GameLifeCycle {
         createTowerSelectionPI.setVisible(false);
         gameContext.getChildren().add(createTowerSelectionPI);
 
-        Timeline createTowerSelectionTimeline = new Timeline();
-        createTowerSelectionTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(createTowerSelectionPI.progressProperty(), 1)));
-
         EventHandler<Event> exitTurretTileHandler = event -> {
             createTowerSelectionTimeline.stop();
             createTowerSelectionPI.setVisible(false);
@@ -203,11 +204,17 @@ public class TowerDefense implements GameLifeCycle {
             EventHandler<Event> enterTurretTileHandler = event -> {
                 double turretX = turretsTile.getX() * tileWidth.get();
                 double turretY = turretsTile.getY() * tileHeight.get();
+                createTowerSelectionPI.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 createTowerSelectionPI.setMinSize(tileWidth.get(), tileHeight.get());
                 createTowerSelectionPI.relocate(turretX, turretY);
                 createTowerSelectionPI.setProgress(0);
                 createTowerSelectionPI.setVisible(true);
 
+                if(createTowerSelectionTimeline!=null){
+                    createTowerSelectionTimeline.stop();
+                }
+                createTowerSelectionTimeline = new Timeline();
+                createTowerSelectionTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(createTowerSelectionPI.progressProperty(), 1)));
                 createTowerSelectionTimeline.setOnFinished(actionEvent -> {
                     createTowerSelectionPI.setVisible(false);
                     createTowerSelection((int) turretsTile.getX(), (int) turretsTile.getY());
@@ -410,7 +417,6 @@ public class TowerDefense implements GameLifeCycle {
 
     private Label createLabel(String text, String imagePath){
         Label label = new Label(text);
-        System.out.println(tileWidth.get());
         tileWidth.addListener(observable -> label.setStyle("-fx-font-size: "+tileWidth.get()/2+";-fx-font-family: 'Agency FB'"));
         label.setStyle("-fx-font-size: "+tileWidth.get()/2+";-fx-font-family: 'Agency FB'");
         ImageView image = new ImageView(new Image(imagePath));
@@ -472,7 +478,6 @@ public class TowerDefense implements GameLifeCycle {
         towerPi.setMinSize((mainCircleRadius - 0.5)*tileWidth.get(), (mainCircleRadius - 0.5)*tileHeight.get());
 
         placeTowerTimeline = new Timeline();
-        placeTowerTimeline.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(towerPi.progressProperty(), 1)));
 
         createTowerIcon(BASIC_TOWER, col, row, mainCircleRadius, group);
         createTowerIcon(MISSILE_TOWER, col, row, mainCircleRadius, group);
@@ -487,15 +492,18 @@ public class TowerDefense implements GameLifeCycle {
         exitPi.relocate(col*tileWidth.get(), row*tileHeight.get());
 
         Timeline exitTl = new Timeline();
-        exitTl.getKeyFrames().add(new KeyFrame(new Duration(1000), new KeyValue(exitPi.progressProperty(), 1)));
         exitTl.setOnFinished(event1 -> {
             group.getChildren().clear();
             gameContext.getChildren().remove(group);
         });
 
         EventHandler<Event> exitGroupHandler = event -> {
+            exitPi.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
             exitPi.setProgress(0);
             exitPi.setVisible(true);
+
+            exitTl.getKeyFrames().clear();
+            exitTl.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(exitPi.progressProperty(), 1)));
             exitTl.play();
         };
 
@@ -560,9 +568,13 @@ public class TowerDefense implements GameLifeCycle {
         group.getChildren().add(tower);
 
         EventHandler<Event> enterRightTowerHandler = event -> {
+            towerPi.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
             towerPi.relocate(tower.getX(), tower.getY());
             towerPi.setProgress(0);
             towerPi.setVisible(true);
+
+            placeTowerTimeline = new Timeline();
+            placeTowerTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(towerPi.progressProperty(), 1)));
             placeTowerTimeline.setOnFinished(eve -> {
                 createTower(col, row, towerType);
                 group.getChildren().clear();
