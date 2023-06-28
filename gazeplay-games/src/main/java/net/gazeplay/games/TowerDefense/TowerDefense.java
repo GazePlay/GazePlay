@@ -430,6 +430,9 @@ public class TowerDefense implements GameLifeCycle {
         life.set(life.get()-1);
         if(life.get()<=0){
             // Game Lost
+            gameLoop.stop();
+            sendWaveButton.setVisible(false);
+            gameContext.playWinTransition(0, actionEvent -> gameContext.endWinTransition());
         }
     }
 
