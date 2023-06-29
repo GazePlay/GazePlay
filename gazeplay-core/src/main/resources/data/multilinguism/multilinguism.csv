@@ -520,8 +520,15 @@ Normal_MOUSE,,,,,,, Normal mouse ,, Normal souris ,,,,,,,,,,,,
 Hard_MOUSE,,,,,,, Hard mouse ,, Difficile souris ,,,,,,,,,,,,
 
 # Sprint to the finish name
+SprintFinish,,,,,,, Sprint jusqu'à l'arrivée ,, Sprint to the finish ,,,,,,,,,,,,
+SprintFinishMouse,,,,,,, Sprint jusqu'à l'arrivée (Souris/Yeux) ,, Sprint to the finish (Mouse/Gaze) ,,,,,,,,,,,,
 SprintFinish,,,,,,, Sprint to the finish ,, Sprint jusqu'à l'arrivée ,,,,,,,,,,,,
 SprintFinishMouse,,,,,,, Sprint to the finish (Gaze) ,, Sprint jusqu'à l'arrivée (Regard) ,,,,,,,,,,,,
+
+# GazeRace
+GazeRace,,,,,,, GazeRace ,, GazeRace ,,,,,,,,,,,,
+Play horizontally,,,,,,, Play horizontally ,, Jouer horizontalement
+Play vertically,,,,,,, Play vertically ,, Jouer verticalement
 
 # Tower Defense
 SendWave,,,,,,, Envoyer la vague suivante ,, Send next wave ,,,,,,,,,,,,
