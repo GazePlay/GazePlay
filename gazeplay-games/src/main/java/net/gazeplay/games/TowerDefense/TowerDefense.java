@@ -18,6 +18,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -275,6 +276,7 @@ public class TowerDefense implements GameLifeCycle {
 
         ProgressIndicator createTowerSelectionPI = new ProgressIndicator(0);
         createTowerSelectionPI.setVisible(false);
+        createTowerSelectionPI.setMouseTransparent(true);
         gameContext.getChildren().add(createTowerSelectionPI);
 
         EventHandler<Event> exitTurretTileHandler = event -> {
@@ -582,93 +584,78 @@ public class TowerDefense implements GameLifeCycle {
             createTowerIcon(DOUBLE_TOWER, col, row, mainCircleRadius, group);
         }
 
-        //// Close the tower selection when looking away
-        ProgressIndicator exitPi = new ProgressIndicator(0);
-        exitPi.setVisible(false);
-        exitPi.setMouseTransparent(true);
-        exitPi.setMinSize(tileWidth.get(), tileHeight.get());
-        exitPi.relocate(col*tileWidth.get(), row*tileHeight.get());
-
-        Timeline exitTl = new Timeline();
-        exitTl.setOnFinished(event1 -> {
+        // Bigger rectangle to work better with eye-tracking
+        Rectangle rect = new Rectangle((col-mainCircleRadius)*tileWidth.get(),(row-mainCircleRadius)*tileHeight.get(),(mainCircleRadius*2+1)*tileWidth.get(), (mainCircleRadius*2+1)*tileHeight.get());
+        rect.setOpacity(0);
+        rect.setViewOrder(10);
+        group.getChildren().add(rect);
+        rect.addEventFilter(GazeEvent.GAZE_EXITED, gazeEvent -> {
+            group.getChildren().clear();
+            gameContext.getChildren().remove(group);
+        });
+        rect.addEventFilter(MouseEvent.MOUSE_EXITED, mouseEvent -> {
             group.getChildren().clear();
             gameContext.getChildren().remove(group);
         });
 
-        EventHandler<Event> exitGroupHandler = event -> {
-            exitPi.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
-            exitPi.setProgress(0);
-            exitPi.setVisible(true);
-
-            exitTl.getKeyFrames().clear();
-            exitTl.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(exitPi.progressProperty(), 1)));
-            exitTl.play();
-        };
-
-        EventHandler<Event> enterGroupHandler = event -> {
-            exitPi.setVisible(false);
-            exitTl.stop();
-        };
-
-        // Bigger rectangle to work better with eye-tracking
-        Rectangle rect = new Rectangle((col-2)*tileWidth.get(),(row-2)*tileHeight.get(),tileWidth.get()*5, tileHeight.get()*5);
-        rect.setOpacity(0);
-        rect.setMouseTransparent(true);
-        gameContext.getChildren().add(rect);
-
-        group.addEventFilter(MouseEvent.MOUSE_ENTERED, enterGroupHandler);
-        rect.addEventFilter(GazeEvent.GAZE_ENTERED, enterGroupHandler);
-
-        group.addEventFilter(MouseEvent.MOUSE_EXITED, exitGroupHandler);
-        rect.addEventFilter(GazeEvent.GAZE_EXITED, exitGroupHandler);
-
         gameContext.getGazeDeviceManager().addEventFilter(rect);
-        gameContext.getGazeDeviceManager().addEventFilter(group);
 
         group.getChildren().add(towerPi);
-        group.getChildren().add(exitPi);
 
     }
 
     private void createTowerIcon(int towerType, int col, int row, double mainCircleRadius, Group group){
+        StackPane stackPane = new StackPane();
+
         ImageView tower;
         switch (towerType) {
             case MISSILE_TOWER -> {
                 tower = new ImageView(missileTowerImage);
                 tower.setFitWidth((mainCircleRadius - 0.5) * tileWidth.get());
                 tower.setFitHeight((mainCircleRadius - 0.5) * tileHeight.get());
-                tower.setX((col + 0.5 - mainCircleRadius) * tileWidth.get());
-                tower.setY((row + 0.5) * tileHeight.get() - tower.getFitHeight() / 2);
+                stackPane.setTranslateX((col + 0.5 - mainCircleRadius) * tileWidth.get());
+                stackPane.setTranslateY((row + 0.5) * tileHeight.get() - tower.getFitHeight() / 2);
             }
             case DOUBLE_TOWER -> {
                 tower = new ImageView(doubleTowerImage);
                 tower.setFitWidth((mainCircleRadius - 0.5) * tileWidth.get());
                 tower.setFitHeight((mainCircleRadius - 0.5) * tileHeight.get());
-                tower.setX((col + 0.5) * tileWidth.get() - tower.getFitWidth() / 2);
-                tower.setY((row + 1) * tileHeight.get());
+                stackPane.setTranslateX((col + 0.5) * tileWidth.get() - tower.getFitWidth() / 2);
+                stackPane.setTranslateY((row + 1) * tileHeight.get());
             }
             case CANON_TOWER -> {
                 tower = new ImageView(canonTowerImage);
                 tower.setFitWidth((mainCircleRadius - 0.5) * tileWidth.get());
                 tower.setFitHeight((mainCircleRadius - 0.5) * tileHeight.get());
-                tower.setX((col + 1) * tileWidth.get());
-                tower.setY((row + 0.5) * tileHeight.get() - tower.getFitHeight() / 2);
+                stackPane.setTranslateX((col + 1) * tileWidth.get());
+                stackPane.setTranslateY((row + 0.5) * tileHeight.get() - tower.getFitHeight() / 2);
             }
             default -> {
                 tower = new ImageView(basicTowerImage);
                 tower.setFitWidth((mainCircleRadius - 0.5) * tileWidth.get());
                 tower.setFitHeight((mainCircleRadius - 0.5) * tileHeight.get());
-                tower.setX((col + 0.5) * tileWidth.get() - tower.getFitWidth() / 2);
-                tower.setY((row + 0.5 - mainCircleRadius) * tileHeight.get());
+                stackPane.setTranslateX((col + 0.5) * tileWidth.get() - tower.getFitWidth() / 2);
+                stackPane.setTranslateY((row + 0.5 - mainCircleRadius) * tileHeight.get());
             }
         }
 
+        Label costLabel = new Label();
+        costLabel.setMouseTransparent(true);
+        costLabel.setFont(Font.font("Agency FB", tower.getFitHeight()/2));
+        switch (towerType){
+            case BASIC_TOWER -> costLabel.setText("25");
+            case DOUBLE_TOWER -> costLabel.setText("50");
+            case MISSILE_TOWER -> costLabel.setText("25");
+            case CANON_TOWER -> costLabel.setText("25");
+        }
+        stackPane.getChildren().addAll(tower, costLabel);
+
         tower.setPickOnBounds(true);
-        group.getChildren().add(tower);
+        group.getChildren().add(stackPane);
 
         EventHandler<Event> enterRightTowerHandler = event -> {
             towerPi.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
-            towerPi.relocate(tower.getX(), tower.getY());
+            towerPi.relocate(stackPane.getTranslateX(), stackPane.getTranslateY());
             towerPi.setProgress(0);
             towerPi.setVisible(true);
 
