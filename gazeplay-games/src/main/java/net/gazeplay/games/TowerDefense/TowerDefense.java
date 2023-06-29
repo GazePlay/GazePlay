@@ -17,15 +17,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.*;
 import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.utils.stats.Stats;
+
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
@@ -60,6 +60,7 @@ public class TowerDefense implements GameLifeCycle {
     private int enemiesToSend;
     private int enemiesSent;
     private int enemySpawnTick;
+    private Instant lastBlizzardInstant;
 
     // IMAGES
     private final Image basicTowerImage;
@@ -69,6 +70,7 @@ public class TowerDefense implements GameLifeCycle {
     private final Image moneyGainImage;
     private final Image moneyLossImage;
     private final Image sellTowerImage;
+    private final ImageView blizzardGif;
 
     // CONSTANTS
     private final static int EXPLOSION_DAMAGE = 5;
@@ -80,6 +82,7 @@ public class TowerDefense implements GameLifeCycle {
     private final static int DOUBLE_TOWER = 1;
     private final static int MISSILE_TOWER = 2;
     private final static int CANON_TOWER = 3;
+    private final static double BLIZZARD_COOLDOWN = 30;
 
     TowerDefense(final IGameContext gameContext, final Stats stats){
 
@@ -103,6 +106,9 @@ public class TowerDefense implements GameLifeCycle {
         moneyLossImage = new Image("data/TowerDefense/moneyLoss.png");
         moneyGainImage = new Image("data/TowerDefense/moneyGain.png");
         sellTowerImage = new Image("data/TowerDefense/sellTower.png");
+        blizzardGif = new ImageView(new Image("data/TowerDefense/blizzard.gif"));
+        blizzardGif.fitWidthProperty().bind(gameContext.getRoot().widthProperty());
+        blizzardGif.fitHeightProperty().bind(gameContext.getRoot().heightProperty());
 
         tileWidth = new SimpleDoubleProperty();
         tileHeight = new SimpleDoubleProperty();
@@ -125,6 +131,7 @@ public class TowerDefense implements GameLifeCycle {
         enemiesToSend = 0;
         enemiesSent = 0;
         enemySpawnTick = 0;
+        lastBlizzardInstant = Instant.MIN;
 
         gameContext.getChildren().add(canvas);
 
@@ -184,6 +191,86 @@ public class TowerDefense implements GameLifeCycle {
         sendWaveButton.addEventFilter(GazeEvent.GAZE_EXITED, exitWaveButtonHandler);
         gameContext.getGazeDeviceManager().addEventFilter(sendWaveButton);
 
+        //// Blizzard Power
+        Label blizzardLabel = createLabel("", "data/TowerDefense/blizzardIcon.png");
+        ImageView blizzarIcon = new ImageView(new Image("data/TowerDefense/blizzardIcon.png"));
+        blizzarIcon.fitWidthProperty().bind(tileWidth.multiply(1.5));
+        blizzarIcon.fitHeightProperty().bind(tileHeight.multiply(1.5));
+        blizzardLabel.setGraphic(blizzarIcon);
+        topBar.getChildren().add(blizzardLabel);
+
+        ProgressIndicator blizzardPi = new ProgressIndicator(0);
+        blizzardPi.setVisible(false);
+        blizzardPi.setMouseTransparent(true);
+        gameContext.getChildren().add(blizzardPi);
+
+        Timeline blizzardTl = new Timeline();
+        blizzardTl.setOnFinished(actionEvent -> {
+            lastBlizzardInstant = Instant.now();
+            blizzardPi.setVisible(false);
+            gameContext.getChildren().add(blizzardGif);
+            enemies.forEach(enemy -> enemy.setFrozen(true));
+
+            Arc arc = new Arc(blizzardLabel.getLayoutX()+blizzardLabel.getWidth()/2, blizzardLabel.getLayoutY()+blizzardLabel.getHeight()/2, blizzardLabel.getWidth()/2, blizzardLabel.getHeight()/2, 90, 360);
+            arc.centerXProperty().bind(blizzardLabel.layoutXProperty().add(blizzardLabel.getWidth()/2));
+            arc.centerYProperty().bind(blizzardLabel.layoutYProperty().add(blizzardLabel.getHeight()/2));
+            arc.radiusXProperty().bind(blizzardLabel.widthProperty().divide(2));
+            arc.radiusYProperty().bind(blizzardLabel.heightProperty().divide(2));
+            arc.setType(ArcType.ROUND);
+            arc.setOpacity(0.75);
+            arc.setFill(Color.DARKGREY);
+            gameContext.getChildren().add(arc);
+
+            // Update cooldown
+            AnimationTimer cooldownTimer = new AnimationTimer() {
+                @Override
+                public void handle(long l) {
+                    double rate = 1 - java.time.Duration.between(lastBlizzardInstant, Instant.now()).toSeconds()/BLIZZARD_COOLDOWN;
+                    if(rate<0){
+                        gameContext.getChildren().remove(arc);
+                        stop();
+                    }
+                    arc.setLength(rate*360);
+                }
+            };
+
+            cooldownTimer.start();
+
+            // End the blizzard
+            Timeline endBlizzardTl = new Timeline(new KeyFrame(Duration.seconds(5), actionEvent1 -> {
+                gameContext.getChildren().remove(blizzardGif);
+                enemies.forEach(enemy -> enemy.setFrozen(false));
+            }));
+            endBlizzardTl.play();
+
+        });
+
+        EventHandler<Event> enterBlizzardHandler = event -> {
+            if(java.time.Duration.between(lastBlizzardInstant, Instant.now()).toSeconds() >= BLIZZARD_COOLDOWN){
+                blizzardPi.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+                blizzardPi.setMinSize(blizzardLabel.getWidth(), blizzardLabel.getHeight());
+                blizzardPi.relocate(blizzardLabel.getLayoutX(), blizzardLabel.getLayoutY());
+                blizzardPi.setProgress(0);
+                blizzardPi.setVisible(true);
+                blizzardTl.getKeyFrames().clear();
+                blizzardTl.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(blizzardPi.progressProperty(), 1)));
+                blizzardTl.play();
+            }
+        };
+
+        EventHandler<Event> exitBlizzardHandler = event -> {
+            blizzardTl.stop();
+            blizzardPi.setVisible(false);
+        };
+
+        blizzardLabel.addEventFilter(MouseEvent.MOUSE_ENTERED, enterBlizzardHandler);
+        blizzardLabel.addEventFilter(GazeEvent.GAZE_ENTERED, enterBlizzardHandler);
+
+        blizzardLabel.addEventFilter(MouseEvent.MOUSE_EXITED, exitBlizzardHandler);
+        blizzardLabel.addEventFilter(GazeEvent.GAZE_EXITED, exitBlizzardHandler);
+
+        gameContext.getGazeDeviceManager().addEventFilter(blizzardLabel);
+
         // TOWER SELECTION
 
         ProgressIndicator createTowerSelectionPI = new ProgressIndicator(0);
@@ -197,7 +284,6 @@ public class TowerDefense implements GameLifeCycle {
 
         for (Point2D turretsTile : map.getTurretsTiles()) {
             Rectangle rectangle = new Rectangle();
-            rectangle.setViewOrder(-1);
             rectangle.xProperty().bind(tileWidth.multiply(turretsTile.getX()-0.5));
             rectangle.yProperty().bind(tileHeight.multiply(turretsTile.getY()-0.5));
             rectangle.widthProperty().bind(tileWidth.multiply(2));
@@ -410,7 +496,9 @@ public class TowerDefense implements GameLifeCycle {
         ListIterator<Enemy> enemyIter = enemies.listIterator();
         while (enemyIter.hasNext()) {
             Enemy enemy = enemyIter.next();
-            enemy.move();
+            if(!enemy.isFrozen()){
+                enemy.move();
+            }
             if(enemy.reachedEnd()){
                 enemyIter.remove();
                 loseLife();

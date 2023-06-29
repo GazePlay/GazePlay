@@ -16,12 +16,14 @@ public class Enemy {
     private double maxHealth;
     private double currentHealth;
     private boolean reachedEnd;
+    private boolean isFrozen;
 
     public Enemy(Map map, double x, double y){
         this.map = map;
         this.x = x;
         this.y = y;
         reachedEnd = false;
+        isFrozen = false;
 
         maxHealth = 50;
         currentHealth = maxHealth;
@@ -146,5 +148,13 @@ public class Enemy {
 
     public double getSpeedY() {
         return speedY;
+    }
+
+    public boolean isFrozen() {
+        return isFrozen;
+    }
+
+    public void setFrozen(boolean frozen) {
+        isFrozen = frozen;
     }
 }

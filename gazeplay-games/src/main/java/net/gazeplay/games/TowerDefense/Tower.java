@@ -50,13 +50,16 @@ public abstract class Tower {
             double tx = targetCenter.getX() - towerCenterX;
             double ty = targetCenter.getY() - towerCenterY;
 
-            double estimatedTicksToReachTarget = Math.sqrt(Math.pow(tx, 2)+Math.pow(ty, 2))/projSpeed;
-            double estimatedTargetX = targetCenter.getX() + target.getSpeedX()*estimatedTicksToReachTarget;
-            double estimatedTargetY = targetCenter.getY() + target.getSpeedY()*estimatedTicksToReachTarget;
+            // If target isn't frozen, tower needs to shoot ahead of the target
+            if(!target.isFrozen()){
+                double estimatedTicksToReachTarget = Math.sqrt(Math.pow(tx, 2)+Math.pow(ty, 2))/projSpeed;
+                double estimatedTargetX = targetCenter.getX() + target.getSpeedX()*estimatedTicksToReachTarget;
+                double estimatedTargetY = targetCenter.getY() + target.getSpeedY()*estimatedTicksToReachTarget;
 
-            // Correct translation based on predicted position
-            tx = estimatedTargetX - towerCenterX;
-            ty = estimatedTargetY - towerCenterY;
+                // Correct translation based on predicted position
+                tx = estimatedTargetX - towerCenterX;
+                ty = estimatedTargetY - towerCenterY;
+            }
 
             // Aim at enemy
             rotation = Math.toDegrees(Math.atan2(ty, tx)) + 90;
