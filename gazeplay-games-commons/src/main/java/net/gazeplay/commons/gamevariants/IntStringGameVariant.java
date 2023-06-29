@@ -1,6 +1,7 @@
 package net.gazeplay.commons.gamevariants;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.gazeplay.commons.ui.Translator;
 
 public class IntStringGameVariant implements IGameVariant {
@@ -10,8 +11,18 @@ public class IntStringGameVariant implements IGameVariant {
     @Getter
     private final String stringValue;
 
+    @Getter
+    @Setter
+    private int number2;
+
     public IntStringGameVariant(int number, String stringValue) {
         this.number = number;
+        this.stringValue = stringValue;
+    }
+
+    public IntStringGameVariant(int number, String stringValue, int number2) {
+        this.number = number;
+        this.number2 = number2;
         this.stringValue = stringValue;
     }
 
@@ -39,6 +50,6 @@ public class IntStringGameVariant implements IGameVariant {
 
     @Override
     public String toString() {
-        return "IntStringGameVariant:" + number + ":" + stringValue;
+        return "IntStringGameVariant:" + number + ":" + stringValue + ":" + number2;
     }
 }
