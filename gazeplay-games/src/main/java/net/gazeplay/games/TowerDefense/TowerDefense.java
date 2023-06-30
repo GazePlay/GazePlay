@@ -647,6 +647,7 @@ public class TowerDefense implements GameLifeCycle {
             case DOUBLE_TOWER -> costLabel.setText("50");
             case MISSILE_TOWER -> costLabel.setText("25");
             case CANON_TOWER -> costLabel.setText("25");
+            default -> costLabel.setText("25");
         }
         stackPane.getChildren().addAll(tower, costLabel);
 
