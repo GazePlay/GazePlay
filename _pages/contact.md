@@ -4,7 +4,7 @@ permalink: /contact/
 layout: single
 ---
 
-GAZEPLAY Copyright (C) 2016-2021 Univ. Grenoble Alpes, CNRS, LIG UMR 5217
+GAZEPLAY Copyright (C) 2016-2023 Univ. Grenoble Alpes, CNRS, LIG UMR 5217
 
 GazePlay has been conducted by Didier Schwab in the framework of a research project of the GETALP Team (Study Group for Machine Translation and Automated Processing of Languages and Speech) of the LIG (Laboratory of Informatics of Grenoble) which [partners]({{ site.baseurl }}/partners/) are the CNRS, Grenoble Institute of Technology (Grenoble INP), Inria Grenoble Rhône-Alpes, Grenoble Alps University.
 

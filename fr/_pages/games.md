@@ -384,6 +384,22 @@ Joue tes propres vidéos ou celles-ci depuis YouTube.
 
 {% include figure image_path="/assets/images/games/gazeMedia.png" alt="Image du jeu Media player." %}
 
+## Aiguillages
+
+Guide les trains jusqu'à la gare de la couleur correspondante en activant les aiguillages avec ton regard. <br>
+Plusieurs variantes sont disponibles pour simplifier le jeu : 
+* Pause : Le jeu se met en pause lorsqu'un train arrive à un aiguillage.
+* Train renvoyés : Les trains sont réenvoyés plus tard lorsqu'ils atteignent la mauvaise gare.
+* Un seul train à la fois : Il n'y a qu'un seul train à la fois.
+
+{% include figure image_path="/assets/images/games/trainSwitches.png" alt="Image du jeu Aiguillages." %}
+
+## Puissance 4
+
+Aligne 4 jetons pour gagner la partie ! <br>
+Place un jeton dans une colonne en regardant en haut de la colonne.
+
+{% include figure image_path="/assets/images/games/connect4.png" alt="Image du jeu Puissance 4." %}
 
 ## Survivre contre les robots
 
