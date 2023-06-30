@@ -395,3 +395,19 @@ Sprint to the finish is a cooperative game for two players.
 * Mouse/Gaze version : Player 1 moves using his eye movements and must reach the finish line, while Player 2 uses the "A" keys to stop enemies, "Z" to activate switches and "E" to stop moving walls and help Player 1.
 
 {% include figure image_path="/assets/images/games/sprintToTheFinish.png" alt="Image of the game Sprint to the finish." %}
+
+
+## Simon
+Play the famous board game Simon! <br>
+3 game modes are available:
+* Classic: repeat the notes that the terminal produces
+* Simon copies you: The terminal reproduces your notes this time. Pay attention to the correct sequence!
+* Multiplayer: Two players take turns and must imitate the terminal!
+
+{% include figure image_path="/assets/images/games/simon.png" alt="Image of the game Simon." %}
+
+
+## GazeRace
+Play a car game where the goal is to dodge other cars and obstacles!
+
+{% include figure image_path="/assets/images/games/gazeRace.png" alt="Image of the game GazeRace." %}
