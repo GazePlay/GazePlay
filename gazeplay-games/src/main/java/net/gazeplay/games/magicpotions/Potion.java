@@ -144,11 +144,9 @@ class Potion extends Parent {
         gameInstance.getPotionYellow().removeEventFilter(GazeEvent.ANY, gameInstance.getPotionYellow().getEnterEvent());
         progressButton.setStyle(" -fx-progress-color: red;");
         progressButton.setAccessibleText("");
-
         gameInstance.getPotionBlue().progressButton.disable();
         gameInstance.getPotionRed().progressButton.disable();
         gameInstance.getPotionYellow().progressButton.disable();
-
         currentTimeline.stop();
         currentTimeline = new Timeline();
 
@@ -178,12 +176,24 @@ class Potion extends Parent {
             progressButton.disable();
             progressButton.setOpacity(.3);
 
+
+            gameInstance.getPotionBlue().setDisable(true);
+            gameInstance.getPotionRed().setDisable(true);
+            gameInstance.getPotionYellow().setDisable(true);
+
             TranslateTransition tt = new TranslateTransition(Duration.seconds(2), progressButton);
 
             tt.setToX(gameInstance.currentRoundDetails.getMixPotColor().getCenterX()+50);
             tt.setCycleCount(2);
             tt.setAutoReverse(true);
             tt.play();
+
+            tt.setOnFinished(event2->{
+                gameInstance.getPotionBlue().setDisable(false);
+                gameInstance.getPotionRed().setDisable(false);
+                gameInstance.getPotionYellow().setDisable(false);
+                potion.setDisable(true);
+            });
 
             AnimationTimer animationTimer = new AnimationTimer() {
                 int nbframe = 0;
