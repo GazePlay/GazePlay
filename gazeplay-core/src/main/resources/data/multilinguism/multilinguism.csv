@@ -84,6 +84,7 @@ WhereIsTheShape,Ku është forma?,اين الشكل؟,Дзе форма?,形状�
 WhereIsTheSound,Çfarë është ky tingull?,ما هذا الصوت؟,Што гэта за гук?,这是什么声音？,Was ist das für ein Geräusch?,Τι είναι αυτός ο ήχος;,What is this sound?,Mikä tämä ääni on?,Quel est ce son ?,यह ध्वनि क्या है?,Kakav je ovo zvuk?,Suara apa ini?,Cos'è questo suono?,この音は何ですか？,Wat is dit geluid?,Co to za dźwięk?,O que é esse som?,Что это за звук?,¿Qué es este sonido?,Đây là âm thanh gì?,Apakah bunyi ini?
 Connect4,,,,,,,Connect 4,,Puissance 4,,,,,,,,,,,,
 TrainSwitches,,,,,,,Train Switches,,Aiguillages,,,,,,,,,,,,
+TowerDefense,,,,,,,Tower Defense,,Défendre le chateau,,,,,,,,,,,,
 
 # VARIANT CHOOSE TEXTS
 Choose Game Variant,Zgjidhni një variant të lojës,اختر نوع اللعبة,Выберыце варыянт гульні,选择游戏变体,Wähle eine Spielvariante,Επιλέξτε μια παραλλαγή παιχνιδιού,Choose a Game Variant,Valitse peliversio,Choisissez une variante de jeu,एक गेम प्रकार चुनें,Odaberite varijantu igre,Pilih varian permainan,Scegli una variante di gioco,ゲームのバリエーションを選択してください,Kies een spelvariant,Wybierz wariant gry,Escolha uma variante de jogo,Выберите вариант игры,Elige una variante del juego,Chọn một biến thể trò chơi,Pilih varian permainan
@@ -524,8 +525,10 @@ SprintFinishMouse,,,,,,, Sprint jusqu'à l'arrivée (Souris/Yeux) ,, Sprint to t
 SprintFinish,,,,,,, Sprint to the finish ,, Sprint jusqu'à l'arrivée ,,,,,,,,,,,,
 SprintFinishMouse,,,,,,, Sprint to the finish (Gaze) ,, Sprint jusqu'à l'arrivée (Regard) ,,,,,,,,,,,,
 
-
 # GazeRace
 GazeRace,,,,,,, GazeRace ,, GazeRace ,,,,,,,,,,,,
 Play horizontally,,,,,,, Play horizontally ,, Jouer horizontalement
 Play vertically,,,,,,, Play vertically ,, Jouer verticalement
+
+# Tower Defense
+SendWave,,,,,,, Envoyer la vague suivante ,, Send next wave ,,,,,,,,,,,,
