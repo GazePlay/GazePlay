@@ -409,8 +409,22 @@ Survivez contre des vagues de robots en vous déplaçant et en tirant en utilisa
 
 ## Sprint jusqu'à l'arrivée
 
-Sprint to the finish is a cooperative game for two players.
+Sprint jusqu'à l'arrivée est un jeu coopératif en simultané pour deux joueurs.
 * Clavier version : Le joueur 1 utilise les flèches directionnelles pour se déplacer et atteindre la ligne d'arrivée, tandis que le joueur 2 doit surveiller les ennemis qui se déplacent en les regardants ou en utilisant la souris ce qui permettra de les immobiliser et utiliser des interrupteurs pour aider le joueur 1.
 * Souris/Regard version : Le joueur 1 se déplace en utilisant les mouvements de ses yeux et doit atteindre la ligne d'arrivée, tandis que le joueur 2 utilise les touches « A » pour immobiliser les ennemis, « Z » pour actionner les interrupteurs et « E » pour immobiliser les murs qui se déplacent et aider le joueur 1.
 
-{% include figure image_path="/assets/images/games/sprintToTheFinish.png" alt="Image of the game Sprint to the finish." %}
+{% include figure image_path="/assets/images/games/sprintToTheFinish.png" alt="Image du jeu Sprint jusqu'à l'arrivée." %}
+
+## Simon
+Jouez au célèbre jeu de société Simon ! <br>
+3 modes de jeux sont disponibles : 
+* Classique : répétez les notes que la borne produit
+* Simon te copie : La borne reproduit cette fois-ci tes notes. Attention à effectuer la bonne séquence !
+* Multijoueur : Deux joueurs jouent chacun leur tour et doivent imiter la borne !
+
+{% include figure image_path="/assets/images/games/simon.png" alt="Image du jeu Simon." %}
+
+## GazeRace
+Jouez à un jeu de voiture où le but est d'esquiver les autres voitures et obstacles !
+
+{% include figure image_path="/assets/images/games/gazeRace.png" alt="Image du jeu GazeRace." %}
