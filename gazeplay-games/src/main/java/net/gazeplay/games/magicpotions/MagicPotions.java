@@ -28,6 +28,8 @@ import java.util.List;
 @Slf4j
 public class MagicPotions extends Parent implements GameLifeCycle {
 
+
+    protected boolean gameEnded;
     @Data
     public static class RoundDetails {
 
@@ -99,7 +101,7 @@ public class MagicPotions extends Parent implements GameLifeCycle {
 
         gameContext.setLimiterAvailable();
         final String imagePATH = "data/potions/images/";
-
+        gameEnded = false;
         initBackground(imagePATH);
 
         /* BIBOULE - CLIENT */
