@@ -3,9 +3,12 @@ package net.gazeplay.games.gazeRace;
 import javafx.animation.AnimationTimer;
 import javafx.animation.RotateTransition;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -34,7 +37,7 @@ public class GazeRace extends Parent implements GameLifeCycle {
     private Rectangle rightDeathBarrier;
     private final ImagePattern death = new ImagePattern(new Image("data/gazeRace/Flash.png"));
 
-
+    private int nbRect = 0;
     private Player player;
     protected double mphGeneral;
     private Random random;
@@ -93,12 +96,22 @@ public class GazeRace extends Parent implements GameLifeCycle {
 
         if (gameVariant.equals(GazeRaceVariant.HORIZONTAL)){
             delimiterRoad = new Rectangle(0,dimension2D.getHeight()/2-25,dimension2D.getWidth(),50);
+            nbRect = 0;
 
-            for (int i = 0; i < 21; i++){
-                BackgroundRoad backgroundRoadTop = new BackgroundRoad(espacement,dimension2D.getHeight()/4,200,50,mphGeneral,gameVariant);
+            while(espacement <= dimension2D.getWidth()){
+                espacement+=300;
+                nbRect++;
+            }
+
+            espacement = 0;
+            nbRect*=3;
+
+
+            for (int i = 0; i < nbRect; i++){
+                BackgroundRoad backgroundRoadTop = new BackgroundRoad(espacement,dimension2D.getHeight()/4,200,50,mphGeneral,gameVariant,false);
                 backgroundRoadsTop.add(backgroundRoadTop);
 
-                BackgroundRoad backgroundRoadBot = new BackgroundRoad(espacement,dimension2D.getHeight()*0.75,200,50,mphGeneral,gameVariant);
+                BackgroundRoad backgroundRoadBot = new BackgroundRoad(espacement,dimension2D.getHeight()*0.75,200,50,mphGeneral,gameVariant,false);
                 backgroundRoadsBot.add(backgroundRoadBot);
 
                 gameContext.getChildren().add(backgroundRoadTop);
@@ -107,12 +120,20 @@ public class GazeRace extends Parent implements GameLifeCycle {
             }
         }else{
             delimiterRoad = new Rectangle(dimension2D.getWidth()/2-25,0,50,dimension2D.getHeight());
+            nbRect = 0;
 
-            for (int i = 0; i < 18; i++){
-                BackgroundRoad backgroundRoadTop = new BackgroundRoad(dimension2D.getWidth()/4, dimension2D.getHeight()-espacement,50,250,mphGeneral,gameVariant);
+            while(espacement <= dimension2D.getWidth()){
+                espacement+=300;
+                nbRect++;
+            }
+
+            espacement = 0;
+            nbRect*=3;
+            for (int i = 0; i < nbRect; i++){
+                BackgroundRoad backgroundRoadTop = new BackgroundRoad(dimension2D.getWidth()/4, dimension2D.getHeight()-espacement,50,250,mphGeneral,gameVariant,false);
                 backgroundRoadsTop.add(backgroundRoadTop);
 
-                BackgroundRoad backgroundRoadBot = new BackgroundRoad(dimension2D.getWidth()*0.75,dimension2D.getHeight()-espacement,50,250,mphGeneral,gameVariant);
+                BackgroundRoad backgroundRoadBot = new BackgroundRoad(dimension2D.getWidth()*0.75,dimension2D.getHeight()-espacement,50,250,mphGeneral,gameVariant,false);
                 backgroundRoadsBot.add(backgroundRoadBot);
 
                 gameContext.getChildren().add(backgroundRoadTop);
@@ -122,8 +143,6 @@ public class GazeRace extends Parent implements GameLifeCycle {
         }
         delimiterRoad.setFill(Color.WHITE);
         gameContext.getChildren().add(delimiterRoad);
-
-
 
         generalAnimation = new AnimationTimer() {
             int nbframes = 0;
@@ -144,6 +163,11 @@ public class GazeRace extends Parent implements GameLifeCycle {
                     }
                 }
 
+
+
+
+
+
                 if (nbframes == 30){
                     nbCar = random.nextInt(2,4);
                     for (int i = 0; i < nbCar; i++){
@@ -157,6 +181,24 @@ public class GazeRace extends Parent implements GameLifeCycle {
 
                 if (nbframes == 60){
                     nbSecond++;
+                    if (nbSecond%12 == 0){
+                        BackgroundRoad obstacle;
+                        if (gameVariant.equals(GazeRaceVariant.HORIZONTAL)){
+                            obstacle = new BackgroundRoad(dimension2D.getWidth()+500,dimension2D.getHeight()/2-25,300,50,mphGeneral,gameVariant,true);
+                        }else{
+                            obstacle = new BackgroundRoad(dimension2D.getWidth()/2-25,-500,50,300,mphGeneral,gameVariant,true);
+                            obstacle.dimension2D = dimension2D;
+                        }
+
+
+
+                        gameContext.getChildren().add(obstacle);
+                        gameContext.getChildren().add(obstacle.imageRight);
+                        gameContext.getChildren().add(obstacle.imageLeft);
+                        obstacle.imageRight.toFront();
+                        obstacle.setFill(Color.ORANGE);
+                        obstacles.add(obstacle);
+                    }
                     if (mphGeneral <= 15){
                         mphGeneral += 0.2;
                     }
@@ -356,10 +398,20 @@ public class GazeRace extends Parent implements GameLifeCycle {
 
             if (isCollidingWithASpecificObstacle(futurePos, obstacle)) {
                 if (object == player || obstacle == player){
-                    if (obstacle instanceof Car){
+                    if (obstacle instanceof Car || obstacle instanceof BackgroundRoad){
+                        boolean obstacledestroy = true;
+                        if (obstacle instanceof BackgroundRoad backgroundRoad){
+                            if (!backgroundRoad.obstacle){
+                                continue;
+                            }else{
+                                obstacledestroy = false;
+                            }
+                        }
                         if (!player.isInvincible){
                             player.startTimerInvincible();
-                            playDeathAnimation(1,obstacle);
+                            if (obstacledestroy){
+                                playDeathAnimation(1,obstacle);
+                            }
                             player.health--;
                             RotateTransition rotateTransition = new RotateTransition(Duration.seconds(1), player);
                             rotateTransition.setByAngle(360); // Angle de rotation (360 degrés dans ce cas)
@@ -433,7 +485,6 @@ public class GazeRace extends Parent implements GameLifeCycle {
 
         // Get the dimensions of the game panel from the game context
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
 
 
             Rectangle upWall = new Rectangle(0,0,dimension2D.getWidth(),50);
@@ -510,18 +561,58 @@ public class GazeRace extends Parent implements GameLifeCycle {
 
         protected boolean stopTimer;
         protected double speed;
-        public BackgroundRoad(double x, double y, double width, double height, double speed2, Enum<GazeRaceVariant> gameVariant) {
+        private final boolean obstacle;
+        protected ImageView imageLeft,imageRight;
+        protected Dimension2D dimension2D;
+        public BackgroundRoad(double x, double y, double width, double height, double speed2, Enum<GazeRaceVariant> gameVariant, boolean obstacle) {
             super(x, y, width, height);
             setFill(Color.WHITE);
             stopTimer = false;
             speed = speed2;
+            this.obstacle = obstacle;
+            imageLeft = null;
+            imageRight = null;
+            if (this.obstacle){
+                imageLeft = new ImageView(new Image("data/gazeRace/cone-construction-road.png"));
+                imageRight = new ImageView(new Image("data/gazeRace/cone-construction-road.png"));
+                imageLeft.setFitWidth(50);
+                imageLeft.setFitHeight(50);
+                imageRight.setFitWidth(50);
+                imageRight.setFitHeight(50);
+                imageLeft.setX(getX());
+                imageLeft.setY(getY());
+                if (gameVariant.equals(GazeRaceVariant.HORIZONTAL)){
+                    imageRight.setX(getX()+getWidth()-imageRight.getFitWidth());
+                    imageRight.setY(getY());
+                }else{
+                    imageRight.setY(getY()+getHeight()-imageRight.getFitHeight());
+                    imageRight.setX(getX());
+                }
+            }
             AnimationTimer timer = new AnimationTimer() {
                 @Override
                 public void handle(long now) {
                     if (!stopTimer){
                         if (gameVariant.equals(GazeRaceVariant.HORIZONTAL)){
+                            if (obstacle){
+                                if (imageRight.getX() < -100){
+                                    stopTimer = true;
+                                }
+                                imageLeft.setX(imageLeft.getX()-speed);
+                                imageRight.setX(imageRight.getX()-speed);
+
+                            }
                             setX(getX()-speed);
+
                         }else{
+                            if (obstacle){
+                                if (imageLeft.getY() > dimension2D.getHeight()+100){
+                                    stopTimer = true;
+                                }
+                                imageLeft.setY(imageLeft.getY()+speed);
+                                imageRight.setY(imageRight.getY()+speed);
+
+                            }
                             setY(getY()+speed);
                         }
                     }else{
@@ -531,6 +622,7 @@ public class GazeRace extends Parent implements GameLifeCycle {
             };
             timer.start();
         }
+
     }
 
 }
