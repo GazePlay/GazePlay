@@ -28,6 +28,9 @@
         "statsNbGoalsReached": {
             "type": "number"
         },
+        "statsNbMistakes": {
+          "type": "number"
+        },
         "statsNbGoalsToReach": {
             "type": "number"
         },

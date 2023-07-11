@@ -102,8 +102,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     private final ArrayList<Rectangle> bulletBossListRec;
     private final ArrayList<Rectangle> spaceshipDestroyed;
     private int bossHit;
+    private final SpaceGameVariant gameVariant;
 
-    public SpaceGame(final IGameContext gameContext, final SpaceGameStats stats) {
+    public SpaceGame(final IGameContext gameContext, final SpaceGameStats stats, SpaceGameVariant gameVariant) {
         this.stats = stats;
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -112,6 +113,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.gameContext.startScoreLimiter();
         this.random = new ReplayablePseudoRandom();
         this.stats.setGameSeed(random.getSeed());
+        this.gameVariant = gameVariant;
 
         spaceshipImage = ImageUtils.createCustomizedImageLibrary(null, "space/spaceship", random);
         bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/biboule", random);
@@ -192,7 +194,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.bulletBossListRec = new ArrayList<>();
     }
 
-    public SpaceGame(final IGameContext gameContext, final SpaceGameStats stats, double gameSeed) {
+    public SpaceGame(final IGameContext gameContext, final SpaceGameStats stats, double gameSeed, SpaceGameVariant gameVariant) {
         this.stats = stats;
         this.gameContext = gameContext;
         this.dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -200,6 +202,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.gameContext.startTimeLimiter();
         this.gameContext.startScoreLimiter();
         this.random = new ReplayablePseudoRandom(gameSeed);
+        this.gameVariant = gameVariant;
 
         spaceshipImage = ImageUtils.createCustomizedImageLibrary(null, "space/spaceship", random);
         bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/biboule", random);
@@ -621,7 +624,21 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
             middleLayer.getChildren().add(bulletRec);
             bulletListRec.add(bulletRec);
 
-            bulletTransition = new TranslateTransition(Duration.seconds(1), bulletRec);
+            double bulletTransitionTime;
+            switch(gameVariant){
+                case EASY:
+                    bulletTransitionTime = 0.5;
+                    break;
+                case NORMAL:
+                    bulletTransitionTime = 2;
+                    break;
+                case HARD:
+                    bulletTransitionTime = 4;
+                    break;
+                default:
+                    bulletTransitionTime = 0.5;
+            }
+            bulletTransition = new TranslateTransition(Duration.seconds(bulletTransitionTime), bulletRec);
             bulletTransition.setToY(-1 * dimension2D.getHeight());
             bulletTransition.setCycleCount(1);
             bulletTransition.setInterpolator(Interpolator.LINEAR);

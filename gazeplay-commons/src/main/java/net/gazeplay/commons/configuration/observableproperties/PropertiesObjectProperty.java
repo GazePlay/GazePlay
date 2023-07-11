@@ -45,6 +45,7 @@ public abstract class PropertiesObjectProperty<T> extends ObjectPropertyBase<T> 
         log.info("Set property {} to {}", propertyName, value);
         setProperty(propertyName, value);
         propertyChangeListener.propertyChange(new PropertyChangeEvent(this, propertyName, null, value));
+        fireValueChangedEvent();
     }
 
 }
