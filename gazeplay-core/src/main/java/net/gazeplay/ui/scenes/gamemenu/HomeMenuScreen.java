@@ -28,6 +28,7 @@ import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.gaze.devicemanager.TobiiGazeDeviceManager;
 import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
@@ -39,6 +40,7 @@ import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.MenuUtils;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 
@@ -47,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -60,12 +63,13 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private List<Node> gameCardsList;
     private List<Node> favGameCardsList;
-
     public GamesStatisticsPane gamesStatisticsPane;
     public CheckBox checkBox;
     private ScrollPane choicePanelScroller;
     private CustomButton MiddleUpArrowButton;
+    private Stats stats;
     private CustomButton MiddleDownArrowButton;
+    private TobiiGazeDeviceManager gazeDeviceManager;
     @Getter
     private Label errorMessageLabel;
     @Getter
@@ -82,6 +86,15 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         super(gazePlay, new BorderPane());
         this.soundManager = soundManager;
         this.gameMenuFactory = gameMenuFactory;
+
+        stats = new Stats(gazePlay.getPrimaryScene());
+
+        CurrentScreenPositionSupplierFactoryBean test = new CurrentScreenPositionSupplierFactoryBean();
+        test.setGazePlay(gazePlay);
+
+        gazeDeviceManager = new TobiiGazeDeviceManager();
+        gazeDeviceManager.init(gazePlay.getCurrentScreenDimensionSupplier(), test.getObject());
+        gazeDeviceManager.addStats(stats);
 
         String gazeplayType = GazePlayArgs.returnArgs();
 
@@ -139,10 +152,11 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.002);
             }
         };
-        downArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
-        downArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
-        downArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
-        downArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
+        gazeDeviceManager.addEventFilter(downArrowPane);
+        downArrowPane.addEventFilter(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
+        downArrowPane.addEventFilter(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
+        downArrowPane.addEventFilter(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
+        downArrowPane.addEventFilter(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
 
         BorderPane bottomPane = new BorderPane();
         bottomPane.setLeft(leftControlPane);
@@ -181,10 +195,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.002);
             }
         };
-        upArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
-        upArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
-        upArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
-        upArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
+        gazeDeviceManager.addEventFilter(upArrowPane);
+        upArrowPane.addEventFilter(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
+        upArrowPane.addEventFilter(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
+        upArrowPane.addEventFilter(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
+        upArrowPane.addEventFilter(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
+
 
         VBox topBotPane = new VBox();
         topBotPane.setAlignment(Pos.CENTER);
@@ -271,10 +287,13 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.002);
             }
         };
-        downArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
-        downArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
-        downArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
-        downArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
+
+        gazeDeviceManager.addEventFilter(downArrowPane);
+        downArrowPane.addEventFilter(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
+        downArrowPane.addEventFilter(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
+        downArrowPane.addEventFilter(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
+        downArrowPane.addEventFilter(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
+
 
         BorderPane bottomPane = new BorderPane();
         bottomPane.setLeft(leftControlPane);
@@ -323,10 +342,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.002);
             }
         };
-        upArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
-        upArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
-        upArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
-        upArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
+
+        gazeDeviceManager.addEventFilter(upArrowPane);
+        upArrowPane.addEventFilter(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
+        upArrowPane.addEventFilter(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
+        upArrowPane.addEventFilter(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
+        upArrowPane.addEventFilter(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
 
         VBox topBotPane = new VBox();
         topBotPane.setAlignment(Pos.CENTER);
@@ -446,7 +467,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             config,
             translator,
             gameSpec,
-            gameButtonOrientation);
+            gameButtonOrientation,
+            gazeDeviceManager
+            );
 
         return gameCard;
     }
@@ -519,13 +542,13 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private CustomButton createExitButton(Dimension2D screenDimension) {
         CustomButton exitButton = new CustomButton("data/common/images/power-off.png", screenDimension);
-        exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
+        exitButton.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
         return exitButton;
     }
 
     private CustomButton createLogoutButton(GazePlay gazePlay, Dimension2D screenDimension) {
         CustomButton logoutButton = new CustomButton("data/common/images/logout.png", screenDimension);
-        logoutButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> gazePlay.goToUserPage());
+        logoutButton.addEventFilter(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> gazePlay.goToUserPage());
         return logoutButton;
     }
 

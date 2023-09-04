@@ -2,6 +2,7 @@ package net.gazeplay;
 
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
+import lombok.Setter;
 import net.gazeplay.commons.utils.CachingSupplier;
 import net.gazeplay.commons.utils.screen.ScreenDimensionSupplier;
 import net.gazeplay.commons.utils.screen.ScreenPositionSupplier;
@@ -16,6 +17,7 @@ import java.util.function.Supplier;
 public class CurrentScreenPositionSupplierFactoryBean implements FactoryBean<Supplier<Point2D>> {
 
     @Autowired
+    @Setter
     private GazePlay gazePlay;
 
     @Override
