@@ -47,7 +47,6 @@ public class CurrentScreenSupplier implements Supplier<Screen> {
         log.debug("window position : x = {}, y = {}", x, y);
         ObservableList<Screen> screensForRectangle = Screen.getScreensForRectangle(x, y, x, y);
         if (screensForRectangle.isEmpty()) {
-            log.warn("no screen found for this position, using primary screen dimension");
             return primaryScreenSupplier.get();
         }
         Screen screen = screensForRectangle.get(0);

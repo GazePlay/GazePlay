@@ -15,6 +15,7 @@ import javafx.util.Duration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 @Slf4j
@@ -30,6 +31,8 @@ public class ProgressButton extends StackPane {
 
     @Getter
     private ImageView image;
+    @Getter
+    private String name;
 
     public ProgressButton() {
         this(true);
@@ -40,6 +43,16 @@ public class ProgressButton extends StackPane {
         button = new Circle();
         button.setFill(Color.LIGHTGREY);
         init(imageResized);
+        image = new ImageView();
+        this.getChildren().addAll(button, image, indicator);
+    }
+
+    public ProgressButton(String name){
+        super();
+        this.name = name;
+        button = new Circle();
+        button.setFill(Color.LIGHTGREY);
+        init(true);
         image = new ImageView();
         this.getChildren().addAll(button, image, indicator);
     }
@@ -106,6 +119,51 @@ public class ProgressButton extends StackPane {
                 image.setFitWidth(1.8 * newVal.doubleValue());
             }
         });
+    }
+
+    public ProgressIndicator assignIndicatorUpdatable(final EventHandler<Event> enterEvent, Configuration config){
+        indicator.setMouseTransparent(true);
+        indicator.setOpacity(0);
+        final ProgressButton pb = this;
+        final Event e1 = new Event(pb, pb, MouseEvent.ANY);
+
+        enterButtonHandler = e -> {
+            indicator.setStyle(" -fx-progress-color: " + config.getProgressBarColor());
+            if (inuse) {
+                indicator.setProgress(0);
+                indicator.setOpacity(0.5);
+
+                timelineProgressBar.stop();
+                timelineProgressBar.getKeyFrames().clear();
+
+                timelineProgressBar.setDelay(new Duration(300));
+
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(
+                    new Duration(2000),
+                    new KeyValue(indicator.progressProperty(), 1)
+                ));
+
+                timelineProgressBar.onFinishedProperty().set(actionEvent -> {
+                    indicator.setOpacity(0);
+                    if (enterEvent != null) {
+                        enterEvent.handle(e1);
+                    }
+                });
+                timelineProgressBar.play();
+            }
+        };
+
+        exitButtonHandler = e -> {
+            if (inuse) {
+                timelineProgressBar.stop();
+                indicator.setOpacity(0);
+                indicator.setProgress(0);
+            }
+        };
+
+        active2();
+
+        return indicator;
     }
 
     public ProgressIndicator assignIndicatorUpdatable(final EventHandler<Event> enterEvent, final IGameContext gameContext) {

@@ -28,6 +28,7 @@ import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.gaze.devicemanager.TobiiGazeDeviceManager;
 import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
@@ -39,12 +40,14 @@ import net.gazeplay.commons.utils.ControlPanelConfigurator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.games.MenuUtils;
 import net.gazeplay.commons.utils.games.Utils;
+import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.SortedSet;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -65,7 +68,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     public CheckBox checkBox;
     private ScrollPane choicePanelScroller;
     private CustomButton MiddleUpArrowButton;
+    private Stats stats;
     private CustomButton MiddleDownArrowButton;
+    private TobiiGazeDeviceManager gazeDeviceManager;
     @Getter
     private Label errorMessageLabel;
     @Getter
@@ -82,6 +87,15 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         super(gazePlay, new BorderPane());
         this.soundManager = soundManager;
         this.gameMenuFactory = gameMenuFactory;
+
+        stats = new Stats(gazePlay.getPrimaryScene());
+
+        CurrentScreenPositionSupplierFactoryBean currentScreenPositionSupplierFactoryBean = new CurrentScreenPositionSupplierFactoryBean();
+        currentScreenPositionSupplierFactoryBean.setGazePlay(gazePlay);
+
+        gazeDeviceManager = new TobiiGazeDeviceManager();
+        gazeDeviceManager.init(gazePlay.getCurrentScreenDimensionSupplier(), currentScreenPositionSupplierFactoryBean.getObject());
+        gazeDeviceManager.addStats(stats);
 
         String gazeplayType = GazePlayArgs.returnArgs();
 
@@ -101,8 +115,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         CustomButton logoutButton = createLogoutButton(gazePlay, screenDimension);
 
         ConfigurationButton configurationButton = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
-
         Configuration config = ActiveConfigurationContext.getInstance();
+        this.setupGaze(gazePlay);
 
         HBox leftControlPane = QuickControlPanel.getInstance().createQuickControlPanel(gazePlay, getMusicControl(), configurationButton, config);
 
@@ -139,10 +153,19 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.002);
             }
         };
+        gazeDeviceManager.addEventFilter(downArrowPane);
         downArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
         downArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
-        downArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
-        downArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
+        downArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> {
+                if (!Objects.equals(config.getEyeTracker(), "mouse_control")){
+                    scrollDownTimer.start();
+                }
+            });
+        downArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> {
+            if (!Objects.equals(config.getEyeTracker(), "mouse_control")){
+                scrollDownTimer.stop();
+            }
+        });
 
         BorderPane bottomPane = new BorderPane();
         bottomPane.setLeft(leftControlPane);
@@ -181,10 +204,19 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.002);
             }
         };
+        gazeDeviceManager.addEventFilter(upArrowPane);
         upArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
         upArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
-        upArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
-        upArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
+        upArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> {
+            if (!Objects.equals(config.getEyeTracker(), "mouse_control")){
+                scrollUpTimer.start();
+            }
+        });
+        upArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> {
+            if (!Objects.equals(config.getEyeTracker(), "mouse_control")){
+                scrollUpTimer.stop();
+            }
+        });
 
         VBox topBotPane = new VBox();
         topBotPane.setAlignment(Pos.CENTER);
@@ -271,6 +303,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.002);
             }
         };
+        gazeDeviceManager.addEventFilter(downArrowPane);
         downArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
         downArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
         downArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
@@ -323,6 +356,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.002);
             }
         };
+        gazeDeviceManager.addEventFilter(upArrowPane);
         upArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
         upArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
         upArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
@@ -446,7 +480,8 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             config,
             translator,
             gameSpec,
-            gameButtonOrientation);
+            gameButtonOrientation,
+            gazeDeviceManager);
 
         return gameCard;
     }
@@ -632,5 +667,9 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: black;");
             gamesStatisticsPane.setAllLabelsStyleLight();
         }
+    }
+
+    private void setupGaze(GazePlay gazePlay){
+
     }
 }

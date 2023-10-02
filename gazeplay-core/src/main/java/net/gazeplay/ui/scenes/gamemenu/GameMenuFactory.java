@@ -1,8 +1,12 @@
 package net.gazeplay.ui.scenes.gamemenu;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,11 +19,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Duration;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.*;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.gaze.devicemanager.TobiiGazeDeviceManager;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
@@ -28,8 +35,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
-import static javafx.scene.input.MouseEvent.MOUSE_PRESSED;
+import static javafx.scene.input.MouseEvent.*;
 
 @Slf4j
 @Data
@@ -47,17 +53,22 @@ public class GameMenuFactory {
     @Autowired
     private GameMenuController gameMenuController;
 
+    private TobiiGazeDeviceManager gazeDeviceManager;
+
+    public boolean inGameVariant = false;
+
     public GameButtonPane createGameButton(
         @NonNull final GazePlay gazePlay,
         @NonNull final Region root,
         @NonNull final Configuration config,
         @NonNull final Translator translator,
         @NonNull final GameSpec gameSpec,
-        @NonNull final GameButtonOrientation orientation
-    ) {
+        @NonNull final GameButtonOrientation orientation,
+        TobiiGazeDeviceManager gazeDeviceManager) {
 
         final GameSummary gameSummary = gameSpec.getGameSummary();
         final String gameName = translator.translate(gameSummary.getNameCode());
+        this.gazeDeviceManager = gazeDeviceManager;
 
         final Image heartIcon;
         heartIcon = new Image("data/common/images/heart_filled.png");
@@ -258,12 +269,43 @@ public class GameMenuFactory {
                 break;
         }
 
+        gazeDeviceManager.addEventFilter(gameCard);
+        ProgressIndicator progressIndicator = new ProgressIndicator(0);
+        progressIndicator.setMinWidth(80);
+        progressIndicator.setMinHeight(80);
+        progressIndicator.setStyle("-fx-progress-color: " + config.getProgressBarColor());
+
+        Timeline timelineProgressBar = new Timeline();
+
         gameCard.addEventHandler(MOUSE_PRESSED, (MouseEvent e) -> {
             if (!favGamesImageView.isHover()) {
-                gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName);
+                gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName, gazeDeviceManager, this);
             }
             final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
             backgroundMusicManager.pause();
+            timelineProgressBar.stop();
+            progressIndicator.setOpacity(0);
+        });
+
+        gameCard.addEventHandler(GazeEvent.GAZE_ENTERED, (GazeEvent ev) -> {
+            if (!this.inGameVariant){
+                progressIndicator.setProgress(0.0);
+                progressIndicator.setOpacity(1);
+                gameCard.setCenter(progressIndicator);
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(2000),
+                    new KeyValue(progressIndicator.progressProperty(), 1)));
+                timelineProgressBar.setOnFinished(actionEvent -> {
+                    this.inGameVariant = true;
+                    timelineProgressBar.stop();
+                    gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName, gazeDeviceManager, this);
+                });
+                timelineProgressBar.play();
+            }
+        });
+
+        gameCard.addEventHandler(GazeEvent.GAZE_EXITED, (GazeEvent ev2) -> {
+            timelineProgressBar.stop();
+            progressIndicator.setOpacity(0);
         });
 
         @Data

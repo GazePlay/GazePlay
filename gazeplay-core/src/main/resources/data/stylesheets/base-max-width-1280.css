@@ -24,3 +24,7 @@
 .gameChooserButtonTitle {
     -fx-font-size: 10pt;
 }
+
+.progress-indicator .percentage {
+    -fx-fill: null;
+}

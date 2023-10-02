@@ -12,6 +12,8 @@ import net.gazeplay.*;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.IGameVariant;
+import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManagerFactory;
+import net.gazeplay.commons.gaze.devicemanager.TobiiGazeDeviceManager;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -41,14 +43,16 @@ public class GameMenuController {
         @NonNull GazePlay gazePlay,
         @NonNull Parent root,
         @NonNull GameSpec gameSpec,
-        String gameName
+        String gameName,
+        TobiiGazeDeviceManager tobiiGazeDeviceManager,
+        GameMenuFactory gameMenuFactory
     ) {
         String gazeplayType = GazePlayArgs.returnArgs();
         Collection<IGameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
         if (variants.size() > 1) {
             root.setEffect(new BoxBlur());
             root.setDisable(true);
-            GameVariantDialog dialog = new GameVariantDialog(gazePlay, this, gazePlay.getPrimaryStage(), gameSpec, root, gameSpec.getGameVariantGenerator().getVariantChooseText());
+            GameVariantDialog dialog = new GameVariantDialog(gazePlay, this, gazePlay.getPrimaryStage(), gameSpec, root, gameSpec.getGameVariantGenerator().getVariantChooseText(), tobiiGazeDeviceManager, gameMenuFactory);
             dialog.setTitle(gameName);
             dialog.show();
             dialog.toFront();

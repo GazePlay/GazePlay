@@ -20,3 +20,7 @@
 .gameChooserButton.variant {
     -fx-font-size: 22pt;
 }
+
+.progress-indicator .percentage {
+    -fx-fill: null;
+}
