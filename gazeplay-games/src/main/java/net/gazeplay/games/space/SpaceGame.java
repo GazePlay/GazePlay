@@ -312,40 +312,13 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         backgroundImage.heightProperty().bind(gameContext.getRoot().heightProperty());
         backgroundImage.setFill(new ImagePattern(new Image("data/space/background/space_img.png")));
 
-        final Rectangle backgroundImage2 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        backgroundImage2.widthProperty().bind(gameContext.getRoot().widthProperty());
-        backgroundImage2.heightProperty().bind(gameContext.getRoot().heightProperty());
-        backgroundImage2.setFill(new ImagePattern(new Image("data/space/background/space_img.png")));
-
-        final Rectangle backgroundImage3 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
-        backgroundImage3.widthProperty().bind(gameContext.getRoot().widthProperty());
-        backgroundImage3.heightProperty().bind(gameContext.getRoot().heightProperty());
-        backgroundImage3.setFill(new ImagePattern(new Image("data/space/background/space_img.png")));
-
-        backgroundImage.setOpacity(0.08);
-        backgroundImage2.setOpacity(0.08);
-        backgroundImage3.setOpacity(0.4);
-
         backgroundLayer.getChildren().add(backgroundImage);
-        backgroundLayer.getChildren().add(backgroundImage2);
-        backgroundLayer.getChildren().add(backgroundImage3);
         backgroundImage.toFront();
-        backgroundImage2.toFront();
-        backgroundImage3.toBack();
 
         final TranslateTransition translateTransition = new TranslateTransition(Duration.millis(10000), backgroundImage);
         translateTransition.setFromY(0);
         translateTransition.setToY(dimension2D.getHeight());
         translateTransition.setInterpolator(Interpolator.LINEAR);
-
-        final TranslateTransition translateTransition2 = new TranslateTransition(Duration.millis(10000), backgroundImage2);
-        translateTransition2.setFromY(-dimension2D.getHeight());
-        translateTransition2.setToY(0);
-        translateTransition2.setInterpolator(Interpolator.LINEAR);
-
-        final ParallelTransition parallelTransition = new ParallelTransition(translateTransition, translateTransition2);
-        parallelTransition.setCycleCount(Animation.INDEFINITE);
-        parallelTransition.play();
 
         spaceship = new Rectangle(dimension2D.getWidth() / 2, 6 * dimension2D.getHeight() / 7,
             dimension2D.getWidth() / 8, dimension2D.getHeight() / 7);
