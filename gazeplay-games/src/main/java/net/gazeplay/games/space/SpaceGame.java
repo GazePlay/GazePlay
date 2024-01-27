@@ -619,7 +619,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         if (currentTime - startTime >= 500) {
 
             final Rectangle bulletRec = new Rectangle(spaceship.getX() + spaceship.getWidth() / 2,
-                spaceship.getY() - spaceship.getHeight() / 3, spaceship.getHeight() / 12, spaceship.getHeight() / 6);
+                spaceship.getY() - spaceship.getHeight() / 3, spaceship.getHeight() /6, spaceship.getHeight() / 6);
             bulletRec.setFill(new ImagePattern(new Image("data/space/bullet/laserBlue01.png")));
             middleLayer.getChildren().add(bulletRec);
             bulletListRec.add(bulletRec);
@@ -769,7 +769,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         for (final Rectangle b : biboules) {
             final int bibouleShoot = random.nextInt(1500);
 
-            final Rectangle bulletBibouleRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), spaceship.getHeight() / 12, spaceship.getHeight() / 6);
+            final Rectangle bulletBibouleRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), spaceship.getHeight() , spaceship.getHeight() );
             bulletBibouleRec.setFill(new ImagePattern(new Image("data/space/bullet/laserRed01.png")));
 
             if (bibouleShoot == 1) {
