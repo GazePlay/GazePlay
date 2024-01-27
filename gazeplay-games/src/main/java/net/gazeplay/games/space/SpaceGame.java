@@ -51,7 +51,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     private final Configuration configuration;
 
     private final ImageLibrary spaceshipImage;
-    private final ImageLibrary bibouleImage;
+    private final ImageLibrary evilBibouleImage;
 
     private final Group backgroundLayer;
     private final Group middleLayer;
@@ -62,8 +62,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     private Point2D gazeTarget;
     private Point2D velocity;
 
-    private final double bibouleWidth;
-    private final double bibouleHeight;
+    private final double evilBibouleWidth;
+    private final double evilBibouleHeight;
     private final double bossWidth;
     private final double bossHeight;
 
@@ -74,9 +74,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     private Rectangle spaceship;
     private Rectangle spaceshipCollider;
     private final Text scoreText;
-    private final ArrayList<Biboule> biboules;
-    private final ArrayList<Biboule> biboulesKilled;
-    private final ArrayList<Point2D> biboulesPos;
+    private final ArrayList<EvilBiboule> evilBiboules;
+    private final ArrayList<EvilBiboule> evilBiboulesKilled;
+    private final ArrayList<Point2D> evilBiboulesPos;
     private final ArrayList<Boss> bosses;
     private final ArrayList<Boss> bossKilled;
 
@@ -96,9 +96,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     private FadeTransition bossFade;
     private FadeTransition bossFade2;
 
-    private int bibouleValue;
+    private int evilBibouleValue;
     private final ArrayList<Rectangle> bulletListRec;
-    private final ArrayList<Rectangle> bulletBibouleListRec;
+    private final ArrayList<Rectangle> bulletEvilBibouleListRec;
     private final ArrayList<Rectangle> bulletBossListRec;
     private final ArrayList<Rectangle> spaceshipDestroyed;
     private int bossHit;
@@ -116,16 +116,16 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.gameVariant = gameVariant;
 
         spaceshipImage = ImageUtils.createCustomizedImageLibrary(null, "space/spaceship", random);
-        bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/biboule", random);
+        evilBibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/evil-biboule", random);
 
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
         this.foregroundLayer = new Group();
         gameContext.getChildren().addAll(backgroundLayer, middleLayer, foregroundLayer);
 
-        this.biboules = new ArrayList<>();
-        this.bibouleWidth = dimension2D.getWidth() / 20;
-        this.bibouleHeight = dimension2D.getHeight() / 10;
+        this.evilBiboules = new ArrayList<>();
+        this.evilBibouleWidth = dimension2D.getWidth() / 20;
+        this.evilBibouleHeight = dimension2D.getHeight() / 10;
         this.bossWidth = dimension2D.getWidth() / 8;
         this.bossHeight = dimension2D.getHeight() / 4;
 
@@ -182,12 +182,12 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(interactionOverlay);
 
-        this.bibouleValue = 0;
+        this.evilBibouleValue = 0;
         this.bossHit = 0;
         this.bulletListRec = new ArrayList<>();
-        this.biboulesKilled = new ArrayList<>();
-        this.biboulesPos = new ArrayList<>();
-        this.bulletBibouleListRec = new ArrayList<>();
+        this.evilBiboulesKilled = new ArrayList<>();
+        this.evilBiboulesPos = new ArrayList<>();
+        this.bulletEvilBibouleListRec = new ArrayList<>();
         this.spaceshipDestroyed = new ArrayList<>();
         this.bosses = new ArrayList<>();
         this.bossKilled = new ArrayList<>();
@@ -205,16 +205,16 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.gameVariant = gameVariant;
 
         spaceshipImage = ImageUtils.createCustomizedImageLibrary(null, "space/spaceship", random);
-        bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/biboule", random);
+        evilBibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/evil-biboule", random);
 
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
         this.foregroundLayer = new Group();
         gameContext.getChildren().addAll(backgroundLayer, middleLayer, foregroundLayer);
 
-        this.biboules = new ArrayList<>();
-        this.bibouleWidth = dimension2D.getWidth() / 20;
-        this.bibouleHeight = dimension2D.getHeight() / 10;
+        this.evilBiboules = new ArrayList<>();
+        this.evilBibouleWidth = dimension2D.getWidth() / 20;
+        this.evilBibouleHeight = dimension2D.getHeight() / 10;
         this.bossWidth = dimension2D.getWidth() / 8;
         this.bossHeight = dimension2D.getHeight() / 4;
 
@@ -271,12 +271,12 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
 
         gameContext.getGazeDeviceManager().addEventFilter(interactionOverlay);
 
-        this.bibouleValue = 0;
+        this.evilBibouleValue = 0;
         this.bossHit = 0;
         this.bulletListRec = new ArrayList<>();
-        this.biboulesKilled = new ArrayList<>();
-        this.biboulesPos = new ArrayList<>();
-        this.bulletBibouleListRec = new ArrayList<>();
+        this.evilBiboulesKilled = new ArrayList<>();
+        this.evilBiboulesPos = new ArrayList<>();
+        this.bulletEvilBibouleListRec = new ArrayList<>();
         this.spaceshipDestroyed = new ArrayList<>();
         this.bosses = new ArrayList<>();
         this.bossKilled = new ArrayList<>();
@@ -297,9 +297,9 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.middleLayer.getChildren().clear();
         gameContext.getChildren().clear();
         bulletListRec.clear();
-        biboulesKilled.clear();
-        biboulesPos.clear();
-        bulletBibouleListRec.clear();
+        evilBiboulesKilled.clear();
+        evilBiboulesPos.clear();
+        bulletEvilBibouleListRec.clear();
         spaceshipDestroyed.clear();
         bulletBossListRec.clear();
         bosses.clear();
@@ -378,12 +378,12 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         bossHit = 0;
 
 
-        spawnBiboule();
+        spawnEvilBiboule();
 
         updatePosition();
 
 
-        score = biboulesKilled.size() + bossKilled.size() * 125;
+        score = evilBiboulesKilled.size() + bossKilled.size() * 125;
         stats.incrementNumberOfGoalsReached(score);
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
@@ -421,15 +421,15 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         spaceshipCollider.setX(spaceship.getX() + spaceship.getWidth() / 10);
         spaceshipCollider.setY(spaceship.getY() + spaceship.getHeight() / 2);
 
-        verticalBibouleMovement();
+        verticalEvilBibouleMovement();
 
         computeBulletPlayer();
-        computeBulletBiboule();
+        computeBulletEvilBiboule();
 
-        if (biboules.size() == 0) {
-            spawnBiboule();
+        if (evilBiboules.size() == 0) {
+            spawnEvilBiboule();
         }
-        if (bosses.size() == 0 && biboulesKilled.size() % 25 == 24) {
+        if (bosses.size() == 0 && evilBiboulesKilled.size() % 25 == 24) {
             displayBoss();
         }
         computeBulletBoss();
@@ -439,8 +439,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     private void removeAll() {
 
         bulletListRec.clear();
-        bulletBibouleListRec.clear();
-        biboules.clear();
+        bulletEvilBibouleListRec.clear();
+        evilBiboules.clear();
         bulletBossListRec.clear();
         middleLayer.getChildren().remove(spaceship);
     }
@@ -466,28 +466,28 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         }
     }
 
-    private void verticalBibouleMovement() {
-        bibouleValue += 1;
-        if (bibouleValue == 300) {
-            for (final Biboule b : biboules) {
+    private void verticalEvilBibouleMovement() {
+        evilBibouleValue += 1;
+        if (evilBibouleValue == 300) {
+            for (final EvilBiboule b : evilBiboules) {
                 final boolean lower = random.nextBoolean();
                 if (lower) {
-                    b.moveToLower(biboulesPos.get(0).getX(), biboulesPos.get(0).getY());
+                    b.moveToLower(evilBiboulesPos.get(0).getX(), evilBiboulesPos.get(0).getY());
                 } else {
-                    b.moveToUpper(biboulesPos.get(0).getX(), 50);
+                    b.moveToUpper(evilBiboulesPos.get(0).getX(), 50);
                     if (b.getY() <= 50) {
-                        b.moveToLower(biboulesPos.get(0).getX(), biboulesPos.get(0).getY());
+                        b.moveToLower(evilBiboulesPos.get(0).getX(), evilBiboulesPos.get(0).getY());
                     }
                 }
             }
 
-            bibouleValue = 0;
+            evilBibouleValue = 0;
         }
     }
 
-    private void spawnBiboule() {
-        while (biboules.size() < 10) {
-            displayBiboule();
+    private void spawnEvilBiboule() {
+        while (evilBiboules.size() < 10) {
+            displayEvilBiboule();
         }
     }
 
@@ -552,28 +552,28 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     }
 
     private void updateScore() {
-        score = biboulesKilled.size() + bossKilled.size() * 125;
+        score = evilBiboulesKilled.size() + bossKilled.size() * 125;
         stats.incrementNumberOfGoalsReached(score);
         scoreText.setText(String.valueOf(score));
         scoreText.setX(dimension2D.getWidth() / 2 - scoreText.getWrappingWidth() / 2);
         gameContext.updateScore(stats, this);
     }
 
-    private void createBiboule(final double x, final double y) {
-        final Biboule b;
-        b = new Biboule(x, y, bibouleWidth, bibouleHeight, null, dimension2D.getWidth(), getGameSpeed(), 0, 0, 0, 0);
+    private void createEvilBiboule(final double x, final double y) {
+        final EvilBiboule b;
+        b = new EvilBiboule(x, y, evilBibouleWidth, evilBibouleHeight, null, dimension2D.getWidth(), getGameSpeed(), 0, 0, 0, 0);
 
-        biboules.add(b);
-        b.setFill(new ImagePattern(bibouleImage.pickRandomImage()));
+        evilBiboules.add(b);
+        b.setFill(new ImagePattern(evilBibouleImage.pickRandomImage()));
         backgroundLayer.getChildren().add(b);
         //code for transition when biboule appear, bug sometimes when the game restart
         /*
-        final FadeTransition bibouleAppear = new FadeTransition(Duration.seconds(1), b);
-        bibouleAppear.setInterpolator(Interpolator.LINEAR);
-        bibouleAppear.setCycleCount(1);
-        bibouleAppear.setFromValue(0);
-        bibouleAppear.setToValue(1);
-        bibouleAppear.play();
+        final FadeTransition evilBibouleAppear = new FadeTransition(Duration.seconds(1), b);
+        evilBibouleAppear.setInterpolator(Interpolator.LINEAR);
+        evilBibouleAppear.setCycleCount(1);
+        evilBibouleAppear.setFromValue(0);
+        evilBibouleAppear.setToValue(1);
+        evilBibouleAppear.play();
         */
     }
 
@@ -599,19 +599,19 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         createBoss(bossX, bossY);
     }
 
-    private void displayBiboule() {
+    private void displayEvilBiboule() {
         final double newBibX;
         final double newBibY;
         newBibX = random.nextInt((int) (dimension2D.getWidth()));
         newBibY = random.nextInt((int) (dimension2D.getHeight() / 4));
-        createBiboule(newBibX, newBibY);
+        createEvilBiboule(newBibX, newBibY);
     }
 
     private void updatePosition() {
         final Point2D p1 = new Point2D(200, 200);
         final Point2D p2 = new Point2D(300, 300);
-        biboulesPos.add(p1);
-        biboulesPos.add(p2);
+        evilBiboulesPos.add(p1);
+        evilBiboulesPos.add(p2);
     }
 
     private void computeBulletPlayer() {
@@ -654,22 +654,22 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         }
 
         for (final Rectangle r : bulletListRec) {
-            for (final Biboule b : biboules) {
+            for (final EvilBiboule b : evilBiboules) {
                 final ObservableBooleanValue colliding = Bindings.createBooleanBinding(() -> r.getBoundsInParent().intersects(b.getBoundsInParent()), r.boundsInParentProperty(), b.boundsInParentProperty());
 
                 colliding.addListener((obs, oldValue, newValue) -> {
                     if (newValue) {
 
-                        boolean bibouleBoolean = false;
+                        boolean evilBibouleBoolean = false;
 
-                        if (!biboulesKilled.contains(b)) {
-                            biboulesKilled.add(b);
-                            bibouleBoolean = true;
+                        if (!evilBiboulesKilled.contains(b)) {
+                            evilBiboulesKilled.add(b);
+                            evilBibouleBoolean = true;
                         }
-                        if (bibouleBoolean) {
+                        if (evilBibouleBoolean) {
 
                             bulletListRec.remove(r);
-                            biboules.remove(b);
+                            evilBiboules.remove(b);
                             backgroundLayer.getChildren().remove(b);
                             middleLayer.getChildren().remove(r);
                             updateScore();
@@ -765,32 +765,32 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         updateShipPosition();
     }
 
-    private void computeBulletBiboule() {
-        for (final Rectangle b : biboules) {
-            final int bibouleShoot = random.nextInt(1500);
+    private void computeBulletEvilBiboule() {
+        for (final Rectangle b : evilBiboules) {
+            final int evilBibouleShoot = random.nextInt(1500);
 
-            final Rectangle bulletBibouleRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), spaceship.getHeight() / 12, spaceship.getHeight() / 6);
-            bulletBibouleRec.setFill(new ImagePattern(new Image("data/space/bullet/laserRed01.png")));
+            final Rectangle bulletEvilBibouleRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), spaceship.getHeight() / 12, spaceship.getHeight() / 6);
+            bulletEvilBibouleRec.setFill(new ImagePattern(new Image("data/space/bullet/laserRed01.png")));
 
-            if (bibouleShoot == 1) {
-                backgroundLayer.getChildren().add(bulletBibouleRec);
-                bulletBibouleListRec.add(bulletBibouleRec);
+            if (evilBibouleShoot == 1) {
+                backgroundLayer.getChildren().add(bulletEvilBibouleRec);
+                bulletEvilBibouleListRec.add(bulletEvilBibouleRec);
 
                 final Timeline timeline = new Timeline();
                 timeline.setCycleCount(1);
                 timeline.getKeyFrames()
-                    .add(new KeyFrame(Duration.seconds(15), new KeyValue(bulletBibouleRec.translateYProperty(),
+                    .add(new KeyFrame(Duration.seconds(15), new KeyValue(bulletEvilBibouleRec.translateYProperty(),
                         dimension2D.getHeight(), Interpolator.LINEAR)));
                 timeline.setOnFinished(event -> {
-                    bulletBibouleListRec.remove(bulletBibouleRec);
-                    backgroundLayer.getChildren().remove(bulletBibouleRec);
+                    bulletEvilBibouleListRec.remove(bulletEvilBibouleRec);
+                    backgroundLayer.getChildren().remove(bulletEvilBibouleRec);
                     //System.gc();
                 });
                 timeline.play();
 
             }
 
-            for (final Rectangle rb : bulletBibouleListRec) {
+            for (final Rectangle rb : bulletEvilBibouleListRec) {
                 final ObservableBooleanValue collidingBulletBibSpaceship = Bindings
                     .createBooleanBinding(() -> rb.getBoundsInParent().intersects(spaceshipCollider.getBoundsInParent()), rb.boundsInParentProperty(), spaceshipCollider.boundsInParentProperty());
 
