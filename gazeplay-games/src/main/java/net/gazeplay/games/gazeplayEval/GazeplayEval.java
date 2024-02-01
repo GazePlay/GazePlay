@@ -126,8 +126,8 @@ public class GazeplayEval implements GameLifeCycle {
         String jsonToArray = "";
         try  (FileReader reader = new FileReader(gameDirectory, StandardCharsets.UTF_8)) {
             JsonArray obj = jsonParser.parse(reader).getAsJsonArray();
-            this.gameRules = new String[obj.size()][];
-            for (int i=0; i<obj.size(); i++){
+            this.gameRules = new String[obj.size()-1][];
+            for (int i=1; i<obj.size(); i++){
                 jsonToArray = "";
                 for (int j=0; j<obj.get(i).getAsJsonArray().size(); j++){
                     String value = obj.get(i).getAsJsonArray().get(j).getAsString();
@@ -137,7 +137,7 @@ public class GazeplayEval implements GameLifeCycle {
                         jsonToArray += obj.get(i).getAsJsonArray().get(j).getAsString() + ";";
                     }
                 }
-                this.gameRules[i] = jsonToArray.split(";");
+                this.gameRules[i-1] = jsonToArray.split(";");
             }
             this.indexEndGame = this.gameRules.length;
             this.generateTabFromJson();
@@ -164,9 +164,9 @@ public class GazeplayEval implements GameLifeCycle {
             this.listImages[i] = this.getImg(i);
             this.listPointsScores[i] = new int[this.listImages[i].length][];
             this.getScoresPoints(i);
-            this.listLengthFixation[i] = Double.parseDouble(this.gameRules[i][this.gameRules[i].length-1]);
-            this.nbImgToSee[i] = Integer.parseInt(this.gameRules[i][this.gameRules[i].length-2]);
-            this.listSounds[i] = this.gameRules[i][this.gameRules[i].length-3];
+            this.listLengthFixation[i] = Double.parseDouble(this.gameRules[i][this.gameRules[i].length-4]);
+            this.nbImgToSee[i] = Integer.parseInt(this.gameRules[i][this.gameRules[i].length-5]);
+            this.listSounds[i] = this.gameRules[i][this.gameRules[i].length-6];
         }
         this.getScores();
 
@@ -249,7 +249,7 @@ public class GazeplayEval implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
 
-        //this.startGame();
+        this.startGame();
     }
 
     public void startGame() {
@@ -312,7 +312,7 @@ public class GazeplayEval implements GameLifeCycle {
 
     public boolean checkAllPictureCardChecked() {
         this.nbImageSee++;
-        return this.nbImageSee == this.nbImages[this.indexFileImage];
+        return this.nbImageSee == this.nbImgToSee[this.indexFileImage];
     }
 
     public Timeline waitForInput(){
