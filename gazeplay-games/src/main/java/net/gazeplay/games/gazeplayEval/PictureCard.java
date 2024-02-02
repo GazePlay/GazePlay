@@ -126,7 +126,7 @@ class PictureCard extends Group {
             progressIndicator.setVisible(false);
 
             this.onCardSelected();
-            if (gameInstance.checkAllPictureCardChecked()){
+            if (gameInstance.checkAllPictureCardChecked()) {
                 this.waitBeforeNextRound();
             }
         };
@@ -140,27 +140,31 @@ class PictureCard extends Group {
         customInputEventHandlerMouse.ignoreAnyInput = true;
     }
 
-    public void setVisibleImagePicture(boolean value){
+    public void setVisibleImagePicture(boolean value) {
         this.imageRectangle.setVisible(value);
     }
 
-    public void setNotifImageRectangle(boolean value) { this.notifImageRectangle.setVisible(value); }
+    public void setNotifImageRectangle(boolean value) {
+        this.notifImageRectangle.setVisible(value);
+    }
 
-    public void resetMovedCursorOrGaze(){ customInputEventHandlerMouse.moved = false; }
+    public void resetMovedCursorOrGaze() {
+        customInputEventHandlerMouse.moved = false;
+    }
 
-    public void checkedImage(){
+    public void checkedImage() {
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        if (Objects.equals(config.getFeedback(), "nothing")){
+        if (Objects.equals(config.getFeedback(), "nothing")) {
             notifImageRectangle.setOpacity(0);
             notifImageRectangle.setVisible(false);
-        }else {
+        } else {
             notifImageRectangle.setOpacity(1);
             notifImageRectangle.setVisible(true);
         }
     }
 
-    public void removeEventHandler(){
+    public void removeEventHandler() {
         customInputEventHandlerMouse.ignoreAnyInput = true;
     }
 
@@ -170,15 +174,15 @@ class PictureCard extends Group {
         gameContext.updateScore(stats, gameInstance);
     }
 
-    public void waitBeforeNextRound(){
+    public void waitBeforeNextRound() {
         Configuration config = ActiveConfigurationContext.getInstance();
 
         Timeline transition = new Timeline();
         transition.getKeyFrames().add(new KeyFrame(new Duration(config.getTransitionTime())));
         transition.setOnFinished(event -> {
-            if(gameInstance.increaseIndexFileImage()){
+            if (gameInstance.increaseIndexFileImage()) {
                 this.endGame();
-            }else {
+            } else {
                 gameInstance.dispose();
                 gameContext.clear();
                 gameInstance.launch();
@@ -192,7 +196,7 @@ class PictureCard extends Group {
                                       @NonNull String imageName) {
 
         Configuration config = ActiveConfigurationContext.getInstance();
-        File file = new File(config.getFileDir() + "\\evals\\" +  this.gameVariant.getNameGame() + "\\images\\" + imageName);
+        File file = new File(config.getFileDir() + "\\evals\\" + this.gameVariant.getNameGame() + "\\images\\" + imageName);
         final Image image = new Image(file.toURI().toString());
 
         ImageView result = new ImageView(image);
@@ -224,7 +228,7 @@ class PictureCard extends Group {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        if (Objects.equals(config.getFeedback(), "standard")){
+        if (Objects.equals(config.getFeedback(), "standard")) {
             final Image image = new Image("data/common/images/blackCircle.png");
 
             double imageWidth = image.getWidth();
@@ -243,7 +247,7 @@ class PictureCard extends Group {
             notifImageRectangle.setOpacity(0);
             notifImageRectangle.setVisible(false);
             return notifImageRectangle;
-        }else {
+        } else {
             final Image image = new Image("data/common/images/redFrame.png");
 
             ImageView result = new ImageView(image);
@@ -321,7 +325,7 @@ class PictureCard extends Group {
 
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
                 onEntered();
-            } else if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_MOVED){
+            } else if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_MOVED) {
                 onEnteredOnceWhileMoved();
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
                 onExited();
@@ -341,8 +345,8 @@ class PictureCard extends Group {
             progressIndicatorAnimationTimeLine.playFromStart();
         }
 
-        private void onEnteredOnceWhileMoved(){
-            if (!this.moved){
+        private void onEnteredOnceWhileMoved() {
+            if (!this.moved) {
 
                 this.moved = true;
                 log.info("ENTERED {}", imageName);

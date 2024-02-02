@@ -1,7 +1,6 @@
 package net.gazeplay.games.gazeplayEval;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -10,10 +9,8 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
@@ -22,14 +19,8 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GazeplayEvalGameVariant;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
-import net.gazeplay.commons.utils.games.DateUtils;
-import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -115,29 +106,29 @@ public class GazeplayEval implements GameLifeCycle {
 
     }
 
-    public void loadInfoUser(){
+    public void loadInfoUser() {
 
     }
 
-    public void loadConfig(){
+    public void loadConfig() {
         Configuration config = ActiveConfigurationContext.getInstance();
         File gameDirectory = new File(config.getFileDir() + "\\evals\\" + this.gameVariant.getNameGame() + "\\config.json");
         JsonParser jsonParser = new JsonParser();
         String jsonToArray = "";
-        try  (FileReader reader = new FileReader(gameDirectory, StandardCharsets.UTF_8)) {
+        try (FileReader reader = new FileReader(gameDirectory, StandardCharsets.UTF_8)) {
             JsonArray obj = jsonParser.parse(reader).getAsJsonArray();
-            this.gameRules = new String[obj.size()-1][];
-            for (int i=1; i<obj.size(); i++){
+            this.gameRules = new String[obj.size() - 1][];
+            for (int i = 1; i < obj.size(); i++) {
                 jsonToArray = "";
-                for (int j=0; j<obj.get(i).getAsJsonArray().size(); j++){
+                for (int j = 0; j < obj.get(i).getAsJsonArray().size(); j++) {
                     String value = obj.get(i).getAsJsonArray().get(j).getAsString();
-                    if (Objects.equals(value, "")){
+                    if (Objects.equals(value, "")) {
                         jsonToArray += "null;";
-                    }else {
+                    } else {
                         jsonToArray += obj.get(i).getAsJsonArray().get(j).getAsString() + ";";
                     }
                 }
-                this.gameRules[i-1] = jsonToArray.split(";");
+                this.gameRules[i - 1] = jsonToArray.split(";");
             }
             this.indexEndGame = this.gameRules.length;
             this.generateTabFromJson();
@@ -147,7 +138,7 @@ public class GazeplayEval implements GameLifeCycle {
         }
     }
 
-    public void generateTabFromJson(){
+    public void generateTabFromJson() {
 
         this.rows = new int[this.gameRules.length];
         this.cols = new int[this.gameRules.length];
@@ -158,15 +149,15 @@ public class GazeplayEval implements GameLifeCycle {
         this.listPointsScores = new int[this.gameRules.length][][];
 
         //Rows & Cols
-        for (int i=0; i<this.gameRules.length; i++){
+        for (int i = 0; i < this.gameRules.length; i++) {
             this.rows[i] = Integer.parseInt(this.gameRules[i][0]);
             this.cols[i] = Integer.parseInt(this.gameRules[i][1]);
             this.listImages[i] = this.getImg(i);
             this.listPointsScores[i] = new int[this.listImages[i].length][];
             this.getScoresPoints(i);
-            this.listLengthFixation[i] = Double.parseDouble(this.gameRules[i][this.gameRules[i].length-4]);
-            this.nbImgToSee[i] = Integer.parseInt(this.gameRules[i][this.gameRules[i].length-5]);
-            this.listSounds[i] = this.gameRules[i][this.gameRules[i].length-6];
+            this.listLengthFixation[i] = Double.parseDouble(this.gameRules[i][this.gameRules[i].length - 4]);
+            this.nbImgToSee[i] = Integer.parseInt(this.gameRules[i][this.gameRules[i].length - 5]);
+            this.listSounds[i] = this.gameRules[i][this.gameRules[i].length - 6];
         }
         this.getScores();
 
@@ -180,11 +171,11 @@ public class GazeplayEval implements GameLifeCycle {
         log.info("List scores points = " + Arrays.deepToString(this.listPointsScores));
     }
 
-    public String[] getImg(int index){
-        String[] listImg = new String[this.rows[index]*this.cols[index]];
+    public String[] getImg(int index) {
+        String[] listImg = new String[this.rows[index] * this.cols[index]];
         int tmpIndex = 0;
-        for (int i=2; i<(this.gameRules[index].length - 3); i++){
-            if (Objects.equals(this.gameRules[index][i], "null") || this.gameRules[index][i].contains(".png")){
+        for (int i = 2; i < (this.gameRules[index].length - 3); i++) {
+            if (Objects.equals(this.gameRules[index][i], "null") || this.gameRules[index][i].contains(".png")) {
                 listImg[tmpIndex] = this.gameRules[index][i];
                 tmpIndex++;
             }
@@ -192,44 +183,44 @@ public class GazeplayEval implements GameLifeCycle {
         return listImg;
     }
 
-    public void getScores(){
+    public void getScores() {
         int nbScores = ((this.gameRules[0].length - 5 - this.listImages[0].length) / this.listImages[0].length) / 2;
         int indexScore = 0;
         this.listScores = new String[nbScores];
-        for (int i=3; i<(2 + (nbScores*2)); i+=2){
+        for (int i = 3; i < (2 + (nbScores * 2)); i += 2) {
             this.listScores[indexScore] = this.gameRules[0][i];
             indexScore++;
         }
     }
 
-    public void getScoresPoints(int index){
+    public void getScoresPoints(int index) {
         int nbScores = ((this.gameRules[index].length - 5 - this.listImages[index].length) / this.listImages[index].length) / 2;
         int indexImg = 4;
         int tmpIndex = 0;
         int indexScores = 0;
-        for (int i=0; i<this.listImages[index].length; i++){
+        for (int i = 0; i < this.listImages[index].length; i++) {
             this.listPointsScores[index][i] = new int[nbScores];
-            for (int j=indexImg; j<(indexImg+(2*nbScores)-1); j+=2){
+            for (int j = indexImg; j < (indexImg + (2 * nbScores) - 1); j += 2) {
                 this.listPointsScores[index][i][indexScores] = Integer.parseInt(this.gameRules[index][j]);
                 indexScores++;
-                tmpIndex = j+3;
+                tmpIndex = j + 3;
             }
             indexImg = tmpIndex;
             indexScores = 0;
         }
     }
 
-    public void setSound(){
-        if (this.indexFileImage < this.indexEndGame){
+    public void setSound() {
+        if (this.indexFileImage < this.indexEndGame) {
             Configuration config = ActiveConfigurationContext.getInstance();
             final String directorySounds = config.getFileDir() + "/evals/" + this.gameVariant.getNameGame() + "/sounds/";
             this.IMAGE_SOUND = directorySounds + this.listSounds[this.indexFileImage];
         }
     }
 
-    public void playSound(String soundPath){
+    public void playSound(String soundPath) {
         Configuration config = ActiveConfigurationContext.getInstance();
-        if (config.isSoundEnabled()){
+        if (config.isSoundEnabled()) {
             gameContext.getSoundManager().add(soundPath);
         }
     }
@@ -315,7 +306,7 @@ public class GazeplayEval implements GameLifeCycle {
         return this.nbImageSee == this.nbImgToSee[this.indexFileImage];
     }
 
-    public Timeline waitForInput(){
+    public Timeline waitForInput() {
         Configuration config = ActiveConfigurationContext.getInstance();
 
         log.info("INPUT TIME : {}", config.getDelayBeforeSelectionTime());
@@ -331,7 +322,7 @@ public class GazeplayEval implements GameLifeCycle {
         return transition;
     }
 
-    public Timeline waitForQuestion(){
+    public Timeline waitForQuestion() {
 
         Configuration config = ActiveConfigurationContext.getInstance();
 
@@ -345,9 +336,9 @@ public class GazeplayEval implements GameLifeCycle {
         return question;
     }
 
-    public void incrementPos(){
+    public void incrementPos() {
         this.posX++;
-        if (this.posX == this.cols[this.indexFileImage]){
+        if (this.posX == this.cols[this.indexFileImage]) {
             this.posX = 0;
             this.posY++;
         }
@@ -366,15 +357,15 @@ public class GazeplayEval implements GameLifeCycle {
         String question = null;
         List<Image> pictograms = null;
 
-        for (int i=0; i<this.listImages[this.indexFileImage].length; i++){
-            if (Objects.equals(this.listImages[this.indexFileImage][i], "null")){
+        for (int i = 0; i < this.listImages[this.indexFileImage].length; i++) {
+            if (Objects.equals(this.listImages[this.indexFileImage][i], "null")) {
                 this.incrementPos();
             } else {
                 pictureCardList.add(new PictureCard(
                     gameSizing.width * posX,
                     gameSizing.height * posY + 10,
                     gameSizing.width,
-                    gameSizing.height -10,
+                    gameSizing.height - 10,
                     gameContext,
                     gameVariant,
                     this.listImages[this.indexFileImage][i],
@@ -396,23 +387,23 @@ public class GazeplayEval implements GameLifeCycle {
             pictograms);
     }
 
-    public void startTimer(){
-        if (this.indexFileImage == 0){
+    public void startTimer() {
+        if (this.indexFileImage == 0) {
             currentRoundStartTime = System.currentTimeMillis();
         }
     }
 
     public boolean increaseIndexFileImage() {
         this.indexFileImage = this.indexFileImage + 1;
-        if (this.indexFileImage == this.indexEndGame){
+        if (this.indexFileImage == this.indexEndGame) {
             return true;
-        }else {
+        } else {
             this.setSound();
             return false;
         }
     }
 
-    public void calculScores(){
+    public void calculScores() {
         /*log.info("---TEST CV---" + value);
         if (!Objects.equals(value, "null")) {
             for (int i = 0; i < this.listScores[this.indexFileImage].length; i++) {
@@ -447,13 +438,13 @@ public class GazeplayEval implements GameLifeCycle {
         }
     }
 
-    public void removeEventHandlerPictureCard(){
+    public void removeEventHandlerPictureCard() {
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
             p.removeEventHandler();
         }
     }
 
-    public void choicePicturePair(){
+    public void choicePicturePair() {
         this.whiteCrossPicture.setVisible(false);
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
             p.hideProgressIndicator();
@@ -472,7 +463,8 @@ public class GazeplayEval implements GameLifeCycle {
         }
         stats.setTargetAOIList(targetAOIList);
     }
-    public void resetFromReplay(){
+
+    public void resetFromReplay() {
         this.totalItemsAddedManually = 0;
         this.indexFileImage = 0;
         this.nbCountError = 0;
@@ -488,7 +480,7 @@ public class GazeplayEval implements GameLifeCycle {
         stats.scores = this.listScoresPoints;
         stats.totalItemsAddedManually = this.totalItemsAddedManually;
 
-        /*switch (this.outputFile) {
+        switch (this.outputFile) {
             case "csv" -> createCsvFile();
             case "xls" -> createExcelFile();
             case "all" -> {
@@ -498,17 +490,17 @@ public class GazeplayEval implements GameLifeCycle {
             default -> {
                 log.info("No Output set or wrong statement");
             }
-        }*/
+        }
     }
 
-    public String getDate(){
+    public String getDate() {
         Date now = new Date();
         SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy 'à' HH:mm:ss");
 
         return formatDate.format(now);
     }
 
-    public void createCsvFile(){
+    public void createCsvFile() {
 
         /*File pathDirectory = stats.getGameStatsOfTheDayDirectory();
         String pathFile = pathDirectory + "\\" + this.gameName + "-" + DateUtils.dateTimeNow() + ".csv";
@@ -557,7 +549,7 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     @SuppressWarnings("PMD")
-    public void createExcelFile(){
+    public void createExcelFile() {
 
         /*File pathDirectory = stats.getGameStatsOfTheDayDirectory();
         String pathFile = pathDirectory + "\\" + this.gameName + "-" + DateUtils.dateTimeNow() + ".xlsx";
@@ -657,7 +649,7 @@ public class GazeplayEval implements GameLifeCycle {
                 return;
             }
 
-            if (key.getCode().isArrowKey() && goNext){
+            if (key.getCode().isArrowKey() && goNext) {
                 ignoreAnyInput = true;
                 timelineQuestion.stop();
                 next("null");
