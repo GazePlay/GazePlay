@@ -63,6 +63,7 @@ def generatedResources = "${buildDir}/generated-resources/main"
 
 sourceSets.main.output.dir(generatedResources, builtBy: 'generateGamesCatalog')
 sourceSets.main.output.dir(generatedResources, builtBy: 'generateEvalsCatalog')
+sourceSets.main.output.dir(generatedResources, builtBy: 'generatedEmmanuelCatalog')
 
 task generateGamesCatalog {
     outputs.dir generatedResources
@@ -113,5 +114,61 @@ task generateEvalsCatalog {
             file.delete()
         }
         packages.each { file.append(it + '\n') }
+    }
+}
+
+task generatedEmmanuelCatalog {
+    outputs.dir generatedResources
+
+    doLast {
+        def sourceSet = project(':gazeplay-games').sourceSets.findByName('main').java
+
+        def rushHour = sourceSet
+                .filter { it.path.endsWith('.java') }
+                .filter { it.path.contains('RushHour') }
+                .filter { it.path.contains('SpecSource') }
+                .collect {
+                    it.path
+                            .substring(sourceSet.srcDirs[0].path.length() + 1)
+                            .replace('/', '.')
+                            .replace('\\', '.')
+                            .replace('.java', '')
+                }
+                .unique()
+
+        def follow = sourceSet
+                .filter { it.path.endsWith('.java') }
+                .filter { it.path.contains('Follow') }
+                .filter { it.path.contains('SpecSource') }
+                .collect {
+                    it.path
+                            .substring(sourceSet.srcDirs[0].path.length() + 1)
+                            .replace('/', '.')
+                            .replace('\\', '.')
+                            .replace('.java', '')
+                }
+                .unique()
+
+        def flag = sourceSet
+                .filter { it.path.endsWith('.java') }
+                .filter { it.path.contains('TheFlag') }
+                .filter { it.path.contains('SpecSource') }
+                .collect {
+                    it.path
+                            .substring(sourceSet.srcDirs[0].path.length() + 1)
+                            .replace('/', '.')
+                            .replace('\\', '.')
+                            .replace('.java', '')
+                }
+                .unique()
+
+        def file = new File(generatedResources, "emmanuel-catalog.txt")
+        if (file.exists()) {
+            file.delete()
+        }
+
+        rushHour.each { file.append(it + '\n') }
+        follow.each { file.append(it + '\n') }
+        flag.each { file.append(it + '\n') }
     }
 }

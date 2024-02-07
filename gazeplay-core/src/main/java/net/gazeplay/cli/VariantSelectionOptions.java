@@ -14,4 +14,7 @@ public class VariantSelectionOptions {
 
     @CommandLine.Option(names = {"--bera"}, defaultValue = "true")
     private boolean bera;
+
+    @CommandLine.Option(names = {"--emmanuel"}, defaultValue = "true")
+    private boolean emmanuel;
 }

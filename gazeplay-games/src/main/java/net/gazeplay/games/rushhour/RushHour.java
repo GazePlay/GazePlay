@@ -1,11 +1,14 @@
 package net.gazeplay.games.rushhour;
 
+import javafx.animation.Transition;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -15,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.GamesRules;
+import net.gazeplay.games.gazeplayEval.GazeplayEval;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -27,27 +32,25 @@ public class RushHour extends Parent implements GameLifeCycle {
     public IntegerProperty size;
     private Rectangle ground;
     private boolean endOfGame = false;
-
     private int garageHeight;
     private int garageWidth;
     private Pane p;
-
     private Rectangle up;
     private Rectangle down;
     private Rectangle left;
     private Rectangle right;
     private Rectangle door;
-
     private Car toWin;
-
     private List<Car> garage;
-
     private int level;
+    public CustomInputEventHandlerKeyboard customInputEventHandlerKeyboard = new CustomInputEventHandlerKeyboard();
+    private final GamesRules gamesRules;
 
     public RushHour(final IGameContext gameContext, Stats stats, int number) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameContext.startTimeLimiter();
+        this.gamesRules = new GamesRules();
         level = number-1;
         size = new SimpleIntegerProperty();
         gameContext.getPrimaryStage().widthProperty().addListener((observable, oldValue, newValue) -> {
@@ -65,7 +68,7 @@ public class RushHour extends Parent implements GameLifeCycle {
 
         });
 
-
+        this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
         ground = new Rectangle(); // to avoid NullPointerException
     }
 
@@ -2423,18 +2426,24 @@ public class RushHour extends Parent implements GameLifeCycle {
     public void launch() {
         endOfGame = false;
         gameContext.setLimiterAvailable();
-        setLevel(level);
-        if (toWin.isDirection()) {
-            toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiH.png")));
-        } else {
-            toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiV.png")));
-        }
-        toWin.setEffect(null);
-        final int numberLevels = 33;
-        level = (level + 1) % numberLevels;
-        stats.notifyNewRoundReady();
-        gameContext.getGazeDeviceManager().addStats(stats);
-        gameContext.firstStart();
+        String rule = "Sélectionnez une voiture pour pouvoir la déplacer en ligne droite \n Vous avez 2 minutes pour terminer le plus de tableaux possibles";
+        final Transition animation = this.gamesRules.createQuestionTransition(gameContext, rule);
+        animation.play();
+        animation.setOnFinished(event -> {
+            this.gamesRules.hideQuestionText();
+            setLevel(level);
+            if (toWin.isDirection()) {
+                toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiH.png")));
+            } else {
+                toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiV.png")));
+            }
+            toWin.setEffect(null);
+            final int numberLevels = 33;
+            level = (level + 1) % numberLevels;
+            stats.notifyNewRoundReady();
+            gameContext.getGazeDeviceManager().addStats(stats);
+            gameContext.firstStart();
+        });
     }
 
     @Override
@@ -2461,10 +2470,8 @@ public class RushHour extends Parent implements GameLifeCycle {
         stats.incrementNumberOfGoalsReached();
 
         gameContext.updateScore(stats, this);
-        gameContext.playWinTransition(500, actionEvent -> {
-            dispose();
-            launch();
-        });
+        dispose();
+        launch();
     }
 
     private void setIntersections() {
@@ -2536,5 +2543,16 @@ public class RushHour extends Parent implements GameLifeCycle {
         ground.toBack();
 
         p.getChildren().addAll(up, down, left, right, door);
+    }
+
+    private class CustomInputEventHandlerKeyboard implements EventHandler<KeyEvent> {
+
+        @Override
+        public void handle(KeyEvent key) {
+
+            if (key.getCode().isArrowKey()){
+                launch();
+            }
+        }
     }
 }

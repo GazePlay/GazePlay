@@ -1,6 +1,7 @@
 package net.gazeplay.games.follow;
 
 import javafx.animation.PauseTransition;
+import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
@@ -18,6 +19,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.GamesRules;
 
 import java.util.ArrayList;
 
@@ -91,78 +93,84 @@ public class Follow implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.setOffFixationLengthControl();
 
-        gameContext.getChildren().clear();
+        String rule = "Déplacer le personnage dans le labyrinthe pour récupérer les clés assorties aux portes \n Vous avez 2 minutes pour faire le plus de tableaux possibles";
+        final Transition animation = new GamesRules().createQuestionTransition(gameContext, rule);
+        animation.play();
+        animation.setOnFinished(event -> {
+            gameContext.setOffFixationLengthControl();
 
-        score = 0;
-        scoretoreach = 0;
+            gameContext.getChildren().clear();
 
-        canmove = true;
+            score = 0;
+            scoretoreach = 0;
 
-        x = 32;
-        y = 18;
+            canmove = true;
 
-        sizeWw = dimension2D.getWidth() / x;
-        sizeWh = dimension2D.getHeight() / y;
+            x = 32;
+            y = 18;
 
-        py = dimension2D.getHeight() / 2;
-        px = dimension2D.getWidth() / 2;
+            sizeWw = dimension2D.getWidth() / x;
+            sizeWh = dimension2D.getHeight() / y;
 
-        sizeP = dimension2D.getWidth() / 50;
+            py = dimension2D.getHeight() / 2;
+            px = dimension2D.getWidth() / 2;
 
-        //Make the paving of the floor
-        paving();
+            sizeP = dimension2D.getWidth() / 50;
 
-        //Make the player
-        player();
+            //Make the paving of the floor
+            paving();
 
-        //increase the speed but decrease the accuracy
-        speed = 4;
+            //Make the player
+            player();
 
-        //Make the border of the screen
-        contour();
+            //increase the speed but decrease the accuracy
+            speed = 4;
 
-        if (variant.equals(FollowGameVariant.FKEY)) {
-            fKEY();
-        } else if (variant.equals(FollowGameVariant.FCOIN)) {
-            fCOIN();
-        } else if (variant.equals(FollowGameVariant.FKEYEASY)) {
-            fKEYEASY();
-        } else {
-            log.error("Variant not found : " + variant.getLabel());
-        }
+            //Make the border of the screen
+            contour();
 
-        pointer();
+            if (variant.equals(FollowGameVariant.FKEY)) {
+                fKEY();
+            } else if (variant.equals(FollowGameVariant.FCOIN)) {
+                fCOIN();
+            } else if (variant.equals(FollowGameVariant.FKEYEASY)) {
+                fKEYEASY();
+            } else {
+                log.error("Variant not found : " + variant.getLabel());
+            }
 
-        {
-            Scene gameContextScene = gameContext.getPrimaryScene();
+            pointer();
 
-            EventHandler<GazeEvent> recordGazeMovements = e -> {
-                Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
-                if (((toSceneCoordinate.getX() - dimension2D.getWidth() / 2) * (toSceneCoordinate.getX() - dimension2D.getWidth() / 2) + (toSceneCoordinate.getY() - dimension2D.getHeight() / 2) * (toSceneCoordinate.getY() - dimension2D.getHeight() / 2)) > 0.15) {
+            {
+                Scene gameContextScene = gameContext.getPrimaryScene();
+
+                EventHandler<GazeEvent> recordGazeMovements = e -> {
+                    Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
+                    if (((toSceneCoordinate.getX() - dimension2D.getWidth() / 2) * (toSceneCoordinate.getX() - dimension2D.getWidth() / 2) + (toSceneCoordinate.getY() - dimension2D.getHeight() / 2) * (toSceneCoordinate.getY() - dimension2D.getHeight() / 2)) > 0.15) {
+                        rx = toSceneCoordinate.getX();
+                        ry = toSceneCoordinate.getY();
+                    }
+
+                };
+
+                EventHandler<MouseEvent> recordMouseMovements = e -> {
+                    Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
                     rx = toSceneCoordinate.getX();
                     ry = toSceneCoordinate.getY();
-                }
 
-            };
+                };
 
-            EventHandler<MouseEvent> recordMouseMovements = e -> {
-                Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
-                rx = toSceneCoordinate.getX();
-                ry = toSceneCoordinate.getY();
+                gameContextScene.getRoot().addEventFilter(GazeEvent.GAZE_MOVED, recordGazeMovements);
+                gameContextScene.getRoot().addEventFilter(MouseEvent.MOUSE_MOVED, recordMouseMovements);
+            }
 
-            };
+            startafterdelay();
 
-            gameContextScene.getRoot().addEventFilter(GazeEvent.GAZE_MOVED, recordGazeMovements);
-            gameContextScene.getRoot().addEventFilter(MouseEvent.MOUSE_MOVED, recordMouseMovements);
-        }
-
-        startafterdelay();
-
-        stats.notifyNewRoundReady();
-        gameContext.getGazeDeviceManager().addStats(stats);
-        gameContext.firstStart();
+            stats.notifyNewRoundReady();
+            gameContext.getGazeDeviceManager().addStats(stats);
+            gameContext.firstStart();
+        });
     }
 
     @Override

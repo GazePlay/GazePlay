@@ -36,6 +36,9 @@ public class GazePlayLauncher {
             } else if (args[0].contains("bera")){
                 log.info("BERA GAZEPLAY");
                 saveArgs("bera");
+            } else if (args[0].contains("emmanuel")){
+                log.info("EMMANUEL GAZEPLAY");
+                saveArgs("emmanuel");
             }
         } catch (Exception e) {
             log.info("GAZEPLAY");

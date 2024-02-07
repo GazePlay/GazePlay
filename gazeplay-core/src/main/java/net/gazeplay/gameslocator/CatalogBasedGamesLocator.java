@@ -24,6 +24,8 @@ public class CatalogBasedGamesLocator extends AbstractGamesLocator {
 
         if (gazeplayType.contains("bera")){
             catalogResourceLocation = "evals-catalog.txt";
+        } else if (gazeplayType.contains("emmanuel")) {
+            catalogResourceLocation = "emmanuel-catalog.txt";
         }
 
         Stream<String> linesStream = Stream.generate(new Supplier<>() {
