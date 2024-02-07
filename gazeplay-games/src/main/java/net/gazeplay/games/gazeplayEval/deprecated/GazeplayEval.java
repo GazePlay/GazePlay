@@ -1,4 +1,4 @@
-package net.gazeplay.games.gazeplayEval;
+package net.gazeplay.games.gazeplayEval.deprecated;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;

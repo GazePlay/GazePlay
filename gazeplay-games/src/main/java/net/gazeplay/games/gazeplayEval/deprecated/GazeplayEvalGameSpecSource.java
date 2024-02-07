@@ -1,4 +1,4 @@
-package net.gazeplay.games.gazeplayEval;
+package net.gazeplay.games.gazeplayEval.deprecated;
 
 import net.gazeplay.GameCategories;
 import net.gazeplay.GameSpec;

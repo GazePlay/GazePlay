@@ -1,4 +1,4 @@
-package net.gazeplay.games.gazeplayEval;
+package net.gazeplay.games.gazeplayEval.deprecated;
 
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;

@@ -1,4 +1,4 @@
-package net.gazeplay.games.gazeplayEval;
+package net.gazeplay.games.gazeplayEval.deprecated;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -23,7 +23,6 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GazeplayEvalGameVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.io.File;

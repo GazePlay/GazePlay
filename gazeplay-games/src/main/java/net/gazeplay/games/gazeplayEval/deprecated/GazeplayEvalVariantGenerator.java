@@ -1,4 +1,4 @@
-package net.gazeplay.games.gazeplayEval;
+package net.gazeplay.games.gazeplayEval.deprecated;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

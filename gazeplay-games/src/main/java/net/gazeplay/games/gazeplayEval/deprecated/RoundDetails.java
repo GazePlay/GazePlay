@@ -1,4 +1,4 @@
-package net.gazeplay.games.gazeplayEval;
+package net.gazeplay.games.gazeplayEval.deprecated;
 
 import javafx.scene.image.Image;
 import lombok.AllArgsConstructor;
