@@ -1,61 +1,61 @@
 package net.gazeplay.games.gazeplayEval;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
-import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
-import net.gazeplay.commons.configuration.Configuration;
-import net.gazeplay.commons.gamevariants.GazeplayEvalGameVariant;
-import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.games.gazeplayEval.config.*;
+import net.gazeplay.games.gazeplayEval.round.EvalRound;
+
+import java.util.Iterator;
+import java.util.function.Function;
 
 @Slf4j
 public class GazeplayEval implements GameLifeCycle {
-    private final IGameContext gameContext;
-    private final GazeplayEvalGameVariant gameVariant;
-    private final boolean fourThree;
-    private final Stats stats;
+    @Getter
+    private final double gameSeed;
 
-    public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats) {
-        this.gameContext = gameContext;
-        this.gameVariant = gameVariant;
-        this.fourThree = fourThree;
-        this.stats = stats;
+    private final Iterator<EvalRound> rounds;
+    private final EvalConfig config;
 
-        this.gameContext.startScoreLimiter();
-        this.gameContext.startTimeLimiter();
+    @Getter
+    private EvalRound currentRound;
 
-        Configuration config = ActiveConfigurationContext.getInstance();
+    public GazeplayEval(double gameSeed) {
+        this.gameSeed = gameSeed;
+
+        EvalState.gameContext.startScoreLimiter();
+        EvalState.gameContext.startTimeLimiter();
+
+        final Function<Void, Void> onRoundFinishDummy = (aVoid) -> {
+            this.onRoundFinish();
+            return null;
+        };
+
         try {
-            EvalConfig evalConfig = new EvalConfig(config.getFileDir() + "\\evals\\" + gameVariant.getNameGame());
+            config = new EvalConfig(EvalState.gameVariant.getNameGame());
+            rounds = config.getItems().map(item -> new EvalRound(item, onRoundFinishDummy)).iterator();
         } catch (Exception e) {
-            log.error("Error while loading the configuration file for the game " + gameVariant.getNameGame(), e);
-        }
-    }
-
-    public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats, double gameSeed) {
-        this.gameContext = gameContext;
-        this.gameVariant = gameVariant;
-        this.fourThree = fourThree;
-        this.stats = stats;
-
-        this.gameContext.startScoreLimiter();
-        this.gameContext.startTimeLimiter();
-
-        Configuration config = ActiveConfigurationContext.getInstance();
-        try {
-            EvalConfig evalConfig = new EvalConfig(config.getFileDir() + "\\evals\\" + gameVariant.getNameGame());
-        } catch (Exception e) {
-            log.error("Error while loading the configuration file for the game " + gameVariant.getNameGame(), e);
+            log.error("Error while loading the configuration file for the game " + EvalState.gameVariant.getNameGame(), e);
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public void launch() {
+        if (currentRound != null) {
+            log.error("Trying to launch a new round while the current one is still running");
+            return;
+        }
+        log.info("Starting new round");
+
+        currentRound = rounds.next();
     }
 
     @Override
     public void dispose() {
-
+        currentRound = null;
     }
+
+    private void onRoundFinish() {
+    };
 }

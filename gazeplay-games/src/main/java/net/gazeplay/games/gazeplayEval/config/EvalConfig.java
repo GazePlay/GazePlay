@@ -7,9 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.stream.Stream;
 
-import static net.gazeplay.games.gazeplayEval.config.Constants.*;
+import static net.gazeplay.games.gazeplayEval.config.Const.*;
 
 @Slf4j
 public class EvalConfig {
@@ -25,9 +25,9 @@ public class EvalConfig {
         this.items = items;
     }
 
-    public EvalConfig(String evalDirectory) throws Exception {
+    public EvalConfig(String evalDirName) throws Exception {
         JsonParser parser = new JsonParser();
-        JsonObject config = parser.parse(new FileReader(evalDirectory + CONFIG_FILEPATH)).getAsJsonObject();
+        JsonObject config = parser.parse(new FileReader(ROOT_DIRECTORY + evalDirName + CONFIG_FILEPATH)).getAsJsonObject();
 
         this.name = config.get(EVAL_NAME).getAsString();
         this.outputType = ResultsOutputType.valueOf(config.get(EVAL_OUTPUT_TYPE).getAsString().trim().toUpperCase());
@@ -61,7 +61,7 @@ public class EvalConfig {
         return items.get(index);
     }
 
-    public Iterator<ItemConfig> getItems() {
-        return items.iterator();
+    public Stream<ItemConfig> getItems() {
+        return items.stream();
     }
 }

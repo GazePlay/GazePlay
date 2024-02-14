@@ -403,29 +403,6 @@ public class GazeplayEval implements GameLifeCycle {
         }
     }
 
-    public void calculScores() {
-        /*log.info("---TEST CV---" + value);
-        if (!Objects.equals(value, "null")) {
-            for (int i = 0; i < this.listScores[this.indexFileImage].length; i++) {
-                if (this.listNameScores.contains(this.listScores[this.indexFileImage][i])) {
-                    int index = this.listNameScores.indexOf(this.listScores[this.indexFileImage][i]);
-                    if (Objects.equals(value, "True")) {
-                        this.listScoresPoints.add(index, this.listScoresPoints.get(index) + this.scoreGoodAnswer[this.indexFileImage][i]);
-                    } else if (Objects.equals(value, "False")) {
-                        this.listScoresPoints.add(index, this.listScoresPoints.get(index) + this.scoreWrongAnswer[this.indexFileImage][i]);
-                    }
-                } else {
-                    this.listNameScores.add(this.listScores[this.indexFileImage][i]);
-                    if (Objects.equals(value, "True")) {
-                        this.listScoresPoints.add(this.scoreGoodAnswer[this.indexFileImage][i]);
-                    } else if (Objects.equals(value, "False")) {
-                        this.listScoresPoints.add(this.scoreWrongAnswer[this.indexFileImage][i]);
-                    }
-                }
-            }
-        }*/
-    }
-
     private void next(String value) {
         currentRoundDetails.getPictureCardList().get(0).waitBeforeNextRound();
     }

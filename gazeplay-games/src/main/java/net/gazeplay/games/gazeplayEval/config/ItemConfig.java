@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.util.Arrays;
 
-import static net.gazeplay.games.gazeplayEval.config.Constants.*;
+import static net.gazeplay.games.gazeplayEval.config.Const.*;
 
 @Slf4j
 public class ItemConfig {
@@ -72,8 +72,8 @@ public class ItemConfig {
         return cols;
     }
 
-    public File[][] getGrid() {
-        return grid;
+    public File getGrid(int i, int j) {
+        return grid[i][j];
     }
 
     public Boolean isGridRandomized() {
