@@ -9,7 +9,7 @@ public class BottleGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Bottle").gameThumbnail("data/Thumbnails/bottle.jpg").category(GameCategories.Category.SELECTION).build(),
+            GameSummary.builder().nameCode("Bottle").gameThumbnail("bottle").category(GameCategories.Category.SELECTION).build(),
             new BottleGameVariantGenerator(), new BottleGameLauncher());
     }
 }

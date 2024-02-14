@@ -11,7 +11,7 @@ public class TowerDefenseGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return new GameSpec(GameSummary.builder()
             .nameCode("TowerDefense")
-            .gameThumbnail("data/Thumbnails/towerDefense.png")
+            .gameThumbnail("towerDefense")
             .category(GameCategories.Category.ACTION_REACTION).build(),
             new TowerDefenseGameLauncher());
     }

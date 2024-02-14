@@ -9,7 +9,7 @@ public class PotionsGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Potions").gameThumbnail("data/Thumbnails/potions.jpg")
+            GameSummary.builder().nameCode("Potions").gameThumbnail("potions")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.MEMORIZATION).build(),

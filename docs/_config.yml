@@ -37,7 +37,7 @@ footer:
       icon: "fab fa-fw fa-facebook"
       url: "https://facebook.com/GazePlay.root/"
 
-thumbnail_base: https://raw.githubusercontent.com/GazePlay/GazePlay/master/gazeplay/src/main/resources/data/Thumbnails
+thumbnail_base: https://raw.githubusercontent.com/GazePlay/GazePlay/master/gazeplay/src/main/resources/data/common/Thumbnails
 
 
 # Build settings

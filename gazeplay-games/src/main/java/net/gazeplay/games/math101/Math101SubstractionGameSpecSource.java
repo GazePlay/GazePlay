@@ -9,7 +9,7 @@ public class Math101SubstractionGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Math101: Substraction").priority(4).gameThumbnail("data/Thumbnails/math101.png")
+            GameSummary.builder().nameCode("Math101: Substraction").priority(4).gameThumbnail("math101")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS).description("MathDescSub").build(),
             new Math101SubstractionGameVariantGenerator(), new MathGameLauncher(MathGameType.SUBTRACTIONPOS));

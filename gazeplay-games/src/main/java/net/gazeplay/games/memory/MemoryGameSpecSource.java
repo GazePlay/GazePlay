@@ -9,7 +9,7 @@ public class MemoryGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Memory").gameThumbnail("data/Thumbnails/memory.png")
+            GameSummary.builder().nameCode("Memory").gameThumbnail("memory")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION).build(),
             new MemoryGameVariantGenerator(), new MemoryGameLauncher());
