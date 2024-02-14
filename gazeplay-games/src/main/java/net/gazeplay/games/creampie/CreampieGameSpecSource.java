@@ -12,7 +12,7 @@ public class CreampieGameSpecSource implements GameSpecSource {
             GameSummary
                 .builder()
                 .nameCode("Creampie")
-                .gameThumbnail("data/Thumbnails/creamPie.png")
+                .gameThumbnail("creamPie")
                 .category(GameCategories.Category.ACTION_REACTION)
                 .absolutePriority(2)
                 .build(),

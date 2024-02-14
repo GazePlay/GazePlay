@@ -9,7 +9,7 @@ public class RoomGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Room").gameThumbnail("data/Thumbnails/home.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            GameSummary.builder().nameCode("Room").gameThumbnail("home").category(GameCategories.Category.ACTION_REACTION).build(),
             new RoomGameLauncher());
     }
 }

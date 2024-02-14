@@ -9,7 +9,7 @@ public class OpenMemoryNumbersGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("OpenMemoryNumbers").gameThumbnail("data/Thumbnails/openMemoryNumbers.png")
+            GameSummary.builder().nameCode("OpenMemoryNumbers").gameThumbnail("openMemoryNumbers")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.LITERACY)

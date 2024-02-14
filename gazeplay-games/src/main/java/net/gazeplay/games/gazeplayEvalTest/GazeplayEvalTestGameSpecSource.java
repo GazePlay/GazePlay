@@ -10,7 +10,7 @@ public class GazeplayEvalTestGameSpecSource implements  GameSpecSource{
     public GameSpec getGameSpec() {
         return new GameSpec(
             GameSummary.builder().nameCode("GazePlayEvalTest")
-                .gameThumbnail("data/Thumbnails/whereIsIt.png")
+                .gameThumbnail("whereIsIt")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION).build(),
             new GazeplayEvalTestVariantGenerator(), new GazeplayEvalTestGameLauncher());

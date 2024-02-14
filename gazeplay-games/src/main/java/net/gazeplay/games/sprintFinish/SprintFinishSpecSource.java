@@ -9,7 +9,7 @@ public class SprintFinishSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("SprintFinish").gameThumbnail("data/Thumbnails/SprintToTheFinish.png")
+            GameSummary.builder().nameCode("SprintFinish").gameThumbnail("SprintToTheFinish")
                 .category(GameCategories.Category.ACTION_REACTION).build(),
             new SprintFinishVariantGenerator(), new SprintFinishLauncher());
     }
