@@ -116,7 +116,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.gameVariant = gameVariant;
 
         spaceshipImage = ImageUtils.createCustomizedImageLibrary(null, "space/spaceship", random);
-        bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/biboule", random);
+        bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/alien", random);
 
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
@@ -124,8 +124,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         gameContext.getChildren().addAll(backgroundLayer, middleLayer, foregroundLayer);
 
         this.biboules = new ArrayList<>();
-        this.bibouleWidth = dimension2D.getWidth() / 20;
-        this.bibouleHeight = dimension2D.getHeight() / 10;
+        this.bibouleWidth = dimension2D.getWidth() / 15;
+        this.bibouleHeight = dimension2D.getHeight() / 15;
         this.bossWidth = dimension2D.getWidth() / 8;
         this.bossHeight = dimension2D.getHeight() / 4;
 
@@ -205,7 +205,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         this.gameVariant = gameVariant;
 
         spaceshipImage = ImageUtils.createCustomizedImageLibrary(null, "space/spaceship", random);
-        bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/biboule", random);
+        bibouleImage = ImageUtils.createCustomizedImageLibrary(null, "space/alien", random);
 
         this.backgroundLayer = new Group();
         this.middleLayer = new Group();
@@ -213,8 +213,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         gameContext.getChildren().addAll(backgroundLayer, middleLayer, foregroundLayer);
 
         this.biboules = new ArrayList<>();
-        this.bibouleWidth = dimension2D.getWidth() / 20;
-        this.bibouleHeight = dimension2D.getHeight() / 10;
+        this.bibouleWidth = dimension2D.getWidth() / 15;
+        this.bibouleHeight = dimension2D.getHeight() / 15;
         this.bossWidth = dimension2D.getWidth() / 8;
         this.bossHeight = dimension2D.getHeight() / 4;
 
@@ -320,7 +320,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         final Rectangle backgroundImage3 = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
         backgroundImage3.widthProperty().bind(gameContext.getRoot().widthProperty());
         backgroundImage3.heightProperty().bind(gameContext.getRoot().heightProperty());
-        backgroundImage3.setFill(new ImagePattern(new Image("data/space/background/space_img.png")));
+        backgroundImage3.setFill(new ImagePattern(new Image("data/space/background/space_img2.jpg")));
 
         backgroundImage.setOpacity(0.08);
         backgroundImage2.setOpacity(0.08);
@@ -619,7 +619,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         if (currentTime - startTime >= 500) {
 
             final Rectangle bulletRec = new Rectangle(spaceship.getX() + spaceship.getWidth() / 2,
-                spaceship.getY() - spaceship.getHeight() / 3, spaceship.getHeight() / 12, spaceship.getHeight() / 6);
+                spaceship.getY() - spaceship.getHeight() / 3, spaceship.getHeight() / 4, spaceship.getHeight() / 4);
             bulletRec.setFill(new ImagePattern(new Image("data/space/bullet/laserBlue01.png")));
             middleLayer.getChildren().add(bulletRec);
             bulletListRec.add(bulletRec);
@@ -769,7 +769,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         for (final Rectangle b : biboules) {
             final int bibouleShoot = random.nextInt(1500);
 
-            final Rectangle bulletBibouleRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), spaceship.getHeight() / 12, spaceship.getHeight() / 6);
+            final Rectangle bulletBibouleRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), spaceship.getHeight() / 4, spaceship.getHeight() / 4);
             bulletBibouleRec.setFill(new ImagePattern(new Image("data/space/bullet/laserRed01.png")));
 
             if (bibouleShoot == 1) {
@@ -820,7 +820,7 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
         for (final Rectangle b : bosses) {
             final int bossShoot = random.nextInt(240);
 
-            final Rectangle bulletBossRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), spaceship.getHeight() / 8, spaceship.getHeight() / 4);
+            final Rectangle bulletBossRec = new Rectangle(b.getX() + b.getWidth() / 2, b.getY(), spaceship.getHeight() / 2, spaceship.getHeight() / 4);
             bulletBossRec.setFill(new ImagePattern(new Image("data/space/bullet/laserRed01.png")));
 
             if (bossShoot == 1) {
