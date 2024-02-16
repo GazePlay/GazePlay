@@ -10,7 +10,7 @@ public class RockPaperScissorsGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("RockPaperScissors").gameThumbnail("data/Thumbnails/rockPaperScissors.png")
+            GameSummary.builder().nameCode("RockPaperScissors").gameThumbnail("rockPaperScissors")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS).build(),
             new RockPaperScissorsGameVariantGenerator(), new RockPaperScissorsLauncher());

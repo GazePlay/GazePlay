@@ -9,7 +9,7 @@ public class OpenMemoryLettersGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("OpenMemoryLetters").gameThumbnail("data/Thumbnails/openMemoryLetters.png")
+            GameSummary.builder().nameCode("OpenMemoryLetters").gameThumbnail("openMemoryLetters")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION)
                 .category(GameCategories.Category.LITERACY).build(),

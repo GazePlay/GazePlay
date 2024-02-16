@@ -9,7 +9,7 @@ public class Connect4GameSpecSource  implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Connect4").gameThumbnail("data/Thumbnails/connect4.png")
+            GameSummary.builder().nameCode("Connect4").gameThumbnail("connect4")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.ACTION_REACTION) .build(),

@@ -9,7 +9,7 @@ public class SoundsOfLifeGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("SoundsOfLife").gameThumbnail("data/Thumbnails/soundsOfLife.png")
+            GameSummary.builder().nameCode("SoundsOfLife").gameThumbnail("soundsOfLife")
                 .category(GameCategories.Category.SELECTION)
                 .build(),
             new SoundsOfLifeGameVariantGenerator(), new SoundsOfLifeGameLauncher());

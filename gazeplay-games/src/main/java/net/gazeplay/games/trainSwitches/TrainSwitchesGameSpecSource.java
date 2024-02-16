@@ -10,7 +10,7 @@ public class TrainSwitchesGameSpecSource implements GameSpecSource {
     public GameSpec getGameSpec() {
         return  new GameSpec(GameSummary.builder()
             .nameCode("TrainSwitches")
-            .gameThumbnail("data/Thumbnails/trainSwitches.png")
+            .gameThumbnail("trainSwitches")
             .category(GameCategories.Category.ACTION_REACTION)
             .category(GameCategories.Category.SELECTION).build(),
             new TrainSwitchesGameVariantGenerator(), new TrainSwitchesGameLauncher()

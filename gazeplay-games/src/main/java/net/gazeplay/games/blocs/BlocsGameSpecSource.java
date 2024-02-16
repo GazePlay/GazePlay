@@ -10,7 +10,7 @@ public class BlocsGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Blocks").gameThumbnail("data/Thumbnails/block.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            GameSummary.builder().nameCode("Blocks").gameThumbnail("block").category(GameCategories.Category.ACTION_REACTION).build(),
             new SquareDimensionVariantGenerator(2, 9), new BlocsGameLauncher());
     }
 }

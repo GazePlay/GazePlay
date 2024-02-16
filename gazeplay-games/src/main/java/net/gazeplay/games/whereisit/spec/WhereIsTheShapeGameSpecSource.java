@@ -11,7 +11,7 @@ public class WhereIsTheShapeGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("WhereIsTheShape").gameThumbnail("data/Thumbnails/whereIsTheShape.png")
+            GameSummary.builder().nameCode("WhereIsTheShape").gameThumbnail("whereIsTheShape")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.MEMORIZATION).build(),

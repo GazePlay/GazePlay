@@ -9,7 +9,7 @@ public class Math101MultiplicationGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Math101: Multiplication").priority(3).gameThumbnail("data/Thumbnails/math101.png")
+            GameSummary.builder().nameCode("Math101: Multiplication").priority(3).gameThumbnail("math101")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS).description("MathDescMult").build(),
             new Math101MultiplicationGameVariantGenerator(), new MathGameLauncher(MathGameType.MULTIPLICATION));
