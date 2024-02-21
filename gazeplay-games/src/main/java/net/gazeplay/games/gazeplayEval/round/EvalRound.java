@@ -7,8 +7,9 @@ import net.gazeplay.games.gazeplayEval.config.ItemConfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static net.gazeplay.games.gazeplayEval.config.Const.*;
 
@@ -61,16 +62,18 @@ public class EvalRound {
         return null;  // Make Void happy
     }
 
+    private Stream<PictureCard> getFlatPictures() {
+        return Arrays.stream(pictures).flatMap(Arrays::stream);
+    }
+
     public void launch() {
         startTime = System.currentTimeMillis();
 
-        List<PictureCard> flatPictures = Arrays.stream(pictures).flatMap(Arrays::stream).toList();
+        GameState.context.getChildren().addAll(getFlatPictures().toList());
 
-        // Add all pictures, flatten to a 1D array
-        GameState.context.getChildren().addAll(flatPictures);
+        getFlatPictures().forEach(PictureCard::show);
 
-        flatPictures.forEach(PictureCard::show);
-
+        GameState.stats.setTargetAOIList(getFlatPictures().map(PictureCard::getTargetAOI).collect(Collectors.toCollection(ArrayList::new)));
         GameState.stats.notifyNewRoundReady();
         GameState.context.onGameStarted(ROUND_START_DELAY);
 
@@ -78,7 +81,7 @@ public class EvalRound {
     }
 
     public void dispose() {
-
+        getFlatPictures().forEach(PictureCard::dispose);
     }
 
     public void playSound() {

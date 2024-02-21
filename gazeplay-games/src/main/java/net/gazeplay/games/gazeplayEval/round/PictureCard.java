@@ -12,6 +12,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.stats.TargetAOI;
 import net.gazeplay.games.gazeplayEval.GameState;
 import net.gazeplay.games.gazeplayEval.config.*;
 
@@ -24,6 +25,9 @@ public class PictureCard extends Group {
 
     private final ImageView imageView;
     private final Rectangle notification;
+
+    @Getter
+    private final TargetAOI targetAOI;
 
     @Getter
     private boolean selected = false;
@@ -43,6 +47,8 @@ public class PictureCard extends Group {
         double initialY = GameSizing.height * j + 10;  // Not sure why the +-10, but that was here before me
         double initialWidth = GameSizing.width;
         double initialHeight = GameSizing.height - 10;
+
+        this.targetAOI = new TargetAOI(initialX, initialY, (int) GameSizing.height, System.currentTimeMillis());
 
         // Setting up the image to display
         Image image = new Image(config.getGrid(i, j).getPath());
@@ -88,13 +94,12 @@ public class PictureCard extends Group {
 
     private Void onProgressFinish(Void ignored) {
         selected = true;
-        mouserHandler.disable();  // TODO: test without the disable and `this` instead of `imageView`
         notification.setVisible(!ActiveConfigurationContext.getInstance().getFeedback().equals("nothing"));
         this.setVisible(false);
 
         GameState.context.getGazeDeviceManager().removeEventFilter(imageView);
-        imageView.removeEventFilter(MouseEvent.ANY, mouserHandler);
-        imageView.removeEventFilter(GazeEvent.ANY, mouserHandler);
+        this.removeEventFilter(MouseEvent.ANY, mouserHandler);
+        this.removeEventFilter(GazeEvent.ANY, mouserHandler);
 
         onSelection.apply(PictureCard.this);
 
@@ -104,6 +109,11 @@ public class PictureCard extends Group {
     public void show() {
         this.toFront();
         this.setOpacity(1);
+    }
+
+    public void dispose() {
+        mouserHandler.disable();
+        progress.stop();
     }
 
     private class MouseEventHandler implements EventHandler<Event> {

@@ -13,6 +13,7 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.games.gazeplayEval.config.*;
 import net.gazeplay.games.gazeplayEval.round.EvalRound;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.function.Function;
 
@@ -28,6 +29,8 @@ public class GazeplayEval implements GameLifeCycle {
 
     @Getter
     private EvalRound currentRound;
+
+    private long startTime = 0;
 
     public GazeplayEval(double gameSeed) {
         this.random = new ReplayablePseudoRandom(gameSeed);
@@ -59,6 +62,9 @@ public class GazeplayEval implements GameLifeCycle {
         }
         log.info("Starting new round");
 
+        if (startTime == 0)
+            startTime = System.currentTimeMillis();
+
         currentRound = rounds.next();
 
 //        this.canRemoveItemManually = true;
@@ -76,29 +82,54 @@ public class GazeplayEval implements GameLifeCycle {
 
     @Override
     public void dispose() {
+        if (currentRound == null) {
+            log.warn("Trying to dispose the game twice");
+            return;
+        }
+        log.info("Disposing current round");
+        currentRound.dispose();
         currentRound = null;
+    }
+
+    private void finalizeStats() {
+        GameState.stats.timeGame = System.currentTimeMillis() - startTime;
+        GameState.stats.nameScores = new ArrayList<>();
+        GameState.stats.scores = new ArrayList<>();
+        GameState.stats.totalItemsAddedManually = 0;
+        switch (config.getOutputType()) {
+            case CSV -> exportToCSV();
+            case XLS -> exportToExcel();
+            case ALL -> {
+                exportToCSV();
+                exportToExcel();
+            }
+            default -> log.info("No Output set or wrong statement");
+        }
+    }
+
+    private void exportToExcel() {
+    }
+
+    private void exportToCSV() {
     }
 
     private void onRoundFinish() {
         Timeline transition = new Timeline();
         transition.getKeyFrames().add(new KeyFrame(new Duration(ActiveConfigurationContext.getInstance().getTransitionTime())));
-        transition.setOnFinished((event) -> this.transitionToRoundFinish());
-//        this.removeEventHandlerPictureCard();
+        transition.setOnFinished((event) -> this.afterRoundFinish());
+        this.dispose();
         transition.playFromStart();
     }
 
-    private void transitionToRoundFinish() {
+    private void afterRoundFinish() {
+        GameState.context.clear();
         if (rounds.hasNext()) {
-            this.dispose();
-            GameState.context.clear();
             this.launch();
         } else {
-//            this.finalStats();
-//            EvalState.gameContext.updateScore(EvalState.stats, this);
+            this.finalizeStats();
+            GameState.context.updateScore(GameState.stats, this);
 //            this.resetFromReplay();
-            this.dispose();
-//            EvalState.gameContext.clear();
-//            EvalState.gameContext.showRoundStats(EvalState.stats, this);
+            GameState.context.showRoundStats(GameState.stats, this);
         }
     }
 

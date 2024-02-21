@@ -46,7 +46,8 @@ public class SelectionProgress extends ProgressIndicator {
     }
 
     public void stop() {
-        animationTimeLine.stop();
+        if (animationTimeLine != null)
+            animationTimeLine.stop();
         this.setVisible(false);
         this.setProgress(0);
     }
