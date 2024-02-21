@@ -7,6 +7,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GazeplayEvalGameVariant;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
+import net.gazeplay.games.gazeplayEval.config.Const;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,17 +17,13 @@ public class GazeplayEvalVariantGenerator implements IGameVariantGenerator {
 
     @Override
     public Set<IGameVariant> getVariants() {
-
-        Configuration config = ActiveConfigurationContext.getInstance();
-        File directoryPath = new File(config.getFileDir() + "\\evals\\");
+        File directoryPath = new File(Const.ROOT_DIRECTORY);
         String[] content = directoryPath.list();
         ArrayList<GazeplayEvalGameVariant> game = Lists.newArrayList();
 
-        if (content != null && content.length > 0){
-            for (int i=0; i<content.length; i++){
+        if (content != null && content.length > 0)
+            for (int i = 0; i < content.length; i++)
                 game.add(i, new GazeplayEvalGameVariant(content[i]));
-            }
-        }
 
         return Sets.newLinkedHashSet(game);
     }

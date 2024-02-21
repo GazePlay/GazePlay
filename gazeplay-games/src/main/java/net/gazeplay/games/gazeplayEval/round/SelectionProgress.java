@@ -7,7 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ProgressIndicator;
 import javafx.util.Duration;
-import net.gazeplay.games.gazeplayEval.EvalState;
+import net.gazeplay.games.gazeplayEval.GameState;
 
 import java.util.function.Function;
 
@@ -37,9 +37,9 @@ public class SelectionProgress extends ProgressIndicator {
 
     public void start() {
         this.newAnimationTimeLine();
-        this.setStyle(" -fx-progress-color: " + EvalState.gameContext.getConfiguration().getProgressBarColor());
-        this.setMinWidth(EvalState.gameContext.getConfiguration().getProgressBarSize());
-        this.setMinHeight(EvalState.gameContext.getConfiguration().getProgressBarSize());
+        this.setStyle(" -fx-progress-color: " + GameState.context.getConfiguration().getProgressBarColor());
+        this.setMinWidth(GameState.context.getConfiguration().getProgressBarSize());
+        this.setMinHeight(GameState.context.getConfiguration().getProgressBarSize());
         this.setProgress(0);
         this.setVisible(true);
         animationTimeLine.playFromStart();

@@ -27,7 +27,7 @@ public class EvalConfig {
 
     public EvalConfig(String evalDirName) throws Exception {
         JsonParser parser = new JsonParser();
-        JsonObject config = parser.parse(new FileReader(ROOT_DIRECTORY + evalDirName + CONFIG_FILEPATH)).getAsJsonObject();
+        JsonObject config = parser.parse(new FileReader(ROOT_DIRECTORY + evalDirName + CONFIG_LOCATION)).getAsJsonObject();
 
         this.name = config.get(EVAL_NAME).getAsString();
         this.outputType = ResultsOutputType.valueOf(config.get(EVAL_OUTPUT_TYPE).getAsString().trim().toUpperCase());

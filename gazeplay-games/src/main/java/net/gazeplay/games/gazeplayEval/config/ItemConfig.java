@@ -3,6 +3,7 @@ package net.gazeplay.games.gazeplayEval.config;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.games.gazeplayEval.GameState;
 
 import java.io.File;
 import java.util.Arrays;
@@ -38,7 +39,7 @@ public class ItemConfig {
         this.cols = itemObject.get(ITEM_COLS).getAsInt();
         this.randomize = itemObject.get(ITEM_RANDOMIZE_GRID).getAsBoolean();
         this.selections = itemObject.get(ITEM_SELECTIONS).getAsInt();
-        this.audioFile = new File(itemObject.get(ITEM_AUDIO_FILEPATH).getAsString());
+        this.audioFile = new File(ROOT_DIRECTORY + GameState.variant.getNameGame() + AUDIO_LOCATION + itemObject.get(ITEM_AUDIO_FILENAME).getAsString());
         this.audioSchedule = AudioScheduleType.valueOf(itemObject.get(ITEM_AUDIO_SCHEDULE).getAsString().trim().toUpperCase());
         this.gazeTime = itemObject.get(ITEM_GAZE_TIME).getAsInt();
         this.timeLimit = itemObject.get(ITEM_TIME_LIMIT).getAsInt();
@@ -47,7 +48,7 @@ public class ItemConfig {
         for (int i = 0; i < rows; i++) {
             JsonArray gridRow = gridArray.get(i).getAsJsonArray();
             for (int j = 0; j < cols; j++)
-                this.grid[i][j] = new File(gridRow.get(j).getAsString());
+                this.grid[i][j] = new File(ROOT_DIRECTORY + GameState.variant.getNameGame() + IMAGES_LOCATION + gridRow.get(j).getAsString());
         }
         log.debug(
             "New instance: " + "\n" +

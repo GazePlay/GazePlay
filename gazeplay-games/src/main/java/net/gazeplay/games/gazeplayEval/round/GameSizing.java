@@ -1,6 +1,6 @@
 package net.gazeplay.games.gazeplayEval.round;
 
-import net.gazeplay.games.gazeplayEval.EvalState;
+import net.gazeplay.games.gazeplayEval.GameState;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -41,7 +41,7 @@ class GameSizing {
         log.info("16/9 or 16/10 screen? -> " + ((sceneWidth / sceneHeight) - (16.0 / 9.0)));
 
         GameSizing.height = sceneHeight / rows;
-        if (EvalState.fourThree && ((sceneWidth / sceneHeight) - (16.0 / 9.0)) < 0.1) {
+        if (GameState.fourThree && ((sceneWidth / sceneHeight) - (16.0 / 9.0)) < 0.1) {
             GameSizing.width = 4 * sceneHeight / (3 * cols);
             GameSizing.shift = (sceneWidth - width) / 2;
         } else {

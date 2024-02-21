@@ -3,6 +3,10 @@ package net.gazeplay.commons.random;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
+import static java.util.Collections.swap;
+
 /**
  * @author Christophe El Zeinaty
  */
@@ -60,5 +64,9 @@ public class ReplayablePseudoRandom {
         return (float) (this.random() / (double) randMax) / 2;
     }
 
+    public void shuffle(List<?> list) {
+        for (int i = list.size() - 1; i > 0; i--)
+            swap(list, i, nextInt(i));
+    }
 }
 

@@ -1,6 +1,5 @@
 package net.gazeplay.games.gazeplayEval.round;
 
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -13,7 +12,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
-import net.gazeplay.games.gazeplayEval.EvalState;
+import net.gazeplay.games.gazeplayEval.GameState;
 import net.gazeplay.games.gazeplayEval.config.*;
 
 import java.util.function.Function;
@@ -27,17 +26,16 @@ public class PictureCard extends Group {
     private final Rectangle notification;
 
     @Getter
-    private boolean selected;
+    private boolean selected = false;
 
     private final Function<PictureCard, Void> onSelection;
 
-    private final MouseEventHandler mouserHandler;
+    private final MouseEventHandler mouserHandler = new MouseEventHandler();
     private final SelectionProgress progress;
 
     public PictureCard(ItemConfig config, int i, int j, Function<PictureCard, Void> onSelection) {
         log.info("imagePath = " + config.getGrid(i, j));
 
-        selected = false;
         this.config = config;
         this.onSelection = onSelection;
 
@@ -60,11 +58,7 @@ public class PictureCard extends Group {
         this.getChildren().add(imageView);
 
         // Setting up the progress indicator
-        final Function<Void, Void> onProgressFinishDummy = (aVoid) -> {
-            this.onProgressFinish();
-            return aVoid;
-        };
-        progress = new SelectionProgress(config.getGazeTime(), initialX, initialY, initialWidth, initialHeight, onProgressFinishDummy);
+        progress = new SelectionProgress(config.getGazeTime(), initialX, initialY, initialWidth, initialHeight, this::onProgressFinish);
         this.getChildren().add(progress);
 
         // Setting up the notification image
@@ -87,23 +81,29 @@ public class PictureCard extends Group {
         this.getChildren().add(notification);
 
         // Adding the event filters
-        EvalState.gameContext.getGazeDeviceManager().addEventFilter(imageView);
-        mouserHandler = new MouseEventHandler();
+        GameState.context.getGazeDeviceManager().addEventFilter(imageView);
         this.addEventFilter(MouseEvent.ANY, mouserHandler);
         this.addEventFilter(GazeEvent.ANY, mouserHandler);
     }
 
-    private void onProgressFinish() {
+    private Void onProgressFinish(Void ignored) {
         selected = true;
-        mouserHandler.disable();
+        mouserHandler.disable();  // TODO: test without the disable and `this` instead of `imageView`
         notification.setVisible(!ActiveConfigurationContext.getInstance().getFeedback().equals("nothing"));
         this.setVisible(false);
 
-        EvalState.gameContext.getGazeDeviceManager().removeEventFilter(imageView);
+        GameState.context.getGazeDeviceManager().removeEventFilter(imageView);
         imageView.removeEventFilter(MouseEvent.ANY, mouserHandler);
         imageView.removeEventFilter(GazeEvent.ANY, mouserHandler);
 
         onSelection.apply(PictureCard.this);
+
+        return null;  // Make Void happy
+    }
+
+    public void show() {
+        this.toFront();
+        this.setOpacity(1);
     }
 
     private class MouseEventHandler implements EventHandler<Event> {

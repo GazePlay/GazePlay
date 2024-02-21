@@ -37,10 +37,10 @@ public class GazeplayEvalGameLauncher implements IGameLauncher<Stats, GazeplayEv
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, GazeplayEvalGameVariant gameVariant, Stats stats, double gameSeed) {
-        EvalState.fourThree = false;
-        EvalState.gameContext = gameContext;
-        EvalState.gameVariant = gameVariant;
-        EvalState.stats = stats;
+        GameState.fourThree = false;
+        GameState.context = gameContext;
+        GameState.variant = gameVariant;
+        GameState.stats = stats;
         return new GazeplayEval(gameSeed);
     }
 }
