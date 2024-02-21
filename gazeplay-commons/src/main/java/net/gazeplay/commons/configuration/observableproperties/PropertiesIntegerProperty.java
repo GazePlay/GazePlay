@@ -45,6 +45,7 @@ public abstract class PropertiesIntegerProperty extends IntegerPropertyBase {
         log.info("Set property {} to {}", propertyName, value);
         setProperty(propertyName, Integer.toString(value));
         propertyChangeListener.propertyChange(new PropertyChangeEvent(this, propertyName, null, value));
+        fireValueChangedEvent();
     }
 
 }

@@ -9,7 +9,7 @@ public class HorsesSimplifiedGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Horses Simplified").gameThumbnail("data/Thumbnails/horsesSimplified.png")
+            GameSummary.builder().nameCode("Horses Simplified").gameThumbnail("horsesSimplified")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS).build(),
             new HorsesSimplifiedGameVariantGenerator(), new HorsesSimplifiedGameLauncher());

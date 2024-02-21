@@ -9,9 +9,9 @@ public class RushHourGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("RushHour").gameThumbnail("data/Thumbnails/rushHour.png")
+            GameSummary.builder().nameCode("RushHour").gameThumbnail("rushHour")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS).build(),
-            new RushHourGameLauncher());
+            new RushHourGameVariant(), new RushHourGameLauncher());
     }
 }

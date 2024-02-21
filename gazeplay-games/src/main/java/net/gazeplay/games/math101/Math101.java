@@ -60,6 +60,7 @@ public class Math101 implements GameLifeCycle {
         this.gameContext = gameContext;
         this.maxValue = gameVariant.getMax();
         this.stats = stats;
+        this.stats.incrementNumberOfMistakes();
         this.nbLines = 2;
         this.nbColumns = 3;
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
@@ -76,6 +77,7 @@ public class Math101 implements GameLifeCycle {
         this.gameContext = gameContext;
         this.maxValue = gameVariant.getMax();
         this.stats = stats;
+        this.stats.incrementNumberOfMistakes();
         this.nbLines = 2;
         this.nbColumns = 3;
         this.gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();

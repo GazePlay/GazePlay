@@ -75,6 +75,7 @@ public abstract class PropertiesStringSetProperty extends SetPropertyBase<String
         log.info("Set property {} to {}", propertyName, marshalledValue);
         setProperty(propertyName, marshalledValue);
         propertyChangeListener.propertyChange(new PropertyChangeEvent(this, propertyName, null, value));
+        fireValueChangedEvent();
     }
 
 }

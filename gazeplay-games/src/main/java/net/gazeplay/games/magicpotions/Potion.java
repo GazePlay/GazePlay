@@ -1,8 +1,6 @@
 package net.gazeplay.games.magicpotions;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
@@ -20,6 +18,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.components.ProgressButton;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Johana MARKU
@@ -51,6 +50,8 @@ class Potion extends Parent {
     private final MagicPotions gameInstance;
 
     private final IGameContext gameContext;
+    private double posX;
+    private double posY;
 
     private final MagicPotionsStats stats;
     @Getter
@@ -67,7 +68,8 @@ class Potion extends Parent {
         shadow.setOffsetX(5);
         shadow.setOffsetY(5);
         shadow.setRadius(3);
-
+        posX = positionX;
+        posY = positionY;
         this.potion = new ImageView(image);
         this.potion.setFitWidth(width);
         this.potion.setFitHeight(height);
@@ -103,6 +105,7 @@ class Potion extends Parent {
 
     private void onMixAchieved() {
 
+        gameInstance.gameEnded = true;
         gameInstance.currentRoundDetails.getMixPotColor().setFill(gameInstance.currentRoundDetails.getColorRequest());
         gameInstance.getPotionBlue().removeEventFilter(MouseEvent.ANY, gameInstance.getPotionBlue().getEnterEvent());
         gameInstance.getPotionBlue().removeEventFilter(GazeEvent.ANY, gameInstance.getPotionBlue().getEnterEvent());
@@ -131,7 +134,7 @@ class Potion extends Parent {
     }
 
     private void onWrongPotionSelected() {
-
+        gameInstance.gameEnded = true;
         gameInstance.getPotionBlue().removeEventFilter(MouseEvent.ANY, gameInstance.getPotionBlue().getEnterEvent());
         gameInstance.getPotionBlue().removeEventFilter(GazeEvent.ANY, gameInstance.getPotionBlue().getEnterEvent());
         gameInstance.getPotionRed().removeEventFilter(MouseEvent.ANY, gameInstance.getPotionRed().getEnterEvent());
@@ -141,11 +144,9 @@ class Potion extends Parent {
         gameInstance.getPotionYellow().removeEventFilter(GazeEvent.ANY, gameInstance.getPotionYellow().getEnterEvent());
         progressButton.setStyle(" -fx-progress-color: red;");
         progressButton.setAccessibleText("");
-
         gameInstance.getPotionBlue().progressButton.disable();
         gameInstance.getPotionRed().progressButton.disable();
         gameInstance.getPotionYellow().progressButton.disable();
-
         currentTimeline.stop();
         currentTimeline = new Timeline();
 
@@ -171,52 +172,96 @@ class Potion extends Parent {
     private EventHandler<Event> buildEvent(ProgressButton progressButton) {
         return event -> {
             chosen = true;
-            gameInstance.currentRoundDetails.getMixture().add(potionColor); // we add the color of the potion to our mixture
             // change opacity of potion when it has been selected once
             progressButton.disable();
             progressButton.setOpacity(.3);
 
+
+            gameInstance.getPotionBlue().setDisable(true);
+            gameInstance.getPotionRed().setDisable(true);
+            gameInstance.getPotionYellow().setDisable(true);
+
+            TranslateTransition tt = new TranslateTransition(Duration.seconds(2), progressButton);
+
+            tt.setToX(gameInstance.currentRoundDetails.getMixPotColor().getCenterX()+50);
+            tt.setCycleCount(2);
+            tt.setAutoReverse(true);
+            tt.play();
+
+            tt.setOnFinished(event2->{
+                gameInstance.getPotionBlue().setDisable(false);
+                gameInstance.getPotionRed().setDisable(false);
+                gameInstance.getPotionYellow().setDisable(false);
+                potion.setDisable(true);
+            });
+
+            AnimationTimer animationTimer = new AnimationTimer() {
+                int nbframe = 0;
+                int nbSecond = 0;
+                @Override
+                public void handle(long now) {
+
+                    if (gameInstance.gameEnded){
+                        this.stop();
+                    }
+
+                    if (nbframe == 60){
+                        nbframe = 0;
+                        nbSecond++;
+
+                        if (nbSecond >= tt.getDuration().toSeconds()){
+                            this.stop();
+                            gameInstance.currentRoundDetails.getMixture().add(potionColor); // we add the color of the potion to our mixture
+                            if (!gameInstance.currentRoundDetails.getPotionsToMix().contains(potionColor)) {
+                                onWrongPotionSelected();
+                            } else if (gameInstance.currentRoundDetails.getMixture().containsAll(gameInstance.currentRoundDetails.getPotionsToMix())) {
+                                onMixAchieved();
+                            } else {
+                                stats.incrementNumberOfGoalsToReach();
+                            }
+                            switch (gameInstance.currentRoundDetails.getMixture().size()) {
+                                case 1:
+                                    gameInstance.currentRoundDetails.getMixPotColor().setFill(gameInstance.currentRoundDetails.getMixture().get(0));
+                                    break;
+                                case 2:
+                                    if (gameInstance.currentRoundDetails.getPotionsToMix().size() == 2) {
+                                        gameInstance.currentRoundDetails.getMixPotColor()
+                                            .setFill(gameInstance.currentRoundDetails.getRequest().getColor());
+                                    } else {
+                                        if ((gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.YELLOW)) ||
+                                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.YELLOW))){
+                                            gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.ORANGE);
+                                        }
+
+                                        if ((gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.BLUE) && gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.YELLOW)) ||
+                                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.BLUE) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.YELLOW))){
+                                            gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.GREEN);
+                                        }
+
+                                        if ((gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.BLUE)) ||
+                                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.BLUE))){
+                                            gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.PURPLE);
+                                        }
+                                    }
+                                    break;
+                                case 3:
+                                    gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.BLACK);
+                                    break;
+                                default:
+                                    throw new IllegalArgumentException("value : " + gameInstance.currentRoundDetails.getMixture().size());
+                            }
+                        }
+                    }
+
+                    nbframe++;
+                }
+            };
+            animationTimer.start();
+
             potion.removeEventFilter(MouseEvent.ANY, enterEvent); // we cannot select anymore this color
             potion.removeEventFilter(GazeEvent.ANY, enterEvent);
 
-            if (!gameInstance.currentRoundDetails.getPotionsToMix().contains(potionColor)) {
-                onWrongPotionSelected();
-            } else if (gameInstance.currentRoundDetails.getMixture().containsAll(gameInstance.currentRoundDetails.getPotionsToMix())) {
-                onMixAchieved();
-            } else {
-                stats.incrementNumberOfGoalsToReach();
-            }
-            switch (gameInstance.currentRoundDetails.getMixture().size()) {
-                case 1:
-                    gameInstance.currentRoundDetails.getMixPotColor().setFill(gameInstance.currentRoundDetails.getMixture().get(0));
-                    break;
-                case 2:
-                    if (gameInstance.currentRoundDetails.getPotionsToMix().size() == 2) {
-                        gameInstance.currentRoundDetails.getMixPotColor()
-                            .setFill(gameInstance.currentRoundDetails.getRequest().getColor());
-                    } else {
-                        if ((gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.YELLOW)) ||
-                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.YELLOW))){
-                            gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.ORANGE);
-                        }
 
-                        if ((gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.BLUE) && gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.YELLOW)) ||
-                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.BLUE) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.YELLOW))){
-                            gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.GREEN);
-                        }
-
-                        if ((gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.BLUE)) ||
-                            (gameInstance.currentRoundDetails.getMixture().get(1).equals(Color.RED) && gameInstance.currentRoundDetails.getMixture().get(0).equals(Color.BLUE))){
-                            gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.PURPLE);
-                        }
-                    }
-                    break;
-                case 3:
-                    gameInstance.currentRoundDetails.getMixPotColor().setFill(Color.BLACK);
-                    break;
-                default:
-                    throw new IllegalArgumentException("value : " + gameInstance.currentRoundDetails.getMixture().size());
-            }
         };
     }
 

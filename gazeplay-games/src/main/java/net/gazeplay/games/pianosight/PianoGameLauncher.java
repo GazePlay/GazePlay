@@ -4,7 +4,7 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
-import net.gazeplay.commons.gamevariants.DimensionGameVariant;
+import net.gazeplay.commons.gamevariants.EnumGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -14,7 +14,7 @@ import net.gazeplay.games.shooter.ShooterGamesStats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class PianoGameLauncher implements IGameLauncher<ShooterGamesStats, DimensionGameVariant> {
+public class PianoGameLauncher implements IGameLauncher<ShooterGamesStats, EnumGameVariant<PianoGameVariant>> {
 
     @Override
     public ShooterGamesStats createNewStats(Scene scene) {
@@ -29,18 +29,18 @@ public class PianoGameLauncher implements IGameLauncher<ShooterGamesStats, Dimen
     @Override
     public GameLifeCycle createNewGame(
         IGameContext gameContext,
-        DimensionGameVariant gameVariant,
+        EnumGameVariant<PianoGameVariant> gameVariant,
         ShooterGamesStats stats
     ) {
-        return new Piano(gameContext, stats);
+        return new Piano(gameContext, stats, gameVariant.getEnumValue());
     }
 
     @Override
     public GameLifeCycle replayGame(
         IGameContext gameContext,
-        DimensionGameVariant gameVariant,
+        EnumGameVariant<PianoGameVariant> gameVariant,
         ShooterGamesStats stats, double gameSeed
     ) {
-        return new Piano(gameContext, stats, gameSeed);
+        return new Piano(gameContext, stats, gameVariant.getEnumValue(), gameSeed);
     }
 }

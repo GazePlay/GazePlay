@@ -11,7 +11,7 @@ public class WhereIsTheSoundGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("WhereIsTheSound").gameThumbnail("data/Thumbnails/whereIsTheSound.png")
+            GameSummary.builder().nameCode("WhereIsTheSound").gameThumbnail("whereIsTheSound")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION).build(),
             new WhereIsTheSoundGameVariantGenerator(), new WhereIsTheSoundGameLauncher());

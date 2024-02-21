@@ -83,7 +83,6 @@ public class GameMenuController {
     ) {
         gazePlay.getPrimaryScene().setCursor(Cursor.WAIT);
         gazePlay.getPrimaryScene().setRoot(new LoadingContext(gazePlay));
-
         ProcessBuilder builder;
 
         int height = 0;
@@ -97,6 +96,8 @@ public class GameMenuController {
         musicManager.stop();
         runProcessDisplayLoadAndWaitForNewJVMDisplayed(gazePlay, builder);
     }
+
+
 
     public static void runProcessDisplayLoadAndWaitForNewJVMDisplayed(GazePlay gazePlay, ProcessBuilder builder) {
 
@@ -184,6 +185,7 @@ public class GameMenuController {
         } else {
             gameVariantLabel = null;
         }
+
 
         String gameNameCode = selectedGameSpec.getGameSummary().getNameCode();
         stats.setGameVariant(gameVariantLabel, gameNameCode);

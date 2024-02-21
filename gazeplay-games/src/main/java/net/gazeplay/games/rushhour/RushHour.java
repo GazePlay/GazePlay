@@ -44,11 +44,11 @@ public class RushHour extends Parent implements GameLifeCycle {
 
     private int level;
 
-    public RushHour(final IGameContext gameContext, Stats stats) {
+    public RushHour(final IGameContext gameContext, Stats stats, int number) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameContext.startTimeLimiter();
-        level = 0;
+        level = number-1;
         size = new SimpleIntegerProperty();
         gameContext.getPrimaryStage().widthProperty().addListener((observable, oldValue, newValue) -> {
 

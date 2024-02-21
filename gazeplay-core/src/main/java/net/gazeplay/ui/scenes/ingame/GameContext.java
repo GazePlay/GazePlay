@@ -245,6 +245,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         FixationLengthControl fixationLengthControl = FixationLengthControl.getInstance();
         ElementSizeControl elementSizeControl = ElementSizeControl.getInstance();
         ProgressBarControl progressBarControl = ProgressBarControl.getInstance();
+        BackgroundColorControl backgroundColorControl = BackgroundColorControl.getInstance();
 
         Stage primaryStage = gazePlay.getPrimaryStage();
         ScrollPane scrollPane = new ScrollPane();
@@ -261,6 +262,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             leftControlPane.add(animationSpeedRatioControl.createSpeedEffectsPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 3, 0);
             leftControlPane.add(elementSizeControl.createElementSizePane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 4, 0);
             leftControlPane.add(progressBarControl.createProgressControlPane(config, gazePlay.getTranslator(), gazePlay.getPrimaryScene()), 5, 0);
+            leftControlPane.add(backgroundColorControl.createBackgroundColorControlPane(config, gazePlay.getTranslator(), gamingRoot), 6, 0);
         }
         leftControlPane.getChildren().forEach(node -> {
             GridPane.setVgrow(node, Priority.ALWAYS);

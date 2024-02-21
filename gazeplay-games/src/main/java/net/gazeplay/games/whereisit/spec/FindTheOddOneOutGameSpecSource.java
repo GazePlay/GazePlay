@@ -11,7 +11,7 @@ public class FindTheOddOneOutGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("FindTheOddOneOut").gameThumbnail("data/Thumbnails/findTheOddOneOut.jpg")
+            GameSummary.builder().nameCode("FindTheOddOneOut").gameThumbnail("findTheOddOneOut")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.MEMORIZATION).build(),

@@ -9,7 +9,8 @@ public class SpaceGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("SpaceGame").gameThumbnail("data/Thumbnails/space.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            GameSummary.builder().nameCode("SpaceGame").gameThumbnail("space").category(GameCategories.Category.ACTION_REACTION).build(),
+            new SpaceGameVariantGenerator(),
             new SpaceGameLauncher());
     }
 }
