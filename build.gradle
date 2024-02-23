@@ -158,6 +158,7 @@ dependencies {
     implementation project(':gazeplay-commons')
     implementation project(':gazeplay-melordi')
     implementation project(':gazeplay-picto-pick')
+    implementation project(':gazeplay-emmanuel')
 
     implementation 'javax.servlet:javax.servlet-api:4.0.1'
 }

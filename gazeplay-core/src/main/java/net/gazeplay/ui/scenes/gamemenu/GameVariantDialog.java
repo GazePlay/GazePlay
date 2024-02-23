@@ -262,7 +262,8 @@ public class GameVariantDialog extends Stage {
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheLetter") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheShape") ||
                 gameSpec.getGameSummary().getNameCode().equals("WhereIsTheSound") ||
-                gameSpec.getGameSummary().getNameCode().equals("TrainSwitches")) &&
+                gameSpec.getGameSummary().getNameCode().equals("TrainSwitches") ||
+                gameSpec.getGameSummary().getNameCode().equals("RushHourEmmanuel")) &&
                 group.getToggles().size() < 2
             ) {
                 RadioButton[] categories;

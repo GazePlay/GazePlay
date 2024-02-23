@@ -2426,24 +2426,18 @@ public class RushHour extends Parent implements GameLifeCycle {
     public void launch() {
         endOfGame = false;
         gameContext.setLimiterAvailable();
-        String rule = "Sélectionnez une voiture pour pouvoir la déplacer en ligne droite \n Vous avez 2 minutes pour terminer le plus de tableaux possibles";
-        final Transition animation = this.gamesRules.createQuestionTransition(gameContext, rule);
-        animation.play();
-        animation.setOnFinished(event -> {
-            this.gamesRules.hideQuestionText();
-            setLevel(level);
-            if (toWin.isDirection()) {
-                toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiH.png")));
-            } else {
-                toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiV.png")));
-            }
-            toWin.setEffect(null);
-            final int numberLevels = 33;
-            level = (level + 1) % numberLevels;
-            stats.notifyNewRoundReady();
-            gameContext.getGazeDeviceManager().addStats(stats);
-            gameContext.firstStart();
-        });
+        setLevel(level);
+        if (toWin.isDirection()) {
+            toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiH.png")));
+        } else {
+            toWin.setFill(new ImagePattern(new Image("data/rushHour/taxiV.png")));
+        }
+        toWin.setEffect(null);
+        final int numberLevels = 33;
+        level = (level + 1) % numberLevels;
+        stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
+        gameContext.firstStart();
     }
 
     @Override
@@ -2470,8 +2464,10 @@ public class RushHour extends Parent implements GameLifeCycle {
         stats.incrementNumberOfGoalsReached();
 
         gameContext.updateScore(stats, this);
-        dispose();
-        launch();
+        gameContext.playWinTransition(500, actionEvent -> {
+            dispose();
+            launch();
+        });
     }
 
     private void setIntersections() {

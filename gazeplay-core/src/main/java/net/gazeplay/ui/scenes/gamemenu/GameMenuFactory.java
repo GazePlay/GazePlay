@@ -141,8 +141,6 @@ public class GameMenuFactory {
 
         if (gameSummary.getGameThumbnail() != null) {
 
-            log.info("---TEST--- = " + gameSummary.getGameThumbnail());
-
             String path = thumbnailImage.getPathThumbnailImg(gameSummary.getGameThumbnail());
             ImageView imageView = new ImageView(new Image(path, 200, 200, true, false));
             imageView.getStyleClass().add("gameChooserButtonThumbnail");
