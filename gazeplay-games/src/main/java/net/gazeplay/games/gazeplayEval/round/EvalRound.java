@@ -1,5 +1,8 @@
 package net.gazeplay.games.gazeplayEval.round;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.games.gazeplayEval.GameState;
@@ -7,10 +10,12 @@ import net.gazeplay.games.gazeplayEval.config.ItemConfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static net.gazeplay.games.gazeplayEval.config.AudioScheduleType.*;
 import static net.gazeplay.games.gazeplayEval.config.Const.*;
 
 
@@ -48,7 +53,8 @@ public class EvalRound {
 
         for (int i = 0; i < config.getRowSize(); i++)
             for (int j = 0; j < config.getColumnSize(); j++)
-                pictures[xOrder.get(i)][yOrder.get(j)] = new PictureCard(config, xOrder.get(i), yOrder.get(j), this::onPictureCardSelection);
+                if (config.getGrid(i, j).isFile())
+                    pictures[xOrder.get(i)][yOrder.get(j)] = new PictureCard(config, xOrder.get(i), yOrder.get(j), this::onPictureCardSelection);
     }
 
     private Void onPictureCardSelection(PictureCard pictureCard) {
@@ -63,21 +69,30 @@ public class EvalRound {
     }
 
     private Stream<PictureCard> getFlatPictures() {
-        return Arrays.stream(pictures).flatMap(Arrays::stream);
+        return Arrays.stream(pictures).flatMap(Arrays::stream).filter(Objects::nonNull);
     }
 
     public void launch() {
         startTime = System.currentTimeMillis();
 
-        GameState.context.getChildren().addAll(getFlatPictures().toList());
+        GameState.context.getChildren().addAll(this.getFlatPictures().toList());
 
-        getFlatPictures().forEach(PictureCard::show);
+        this.getFlatPictures().forEach(PictureCard::show);
 
-        GameState.stats.setTargetAOIList(getFlatPictures().map(PictureCard::getTargetAOI).collect(Collectors.toCollection(ArrayList::new)));
+//        If you need the TargetAOI list for this round, here it is
+//        getFlatPictures().map(PictureCard::getTargetAOI).collect(Collectors.toCollection(ArrayList::new);
+
         GameState.stats.notifyNewRoundReady();
-        GameState.context.onGameStarted(ROUND_START_DELAY);
+        GameState.context.onGameStarted(ActiveConfigurationContext.getInstance().getDelayBeforeSelectionTime());
 
-        playSound();
+        if (config.getAudioSchedule() == BEFORE) {
+            this.playSound();
+        } else {
+            Timeline transition = new Timeline();
+            transition.getKeyFrames().add(new KeyFrame(new Duration(ActiveConfigurationContext.getInstance().getDelayBeforeSelectionTime())));
+            transition.setOnFinished((event) -> this.playSound());
+            transition.playFromStart();
+        }
     }
 
     public void dispose() {
@@ -85,7 +100,7 @@ public class EvalRound {
     }
 
     public void playSound() {
-        if (ActiveConfigurationContext.getInstance().isSoundEnabled()) {
+        if (ActiveConfigurationContext.getInstance().isSoundEnabled() && config.getAudioFile().isFile()) {
             GameState.context.getSoundManager().add(config.getAudioFile().getPath());
         }
     }

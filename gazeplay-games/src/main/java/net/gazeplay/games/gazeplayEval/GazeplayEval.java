@@ -22,9 +22,10 @@ public class GazeplayEval implements GameLifeCycle {
     @Getter
     private final ReplayablePseudoRandom random;
 
-    private final Iterator<EvalRound> rounds;
+    private Iterator<EvalRound> rounds = null;
     private final EvalConfig config;
 
+    private final Function<Void, Void> onRoundFinishDummy;
     private final KeyboardEventHandler keyboardHandler = new KeyboardEventHandler();
 
     @Getter
@@ -33,19 +34,20 @@ public class GazeplayEval implements GameLifeCycle {
     private long startTime = 0;
 
     public GazeplayEval(double gameSeed) {
-        this.random = new ReplayablePseudoRandom(gameSeed);
+        random = new ReplayablePseudoRandom(gameSeed);
 
         GameState.context.startScoreLimiter();
         GameState.context.startTimeLimiter();
+        GameState.stats.setGameSeed(gameSeed);
+        GameState.stats.setTargetAOIList(new ArrayList<>());
 
-        final Function<Void, Void> onRoundFinishDummy = (aVoid) -> {
+        onRoundFinishDummy = (aVoid) -> {
             this.onRoundFinish();
             return null;
         };
 
         try {
-            config = new EvalConfig(GameState.variant.getNameGame());
-            rounds = config.getItems().map(item -> new EvalRound(item, onRoundFinishDummy)).iterator();
+            config = new EvalConfig();
         } catch (Exception e) {
             log.error("Error while loading the configuration file for the game " + GameState.variant.getNameGame(), e);
             throw new RuntimeException(e);
@@ -65,18 +67,18 @@ public class GazeplayEval implements GameLifeCycle {
         if (startTime == 0)
             startTime = System.currentTimeMillis();
 
-        currentRound = rounds.next();
-
 //        this.canRemoveItemManually = true;
 
-        GameState.context.setLimiterAvailable();
-        GameState.stats.notifyNewRoundReady();
+        if (rounds == null || !rounds.hasNext())  // Play the evaluation, if not started yet or restarting
+            rounds = config.getItems().map(item -> new EvalRound(item, onRoundFinishDummy)).iterator();
 
+        currentRound = rounds.next();
+
+        GameState.context.setLimiterAvailable();
         GameState.context.getGazeDeviceManager().addStats(GameState.stats);
         GameState.context.firstStart();
 
         keyboardHandler.enable();
-
         currentRound.launch();
     }
 
@@ -87,6 +89,7 @@ public class GazeplayEval implements GameLifeCycle {
             return;
         }
         log.info("Disposing current round");
+        keyboardHandler.disable();
         currentRound.dispose();
         currentRound = null;
     }
@@ -97,13 +100,13 @@ public class GazeplayEval implements GameLifeCycle {
         GameState.stats.scores = new ArrayList<>();
         GameState.stats.totalItemsAddedManually = 0;
         switch (config.getOutputType()) {
-            case CSV -> exportToCSV();
-            case XLS -> exportToExcel();
+            case CSV -> this.exportToCSV();
+            case XLS -> this.exportToExcel();
             case ALL -> {
-                exportToCSV();
-                exportToExcel();
+                this.exportToCSV();
+                this.exportToExcel();
             }
-            default -> log.info("No Output set or wrong statement");
+            default -> log.warn("No Output set or wrong statement");
         }
     }
 
@@ -142,22 +145,10 @@ public class GazeplayEval implements GameLifeCycle {
             if (ignoreAnyInput)
                 return;
 
-//            if (key.getCode().isArrowKey()) {
-//                ignoreAnyInput = true;
-//                timelineQuestion.stop();
-//                next("null");
-//            } else if (key.getCode().getChar().equals("X")) {
-//                ignoreAnyInput = true;
-//                timelineQuestion.stop();
-//                next("True");
-//            } else if (key.getCode().getChar().equals("C")) {
-//                ignoreAnyInput = true;
-//                timelineQuestion.stop();
-//                next("False");
-//            } else if (key.getCode().getChar().equals("V")) {
-//                timelineQuestion.stop();
-//                removeItemAddedManually();
-//            }
+            if (key.getCode().isWhitespaceKey()) {
+                dispose();
+                afterRoundFinish();
+            }
         }
 
         public void disable() {

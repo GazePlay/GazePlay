@@ -94,15 +94,8 @@ public class PictureCard extends Group {
 
     private Void onProgressFinish(Void ignored) {
         selected = true;
-        notification.setVisible(!ActiveConfigurationContext.getInstance().getFeedback().equals("nothing"));
-        this.setVisible(false);
-
-        GameState.context.getGazeDeviceManager().removeEventFilter(imageView);
-        this.removeEventFilter(MouseEvent.ANY, mouserHandler);
-        this.removeEventFilter(GazeEvent.ANY, mouserHandler);
-
+        this.dispose();
         onSelection.apply(PictureCard.this);
-
         return null;  // Make Void happy
     }
 
@@ -112,7 +105,14 @@ public class PictureCard extends Group {
     }
 
     public void dispose() {
-        mouserHandler.disable();
+        notification.setVisible(!ActiveConfigurationContext.getInstance().getFeedback().equals("nothing"));
+
+        GameState.context.getGazeDeviceManager().removeEventFilter(imageView);
+        this.removeEventFilter(MouseEvent.ANY, mouserHandler);
+        this.removeEventFilter(GazeEvent.ANY, mouserHandler);
+
+        this.targetAOI.setTimeEnded(System.currentTimeMillis());
+
         progress.stop();
     }
 

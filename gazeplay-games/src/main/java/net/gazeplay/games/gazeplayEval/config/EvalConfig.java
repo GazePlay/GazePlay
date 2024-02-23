@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
+import net.gazeplay.games.gazeplayEval.GameState;
 
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -25,9 +26,9 @@ public class EvalConfig {
         this.items = items;
     }
 
-    public EvalConfig(String evalDirName) throws Exception {
+    public EvalConfig() throws Exception {
         JsonParser parser = new JsonParser();
-        JsonObject config = parser.parse(new FileReader(ROOT_DIRECTORY + evalDirName + CONFIG_LOCATION)).getAsJsonObject();
+        JsonObject config = parser.parse(new FileReader(GameState.getPathFor(CONFIG_LOCATION))).getAsJsonObject();
 
         this.name = config.get(EVAL_NAME).getAsString();
         this.outputType = ResultsOutputType.valueOf(config.get(EVAL_OUTPUT_TYPE).getAsString().trim().toUpperCase());
