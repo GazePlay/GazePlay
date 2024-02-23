@@ -12,11 +12,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static net.gazeplay.games.gazeplayEval.config.AudioScheduleType.*;
-import static net.gazeplay.games.gazeplayEval.config.Const.*;
+import static net.gazeplay.games.gazeplayEval.config.QuestionScheduleType.*;
+import static net.gazeplay.games.gazeplayEval.config.QuestionType.*;
 
 
 @Slf4j
@@ -85,12 +84,12 @@ public class EvalRound {
         GameState.stats.notifyNewRoundReady();
         GameState.context.onGameStarted(ActiveConfigurationContext.getInstance().getDelayBeforeSelectionTime());
 
-        if (config.getAudioSchedule() == BEFORE) {
-            this.playSound();
+        if (config.getQuestionSchedule() == BEFORE) {
+            this.advertiseQuestion();
         } else {
             Timeline transition = new Timeline();
             transition.getKeyFrames().add(new KeyFrame(new Duration(ActiveConfigurationContext.getInstance().getDelayBeforeSelectionTime())));
-            transition.setOnFinished((event) -> this.playSound());
+            transition.setOnFinished((event) -> this.advertiseQuestion());
             transition.playFromStart();
         }
     }
@@ -99,9 +98,12 @@ public class EvalRound {
         getFlatPictures().forEach(PictureCard::dispose);
     }
 
-    public void playSound() {
-        if (ActiveConfigurationContext.getInstance().isSoundEnabled() && config.getAudioFile().isFile()) {
-            GameState.context.getSoundManager().add(config.getAudioFile().getPath());
+    public void advertiseQuestion() {
+        if (config.getQuestionType() == AUDIO) {
+            if (ActiveConfigurationContext.getInstance().isSoundEnabled() && config.getQuestionAudioFile().isFile())
+                GameState.context.getSoundManager().add(config.getQuestionAudioFile().getPath());
+        } else {
+            System.out.println("Unimplemented");  // TODO: Implement the question as plain text on the screen
         }
     }
 }

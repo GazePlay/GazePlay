@@ -18,12 +18,15 @@ public class Const {
     public final static String ITEM_GRID = "image_grid";
     public final static String ITEM_RANDOMIZE_GRID = "randomize_grid";
     public final static String ITEM_SELECTIONS = "nb_selections_required";
-    public final static String ITEM_AUDIO_FILENAME = "audio_file";
-    public final static String ITEM_AUDIO_SCHEDULE = "audio_schedule";
+    public final static String ITEM_QUESTION = "question";
+    public final static String ITEM_QUESTION_TYPE = "question_type";
+    public final static String ITEM_QUESTION_SCHEDULE = "question_schedule";
     public final static String ITEM_GAZE_TIME = "fixation_length";
     public final static String ITEM_TIME_LIMIT = "item_time_limit";
 
     public final static int SELECTION_PROGRESS_MIN_WIDTH = 75;
     public final static int SELECTION_PROGRESS_MIN_HEIGHT = 75;
     public final static double SELECTION_PROGRESS_OPACITY = 0.5;
+
+    public final static double NOTIFICATION_IMAGE_PROPORTION = 0.05;
 }

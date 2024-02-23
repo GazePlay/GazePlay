@@ -18,6 +18,8 @@ import net.gazeplay.games.gazeplayEval.config.*;
 
 import java.util.function.Function;
 
+import static net.gazeplay.games.gazeplayEval.config.Const.*;
+
 @Slf4j
 @ToString
 public class PictureCard extends Group {
@@ -58,8 +60,10 @@ public class PictureCard extends Group {
         imageView.setX(initialX);
         imageView.setY(initialY);
         double reduceCoeff = Math.min(initialWidth / image.getWidth(), initialHeight / image.getHeight());
-        imageView.setTranslateX((initialWidth - image.getWidth() * reduceCoeff) / 2);
-        imageView.setTranslateY((initialHeight - image.getHeight() * reduceCoeff) / 2);
+        double trueTranslateX = (initialWidth - image.getWidth() * reduceCoeff) / 2;
+        double trueTranslateY = (initialHeight - image.getHeight() * reduceCoeff) / 2;
+        imageView.setTranslateX(trueTranslateX);
+        imageView.setTranslateY(trueTranslateY);
         imageView.setPreserveRatio(true);
         this.getChildren().add(imageView);
 
@@ -69,12 +73,11 @@ public class PictureCard extends Group {
 
         // Setting up the notification image
         Image notifImage;
-        double trueWidth = initialWidth;
-        double trueHeight = initialHeight;
-        double trueTranslateX = 0;
-        double trueTranslateY = 0;
+        double trueWidth = initialWidth * NOTIFICATION_IMAGE_PROPORTION;
+        double trueHeight;
         if (ActiveConfigurationContext.getInstance().getFeedback().equals("standard")) {
             notifImage = new Image("data/common/images/blackCircle.png");
+            trueHeight = trueWidth * notifImage.getHeight() / notifImage.getWidth();
         } else {
             notifImage = new Image("data/common/images/redFrame.png");
             reduceCoeff = Math.min(initialWidth / notifImage.getWidth(), initialHeight / notifImage.getHeight());
@@ -94,6 +97,11 @@ public class PictureCard extends Group {
 
     private Void onProgressFinish(Void ignored) {
         selected = true;
+        if (!ActiveConfigurationContext.getInstance().getFeedback().equals("nothing")) {
+            notification.setOpacity(1);
+            notification.setVisible(true);
+            notification.toFront();
+        }
         this.dispose();
         onSelection.apply(PictureCard.this);
         return null;  // Make Void happy
@@ -105,8 +113,6 @@ public class PictureCard extends Group {
     }
 
     public void dispose() {
-        notification.setVisible(!ActiveConfigurationContext.getInstance().getFeedback().equals("nothing"));
-
         GameState.context.getGazeDeviceManager().removeEventFilter(imageView);
         this.removeEventFilter(MouseEvent.ANY, mouserHandler);
         this.removeEventFilter(GazeEvent.ANY, mouserHandler);

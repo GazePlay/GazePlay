@@ -67,8 +67,6 @@ public class GazeplayEval implements GameLifeCycle {
         if (startTime == 0)
             startTime = System.currentTimeMillis();
 
-//        this.canRemoveItemManually = true;
-
         if (rounds == null || !rounds.hasNext())  // Play the evaluation, if not started yet or restarting
             rounds = config.getItems().map(item -> new EvalRound(item, onRoundFinishDummy)).iterator();
 

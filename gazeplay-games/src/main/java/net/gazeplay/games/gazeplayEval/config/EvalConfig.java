@@ -19,13 +19,6 @@ public class EvalConfig {
     private final String patientId;
     private final ArrayList<ItemConfig> items;
 
-    public EvalConfig(String name, ResultsOutputType outputType, String patientId, ArrayList<ItemConfig> items) {
-        this.name = name;
-        this.outputType = outputType;
-        this.patientId = patientId;
-        this.items = items;
-    }
-
     public EvalConfig() throws Exception {
         JsonParser parser = new JsonParser();
         JsonObject config = parser.parse(new FileReader(GameState.getPathFor(CONFIG_LOCATION))).getAsJsonObject();
@@ -36,7 +29,7 @@ public class EvalConfig {
         this.items = new ArrayList<>();
         for (JsonElement item : config.get(EVAL_ITEMS).getAsJsonArray())
             this.items.add(new ItemConfig(item.getAsJsonObject()));
-        log.debug(
+        log.info(
             "New instance: " + "\n" +
             "    name: " + name + "\n" +
             "    outputType: " + outputType + "\n" +
