@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 @Slf4j
-public class FollowEmmanuelGenerateLabyrinthLevel1 {
+public class FollowEmmanuelGenerateLabyrinthLevel3 {
 
     private IGameContext gameContext;
     private ArrayList<EventItemEmmanuel> listEI;
@@ -21,12 +21,13 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
     private EventHandler<ActionEvent> eventwin;
     private int[][] newMap;
     public Rectangle doorRED;
+    public int nbKey = 0;
 
-    public FollowEmmanuelGenerateLabyrinthLevel1(){}
+    public FollowEmmanuelGenerateLabyrinthLevel3(){}
 
     public void initiateLevel(){
         this.newMap = new int[][]{
-          // 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29
+            //0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -44,6 +45,8 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
         };
+
+        this.nbKey = 0;
     }
 
     public int[][] generateLabyrinth(
@@ -112,6 +115,7 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
                 this.setupRubyDiagonallyTopLeftToBottomRight((4+x), (4+y));
                 this.setupDoorTopLeft(map, (4+x), (4+y));
                 this.setupCenterBottomKey(map);
+                this.setupCenterRightKey(map);
                 break;
             case 1:
                 x = new Random().nextInt(4);
@@ -125,6 +129,7 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
                 this.setupRubyDiagonallyTopRightToBottomLeft((4+x), (4+y));
                 this.setupDoorTopRight(map, (4+x), (4+y));
                 this.setupCenterBottomKey(map);
+                this.setupCenterLeftKey(map);
                 break;
             case 2:
                 x = new Random().nextInt(4);
@@ -138,6 +143,7 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
                 this.setupRubyDiagonallyBottomLeftToTopRight((4+x), (4+y));
                 this.setupDoorBottomLeft(map, (4+x), (4+y));
                 this.setupCenterTopKey(map);
+                this.setupCenterRightKey(map);
                 break;
             case 3:
                 x = new Random().nextInt(4);
@@ -151,8 +157,11 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
                 this.setupRubyDiagonallyBottomRightToTopLeft((4+x), (4+y));
                 this.setupDoorBottomRight(map, (4+x), (4+y));
                 this.setupCenterTopKey(map);
+                this.setupCenterLeftKey(map);
                 break;
         }
+
+        this.setupKeyRandom(nbRandom);
 
         return map;
     }
@@ -236,6 +245,125 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
         this.setupKeyTop(14-y, 14+y);
     }
 
+    public void setupCenterRightKey(int[][] map){
+        int x = 15;
+        int y = 25 - new Random().nextInt(3);
+        for (int i=0; i<=x; i++){
+            if (i==8){
+                for (int j=y; j<=29; j++){
+                    map[i][j] = 1;
+                }
+            }
+            map[i][y] = 1;
+        }
+
+        int randomPos = new Random().nextInt(3);
+        int randomPosDoor;
+        int randomPosDoor2;
+
+        switch (randomPos){
+            case 0:
+                randomPosDoor = new Random().nextInt(6);
+                randomPosDoor2 = new Random().nextInt(29 - y);
+
+                map[randomPosDoor][y] = 0;
+                map[randomPosDoor+1][y] = 0;
+
+                map[8][28-randomPosDoor2] = 0;
+                map[8][28-randomPosDoor2+1] = 0;
+                break;
+
+            case 1:
+                randomPosDoor = 9 + new Random().nextInt(6);
+                randomPosDoor2 = new Random().nextInt(29 - y);
+
+                map[randomPosDoor][y] = 0;
+                map[randomPosDoor+1][y] = 0;
+
+                map[8][28-randomPosDoor2] = 0;
+                map[8][28-randomPosDoor2+1] = 0;
+                break;
+
+            case 2:
+                randomPosDoor = new Random().nextInt(7);
+                randomPosDoor2 = 9 + new Random().nextInt(6);
+
+                map[randomPosDoor][y] = 0;
+                map[randomPosDoor+1][y] = 0;
+
+                map[randomPosDoor2][y] = 0;
+                map[randomPosDoor2+1][y] = 0;
+                break;
+
+            default:
+                log.info("Error Door !");
+                break;
+        }
+
+        this.setupKeyRight(y);
+    }
+
+    public void setupCenterLeftKey(int[][] map){
+        int x = 15;
+        int y = 4 + new Random().nextInt(3);
+        for (int i=0; i<=x; i++){
+            if (i==8){
+                for (int j=0; j<(y); j++){
+                    map[i][j] = 1;
+                }
+            }
+            map[i][y] = 1;
+        }
+
+        int randomPos = new Random().nextInt(3);
+        int randomPosDoor;
+        int randomPosDoor2;
+
+        switch (randomPos){
+            case 0:
+                randomPosDoor = new Random().nextInt(6);
+                randomPosDoor2 = new Random().nextInt(y);
+
+                map[randomPosDoor][y] = 0;
+                map[randomPosDoor+1][y] = 0;
+
+                map[8][randomPosDoor2] = 0;
+                map[8][randomPosDoor2+1] = 0;
+
+                break;
+
+            case 1:
+                randomPosDoor = 9 + new Random().nextInt(6);
+                randomPosDoor2 = new Random().nextInt(y);
+
+                map[randomPosDoor][y] = 0;
+                map[randomPosDoor+1][y] = 0;
+
+                map[8][randomPosDoor2] = 0;
+                map[8][randomPosDoor2+1] = 0;
+
+                break;
+
+            case 2:
+                randomPosDoor = new Random().nextInt(7);
+                randomPosDoor2 = 9 + new Random().nextInt(6);
+
+                map[randomPosDoor][y] = 0;
+                map[randomPosDoor+1][y] = 0;
+
+                map[randomPosDoor2][y] = 0;
+                map[randomPosDoor2+1][y] = 0;
+
+                break;
+
+            default:
+                log.info("Error Door !");
+                break;
+        }
+
+        this.setupKeyLeft(y);
+    }
+
     public void setupCenterBottomKey(int[][] map){
         int x = 11;
         int y = new Random().nextInt(5);
@@ -291,8 +419,11 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
             randomPos = new Random().nextInt(difference);
         }
         EventHandler<ActionEvent> eventkeyred = e -> {
-            listWall.remove(doorRED);
-            gameContext.getChildren().remove(doorRED);
+            this.nbKey++;
+            if (this.nbKey==5){
+                listWall.remove(doorRED);
+                gameContext.getChildren().remove(doorRED);
+            }
         };
         EventItemEmmanuel ruby = new EventItemEmmanuel((min+randomPos) * sizeWw, 2 * sizeWh, 2 * sizeWw, 2 * sizeWh, new ImagePattern(new Image("data/follow/keyred.png")), eventkeyred, true);
         listEI.add(ruby);
@@ -308,12 +439,111 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
             randomPos = new Random().nextInt(difference);
         }
         EventHandler<ActionEvent> eventkeyred = e -> {
-            listWall.remove(doorRED);
-            gameContext.getChildren().remove(doorRED);
+            this.nbKey++;
+            if (this.nbKey==5){
+                listWall.remove(doorRED);
+                gameContext.getChildren().remove(doorRED);
+            }
         };
         EventItemEmmanuel ruby = new EventItemEmmanuel((min+randomPos) * sizeWw, 13 * sizeWh, 2 * sizeWw, 2 * sizeWh, new ImagePattern(new Image("data/follow/keyred.png")), eventkeyred, true);
         listEI.add(ruby);
         gameContext.getChildren().add(ruby);
+    }
+
+    public void setupKeyLeft(int weight){
+        int posX = new Random().nextInt(weight/2);
+        int posY = new Random().nextInt(5);
+        EventHandler<ActionEvent> eventkeyred = e -> {
+            this.nbKey++;
+            if (this.nbKey==5){
+                listWall.remove(doorRED);
+                gameContext.getChildren().remove(doorRED);
+            }
+        };
+        EventItemEmmanuel ruby = new EventItemEmmanuel((1+posX) * sizeWw, (2+posY) * sizeWh, 2 * sizeWw, 2 * sizeWh, new ImagePattern(new Image("data/follow/key.png")), eventkeyred, true);
+        listEI.add(ruby);
+        gameContext.getChildren().add(ruby);
+
+        EventItemEmmanuel ruby2 = new EventItemEmmanuel((1+posX) * sizeWw, (10+posY) * sizeWh, 2 * sizeWw, 2 * sizeWh, new ImagePattern(new Image("data/follow/keygreen.png")), eventkeyred, true);
+        listEI.add(ruby2);
+        gameContext.getChildren().add(ruby2);
+    }
+
+    public void setupKeyRight(int weight){
+        int posX = new Random().nextInt(28-weight);
+        int posY = new Random().nextInt(5);
+        EventHandler<ActionEvent> eventkeyred = e -> {
+            this.nbKey++;
+            if (this.nbKey==5){
+                listWall.remove(doorRED);
+                gameContext.getChildren().remove(doorRED);
+            }
+        };
+        EventItemEmmanuel ruby = new EventItemEmmanuel((weight+posX+2) * sizeWw, (2+posY) * sizeWh, 2 * sizeWw, 2 * sizeWh, new ImagePattern(new Image("data/follow/key.png")), eventkeyred, true);
+        listEI.add(ruby);
+        gameContext.getChildren().add(ruby);
+
+        EventItemEmmanuel ruby2 = new EventItemEmmanuel((weight+posX+2) * sizeWw, (10+posY) * sizeWh, 2 * sizeWw, 2 * sizeWh, new ImagePattern(new Image("data/follow/keygreen.png")), eventkeyred, true);
+        listEI.add(ruby2);
+        gameContext.getChildren().add(ruby2);
+    }
+
+    public void setupKeyRandom(int pos){
+
+        EventHandler<ActionEvent> eventkeyred = e -> {
+            this.nbKey++;
+            if (this.nbKey==5){
+                listWall.remove(doorRED);
+                gameContext.getChildren().remove(doorRED);
+            }
+        };
+
+        EventItemEmmanuel ruby, ruby2;
+
+        switch (pos){
+            case 0:
+                ruby = new EventItemEmmanuel(15 * sizeWw, 3 * sizeWh, 2 * sizeWw, 2 * sizeWh, new ImagePattern(new Image("data/follow/keygrey.png")), eventkeyred, true);
+                listEI.add(ruby);
+                gameContext.getChildren().add(ruby);
+
+                ruby2 = new EventItemEmmanuel(4 * sizeWw, 12 * sizeWh, 2 * sizeWw, 2 * sizeWh, new ImagePattern(new Image("data/follow/keypink.png")), eventkeyred, true);
+                listEI.add(ruby2);
+                gameContext.getChildren().add(ruby2);
+                break;
+
+            case 1:
+                ruby = new EventItemEmmanuel(15 * sizeWw, 3 * sizeWh, 2 * sizeWw, 2 * sizeWh, new ImagePattern(new Image("data/follow/keygrey.png")), eventkeyred, true);
+                listEI.add(ruby);
+                gameContext.getChildren().add(ruby);
+
+                ruby2 = new EventItemEmmanuel(26 * sizeWw, 12 * sizeWh, 2 * sizeWw, 2 * sizeWh, new ImagePattern(new Image("data/follow/keypink.png")), eventkeyred, true);
+                listEI.add(ruby2);
+                gameContext.getChildren().add(ruby2);
+                break;
+
+            case 2:
+                ruby = new EventItemEmmanuel(15 * sizeWw, 12 * sizeWh, 2 * sizeWw, 2 * sizeWh, new ImagePattern(new Image("data/follow/keygrey.png")), eventkeyred, true);
+                listEI.add(ruby);
+                gameContext.getChildren().add(ruby);
+
+                ruby2 = new EventItemEmmanuel(26 * sizeWw, 3 * sizeWh, 2 * sizeWw, 2 * sizeWh, new ImagePattern(new Image("data/follow/keypink.png")), eventkeyred, true);
+                listEI.add(ruby2);
+                gameContext.getChildren().add(ruby2);
+                break;
+
+            case 3:
+                ruby = new EventItemEmmanuel(15 * sizeWw, 12 * sizeWh, 2 * sizeWw, 2 * sizeWh, new ImagePattern(new Image("data/follow/keygrey.png")), eventkeyred, true);
+                listEI.add(ruby);
+                gameContext.getChildren().add(ruby);
+
+                ruby2 = new EventItemEmmanuel(4 * sizeWw, 3 * sizeWh, 2 * sizeWw, 2 * sizeWh, new ImagePattern(new Image("data/follow/keypink.png")), eventkeyred, true);
+                listEI.add(ruby2);
+                gameContext.getChildren().add(ruby2);
+                break;
+
+            default:
+                break;
+        }
     }
 
     public void setupDoorTopLeft(int[][] map, int posX, int posY){
@@ -324,7 +554,7 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
             randomPosDoor = new Random().nextInt(posY);
 
             doorRED = new Rectangle((randomPosDoor+1) * sizeWw, (posX+1) * sizeWh, 2 * sizeWw, sizeWh);
-            doorRED.setFill(new ImagePattern(new Image("data/follow/door1rouge.png")));
+            doorRED.setFill(new ImagePattern(new Image("data/follow/door1.png")));
             listWall.add(doorRED);
             gameContext.getChildren().add(doorRED);
 
@@ -334,7 +564,7 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
             randomPosDoor = new Random().nextInt(posX);
 
             doorRED = new Rectangle((posY+1) * sizeWw, (randomPosDoor+1) * sizeWh, sizeWw, 2 * sizeWh);
-            doorRED.setFill(new ImagePattern(new Image("data/follow/door1rouge.png")));
+            doorRED.setFill(new ImagePattern(new Image("data/follow/door1.png")));
             listWall.add(doorRED);
             gameContext.getChildren().add(doorRED);
 
@@ -351,7 +581,7 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
             randomPosDoor = new Random().nextInt(posY);
 
             doorRED = new Rectangle((28-randomPosDoor+1) * sizeWw, (posX+1) * sizeWh, 2 * sizeWw, sizeWh);
-            doorRED.setFill(new ImagePattern(new Image("data/follow/door1rouge.png")));
+            doorRED.setFill(new ImagePattern(new Image("data/follow/door1.png")));
             listWall.add(doorRED);
             gameContext.getChildren().add(doorRED);
 
@@ -361,7 +591,7 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
             randomPosDoor = new Random().nextInt(posX);
 
             doorRED = new Rectangle((29-posY+1) * sizeWw, (randomPosDoor+1) * sizeWh, sizeWw, 2 * sizeWh);
-            doorRED.setFill(new ImagePattern(new Image("data/follow/door1rouge.png")));
+            doorRED.setFill(new ImagePattern(new Image("data/follow/door1.png")));
             listWall.add(doorRED);
             gameContext.getChildren().add(doorRED);
 
@@ -378,7 +608,7 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
             randomPosDoor = new Random().nextInt(posY);
 
             doorRED = new Rectangle((randomPosDoor+1) * sizeWw, (15-posX+1) * sizeWh, 2 * sizeWw, sizeWh);
-            doorRED.setFill(new ImagePattern(new Image("data/follow/door1rouge.png")));
+            doorRED.setFill(new ImagePattern(new Image("data/follow/door1.png")));
             listWall.add(doorRED);
             gameContext.getChildren().add(doorRED);
 
@@ -388,7 +618,7 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
             randomPosDoor = new Random().nextInt(posX);
 
             doorRED = new Rectangle((posY+1) * sizeWw, (14-randomPosDoor+1) * sizeWh, sizeWw, 2 * sizeWh);
-            doorRED.setFill(new ImagePattern(new Image("data/follow/door1rouge.png")));
+            doorRED.setFill(new ImagePattern(new Image("data/follow/door1.png")));
             listWall.add(doorRED);
             gameContext.getChildren().add(doorRED);
 
@@ -405,7 +635,7 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
             randomPosDoor = new Random().nextInt(posY);
 
             doorRED = new Rectangle((28-randomPosDoor+1) * sizeWw, (15-posX+1) * sizeWh, 2 * sizeWw, sizeWh);
-            doorRED.setFill(new ImagePattern(new Image("data/follow/door1rouge.png")));
+            doorRED.setFill(new ImagePattern(new Image("data/follow/door1.png")));
             listWall.add(doorRED);
             gameContext.getChildren().add(doorRED);
 
@@ -415,7 +645,7 @@ public class FollowEmmanuelGenerateLabyrinthLevel1 {
             randomPosDoor = new Random().nextInt(posX);
 
             doorRED = new Rectangle((29-posY+1) * sizeWw, (14-randomPosDoor+1) * sizeWh, sizeWw, 2 * sizeWh);
-            doorRED.setFill(new ImagePattern(new Image("data/follow/door1rouge.png")));
+            doorRED.setFill(new ImagePattern(new Image("data/follow/door1.png")));
             listWall.add(doorRED);
             gameContext.getChildren().add(doorRED);
 

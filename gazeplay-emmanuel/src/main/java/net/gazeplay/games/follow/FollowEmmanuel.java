@@ -36,6 +36,8 @@ public class FollowEmmanuel implements GameLifeCycle {
     private FollowEmmanuelGameVariant variant;
 
     private FollowEmmanuelGenerateLabyrinthLevel1 generateLabyrinthLevel1;
+    private FollowEmmanuelGenerateLabyrinthLevel2 generateLabyrinthLevel2;
+    private FollowEmmanuelGenerateLabyrinthLevel3 generateLabyrinthLevel3;
 
     private final Dimension2D dimension2D;
 
@@ -88,6 +90,8 @@ public class FollowEmmanuel implements GameLifeCycle {
         this.stats = stats;
         this.variant = variant;
         this.generateLabyrinthLevel1 = new FollowEmmanuelGenerateLabyrinthLevel1();
+        this.generateLabyrinthLevel2 = new FollowEmmanuelGenerateLabyrinthLevel2();
+        this.generateLabyrinthLevel3 = new FollowEmmanuelGenerateLabyrinthLevel3();
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
@@ -152,6 +156,10 @@ public class FollowEmmanuel implements GameLifeCycle {
 
         if (variant.equals(FollowEmmanuelGameVariant.Level1)) {
             getRubyLvl1();
+        } else if (variant.equals(FollowEmmanuelGameVariant.Level2)){
+            getRubyLvl2();
+        }else if (variant.equals(FollowEmmanuelGameVariant.Level3)){
+            getRubyLvl3();
         } else {
             log.error("Variant not found : " + variant.getLabel());
         }
@@ -384,7 +392,31 @@ public class FollowEmmanuel implements GameLifeCycle {
             win();
         };
 
-        map = generateLabyrinthLevel1.generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.stats, this.sizeWw, this.sizeWh, eventwin);
+        map = generateLabyrinthLevel1.generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.sizeWw, this.sizeWh, eventwin);
+        build(map);
+    }
+
+    private void getRubyLvl2() {
+        int[][] map;
+
+        EventHandler<ActionEvent> eventwin = e -> {
+            stats.incrementNumberOfGoalsReached();
+            win();
+        };
+
+        map = generateLabyrinthLevel2.generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.sizeWw, this.sizeWh, eventwin);
+        build(map);
+    }
+
+    private void getRubyLvl3() {
+        int[][] map;
+
+        EventHandler<ActionEvent> eventwin = e -> {
+            stats.incrementNumberOfGoalsReached();
+            win();
+        };
+
+        map = generateLabyrinthLevel3.generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.sizeWw, this.sizeWh, eventwin);
         build(map);
     }
 
