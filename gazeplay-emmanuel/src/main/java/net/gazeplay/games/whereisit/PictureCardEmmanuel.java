@@ -92,6 +92,7 @@ class PictureCardEmmanuel extends Group {
         this.addEventFilter(MouseEvent.ANY, customInputEventHandler);
 
         this.addEventFilter(GazeEvent.ANY, customInputEventHandler);
+
     }
 
     private Timeline createProgressIndicatorTimeLine(WhereIsItEmmanuel gameInstance) {
@@ -160,22 +161,12 @@ class PictureCardEmmanuel extends Group {
         translateToCenterTransition
             .setByY(-initialPositionY + (gamePanelDimension2D.getHeight() - initialHeight) / 2);
 
-        ParallelTransition fullAnimation = new ParallelTransition();
-        fullAnimation.getChildren().add(translateToCenterTransition);
-        fullAnimation.getChildren().add(scaleToFullScreenTransition);
 
         gameContext.updateScore(stats, gameInstance);
 
-        fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
-            gameInstance.dispose();
-            gameContext.clear();
-            gameInstance.launch();
-            // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
-            // gameInstance.stats);
-
-        }));
-
-        fullAnimation.play();
+        gameInstance.dispose();
+        gameContext.clear();
+        gameInstance.launch();
     }
 
     private void onWrongCardSelected(WhereIsItEmmanuel gameInstance) {
@@ -322,20 +313,23 @@ class PictureCardEmmanuel extends Group {
         }
 
         private void onEntered() {
-            log.info("ENTERED {}", imagePath);
+            if (gameInstance.startGaze){
+                log.info("ENTERED {}", imagePath);
 
-            progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
-            progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
+                progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+                progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
 
-            progressIndicator.setProgress(0);
-            progressIndicator.setVisible(true);
+                progressIndicator.setProgress(0);
+                progressIndicator.setVisible(true);
 
-            progressIndicatorAnimationTimeLine.playFromStart();
+                progressIndicatorAnimationTimeLine.playFromStart();
+            }
         }
 
         private void onExited() {
             log.info("EXITED {}", imagePath);
 
+            gameInstance.startGaze = true;
             progressIndicatorAnimationTimeLine.stop();
 
             progressIndicator.setVisible(false);

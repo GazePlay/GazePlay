@@ -507,7 +507,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         if (!getChildren().contains(bravo)) {
             getChildren().add(bravo);
             bravo.toFront();
-            bravo.setConfettiOnStart(this);
             bravo.playWinTransition(root, delay, onFinishedEventHandler);
         }
     }

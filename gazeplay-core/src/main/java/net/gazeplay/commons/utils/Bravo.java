@@ -86,8 +86,6 @@ public class Bravo extends Rectangle {
         final long initialDelay,
         final EventHandler<ActionEvent> onFinishedEventHandler
     ) {
-        resetState(root);
-
         fullTransition.setOnFinished(actionEvent -> {
             log.debug("finished fullTransition");
             onFinishedEventHandler.handle(actionEvent);

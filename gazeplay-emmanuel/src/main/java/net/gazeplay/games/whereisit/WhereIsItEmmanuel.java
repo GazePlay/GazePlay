@@ -66,6 +66,7 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
     private final ArrayList<TargetAOI> targetAOIList;
     private final GamesRules gamesRules;
     private boolean startGame = false;
+    public boolean startGaze = false;
 
     public WhereIsItEmmanuel(final WhereIsItEmmanuelGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
                              final IGameContext gameContext, final Stats stats) {
@@ -108,6 +109,7 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
             final Transition animationRules = this.gamesRules.createQuestionTransition(gameContext, rule);
             animationRules.play();
             animationRules.setOnFinished(event -> {
+                this.gamesRules.hideQuestionText();
                 final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
                 log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
 
@@ -298,7 +300,7 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
 
             stats.notifyNewRoundReady();
 
-            gameContext.onGameStarted(2000);
+            gameContext.onGameStarted(1000);
         });
 
         return fullAnimation;
