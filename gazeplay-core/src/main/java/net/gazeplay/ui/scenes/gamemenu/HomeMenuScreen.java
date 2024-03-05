@@ -1,5 +1,8 @@
 package net.gazeplay.ui.scenes.gamemenu;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import javafx.animation.*;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -39,7 +42,10 @@ import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.gameslocator.GamesLocator;
 import net.gazeplay.ui.GraphicalContext;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
@@ -55,6 +61,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private FlowPane choicePanel;
 
+    public List<GameSpec> games;
     private List<Node> gameCardsList;
     private List<Node> favGameCardsList;
 
@@ -112,7 +119,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         rightControlPane.setAlignment(Pos.CENTER);
         rightControlPane.getChildren().add(toggleFullScreenButton);
 
-        final List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
+        games = gamesLocator.listGames(gazePlay.getTranslator());
 
         CustomButton replayGameButton = createReplayGameButton(gazePlay, screenDimension, games);
 
@@ -243,7 +250,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         rightControlPane.setAlignment(Pos.CENTER);
         rightControlPane.getChildren().add(toggleFullScreenButton);
 
-        final List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
+        games = gamesLocator.listGames(gazePlay.getTranslator());
 
         CustomButton replayGameButton = createReplayGameButton(gazePlay, screenDimension, games);
 
@@ -407,11 +414,39 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         final GameButtonOrientation gameButtonOrientation = GameButtonOrientation.fromConfig(config);
 
         final List<Node> gameCardsList = new ArrayList<>();
+        ArrayList<String> gameWanted;
 
-        for (GameSpec gameSpec : games) {
-            final GameButtonPane gameCard = createGameCard(config, gameSpec, translator, gameButtonOrientation, dwellTimeIndicator);
-            gameCardsList.add(gameCard);
+        File gameDirectory = new File(config.getFileDir() + "\\listGames.json");
+
+        if (gameDirectory.exists()){
+            gameWanted = this.getListGamesWanted(gameDirectory);
+            if (gameWanted.isEmpty()){
+                for (GameSpec gameSpec : games) {
+                    final GameButtonPane gameCard = createGameCard(config, gameSpec, translator, gameButtonOrientation, dwellTimeIndicator);
+                    gameCardsList.add(gameCard);
+                }
+            }else {
+                for (GameSpec gameSpec : games) {
+                    if (gameWanted.contains(gameSpec.getGameSummary().getNameCode().toLowerCase())){
+                        final GameButtonPane gameCard = createGameCard(config, gameSpec, translator, gameButtonOrientation, dwellTimeIndicator);
+                        gameCardsList.add(gameCard);
+                    }
+                }
+            }
+        }else {
+            for (GameSpec gameSpec : games) {
+                final GameButtonPane gameCard = createGameCard(config, gameSpec, translator, gameButtonOrientation, dwellTimeIndicator);
+                gameCardsList.add(gameCard);
+            }
         }
+
+        if (gameCardsList.isEmpty()){
+            for (GameSpec gameSpec : games) {
+                final GameButtonPane gameCard = createGameCard(config, gameSpec, translator, gameButtonOrientation, dwellTimeIndicator);
+                gameCardsList.add(gameCard);
+            }
+        }
+
         return gameCardsList;
     }
 
@@ -631,6 +666,21 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                 + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: white; "
                 + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);" + "-fx-text-fill: black;");
             gamesStatisticsPane.setAllLabelsStyleLight();
+        }
+    }
+
+    private ArrayList<String> getListGamesWanted(File gameDirectory){
+        JsonParser jsonParser = new JsonParser();
+        ArrayList<String> gamesJson = new ArrayList<>();
+        try  (FileReader reader = new FileReader(gameDirectory, StandardCharsets.UTF_8)) {
+            JsonObject obj = jsonParser.parse(reader).getAsJsonObject();
+            JsonArray listGamesJson = obj.get("listGames").getAsJsonArray();
+            for (int i=0; i<listGamesJson.size(); i++){
+                gamesJson.add(listGamesJson.get(i).getAsString().toLowerCase());
+            }
+            return gamesJson;
+        }catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

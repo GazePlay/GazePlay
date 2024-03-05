@@ -297,6 +297,7 @@ SeeFolder,,,,,,,See folder,,voir dossier,,,,,,,,,,,,
 
 # GAME SETTINGS
 QuitKey,Tasti për të dalë,مفتاح الخروج,Кнопка выхаду,退出键,,,Quit Key,,Bouton pour quitter,,,,Tasto per uscire,,Stop toets,,,Кнопка выхода,Tecla para salir,,
+ChooseDisplayGames,,,,,,,Choose games to display,,Choisir les jeux à afficher,,,,,,,,,,,,
 QuestionLength,Kohëzgjatja e pyetjeve,مدة ظهور الاسئلة,Працягласць прайгравання пытання,问题长度,Dauer der Veröffentlichung von Fragen,Μήκος εμφάνισης ερωτήματος,Question Display Length,kysymys,Durée d’affichage des questions,,Dužina prikazivanja pitanja,Panjang Paparan Soalan,Durata esposizione della domanda,,Hoe lang de vraag tonen?,Długość wyświetlania pytania,*Pergunta Display Length,Длительность воспроизведения вопроса,Duración de visualización de las preguntas,Thời gian hiển thị câu hỏi,Panjang Paparan Soalan
 ReaskQuestionOnFail,,,Задаць пытанне зноў калі няправільны адказ,,,,Ask the question again in case it's answered incorrectly,,Reposer la question en cas de mauvaise réponse,,,,,,,,,Задать вопрос снова если неправильный ответ,,,
 EnableRewardSound,Aktivizo audion për shpërblimet,تفعيل الصوت (احسنت),Ўключыць гук ўзнагароджання,打开奖励音效,Aktiviere den Sound Bravo,Ενεργοποίηση ήχου ανταμοιβής,Enable Reward sound,sallia palkkioääni,Activer le son « bravo »,,Aktiviraj zvuk za,Dayakan bunyi Ganjaran,Attiva suono ricompensa,,Activeer beloningsgeluid,Włącz dźwięk nagrody,Activar o som a « Bravo »,Включить звук вознаграждения,Activar el sonido Bravo,Bật tiếng,Dayakan bunyi Ganjaran
@@ -350,6 +351,7 @@ Exit FullScreen,Çaktivizo Ekranin e plotë,الخروج من كامل الشا�
 
 # CUSTOM FILES CHOOSER
 customFileChooser,,,Выбраць персаналізаваную тэчку,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,Выбрать персонализированную папку,,,
+customGamesChooser,,,,,,,Custom games chooser,,Sélecteur de jeux à afficher,,,,,,,,,,,,
 importEvalChooser,,,,,,,Import Eval chooser,,Sélecteur d'eval personnalisés,,,,,,,,,,,,
 addNewEval,,,,,,,Add a new eval,,Ajouter un nouveau eval,,,,,,,,,,,,
 addNewImages,,,Дадаць выявы,,,,Add new images ...,,Ajouter de nouvelles images ...,,,,,,,,,Добавить изображения,Agregar nuevas imágenes ...,,

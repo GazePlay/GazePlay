@@ -470,6 +470,8 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GamesSettings", COLON));
+        // Games settings
         if (Utils.isWindows()) {
             {
                 I18NText label = new I18NText(translator, "CreateShortcut", COLON);
@@ -479,9 +481,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 addToGrid(grid, currentFormRow, label, input);
             }
         }
+        {
+            I18NText label = new I18NText(translator, "ChooseDisplayGames", COLON);
 
-        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "GamesSettings", COLON));
-        // Games settings
+            Node input = chooseGamesScreen(config, configurationContext, translator);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
         {
             I18NText label = new I18NText(translator, "QuitKey", COLON);
 
@@ -1214,6 +1220,21 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         gameBox.setPrefHeight(PREF_HEIGHT);
 
         return shortCutBox;
+    }
+
+    private Node chooseGamesScreen(Configuration configuration,
+                                   ConfigurationContext configurationContext,
+                                   Translator translator){
+        final I18NButton selectButton = new I18NButton(translator, "Select");
+        Stage dialog = new CustomGamesChooser(configuration, configurationContext, translator, getGazePlay());
+
+        selectButton.setOnAction(e -> {
+            dialog.show();
+            dialog.sizeToScene();
+            getGazePlay().getPrimaryStage().getScene().getRoot().setEffect(new GaussianBlur());
+        });
+
+        return selectButton;
     }
 
     MenuButton buildLanguageChooser(
