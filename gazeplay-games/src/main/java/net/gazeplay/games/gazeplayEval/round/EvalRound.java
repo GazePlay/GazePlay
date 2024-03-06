@@ -2,6 +2,11 @@ package net.gazeplay.games.gazeplayEval.round;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
@@ -103,7 +108,15 @@ public class EvalRound {
             if (ActiveConfigurationContext.getInstance().isSoundEnabled() && config.getQuestionAudioFile().isFile())
                 GameState.context.getSoundManager().add(config.getQuestionAudioFile().getPath());
         } else {
-            System.out.println("Unimplemented");  // TODO: Implement the question as plain text on the screen
+            Text question = new Text(config.getQuestionText());
+            question.setTextAlignment(TextAlignment.LEFT);
+            question.setFill(Color.RED);  // Should be modified to be modular
+            question.setX((GameState.context.getGamePanelDimensionProvider().getDimension2D().getWidth() - question.getLayoutBounds().getWidth()) / 2);
+            question.setY(GameSizing.height + question.getLayoutBounds().getHeight() / 2);
+            question.setScaleX(4);
+            question.setScaleY(4);
+            GameState.context.getChildren().add(question);
+            // TODO: create a background for this text
         }
     }
 }
