@@ -45,8 +45,8 @@ public class PictureCard extends Group {
         this.config = config;
         this.onSelection = onSelection;
 
-        double initialX = GameSizing.width * i;
-        double initialY = GameSizing.height * j + 10;  // Not sure why the +-10, but that was here before me
+        double initialX = GameSizing.width * j;
+        double initialY = GameSizing.height * i + 10;  // Not sure why the +-10, but that was here before me
         double initialWidth = GameSizing.width;
         double initialHeight = GameSizing.height - 10;
 
