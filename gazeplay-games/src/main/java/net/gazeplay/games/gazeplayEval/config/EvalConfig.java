@@ -8,6 +8,7 @@ import net.gazeplay.games.gazeplayEval.GameState;
 
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static net.gazeplay.games.gazeplayEval.config.Const.*;
@@ -17,7 +18,7 @@ public class EvalConfig {
     private final String name;
     private final ResultsOutputType outputType;
     private final String patientId;
-    private final ArrayList<ItemConfig> items;
+    private final List<ItemConfig> items;
 
     public EvalConfig() throws Exception {
         JsonParser parser = new JsonParser();
@@ -57,5 +58,9 @@ public class EvalConfig {
 
     public Stream<ItemConfig> getItems() {
         return items.stream();
+    }
+
+    public long getItemsCount() {
+        return items.size();
     }
 }

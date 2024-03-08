@@ -29,4 +29,6 @@ public class Const {
     public final static double SELECTION_PROGRESS_OPACITY = 0.5;
 
     public final static double NOTIFICATION_IMAGE_PROPORTION = 0.05;
+
+    public final static double QUESTION_TEXT_SIZE = 4.0;
 }

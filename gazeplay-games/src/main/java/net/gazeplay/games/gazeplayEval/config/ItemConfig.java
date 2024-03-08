@@ -24,7 +24,7 @@ public class ItemConfig {
     private final int gazeTime;  // Game-level parameter of the time needed gazing at objects to select them
     private final int timeLimit;
 
-    public ItemConfig(JsonObject itemObject) throws Exception {
+    public ItemConfig(JsonObject itemObject) {
         this.rows = itemObject.get(ITEM_ROWS).getAsInt();
         this.cols = itemObject.get(ITEM_COLS).getAsInt();
         this.randomize = itemObject.get(ITEM_RANDOMIZE_GRID).getAsBoolean();
@@ -98,6 +98,6 @@ public class ItemConfig {
     }
 
     public int getTimeLimit() {
-        return timeLimit;
+        return timeLimit;  // TODO: take this value into account for limiting the evaluation
     }
 }

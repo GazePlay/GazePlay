@@ -8,7 +8,7 @@ import net.gazeplay.commons.gamevariants.generators.IGameVariantGenerator;
 import static net.gazeplay.games.gazeplayEval.config.Const.ROOT_DIRECTORY;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class GazeplayEvalVariantGenerator implements IGameVariantGenerator {
@@ -17,7 +17,7 @@ public class GazeplayEvalVariantGenerator implements IGameVariantGenerator {
     public Set<IGameVariant> getVariants() {
         File directoryPath = new File(ROOT_DIRECTORY);
         String[] content = directoryPath.list();
-        ArrayList<GazeplayEvalGameVariant> game = Lists.newArrayList();
+        List<GazeplayEvalGameVariant> game = Lists.newArrayList();
 
         if (content != null && content.length > 0)
             for (int i = 0; i < content.length; i++)
