@@ -33,6 +33,7 @@ public class EvalRound {
 
     private long startTime;
 
+    // Item from configuration = Round of the evaluation
     public EvalRound(ItemConfig config, Function<Void, Void> onRoundFinish) {
         this.config = config;
         this.onRoundFinish = onRoundFinish;
