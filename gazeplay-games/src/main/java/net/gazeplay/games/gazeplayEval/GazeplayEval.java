@@ -1,5 +1,6 @@
 package net.gazeplay.games.gazeplayEval;
 
+import com.sun.java.accessibility.util.Translator;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
@@ -43,6 +44,7 @@ public class GazeplayEval implements GameLifeCycle {
     private EvalRound currentRound;
 
     private long startTime = 0;
+    private final Timeline timeLimiter = new Timeline(); // Time limit for the round
 
     public GazeplayEval(double gameSeed) {
         random = new ReplayablePseudoRandom(gameSeed);
@@ -70,7 +72,7 @@ public class GazeplayEval implements GameLifeCycle {
     @Override
     public void launch() {
         if (currentRound != null) {
-            log.error("Trying to launch a new round while the current one is still running");
+            log.warn("Trying to launch a new round while the current one is still running");
             return;
         }
         log.info("Starting new round");
@@ -87,6 +89,12 @@ public class GazeplayEval implements GameLifeCycle {
         GameState.context.getGazeDeviceManager().addStats(GameState.stats);
         GameState.context.firstStart();
 
+        if (currentRound.getConfig().getTimeLimit() > 0) {
+            timeLimiter.getKeyFrames().clear();  // Make sure there is no other Key Frame
+            timeLimiter.getKeyFrames().add(new KeyFrame(new Duration(currentRound.getConfig().getTimeLimit()), (event) -> onRoundFinish()));
+            timeLimiter.playFromStart();
+        }
+
         keyboardHandler.enable();
         currentRound.launch();
     }
@@ -99,6 +107,7 @@ public class GazeplayEval implements GameLifeCycle {
         }
         log.info("Disposing current round, and retrieving its results");
         keyboardHandler.disable();
+        timeLimiter.stop();
         resultsList.add(currentRound.retrieveResults());
         currentRound.dispose();
         currentRound = null;
@@ -159,7 +168,7 @@ public class GazeplayEval implements GameLifeCycle {
             for (int i = 0; i < values.length; i++) {
                 if (i > 0)
                     out.append(", ");
-                out.append(values[i].translateEscapes());
+                out.append(values[i].translateEscapes().replaceAll(",", "\\\\,"));
             }
             out.append("\r\n");
         };
@@ -169,7 +178,7 @@ public class GazeplayEval implements GameLifeCycle {
         export.line("ID du patient", config.getPatientId());
         export.line("Fait le", new SimpleDateFormat("dd/MM/yyyy").format(new Date(startTime)));
         export.line("Heure de l'évaluation", new SimpleDateFormat("HH:mm").format(new Date(startTime)));
-        export.line("Durée de l'évaluation", Math.round(GameState.stats.timeGame / 100f) * 10 + "s");
+        export.line("Durée de l'évaluation", (GameState.stats.timeGame / 10) / 100f + "s");
         export.line("Nombre d'items", String.valueOf(config.getItemsCount()));
         export.line("Nombre total d'images", String.valueOf(resultsList.stream().mapToInt(RoundResults::getPicturesCount).sum()));
         export.line("Nombre total de sons", String.valueOf(config.getItems().mapToInt(it -> it.getQuestionType() == AUDIO ? 1 : 0).sum()));
@@ -191,8 +200,8 @@ public class GazeplayEval implements GameLifeCycle {
                 String.valueOf(resultsList.get(i).getPicturesCount()), // Nombre d'images
                 String.valueOf(iConfig.getSelectionsRequired()), // Nombres d'images à sélectionner
                 config.getItem(i).getQuestionText(), // Question posée
-                Math.round(iConfig.getTimeLimit() / 100f) * 10 + "s", // Temps limite, 2 chiffres après la virgule
-                Math.round(resultsList.get(i).getTimeRound() / 100f) * 10 + "s", // Durée de réponse
+                (iConfig.getTimeLimit() / 10) / 100f + "s", // Temps limite, 2 chiffres après la virgule
+                (resultsList.get(i).getTimeRound() / 10) / 100f + "s", // Durée de réponse
                 String.valueOf(resultsList.get(i).getSelectedPictures().stream().map(
                     pictureCoord -> iConfig.getGrid(pictureCoord.getKey(), pictureCoord.getValue()).getName()
                 ).toList()) // Images sélectionnées

@@ -7,6 +7,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import javafx.util.Pair;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.games.gazeplayEval.GameState;
@@ -23,6 +24,7 @@ import static net.gazeplay.games.gazeplayEval.config.QuestionType.*;
 
 @Slf4j
 public class EvalRound {
+    @Getter
     private final ItemConfig config;
     private final PictureCard[][] pictures;
     private final int picturesCount;
