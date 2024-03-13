@@ -58,7 +58,7 @@ public class GazeplayEval implements GameLifeCycle {
         };
 
         try {
-            config = new EvalConfig();
+            config = new EvalConfig();  // Load config from context
         } catch (Exception e) {
             log.error("Error while loading the configuration file for the game " + GameState.variant.getNameGame(), e);
             throw new RuntimeException(e);
@@ -119,7 +119,6 @@ public class GazeplayEval implements GameLifeCycle {
         } else {
             this.finalizeStats();
             GameState.context.updateScore(GameState.stats, this);
-//            this.resetFromReplay();
             GameState.context.showRoundStats(GameState.stats, this);
         }
     }
@@ -151,7 +150,7 @@ public class GazeplayEval implements GameLifeCycle {
         File outputPath = new File(GameState.stats.getGameStatsOfTheDayDirectory() + "\\" + config.getName() + "-" + DateUtils.dateTimeNow() + ".csv");
         GameState.stats.actualFile = outputPath.getPath();
 
-        // Setting up export.lin() where each argument is a string to be written in a different column
+        // Setting up export.line() where each argument is a string to be written in a different column
         PrintWriter out = new PrintWriter(outputPath, StandardCharsets.UTF_16);
         interface CSVexporter {
             void line(String... values);

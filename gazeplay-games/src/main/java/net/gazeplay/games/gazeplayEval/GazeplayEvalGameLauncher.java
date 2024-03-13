@@ -41,6 +41,8 @@ public class GazeplayEvalGameLauncher implements IGameLauncher<Stats, GazeplayEv
         GameState.context = gameContext;
         GameState.variant = gameVariant;
         GameState.stats = stats;
-        return new GazeplayEval(gameSeed);
+
+        GameState.eval = new GazeplayEval(gameSeed);
+        return GameState.eval;
     }
 }
