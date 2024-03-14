@@ -20,6 +20,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import java.awt.*;
 
@@ -57,7 +58,7 @@ public class CarEmmanuel extends Rectangle {
      * @param size,     the size of one block
      */
     CarEmmanuel(final int x, final int y, final int l, final int h, final Color c, final boolean direction, final int size, final ProgressIndicator pi,
-        final IGameContext gameContext) {
+                final IGameContext gameContext, Stats stats, RushHourEmmanuel rushHourEmmanuel) {
         super(0, 0, l * size, h * size);
         if (direction) {
             this.setFill(new ImagePattern(new Image("data/rushHour/carH.png")));
@@ -109,6 +110,7 @@ public class CarEmmanuel extends Rectangle {
 
 
         final EventHandler<Event> exitEvent = e -> {
+            this.gameContext.updateScore(stats, rushHourEmmanuel);
             if (timerRunning) {
                 timelineProgressBar.stop();
                 pi.setProgress(0);

@@ -7,6 +7,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,6 +16,8 @@ import java.util.Random;
 public class FollowEmmanuelGenerateLabyrinthLevel3 {
 
     private IGameContext gameContext;
+    public Stats stats;
+    public FollowEmmanuel followEmmanuel;
     private ArrayList<EventItemEmmanuel> listEI;
     private ArrayList<Rectangle> listWall;
     private double sizeWw, sizeWh;
@@ -55,9 +58,13 @@ public class FollowEmmanuelGenerateLabyrinthLevel3 {
         ArrayList<Rectangle> listWall,
         double sizeWw,
         double sizeWh,
-        EventHandler<ActionEvent> eventwin){
+        EventHandler<ActionEvent> eventwin,
+        Stats stats,
+        FollowEmmanuel followEmmanuel){
 
         this.gameContext = gameContext;
+        this.stats = stats;
+        this.followEmmanuel = followEmmanuel;
         this.listEI = listEI;
         this.sizeWw = sizeWw;
         this.sizeWh = sizeWh;
@@ -419,6 +426,7 @@ public class FollowEmmanuelGenerateLabyrinthLevel3 {
             randomPos = new Random().nextInt(difference);
         }
         EventHandler<ActionEvent> eventkeyred = e -> {
+            gameContext.updateScore(this.stats, this.followEmmanuel);
             this.nbKey++;
             if (this.nbKey==5){
                 listWall.remove(doorRED);
@@ -439,6 +447,7 @@ public class FollowEmmanuelGenerateLabyrinthLevel3 {
             randomPos = new Random().nextInt(difference);
         }
         EventHandler<ActionEvent> eventkeyred = e -> {
+            gameContext.updateScore(this.stats, this.followEmmanuel);
             this.nbKey++;
             if (this.nbKey==5){
                 listWall.remove(doorRED);
@@ -454,6 +463,7 @@ public class FollowEmmanuelGenerateLabyrinthLevel3 {
         int posX = new Random().nextInt(weight/2);
         int posY = new Random().nextInt(5);
         EventHandler<ActionEvent> eventkeyred = e -> {
+            gameContext.updateScore(this.stats, this.followEmmanuel);
             this.nbKey++;
             if (this.nbKey==5){
                 listWall.remove(doorRED);
@@ -473,6 +483,7 @@ public class FollowEmmanuelGenerateLabyrinthLevel3 {
         int posX = new Random().nextInt(28-weight);
         int posY = new Random().nextInt(5);
         EventHandler<ActionEvent> eventkeyred = e -> {
+            gameContext.updateScore(this.stats, this.followEmmanuel);
             this.nbKey++;
             if (this.nbKey==5){
                 listWall.remove(doorRED);
@@ -491,6 +502,7 @@ public class FollowEmmanuelGenerateLabyrinthLevel3 {
     public void setupKeyRandom(int pos){
 
         EventHandler<ActionEvent> eventkeyred = e -> {
+            gameContext.updateScore(this.stats, this.followEmmanuel);
             this.nbKey++;
             if (this.nbKey==5){
                 listWall.remove(doorRED);

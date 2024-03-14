@@ -21,6 +21,8 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.GamesRules;
+import net.gazeplay.components.SaveData;
+
 import java.util.ArrayList;
 
 @Slf4j
@@ -84,6 +86,7 @@ public class FollowEmmanuel implements GameLifeCycle {
     public boolean firstGame = true;
     public CustomInputEventHandlerKeyboard customInputEventHandlerKeyboard = new CustomInputEventHandlerKeyboard();
     private PauseTransition next;
+    public SaveData saveData;
 
     FollowEmmanuel(final IGameContext gameContext, final Stats stats, final FollowEmmanuelGameVariant variant) {
         this.gameContext = gameContext;
@@ -93,18 +96,18 @@ public class FollowEmmanuel implements GameLifeCycle {
         this.generateLabyrinthLevel2 = new FollowEmmanuelGenerateLabyrinthLevel2();
         this.generateLabyrinthLevel3 = new FollowEmmanuelGenerateLabyrinthLevel3();
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
+        this.saveData = new SaveData(this.stats, variant.getLabel());
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         listWall = new ArrayList<>();
         listEI = new ArrayList<>();
 
-        this.gameContext.startTimeLimiter();
+        this.gameContext.startTimeLimiterEmmanuel(this.saveData);
     }
 
     @Override
     public void launch() {
 
-        gameContext.setLimiterAvailable();
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
@@ -198,6 +201,15 @@ public class FollowEmmanuel implements GameLifeCycle {
         listWall.clear();
         next.stop();
         gameContext.getChildren().clear();
+    }
+
+    public void next(){
+        listEI.clear();
+        listWall.clear();
+        next.stop();
+        gameContext.getChildren().clear();
+        this.saveData.addMouseMovements(this.stats.fixationSequence.get(0).size());
+        this.saveData.addTrackerMovements(this.stats.fixationSequence.get(1).size());
     }
 
     private void followthegaze() {
@@ -297,7 +309,7 @@ public class FollowEmmanuel implements GameLifeCycle {
     private void win() {
         stats.incrementNumberOfGoalsReached();
         gameContext.updateScore(stats, this);
-        dispose();
+        next();
         launch();
     }
 
@@ -388,11 +400,10 @@ public class FollowEmmanuel implements GameLifeCycle {
         int[][] map;
 
         EventHandler<ActionEvent> eventwin = e -> {
-            stats.incrementNumberOfGoalsReached();
             win();
         };
 
-        map = generateLabyrinthLevel1.generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.sizeWw, this.sizeWh, eventwin);
+        map = generateLabyrinthLevel1.generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.sizeWw, this.sizeWh, eventwin, stats, this);
         build(map);
     }
 
@@ -400,11 +411,10 @@ public class FollowEmmanuel implements GameLifeCycle {
         int[][] map;
 
         EventHandler<ActionEvent> eventwin = e -> {
-            stats.incrementNumberOfGoalsReached();
             win();
         };
 
-        map = generateLabyrinthLevel2.generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.sizeWw, this.sizeWh, eventwin);
+        map = generateLabyrinthLevel2.generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.sizeWw, this.sizeWh, eventwin, stats, this);
         build(map);
     }
 
@@ -412,11 +422,10 @@ public class FollowEmmanuel implements GameLifeCycle {
         int[][] map;
 
         EventHandler<ActionEvent> eventwin = e -> {
-            stats.incrementNumberOfGoalsReached();
             win();
         };
 
-        map = generateLabyrinthLevel3.generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.sizeWw, this.sizeWh, eventwin);
+        map = generateLabyrinthLevel3.generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.sizeWw, this.sizeWh, eventwin, stats, this);
         build(map);
     }
 
@@ -426,7 +435,7 @@ public class FollowEmmanuel implements GameLifeCycle {
         public void handle(KeyEvent key) {
 
             if (key.getCode().isArrowKey()){
-                dispose();
+                next();
                 launch();
             }
         }

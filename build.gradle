@@ -180,7 +180,7 @@ distributions {
         contents {
             with distributions.main.contents
             from("build/reports")
-            from("build/bin/gazeplay-windows.bat") {
+            from("build/bin/gazeplay-emmanuel-windows.bat") {
                 into 'bin'
             }
             from("build/jre/windows-x64") {

@@ -16,6 +16,7 @@ import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
+import net.gazeplay.components.SaveData;
 
 import java.util.function.Supplier;
 
@@ -74,6 +75,8 @@ public interface IGameContext {
     void startScoreLimiter();
 
     void startTimeLimiter();
+
+    void startTimeLimiterEmmanuel(SaveData saveData);
 
     void setLimiterAvailable();
 

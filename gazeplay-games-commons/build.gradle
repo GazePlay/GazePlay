@@ -14,6 +14,7 @@ dependencies {
     implementation 'com.google.guava:guava:31.1-jre'
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'com.mageddo.tobby-transactional-outbox:spring:1.5.1'
+    implementation group : 'org.apache.poi', name: 'poi-ooxml', version: '4.0.0'
     runtimeOnly 'org.slf4j:jcl-over-slf4j:1.7.36'
     runtimeOnly 'org.slf4j:log4j-over-slf4j:1.7.36'
 

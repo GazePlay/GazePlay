@@ -62,7 +62,7 @@ public class Stats implements GazeMotionListener {
     private static final int fixationTrail = 50;
     private final double heatMapPixelSize;
     public final Scene gameContextScene;
-    protected String gameName;
+    public String gameName;
 
     long startTime;
     int sceneCounter = 0;
@@ -114,7 +114,7 @@ public class Stats implements GazeMotionListener {
     private long lastGazeTime;
 
     @Getter
-    private ArrayList<LinkedList<FixationPoint>> fixationSequence;
+    public ArrayList<LinkedList<FixationPoint>> fixationSequence;
 
     @Getter
     private SavedStatsInfo savedStatsInfo;
@@ -136,7 +136,9 @@ public class Stats implements GazeMotionListener {
     private Long currentRoundStartTime;
 
     public String variantType = "";
-
+    public int nbError = 0;
+    public int nbMaxMovementsMouse = 0;
+    public int nbMaxMovementsTracker = 0;
     //Phonology
     public int totalPhonology = 0;
     public int simpleScoreItemsPhonology = 0;

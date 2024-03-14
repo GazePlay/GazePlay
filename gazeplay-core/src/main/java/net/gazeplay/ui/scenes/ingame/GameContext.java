@@ -41,11 +41,13 @@ import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
+import net.gazeplay.components.SaveData;
 import net.gazeplay.ui.*;
 import net.gazeplay.ui.scenes.stats.StatsContext;
 import net.gazeplay.ui.scenes.stats.StatsContextFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.function.Supplier;
 
 @Slf4j
@@ -103,6 +105,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     private TitledPane fixPan;
 
     private GridPane leftControlPane;
+    public SaveData saveData;
+    public boolean isEmmanuel = false;
 
     protected GameContext(
         @NonNull GazePlay gazePlay,
@@ -159,6 +163,14 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     @Override
     public void startTimeLimiter() {
+        this.isEmmanuel = false;
+        limiterT = getConfiguration().isLimiterTimeEnabled();
+        setLimiterAvailable();
+    }
+
+    public void startTimeLimiterEmmanuel(SaveData saveData){
+        this.isEmmanuel = true;
+        this.saveData = saveData;
         limiterT = getConfiguration().isLimiterTimeEnabled();
         setLimiterAvailable();
     }
@@ -187,9 +199,12 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     @Override
     public void updateScore(Stats stats, GameLifeCycle currentGame) {
-        updateScore(stats, currentGame, e -> {
-        }, e -> {
-        });
+        if (((System.currentTimeMillis() - startTime)/1000) >= getConfiguration().getLimiterTime()){
+            stop();
+            showRoundStats(stats, currentGame);
+            startTime = 0;
+            limiteUsed = true;
+        }
     }
 
     @Override
@@ -210,7 +225,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
                 limiteUsed = true;
             }
         }
-
     }
 
     private double time(double start, double end) {
@@ -475,6 +489,13 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         Runnable asynchronousStatsPersistTask = () -> {
             try {
                 stats.saveStats();
+                this.saveData.addMouseMovements(stats.fixationSequence.get(0).size());
+                this.saveData.addTrackerMovements(stats.fixationSequence.get(1).size());
+                //this.saveData.createCsvSaveFile();
+                this.saveData.createExcelSavFile();
+                stats.nbMaxMovementsMouse = this.saveData.maxMouseMovements;
+                stats.nbMaxMovementsTracker = this.saveData.maxTrackerMovements;
+
             } catch (IOException e) {
                 log.error("Failed to save stats file", e);
             }

@@ -332,11 +332,16 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         if (gazeplayType.equals("emmanuel")){
             AtomicInteger currentFormRow = new AtomicInteger(0);
             Text value;
-            String labelValue;
             value = new Text(StatDisplayUtils.convert(stats.computeTotalElapsedDuration()));
             addToGrid(grid, currentFormRow, translator, "TotalLength", value, alignLeft);
-            value = new Text(String.valueOf(stats.nbGoalsReached - 1));
+            value = new Text(String.valueOf(stats.nbGoalsReached + 1));
             addToGrid(grid, currentFormRow, translator, "NbTab", value, alignLeft);
+            value = new Text(String.valueOf(stats.nbError));
+            addToGrid(grid, currentFormRow, translator, "NbError", value, alignLeft);
+            value = new Text(String.valueOf(stats.nbMaxMovementsMouse));
+            addToGrid(grid, currentFormRow, translator, "NbMoveMouse", value, alignLeft);
+            value = new Text(String.valueOf(stats.nbMaxMovementsTracker));
+            addToGrid(grid, currentFormRow, translator, "NbMoveTracker", value, alignLeft);
         }else {
             AtomicInteger currentFormRow = new AtomicInteger(1);
 

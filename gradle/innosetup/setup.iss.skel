@@ -49,12 +49,12 @@ Source: "..\\${unpackedDirectory}\\license\\*"; DestDir: "{app}\\license"; Flags
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"; IconFilename: "{app}\\bin\\gazeplayicon.ico"; Flags: runminimized
+Name: "{group}\\GazePlay"; Filename: "{app}\\bin\\gazeplay-emmanuel-windows.bat"; IconFilename: "{app}\\bin\\gazeplayicon.ico"; Flags: runminimized
 Name: "{group}\\Uninstall GazePlay"; Filename: "{uninstallexe}"; IconFilename: "{app}\\bin\\gazeplayicon.ico"
-Name: "{commondesktop}\\GazePlay"; Filename: "{app}\\bin\\gazeplay-windows.bat"; Tasks: desktopicon; IconFilename: "{app}\\bin\\gazeplayicon.ico"
+Name: "{commondesktop}\\GazePlay"; Filename: "{app}\\bin\\gazeplay-emmanuel-windows.bat"; Tasks: desktopicon; IconFilename: "{app}\\bin\\gazeplayicon.ico"
 
 [Run]
-Filename: "{app}\\bin\\gazeplay-windows.bat"; Description: "{cm:LaunchProgram,GazePlay}"; Flags: shellexec postinstall skipifsilent
+Filename: "{app}\\bin\\gazeplay-emmanuel-windows.bat"; Description: "{cm:LaunchProgram,GazePlay}"; Flags: shellexec postinstall skipifsilent
 
 [Code]
 function GetUninstallString: string;

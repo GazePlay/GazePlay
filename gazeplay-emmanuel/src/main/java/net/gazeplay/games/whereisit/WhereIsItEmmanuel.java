@@ -27,6 +27,7 @@ import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 import net.gazeplay.components.GamesRules;
+import net.gazeplay.components.SaveData;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -67,6 +68,8 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
     private final GamesRules gamesRules;
     private boolean startGame = false;
     public boolean startGaze = false;
+    public String questionTextGame = "";
+    public SaveData saveData;
 
     public WhereIsItEmmanuel(final WhereIsItEmmanuelGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
                              final IGameContext gameContext, final Stats stats) {
@@ -82,6 +85,9 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom();
         this.gamesRules = new GamesRules();
         this.stats.setGameSeed(randomGenerator.getSeed());
+        this.saveData = new SaveData(this.stats, gameType.getVariant());
+
+        this.gameContext.startTimeLimiterEmmanuel(this.saveData);
     }
 
     public WhereIsItEmmanuel(final WhereIsItEmmanuelGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
@@ -97,12 +103,13 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
         this.gamesRules = new GamesRules();
+        this.saveData = new SaveData(this.stats, gameType.getVariant());
+
+        this.gameContext.startTimeLimiterEmmanuel(this.saveData);
     }
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
-
         if (!this.startGame) {
             this.startGame = true;
             String rule = "Trouver le drapeau du pays cité";
@@ -140,6 +147,14 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
 
                 currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, randomGenerator,
                     winnerImageIndexAmongDisplayedImages);
+
+                if (Objects.equals(this.questionTextGame, "")){
+                    this.questionTextGame = currentRoundDetails.getQuestion();
+                }else if (Objects.equals(this.questionTextGame, currentRoundDetails.getQuestion())){
+                    this.dispose();
+                    gameContext.clear();
+                    this.launch();
+                }
 
                 if (currentRoundDetails != null) {
                     final Transition animation = createQuestionTransition(currentRoundDetails.getQuestion(), currentRoundDetails.getPictos());
@@ -189,6 +204,14 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
 
             currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, randomGenerator,
                 winnerImageIndexAmongDisplayedImages);
+
+            if (Objects.equals(this.questionTextGame, "")){
+                this.questionTextGame = currentRoundDetails.getQuestion();
+            }else if (Objects.equals(this.questionTextGame, currentRoundDetails.getQuestion())){
+                this.dispose();
+                gameContext.clear();
+                this.launch();
+            }
 
             if (currentRoundDetails != null) {
                 final Transition animation = createQuestionTransition(currentRoundDetails.getQuestion(), currentRoundDetails.getPictos());
@@ -324,6 +347,8 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
             currentRoundDetails = null;
         }
         stats.setTargetAOIList(targetAOIList);
+        this.saveData.addMouseMovements(this.stats.fixationSequence.get(0).size());
+        this.saveData.addTrackerMovements(this.stats.fixationSequence.get(1).size());
     }
 
     void removeAllIncorrectPictureCards() {

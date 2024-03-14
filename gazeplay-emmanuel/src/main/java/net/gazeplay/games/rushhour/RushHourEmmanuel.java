@@ -19,6 +19,7 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.GamesRules;
+import net.gazeplay.components.SaveData;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +28,7 @@ import java.util.List;
 public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
     public final IGameContext gameContext;
-    private final Stats stats;
+    public final Stats stats;
     public IntegerProperty size;
     private Rectangle ground;
     private boolean endOfGame = false;
@@ -46,13 +47,14 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
     private final GamesRules gamesRules;
     private final RushHourEmmanuelGameVariant gameVariant;
     private boolean startGame = false;
+    public SaveData saveData;
 
     public RushHourEmmanuel(final IGameContext gameContext, Stats stats, final RushHourEmmanuelGameVariant gameVariant) {
         this.gameContext = gameContext;
         this.stats = stats;
-        this.gameContext.startTimeLimiter();
         this.gamesRules = new GamesRules();
         this.gameVariant = gameVariant;
+        this.saveData = new SaveData(this.stats, gameVariant.getLabel());
         size = new SimpleIntegerProperty();
         gameContext.getPrimaryStage().widthProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -69,6 +71,7 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         });
 
+        this.gameContext.startTimeLimiterEmmanuel(this.saveData);
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
         ground = new Rectangle(); // to avoid NullPointerException
     }
@@ -216,25 +219,25 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(0, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(0, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(1, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(1, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
@@ -262,37 +265,37 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(1, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(1, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(0, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(0, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(3, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(3, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(4, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(4, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(5, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(5, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
@@ -320,25 +323,25 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c7 = new CarEmmanuel(2, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(2, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
@@ -366,37 +369,37 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(1, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(1, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(0, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(0, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(1, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(1, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(2, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(2, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(5, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(5, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
@@ -424,49 +427,49 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(1, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(1, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(3, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(3, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(3, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(3, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(3, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(3, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
     }
@@ -493,53 +496,53 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(1, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(1, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(2, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(2, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(4, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(4, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(5, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(5, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(4, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(4, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(3, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(3, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        final CarEmmanuel c11 = new CarEmmanuel(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c11 = new CarEmmanuel(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c11);
         p.getChildren().add(c11);
 
@@ -567,49 +570,49 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(5, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(5, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -637,49 +640,49 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(1, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(1, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(2, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(2, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(2, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(2, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(3, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(3, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(3, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(3, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(4, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(4, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(0, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(0, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(2, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(2, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -707,41 +710,41 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(0, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(0, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(2, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(2, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(3, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(3, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
@@ -769,45 +772,45 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(1, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(1, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(3, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(3, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -835,45 +838,45 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(4, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(4, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(2, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(2, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(1, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(1, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(3, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(3, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(2, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(2, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(2, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(2, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -901,49 +904,49 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(2, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(2, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(5, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(5, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -971,45 +974,45 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(4, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(4, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(1, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(1, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(2, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(2, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -1037,45 +1040,45 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(3, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(3, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(4, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(4, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(4, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(4, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -1103,57 +1106,57 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(2, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(2, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        final CarEmmanuel c11 = new CarEmmanuel(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c11 = new CarEmmanuel(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c11);
         p.getChildren().add(c11);
 
-        final CarEmmanuel c12 = new CarEmmanuel(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c12 = new CarEmmanuel(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c12);
         p.getChildren().add(c12);
 
@@ -1181,57 +1184,57 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(2, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(2, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(4, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(4, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(1, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(1, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(2, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(2, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(0, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(0, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        final CarEmmanuel c11 = new CarEmmanuel(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c11 = new CarEmmanuel(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c11);
         p.getChildren().add(c11);
 
-        final CarEmmanuel c12 = new CarEmmanuel(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c12 = new CarEmmanuel(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c12);
         p.getChildren().add(c12);
 
@@ -1259,45 +1262,45 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(2, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(2, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(1, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(1, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -1325,45 +1328,45 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(3, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(1, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(1, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -1391,49 +1394,49 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(4, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(4, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -1461,65 +1464,65 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(4, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(3, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(3, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(0, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        final CarEmmanuel c11 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c11 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c11);
         p.getChildren().add(c11);
 
-        final CarEmmanuel c12 = new CarEmmanuel(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c12 = new CarEmmanuel(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c12);
         p.getChildren().add(c12);
 
-        final CarEmmanuel c13 = new CarEmmanuel(3, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c13 = new CarEmmanuel(3, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c13);
         p.getChildren().add(c13);
 
-        final CarEmmanuel c14 = new CarEmmanuel(3, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c14 = new CarEmmanuel(3, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c14);
         p.getChildren().add(c14);
 
@@ -1547,45 +1550,45 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(3, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(3, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(4, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(4, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(4, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(4, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(5, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(5, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -1613,53 +1616,53 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(5, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(5, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(0, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(0, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(1, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(1, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(2, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(2, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(2, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(2, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(4, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(4, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        final CarEmmanuel c11 = new CarEmmanuel(3, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c11 = new CarEmmanuel(3, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c11);
         p.getChildren().add(c11);
 
@@ -1687,49 +1690,49 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(2, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(1, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -1757,49 +1760,49 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(5, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(5, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(0, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(3, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(3, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -1827,49 +1830,49 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(3, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(3, 0, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(2, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(2, 1, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(3, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(3, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(2, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(2, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -1897,45 +1900,45 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(2, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(4, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(4, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(2, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(2, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(3, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(0, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -1963,45 +1966,45 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(0, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(0, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(0, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(0, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(2, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(2, 3, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
@@ -2029,41 +2032,41 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(1, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(1, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(1, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(1, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(0, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(0, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
@@ -2091,53 +2094,53 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(4, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        final CarEmmanuel c11 = new CarEmmanuel(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c11 = new CarEmmanuel(2, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c11);
         p.getChildren().add(c11);
 
@@ -2165,53 +2168,53 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(0, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(3, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(5, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(5, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(3, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(3, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(1, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(3, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(4, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(0, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        final CarEmmanuel c11 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c11 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c11);
         p.getChildren().add(c11);
 
@@ -2239,49 +2242,49 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(1, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(1, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(0, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(0, 2, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(5, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(5, 3, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(0, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(3, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(4, 5, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -2309,57 +2312,57 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(2, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(1, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(4, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(4, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(5, 1, 1, 3, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(0, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(0, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(2, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(2, 3, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(2, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
-        final CarEmmanuel c11 = new CarEmmanuel(3, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c11 = new CarEmmanuel(3, 4, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c11);
         p.getChildren().add(c11);
 
-        final CarEmmanuel c12 = new CarEmmanuel(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c12 = new CarEmmanuel(3, 5, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c12);
         p.getChildren().add(c12);
 
@@ -2387,49 +2390,49 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
 
         createGarage(p);
 
-        final CarEmmanuel red = new CarEmmanuel(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel red = new CarEmmanuel(3, 2, 2, 1, Color.RED, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(red);
         p.getChildren().add(red);
 
         toWin = red;
 
-        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c1 = new CarEmmanuel(0, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c1);
         p.getChildren().add(c1);
 
-        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c2 = new CarEmmanuel(1, 0, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c2);
         p.getChildren().add(c2);
 
-        final CarEmmanuel c3 = new CarEmmanuel(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c3 = new CarEmmanuel(1, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c3);
         p.getChildren().add(c3);
 
-        final CarEmmanuel c4 = new CarEmmanuel(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c4 = new CarEmmanuel(2, 1, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c4);
         p.getChildren().add(c4);
 
-        final CarEmmanuel c5 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c5 = new CarEmmanuel(3, 0, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c5);
         p.getChildren().add(c5);
 
-        final CarEmmanuel c6 = new CarEmmanuel(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c6 = new CarEmmanuel(4, 1, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c6);
         p.getChildren().add(c6);
 
-        final CarEmmanuel c7 = new CarEmmanuel(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c7 = new CarEmmanuel(5, 2, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c7);
         p.getChildren().add(c7);
 
-        final CarEmmanuel c8 = new CarEmmanuel(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext);
+        final CarEmmanuel c8 = new CarEmmanuel(5, 4, 1, 2, Color.BROWN, false, size.getValue(), pi, gameContext, stats, this);
         garage.add(c8);
         p.getChildren().add(c8);
 
-        final CarEmmanuel c9 = new CarEmmanuel(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c9 = new CarEmmanuel(0, 3, 3, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c9);
         p.getChildren().add(c9);
 
-        final CarEmmanuel c10 = new CarEmmanuel(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext);
+        final CarEmmanuel c10 = new CarEmmanuel(0, 4, 2, 1, Color.BROWN, true, size.getValue(), pi, gameContext, stats, this);
         garage.add(c10);
         p.getChildren().add(c10);
 
@@ -2438,7 +2441,6 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
     @Override
     public void launch() {
         endOfGame = false;
-        gameContext.setLimiterAvailable();
         if (!this.startGame){
             this.startGame = true;
             String rule = "Sélectionnez une voiture pour pouvoir la déplacer en ligne droite \n Vous avez 2 minutes pour terminer le plus de tableaux possibles";
@@ -2486,6 +2488,8 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
     @Override
     public void dispose() {
         gameContext.getChildren().clear();
+        this.saveData.addMouseMovements(this.stats.fixationSequence.get(0).size());
+        this.saveData.addTrackerMovements(this.stats.fixationSequence.get(1).size());
     }
 
     private void toWinListener() {
@@ -2580,6 +2584,10 @@ public class RushHourEmmanuel extends Parent implements GameLifeCycle {
         ground.toBack();
 
         p.getChildren().addAll(up, down, left, right, door);
+    }
+
+    public void updateScore(){
+        gameContext.updateScore(stats, this);
     }
 
     private class CustomInputEventHandlerKeyboard implements EventHandler<KeyEvent> {

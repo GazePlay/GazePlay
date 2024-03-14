@@ -164,6 +164,7 @@ class PictureCardEmmanuel extends Group {
 
         gameContext.updateScore(stats, gameInstance);
 
+        gameInstance.startGaze = false;
         gameInstance.dispose();
         gameContext.clear();
         gameInstance.launch();
@@ -202,6 +203,8 @@ class PictureCardEmmanuel extends Group {
         });
 
         fullAnimation.play();
+        stats.nbError += 1;
+        gameContext.updateScore(stats, gameInstance);
     }
 
     private ImageView createImageView(double posX, double posY, double width, double height,
