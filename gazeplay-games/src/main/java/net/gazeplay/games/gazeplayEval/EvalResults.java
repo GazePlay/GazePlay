@@ -2,15 +2,12 @@ package net.gazeplay.games.gazeplayEval;
 
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.games.DateUtils;
-import net.gazeplay.games.gazeplayEval.config.EvalConfig;
-import net.gazeplay.games.gazeplayEval.config.ItemConfig;
-import net.gazeplay.games.gazeplayEval.config.QuestionType;
-import net.gazeplay.games.gazeplayEval.config.ResultsOutput;
+import net.gazeplay.games.gazeplayEval.config.*;
 import net.gazeplay.games.gazeplayEval.round.RoundResults;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -20,6 +17,7 @@ import java.util.stream.Stream;
 
 import static net.gazeplay.games.gazeplayEval.config.QuestionType.*;
 import static net.gazeplay.games.gazeplayEval.config.ResultsOutput.*;
+import static net.gazeplay.games.gazeplayEval.config.ResultsOutputType.*;
 
 @Slf4j
 class EvalResults {
@@ -45,11 +43,11 @@ class EvalResults {
         this.computeResults();
         try {
             switch (GameState.eval.getConfig().getOutputType()) {
-                case CSV -> this.exportToCSV(new File(formattedName + ".csv"));
-                case XLS -> this.exportToExcel(new File(formattedName + ".xls"));
+                case CSV -> this.exportToCSV(new File(formattedName + CSV.getExtension()));
+                case XLS -> this.exportToExcel(new File(formattedName + XLS.getExtension()));
                 case ALL -> {
-                    this.exportToCSV(new File(formattedName + ".csv"));
-                    this.exportToExcel(new File(formattedName + ".xls"));
+                    this.exportToCSV(new File(formattedName + CSV.getExtension()));
+                    this.exportToExcel(new File(formattedName + XLS.getExtension()));
                     // Excel last, to be the one chosen when user clicks to get stats
                 }
                 default -> log.warn("No Output set or wrong statement");
@@ -94,7 +92,7 @@ class EvalResults {
     private void exportToExcel(File outputPath) throws Exception {
         GameState.stats.actualFile = outputPath.getPath();
 
-        try (Workbook book = new XSSFWorkbook()) {
+        try (Workbook book = new HSSFWorkbook()) {
             Sheet mainSheet = book.createSheet("Résultats de l'évaluation");
             Sheet itemsSheet = book.createSheet("Détail des items");
 
@@ -102,15 +100,17 @@ class EvalResults {
             Row mainResultsRow = mainSheet.createRow(1);
             int i = 0;
             for (String name : ResultsOutput.eval_values()) {
+                mainSheet.autoSizeColumn(i);
                 mainResultsHeader.createCell(i).setCellValue(name);
-                mainResultsRow.createCell(i).setCellValue(computedMainResults.get(name));
-                i++;
+                mainResultsRow.createCell(i++).setCellValue(computedMainResults.get(name));
             }
 
             Row itemsResultsHeader = itemsSheet.createRow(0);
             i = 0;
-            for (String name : ResultsOutput.item_values())
-                itemsResultsHeader.createCell(i++).setCellValue(name);
+            for (String name : ResultsOutput.item_values()) {
+                itemsResultsHeader.createCell(i).setCellValue(name);
+                itemsSheet.autoSizeColumn(i++);
+            }
 
             int j = 1;
             for (HashMap<String, String> itemResults : computedItemsResults) {
