@@ -100,24 +100,25 @@ class EvalResults {
             Row mainResultsRow = mainSheet.createRow(1);
             int i = 0;
             for (String name : ResultsOutput.eval_values()) {
-                mainSheet.autoSizeColumn(i);
                 mainResultsHeader.createCell(i).setCellValue(name);
-                mainResultsRow.createCell(i++).setCellValue(computedMainResults.get(name));
+                mainResultsRow.createCell(i).setCellValue(computedMainResults.get(name));
+                mainSheet.autoSizeColumn(i++);
             }
 
             Row itemsResultsHeader = itemsSheet.createRow(0);
             i = 0;
-            for (String name : ResultsOutput.item_values()) {
-                itemsResultsHeader.createCell(i).setCellValue(name);
-                itemsSheet.autoSizeColumn(i++);
-            }
+            for (String name : ResultsOutput.item_values())
+                itemsResultsHeader.createCell(i++).setCellValue(name);
 
             int j = 1;
             for (HashMap<String, String> itemResults : computedItemsResults) {
                 Row itemResultsRow = itemsSheet.createRow(j++);
                 i = 0;
-                for (String name : ResultsOutput.item_values())
-                    itemResultsRow.createCell(i++).setCellValue(itemResults.get(name));
+                for (String name : ResultsOutput.item_values()) {
+                    itemResultsRow.createCell(i).setCellValue(itemResults.get(name));
+                    // Maybe change dynamically the type of the cell?
+                    itemsSheet.autoSizeColumn(i++);
+                }
             }
 
             try (FileOutputStream fileOut = new FileOutputStream(outputPath)) {

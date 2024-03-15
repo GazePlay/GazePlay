@@ -39,14 +39,14 @@ public class PictureCard extends Group {
     private final MouseEventHandler mouserHandler = new MouseEventHandler();
     private final SelectionProgress progress;
 
-    public PictureCard(ItemConfig config, int i, int j, Function<PictureCard, Void> onSelection) {
+    public PictureCard(ItemConfig config, int i, int j, int imap, int jmap, Function<PictureCard, Void> onSelection) {
         log.info("imagePath = " + config.getGrid(i, j));
 
         this.config = config;
         this.onSelection = onSelection;
 
-        double initialX = GameSizing.width * j;
-        double initialY = GameSizing.height * i + 10;  // Not sure why the +-10, but that was here before me
+        double initialX = GameSizing.width * jmap;
+        double initialY = GameSizing.height * imap + 10;  // Not sure why the +-10, but that was here before me
         double initialWidth = GameSizing.width;
         double initialHeight = GameSizing.height - 10;
 

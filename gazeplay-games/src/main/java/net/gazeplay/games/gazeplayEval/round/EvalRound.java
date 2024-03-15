@@ -61,7 +61,7 @@ public class EvalRound {
         for (int i = 0; i < config.getRowSize(); i++)
             for (int j = 0; j < config.getColumnSize(); j++)
                 if (config.getGrid(i, j).isFile()) {
-                    pictures[xOrder.get(i)][yOrder.get(j)] = new PictureCard(config, xOrder.get(i), yOrder.get(j), this::onPictureCardSelection);
+                    pictures[i][j] = new PictureCard(config, i, j, xOrder.get(i), yOrder.get(j), this::onPictureCardSelection);
                     count++;
                 }
         return count;

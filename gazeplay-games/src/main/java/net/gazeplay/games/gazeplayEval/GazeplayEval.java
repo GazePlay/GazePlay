@@ -37,6 +37,8 @@ public class GazeplayEval implements GameLifeCycle {
     public GazeplayEval(double gameSeed) {
         random = new ReplayablePseudoRandom(gameSeed);
 
+        log.info("New instance, with seed " + gameSeed);
+
         GameState.context.startScoreLimiter();
         GameState.context.startTimeLimiter();
         GameState.stats.setGameSeed(gameSeed);
