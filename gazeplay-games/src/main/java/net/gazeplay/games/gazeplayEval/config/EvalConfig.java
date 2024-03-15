@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.games.gazeplayEval.GameState;
 
 import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -24,7 +26,7 @@ public class EvalConfig {
         JsonParser parser = new JsonParser();
         JsonObject config;
         try (FileInputStream file = new FileInputStream(GameState.getPathFor(CONFIG_LOCATION))) {
-            config = parser.parse(file.toString()).getAsJsonObject();
+            config = parser.parse(new InputStreamReader(file, StandardCharsets.UTF_8)).getAsJsonObject();
         }
 
         this.name = config.get(EVAL_NAME).getAsString();
