@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static net.gazeplay.games.gazeplayEval.config.QuestionType.AUDIO;
+import static net.gazeplay.games.gazeplayEval.config.QuestionType.*;
 import static net.gazeplay.games.gazeplayEval.config.ResultsOutput.*;
 
 @Slf4j
@@ -26,13 +26,13 @@ class EvalResults {
     private final List<RoundResults> roundResultsList = new ArrayList<>();
     public long startTime;
 
-    private final HashMap<String, String> mainComputedResults = new HashMap<>();
-    private final List<HashMap<String, String>> itemsComputedResults = new ArrayList<>();
+    private final HashMap<String, String> computedMainResults = new HashMap<>();
+    private final List<HashMap<String, String>> computedItemsResults = new ArrayList<>();
 
     public void clear() {
         roundResultsList.clear();
-        mainComputedResults.clear();
-        itemsComputedResults.clear();
+        computedMainResults.clear();
+        computedItemsResults.clear();
     }
 
     public void add(RoundResults roundResults) {
@@ -62,14 +62,14 @@ class EvalResults {
     private void computeResults() {
         EvalConfig config = GameState.eval.getConfig();
 
-        mainComputedResults.put(EVAL_NAME, config.getName());
-        mainComputedResults.put(EVAL_PATIENT_ID, config.getPatientId());
-        mainComputedResults.put(EVAL_DATE, new SimpleDateFormat("dd/MM/yyyy").format(new Date(startTime)));
-        mainComputedResults.put(EVAL_TIME, new SimpleDateFormat("HH:mm").format(new Date(startTime)));
-        mainComputedResults.put(EVAL_DURATION, (GameState.stats.timeGame / 10) / 100f + "s");
-        mainComputedResults.put(EVAL_ITEMS_COUNT, String.valueOf(config.getItemsCount()));
-        mainComputedResults.put(EVAL_PICTURES_COUNT, String.valueOf(roundResultsList.stream().mapToInt(RoundResults::getPicturesCount).sum()));
-        mainComputedResults.put(EVAL_SOUNDS_COUNT, String.valueOf(config.getItems().mapToInt(it -> it.getQuestionType() == AUDIO ? 1 : 0).sum()));
+        computedMainResults.put(EVAL_NAME, config.getName());
+        computedMainResults.put(EVAL_PATIENT_ID, config.getPatientId());
+        computedMainResults.put(EVAL_DATE, new SimpleDateFormat("dd/MM/yyyy").format(new Date(startTime)));
+        computedMainResults.put(EVAL_TIME, new SimpleDateFormat("HH:mm").format(new Date(startTime)));
+        computedMainResults.put(EVAL_DURATION, Math.round(GameState.stats.timeGame / 10f) / 100f + "s");
+        computedMainResults.put(EVAL_ITEMS_COUNT, String.valueOf(config.getItemsCount()));
+        computedMainResults.put(EVAL_PICTURES_COUNT, String.valueOf(roundResultsList.stream().mapToInt(RoundResults::getPicturesCount).sum()));
+        computedMainResults.put(EVAL_SOUNDS_COUNT, String.valueOf(config.getItems().mapToInt(it -> it.getQuestionType() == AUDIO ? 1 : 0).sum()));
 
         for (int i = 0; i < config.getItemsCount(); i++) {
             HashMap<String, String> itemComputedResults = new HashMap<>();
@@ -81,13 +81,13 @@ class EvalResults {
             itemComputedResults.put(ITEM_QUESTION, config.getItem(i).getQuestionText()); // Question posée
             if (config.getItem(i).getQuestionType() == QuestionType.TEXT)
                 itemComputedResults.put(ITEM_QUESTION, "\"" + itemComputedResults.get(ITEM_QUESTION) + "\"");
-            itemComputedResults.put(ITEM_LIMIT_TIME, (iConfig.getTimeLimit() / 10) / 100f + "s"); // Temps limite, 2 chiffres après la virgule
-            itemComputedResults.put(ITEM_RESPONSE_TIME, (roundResultsList.get(i).getTimeRound() / 10) / 100f + "s"); // Durée de réponse
+            itemComputedResults.put(ITEM_LIMIT_TIME, Math.round(iConfig.getTimeLimit() / 10f) / 100f + "s"); // Temps limite, 2 chiffres après la virgule
+            itemComputedResults.put(ITEM_RESPONSE_TIME, Math.round(roundResultsList.get(i).getTimeRound() / 10f) / 100f + "s"); // Durée de réponse
             itemComputedResults.put(ITEM_PICTURES_SELECTED, roundResultsList.get(i).getSelectedPictures().stream().map(
                 pictureCoord -> iConfig.getGrid(pictureCoord.getKey(), pictureCoord.getValue()).getName()
             ).toList().toString()); // Images sélectionnées
 
-            itemsComputedResults.add(itemComputedResults);
+            computedItemsResults.add(itemComputedResults);
         }
     }
 
@@ -103,7 +103,7 @@ class EvalResults {
             int i = 0;
             for (String name : ResultsOutput.eval_values()) {
                 mainResultsHeader.createCell(i).setCellValue(name);
-                mainResultsRow.createCell(i).setCellValue(mainComputedResults.get(name));
+                mainResultsRow.createCell(i).setCellValue(computedMainResults.get(name));
                 i++;
             }
 
@@ -113,14 +113,16 @@ class EvalResults {
                 itemsResultsHeader.createCell(i++).setCellValue(name);
 
             int j = 1;
-            for (HashMap<String, String> itemComputedResults : itemsComputedResults) {
+            for (HashMap<String, String> itemResults : computedItemsResults) {
                 Row itemResultsRow = itemsSheet.createRow(j++);
                 i = 0;
                 for (String name : ResultsOutput.item_values())
-                    itemResultsRow.createCell(i++).setCellValue(itemComputedResults.get(name));
+                    itemResultsRow.createCell(i++).setCellValue(itemResults.get(name));
             }
 
-            book.write(new FileOutputStream(outputPath));
+            try (FileOutputStream fileOut = new FileOutputStream(outputPath)) {
+                book.write(fileOut);
+            }
         }
     }
 
@@ -142,12 +144,12 @@ class EvalResults {
 
         export.line();
         for (String name : ResultsOutput.eval_values())
-            export.line(name, mainComputedResults.get(name));
+            export.line(name, computedMainResults.get(name));
 
         export.line();
         export.line(Stream.of(ResultsOutput.item_values()).toArray(String[]::new));
-        for (HashMap<String, String> itemComputedResults : itemsComputedResults)
-            export.line(Stream.of(ResultsOutput.item_values()).map(itemComputedResults::get).toArray(String[]::new));
+        for (HashMap<String, String> itemResults : computedItemsResults)
+            export.line(Stream.of(ResultsOutput.item_values()).map(itemResults::get).toArray(String[]::new));
         out.close();
     }
 }
