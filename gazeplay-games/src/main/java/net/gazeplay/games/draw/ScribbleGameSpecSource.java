@@ -9,7 +9,7 @@ public class ScribbleGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Scribble").gameThumbnail("data/Thumbnails/gribouille.png")
+            GameSummary.builder().nameCode("Scribble").gameThumbnail("gribouille")
                 .category(GameCategories.Category.ACTION_REACTION)
                 .category(GameCategories.Category.MULTIMEDIA).build(),
             new ScribbleGameLauncher());

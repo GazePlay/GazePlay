@@ -9,7 +9,7 @@ public class LettersGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Letters").gameThumbnail("data/Thumbnails/letters.png")
+            GameSummary.builder().nameCode("Letters").gameThumbnail("letters")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LITERACY)
                 .category(GameCategories.Category.MEMORIZATION).build(),

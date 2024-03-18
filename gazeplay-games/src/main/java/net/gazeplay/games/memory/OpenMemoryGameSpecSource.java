@@ -9,7 +9,7 @@ public class OpenMemoryGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("OpenMemory").gameThumbnail("data/Thumbnails/openMemory.png")
+            GameSummary.builder().nameCode("OpenMemory").gameThumbnail("openMemory")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION).build(),
             new MemoryGameVariantGenerator(), new OpenMemoryGameLauncher());

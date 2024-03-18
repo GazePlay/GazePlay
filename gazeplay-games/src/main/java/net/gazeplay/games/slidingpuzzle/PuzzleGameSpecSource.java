@@ -9,7 +9,7 @@ public class PuzzleGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Puzzle").gameThumbnail("data/Thumbnails/slidingpuzzle.png")
+            GameSummary.builder().nameCode("Puzzle").gameThumbnail("slidingpuzzle")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.MEMORIZATION).build(),

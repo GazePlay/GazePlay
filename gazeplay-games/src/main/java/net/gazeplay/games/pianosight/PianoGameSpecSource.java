@@ -9,10 +9,10 @@ public class PianoGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Piano").gameThumbnail("data/Thumbnails/pianosight.png")
+            GameSummary.builder().nameCode("Piano").gameThumbnail("pianosight")
                 .category(GameCategories.Category.ACTION_REACTION)
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MULTIMEDIA).build(),
-            new PianoGameLauncher());
+            new PianoGameVariantGenerator(), new PianoGameLauncher());
     }
 }

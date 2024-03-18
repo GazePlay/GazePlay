@@ -184,6 +184,7 @@ public class Card extends Parent {
     }
 
     private void onWrongCardSelected() {
+        stats.incrementNumberOfMistakes();
 
         currentTimeline.stop();
         currentTimeline = new Timeline();

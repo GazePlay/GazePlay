@@ -8,6 +8,7 @@ name: Release GazePlay
 jobs:
   release:
     runs-on: ubuntu-latest
+    
     steps:
 
       - name: Free Disk Space (Ubuntu)
@@ -21,30 +22,35 @@ jobs:
           swap-storage: false
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
-          java-version: 17
+          distribution: 'zulu'
+          java-version: '17'
+          
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
 
       - name: Download JREs
         run: |
           chmod +x ./gradlew
           ./gradlew --stacktrace --info downloadAndExtractJREs
           chmod -R 777 build/jre
-
       - name: Setup Git Config
         run: |
           git config --global user.email "ci@gazeplay.net"
           git config --global user.name "GazePlay Automation"
-
+          
       - name: Generate Releases
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ./gradlew --stacktrace --info release
-
+          
       # add this for installer 32bits afsr and bera (don't forget to uncomment the lines at the very bottom of the build.gradle file at the root
       # mv gazeplay-afsr-windows-x32*installer.exe gazeplay-afsr-windows-x32-installer.exe
       # mv gazeplay-bera-windows-x32*installer.exe gazeplay-bera-windows-x32-installer.exe
@@ -64,13 +70,13 @@ jobs:
           mv gazeplay-bera-windows-x64*.zip gazeplay-bera-windows-x64.zip
           mv gazeplay-bera-windows-x64*installer.exe gazeplay-bera-windows-x64-installer.exe
           mv gazeplay-bera-windows-x32*.zip gazeplay-bera-windows-x32.zip
-          mv gazeplay-no-jre*.zip gazeplay-no-jre.zip
-
+          mv gazeplay-no-jre*.zip gazeplay-no-jre.zip          
+          
       - name: Get Env
         run: |
           echo "REPO_NAME=${{ github.repository }}" >> $GITHUB_ENV
           echo "REPO_BASENAME=$(basename ${{ github.repository }})" >> $GITHUB_ENV
-
+          
       - name: New tag
         id: new-tag
         run: |
@@ -85,75 +91,20 @@ jobs:
           TAG_3=$(echo "$GET_TAG" | cut -d. -f3)
           NEW_TAG=$(echo "$(( $TAG_3 + 1 ))")
           TAG="${TAG_1}.${TAG_2}.${NEW_TAG}"
-          echo ::set-output name=tag::$(echo $TAG)
-
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          
+      # add this to add afsr installer 32bits to the release
+      # ./build/distributions/gazeplay-afsr-windows-x32-installer.exe   
+      # add this to add bera installer 32bits to the release
+      # ./build/distributions/gazeplay-bera-windows-x32-installer.exe
       - name: Create GitHub Release
         id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: ${{ steps.new-tag.outputs.tag }}
-          release_name: ${{ env.REPO_BASENAME }} ${{ steps.new-tag.outputs.tag }}
-          draft: false
+          tag: ${{ steps.new-tag.outputs.tag }}
+          name: ${{ env.REPO_BASENAME }} ${{ steps.new-tag.outputs.tag }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit: "master"
           prerelease: true
-
-      - name: Upload Gazeplay Linux/Mac/Arm to Release
-        id: upload-gazeplay-assets
-        uses: csexton/release-asset-action@v2
-        with:
-          release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
-          files: |
-            ./build/distributions/gazeplay-linux-x64.tar.gz
-            ./build/distributions/gazeplay-macos.tar.gz
-            ./build/distributions/gazeplay-arm.tar.gz
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Gazeplay Windows to Release
-        id: upload-windows-assets
-        uses: csexton/release-asset-action@v2
-        with:
-          release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
-          files: |
-            ./build/distributions/gazeplay-windows-x64.zip
-            ./build/distributions/gazeplay-windows-x64-installer.exe
-            ./build/distributions/gazeplay-windows-x32.zip
-            ./build/distributions/gazeplay-windows-x32-installer.exe
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Gazeplay-AFSR to Release
-        id: upload-afsr-assets
-        uses: csexton/release-asset-action@v2
-        with:
-          release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
-
-          # add this to add afsr installer 32bits to the release
-          # ./build/distributions/gazeplay-afsr-windows-x32-installer.exe
-          files: |
-            ./build/distributions/gazeplay-afsr-windows-x64.zip
-            ./build/distributions/gazeplay-afsr-windows-x64-installer.exe
-            ./build/distributions/gazeplay-afsr-windows-x32.zip
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Gazeplay-Bera to Release
-        id: upload-bera-assets
-        uses: csexton/release-asset-action@v2
-        with:
-          release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
-
-          # add this to add bera installer 32bits to the release
-          # ./build/distributions/gazeplay-bera-windows-x32-installer.exe
-          files: |
-            ./build/distributions/gazeplay-bera-windows-x64.zip
-            ./build/distributions/gazeplay-bera-windows-x64-installer.exe
-            ./build/distributions/gazeplay-bera-windows-x32.zip
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Upload No JRE to Release
-        id: upload-nojre-assets
-        uses: csexton/release-asset-action@v2
-        with:
-          release-url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`.
-          files: |
-            ./build/distributions/gazeplay-no-jre.zip
-          github-token: ${{ secrets.GITHUB_TOKEN }}    
+          draft: false
+          artifacts: "./build/distributions/gazeplay-linux-x64.tar.gz,./build/distributions/gazeplay-macos.tar.gz,./build/distributions/gazeplay-arm.tar.gz,./build/distributions/gazeplay-windows-x64.zip,./build/distributions/gazeplay-windows-x64-installer.exe,./build/distributions/gazeplay-windows-x32.zip,./build/distributions/gazeplay-windows-x32-installer.exe,./build/distributions/gazeplay-afsr-windows-x64.zip,./build/distributions/gazeplay-afsr-windows-x64-installer.exe,./build/distributions/gazeplay-afsr-windows-x32.zip,./build/distributions/gazeplay-bera-windows-x64.zip,./build/distributions/gazeplay-bera-windows-x64-installer.exe,./build/distributions/gazeplay-bera-windows-x32.zip,./build/distributions/gazeplay-no-jre.zip"

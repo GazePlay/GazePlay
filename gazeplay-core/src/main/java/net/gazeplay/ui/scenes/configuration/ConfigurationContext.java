@@ -2,6 +2,7 @@ package net.gazeplay.ui.scenes.configuration;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -524,6 +525,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
+        {
+            I18NText label = new I18NText(translator, "PianoTileColors", COLON);
+
+            HBox input = chooseColorHBox(config.getTileColorsProperty());
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
 
 
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "EyeTrackerSettings", COLON));
@@ -554,8 +562,16 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
-            I18NText label = new I18NText(translator, "BackgroundStyle", COLON);
-            HBox input = buildBackgroundStyleToggleGroup(config, translator);
+            // TO BE USED WITH DARK/LIGHT BACKGROUND SETTINGS
+//            I18NText label = new I18NText(translator, "BackgroundStyle", COLON);
+//            HBox input = buildBackgroundStyleToggleGroup(config, translator);
+//
+//            addToGrid(grid, currentFormRow, label, input);
+
+            // TO BE USED WITH COLORED BACKGROUND SETTINGS
+            I18NText label = new I18NText(translator, "BackgroundColor", COLON);
+
+            HBox input = chooseColorHBox(config.getBackgroundColorProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -1477,6 +1493,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
     }
 
+    private HBox chooseColorHBox(StringProperty property){
+        HBox hBox = new HBox();
+        hBox.setSpacing(5);
+        ColorPicker colorPicker = new ColorPicker(Color.web(property.getValue()));
+        colorPicker.valueProperty().addListener((observableValue, color, t1) -> property.setValue(colorPicker.getValue().toString()));
+        hBox.getChildren().add(colorPicker);
+        return hBox;
+    }
+
     HBox buildHeatMapColorHBox(Configuration config, Translator translator) {
         HBox hbox = new HBox();
         hbox.setSpacing(5);
@@ -1647,6 +1672,10 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         }
         log.info(stringBuilder.toString());
         config.setHeatMapColors(stringBuilder.toString());
+    }
+
+    private void updateTileColorProperty(HBox hbox, Configuration config) {
+        config.setTileColors(((ColorPicker) (hbox.getChildren().get(0))).getValue().toString());
     }
 
     public void changeConstrutorCss(Configuration config){

@@ -22,10 +22,12 @@ import net.gazeplay.*;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
+import net.gazeplay.commons.utils.ThumbnailImage;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
 import java.util.concurrent.atomic.AtomicReference;
 
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
@@ -53,15 +55,14 @@ public class GameMenuFactory {
         @NonNull final Configuration config,
         @NonNull final Translator translator,
         @NonNull final GameSpec gameSpec,
-        @NonNull final GameButtonOrientation orientation
+        @NonNull final GameButtonOrientation orientation,
+        @NonNull final ThumbnailImage thumbnailImage
     ) {
 
         final GameSummary gameSummary = gameSpec.getGameSummary();
         final String gameName = translator.translate(gameSummary.getNameCode());
 
-        final Image heartIcon;
-        heartIcon = new Image("data/common/images/heart_filled.png");
-        ImageView favGamesImageView = new ImageView(heartIcon);
+        ImageView favGamesImageView = new ImageView(new Image("data/common/images/heart_filled.png"));
 
         if (config.getFavoriteGamesProperty().contains(gameSummary.getNameCode())) {
             favGamesImageView.setEffect(null);
@@ -104,36 +105,6 @@ public class GameMenuFactory {
 
         BorderPane gameDescriptionPane = new BorderPane();
 
-
-        if (gameSummary.getGameThumbnail() != null) {
-
-            Image buttonGraphics = new Image(gameSummary.getGameThumbnail(), 200, 200, true, false);
-            ImageView imageView = new ImageView(buttonGraphics);
-            imageView.getStyleClass().add("gameChooserButtonThumbnail");
-            imageView.setPreserveRatio(true);
-            thumbnailContainer.setCenter(imageView);
-
-            double imageSizeRatio = buttonGraphics.getWidth() / buttonGraphics.getHeight();
-
-            switch (orientation) {
-                case HORIZONTAL:
-                    gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
-                        double preferredHeight = newValue.doubleValue() - thumbnailBorderSize;
-                        imageView.setFitHeight(preferredHeight - 10);
-                        imageView.setFitWidth(preferredHeight * imageSizeRatio);
-                    });
-
-                    break;
-                case VERTICAL:
-                    gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
-                        double preferredWidth = newValue.doubleValue() * THUMBNAIL_WIDTH_RATIO;
-                        imageView.setFitWidth(preferredWidth);
-                    });
-                    gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue() * THUMBNAIL_HEIGHT_RATIO));
-                    break;
-            }
-        }
-
         final HBox gameCategoryContainer = new HBox();
         final VBox favIconContainer = new VBox(favGamesImageView);
 
@@ -165,6 +136,37 @@ public class GameMenuFactory {
                         gameCategoryContainer.getChildren().add(imageView);
                         break;
                 }
+            }
+        }
+
+        if (gameSummary.getGameThumbnail() != null) {
+
+            log.info("---TEST--- = " + gameSummary.getGameThumbnail());
+
+            String path = thumbnailImage.getPathThumbnailImg(gameSummary.getGameThumbnail());
+            ImageView imageView = new ImageView(new Image(path, 200, 200, true, false));
+            imageView.getStyleClass().add("gameChooserButtonThumbnail");
+            imageView.setPreserveRatio(true);
+            thumbnailContainer.setCenter(imageView);
+
+            double imageSizeRatio = imageView.getImage().getWidth() / imageView.getImage().getHeight();
+
+            switch (orientation) {
+                case HORIZONTAL:
+                    gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> {
+                        double preferredHeight = newValue.doubleValue() - thumbnailBorderSize;
+                        imageView.setFitHeight(preferredHeight - 10);
+                        imageView.setFitWidth(preferredHeight * imageSizeRatio);
+                    });
+
+                    break;
+                case VERTICAL:
+                    gameCard.widthProperty().addListener((observableValue, oldValue, newValue) -> {
+                        double preferredWidth = newValue.doubleValue() * THUMBNAIL_WIDTH_RATIO;
+                        imageView.setFitWidth(preferredWidth);
+                    });
+                    gameCard.heightProperty().addListener((observableValue, oldValue, newValue) -> imageView.setFitHeight(newValue.doubleValue() * THUMBNAIL_HEIGHT_RATIO));
+                    break;
             }
         }
 

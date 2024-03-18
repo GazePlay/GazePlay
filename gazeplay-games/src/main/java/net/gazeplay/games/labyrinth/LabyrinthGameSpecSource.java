@@ -9,7 +9,7 @@ public class LabyrinthGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Labyrinth").gameThumbnail("data/Thumbnails/labyrinth.png")
+            GameSummary.builder().nameCode("Labyrinth").gameThumbnail("labyrinth")
                 .category(GameCategories.Category.ACTION_REACTION)
                 .category(GameCategories.Category.SELECTION).build(),
             new LabyrinthGameVariantGenerator(), new LabyrinthGameLauncher());

@@ -55,6 +55,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_BACKGROUND_ENABLED = "BACKGROUND_ENABLED";
     private static final String PROPERTY_NAME_DARK_THEME_ENABLED = "DARK_THEME_ENABLED";
     private static final String PROPERTY_NAME_MENU_BUTTONS_ORIENTATION = "MENU_BUTTONS_ORIENTATION";
+    private static final String PROPERTY_NAME_BACKGROUND_COLOR = "BACKGROUND_COLOR";
     /* Directories settings */
     private static final String PROPERTY_NAME_FILE_DIR = "FILE_DIR";
     private static final String PROPERTY_NAME_MUSIC_DIR = "MUSIC_DIR";
@@ -64,6 +65,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_HEATMAP_DISABLED = "HEATMAP_DISABLED";
     private static final String PROPERTY_NAME_HEATMAP_OPACITY = "HEATMAP_OPACITY";
     private static final String PROPERTY_NAME_HEATMAP_COLORS = "HEATMAP_COLORS";
+    private static final String PROPERTY_NAME_TILE_COLORS = "TILE_COLORS";
     private static final String PROPERTY_NAME_AREA_OF_INTEREST_DISABLED = "AREA_OF_INTEREST_DISABLED";
     private static final String PROPERTY_NAME_CONVEX_HULL_DISABLED = "CONVEX_HULL_DISABLED";
     private static final String PROPERTY_NAME_VIDEO_RECORDING_ENABLED = "VIDEO_RECORDING_ENABLED";
@@ -115,6 +117,7 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_BACKGROUND_ENABLED = true;
     private static final boolean DEFAULT_VALUE_DARK_THEME_ENABLED = false;
     private static final String DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION = "HORIZONTAL";
+    private static final String DEFAULT_VALUE_BACKGROUND_COLOR = "BLACK";
     /* Directories settings */
     public static final String DEFAULT_VALUE_MUSIC_DIR = "";
     public static final String DEFAULT_VALUE_WHERE_IS_IT_DIR = "";
@@ -122,6 +125,7 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_HEATMAP_DISABLED = false;
     private static final double DEFAULT_VALUE_HEATMAP_OPACITY = 0.7;
     public static final String DEFAULT_VALUE_HEATMAP_COLORS = "0000FF,00FF00,FFFF00,FF0000";
+    public static final String DEFAULT_VALUE_TILE_COLORS = "FFA500";
     private static final boolean DEFAULT_VALUE_AREA_OF_INTEREST_DISABLED = false;
     private static final boolean DEFAULT_VALUE_CONVEX_HULL_DISABLED = false;
     private static final boolean DEFAULT_VALUE_VIDEO_RECORDING_ENABLED = false;
@@ -196,6 +200,8 @@ public class Configuration {
     @Getter
     private final BooleanProperty darkThemeEnabledProperty;
     @Getter
+    private final StringProperty backgroundColorProperty;
+    @Getter
     private final StringProperty menuButtonsOrientationProperty;
     /* Directories settings */
     @Getter
@@ -213,6 +219,8 @@ public class Configuration {
     private final DoubleProperty heatMapOpacityProperty;
     @Getter
     private final StringProperty heatMapColorsProperty;
+    @Getter
+    private final StringProperty tileColorsProperty;
     @Getter
     private final BooleanProperty areaOfInterestDisabledProperty;
     @Getter
@@ -283,6 +291,7 @@ public class Configuration {
         limiterTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_TIME, DEFAULT_VALUE_LIMITER_TIME, propertyChangeListener);
         limiterScoreEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_LIMITER_SCORE_ENABLED, DEFAULT_VALUE_LIMITER_SCORE_ENABLED, propertyChangeListener);
         limiterScoreProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_LIMITER_SCORE, DEFAULT_VALUE_LIMITER_SCORE, propertyChangeListener);
+        tileColorsProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_TILE_COLORS, DEFAULT_VALUE_TILE_COLORS, propertyChangeListener);
 
         /* Bera settings */
         transitionTimeProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_TRANSITION_TIME, DEFAULT_VALUE_TRANSITION_TIME, propertyChangeListener);
@@ -304,6 +313,7 @@ public class Configuration {
         backgroundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_ENABLED, DEFAULT_VALUE_BACKGROUND_ENABLED, propertyChangeListener);
         darkThemeEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_DARK_THEME_ENABLED, DEFAULT_VALUE_DARK_THEME_ENABLED, propertyChangeListener);
         menuButtonsOrientationProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_MENU_BUTTONS_ORIENTATION, DEFAULT_VALUE_MENU_BUTTONS_ORIENTATION, propertyChangeListener);
+        backgroundColorProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_BACKGROUND_COLOR, DEFAULT_VALUE_BACKGROUND_COLOR, propertyChangeListener);
 
         /* Directories settings */
         fileDirProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FILE_DIR, GazePlayDirectories.getDefaultFileDirectoryDefaultValue().getAbsolutePath(), propertyChangeListener);
@@ -514,6 +524,10 @@ public class Configuration {
         return colors;
     }
 
+    public Color getTileColors(){
+        return Color.web(tileColorsProperty.getValue());
+    }
+
     public Boolean isAreaOfInterestDisabled() {
         return areaOfInterestDisabledProperty.getValue();
     }
@@ -693,6 +707,10 @@ public class Configuration {
 
     public void setHeatMapColors(final String heatMapColors) {
         heatMapColorsProperty.setValue(heatMapColors);
+    }
+
+    public void setTileColors(final String tileColors){
+        tileColorsProperty.setValue(tileColors);
     }
 
     /* In game settings */

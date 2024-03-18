@@ -82,6 +82,9 @@ WhereIsTheLetter,Ku është letra?,اين الرسالة؟,Дзе ліст?,信�
 WhereIsTheNumber,Ku është numri?,اين الرقم؟,Дзе нумар?,号码在哪里？,Wo ist die Nummer?,Πού είναι ο αριθμός;,Where is the number?,Missä numero on?,Où est le chiffre ?,संख्या कहां है?,Gdje je broj?,Dimana nomornya?,Dov'è il numero?,番号はどこですか？,Waar is het nummer?,Gdzie jest numer?,Onde está o número?,Где номер?,¿Dónde está el número?,Số ở đâu?,Mana nombornya?
 WhereIsTheShape,Ku është forma?,اين الشكل؟,Дзе форма?,形状在哪里？,Wo ist die Form?,Πού είναι το σχήμα;,Where is the shape?,Missä muoto on?,Où est la forme ?,आकृति कहाँ है?,Gdje je oblik?,Dimana bentuknya?,Dov'è la forma?,形はどこ？,Waar is de vorm?,Gdzie jest kształt?,Onde está a forma?,Где форма?,¿Dónde está la forma?,Hình dạng ở đâu?,Di manakah bentuknya?
 WhereIsTheSound,Çfarë është ky tingull?,ما هذا الصوت؟,Што гэта за гук?,这是什么声音？,Was ist das für ein Geräusch?,Τι είναι αυτός ο ήχος;,What is this sound?,Mikä tämä ääni on?,Quel est ce son ?,यह ध्वनि क्या है?,Kakav je ovo zvuk?,Suara apa ini?,Cos'è questo suono?,この音は何ですか？,Wat is dit geluid?,Co to za dźwięk?,O que é esse som?,Что это за звук?,¿Qué es este sonido?,Đây là âm thanh gì?,Apakah bunyi ini?
+Connect4,,,,,,,Connect 4,,Puissance 4,,,,,,,,,,,,
+TrainSwitches,,,,,,,Train Switches,,Aiguillages,,,,,,,,,,,,
+TowerDefense,,,,,,,Tower Defense,,Défendre le chateau,,,,,,,,,,,,
 
 # VARIANT CHOOSE TEXTS
 Choose Game Variant,Zgjidhni një variant të lojës,اختر نوع اللعبة,Выберыце варыянт гульні,选择游戏变体,Wähle eine Spielvariante,Επιλέξτε μια παραλλαγή παιχνιδιού,Choose a Game Variant,Valitse peliversio,Choisissez une variante de jeu,एक गेम प्रकार चुनें,Odaberite varijantu igre,Pilih varian permainan,Scegli una variante di gioco,ゲームのバリエーションを選択してください,Kies een spelvariant,Wybierz wariant gry,Escolha uma variante de jogo,Выберите вариант игры,Elige una variante del juego,Chọn một biến thể trò chơi,Pilih varian permainan
@@ -95,6 +98,7 @@ cups,tasa,كؤوس,кубкі,,,,cups,,gobelets,,,,tazze,,Bekers,,,чашки,ta
 players,,,гульцы,玩家,,,players,,joueurs,,,,,,spelers,,,игроки,,,
 targets,shënjestra,أهداف,мэты,目标,,,targets,,objectifs,,,,bersagli,,Doelen,,,цели,objetivos,,
 NoEvalsFound,,,,,,,No evaluations found !,,Pas d'évaluations trouvées !,,,,,,,,,,,,
+NumberOfTrains,,,,,,,Number of trains,,Nombre de trains,,,,,,,,,,,,
 
 # VARIANT CATEGORIES
 Static,,,,,,,Static,,Statique,,,,,,,,,,,,
@@ -215,6 +219,15 @@ Farm,,,Ферма,农场,,,Farm,,Ferme,,,,,,Boerderij,,,Ферма,,,
 Jungle,,,Джунглі,丛林,,,Jungle,,Jungle,,,,,,Jungle,,,Джунгли,,,
 Savanna,,,Саванна,稀树草原,,,Savanna,,Savane,,,,,,Savanne,,,Саванна,,,
 Sea,,,Мора,,,,Sea,,Mer,,,,,,,,,Море,,,
+Freeplay,,,,,,,Freeplay,,Jeu libre,,,,,,,,,,,,
+PlayWithInstructions,,,,,,,Play by following instructions,,Jouer en suivant les instructions,,,,,,,,,,,,
+PlayerStart,,,,,,,Play first,,Jouer en premier,,,,,,,,,,,,
+AiStart,,,,,,,Play second,,Jouer en second,,,,,,,,,,,,
+ClassicTrain,,,,,,,Classic,,Classique,,,,,,,,,,,,
+PauseTrain,,,,,,,Game is paused when a train reach a switch,,Le jeu se met en pause lorsqu'un train arrive à un aiguillage,,,,,,,,,,,,
+InfiniteTrain,,,,,,,Trains are sent again if they reach the wrong station,,Les trains sont réenvoyés lorsqu'ils atteignent la mauvaise gare,,,,,,,,,,,,
+UniqueTrain,,,,,,,Only one train at a time,,Un seul train à la fois,,,,,,,,,,,,
+Stations,,,,,,,Stations,,Gares,,,,,,,,,,,,
 
 # CONTEXT TITLES
 ConfigTitle,Konfigurimi,ترتيب,Канфігурацыя,恭喜你！,Konfiguration,Διαμόρφωση,Configuration,asetuksen nimi,Configuration,विन्यास,Konfiguracija,Konfigurasi,Configurazione,構成,Configuratie,Konfiguracja,Configuraçaô,Конфигурация,Configuración,Tùy chỉnh,Konfigurasi
@@ -289,6 +302,7 @@ ReaskQuestionOnFail,,,Задаць пытанне зноў калі няправ
 EnableRewardSound,Aktivizo audion për shpërblimet,تفعيل الصوت (احسنت),Ўключыць гук ўзнагароджання,打开奖励音效,Aktiviere den Sound Bravo,Ενεργοποίηση ήχου ανταμοιβής,Enable Reward sound,sallia palkkioääni,Activer le son « bravo »,,Aktiviraj zvuk za,Dayakan bunyi Ganjaran,Attiva suono ricompensa,,Activeer beloningsgeluid,Włącz dźwięk nagrody,Activar o som a « Bravo »,Включить звук вознаграждения,Activar el sonido Bravo,Bật tiếng,Dayakan bunyi Ganjaran
 Limiter Time,,,Абмежавальнік часу,时间限制器,,,Time Limiter,,Limiteur de Temps,,,,,,,,,Ограничитель времени,,,
 Limiter Score,,,Абмежавальнік выніку,分数限制器,,,Score Limiter,,Limiteur de Score,,,,,,,,,Ограничитель счёта,,,
+PianoTileColors,,,,,,,Panio tile color,,Couleur tuile piano,,,,,,,,,,,,
 Score,,,вынік,分数,,,Score,,Score,,,,,,,,,счёт,,,
 Time,,,Час (у секундах),时间 (秒),,,Time (seconds),,Temps (secondes),,,,,,,,,Время (в секундах),,,
 
@@ -302,6 +316,8 @@ BackgroundStyle,,,Стыль фону,,,,Background style,,Style de fond,,,,,,,,
 MenuOrientation,Orientimi i menusë (nevojitet rinisja e lojës),إتجاه القائمة,Становішча меню (перазапусціце гульню для актывацыі),菜单方向,Menüorientierung (erfordert Neustart des Spiels),Μενού προσανατολισμού (επανεκκίνηση του παιχνιδιού για να τεθεί σε ισχύ),Menu Orientation (restart game to take effect),valikon suunta,Orientation du menu (nécessite de relancer le jeu),,Orjentacijski meni (restartiraj igru za aktivaciju),Orientasi Menu (memulakan semula permainan untuk berkuatkuasa),Orientazione del menù (è richiesto il riavvio del gioco),,Richting menu (herstart nodig voor activering),Orientacja menu (uruchom ponownie grę),orientacaõ domens,Положение меню (перезапустите игру для активации),Orientación del menú (requiere reiniciar el juego),Phương ngang/dọc của menu (Khởi động lại để có hiệu lực),Orientasi Menu (memulakan semula permainan untuk berkuatkuasa)
 BackgroundEnabled,,,Актываваць карцінкі на фоне,,,,Background images enabled,,Fonds d'écran activés,,,,,,,,,Активировать картинки на фоне,,,
 DarkTh,,,,,,,Dark Theme,,Thème sombre,,,,,,,,,,,,
+BackgroundColor,,,,,,,Background Color,,Couleur de fond,,,,,,,,,,,,
+Color,,,,,,,Color,,Couleur,,,,,,,,,,,,
 Dark,,,Цёмны,,,,Dark,,Sombre,,,,,,,,,Тёмный,Oscuro,,
 Light,,,Светлы,,,,Light,,Clair,,,,,,,,,Светлый,Claro,,
 
@@ -366,6 +382,7 @@ UncountedShot,Gjuajtje të panumëruara,رميات غير محتسبة,Няўл�
 Mouse,,,Мышка,,,,Mouse,,Souris,,,,,,,,,Мышка,,,
 Gaze,,,Погляд,,,,Gaze,,Regard,,,,,,,,,Взгляд,,,
 MouseAndGaze,,,Мышка і погляд,,,,Mouse and Gaze,,Souris et Regard,,,,,,,,,Мышка и взгляд,,,
+Mistakes,,,,,,,Mistakes,,Erreurs
 
 # BERA STATS CONTEXT
 TimeGame,,,,,,,Time game,,Temps de jeu,,,,,,,,,,,,
@@ -450,6 +467,12 @@ Differences found,Ndryshimet e gjetura,,Знойдзеныя адрозненн�
 Highscore,Rekord,أعلى نتيجة,Лепшы вынік,最高得分,,,Highscore,,Meilleur score,,,,Record !,,Hoogste Score,,,Лучший результат,Récord,,
 New highscore!,Rekord i ri !,نتيجة عالية جديدة,Новы рэкорд!,新记录！,,,New highscore!,,Nouveau meilleur score!,,,,Nuovo record !,,Nieuwe hoogste score!,,,Новый рекорд!,Niuevo récord !,,
 
+# CONNECT4 GAME
+CurrentPlayer,,,,,,,Current player :,,Joueur actuel :,,,,,,,,,,,,
+
+# TRAIN GAME
+ResumeButton,,,,,,,Resume the game,,Reprendre le jeu,,,,,,,,,,,,
+
 # ERROR MESSAGES
 WII-error,Verifikim i direktorisë “Ku është?”,تثبت من دليل اللعبة اين هذا؟,"Праверце тэчку для гульні ""Дзе гэта?""",查找《它在哪》游戏目录,Überprüfen Spielverzeichnis « Wo ist es? »,Ελέγξτε «Πού είναι;,Check « Where is it? » Game directory,Tarkista «Missä se on? » Pelihakemisto,Vérifiez le répertoire du jeu « Où est-ce ? ».,,Provjeri,Semak « Di mana? » Arahan permainan,"Controllo cartella di gioco ""Dov'è?""""ontroll ",,Controleer de « Waar is het » Spel bestandslocatie,Sprawdź «Gdzie to jest? » Katalog gier,*Verifique «Onde está?,"Проверьте папку для игры ""Где это?""","Verifica el directorio del juego ""¿Donde está?""""erifica el di ",Kiểm tra Thư mục game,Semak «Di mana? » Arahan permainan
 File %s is not supported,,,Файл %s не падыходзіць па тыпу,不支持文件 %s ,,,File %s is not supported,,Le fichier %s n'est pas compatible,,,,,,Bestand %s wordt niet ondersteund,,,Файл %s не подходит по типу,,,
@@ -460,3 +483,52 @@ SorryButReplayInvalid,,,Не можна пераграць гульню '{}',,,,
 EnableGazeMouse,Aktivizo mouse,تشغيل مظاهات الفارة البصرية اضغط س لايقاف/تشغيل,Ўключыць эмуляцыю Gaze мышкі; націсніце на S каб пачаць / спыніць эмуляцыю; націсніце прабел для эмуляцыі кліка,开启眼动鼠标，S键开始/停止，空格替代鼠标点击,Aktivieren der visuellen Mausemulation ; drücken Sie S um die Emulation zu stoppen/starten ; Drücken Sie die Leertaste um den Mausklick zu emulieren.,Ενεργοποιήστε την εξομοίωση του Mouse Gaze. πατήστε S για να διακόψετε ; ξεκινήσετε την εξομοίωση. Πατήστε το πλήκτρο διαστήματος για να εξομοιώσετε το κλικ.,Enable the Gaze Mouse emulation ; press S to stop/start the emulation ; Press space to emulate click,aktivoi katseohjainhiiri,Activer l'émulation de la souris visuelle ; appuyez sur S pour arrêter/commencer l'émulation ; appuyez sur espace pour émuler un click de souris,,Aktiviraj opciju pogled; Pritisni S za stop/start; Pritisni razmaknicu za efekt klik misa,Dayakan emulasi Gaze Mouse; tekan S untuk menghentikan / memulakan emulasi; Tekan ruang untuk meniru klik,Attiva modalità emulazione mouse ; premi S per fermare/avviare l'emulatore ; premi spazio per emulare il click del mouse,,Activeer de oogsturing via muissimulatie ; druk S om de muissimulaite te stoppen/starten ; klik op de spatiebar om een klik na te doen,Włącz emulację Gaze Mouse; naciśnij S,*Ative a emulação do Gaze Mouse; pressione S para parar / iniciar a emulação; Pressione espaço para emular clique,Включить эмуляцию Gaze мышки ; нажмите на S чтобы начать/остановить эмуляцию; нажмите пробел для эмуляции клика,Activación de la emulación del ratón visual ; presione S para detener/iniciar la emulación ; presione espacio para emular el clic,Bật giả lập Chuột Gaze; ấn S để dừng/bắt đầu giả lập,Dayakan emulasi Gaze Mouse; tekan S untuk menghentikan / memulakan emulasi; Tekan ruang untuk meniru klik
 free,Lehtë,حر,Лёгкі,简单,,,Free,,Facile,,,,Facile,,Gratis,,,Лёгкий,Fácil,,
 Utilities,Utilities,,Утыліты,工具,,,Utilities,,Utilitaires,,,,Utilities,,,,,Утилиты,,,
+
+# Egg Game
+ImageShrink,,,,,,, Image Shrink ,, Image rétrécie ,,,,,,,,,,,,
+
+# Rush Hour level | Sprint to the finish selection
+Niveau1-5,,,,,,, Level 1-5 ,, Niveau 1-5 ,,,,,,,,,,,,
+Niveau6-11,,,,,,, Level 6-11 ,, Niveau 6-5 ,,,,,,,,,,,,
+Niveau12-17,,,,,,, Level 12-17 ,, Niveau 12-17 ,,,,,,,,,,,,
+Niveau18-23,,,,,,, Level 18-23 ,, Niveau 18-23 ,,,,,,,,,,,,
+Niveau24-29,,,,,,, Level 24-29 ,, Niveau 24-29 ,,,,,,,,,,,,
+Niveau30-33,,,,,,, Level 30-33 ,, Niveau 30-33 ,,,,,,,,,,,,
+
+# Simon Game
+Simon,,,,,,, Simon ,, Simon ,,,,,,,,,,,,
+Simon copy you,,,,,,, Simon copies you ,, Simon te copie ,,,,,,,,,,,,
+Multiplayer,,,,,,, Multiplayer ,, Multijoueur ,,,,,,,,,,,,
+Player 1 turn,,,,,,, Player 1 turn ,, Tour du joueur 1 ,,,,,,,,,,,,
+Player 2 turn,,,,,,, Player 2 turn ,, Tour du joueur 2 ,,,,,,,,,,,,
+
+# Survive Against Robot game
+SurviveAgainstRobots,,,,,,, Survive Against Robots ,, Survivre contre des robots ,,,,,,,,,,,,
+SurviveAgainstRobotsMouse,,,,,,, Survive Against Robots (Gaze) ,, Survivre contre des robots (Regard) ,,,,,,,,,,,,
+Easy_AUTO_KEYBOARD,,,,,,, Easy auto keyboard ,, Facile auto clavier ,,,,,,,,,,,,
+Normal_AUTO_KEYBOARD,,,,,,, Normal auto keyboard ,, Normal auto clavier ,,,,,,,,,,,,
+Hard_AUTO_KEYBOARD,,,,,,, Hard auto keyboard ,, Difficile auto clavier ,,,,,,,,,,,,
+Easy_KEYBOARD,,,,,,, Easy keyboard ,, Facile clavier ,,,,,,,,,,,,
+Normal_KEYBOARD,,,,,,, Normal keyboard ,, Normal clavier ,,,,,,,,,,,,
+Hard_KEYBOARD,,,,,,, Hard keyboard ,, Difficile clavier ,,,,,,,,,,,,
+
+Easy_AUTO_MOUSE,,,,,,, Easy auto mouse ,, Facile auto souris ,,,,,,,,,,,,
+Normal_AUTO_MOUSE,,,,,,, Normal auto mouse ,, Normal auto souris ,,,,,,,,,,,,
+Hard_AUTO_MOUSE,,,,,,, Hard auto mouse ,, Difficile auto souris ,,,,,,,,,,,,
+Easy_MOUSE,,,,,,, Easy mouse ,, Facile souris ,,,,,,,,,,,,
+Normal_MOUSE,,,,,,, Normal mouse ,, Normal souris ,,,,,,,,,,,,
+Hard_MOUSE,,,,,,, Hard mouse ,, Difficile souris ,,,,,,,,,,,,
+
+# Sprint to the finish name
+SprintFinish,,,,,,, Sprint jusqu'à l'arrivée ,, Sprint to the finish ,,,,,,,,,,,,
+SprintFinishMouse,,,,,,, Sprint jusqu'à l'arrivée (Souris/Yeux) ,, Sprint to the finish (Mouse/Gaze) ,,,,,,,,,,,,
+SprintFinish,,,,,,, Sprint to the finish ,, Sprint jusqu'à l'arrivée ,,,,,,,,,,,,
+SprintFinishMouse,,,,,,, Sprint to the finish (Gaze) ,, Sprint jusqu'à l'arrivée (Regard) ,,,,,,,,,,,,
+
+# GazeRace
+GazeRace,,,,,,, GazeRace ,, GazeRace ,,,,,,,,,,,,
+Play horizontally,,,,,,, Play horizontally ,, Jouer horizontalement
+Play vertically,,,,,,, Play vertically ,, Jouer verticalement
+
+# Tower Defense
+SendWave,,,,,,, Envoyer la vague suivante ,, Send next wave ,,,,,,,,,,,,

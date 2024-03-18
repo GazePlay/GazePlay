@@ -9,7 +9,7 @@ public class RabbitsGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Rabbits").gameThumbnail("data/Thumbnails/rabbits.png")
+            GameSummary.builder().nameCode("Rabbits").gameThumbnail("rabbits")
                 .category(GameCategories.Category.ACTION_REACTION).build(),
             new RabbitsGameLauncher());
     }

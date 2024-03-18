@@ -129,7 +129,7 @@ BibJump,Biboule Jump,بيبول يقذف,Biboule 跳,Biboule Jump,Biboule Jump,B
 Score,Pikët,مجموع النقاط,得分,,,Score,,Score,,,Punteggio,,,,,Score,,Puntuación,
 Highscore,Rekord,أعلى نتيجة,最高得分,,,Highscore,,Meilleur score,,,Record !,,,,,Hoogste Score,,Récord,
 New highscore!,Rekord i ri !,نتيجة عالية جديدة,新记录！,,,New highscore!,,Nouveau meilleur score!,,,Nuovo record !,,,,,Nieuwe hoogste score!,,Niuevo récord !,
-
+Connect4,,,,,,Connect 4,,Puissance 4,,,,,,,,,,,
 Choose number of targets,,,选择目标数量,,,Choose number of targets,,Choisis le nombre de cibles,,,,,,,,Kies het aantal doelen,,,
 targets,shënjestra,أهداف,目标,,,targets,,objectifs,,,bersagli,,,,,Doelen,,objetivos,
 
@@ -256,3 +256,4 @@ BackgroundEnabled,,,,,,Background images enabled,,Fonds d'écran activé,,,,,,,,
 addNewImages,,,,,,Add new images ...,,Ajouter de nouvelles images ...,,,,,,,,,,Agregar nuevas imágenes ...,
 customFileChooser,,,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,,,
 
+Mistakes,,,,,,Mistakes,,Erreurs

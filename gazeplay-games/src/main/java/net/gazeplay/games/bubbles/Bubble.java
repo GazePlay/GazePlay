@@ -2,16 +2,22 @@ package net.gazeplay.games.bubbles;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.Portrait;
 import net.gazeplay.components.RandomPositionGenerator;
+import net.gazeplay.games.blocs.Blocs;
+
+import java.util.ArrayList;
 
 /**
  * Created by schwab on 28/08/2016.
@@ -28,8 +34,10 @@ public class Bubble implements GameLifeCycle {
     private final IGameContext gameContext;
 
     private final BubbleType type;
+    private ArrayList<Bloc> blocs;
 
     private final Stats stats;
+
 
     private final BubblesGameVariant gameVariant;
 
@@ -41,6 +49,7 @@ public class Bubble implements GameLifeCycle {
         this.type = type;
         this.stats = stats;
         this.gameVariant = gameVariant;
+        this.blocs = new ArrayList<>();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
     }
@@ -78,6 +87,21 @@ public class Bubble implements GameLifeCycle {
             imageRectangle.setOpacity(imageRectangleOpacity);
 
             gameContext.getChildren().add(imageRectangle);
+
+            int nbColomns = 6;
+            int nbLines = 6;
+            final double width = dimension2D.getWidth() / nbColomns;
+            final double height = dimension2D.getHeight() / nbLines;
+            for (int i = 0; i < nbColomns; i++) {
+                for (int j = 0; j < nbLines; j++) {
+                    final Bloc bloc = new Bloc(i * width, j * height, width + 1, height + 1, i, j);// width+1, height+1 to avoid
+                    bloc.setFill(Color.BLACK);
+                    gameContext.getChildren().add(bloc);
+                    bloc.toFront();
+                    blocs.add(bloc);
+
+                }
+            }
         }
     }
 
@@ -88,7 +112,7 @@ public class Bubble implements GameLifeCycle {
         randomPositionGenerator.setRandomGenerator(randomGenerator);
         for (int i = 0; i < 10; i++) {
             Target portrait = new Target(gameContext, randomPositionGenerator, stats,
-                Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, type);
+                Portrait.createImageLibrary(randomGenerator), gameVariant, this, randomGenerator, type, blocs);
             gameContext.getChildren().add(portrait);
         }
         gameContext.setLimiterAvailable();
@@ -100,5 +124,18 @@ public class Bubble implements GameLifeCycle {
     @Override
     public void dispose() {
         gameContext.clear();
+    }
+
+    public static class Bloc extends Rectangle {
+
+        final int posX;
+        final int posY;
+
+        Bloc(final double x, final double y, final double width, final double height, final int posX, final int posY) {
+            super(x, y, width, height);
+            this.posX = posX;
+            this.posY = posY;
+        }
+
     }
 }

@@ -4,7 +4,7 @@ import javafx.scene.Scene;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.IGameLauncher;
-import net.gazeplay.commons.gamevariants.IntGameVariant;
+import net.gazeplay.commons.gamevariants.IntStringGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
@@ -14,7 +14,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class PersonalizeEggGameGameLauncher implements IGameLauncher<Stats, IntGameVariant> {
+public class PersonalizeEggGameGameLauncher implements IGameLauncher<Stats, IntStringGameVariant> {
     @Override
     public Stats createNewStats(Scene scene) {
         return new EggGameStats(scene, "personalize");
@@ -26,14 +26,14 @@ public class PersonalizeEggGameGameLauncher implements IGameLauncher<Stats, IntG
     }
 
     @Override
-    public GameLifeCycle createNewGame(IGameContext gameContext, IntGameVariant gameVariant,
+    public GameLifeCycle createNewGame(IGameContext gameContext, IntStringGameVariant gameVariant,
                                        Stats stats) {
-        return new EggGame(gameContext, stats, gameVariant.getNumber(), "personalize");
+        return new EggGame(gameContext, stats, gameVariant.getNumber(), "personalize", gameVariant.getStringValue());
     }
 
     @Override
-    public GameLifeCycle replayGame(IGameContext gameContext, IntGameVariant gameVariant,
+    public GameLifeCycle replayGame(IGameContext gameContext, IntStringGameVariant gameVariant,
                                     Stats stats, double gameSeed) {
-        return new EggGame(gameContext, stats, gameVariant.getNumber(), "personalize", gameSeed);
+        return new EggGame(gameContext, stats, gameVariant.getNumber(), "personalize", gameSeed,gameVariant.getStringValue());
     }
 }
