@@ -100,14 +100,14 @@ public class TowerDefense implements GameLifeCycle {
         life = new SimpleIntegerProperty(START_LIFE);
         waveCount = new SimpleIntegerProperty(0);
 
-        basicTowerImage = new Image("data/TowerDefense/basicTower.png");
-        doubleTowerImage = new Image("data/TowerDefense/doubleTower.png");
-        missileTowerImage = new Image("data/TowerDefense/missileTower.png");
-        canonTowerImage = new Image("data/TowerDefense/canonTower.png");
-        moneyLossImage = new Image("data/TowerDefense/moneyLoss.png");
-        moneyGainImage = new Image("data/TowerDefense/moneyGain.png");
-        sellTowerImage = new Image("data/TowerDefense/sellTower.png");
-        blizzardGif = new ImageView(new Image("data/TowerDefense/blizzard.gif"));
+        basicTowerImage = new Image("data/TowerDefense/images/basicTower.png");
+        doubleTowerImage = new Image("data/TowerDefense/images/doubleTower.png");
+        missileTowerImage = new Image("data/TowerDefense/images/missileTower.png");
+        canonTowerImage = new Image("data/TowerDefense/images/canonTower.png");
+        moneyLossImage = new Image("data/TowerDefense/images/moneyLoss.png");
+        moneyGainImage = new Image("data/TowerDefense/images/moneyGain.png");
+        sellTowerImage = new Image("data/TowerDefense/images/sellTower.png");
+        blizzardGif = new ImageView(new Image("data/TowerDefense/images/blizzard.gif"));
         blizzardGif.fitWidthProperty().bind(gameContext.getRoot().widthProperty());
         blizzardGif.fitHeightProperty().bind(gameContext.getRoot().heightProperty());
 
@@ -143,15 +143,15 @@ public class TowerDefense implements GameLifeCycle {
         topBar.setPadding(new Insets(10,0,0,15));
         gameContext.getChildren().add(topBar);
 
-        lifeLabel = createLabel(life.get()+"/"+START_LIFE, "data/TowerDefense/heart.png");
+        lifeLabel = createLabel(life.get()+"/"+START_LIFE, "data/TowerDefense/images/heart.png");
         life.addListener(observable -> lifeLabel.setText(life.get()+"/"+START_LIFE));
         topBar.getChildren().add(lifeLabel);
 
-        moneyLabel = createLabel(""+START_MONEY, "data/TowerDefense/money.png");
+        moneyLabel = createLabel(""+START_MONEY, "data/TowerDefense/images/money.png");
         money.addListener(observable -> moneyLabel.setText(""+money.get()));
         topBar.getChildren().add(moneyLabel);
 
-        waveCountLabel = createLabel(""+waveCount.get(), "data/TowerDefense/wave.png");
+        waveCountLabel = createLabel(""+waveCount.get(), "data/TowerDefense/images/wave.png");
         waveCount.addListener(observable -> waveCountLabel.setText(""+waveCount.getValue()));
         topBar.getChildren().add(waveCountLabel);
 
@@ -193,8 +193,8 @@ public class TowerDefense implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(sendWaveButton);
 
         //// Blizzard Power
-        Label blizzardLabel = createLabel("", "data/TowerDefense/blizzardIcon.png");
-        ImageView blizzarIcon = new ImageView(new Image("data/TowerDefense/blizzardIcon.png"));
+        Label blizzardLabel = createLabel("", "data/TowerDefense/images/blizzardIcon.png");
+        ImageView blizzarIcon = new ImageView(new Image("data/TowerDefense/images/blizzardIcon.png"));
         blizzarIcon.fitWidthProperty().bind(tileWidth.multiply(1.5));
         blizzarIcon.fitHeightProperty().bind(tileHeight.multiply(1.5));
         blizzardLabel.setGraphic(blizzarIcon);

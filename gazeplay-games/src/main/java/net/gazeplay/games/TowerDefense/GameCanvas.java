@@ -49,19 +49,19 @@ public class GameCanvas extends Canvas {
         this.projectiles = projectiles;
         arrowTick = 0;
 
-        basicTowerImage = new Image("data/TowerDefense/basicTower.png");
-        doubleTowerImage = new Image("data/TowerDefense/doubleTower.png");
-        missileTowerImage = new Image("data/TowerDefense/missileTower.png");
-        canonTowerImage = new Image("data/TowerDefense/canonTower.png");
-        basicEnemyImage = new Image("data/TowerDefense/basicEnemy.png");
-        explosionImage = new Image("data/TowerDefense/explosion.png");
-        missileImage = new Image("data/TowerDefense/missile.png");
-        dirtImage = new Image("data/TowerDefense/dirt.png");
-        grassImage = new Image("data/TowerDefense/grass.png");
-        towerBaseImage = new Image("data/TowerDefense/towerBase.png");
-        castleImage = new Image("data/TowerDefense/castle.png");
-        arrow1Image = new Image("data/TowerDefense/arrow1.png");
-        arrow2Image = new Image("data/TowerDefense/arrow2.png");
+        basicTowerImage = new Image("data/TowerDefense/images/basicTower.png");
+        doubleTowerImage = new Image("data/TowerDefense/images/doubleTower.png");
+        missileTowerImage = new Image("data/TowerDefense/images/missileTower.png");
+        canonTowerImage = new Image("data/TowerDefense/images/canonTower.png");
+        basicEnemyImage = new Image("data/TowerDefense/images/basicEnemy.png");
+        explosionImage = new Image("data/TowerDefense/images/explosion.png");
+        missileImage = new Image("data/TowerDefense/images/missile.png");
+        dirtImage = new Image("data/TowerDefense/images/dirt.png");
+        grassImage = new Image("data/TowerDefense/images/grass.png");
+        towerBaseImage = new Image("data/TowerDefense/images/towerBase.png");
+        castleImage = new Image("data/TowerDefense/images/castle.png");
+        arrow1Image = new Image("data/TowerDefense/images/arrow1.png");
+        arrow2Image = new Image("data/TowerDefense/images/arrow2.png");
 
         widthProperty().addListener(evt -> draw());
         heightProperty().addListener(evt -> draw());
