@@ -85,6 +85,9 @@ public class TowerDefense implements GameLifeCycle {
     private final static int CANON_TOWER = 3;
     private final static double BLIZZARD_COOLDOWN = 30;
 
+    private static final String SOUNDS_CRAFT = "data/towerDefense/sounds/craft.mp3";
+
+
     TowerDefense(final IGameContext gameContext, final Stats stats){
 
         this.gameContext = gameContext;
@@ -337,7 +340,7 @@ public class TowerDefense implements GameLifeCycle {
 
                 // Fire projectiles
                 for (Tower tower : towers) {
-                    tower.fire();
+                    tower.fire(gameContext);
                 }
 
                 // Move projectiles
@@ -608,6 +611,7 @@ public class TowerDefense implements GameLifeCycle {
         StackPane stackPane = new StackPane();
 
         ImageView tower;
+        System.out.println("Tower is built");
         switch (towerType) {
             case MISSILE_TOWER -> {
                 tower = new ImageView(missileTowerImage);
@@ -639,6 +643,7 @@ public class TowerDefense implements GameLifeCycle {
             }
         }
 
+
         Label costLabel = new Label();
         costLabel.setMouseTransparent(true);
         costLabel.setFont(Font.font("Agency FB", tower.getFitHeight()/2));
@@ -664,6 +669,7 @@ public class TowerDefense implements GameLifeCycle {
             placeTowerTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(towerPi.progressProperty(), 1)));
             placeTowerTimeline.setOnFinished(eve -> {
                 createTower(col, row, towerType);
+                gameContext.getSoundManager().add(SOUNDS_CRAFT);
                 group.getChildren().clear();
                 gameContext.getChildren().remove(group);
             });

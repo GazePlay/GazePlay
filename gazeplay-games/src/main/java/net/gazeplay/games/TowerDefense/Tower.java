@@ -2,6 +2,7 @@ package net.gazeplay.games.TowerDefense;
 
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Circle;
+import net.gazeplay.IGameContext;
 
 import java.util.ArrayList;
 
@@ -22,6 +23,8 @@ public abstract class Tower {
     protected final ArrayList<Projectile> projectiles;
     private final ArrayList<Enemy> enemies;
 
+    private static final String SOUNDS_FIRE = "data/towerDefense/sounds/piou.mp3";
+
     public Tower(int col, int row, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies){
         this.col = col;
         this.row = row;
@@ -39,7 +42,7 @@ public abstract class Tower {
         range = 3;
     }
 
-    public void fire(){
+    public void fire(IGameContext context){
         Enemy target = findEnemyInRange();
         if(target!=null){
             double towerCenterX = getCenter().getX();
@@ -72,6 +75,7 @@ public abstract class Tower {
                 double yratio = ty / (Math.abs(tx)+Math.abs(ty));
 
                createProjectile(getProjectileStart().getX(), getProjectileStart().getY(), xratio*projSpeed, yratio*projSpeed, projSize, damage);
+               context.getSoundManager().add(SOUNDS_FIRE);
             }
         }
     }
