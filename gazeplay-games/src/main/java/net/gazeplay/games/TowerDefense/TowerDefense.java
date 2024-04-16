@@ -19,6 +19,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -84,8 +85,6 @@ public class TowerDefense implements GameLifeCycle {
     private final static int MISSILE_TOWER = 2;
     private final static int CANON_TOWER = 3;
     private final static double BLIZZARD_COOLDOWN = 30;
-
-    private static final String SOUNDS_CRAFT = "data/towerDefense/sounds/craft.mp3";
 
 
     TowerDefense(final IGameContext gameContext, final Stats stats){
@@ -581,6 +580,17 @@ public class TowerDefense implements GameLifeCycle {
 
         if(getTower(col, row)!=null){
             createSellIcon(col, row, mainCircleRadius, group);
+            //
+            Tower existingTower = getTower(col, row);
+            Text towerInfo = new Text("Dégâts : " + existingTower.damage + "\n"
+            + "Portée : " + existingTower.range + " unités" + "\n"
+            + "Vitesse : " + existingTower.projSpeed);
+            towerInfo.setLayoutX(existingTower.getCenter().getX());
+            towerInfo.setLayoutY(existingTower.getCenter().getY());
+            towerInfo.setId("info");
+            gameContext.getChildren().add(towerInfo);
+
+
         }else{
             createTowerIcon(BASIC_TOWER, col, row, mainCircleRadius, group);
             createTowerIcon(MISSILE_TOWER, col, row, mainCircleRadius, group);
@@ -720,6 +730,8 @@ public class TowerDefense implements GameLifeCycle {
         EventHandler<Event> exitTowerHandler = event -> {
             towerPi.setVisible(false);
             placeTowerTimeline.stop();
+            gameContext.getRoot().lookupAll("#info").forEach(node -> gameContext.getChildren().remove(node));
+
         };
 
         sellIcon.addEventFilter(MouseEvent.MOUSE_ENTERED, enterRightTowerHandler);
