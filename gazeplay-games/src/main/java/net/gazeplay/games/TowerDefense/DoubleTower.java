@@ -8,6 +8,9 @@ public class DoubleTower extends Tower {
 
     private boolean shootLeft;
 
+    public static final String SOUNDS_FIRE = "data/towerDefense/sounds/piou.mp3";
+    private static final String SOUNDS_BUILD = "data/towerDefense/sounds/craftdouble.mp3";
+
     public DoubleTower(int col, int row, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies) {
         super(col, row, projectiles, enemies);
         fireTickLimit = 20;
@@ -36,4 +39,15 @@ public class DoubleTower extends Tower {
         tick = 0;
         shootLeft = !shootLeft;
     }
+
+    @Override
+    public String getSoundsFire() {
+        return SOUNDS_FIRE;
+    }
+
+    @Override
+    public String getSoundsConstruction() {
+        return SOUNDS_BUILD;
+    }
+
 }
