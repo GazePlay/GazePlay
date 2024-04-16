@@ -23,8 +23,6 @@ public abstract class Tower {
     protected final ArrayList<Projectile> projectiles;
     private final ArrayList<Enemy> enemies;
 
-    private static final String SOUNDS_FIRE = "data/towerDefense/sounds/piou.mp3";
-
     public Tower(int col, int row, ArrayList<Projectile> projectiles, ArrayList<Enemy> enemies){
         this.col = col;
         this.row = row;
@@ -75,7 +73,7 @@ public abstract class Tower {
                 double yratio = ty / (Math.abs(tx)+Math.abs(ty));
 
                createProjectile(getProjectileStart().getX(), getProjectileStart().getY(), xratio*projSpeed, yratio*projSpeed, projSize, damage);
-               context.getSoundManager().add(SOUNDS_FIRE);
+               context.getSoundManager().add(this.getSoundsFire());
             }
         }
     }
@@ -118,4 +116,6 @@ public abstract class Tower {
         return new Point2D(col + 0.5, row + 0.5);
     }
 
+    public abstract String getSoundsFire();
+    public abstract String getSoundsConstruction();
 }
