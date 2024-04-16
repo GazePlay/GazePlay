@@ -403,6 +403,7 @@ public class TowerDefense implements GameLifeCycle {
             gameContext.getChildren().add(image);
 
             towers.add(tower);
+            gameContext.getSoundManager().add(tower.getSoundsConstruction());
         }
     }
 
@@ -611,7 +612,6 @@ public class TowerDefense implements GameLifeCycle {
         StackPane stackPane = new StackPane();
 
         ImageView tower;
-        System.out.println("Tower is built");
         switch (towerType) {
             case MISSILE_TOWER -> {
                 tower = new ImageView(missileTowerImage);
@@ -669,7 +669,6 @@ public class TowerDefense implements GameLifeCycle {
             placeTowerTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()), new KeyValue(towerPi.progressProperty(), 1)));
             placeTowerTimeline.setOnFinished(eve -> {
                 createTower(col, row, towerType);
-                gameContext.getSoundManager().add(SOUNDS_CRAFT);
                 group.getChildren().clear();
                 gameContext.getChildren().remove(group);
             });
