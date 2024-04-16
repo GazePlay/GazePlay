@@ -9,7 +9,7 @@ public class DiceGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Dice").gameThumbnail("data/Thumbnails/dice.png")
+            GameSummary.builder().nameCode("Dice").gameThumbnail("dice")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.MULTIMEDIA).build(),

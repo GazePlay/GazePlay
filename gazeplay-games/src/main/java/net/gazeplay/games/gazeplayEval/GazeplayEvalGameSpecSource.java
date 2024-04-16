@@ -13,7 +13,7 @@ public class GazeplayEvalGameSpecSource implements GameSpecSource {
             GameSummary
                 .builder()
                 .nameCode("GazePlayEval")
-                .gameThumbnail("data/Thumbnails/whereIsIt.png")
+                .gameThumbnail("whereIsIt")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION)
                 .build(),

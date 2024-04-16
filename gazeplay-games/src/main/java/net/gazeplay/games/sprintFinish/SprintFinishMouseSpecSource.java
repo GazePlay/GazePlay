@@ -10,7 +10,7 @@ public class SprintFinishMouseSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("SprintFinishMouse").gameThumbnail("data/Thumbnails/SprintToTheFinish.png")
+            GameSummary.builder().nameCode("SprintFinishMouse").gameThumbnail("SprintToTheFinish")
                 .category(GameCategories.Category.ACTION_REACTION).build(),
             new SprintFinishVariantGenerator(), new SprintFinishMouseLauncher());
     }

@@ -9,7 +9,7 @@ public class LadderGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Ladder").gameThumbnail("data/Thumbnails/ladder.png")
+            GameSummary.builder().nameCode("Ladder").gameThumbnail("ladder")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .build(),

@@ -11,7 +11,7 @@ public class WhereIsTheFlagGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("WhereIsTheFlag").gameThumbnail("data/Thumbnails/whereIsTheFlag.png")
+            GameSummary.builder().nameCode("WhereIsTheFlag").gameThumbnail("whereIsTheFlag")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION).build(),
             new WhereIsTheFlagGameVariantGenerator(), new WhereIsTheFlagGameLauncher());

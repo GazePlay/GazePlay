@@ -9,7 +9,7 @@ public class ColoredBubblesGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("ColoredBubbles").gameThumbnail("data/Thumbnails/bubblecolor.png").category(GameCategories.Category.ACTION_REACTION).build(),
+            GameSummary.builder().nameCode("ColoredBubbles").gameThumbnail("bubblecolor").category(GameCategories.Category.ACTION_REACTION).build(),
             new BubbleGameVariantGenerator(), new ColoredBubblesGameLauncher());
     }
 }

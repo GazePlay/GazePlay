@@ -12,7 +12,7 @@ public class DotToDotGameSpecSource implements GameSpecSource {
             GameSummary
                 .builder()
                 .nameCode("DotToDot")
-                .gameThumbnail("data/Thumbnails/dottodot.png")
+                .gameThumbnail("dottodot")
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.SELECTION)
                 .absolutePriority(1)
