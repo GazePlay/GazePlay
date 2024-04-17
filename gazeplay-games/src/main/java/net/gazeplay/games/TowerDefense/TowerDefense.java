@@ -584,9 +584,10 @@ public class TowerDefense implements GameLifeCycle {
             Tower existingTower = getTower(col, row);
             Text towerInfo = new Text("Dégâts : " + existingTower.damage + "\n"
             + "Portée : " + existingTower.range + " unités" + "\n"
-            + "Vitesse : " + existingTower.projSpeed);
-            towerInfo.setLayoutX(existingTower.getCenter().getX());
-            towerInfo.setLayoutY(existingTower.getCenter().getY());
+            + "Vitesse : " + String.format("%.2f", existingTower.projSpeed));
+            towerInfo.setFill(Color.WHITE);
+            towerInfo.setLayoutX(130);
+            towerInfo.setLayoutY(150);
             towerInfo.setId("info");
             gameContext.getChildren().add(towerInfo);
 
@@ -606,10 +607,14 @@ public class TowerDefense implements GameLifeCycle {
         rect.addEventFilter(GazeEvent.GAZE_EXITED, gazeEvent -> {
             group.getChildren().clear();
             gameContext.getChildren().remove(group);
+            gameContext.getRoot().lookupAll("#info").forEach(node -> gameContext.getChildren().remove(node));
+            System.out.println("exitHandler is called");
         });
         rect.addEventFilter(MouseEvent.MOUSE_EXITED, mouseEvent -> {
             group.getChildren().clear();
             gameContext.getChildren().remove(group);
+            gameContext.getRoot().lookupAll("#info").forEach(node -> gameContext.getChildren().remove(node));
+            System.out.println("exitHandler is called");
         });
 
         gameContext.getGazeDeviceManager().addEventFilter(rect);
@@ -730,8 +735,6 @@ public class TowerDefense implements GameLifeCycle {
         EventHandler<Event> exitTowerHandler = event -> {
             towerPi.setVisible(false);
             placeTowerTimeline.stop();
-            gameContext.getRoot().lookupAll("#info").forEach(node -> gameContext.getChildren().remove(node));
-
         };
 
         sellIcon.addEventFilter(MouseEvent.MOUSE_ENTERED, enterRightTowerHandler);
