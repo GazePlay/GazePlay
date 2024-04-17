@@ -7,8 +7,10 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
@@ -20,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -49,6 +52,11 @@ public class TowerDefense implements GameLifeCycle {
     private Timeline placeTowerTimeline;
     private Timeline createTowerSelectionTimeline;
     private AnimationTimer gameLoop;
+    private final Dimension2D dimensions;
+
+    private final VBox messages;
+
+
 
     // GAME VARIABLES
     private final ArrayList<Enemy> enemies;
@@ -102,6 +110,13 @@ public class TowerDefense implements GameLifeCycle {
         life = new SimpleIntegerProperty(START_LIFE);
         waveCount = new SimpleIntegerProperty(0);
 
+        this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        // The message queue
+        messages = new VBox();
+        messages.setAlignment(Pos.CENTER);
+        messages.setPadding(new Insets(120));
+
         basicTowerImage = new Image("data/TowerDefense/images/basicTower.png");
         doubleTowerImage = new Image("data/TowerDefense/images/doubleTower.png");
         missileTowerImage = new Image("data/TowerDefense/images/missileTower.png");
@@ -137,6 +152,7 @@ public class TowerDefense implements GameLifeCycle {
         lastBlizzardInstant = Instant.MIN;
 
         gameContext.getChildren().add(canvas);
+        gameContext.getChildren().add(messages);
 
         // TOPBAR
 
@@ -404,6 +420,10 @@ public class TowerDefense implements GameLifeCycle {
             towers.add(tower);
             gameContext.getSoundManager().add(tower.getSoundsConstruction());
         }
+        else {
+            //Missing money
+            showMessage(Color.RED,"Pas assez d'argent");
+        }
     }
 
     private Tower getTower(double col, double row){
@@ -580,16 +600,11 @@ public class TowerDefense implements GameLifeCycle {
 
         if(getTower(col, row)!=null){
             createSellIcon(col, row, mainCircleRadius, group);
-            //
+            //Display info about the tower
             Tower existingTower = getTower(col, row);
-            Text towerInfo = new Text("Dégâts : " + existingTower.damage + "\n"
-            + "Portée : " + existingTower.range + " unités" + "\n"
-            + "Vitesse : " + String.format("%.2f", existingTower.projSpeed));
-            towerInfo.setFill(Color.WHITE);
-            towerInfo.setLayoutX(130);
-            towerInfo.setLayoutY(150);
-            towerInfo.setId("info");
-            gameContext.getChildren().add(towerInfo);
+            showMessage(Color.WHITE,"Dégâts : " + existingTower.damage + "\n"
+                + "Portée : " + existingTower.range + " unités" + "\n"
+                + "Vitesse : " + String.format("%.2f", existingTower.projSpeed));
 
 
         }else{
@@ -607,14 +622,10 @@ public class TowerDefense implements GameLifeCycle {
         rect.addEventFilter(GazeEvent.GAZE_EXITED, gazeEvent -> {
             group.getChildren().clear();
             gameContext.getChildren().remove(group);
-            gameContext.getRoot().lookupAll("#info").forEach(node -> gameContext.getChildren().remove(node));
-            System.out.println("exitHandler is called");
         });
         rect.addEventFilter(MouseEvent.MOUSE_EXITED, mouseEvent -> {
             group.getChildren().clear();
             gameContext.getChildren().remove(group);
-            gameContext.getRoot().lookupAll("#info").forEach(node -> gameContext.getChildren().remove(node));
-            System.out.println("exitHandler is called");
         });
 
         gameContext.getGazeDeviceManager().addEventFilter(rect);
@@ -742,6 +753,31 @@ public class TowerDefense implements GameLifeCycle {
         sellIcon.addEventFilter(MouseEvent.MOUSE_EXITED, exitTowerHandler);
         sellIcon.addEventFilter(GazeEvent.GAZE_EXITED, exitTowerHandler);
         gameContext.getGazeDeviceManager().addEventFilter(sellIcon);
+    }
+
+    /**
+     * Displays a message in a vertical queue, which disappears after a short time
+     */
+    public void showMessage(final Color fontColor, final String message) {
+        final Text messageText = new Text(130, 150,
+            message);
+        messageText.setTextAlignment(TextAlignment.CENTER);
+        messageText.setFill(fontColor);
+        messageText.setFont(new Font(dimensions.getHeight() / 10));
+        messageText.setStyle("-fx-stroke: black; -fx-stroke-width: 3;");
+        messageText.setWrappingWidth(dimensions.getWidth());
+        messageText.setOpacity(0);
+
+        messages.getChildren().add(messageText);
+
+        final Timeline showMessage = new Timeline(
+            new KeyFrame(Duration.seconds(0.3), new KeyValue(messageText.opacityProperty(), 1)),
+            new KeyFrame(Duration.seconds(4), new KeyValue(messageText.opacityProperty(), 1)),
+            new KeyFrame(Duration.seconds(4.3), new KeyValue(messageText.opacityProperty(), 0)));
+
+        showMessage.setOnFinished(e -> messages.getChildren().remove(messageText));
+
+        showMessage.playFromStart();
     }
 
 }
