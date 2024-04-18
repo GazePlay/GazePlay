@@ -1,11 +1,13 @@
 package net.gazeplay.games.TowerDefense;
 
 import javafx.geometry.Point2D;
+import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
+import lombok.Getter;
 
 import static net.gazeplay.games.TowerDefense.Map.*;
 
-public class Enemy {
+public abstract class Enemy {
 
     private final Map map;
     private final double reward;
@@ -17,21 +19,29 @@ public class Enemy {
     private double currentHealth;
     private boolean reachedEnd;
     private boolean isFrozen;
+    @Getter
+    private final Image enemyImage;
 
-    public Enemy(Map map, double x, double y){
+    public Enemy(Map map, double x, double y, double maxHealth, double reward, double speedX,Image enemyImage){
         this.map = map;
         this.x = x;
         this.y = y;
         reachedEnd = false;
         isFrozen = false;
 
-        maxHealth = 50;
+        //Basic enemy : 50
+        this.maxHealth = maxHealth;
         currentHealth = maxHealth;
-        reward = 5;
+        //Basic enemy : 5
+        this.reward = reward;
 
         // In Tile/tick
-        speedX = 1.0/60;
+        //Basic enemy : 1.0/60
+        this.speedX = speedX;
         speedY = 0;
+
+        //Enemy Image
+        this.enemyImage = enemyImage;
     }
 
     public void move(){
@@ -157,4 +167,5 @@ public class Enemy {
     public void setFrozen(boolean frozen) {
         isFrozen = frozen;
     }
+
 }
