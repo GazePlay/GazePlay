@@ -30,7 +30,6 @@ public class GameCanvas extends Canvas {
     private final Image missileTowerImage;
     private final Image canonTowerImage;
     private final Image missileImage;
-    private final Image basicEnemyImage;
     private final Image dirtImage;
     private final Image grassImage;
     private final Image towerBaseImage;
@@ -53,7 +52,6 @@ public class GameCanvas extends Canvas {
         doubleTowerImage = new Image("data/TowerDefense/images/doubleTower.png");
         missileTowerImage = new Image("data/TowerDefense/images/missileTower.png");
         canonTowerImage = new Image("data/TowerDefense/images/canonTower.png");
-        basicEnemyImage = new Image("data/TowerDefense/images/basicEnemy.png");
         explosionImage = new Image("data/TowerDefense/images/explosion.png");
         missileImage = new Image("data/TowerDefense/images/missile.png");
         dirtImage = new Image("data/TowerDefense/images/dirt.png");
@@ -100,7 +98,7 @@ public class GameCanvas extends Canvas {
             gc.save();
             gc.translate(enemy.getCenter().getX()*tileWidth.get(),enemy.getCenter().getY()*tileHeight.get());
             gc.rotate(enemy.getRotation());
-            gc.drawImage(basicEnemyImage, -tileWidth.get()/2, -tileHeight.get()/2, tileWidth.get(), tileHeight.get());
+            gc.drawImage(enemy.getEnemyImage(), -tileWidth.get()/2, -tileHeight.get()/2, tileWidth.get(), tileHeight.get());
             gc.restore();
 
             // Draw Health bar
