@@ -71,6 +71,7 @@ public class TowerDefense implements GameLifeCycle {
     private int enemiesSent;
     private int enemySpawnTick;
     private Instant lastBlizzardInstant;
+    private final TowerDefenseVariant gameVariant;
 
     // IMAGES
     private final Image basicTowerImage;
@@ -94,17 +95,22 @@ public class TowerDefense implements GameLifeCycle {
     private final static int CANON_TOWER = 3;
     private final static double BLIZZARD_COOLDOWN = 30;
 
-
-    TowerDefense(final IGameContext gameContext, final Stats stats){
-
+    TowerDefense(final IGameContext gameContext, final Stats stats, TowerDefenseVariant gameVariant){
         this.gameContext = gameContext;
         this.stats = stats;
+        this.gameVariant = gameVariant;
         gameContext.getGazeDeviceManager().addStats(stats);
 
         enemies = new ArrayList<>();
         towers = new ArrayList<>();
         projectiles = new ArrayList<>();
-        map = new Map(1);
+        switch (this.gameVariant){
+            case MAP_ONE:
+                this.map = new MapOne();
+                break;
+            default:
+                this.map = new MapOne();
+        }
 
         money = new SimpleDoubleProperty(START_MONEY);
         life = new SimpleIntegerProperty(START_LIFE);
