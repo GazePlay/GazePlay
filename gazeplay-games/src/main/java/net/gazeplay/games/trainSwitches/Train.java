@@ -16,7 +16,7 @@ public class Train {
     private int index;
 
     public Train(TrainColors trainColor, String direction) {
-        this.color = trainColor.toString();
+        this.color = trainColor.getColor();
 
         // Create a small animation for the train consisting of 2 images
         index = 0;

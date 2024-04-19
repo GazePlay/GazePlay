@@ -1,5 +1,7 @@
 package net.gazeplay.games.trainSwitches;
 
+
+
 public enum TrainColors {
     BLACK("black"),
     BROWN("brown"),
@@ -15,7 +17,13 @@ public enum TrainColors {
     WHITE("white"),
     YELLOW("yellow");
 
+    private final String color;
+
     TrainColors(final String color){
+        this.color = color;
     }
 
+    public String getColor() {
+        return color;
+    }
 }
