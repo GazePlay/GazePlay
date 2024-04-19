@@ -1,4 +1,4 @@
-package net.gazeplay.games.TowerDefense;
+package net.gazeplay.games.TowerDefense.maps;
 
 import javafx.geometry.Point2D;
 

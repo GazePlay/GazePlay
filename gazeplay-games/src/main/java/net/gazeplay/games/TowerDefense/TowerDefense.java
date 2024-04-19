@@ -29,6 +29,13 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.TowerDefense.enemies.BasicEnemy;
+import net.gazeplay.games.TowerDefense.enemies.Enemy;
+import net.gazeplay.games.TowerDefense.enemies.FastEnemy;
+import net.gazeplay.games.TowerDefense.enemies.TankEnemy;
+import net.gazeplay.games.TowerDefense.maps.Map;
+import net.gazeplay.games.TowerDefense.maps.MapOne;
+import net.gazeplay.games.TowerDefense.towers.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
