@@ -5,10 +5,16 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import net.gazeplay.games.TowerDefense.enemies.Enemy;
+import net.gazeplay.games.TowerDefense.maps.Map;
+import net.gazeplay.games.TowerDefense.towers.CanonTower;
+import net.gazeplay.games.TowerDefense.towers.DoubleTower;
+import net.gazeplay.games.TowerDefense.towers.MissileTower;
+import net.gazeplay.games.TowerDefense.towers.Tower;
 
 import java.util.ArrayList;
 
-import static net.gazeplay.games.TowerDefense.Map.*;
+import static net.gazeplay.games.TowerDefense.maps.Map.*;
 
 public class GameCanvas extends Canvas {
 

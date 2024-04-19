@@ -1,11 +1,12 @@
-package net.gazeplay.games.TowerDefense;
+package net.gazeplay.games.TowerDefense.enemies;
 
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 import lombok.Getter;
+import net.gazeplay.games.TowerDefense.maps.Map;
 
-import static net.gazeplay.games.TowerDefense.Map.*;
+import static net.gazeplay.games.TowerDefense.maps.Map.*;
 
 public abstract class Enemy {
 

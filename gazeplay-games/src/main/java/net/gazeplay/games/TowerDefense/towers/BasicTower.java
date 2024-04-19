@@ -1,8 +1,11 @@
-package net.gazeplay.games.TowerDefense;
+package net.gazeplay.games.TowerDefense.towers;
+
+import net.gazeplay.games.TowerDefense.enemies.Enemy;
+import net.gazeplay.games.TowerDefense.Projectile;
 
 import java.util.ArrayList;
 
-public class BasicTower extends Tower{
+public class BasicTower extends Tower {
 
     public static final String SOUNDS_FIRE = "data/towerDefense/sounds/piou.mp3";
     private static final String SOUNDS_BUILD = "data/towerDefense/sounds/craft.mp3";

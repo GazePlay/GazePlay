@@ -1,6 +1,8 @@
-package net.gazeplay.games.TowerDefense;
+package net.gazeplay.games.TowerDefense.towers;
 
 import javafx.geometry.Point2D;
+import net.gazeplay.games.TowerDefense.enemies.Enemy;
+import net.gazeplay.games.TowerDefense.Projectile;
 
 import java.util.ArrayList;
 

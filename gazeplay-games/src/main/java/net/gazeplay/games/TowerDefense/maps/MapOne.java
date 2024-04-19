@@ -1,6 +1,6 @@
-package net.gazeplay.games.TowerDefense;
+package net.gazeplay.games.TowerDefense.maps;
 
-public class MapOne extends Map{
+public class MapOne extends Map {
     public MapOne() {
         super();
     }
