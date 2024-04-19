@@ -569,7 +569,15 @@ public class TowerDefense implements GameLifeCycle {
         if (enemiesSent < enemiesToSend && enemySpawnTick >= ENEMY_SPAWN_TICK_LIMIT){
             enemySpawnTick = 0;
             enemiesSent++;
-            Enemy enemy = new Enemy(map, map.getStartCol(), map.getStartRow());
+            Enemy enemy;
+            //spawn Fast Enemies if wave is 10,20,30,...
+            if (waveCount.get()%10 == 0){
+                enemy = new FastEnemy(map, map.getStartCol(), map.getStartRow());
+            } else if (waveCount.get()%5 == 0 && waveCount.get() != 5) {
+                enemy = new TankEnemy(map,map.getStartCol(), map.getStartRow());
+            } else {
+                enemy = new BasicEnemy(map,map.getStartCol(), map.getStartRow());
+            }
             enemy.multiplyHealth(enemyHealthMultiplier);
             enemies.add(enemy);
         }else{
