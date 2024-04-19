@@ -35,6 +35,7 @@ import net.gazeplay.games.TowerDefense.enemies.FastEnemy;
 import net.gazeplay.games.TowerDefense.enemies.TankEnemy;
 import net.gazeplay.games.TowerDefense.maps.Map;
 import net.gazeplay.games.TowerDefense.maps.MapOne;
+import net.gazeplay.games.TowerDefense.maps.MapTwo;
 import net.gazeplay.games.TowerDefense.towers.*;
 
 import java.time.Instant;
@@ -114,6 +115,9 @@ public class TowerDefense implements GameLifeCycle {
         switch (this.gameVariant){
             case MAP_ONE:
                 this.map = new MapOne();
+                break;
+            case MAP_TWO:
+                this.map = new MapTwo();
                 break;
             default:
                 this.map = new MapOne();
