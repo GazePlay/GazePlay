@@ -5,10 +5,16 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import net.gazeplay.games.TowerDefense.enemies.Enemy;
+import net.gazeplay.games.TowerDefense.maps.Map;
+import net.gazeplay.games.TowerDefense.towers.CanonTower;
+import net.gazeplay.games.TowerDefense.towers.DoubleTower;
+import net.gazeplay.games.TowerDefense.towers.MissileTower;
+import net.gazeplay.games.TowerDefense.towers.Tower;
 
 import java.util.ArrayList;
 
-import static net.gazeplay.games.TowerDefense.Map.*;
+import static net.gazeplay.games.TowerDefense.maps.Map.*;
 
 public class GameCanvas extends Canvas {
 
@@ -30,7 +36,6 @@ public class GameCanvas extends Canvas {
     private final Image missileTowerImage;
     private final Image canonTowerImage;
     private final Image missileImage;
-    private final Image basicEnemyImage;
     private final Image dirtImage;
     private final Image grassImage;
     private final Image towerBaseImage;
@@ -49,19 +54,18 @@ public class GameCanvas extends Canvas {
         this.projectiles = projectiles;
         arrowTick = 0;
 
-        basicTowerImage = new Image("data/TowerDefense/basicTower.png");
-        doubleTowerImage = new Image("data/TowerDefense/doubleTower.png");
-        missileTowerImage = new Image("data/TowerDefense/missileTower.png");
-        canonTowerImage = new Image("data/TowerDefense/canonTower.png");
-        basicEnemyImage = new Image("data/TowerDefense/basicEnemy.png");
-        explosionImage = new Image("data/TowerDefense/explosion.png");
-        missileImage = new Image("data/TowerDefense/missile.png");
-        dirtImage = new Image("data/TowerDefense/dirt.png");
-        grassImage = new Image("data/TowerDefense/grass.png");
-        towerBaseImage = new Image("data/TowerDefense/towerBase.png");
-        castleImage = new Image("data/TowerDefense/castle.png");
-        arrow1Image = new Image("data/TowerDefense/arrow1.png");
-        arrow2Image = new Image("data/TowerDefense/arrow2.png");
+        basicTowerImage = new Image("data/TowerDefense/images/basicTower.png");
+        doubleTowerImage = new Image("data/TowerDefense/images/doubleTower.png");
+        missileTowerImage = new Image("data/TowerDefense/images/missileTower.png");
+        canonTowerImage = new Image("data/TowerDefense/images/canonTower.png");
+        explosionImage = new Image("data/TowerDefense/images/explosion.png");
+        missileImage = new Image("data/TowerDefense/images/missile.png");
+        dirtImage = new Image("data/TowerDefense/images/dirt.png");
+        grassImage = new Image("data/TowerDefense/images/grass.png");
+        towerBaseImage = new Image("data/TowerDefense/images/towerBase.png");
+        castleImage = new Image("data/TowerDefense/images/castle.png");
+        arrow1Image = new Image("data/TowerDefense/images/arrow1.png");
+        arrow2Image = new Image("data/TowerDefense/images/arrow2.png");
 
         widthProperty().addListener(evt -> draw());
         heightProperty().addListener(evt -> draw());
@@ -100,7 +104,7 @@ public class GameCanvas extends Canvas {
             gc.save();
             gc.translate(enemy.getCenter().getX()*tileWidth.get(),enemy.getCenter().getY()*tileHeight.get());
             gc.rotate(enemy.getRotation());
-            gc.drawImage(basicEnemyImage, -tileWidth.get()/2, -tileHeight.get()/2, tileWidth.get(), tileHeight.get());
+            gc.drawImage(enemy.getEnemyImage(), -tileWidth.get()/2, -tileHeight.get()/2, tileWidth.get(), tileHeight.get());
             gc.restore();
 
             // Draw Health bar

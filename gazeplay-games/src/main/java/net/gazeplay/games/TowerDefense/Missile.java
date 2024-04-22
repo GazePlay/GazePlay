@@ -10,7 +10,7 @@ public class Missile extends Projectile {
     private boolean isActive;
     private final double rotation;
 
-    Missile(double x, double y, double speedX, double speedY, double rotation, double damage) {
+    public Missile(double x, double y, double speedX, double speedY, double rotation, double damage) {
         super(x, y, speedX, speedY, 1, damage);
         tick = 0;
         frameIndex = 0;

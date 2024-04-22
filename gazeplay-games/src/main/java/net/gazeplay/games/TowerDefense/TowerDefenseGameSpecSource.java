@@ -13,6 +13,7 @@ public class TowerDefenseGameSpecSource implements GameSpecSource {
             .nameCode("TowerDefense")
             .gameThumbnail("towerDefense")
             .category(GameCategories.Category.ACTION_REACTION).build(),
+            new TowerDefenseVariantGenerator(),
             new TowerDefenseGameLauncher());
     }
 
