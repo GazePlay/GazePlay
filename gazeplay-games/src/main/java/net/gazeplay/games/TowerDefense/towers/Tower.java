@@ -1,7 +1,10 @@
-package net.gazeplay.games.TowerDefense;
+package net.gazeplay.games.TowerDefense.towers;
 
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Circle;
+import net.gazeplay.IGameContext;
+import net.gazeplay.games.TowerDefense.enemies.Enemy;
+import net.gazeplay.games.TowerDefense.Projectile;
 
 import java.util.ArrayList;
 
@@ -12,12 +15,12 @@ public abstract class Tower {
     protected final int col;
     protected final int row;
 
-    protected double damage;
-    protected double projSpeed;
-    protected double projSize;
-    protected double rotation;
-    protected double cost;
-    protected int range;
+    public double damage;
+    public double projSpeed;
+    public double projSize;
+    public double rotation;
+    public double cost;
+    public int range;
 
     protected final ArrayList<Projectile> projectiles;
     private final ArrayList<Enemy> enemies;
@@ -39,7 +42,7 @@ public abstract class Tower {
         range = 3;
     }
 
-    public void fire(){
+    public void fire(IGameContext context){
         Enemy target = findEnemyInRange();
         if(target!=null){
             double towerCenterX = getCenter().getX();
@@ -72,6 +75,7 @@ public abstract class Tower {
                 double yratio = ty / (Math.abs(tx)+Math.abs(ty));
 
                createProjectile(getProjectileStart().getX(), getProjectileStart().getY(), xratio*projSpeed, yratio*projSpeed, projSize, damage);
+               context.getSoundManager().add(this.getSoundsFire());
             }
         }
     }
@@ -114,4 +118,6 @@ public abstract class Tower {
         return new Point2D(col + 0.5, row + 0.5);
     }
 
+    public abstract String getSoundsFire();
+    public abstract String getSoundsConstruction();
 }
