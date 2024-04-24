@@ -18,7 +18,7 @@ public class ColorBlend implements GameLifeCycle {
 
     public ColorBlend(final IGameContext gameContext){
         this.gameContext = gameContext;
-        final Dimension2D dimensions=gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         createBackground();
     }
     @Override
@@ -33,7 +33,7 @@ public class ColorBlend implements GameLifeCycle {
 
     private void createBackground() {
         Background background = new Background(new BackgroundImage(
-            new Image("data/colorblend/park.png"),
+            new Image("data/colorblend/images/park.png"),
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
             new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, false, true)
         ));
