@@ -17,7 +17,7 @@ import java.util.LinkedList;
 public class ColorBlendLauncher implements IGameLauncher<Stats, IGameVariant>{
     @Override
     public Stats createNewStats(Scene scene) {
-        return null;
+        return new ColorBlendStats(scene);
     }
 
     @Override
