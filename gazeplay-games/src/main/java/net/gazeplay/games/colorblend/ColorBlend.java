@@ -6,6 +6,7 @@ import javafx.scene.layout.*;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.utils.stats.Stats;
 
 /**
  * Choose between multiple colors and blend them together
@@ -15,9 +16,11 @@ import net.gazeplay.IGameContext;
 public class ColorBlend implements GameLifeCycle {
 
     private IGameContext gameContext;
+    private Stats stats;
 
-    public ColorBlend(final IGameContext gameContext){
+    public ColorBlend(final IGameContext gameContext, Stats stats){
         this.gameContext = gameContext;
+        this.stats = stats;
         final Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
         createBackground();
     }
