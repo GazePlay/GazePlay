@@ -10,7 +10,6 @@ import net.gazeplay.commons.utils.stats.LifeCycle;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
-import net.gazeplay.games.cassebrique.CasseBriqueStats;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
