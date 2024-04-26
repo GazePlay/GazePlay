@@ -54,18 +54,18 @@ public class GameCanvas extends Canvas {
         this.projectiles = projectiles;
         arrowTick = 0;
 
-        basicTowerImage = new Image("data/TowerDefense/images/basicTower.png");
-        doubleTowerImage = new Image("data/TowerDefense/images/doubleTower.png");
-        missileTowerImage = new Image("data/TowerDefense/images/missileTower.png");
-        canonTowerImage = new Image("data/TowerDefense/images/canonTower.png");
-        explosionImage = new Image("data/TowerDefense/images/explosion.png");
-        missileImage = new Image("data/TowerDefense/images/missile.png");
-        dirtImage = new Image("data/TowerDefense/images/dirt.png");
-        grassImage = new Image("data/TowerDefense/images/grass.png");
-        towerBaseImage = new Image("data/TowerDefense/images/towerBase.png");
-        castleImage = new Image("data/TowerDefense/images/castle.png");
-        arrow1Image = new Image("data/TowerDefense/images/arrow1.png");
-        arrow2Image = new Image("data/TowerDefense/images/arrow2.png");
+        basicTowerImage = new Image("data/towerDefense/images/basicTower.png");
+        doubleTowerImage = new Image("data/towerDefense/images/doubleTower.png");
+        missileTowerImage = new Image("data/towerDefense/images/missileTower.png");
+        canonTowerImage = new Image("data/towerDefense/images/canonTower.png");
+        explosionImage = new Image("data/towerDefense/images/explosion.png");
+        missileImage = new Image("data/towerDefense/images/missile.png");
+        dirtImage = new Image("data/towerDefense/images/dirt.png");
+        grassImage = new Image("data/towerDefense/images/grass.png");
+        towerBaseImage = new Image("data/towerDefense/images/towerBase.png");
+        castleImage = new Image("data/towerDefense/images/castle.png");
+        arrow1Image = new Image("data/towerDefense/images/arrow1.png");
+        arrow2Image = new Image("data/towerDefense/images/arrow2.png");
 
         widthProperty().addListener(evt -> draw());
         heightProperty().addListener(evt -> draw());
