@@ -1,7 +1,10 @@
 package net.gazeplay.games.colorblend;
 
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +15,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Color;
 import javafx.geometry.Insets;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Choose between multiple colors and blend them together
@@ -28,7 +34,7 @@ public class ColorBlend implements GameLifeCycle {
     private Circle circle;
 
     private static final int CIRCLE_RADIUS = 400;
-    private static final int PALETTE_WIDTH = 180;
+    private static final int PALETTE_WIDTH = 350;
 
     public ColorBlend(final IGameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
@@ -78,28 +84,45 @@ public class ColorBlend implements GameLifeCycle {
         };
 
         for (Rectangle color : colors) {
-            color.setOnMouseClicked(mouseEvent -> handleMouseClick(color));
+            color.setOnMouseClicked(mouseEvent -> handleColorClick(color));
         }
 
         // Création de la grille pour disposer les rectangles par paires
         GridPane colorGrid = new GridPane();
         colorGrid.setPadding(new Insets(20));
-        colorGrid.setHgap(10);
-        colorGrid.setVgap(10);
+        colorGrid.setHgap(25);
+        colorGrid.setVgap(25);
 
         // Ajout des rectangles de couleur à la grille par paires
         for (int i = 0; i < colors.length; i += 2) {
             colorGrid.addRow(i / 2, colors[i], colors[i + 1]);
         }
 
-        // Création du rectangle englobant
         Rectangle paletteRectangle = createPaletteRectangle(colors.length / 2);
 
-        // Empilement du rectangle englobant et de la grille dans une StackPane
+        //Glass image
+        Image resetImage = new Image("data/colorblend/images/glass.jpeg");
+        ImageView imageView = new ImageView(resetImage);
+        imageView.setFitWidth(150); // Taille de l'image
+        imageView.setFitHeight(200);
+
+        // Reset button with glass image on it
+        Button resetButton = new Button();
+        resetButton.setGraphic(imageView);
+        resetButton.setOnAction(event -> handleReset());
+
+        HBox buttonBox = new HBox(resetButton);
+        buttonBox.setAlignment(Pos.CENTER);
+
+
+        // Putting, palette, colorgrid in the same stackpane
         StackPane root = new StackPane(paletteRectangle, colorGrid);
 
+        VBox container = new VBox(root, buttonBox);
+        container.setAlignment(Pos.CENTER); // Alignement du conteneur au centre
+
         // Création de la scène
-        gameContext.getChildren().add(root);
+        gameContext.getChildren().add(container);
     }
 
     /**
@@ -108,7 +131,7 @@ public class ColorBlend implements GameLifeCycle {
      * @return a Rectangle Object used for choosing color
      */
     private Rectangle createColorRectangle(Color color) {
-        Rectangle rectangle = new Rectangle(75, 75);
+        Rectangle rectangle = new Rectangle(150, 150);
         rectangle.setFill(color);
         rectangle.setStroke(color.darker());
         rectangle.setStrokeWidth(1);
@@ -117,7 +140,7 @@ public class ColorBlend implements GameLifeCycle {
 
 
     private Rectangle createPaletteRectangle(int numPairs) {
-        double height = numPairs * 53 + (numPairs - 1) * 10; // Hauteur = (height of a color rectangle + spacing) * size of colors - spacing
+        double height = numPairs * 80 + (numPairs - 1) * 120; // Hauteur = (height of a color rectangle + spacing) * size of colors - spacing
         Rectangle rectangle = new Rectangle(PALETTE_WIDTH, height); // constant width for more visibility
         rectangle.setFill(Color.BEIGE);
         rectangle.setStroke(Color.BEIGE.darker());
@@ -125,7 +148,7 @@ public class ColorBlend implements GameLifeCycle {
         return rectangle;
     }
 
-    private void handleMouseClick(Rectangle color) {
+    private void handleColorClick(Rectangle color) {
         if (this.color1 == null) {
             this.color1 = color.getFill();
             this.circle = createCirle();
@@ -135,9 +158,18 @@ public class ColorBlend implements GameLifeCycle {
             color.setStroke(Color.WHITE);
             Color newColor = blendColors();
             this.circle.setFill(newColor);
+            this.color1 = newColor;
         }
 
     }
+
+    private void handleReset() {
+        // Réinitialisation des couleurs et du cercle
+        color1 = null;
+        color2 = null;
+        circle.setFill(null);
+    }
+
     /**
      * Get a blended color from 2 initial colors
      *
