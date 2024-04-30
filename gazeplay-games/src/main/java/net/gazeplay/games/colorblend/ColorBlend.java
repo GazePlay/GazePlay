@@ -101,7 +101,7 @@ public class ColorBlend implements GameLifeCycle {
         Rectangle paletteRectangle = createPaletteRectangle(colors.length / 2);
 
         //Glass image
-        Image resetImage = new Image("data/colorblend/images/glass.jpeg");
+        Image resetImage = new Image("data/colorblend/images/glass.png");
         ImageView imageView = new ImageView(resetImage);
         imageView.setFitWidth(150); // Taille de l'image
         imageView.setFitHeight(200);
