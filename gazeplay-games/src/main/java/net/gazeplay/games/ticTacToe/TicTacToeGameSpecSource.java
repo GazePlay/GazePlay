@@ -9,7 +9,7 @@ public class TicTacToeGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("TicTacToe").gameThumbnail("data/Thumbnails/ticTacToe.png")
+            GameSummary.builder().nameCode("TicTacToe").gameThumbnail("ticTacToe")
                 .category(GameCategories.Category.LOGIC_MATHS)
                 .category(GameCategories.Category.SELECTION)
                 .build(),

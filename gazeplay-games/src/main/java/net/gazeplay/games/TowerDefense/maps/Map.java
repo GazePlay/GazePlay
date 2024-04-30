@@ -1,35 +1,31 @@
-package net.gazeplay.games.TowerDefense;
+package net.gazeplay.games.TowerDefense.maps;
 
 import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
 
-public class Map {
+public abstract class Map {
 
-    static final int START = 8;
-    static final int END = 9;
-    static final int GRASS = 0;
-    static final int ROAD = 1;
-    static final int TURRET = 2;
+    public static final int START = 8;
+    public static final int END = 9;
+    public static final int GRASS = 0;
+    public static final int ROAD = 1;
+    public static final int TURRET = 2;
 
     private final ArrayList<Point2D> turretsTiles;
-    private int [][] map;
+    protected int [][] map;
     private int nbCols;
     private int nbRows;
     private int startCol;
     private int startRow;
 
-    public Map(int level){
+    public Map(){
         turretsTiles = new ArrayList<>();
-        initLevel(level);
+        initLevel();
     }
 
-    private void initLevel(int level){
-        switch (level) {
-            case 1 -> initLevel1();
-            default -> initLevel1();
-        }
-
+    private void initLevel(){
+        setStructure();
         nbRows = map.length;
         nbCols = map[0].length;
 
@@ -44,23 +40,8 @@ public class Map {
             }
         }
     }
-
-    private void initLevel1(){
-        // Look at the static variables above to understand the map
-        map = new int[][] {
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0,0,},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,},
-            {0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,},
-            {0,0,0,0,1,2,0,2,0,1,0,0,0,2,0,0,0,1,2,0,},
-            {0,0,0,0,1,0,0,0,0,1,0,0,1,1,1,0,0,1,1,1,},
-            {0,0,0,2,1,0,0,0,0,1,0,0,1,0,1,0,0,0,0,1,},
-            {9,1,1,1,1,0,0,0,0,1,0,0,1,0,1,0,2,1,1,1,},
-            {0,0,2,0,0,0,0,0,0,1,0,2,1,0,1,0,0,1,0,0,},
-            {0,0,0,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,0,0,},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,},
-            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
-        };
-    }
+    // Look at the static variables above to understand a map
+    public abstract void setStructure();
 
     public ArrayList<Point2D> getTurretsTiles() {
         return turretsTiles;

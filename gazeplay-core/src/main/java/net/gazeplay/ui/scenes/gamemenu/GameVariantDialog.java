@@ -7,6 +7,7 @@ import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -91,7 +92,7 @@ public class GameVariantDialog extends Stage {
             numberBox.getChildren().add(numberField);
         }
 
-        final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 24; -fx-text-fill: black;";
+        final String labelStyle = "-fx-font-weight: bold; -fx-font-size: 36; -fx-text-fill: black; -fx-padding: 60 0 0 0";
 
         I18NLabel chooseVariantPromptLabel = new I18NLabel(gazePlay.getTranslator(), chooseVariantPromptLabelTextKey);
         Label titleVariant = new Label(chooseVariantPromptLabel.getText() + " " + gameSpec.getGameSummary().getNameCode());
@@ -117,6 +118,7 @@ public class GameVariantDialog extends Stage {
         bottom.prefWidthProperty().bind(sceneContentPane.widthProperty());
         bottom.setAlignment(Pos.CENTER);
         bottom.setSpacing(50);
+        bottom.setPadding(new Insets(0, 0, 50, 0));
 
         for (IGameVariant variant : gameSpec.getGameVariantGenerator().getVariants()) {
 
@@ -882,7 +884,7 @@ public class GameVariantDialog extends Stage {
     }
 
     private void whereIsItErrorHandling(GazePlay gazePlay, GameMenuController gameMenuController, GameSpec gameSpec, Parent root, IGameVariant finalVariant) {
-        String whereIsItPromptLabel = "WhereIsItNotConfigDirectory";
+        String whereIsItPromptLabel = "WhereIsItNot Config Directory";
         GameWhereIsItErrorPathDialog errorDialog = new GameWhereIsItErrorPathDialog(gazePlay, gameMenuController, gazePlay.getPrimaryStage(), gameSpec, root, whereIsItPromptLabel, finalVariant);
         errorDialog.setTitle("error");
         errorDialog.show();

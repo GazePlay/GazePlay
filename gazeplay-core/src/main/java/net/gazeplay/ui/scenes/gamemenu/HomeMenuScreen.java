@@ -34,10 +34,7 @@ import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.I18NTooltip;
 import net.gazeplay.commons.ui.Translator;
-import net.gazeplay.commons.utils.ConfigurationButton;
-import net.gazeplay.commons.utils.ConfigurationButtonFactory;
-import net.gazeplay.commons.utils.ControlPanelConfigurator;
-import net.gazeplay.commons.utils.CustomButton;
+import net.gazeplay.commons.utils.*;
 import net.gazeplay.commons.utils.games.MenuUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -77,6 +74,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
     private StackPane errorMessage;
     @Getter
     private VBox centerPanel;
+    private ThumbnailImage thumbnailImage;
 
     public HomeMenuScreen(
         GazePlay gazePlay,
@@ -87,6 +85,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         super(gazePlay, new BorderPane());
         this.soundManager = soundManager;
         this.gameMenuFactory = gameMenuFactory;
+        this.thumbnailImage = new ThumbnailImage();
 
         stats = new Stats(gazePlay.getPrimaryScene());
 
@@ -480,6 +479,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
             config,
             translator,
             gameSpec,
+            thumbnailImage,
             gameButtonOrientation,
             gazeDeviceManager);
 

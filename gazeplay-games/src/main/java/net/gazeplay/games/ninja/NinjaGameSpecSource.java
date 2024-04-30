@@ -12,7 +12,7 @@ public class NinjaGameSpecSource implements GameSpecSource {
             GameSummary
                 .builder()
                 .nameCode("Ninja")
-                .gameThumbnail("data/Thumbnails/ninja.png")
+                .gameThumbnail("ninja")
                 .category(GameCategories.Category.ACTION_REACTION)
                 .absolutePriority(1)
                 .build(),

@@ -9,7 +9,7 @@ public class CakesGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Cakes").gameThumbnail("data/Thumbnails/cakes.png")
+            GameSummary.builder().nameCode("Cakes").gameThumbnail("cakes")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MEMORIZATION)
                 .build(),

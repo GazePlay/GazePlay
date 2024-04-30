@@ -11,7 +11,7 @@ public class SimonGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Simon").gameThumbnail("data/Thumbnails/simon.png")
+            GameSummary.builder().nameCode("Simon").gameThumbnail("simon")
                 .category(GameCategories.Category.ACTION_REACTION)
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.MULTIMEDIA).build(),

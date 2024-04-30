@@ -7,8 +7,10 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
@@ -19,12 +21,22 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.TowerDefense.enemies.BasicEnemy;
+import net.gazeplay.games.TowerDefense.enemies.Enemy;
+import net.gazeplay.games.TowerDefense.enemies.FastEnemy;
+import net.gazeplay.games.TowerDefense.enemies.TankEnemy;
+import net.gazeplay.games.TowerDefense.maps.Map;
+import net.gazeplay.games.TowerDefense.maps.MapOne;
+import net.gazeplay.games.TowerDefense.maps.MapTwo;
+import net.gazeplay.games.TowerDefense.towers.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -48,6 +60,11 @@ public class TowerDefense implements GameLifeCycle {
     private Timeline placeTowerTimeline;
     private Timeline createTowerSelectionTimeline;
     private AnimationTimer gameLoop;
+    private final Dimension2D dimensions;
+
+    private final VBox messages;
+
+
 
     // GAME VARIABLES
     private final ArrayList<Enemy> enemies;
@@ -62,6 +79,7 @@ public class TowerDefense implements GameLifeCycle {
     private int enemiesSent;
     private int enemySpawnTick;
     private Instant lastBlizzardInstant;
+    private final TowerDefenseVariant gameVariant;
 
     // IMAGES
     private final Image basicTowerImage;
@@ -85,29 +103,45 @@ public class TowerDefense implements GameLifeCycle {
     private final static int CANON_TOWER = 3;
     private final static double BLIZZARD_COOLDOWN = 30;
 
-    TowerDefense(final IGameContext gameContext, final Stats stats){
-
+    TowerDefense(final IGameContext gameContext, final Stats stats, TowerDefenseVariant gameVariant){
         this.gameContext = gameContext;
         this.stats = stats;
+        this.gameVariant = gameVariant;
         gameContext.getGazeDeviceManager().addStats(stats);
 
         enemies = new ArrayList<>();
         towers = new ArrayList<>();
         projectiles = new ArrayList<>();
-        map = new Map(1);
+        switch (this.gameVariant){
+            case MAP_ONE:
+                this.map = new MapOne();
+                break;
+            case MAP_TWO:
+                this.map = new MapTwo();
+                break;
+            default:
+                this.map = new MapOne();
+        }
 
         money = new SimpleDoubleProperty(START_MONEY);
         life = new SimpleIntegerProperty(START_LIFE);
         waveCount = new SimpleIntegerProperty(0);
 
-        basicTowerImage = new Image("data/TowerDefense/basicTower.png");
-        doubleTowerImage = new Image("data/TowerDefense/doubleTower.png");
-        missileTowerImage = new Image("data/TowerDefense/missileTower.png");
-        canonTowerImage = new Image("data/TowerDefense/canonTower.png");
-        moneyLossImage = new Image("data/TowerDefense/moneyLoss.png");
-        moneyGainImage = new Image("data/TowerDefense/moneyGain.png");
-        sellTowerImage = new Image("data/TowerDefense/sellTower.png");
-        blizzardGif = new ImageView(new Image("data/TowerDefense/blizzard.gif"));
+        this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        // The message queue
+        messages = new VBox();
+        messages.setAlignment(Pos.CENTER);
+        messages.setPadding(new Insets(120));
+
+        basicTowerImage = new Image("data/towerDefense/images/basicTower.png");
+        doubleTowerImage = new Image("data/towerDefense/images/doubleTower.png");
+        missileTowerImage = new Image("data/towerDefense/images/missileTower.png");
+        canonTowerImage = new Image("data/towerDefense/images/canonTower.png");
+        moneyLossImage = new Image("data/towerDefense/images/moneyLoss.png");
+        moneyGainImage = new Image("data/towerDefense/images/moneyGain.png");
+        sellTowerImage = new Image("data/towerDefense/images/sellTower.png");
+        blizzardGif = new ImageView(new Image("data/towerDefense/images/blizzard.gif"));
         blizzardGif.fitWidthProperty().bind(gameContext.getRoot().widthProperty());
         blizzardGif.fitHeightProperty().bind(gameContext.getRoot().heightProperty());
 
@@ -135,6 +169,7 @@ public class TowerDefense implements GameLifeCycle {
         lastBlizzardInstant = Instant.MIN;
 
         gameContext.getChildren().add(canvas);
+        gameContext.getChildren().add(messages);
 
         // TOPBAR
 
@@ -143,15 +178,15 @@ public class TowerDefense implements GameLifeCycle {
         topBar.setPadding(new Insets(10,0,0,15));
         gameContext.getChildren().add(topBar);
 
-        lifeLabel = createLabel(life.get()+"/"+START_LIFE, "data/TowerDefense/heart.png");
+        lifeLabel = createLabel(life.get()+"/"+START_LIFE, "data/towerDefense/images/heart.png");
         life.addListener(observable -> lifeLabel.setText(life.get()+"/"+START_LIFE));
         topBar.getChildren().add(lifeLabel);
 
-        moneyLabel = createLabel(""+START_MONEY, "data/TowerDefense/money.png");
+        moneyLabel = createLabel(""+START_MONEY, "data/towerDefense/images/money.png");
         money.addListener(observable -> moneyLabel.setText(""+money.get()));
         topBar.getChildren().add(moneyLabel);
 
-        waveCountLabel = createLabel(""+waveCount.get(), "data/TowerDefense/wave.png");
+        waveCountLabel = createLabel(""+waveCount.get(), "data/towerDefense/images/wave.png");
         waveCount.addListener(observable -> waveCountLabel.setText(""+waveCount.getValue()));
         topBar.getChildren().add(waveCountLabel);
 
@@ -193,8 +228,8 @@ public class TowerDefense implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addEventFilter(sendWaveButton);
 
         //// Blizzard Power
-        Label blizzardLabel = createLabel("", "data/TowerDefense/blizzardIcon.png");
-        ImageView blizzarIcon = new ImageView(new Image("data/TowerDefense/blizzardIcon.png"));
+        Label blizzardLabel = createLabel("", "data/towerDefense/images/blizzardIcon.png");
+        ImageView blizzarIcon = new ImageView(new Image("data/towerDefense/images/blizzardIcon.png"));
         blizzarIcon.fitWidthProperty().bind(tileWidth.multiply(1.5));
         blizzarIcon.fitHeightProperty().bind(tileHeight.multiply(1.5));
         blizzardLabel.setGraphic(blizzarIcon);
@@ -337,7 +372,7 @@ public class TowerDefense implements GameLifeCycle {
 
                 // Fire projectiles
                 for (Tower tower : towers) {
-                    tower.fire();
+                    tower.fire(gameContext);
                 }
 
                 // Move projectiles
@@ -400,6 +435,11 @@ public class TowerDefense implements GameLifeCycle {
             gameContext.getChildren().add(image);
 
             towers.add(tower);
+            gameContext.getSoundManager().add(tower.getSoundsConstruction());
+        }
+        else {
+            //Missing money
+            showMessage(Color.RED,"Pas assez d'argent");
         }
     }
 
@@ -546,7 +586,15 @@ public class TowerDefense implements GameLifeCycle {
         if (enemiesSent < enemiesToSend && enemySpawnTick >= ENEMY_SPAWN_TICK_LIMIT){
             enemySpawnTick = 0;
             enemiesSent++;
-            Enemy enemy = new Enemy(map, map.getStartCol(), map.getStartRow());
+            Enemy enemy;
+            //spawn Fast Enemies if wave is 10,20,30,...
+            if (waveCount.get()%10 == 0){
+                enemy = new FastEnemy(map, map.getStartCol(), map.getStartRow());
+            } else if (waveCount.get()%5 == 0 && waveCount.get() != 5) {
+                enemy = new TankEnemy(map,map.getStartCol(), map.getStartRow());
+            } else {
+                enemy = new BasicEnemy(map,map.getStartCol(), map.getStartRow());
+            }
             enemy.multiplyHealth(enemyHealthMultiplier);
             enemies.add(enemy);
         }else{
@@ -577,6 +625,13 @@ public class TowerDefense implements GameLifeCycle {
 
         if(getTower(col, row)!=null){
             createSellIcon(col, row, mainCircleRadius, group);
+            //Display info about the tower
+            Tower existingTower = getTower(col, row);
+            showMessage(Color.WHITE,"Dégâts : " + existingTower.damage + "\n"
+                + "Portée : " + existingTower.range + " unités" + "\n"
+                + "Vitesse : " + String.format("%.2f", existingTower.projSpeed));
+
+
         }else{
             createTowerIcon(BASIC_TOWER, col, row, mainCircleRadius, group);
             createTowerIcon(MISSILE_TOWER, col, row, mainCircleRadius, group);
@@ -638,6 +693,7 @@ public class TowerDefense implements GameLifeCycle {
                 stackPane.setTranslateY((row + 0.5 - mainCircleRadius) * tileHeight.get());
             }
         }
+
 
         Label costLabel = new Label();
         costLabel.setMouseTransparent(true);
@@ -722,6 +778,31 @@ public class TowerDefense implements GameLifeCycle {
         sellIcon.addEventFilter(MouseEvent.MOUSE_EXITED, exitTowerHandler);
         sellIcon.addEventFilter(GazeEvent.GAZE_EXITED, exitTowerHandler);
         gameContext.getGazeDeviceManager().addEventFilter(sellIcon);
+    }
+
+    /**
+     * Displays a message in a vertical queue, which disappears after a short time
+     */
+    public void showMessage(final Color fontColor, final String message) {
+        final Text messageText = new Text(130, 150,
+            message);
+        messageText.setTextAlignment(TextAlignment.CENTER);
+        messageText.setFill(fontColor);
+        messageText.setFont(new Font(dimensions.getHeight() / 10));
+        messageText.setStyle("-fx-stroke: black; -fx-stroke-width: 3;");
+        messageText.setWrappingWidth(dimensions.getWidth());
+        messageText.setOpacity(0);
+
+        messages.getChildren().add(messageText);
+
+        final Timeline showMessage = new Timeline(
+            new KeyFrame(Duration.seconds(0.3), new KeyValue(messageText.opacityProperty(), 1)),
+            new KeyFrame(Duration.seconds(4), new KeyValue(messageText.opacityProperty(), 1)),
+            new KeyFrame(Duration.seconds(4.3), new KeyValue(messageText.opacityProperty(), 0)));
+
+        showMessage.setOnFinished(e -> messages.getChildren().remove(messageText));
+
+        showMessage.playFromStart();
     }
 
 }

@@ -9,7 +9,7 @@ public class Station {
     private final ImageView shape;
 
     public Station(TrainColors trainColor) {
-        this.color = trainColor.toString();
+        this.color = trainColor.getColor();
         shape = new ImageView(new Image("data/trainSwitches/images/"+color+"Station.png"));
     }
 

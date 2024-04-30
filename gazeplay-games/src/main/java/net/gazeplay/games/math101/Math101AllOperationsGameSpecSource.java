@@ -9,7 +9,7 @@ public class Math101AllOperationsGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("Math101: All operations").priority(1).gameThumbnail("data/Thumbnails/math101.png")
+            GameSummary.builder().nameCode("Math101: All operations").priority(1).gameThumbnail("math101")
                 .category(GameCategories.Category.SELECTION)
                 .category(GameCategories.Category.LOGIC_MATHS).description("MathDesc").build(),
             new Math101AllOperationsGameVariantGenerator(), new MathGameLauncher(MathGameType.MATHALL));

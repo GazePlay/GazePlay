@@ -9,7 +9,7 @@ public class PersonalizeEggGameGameSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
         return new GameSpec(
-            GameSummary.builder().nameCode("PersonalizeEggGame").gameThumbnail("data/Thumbnails/egg.png")
+            GameSummary.builder().nameCode("PersonalizeEggGame").gameThumbnail("egg")
                 .category(GameCategories.Category.SELECTION).build(),
             new EggGameVariantGenerator(), new PersonalizeEggGameGameLauncher());
     }
