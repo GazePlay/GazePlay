@@ -1,23 +1,29 @@
 package net.gazeplay.games.colorblend;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Color;
 import javafx.geometry.Insets;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Choose between multiple colors and blend them together
@@ -51,6 +57,16 @@ public class ColorBlend implements GameLifeCycle {
     @Override
     public void dispose() {
 
+    }
+
+    private ProgressIndicator createProgressIndicator(final Rectangle rectangle) {
+        final ProgressIndicator indicator = new ProgressIndicator(0);
+        indicator.setTranslateX(rectangle.getX());
+        indicator.setTranslateY(rectangle.getY());
+        //indicator.setMinWidth(width * 0.9);
+        //indicator.setMinHeight(width * 0.9);
+        indicator.setOpacity(0);
+        return indicator;
     }
 
     /**
@@ -135,6 +151,24 @@ public class ColorBlend implements GameLifeCycle {
         rectangle.setFill(color);
         rectangle.setStroke(color.darker());
         rectangle.setStrokeWidth(1);
+
+        //Handle click event from eyetracker
+        EventHandler<Event> eventHandler = event -> {
+                System.out.println("handling!!");
+            ProgressIndicator progressIndicator = createProgressIndicator(rectangle);
+            progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+            progressIndicator.setOpacity(1);
+            progressIndicator.setProgress(0);
+            Timeline timelineProgressBar = new Timeline();
+            timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
+                new KeyValue(progressIndicator.progressProperty(), 1)));
+
+            timelineProgressBar.setOnFinished(actionEvent -> handleColorClick(rectangle));
+
+        };
+        rectangle.addEventFilter(MouseEvent.MOUSE_ENTERED,eventHandler);
+        rectangle.addEventFilter(GazeEvent.GAZE_ENTERED,eventHandler);
+
         return rectangle;
     }
 
