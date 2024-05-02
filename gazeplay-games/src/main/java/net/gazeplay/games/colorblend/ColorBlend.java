@@ -42,6 +42,9 @@ public class ColorBlend implements GameLifeCycle {
     private static final int CIRCLE_RADIUS = 400;
     private static final int PALETTE_WIDTH = 350;
 
+    private ProgressIndicator progressIndicator;
+    private Timeline timelineProgressBar;
+
     public ColorBlend(final IGameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
@@ -57,16 +60,6 @@ public class ColorBlend implements GameLifeCycle {
     @Override
     public void dispose() {
 
-    }
-
-    private ProgressIndicator createProgressIndicator(final Rectangle rectangle) {
-        final ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(rectangle.getX());
-        indicator.setTranslateY(rectangle.getY());
-        //indicator.setMinWidth(width * 0.9);
-        //indicator.setMinHeight(width * 0.9);
-        indicator.setOpacity(0);
-        return indicator;
     }
 
     /**
@@ -132,13 +125,35 @@ public class ColorBlend implements GameLifeCycle {
 
 
         // Putting, palette, colorgrid in the same stackpane
-        StackPane root = new StackPane(paletteRectangle, colorGrid);
+        StackPane root = new StackPane(paletteRectangle, colorGrid, this.progressIndicator);
 
         VBox container = new VBox(root, buttonBox);
         container.setAlignment(Pos.CENTER); // Alignement du conteneur au centre
 
         // Création de la scène
         gameContext.getChildren().add(container);
+    }
+
+    private EventHandler<Event> buildEvent(final Rectangle rectangle) {
+        return e -> {
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                timelineProgressBar = new Timeline();
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
+                    new KeyValue(progressIndicator.progressProperty(), 1)));
+
+                timelineProgressBar.setOnFinished(actionEvent -> handleColorClick(rectangle));
+
+                progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+                progressIndicator.setOpacity(1);
+                progressIndicator.setProgress(0);
+
+                timelineProgressBar.play();
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                timelineProgressBar.stop();
+                progressIndicator.setOpacity(0);
+                progressIndicator.setProgress(0);
+            }
+        };
     }
 
     /**
@@ -152,26 +167,21 @@ public class ColorBlend implements GameLifeCycle {
         rectangle.setStroke(color.darker());
         rectangle.setStrokeWidth(1);
 
-        //Handle click event from eyetracker
-        EventHandler<Event> eventHandler = event -> {
-                System.out.println("handling!!");
-            ProgressIndicator progressIndicator = createProgressIndicator(rectangle);
-            progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
-            progressIndicator.setOpacity(1);
-            progressIndicator.setProgress(0);
-            Timeline timelineProgressBar = new Timeline();
-            timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
-                new KeyValue(progressIndicator.progressProperty(), 1)));
+        this.progressIndicator = createProgressIndicator(rectangle);
 
-            timelineProgressBar.setOnFinished(actionEvent -> handleColorClick(rectangle));
-
-        };
-        rectangle.addEventFilter(MouseEvent.MOUSE_ENTERED,eventHandler);
-        rectangle.addEventFilter(GazeEvent.GAZE_ENTERED,eventHandler);
+        rectangle.addEventFilter(MouseEvent.ANY,buildEvent(rectangle));
+        rectangle.addEventFilter(GazeEvent.ANY,buildEvent(rectangle));
 
         return rectangle;
     }
 
+    private ProgressIndicator createProgressIndicator(final Rectangle rectangle) {
+        final ProgressIndicator indicator = new ProgressIndicator(0);
+        indicator.setMinWidth(rectangle.getWidth() / 2);
+        indicator.setMinHeight(rectangle.getHeight() / 2);
+        indicator.setOpacity(0);
+        return indicator;
+    }
 
     private Rectangle createPaletteRectangle(int numPairs) {
         double height = numPairs * 80 + (numPairs - 1) * 120; // Hauteur = (height of a color rectangle + spacing) * size of colors - spacing
