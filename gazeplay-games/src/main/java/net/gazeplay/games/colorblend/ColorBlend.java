@@ -117,10 +117,13 @@ public class ColorBlend implements GameLifeCycle {
 
         // Reset button with glass image on it
         Button resetButton = new Button();
+        HBox buttonBox = new HBox(resetButton);
+
         resetButton.setGraphic(imageView);
         resetButton.setOnAction(event -> handleReset());
+        resetButton.addEventFilter(MouseEvent.ANY, resetBuildEvent(buttonBox));
+        resetButton.addEventFilter(GazeEvent.ANY, resetBuildEvent(buttonBox));
 
-        HBox buttonBox = new HBox(resetButton);
         buttonBox.setAlignment(Pos.CENTER);
 
 
@@ -134,7 +137,7 @@ public class ColorBlend implements GameLifeCycle {
         gameContext.getChildren().add(container);
     }
 
-    private EventHandler<Event> buildEvent(final Rectangle rectangle) {
+    private EventHandler<Event> rectangleBuildEvent(final Rectangle rectangle) {
         return e -> {
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
                 timelineProgressBar = new Timeline();
@@ -147,11 +150,16 @@ public class ColorBlend implements GameLifeCycle {
                 progressIndicator.setOpacity(1);
                 progressIndicator.setProgress(0);
 
+                progressIndicator.layoutXProperty().bind(rectangle.layoutXProperty().add(rectangle.getWidth() / 2).subtract(progressIndicator.getMinWidth() / 2));
+                progressIndicator.layoutYProperty().bind(rectangle.layoutYProperty().add(rectangle.getHeight() / 2).subtract(progressIndicator.getMinHeight() / 2));
+
                 timelineProgressBar.play();
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
                 timelineProgressBar.stop();
                 progressIndicator.setOpacity(0);
                 progressIndicator.setProgress(0);
+                //Avoid event calling on it
+                progressIndicator.setMouseTransparent(true);
             }
         };
     }
