@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import javafx.stage.Screen;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
@@ -40,8 +41,6 @@ public class ColorBlend implements GameLifeCycle {
     private Circle circle;
 
     private static final int CIRCLE_RADIUS = 400;
-    private static final int PALETTE_WIDTH = 350;
-
     private ProgressIndicator progressIndicator;
     private Timeline timelineProgressBar;
 
@@ -78,6 +77,18 @@ public class ColorBlend implements GameLifeCycle {
      * Create the palette of colors
      */
     private void createPalette() {
+
+        double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
+        double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
+
+        // Définir la taille de la palette en pourcentage de la taille de la fenêtre
+        double paletteWidthPercentage = 0.15; // 15% de la largeur de l'écran
+        double paletteHeightPercentage = 0.65; // 80% de la hauteur de l'écran
+
+        double paletteWidth = screenWidth * paletteWidthPercentage;
+        double paletteHeight = screenHeight * paletteHeightPercentage;
+
+
         //Create colors
         Rectangle[] colors = {
             createColorRectangle(Color.RED),
@@ -107,7 +118,7 @@ public class ColorBlend implements GameLifeCycle {
             colorGrid.addRow(i / 2, colors[i], colors[i + 1]);
         }
 
-        Rectangle paletteRectangle = createPaletteRectangle(colors.length / 2);
+        Rectangle paletteRectangle = createPaletteRectangle(colors.length / 2,paletteWidth,paletteHeight);
 
         //Glass image
         Image resetImage = new Image("data/colorblend/images/glass.png");
@@ -219,9 +230,8 @@ public class ColorBlend implements GameLifeCycle {
         return indicator;
     }
 
-    private Rectangle createPaletteRectangle(int numPairs) {
-        double height = numPairs * 80 + (numPairs - 1) * 120; // Hauteur = (height of a color rectangle + spacing) * size of colors - spacing
-        Rectangle rectangle = new Rectangle(PALETTE_WIDTH, height); // constant width for more visibility
+    private Rectangle createPaletteRectangle(int numPairs,double width, double height) {
+        Rectangle rectangle = new Rectangle(width, height); // constant width for more visibility
         rectangle.setFill(Color.BEIGE);
         rectangle.setStroke(Color.BEIGE.darker());
         rectangle.setStrokeWidth(2);
