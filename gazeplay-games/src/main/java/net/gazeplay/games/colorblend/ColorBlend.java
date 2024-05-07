@@ -164,6 +164,34 @@ public class ColorBlend implements GameLifeCycle {
         };
     }
 
+    private EventHandler<Event> resetBuildEvent(HBox buttonBox) {
+        return e -> {
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                timelineProgressBar = new Timeline();
+                timelineProgressBar.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
+                    new KeyValue(progressIndicator.progressProperty(), 1)));
+
+                timelineProgressBar.setOnFinished(actionEvent -> handleReset());
+
+                progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+                progressIndicator.setOpacity(1);
+                progressIndicator.setProgress(0);
+
+                // Lier les propriétés layoutX et layoutY du ProgressIndicator à celles du conteneur du bouton
+                progressIndicator.layoutXProperty().bind(buttonBox.layoutXProperty().add(buttonBox.getWidth() / 2).subtract(progressIndicator.getMinWidth() / 2));
+                progressIndicator.layoutYProperty().bind(buttonBox.layoutYProperty().add(buttonBox.getHeight() / 2).subtract(progressIndicator.getMinHeight() / 2));
+
+                timelineProgressBar.play();
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                timelineProgressBar.stop();
+                progressIndicator.setOpacity(0);
+                progressIndicator.setProgress(0);
+                // Empêcher les événements de souris d'être capturés par le ProgressIndicator
+                progressIndicator.setMouseTransparent(true);
+            }
+        };
+    }
+
     /**
      * Create a rectangle for a color
      * @param color the color used
