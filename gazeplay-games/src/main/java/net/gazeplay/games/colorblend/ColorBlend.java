@@ -211,7 +211,7 @@ public class ColorBlend implements GameLifeCycle {
         // Réinitialisation des couleurs et du cercle
         color1 = null;
         color2 = null;
-        circle.setFill(null);
+        if (circle != null) circle.setFill(null);
     }
 
     /**
