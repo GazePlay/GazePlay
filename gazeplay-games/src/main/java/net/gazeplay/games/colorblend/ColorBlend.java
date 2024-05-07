@@ -205,8 +205,8 @@ public class ColorBlend implements GameLifeCycle {
 
         this.progressIndicator = createProgressIndicator(rectangle);
 
-        rectangle.addEventFilter(MouseEvent.ANY,buildEvent(rectangle));
-        rectangle.addEventFilter(GazeEvent.ANY,buildEvent(rectangle));
+        rectangle.addEventFilter(MouseEvent.ANY, rectangleBuildEvent(rectangle));
+        rectangle.addEventFilter(GazeEvent.ANY, rectangleBuildEvent(rectangle));
 
         return rectangle;
     }
