@@ -123,8 +123,13 @@ public class ColorBlend implements GameLifeCycle {
         //Glass image
         Image resetImage = new Image("data/colorblend/images/glass.png");
         ImageView imageView = new ImageView(resetImage);
-        imageView.setFitWidth(150); // Taille de l'image
-        imageView.setFitHeight(200);
+
+        double glassWidthPercentage = 0.05; // 5% de la largeur de l'écran
+        double glassHeightPercentage = 0.10; // 10% de la hauteur de l'écran
+
+
+        imageView.setFitWidth(screenWidth * glassWidthPercentage); // Taille de l'image
+        imageView.setFitHeight(screenHeight * glassHeightPercentage);
 
         // Reset button with glass image on it
         Button resetButton = new Button();
