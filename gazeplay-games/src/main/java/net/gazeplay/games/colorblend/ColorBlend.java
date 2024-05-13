@@ -82,8 +82,8 @@ public class ColorBlend implements GameLifeCycle {
         double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
 
         // Définir la taille de la palette en pourcentage de la taille de la fenêtre
-        double paletteWidthPercentage = 0.15; // 15% de la largeur de l'écran
-        double paletteHeightPercentage = 0.65; // 80% de la hauteur de l'écran
+        double paletteWidthPercentage = 0.12; // 10% de la largeur de l'écran
+        double paletteHeightPercentage = 0.65; // 65% de la hauteur de l'écran
 
         double paletteWidth = screenWidth * paletteWidthPercentage;
         double paletteHeight = screenHeight * paletteHeightPercentage;
@@ -148,6 +148,33 @@ public class ColorBlend implements GameLifeCycle {
         gameContext.getChildren().add(container);
     }
 
+    /**
+     * Create a rectangle for a color
+     * @param color the color used
+     * @return a Rectangle Object used for choosing color
+     */
+    private Rectangle createColorRectangle(Color color) {
+
+        double screenWidth = Screen.getPrimary().getVisualBounds().getWidth();
+        double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
+
+        // Définir la taille de la palette en pourcentage de la taille de la fenêtre
+        double rectangleWidthPercentage = 0.05; // 10% de la largeur de l'écran
+        double rectangleHeightPercentage = 0.10; // 10% de la hauteur de l'écran
+
+        Rectangle rectangle = new Rectangle(screenWidth* rectangleWidthPercentage, screenHeight* rectangleHeightPercentage);
+        rectangle.setFill(color);
+        rectangle.setStroke(color.darker());
+        rectangle.setStrokeWidth(1);
+
+        this.progressIndicator = createProgressIndicator(rectangle);
+
+        rectangle.addEventFilter(MouseEvent.ANY, rectangleBuildEvent(rectangle));
+        rectangle.addEventFilter(GazeEvent.ANY, rectangleBuildEvent(rectangle));
+
+        return rectangle;
+    }
+
     private EventHandler<Event> rectangleBuildEvent(final Rectangle rectangle) {
         return e -> {
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
@@ -201,25 +228,6 @@ public class ColorBlend implements GameLifeCycle {
                 progressIndicator.setMouseTransparent(true);
             }
         };
-    }
-
-    /**
-     * Create a rectangle for a color
-     * @param color the color used
-     * @return a Rectangle Object used for choosing color
-     */
-    private Rectangle createColorRectangle(Color color) {
-        Rectangle rectangle = new Rectangle(150, 150);
-        rectangle.setFill(color);
-        rectangle.setStroke(color.darker());
-        rectangle.setStrokeWidth(1);
-
-        this.progressIndicator = createProgressIndicator(rectangle);
-
-        rectangle.addEventFilter(MouseEvent.ANY, rectangleBuildEvent(rectangle));
-        rectangle.addEventFilter(GazeEvent.ANY, rectangleBuildEvent(rectangle));
-
-        return rectangle;
     }
 
     private ProgressIndicator createProgressIndicator(final Rectangle rectangle) {
@@ -288,8 +296,11 @@ public class ColorBlend implements GameLifeCycle {
 
     private Circle createCirle(){
         Circle circle = new Circle();
-        double radius = CIRCLE_RADIUS;
-        circle.setRadius(radius);
+        double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
+
+        // Définir la taille de la palette en pourcentage de la taille de la fenêtre
+        double circleeHeightPercentage = 0.25; // 50% de la hauteur de l'écran
+        circle.setRadius(screenHeight * circleeHeightPercentage);
 
         this.gameContext.getRoot().getChildren().add(circle);
 
