@@ -408,7 +408,7 @@ public class GameVariantDialog extends Stage {
                 } else if (gameSpec.getGameSummary().getNameCode().equals("TrainSwitches")) {
                     IntStringGameVariant v = (IntStringGameVariant) variant;
                     int numberOfTrains = Integer.parseInt(numberField.getText());
-                    System.out.println("Nombred de trains"+numberOfTrains);
+                    System.out.println("Nombre de trains"+numberOfTrains);
                     v.setNumber2(numberOfTrains);
                     gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, v);
                 } else {
@@ -431,7 +431,7 @@ public class GameVariantDialog extends Stage {
                     } else if (gameSpec.getGameSummary().getNameCode().equals("TrainSwitches")) {
                         IntStringGameVariant v = (IntStringGameVariant) variant;
                         int numberOfTrains = Integer.parseInt(numberField.getText());
-                        System.out.println("Nombred de trains"+numberOfTrains);
+                        System.out.println("Nombre de trains"+numberOfTrains);
                         v.setNumber2(numberOfTrains);
                         gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, v);
                     } else {
@@ -476,7 +476,7 @@ public class GameVariantDialog extends Stage {
     ) {
         initModality(Modality.WINDOW_MODAL);
         initOwner(primaryStage);
-        initStyle(StageStyle.UNDECORATED);
+        initStyle(StageStyle.UTILITY);
         setOnCloseRequest(windowEvent -> {
             primaryStage.getScene().getRoot().setEffect(null);
             root.setDisable(false);
