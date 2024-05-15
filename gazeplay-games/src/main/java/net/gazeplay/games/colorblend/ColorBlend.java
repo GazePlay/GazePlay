@@ -118,7 +118,7 @@ public class ColorBlend implements GameLifeCycle {
             colorGrid.addRow(i / 2, colors[i], colors[i + 1]);
         }
 
-        Rectangle paletteRectangle = createPaletteRectangle(colors.length / 2,paletteWidth,paletteHeight);
+        Rectangle paletteRectangle = createPaletteRectangle(paletteWidth,paletteHeight);
 
         //Glass image
         Image resetImage = new Image("data/colorblend/images/glass.png");
@@ -243,8 +243,8 @@ public class ColorBlend implements GameLifeCycle {
         return indicator;
     }
 
-    private Rectangle createPaletteRectangle(int numPairs,double width, double height) {
-        Rectangle rectangle = new Rectangle(width, height); // constant width for more visibility
+    private Rectangle createPaletteRectangle(double width, double height) {
+        Rectangle rectangle = new Rectangle(width, height);
         rectangle.setFill(Color.BEIGE);
         rectangle.setStroke(Color.BEIGE.darker());
         rectangle.setStrokeWidth(2);
@@ -304,7 +304,7 @@ public class ColorBlend implements GameLifeCycle {
         double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
 
         // Définir la taille de la palette en pourcentage de la taille de la fenêtre
-        double circleeHeightPercentage = 0.25; // 50% de la hauteur de l'écran
+        double circleeHeightPercentage = 0.25; // 25% de la hauteur de l'écran
         circle.setRadius(screenHeight * circleeHeightPercentage);
 
         this.gameContext.getRoot().getChildren().add(circle);
