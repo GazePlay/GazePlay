@@ -82,7 +82,7 @@ public class ColorBlend implements GameLifeCycle {
         double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
 
         // Définir la taille de la palette en pourcentage de la taille de la fenêtre
-        double paletteWidthPercentage = 0.12; // 10% de la largeur de l'écran
+        double paletteWidthPercentage = 0.12; // 12% de la largeur de l'écran
         double paletteHeightPercentage = 0.65; // 65% de la hauteur de l'écran
 
         double paletteWidth = screenWidth * paletteWidthPercentage;
@@ -164,7 +164,7 @@ public class ColorBlend implements GameLifeCycle {
         double screenHeight = Screen.getPrimary().getVisualBounds().getHeight();
 
         // Définir la taille de la palette en pourcentage de la taille de la fenêtre
-        double rectangleWidthPercentage = 0.05; // 10% de la largeur de l'écran
+        double rectangleWidthPercentage = 0.05; // 5% de la largeur de l'écran
         double rectangleHeightPercentage = 0.10; // 10% de la hauteur de l'écran
 
         Rectangle rectangle = new Rectangle(screenWidth* rectangleWidthPercentage, screenHeight* rectangleHeightPercentage);
