@@ -8,9 +8,8 @@ import net.gazeplay.GameSummary;
 public class ColorBlendSpecSource implements GameSpecSource {
     @Override
     public GameSpec getGameSpec() {
-        return new GameSpec(GameSummary.builder().nameCode("colorblend").gameThumbnail("colorblend")
-            .category(GameCategories.Category.SELECTION)
-            .category(GameCategories.Category.MULTIMEDIA).description("ColorBlendDesc").build(),
+        return new GameSpec(
+            GameSummary.builder().nameCode("colorblend").gameThumbnail("colorblend").category(GameCategories.Category.SELECTION).build(),
         new ColorBlendLauncher());
     }
 }

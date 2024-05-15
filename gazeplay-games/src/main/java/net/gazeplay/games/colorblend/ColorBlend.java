@@ -5,7 +5,6 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
@@ -33,8 +32,8 @@ import javafx.geometry.Insets;
  */
 @Slf4j
 public class ColorBlend implements GameLifeCycle {
-    private IGameContext gameContext;
-    private Stats stats;
+    private final IGameContext gameContext;
+    private final Stats stats;
 
     private Paint color1;
     private Paint color2;
@@ -47,13 +46,15 @@ public class ColorBlend implements GameLifeCycle {
     public ColorBlend(final IGameContext gameContext, Stats stats) {
         this.gameContext = gameContext;
         this.stats = stats;
-        final Dimension2D dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
     }
 
     @Override
     public void launch() {
         createBackground();
         createPalette();
+
+        stats.notifyNewRoundReady();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     @Override

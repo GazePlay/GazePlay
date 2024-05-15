@@ -14,11 +14,11 @@ public class ColorBlendStats extends Stats {
 
     public ColorBlendStats(Scene scene) {
         super(scene);
-        this.gameName = "ColorBlend";
+        gameName = "ColorBlend";
     }
 
     public ColorBlendStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
-        this.gameName = "ColorBlend";
+        gameName = "ColorBlend";
     }
 }
