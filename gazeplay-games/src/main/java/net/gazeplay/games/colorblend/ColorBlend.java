@@ -146,7 +146,7 @@ public class ColorBlend implements GameLifeCycle {
         // Putting, palette, colorgrid in the same stackpane
         StackPane root = new StackPane(paletteRectangle, colorGrid);
 
-        VBox container = new VBox(root, buttonBox, this.progressIndicator);
+        HBox container = new HBox(root, buttonBox, this.progressIndicator);
         container.setAlignment(Pos.CENTER); // Alignement du conteneur au centre
 
         // Création de la scène
