@@ -6,7 +6,7 @@ import javafx.util.Duration;
 import lombok.Getter;
 import net.gazeplay.games.cups2.strategy.StrategyBuilder;
 import net.gazeplay.games.cups2.utils.*;
-import net.gazeplay.games.cups2.action.*;
+import net.gazeplay.games.cups2.action.Action;
 
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
@@ -28,18 +28,15 @@ public class CupsAndBalls implements GameLifeCycle {
     private static Stats stats;
 
     private final Ball ball;
-    private final StrategyBuilder strategy;
-    private final List<Action> actions;
-    private final List<Cup> cups;
+    private final StrategyBuilder strategy = StrategyBuilder.newInstanceOf(Config.STRATEGY_TYPE);
+    private final List<Action> actions = new ArrayList<>();
+    private final List<Cup> cups = new ArrayList<>();
 
     public CupsAndBalls(IGameContext gameContext, Stats stats, int nbCups, double gameSeed) {
         super();
         Config.nbCups = nbCups;
         CupsAndBalls.gameContext = gameContext;
         CupsAndBalls.stats = stats;
-        this.strategy = StrategyBuilder.newInstanceOf(Config.STRATEGY_TYPE);
-        this.actions = new ArrayList<>();
-        this.cups = new ArrayList<>(nbCups);
         for (int i = 0; i < nbCups; i++)
             this.cups.add(new Cup(i));
         random.setSeed(gameSeed);
@@ -57,9 +54,6 @@ public class CupsAndBalls implements GameLifeCycle {
         Config.nbCups = nbCups;
         CupsAndBalls.gameContext = gameContext;
         CupsAndBalls.stats = stats;
-        this.strategy = StrategyBuilder.newInstanceOf(Config.STRATEGY_TYPE);
-        this.actions = new ArrayList<>();
-        this.cups = new ArrayList<>(nbCups);
         for (int i = 0; i < nbCups; i++)
             this.cups.add(new Cup(i));
         random.setSeed(System.currentTimeMillis());

@@ -44,5 +44,5 @@ public class Config {
         nbCupsWatchers.remove(watcher);
     }
 
-    public static double speedFactor = 0.5;
+    public static double speedFactor = 1;
 }
