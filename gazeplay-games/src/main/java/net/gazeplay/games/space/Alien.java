@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class Biboule extends Rectangle {
+public class Alien extends Rectangle {
     @Getter
     private final String soundFileLocation;
     @Getter
@@ -15,14 +15,14 @@ public class Biboule extends Rectangle {
     private final Timeline leftMovement;
     private final Timeline rightMovement;
 
-    public Biboule(final double x, final double y, final double width, final double height, final String soundFileLocation, final double windowWidth,
-                   final double speed) {
+    public Alien(final double x, final double y, final double width, final double height, final String soundFileLocation, final double windowWidth,
+                 final double speed) {
         this(x, y, width, height, soundFileLocation, windowWidth, speed, 0, 0, 0, 0);
     }
 
-    public Biboule(final double x, final double y, final double width, final double height, final String soundFileLocation, final double windowWidth,
-                   final double speed, final double colliderMarginUp, final double colliderMarginRight, final double colliderMarginDown,
-                   final double colliderMarginLeft) {
+    public Alien(final double x, final double y, final double width, final double height, final String soundFileLocation, final double windowWidth,
+                 final double speed, final double colliderMarginUp, final double colliderMarginRight, final double colliderMarginDown,
+                 final double colliderMarginLeft) {
         super(x, y, width, height);
         this.soundFileLocation = soundFileLocation;
         this.collider = new Rectangle(x + colliderMarginLeft * width, y + colliderMarginUp * height,
