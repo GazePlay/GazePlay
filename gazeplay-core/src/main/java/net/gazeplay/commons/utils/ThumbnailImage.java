@@ -43,6 +43,7 @@ public class ThumbnailImage {
         new AbstractMap.SimpleEntry<>("openMemoryNumbers", "data/common/Thumbnails/openMemoryNumbers.png"),
         new AbstractMap.SimpleEntry<>("mole", "data/common/Thumbnails/mole.png"),
         new AbstractMap.SimpleEntry<>("ninja", "data/common/Thumbnails/ninja.png"),
+        new AbstractMap.SimpleEntry<>("oddOne", "data/common/Thumbnails/oddone.png"),
         new AbstractMap.SimpleEntry<>("opinions", "data/common/Thumbnails/opinions.jpg"),
         new AbstractMap.SimpleEntry<>("ordre", "data/common/Thumbnails/ordre.png"),
         new AbstractMap.SimpleEntry<>("pet", "data/common/Thumbnails/pet.png"),
