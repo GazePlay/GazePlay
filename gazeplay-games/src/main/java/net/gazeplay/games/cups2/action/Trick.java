@@ -68,9 +68,13 @@ public class Trick implements Action {
         if (ballCup.hasBall()) {
             PauseTransition tricker = new PauseTransition(Duration.millis(time * 0.45));
             tricker.setOnFinished(e -> {
-                double middleX = (ballCup.getX() + ballCup.getTranslateX() + otherCup.getX() + otherCup.getTranslateX() + ballCup.getFitWidth()) / 2;
-                double ballCupY = ballCup.getY() + ballCup.getTranslateY() + ballCup.getFitHeight() * (direction ? 0.2 : 0.8);
-                double otherCupY = otherCup.getY() + otherCup.getTranslateY() + otherCup.getFitHeight() * (direction ? 0.8 : 0.2);
+                double ballCupX = ballCup.getX() + ballCup.getTranslateX() + ballCup.getFitWidth() / 2;
+                double otherCupX = otherCup.getX() + otherCup.getTranslateX() + otherCup.getFitWidth() / 2;
+                double middleX = (ballCupX + otherCupX) / 2;
+                double ballCupY = ballCup.getY() + ballCup.getTranslateY();
+                double otherCupY = otherCup.getY() + otherCup.getTranslateY();
+                ballCupY += ballCup.getFitHeight() * (ballCupY < otherCupY ? 0.8 : 0.2);
+                otherCupY += ballCup.getFitHeight() * (ballCupY < otherCupY ? 0.2 : 0.8);
 
                 ballCup.getBall().setCenterX(middleX);
                 ballCup.getBall().setCenterY(ballCupY);
@@ -82,6 +86,7 @@ public class Trick implements Action {
                     Cup.swapBall(ballCup, otherCup);
                     joinCallback.call(null);
                 });
+                trick.setByX(ballCupX - middleX);
                 trick.setByY(otherCupY - ballCupY);
                 trick.play();
             });

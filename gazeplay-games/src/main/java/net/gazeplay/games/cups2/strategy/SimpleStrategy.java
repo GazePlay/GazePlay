@@ -14,23 +14,26 @@ public class SimpleStrategy implements StrategyBuilder {
 
     @Override
     public void computeActions(List<Action> actions, List<Cup> cups, int ballIndex) {
-        actions.add(new RevealAll(cups));
-        final int nbRounds = CupsAndBalls.random.nextInt(10) + 6;
+        int nbRounds = CupsAndBalls.random.nextInt(10) + 6;
         for (int i = 0; i < nbRounds; i++) {
             int a, b;
-            ballIndex = actions.get(actions.size() - 1).simulate(ballIndex);
+            if (!actions.isEmpty())
+                ballIndex = actions.get(actions.size() - 1).simulate(ballIndex);
             switch (CupsAndBalls.random.nextInt(6)) {
                 case 0 -> {
                     do {
                         b = CupsAndBalls.random.nextBoolean() ? ballIndex - 1 : ballIndex + 1;
-                    } while (0 <= b && b < cups.size());
-                    actions.add(new Trick(cups, ballIndex, b));
+                    } while (!(0 <= b && b < cups.size()));
+                    if (CupsAndBalls.random.nextBoolean())
+                        actions.add(new Trick(cups, ballIndex, b));
+                    else
+                        actions.add(new Trick(cups, b, ballIndex));
                 }
                 case 1 -> {
                     a = CupsAndBalls.random.nextInt(cups.size());
                     do {
                         b = CupsAndBalls.random.nextInt(cups.size());
-                    } while (a == b);
+                    } while (Math.abs(a - b) != 1);
                     actions.add(new FakeTrick(cups, a, b));
                 }
                 case 2 -> {
