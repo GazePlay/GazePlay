@@ -14,7 +14,7 @@ public class Config {
     public final static StrategyBuilder.Type STRATEGY_TYPE = StrategyBuilder.Type.SIMPLE;
 
     public final static String CUP_IMAGE_PATH = "data/cups/images/cup.png";
-    public final static double CUP_MARGIN = 50;
+    public final static double CUP_MARGIN = 20;
     public static final double CUP_WIDTH = 200;
 
     public final static Color BALL_COLOR = Color.BLUEVIOLET;

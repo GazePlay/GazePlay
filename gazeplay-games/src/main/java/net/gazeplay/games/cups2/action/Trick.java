@@ -77,6 +77,7 @@ public class Trick implements Action {
                     ballCupY += ballCup.getFitHeight() * (ballCupY < otherCupY ? 0.8 : 0.2);
                     otherCupY += ballCup.getFitHeight() * (ballCupY < otherCupY ? 0.2 : 0.8);
 
+                    ballCup.getBall().toBack();
                     ballCup.getBall().setCenterX(middleX);
                     ballCup.getBall().setCenterY(ballCupY);
                     ballCup.getBall().setVisible(true);
