@@ -50,15 +50,15 @@ public class Cycle implements Action {
 
         PathTransition pt;
         if (direction)
-            pt = Action.smoothArcTransition(Duration.millis(Config.ACTION_CYCLE_TIME / Config.speedFactor), cups.get(start), cups.get(end), upOrDown);
+            pt = Action.smoothArcTransition(Duration.millis(Config.ACTION_CYCLE_TIME / Config.getSpeedFactor()), cups.get(start), cups.get(end), upOrDown);
         else
-            pt = Action.smoothArcTransition(Duration.millis(Config.ACTION_CYCLE_TIME / Config.speedFactor), cups.get(end), cups.get(start), upOrDown);
+            pt = Action.smoothArcTransition(Duration.millis(Config.ACTION_CYCLE_TIME / Config.getSpeedFactor()), cups.get(end), cups.get(start), upOrDown);
         pt.setOnFinished(e -> joinCallback.call(null));
         pt.play();
 
         int dir = direction ? 1 : 0;
         for (Cup cup : cups.subList(start + dir, end + dir)) {
-            TranslateTransition tt = new TranslateTransition(Duration.millis(Config.ACTION_EXCHANGE_TIME / Config.speedFactor), cup);
+            TranslateTransition tt = new TranslateTransition(Duration.millis(Config.ACTION_EXCHANGE_TIME / Config.getSpeedFactor()), cup);
             tt.setByX(distance);
             tt.setInterpolator(Interpolator.EASE_BOTH);
             tt.setOnFinished(e -> joinCallback.call(null));

@@ -26,8 +26,17 @@ public class CupsAndBalls implements GameLifeCycle {
 
     @Getter
     private static IGameContext gameContext;
+
+    private static void setGameContext(IGameContext gameContext) {
+        CupsAndBalls.gameContext = gameContext;
+    }
+
     @Getter
     private static Stats stats;
+
+    private static void setStats(Stats stats) {
+        CupsAndBalls.stats = stats;
+    }
 
     private final Ball ball;
     private final StrategyBuilder strategy = StrategyBuilder.newInstanceOf(Config.STRATEGY_TYPE);
@@ -36,9 +45,9 @@ public class CupsAndBalls implements GameLifeCycle {
 
     public CupsAndBalls(IGameContext gameContext, Stats stats, int nbCups, double gameSeed) {
         super();
-        Config.nbCups = nbCups;
-        CupsAndBalls.gameContext = gameContext;
-        CupsAndBalls.stats = stats;
+        Config.setNbCups(nbCups);
+        setGameContext(gameContext);
+        setStats(stats);
         for (int i = 0; i < nbCups; i++)
             this.cups.add(new Cup(i, this::onCupSelected));
         random.setSeed(gameSeed);
@@ -54,9 +63,9 @@ public class CupsAndBalls implements GameLifeCycle {
 
     public CupsAndBalls(IGameContext gameContext, Stats stats, int nbCups) {
         super();
-        Config.nbCups = nbCups;
-        CupsAndBalls.gameContext = gameContext;
-        CupsAndBalls.stats = stats;
+        Config.setNbCups(nbCups);
+        setGameContext(gameContext);
+        setStats(stats);
         for (int i = 0; i < nbCups; i++)
             this.cups.add(new Cup(i, this::onCupSelected));
         random.setSeed(System.currentTimeMillis());

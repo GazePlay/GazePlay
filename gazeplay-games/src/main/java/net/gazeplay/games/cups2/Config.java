@@ -2,6 +2,8 @@ package net.gazeplay.games.cups2;
 
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
+import lombok.Getter;
+import lombok.Setter;
 import net.gazeplay.games.cups2.strategy.*;
 
 import java.util.HashSet;
@@ -30,9 +32,10 @@ public class Config {
 
 
     // Game state (dynamic)
-    public static int nbCups = 0;  // Will get initialized by the game anyway
+    @Getter
+    private static int nbCups = 0;  // Will get initialized by the game anyway
     private final static Set<Callback<Void, Void>> nbCupsWatchers = new HashSet<>();
-    public static void nbCupsPublish(int newValue) {
+    public static void setNbCups(int newValue) {
         nbCups = newValue;
         for (Callback<Void, Void> watcher : nbCupsWatchers)
             watcher.call(null);
@@ -44,5 +47,7 @@ public class Config {
         nbCupsWatchers.remove(watcher);
     }
 
-    public static double speedFactor = 1;
+    @Getter
+    @Setter
+    private static double speedFactor = 1;
 }

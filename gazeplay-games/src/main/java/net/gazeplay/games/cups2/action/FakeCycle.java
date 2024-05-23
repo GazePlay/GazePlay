@@ -49,7 +49,7 @@ public class FakeCycle implements Action {
     public void execute(Callback<Void, Void> onFinish) {
         Callback<Void, Void> joinCallback = Action.joiner(onFinish, end - start + 1);
         double distance = (direction ? -1 : 1) * (cups.get(1).getX() - cups.get(0).getX());
-        double time = Config.ACTION_FAKE_CYCLE_TIME / Config.speedFactor;
+        double time = Config.ACTION_FAKE_CYCLE_TIME / Config.getSpeedFactor();
 
         PathTransition fpt;
         if (direction)
@@ -95,7 +95,7 @@ public class FakeCycle implements Action {
             heightSide = Math.floor(Math.sqrt(Math.abs(toCup - fromCup)) * 10) / 10;
         heightSide = 0.5 + heightSide * (upOrDown ? 1 : -1);
         return new PathTransition(
-            Duration.millis(Config.ACTION_FAKE_CYCLE_TIME / Config.speedFactor),
+            Duration.millis(Config.ACTION_FAKE_CYCLE_TIME / Config.getSpeedFactor()),
             new Path(
                 new MoveTo(cupA.getX() + cupA.getFitWidth() / 2, cupA.getY() + cupA.getFitHeight() / 2),
                 new CubicCurveTo(

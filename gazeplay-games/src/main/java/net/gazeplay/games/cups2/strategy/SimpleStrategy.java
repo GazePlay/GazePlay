@@ -64,6 +64,7 @@ public class SimpleStrategy implements StrategyBuilder {
                     } while (Math.abs(a - b) < 2);
                     actions.add(new FakeCycle(cups, a, b, CupsAndBalls.random.nextBoolean()));
                 }
+                default -> throw new IllegalStateException("Unexpected value");
             }
         }
     }

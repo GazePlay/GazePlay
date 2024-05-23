@@ -43,7 +43,7 @@ public class Trick implements Action {
         Cup otherCup = cupA.hasBall() ? cupB : cupA;
 
         Callback<Void, Void> joinCallback = Action.joiner(onFinish, 3);
-        double time = Config.ACTION_TRICK_TIME / Config.speedFactor;
+        double time = Config.ACTION_TRICK_TIME / Config.getSpeedFactor();
 
         SequentialTransition sta = new SequentialTransition(
             new PauseTransition(Duration.millis(time * 0.4)),

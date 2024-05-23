@@ -39,7 +39,7 @@ public class FakeExchange implements Action {
 
     @Override
     public void execute(Callback<Void, Void> onFinish) {
-        double time = Config.ACTION_FAKE_EXCHANGE_TIME / (1.2 * Config.speedFactor);
+        double time = Config.ACTION_FAKE_EXCHANGE_TIME / (1.2 * Config.getSpeedFactor());
         Cup cupA = cups.get(indexA);
         Cup cupB = cups.get(indexB);
 

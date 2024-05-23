@@ -41,7 +41,7 @@ public class FakeTrick implements Action {
         Cup cupB = cups.get(indexB);
 
         Callback<Void, Void> joinCallback = Action.joiner(onFinish, 2);
-        double time = Config.ACTION_FAKE_TRICK_TIME / Config.speedFactor;
+        double time = Config.ACTION_FAKE_TRICK_TIME / Config.getSpeedFactor();
 
         SequentialTransition sta = new SequentialTransition(
             new PauseTransition(Duration.millis(time * 0.4)),

@@ -41,8 +41,8 @@ public class Exchange implements Action {
         Cup cupB = cups.get(indexB);
 
         Callback<Void, Void> joinCallback = Action.joiner(onFinish, 2);
-        PathTransition pta = Action.smoothArcTransition(Duration.millis(Config.ACTION_EXCHANGE_TIME / Config.speedFactor), cupA, cupB, direction);
-        PathTransition ptb = Action.smoothArcTransition(Duration.millis(Config.ACTION_EXCHANGE_TIME / Config.speedFactor), cupB, cupA, !direction);
+        PathTransition pta = Action.smoothArcTransition(Duration.millis(Config.ACTION_EXCHANGE_TIME / Config.getSpeedFactor()), cupA, cupB, direction);
+        PathTransition ptb = Action.smoothArcTransition(Duration.millis(Config.ACTION_EXCHANGE_TIME / Config.getSpeedFactor()), cupB, cupA, !direction);
         pta.setOnFinished(e -> joinCallback.call(null));
         ptb.setOnFinished(e -> joinCallback.call(null));
         pta.play();
