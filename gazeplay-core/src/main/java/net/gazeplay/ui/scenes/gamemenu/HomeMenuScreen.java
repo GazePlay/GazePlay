@@ -156,12 +156,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         downArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
         downArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
         downArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> {
-                if (!Objects.equals(config.getEyeTracker(), "mouse_control")){
+                if (!Objects.equals(config.getEyeTracker(), "mouse_control") && !this.gameMenuFactory.inGameVariant){
                     scrollDownTimer.start();
                 }
             });
         downArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> {
-            if (!Objects.equals(config.getEyeTracker(), "mouse_control")){
+            if (!Objects.equals(config.getEyeTracker(), "mouse_control") && !this.gameMenuFactory.inGameVariant){
                 scrollDownTimer.stop();
             }
         });
@@ -207,12 +207,12 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         upArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
         upArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
         upArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> {
-            if (!Objects.equals(config.getEyeTracker(), "mouse_control")){
+            if (!Objects.equals(config.getEyeTracker(), "mouse_control") && !this.gameMenuFactory.inGameVariant){
                 scrollUpTimer.start();
             }
         });
         upArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> {
-            if (!Objects.equals(config.getEyeTracker(), "mouse_control")){
+            if (!Objects.equals(config.getEyeTracker(), "mouse_control") && !this.gameMenuFactory.inGameVariant){
                 scrollUpTimer.stop();
             }
         });

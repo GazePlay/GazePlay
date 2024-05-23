@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static javafx.scene.input.MouseEvent.*;
@@ -151,8 +152,6 @@ public class GameMenuFactory {
         }
 
         if (gameSummary.getGameThumbnail() != null) {
-
-            log.info("---TEST--- = " + gameSummary.getGameThumbnail());
 
             String path = thumbnailImage.getPathThumbnailImg(gameSummary.getGameThumbnail());
             ImageView imageView = new ImageView(new Image(path, 200, 200, true, false));
@@ -290,7 +289,7 @@ public class GameMenuFactory {
         });
 
         gameCard.addEventHandler(GazeEvent.GAZE_ENTERED, (GazeEvent ev) -> {
-            if (!this.inGameVariant){
+            if (gazeDeviceManager.positionPollerRunnable.gazeOn && !this.inGameVariant && !Objects.equals(config.getEyeTracker(), "mouse_control")){
                 progressIndicator.setProgress(0.0);
                 progressIndicator.setOpacity(1);
                 gameCard.setCenter(progressIndicator);
@@ -299,6 +298,7 @@ public class GameMenuFactory {
                 timelineProgressBar.setOnFinished(actionEvent -> {
                     this.inGameVariant = true;
                     timelineProgressBar.stop();
+                    progressIndicator.setOpacity(0);
                     gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName, gazeDeviceManager, this);
                 });
                 timelineProgressBar.play();
@@ -306,8 +306,10 @@ public class GameMenuFactory {
         });
 
         gameCard.addEventHandler(GazeEvent.GAZE_EXITED, (GazeEvent ev2) -> {
-            timelineProgressBar.stop();
-            progressIndicator.setOpacity(0);
+            if (!Objects.equals(config.getEyeTracker(), "mouse_control")){
+                timelineProgressBar.stop();
+                progressIndicator.setOpacity(0);
+            }
         });
 
         @Data

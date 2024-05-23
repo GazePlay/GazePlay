@@ -23,6 +23,8 @@ public class PositionPollerRunnable implements Runnable {
     @Setter
     private transient boolean stopRequested = false;
 
+    public Boolean gazeOn = false;
+
     public PositionPollerRunnable(final Supplier<Dimension2D> screenDimensionSupplier, final Supplier<Point2D> screenPositionSupplier, final TobiiGazeDeviceManager tobiiGazeDeviceManager) {
         this.screenDimensionSupplier = screenDimensionSupplier;
         this.screenPositionSupplier = screenPositionSupplier;
@@ -52,6 +54,8 @@ public class PositionPollerRunnable implements Runnable {
 
         final float xRatio = pointAsFloatArray[0];
         final float yRatio = pointAsFloatArray[1];
+
+        this.gazeOn = xRatio != 0.5 || yRatio != 0.5;
 
         final Dimension2D screenDimension = screenDimensionSupplier.get();
         final double positionX = xRatio * screenDimension.getWidth();

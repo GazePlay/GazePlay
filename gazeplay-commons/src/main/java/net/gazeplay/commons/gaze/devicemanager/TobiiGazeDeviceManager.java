@@ -13,7 +13,7 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
 
     private ExecutorService executorService;
 
-    private PositionPollerRunnable positionPollerRunnable;
+    public PositionPollerRunnable positionPollerRunnable;
 
     public TobiiGazeDeviceManager() {
         super();

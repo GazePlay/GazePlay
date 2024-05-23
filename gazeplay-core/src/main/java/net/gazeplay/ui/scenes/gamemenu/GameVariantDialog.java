@@ -856,6 +856,7 @@ public class GameVariantDialog extends Stage {
                     } else {
                         gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, variant);
                     }
+                    gameMenuFactory.inGameVariant = false;
                 });
                 timelineProgressBar.play();
             };
