@@ -48,7 +48,7 @@ public class Trick implements Action {
         SequentialTransition sta = new SequentialTransition(
             new PauseTransition(Duration.millis(time * 0.4)),
             new RotateTransition(Duration.millis(time * 0.15), cupA),
-        new PauseTransition(Duration.millis(time * 0.3))
+            new PauseTransition(Duration.millis(time * 0.3))
         );
         ((RotateTransition) sta.getChildren().get(1)).setByAngle(20);
         ((RotateTransition) sta.getChildren().get(1)).setInterpolator(Interpolator.LINEAR);
@@ -66,31 +66,32 @@ public class Trick implements Action {
         stb.getChildren().get(1).setAutoReverse(true);
 
         if (ballCup.hasBall()) {
-            PauseTransition tricker = new PauseTransition(Duration.millis(time * 0.45));
-            tricker.setOnFinished(e -> {
-                double ballCupX = ballCup.getX() + ballCup.getTranslateX() + ballCup.getFitWidth() / 2;
-                double otherCupX = otherCup.getX() + otherCup.getTranslateX() + otherCup.getFitWidth() / 2;
-                double middleX = (ballCupX + otherCupX) / 2;
-                double ballCupY = ballCup.getY() + ballCup.getTranslateY();
-                double otherCupY = otherCup.getY() + otherCup.getTranslateY();
-                ballCupY += ballCup.getFitHeight() * (ballCupY < otherCupY ? 0.8 : 0.2);
-                otherCupY += ballCup.getFitHeight() * (ballCupY < otherCupY ? 0.2 : 0.8);
+            new Timeline(new KeyFrame(
+                Duration.millis(time * 0.45),
+                e -> {
+                    double ballCupX = ballCup.getX() + ballCup.getTranslateX() + ballCup.getFitWidth() / 2;
+                    double otherCupX = otherCup.getX() + otherCup.getTranslateX() + otherCup.getFitWidth() / 2;
+                    double middleX = (ballCupX + otherCupX) / 2;
+                    double ballCupY = ballCup.getY() + ballCup.getTranslateY();
+                    double otherCupY = otherCup.getY() + otherCup.getTranslateY();
+                    ballCupY += ballCup.getFitHeight() * (ballCupY < otherCupY ? 0.8 : 0.2);
+                    otherCupY += ballCup.getFitHeight() * (ballCupY < otherCupY ? 0.2 : 0.8);
 
-                ballCup.getBall().setCenterX(middleX);
-                ballCup.getBall().setCenterY(ballCupY);
-                ballCup.getBall().setVisible(true);
+                    ballCup.getBall().setCenterX(middleX);
+                    ballCup.getBall().setCenterY(ballCupY);
+                    ballCup.getBall().setVisible(true);
 
-                TranslateTransition trick = new TranslateTransition(Duration.millis(time * 0.1), ballCup.getBall());
-                trick.setOnFinished(ep -> {
-                    ballCup.getBall().setVisible(false);
-                    Cup.swapBall(ballCup, otherCup);
-                    joinCallback.call(null);
-                });
-                trick.setByX(ballCupX - middleX);
-                trick.setByY(otherCupY - ballCupY);
-                trick.play();
-            });
-            tricker.play();
+                    TranslateTransition trick = new TranslateTransition(Duration.millis(time * 0.1), ballCup.getBall());
+                    trick.setOnFinished(ep -> {
+                        ballCup.getBall().setVisible(false);
+                        Cup.swapBall(ballCup, otherCup);
+                        joinCallback.call(null);
+                    });
+                    trick.setByX(ballCupX - middleX);
+                    trick.setByY(otherCupY - ballCupY);
+                    trick.play();
+                }
+            )).play();
         } else
             joinCallback.call(null);
 

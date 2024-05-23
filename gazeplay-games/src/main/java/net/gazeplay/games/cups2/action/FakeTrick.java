@@ -46,7 +46,7 @@ public class FakeTrick implements Action {
         SequentialTransition sta = new SequentialTransition(
             new PauseTransition(Duration.millis(time * 0.4)),
             new RotateTransition(Duration.millis(time * 0.15), cupA),
-        new PauseTransition(Duration.millis(time * 0.3))
+            new PauseTransition(Duration.millis(time * 0.3))
         );
         ((RotateTransition) sta.getChildren().get(1)).setByAngle(20);
         ((RotateTransition) sta.getChildren().get(1)).setInterpolator(Interpolator.LINEAR);

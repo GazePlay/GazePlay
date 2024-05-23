@@ -1,7 +1,8 @@
 package net.gazeplay.games.cups2.action;
 
+import javafx.animation.KeyFrame;
 import javafx.animation.PathTransition;
-import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import net.gazeplay.games.cups2.Config;
@@ -54,11 +55,12 @@ public class FakeExchange implements Action {
         pta.play();
         ptb.play();
 
-        PauseTransition faker = new PauseTransition(Duration.millis(time * 0.6));
-        faker.setOnFinished(e -> {
-            pta.jumpTo(Duration.millis(time * 1.4));
-            ptb.jumpTo(Duration.millis(time * 1.4));
-        });
-        faker.play();
+        new Timeline(new KeyFrame(
+            Duration.millis(time * 0.6),
+            e -> {
+                pta.jumpTo(Duration.millis(time * 1.4));
+                ptb.jumpTo(Duration.millis(time * 1.4));
+            }
+        )).play();
     }
 }

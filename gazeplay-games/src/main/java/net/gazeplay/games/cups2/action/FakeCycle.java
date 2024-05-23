@@ -1,9 +1,6 @@
 package net.gazeplay.games.cups2.action;
 
-import javafx.animation.Interpolator;
-import javafx.animation.PathTransition;
-import javafx.animation.PauseTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.scene.shape.CubicCurveTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -64,14 +61,15 @@ public class FakeCycle implements Action {
 
         TranslateTransition ftt = new TranslateTransition(Duration.millis(time), cups.get(direction ? end : start));
         ftt.setByX(distance);
-        ftt.setInterpolator(Interpolator.EASE_IN);
+        ftt.setInterpolator(Interpolator.EASE_BOTH);
         ftt.setOnFinished(e -> joinCallback.call(null));
         ftt.setCycleCount(2);
         ftt.setAutoReverse(true);
         ftt.play();
-        PauseTransition faker = new PauseTransition(Duration.millis(time * 0.5));
-        faker.setOnFinished(e -> ftt.jumpTo(Duration.millis(time * 1.5)));
-        faker.play();
+        new Timeline(new KeyFrame(
+            Duration.millis(time * 0.5),
+            e -> ftt.jumpTo(Duration.millis(time * 1.5))
+        )).play();
 
         for (Cup cup : cups.subList(start + 1, end)) {
             TranslateTransition tt = new TranslateTransition(Duration.millis(time), cup);
