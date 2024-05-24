@@ -1,17 +1,20 @@
 package net.gazeplay.games.cups2.action;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.util.Callback;
+import javafx.util.Duration;
+import net.gazeplay.games.cups2.Config;
 import net.gazeplay.games.cups2.utils.Cup;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RevealAll implements Action {
-    private final List<Action> reveals = new ArrayList<>();
+    private final List<Cup> cups;
 
     public RevealAll(List<Cup> cups) {
-        for (Cup cup : cups)
-            reveals.add(new Reveal(cup));
+        this.cups = cups;
     }
 
     @Override
@@ -31,8 +34,12 @@ public class RevealAll implements Action {
 
     @Override
     public void execute(Callback<Void, Void> onFinish) {
-        Callback<Void, Void> joinCallback = Action.joiner(onFinish, reveals.size());
-        for (Action reveal : reveals)
-            reveal.execute(joinCallback);
+        Callback<Void, Void> joinCallback = Action.joiner(onFinish, cups.size() + 1);
+        for (Cup cup : cups)
+            (new Reveal(cup)).execute(joinCallback);
+        new Timeline(new KeyFrame(
+            Duration.millis(Config.ACTION_REVEAL_TIME + Config.ROUND_DELAY),
+            e -> joinCallback.call(null)
+        )).play();
     }
 }

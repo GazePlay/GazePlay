@@ -5,7 +5,7 @@ import net.gazeplay.commons.gamevariants.generators.IntListVariantGenerator;
 public class CupsAndBallsGameVariantGenerator extends IntListVariantGenerator {
 
     public CupsAndBallsGameVariantGenerator() {
-        super("Choose starting number of cups", 3, 5, 7, 9);
+        super("Choose starting number of cups", 3, 5, 7);
     }
 
 }

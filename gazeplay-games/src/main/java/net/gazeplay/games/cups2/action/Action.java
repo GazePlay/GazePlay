@@ -6,6 +6,7 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import net.gazeplay.games.cups2.Config;
 import net.gazeplay.games.cups2.CupsAndBalls;
 import net.gazeplay.games.cups2.utils.Cup;
 
@@ -22,18 +23,15 @@ public interface Action {
 
     void execute(Callback<Void, Void> onFinish);
 
-    static PathTransition smoothArcTransition(Duration duration, Cup fromCup, Cup toCup, boolean upOrDown) {
+    static PathTransition smoothArcTransition(double time, Cup fromCup, Cup toCup, boolean upOrDown) {
         if (upOrDown)
             fromCup.toBack();
         else
             fromCup.toFront();
         double maxHeight = CupsAndBalls.getGameContext().getGamePanelDimensionProvider().getDimension2D().getHeight();
-        double heightSide = 2 / 3d;
-        if (Cup.indexDistance(fromCup, toCup) > 1)
-            heightSide = Math.floor(Math.sqrt(Cup.indexDistance(fromCup, toCup)) * 10) / 10;
-        heightSide = 0.5 + heightSide * (upOrDown ? 1 : -1);
+        double heightSide = 0.5 + Math.pow(Cup.indexDistance(fromCup, toCup), 0.8) * (Config.CUP_MARGIN / 100) * (upOrDown ? -1 : 1);
         return new PathTransition(
-            duration,
+            Duration.millis(Math.pow(Cup.indexDistance(fromCup, toCup), 0.25) * time / Config.getSpeedFactor()),
             new Path(
                 new MoveTo(fromCup.getX() + fromCup.getFitWidth() / 2, fromCup.getY() + fromCup.getFitHeight() / 2),
                 new CubicCurveTo(

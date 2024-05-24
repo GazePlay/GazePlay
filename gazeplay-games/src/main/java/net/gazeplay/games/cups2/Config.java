@@ -16,19 +16,21 @@ public class Config {
     public final static StrategyBuilder.Type STRATEGY_TYPE = StrategyBuilder.Type.SIMPLE;
 
     public final static String CUP_IMAGE_PATH = "data/cups/images/cup.png";
-    public final static double CUP_MARGIN = 20;
+    public final static double CUP_MARGIN = 40;
     public static final double CUP_WIDTH = 200;
 
     public final static Color BALL_COLOR = Color.BLUEVIOLET;
     public static final double BALL_RADIUS = 20;
 
-    public static final double ACTION_REVEAL_TIME = 1500;
-    public static final double ACTION_EXCHANGE_TIME = 2000;
-    public static final double ACTION_FAKE_EXCHANGE_TIME = 2000;
-    public static final double ACTION_CYCLE_TIME = 2000;
-    public static final double ACTION_FAKE_CYCLE_TIME = 2000;
-    public static final double ACTION_TRICK_TIME = 2000;
-    public static final double ACTION_FAKE_TRICK_TIME = 2000;
+    public static final double ACTION_REVEAL_TIME = 1500;  // Except for REVEAL, all action times are on a per-index basis
+    public static final double ACTION_EXCHANGE_TIME = 1300;
+    public static final double ACTION_FAKE_EXCHANGE_TIME = 1300;
+    public static final double ACTION_CYCLE_TIME = 1000;
+    public static final double ACTION_FAKE_CYCLE_TIME = 1000;
+    public static final double ACTION_TRICK_TIME = 1500;
+    public static final double ACTION_FAKE_TRICK_TIME = 1500;
+
+    public static final int MAX_NB_CUPS = 7;
 
 
     // Game state (dynamic)

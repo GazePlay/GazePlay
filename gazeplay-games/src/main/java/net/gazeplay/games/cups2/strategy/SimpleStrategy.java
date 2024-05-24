@@ -1,5 +1,6 @@
 package net.gazeplay.games.cups2.strategy;
 
+import net.gazeplay.games.cups2.Config;
 import net.gazeplay.games.cups2.CupsAndBalls;
 import net.gazeplay.games.cups2.action.*;
 import net.gazeplay.games.cups2.utils.Cup;
@@ -19,9 +20,9 @@ public class SimpleStrategy implements StrategyBuilder {
             int a, b;
             if (!actions.isEmpty())
                 ballIndex = actions.get(actions.size() - 1).simulate(ballIndex);
-            switch (CupsAndBalls.random.nextInt(6)) {
+            switch (CupsAndBalls.random.nextInt(Config.getNbCups() > 3 ? 6 : 4)) {
                 case 0 -> {
-                    do {
+                   do {
                         b = CupsAndBalls.random.nextBoolean() ? ballIndex - 1 : ballIndex + 1;
                     } while (!(0 <= b && b < cups.size()));
                     if (CupsAndBalls.random.nextBoolean())

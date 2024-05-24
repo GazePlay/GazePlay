@@ -39,27 +39,22 @@ public class FakeExchange implements Action {
 
     @Override
     public void execute(Callback<Void, Void> onFinish) {
-        double time = Config.ACTION_FAKE_EXCHANGE_TIME / (1.2 * Config.getSpeedFactor());
         Cup cupA = cups.get(indexA);
         Cup cupB = cups.get(indexB);
 
         Callback<Void, Void> joinCallback = Action.joiner(onFinish, 2);
-        PathTransition pta = Action.smoothArcTransition(Duration.millis(time), cupA, cupB, direction);
-        PathTransition ptb = Action.smoothArcTransition(Duration.millis(time), cupB, cupA, !direction);
-        pta.setCycleCount(2);
-        ptb.setCycleCount(2);
-        pta.setAutoReverse(true);
-        ptb.setAutoReverse(true);
+        PathTransition pta = Action.smoothArcTransition(Config.ACTION_FAKE_EXCHANGE_TIME, cupA, cupB, direction);
+        PathTransition ptb = Action.smoothArcTransition(Config.ACTION_FAKE_EXCHANGE_TIME, cupB, cupA, !direction);
         pta.setOnFinished(e -> joinCallback.call(null));
         ptb.setOnFinished(e -> joinCallback.call(null));
         pta.play();
         ptb.play();
 
         new Timeline(new KeyFrame(
-            Duration.millis(time * 0.6),
+            Duration.millis(pta.getDuration().toMillis() * 2 / 3),
             e -> {
-                pta.jumpTo(Duration.millis(time * 1.4));
-                ptb.jumpTo(Duration.millis(time * 1.4));
+                pta.setRate(-1);
+                ptb.setRate(-1);
             }
         )).play();
     }

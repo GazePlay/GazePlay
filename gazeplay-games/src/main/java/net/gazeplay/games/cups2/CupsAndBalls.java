@@ -102,18 +102,32 @@ public class CupsAndBalls implements GameLifeCycle {
     }
 
     private Void onCupSelected(Cup cup) {
-        (new Reveal(cup)).execute(this::onRevealFinished);
-        if (!cup.hasBall())
-            actions.add(new RevealAll(cups));
+        if (cup.hasBall())
+            (new Reveal(cup)).execute(this::onRightRevealFinished);
+        else
+            (new Reveal(cup)).execute(this::onWrongRevealFinished);
         for (Cup c : cups)
             c.disableSelection();
         return null;
     }
 
-    private Void onRevealFinished(Void unused) {
+    private Void onRightRevealFinished(Void unused) {
 //        dispose();
 //        gameContext.clear();
+        if (Config.getNbCups() < Config.MAX_NB_CUPS) {
+            Config.setNbCups(Config.getNbCups() + 1);
+            cups.add(new Cup(cups.size(), this::onCupSelected));
+            gameContext.getChildren().add(cups.get(cups.size() - 1));
+            Cup.swapBall(ball.getContainer(), cups.get(random.nextInt(cups.size())));
+            actions.add(new RevealAll(cups));
+        }
         launch();
+        return null;
+    }
+
+    private Void onWrongRevealFinished(Void unused) {
+        for (Cup c : cups)
+            c.enableSelection();
         return null;
     }
 

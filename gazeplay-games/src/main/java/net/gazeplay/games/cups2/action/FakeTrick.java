@@ -40,41 +40,36 @@ public class FakeTrick implements Action {
         Cup cupA = cups.get(indexA);
         Cup cupB = cups.get(indexB);
 
-        Callback<Void, Void> joinCallback = Action.joiner(onFinish, 2);
-        double time = Config.ACTION_FAKE_TRICK_TIME / Config.getSpeedFactor();
+        double time = Math.abs(indexA - indexB) * Config.ACTION_FAKE_TRICK_TIME / Config.getSpeedFactor();
 
         SequentialTransition sta = new SequentialTransition(
-            new PauseTransition(Duration.millis(time * 0.4)),
+            new PauseTransition(Duration.millis(time * 0.1)),
             new RotateTransition(Duration.millis(time * 0.15), cupA),
-            new PauseTransition(Duration.millis(time * 0.3))
+            new PauseTransition(Duration.millis(time * 0.6))
         );
-        ((RotateTransition) sta.getChildren().get(1)).setByAngle(20);
+        ((RotateTransition) sta.getChildren().get(1)).setByAngle(-20);
         ((RotateTransition) sta.getChildren().get(1)).setInterpolator(Interpolator.LINEAR);
         sta.getChildren().get(1).setCycleCount(2);
         sta.getChildren().get(1).setAutoReverse(true);
 
         SequentialTransition stb = new SequentialTransition(
-            new PauseTransition(Duration.millis(time * 0.4)),
+            new PauseTransition(Duration.millis(time * 0.1)),
             new RotateTransition(Duration.millis(time * 0.15), cupB),
-            new PauseTransition(Duration.millis(time * 0.3))
+            new PauseTransition(Duration.millis(time * 0.6))
         );
-        ((RotateTransition) stb.getChildren().get(1)).setByAngle(-20);
+        ((RotateTransition) stb.getChildren().get(1)).setByAngle(20);
         ((RotateTransition) stb.getChildren().get(1)).setInterpolator(Interpolator.LINEAR);
         stb.getChildren().get(1).setCycleCount(2);
         stb.getChildren().get(1).setAutoReverse(true);
 
         ParallelTransition pta = new ParallelTransition(
-            Action.smoothArcTransition(Duration.millis(time), cupA, cupB, direction),
-            sta
-        );
-        ParallelTransition ptb = new ParallelTransition(
-            Action.smoothArcTransition(Duration.millis(time), cupB, cupA, !direction),
+            Action.smoothArcTransition(Config.ACTION_FAKE_TRICK_TIME, cupA, cupB, direction),
+            sta,
+            Action.smoothArcTransition(Config.ACTION_FAKE_TRICK_TIME, cupB, cupA, !direction),
             stb
         );
-        pta.setOnFinished(e -> joinCallback.call(null));
-        ptb.setOnFinished(e -> joinCallback.call(null));
+        pta.setOnFinished(e -> onFinish.call(null));
         pta.play();
-        ptb.play();
 
         cups.set(indexA, cupB);
         cups.set(indexB, cupA);

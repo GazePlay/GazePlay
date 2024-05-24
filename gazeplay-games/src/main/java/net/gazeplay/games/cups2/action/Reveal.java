@@ -37,16 +37,15 @@ public class Reveal implements Action {
 
         TranslateTransition tt1 = new TranslateTransition(Duration.millis(thirdTime), cup);
         tt1.setInterpolator(Interpolator.EASE_BOTH);
-        tt1.setByY(-0.7 * cup.getFitHeight());
+        tt1.setByY(-2 / 3d * cup.getFitHeight());
         TranslateTransition tt2 = new TranslateTransition(Duration.millis(thirdTime), cup);
         tt2.setInterpolator(Interpolator.EASE_BOTH);
-        tt2.setByY( 0.7 * cup.getFitHeight());
+        tt2.setByY( 2 / 3d * cup.getFitHeight());
 
         SequentialTransition st = new SequentialTransition(
             tt1,
             new PauseTransition(Duration.millis(thirdTime)),
-            tt2,
-            new PauseTransition(Duration.millis(Config.ROUND_DELAY))
+            tt2
         );
         st.setOnFinished(e -> {
             if (cup.hasBall())

@@ -42,53 +42,59 @@ public class Trick implements Action {
         Cup ballCup = cupA.hasBall() ? cupA : cupB;
         Cup otherCup = cupA.hasBall() ? cupB : cupA;
 
-        Callback<Void, Void> joinCallback = Action.joiner(onFinish, 3);
+        Callback<Void, Void> joinCallback = Action.joiner(onFinish, 2);
         double time = Config.ACTION_TRICK_TIME / Config.getSpeedFactor();
 
         SequentialTransition sta = new SequentialTransition(
-            new PauseTransition(Duration.millis(time * 0.4)),
+            new PauseTransition(Duration.millis(time * 0.1)),
             new RotateTransition(Duration.millis(time * 0.15), cupA),
-            new PauseTransition(Duration.millis(time * 0.3))
+            new PauseTransition(Duration.millis(time * 0.6))
         );
-        ((RotateTransition) sta.getChildren().get(1)).setByAngle(20);
+        ((RotateTransition) sta.getChildren().get(1)).setByAngle(-20);
         ((RotateTransition) sta.getChildren().get(1)).setInterpolator(Interpolator.LINEAR);
         sta.getChildren().get(1).setCycleCount(2);
         sta.getChildren().get(1).setAutoReverse(true);
 
         SequentialTransition stb = new SequentialTransition(
-            new PauseTransition(Duration.millis(time * 0.4)),
+            new PauseTransition(Duration.millis(time * 0.1)),
             new RotateTransition(Duration.millis(time * 0.15), cupB),
-            new PauseTransition(Duration.millis(time * 0.3))
+            new PauseTransition(Duration.millis(time * 0.6))
         );
-        ((RotateTransition) stb.getChildren().get(1)).setByAngle(-20);
+        ((RotateTransition) stb.getChildren().get(1)).setByAngle(20);
         ((RotateTransition) stb.getChildren().get(1)).setInterpolator(Interpolator.LINEAR);
         stb.getChildren().get(1).setCycleCount(2);
         stb.getChildren().get(1).setAutoReverse(true);
 
         if (ballCup.hasBall()) {
             new Timeline(new KeyFrame(
-                Duration.millis(time * 0.45),
+                Duration.millis(time * 0.15),
                 e -> {
-                    double ballCupX = ballCup.getX() + ballCup.getTranslateX() + ballCup.getFitWidth() / 2;
-                    double otherCupX = otherCup.getX() + otherCup.getTranslateX() + otherCup.getFitWidth() / 2;
-                    double middleX = (ballCupX + otherCupX) / 2;
+                    double ballCupX = ballCup.getX() + ballCup.getTranslateX();
+                    double otherCupX = otherCup.getX() + otherCup.getTranslateX();
                     double ballCupY = ballCup.getY() + ballCup.getTranslateY();
                     double otherCupY = otherCup.getY() + otherCup.getTranslateY();
-                    ballCupY += ballCup.getFitHeight() * (ballCupY < otherCupY ? 0.8 : 0.2);
-                    otherCupY += ballCup.getFitHeight() * (ballCupY < otherCupY ? 0.2 : 0.8);
+                    if (ballCupX < otherCupX) {
+                        ballCupX += ballCup.getFitWidth() * 0.9;
+                        otherCupX += ballCup.getFitWidth() * 0.2;
+                    } else {
+                        ballCupX += ballCup.getFitWidth() * 0.1;
+                        otherCupX += ballCup.getFitWidth() * 0.8;
+                    }
+                    otherCupY += ballCup.getFitHeight() * (ballCupY < otherCupY ? 1.0 : 0.6);
+                    ballCupY += ballCup.getFitHeight() * 0.8;
 
                     ballCup.getBall().toBack();
-                    ballCup.getBall().setCenterX(middleX);
+                    ballCup.getBall().setCenterX(ballCupX);
                     ballCup.getBall().setCenterY(ballCupY);
                     ballCup.getBall().setVisible(true);
 
-                    TranslateTransition trick = new TranslateTransition(Duration.millis(time * 0.1), ballCup.getBall());
+                    TranslateTransition trick = new TranslateTransition(Duration.millis(time * 0.2), ballCup.getBall());
                     trick.setOnFinished(ep -> {
                         ballCup.getBall().setVisible(false);
                         Cup.swapBall(ballCup, otherCup);
                         joinCallback.call(null);
                     });
-                    trick.setByX(ballCupX - middleX);
+                    trick.setByX(otherCupX - ballCupX);
                     trick.setByY(otherCupY - ballCupY);
                     trick.play();
                 }
@@ -97,17 +103,13 @@ public class Trick implements Action {
             joinCallback.call(null);
 
         ParallelTransition pta = new ParallelTransition(
-            Action.smoothArcTransition(Duration.millis(time), cupA, cupB, direction),
-            sta
-        );
-        ParallelTransition ptb = new ParallelTransition(
-            Action.smoothArcTransition(Duration.millis(time), cupB, cupA, !direction),
+            Action.smoothArcTransition(Config.ACTION_TRICK_TIME, cupA, cupB, direction),
+            sta,
+            Action.smoothArcTransition(Config.ACTION_TRICK_TIME, cupB, cupA, !direction),
             stb
         );
         pta.setOnFinished(e -> joinCallback.call(null));
-        ptb.setOnFinished(e -> joinCallback.call(null));
         pta.play();
-        ptb.play();
 
         cups.set(indexA, cupB);
         cups.set(indexB, cupA);

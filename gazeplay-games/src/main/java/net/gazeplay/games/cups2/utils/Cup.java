@@ -118,7 +118,8 @@ public class Cup extends ImageView {
 
     public static double computeX(int xIndex) {
         double width = CupsAndBalls.getGameContext().getGamePanelDimensionProvider().getDimension2D().getWidth();
-        return Config.CUP_MARGIN + (xIndex + 0.5) * (width - 2 * Config.CUP_MARGIN) / Config.getNbCups() - Config.CUP_WIDTH / 2;
+        double margin = (width - (Config.CUP_MARGIN + Config.getNbCups() * (Config.CUP_MARGIN + Config.CUP_WIDTH))) / 2;
+        return margin + (xIndex + 0.5) * (width - 2 * margin) / Config.getNbCups() - Config.CUP_WIDTH / 2;
     }
 
     public static int indexDistance(Cup cupA, Cup cupB) {
@@ -126,6 +127,8 @@ public class Cup extends ImageView {
     }
 
     public static void swapBall(Cup from, Cup to) {
+        if (from == to)
+            return;
         to.ball = from.ball;
         from.ball = null;
         to.ball.container = to;

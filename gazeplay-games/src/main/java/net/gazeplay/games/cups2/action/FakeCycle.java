@@ -7,6 +7,7 @@ import javafx.scene.shape.Path;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import net.gazeplay.games.cups2.Config;
+import net.gazeplay.games.cups2.CupsAndBalls;
 import net.gazeplay.games.cups2.utils.Cup;
 
 import java.util.List;
@@ -49,7 +50,6 @@ public class FakeCycle implements Action {
     public void execute(Callback<Void, Void> onFinish) {
         Callback<Void, Void> joinCallback = Action.joiner(onFinish, end - start + 1);
         double distance = (direction ? -1 : 1) * (cups.get(1).getX() - cups.get(0).getX());
-        double time = Config.ACTION_FAKE_CYCLE_TIME / Config.getSpeedFactor();
 
         PathTransition fpt;
         if (direction)
@@ -59,16 +59,16 @@ public class FakeCycle implements Action {
         fpt.setOnFinished(e -> joinCallback.call(null));
         fpt.play();
 
+        double time = fpt.getDuration().toMillis();
+
         TranslateTransition ftt = new TranslateTransition(Duration.millis(time), cups.get(direction ? end : start));
         ftt.setByX(distance);
         ftt.setInterpolator(Interpolator.EASE_BOTH);
         ftt.setOnFinished(e -> joinCallback.call(null));
-        ftt.setCycleCount(2);
-        ftt.setAutoReverse(true);
         ftt.play();
         new Timeline(new KeyFrame(
             Duration.millis(time * 0.5),
-            e -> ftt.jumpTo(Duration.millis(time * 1.5))
+            e -> ftt.setRate(-1)
         )).play();
 
         for (Cup cup : cups.subList(start + 1, end)) {
@@ -88,19 +88,20 @@ public class FakeCycle implements Action {
     PathTransition fakedSmoothArcTransition(int fromCup, int toCup, boolean upOrDown) {
         Cup cupA = cups.get(fromCup);
         Cup cupB = cups.get(toCup);
+        if (upOrDown)
+            cupA.toBack();
+        else
+            cupA.toFront();
         int dir = direction ? -1 : 1;
-
-        double heightSide = 0.7;
-        if (Math.abs(toCup - fromCup) > 1)
-            heightSide = Math.floor(Math.sqrt(Math.abs(toCup - fromCup)) * 10) / 10;
-        heightSide = 0.5 + heightSide * (upOrDown ? 1 : -1);
+        double maxHeight = CupsAndBalls.getGameContext().getGamePanelDimensionProvider().getDimension2D().getHeight();
+        double heightSide = 0.5 + Math.pow(Math.abs(fromCup - toCup), 0.8) * (Config.CUP_MARGIN / 100) * (upOrDown ? -1 : 1);
         return new PathTransition(
-            Duration.millis(Config.ACTION_FAKE_CYCLE_TIME / Config.getSpeedFactor()),
+            Duration.millis(Math.pow(Math.abs(fromCup - toCup), 0.25) * Config.ACTION_FAKE_CYCLE_TIME / Config.getSpeedFactor()),
             new Path(
                 new MoveTo(cupA.getX() + cupA.getFitWidth() / 2, cupA.getY() + cupA.getFitHeight() / 2),
                 new CubicCurveTo(
-                    cupA.getX() + cupA.getFitWidth() / 2, cupA.getY() + cupA.getFitHeight() * heightSide,
-                    cupB.getX() + cupB.getFitWidth() / 2, cupB.getY() + cupB.getFitHeight() * heightSide,
+                    cupA.getX() + cupA.getFitWidth() / 2, Math.max(0, Math.min(cupA.getY() + cupA.getFitHeight() * heightSide, maxHeight)),
+                    cupB.getX() + cupB.getFitWidth() / 2, Math.max(0, Math.min(cupB.getY() + cupB.getFitHeight() * heightSide, maxHeight)),
                     cups.get(toCup + dir).getX() + cupB.getFitWidth() / 2, cupB.getY() + cupB.getFitHeight() / 2
                 )
             ),
