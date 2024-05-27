@@ -7,7 +7,6 @@ import javafx.util.Duration;
 import net.gazeplay.games.cups2.Config;
 import net.gazeplay.games.cups2.utils.Cup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RevealAll implements Action {

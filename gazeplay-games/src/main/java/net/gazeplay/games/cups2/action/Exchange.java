@@ -2,7 +2,6 @@ package net.gazeplay.games.cups2.action;
 
 import javafx.animation.PathTransition;
 import javafx.util.Callback;
-import javafx.util.Duration;
 import net.gazeplay.games.cups2.Config;
 import net.gazeplay.games.cups2.utils.Cup;
 

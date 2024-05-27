@@ -63,9 +63,9 @@ public class Cup extends ImageView {
 
         this.progressIndicator = createProgressIndicator();
         this.selectionCallback = onSelect;
-        addEventFilter(MouseEvent.ANY, this::handleEvent);
-        addEventFilter(GazeEvent.ANY, this::handleEvent);
-        CupsAndBalls.getGameContext().getGazeDeviceManager().addEventFilter(this);
+        progressIndicator.addEventFilter(MouseEvent.ANY, this::handleEvent);
+        progressIndicator.addEventFilter(GazeEvent.ANY, this::handleEvent);
+        CupsAndBalls.getGameContext().getGazeDeviceManager().addEventFilter(progressIndicator);
     }
 
     public void dispose() {
@@ -77,18 +77,19 @@ public class Cup extends ImageView {
         setTranslateX(0);
         if (hasBall())
             ball.update();
-        progressIndicator.setTranslateX(getX());
+        progressIndicator.setTranslateX(getX() + getFitWidth() / 2 - progressIndicator.getWidth() / 2);
     }
 
     private ProgressIndicator createProgressIndicator() {
         ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setTranslateX(getX());
-        indicator.setTranslateY(getY());
-        indicator.setPrefSize(getFitWidth() / 5, getFitHeight() / 5);
-        indicator.setMinWidth(getFitWidth() / 5);
-        indicator.setMinHeight(getFitHeight() / 5);
+        indicator.setPrefSize(getFitWidth(), getFitWidth());
+        indicator.setMinWidth(getFitWidth());
+        indicator.setMinHeight(getFitWidth());
+        indicator.setTranslateX(getX() + getFitWidth() / 2 - indicator.getWidth() / 2);
+        indicator.setTranslateY(getY() + getFitHeight() / 6);
         indicator.setStyle("-fx-progress-color:" + CupsAndBalls.getGameContext().getConfiguration().getProgressBarColor());
-        indicator.setVisible(false);
+        indicator.setOpacity(0);
+        indicator.setVisible(true);
         CupsAndBalls.getGameContext().getChildren().add(indicator);
         return indicator;
     }
@@ -102,15 +103,15 @@ public class Cup extends ImageView {
                 new KeyValue(progressIndicator.progressProperty(), 1)
             ));
             progressTimeline.setOnFinished(f -> {
-                progressIndicator.setVisible(false);
+                progressIndicator.setOpacity(0);
                 selectionCallback.call(this);
             });
             progressIndicator.setProgress(0);
-            progressIndicator.setVisible(true);
+            progressIndicator.setOpacity(0.8);
             progressIndicator.toFront();
             progressTimeline.play();
         } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-            progressIndicator.setVisible(false);
+            progressIndicator.setOpacity(0);
             if (progressTimeline != null)
                 progressTimeline.stop();
         }
