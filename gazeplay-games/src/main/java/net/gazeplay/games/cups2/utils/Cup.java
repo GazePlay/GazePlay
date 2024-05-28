@@ -4,6 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.InputEvent;
@@ -24,11 +25,22 @@ public class Cup extends ImageView {
 
     public void enableSelection() {
         selectionEnabled = true;
+
+        Glow effect = new Glow(0);
+        setEffect(effect);
+        Timeline bloomTimeline = new Timeline(new KeyFrame(
+            Duration.millis(600),
+            new KeyValue(effect.levelProperty(), 0.2)
+        ));
+        bloomTimeline.setAutoReverse(true);
+        bloomTimeline.setCycleCount(Timeline.INDEFINITE);
+        bloomTimeline.play();
     }
 
     public void disableSelection() {
         handleEvent(new InputEvent(MouseEvent.MOUSE_EXITED));
         selectionEnabled = false;
+        setEffect(null);
     }
 
     private final Callback<Void, Void> updateCallback = unused -> {
