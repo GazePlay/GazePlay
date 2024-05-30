@@ -193,6 +193,7 @@ class PictureCard extends Group {
 
         Configuration config = ActiveConfigurationContext.getInstance();
         File file = new File(config.getFileDir() + "\\evals\\" +  this.gameVariant.getNameGame() + "\\images\\" + imageName);
+        log.info(config.getFileDir() + "\\evals\\" +  this.gameVariant.getNameGame() + "\\images\\" + imageName);
         final Image image = new Image(file.toURI().toString());
 
         ImageView result = new ImageView(image);

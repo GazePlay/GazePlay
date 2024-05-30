@@ -96,7 +96,7 @@ public class GazeplayEval implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
         this.loadInfoUser();
-        this.loadConfig();
+        //this.loadConfig();
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
     }
 
@@ -110,13 +110,29 @@ public class GazeplayEval implements GameLifeCycle {
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
         this.loadInfoUser();
-        this.loadConfig();
+        //this.loadConfig();
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
 
     }
 
     public void loadInfoUser(){
-
+        this.rows = new int[]{2};
+        this.cols = new int[]{2};
+        this.listImages = new String[][]{
+            {
+                "C_arbre-isGoodImg.png",
+                "V_brocoli.png",
+                "P_barbe.png",
+                "S_feuille.png"
+            }
+        };
+        this.listSounds = new String[]{"13_Pleurer.wav"};
+        this.listLengthFixation = new double[]{5000.0};
+        this.listScores = new String[]{};
+        this.listPointsScores = new int[][][]{};
+        this.indexEndGame = 1;
+        this.nbImages = new int[]{1};
+        this.setSound();
     }
 
     public void loadConfig(){
@@ -125,6 +141,7 @@ public class GazeplayEval implements GameLifeCycle {
         JsonParser jsonParser = new JsonParser();
         String jsonToArray = "";
         try  (FileReader reader = new FileReader(gameDirectory, StandardCharsets.UTF_8)) {
+            log.info("Passe");
             JsonArray obj = jsonParser.parse(reader).getAsJsonArray();
             this.gameRules = new String[obj.size()][];
             for (int i=0; i<obj.size(); i++){
@@ -249,7 +266,7 @@ public class GazeplayEval implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
 
-        //this.startGame();
+        this.startGame();
     }
 
     public void startGame() {
