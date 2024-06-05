@@ -26,6 +26,11 @@ public class Trick implements Action {
     }
 
     @Override
+    public double getDifficulty() {
+        return Config.ACTION_TRICK_DIFFICULTY;
+    }
+
+    @Override
     public int simulate(int ballIndex) {
         return ballIndex;
     }

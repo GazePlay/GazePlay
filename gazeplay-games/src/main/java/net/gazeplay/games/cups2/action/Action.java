@@ -12,10 +12,21 @@ import net.gazeplay.games.cups2.utils.Cup;
 
 public interface Action {
     enum Type {
-        EXCHANGE, REVEAL_ALL, CYCLE, REVEAL, FAKE_CYCLE, TRICK, FAKE_TRICK, FAKE_EXCHANGE
+        EXCHANGE, FAKE_EXCHANGE, TRICK, FAKE_TRICK, CYCLE, FAKE_CYCLE, REVEAL, REVEAL_ALL
+    }
+
+    static Type getFakeTypeOf(Type type) {
+        return switch (type) {
+            case EXCHANGE -> Type.FAKE_EXCHANGE;
+            case TRICK -> Type.FAKE_TRICK;
+            case CYCLE -> Type.FAKE_CYCLE;
+            default -> null;
+        };
     }
 
     Type getType();
+
+    double getDifficulty();
 
     int simulate(int ballIndex);
 

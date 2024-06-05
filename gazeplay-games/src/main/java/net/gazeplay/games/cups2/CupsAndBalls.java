@@ -6,6 +6,7 @@ import javafx.util.Duration;
 import lombok.Getter;
 import net.gazeplay.games.cups2.action.Reveal;
 import net.gazeplay.games.cups2.action.RevealAll;
+import net.gazeplay.games.cups2.model.PlayerModel;
 import net.gazeplay.games.cups2.strategy.StrategyBuilder;
 import net.gazeplay.games.cups2.utils.*;
 import net.gazeplay.games.cups2.action.Action;
@@ -38,16 +39,31 @@ public class CupsAndBalls implements GameLifeCycle {
         CupsAndBalls.stats = stats;
     }
 
+    @Getter
+    private static PlayerModel playerModel;
+
+    private static void setPlayerModel(PlayerModel playerModel) {
+        CupsAndBalls.playerModel = playerModel;
+    }
+
     private final Ball ball;
     private final StrategyBuilder strategy = StrategyBuilder.newInstanceOf(Config.STRATEGY_TYPE);
     private final List<Action> actions = new ArrayList<>();
     private final List<Cup> cups = new ArrayList<>();
+
+    @Getter
+    private static Phase currentPhase = Phase.OBSERVATION;
+
+    @Getter
+    private static Action currentAction = null;  // Invalid when currentPhase == Phase.SELECTION
 
     public CupsAndBalls(IGameContext gameContext, Stats stats, int nbCups, double gameSeed) {
         super();
         Config.setNbCups(nbCups);
         setGameContext(gameContext);
         setStats(stats);
+        if (Config.STRATEGY_TYPE == StrategyBuilder.Type.ADAPTIVE)
+            setPlayerModel(new PlayerModel());
         for (int i = 0; i < nbCups; i++)
             this.cups.add(new Cup(i, this::onCupSelected));
         random.setSeed(gameSeed);
@@ -66,6 +82,8 @@ public class CupsAndBalls implements GameLifeCycle {
         Config.setNbCups(nbCups);
         setGameContext(gameContext);
         setStats(stats);
+        if (Config.STRATEGY_TYPE == StrategyBuilder.Type.ADAPTIVE)
+            setPlayerModel(new PlayerModel());
         for (int i = 0; i < nbCups; i++)
             this.cups.add(new Cup(i, this::onCupSelected));
         random.setSeed(System.currentTimeMillis());
@@ -86,6 +104,7 @@ public class CupsAndBalls implements GameLifeCycle {
         gameContext.setLimiterAvailable();
         stats.notifyNewRoundReady();
 
+        currentPhase = Phase.OBSERVATION;
         strategy.computeActions(actions, cups, ball.getContainer().getCurrentIndex());
 
         new Timeline(new KeyFrame(
@@ -99,13 +118,15 @@ public class CupsAndBalls implements GameLifeCycle {
         for (Cup cup : cups)
             cup.dispose();
         ball.dispose();
+        if (playerModel != null)
+            playerModel.dispose();
     }
 
     private Void onCupSelected(Cup cup) {
         if (cup.hasBall())
-            (new Reveal(cup)).execute(this::onRightRevealFinished);
+            (currentAction = new Reveal(cup)).execute(this::onRightRevealFinished);
         else
-            (new Reveal(cup)).execute(this::onWrongRevealFinished);
+            (currentAction = new Reveal(cup)).execute(this::onWrongRevealFinished);
         for (Cup c : cups)
             c.disableSelection();
         return null;
@@ -114,13 +135,13 @@ public class CupsAndBalls implements GameLifeCycle {
     private Void onRightRevealFinished(Void unused) {
 //        dispose();
 //        gameContext.clear();
-        if (Config.getNbCups() < Config.MAX_NB_CUPS) {
-            Config.setNbCups(Config.getNbCups() + 1);
-            cups.add(new Cup(cups.size(), this::onCupSelected));
-            gameContext.getChildren().add(cups.get(cups.size() - 1));
-            Cup.swapBall(ball.getContainer(), cups.get(random.nextInt(cups.size())));
-            actions.add(new RevealAll(cups));
-        }
+//        if (Config.getNbCups() < Config.MAX_NB_CUPS) {
+//            Config.setNbCups(Config.getNbCups() + 1);
+//            cups.add(new Cup(cups.size(), this::onCupSelected));
+//            gameContext.getChildren().add(cups.get(cups.size() - 1));
+//            Cup.swapBall(ball.getContainer(), cups.get(random.nextInt(cups.size())));
+//            actions.add(new RevealAll(cups));
+//        }
         launch();
         return null;
     }
@@ -138,14 +159,19 @@ public class CupsAndBalls implements GameLifeCycle {
         if (actions.isEmpty()) {
             setupSelection();
         } else {
-            actions.remove(0).execute(this::onActionFinished);
+            (currentAction = actions.remove(0)).execute(this::onActionFinished);
         }
 
         return null;
     }
 
     private void setupSelection() {
+        currentPhase = Phase.SELECTION;
         for (Cup cup : cups)
             cup.enableSelection();
+    }
+
+    public enum Phase {
+        SELECTION, OBSERVATION
     }
 }

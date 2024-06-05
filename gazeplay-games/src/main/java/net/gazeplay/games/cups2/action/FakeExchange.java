@@ -28,6 +28,11 @@ public class FakeExchange implements Action {
     }
 
     @Override
+    public double getDifficulty() {
+        return Config.ACTION_FAKE_EXCHANGE_DIFFICULTY;
+    }
+
+    @Override
     public int simulate(int ballIndex) {
         return ballIndex;
     }

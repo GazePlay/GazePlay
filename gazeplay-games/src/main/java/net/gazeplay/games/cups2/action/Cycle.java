@@ -31,6 +31,11 @@ public class Cycle implements Action {
     }
 
     @Override
+    public double getDifficulty() {
+        return Config.ACTION_CYCLE_DIFFICULTY;
+    }
+
+    @Override
     public int simulate(int ballIndex) {
         if (start <= ballIndex && ballIndex <= end)
             return start + (ballIndex - start + (direction ? -1 : 1) + (end - start + 1)) % (end - start + 1);

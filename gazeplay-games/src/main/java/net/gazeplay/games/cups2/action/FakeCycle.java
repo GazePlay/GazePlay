@@ -33,6 +33,11 @@ public class FakeCycle implements Action {
     }
 
     @Override
+    public double getDifficulty() {
+        return Config.ACTION_FAKE_CYCLE_DIFFICULTY;
+    }
+
+    @Override
     public int simulate(int ballIndex) {
         int dir = direction ? 0 : 1;
         if (start + dir <= ballIndex && ballIndex <= end - 1 + dir)

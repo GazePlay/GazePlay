@@ -26,6 +26,11 @@ public class FakeTrick implements Action {
     }
 
     @Override
+    public double getDifficulty() {
+        return Config.ACTION_FAKE_TRICK_DIFFICULTY;
+    }
+
+    @Override
     public int simulate(int ballIndex) {
         return ballIndex == indexA ? indexB : (ballIndex == indexB ? indexA : ballIndex);
     }

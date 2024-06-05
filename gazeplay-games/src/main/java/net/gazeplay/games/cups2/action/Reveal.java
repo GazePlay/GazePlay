@@ -22,6 +22,11 @@ public class Reveal implements Action {
     }
 
     @Override
+    public double getDifficulty() {
+        return Config.ACTION_REVEAL_DIFFICULTY;
+    }
+
+    @Override
     public int simulate(int ballIndex) {
         return ballIndex;
     }

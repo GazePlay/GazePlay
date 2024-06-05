@@ -25,6 +25,11 @@ public class Exchange implements Action {
     }
 
     @Override
+    public double getDifficulty() {
+        return Config.ACTION_EXCHANGE_DIFFICULTY;
+    }
+
+    @Override
     public int simulate(int ballIndex) {
         return ballIndex == indexA ? indexB : (ballIndex == indexB ? indexA : ballIndex);
     }
