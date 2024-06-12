@@ -1,6 +1,7 @@
 package net.gazeplay.games.oddshape;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public enum OddShapes {
     RECTANGLE,
@@ -13,9 +14,7 @@ public enum OddShapes {
     //donc on construit un ArrayList nous-mêmes
     public static ArrayList<OddShapes> getAllShapes(){
         ArrayList<OddShapes> allShapes = new ArrayList<>();
-        for(OddShapes shape : OddShapes.values()){
-            allShapes.add(shape);
-        }
+        Collections.addAll(allShapes, OddShapes.values());
         return allShapes;
     }
 }
