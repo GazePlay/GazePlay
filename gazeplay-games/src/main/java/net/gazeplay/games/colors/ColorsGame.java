@@ -119,7 +119,11 @@ public class ColorsGame implements GameLifeCycle {
         "draw-butterfly.png",
         "draw-cake.png",
         "draw-rabbit.png",
-        "draw-aqua.png"};
+        "draw-aqua.png",
+        "draw-grape.jpg",
+        "draw-manuel.png",
+        "draw-sunmoon.jpg",
+        "draw-hellokitty.jpg"};
     private int index;
     private boolean defaultImg;
     private final ProgressButton nextButton;

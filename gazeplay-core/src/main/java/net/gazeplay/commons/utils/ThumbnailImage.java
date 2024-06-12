@@ -72,7 +72,8 @@ public class ThumbnailImage {
         new AbstractMap.SimpleEntry<>("whereIsTheLetter", "data/common/Thumbnails/whereIsTheLetter.png"),
         new AbstractMap.SimpleEntry<>("whereIsTheNumber", "data/common/Thumbnails/whereIsTheNumber.png"),
         new AbstractMap.SimpleEntry<>("whereIsTheShape", "data/common/Thumbnails/whereIsTheShape.png"),
-        new AbstractMap.SimpleEntry<>("whereIsTheSound", "data/common/Thumbnails/whereIsTheSound.png")
+        new AbstractMap.SimpleEntry<>("whereIsTheSound", "data/common/Thumbnails/whereIsTheSound.png"),
+        new AbstractMap.SimpleEntry<>("colorblend","data/common/Thumbnails/colorblend.png")
     );
 
     public ThumbnailImage(){
