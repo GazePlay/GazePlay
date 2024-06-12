@@ -31,8 +31,8 @@ public class OddShapeGame implements GameLifeCycle {
     private Shape badShape;
     private ArrayList<Shape> hiddenShapes;
 
-//    //les couleurs
-//    private List validColors =
+    //les couleurs
+    private ArrayList<Color> validColors = new ArrayList<>();
 
     //le nécessaire
     private final IGameContext gameContext;
@@ -42,8 +42,8 @@ public class OddShapeGame implements GameLifeCycle {
     private final Pane root;
     private final HBox hBox = new HBox();
 
-    double width = Screen.getPrimary().getVisualBounds().getWidth();
-    double height = Screen.getPrimary().getVisualBounds().getHeight();
+    private double width = Screen.getPrimary().getVisualBounds().getWidth();
+    private double height = Screen.getPrimary().getVisualBounds().getHeight();
 
     //constructeur du jeu
     //rien à rajouter, c'est tout ce qu'il te faut
@@ -61,6 +61,8 @@ public class OddShapeGame implements GameLifeCycle {
 
         //afficher background
         createBackground();
+        //initialiser les couleurs
+        initialiseColors();
         //sélectionner une forme
         baseShape = selectShape();
         //puis faire le groupe de bonnes formes
@@ -100,6 +102,19 @@ public class OddShapeGame implements GameLifeCycle {
     }
 
     //-----------------------------------------------------------------
+   //recréer les couleurs après chaque partie
+    private void initialiseColors(){
+        //vider les couleurs
+        validColors.clear();
+        //et tout remettre
+        validColors.add(Color.CRIMSON);
+        validColors.add(Color.LIGHTSKYBLUE);
+        validColors.add(Color.LIMEGREEN);
+        validColors.add(Color.ORANGE);
+        validColors.add(Color.HOTPINK);
+        validColors.add(Color.GOLD);
+    }
+    //-----------------------------------------------------------------
 
     //dessiner les formes
     private void drawShapes() {
@@ -108,7 +123,6 @@ public class OddShapeGame implements GameLifeCycle {
         //on dessine les bonnes formes
         for(Shape shapes : goodShapes){
             //couleur
-            shapes.setFill(Color.WHITE);
             shapes.setStroke(Color.BLACK);
             shapes.setStrokeWidth(20);
             //emplacement sur l'écran
@@ -121,7 +135,6 @@ public class OddShapeGame implements GameLifeCycle {
             root.getChildren().add(shapes);
         }
         //et la mauvaise
-        badShape.setFill(Color.WHITE);
         badShape.setStroke(Color.BLACK);
         badShape.setStrokeWidth(20);
         badShape.setLayoutX(rand.nextInt( (int) width-100));
@@ -134,8 +147,9 @@ public class OddShapeGame implements GameLifeCycle {
     }
 
     private void createBackground() {
+        //background by kues on freepik
         Background background = new Background(new BackgroundImage(
-            new Image("data/oddshapes/1708774927070.png"),
+            new Image("data/oddshapes/papier.jpg"),
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
             new BackgroundSize(20, 40, false, false, false, true)
         ));
@@ -153,6 +167,11 @@ public class OddShapeGame implements GameLifeCycle {
         validShapes.remove(selectedShape);
 
         return selectedShape;
+    }
+
+    //la même pour les couleurs
+    private Color selectColor(){
+        return validColors.get(new Random().nextInt(validShapes.size()));
     }
 
 
@@ -176,7 +195,7 @@ public class OddShapeGame implements GameLifeCycle {
             }
 
             default -> {
-                throw new RuntimeException("ça ne devrait pas arriver...");
+                throw new RuntimeException("ça ne devrait pas arriver, mais la forme est inconnue");
             }
         }
     }
@@ -186,19 +205,28 @@ public class OddShapeGame implements GameLifeCycle {
     private ArrayList<Shape> createShapeGroup(Shape baseShape){
         //on en ajoute 9, la 10ème sera la mauvaise
         ArrayList<Shape> shapeList = new ArrayList<>();
+        Color selectedColor = selectColor();
         for(int i = 0; i <= 9; i++){
             shapeList.add(duplicateShape(baseShape));
+            shapeList.get(i).setFill(selectedColor);
         }
         return shapeList;
     }
+
 
     //pour créer la "mauvaise" shape
     //on se base sur la LISTE qui normalement n'a pas la shape sélectionnée
     //pour bien faire un intrus
     private Shape createBadShape(){
-        OddShapes randomShape = validShapes.get(new Random().nextInt(validShapes.size()-1));
         //on fait ça après avoir enlevé la shape des validshapes, du coup on ne peut pas tomber sur la même
-        return createShape(randomShape);
+        OddShapes randomShape = validShapes.get(new Random().nextInt(validShapes.size()-1));
+        //on sélectionne une couleur au hasard
+        Color randomColor = selectColor();
+        //on crée la forme
+        Shape finalShape = createShape(randomShape);
+        //et on la colore avant de la donner
+        finalShape.setFill(randomColor);
+        return finalShape;
     }
 
     //TODO: coder quelque chose de meilleur
