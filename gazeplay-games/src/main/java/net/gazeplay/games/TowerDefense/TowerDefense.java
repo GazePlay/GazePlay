@@ -132,7 +132,7 @@ public class TowerDefense implements GameLifeCycle {
         // The message queue
         messages = new VBox();
         messages.setAlignment(Pos.CENTER);
-        messages.setPadding(new Insets(120));
+        messages.setPadding(new Insets(160));
 
         basicTowerImage = new Image("data/towerDefense/images/basicTower.png");
         doubleTowerImage = new Image("data/towerDefense/images/doubleTower.png");
