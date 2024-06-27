@@ -26,6 +26,9 @@ import java.util.function.Supplier;
 @Slf4j
 public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
+    private double posX = 0.0;
+    private double posY = 0.0;
+
     private boolean isInReplayMode = false;
 
     private final List<GazeMotionListener> gazeMotionListeners = new CopyOnWriteArrayList<>();
@@ -157,6 +160,10 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         // notifyAllGazeMotionListeners(gazePositionOnScreen);
         final double positionX = gazePositionOnScreen.getX();
         final double positionY = gazePositionOnScreen.getY();
+
+        this.posX = positionX;
+        this.posY = positionY;
+
         updatePosition(positionX, positionY, event, false);
     }
 
@@ -283,4 +290,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         return false;
     }
 
+    public double[] getPosition(){
+        return new double[]{this.posX, this.posY};
+    }
 }
