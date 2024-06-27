@@ -1,5 +1,8 @@
 package net.gazeplay.games.oddshape;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.Timeline;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -9,6 +12,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 
 import javafx.stage.Screen;
+import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
@@ -27,8 +31,8 @@ public class OddShapeGame implements GameLifeCycle {
 
     //les formes
     private OddShapes baseShape;
-    private ArrayList<Shape> goodShapes;
-    private Shape badShape;
+    private ArrayList<Shape> badShapes;
+    private Shape goodShape;
     private ArrayList<Shape> hiddenShapes;
 
     //les couleurs
@@ -37,6 +41,11 @@ public class OddShapeGame implements GameLifeCycle {
     //le nécessaire
     private final IGameContext gameContext;
     private final Stats stats;
+    private final OddShapeVariant gameVariant;
+
+    //eye-tracker
+    private final ProgressIndicator progressIndicator;
+    private Timeline progressTimeline;
 
     //pour dessiner
     private final Pane root;
@@ -47,10 +56,17 @@ public class OddShapeGame implements GameLifeCycle {
 
     //constructeur du jeu
     //rien à rajouter, c'est tout ce qu'il te faut
-    public OddShapeGame(final IGameContext gameContext, final Stats stats) {
+    public OddShapeGame(final IGameContext gameContext, final Stats stats, OddShapeVariant gameVariant) {
         this.gameContext = gameContext;
         this.stats = stats;
         this.root = this.gameContext.getRoot();
+        this.gameVariant = gameVariant;
+
+        progressIndicator = new ProgressIndicator(0);
+        progressIndicator.setOpacity(0);
+        progressIndicator.setMouseTransparent(true);
+
+        this.gameContext.getGazeDeviceManager().addStats(stats);
     }
 
 
@@ -66,9 +82,9 @@ public class OddShapeGame implements GameLifeCycle {
         //sélectionner une forme
         baseShape = selectShape();
         //puis faire le groupe de bonnes formes
-        goodShapes = createShapeGroup(createShape(baseShape));
+        badShapes = createShapeGroup(createShape(baseShape));
         //et génerer la mauvaise
-        badShape = createBadShape();
+        goodShape = createGoodShape();
         drawShapes();
 
 
@@ -113,6 +129,7 @@ public class OddShapeGame implements GameLifeCycle {
         validColors.add(Color.ORANGE);
         validColors.add(Color.HOTPINK);
         validColors.add(Color.GOLD);
+        validColors.add(Color.PURPLE);
     }
     //-----------------------------------------------------------------
 
@@ -121,7 +138,7 @@ public class OddShapeGame implements GameLifeCycle {
         Random rand = new Random();
 
         //on dessine les bonnes formes
-        for(Shape shapes : goodShapes){
+        for(Shape shapes : badShapes){
             //couleur
             shapes.setStroke(Color.BLACK);
             shapes.setStrokeWidth(20);
@@ -130,20 +147,21 @@ public class OddShapeGame implements GameLifeCycle {
             shapes.setLayoutY(rand.nextInt((int) height-100));
 
             //quand on clique sur ces formes la c'est pas bon
-            shapes.setOnMouseClicked(mouseEvent -> playSound());
+            //! event pour les mauvaises shapes
+            shapes.setOnMouseClicked(mouseEvent -> win());
 
             root.getChildren().add(shapes);
         }
         //et la mauvaise
-        badShape.setStroke(Color.BLACK);
-        badShape.setStrokeWidth(20);
-        badShape.setLayoutX(rand.nextInt( (int) width-100));
-        badShape.setLayoutY(rand.nextInt( (int) height-100));
+        goodShape.setStroke(Color.BLACK);
+        goodShape.setStrokeWidth(20);
+        goodShape.setLayoutX(rand.nextInt( (int) width-100));
+        goodShape.setLayoutY(rand.nextInt( (int) height-100));
 
-        //mais celle la si
-        badShape.setOnMouseClicked(mouseEvent -> win());
+        //! event pour la bonne shape
+        goodShape.setOnMouseClicked(mouseEvent -> win());
 
-        root.getChildren().add(badShape);
+        root.getChildren().add(goodShape);
     }
 
     private void createBackground() {
@@ -159,7 +177,6 @@ public class OddShapeGame implements GameLifeCycle {
 
     //-----------------------------------------------------------------
 
-
     //prendre une shape au hasard dans la liste
     private OddShapes selectShape() {
         OddShapes selectedShape = validShapes.get(new Random().nextInt(validShapes.size()));
@@ -171,7 +188,15 @@ public class OddShapeGame implements GameLifeCycle {
 
     //la même pour les couleurs
     private Color selectColor(){
-        return validColors.get(new Random().nextInt(validShapes.size()));
+        Color selectedColor;
+        if(this.gameVariant == OddShapeVariant.NORMAL) { //si on joue en difficulté "normal"
+            selectedColor = validColors.get(new Random().nextInt(validShapes.size())); //on rend le jeu un peu plus simple en ne pouvant pas avoir de formes bonnes et mauvaises de la même couleur
+            validColors.remove(selectedColor);
+            return selectedColor;
+        } else { // si le jeu est un peu plus dur, alors on laisse les formes avoir la même couleur
+            selectedColor = validColors.get(new Random().nextInt(validShapes.size()));
+        }
+        return selectedColor;
     }
 
 
@@ -180,7 +205,7 @@ public class OddShapeGame implements GameLifeCycle {
     private Shape createShape(OddShapes shape) {
         switch(shape) {
             case CIRCLE -> {
-                return new Circle(100); //rayon hasardeux
+                return new Circle(100);
             }
             case RECTANGLE -> {
                 return new Rectangle(300, 200);
@@ -195,7 +220,7 @@ public class OddShapeGame implements GameLifeCycle {
             }
 
             default -> {
-                throw new RuntimeException("ça ne devrait pas arriver, mais la forme est inconnue");
+                throw new RuntimeException("forme inconnue");
             }
         }
     }
@@ -216,8 +241,8 @@ public class OddShapeGame implements GameLifeCycle {
 
     //pour créer la "mauvaise" shape
     //on se base sur la LISTE qui normalement n'a pas la shape sélectionnée
-    //pour bien faire un intrus
-    private Shape createBadShape(){
+    //pour bien faire un intrus qui n'en fait pas partie
+    private Shape createGoodShape(){
         //on fait ça après avoir enlevé la shape des validshapes, du coup on ne peut pas tomber sur la même
         OddShapes randomShape = validShapes.get(new Random().nextInt(validShapes.size()-1));
         //on sélectionne une couleur au hasard
@@ -228,9 +253,9 @@ public class OddShapeGame implements GameLifeCycle {
         finalShape.setFill(randomColor);
         return finalShape;
     }
-
-    //TODO: coder quelque chose de meilleur
-    //clone les shapes
+    
+    //cloner les shapes
+    //pour chaque type possible
     private Shape duplicateShape(Shape shape) {
         if (shape instanceof Circle) {
             Circle og = (Circle) shape;
@@ -256,12 +281,6 @@ public class OddShapeGame implements GameLifeCycle {
             return clone;
         }
         else return shape;
-    }
-
-    //joue un son
-    public void playSound() {
-        final String soundResource = "data/oddshapes/buzzer.mp3";
-        gameContext.getSoundManager().add(soundResource);
     }
 
 

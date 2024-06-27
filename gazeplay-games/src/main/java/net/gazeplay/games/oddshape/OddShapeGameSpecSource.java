@@ -17,6 +17,7 @@ public class OddShapeGameSpecSource implements GameSpecSource {
             //TODO: changer les catégories
             .category(GameCategories.Category.ACTION_REACTION)
             .category(GameCategories.Category.SELECTION).build(),
+            new OddShapeVariantGenerator(),
             new OddShapeGameLauncher()
         );
     }
