@@ -10,7 +10,7 @@ import java.util.*;
 
 public class Config {
     // Fixed config
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     public final static double ROUND_DELAY = 1000;
     public static final double INTER_ROUND_DELAY = 200;
