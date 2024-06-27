@@ -82,6 +82,10 @@ public class Cup extends ImageView {
 
     public void dispose() {
         Config.nbCupsUnsubscribe(updateCallback);
+        progressIndicator.removeEventFilter(MouseEvent.ANY, this::handleEvent);
+        progressIndicator.removeEventFilter(GazeEvent.ANY, this::handleEvent);
+        CupsAndBalls.getGameContext().getGazeDeviceManager().removeEventFilter(progressIndicator);
+        CupsAndBalls.getGameContext().getChildren().remove(progressIndicator);
     }
 
     public void update() {
@@ -94,11 +98,12 @@ public class Cup extends ImageView {
 
     private ProgressIndicator createProgressIndicator() {
         ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setPrefSize(getFitWidth(), getFitWidth());
-        indicator.setMinWidth(getFitWidth());
-        indicator.setMinHeight(getFitWidth());
-        indicator.setTranslateX(getX() + getFitWidth() / 2 - indicator.getWidth() / 2);
-        indicator.setTranslateY(getY() + getFitHeight() / 6);
+        double size = (getFitHeight() + getFitWidth()) / 2;
+        indicator.setPrefSize(size, size);
+        indicator.setMinWidth(size);
+        indicator.setMinHeight(size);
+        indicator.setTranslateX(getX() + getFitWidth() / 2 - size / 2);
+        indicator.setTranslateY(getY() + getFitHeight() / 2 - size / 2);
         indicator.setStyle("-fx-progress-color:" + CupsAndBalls.getGameContext().getConfiguration().getProgressBarColor());
         indicator.setOpacity(0);
         indicator.setVisible(true);

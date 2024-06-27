@@ -31,6 +31,10 @@ public class RevealAll implements Action {
         return ballIndex;
     }
 
+    public boolean hasBall() {
+        return true;
+    }
+
     @Override
     public void execute() {
         execute(null);

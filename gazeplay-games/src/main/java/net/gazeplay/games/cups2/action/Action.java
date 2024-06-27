@@ -30,6 +30,8 @@ public interface Action {
 
     int simulate(int ballIndex);
 
+    boolean hasBall();
+
     void execute();
 
     void execute(Callback<Void, Void> onFinish);
@@ -40,7 +42,7 @@ public interface Action {
         else
             fromCup.toFront();
         double maxHeight = CupsAndBalls.getGameContext().getGamePanelDimensionProvider().getDimension2D().getHeight();
-        double heightSide = 0.5 + Math.pow(Cup.indexDistance(fromCup, toCup), 0.8) * (Config.CUP_MARGIN / 100) * (upOrDown ? -1 : 1);
+        double heightSide = 0.5 + Math.pow(Cup.indexDistance(fromCup, toCup), 0.8) * (Config.CUP_MARGIN / 200) * (upOrDown ? -1 : 1);
         return new PathTransition(
             Duration.millis(Math.pow(Cup.indexDistance(fromCup, toCup), 0.25) * time / Config.getSpeedFactor()),
             new Path(

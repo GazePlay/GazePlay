@@ -43,6 +43,10 @@ public class Cycle implements Action {
             return ballIndex;
     }
 
+    public boolean hasBall() {
+        return cups.stream().filter(cup -> start <= cup.getCurrentIndex() && cup.getCurrentIndex() <= end).anyMatch(Cup::hasBall);
+    }
+
     @Override
     public void execute() {
         execute(null);

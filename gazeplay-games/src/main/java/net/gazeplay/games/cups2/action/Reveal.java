@@ -31,6 +31,10 @@ public class Reveal implements Action {
         return ballIndex;
     }
 
+    public boolean hasBall() {
+        return cup.hasBall();
+    }
+
     @Override
     public void execute() {
         execute(null);

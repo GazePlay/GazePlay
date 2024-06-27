@@ -37,6 +37,10 @@ public class FakeExchange implements Action {
         return ballIndex;
     }
 
+    public boolean hasBall() {
+        return cups.get(indexA).hasBall() || cups.get(indexB).hasBall();
+    }
+
     @Override
     public void execute() {
         execute(null);

@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import net.gazeplay.games.cups2.Config;
 import net.gazeplay.games.cups2.CupsAndBalls;
@@ -14,6 +16,8 @@ import java.util.*;
 import java.util.concurrent.Semaphore;
 
 public class PlayerModel {
+
+    static final double MIN_GAZE_DISTANCE = 80;  // in pixels
 
     private final List<Performance> performanceHistory = new ArrayList<>();
     private Performance currentPerf;
@@ -56,9 +60,19 @@ public class PlayerModel {
     }
 
 
+    Circle debugGazePoint = null;
+
     public PlayerModel() {
         super();
         CupsAndBalls.getGameContext().getGazeDeviceManager().addGazeMotionListener(this::gazeListener);
+
+        if (Config.DEBUG) {
+            debugGazePoint = new Circle(MIN_GAZE_DISTANCE, Paint.valueOf("lime"));
+            debugGazePoint.setVisible(true);
+            debugGazePoint.setOpacity(0.2);
+            CupsAndBalls.getGameContext().getChildren().add(debugGazePoint);
+        }
+
         trackingLoop();
     }
 
@@ -68,6 +82,12 @@ public class PlayerModel {
 
     private void gazeListener(Point2D position) {
         setLastGazePosition(position);
+        if (debugGazePoint != null) {
+            debugGazePoint.toFront();
+            debugGazePoint.setRadius(MIN_GAZE_DISTANCE * Math.sqrt(Config.getSpeedFactor()));
+            debugGazePoint.setCenterX(position.getX());
+            debugGazePoint.setCenterY(position.getY());
+        }
     }
 
     private void trackingLoop() {
@@ -79,25 +99,31 @@ public class PlayerModel {
 
         totalMeasurements++;
         currentActionMeasurements++;
-        if (lastAction != null)
+        if (lastAction != null && CupsAndBalls.getCurrentAction() != null)
             actionMeasurements.put(
                 CupsAndBalls.getCurrentAction().getType(),
-                actionMeasurements.get(CupsAndBalls.getCurrentAction().getType()) + 1
+                actionMeasurements.getOrDefault(CupsAndBalls.getCurrentAction().getType(), 0) + 1
             );
 
         Optional<Point2D> optPosition = getLastGazePosition();
         if (optPosition.isPresent()) {
             Point2D position = optPosition.get();
             boolean ballUnderGaze = CupsAndBalls.getGameContext().getChildren().stream().filter(
-                node -> node instanceof Cup && node.contains(position)
+                node -> node instanceof Cup && node.intersects((new Circle(
+                    position.getX(), position.getY(),
+                    MIN_GAZE_DISTANCE * Math.sqrt(Config.getSpeedFactor())
+                )).getBoundsInLocal())
             ).anyMatch(cup -> ((Cup) cup).hasBall());
-            if (ballUnderGaze && CupsAndBalls.getCurrentPhase() == CupsAndBalls.Phase.OBSERVATION) {
-                currentPerf.ballTracking++;
-                if (!lostTrackOfBall)
-                    currentPerf.getActionsPerf().put(
-                        CupsAndBalls.getCurrentAction().getType(),
-                        currentPerf.getActionsPerf().get(CupsAndBalls.getCurrentAction().getType()) + 1
-                    );
+            if (ballUnderGaze) {
+                currentActionPerf++;
+                if (CupsAndBalls.getCurrentPhase() == CupsAndBalls.Phase.OBSERVATION && CupsAndBalls.getCurrentAction() != null) {
+                    currentPerf.ballTracking++;
+                    if (!lostTrackOfBall)
+                        currentPerf.getActionsPerf().put(
+                            CupsAndBalls.getCurrentAction().getType(),
+                            currentPerf.getActionsPerf().getOrDefault(CupsAndBalls.getCurrentAction().getType(), 0.) + 1
+                        );
+                }
             }
         }
 
@@ -105,7 +131,7 @@ public class PlayerModel {
 
         // lostTrackOfBall logic, updated after each action
         if (lastAction != null && lastAction != CupsAndBalls.getCurrentAction()) {
-            if (currentActionPerf / currentActionMeasurements < 0.5)
+            if (currentActionPerf / currentActionMeasurements < (lastAction.hasBall() ? 0.5 : 0.2))
                 lostTrackOfBallCooldown = Math.max(lostTrackOfBallCooldown - 1, 0);
             else
                 lostTrackOfBallCooldown = Math.min(lostTrackOfBallCooldown + 1, Config.PLAYER_BALL_TRACKING_COOLDOWN);
@@ -113,13 +139,37 @@ public class PlayerModel {
                 lostTrackOfBall = lostTrackOfBallCooldown == 0;
             currentActionPerf = 0;
             currentActionMeasurements = 0;
+            if (debugGazePoint != null)
+                debugGazePoint.setFill(Paint.valueOf(lostTrackOfBall ? "red" : "lime"));
+            currentPerf.speedPerf *= lostTrackOfBall ? 0.9 : 1.05;
+            currentPerf.nbCupsPerf *= lostTrackOfBall ? 0.9 : 1.05;
         }
         lastAction = CupsAndBalls.getCurrentAction();
 
         new Timeline(new KeyFrame(
-            Duration.millis(1000 / 30d),  // 60 TPS
+            Duration.millis(1000 / 61d),  // 60 TPS
             e -> trackingLoop()
         )).play();
+    }
+
+    public void finishRound() {
+        try {
+            performanceLock.acquire();
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        if (totalMeasurements > 0 && lastAction != null) {
+            currentPerf.ballTracking /= totalMeasurements;
+            for (Map.Entry<Action.Type, Integer> entry : actionMeasurements.entrySet())
+                currentPerf.getActionsPerf().put(
+                    entry.getKey(),
+                    currentPerf.getActionsPerf().get(entry.getKey()) / entry.getValue()
+                );
+            performanceHistory.add(currentPerf);
+        }
+
+        performanceLock.release();
     }
 
 
@@ -128,17 +178,6 @@ public class PlayerModel {
             performanceLock.acquire();
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
-        }
-
-        // Packing everything up
-        if (totalMeasurements > 0) {
-            currentPerf.ballTracking /= totalMeasurements;
-            for (Map.Entry<Action.Type, Integer> entry : actionMeasurements.entrySet())
-                currentPerf.getActionsPerf().put(
-                    entry.getKey(),
-                    currentPerf.getActionsPerf().get(entry.getKey()) / entry.getValue()
-                );
-            performanceHistory.add(currentPerf);
         }
 
         // Resetting performance
@@ -152,5 +191,13 @@ public class PlayerModel {
         currentPerf = new Performance(round);
 
         performanceLock.release();
+    }
+
+    public void selectedRightCup() {
+    }
+
+    public void selectedWrongCup() {
+        currentPerf.speedPerf *= 0.8;
+//        currentPerf.nbCupsPerf *= 0.8;
     }
 }

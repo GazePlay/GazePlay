@@ -54,8 +54,16 @@ public class CupsAndBalls implements GameLifeCycle {
     @Getter
     private static Phase currentPhase = Phase.OBSERVATION;
 
+    private static void setCurrentPhase(Phase newPhase) {
+        currentPhase = newPhase;
+    }
+
     @Getter
     private static Action currentAction = null;  // Invalid when currentPhase == Phase.SELECTION
+
+    private static Action setCurrentAction(Action newAction) {
+        return (currentAction = newAction);
+    }
 
     public CupsAndBalls(IGameContext gameContext, Stats stats, int nbCups, double gameSeed) {
         super();
@@ -96,6 +104,8 @@ public class CupsAndBalls implements GameLifeCycle {
 
         gameContext.getChildren().addAll(cups);
         gameContext.getChildren().add(ball);
+
+        Config.nbCupsSubscribe(this::onNbCupsChanged);
     }
 
     @Override
@@ -104,7 +114,7 @@ public class CupsAndBalls implements GameLifeCycle {
         gameContext.setLimiterAvailable();
         stats.notifyNewRoundReady();
 
-        currentPhase = Phase.OBSERVATION;
+        setCurrentPhase(Phase.OBSERVATION);
         strategy.computeActions(actions, cups, ball.getContainer().getCurrentIndex());
 
         new Timeline(new KeyFrame(
@@ -122,11 +132,30 @@ public class CupsAndBalls implements GameLifeCycle {
             playerModel.dispose();
     }
 
+    private Void onNbCupsChanged(Void unused) {
+        if (cups.size() < Config.getNbCups()) {
+            for (int i = cups.size(); i < Config.getNbCups(); i++) {
+                cups.add(new Cup(i, this::onCupSelected));
+                gameContext.getChildren().add(cups.get(i));
+            }
+            Cup.swapBall(ball.getContainer(), cups.get(random.nextInt(Config.getNbCups())));
+        } else if (cups.size() > Config.getNbCups()) {
+            Cup.swapBall(ball.getContainer(), cups.get(random.nextInt(Config.getNbCups())));
+            for (int i = cups.size() - 1; i >= Config.getNbCups(); i--) {
+                gameContext.getChildren().remove(cups.get(i));
+                cups.remove(i).dispose();
+            }
+        } else
+            return null;
+        actions.add(0, new RevealAll(cups));
+        return null;
+    }
+
     private Void onCupSelected(Cup cup) {
         if (cup.hasBall())
-            (currentAction = new Reveal(cup)).execute(this::onRightRevealFinished);
+            setCurrentAction(new Reveal(cup)).execute(this::onRightRevealFinished);
         else
-            (currentAction = new Reveal(cup)).execute(this::onWrongRevealFinished);
+            setCurrentAction(new Reveal(cup)).execute(this::onWrongRevealFinished);
         for (Cup c : cups)
             c.disableSelection();
         return null;
@@ -142,6 +171,7 @@ public class CupsAndBalls implements GameLifeCycle {
 //            Cup.swapBall(ball.getContainer(), cups.get(random.nextInt(cups.size())));
 //            actions.add(new RevealAll(cups));
 //        }
+        getPlayerModel().selectedRightCup();
         launch();
         return null;
     }
@@ -149,6 +179,7 @@ public class CupsAndBalls implements GameLifeCycle {
     private Void onWrongRevealFinished(Void unused) {
         for (Cup c : cups)
             c.enableSelection();
+        getPlayerModel().selectedWrongCup();
         return null;
     }
 
@@ -156,17 +187,21 @@ public class CupsAndBalls implements GameLifeCycle {
         for (Cup cup : cups)
             cup.setCurrentIndex(cups.indexOf(cup));
 
+        setCurrentAction(null);
         if (actions.isEmpty()) {
             setupSelection();
         } else {
-            (currentAction = actions.remove(0)).execute(this::onActionFinished);
+            new Timeline(new KeyFrame(
+                Duration.millis(Config.INTER_ROUND_DELAY),
+                e -> setCurrentAction(actions.remove(0)).execute(this::onActionFinished)
+            )).play();
         }
 
         return null;
     }
 
     private void setupSelection() {
-        currentPhase = Phase.SELECTION;
+        setCurrentPhase(Phase.SELECTION);
         for (Cup cup : cups)
             cup.enableSelection();
     }

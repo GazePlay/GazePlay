@@ -46,6 +46,10 @@ public class FakeCycle implements Action {
             return ballIndex;
     }
 
+    public boolean hasBall() {
+        return cups.stream().filter(cup -> start <= cup.getCurrentIndex() && cup.getCurrentIndex() <= end).anyMatch(Cup::hasBall);
+    }
+
     @Override
     public void execute() {
         execute(null);
@@ -99,7 +103,7 @@ public class FakeCycle implements Action {
             cupA.toFront();
         int dir = direction ? -1 : 1;
         double maxHeight = CupsAndBalls.getGameContext().getGamePanelDimensionProvider().getDimension2D().getHeight();
-        double heightSide = 0.5 + Math.pow(Math.abs(fromCup - toCup), 0.8) * (Config.CUP_MARGIN / 100) * (upOrDown ? -1 : 1);
+        double heightSide = 0.5 + Math.pow(Math.abs(fromCup - toCup), 0.8) * (Config.CUP_MARGIN / 200) * (upOrDown ? -1 : 1);
         return new PathTransition(
             Duration.millis(Math.pow(Math.abs(fromCup - toCup), 0.25) * Config.ACTION_FAKE_CYCLE_TIME / Config.getSpeedFactor()),
             new Path(

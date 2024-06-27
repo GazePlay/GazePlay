@@ -35,6 +35,10 @@ public class FakeTrick implements Action {
         return ballIndex == indexA ? indexB : (ballIndex == indexB ? indexA : ballIndex);
     }
 
+    public boolean hasBall() {
+        return cups.get(indexA).hasBall() || cups.get(indexB).hasBall();
+    }
+
     @Override
     public void execute() {
         execute(null);

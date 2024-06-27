@@ -17,7 +17,7 @@ public class AdaptiveStrategy implements StrategyBuilder {
         Action.Type.TRICK
     );
 
-    private final List<Action.Type> actionPool = new ArrayList<>(List.of(Action.Type.EXCHANGE));
+    private final List<Action.Type> actionPool = new ArrayList<>(Config.ADAPTIVE_IMMUTABLE_POOL);
 
     @Override
     public Type getType() {
@@ -26,6 +26,7 @@ public class AdaptiveStrategy implements StrategyBuilder {
 
     @Override
     public void computeActions(List<Action> actions, List<Cup> cups, int ballIndex) {
+        CupsAndBalls.getPlayerModel().finishRound();
         List<Performance> performances = CupsAndBalls.getPlayerModel().getPerformanceHistory();
 
         // Calibration phase if not true
@@ -36,35 +37,39 @@ public class AdaptiveStrategy implements StrategyBuilder {
             // Compute the different factors of the next round with linear extrapolation
             int predNbCups = prevPerf2.getRound().getNbCups() + (int) Math.round(
                 (
-                    prevPerf2.getRound().getNbCups() * prevPerf2.getNbCupsPerf() -
-                        prevPerf1.getRound().getNbCups() * prevPerf1.getNbCupsPerf()
-                ) /
-                    Math.max(Math.abs(prevPerf1.getNbCupsPerf()), Math.abs(prevPerf2.getNbCupsPerf()))
+                    prevPerf2.getRound().getNbCups() * prevPerf2.getNbCupsPerf() +
+                    prevPerf1.getRound().getNbCups() * prevPerf1.getNbCupsPerf()
+                ) / 2
             );
             Config.setNbCups(predNbCups);
 
+            System.out.println("prevPerf1: " + prevPerf1.getRound().getSpeedFactor() + ", " + prevPerf1.getSpeedPerf());
+            System.out.println("prevPerf2: " + prevPerf2.getRound().getSpeedFactor() + ", " + prevPerf2.getSpeedPerf());
+
             double predSpeedFactor = prevPerf2.getRound().getSpeedFactor() + (
-                prevPerf2.getRound().getSpeedFactor() * prevPerf2.getSpeedPerf() -
-                    prevPerf1.getRound().getSpeedFactor() * prevPerf1.getSpeedPerf()
-            ) /
-                Math.max(Math.abs(prevPerf1.getSpeedPerf()), Math.abs(prevPerf2.getSpeedPerf()));
+                prevPerf2.getRound().getSpeedFactor() * prevPerf2.getSpeedPerf() +
+                prevPerf1.getRound().getSpeedFactor() * prevPerf1.getSpeedPerf()
+            ) / 2;
             Config.setSpeedFactor(predSpeedFactor);
 
             for (Action.Type type : prevPerf2.getRound().getActionPool()) {
-                if (prevPerf2.getActionsPerf().get(type) < Config.ADAPTIVE_REMOVE_FAKENESS_THRESHOLD)
+                if (prevPerf2.getActionsPerf().get(type) < Config.ADAPTIVE_REMOVE_FAKENESS_THRESHOLD && !Config.ADAPTIVE_IMMUTABLE_POOL.contains(type))
                     actionPool.remove(type);
-                if (prevPerf2.getActionsPerf().get(type) > Config.ADAPTIVE_INTRODUCE_FAKENESS_THRESHOLD)
+                if (prevPerf2.getActionsPerf().get(type) > Config.ADAPTIVE_INTRODUCE_FAKENESS_THRESHOLD && Action.getFakeTypeOf(type) != null && !actionPool.contains(Action.getFakeTypeOf(type)))
                     actionPool.add(Action.getFakeTypeOf(type));
             }
 
             if (prevPerf2.getActionsPerf().values().stream().reduce(0.0, Double::sum) /
-                prevPerf2.getActionsPerf().size() > Config.ADAPTIVE_INTRODUCE_FEATURE_THRESHOLD &&
-                !actionPool.containsAll(actionSuccession)) {
+                prevPerf2.getActionsPerf().size() > Config.ADAPTIVE_INTRODUCE_FEATURE_THRESHOLD) {
                 List<Action.Type> candidates = new ArrayList<>(List.copyOf(actionSuccession));
                 candidates.removeAll(actionPool);
-                actionPool.add(candidates.get(CupsAndBalls.random.nextInt(candidates.size())));
+                if (!candidates.isEmpty())
+                    actionPool.add(candidates.get(CupsAndBalls.random.nextInt(candidates.size())));
             }
         }
+
+        System.out.println("actionPool: " + actionPool);
+        System.out.println("Config.getSpeedFactor(): " + Config.getSpeedFactor());
 
         int nbActions = Config.MIN_ACTIONS_PER_ROUND + CupsAndBalls.random.nextInt(Config.MAX_ACTIONS_PER_ROUND + 1 - Config.MIN_ACTIONS_PER_ROUND);
         for (int i = 0; i < nbActions; i++) {
@@ -75,9 +80,5 @@ public class AdaptiveStrategy implements StrategyBuilder {
             actions.add(StrategyBuilder.newActionOfType(type, cups, ballIndex));
         }
         CupsAndBalls.getPlayerModel().newRound(new RoundInstance(actionPool, actions.size()));
-    }
-
-    public static double computeDifficulty(List<Action> actions) {
-        return actions.stream().mapToDouble(Action::getDifficulty).sum() * Math.sqrt(Config.getNbCups()) * Config.getSpeedFactor();
     }
 }

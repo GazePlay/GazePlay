@@ -21,5 +21,7 @@ public class Performance {
         this.round = round;
         for (Action.Type type : Action.Type.values())
             actionsPerf.put(type, 0.0);
+        speedPerf = 1;
+        nbCupsPerf = 1;
     }
 }
