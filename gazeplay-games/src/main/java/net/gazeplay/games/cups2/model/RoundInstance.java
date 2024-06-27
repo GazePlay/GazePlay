@@ -9,6 +9,8 @@ import java.util.List;
 
 @Getter
 public class RoundInstance {
+    // Represents a round of the game, in order to keep track of some metrics and parameters for later estimations by PlayerModel and AdaptiveStrategy
+
     double speedFactor;
     int nbCups;
     List<Action.Type> actionPool;

@@ -37,6 +37,7 @@ public interface Action {
     void execute(Callback<Void, Void> onFinish);
 
     static PathTransition smoothArcTransition(double time, Cup fromCup, Cup toCup, boolean upOrDown) {
+        // Create an arc transition from fromCup to toCup positions with some fancy calculations
         if (upOrDown)
             fromCup.toBack();
         else

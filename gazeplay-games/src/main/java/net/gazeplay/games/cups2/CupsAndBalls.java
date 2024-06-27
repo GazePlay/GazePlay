@@ -40,14 +40,14 @@ public class CupsAndBalls implements GameLifeCycle {
     }
 
     @Getter
-    private static PlayerModel playerModel;
+    private static PlayerModel playerModel;  // is in charge of estimating the player's skill level
 
     private static void setPlayerModel(PlayerModel playerModel) {
         CupsAndBalls.playerModel = playerModel;
     }
 
     private final Ball ball;
-    private final StrategyBuilder strategy = StrategyBuilder.newInstanceOf(Config.STRATEGY_TYPE);
+    private final StrategyBuilder strategy = StrategyBuilder.newInstanceOf(Config.STRATEGY_TYPE);  // Will build the list of actions in each round
     private final List<Action> actions = new ArrayList<>();
     private final List<Cup> cups = new ArrayList<>();
 
@@ -133,6 +133,10 @@ public class CupsAndBalls implements GameLifeCycle {
     }
 
     private Void onNbCupsChanged(Void unused) {
+        // Executed when the number of cups changes
+        // Create or remove cups to match the new number of cups
+        // and if that's the case, interchange the ball with the whole new set of cups,
+        // and reveal its location to the player
         if (cups.size() < Config.getNbCups()) {
             for (int i = cups.size(); i < Config.getNbCups(); i++) {
                 cups.add(new Cup(i, this::onCupSelected));
@@ -152,7 +156,9 @@ public class CupsAndBalls implements GameLifeCycle {
     }
 
     private Void onCupSelected(Cup cup) {
+        // Executed during the selection phase when the player picked a cup
         if (cup.hasBall())
+            // Set the new current action and execute it, then call the method corresponding to whether the ball is inside or not
             setCurrentAction(new Reveal(cup)).execute(this::onRightRevealFinished);
         else
             setCurrentAction(new Reveal(cup)).execute(this::onWrongRevealFinished);
@@ -162,21 +168,14 @@ public class CupsAndBalls implements GameLifeCycle {
     }
 
     private Void onRightRevealFinished(Void unused) {
-//        dispose();
-//        gameContext.clear();
-//        if (Config.getNbCups() < Config.MAX_NB_CUPS) {
-//            Config.setNbCups(Config.getNbCups() + 1);
-//            cups.add(new Cup(cups.size(), this::onCupSelected));
-//            gameContext.getChildren().add(cups.get(cups.size() - 1));
-//            Cup.swapBall(ball.getContainer(), cups.get(random.nextInt(cups.size())));
-//            actions.add(new RevealAll(cups));
-//        }
+        // Start a new round and inform the player model
         getPlayerModel().selectedRightCup();
         launch();
         return null;
     }
 
     private Void onWrongRevealFinished(Void unused) {
+        // Start again the selection phase and inform the player model
         for (Cup c : cups)
             c.enableSelection();
         getPlayerModel().selectedWrongCup();
@@ -184,16 +183,18 @@ public class CupsAndBalls implements GameLifeCycle {
     }
 
     private Void onActionFinished(Void unused) {
-        for (Cup cup : cups)
+        for (Cup cup : cups)  // Update the index of all cups in case some were moved
             cup.setCurrentIndex(cups.indexOf(cup));
 
         setCurrentAction(null);
         if (actions.isEmpty()) {
+            // When there is no more action then the round is finished, so we set up a new selection phase
             setupSelection();
         } else {
             new Timeline(new KeyFrame(
                 Duration.millis(Config.INTER_ROUND_DELAY),
                 e -> setCurrentAction(actions.remove(0)).execute(this::onActionFinished)
+                // Calls itself after the end of the executed action
             )).play();
         }
 

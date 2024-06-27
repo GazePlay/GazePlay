@@ -7,6 +7,8 @@ import java.util.HashMap;
 
 @Getter
 public class Performance {
+    // Performance of a player on a round of the game
+
     RoundInstance round;  // The round config and actions the performance is based on
 
     double ballTracking;  // Ratio of time spent on the ball over the round's time

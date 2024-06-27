@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.concurrent.Semaphore;
 
 public class PlayerModel {
+    // Represents the player's skill level, in order to adapt the game difficulty using AdaptiveStrategy's action building
 
     static final double MIN_GAZE_DISTANCE = 80;  // in pixels
 
@@ -25,7 +26,7 @@ public class PlayerModel {
     private int totalMeasurements = 0;
     private final HashMap<Action.Type, Integer> actionMeasurements = new HashMap<>();
 
-    private boolean lostTrackOfBall = false;
+    private boolean lostTrackOfBall = false;  // True whenether the player didn't whatch the cup with the ball for a while
     private int lostTrackOfBallCooldown = Config.PLAYER_BALL_TRACKING_COOLDOWN;
     private Action lastAction = null;
     private double currentActionPerf = 0;
@@ -35,7 +36,7 @@ public class PlayerModel {
         return ImmutableList.copyOf(performanceHistory);
     }
 
-    private Point2D lastGazePosition = null;
+    private Point2D lastGazePosition = null;  // Last position given by the gaze-tracking device in order to treat other metrics
     private final Semaphore lastGazePositionLock = new Semaphore(1);
 
     private void setLastGazePosition(Point2D position) {
@@ -60,6 +61,7 @@ public class PlayerModel {
     }
 
 
+    // Circle that shows some internal states of lostTrackOfBall and gaze tracking, only for testing purposes
     Circle debugGazePoint = null;
 
     public PlayerModel() {
@@ -81,6 +83,7 @@ public class PlayerModel {
     }
 
     private void gazeListener(Point2D position) {
+        // Updates the gaze position given by the gaze-tracking device
         setLastGazePosition(position);
         if (debugGazePoint != null) {
             debugGazePoint.toFront();
@@ -91,6 +94,8 @@ public class PlayerModel {
     }
 
     private void trackingLoop() {
+        // Executed every tick (60 TPS) to update the player's performance metrics
+
         try {
             performanceLock.acquire();
         } catch (InterruptedException ex) {
@@ -153,6 +158,8 @@ public class PlayerModel {
     }
 
     public void finishRound() {
+        // Executed at the beginning of a new round to save the previous one's performance metrics
+
         try {
             performanceLock.acquire();
         } catch (InterruptedException ex) {
@@ -174,6 +181,8 @@ public class PlayerModel {
 
 
     public void newRound(RoundInstance round) {
+        // Set up the player's performance metrics for a new round
+
         try {
             performanceLock.acquire();
         } catch (InterruptedException ex) {

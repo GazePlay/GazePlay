@@ -32,6 +32,8 @@ public class Config {
     public static final double ACTION_TRICK_TIME = 1500;
     public static final double ACTION_FAKE_TRICK_TIME = 1500;
 
+    // The difficulty is not really used anymore,
+    // but initially it was used by PlayerModel and Adaptive Strategy to determine the whole difficulty of a round
     public static final double ACTION_REVEAL_DIFFICULTY = 0;
     public static final double ACTION_EXCHANGE_DIFFICULTY = 1;
     public static final double ACTION_FAKE_EXCHANGE_DIFFICULTY = 2;

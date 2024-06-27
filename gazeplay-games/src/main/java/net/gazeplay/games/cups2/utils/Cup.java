@@ -18,14 +18,15 @@ import net.gazeplay.games.cups2.CupsAndBalls;
 
 public class Cup extends ImageView {
 
-    private final ProgressIndicator progressIndicator;
-    private final Callback<Cup, Void> selectionCallback;
+    private final ProgressIndicator progressIndicator;  // Manages the progress bar during selection phase
+    private final Callback<Cup, Void> selectionCallback;  // Callback function of parent class to be called when cup is selected
     private Timeline progressTimeline;
     private boolean selectionEnabled = false;
 
     public void enableSelection() {
         selectionEnabled = true;
 
+        // Glowing animation effect during selection phase
         Glow effect = new Glow(0);
         setEffect(effect);
         Timeline bloomTimeline = new Timeline(new KeyFrame(
@@ -89,6 +90,8 @@ public class Cup extends ImageView {
     }
 
     public void update() {
+        // Update the position of the cup in the screen (X coord), remove any remaining translation from animations
+        // and update the ball if it contains it
         setX(computeX(currentIndex));
         setTranslateX(0);
         if (hasBall())
@@ -112,9 +115,11 @@ public class Cup extends ImageView {
     }
 
     private void handleEvent(InputEvent e) {
+        // Handles the IN and OUT events during the selection phase
         if (!selectionEnabled)
             return;
         if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+            // Show the progress indicator, and start its animation, which executes the callback when finished
             progressTimeline = new Timeline(new KeyFrame(
                 new Duration(CupsAndBalls.getGameContext().getConfiguration().getFixationLength()),
                 new KeyValue(progressIndicator.progressProperty(), 1)
@@ -128,6 +133,7 @@ public class Cup extends ImageView {
             progressIndicator.toFront();
             progressTimeline.play();
         } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+            // Cancel the progress indicator and unshow it
             progressIndicator.setOpacity(0);
             if (progressTimeline != null)
                 progressTimeline.stop();
@@ -135,6 +141,8 @@ public class Cup extends ImageView {
     }
 
     public static double computeX(int xIndex) {
+        // Fancy calculations to compute the X coordinate of a cup depending on its index, the number of cups, and some
+        // other static configurations
         double width = CupsAndBalls.getGameContext().getGamePanelDimensionProvider().getDimension2D().getWidth();
         double margin = (width - (Config.CUP_MARGIN + Config.getNbCups() * (Config.CUP_MARGIN + Config.CUP_WIDTH))) / 2;
         return margin + (xIndex + 0.5) * (width - 2 * margin) / Config.getNbCups() - Config.CUP_WIDTH / 2;

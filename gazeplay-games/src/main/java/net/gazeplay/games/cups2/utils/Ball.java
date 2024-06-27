@@ -22,6 +22,7 @@ public class Ball extends Circle {
     }
 
     public void update() {
+        // Follows the same principle than Cup.update()
         setCenterX(Cup.computeX(container.getCurrentIndex()) + container.getFitWidth() / 2);
         setCenterY(container.getY() + container.getFitHeight() * 0.8);
         setTranslateX(0);
