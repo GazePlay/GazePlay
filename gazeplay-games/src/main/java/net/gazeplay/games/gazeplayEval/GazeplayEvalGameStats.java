@@ -14,11 +14,11 @@ public class GazeplayEvalGameStats extends HiddenItemsGamesStats {
 
     public GazeplayEvalGameStats(Scene scene){
         super(scene);
-        this.gameName = "beraProject";
+        this.gameName = "ANR_Project";
     }
 
     public GazeplayEvalGameStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
-        this.gameName = "beraProject";
+        this.gameName = "ANR_Project";
     }
 }

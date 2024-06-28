@@ -161,8 +161,8 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         final double positionX = gazePositionOnScreen.getX();
         final double positionY = gazePositionOnScreen.getY();
 
-        this.posX = positionX;
-        this.posY = positionY;
+        this.posX = gazePositionOnScreen.getX();
+        this.posY = gazePositionOnScreen.getY();
 
         updatePosition(positionX, positionY, event, false);
     }

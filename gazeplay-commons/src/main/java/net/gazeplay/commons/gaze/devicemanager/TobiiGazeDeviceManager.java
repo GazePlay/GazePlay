@@ -36,4 +36,7 @@ public class TobiiGazeDeviceManager extends AbstractGazeDeviceManager {
         }
     }
 
+    public double[] getPosition(){
+        return new double[]{this.positionPollerRunnable.point.getX(), this.positionPollerRunnable.point.getY()};
+    }
 }

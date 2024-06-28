@@ -132,21 +132,7 @@ class PictureCard extends Group {
         };
     }
 
-    public void setVisibleProgressIndicator() {
-        customInputEventHandlerMouse.ignoreAnyInput = this.valueProgressIndicator == 0;
-    }
-
-    public void hideProgressIndicator() {
-        customInputEventHandlerMouse.ignoreAnyInput = true;
-    }
-
-    public void setVisibleImagePicture(boolean value){
-        this.imageRectangle.setVisible(value);
-    }
-
     public void setNotifImageRectangle(boolean value) { this.notifImageRectangle.setVisible(value); }
-
-    public void resetMovedCursorOrGaze(){ customInputEventHandlerMouse.moved = false; }
 
     public void checkedImage(){
         Configuration config = ActiveConfigurationContext.getInstance();
@@ -179,6 +165,7 @@ class PictureCard extends Group {
             if(gameInstance.increaseIndexFileImage()){
                 this.endGame();
             }else {
+                gameInstance.stopDisplayDuration();
                 gameInstance.stopGetGazePosition();
                 gameInstance.dispose();
                 gameContext.clear();
@@ -194,7 +181,6 @@ class PictureCard extends Group {
 
         Configuration config = ActiveConfigurationContext.getInstance();
         File file = new File(config.getFileDir() + "\\evals\\" +  this.gameVariant.getNameGame() + "\\images\\" + imageName);
-        log.info(config.getFileDir() + "\\evals\\" +  this.gameVariant.getNameGame() + "\\images\\" + imageName);
         final Image image = new Image(file.toURI().toString());
 
         ImageView result = new ImageView(image);
@@ -293,6 +279,8 @@ class PictureCard extends Group {
     public void endGame() {
 
         progressIndicator.setVisible(false);
+        gameInstance.stopDisplayDuration();
+        gameInstance.stopGetGazePosition();
         gameInstance.finalStats();
         gameContext.updateScore(stats, gameInstance);
         gameInstance.resetFromReplay();
@@ -347,7 +335,7 @@ class PictureCard extends Group {
             if (!this.moved){
 
                 this.moved = true;
-                log.info("ENTERED {}", imageName);
+                log.info("MOVED {}", imageName);
 
                 progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
                 progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
