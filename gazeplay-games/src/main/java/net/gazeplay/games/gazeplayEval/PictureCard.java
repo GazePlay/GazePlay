@@ -167,6 +167,7 @@ class PictureCard extends Group {
             }else {
                 gameInstance.stopDisplayDuration();
                 gameInstance.stopGetGazePosition();
+                gameInstance.getScreenHeatmapGaze();
                 gameInstance.dispose();
                 gameContext.clear();
                 gameInstance.launch();
@@ -281,6 +282,7 @@ class PictureCard extends Group {
         progressIndicator.setVisible(false);
         gameInstance.stopDisplayDuration();
         gameInstance.stopGetGazePosition();
+        gameInstance.getScreenHeatmapGaze();
         gameInstance.finalStats();
         gameContext.updateScore(stats, gameInstance);
         gameInstance.resetFromReplay();

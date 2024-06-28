@@ -719,13 +719,13 @@ public class Stats implements GazeMotionListener {
         final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
         saveImageAsPng(screenshotImage, screenShotFile);
 
-        final BufferedImage bImageMouse = newBufferImage(screenshotImage);
+        /*final BufferedImage bImageMouse = newBufferImage(screenshotImage);
         final BufferedImage bImageGaze = newBufferImage(screenshotImage);
-        final BufferedImage bImageMouseAndGaze = newBufferImage(screenshotImage);
+        final BufferedImage bImageMouseAndGaze = newBufferImage(screenshotImage);*/
 
-        Graphics gMouse = initGazeMetricsImage(bImageMouse, screenshotImage);
+        /*Graphics gMouse = initGazeMetricsImage(bImageMouse, screenshotImage);
         Graphics gGaze = initGazeMetricsImage(bImageGaze, screenshotImage);
-        Graphics gMouseAndGaze = initGazeMetricsImage(bImageMouseAndGaze, screenshotImage);
+        Graphics gMouseAndGaze = initGazeMetricsImage(bImageMouseAndGaze, screenshotImage);*/
 
         try (BufferedWriter bf = Files.newBufferedWriter(replayDataFile.toPath(), Charset.defaultCharset())) {
             bf.write(buildSavedDataJSON(coordinateData).toString());
@@ -736,7 +736,7 @@ public class Stats implements GazeMotionListener {
             colorBandsFile, replayDataFile);
 
         this.savedStatsInfo = savedStatsInfo;
-        if (this.heatMap != null) {
+        /*if (this.heatMap != null) {
             final HeatMap hm = new HeatMap(heatMap, config.getHeatMapOpacity(), config.getHeatMapColors());
             addHeatMapToMetrics(hm, bImageMouse, gMouse, screenshotImage);
             addHeatMapToMetrics(hm, bImageGaze, gGaze, screenshotImage);
@@ -751,7 +751,7 @@ public class Stats implements GazeMotionListener {
 
         saveImageAsPng(bImageMouse, gazeMetricsFileMouse);
         saveImageAsPng(bImageGaze, gazeMetricsFileGaze);
-        saveImageAsPng(bImageMouseAndGaze, gazeMetricsFileMouseAndGaze);
+        saveImageAsPng(bImageMouseAndGaze, gazeMetricsFileMouseAndGaze);*/
 
         savedStatsInfo.notifyFilesReady();
         return savedStatsInfo;
@@ -1051,5 +1051,39 @@ public class Stats implements GazeMotionListener {
             });
             threadScreenshot.start();
         }
+    }
+
+    public void screenHeatMapGaze(){
+        final Configuration config = ActiveConfigurationContext.getInstance();
+
+        final File todayDirectory = getGameStatsOfTheDayDirectory();
+        final String now = DateUtils.dateTimeNow();
+        final String gazeMetricsFilePrefixGaze = now + "-metricsGaze";
+
+        final File gazeMetricsFileGaze = new File(todayDirectory, gazeMetricsFilePrefixGaze + ".png");
+
+        final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
+
+        final BufferedImage bImageGaze = newBufferImage(screenshotImage);
+        final BufferedImage bImageMouseAndGaze = newBufferImage(screenshotImage);
+
+        Graphics gGaze = initGazeMetricsImage(bImageGaze, screenshotImage);
+        Graphics gMouseAndGaze = initGazeMetricsImage(bImageMouseAndGaze, screenshotImage);
+
+
+        if (this.heatMap != null) {
+            final HeatMap hm = new HeatMap(heatMap, config.getHeatMapOpacity(), config.getHeatMapColors());
+            addHeatMapToMetrics(hm, bImageGaze, gGaze, screenshotImage);
+        }
+
+        if (this.fixationSequence != null) {
+            addFixationSequence(FixationSequence.GAZE_FIXATION_SEQUENCE, gGaze, gMouseAndGaze, screenshotImage);
+        }
+
+        saveImageAsPng(bImageGaze, gazeMetricsFileGaze);
+        log.info("Heatmap created !");
+
+        heatMap = instantiateHeatMapData(gameContextScene, heatMapPixelSize);
+        fixationSequence = new ArrayList<LinkedList<FixationPoint>>(List.of(new LinkedList<FixationPoint>(), new LinkedList<FixationPoint>()));
     }
 }

@@ -28,7 +28,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Slf4j
@@ -199,6 +198,7 @@ public class GazeplayEval implements GameLifeCycle {
     public void createDisplayDuration(){
         log.info("Create timeline DD !");
         this.createDisplayDuration = new Timeline(new KeyFrame(Duration.millis(this.displayDuration[this.indexFileImage]), event -> {
+            log.info("DD passe !");
             if(this.increaseIndexFileImage()){
                 this.finalStats();
                 this.gameContext.updateScore(stats, this);
@@ -207,6 +207,7 @@ public class GazeplayEval implements GameLifeCycle {
                 this.gameContext.clear();
                 this.gameContext.showRoundStats(stats, this);
             }else {
+                this.stats.screenHeatMapGaze();
                 this.stopGetGazePosition();
                 this.dispose();
                 this.gameContext.clear();
@@ -214,6 +215,10 @@ public class GazeplayEval implements GameLifeCycle {
             }
         }));
         this.createDisplayDuration.setCycleCount(1);
+    }
+
+    public void getScreenHeatmapGaze(){
+        this.stats.screenHeatMapGaze();
     }
 
     @Override
@@ -435,6 +440,7 @@ public class GazeplayEval implements GameLifeCycle {
 
     public void finalStats() {
 
+        this.stats.screenHeatMapGaze();
         stats.timeGame = System.currentTimeMillis() - this.currentRoundStartTime;
         stats.nameScores = this.listNameScores;
         stats.scores = this.listScoresPoints;
@@ -455,8 +461,8 @@ public class GazeplayEval implements GameLifeCycle {
         Object[][] bookData = new Object[this.listGazePositionX.size()][2];
 
         for (int i=0; i<this.listGazePositionX.size(); i++){
-            bookData[0][0] = String.valueOf(this.listGazePositionX.get(0));
-            bookData[0][1] = String.valueOf(this.listGazePositionY.get(0));
+            bookData[i][0] = String.valueOf(this.listGazePositionX.get(i));
+            bookData[i][1] = String.valueOf(this.listGazePositionY.get(i));
         }
 
         int rowCount = 0;
