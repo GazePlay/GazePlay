@@ -92,6 +92,7 @@ public class CupsAndBalls implements GameLifeCycle {
         setStats(stats);
         if (Config.STRATEGY_TYPE == StrategyBuilder.Type.ADAPTIVE)
             setPlayerModel(new PlayerModel());
+        // TODO: cups are set up once on their Y coordinate, only changing the X coordinate, but the window could be resized...
         for (int i = 0; i < nbCups; i++)
             this.cups.add(new Cup(i, this::onCupSelected));
         random.setSeed(System.currentTimeMillis());

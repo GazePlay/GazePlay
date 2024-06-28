@@ -20,6 +20,9 @@ public class PlayerModel {
 
     static final double MIN_GAZE_DISTANCE = 80;  // in pixels
 
+    // TODO: This class should be completed with more metrics such as a proper way to the estimate player's relation to
+    //  the number of cups a better balanced estimation for the speed factor, and probably else
+
     private final List<Performance> performanceHistory = new ArrayList<>();
     private Performance currentPerf;
     private final Semaphore performanceLock = new Semaphore(1);

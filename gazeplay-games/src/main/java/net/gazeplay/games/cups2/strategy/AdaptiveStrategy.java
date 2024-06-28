@@ -26,6 +26,8 @@ public class AdaptiveStrategy implements StrategyBuilder {
 
     @Override
     public void computeActions(List<Action> actions, List<Cup> cups, int ballIndex) {
+        // TODO: Function is incomplete and should be improved by balancing the extrapolation of the player's performance
+        //  (currently the approximation is linear with a weighted average of the last two performances)
         CupsAndBalls.getPlayerModel().finishRound();
         List<Performance> performances = CupsAndBalls.getPlayerModel().getPerformanceHistory();
 
@@ -43,15 +45,13 @@ public class AdaptiveStrategy implements StrategyBuilder {
             );
             Config.setNbCups(predNbCups);
 
-            System.out.println("prevPerf1: " + prevPerf1.getRound().getSpeedFactor() + ", " + prevPerf1.getSpeedPerf());
-            System.out.println("prevPerf2: " + prevPerf2.getRound().getSpeedFactor() + ", " + prevPerf2.getSpeedPerf());
-
             double predSpeedFactor = prevPerf2.getRound().getSpeedFactor() + (
                 prevPerf2.getRound().getSpeedFactor() * prevPerf2.getSpeedPerf() +
                 prevPerf1.getRound().getSpeedFactor() * prevPerf1.getSpeedPerf()
             ) / 2;
             Config.setSpeedFactor(predSpeedFactor);
 
+            // TODO: The following part doesn't update correctly the action pool (probably due to improper balance)
             for (Action.Type type : prevPerf2.getRound().getActionPool()) {
                 if (prevPerf2.getActionsPerf().get(type) < Config.ADAPTIVE_REMOVE_FAKENESS_THRESHOLD && !Config.ADAPTIVE_IMMUTABLE_POOL.contains(type))
                     actionPool.remove(type);
@@ -67,9 +67,6 @@ public class AdaptiveStrategy implements StrategyBuilder {
                     actionPool.add(candidates.get(CupsAndBalls.random.nextInt(candidates.size())));
             }
         }
-
-        System.out.println("actionPool: " + actionPool);
-        System.out.println("Config.getSpeedFactor(): " + Config.getSpeedFactor());
 
         int nbActions = Config.MIN_ACTIONS_PER_ROUND + CupsAndBalls.random.nextInt(Config.MAX_ACTIONS_PER_ROUND + 1 - Config.MIN_ACTIONS_PER_ROUND);
         for (int i = 0; i < nbActions; i++) {
