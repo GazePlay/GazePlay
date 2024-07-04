@@ -13,11 +13,11 @@ import java.util.LinkedList;
 public class OddShapeStats extends ExplorationGamesStats {
     public OddShapeStats(Scene scene) {
         super(scene);
-        this.gameName = "oddshapes";
+        gameName = "oddshapes";
     }
 
     public OddShapeStats(Scene scene, int nbGoalsReached, int nbGoalsToReach, int nbUnCountedGoalsReached, ArrayList<LinkedList<FixationPoint>> fixationSequence, LifeCycle lifeCycle, RoundsDurationReport roundsDurationReport, SavedStatsInfo savedStatsInfo) {
         super(scene, nbGoalsReached, nbGoalsToReach, nbUnCountedGoalsReached, fixationSequence, lifeCycle, roundsDurationReport, savedStatsInfo);
-        this.gameName = "oddshapes";
+        gameName = "oddshapes";
     }
 }
