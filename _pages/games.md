@@ -426,3 +426,13 @@ Play the famous board game Simon! <br>
 Play a car game where the goal is to dodge other cars and obstacles!
 
 {% include figure image_path="/assets/images/games/gazeRace.png" alt="Image of the game GazeRace." %}
+
+## Defend the castle
+Push back the enemies that are trying to attack your castle with defense turrets.
+
+{% include figure image_path="/assets/images/games/towerdefense.png" alt="Picture of TowerDefense" %}
+
+## ColorBlend
+Blend the colors together to create new ones !
+
+{% include figure image_path="/assets/images/games/colorblend.png" alt="Picture of ColorBlend." %}
