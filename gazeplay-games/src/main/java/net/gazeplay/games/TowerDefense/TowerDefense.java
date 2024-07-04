@@ -42,6 +42,11 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+/**
+ * Try to defend your castle from the enemies coming from the opposite
+ * @author HugolinBouhineau, Yaniissou
+ *
+ */
 public class TowerDefense implements GameLifeCycle {
 
     // GAZEPLAY
@@ -112,6 +117,7 @@ public class TowerDefense implements GameLifeCycle {
         enemies = new ArrayList<>();
         towers = new ArrayList<>();
         projectiles = new ArrayList<>();
+        //TODO: Don't use objects to choose between maps, reading a file should be better
         switch (this.gameVariant){
             case MAP_ONE:
                 this.map = new MapOne();
@@ -129,7 +135,7 @@ public class TowerDefense implements GameLifeCycle {
 
         this.dimensions = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
-        // The message queue
+        // The message queue (allows to display messages for the user)
         messages = new VBox();
         messages.setAlignment(Pos.CENTER);
         messages.setPadding(new Insets(120));
@@ -169,6 +175,7 @@ public class TowerDefense implements GameLifeCycle {
         lastBlizzardInstant = Instant.MIN;
 
         gameContext.getChildren().add(canvas);
+        //Add the message queue to the childrens
         gameContext.getChildren().add(messages);
 
         // TOPBAR
@@ -435,10 +442,12 @@ public class TowerDefense implements GameLifeCycle {
             gameContext.getChildren().add(image);
 
             towers.add(tower);
+            //fire a sound when a tower is created
             gameContext.getSoundManager().add(tower.getSoundsConstruction());
         }
         else {
             //Missing money
+            //Let the user know why the tower won't create
             showMessage(Color.RED,"Pas assez d'argent");
         }
     }
