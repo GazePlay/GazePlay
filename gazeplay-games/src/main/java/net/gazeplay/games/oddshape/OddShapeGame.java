@@ -1,11 +1,18 @@
 package net.gazeplay.games.oddshape;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.event.EventHandler;
+import javafx.event.Event;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Polygon;
@@ -16,6 +23,7 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
 import java.awt.*;
@@ -26,36 +34,33 @@ import java.util.Random;
 public class OddShapeGame implements GameLifeCycle {
 
 
-    //liste faite avec le contenu de l'enum
+    //List of available shapes, built from the OddShapes Enum
     private ArrayList<OddShapes> validShapes = OddShapes.getAllShapes();
 
-    //les formes
+    //Attributes related to the shapes
     private OddShapes baseShape;
     private ArrayList<Shape> badShapes;
     private Shape goodShape;
     private ArrayList<Shape> hiddenShapes;
 
-    //les couleurs
+    //List of available colors
     private ArrayList<Color> validColors = new ArrayList<>();
 
-    //le nécessaire
+    //Attributes necessary for the game to function
     private final IGameContext gameContext;
     private final Stats stats;
     private final OddShapeVariant gameVariant;
 
-    //eye-tracker
-    private final ProgressIndicator progressIndicator;
+    //Attributes related to the eye-tracker
+    private ProgressIndicator progressIndicator;
     private Timeline progressTimeline;
 
-    //pour dessiner
+    //Attributes related to the scene
     private final Pane root;
-    private final HBox hBox = new HBox();
-
     private double width = Screen.getPrimary().getVisualBounds().getWidth();
     private double height = Screen.getPrimary().getVisualBounds().getHeight();
 
-    //constructeur du jeu
-    //rien à rajouter, c'est tout ce qu'il te faut
+    //Game constructor
     public OddShapeGame(final IGameContext gameContext, final Stats stats, OddShapeVariant gameVariant) {
         this.gameContext = gameContext;
         this.stats = stats;
@@ -66,44 +71,153 @@ public class OddShapeGame implements GameLifeCycle {
         progressIndicator.setOpacity(0);
         progressIndicator.setMouseTransparent(true);
 
-        this.gameContext.getGazeDeviceManager().addStats(stats);
     }
 
 
-
-    //méthode pour démarrer le jeu
+    /**
+     * launch()
+     *
+     * Starts a new game.
+     */
     @Override
     public void launch() {
 
-        //afficher background
+        //Adds progressIndicator to the scene
+        root.getChildren().add(progressIndicator);
+        //Shows background
         createBackground();
-        //initialiser les couleurs
+        //Initialises the available colors
         initialiseColors();
-        //sélectionner une forme
+        //Selects a shape
         baseShape = selectShape();
-        //puis faire le groupe de bonnes formes
+        //Creates "bad" shapes group
         badShapes = createShapeGroup(createShape(baseShape));
-        //et génerer la mauvaise
+        //Creates "good" shape
         goodShape = createGoodShape();
+        //Shows all shapes on screen
         drawShapes();
+
+        //Eye-tracker integration
+        stats.notifyNewRoundReady();
+        //Stats integration
+        gameContext.getGazeDeviceManager().addStats(stats);
 
 
     }
 
-    //méthode pour tout nettoyer
+    /**
+     * dispose()
+     *
+     * Cleans up the scene.
+     */
     @Override
     public void dispose() {
-        //on réinitialise les formes possibles
+        //Resets the pool of shapes
         validShapes = OddShapes.getAllShapes();
-        //et on enlève tout le monde
+        //Removes all elements from screen
         root.getChildren().removeAll();
 
     }
 
     //-----------------------------------------------------------------
 
+    /**
+     * buildEvent()
+     * @param shape
+     * @return
+     *
+     * Manages the selection of an item when the mouse or the gaze of the user hovers it.
+     */
+    private EventHandler<Event> buildEvent(final Shape shape) {
+        return e -> {
+            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                progressTimeline = new Timeline();
+                progressTimeline.getKeyFrames().add(new KeyFrame(new Duration(gameContext.getConfiguration().getFixationLength()),
+                    new KeyValue(progressIndicator.progressProperty(), 1)));
 
-    //si on gagne ça joue l'animation et on peut rejouer
+                progressTimeline.setOnFinished(actionEvent -> checkShape(shape));
+
+                progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+                progressIndicator.setOpacity(1);
+                progressIndicator.setProgress(0);
+
+                progressTimeline.play();
+            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                progressTimeline.stop();
+                progressIndicator.setOpacity(0);
+                progressIndicator.setProgress(0);
+            }
+        };
+    }
+
+    /**
+     * createProgressIndicator()
+     * @param shape
+     * @return
+     *
+     * Creates a ProgressIndicator object, based on a shape.
+     */
+    private ProgressIndicator createProgressIndicator(final Shape shape) {
+        final ProgressIndicator progressIndicator = new ProgressIndicator(0);
+
+        progressIndicator.setMinWidth(shape.getLayoutBounds().getWidth());
+        progressIndicator.setMinHeight(shape.getLayoutBounds().getHeight());
+        progressIndicator.setOpacity(0);
+
+        return progressIndicator;
+    }
+
+    //-----------------------------------------------------------------
+
+    /**!
+     * checkShape()
+     * @param shape
+     *
+     * Checks if the clicked shape is considered "good" or "bad".
+     * If it's a win, all shapes are disabled, so they cannot be clicked during the animation.
+     */
+    private void checkShape(Shape shape){
+        if(shape == goodShape){
+            for(Shape shapes: badShapes){
+                shapes.setOnMouseClicked(null);
+            }
+            win();
+        } else {
+            onError(shape);
+        }
+    }
+
+    /**
+     * onError()
+     * @param shape
+     *
+     * Generates an error picture when a "bad" shape is clicked.
+     */
+
+    private void onError(Shape shape){
+        //Error picture
+        final Image image = new Image("data/common/images/error.png");
+        ImageView imageCroix = new ImageView(image);
+        //Reduces its size
+        imageCroix.setFitHeight(100);
+        imageCroix.setFitWidth(100);
+        //Adds it to the scene
+        root.getChildren().add(imageCroix);
+        //Figures out where the center of the shape is
+        double centreX = shape.getLayoutX() + shape.getLayoutBounds().getWidth() / 2;
+        double centreY = shape.getLayoutY() + shape.getLayoutBounds().getHeight() / 2;
+        //And attaches the picture to it
+        imageCroix.setX(centreX - imageCroix.getFitWidth() / 2);
+        imageCroix.setY(centreY - imageCroix.getFitHeight() / 2);
+        imageCroix.setVisible(true);
+    }
+
+    /**
+     * win()
+     *
+     * Plays the win animation and generates the next game.
+     */
+
     private void win(){
         gameContext.playWinTransition(500, actionEvent -> {
 
@@ -117,12 +231,15 @@ public class OddShapeGame implements GameLifeCycle {
         });
     }
 
-    //-----------------------------------------------------------------
-   //recréer les couleurs après chaque partie
+    /**
+     * initialiseColors()
+     *
+     * Resets the pool of available colors.
+     */
     private void initialiseColors(){
-        //vider les couleurs
+        //Empties all colors left
         validColors.clear();
-        //et tout remettre
+        //And puts a new set back
         validColors.add(Color.CRIMSON);
         validColors.add(Color.LIGHTSKYBLUE);
         validColors.add(Color.LIMEGREEN);
@@ -133,33 +250,46 @@ public class OddShapeGame implements GameLifeCycle {
     }
     //-----------------------------------------------------------------
 
-    //dessiner les formes
+    /**
+     * drawShapes()
+     *
+     * Shows all shapes on screen and manages their appearance as well as their behaviour.
+     * Also where events are applied.
+     */
     private void drawShapes() {
         Random rand = new Random();
 
-        //on dessine les bonnes formes
+        //Generating the "bad" shapes
         for(Shape shapes : badShapes){
-            //couleur
             shapes.setStroke(Color.BLACK);
             shapes.setStrokeWidth(20);
-            //emplacement sur l'écran
-            shapes.setLayoutX(rand.nextInt((int) width-100));
-            shapes.setLayoutY(rand.nextInt((int) height-100));
+            //Their location on screen
+            shapes.setLayoutX(rand.nextInt((int) width-150));
+            shapes.setLayoutY(rand.nextInt((int) height-150));
 
-            //quand on clique sur ces formes la c'est pas bon
-            //! event pour les mauvaises shapes
-            shapes.setOnMouseClicked(mouseEvent -> win());
+            //When the shape is clicked with the mouse
+            shapes.setOnMouseClicked(mouseEvent -> checkShape(shapes));
+            //Eye-tracker integration
+            this.progressIndicator = createProgressIndicator(shapes);
+            shapes.addEventFilter(MouseEvent.ANY, buildEvent(shapes));
+            shapes.addEventFilter(GazeEvent.ANY, buildEvent(shapes));
+
 
             root.getChildren().add(shapes);
         }
-        //et la mauvaise
+        //Generating the "good" shape
         goodShape.setStroke(Color.BLACK);
         goodShape.setStrokeWidth(20);
-        goodShape.setLayoutX(rand.nextInt( (int) width-100));
-        goodShape.setLayoutY(rand.nextInt( (int) height-100));
+        //Their location on screen
+        goodShape.setLayoutX(rand.nextInt( (int) width-150));
+        goodShape.setLayoutY(rand.nextInt( (int) height-150));
 
-        //! event pour la bonne shape
-        goodShape.setOnMouseClicked(mouseEvent -> win());
+        //When the shape is clicked with the mouse
+        goodShape.setOnMouseClicked(mouseEvent -> checkShape(goodShape));
+        //Eye-tracker integration
+        this.progressIndicator = createProgressIndicator(goodShape);
+        goodShape.addEventFilter(MouseEvent.ANY,buildEvent(goodShape));
+        goodShape.addEventFilter(GazeEvent.ANY,buildEvent(goodShape));
 
         root.getChildren().add(goodShape);
     }
@@ -177,31 +307,49 @@ public class OddShapeGame implements GameLifeCycle {
 
     //-----------------------------------------------------------------
 
-    //prendre une shape au hasard dans la liste
+    /**
+     * selectShape()
+     * @return
+     *
+     * Selects a OddShape randomly from a list.
+     * Removes that value afterwards, so it is not picked again.
+     */
     private OddShapes selectShape() {
         OddShapes selectedShape = validShapes.get(new Random().nextInt(validShapes.size()));
-        //et l'enlever
         validShapes.remove(selectedShape);
 
         return selectedShape;
     }
 
-    //la même pour les couleurs
+    /**
+     * selectColor()
+     *
+     * Selects a color randomly from a list.
+     * Whether the color is removed or not afterwards depends on the chosen variant.
+     */
+
     private Color selectColor(){
         Color selectedColor;
-        if(this.gameVariant == OddShapeVariant.NORMAL) { //si on joue en difficulté "normal"
+        //"Normal" variant
+        if(this.gameVariant == OddShapeVariant.NORMAL) {
             selectedColor = validColors.get(new Random().nextInt(validShapes.size())); //on rend le jeu un peu plus simple en ne pouvant pas avoir de formes bonnes et mauvaises de la même couleur
             validColors.remove(selectedColor);
             return selectedColor;
-        } else { // si le jeu est un peu plus dur, alors on laisse les formes avoir la même couleur
+        //"Harder" variant
+        } else {
             selectedColor = validColors.get(new Random().nextInt(validShapes.size()));
         }
         return selectedColor;
     }
 
 
-    //créer une forme en fonction de l'enum utilisé
-    //dans le cas du jeu, ça sera avec la selectedShape
+    /**
+     * createShape()
+     * @param shape
+     * @return
+     *
+     * Creates a Shape object based on the OddShape selected with selectShape().
+     */
     private Shape createShape(OddShapes shape) {
         switch(shape) {
             case CIRCLE -> {
@@ -225,10 +373,17 @@ public class OddShapeGame implements GameLifeCycle {
         }
     }
 
-    //pour créer les groupes de "bonnes" shapes
-    //on se base sur la SHAPE SELECTIONNEE puis on crée
+    /**
+     * createShapeGroup()
+     * @param baseShape
+     * @return
+     *
+     * Creates a group of Shape objects based on a Shape.
+     * It is duplicated using duplicateShape() then put in a list.
+     * These are considered the "bad" shapes.
+     */
     private ArrayList<Shape> createShapeGroup(Shape baseShape){
-        //on en ajoute 9, la 10ème sera la mauvaise
+        //9 are added, the 10th will be the good shape
         ArrayList<Shape> shapeList = new ArrayList<>();
         Color selectedColor = selectColor();
         for(int i = 0; i <= 9; i++){
@@ -239,23 +394,31 @@ public class OddShapeGame implements GameLifeCycle {
     }
 
 
-    //pour créer la "mauvaise" shape
-    //on se base sur la LISTE qui normalement n'a pas la shape sélectionnée
-    //pour bien faire un intrus qui n'en fait pas partie
+    /**
+     * createGoodShape()
+     * @return
+     *
+     * Creates the "good" shape based on the validShapes and validColors() lists.
+     */
     private Shape createGoodShape(){
-        //on fait ça après avoir enlevé la shape des validshapes, du coup on ne peut pas tomber sur la même
+        //Can't fall on the same shape as the "bad" ones
         OddShapes randomShape = validShapes.get(new Random().nextInt(validShapes.size()-1));
-        //on sélectionne une couleur au hasard
+        //A random color is taken...
         Color randomColor = selectColor();
-        //on crée la forme
+        //...and the shape is created.
         Shape finalShape = createShape(randomShape);
-        //et on la colore avant de la donner
+        //Filling it with the chosen color
         finalShape.setFill(randomColor);
         return finalShape;
     }
-    
-    //cloner les shapes
-    //pour chaque type possible
+
+    /**
+     * duplicateShape()
+     * @param shape
+     * @return
+     *
+     * Creates a clone of a shape, depending on its type.
+     */
     private Shape duplicateShape(Shape shape) {
         if (shape instanceof Circle) {
             Circle og = (Circle) shape;
