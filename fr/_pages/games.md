@@ -428,3 +428,13 @@ Jouez au célèbre jeu de société Simon ! <br>
 Jouez à un jeu de voiture où le but est d'esquiver les autres voitures et obstacles !
 
 {% include figure image_path="/assets/images/games/gazeRace.png" alt="Image du jeu GazeRace." %}
+
+## Défendre le château
+Repoussez les différents ennemis qui attaquent votre château à l'aide de tourelles de défense.
+
+{% include figure image_path="/assets/images/games/towerdefense.png" alt="Image du jeu TowerDefense." %}
+
+## ColorBlend
+Mélangez des couleurs ensemble pour pouvoir en former de nouvelles !
+
+{% include figure image_path="/assets/images/games/colorblend.png" alt="Image du jeu ColorBlend." %}
