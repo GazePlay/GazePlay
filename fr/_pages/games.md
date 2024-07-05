@@ -235,7 +235,7 @@ Détruisez-les tous avec votre regard et cumulez le score le plus élevé.
 
 ## Jeu Spatial
 
-Tirer sur les biboules aliénés avec les lasers de votre vaisseau spatial et incrémentez votre score. <br>
+Tirer sur les aliens avec les lasers de votre vaisseau spatial et incrémentez votre score. <br>
 Faites attention à ne pas être touché de leurs lasers rouges !
 
 {% include figure image_path="/assets/images/games/space.png" alt="Image du Jeu spatial." %}
@@ -428,6 +428,13 @@ Jouez au célèbre jeu de société Simon ! <br>
 Jouez à un jeu de voiture où le but est d'esquiver les autres voitures et obstacles !
 
 {% include figure image_path="/assets/images/games/gazeRace.png" alt="Image du jeu GazeRace." %}
+
+## Trouver la forme différente
+Trouvez la forme qui ne ressemble pas aux autres! <br>
+Vous pouvez jouer en mode normal, où la forme différente sera forcément distincte des autres — ou le mode plus difficile,
+où la forme à trouver peut être de la même couleur que ses voisines.
+
+{% include figure image_path="/assets/images/games/oddShape.png" alt="Image du jeu OddShape." %}
 
 ## Défendre le château
 Repoussez les différents ennemis qui attaquent votre château à l'aide de tourelles de défense.

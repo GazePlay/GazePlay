@@ -427,6 +427,13 @@ Play a car game where the goal is to dodge other cars and obstacles!
 
 {% include figure image_path="/assets/images/games/gazeRace.png" alt="Image of the game GazeRace." %}
 
+## Find the odd shape
+Find the shape that doesn't look like the others!
+You can play on normal difficulty, where the shape to find will be very different from the others: or the more difficult
+variant, where the shape can be the same color as the "wrong" ones.
+
+{% include figure image_path="/assets/images/games/oddShape.png" alt="Image du jeu OddShape." %}
+
 ## Defend the castle
 Push back the enemies that are trying to attack your castle with defense turrets.
 
