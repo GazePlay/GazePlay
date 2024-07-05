@@ -433,3 +433,13 @@ You can play on normal difficulty, where the shape to find will be very differen
 variant, where the shape can be the same color as the "wrong" ones.
 
 {% include figure image_path="/assets/images/games/oddShape.png" alt="Image du jeu OddShape." %}
+
+## Defend the castle
+Push back the enemies that are trying to attack your castle with defense turrets.
+
+{% include figure image_path="/assets/images/games/towerdefense.png" alt="Picture of TowerDefense" %}
+
+## ColorBlend
+Blend the colors together to create new ones !
+
+{% include figure image_path="/assets/images/games/colorblend.png" alt="Picture of ColorBlend." %}
