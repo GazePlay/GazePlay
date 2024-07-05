@@ -40,7 +40,15 @@ public abstract class Map {
             }
         }
     }
-    // Look at the static variables above to understand a map
+
+    /**
+     * Define the structure of the map itself:
+     * 0: GRASS
+     * 1: ROAD
+     * 2: TOWER SPOT
+     * 8: START
+     * 9: END (The Castle)
+     */
     public abstract void setStructure();
 
     public ArrayList<Point2D> getTurretsTiles() {
