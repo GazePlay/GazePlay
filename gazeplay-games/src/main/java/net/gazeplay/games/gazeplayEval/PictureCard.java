@@ -152,7 +152,7 @@ class PictureCard extends Group {
         this.imageRectangle.setVisible(value);
     }
 
-    public void setNotifImageRectangle(boolean value) { this.notifImageRectangle.setVisible(value); }
+    public void setNotifImageRectangle(boolean value) { }
 
     public void resetMovedCursorOrGaze(){ customInputEventHandlerMouse.moved = false; }
 
@@ -164,15 +164,6 @@ class PictureCard extends Group {
     }
 
     public void checkedImage(){
-        Configuration config = ActiveConfigurationContext.getInstance();
-
-        if (Objects.equals(config.getFeedback(), "nothing")){
-            notifImageRectangle.setOpacity(0);
-            notifImageRectangle.setVisible(false);
-        }else {
-            notifImageRectangle.setOpacity(1);
-            notifImageRectangle.setVisible(true);
-        }
     }
 
     public void removeEventHandler(){
@@ -274,61 +265,29 @@ class PictureCard extends Group {
     }
 
     private Rectangle createNotifImageRectangle() {
+        final Image image = new Image("data/common/images/redFrame.png");
 
-        Configuration config = ActiveConfigurationContext.getInstance();
+        ImageView result = new ImageView(image);
 
-        if (Objects.equals(config.getFeedback(), "standard")){
-            final Image image = new Image("data/common/images/blackCircle.png");
+        result.setFitWidth(this.initialWidth);
+        result.setFitHeight(this.initialHeight);
 
-            double imageWidth = image.getWidth();
-            double imageHeight = image.getHeight();
-            double imageHeightToWidthRatio = imageHeight / imageWidth;
+        double ratioX = result.getFitWidth() / image.getWidth();
+        double ratioY = result.getFitHeight() / image.getHeight();
 
-            double rectangleWidth = imageRectangle.getFitWidth() / 40;
-            double rectangleHeight = imageHeightToWidthRatio * rectangleWidth;
+        double reducCoeff = Math.min(ratioX, ratioY);
 
-            double positionX = 0;
-            double positionY = 0;
-            if (config.isColumnarImagesEnabled()){
-                positionX = imageRectangle.getX() + 5;
-                positionY = imageRectangle.getY() + 15;
-            }else {
-                positionX = imageRectangle.getX() + 5;
-                positionY = imageRectangle.getY() + 35;
-            }
+        double w = image.getWidth() * reducCoeff;
+        double h = image.getHeight() * reducCoeff;
 
-            Rectangle notifImageRectangle = new Rectangle(rectangleWidth, rectangleHeight);
-            notifImageRectangle.setFill(new ImagePattern(image));
-            notifImageRectangle.setX(positionX);
-            notifImageRectangle.setY(positionY);
-            notifImageRectangle.setOpacity(0);
-            notifImageRectangle.setVisible(false);
-            return notifImageRectangle;
-        }else {
-            final Image image = new Image("data/common/images/redFrame.png");
+        double posY = (result.getFitHeight() - h) / 2;
 
-            ImageView result = new ImageView(image);
-
-            result.setFitWidth(this.initialWidth);
-            result.setFitHeight(this.initialHeight);
-
-            double ratioX = result.getFitWidth() / image.getWidth();
-            double ratioY = result.getFitHeight() / image.getHeight();
-
-            double reducCoeff = Math.min(ratioX, ratioY);
-
-            double w = image.getWidth() * reducCoeff;
-            double h = image.getHeight() * reducCoeff;
-
-            double posY = (result.getFitHeight() - h) / 2;
-
-            Rectangle notifImageRectangle = new Rectangle(w, h);
-            notifImageRectangle.setFill(new ImagePattern(image));
-            notifImageRectangle.setX(this.initialPositionX);
-            notifImageRectangle.setY(posY);
-            notifImageRectangle.setVisible(false);
-            return notifImageRectangle;
-        }
+        Rectangle notifImageRectangle = new Rectangle(w, h);
+        notifImageRectangle.setFill(new ImagePattern(image));
+        notifImageRectangle.setX(this.initialPositionX);
+        notifImageRectangle.setY(posY);
+        notifImageRectangle.setVisible(true);
+        return notifImageRectangle;
     }
 
     private ProgressIndicator buildProgressIndicator(double parentWidth, double parentHeight) {
@@ -406,7 +365,7 @@ class PictureCard extends Group {
             if (!this.moved){
 
                 this.moved = true;
-                log.info("ENTERED {}", imageName);
+                log.info("ENTERED while moved {}", imageName);
 
                 progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
                 progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());

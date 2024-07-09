@@ -1,7 +1,6 @@
 package net.gazeplay.components;
 
-import javafx.animation.Transition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 public class GamesRules {
 
     private Text questionText;
+    public Boolean enableEyeTracker = false;
 
     public GamesRules(){}
 
@@ -40,9 +40,18 @@ public class GamesRules {
         final TranslateTransition fullAnimation = new TranslateTransition(
             Duration.millis(gameContext.getConfiguration().getQuestionLength() / 2.0), questionText);
 
+        fullAnimation.setCycleCount(Animation.INDEFINITE);
         fullAnimation.setDelay(Duration.millis(gameContext.getConfiguration().getQuestionLength()));
 
         return fullAnimation;
+    }
+
+    public void startGaze(){
+        final Timeline startGazeTimeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
+            this.enableEyeTracker = true;
+        }));
+        startGazeTimeline.setCycleCount(1);
+        startGazeTimeline.playFromStart();
     }
 
     public Transition createQuestionTransitionAOI(final IGameContext gameContext, final String question, final ArrayList<TargetAOI> targetAOIList) {

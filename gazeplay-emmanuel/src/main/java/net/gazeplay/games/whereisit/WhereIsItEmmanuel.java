@@ -2,9 +2,12 @@ package net.gazeplay.games.whereisit;
 
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
@@ -16,6 +19,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.difficulty.SourceSet;
@@ -70,6 +74,9 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
     public boolean startGaze = false;
     public String questionTextGame = "";
     public SaveData saveData;
+    public Transition animationRules;
+    public CustomInputEventHandlerKeyboard customInputEventHandlerKeyboard = new CustomInputEventHandlerKeyboard();
+    public String eyeTracker;
 
     public WhereIsItEmmanuel(final WhereIsItEmmanuelGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
                              final IGameContext gameContext, final Stats stats) {
@@ -86,8 +93,9 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
         this.gamesRules = new GamesRules();
         this.stats.setGameSeed(randomGenerator.getSeed());
         this.saveData = new SaveData(this.stats, gameType.getVariant());
+        this.eyeTracker = ActiveConfigurationContext.getInstance().getEyeTracker();
 
-        this.gameContext.startTimeLimiterEmmanuel(this.saveData);
+        this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
     }
 
     public WhereIsItEmmanuel(final WhereIsItEmmanuelGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
@@ -104,76 +112,46 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
         this.gamesRules = new GamesRules();
         this.saveData = new SaveData(this.stats, gameType.getVariant());
+        this.eyeTracker = ActiveConfigurationContext.getInstance().getEyeTracker();
 
-        this.gameContext.startTimeLimiterEmmanuel(this.saveData);
+        this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
     }
 
     @Override
     public void launch() {
         if (!this.startGame) {
             this.startGame = true;
-            String rule = "Trouver le drapeau du pays cité";
-            final Transition animationRules = this.gamesRules.createQuestionTransition(gameContext, rule);
-            animationRules.play();
-            animationRules.setOnFinished(event -> {
-                this.gamesRules.hideQuestionText();
-                final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
-                log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
+            String rule = "";
+            switch (this.gameType.getVariant()){
+                case "Europe":
+                    rule = "Dans DRAPEAU, vous devez trouver le drapeau du pays dont le nom s’affiche. \n" +
+                        "Quand votre regard passe sur un drapeau, un chronomètre jaune s’affiche. \n" +
+                        "Quand ce chronomètre est complet, la réponse s’affiche : \n" +
+                        "si votre réponse est juste, le jeu propose un nouveau pays à identifier ; \n" +
+                        "si la réponse est fausse une croix rouge apparaît et vous pouvez sélectionner un autre drapeau. \n" +
+                        "Dans le niveau 1, il s’agit uniquement de drapeaux de l’Europe et vous devez en identifier un parmi quatre. \n" +
+                        "Il est possible que le jeu demande plusieurs fois le même pays. \n" +
+                        "Attention, si vous clignez des yeux lorsque le chronomètre tourne, il est automatiquement remis à zéro.";
+                    break;
+                case "EuropeAmerica":
+                    rule = "Dans le niveau 2, vous trouverez cette fois des drapeaux d’Europe et d’Asie. \n" +
+                        "Vous devrez trouver le bon drapeau parmi six.";
+                    break;
 
-                final int winnerImageIndexAmongDisplayedImages = randomGenerator.nextInt(numberOfImagesToDisplayPerRound);
-                log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
+                case "AllFlags":
+                    rule = "Dans le niveau 3, vous trouverez des drapeaux du monde entier. \n" +
+                        "Vous devrez trouver le bon drapeau parmi neuf.";
+                    break;
 
-                if (stats.nbGoalsReached > 0 && stats.nbGoalsReached % 8 == 0) {
-                    stats.getChiReport().addChiObs(chi2Obs(rightDecision, wrongDecision));
-                    stats.getChiReport().addChiLevel(level);
-                    boolean randomness = chi2decision(rightDecision, wrongDecision);
-                    lvlReplays++;
+                default:
+                    break;
+            }
 
-                    if (randomness && rightDecision > wrongDecision) {
-                        if (level < 5) {
-                            level++;
-                        }
-                        rightDecision = 0;
-                        wrongDecision = 0;
-                        lvlReplays = 1;
-                    }
-                    if (!randomness && level > 1) {
-                        level--;
-                        rightDecision = 0;
-                        wrongDecision = 0;
-                        lvlReplays = 1;
-                    }
-                }
-
-                currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, randomGenerator,
-                    winnerImageIndexAmongDisplayedImages);
-
-                if (Objects.equals(this.questionTextGame, "")){
-                    this.questionTextGame = currentRoundDetails.getQuestion();
-                }else if (Objects.equals(this.questionTextGame, currentRoundDetails.getQuestion())){
-                    this.dispose();
-                    gameContext.clear();
-                    this.launch();
-                }
-
-                if (currentRoundDetails != null) {
-                    final Transition animation = createQuestionTransition(currentRoundDetails.getQuestion(), currentRoundDetails.getPictos());
-                    animation.play();
-                    if (currentRoundDetails.getQuestionSoundPath() != null) {
-                        playQuestionSound();
-                    }
-                }
-
-                stats.notifyNewRoundReady();
-                gameContext.getGazeDeviceManager().addStats(stats);
-                gameContext.firstStart();
-
-                if (gameType.toString().contains("SOUNDS")) {
-                    final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
-                    backgroundMusicManager.pause();
-                }
-            });
+            this.animationRules = this.gamesRules.createQuestionTransition(gameContext, rule);
+            this.animationRules.play();
         }else {
+            this.gamesRules.enableEyeTracker = false;
+
             final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
             log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
 
@@ -229,6 +207,9 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
                 final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
                 backgroundMusicManager.pause();
             }
+
+            this.gamesRules.startGaze();
+            this.gameContext.startTimeLimiterEmmanuel(this.saveData);
         }
     }
 
@@ -302,7 +283,7 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
         fullAnimation.setDelay(Duration.millis(gameContext.getConfiguration().getQuestionLength()));
 
         final double bottomCenter = (0.9 * gamePaneDimension2D.getHeight()) - questionText.getY()
-            + questionText.getBoundsInParent().getHeight() * 3;
+            + questionText.getBoundsInParent().getHeight() * 3 + 20;
         fullAnimation.setToY(bottomCenter);
 
         fullAnimation.setOnFinished(actionEvent -> {
@@ -463,7 +444,7 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
 
             final PictureCardEmmanuel pictureCard = new PictureCardEmmanuel(gameSizing.width * posX + gameSizing.shift,
                 gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
+                winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this, gamesRules);
 
             pictureCardList.add(pictureCard);
 
@@ -613,5 +594,19 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
         int index = lvlReplays > 4 ? lvlReplays - 1 : 3;
 
         return chi2Theoretic.get(index) <= chi2Obs;
+    }
+
+    private class CustomInputEventHandlerKeyboard implements EventHandler<KeyEvent> {
+
+        private boolean acceptInput = true;
+        @Override
+        public void handle(KeyEvent key) {
+            if (key.getCode().equals(KeyCode.ENTER) && acceptInput) {
+                acceptInput = false;
+                animationRules.stop();
+                gamesRules.hideQuestionText();
+                launch();
+            }
+        }
     }
 }

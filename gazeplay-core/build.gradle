@@ -124,19 +124,6 @@ task generatedEmmanuelCatalog {
     doLast {
         def sourceSet = project(':gazeplay-emmanuel').sourceSets.findByName('main').java
 
-        def rushHour = sourceSet
-                .filter { it.path.endsWith('.java') }
-                .filter { it.path.contains('RushHour') }
-                .filter { it.path.contains('SpecSource') }
-                .collect {
-                    it.path
-                            .substring(sourceSet.srcDirs[0].path.length() + 1)
-                            .replace('/', '.')
-                            .replace('\\', '.')
-                            .replace('.java', '')
-                }
-                .unique()
-
         def follow = sourceSet
                 .filter { it.path.endsWith('.java') }
                 .filter { it.path.contains('Follow') }
@@ -168,7 +155,6 @@ task generatedEmmanuelCatalog {
             file.delete()
         }
 
-        rushHour.each { file.append(it + '\n') }
         follow.each { file.append(it + '\n') }
         flag.each { file.append(it + '\n') }
     }

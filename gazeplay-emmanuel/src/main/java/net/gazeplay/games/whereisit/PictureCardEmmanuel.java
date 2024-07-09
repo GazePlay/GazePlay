@@ -10,6 +10,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -18,9 +19,11 @@ import lombok.NonNull;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.components.GamesRules;
 
 @Slf4j
 @ToString
@@ -52,8 +55,11 @@ class PictureCardEmmanuel extends Group {
 
     private final WhereIsItEmmanuel gameInstance;
 
+    public GamesRules gamesRules;
+    private Rectangle notifImage;
+
     PictureCardEmmanuel(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
-                boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsItEmmanuel gameInstance) {
+                        boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsItEmmanuel gameInstance, GamesRules gamesRules) {
 
         log.info("imagePath = {}", imagePath);
 
@@ -69,21 +75,18 @@ class PictureCardEmmanuel extends Group {
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameInstance = gameInstance;
-
+        this.gamesRules = gamesRules;
         this.imagePath = imagePath;
 
-        if (gameInstance.getGameType().toString().contains("COLORS")) {
-            this.imageRectangle = createStretchedImageView(posX, posY, width, height, imagePath);
-        } else {
-            this.imageRectangle = createImageView(posX, posY, width, height, imagePath);
-        }
+        this.imageRectangle = createImageView(posX, posY, width, height, imagePath);
         this.progressIndicator = buildProgressIndicator(width, height);
-
         this.errorImageRectangle = createErrorImageRectangle();
+        this.notifImage = createNotifImage();
 
         this.getChildren().add(imageRectangle);
         this.getChildren().add(progressIndicator);
         this.getChildren().add(errorImageRectangle);
+        this.getChildren().add(notifImage);
 
         customInputEventHandler = new CustomInputEventHandler();
 
@@ -271,6 +274,24 @@ class PictureCardEmmanuel extends Group {
         return errorImageRectangle;
     }
 
+    private Rectangle createNotifImage() {
+
+        double rectangleWidth = imageRectangle.getFitWidth();
+        double rectangleHeight = imageRectangle.getFitHeight();
+
+        double positionX = imageRectangle.getX() + (imageRectangle.getFitWidth() - rectangleWidth) / 2;
+        double positionY = imageRectangle.getY() + (imageRectangle.getFitHeight() - rectangleHeight) / 2;
+
+        Rectangle bordureRectangle = new Rectangle(rectangleWidth, rectangleHeight);
+        bordureRectangle.setFill(Color.TRANSPARENT);
+        bordureRectangle.setStroke(Color.BLACK);
+        bordureRectangle.setStrokeWidth(10);
+        bordureRectangle.setX(positionX);
+        bordureRectangle.setY(positionY);
+        bordureRectangle.setVisible(true);
+        return bordureRectangle;
+    }
+
     private ProgressIndicator buildProgressIndicator(double parentWidth, double parentHeight) {
         double minWidth = parentWidth / 2;
         double minHeight = parentHeight / 2;
@@ -295,11 +316,17 @@ class PictureCardEmmanuel extends Group {
          * do not want the game to continue to process input, as the user input is irrelevant while the animation is
          * in progress
          */
-        private boolean ignoreAnyInput = false;
+        public boolean ignoreAnyInput = false;
+        private boolean moved = false;
 
         @Override
         public void handle(Event e) {
+
             if (ignoreAnyInput) {
+                return;
+            }
+
+            if (!gamesRules.enableEyeTracker){
                 return;
             }
 
@@ -307,36 +334,63 @@ class PictureCardEmmanuel extends Group {
                 return;
             }
 
-            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                onEntered();
-            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-                onExited();
+            if (gameInstance.eyeTracker.equals("tobii")){
+                if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    onEntered();
+                } else if (e.getEventType() == GazeEvent.GAZE_MOVED){
+                    onEnteredOnceWhileMoved();
+                } else if (e.getEventType() == GazeEvent.GAZE_EXITED) {
+                    onExited();
+                }
+            }else {
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                    onEntered();
+                } else if (e.getEventType() == MouseEvent.MOUSE_MOVED){
+                    onEnteredOnceWhileMoved();
+                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED) {
+                    onExited();
+                }
             }
-
         }
 
         private void onEntered() {
-            if (gameInstance.startGaze){
-                log.info("ENTERED {}", imagePath);
+            this.moved = true;
+            log.info("ENTERED");
 
-                progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+            progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
+            progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+            progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
+            progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
+            progressIndicator.setProgress(0);
+            progressIndicator.setVisible(true);
+            progressIndicatorAnimationTimeLine.playFromStart();
+        }
+
+        private void onEnteredOnceWhileMoved(){
+            if (!this.moved){
+
+                this.moved = true;
+                log.info("ENTERED while moved");
+
                 progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
-
+                progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+                progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
+                progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
                 progressIndicator.setProgress(0);
                 progressIndicator.setVisible(true);
-
                 progressIndicatorAnimationTimeLine.playFromStart();
             }
         }
 
         private void onExited() {
-            log.info("EXITED {}", imagePath);
+            log.info("EXITED");
 
-            gameInstance.startGaze = true;
             progressIndicatorAnimationTimeLine.stop();
 
             progressIndicator.setVisible(false);
             progressIndicator.setProgress(0);
+
+            this.moved = false;
         }
 
     }
