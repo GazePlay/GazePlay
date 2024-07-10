@@ -265,7 +265,7 @@ class PictureCard extends Group {
             progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
             progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
             progressIndicator.setProgress(0);
-            progressIndicator.setVisible(true);
+            progressIndicator.setVisible(false);
             progressIndicatorAnimationTimeLine.playFromStart();
         }
 
@@ -280,7 +280,7 @@ class PictureCard extends Group {
                 progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
                 progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
                 progressIndicator.setProgress(0);
-                progressIndicator.setVisible(true);
+                progressIndicator.setVisible(false);
                 progressIndicatorAnimationTimeLine.playFromStart();
             }
         }

@@ -99,7 +99,7 @@ task generateEvalsCatalog {
 
         def gazeplayEval = sourceSet
                 .filter { it.path.endsWith('.java') }
-                .filter { it.path.contains('GazeplayEvalGame') }
+                .filter { it.path.contains('GazeplayEval') }
                 .filter { it.path.contains('SpecSource') }
                 .collect {
                     it.path

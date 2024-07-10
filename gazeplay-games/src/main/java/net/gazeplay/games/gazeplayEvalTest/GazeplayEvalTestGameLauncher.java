@@ -36,12 +36,12 @@ public class GazeplayEvalTestGameLauncher implements IGameLauncher<Stats, Gazepl
     @Override
     public GameLifeCycle createNewGame(IGameContext gameContext, GazeplayEvalGameVariant gameVariant,
                                        Stats stats) {
-        return new GazePlayEvalTest(gameContext, gameStats, gameContext.getTranslator());
+        return new GazePlayEvalTest(false, gameContext, gameVariant, stats);
     }
 
     @Override
     public GameLifeCycle replayGame(IGameContext gameContext, GazeplayEvalGameVariant gameVariant,
                                     Stats stats, double gameSeed) {
-        return new GazePlayEvalTest(gameContext, gameStats, gameContext.getTranslator());
+        return new GazePlayEvalTest(false, gameContext, gameVariant, stats);
     }
 }

@@ -1,4 +1,4 @@
-package net.gazeplay.games.gazeplayEval;
+package net.gazeplay.games.gazeplayEvalTest;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -19,6 +19,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gamevariants.GazeplayEvalGameVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
+import net.gazeplay.games.gazeplayEval.GazeplayEval;
 
 @Slf4j
 public class ScreenCard extends Group {
@@ -26,13 +27,13 @@ public class ScreenCard extends Group {
     private ImageView imageRectangle;
     private ProgressIndicator progressIndicator;
     private String type;
-    private GazeplayEval gameInstance;
+    private GazePlayEvalTest gameInstance;
     private final IGameContext gameContext;
     private Timeline progressIndicatorAnimationTimeLine;
     private CustomInputEventHandler customInputEventHandler;
 
     ScreenCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, @NonNull GazeplayEvalGameVariant gameVariant,
-               @NonNull String imageName, @NonNull Stats stats, GazeplayEval gameInstance, String type, Boolean firstPosition){
+               @NonNull String imageName, @NonNull Stats stats, GazePlayEvalTest gameInstance, String type, Boolean firstPosition){
 
         this.type = type;
         this.gameInstance = gameInstance;
@@ -111,7 +112,7 @@ public class ScreenCard extends Group {
         return result;
     }
 
-    private Timeline createProgressIndicatorTimeLine(GazeplayEval gameInstance) {
+    private Timeline createProgressIndicatorTimeLine(GazePlayEvalTest gameInstance) {
         Timeline result = new Timeline();
 
         result.getKeyFrames()
@@ -125,7 +126,7 @@ public class ScreenCard extends Group {
         return result;
     }
 
-    private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(GazeplayEval gameInstance) {
+    private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(GazePlayEvalTest gameInstance) {
         return actionEvent -> {
 
             imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandler);
@@ -182,7 +183,7 @@ public class ScreenCard extends Group {
             progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
             progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
             progressIndicator.setProgress(0);
-            progressIndicator.setVisible(false);
+            progressIndicator.setVisible(true);
             progressIndicatorAnimationTimeLine.playFromStart();
         }
 
@@ -196,7 +197,7 @@ public class ScreenCard extends Group {
                 progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
                 progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
                 progressIndicator.setProgress(0);
-                progressIndicator.setVisible(false);
+                progressIndicator.setVisible(true);
                 progressIndicatorAnimationTimeLine.playFromStart();
             }
         }

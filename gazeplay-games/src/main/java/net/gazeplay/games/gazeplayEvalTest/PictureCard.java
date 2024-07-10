@@ -21,22 +21,24 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import net.gazeplay.commons.gamevariants.GazeplayEvalGameVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.io.File;
 import java.util.Objects;
 
 @Slf4j
 @ToString
 @Getter
-public class PictureCard extends Group{
+class PictureCard extends Group {
 
     private final double minTime;
     private final IGameContext gameContext;
-    private final boolean winner;
+    private final GazeplayEvalGameVariant gameVariant;
 
     private final ImageView imageRectangle;
-    private final Rectangle notifImageRectangle;
 
     private double initialWidth;
     private double initialHeight;
@@ -45,20 +47,22 @@ public class PictureCard extends Group{
     private final double initialPositionY;
 
     private final Stats stats;
-    private final String imagePath;
-    private final PictureCard.CustomInputEventHandlerMouse customInputEventHandlerMouse;
+    private final String imageName;
+    private final CustomInputEventHandlerMouse customInputEventHandlerMouse;
     private final GazePlayEvalTest gameInstance;
     private ProgressIndicator progressIndicator;
     private Timeline progressIndicatorAnimationTimeLine;
     private boolean selected;
     private boolean alreadySee;
+    private double valueProgressIndicator = 2000;
+    private double valueTranslateX = 0;
+    private double valueTranslateY = 0;
+    private boolean firstPosition;
 
-    private int valueProgressIndicator = 500;
+    PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, @NonNull GazeplayEvalGameVariant gameVariant,
+                @NonNull String imageName, Double fixationLength, @NonNull Stats stats, GazePlayEvalTest gameInstance, Boolean firstPosition) {
 
-    PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
-                boolean winner, @NonNull String imagePath, @NonNull Stats stats, GazePlayEvalTest gameInstance) {
-
-        log.info("imagePath = {}", imagePath);
+        log.info("imagePath = {}", imageName);
 
         final Configuration config = gameContext.getConfiguration();
 
@@ -69,23 +73,22 @@ public class PictureCard extends Group{
         this.initialHeight = height;
         this.selected = false;
         this.alreadySee = false;
-        this.winner = winner;
         this.gameContext = gameContext;
+        this.gameVariant = gameVariant;
         this.stats = stats;
         this.gameInstance = gameInstance;
-        this.imagePath = imagePath;
+        this.imageName = imageName;
+        this.valueProgressIndicator = fixationLength;
+        this.firstPosition = firstPosition;
 
-        this.imageRectangle = createImageView(this.initialPositionX, this.initialPositionY, this.initialWidth, this.initialHeight, imagePath);
-
+        this.imageRectangle = createImageView(this.initialPositionX, this.initialPositionY, this.initialWidth, this.initialHeight, imageName);
         this.progressIndicator = buildProgressIndicator(this.initialWidth, this.initialHeight);
 
-        this.notifImageRectangle = createNotifImageRectangle();
 
         this.getChildren().add(imageRectangle);
         this.getChildren().add(progressIndicator);
-        this.getChildren().add(notifImageRectangle);
 
-        customInputEventHandlerMouse = new PictureCard.CustomInputEventHandlerMouse();
+        customInputEventHandlerMouse = new CustomInputEventHandlerMouse();
 
         gameContext.getGazeDeviceManager().addEventFilter(imageRectangle);
 
@@ -111,116 +114,28 @@ public class PictureCard extends Group{
     private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(GazePlayEvalTest gameInstance) {
         return actionEvent -> {
 
-            log.debug("FINISHED");
+            selected = true;
+            imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);
+            imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandlerMouse);
+            gameContext.getGazeDeviceManager().removeEventFilter(imageRectangle);
+            customInputEventHandlerMouse.ignoreAnyInput = true;
+            progressIndicator.setVisible(false);
 
-            if (this.alreadySee) {
-                selected = true;
-                this.setNotifImageRectangle(true);
-                imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);
-                imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandlerMouse);
-                gameContext.getGazeDeviceManager().removeEventFilter(imageRectangle);
-                if (winner) {
-                    onCorrectCardSelected();
-                } else {
-                    // bad card
-                    onWrongCardSelected();
-                }
-            } else {
-                this.checkedImage();
-                this.alreadySee = true;
-                customInputEventHandlerMouse.ignoreAnyInput = true;
-                this.newProgressIndicator();
-                gameInstance.checkAllPictureCardChecked();
+            this.onCardSelected();
+            if (gameInstance.checkAllPictureCardChecked()){
+                this.waitBeforeNextRound();
             }
         };
-    }
-
-    public void setVisibleProgressIndicator() {
-        customInputEventHandlerMouse.ignoreAnyInput = false;
-    }
-
-    public void hideProgressIndicator() {
-        customInputEventHandlerMouse.ignoreAnyInput = true;
-    }
-
-    public void setVisibleImagePicture(boolean value){
-        this.imageRectangle.setVisible(value);
-    }
-
-    public void setNotifImageRectangle(boolean value) { this.notifImageRectangle.setVisible(value); }
-
-    public void resetMovedCursorOrGaze(){ customInputEventHandlerMouse.moved = false; }
-
-    public void newProgressIndicator() {
-        this.getChildren().remove(progressIndicator);
-        this.valueProgressIndicator = 2000;
-        this.progressIndicator = buildProgressIndicator(initialWidth, initialHeight);
-        this.getChildren().add(progressIndicator);
-    }
-
-    public void checkedImage(){
-        Configuration config = ActiveConfigurationContext.getInstance();
-
-        if (Objects.equals(config.getFeedback(), "nothing")){
-            notifImageRectangle.setOpacity(0);
-            notifImageRectangle.setVisible(false);
-        }else {
-            notifImageRectangle.setOpacity(1);
-            notifImageRectangle.setVisible(true);
-        }
     }
 
     public void removeEventHandler(){
         customInputEventHandlerMouse.ignoreAnyInput = true;
     }
 
-    public void onCorrectCardSelected() {
-
-        if (gameInstance.indexFileImage == (gameInstance.indexEndGame - 1)) {
-            progressIndicator.setVisible(false);
-            gameInstance.increaseIndexFileImage(true);
-            this.endGame();
-        } else {
-
-            gameInstance.nbCountError = 0;
-            gameInstance.increaseIndexFileImage(true);
-
-            stats.incrementNumberOfGoalsReached();
-
-            customInputEventHandlerMouse.ignoreAnyInput = true;
-            progressIndicator.setVisible(false);
-
-            gameContext.updateScore(stats, gameInstance);
-
-            this.waitBeforeNextRound();
-        }
-    }
-
-    public void onWrongCardSelected() {
-
-        gameInstance.nbCountError += 1;
-
-        if (gameInstance.nbCountError != 5){
-
-            if (gameInstance.indexFileImage == (gameInstance.indexEndGame - 1)) {
-                progressIndicator.setVisible(false);
-                this.endGame();
-            } else {
-                gameInstance.increaseIndexFileImage(false);
-
-                stats.incrementNumberOfGoalsReached();
-
-                customInputEventHandlerMouse.ignoreAnyInput = true;
-                progressIndicator.setVisible(false);
-
-                gameContext.updateScore(stats, gameInstance);
-
-                this.waitBeforeNextRound();
-            }
-        }else {
-            progressIndicator.setVisible(false);
-            this.endGame();
-        }
+    public void onCardSelected() {
+        gameInstance.calculScores(this.imageName);
+        stats.incrementNumberOfGoalsReached();
+        gameContext.updateScore(stats, gameInstance);
     }
 
     public void waitBeforeNextRound(){
@@ -229,98 +144,45 @@ public class PictureCard extends Group{
         Timeline transition = new Timeline();
         transition.getKeyFrames().add(new KeyFrame(new Duration(config.getTransitionTime())));
         transition.setOnFinished(event -> {
-            gameInstance.dispose();
-            gameContext.clear();
-            gameInstance.launch();
+            if(gameInstance.increaseIndexFileImage()){
+                this.endGame();
+            }else {
+                gameInstance.stopDisplayDuration();
+                gameInstance.stopGetGazePosition();
+                gameInstance.getScreenHeatmapGaze();
+                gameInstance.dispose();
+                gameContext.clear();
+                gameInstance.launch();
+            }
         });
-
         gameInstance.removeEventHandlerPictureCard();
         transition.playFromStart();
     }
 
     private ImageView createImageView(double posX, double posY, double width, double height,
-                                      @NonNull String imagePath) {
+                                      @NonNull String imageName) {
 
-        final Image image = new Image(imagePath);
+        Configuration config = ActiveConfigurationContext.getInstance();
+        File file = new File(config.getFileDir() + "\\evals\\" +  this.gameVariant.getNameGame() + "\\images\\" + imageName);
+        final Image image = new Image(file.toURI().toString());
 
         ImageView result = new ImageView(image);
 
-        result.setFitWidth(width);
-        result.setFitHeight(height);
-
-        double ratioX = result.getFitWidth() / image.getWidth();
-        double ratioY = result.getFitHeight() / image.getHeight();
-
-        double reducCoeff = Math.min(ratioX, ratioY);
-
-        double w = image.getWidth() * reducCoeff;
-        double h = image.getHeight() * reducCoeff;
-
+        result.setFitWidth(width/2);
+        result.setFitHeight(height/2);
         result.setX(posX);
         result.setY(posY);
-        result.setTranslateX((result.getFitWidth() - w) / 2);
-        result.setTranslateY((result.getFitHeight() - h) / 2);
+        result.setTranslateY(result.getFitHeight() / 2);
         result.setPreserveRatio(true);
 
-        return result;
-    }
-
-    private Rectangle createNotifImageRectangle() {
-
-        Configuration config = ActiveConfigurationContext.getInstance();
-
-        if (Objects.equals(config.getFeedback(), "standard")){
-            final Image image = new Image("data/common/images/blackCircle.png");
-
-            double imageWidth = image.getWidth();
-            double imageHeight = image.getHeight();
-            double imageHeightToWidthRatio = imageHeight / imageWidth;
-
-            double rectangleWidth = imageRectangle.getFitWidth() / 40;
-            double rectangleHeight = imageHeightToWidthRatio * rectangleWidth;
-
-            double positionX = 0;
-            double positionY = 0;
-            if (config.isColumnarImagesEnabled()){
-                positionX = imageRectangle.getX() + 5;
-                positionY = imageRectangle.getY() + 15;
-            }else {
-                positionX = imageRectangle.getX() + 5;
-                positionY = imageRectangle.getY() + 35;
-            }
-
-            Rectangle notifImageRectangle = new Rectangle(rectangleWidth, rectangleHeight);
-            notifImageRectangle.setFill(new ImagePattern(image));
-            notifImageRectangle.setX(positionX);
-            notifImageRectangle.setY(positionY);
-            notifImageRectangle.setOpacity(0);
-            notifImageRectangle.setVisible(false);
-            return notifImageRectangle;
+        if (this.firstPosition){
+            result.setTranslateX(result.getFitWidth());
         }else {
-            final Image image = new Image("data/common/images/redFrame.png");
-
-            ImageView result = new ImageView(image);
-
-            result.setFitWidth(this.initialWidth);
-            result.setFitHeight(this.initialHeight);
-
-            double ratioX = result.getFitWidth() / image.getWidth();
-            double ratioY = result.getFitHeight() / image.getHeight();
-
-            double reducCoeff = Math.min(ratioX, ratioY);
-
-            double w = image.getWidth() * reducCoeff;
-            double h = image.getHeight() * reducCoeff;
-
-            double posY = (result.getFitHeight() - h) / 2;
-
-            Rectangle notifImageRectangle = new Rectangle(w, h);
-            notifImageRectangle.setFill(new ImagePattern(image));
-            notifImageRectangle.setX(this.initialPositionX);
-            notifImageRectangle.setY(posY);
-            notifImageRectangle.setVisible(false);
-            return notifImageRectangle;
+            result.setTranslateX(result.getFitWidth() / 2);
         }
+
+
+        return result;
     }
 
     private ProgressIndicator buildProgressIndicator(double parentWidth, double parentHeight) {
@@ -344,12 +206,15 @@ public class PictureCard extends Group{
     public void endGame() {
 
         progressIndicator.setVisible(false);
+        gameInstance.stopDisplayDuration();
+        gameInstance.stopGetGazePosition();
+        gameInstance.getScreenHeatmapGaze();
         gameInstance.finalStats();
         gameContext.updateScore(stats, gameInstance);
         gameInstance.resetFromReplay();
         gameInstance.dispose();
         gameContext.clear();
-        gameContext.showRoundStats(stats, gameInstance);
+        gameInstance.generateEndScreen();
     }
 
     private class CustomInputEventHandlerMouse implements EventHandler<Event> {
@@ -372,18 +237,28 @@ public class PictureCard extends Group{
                 return;
             }
 
-            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                onEntered();
-            } else if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_MOVED){
-                onEnteredOnceWhileMoved();
-            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-                onExited();
+            if (gameInstance.eyeTracker.equals("tobii")){
+                if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    onEntered();
+                } else if (e.getEventType() == GazeEvent.GAZE_MOVED){
+                    onEnteredOnceWhileMoved();
+                } else if (e.getEventType() == GazeEvent.GAZE_EXITED) {
+                    onExited();
+                }
+            }else {
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                    onEntered();
+                } else if (e.getEventType() == MouseEvent.MOUSE_MOVED){
+                    onEnteredOnceWhileMoved();
+                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED) {
+                    onExited();
+                }
             }
         }
 
         private void onEntered() {
             this.moved = true;
-            log.info("ENTERED {}", imagePath);
+            log.info("ENTERED {}", imageName);
 
             progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
             progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
@@ -398,7 +273,7 @@ public class PictureCard extends Group{
             if (!this.moved){
 
                 this.moved = true;
-                log.info("ENTERED {}", imagePath);
+                log.info("MOVED {}", imageName);
 
                 progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(gameInstance);
                 progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
@@ -411,7 +286,7 @@ public class PictureCard extends Group{
         }
 
         private void onExited() {
-            log.info("EXITED {}", imagePath);
+            log.info("EXITED {}", imageName);
 
             progressIndicatorAnimationTimeLine.stop();
 
