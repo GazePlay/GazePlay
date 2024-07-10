@@ -274,6 +274,7 @@ ActivateAutomaticModeQuestion,,,,,,,Activate automatic mode for questions,,Activ
 QuestionTime,,,,,,,Time for ask the question,,Temps pour énoncer la question,,,,,,,,,,,,
 HorizontalImages,,,,,,,Columnar images,,Images en colonnes,,,,,,,,,,,,
 ActivateSound,,,,,,,Activate sound,,Activer le son,,,,,,,,,,,,
+ActivateSoa,,,,,,,Activate SOA,,Activer le SOA,,,,,,,,,,,,
 Feedback,,,,,,,Feedback,,Retour utilisateur,,,,,,,,,,,,
 nothing,,,,,,,Nothing,,Rien,,,,,,,,,,,,
 standard,,,,,,,Standard,,Standard,,,,,,,,,,,,

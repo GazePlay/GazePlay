@@ -187,7 +187,15 @@ public class GazePlayEvalTest implements GameLifeCycle {
     public void playSound(String soundPath){
         Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isSoundEnabled()){
-            gameContext.getSoundManager().add(soundPath);
+            if (config.isSoaEnabled()){
+                Timeline soundSOA = new Timeline(new KeyFrame(Duration.millis(2000), event -> {
+                    gameContext.getSoundManager().add(soundPath);
+                }));
+                soundSOA.setCycleCount(1);
+                soundSOA.playFromStart();
+            }else {
+                gameContext.getSoundManager().add(soundPath);
+            }
         }
     }
 
