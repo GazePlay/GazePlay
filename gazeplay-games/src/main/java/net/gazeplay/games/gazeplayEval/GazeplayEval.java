@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -56,9 +57,10 @@ public class GazeplayEval implements GameLifeCycle {
     public int posY = 0;
     private boolean canRemoveItemManually = true;
     private RoundDetails currentRoundDetails;
+    private PictureCard screen;
     private Long currentRoundStartTime;
     public ImageView whiteCrossPicture;
-    public CustomInputEventHandlerKeyboard customInputEventHandlerKeyboard = new CustomInputEventHandlerKeyboard();
+    public CustomInputEventHandler CustomInputEventHandler = new CustomInputEventHandler();
     public boolean reEntered = false;
     public boolean goNext = false;
     public int scores = 0;
@@ -72,6 +74,8 @@ public class GazeplayEval implements GameLifeCycle {
     public Timeline createDisplayDuration;
     public ArrayList<Double> listGazePositionX = new ArrayList<>();
     public ArrayList<Double> listGazePositionY = new ArrayList<>();
+    public String eyeTracker;
+    public String typeScreen;
 
     public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats) {
         this.gameContext = gameContext;
@@ -84,7 +88,8 @@ public class GazeplayEval implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
         this.loadConfig();
-        this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
+        this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, CustomInputEventHandler);
+        this.eyeTracker = ActiveConfigurationContext.getInstance().getEyeTracker();
     }
 
     public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats, double gameSeed) {
@@ -97,7 +102,8 @@ public class GazeplayEval implements GameLifeCycle {
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
         this.loadConfig();
-        this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
+        this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, CustomInputEventHandler);
+        this.eyeTracker = ActiveConfigurationContext.getInstance().getEyeTracker();
 
     }
 
@@ -230,6 +236,7 @@ public class GazeplayEval implements GameLifeCycle {
 
         gameContext.setLimiterAvailable();
 
+        generateScreen();
         currentRoundDetails = pickAndBuildRandomPictures();
 
         stats.notifyNewRoundReady();
@@ -237,10 +244,136 @@ public class GazeplayEval implements GameLifeCycle {
         gameContext.firstStart();
 
 
-        this.startGame();
+        this.generateScreen();
     }
 
-    public void startGame() {
+    public boolean checkAllPictureCardChecked() {
+        this.nbImageSee++;
+        return this.nbImageSee == this.nbImages[this.indexFileImage];
+    }
+
+    public void incrementPos(){
+        this.posX++;
+        if (this.posX == this.cols[this.indexFileImage]){
+            this.posX = 0;
+            this.posY++;
+        }
+    }
+
+    public void clearScreen(){
+        gameContext.clear();
+    }
+
+    public void generateScreen(){
+        if (this.indexFileImage == 0){
+            this.generateInstructionScreen();
+        } else if (this.indexFileImage == (this.indexEndGame/2)) {
+            this.generateBreakScreen();
+        } else if (this.indexFileImage == this.indexEndGame){
+            this.generateEndScreen();
+        } else {
+            this.generateCrossFixationScreen();
+        }
+    }
+
+    public void generateInstructionScreen(){
+        this.typeScreen = "instruction";
+        final GameSizing gameSizing = new GameSizingComputer(1, 2, fourThree)
+            .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
+
+        gameContext.getChildren().add(new ScreenCard(
+            0,
+            10,
+            gameSizing.width,
+            gameSizing.height-10,
+            gameContext,
+            gameVariant,
+            "oculometrie.png",
+            stats,
+            this,
+            "instruction",
+            true
+        ));
+
+        gameContext.getChildren().add(new ScreenCard(
+            gameSizing.width,
+            10,
+            gameSizing.width,
+            gameSizing.height-10,
+            gameContext,
+            gameVariant,
+            "question.png",
+            stats,
+            this,
+            "instruction",
+            false
+        ));
+    }
+
+    public void generateCrossFixationScreen(){
+        this.typeScreen = "cross";
+
+        final GameSizing gameSizing = new GameSizingComputer(1, 1, fourThree)
+            .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
+
+        gameContext.getChildren().add(new ScreenCard(
+            0,
+            10,
+            gameSizing.width,
+            gameSizing.height-10,
+            gameContext,
+            gameVariant,
+            "blackCross.png",
+            stats,
+            this,
+            "cross",
+            true
+        ));
+    }
+
+    public void generateBreakScreen(){
+        this.typeScreen = "break";
+
+        final GameSizing gameSizing = new GameSizingComputer(1, 1, fourThree)
+            .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
+
+        gameContext.getChildren().add(new ScreenCard(
+            0,
+            0,
+            gameSizing.width,
+            gameSizing.height,
+            gameContext,
+            gameVariant,
+            "picto_pause.png",
+            stats,
+            this,
+            "break",
+            true
+        ));
+    }
+
+    public void generateEndScreen(){
+        this.typeScreen = "end";
+
+        final GameSizing gameSizing = new GameSizingComputer(1, 1, fourThree)
+            .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
+
+        gameContext.getChildren().add(new ScreenCard(
+            0,
+            0,
+            gameSizing.width,
+            gameSizing.height,
+            gameContext,
+            gameVariant,
+            "feux_artifice.png",
+            stats,
+            this,
+            "end",
+            true
+        ));
+    }
+
+    public void generateGame(){
         final List<Rectangle> pictogramesList = new ArrayList<>(20); // storage of actual Pictogramm nodes in order to delete
 
         final List<Image> listOfPictos = currentRoundDetails.getPictos();
@@ -293,25 +426,10 @@ public class GazeplayEval implements GameLifeCycle {
 
         gameContext.onGameStarted(2000);
 
-        customInputEventHandlerKeyboard.ignoreAnyInput = false;
-
         this.playSound(this.IMAGE_SOUND);
 
         this.startGetGazePosition();
         this.startDisplayDuration();
-    }
-
-    public boolean checkAllPictureCardChecked() {
-        this.nbImageSee++;
-        return this.nbImageSee == this.nbImages[this.indexFileImage];
-    }
-
-    public void incrementPos(){
-        this.posX++;
-        if (this.posX == this.cols[this.indexFileImage]){
-            this.posX = 0;
-            this.posY++;
-        }
     }
 
     RoundDetails pickAndBuildRandomPictures() {
@@ -341,7 +459,8 @@ public class GazeplayEval implements GameLifeCycle {
                     this.listImages[this.indexFileImage][i],
                     this.listLengthFixation[this.indexFileImage],
                     stats,
-                    this));
+                    this,
+                    this.isFirstPosition()));
 
                 targetAOIList.add(new TargetAOI(
                     gameSizing.width * posX,
@@ -355,6 +474,10 @@ public class GazeplayEval implements GameLifeCycle {
 
         return new RoundDetails(pictureCardList, 0, questionSoundPath, question,
             pictograms);
+    }
+
+    public Boolean isFirstPosition(){
+        return this.posX==0;
     }
 
     public void startTimer(){
@@ -382,6 +505,10 @@ public class GazeplayEval implements GameLifeCycle {
     public void stopDisplayDuration(){
         log.info("Stop timeline DD");
         this.createDisplayDuration.stop();
+    }
+
+    public void goToStats(){
+        gameContext.showRoundStats(stats, this);
     }
 
     public boolean increaseIndexFileImage() {
@@ -490,28 +617,25 @@ public class GazeplayEval implements GameLifeCycle {
         }
     }
 
-    private class CustomInputEventHandlerKeyboard implements EventHandler<KeyEvent> {
-
-        public boolean ignoreAnyInput = false;
+    private class CustomInputEventHandler implements EventHandler<KeyEvent> {
 
         @Override
         public void handle(KeyEvent key) {
-
-            if (ignoreAnyInput) {
-                return;
-            }
-
-            if (key.getCode().isArrowKey() && goNext){
-                ignoreAnyInput = true;
-                next("null");
-            } else if (key.getCode().getChar().equals("X")) {
-                ignoreAnyInput = true;
-                next("True");
-            } else if (key.getCode().getChar().equals("C")) {
-                ignoreAnyInput = true;
-                next("False");
-            } else if (key.getCode().getChar().equals("V")) {
-                removeItemAddedManually();
+            if (typeScreen.equals("instruction")){
+                if (key.getCode().equals(KeyCode.SPACE)) {
+                    clearScreen();
+                    generateCrossFixationScreen();
+                }
+            } else if (typeScreen.equals("end")) {
+                if (key.getCode().equals(KeyCode.SPACE)) {
+                    clearScreen();
+                    goToStats();
+                }
+            } else if (typeScreen.equals("break")) {
+                if (key.getCode().equals(KeyCode.P)) {
+                    clearScreen();
+                    generateCrossFixationScreen();
+                }
             }
         }
     }

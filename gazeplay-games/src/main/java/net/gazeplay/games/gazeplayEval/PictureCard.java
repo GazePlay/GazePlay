@@ -39,7 +39,6 @@ class PictureCard extends Group {
     private final GazeplayEvalGameVariant gameVariant;
 
     private final ImageView imageRectangle;
-    private final Rectangle notifImageRectangle;
 
     private double initialWidth;
     private double initialHeight;
@@ -49,7 +48,7 @@ class PictureCard extends Group {
 
     private final Stats stats;
     private final String imageName;
-    private final PictureCard.CustomInputEventHandlerMouse customInputEventHandlerMouse;
+    private final CustomInputEventHandlerMouse customInputEventHandlerMouse;
     private final GazeplayEval gameInstance;
     private ProgressIndicator progressIndicator;
     private Timeline progressIndicatorAnimationTimeLine;
@@ -58,9 +57,10 @@ class PictureCard extends Group {
     private double valueProgressIndicator = 2000;
     private double valueTranslateX = 0;
     private double valueTranslateY = 0;
+    private boolean firstPosition;
 
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, @NonNull GazeplayEvalGameVariant gameVariant,
-                @NonNull String imageName, Double fixationLength, @NonNull Stats stats, GazeplayEval gameInstance) {
+                @NonNull String imageName, Double fixationLength, @NonNull Stats stats, GazeplayEval gameInstance, Boolean firstPosition) {
 
         log.info("imagePath = {}", imageName);
 
@@ -79,18 +79,16 @@ class PictureCard extends Group {
         this.gameInstance = gameInstance;
         this.imageName = imageName;
         this.valueProgressIndicator = fixationLength;
+        this.firstPosition = firstPosition;
 
         this.imageRectangle = createImageView(this.initialPositionX, this.initialPositionY, this.initialWidth, this.initialHeight, imageName);
-
         this.progressIndicator = buildProgressIndicator(this.initialWidth, this.initialHeight);
 
-        this.notifImageRectangle = createNotifImageRectangle();
 
         this.getChildren().add(imageRectangle);
         this.getChildren().add(progressIndicator);
-        this.getChildren().add(notifImageRectangle);
 
-        customInputEventHandlerMouse = new PictureCard.CustomInputEventHandlerMouse();
+        customInputEventHandlerMouse = new CustomInputEventHandlerMouse();
 
         gameContext.getGazeDeviceManager().addEventFilter(imageRectangle);
 
@@ -117,11 +115,9 @@ class PictureCard extends Group {
         return actionEvent -> {
 
             selected = true;
-            this.setNotifImageRectangle(true);
             imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);
             imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandlerMouse);
             gameContext.getGazeDeviceManager().removeEventFilter(imageRectangle);
-            this.checkedImage();
             customInputEventHandlerMouse.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
 
@@ -130,20 +126,6 @@ class PictureCard extends Group {
                 this.waitBeforeNextRound();
             }
         };
-    }
-
-    public void setNotifImageRectangle(boolean value) { this.notifImageRectangle.setVisible(value); }
-
-    public void checkedImage(){
-        Configuration config = ActiveConfigurationContext.getInstance();
-
-        if (Objects.equals(config.getFeedback(), "nothing")){
-            notifImageRectangle.setOpacity(0);
-            notifImageRectangle.setVisible(false);
-        }else {
-            notifImageRectangle.setOpacity(1);
-            notifImageRectangle.setVisible(true);
-        }
     }
 
     public void removeEventHandler(){
@@ -186,77 +168,21 @@ class PictureCard extends Group {
 
         ImageView result = new ImageView(image);
 
-        result.setFitWidth(width);
-        result.setFitHeight(height);
-
-        double ratioX = result.getFitWidth() / image.getWidth();
-        double ratioY = result.getFitHeight() / image.getHeight();
-
-        double reducCoeff = Math.min(ratioX, ratioY);
-
-        double w = image.getWidth() * reducCoeff;
-        double h = image.getHeight() * reducCoeff;
-
-        this.valueTranslateX = (result.getFitWidth() - w) / 2;
-        this.valueTranslateY = (result.getFitHeight() - h) / 2;
-
+        result.setFitWidth(width/2);
+        result.setFitHeight(height/2);
         result.setX(posX);
         result.setY(posY);
-        result.setTranslateX((result.getFitWidth() - w) / 2);
-        result.setTranslateY((result.getFitHeight() - h) / 2);
+        result.setTranslateY(result.getFitHeight() / 2);
         result.setPreserveRatio(true);
 
-        return result;
-    }
-
-    private Rectangle createNotifImageRectangle() {
-
-        Configuration config = ActiveConfigurationContext.getInstance();
-
-        if (Objects.equals(config.getFeedback(), "standard")){
-            final Image image = new Image("data/common/images/blackCircle.png");
-
-            double imageWidth = image.getWidth();
-            double imageHeight = image.getHeight();
-            double imageHeightToWidthRatio = imageHeight / imageWidth;
-
-            double rectangleWidth = imageRectangle.getFitWidth() / 40;
-            double rectangleHeight = imageHeightToWidthRatio * rectangleWidth;
-
-            Rectangle notifImageRectangle = new Rectangle(rectangleWidth, rectangleHeight);
-            notifImageRectangle.setFill(new ImagePattern(image));
-            notifImageRectangle.setX(this.initialPositionX);
-            notifImageRectangle.setY(this.initialPositionY);
-            notifImageRectangle.setTranslateX(this.valueTranslateX);
-            notifImageRectangle.setTranslateY(this.valueTranslateY);
-            notifImageRectangle.setOpacity(0);
-            notifImageRectangle.setVisible(false);
-            return notifImageRectangle;
+        if (this.firstPosition){
+            result.setTranslateX(result.getFitWidth());
         }else {
-            final Image image = new Image("data/common/images/redFrame.png");
-
-            ImageView result = new ImageView(image);
-
-            result.setFitWidth(this.initialWidth);
-            result.setFitHeight(this.initialHeight);
-
-            double ratioX = result.getFitWidth() / image.getWidth();
-            double ratioY = result.getFitHeight() / image.getHeight();
-
-            double reducCoeff = Math.min(ratioX, ratioY);
-
-            double w = image.getWidth() * reducCoeff;
-            double h = image.getHeight() * reducCoeff;
-
-            Rectangle notifImageRectangle = new Rectangle(w, h);
-            notifImageRectangle.setFill(new ImagePattern(image));
-            notifImageRectangle.setX(this.initialPositionX);
-            notifImageRectangle.setY(this.initialPositionY);
-            notifImageRectangle.setTranslateX((result.getFitWidth() - w) / 2);
-            notifImageRectangle.setTranslateY((result.getFitHeight() - h) / 2);
-            notifImageRectangle.setVisible(false);
-            return notifImageRectangle;
+            result.setTranslateX(result.getFitWidth() / 2);
         }
+
+
+        return result;
     }
 
     private ProgressIndicator buildProgressIndicator(double parentWidth, double parentHeight) {
@@ -288,7 +214,7 @@ class PictureCard extends Group {
         gameInstance.resetFromReplay();
         gameInstance.dispose();
         gameContext.clear();
-        gameContext.showRoundStats(stats, gameInstance);
+        gameInstance.generateEndScreen();
     }
 
     private class CustomInputEventHandlerMouse implements EventHandler<Event> {
@@ -311,12 +237,22 @@ class PictureCard extends Group {
                 return;
             }
 
-            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                onEntered();
-            } else if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_MOVED){
-                onEnteredOnceWhileMoved();
-            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-                onExited();
+            if (gameInstance.eyeTracker.equals("tobii")){
+                if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    onEntered();
+                } else if (e.getEventType() == GazeEvent.GAZE_MOVED){
+                    onEnteredOnceWhileMoved();
+                } else if (e.getEventType() == GazeEvent.GAZE_EXITED) {
+                    onExited();
+                }
+            }else {
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                    onEntered();
+                } else if (e.getEventType() == MouseEvent.MOUSE_MOVED){
+                    onEnteredOnceWhileMoved();
+                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED) {
+                    onExited();
+                }
             }
         }
 
