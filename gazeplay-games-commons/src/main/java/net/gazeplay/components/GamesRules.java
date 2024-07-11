@@ -3,6 +3,7 @@ package net.gazeplay.components;
 import javafx.animation.*;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -25,9 +26,9 @@ public class GamesRules {
         questionText.setTranslateY(0);
         questionText.setId("title");
 
-        final Dimension2D gamePaneDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        final double positionX = gamePaneDimension2D.getWidth() / 2 - questionText.getBoundsInParent().getWidth();
-        final double positionY = gamePaneDimension2D.getHeight() / 2 - questionText.getBoundsInParent().getHeight() / 2;
+        final Region root = gameContext.getRoot();
+        final double positionX = (root.getWidth() / 2) - (questionText.getBoundsInParent().getWidth());
+        final double positionY = (root.getHeight() / 2) - (questionText.getBoundsInParent().getHeight());
 
         questionText.setX(positionX);
         questionText.setY(positionY);

@@ -8,6 +8,7 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
@@ -87,6 +88,8 @@ public class FollowEmmanuel implements GameLifeCycle {
     public CustomInputEventHandlerKeyboard customInputEventHandlerKeyboard = new CustomInputEventHandlerKeyboard();
     private PauseTransition next;
     public SaveData saveData;
+    private final GamesRules gamesRules;
+    public Transition animationRules;
 
     FollowEmmanuel(final IGameContext gameContext, final Stats stats, final FollowEmmanuelGameVariant variant) {
         this.gameContext = gameContext;
@@ -97,6 +100,7 @@ public class FollowEmmanuel implements GameLifeCycle {
         this.generateLabyrinthLevel3 = new FollowEmmanuelGenerateLabyrinthLevel3();
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
         this.saveData = new SaveData(this.stats, variant.getLabel());
+        this.gamesRules = new GamesRules();
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         listWall = new ArrayList<>();
@@ -115,11 +119,8 @@ public class FollowEmmanuel implements GameLifeCycle {
         if (this.firstGame){
             this.firstGame = false;
             String rule = "Déplacer le personnage dans le labyrinthe pour récupérer les clés assorties aux portes \n Vous avez 2 minutes pour faire le plus de tableaux possibles";
-            final Transition animation = new GamesRules().createQuestionTransition(gameContext, rule);
-            animation.play();
-            animation.setOnFinished(event -> {
-                this.generateGame();
-            });
+            animationRules = this.gamesRules.createQuestionTransition(gameContext, rule);
+            animationRules.play();
         }else {
             this.generateGame();
         }
@@ -334,8 +335,8 @@ public class FollowEmmanuel implements GameLifeCycle {
     }
 
     private void player() {
-        rPlayer = new Rectangle(px - sizeP / 2, py - sizeP / 2, sizeP, sizeP);
-        rPlayer.setFill(new ImagePattern(new Image("data/follow/Biboule.png")));
+        rPlayer = new Rectangle(px - sizeP / 2, py - sizeP / 2, sizeP * 1.5, sizeP * 1.5);
+        rPlayer.setFill(new ImagePattern(new Image("data/follow/player.png")));
         gameContext.getChildren().add(rPlayer);
     }
 
@@ -430,12 +431,13 @@ public class FollowEmmanuel implements GameLifeCycle {
     }
 
     private class CustomInputEventHandlerKeyboard implements EventHandler<KeyEvent> {
-
+        private boolean acceptInput = true;
         @Override
         public void handle(KeyEvent key) {
-
-            if (key.getCode().isArrowKey()){
-                next();
+            if (key.getCode().equals(KeyCode.ENTER) && acceptInput) {
+                acceptInput = false;
+                animationRules.stop();
+                gamesRules.hideQuestionText();
                 launch();
             }
         }

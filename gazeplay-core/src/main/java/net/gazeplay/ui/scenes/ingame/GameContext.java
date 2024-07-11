@@ -199,7 +199,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     @Override
     public void updateScore(Stats stats, GameLifeCycle currentGame) {
-        if (((System.currentTimeMillis() - startTime)/1000) >= getConfiguration().getLimiterTime()){
+        if (((System.currentTimeMillis() - startTime)/1000) >= getConfiguration().getLimiterTime() && getConfiguration().isLimiterTimeEnabled()){
             stop();
             showRoundStats(stats, currentGame);
             startTime = 0;
