@@ -1,6 +1,7 @@
 package net.gazeplay.games.gazeplayEvalTest;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -87,9 +88,10 @@ public class GazePlayEvalTest implements GameLifeCycle {
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
-        this.loadConfig();
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, CustomInputEventHandler);
         this.eyeTracker = ActiveConfigurationContext.getInstance().getEyeTracker();
+
+        this.loadConfig();
     }
 
     public GazePlayEvalTest(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats, double gameSeed) {
@@ -101,9 +103,10 @@ public class GazePlayEvalTest implements GameLifeCycle {
         this.gameContext.startScoreLimiter();
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-        this.loadConfig();
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, CustomInputEventHandler);
         this.eyeTracker = ActiveConfigurationContext.getInstance().getEyeTracker();
+
+        this.loadConfig();
 
     }
 
@@ -115,17 +118,17 @@ public class GazePlayEvalTest implements GameLifeCycle {
             Object obj = jsonParser.parse(reader);
             JsonArray configFile = (JsonArray) obj;
             this.generateTab(configFile);
-            for (int i=1; i<configFile.size(); i++){
+            configFile = this.shuffleJsonArray(configFile);
+            for (int i=0; i<configFile.size(); i++){
                 String value = String.valueOf(configFile.get(i));
                 value = value.replace("[", "");
                 value = value.replace("]", "");
                 value = value.replace("\"", "");
                 this.generateGame(value.split(","), i);
             }
-            this.indexEndGame = configFile.size()-1;
+            this.indexEndGame = configFile.size();
             this.setSound();
             this.getGazePosition();
-            //this.logInfo();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -141,14 +144,26 @@ public class GazePlayEvalTest implements GameLifeCycle {
         this.displayDuration = new double[configFile.size()-1];
 
         this.gameName = String.valueOf(configFile.get(0).getAsJsonArray().get(0)).replace("\"", "");
-        log.info("Nom de l'eval = " + this.gameName);
+        configFile.remove(0);
+    }
+
+    public JsonArray shuffleJsonArray(JsonArray configFile){
+        Random rnd = new Random();
+        for (int i = configFile.size() - 1; i >= 0; i--) {
+            int j = rnd.nextInt(i + 1);
+            rnd.setSeed(System.currentTimeMillis());
+            JsonElement object = configFile.get(j);
+            configFile.set(j, configFile.get(i));
+            configFile.set(i, object);
+        }
+        return configFile;
     }
 
     public void generateGame(String[] values, int index){
-        this.rows[index-1] = Integer.parseInt(values[0]);
-        this.cols[index-1] = Integer.parseInt(values[1]);
+        this.rows[index] = Integer.parseInt(values[0]);
+        this.cols[index] = Integer.parseInt(values[1]);
 
-        int nbImg = this.rows[index-1]*this.cols[index-1];
+        int nbImg = this.rows[index]*this.cols[index];
         String[] listImgTmp = new String[nbImg];
         for (int j=3; j<(3+nbImg); j++){
             listImgTmp[j-3] = values[j];
@@ -158,22 +173,11 @@ public class GazePlayEvalTest implements GameLifeCycle {
             Collections.shuffle(list);
             list.toArray(listImgTmp);
         }
-        this.listImages[index-1] = listImgTmp;
-        this.listSounds[index-1] = values[nbImg+3];
-        this.nbImages[index-1] = Integer.parseInt(values[nbImg+4]);
-        this.listLengthFixation[index-1] = Double.parseDouble(values[nbImg+5]);
-        this.displayDuration[index-1] = Double.parseDouble(values[nbImg+6]);
-    }
-
-    public void logInfo(){
-        log.info(String.valueOf(this.indexEndGame));
-        log.info("Rows = " + Arrays.toString(this.rows));
-        log.info("Cols = " + Arrays.toString(this.cols));
-        log.info("List Img = " + Arrays.deepToString(this.listImages));
-        log.info("List sounds = " + Arrays.toString(this.listSounds));
-        log.info("Nb img = " + Arrays.toString(this.nbImages));
-        log.info("List length fixation = " + Arrays.toString(this.listLengthFixation));
-        log.info("List display duration = " + Arrays.toString(this.displayDuration));
+        this.listImages[index] = listImgTmp;
+        this.listSounds[index] = values[nbImg+3];
+        this.nbImages[index] = Integer.parseInt(values[nbImg+4]);
+        this.listLengthFixation[index] = Double.parseDouble(values[nbImg+5]);
+        this.displayDuration[index] = Double.parseDouble(values[nbImg+6]);
     }
 
     public void setSound(){
