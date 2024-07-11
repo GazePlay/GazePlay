@@ -1,4 +1,4 @@
-package net.gazeplay.games.follow;
+package net.gazeplay.games.training;
 
 import javafx.animation.PauseTransition;
 import javafx.animation.Transition;
@@ -14,37 +14,18 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.GamesRules;
-import net.gazeplay.components.SaveData;
 
 import java.util.ArrayList;
 
-@Slf4j
-public class FollowEmmanuel implements GameLifeCycle {
+public class TrainingEmmanuel implements GameLifeCycle {
 
-    @Getter
-    private final IGameContext gameContext;
-
-    private final Stats stats;
-
-    @Getter
-    @Setter
-    private FollowEmmanuelGameVariant variant;
-
-    private FollowEmmanuelGenerateLabyrinthLevel1 generateLabyrinthLevel1;
-    private FollowEmmanuelGenerateLabyrinthLevel2 generateLabyrinthLevel2;
-    private FollowEmmanuelGenerateLabyrinthLevel3 generateLabyrinthLevel3;
-
-    private final Dimension2D dimension2D;
-
-    //player's position
+    public int indexGame = 0;
     private double px;
     private double py;
 
@@ -68,7 +49,7 @@ public class FollowEmmanuel implements GameLifeCycle {
     private final ArrayList<Rectangle> listWall;
 
     //List of EventItems
-    private final ArrayList<EventItemEmmanuel> listEI;
+    private final ArrayList<net.gazeplay.games.training.EventItemEmmanuel> listEI;
 
     //Pointer of the gaze
     private Rectangle gaze;
@@ -80,73 +61,88 @@ public class FollowEmmanuel implements GameLifeCycle {
     //size wall/item
     private double sizeWw;
     private double sizeWh;
-
-    //score with coins
-    private int score;
-    private int scoretoreach;
-    public boolean firstGame = true;
-    public CustomInputEventHandlerKeyboard customInputEventHandlerKeyboard = new CustomInputEventHandlerKeyboard();
-    private PauseTransition next;
-    public SaveData saveData;
+    private final IGameContext gameContext;
+    private final Dimension2D dimension2D;
+    private final Stats stats;
     private final GamesRules gamesRules;
     public Transition animationRules;
+    public CustomInputEventHandlerKeyboard customInputEventHandlerKeyboard = new CustomInputEventHandlerKeyboard();
+    private PauseTransition next;
 
-    FollowEmmanuel(final IGameContext gameContext, final Stats stats, final FollowEmmanuelGameVariant variant) {
+    TrainingEmmanuel(IGameContext gameContext, TrainingEmmanuelGameStats stats){
         this.gameContext = gameContext;
         this.stats = stats;
-        this.variant = variant;
-        this.generateLabyrinthLevel1 = new FollowEmmanuelGenerateLabyrinthLevel1();
-        this.generateLabyrinthLevel2 = new FollowEmmanuelGenerateLabyrinthLevel2();
-        this.generateLabyrinthLevel3 = new FollowEmmanuelGenerateLabyrinthLevel3();
-        this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
-        this.saveData = new SaveData(this.stats, variant.getLabel());
         this.gamesRules = new GamesRules();
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
         listWall = new ArrayList<>();
         listEI = new ArrayList<>();
-
-        this.gameContext.startTimeLimiterEmmanuel(this.saveData);
+        this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
     }
 
     @Override
     public void launch() {
 
+        switch (indexGame){
+            case 0:
+                customInputEventHandlerKeyboard.acceptInput = true;
+                generateFirstInstruction();
+                break;
+
+            case 1:
+                customInputEventHandlerKeyboard.acceptInput = false;
+                generateLvl1();
+                break;
+
+            case 2:
+                customInputEventHandlerKeyboard.acceptInput = true;
+                generateSecondInstruction();
+                break;
+
+            case 3:
+                customInputEventHandlerKeyboard.acceptInput = false;
+                generateLvl2();
+                break;
+
+            case 4:
+                customInputEventHandlerKeyboard.acceptInput = true;
+                generateThirdInstruction();
+                break;
+
+            default:
+                dispose();
+                break;
+        }
+    }
+
+    public void generateFirstInstruction(){
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
+        String rule = "Vous devez trouver une clé. \n " +
+            "Quand vous l'aurez trouvée, fixez-la avec vos yeux.";
+        animationRules = this.gamesRules.createQuestionTransition(gameContext, rule);
+        animationRules.play();
+    }
 
-        if (this.firstGame){
-            this.firstGame = false;
-            String rule = "";
-            if (variant.equals(FollowEmmanuelGameVariant.Level1)) {
-                rule = "Dans suis le chemin, vous devait récupérer le trésor : le rubis rouge. \n"  +
-                    "Ce trésor est caché derrière une porte : vous devez donc allez récupérer la clé, ce qui ouvre automatiquement la porte. \n" +
-                    "Vous pouvez alors aller chercher le trésor. \n" +
-                    "Attention : dans ce jeu, votre regard indique le déplacement que vous souhaitez faire. \n" +
-                    "Cela signifie que si vous voulez aller à droite, vous devez regarder à droite.";
-            } else if (variant.equals(FollowEmmanuelGameVariant.Level2)){
-                rule = "Cette fois-ci, vous allez devoir récupérer non plus une clé mais trois pour ouvrir la porte.";
-            }else if (variant.equals(FollowEmmanuelGameVariant.Level3)){
-                rule = "Cette fois-ci, pour ouvrir la porte, il vous faudra récupérer cinq clés. \n" +
-                    "Attention, certaines clés apparaissent en gris et sont donc moins visibles : il faut être un peu plus vigilant.";
-            } else {
-                log.error("Variant not found : " + variant.getLabel());
-            }
+    public void generateSecondInstruction(){
+        String rule = "Vous devez déplacer la clé. \n" +
+            "Fixez l'objectif que vous voulez atteindre et la clé se déplacera toute seule. \n" +
+            "Vous devez l'emmener jusqu'à la cible.";
+        animationRules = this.gamesRules.createQuestionTransition(gameContext, rule);
+        animationRules.play();
+    }
 
-            animationRules = this.gamesRules.createQuestionTransition(gameContext, rule);
-            animationRules.play();
-        }else {
-            this.generateGame();
-        }
-
+    public void generateThirdInstruction(){
+        String rule = "Vous devez déplacer la clé. \n" +
+            "Fixez l'objectif que vous voulez atteindre et la clé se déplacera toute seule. \n" +
+            "Vous devez l'emmener jusqu'à la cible cachée derrière un mur. \n" +
+            "Vous devrez le faire en plusieurs étapes.";
+        animationRules = this.gamesRules.createQuestionTransition(gameContext, rule);
+        animationRules.play();
     }
 
     public void generateGame(){
         gameContext.getChildren().clear();
-
-        score = 0;
-        scoretoreach = 0;
 
         canmove = true;
 
@@ -172,16 +168,6 @@ public class FollowEmmanuel implements GameLifeCycle {
 
         //Make the border of the screen
         contour();
-
-        if (variant.equals(FollowEmmanuelGameVariant.Level1)) {
-            getRubyLvl1();
-        } else if (variant.equals(FollowEmmanuelGameVariant.Level2)){
-            getRubyLvl2();
-        }else if (variant.equals(FollowEmmanuelGameVariant.Level3)){
-            getRubyLvl3();
-        } else {
-            log.error("Variant not found : " + variant.getLabel());
-        }
 
         pointer();
 
@@ -211,21 +197,21 @@ public class FollowEmmanuel implements GameLifeCycle {
         startafterdelay();
     }
 
-    @Override
-    public void dispose() {
-        listEI.clear();
-        listWall.clear();
-        next.stop();
-        gameContext.getChildren().clear();
+    private void startafterdelay() {
+        PauseTransition wait = new PauseTransition(Duration.millis(1000));
+        wait.setOnFinished(waitevent -> followthegaze());
+        wait.play();
     }
 
-    public void next(){
-        listEI.clear();
-        listWall.clear();
-        next.stop();
-        gameContext.getChildren().clear();
-        this.saveData.addMouseMovements(this.stats.fixationSequence.get(0).size());
-        this.saveData.addTrackerMovements(this.stats.fixationSequence.get(1).size());
+    public void win() {
+        gameContext.playWinTransition(0, event -> {
+            listEI.clear();
+            listWall.clear();
+            next.stop();
+            gameContext.getChildren().clear();
+            indexGame++;
+            launch();
+        });
     }
 
     private void followthegaze() {
@@ -307,12 +293,6 @@ public class FollowEmmanuel implements GameLifeCycle {
         gaze.setY(ry);
     }
 
-    private void startafterdelay() {
-        PauseTransition wait = new PauseTransition(Duration.millis(1000));
-        wait.setOnFinished(waitevent -> followthegaze());
-        wait.play();
-    }
-
     private boolean isInWall(Rectangle wall, double x, double y, double size) {
         double wx = wall.getX() + size / 2;
         double wy = wall.getY() + size / 2;
@@ -320,13 +300,6 @@ public class FollowEmmanuel implements GameLifeCycle {
         double wh = wall.getHeight();
 
         return (x + size > wx) && (y + size > wy) && (x < wx + ww) && (y < wy + wh);
-    }
-
-    private void win() {
-        stats.incrementNumberOfGoalsReached();
-        gameContext.updateScore(stats, this);
-        next();
-        launch();
     }
 
     private void checkEI() {
@@ -343,15 +316,8 @@ public class FollowEmmanuel implements GameLifeCycle {
         listEI.removeAll(remove);
     }
 
-    private void multigoals() {
-        if (score >= scoretoreach) {
-            win();
-        }
-    }
-
     private void player() {
         rPlayer = new Rectangle(px - sizeP / 2, py - sizeP / 2, sizeP * 1.5, sizeP * 1.5);
-        rPlayer.setFill(new ImagePattern(new Image("data/follow/player.png")));
         gameContext.getChildren().add(rPlayer);
     }
 
@@ -412,37 +378,38 @@ public class FollowEmmanuel implements GameLifeCycle {
         }
     }
 
-    private void getRubyLvl1() {
+    private void generateLvl1(){
         int[][] map;
 
+        this.generateGame();
+        rPlayer.setOpacity(0);
+        EventHandler<ActionEvent> eventwin = e -> {};
+
+        TrainingEmmanuelGenerateLvl1 trainingEmmanuelGenerateLvl1 = new TrainingEmmanuelGenerateLvl1();
+        map = trainingEmmanuelGenerateLvl1.generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.sizeWw, this.sizeWh, eventwin, stats, this);
+        build(map);
+
+        gameContext.getChildren().add(trainingEmmanuelGenerateLvl1);
+    }
+
+    private void generateLvl2() {
+        int[][] map;
+
+        this.generateGame();
+        rPlayer.setOpacity(1);
+        rPlayer.setFill(new ImagePattern(new Image("data/follow/key.png")));
         EventHandler<ActionEvent> eventwin = e -> {
             win();
         };
 
-        map = generateLabyrinthLevel1.generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.sizeWw, this.sizeWh, eventwin, stats, this);
+        map = new TrainingEmmanuelGenerateLvl2().generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.sizeWw, this.sizeWh, eventwin, stats, this);
         build(map);
     }
 
-    private void getRubyLvl2() {
-        int[][] map;
-
-        EventHandler<ActionEvent> eventwin = e -> {
-            win();
-        };
-
-        map = generateLabyrinthLevel2.generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.sizeWw, this.sizeWh, eventwin, stats, this);
-        build(map);
-    }
-
-    private void getRubyLvl3() {
-        int[][] map;
-
-        EventHandler<ActionEvent> eventwin = e -> {
-            win();
-        };
-
-        map = generateLabyrinthLevel3.generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.sizeWw, this.sizeWh, eventwin, stats, this);
-        build(map);
+    @Override
+    public void dispose() {
+        gameContext.clear();
+        gameContext.showRoundStats(stats, this);
     }
 
     private class CustomInputEventHandlerKeyboard implements EventHandler<KeyEvent> {
@@ -453,6 +420,7 @@ public class FollowEmmanuel implements GameLifeCycle {
                 acceptInput = false;
                 animationRules.stop();
                 gamesRules.hideQuestionText();
+                indexGame++;
                 launch();
             }
         }

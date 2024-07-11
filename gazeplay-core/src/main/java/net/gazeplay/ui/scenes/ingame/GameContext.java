@@ -220,7 +220,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
             stop();
             if (time(startTime, endTime) >= getConfiguration().getLimiterTime()) {
                 onTimeLimiterEndEventHandler.handle(null);
-                playWinTransition(0, event -> showRoundStats(stats, currentGame));
+                showRoundStats(stats, currentGame);
                 startTime = 0;
                 limiteUsed = true;
             }

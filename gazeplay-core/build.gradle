@@ -150,6 +150,19 @@ task generatedEmmanuelCatalog {
                 }
                 .unique()
 
+        def training = sourceSet
+                .filter { it.path.endsWith('.java') }
+                .filter { it.path.contains('Training') }
+                .filter { it.path.contains('SpecSource') }
+                .collect {
+                    it.path
+                            .substring(sourceSet.srcDirs[0].path.length() + 1)
+                            .replace('/', '.')
+                            .replace('\\', '.')
+                            .replace('.java', '')
+                }
+                .unique()
+
         def file = new File(generatedResources, "emmanuel-catalog.txt")
         if (file.exists()) {
             file.delete()
@@ -157,5 +170,6 @@ task generatedEmmanuelCatalog {
 
         follow.each { file.append(it + '\n') }
         flag.each { file.append(it + '\n') }
+        training.each { file.append(it + '\n') }
     }
 }
