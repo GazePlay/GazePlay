@@ -320,6 +320,10 @@ public class GazePlayEvalTest implements GameLifeCycle {
             "instruction",
             false
         ));
+
+        Configuration config = ActiveConfigurationContext.getInstance();
+        final String soundPathInstruction = config.getFileDir() + "/evals/" + this.gameVariant.getNameGame() + "/sounds/Consigne.m4a";
+        gameContext.getSoundManager().add(soundPathInstruction);
     }
 
     public void generateCrossFixationScreen(){
@@ -383,6 +387,10 @@ public class GazePlayEvalTest implements GameLifeCycle {
             "end",
             true
         ));
+
+        Configuration config = ActiveConfigurationContext.getInstance();
+        final String soundPathEnd = config.getFileDir() + "/evals/" + this.gameVariant.getNameGame() + "/sounds/Cloture.m4a";
+        gameContext.getSoundManager().add(soundPathEnd);
     }
 
     public void generateGame(){
