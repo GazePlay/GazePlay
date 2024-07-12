@@ -1,6 +1,8 @@
 package net.gazeplay.components;
 
 import javafx.animation.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Region;
@@ -27,7 +29,7 @@ public class GamesRules {
         questionText.setId("title");
 
         final Region root = gameContext.getRoot();
-        final double positionX = (root.getWidth() / 2) - (questionText.getBoundsInParent().getWidth());
+        final double positionX = (root.getWidth() / 2) - (questionText.getBoundsInParent().getWidth()) - 100;
         final double positionY = (root.getHeight() / 2) - (questionText.getBoundsInParent().getHeight());
 
         questionText.setX(positionX);
@@ -43,6 +45,34 @@ public class GamesRules {
 
         fullAnimation.setCycleCount(Animation.INDEFINITE);
         fullAnimation.setDelay(Duration.millis(gameContext.getConfiguration().getQuestionLength()));
+
+        return fullAnimation;
+    }
+
+    public Transition createQuestionTransition(final IGameContext gameContext, final String question, EventHandler<ActionEvent> eventEventHandler) {
+        questionText = new Text(question);
+        questionText.setStyle("-fx-font-size: 200;");
+        questionText.setTranslateY(0);
+        questionText.setId("title");
+
+        final Region root = gameContext.getRoot();
+        final double positionX = (root.getWidth() / 2 - questionText.getBoundsInParent().getWidth()) - 300;
+        final double positionY = (root.getHeight() / 2);
+
+        questionText.setX(positionX);
+        questionText.setY(positionY);
+        questionText.setTextAlignment(TextAlignment.CENTER);
+        questionText.toFront();
+        StackPane.setAlignment(questionText, Pos.CENTER);
+
+        gameContext.getChildren().add(questionText);
+
+        final TranslateTransition fullAnimation = new TranslateTransition(
+            Duration.millis(gameContext.getConfiguration().getQuestionLength() / 2.0), questionText);
+
+        fullAnimation.setCycleCount(1);
+        fullAnimation.setDelay(Duration.millis(2000));
+        fullAnimation.setOnFinished(eventEventHandler);
 
         return fullAnimation;
     }

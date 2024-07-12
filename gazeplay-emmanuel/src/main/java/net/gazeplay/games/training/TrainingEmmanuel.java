@@ -1,6 +1,8 @@
 package net.gazeplay.games.training;
 
+import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -20,6 +22,7 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.GamesRules;
+import net.gazeplay.components.SaveData;
 
 import java.util.ArrayList;
 
@@ -68,6 +71,11 @@ public class TrainingEmmanuel implements GameLifeCycle {
     public Transition animationRules;
     public CustomInputEventHandlerKeyboard customInputEventHandlerKeyboard = new CustomInputEventHandlerKeyboard();
     private PauseTransition next;
+    public boolean startMove = false;
+    public SaveData saveData;
+    public String typeEyeTracker = "";
+    EventHandler<GazeEvent> recordGazeMovements;
+    EventHandler<MouseEvent> recordMouseMovements;
 
     TrainingEmmanuel(IGameContext gameContext, TrainingEmmanuelGameStats stats){
         this.gameContext = gameContext;
@@ -76,7 +84,9 @@ public class TrainingEmmanuel implements GameLifeCycle {
         dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         listWall = new ArrayList<>();
         listEI = new ArrayList<>();
+        this.saveData = new SaveData(this.stats, "Training");
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
+        this.typeEyeTracker = ActiveConfigurationContext.getInstance().getEyeTracker();
     }
 
     @Override
@@ -106,6 +116,11 @@ public class TrainingEmmanuel implements GameLifeCycle {
             case 4:
                 customInputEventHandlerKeyboard.acceptInput = true;
                 generateThirdInstruction();
+                break;
+
+            case 5:
+                customInputEventHandlerKeyboard.acceptInput = false;
+                generateLvl3();
                 break;
 
             default:
@@ -174,51 +189,62 @@ public class TrainingEmmanuel implements GameLifeCycle {
         {
             Scene gameContextScene = gameContext.getPrimaryScene();
 
-            EventHandler<GazeEvent> recordGazeMovements = e -> {
-                Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
-                if (((toSceneCoordinate.getX() - dimension2D.getWidth() / 2) * (toSceneCoordinate.getX() - dimension2D.getWidth() / 2) + (toSceneCoordinate.getY() - dimension2D.getHeight() / 2) * (toSceneCoordinate.getY() - dimension2D.getHeight() / 2)) > 0.15) {
+            recordGazeMovements = e -> {
+                if (this.typeEyeTracker.equals("Tobii")){
+                    Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
+                    if (((toSceneCoordinate.getX() - dimension2D.getWidth() / 2) * (toSceneCoordinate.getX() - dimension2D.getWidth() / 2) + (toSceneCoordinate.getY() - dimension2D.getHeight() / 2) * (toSceneCoordinate.getY() - dimension2D.getHeight() / 2)) > 0.15) {
+                        rx = toSceneCoordinate.getX();
+                        ry = toSceneCoordinate.getY();
+                    }
+                }
+            };
+
+            recordMouseMovements = e -> {
+                if (!this.typeEyeTracker.equals("Tobii")){
+                    Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
                     rx = toSceneCoordinate.getX();
                     ry = toSceneCoordinate.getY();
                 }
-
-            };
-
-            EventHandler<MouseEvent> recordMouseMovements = e -> {
-                Point2D toSceneCoordinate = gameContextScene.getRoot().localToScene(e.getX(), e.getY());
-                rx = toSceneCoordinate.getX();
-                ry = toSceneCoordinate.getY();
-
             };
 
             gameContextScene.getRoot().addEventFilter(GazeEvent.GAZE_MOVED, recordGazeMovements);
             gameContextScene.getRoot().addEventFilter(MouseEvent.MOUSE_MOVED, recordMouseMovements);
         }
 
-        startafterdelay();
-    }
-
-    private void startafterdelay() {
-        PauseTransition wait = new PauseTransition(Duration.millis(1000));
-        wait.setOnFinished(waitevent -> followthegaze());
-        wait.play();
+        followthegaze();
     }
 
     public void win() {
-        gameContext.playWinTransition(0, event -> {
-            listEI.clear();
-            listWall.clear();
-            next.stop();
+        listEI.clear();
+        listWall.clear();
+        next.stop();
+        gameContext.getChildren().clear();
+
+        gameContext.getPrimaryScene().getRoot().removeEventFilter(GazeEvent.GAZE_MOVED, recordGazeMovements);
+        gameContext.getPrimaryScene().getRoot().removeEventFilter(MouseEvent.MOUSE_MOVED, recordMouseMovements);
+        this.saveData.addMouseMovements(0);
+        this.saveData.addTrackerMovements(0);
+        this.startMove = false;
+
+        String rule = "BRAVO !";
+        EventHandler<ActionEvent> bravo = event -> {
+            animationRules.stop();
             gameContext.getChildren().clear();
+            stats.incrementNumberOfGoalsReached();
+            gameContext.updateScore(stats, this);
             indexGame++;
             launch();
-        });
+        };
+
+        animationRules = this.gamesRules.createQuestionTransition(gameContext, rule, bravo);
+        animationRules.play();
     }
 
     private void followthegaze() {
         next = new PauseTransition(Duration.millis(5));
         next.setOnFinished(nextevent -> {
             followthegaze();
-            position();
+            //position();
             double x = rx - px;
             double y = ry - py;
             double dist = Math.sqrt(x * x + y * y);
@@ -280,8 +306,10 @@ public class TrainingEmmanuel implements GameLifeCycle {
                     px = tx;
                     py = ty;
                 }
-                rPlayer.setX(px - sizeP / 2);
-                rPlayer.setY(py - sizeP / 2);
+                if (this.startMove){
+                    rPlayer.setX(px - sizeP / 2);
+                    rPlayer.setY(py - sizeP / 2);
+                }
                 checkEI();
             }
         });
@@ -397,19 +425,55 @@ public class TrainingEmmanuel implements GameLifeCycle {
 
         this.generateGame();
         rPlayer.setOpacity(1);
-        rPlayer.setFill(new ImagePattern(new Image("data/follow/key.png")));
+        rPlayer.setFill(new ImagePattern(new Image("data/follow/keyred.png")));
+        rPlayer.setX(3 * sizeWw);
+        rPlayer.setY(8 * sizeWh);
+
         EventHandler<ActionEvent> eventwin = e -> {
             win();
         };
 
         map = new TrainingEmmanuelGenerateLvl2().generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.sizeWw, this.sizeWh, eventwin, stats, this);
         build(map);
+
+        Timeline move = new Timeline(new KeyFrame(Duration.millis(2000), event -> {
+            this.startMove = true;
+            rPlayer.setX(3 * sizeWw);
+            rPlayer.setY(8 * sizeWh);
+        }));
+        move.setCycleCount(1);
+        move.playFromStart();
+    }
+
+    private void generateLvl3() {
+        int[][] map;
+
+        this.generateGame();
+        rPlayer.setOpacity(1);
+        rPlayer.setFill(new ImagePattern(new Image("data/follow/keyred.png")));
+        rPlayer.setX(3 * sizeWw);
+        rPlayer.setY(8 * sizeWh);
+
+        EventHandler<ActionEvent> eventwin = e -> {
+            win();
+        };
+
+        map = new TrainingEmmanuelGenerateLvl3().generateLabyrinth(this.gameContext, this.listEI, this.listWall, this.sizeWw, this.sizeWh, eventwin, stats, this);
+        build(map);
+
+        Timeline move = new Timeline(new KeyFrame(Duration.millis(2000), event -> {
+            this.startMove = true;
+            rPlayer.setX(3 * sizeWw);
+            rPlayer.setY(8 * sizeWh);
+        }));
+        move.setCycleCount(1);
+        move.playFromStart();
     }
 
     @Override
     public void dispose() {
         gameContext.clear();
-        gameContext.showRoundStats(stats, this);
+        gameContext.showStats(stats, this);
     }
 
     private class CustomInputEventHandlerKeyboard implements EventHandler<KeyEvent> {
@@ -419,7 +483,7 @@ public class TrainingEmmanuel implements GameLifeCycle {
             if (key.getCode().equals(KeyCode.ENTER) && acceptInput) {
                 acceptInput = false;
                 animationRules.stop();
-                gamesRules.hideQuestionText();
+                gameContext.getChildren().clear();
                 indexGame++;
                 launch();
             }

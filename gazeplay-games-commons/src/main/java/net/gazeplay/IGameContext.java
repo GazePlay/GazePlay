@@ -58,6 +58,8 @@ public interface IGameContext {
 
     void showRoundStats(Stats stats, GameLifeCycle currentGame);
 
+    void showStats(Stats stats, GameLifeCycle currentGame);
+
     void onGameStarted();
 
     void onGameStarted(int delay);

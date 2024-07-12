@@ -78,7 +78,7 @@ public class TrainingEmmanuelGenerateLvl1 extends Group {
         this.gameContext = gameContext;
         this.initiateLevel();
 
-        this.imageRectangle = createImageView("data/follow/key.png");
+        this.imageRectangle = createImageView("data/follow/keyred.png");
         this.progressIndicator = buildProgressIndicator();
 
         this.getChildren().add(imageRectangle);
@@ -96,21 +96,13 @@ public class TrainingEmmanuelGenerateLvl1 extends Group {
         final Image image = new Image(imagePath);
 
         ImageView result = new ImageView(image);
-
-        double ratioX = result.getFitWidth() / image.getWidth();
-        double ratioY = result.getFitHeight() / image.getHeight();
-
-        double reducCoeff = Math.min(ratioX, ratioY);
-
-        double w = image.getWidth() * reducCoeff;
-        double h = image.getHeight() * reducCoeff;
+        result.setFitWidth(image.getWidth()*2);
+        result.setFitHeight(image.getHeight()*2);
 
         final Region root = gameContext.getRoot();
 
-        result.setX((root.getWidth()/2) - (image.getWidth()/2));
-        result.setY((root.getHeight()/2) - (image.getHeight()/2));
-        result.setTranslateX((result.getFitWidth() - w) / 2);
-        result.setTranslateY((result.getFitHeight() - h) / 2);
+        result.setX((root.getWidth()/2) - (result.getFitWidth()/2));
+        result.setY((root.getHeight()/2) - (result.getFitHeight()/2));
         result.setPreserveRatio(true);
 
         return result;
@@ -122,8 +114,8 @@ public class TrainingEmmanuelGenerateLvl1 extends Group {
         double positionY = imageRectangle.getY();
 
         ProgressIndicator result = new ProgressIndicator(0);
-        result.setTranslateX(positionX);
-        result.setTranslateY(positionY);
+        result.setTranslateX(positionX + 50);
+        result.setTranslateY(positionY + 50);
         result.setOpacity(0.5);
         result.setVisible(false);
         return result;

@@ -523,6 +523,41 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
     }
 
+    public void showStats(Stats stats, GameLifeCycle currentGame){
+        stats.stop();
+
+        Runnable asynchronousStatsPersistTask = () -> {
+            try {
+                stats.saveStats();
+                stats.nbMaxMovementsMouse = 0;
+                stats.nbMaxMovementsTracker = 0;
+
+            } catch (IOException e) {
+                log.error("Failed to save stats file", e);
+            }
+        };
+
+        if (runAsynchronousStatsPersist) {
+            AsyncUiTaskExecutor.getInstance().getExecutorService().execute(asynchronousStatsPersistTask);
+        } else {
+            asynchronousStatsPersistTask.run();
+        }
+
+        Dimension2D screenDimension = getGazePlay().getCurrentScreenDimensionSupplier().get();
+
+        CustomButton continueButton = new CustomButton("data/common/images/continue.png", screenDimension);
+        continueButton.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            getGazePlay().onGameLaunch(this);
+            stats.reset();
+            currentGame.launch();
+        });
+
+        StatsContext statsContext = StatsContextFactory.newInstance(getGazePlay(), stats, continueButton);
+
+        this.clear();
+        getGazePlay().onDisplayStats(statsContext);
+    }
+
     @Override
     public void playWinTransition(long delay, EventHandler<ActionEvent> onFinishedEventHandler) {
         if (!getChildren().contains(bravo)) {
