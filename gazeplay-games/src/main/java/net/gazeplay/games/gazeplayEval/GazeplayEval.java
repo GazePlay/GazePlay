@@ -246,15 +246,13 @@ public class GazeplayEval implements GameLifeCycle {
         this.nbImageSee = 0;
         this.canRemoveItemManually = true;
 
-        gameContext.setLimiterAvailable();
+        //gameContext.setLimiterAvailable();
 
-        generateScreen();
         currentRoundDetails = pickAndBuildRandomPictures();
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
-
 
         this.generateScreen();
     }
@@ -339,7 +337,7 @@ public class GazeplayEval implements GameLifeCycle {
             gameSizing.height-10,
             gameContext,
             gameVariant,
-            "blackCross.png",
+            "blackCrossMini.png",
             stats,
             this,
             "cross",
@@ -643,6 +641,7 @@ public class GazeplayEval implements GameLifeCycle {
         public void handle(KeyEvent key) {
             if (typeScreen.equals("instruction")){
                 if (key.getCode().equals(KeyCode.SPACE)) {
+                    gameContext.getSoundManager().stop();
                     clearScreen();
                     generateCrossFixationScreen();
                 }

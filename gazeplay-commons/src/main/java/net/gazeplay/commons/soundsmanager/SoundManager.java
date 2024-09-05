@@ -49,7 +49,11 @@ public class SoundManager {
             listOfMusicToPlay.clear();
     }
 
-     public void add(String resource) {
+    public void add(String resource) {
             listOfMusicToPlay.add(resource);
+    }
+
+    public void stop(){
+        ForegroundSoundsUtils.stopSound();
     }
 }
