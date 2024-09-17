@@ -12,6 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 public class ScreenCard extends Group {
 
     private ImageView imageRectangle;
+    private Rectangle gazeArea;
     private ProgressIndicator progressIndicator;
     private String type;
     private GazeplayEval gameInstance;
@@ -40,11 +43,13 @@ public class ScreenCard extends Group {
 
         if (type.equals("cross")) {
             this.imageRectangle = createCenteredImageView(posX, posY, width, height, imageName, firstPosition);
+            this.gazeArea = createGazeArea(imageName);
             this.progressIndicator = buildProgressIndicator(posX, posY);
             customInputEventHandler = new CustomInputEventHandler();
             gameContext.getGazeDeviceManager().addEventFilter(imageRectangle);
             this.addEventFilter(MouseEvent.ANY, customInputEventHandler);
             this.addEventFilter(GazeEvent.ANY, customInputEventHandler);
+            this.getChildren().add(gazeArea);
             this.getChildren().add(imageRectangle);
             this.getChildren().add(progressIndicator);
         } else if (type.equals("end") || type.equals("break")){
@@ -91,6 +96,22 @@ public class ScreenCard extends Group {
         result.setPreserveRatio(true);
 
         return result;
+    }
+
+    public Rectangle createGazeArea(@NonNull String imageName){
+        final Image image = new Image("data/common/images/" + imageName);
+
+        gazeArea = new Rectangle();
+        gazeArea.setX(this.imageRectangle.getX() - 5);
+        gazeArea.setY(this.imageRectangle.getY() - 5);
+        gazeArea.setWidth(image.getWidth() + 10);
+        gazeArea.setHeight(image.getHeight() + 10);
+
+        gazeArea.setFill(Color.TRANSPARENT);
+        gazeArea.setStroke(Color.BLUE);
+        gazeArea.setOpacity(0.0);
+
+        return gazeArea;
     }
 
     private ProgressIndicator buildProgressIndicator(double parentWidth, double parentHeight) {

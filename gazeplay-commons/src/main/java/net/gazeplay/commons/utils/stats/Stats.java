@@ -1053,14 +1053,14 @@ public class Stats implements GazeMotionListener {
         }
     }
 
-    public void screenHeatMapGaze(){
+    public void screenHeatMapGaze(String pathStatsGame){
         final Configuration config = ActiveConfigurationContext.getInstance();
 
         final File todayDirectory = getGameStatsOfTheDayDirectory();
         final String now = DateUtils.dateTimeNow();
         final String gazeMetricsFilePrefixGaze = now + "-metricsGaze";
 
-        final File gazeMetricsFileGaze = new File(todayDirectory, gazeMetricsFilePrefixGaze + ".png");
+        final File gazeMetricsFileGaze = new File(pathStatsGame, gazeMetricsFilePrefixGaze + ".png");
 
         final BufferedImage screenshotImage = SwingFXUtils.fromFXImage(gameScreenShot, null);
 

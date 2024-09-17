@@ -11,6 +11,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -39,6 +40,7 @@ class PictureCard extends Group {
     private final GazeplayEvalGameVariant gameVariant;
 
     private final ImageView imageRectangle;
+    private Rectangle gazeArea;
 
     private double initialWidth;
     private double initialHeight;
@@ -82,9 +84,10 @@ class PictureCard extends Group {
         this.firstPosition = firstPosition;
 
         this.imageRectangle = createImageView(this.initialPositionX, this.initialPositionY, this.initialWidth, this.initialHeight, imageName);
+        this.gazeArea = createGazeArea();
         this.progressIndicator = buildProgressIndicator(this.initialWidth, this.initialHeight);
 
-
+        this.getChildren().add(gazeArea);
         this.getChildren().add(imageRectangle);
         this.getChildren().add(progressIndicator);
 
@@ -185,13 +188,36 @@ class PictureCard extends Group {
         return result;
     }
 
+    public Rectangle createGazeArea(){
+
+        gazeArea = new Rectangle();
+        gazeArea.setX(this.imageRectangle.getX() - 5);
+        gazeArea.setY(this.imageRectangle.getY() - 5);
+        gazeArea.setWidth(this.imageRectangle.getFitWidth() / 2 + 10);
+        gazeArea.setHeight(this.imageRectangle.getFitHeight() + 10);
+
+        gazeArea.setTranslateY(this.imageRectangle.getFitHeight() / 2);
+
+        if (this.firstPosition){
+            gazeArea.setTranslateX(this.imageRectangle.getFitWidth());
+        }else {
+            gazeArea.setTranslateX(this.imageRectangle.getFitWidth() / 2);
+        }
+
+        gazeArea.setFill(Color.TRANSPARENT);
+        gazeArea.setStroke(Color.BLUE);
+        gazeArea.setOpacity(0.0);
+
+        return gazeArea;
+    }
+
     private ProgressIndicator buildProgressIndicator(double parentWidth, double parentHeight) {
         // progressIndicator 2cm de diamètre
         double minWidth = 75;
         double minHeight = 75;
 
-        double positionX = imageRectangle.getX() + (parentWidth - minWidth) / 2;
-        double positionY = imageRectangle.getY() + (parentHeight - minHeight) / 2;
+        double positionX = gazeArea.getX() + (parentWidth - minWidth) / 2;
+        double positionY = gazeArea.getY() + (parentHeight - minHeight) / 2;
 
         ProgressIndicator result = new ProgressIndicator(0);
         result.setTranslateX(positionX);

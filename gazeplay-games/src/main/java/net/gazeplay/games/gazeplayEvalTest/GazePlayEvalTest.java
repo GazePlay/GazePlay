@@ -44,6 +44,7 @@ public class GazePlayEvalTest implements GameLifeCycle {
     private final ArrayList<TargetAOI> targetAOIList;
     private final ReplayablePseudoRandom randomGenerator;
     private String gameName = "GazePlayEval";
+    private String pathStatsGame = "";
     private String IMAGE_SOUND = "";
     private int[] rows;
     private int[] cols;
@@ -112,6 +113,7 @@ public class GazePlayEvalTest implements GameLifeCycle {
 
     public void loadConfig(){
         Configuration config = ActiveConfigurationContext.getInstance();
+        generateStatsFolder();
         File gameDirectory = new File(config.getFileDir() + "\\evals\\" + this.gameVariant.getNameGame() + "\\config.json");
         JsonParser jsonParser = new JsonParser();
         try  (FileReader reader = new FileReader(gameDirectory)) {
@@ -132,6 +134,25 @@ public class GazePlayEvalTest implements GameLifeCycle {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void generateStatsFolder(){
+        String username = System.getProperty("user.name");
+        String directory = "C:/Users/" + username + "/Documents/ANR_Project";
+
+        File anrProjet = new File(directory);
+        if (!anrProjet.exists()){
+            anrProjet.mkdirs();
+        }
+
+        int index = 1;
+        File dir = new File(directory, "Eval" + index + "_" + DateUtils.today());
+        while (dir.exists()){
+            index++;
+            dir = new File(directory, DateUtils.today()+"-"+index);
+        }
+        dir.mkdirs();
+        this.pathStatsGame = "C:/Users/" + username + "/Documents/ANR_Project/" + "Eval" + index + "_" + DateUtils.today();
     }
 
     public void generateTab(JsonArray configFile){
@@ -225,7 +246,7 @@ public class GazePlayEvalTest implements GameLifeCycle {
                 this.gameContext.clear();
                 this.gameContext.showRoundStats(stats, this);
             }else {
-                this.stats.screenHeatMapGaze();
+                this.stats.screenHeatMapGaze(this.pathStatsGame);
                 this.stopGetGazePosition();
                 this.dispose();
                 this.gameContext.clear();
@@ -236,7 +257,7 @@ public class GazePlayEvalTest implements GameLifeCycle {
     }
 
     public void getScreenHeatmapGaze(){
-        this.stats.screenHeatMapGaze();
+        this.stats.screenHeatMapGaze(this.pathStatsGame);
     }
 
     @Override
@@ -246,15 +267,11 @@ public class GazePlayEvalTest implements GameLifeCycle {
         this.nbImageSee = 0;
         this.canRemoveItemManually = true;
 
-        gameContext.setLimiterAvailable();
-
-        generateScreen();
         currentRoundDetails = pickAndBuildRandomPictures();
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
-
 
         this.generateScreen();
     }
@@ -339,7 +356,7 @@ public class GazePlayEvalTest implements GameLifeCycle {
             gameSizing.height-10,
             gameContext,
             gameVariant,
-            "blackCross.png",
+            "blackCrossMini.png",
             stats,
             this,
             "cross",
@@ -587,20 +604,24 @@ public class GazePlayEvalTest implements GameLifeCycle {
 
     public void finalStats() {
 
-        this.stats.screenHeatMapGaze();
+        this.stats.screenHeatMapGaze(this.pathStatsGame);
         stats.timeGame = System.currentTimeMillis() - this.currentRoundStartTime;
         stats.nameScores = this.listNameScores;
         stats.scores = this.listScoresPoints;
         stats.totalItemsAddedManually = this.totalItemsAddedManually;
+
         createExcelFile();
+        createTxtFile();
+    }
+
+    public void createTxtFile(){
+
     }
 
     @SuppressWarnings("PMD")
     public void createExcelFile(){
 
-        File pathDirectory = stats.getGameStatsOfTheDayDirectory();
-        String pathFile = pathDirectory + "\\" + this.gameName + "-" + DateUtils.dateTimeNow() + ".xlsx";
-        this.stats.actualFile = pathFile;
+        this.stats.actualFile = this.pathStatsGame  + "/stats_" + DateUtils.today() + ".xlsx";
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet(this.gameName);
@@ -629,7 +650,7 @@ public class GazePlayEvalTest implements GameLifeCycle {
             }
         }
 
-        try (FileOutputStream outputStream = new FileOutputStream(pathFile)) {
+        try (FileOutputStream outputStream = new FileOutputStream(this.stats.actualFile)) {
             workbook.write(outputStream);
         } catch (Exception e){
             log.info("Error creation xls for GazePlay Eval stats game !");
@@ -643,11 +664,13 @@ public class GazePlayEvalTest implements GameLifeCycle {
         public void handle(KeyEvent key) {
             if (typeScreen.equals("instruction")){
                 if (key.getCode().equals(KeyCode.SPACE)) {
+                    gameContext.getSoundManager().stop();
                     clearScreen();
                     generateCrossFixationScreen();
                 }
             } else if (typeScreen.equals("end")) {
                 if (key.getCode().equals(KeyCode.SPACE)) {
+                    gameContext.getSoundManager().stop();
                     clearScreen();
                     goToStats();
                 }

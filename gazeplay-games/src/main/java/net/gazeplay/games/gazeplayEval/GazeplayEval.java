@@ -225,7 +225,7 @@ public class GazeplayEval implements GameLifeCycle {
                 this.gameContext.clear();
                 this.gameContext.showRoundStats(stats, this);
             }else {
-                this.stats.screenHeatMapGaze();
+                //this.stats.screenHeatMapGaze();
                 this.stopGetGazePosition();
                 this.dispose();
                 this.gameContext.clear();
@@ -236,7 +236,7 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public void getScreenHeatmapGaze(){
-        this.stats.screenHeatMapGaze();
+        //this.stats.screenHeatMapGaze();
     }
 
     @Override
@@ -585,7 +585,7 @@ public class GazeplayEval implements GameLifeCycle {
 
     public void finalStats() {
 
-        this.stats.screenHeatMapGaze();
+        //this.stats.screenHeatMapGaze();
         stats.timeGame = System.currentTimeMillis() - this.currentRoundStartTime;
         stats.nameScores = this.listNameScores;
         stats.scores = this.listScoresPoints;
@@ -647,6 +647,7 @@ public class GazeplayEval implements GameLifeCycle {
                 }
             } else if (typeScreen.equals("end")) {
                 if (key.getCode().equals(KeyCode.SPACE)) {
+                    gameContext.getSoundManager().stop();
                     clearScreen();
                     goToStats();
                 }
