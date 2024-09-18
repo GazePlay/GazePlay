@@ -44,6 +44,7 @@ public class GazeplayEval implements GameLifeCycle {
     private final ArrayList<TargetAOI> targetAOIList;
     private final ReplayablePseudoRandom randomGenerator;
     private String gameName = "GazePlayEval";
+    private String pathStatsGame = "";
     private String IMAGE_SOUND = "";
     private int[] rows;
     private int[] cols;
@@ -75,6 +76,11 @@ public class GazeplayEval implements GameLifeCycle {
     public Timeline createDisplayDuration;
     public ArrayList<Double> listGazePositionX = new ArrayList<>();
     public ArrayList<Double> listGazePositionY = new ArrayList<>();
+    public ArrayList<String> idImg = new ArrayList<>();
+    public ArrayList<String> posImgHG = new ArrayList<>();
+    public ArrayList<String> posImgHD = new ArrayList<>();
+    public ArrayList<String> posImgBG = new ArrayList<>();
+    public ArrayList<String> posImgBD = new ArrayList<>();
     public String eyeTracker;
     public String typeScreen;
 
@@ -112,6 +118,7 @@ public class GazeplayEval implements GameLifeCycle {
 
     public void loadConfig(){
         Configuration config = ActiveConfigurationContext.getInstance();
+        generateStatsFolder();
         File gameDirectory = new File(config.getFileDir() + "\\evals\\" + this.gameVariant.getNameGame() + "\\config.json");
         JsonParser jsonParser = new JsonParser();
         try  (FileReader reader = new FileReader(gameDirectory)) {
@@ -132,6 +139,25 @@ public class GazeplayEval implements GameLifeCycle {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void generateStatsFolder(){
+        String username = System.getProperty("user.name");
+        String directory = "C:/Users/" + username + "/Documents/ANR_Project";
+
+        File anrProjet = new File(directory);
+        if (!anrProjet.exists()){
+            anrProjet.mkdirs();
+        }
+
+        int index = 1;
+        File dir = new File(directory, "Eval" + index + "_" + DateUtils.today());
+        while (dir.exists()){
+            index++;
+            dir = new File(directory, "Eval" + index + "_" + DateUtils.today());
+        }
+        dir.mkdirs();
+        this.pathStatsGame = "C:/Users/" + username + "/Documents/ANR_Project/" + "Eval" + index + "_" + DateUtils.today();
     }
 
     public void generateTab(JsonArray configFile){
@@ -209,8 +235,21 @@ public class GazeplayEval implements GameLifeCycle {
             double[] pos = this.gameContext.getGazeDeviceManager().getPosition();
             this.listGazePositionX.add(pos[0]);
             this.listGazePositionY.add(pos[1]);
+            this.idImg.add(this.getId());
+            this.posImgHG.add(this.listImages[this.indexFileImage][0]);
+            this.posImgHD.add(this.listImages[this.indexFileImage][1]);
+            this.posImgBG.add(this.listImages[this.indexFileImage][2]);
+            this.posImgBD.add(this.listImages[this.indexFileImage][3]);
         }));
         this.getGazePositionXY.setCycleCount(Timeline.INDEFINITE);
+    }
+
+    public String getId(){
+        String nameId = this.listSounds[this.indexFileImage];
+        nameId = nameId.split("_")[1];
+        nameId = nameId.split("\\.")[0];
+
+        return nameId;
     }
 
     public void createDisplayDuration(){
@@ -225,7 +264,7 @@ public class GazeplayEval implements GameLifeCycle {
                 this.gameContext.clear();
                 this.gameContext.showRoundStats(stats, this);
             }else {
-                //this.stats.screenHeatMapGaze();
+                this.stats.screenHeatMapGaze(this.pathStatsGame);
                 this.stopGetGazePosition();
                 this.dispose();
                 this.gameContext.clear();
@@ -236,7 +275,7 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public void getScreenHeatmapGaze(){
-        //this.stats.screenHeatMapGaze();
+        this.stats.screenHeatMapGaze(this.pathStatsGame);
     }
 
     @Override
@@ -585,29 +624,64 @@ public class GazeplayEval implements GameLifeCycle {
 
     public void finalStats() {
 
-        //this.stats.screenHeatMapGaze();
+        this.stats.screenHeatMapGaze(this.pathStatsGame);
         stats.timeGame = System.currentTimeMillis() - this.currentRoundStartTime;
         stats.nameScores = this.listNameScores;
         stats.scores = this.listScoresPoints;
         stats.totalItemsAddedManually = this.totalItemsAddedManually;
         createExcelFile();
+        createTxtFile();
+    }
+
+    public void createTxtFile(){
+        File evalTraining = new File(this.pathStatsGame, "Eval_" + DateUtils.today() + ".txt");
+        StringBuilder content = new StringBuilder();
+
+        for (int i=0; i<this.listImages.length; i++){
+            content.append("Planche ").append(i + 1).append(" :").append(System.lineSeparator());
+            content.append(System.lineSeparator());
+            content.append("Image en haut à gauche : ").append(this.listImages[i][0]).append(System.lineSeparator());
+            content.append("Image en haut à droite : ").append(this.listImages[i][1]).append(System.lineSeparator());
+            content.append("Image en bas à gauche : ").append(this.listImages[i][2]).append(System.lineSeparator());
+            content.append("Image en bas à droite : ").append(this.listImages[i][3]).append(System.lineSeparator());
+            content.append("Son : ").append(this.listSounds[i]).append(System.lineSeparator());
+            content.append(System.lineSeparator());
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(evalTraining))){
+            writer.write(content.toString());
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @SuppressWarnings("PMD")
     public void createExcelFile(){
 
-        File pathDirectory = stats.getGameStatsOfTheDayDirectory();
-        String pathFile = pathDirectory + "\\" + this.gameName + "-" + DateUtils.dateTimeNow() + ".xlsx";
-        this.stats.actualFile = pathFile;
+        this.stats.actualFile = this.pathStatsGame  + "/StatsTraining_" + DateUtils.today() + ".xlsx";
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet(this.gameName);
 
-        Object[][] bookData = new Object[this.listGazePositionX.size()][2];
+        Object[][] bookData = new Object[this.listGazePositionX.size()+1][7];
 
-        for (int i=0; i<this.listGazePositionX.size(); i++){
+        bookData[0][0] = "Coordonnées X";
+        bookData[0][1] = "Coordonnées Y";
+        bookData[0][2] = "Img ID";
+        bookData[0][3] = "Img HG";
+        bookData[0][4] = "Img HD";
+        bookData[0][5] = "Img BG";
+        bookData[0][6] = "Img BD";
+
+        for (int i=1; i<this.listGazePositionX.size(); i++){
             bookData[i][0] = String.valueOf(this.listGazePositionX.get(i));
             bookData[i][1] = String.valueOf(this.listGazePositionY.get(i));
+            bookData[i][2] = this.idImg.get(i);
+            bookData[i][3] = this.posImgHG.get(i);
+            bookData[i][4] = this.posImgHD.get(i);
+            bookData[i][5] = this.posImgBG.get(i);
+            bookData[i][6] = this.posImgBD.get(i);
         }
 
         int rowCount = 0;
@@ -627,7 +701,7 @@ public class GazeplayEval implements GameLifeCycle {
             }
         }
 
-        try (FileOutputStream outputStream = new FileOutputStream(pathFile)) {
+        try (FileOutputStream outputStream = new FileOutputStream(this.stats.actualFile)) {
             workbook.write(outputStream);
         } catch (Exception e){
             log.info("Error creation xls for GazePlay Eval stats game !");
