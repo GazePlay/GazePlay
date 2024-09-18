@@ -146,13 +146,13 @@ public class GazePlayEvalTest implements GameLifeCycle {
         }
 
         int index = 1;
-        File dir = new File(directory, "Eval" + index + "_" + DateUtils.today());
+        File dir = new File(directory, "EvalTraining" + index + "_" + DateUtils.today());
         while (dir.exists()){
             index++;
             dir = new File(directory, DateUtils.today()+"-"+index);
         }
         dir.mkdirs();
-        this.pathStatsGame = "C:/Users/" + username + "/Documents/ANR_Project/" + "Eval" + index + "_" + DateUtils.today();
+        this.pathStatsGame = "C:/Users/" + username + "/Documents/ANR_Project/" + "EvalTraining" + index + "_" + DateUtils.today();
     }
 
     public void generateTab(JsonArray configFile){
@@ -615,20 +615,42 @@ public class GazePlayEvalTest implements GameLifeCycle {
     }
 
     public void createTxtFile(){
+        File evalTraining = new File(this.pathStatsGame, "EvalTraining_" + DateUtils.today() + ".txt");
+        StringBuilder content = new StringBuilder();
 
+        for (int i=0; i<this.listImages.length; i++){
+            content.append("Planche ").append(i + 1).append(" :").append(System.lineSeparator());
+            content.append(System.lineSeparator());
+            content.append("Image en haut à gauche : ").append(this.listImages[i][0]).append(System.lineSeparator());
+            content.append("Image en haut à droite : ").append(this.listImages[i][1]).append(System.lineSeparator());
+            content.append("Image en bas à gauche : ").append(this.listImages[i][2]).append(System.lineSeparator());
+            content.append("Image en bas à droite : ").append(this.listImages[i][3]).append(System.lineSeparator());
+            content.append("Son : ").append(this.listSounds[i]).append(System.lineSeparator());
+            content.append(System.lineSeparator());
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(evalTraining))){
+            writer.write(content.toString());
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @SuppressWarnings("PMD")
     public void createExcelFile(){
 
-        this.stats.actualFile = this.pathStatsGame  + "/stats_" + DateUtils.today() + ".xlsx";
+        this.stats.actualFile = this.pathStatsGame  + "/StatsTraining_" + DateUtils.today() + ".xlsx";
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet(this.gameName);
 
-        Object[][] bookData = new Object[this.listGazePositionX.size()][2];
+        Object[][] bookData = new Object[this.listGazePositionX.size()+1][2];
 
-        for (int i=0; i<this.listGazePositionX.size(); i++){
+        bookData[0][0] = "Coordonnées X";
+        bookData[0][1] = "Coordonnées Y";
+
+        for (int i=1; i<this.listGazePositionX.size(); i++){
             bookData[i][0] = String.valueOf(this.listGazePositionX.get(i));
             bookData[i][1] = String.valueOf(this.listGazePositionY.get(i));
         }
