@@ -659,7 +659,8 @@ public class GazeplayEval implements GameLifeCycle {
     @SuppressWarnings("PMD")
     public void createExcelFile(){
 
-        this.stats.actualFile = this.pathStatsGame  + "/StatsTraining_" + DateUtils.today() + ".xlsx";
+        String pathStats = this.pathStatsGame  + "/Stats_" + DateUtils.today() + ".xlsx";
+        this.stats.actualFile = this.pathStatsGame  + "/Stats_" + DateUtils.today() + ".xlsx";
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet(this.gameName);
@@ -701,7 +702,7 @@ public class GazeplayEval implements GameLifeCycle {
             }
         }
 
-        try (FileOutputStream outputStream = new FileOutputStream(this.stats.actualFile)) {
+        try (FileOutputStream outputStream = new FileOutputStream(pathStats)) {
             workbook.write(outputStream);
         } catch (Exception e){
             log.info("Error creation xls for GazePlay Eval stats game !");
@@ -730,6 +731,10 @@ public class GazeplayEval implements GameLifeCycle {
                     clearScreen();
                     generateCrossFixationScreen();
                 }
+            } else if (key.getCode().equals(KeyCode.ESCAPE)) {
+                finalStats();
+                clearScreen();
+                goToStats();
             }
         }
     }

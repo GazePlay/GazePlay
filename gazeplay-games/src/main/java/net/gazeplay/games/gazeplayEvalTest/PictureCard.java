@@ -142,24 +142,17 @@ class PictureCard extends Group {
     }
 
     public void waitBeforeNextRound(){
-        Configuration config = ActiveConfigurationContext.getInstance();
-
-        Timeline transition = new Timeline();
-        transition.getKeyFrames().add(new KeyFrame(new Duration(config.getTransitionTime())));
-        transition.setOnFinished(event -> {
-            if(gameInstance.increaseIndexFileImage()){
-                this.endGame();
-            }else {
-                gameInstance.stopDisplayDuration();
-                gameInstance.stopGetGazePosition();
-                gameInstance.getScreenHeatmapGaze();
-                gameInstance.dispose();
-                gameContext.clear();
-                gameInstance.launch();
-            }
-        });
         gameInstance.removeEventHandlerPictureCard();
-        transition.playFromStart();
+        if(gameInstance.increaseIndexFileImage()){
+            this.endGame();
+        }else {
+            gameInstance.stopDisplayDuration();
+            gameInstance.stopGetGazePosition();
+            gameInstance.getScreenHeatmapGaze();
+            gameInstance.dispose();
+            gameContext.clear();
+            gameInstance.launch();
+        }
     }
 
     private ImageView createImageView(double posX, double posY, double width, double height,
