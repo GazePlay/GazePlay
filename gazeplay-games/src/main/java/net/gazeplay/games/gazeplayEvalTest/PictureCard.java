@@ -93,7 +93,7 @@ class PictureCard extends Group {
 
         customInputEventHandlerMouse = new CustomInputEventHandlerMouse();
 
-        gameContext.getGazeDeviceManager().addEventFilter(imageRectangle);
+        gameContext.getGazeDeviceManager().addEventFilter(gazeArea);
 
         this.addEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);
         this.addEventFilter(GazeEvent.ANY, customInputEventHandlerMouse);

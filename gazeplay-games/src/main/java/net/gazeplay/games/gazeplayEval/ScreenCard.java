@@ -46,7 +46,7 @@ public class ScreenCard extends Group {
             this.gazeArea = createGazeArea(imageName);
             this.progressIndicator = buildProgressIndicator(posX, posY);
             customInputEventHandler = new CustomInputEventHandler();
-            gameContext.getGazeDeviceManager().addEventFilter(imageRectangle);
+            gameContext.getGazeDeviceManager().addEventFilter(gazeArea);
             this.addEventFilter(MouseEvent.ANY, customInputEventHandler);
             this.addEventFilter(GazeEvent.ANY, customInputEventHandler);
             this.getChildren().add(gazeArea);
