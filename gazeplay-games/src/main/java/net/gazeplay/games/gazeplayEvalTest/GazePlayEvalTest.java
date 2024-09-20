@@ -26,6 +26,8 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -74,6 +76,7 @@ public class GazePlayEvalTest implements GameLifeCycle {
     private ArrayList<Integer> listScoresPoints = new ArrayList<>(20);
     public Timeline getGazePositionXY;
     public Timeline createDisplayDuration;
+    public int countStats = 0;
     public ArrayList<Double> listGazePositionX = new ArrayList<>();
     public ArrayList<Double> listGazePositionY = new ArrayList<>();
     public ArrayList<String> idImg = new ArrayList<>();
@@ -158,6 +161,7 @@ public class GazePlayEvalTest implements GameLifeCycle {
         }
         dir.mkdirs();
         this.pathStatsGame = "C:/Users/" + username + "/Documents/ANR_Project/" + "EvalTraining" + index + "_" + DateUtils.today();
+        this.countStats = 0;
     }
 
     public void generateTab(JsonArray configFile){
@@ -233,6 +237,7 @@ public class GazePlayEvalTest implements GameLifeCycle {
         log.info("Create timeline GP !");
         this.getGazePositionXY = new Timeline(new KeyFrame(Duration.millis(20), ev -> {
             double[] pos = this.gameContext.getGazeDeviceManager().getPosition();
+            this.countStats++;
             this.listGazePositionX.add(pos[0]);
             this.listGazePositionY.add(pos[1]);
             this.idImg.add(this.getId());
@@ -245,9 +250,17 @@ public class GazePlayEvalTest implements GameLifeCycle {
     }
 
     public String getId(){
-        String nameId = this.listSounds[this.indexFileImage];
-        nameId = nameId.split("_")[1];
-        nameId = nameId.split("\\.")[0];
+        String nameId = "";
+
+        if (this.listImages[this.indexFileImage][0].contains("isGoodImg")){
+            nameId = this.listImages[this.indexFileImage][0].split("-")[0];
+        } else if (this.listImages[this.indexFileImage][1].contains("isGoodImg")) {
+            nameId = this.listImages[this.indexFileImage][1].split("-")[0];
+        }else if (this.listImages[this.indexFileImage][2].contains("isGoodImg")) {
+            nameId = this.listImages[this.indexFileImage][2].split("-")[0];
+        }else if (this.listImages[this.indexFileImage][3].contains("isGoodImg")) {
+            nameId = this.listImages[this.indexFileImage][3].split("-")[0];
+        }
 
         return nameId;
     }
@@ -257,6 +270,8 @@ public class GazePlayEvalTest implements GameLifeCycle {
         this.createDisplayDuration = new Timeline(new KeyFrame(Duration.millis(this.displayDuration[this.indexFileImage]), event -> {
             log.info("DD passe !");
             if(this.increaseIndexFileImage()){
+                this.stats.screenHeatMapGaze(this.pathStatsGame);
+                this.stopGetGazePosition();
                 this.finalStats();
                 this.gameContext.updateScore(stats, this);
                 this.resetFromReplay();
@@ -622,14 +637,12 @@ public class GazePlayEvalTest implements GameLifeCycle {
 
     public void finalStats() {
 
-        this.stats.screenHeatMapGaze(this.pathStatsGame);
         stats.timeGame = System.currentTimeMillis() - this.currentRoundStartTime;
         stats.nameScores = this.listNameScores;
         stats.scores = this.listScoresPoints;
         stats.totalItemsAddedManually = this.totalItemsAddedManually;
-
-        createExcelFile();
         createTxtFile();
+        createExcelFile();
     }
 
     public void createTxtFile(){
@@ -661,10 +674,10 @@ public class GazePlayEvalTest implements GameLifeCycle {
         String pathStats = this.pathStatsGame  + "/StatsTraining_" + DateUtils.today() + ".xlsx";
         this.stats.actualFile = this.pathStatsGame  + "/StatsTraining_" + DateUtils.today() + ".xlsx";
 
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet(this.gameName);
+        SXSSFWorkbook workbook = new SXSSFWorkbook();
+        Sheet sheet = workbook.createSheet(this.gameName);
 
-        Object[][] bookData = new Object[this.listGazePositionX.size()+1][7];
+        Object[][] bookData = new Object[this.countStats+1][7];
 
         bookData[0][0] = "Coordonnées X";
         bookData[0][1] = "Coordonnées Y";
@@ -674,14 +687,14 @@ public class GazePlayEvalTest implements GameLifeCycle {
         bookData[0][5] = "Img BG";
         bookData[0][6] = "Img BD";
 
-        for (int i=1; i<this.listGazePositionX.size(); i++){
-            bookData[i][0] = String.valueOf(this.listGazePositionX.get(i));
-            bookData[i][1] = String.valueOf(this.listGazePositionY.get(i));
-            bookData[i][2] = this.idImg.get(i);
-            bookData[i][3] = this.posImgHG.get(i);
-            bookData[i][4] = this.posImgHD.get(i);
-            bookData[i][5] = this.posImgBG.get(i);
-            bookData[i][6] = this.posImgBD.get(i);
+        for (int i=1; i<this.countStats; i++){
+            bookData[i][0] = String.valueOf(this.listGazePositionX.get(i-1));
+            bookData[i][1] = String.valueOf(this.listGazePositionY.get(i-1));
+            bookData[i][2] = this.idImg.get(i-1);
+            bookData[i][3] = this.posImgHG.get(i-1);
+            bookData[i][4] = this.posImgHD.get(i-1);
+            bookData[i][5] = this.posImgBG.get(i-1);
+            bookData[i][6] = this.posImgBD.get(i-1);
         }
 
         int rowCount = 0;

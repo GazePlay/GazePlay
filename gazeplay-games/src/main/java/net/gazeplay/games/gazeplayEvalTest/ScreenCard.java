@@ -103,10 +103,10 @@ public class ScreenCard extends Group {
         final Image image = new Image("data/common/images/" + imageName);
 
         gazeArea = new Rectangle();
-        gazeArea.setX(this.imageRectangle.getX() - 5);
-        gazeArea.setY(this.imageRectangle.getY() - 5);
-        gazeArea.setWidth(image.getWidth() + 10);
-        gazeArea.setHeight(image.getHeight() + 10);
+        gazeArea.setX(this.imageRectangle.getX() - 25);
+        gazeArea.setY(this.imageRectangle.getY() - 25);
+        gazeArea.setWidth(image.getWidth() + 50);
+        gazeArea.setHeight(image.getHeight() + 50);
 
         gazeArea.setFill(Color.TRANSPARENT);
         gazeArea.setStroke(Color.BLUE);
