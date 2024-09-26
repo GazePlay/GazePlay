@@ -136,7 +136,7 @@ public class GazeplayEval implements GameLifeCycle {
             }
             this.indexEndGame = configFile.size();
             this.setSound();
-            this.getGazePosition();
+            this.getGazePosition(config);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -231,9 +231,9 @@ public class GazeplayEval implements GameLifeCycle {
         }
     }
 
-    public void getGazePosition(){
+    public void getGazePosition(Configuration config){
         log.info("Create timeline GP !");
-        this.getGazePositionXY = new Timeline(new KeyFrame(Duration.millis(20), ev -> {
+        this.getGazePositionXY = new Timeline(new KeyFrame(Duration.millis((config.getFrameGazePosition()/1000.0)), ev -> {
             double[] pos = this.gameContext.getGazeDeviceManager().getPosition();
             this.countStats++;
             this.listGazePositionX.add(pos[0]);

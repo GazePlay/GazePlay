@@ -28,8 +28,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
 import java.util.*;
@@ -138,7 +136,7 @@ public class GazePlayEvalTest implements GameLifeCycle {
             }
             this.indexEndGame = configFile.size();
             this.setSound();
-            this.getGazePosition();
+            this.getGazePosition(config);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -233,9 +231,9 @@ public class GazePlayEvalTest implements GameLifeCycle {
         }
     }
 
-    public void getGazePosition(){
+    public void getGazePosition(Configuration config){
         log.info("Create timeline GP !");
-        this.getGazePositionXY = new Timeline(new KeyFrame(Duration.millis(20), ev -> {
+        this.getGazePositionXY = new Timeline(new KeyFrame(Duration.millis((config.getFrameGazePosition()/1000.0)), ev -> {
             double[] pos = this.gameContext.getGazeDeviceManager().getPosition();
             this.countStats++;
             this.listGazePositionX.add(pos[0]);

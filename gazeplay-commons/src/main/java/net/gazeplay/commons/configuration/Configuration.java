@@ -46,6 +46,7 @@ public class Configuration {
     private static final String PROPERTY_NAME_COLUMNAR_IMAGES_ENABLED = "COLUMNAR_IMAGES_ENABLED";
     private static final String PROPERTY_NAME_SOUND_ENABLED = "SOUND_ENABLED";
     private static final String PROPERTY_NAME_SOA_ENABLED = "SOA_ENABLED";
+    private static final String PROPERTY_NAME_FRAME_GAZE_POSITION = "FRAME_GAZE_POSITION";
     private static final String PROPERTY_NAME_FEEDBACK = "FEEDBACK";
     /* Eye-tracking settings */
     private static final String PROPERTY_NAME_EYE_TRACKER = "EYE_TRACKER";
@@ -107,6 +108,7 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_COLUMNAR_IMAGES_ENABLED = false;
     private static final boolean DEFAULT_VALUE_SOUND_ENABLED = true;
     private static final boolean DEFAULT_VALUE_SOA_ENABLED = false;
+    private static final int DEFAULT_VALUE_FRAME_GAZE_POSITION = 20;
     private static final String DEFAULT_VALUE_FEEDBACK = Feedback.standard.toString();
     /* Eye-tracking settings */
     private static final String DEFAULT_VALUE_EYE_TRACKER = EyeTracker.tobii.toString();
@@ -183,6 +185,8 @@ public class Configuration {
     private final BooleanProperty soundEnabledProperty;
     @Getter
     private final BooleanProperty soaEnabledProperty;
+    @Getter
+    private final IntegerProperty frameGazePositionProperty;
     @Getter
     private final StringProperty feedbackProperty;
     /* Eye-tracking settings */
@@ -296,6 +300,7 @@ public class Configuration {
         columnarImagesEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_COLUMNAR_IMAGES_ENABLED, DEFAULT_VALUE_COLUMNAR_IMAGES_ENABLED, propertyChangeListener);
         soundEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_SOUND_ENABLED, DEFAULT_VALUE_SOUND_ENABLED, propertyChangeListener);
         soaEnabledProperty = new ApplicationConfigBackedBooleanProperty(applicationConfig, PROPERTY_NAME_SOA_ENABLED, DEFAULT_VALUE_SOA_ENABLED, propertyChangeListener);
+        frameGazePositionProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_FRAME_GAZE_POSITION, DEFAULT_VALUE_FRAME_GAZE_POSITION, propertyChangeListener);
         feedbackProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_FEEDBACK, DEFAULT_VALUE_FEEDBACK, propertyChangeListener);
 
         /* Eye-tracking settings */
@@ -448,6 +453,9 @@ public class Configuration {
 
     public Boolean isSoaEnabled(){
         return soaEnabledProperty.getValue();
+    }
+    public Integer getFrameGazePosition() {
+        return frameGazePositionProperty.getValue();
     }
 
     public String getFeedback() {
