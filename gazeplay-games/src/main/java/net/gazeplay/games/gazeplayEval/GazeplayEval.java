@@ -677,24 +677,35 @@ public class GazeplayEval implements GameLifeCycle {
         SXSSFWorkbook workbook = new SXSSFWorkbook();
         Sheet sheet = workbook.createSheet(this.gameName);
 
-        Object[][] bookData = new Object[this.countStats+1][7];
+        Object[][] bookData = new Object[this.countStats+1][8];
 
-        bookData[0][0] = "Coordonnées X";
-        bookData[0][1] = "Coordonnées Y";
-        bookData[0][2] = "Img ID";
-        bookData[0][3] = "Img HG";
-        bookData[0][4] = "Img HD";
-        bookData[0][5] = "Img BG";
-        bookData[0][6] = "Img BD";
+        bookData[0][0] = "Timepoint";
+        bookData[0][1] = "Coordonnées X";
+        bookData[0][2] = "Coordonnées Y";
+        bookData[0][3] = "Img ID";
+        bookData[0][4] = "Img HG";
+        bookData[0][5] = "Img HD";
+        bookData[0][6] = "Img BG";
+        bookData[0][7] = "Img BD";
 
+        String nameTimepoint = "";
+        int countTimepoint = 1;
         for (int i=1; i<this.countStats; i++){
-            bookData[i][0] = String.valueOf(this.listGazePositionX.get(i-1));
-            bookData[i][1] = String.valueOf(this.listGazePositionY.get(i-1));
-            bookData[i][2] = this.idImg.get(i-1);
-            bookData[i][3] = this.posImgHG.get(i-1);
-            bookData[i][4] = this.posImgHD.get(i-1);
-            bookData[i][5] = this.posImgBG.get(i-1);
-            bookData[i][6] = this.posImgBD.get(i-1);
+
+            if (!nameTimepoint.equals(this.idImg.get(i - 1))){
+                nameTimepoint = this.idImg.get(i - 1);
+                countTimepoint = 1;
+            }
+
+            bookData[i][0] = String.valueOf(countTimepoint);
+            bookData[i][1] = String.valueOf(this.listGazePositionX.get(i-1));
+            bookData[i][2] = String.valueOf(this.listGazePositionY.get(i-1));
+            bookData[i][3] = this.idImg.get(i-1);
+            bookData[i][4] = this.posImgHG.get(i-1);
+            bookData[i][5] = this.posImgHD.get(i-1);
+            bookData[i][6] = this.posImgBG.get(i-1);
+            bookData[i][7] = this.posImgBD.get(i-1);
+            countTimepoint++;
         }
 
         int rowCount = 0;
