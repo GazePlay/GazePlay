@@ -249,15 +249,20 @@ public class GazeplayEval implements GameLifeCycle {
 
     public String getId(){
         String nameId = "";
+        String tmpNameId = "";
 
-        if (this.listImages[this.indexFileImage][0].contains("isGoodImg")){
-            nameId = this.listImages[this.indexFileImage][0].split("-")[0];
-        } else if (this.listImages[this.indexFileImage][1].contains("isGoodImg")) {
-            nameId = this.listImages[this.indexFileImage][1].split("-")[0];
-        }else if (this.listImages[this.indexFileImage][2].contains("isGoodImg")) {
-            nameId = this.listImages[this.indexFileImage][2].split("-")[0];
-        }else if (this.listImages[this.indexFileImage][3].contains("isGoodImg")) {
-            nameId = this.listImages[this.indexFileImage][3].split("-")[0];
+        if (this.listImages[this.indexFileImage][0].contains("C_")){
+            tmpNameId = this.listImages[this.indexFileImage][0].split("_")[1];
+            nameId = tmpNameId.split("\\.")[0];
+        } else if (this.listImages[this.indexFileImage][1].contains("C_")) {
+            tmpNameId = this.listImages[this.indexFileImage][1].split("_")[1];
+            nameId = tmpNameId.split("\\.")[0];
+        }else if (this.listImages[this.indexFileImage][2].contains("C_")) {
+            tmpNameId = this.listImages[this.indexFileImage][2].split("_")[1];
+            nameId = tmpNameId.split("\\.")[0];
+        }else if (this.listImages[this.indexFileImage][3].contains("C_")) {
+            tmpNameId = this.listImages[this.indexFileImage][3].split("_")[1];
+            nameId = tmpNameId.split("\\.")[0];
         }
 
         return nameId;
@@ -592,7 +597,7 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public void calculScores(String name){
-        if (name.contains("isGoodImg")){
+        if (name.contains("C_")){
             this.scores++;
         }
     }
