@@ -120,6 +120,9 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
     @Override
     public void launch() {
         if (!this.startGame) {
+            stats.notifyNewRoundReady();
+            gameContext.getGazeDeviceManager().addStats(stats);
+            gameContext.firstStart();
             this.startGame = true;
             String rule = "";
             switch (this.gameType.getVariant()){

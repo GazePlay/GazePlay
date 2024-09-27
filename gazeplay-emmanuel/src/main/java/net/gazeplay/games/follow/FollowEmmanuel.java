@@ -215,7 +215,9 @@ public class FollowEmmanuel implements GameLifeCycle {
     public void dispose() {
         listEI.clear();
         listWall.clear();
-        next.stop();
+        if (this.next != null){
+            next.stop();
+        }
         gameContext.getChildren().clear();
     }
 
