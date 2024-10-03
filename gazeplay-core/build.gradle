@@ -95,9 +95,62 @@ task generateEvalsCatalog {
 
     doLast {
         def sourceSet = project(':gazeplay-games').sourceSets.findByName('main').java
-        def packages = sourceSet
+
+        def labyrinth = sourceSet
                 .filter { it.path.endsWith('.java') }
-                .filter { it.path.contains('GazeplayEval') }
+                .filter { it.path.contains('Labyrinth') }
+                .filter { it.path.contains('SpecSource') }
+                .collect {
+                    it.path
+                            .substring(sourceSet.srcDirs[0].path.length() + 1)
+                            .replace('/', '.')
+                            .replace('\\', '.')
+                            .replace('.java', '')
+                }
+                .unique()
+
+        def mole = sourceSet
+                .filter { it.path.endsWith('.java') }
+                .filter { it.path.contains('WhacAMole') }
+                .filter { it.path.contains('SpecSource') }
+                .collect {
+                    it.path
+                            .substring(sourceSet.srcDirs[0].path.length() + 1)
+                            .replace('/', '.')
+                            .replace('\\', '.')
+                            .replace('.java', '')
+                }
+                .unique()
+
+        def memory = sourceSet
+                .filter { it.path.endsWith('.java') }
+                .filter { it.path.contains('OpenMemoryGame') }
+                .filter { it.path.contains('SpecSource') }
+                .collect {
+                    it.path
+                            .substring(sourceSet.srcDirs[0].path.length() + 1)
+                            .replace('/', '.')
+                            .replace('\\', '.')
+                            .replace('.java', '')
+                }
+                .unique()
+
+        def animal = sourceSet
+                .filter { it.path.endsWith('.java') }
+                .filter { it.path.contains('WhereIsTheAnimal') }
+                .filter { it.path.contains('SpecSource') }
+                .collect {
+                    it.path
+                            .substring(sourceSet.srcDirs[0].path.length() + 1)
+                            .replace('/', '.')
+                            .replace('\\', '.')
+                            .replace('.java', '')
+                }
+                .unique()
+
+        def frog = sourceSet
+                .filter { it.path.endsWith('.java') }
+                .filter { it.path.contains('FrogGame') }
                 .filter { it.path.contains('SpecSource') }
                 .collect {
                     it.path
@@ -112,6 +165,11 @@ task generateEvalsCatalog {
         if (file.exists()) {
             file.delete()
         }
-        packages.each { file.append(it + '\n') }
+
+        labyrinth.each { file.append(it + '\n') }
+        mole.each { file.append(it + '\n') }
+        memory.each { file.append(it + '\n') }
+        animal.each { file.append(it + '\n') }
+        frog.each { file.append(it + '\n') }
     }
 }

@@ -135,6 +135,7 @@ class PictureCard extends Group {
                 this.alreadySee = true;
                 customInputEventHandlerMouse.ignoreAnyInput = true;
                 this.newProgressIndicator();
+                gameInstance.checkAllPictureCardChecked();
             }
         };
     }
@@ -180,10 +181,52 @@ class PictureCard extends Group {
 
     public void onCorrectCardSelected() {
 
+        if (gameInstance.indexFileImage == (gameInstance.indexEndGame - 1)) {
+            progressIndicator.setVisible(false);
+            gameInstance.increaseIndexFileImage(true);
+            this.endGame();
+        } else {
+
+            gameInstance.nbCountError = 0;
+            gameInstance.increaseIndexFileImage(true);
+
+            stats.incrementNumberOfGoalsReached();
+
+            customInputEventHandlerMouse.ignoreAnyInput = true;
+            progressIndicator.setVisible(false);
+
+            gameContext.updateScore(stats, gameInstance);
+
+            this.waitBeforeNextRound();
+        }
     }
 
     public void onWrongCardSelected() {
 
+        gameInstance.nbCountError += 1;
+
+        if (gameInstance.nbCountError != 5){
+
+            if (gameInstance.indexFileImage == (gameInstance.indexEndGame - 1)) {
+                progressIndicator.setVisible(false);
+                gameInstance.increaseIndexFileImage(false);
+                this.endGame();
+            } else {
+                gameInstance.increaseIndexFileImage(false);
+
+                stats.incrementNumberOfGoalsReached();
+
+                customInputEventHandlerMouse.ignoreAnyInput = true;
+                progressIndicator.setVisible(false);
+
+                gameContext.updateScore(stats, gameInstance);
+
+                this.waitBeforeNextRound();
+            }
+        }else {
+            progressIndicator.setVisible(false);
+            this.endGame();
+        }
     }
 
     public void waitBeforeNextRound(){
@@ -197,6 +240,7 @@ class PictureCard extends Group {
             gameInstance.launch();
         });
 
+        gameInstance.removeEventHandlerPictureCard();
         transition.playFromStart();
     }
 
@@ -308,6 +352,9 @@ class PictureCard extends Group {
     public void endGame() {
 
         progressIndicator.setVisible(false);
+        gameInstance.finalStats();
+        gameContext.updateScore(stats, gameInstance);
+        gameInstance.resetFromReplay();
         gameInstance.dispose();
         gameContext.clear();
         gameContext.showRoundStats(stats, gameInstance);
