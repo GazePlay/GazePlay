@@ -71,7 +71,7 @@ public class Frog implements GameLifeCycle {
         double centerX = screenWidth / 2;
         double centerY = screenHeight / 2;
 
-        double nenupharSize = Math.min(radiusX, radiusY) / 3;
+        double nenupharSize = (Math.min(radiusX, radiusY) / 3) * 2;
 
         nenuphars = new ImageView[nbNenuphars];
         for (int i=0; i<nbNenuphars; i++){
@@ -108,7 +108,7 @@ public class Frog implements GameLifeCycle {
     }
 
     public void moveFrogTo(ImageView nenuphar){
-        double frogSize = nenuphar.getFitWidth() * 0.8;
+        double frogSize = nenuphar.getFitWidth() * 0.5;
         frog.setFitWidth(frogSize);
         frog.setFitHeight(frogSize);
         frog.setX(nenuphar.getX() + (nenuphar.getFitWidth() - frogSize) / 2);
