@@ -133,25 +133,19 @@ public class TrainingEmmanuel implements GameLifeCycle {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
-        String rule = "Vous devez trouver une clé. \n " +
-            "Quand vous l'aurez trouvée, fixez-la avec vos yeux.";
+        String rule = "data/common/rules/TrainingRulesLvl1.png";
         animationRules = this.gamesRules.createQuestionTransition(gameContext, rule);
         animationRules.play();
     }
 
     public void generateSecondInstruction(){
-        String rule = "Vous devez déplacer la clé. \n" +
-            "Fixez l'objectif que vous voulez atteindre et la clé se déplacera toute seule. \n" +
-            "Vous devez l'emmener jusqu'à la cible.";
+        String rule = "data/common/rules/TrainingRulesLvl2.png";
         animationRules = this.gamesRules.createQuestionTransition(gameContext, rule);
         animationRules.play();
     }
 
     public void generateThirdInstruction(){
-        String rule = "Vous devez déplacer la clé. \n" +
-            "Fixez l'objectif que vous voulez atteindre et la clé se déplacera toute seule. \n" +
-            "Vous devez l'emmener jusqu'à la cible cachée derrière un mur. \n" +
-            "Vous devrez le faire en plusieurs étapes.";
+        String rule = "data/common/rules/TrainingRulesLvl3.png";
         animationRules = this.gamesRules.createQuestionTransition(gameContext, rule);
         animationRules.play();
     }
