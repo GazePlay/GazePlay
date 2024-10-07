@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -94,7 +95,6 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
         this.stats.setGameSeed(randomGenerator.getSeed());
         this.saveData = new SaveData(this.stats, gameType.getVariant());
         this.eyeTracker = ActiveConfigurationContext.getInstance().getEyeTracker();
-
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
     }
 
@@ -113,7 +113,6 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
         this.gamesRules = new GamesRules();
         this.saveData = new SaveData(this.stats, gameType.getVariant());
         this.eyeTracker = ActiveConfigurationContext.getInstance().getEyeTracker();
-
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, customInputEventHandlerKeyboard);
     }
 
@@ -127,23 +126,14 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
             String rule = "";
             switch (this.gameType.getVariant()){
                 case "Europe":
-                    rule = "Dans DRAPEAU, vous devez trouver le drapeau du pays dont le nom s’affiche. \n" +
-                        "Quand votre regard passe sur un drapeau, un chronomètre jaune s’affiche. \n" +
-                        "Quand ce chronomètre est complet, la réponse s’affiche : \n" +
-                        "si votre réponse est juste, le jeu propose un nouveau pays à identifier ; \n" +
-                        "si la réponse est fausse une croix rouge apparaît et vous pouvez sélectionner un autre drapeau. \n" +
-                        "Dans le niveau 1, il s’agit uniquement de drapeaux de l’Europe et vous devez en identifier un parmi quatre. \n" +
-                        "Il est possible que le jeu demande plusieurs fois le même pays. \n" +
-                        "Attention, si vous clignez des yeux lorsque le chronomètre tourne, il est automatiquement remis à zéro.";
+                    rule = "data/common/rules/FlagRulesLvl1.png";
                     break;
                 case "EuropeAmerica":
-                    rule = "Dans le niveau 2, vous trouverez cette fois des drapeaux d’Europe et d’Asie. \n" +
-                        "Vous devrez trouver le bon drapeau parmi six.";
+                    rule = "data/common/rules/FlagRulesLvl2.png";
                     break;
 
                 case "AllFlags":
-                    rule = "Dans le niveau 3, vous trouverez des drapeaux du monde entier. \n" +
-                        "Vous devrez trouver le bon drapeau parmi neuf.";
+                    rule = "data/common/rules/FlagRulesLvl3.png";
                     break;
 
                 default:
@@ -219,20 +209,8 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
     private Transition createQuestionTransition(final String question, final List<Image> listOfPictos) {
         questionText = new Text(question);
         questionText.setTranslateY(0);
-
-        final String color = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<>() {
-            @Override
-            public String visitLight() {
-                return "titleB";
-            }
-
-            @Override
-            public String visitDark() {
-                return "titleW";
-            }
-        });
-
-        questionText.setId(color);
+        questionText.setFill(Color.WHITE);
+        questionText.setStyle("-fx-font-size: 60");
 
         final Dimension2D gamePaneDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         final double positionX = gamePaneDimension2D.getWidth() / 2 - questionText.getBoundsInParent().getWidth() * 2;
@@ -607,7 +585,7 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
             if (key.getCode().equals(KeyCode.ENTER) && acceptInput) {
                 acceptInput = false;
                 animationRules.stop();
-                gamesRules.hideQuestionText();
+                gamesRules.hideRule();
                 launch();
             }
         }

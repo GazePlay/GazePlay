@@ -260,7 +260,7 @@ public class GameMenuFactory {
 
         gameCard.addEventHandler(MOUSE_PRESSED, (MouseEvent e) -> {
             if (!favGamesImageView.isHover()) {
-                gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName);
+                gameMenuController.onGameSelection(gazePlay, root, gameSpec, gameName, config);
             }
             final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
             backgroundMusicManager.pause();

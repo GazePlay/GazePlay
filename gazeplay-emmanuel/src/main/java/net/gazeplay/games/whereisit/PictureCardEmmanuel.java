@@ -284,7 +284,7 @@ class PictureCardEmmanuel extends Group {
 
         Rectangle bordureRectangle = new Rectangle(rectangleWidth, rectangleHeight);
         bordureRectangle.setFill(Color.TRANSPARENT);
-        bordureRectangle.setStroke(Color.BLACK);
+        bordureRectangle.setStroke(Color.WHITE);
         bordureRectangle.setStrokeWidth(10);
         bordureRectangle.setX(positionX);
         bordureRectangle.setY(positionY);
