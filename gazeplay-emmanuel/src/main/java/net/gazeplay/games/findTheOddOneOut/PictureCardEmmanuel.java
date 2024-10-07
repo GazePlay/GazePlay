@@ -1,4 +1,4 @@
-package net.gazeplay.games.whereisit;
+package net.gazeplay.games.findTheOddOneOut;
 
 import javafx.animation.*;
 import javafx.event.ActionEvent;
@@ -50,15 +50,15 @@ class PictureCardEmmanuel extends Group {
 
     private boolean selected;
 
-    private final CustomInputEventHandler customInputEventHandler;
+    private final PictureCardEmmanuel.CustomInputEventHandler customInputEventHandler;
 
-    private final WhereIsItEmmanuel gameInstance;
+    private final FindTheOddOneOutEmmanuel gameInstance;
 
     public GamesRules gamesRules;
     private Rectangle notifImage;
 
     PictureCardEmmanuel(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
-                        boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsItEmmanuel gameInstance, GamesRules gamesRules) {
+                boolean winner, @NonNull String imagePath, @NonNull Stats stats, FindTheOddOneOutEmmanuel gameInstance, GamesRules gamesRules) {
 
         log.info("imagePath = {}", imagePath);
 
@@ -75,7 +75,7 @@ class PictureCardEmmanuel extends Group {
         this.stats = stats;
         this.gameInstance = gameInstance;
         this.gamesRules = gamesRules;
-        this.imagePath = imagePath;
+        this.imagePath = imagePath;;
 
         this.imageRectangle = createImageView(posX, posY, width, height, imagePath);
         this.progressIndicator = buildProgressIndicator(width, height);
@@ -96,7 +96,7 @@ class PictureCardEmmanuel extends Group {
         this.addEventFilter(GazeEvent.ANY, customInputEventHandler);
     }
 
-    private Timeline createProgressIndicatorTimeLine(WhereIsItEmmanuel gameInstance) {
+    private Timeline createProgressIndicatorTimeLine(FindTheOddOneOutEmmanuel gameInstance) {
         Timeline result = new Timeline();
 
         result.getKeyFrames()
@@ -110,7 +110,7 @@ class PictureCardEmmanuel extends Group {
         return result;
     }
 
-    private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(WhereIsItEmmanuel gameInstance) {
+    private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(FindTheOddOneOutEmmanuel gameInstance) {
         return actionEvent -> {
 
             log.debug("FINISHED");
@@ -130,7 +130,7 @@ class PictureCardEmmanuel extends Group {
         };
     }
 
-    private void onCorrectCardSelected(WhereIsItEmmanuel gameInstance) {
+    private void onCorrectCardSelected(FindTheOddOneOutEmmanuel gameInstance) {
         log.debug("WINNER");
 
         if (!gameInstance.getFirstWrong())
@@ -171,7 +171,7 @@ class PictureCardEmmanuel extends Group {
         gameInstance.launch();
     }
 
-    private void onWrongCardSelected(WhereIsItEmmanuel gameInstance) {
+    private void onWrongCardSelected(FindTheOddOneOutEmmanuel gameInstance) {
         //could be a single function?
         gameInstance.updateWrong();
         gameInstance.firstWrongCardSelected();
