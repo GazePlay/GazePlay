@@ -129,11 +129,11 @@ public class WhereIsItEmmanuel implements GameLifeCycle {
                     rule = "data/common/rules/FlagRulesLvl1.png";
                     break;
                 case "EuropeAmerica":
-                    rule = "data/common/rules/FlagRulesLvl2.png";
+                    rule = "data/common/rules/FlagRulesLvl1.png";
                     break;
 
                 case "AllFlags":
-                    rule = "data/common/rules/FlagRulesLvl3.png";
+                    rule = "data/common/rules/FlagRulesLvl1.png";
                     break;
 
                 default:

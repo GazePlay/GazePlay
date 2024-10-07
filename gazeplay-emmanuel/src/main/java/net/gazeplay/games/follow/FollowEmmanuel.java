@@ -120,16 +120,14 @@ public class FollowEmmanuel implements GameLifeCycle {
             this.firstGame = false;
             String rule = "";
             if (variant.equals(FollowEmmanuelGameVariant.Level1)) {
-                rule = "Dans suis le chemin, vous devait récupérer le trésor : le rubis rouge. \n"  +
-                    "Ce trésor est caché derrière une porte : vous devez donc allez récupérer la clé, ce qui ouvre automatiquement la porte. \n" +
-                    "Vous pouvez alors aller chercher le trésor. \n" +
-                    "Attention : dans ce jeu, votre regard indique le déplacement que vous souhaitez faire. \n" +
-                    "Cela signifie que si vous voulez aller à droite, vous devez regarder à droite.";
+                rule = "data/common/rules/FollowRulesLvl1.png";
             } else if (variant.equals(FollowEmmanuelGameVariant.Level2)){
-                rule = "Cette fois-ci, vous allez devoir récupérer non plus une clé mais trois pour ouvrir la porte.";
+                /*rule = "Cette fois-ci, vous allez devoir récupérer non plus une clé mais trois pour ouvrir la porte.";*/
+                rule = "data/common/rules/FollowRulesLvl1.png";
             }else if (variant.equals(FollowEmmanuelGameVariant.Level3)){
-                rule = "Cette fois-ci, pour ouvrir la porte, il vous faudra récupérer cinq clés. \n" +
-                    "Attention, certaines clés apparaissent en gris et sont donc moins visibles : il faut être un peu plus vigilant.";
+                /*rule = "Cette fois-ci, pour ouvrir la porte, il vous faudra récupérer cinq clés. \n" +
+                    "Attention, certaines clés apparaissent en gris et sont donc moins visibles : il faut être un peu plus vigilant.";*/
+                rule = "data/common/rules/FollowRulesLvl1.png";
             } else {
                 log.error("Variant not found : " + variant.getLabel());
             }
@@ -454,7 +452,7 @@ public class FollowEmmanuel implements GameLifeCycle {
             if (key.getCode().equals(KeyCode.ENTER) && acceptInput) {
                 acceptInput = false;
                 animationRules.stop();
-                gamesRules.hideQuestionText();
+                gamesRules.hideRule();
                 launch();
             }
         }
