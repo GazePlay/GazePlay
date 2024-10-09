@@ -115,6 +115,6 @@ public class IA {
     }
 
     public void checkNextJump(){
-        
+
     }
 }

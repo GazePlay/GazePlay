@@ -35,11 +35,11 @@ class Cheese extends Parent {
         moveCheese();
         if(this.isCheese)
         {
-            cheese.setFill(new ImagePattern(new Image("data/labyrinth/images/cheese.png"), 5, 5, 1, 1, true));
+            cheese.setFill(new ImagePattern(new Image("data/labyrinth/images/cheese.png"), 15, 5, 1, 1, true));
         }
         else
         {
-            cheese.setFill(new ImagePattern(new Image("data/labyrinth/images/house.png"), 5, 5, 1, 1, true));
+            cheese.setFill(new ImagePattern(new Image("data/labyrinth/images/house.png"), 15, 5, 1, 1, true));
         }
         this.getChildren().add(cheese);
     }
@@ -54,7 +54,7 @@ class Cheese extends Parent {
         indexY = y;
         indexX = x;
 
-        final double coordX = gameInstance.positionX(indexX) - gameInstance.adjustmentCaseWidth;
+        final double coordX = gameInstance.positionX(indexX);
         final double coordY = gameInstance.positionY(indexY) + gameInstance.adjustmentCaseHeight;
 
         cheese.setX(coordX);

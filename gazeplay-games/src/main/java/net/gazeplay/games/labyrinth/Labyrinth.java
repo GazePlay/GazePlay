@@ -25,18 +25,19 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     private GameBox[][] walls;
     private int[][] wallsPlacement;
 
-    final int nbBoxesLine = 4;
-    final int nbBoxesColumns = 6;
+    int nbBoxesLine = 4;
+    int nbBoxesColumns = 6;
+    int iteration = 1;
 
-    final double entiereRecX;
-    final double entiereRecY;
-    final double entiereRecWidth;
-    final double entiereRecHeight;
+    double entiereRecX;
+    double entiereRecY;
+    double entiereRecWidth;
+    double entiereRecHeight;
 
-    final double caseHeight;
-    final double caseWidth;
-    final double adjustmentCaseWidth;
-    final double adjustmentCaseHeight;
+    double caseHeight;
+    double caseWidth;
+    double adjustmentCaseWidth;
+    double adjustmentCaseHeight;
 
     private Cheese cheese;
     private Mouse mouse;
@@ -62,19 +63,6 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         this.variant = variant;
         final Configuration config = gameContext.getConfiguration();
         fixationlength = config.getFixationLength();
-
-        final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-        log.debug("dimension2D = {}", dimension2D);
-
-        entiereRecX = dimension2D.getWidth() * 0.25;
-        entiereRecY = dimension2D.getHeight() * 0.15;
-        entiereRecWidth = dimension2D.getWidth() * 0.6;
-        entiereRecHeight = dimension2D.getHeight() * 0.7;
-
-        caseWidth = entiereRecWidth / nbBoxesColumns;
-        caseHeight = entiereRecHeight / nbBoxesLine;
-        adjustmentCaseWidth = caseWidth / 6;
-        adjustmentCaseHeight = caseHeight / 6;
     }
 
     public Labyrinth(final IGameContext gameContext, final Stats stats, final LabyrinthGameVariant variant, double gameSeed) {
@@ -88,7 +76,13 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         this.variant = variant;
         final Configuration config = gameContext.getConfiguration();
         fixationlength = config.getFixationLength();
+    }
 
+    public GameBox getBoxAt(final int i, final int j) {
+        return walls[i][j];
+    }
+
+    public void prepareLaunch(){
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
         log.debug("dimension2D = {}", dimension2D);
 
@@ -101,141 +95,57 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         caseHeight = entiereRecHeight / nbBoxesLine;
         adjustmentCaseWidth = caseWidth / 6;
         adjustmentCaseHeight = caseHeight / 6;
-
-    }
-
-    public GameBox getBoxAt(final int i, final int j) {
-        return walls[i][j];
     }
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
+        this.prepareLaunch();
+
         final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
 
         final Rectangle recJeu = new Rectangle(entiereRecX, entiereRecY, entiereRecWidth, entiereRecHeight);
         gameContext.getChildren().add(recJeu);
 
-        chooseAnim();
-
         this.wallsPlacement = constructionWallMatrix();
         walls = creationLabyrinth();
 
-        if (doAnim) {
-            //The animation of the creation of the labyrinthe
-            int delay = 20;     //The delay between each dig (in ms)
-            anim(delay);
-        } else {
-            // Creation of cheese
-            cheese = new Cheese(entiereRecX, entiereRecY, dimension2D.getWidth() / 7, dimension2D.getHeight() / 7, this, randomGenerator);
+        // Creation of cheese
+        cheese = new Cheese(entiereRecX, entiereRecY, caseHeight, caseHeight * 0.8, this, randomGenerator);
+        mouse = createMouse();
+        gameContext.getChildren().add(mouse);
 
-            mouse = createMouse();
-
-            gameContext.getChildren().add(mouse);
-
-            // launch of cheese
-            cheese.beginCheese();
-            gameContext.getChildren().add(cheese);
-            gameContext.start();
-            stats.notifyNewRoundReady();
-            stats.incrementNumberOfGoalsToReach();
-            gameContext.getGazeDeviceManager().addStats(stats);
-        }
+        // launch of cheese
+        cheese.beginCheese();
+        gameContext.getChildren().add(cheese);
+        gameContext.start();
+        stats.notifyNewRoundReady();
+        stats.incrementNumberOfGoalsToReach();
+        gameContext.getGazeDeviceManager().addStats(stats);
     }
 
     private Mouse createMouse() {
         // Creation of the mouse
-        Mouse mouse;
-        switch (variant) {
-            case LOOK_DESTINATION:
-                mouse =new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                mouse.setImage();
-                return mouse;
-            case LOOK_LOCAL_ARROWS:
-                mouse =new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                mouse.setImage();
-                return mouse;
-            case LOOK_GLOBAL_ARROWS:
-                mouse=new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                mouse.setImage();
-                return mouse;
-            case SELECT_THEN_LOOK_DESTINATION:
-                mouse= new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                mouse.setImage();
-                return mouse;
-            case ANLOOK_DESTINATION:
-                mouse=new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                mouse.setImage();
-                return mouse;
-            case ANLOOK_LOCAL_ARROWS:
-                mouse= new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                mouse.setImage();
-                return mouse;
-            case ANLOOK_GLOBAL_ARROWS:
-                mouse= new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                mouse.setImage();
-                return mouse;
-            case ANSELECT_THEN_LOOK_DESTINATION:
-                mouse=new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                mouse.setImage();
-                return mouse;
+        Mouse mouse = new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
+        mouse.setImage();
+        return mouse;
+    }
 
-
-            case OTHER_LOOK_DESTINATION:
-                mouse =new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                cheese.setToHouse();
-                mouse.setRandomPersonnage();
-                mouse.setImage();
-                return mouse;
-            case OTHER_LOOK_LOCAL_ARROWS:
-                mouse =new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                cheese.setToHouse();
-                mouse.setRandomPersonnage();
-                mouse.setImage();
-                return mouse;
-            case OTHER_LOOK_GLOBAL_ARROWS:
-                mouse=new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                cheese.setToHouse();
-                mouse.setRandomPersonnage();
-                mouse.setImage();
-                return mouse;
-            case OTHER_SELECT_THEN_LOOK_DESTINATION:
-                mouse= new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                cheese.setToHouse();
-                mouse.setRandomPersonnage();
-                mouse.setImage();
-                return mouse;
-            case OTHER_ANLOOK_DESTINATION:
-                mouse=new MouseTransparentArrows(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                cheese.setToHouse();
-                mouse.setRandomPersonnage();
-                mouse.setImage();
-                return mouse;
-            case OTHER_ANLOOK_LOCAL_ARROWS:
-                mouse= new MouseArrowsV2(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                cheese.setToHouse();
-                mouse.setRandomPersonnage();
-                mouse.setImage();
-                return mouse;
-            case OTHER_ANLOOK_GLOBAL_ARROWS:
-                mouse= new MouseArrowsV3(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                cheese.setToHouse();
-                mouse.setRandomPersonnage();
-                mouse.setImage();
-                return mouse;
-            case OTHER_ANSELECT_THEN_LOOK_DESTINATION:
-                mouse=new MouseV4(entiereRecX, entiereRecY, caseWidth, caseHeight * 0.8, gameContext, stats, this);
-                cheese.setToHouse();
-                mouse.setRandomPersonnage();
-                mouse.setImage();
-                return mouse;
-            default:
-                throw new IllegalArgumentException("Unsupported variant ID");
+    public void nextLvl(){
+        if (this.iteration < 8){
+            this.iteration ++;
+            this.gameContext.getChildren().clear();
+            this.nbBoxesColumns += 1;
+            this.nbBoxesLine += 1;
+            this.launch();
+        }else {
+            this.dispose();
         }
+
     }
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
+        this.gameContext.getChildren().clear();
+        this.gameContext.showRoundStats(stats, this);
     }
 
     protected double positionX(final int j) {
@@ -388,46 +298,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
             cheese.moveCheese();
             stats.incrementNumberOfGoalsToReach();
             mouse.nbMove = 0;
+            this.nextLvl();
         }
     }
-
-    void anim(int delay) {
-        if (!listAnim.isEmpty()) {
-            PauseTransition wait = new PauseTransition(Duration.millis(delay));
-            wait.setOnFinished(waitEvent -> {
-                int x = listAnim.remove(0);
-                int y = listAnim.remove(0);
-                wallsPlacement[x][y] = 0;
-                final GameBox g = new GameBox(caseHeight, caseWidth, entiereRecX + y * caseWidth,
-                    entiereRecY + x * caseHeight, wallsPlacement[x][y], y, x);
-                walls[x][y] = g;
-                gameContext.getChildren().add(g);
-                anim(delay);
-            });
-            wait.play();
-        } else {
-            final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-            // Creation of cheese
-            cheese = new Cheese(entiereRecX, entiereRecY, dimension2D.getWidth() / 7, dimension2D.getHeight() / 7, this, randomGenerator);
-            mouse = createMouse();
-
-            gameContext.getChildren().add(mouse);
-
-            // launch of cheese
-            cheese.beginCheese();
-            gameContext.getChildren().add(cheese);
-
-            gameContext.start();
-
-            stats.notifyNewRoundReady();
-            stats.incrementNumberOfGoalsToReach();
-            gameContext.getGazeDeviceManager().addStats(stats);
-        }
-    }
-
-    private void chooseAnim() {
-        doAnim = variant.getLabel().startsWith("Anime");
-    }
-
 }
