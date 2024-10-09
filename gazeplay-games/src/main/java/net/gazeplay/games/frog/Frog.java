@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
@@ -13,6 +14,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.Random;
 
+@Slf4j
 public class Frog implements GameLifeCycle {
 
     private final IGameContext gameContext;
@@ -22,7 +24,7 @@ public class Frog implements GameLifeCycle {
     Nenuphar[] nenuphars;
     ImageView frog;
     int frogPosition;
-    int nbIteration = 33;
+    int correctFrogPosition;
     int actualIteration = 1;
     int nbNenuphars = 10;
     Rectangle2D screensBounds;
@@ -70,6 +72,7 @@ public class Frog implements GameLifeCycle {
     }
 
     public void iaPlay(){
+        log.info("Actual iteration -> " + this.actualIteration);
         this.ia.iaMoves(this.actualIteration);
         this.actualIteration++;
     }
@@ -88,6 +91,7 @@ public class Frog implements GameLifeCycle {
     }
 
     public void moveFrogTo(Nenuphar nenuphar){
+        log.info("Frog position -> " + this.frogPosition);
         double frogSize = nenuphar.nenupharImgView.getFitWidth() * 0.5;
         frog.setFitWidth(frogSize);
         frog.setFitHeight(frogSize);
@@ -98,9 +102,34 @@ public class Frog implements GameLifeCycle {
             value.haveFrog = false;
         }
         nenuphar.haveFrog = true;
+        log.info("Frog moved");
+    }
+
+    public void setGoodAnswer(String moveType){
+        switch (moveType){
+            case "oneBack":
+                this.correctFrogPosition = this.frogPosition - 1;
+                if (this.correctFrogPosition < 0){
+                    this.correctFrogPosition = this.nenuphars.length - 1;
+                }
+                break;
+
+            case "oneFront":
+                break;
+
+            case "twoBack":
+                break;
+
+            case "jump":
+                break;
+
+            default:
+                break;
+        }
     }
 
     public void playerTurn(){
+        log.info("Player turn");
         for (Nenuphar value : this.nenuphars) {
             value.ignoreInput = false;
             value.nenupharImgView.setOpacity(1);
@@ -108,11 +137,13 @@ public class Frog implements GameLifeCycle {
     }
 
     public void iaTurn(){
+        log.info("IA turn");
         for (Nenuphar value : this.nenuphars) {
             value.ignoreInput = true;
             value.nenupharImgView.setOpacity(0.5);
-            this.iaPlay();
+            value.errorImgView.setVisible(false);
         }
+        this.iaPlay();
     }
 
     @Override

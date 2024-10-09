@@ -22,6 +22,7 @@ public class Nenuphar extends Group {
     IGameContext gameContext;
     Frog frog;
     ImageView nenupharImgView;
+    ImageView errorImgView;
     Boolean haveFrog = false;
     boolean ignoreInput = true;
     int indexNenuphar;
@@ -35,6 +36,7 @@ public class Nenuphar extends Group {
         this.indexNenuphar = index;
 
         this.drawNenuphars(screenWidth, screenHeight, nenupharImg, index, nbNenuphars);
+        this.drawWrongAnswer();
 
         this.progressIndicator = buildProgressIndicator();
         gameContext.getChildren().add(progressIndicator);
@@ -66,22 +68,31 @@ public class Nenuphar extends Group {
         gameContext.getGazeDeviceManager().addEventFilter(nenupharImgView);
     }
 
+    public void drawWrongAnswer(){
+        errorImgView = new ImageView("data/common/images/error.png");
+        errorImgView.setFitWidth(nenupharImgView.getFitWidth());
+        errorImgView.setFitHeight(nenupharImgView.getFitHeight());
+        errorImgView.setX(nenupharImgView.getX());
+        errorImgView.setY(nenupharImgView.getY());
+        errorImgView.setOpacity(0.5);
+        errorImgView.setVisible(false);
+        gameContext.getChildren().add(errorImgView);
+    }
+
     private ProgressIndicator buildProgressIndicator() {
-        // progressIndicator 2cm de diamètre
-        double minWidth = 75;
-        double minHeight = 75;
+        double progressWidth = 30.0;
+        double progressHeight = 30.0;
 
-        double positionX = nenupharImgView.getX();
-        double positionY = nenupharImgView.getY();
+        double positionX = nenupharImgView.getX() - progressWidth/2;
+        double positionY = nenupharImgView.getY() + progressHeight/2;
 
-        ProgressIndicator result = new ProgressIndicator(0);
-        result.setTranslateX(positionX);
-        result.setTranslateY(positionY);
-        result.setMinWidth(minWidth);
-        result.setMinHeight(minHeight);
-        result.setOpacity(0.5);
-        result.setVisible(false);
-        return result;
+        ProgressIndicator pi = new ProgressIndicator(0);
+        pi.setTranslateX(positionX);
+        pi.setTranslateY(positionY);
+        pi.setTranslateZ(-1);
+        pi.setOpacity(0.5);
+        pi.setVisible(false);
+        return pi;
     }
 
     private Timeline createProgressIndicatorTimeLine(Frog frog) {
@@ -100,10 +111,20 @@ public class Nenuphar extends Group {
     private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(Frog frog) {
         return actionEvent -> {
             this.newProgressIndicator();
+            this.checkAnswer();
+        };
+    }
+
+    public void checkAnswer(){
+        if (this.indexNenuphar == this.frog.correctFrogPosition){
             frog.frogPosition = this.indexNenuphar;
             frog.moveFrogTo(this);
             frog.iaTurn();
-        };
+        }else {
+            this.ignoreInput = true;
+            this.nenupharImgView.setOpacity(0.5);
+            this.errorImgView.setVisible(true);
+        }
     }
 
     public void newProgressIndicator() {
@@ -133,8 +154,6 @@ public class Nenuphar extends Group {
             this.moved = true;
             progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(frog);
             progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
-            progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
-            progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
             progressIndicator.setProgress(0);
             progressIndicator.setVisible(true);
             progressIndicatorAnimationTimeLine.playFromStart();
@@ -145,8 +164,6 @@ public class Nenuphar extends Group {
                 this.moved = true;
                 progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(frog);
                 progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
-                progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
-                progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
                 progressIndicator.setProgress(0);
                 progressIndicator.setVisible(true);
                 progressIndicatorAnimationTimeLine.playFromStart();
