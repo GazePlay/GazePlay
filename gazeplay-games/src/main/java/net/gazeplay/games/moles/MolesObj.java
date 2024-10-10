@@ -18,15 +18,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.components.Portrait;
 
-@Slf4j
-public class MolesChar extends Parent {
+public class MolesObj extends Parent {
 
     @Getter
     private final double positionX;
@@ -67,7 +65,7 @@ public class MolesChar extends Parent {
     //url bidoule if bidoule or default case, and DefaultUser if the user don't has a portrait
     private String url;
 
-    MolesChar(
+    MolesObj(
         final double positionX, final double positionY,
         final double width, final double height,
         final double distTrans,
@@ -96,9 +94,11 @@ public class MolesChar extends Parent {
 
         this.progressIndicatorMoles = createProgressIndicatorMoles();
 
+        final ImageLibrary imageLibrary = Portrait.createImageLibrary(randomGenerator);
+
         Image moleImage;
 
-        moleImage = new Image("data/whackmole/images/moles.png");
+        moleImage = new Image("data/whackmole/images/bibouleMole.png");
 
         this.moleMoved = new Rectangle(positionX, positionY - distTrans, width, height);
         this.moleMoved.setFill(new ImagePattern(moleImage, 5, 5, 1, 1, true));
@@ -177,7 +177,7 @@ public class MolesChar extends Parent {
 
         this.canGoOut = false;
 
-        gameInstance.getNbMolesOut().incrementAndGet();
+        gameInstance.getNbObjOut().incrementAndGet();
 
         final TranslateTransition translation = new TranslateTransition(new Duration(1500), this);
         translation.setByX(0);
@@ -236,11 +236,10 @@ public class MolesChar extends Parent {
         translation.setByX(0);
         translation.setByY(this.distTranslation);
         translation.setOnFinished(actionEvent -> {
-            gameInstance.getNbMolesOut().decrementAndGet();
+            gameInstance.getNbObjOut().decrementAndGet();
             mole.opacityProperty().set(0);
             canGoOut = true;
         });
         translation.play();
     }
-
 }

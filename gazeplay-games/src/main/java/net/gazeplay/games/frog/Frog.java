@@ -148,6 +148,7 @@ public class Frog implements GameLifeCycle {
 
     @Override
     public void dispose() {
-
+        this.gameContext.getChildren().clear();
+        this.gameContext.showRoundStats(stats, this);
     }
 }

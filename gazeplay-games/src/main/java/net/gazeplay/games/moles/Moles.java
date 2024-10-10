@@ -1,5 +1,7 @@
 package net.gazeplay.games.moles;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
@@ -11,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -33,6 +36,7 @@ public class Moles extends Parent implements GameLifeCycle {
     @AllArgsConstructor
     public static class RoundDetails {
         public final List<MolesChar> molesList;
+        public final List<MolesObj> molesObjList;
     }
 
     @Getter
@@ -42,8 +46,12 @@ public class Moles extends Parent implements GameLifeCycle {
 
     private int nbMolesWhacked;
 
+    public int limitMoleEntity = 3;
+    public int limitObjEntity = 1;
     @Getter
     private AtomicInteger nbMolesOut = new AtomicInteger(0);
+    @Getter
+    private AtomicInteger nbObjOut = new AtomicInteger(0);
 
     private Label lab;
 
@@ -59,6 +67,7 @@ public class Moles extends Parent implements GameLifeCycle {
     private final ReplayablePseudoRandom randomGenerator;
 
     private MolesGameVariant variant;
+    Timeline difficulty;
 
     Moles(IGameContext gameContext, Stats stats, final MolesGameVariant type) {
         super();
@@ -109,8 +118,10 @@ public class Moles extends Parent implements GameLifeCycle {
         gameContext.getChildren().add(imageFond);
 
         List<MolesChar> molesList = initMoles(variant, randomGenerator);
-        currentRoundDetails = new RoundDetails(molesList);
+        List<MolesObj> molesObjList = initObj(variant, randomGenerator);
+        currentRoundDetails = new RoundDetails(molesList, molesObjList);
         this.getChildren().addAll(molesList);
+        this.getChildren().addAll(molesObjList);
         gameContext.getChildren().add(this);
 
         Rectangle imageFondTrans = new Rectangle(0, 0, dimension2D.getWidth(), dimension2D.getHeight());
@@ -145,7 +156,22 @@ public class Moles extends Parent implements GameLifeCycle {
         this.gameContext.resetBordersToFront();
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
+        this.updateDifficulty();
         play();
+    }
+
+    public void updateDifficulty(){
+        difficulty = new Timeline(new KeyFrame(Duration.seconds(15), event -> {
+            this.limitMoleEntity += 2;
+            this.limitObjEntity ++;
+        }));
+
+        difficulty.setOnFinished(event -> {
+            difficulty.stop();
+            this.dispose();
+        });
+
+        difficulty.setCycleCount(3);
     }
 
     void adjustBackground(Rectangle image) {
@@ -162,46 +188,26 @@ public class Moles extends Parent implements GameLifeCycle {
         });
 
         ColorAdjust colorAdjust = new ColorAdjust();
-
-        if (gameContext.getConfiguration().isBackgroundEnabled()) {
-            colorAdjust.setBrightness(backgroundStyleCoef * 0.25); //0.5 or 0
-        } else {
-            colorAdjust.setBrightness(backgroundStyleCoef - 1); //1 or -1
-        }
-
+        colorAdjust.setBrightness(backgroundStyleCoef * 0.25); //0.5 or 0
         image.setEffect(colorAdjust);
     }
 
     /* Moles get out randomly */
     private synchronized void play() {
-
-        nbMolesOut = new AtomicInteger(0);
-
         minuteur = new Timer();
         TimerTask tache = new TimerTask() {
             public void run() {
-
-                int n = randomGenerator.nextInt(6);
-                if (nbMolesOut.get() <= 3) {
+                if (nbMolesOut.get() < limitMoleEntity) {
                     chooseMoleToOut();
-                } else if ((nbMolesOut.get() <= 4) && (n == 0)) {
-                    chooseMoleToOut();
-                } else if ((nbMolesOut.get() <= 5) && (n == 1)) {
-                    chooseMoleToOut();
-                } else if ((nbMolesOut.get() <= 6) && (n == 2)) {
-                    chooseMoleToOut();
-                } else if ((nbMolesOut.get() <= 7) && (n == 3)) {
-                    chooseMoleToOut();
-                } else if ((nbMolesOut.get() <= 8) && (n == 4)) {
-                    chooseMoleToOut();
-                } else if ((nbMolesOut.get() <= 9) && (n == 5)) {
-                    chooseMoleToOut();
+                }
+                if (nbObjOut.get() < limitObjEntity){
+                    chooseObjToOut();
                 }
             }
         };
 
         minuteur.schedule(tache, 0, 500);
-
+        difficulty.playFromStart();
     }
 
     @Override
@@ -214,6 +220,9 @@ public class Moles extends Parent implements GameLifeCycle {
             }
             currentRoundDetails = null;
         }
+
+        this.gameContext.getChildren().clear();
+        this.gameContext.showRoundStats(stats, this);
     }
 
     /* Select a mole not out for the moment and call "getOut()" */
@@ -226,7 +235,7 @@ public class Moles extends Parent implements GameLifeCycle {
 
         LinkedList<Integer> availableHoles = new LinkedList<>();
         for (int i = 0; i < nbHoles; i++) {
-            if (currentRoundDetails.molesList.get(i).canGoOut) {
+            if (currentRoundDetails.molesList.get(i).canGoOut && currentRoundDetails.molesObjList.get(i).canGoOut) {
                 availableHoles.add(i);
             }
         }
@@ -238,6 +247,30 @@ public class Moles extends Parent implements GameLifeCycle {
         targetAOIList.add(targetAOI);
         m.setTargetAOIListIndex(targetAOIList.size() - 1);
         m.getOut(randomGenerator);
+        stats.incrementNumberOfGoalsToReach();
+    }
+
+    private void chooseObjToOut(){
+        if (this.currentRoundDetails == null) {
+            return;
+        }
+        int indice;
+        int nbHoles = 10;
+
+        LinkedList<Integer> availableHoles = new LinkedList<>();
+        for (int i = 0; i < nbHoles; i++) {
+            if (currentRoundDetails.molesList.get(i).canGoOut && currentRoundDetails.molesObjList.get(i).canGoOut) {
+                availableHoles.add(i);
+            }
+        }
+        indice = availableHoles.get(randomGenerator.nextInt(availableHoles.size()));
+
+        MolesObj o = currentRoundDetails.molesObjList.get(indice);
+        final TargetAOI targetAOI = new TargetAOI(o.getPositionX(), o.getPositionY(), (int) moleRadius / 3,
+            System.currentTimeMillis());
+        targetAOIList.add(targetAOI);
+        o.setTargetAOIListIndex(targetAOIList.size() - 1);
+        o.getOut(randomGenerator);
         stats.incrementNumberOfGoalsToReach();
     }
 
@@ -286,6 +319,30 @@ public class Moles extends Parent implements GameLifeCycle {
         /* Creation and placement of moles in the field */
         for (double[] doubles : place) {
             result.add(new MolesChar(doubles[0], doubles[1], moleWidth, moleHeight, distTrans, gameContext,
+                this, variant, randomGenerator));
+        }
+
+        return result;
+    }
+
+    private List<MolesObj> initObj(MolesGameVariant variant, ReplayablePseudoRandom randomGenerator) {
+        javafx.geometry.Dimension2D gameDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+
+        ArrayList<MolesObj> result = new ArrayList<>();
+
+        double moleHeight = computeMoleHeight(gameDimension2D);
+
+        double moleWidth = computeMoleWidth(gameDimension2D);
+        this.moleRadius = moleWidth;
+        double height = gameDimension2D.getHeight();
+        double width = gameDimension2D.getWidth();
+        double distTrans = computeDistTransMole(gameDimension2D);
+
+        double[][] place = creationTableauPlacement(width, height, distTrans);
+
+        /* Creation and placement of moles in the field */
+        for (double[] doubles : place) {
+            result.add(new MolesObj(doubles[0], doubles[1], moleWidth, moleHeight, distTrans, gameContext,
                 this, variant, randomGenerator));
         }
 
