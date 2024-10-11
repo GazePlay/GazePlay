@@ -56,6 +56,7 @@ public class WhereIsIt implements GameLifeCycle {
 
     private int level = 1;
     private int lvlReplays = 1;
+    int iteration = 1;
     private int rightDecision = 0;
     private int wrongDecision = 0;
     private boolean firstWrong = false;
@@ -105,28 +106,6 @@ public class WhereIsIt implements GameLifeCycle {
 
         final int winnerImageIndexAmongDisplayedImages = randomGenerator.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
-
-        if (stats.nbGoalsReached > 0 && stats.nbGoalsReached % 8 == 0) {
-            stats.getChiReport().addChiObs(chi2Obs(rightDecision, wrongDecision));
-            stats.getChiReport().addChiLevel(level);
-            boolean randomness = chi2decision(rightDecision, wrongDecision);
-            lvlReplays++;
-
-            if (randomness && rightDecision > wrongDecision) {
-                if (level < 5) {
-                    level++;
-                }
-                rightDecision = 0;
-                wrongDecision = 0;
-                lvlReplays = 1;
-            }
-            if (!randomness && level > 1) {
-                level--;
-                rightDecision = 0;
-                wrongDecision = 0;
-                lvlReplays = 1;
-            }
-        }
 
         currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, randomGenerator,
             winnerImageIndexAmongDisplayedImages);
@@ -264,6 +243,10 @@ public class WhereIsIt implements GameLifeCycle {
             currentRoundDetails = null;
         }
         stats.setTargetAOIList(targetAOIList);
+        this.iteration++;
+    }
+
+    public void endGame(){
         this.gameContext.getChildren().clear();
         this.gameContext.showRoundStats(stats, this);
     }
@@ -315,33 +298,6 @@ public class WhereIsIt implements GameLifeCycle {
         List<String> resourcesFolders = new LinkedList<>();
         List<String> winnerFolders = new LinkedList<>();
 
-        if (this.gameType == CUSTOMIZED) {
-            final File imagesDirectory = new File(config.getWhereIsItDir() + "/images/");
-            directoryName = imagesDirectory.getPath();
-            directoriesCount = WhereIsItVaildator.getNumberOfValidDirectories(config.getWhereIsItDir(), imagesFolders);
-        } else if (this.gameType == ANIMALS_DYNAMIC) {
-            final String resourcesDirectory = "data/" + this.gameType.getResourcesDirectoryName();
-            directoryName = resourcesDirectory;
-
-            final String winnerImagesDirectory = resourcesDirectory + "/images/cats/";
-            final String imagesDirectoryLvl1 = resourcesDirectory + "/images/lvl1/";
-            final String imagesDirectoryLvl2 = resourcesDirectory + "/images/lvl2/";
-            final String imagesDirectoryLvl3 = resourcesDirectory + "/images/lvl3/";
-            final String imagesDirectoryLvl4 = resourcesDirectory + "/images/lvl4/";
-            final String imagesDirectoryLvl5 = resourcesDirectory + "/images/lvl5/";
-
-            String[] lvlDirectories = {imagesDirectoryLvl1, imagesDirectoryLvl2, imagesDirectoryLvl3, imagesDirectoryLvl4, imagesDirectoryLvl5};
-            Set<String> tempWinnerFolders = ResourceFileManager.getResourceFolders(winnerImagesDirectory);
-
-            for (int i = 1; i < lvlDirectories.length + 1; i++) {
-                if (level == i) {
-                    resourcesFolders.addAll(ResourceFileManager.getResourceFolders(lvlDirectories[i - 1]));
-                }
-            }
-
-            winnerFolders.addAll(tempWinnerFolders);
-            directoriesCount = resourcesFolders.size();
-        } else {
             final String resourcesDirectory = "data/" + this.gameType.getResourcesDirectoryName();
             final String imagesDirectory = resourcesDirectory + "/images/";
             directoryName = imagesDirectory;
@@ -369,7 +325,6 @@ public class WhereIsIt implements GameLifeCycle {
 
             resourcesFolders.addAll(tempResourcesFolders);
             directoriesCount = resourcesFolders.size();
-        }
 
         final String language = config.getLanguage();
 
@@ -390,133 +345,6 @@ public class WhereIsIt implements GameLifeCycle {
         String question = null;
         List<Image> pictograms = null;
 
-        if (this.gameType == FIND_ODD) {
-            int index = random.nextInt(resourcesFolders.size());
-            final String folder = resourcesFolders.remove((index) % directoriesCount);
-
-            index = random.nextInt(resourcesFolders.size());
-            final String winnerFolder = resourcesFolders.remove((index) % directoriesCount);
-            final String folderName = (new File(winnerFolder)).getName();
-
-            for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
-                final Set<String> files;
-                if (i == winnerImageIndexAmongDisplayedImages) {
-                    files = ResourceFileManager.getResourcePaths(winnerFolder);
-                } else {
-                    files = ResourceFileManager.getResourcePaths(folder);
-                }
-
-                final int numFile = random.nextInt(files.size());
-                final String randomImageFile = (String) files.toArray()[numFile];
-
-                if (winnerImageIndexAmongDisplayedImages == i) {
-                    // TODO for now the line under is commented to avoid freeze
-                    //questionSoundPath = getPathSound(imagesFolders[(index) % filesCount].getName(), language);
-                    question = MultilinguismFactory.getSingleton().getTranslation("FindTheOddOneOut", config.getLanguage());
-                    pictograms = getPictograms(folderName);
-                }
-
-                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, winnerImageIndexAmongDisplayedImages == i,
-                    randomImageFile + "", stats, this);
-
-                final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY + 1), (int) gameSizing.height,
-                    System.currentTimeMillis());
-                targetAOIList.add(targetAOI);
-
-                pictureCardList.add(pictureCard);
-
-                if ((i + 1) % nbColumns != 0) {
-                    posX++;
-                } else {
-                    posY++;
-                    posX = 0;
-                }
-            }
-        } else if (this.gameType == CUSTOMIZED) {
-            for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
-                int index = random.nextInt(imagesFolders.size());
-
-                final File folder = imagesFolders.remove((index) % directoriesCount);
-                final File[] files = getFiles(folder);
-                List<File> validImageFiles = new ArrayList<>();
-
-                for (File file : files) {
-                    if (WhereIsItVaildator.fileIsImageFile(file)) {
-                        validImageFiles.add(file);
-                    }
-                }
-
-                final int numFile = random.nextInt(validImageFiles.size());
-                final File randomImageFile = validImageFiles.get(numFile);
-
-                if (winnerImageIndexAmongDisplayedImages == i) {
-                    questionSoundPath = getPathSound(folder.getName(), language);
-                    question = getQuestionText(folder.getName(), language);
-                    pictograms = getPictograms(folder.getName());
-                }
-
-                // The image file needs 'file:' prepended as this will get images from a local source, not resources.
-                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                    winnerImageIndexAmongDisplayedImages == i, "file:" + randomImageFile, stats, this);
-
-                final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY + 1), (int) gameSizing.height,
-                    System.currentTimeMillis());
-                targetAOIList.add(targetAOI);
-
-                pictureCardList.add(pictureCard);
-
-                if ((i + 1) % nbColumns != 0) {
-                    posX++;
-                } else {
-                    posY++;
-                    posX = 0;
-                }
-            }
-        } else if (this.gameType == ANIMALS_DYNAMIC) {
-            int index = random.nextInt(resourcesFolders.size());
-            final String folder = resourcesFolders.remove((index) % directoriesCount);
-
-            final String winnerFolder = winnerFolders.remove(0);
-            final String folderName = (new File(winnerFolder)).getName();
-            log.info("WinnerFolderName = {}", folderName);
-
-            for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
-                final Set<String> files;
-                if (i == winnerImageIndexAmongDisplayedImages) {
-                    files = ResourceFileManager.getResourcePaths(winnerFolder);
-                } else {
-                    files = ResourceFileManager.getResourcePaths(folder);
-                }
-
-                final int numFile = random.nextInt(files.size());
-                final String randomImageFile = (String) files.toArray()[numFile];
-
-                if (winnerImageIndexAmongDisplayedImages == i) {
-                    questionSoundPath = getPathSound(folderName, language);
-                    question = getQuestionText(folderName, language);
-                    pictograms = getPictograms(folderName);
-                }
-
-                final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
-                    gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext, winnerImageIndexAmongDisplayedImages == i,
-                    randomImageFile + "", stats, this);
-
-                final TargetAOI targetAOI = new TargetAOI(gameSizing.width * (posX + 0.25), gameSizing.height * (posY + 1), (int) gameSizing.height,
-                    System.currentTimeMillis());
-                targetAOIList.add(targetAOI);
-
-                pictureCardList.add(pictureCard);
-
-                if ((i + 1) % nbColumns != 0) {
-                    posX++;
-                } else {
-                    posY++;
-                    posX = 0;
-                }
-            }
-        } else {
             for (int i = 0; i < numberOfImagesToDisplayPerRound; i++) {
                 int index = random.nextInt(resourcesFolders.size());
 
@@ -551,7 +379,6 @@ public class WhereIsIt implements GameLifeCycle {
                     posX = 0;
                 }
             }
-        }
         return new RoundDetails(pictureCardList, winnerImageIndexAmongDisplayedImages, questionSoundPath, question, pictograms);
     }
 
@@ -704,23 +531,5 @@ public class WhereIsIt implements GameLifeCycle {
         double[] probas = {8 * lvlReplays * binomProba(1, 1, 0.5), 8 * lvlReplays * binomProba(1, 0, 0.5)};
 
         return Math.pow(tp - probas[0], 2) / probas[0] + Math.pow(fp - probas[1], 2) / probas[1];
-    }
-
-    public boolean chi2decision(int tp, int fp) {
-        final ArrayList<Double> chi2Theoretic = new ArrayList<>();
-        chi2Theoretic.add(3.84);
-        chi2Theoretic.add(2.71);
-        chi2Theoretic.add(1.32);
-        chi2Theoretic.add(0.45);
-
-        double chi2Obs = chi2Obs(tp, fp);
-
-        log.info("tp = {}, fp = {}", tp, fp);
-        log.info("chi2_obs = {}", chi2Obs);
-        log.info("chi2_th = {}, replays = {}", chi2Theoretic, lvlReplays);
-
-        int index = lvlReplays > 4 ? lvlReplays - 1 : 3;
-
-        return chi2Theoretic.get(index) <= chi2Obs;
     }
 }

@@ -33,7 +33,7 @@ class PictureCard extends Group {
     private final IGameContext gameContext;
     private final boolean winner;
 
-    private final ImageView imageRectangle;
+    private final Rectangle imageRectangle;
     private final Rectangle errorImageRectangle;
 
     private final double initialWidth;
@@ -162,16 +162,17 @@ class PictureCard extends Group {
         fullAnimation.getChildren().add(translateToCenterTransition);
         fullAnimation.getChildren().add(scaleToFullScreenTransition);
 
-        gameContext.updateScore(stats, gameInstance);
-
-        fullAnimation.setOnFinished(actionEvent -> gameContext.playWinTransition(500, actionEvent1 -> {
+        if (gameInstance.iteration == 10){
+            gameContext.updateScore(stats, gameInstance);
+            gameInstance.dispose();
+            gameContext.clear();
+            gameInstance.endGame();
+        }else {
+            gameContext.updateScore(stats, gameInstance);
             gameInstance.dispose();
             gameContext.clear();
             gameInstance.launch();
-            // HomeUtils.home(gameInstance.scene, gameInstance.group, gameInstance.choiceBox,
-            // gameInstance.stats);
-
-        }));
+        }
 
         fullAnimation.play();
     }
@@ -211,30 +212,13 @@ class PictureCard extends Group {
         fullAnimation.play();
     }
 
-    private ImageView createImageView(double posX, double posY, double width, double height,
+    private Rectangle createImageView(double posX, double posY, double width, double height,
                                       @NonNull String imagePath) {
-        final Image image = new Image(imagePath);
 
-        ImageView result = new ImageView(image);
+        Rectangle imgRec = new Rectangle(posX, posY, width, height);
+        imgRec.setFill(new ImagePattern(new Image(imagePath)));
 
-        result.setFitWidth(width);
-        result.setFitHeight(height);
-
-        double ratioX = result.getFitWidth() / image.getWidth();
-        double ratioY = result.getFitHeight() / image.getHeight();
-
-        double reducCoeff = Math.min(ratioX, ratioY);
-
-        double w = image.getWidth() * reducCoeff;
-        double h = image.getHeight() * reducCoeff;
-
-        result.setX(posX);
-        result.setY(posY);
-        result.setTranslateX((result.getFitWidth() - w) / 2);
-        result.setTranslateY((result.getFitHeight() - h) / 2);
-        result.setPreserveRatio(true);
-
-        return result;
+        return imgRec;
     }
 
     private ImageView createStretchedImageView(double posX, double posY, double width, double height,
@@ -260,11 +244,11 @@ class PictureCard extends Group {
         double imageHeight = image.getHeight();
         double imageHeightToWidthRatio = imageHeight / imageWidth;
 
-        double rectangleWidth = imageRectangle.getFitWidth() / 3;
+        double rectangleWidth = imageRectangle.getWidth() / 3;
         double rectangleHeight = imageHeightToWidthRatio * rectangleWidth;
 
-        double positionX = imageRectangle.getX() + (imageRectangle.getFitWidth() - rectangleWidth) / 2;
-        double positionY = imageRectangle.getY() + (imageRectangle.getFitHeight() - rectangleHeight) / 2;
+        double positionX = imageRectangle.getX() + (imageRectangle.getWidth() - rectangleWidth) / 2;
+        double positionY = imageRectangle.getY() + (imageRectangle.getHeight() - rectangleHeight) / 2;
 
         Rectangle errorImageRectangle = new Rectangle(rectangleWidth, rectangleHeight);
         errorImageRectangle.setFill(new ImagePattern(image));
