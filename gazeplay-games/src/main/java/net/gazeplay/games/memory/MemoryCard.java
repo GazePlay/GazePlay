@@ -152,52 +152,24 @@ public class MemoryCard extends Parent {
 
         /* No more cards to play : End of this game : Begin a new Game */
         if (gameInstance.getNbRemainingPeers() == 0) {
-            if (gameInstance.getDifficulty().equals("Dynamic")) {
-                levelsReport.addRoundLevel(gameInstance.getLevel());
-                gameInstance.addRoundResult(gameInstance.totalNbOfTries());
-                int sizeOfList = gameInstance.getListOfResults().size();
-                int compare = 0;
 
-                log.debug("nbOfTries = {}", gameInstance.totalNbOfTries());
-                if (sizeOfList % 3 == 0 && sizeOfList != 0) {
-                    for (int i = 0; i < 3; i++) {
-                        if (gameInstance.totalNbOfTries() <= 2 * gameInstance.getLevel() && gameInstance.getNbColumns() <= 6)
-                            compare++;
-                        if (gameInstance.totalNbOfTries() >= 2.5 * gameInstance.getLevel() && gameInstance.getNbColumns() > 2)
-                            compare--;
-                    }
-                    if (compare == 3) {
-                        if (gameInstance.getLevel() == 6)
-                            gameInstance.setLevel(gameInstance.getLevel() + 2);
-                        else
-                            gameInstance.setLevel(gameInstance.getLevel() + 1);
-                    }
-                    if (compare == -3) {
-                        if (gameInstance.getLevel() == 8)
-                            gameInstance.setLevel(gameInstance.getLevel() - 2);
-                        else
-                            gameInstance.setLevel(gameInstance.getLevel() - 1);
-                    }
-                    levelsReport.addRoundLevel(gameInstance.getLevel());
-                }
-
-                gameInstance.adaptLevel();
+            if (gameInstance.iteration == 6){
+                gameContext.updateScore(stats, gameInstance);
+                gameInstance.resetNbCorrectCards();
+                gameInstance.resetNbWrongCards();
+                gameInstance.dispose();
+                gameContext.clear();
+                gameInstance.endGame();
+            }else {
+                gameContext.updateScore(stats, gameInstance);
+                gameInstance.resetNbCorrectCards();
+                gameInstance.resetNbWrongCards();
+                gameInstance.dispose();
+                gameContext.clear();
+                gameInstance.updateDifficulty();
+                gameInstance.launch();
             }
 
-            gameContext.updateScore(stats, gameInstance);
-
-            gameContext.playWinTransition(500, actionEvent -> {
-
-                gameInstance.resetNbCorrectCards();
-
-                gameInstance.resetNbWrongCards();
-
-                gameInstance.dispose();
-
-                gameContext.clear();
-
-                gameInstance.launch();
-            });
         }
     }
 

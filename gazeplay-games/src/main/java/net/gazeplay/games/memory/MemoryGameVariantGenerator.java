@@ -12,12 +12,7 @@ public class MemoryGameVariantGenerator implements IGameVariantGenerator {
     @Override
     public Set<IGameVariant> getVariants() {
         return Sets.newLinkedHashSet(Lists.newArrayList(
-            new DimensionDifficultyGameVariant(2, 2, "Normal"),
-            new DimensionDifficultyGameVariant(2, 3, "Normal"),
-            new DimensionDifficultyGameVariant(3, 2, "Normal"),
-            new DimensionDifficultyGameVariant(3, 4, "Normal"),
-            new DimensionDifficultyGameVariant(4, 3, "Normal"),
-            new DimensionDifficultyGameVariant(2, 2, "Dynamic")
+            new DimensionDifficultyGameVariant(2, 2, "Normal")
         ));
     }
 }

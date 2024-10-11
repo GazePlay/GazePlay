@@ -264,6 +264,8 @@ public class WhereIsIt implements GameLifeCycle {
             currentRoundDetails = null;
         }
         stats.setTargetAOIList(targetAOIList);
+        this.gameContext.getChildren().clear();
+        this.gameContext.showRoundStats(stats, this);
     }
 
     void removeAllIncorrectPictureCards() {

@@ -50,6 +50,7 @@ public class Memory implements GameLifeCycle {
     @Getter
     @Setter
     private int nbColumns;
+    int iteration = 1;
 
     private String difficulty;
 
@@ -160,6 +161,15 @@ public class Memory implements GameLifeCycle {
 
     }
 
+    public void updateDifficulty(){
+        if (this.iteration % 2 == 0){
+            this.nbLines = 2;
+            this.nbColumns += 1;
+            this.nbRemainingPeers = (nbLines * nbColumns) / 2;
+        }
+        this.iteration++;
+    }
+
     HashMap<Integer, Image> pickRandomImages() {
         final int cardsCount = nbColumns * nbLines;
         final HashMap<Integer, Image> res = new HashMap<>();
@@ -205,6 +215,12 @@ public class Memory implements GameLifeCycle {
             }
             currentRoundDetails = null;
         }
+
+    }
+
+    public void endGame(){
+        this.gameContext.getChildren().clear();
+        this.gameContext.showRoundStats(stats, this);
     }
 
     public void removeSelectedCards() {

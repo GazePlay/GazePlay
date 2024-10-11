@@ -35,10 +35,10 @@ public class IA {
         }else if (iteration < 27){
             log.info("Move one back again");
             this.moveOneBack();
-        }else if (iteration < 33){
+        }/*else if (iteration < 33){
             log.info("Move jump");
             this.moveJump();
-        }else {
+        }*/else {
             this.frog.dispose();
         }
     }
