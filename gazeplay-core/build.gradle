@@ -124,7 +124,7 @@ task generateEvalsCatalog {
 
         def memory = sourceSet
                 .filter { it.path.endsWith('.java') }
-                .filter { it.path.contains('OpenMemoryGame') }
+                .filter { it.path.contains('MemoryGame') }
                 .filter { it.path.contains('SpecSource') }
                 .collect {
                     it.path
