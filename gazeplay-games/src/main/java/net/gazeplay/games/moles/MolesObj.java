@@ -98,7 +98,7 @@ public class MolesObj extends Parent {
 
         Image moleImage;
 
-        moleImage = new Image("data/whackmole/images/bibouleMole.png");
+        moleImage = new Image("data/whackmole/images/molesCarrot.png");
 
         this.moleMoved = new Rectangle(positionX, positionY - distTrans, width, height);
         this.moleMoved.setFill(new ImagePattern(moleImage, 5, 5, 1, 1, true));

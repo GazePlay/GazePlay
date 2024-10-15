@@ -53,7 +53,7 @@ public class Frog implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
 
-        Image nenupharImg = new Image("data/frog/images/nenuphar.png");
+        Image nenupharImg = new Image("data/frog/images/lotus.png");
         Image frogImg = new Image("data/frog/images/frog.png");
 
         this.screensBounds = Screen.getPrimary().getVisualBounds();
