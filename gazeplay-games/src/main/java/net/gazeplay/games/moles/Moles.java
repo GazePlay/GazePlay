@@ -46,8 +46,8 @@ public class Moles extends Parent implements GameLifeCycle {
 
     private int nbMolesWhacked;
 
-    public int limitMoleEntity = 3;
-    public int limitObjEntity = 1;
+    public int limitMoleEntity = 0;
+    public int limitObjEntity = 2;
     @Getter
     private AtomicInteger nbMolesOut = new AtomicInteger(0);
     @Getter
@@ -67,7 +67,8 @@ public class Moles extends Parent implements GameLifeCycle {
     private final ReplayablePseudoRandom randomGenerator;
 
     private MolesGameVariant variant;
-    Timeline difficulty;
+    Timeline difficulty1;
+    Timeline difficulty2;
 
     Moles(IGameContext gameContext, Stats stats, final MolesGameVariant type) {
         super();
@@ -156,22 +157,40 @@ public class Moles extends Parent implements GameLifeCycle {
         this.gameContext.resetBordersToFront();
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
-        this.updateDifficulty();
+        this.updateDifficulty1();
+        this.updateDifficulty2();
         play();
     }
 
-    public void updateDifficulty(){
-        difficulty = new Timeline(new KeyFrame(Duration.seconds(15), event -> {
-            this.limitMoleEntity += 2;
+    public void updateDifficulty1(){
+        difficulty1 = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+            this.limitObjEntity += 2;
+        }));
+
+        difficulty1.setOnFinished(event -> {
+
+            this.limitMoleEntity = 1;
+            this.limitObjEntity = 1;
+
+            difficulty1.stop();
+            difficulty2.playFromStart();
+        });
+
+        difficulty1.setCycleCount(3);
+    }
+
+    public void updateDifficulty2(){
+        difficulty2 = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+            this.limitMoleEntity ++;
             this.limitObjEntity ++;
         }));
 
-        difficulty.setOnFinished(event -> {
-            difficulty.stop();
+        difficulty2.setOnFinished(event -> {
+            difficulty2.stop();
             this.dispose();
         });
 
-        difficulty.setCycleCount(3);
+        difficulty2.setCycleCount(3);
     }
 
     void adjustBackground(Rectangle image) {
@@ -207,7 +226,7 @@ public class Moles extends Parent implements GameLifeCycle {
         };
 
         minuteur.schedule(tache, 0, 500);
-        difficulty.playFromStart();
+        difficulty1.playFromStart();
     }
 
     @Override
