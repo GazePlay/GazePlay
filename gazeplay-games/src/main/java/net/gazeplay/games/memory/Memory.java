@@ -16,10 +16,7 @@ import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 public class Memory implements GameLifeCycle {
@@ -53,6 +50,8 @@ public class Memory implements GameLifeCycle {
     int iteration = 1;
 
     private String difficulty;
+    List<Image> listImgCards;
+    String[] allCards;
 
     private final Stats stats;
 
@@ -108,19 +107,8 @@ public class Memory implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
 
-        if (gameType == MemoryGameType.LETTERS) {
-
-            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters", randomGenerator);
-
-        } else if (gameType == MemoryGameType.NUMBERS) {
-
-            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers", randomGenerator);
-
-        } else {
-            this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"),
-                Utils.getImagesSubdirectory("default"), randomGenerator);
-        }
-
+        this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"), Utils.getImagesSubdirectory("default"), randomGenerator);
+        this.getAllCards();
     }
 
     public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final String difficulty, final Stats stats,
@@ -144,21 +132,31 @@ public class Memory implements GameLifeCycle {
 
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
-        if (gameType == MemoryGameType.LETTERS) {
-
-            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/letters", randomGenerator);
-
-        } else if (gameType == MemoryGameType.NUMBERS) {
-
-            this.imageLibrary = ImageUtils.createCustomizedImageLibrary(null, "common/numbers", randomGenerator);
-
-        } else {
-            this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"),
-                Utils.getImagesSubdirectory("default"), randomGenerator);
-        }
+        this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"), Utils.getImagesSubdirectory("default"), randomGenerator);
+        this.getAllCards();
 
         gameContext.start();
 
+    }
+
+    public void getAllCards(){
+        this.allCards = new String[]{
+            "bearCard.png",
+            "crabCard.png",
+            "dogCard.png",
+            "elephantCard.png",
+            "foxCard.png",
+            "giraffeCard.png",
+            "hedgehogCard.png",
+            "hippoCard.png",
+            "jellyfishCard.png",
+            "lionCard.png",
+            "octopusCard.png",
+            "owlCard.png",
+            "rabbitCard.png",
+            "snakeCard.png",
+            "squirrelCard.png"
+        };
     }
 
     public void updateDifficulty(){
@@ -171,13 +169,12 @@ public class Memory implements GameLifeCycle {
     }
 
     HashMap<Integer, Image> pickRandomImages() {
-        final int cardsCount = nbColumns * nbLines;
         final HashMap<Integer, Image> res = new HashMap<>();
 
-        final Set<Image> images = imageLibrary.pickMultipleRandomDistinctImages(cardsCount / 2);
+        this.generateListCards();
 
         int i = 0;
-        for (final Image image : images) {
+        for (final Image image : this.listImgCards) {
             res.put(i, image);
             i++;
         }
@@ -236,6 +233,27 @@ public class Memory implements GameLifeCycle {
         nbRemainingPeers = nbRemainingPeers - 1;
         // remove all turned cards
         gameContext.getChildren().removeAll(cardsToHide);
+    }
+
+    public void generateListCards(){
+        this.listImgCards = new ArrayList<>();
+        int iteration = (this.nbLines * nbColumns) / 2;
+        Random random = new Random();
+        int index;
+        boolean cardAdded;
+
+        for (int i=0; i<iteration; i++){
+            cardAdded = false;
+            do {
+                index = random.nextInt(this.allCards.length);
+                String nameCard = this.allCards[index];
+                Image getCard = new Image("data/magiccards/cards/" + this.allCards[index]);
+                if (!this.listImgCards.contains(getCard)){
+                    this.listImgCards.add(new Image("data/magiccards/cards/" + nameCard));
+                    cardAdded = true;
+                }
+            } while (!cardAdded);
+        }
     }
 
     private List<MemoryCard> createCards(final HashMap<Integer, Image> im, final Configuration config) {
