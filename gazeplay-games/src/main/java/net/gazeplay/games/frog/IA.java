@@ -6,18 +6,28 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+
 @Slf4j
 public class IA {
 
     Frog frog;
     IGameContext gameContext;
-
+    ArrayList<Integer> possiblePosition;
+    Boolean firstJump = true;
+    int pastFrogPosition;
+    int futureFrogPosition;
     String moveType = "";
     Timeline autoMove;
+    int cyclePassed = 0;
 
     public IA(Frog frog, IGameContext gameContext){
         this.frog = frog;
         this.gameContext = gameContext;
+        this.possiblePosition = new ArrayList<>(Arrays.asList(2,3,7,8));
 
         this.createTimeline();
     }
@@ -35,23 +45,29 @@ public class IA {
         }else if (iteration < 27){
             log.info("Move one back again");
             this.moveOneBack();
-        }/*else if (iteration < 33){
+        }else if (iteration < 33){
             log.info("Move jump");
+            this.specialMoveFrog();
             this.moveJump();
-        }*/else {
+        }else {
             this.frog.dispose();
         }
     }
 
     public void createTimeline(){
         autoMove = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
-            log.info("Timeline Cycle");
-            this.updateFrogPosition();
-            this.frog.moveFrogTo(this.frog.nenuphars[this.frog.frogPosition]);
+            if (this.cyclePassed < 2){
+                log.info("Timeline Cycle");
+                this.cyclePassed++;
+                this.updateFrogPosition();
+                this.frog.moveFrogTo(this.frog.nenuphars[this.frog.frogPosition]);
+            }
         }));
 
         autoMove.setOnFinished(event -> {
             autoMove.stop();
+            this.firstJump = true;
+            this.cyclePassed = 0;
             this.frog.setGoodAnswer(this.moveType);
             this.frog.playerTurn();
         });
@@ -79,6 +95,15 @@ public class IA {
         autoMove.playFromStart();
     }
 
+    public void specialMoveFrog(){
+        if (!this.possiblePosition.contains(this.frog.frogPosition)){
+            Random randomPos = new Random();
+            int newPos = this.possiblePosition.get(randomPos.nextInt(this.possiblePosition.size()));
+            this.frog.moveFrogTo(this.frog.nenuphars[newPos]);
+            this.frog.frogPosition = newPos;
+        }
+    }
+
     public void updateFrogPosition(){
         switch (this.moveType){
             case "oneBack":
@@ -86,7 +111,6 @@ public class IA {
                 if (this.frog.frogPosition < 0){
                     this.frog.frogPosition = this.frog.nenuphars.length - 1;
                 }
-                log.info("New frog position -> " + this.frog.frogPosition);
                 break;
 
             case "oneFront":
@@ -106,15 +130,29 @@ public class IA {
                 break;
 
             case "jump":
+                if (this.firstJump){
+                    this.firstJump = false;
+                    this.pastFrogPosition = this.frog.frogPosition;
 
+                    Random randomJump = new Random();
+                    int newPosJump;
+
+                    if ((this.frog.frogPosition == 2) || (this.frog.frogPosition == 3)){
+                        newPosJump = randomJump.nextInt(2) + 7;
+
+                    }else {
+                        newPosJump = randomJump.nextInt(2) + 2;
+                    }
+
+                    this.futureFrogPosition = newPosJump;
+                    this.frog.frogPosition = newPosJump;
+                }else {
+                    this.frog.frogPosition = this.pastFrogPosition;
+                }
                 break;
 
             default:
                 break;
         }
-    }
-
-    public void checkNextJump(){
-
     }
 }

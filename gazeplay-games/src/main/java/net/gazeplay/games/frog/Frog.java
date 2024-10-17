@@ -3,8 +3,11 @@ package net.gazeplay.games.frog;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
@@ -30,13 +33,14 @@ public class Frog implements GameLifeCycle {
     Rectangle2D screensBounds;
     double screenWidth;
     double screenHeight;
+    ImageView info;
 
     public Frog(IGameContext gameContext, Stats stats) {
         super();
         this.gameContext = gameContext;
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom();
-        this.stats.setGameSeed(randomGenerator.getSeed());
+        this.stats.setGameSeed(this.randomGenerator.getSeed());
     }
 
     public Frog(IGameContext gameContext, Stats stats, double gameSeed) {
@@ -48,61 +52,59 @@ public class Frog implements GameLifeCycle {
 
     @Override
     public void launch() {
-        gameContext.setLimiterAvailable();
-        stats.notifyNewRoundReady();
-        gameContext.getGazeDeviceManager().addStats(stats);
-        gameContext.firstStart();
+        this.gameContext.setLimiterAvailable();
+        this.stats.notifyNewRoundReady();
+        this.gameContext.getGazeDeviceManager().addStats(this.stats);
+        this.gameContext.firstStart();
 
+        this.createInfo();
         Image nenupharImg = new Image("data/frog/images/lotus.png");
         Image frogImg = new Image("data/frog/images/frog.png");
 
         this.screensBounds = Screen.getPrimary().getVisualBounds();
-        this.screenWidth = screensBounds.getWidth();
-        this.screenHeight = screensBounds.getHeight();
+        this.screenWidth = this.screensBounds.getWidth();
+        this.screenHeight = this.screensBounds.getHeight();
 
-        frog = new ImageView(frogImg);
+        this.frog = new ImageView(frogImg);
 
         this.drawNenuphars(this.screenWidth, this.screenHeight, nenupharImg);
         this.generateRandomStart();
 
-        this.gameContext.getChildren().add(frog);
+        this.gameContext.getChildren().add(this.frog);
 
-        this.ia = new IA(this, gameContext);
+        this.ia = new IA(this, this.gameContext);
         this.iaPlay();
     }
 
     public void iaPlay(){
-        log.info("Actual iteration -> " + this.actualIteration);
         this.ia.iaMoves(this.actualIteration);
         this.actualIteration++;
     }
 
     public void generateRandomStart(){
         Random random = new Random();
-        frogPosition = random.nextInt(nbNenuphars);
-        moveFrogTo(nenuphars[frogPosition]);
+        this.frogPosition = random.nextInt(this.nbNenuphars);
+        moveFrogTo(this.nenuphars[this.frogPosition]);
     }
 
     public void drawNenuphars(double screenWidth, double screenHeight, Image nenupharImg){
-        nenuphars = new Nenuphar[nbNenuphars];
-        for (int i=0; i<nbNenuphars; i++){
-            nenuphars[i] = new Nenuphar(screenWidth, screenHeight, nenupharImg, i, nbNenuphars, gameContext, this);
+        this.nenuphars = new Nenuphar[this.nbNenuphars];
+        for (int i=0; i<this.nbNenuphars; i++){
+            this.nenuphars[i] = new Nenuphar(screenWidth, screenHeight, nenupharImg, i, this.nbNenuphars, this.gameContext, this);
         }
     }
 
     public void moveFrogTo(Nenuphar nenuphar){
-        log.info("Frog position -> " + this.frogPosition);
         double frogSize = nenuphar.nenupharImgView.getFitWidth() * 0.5;
-        frog.setFitWidth(frogSize);
-        frog.setFitHeight(frogSize);
-        frog.setX(nenuphar.nenupharImgView.getX() + (nenuphar.nenupharImgView.getFitWidth() - frogSize) / 2);
-        frog.setY(nenuphar.nenupharImgView.getY() + (nenuphar.nenupharImgView.getFitHeight() - frogSize) / 2);
+        this.frog.setFitWidth(frogSize);
+        this.frog.setFitHeight(frogSize);
+        this.frog.setX(nenuphar.nenupharImgView.getX() + (nenuphar.nenupharImgView.getFitWidth() - frogSize) / 2);
+        this.frog.setY(nenuphar.nenupharImgView.getY() + (nenuphar.nenupharImgView.getFitHeight() - frogSize) / 2);
 
         for (Nenuphar value : this.nenuphars) {
             value.haveFrog = false;
         }
         nenuphar.haveFrog = true;
-        log.info("Frog moved");
     }
 
     public void setGoodAnswer(String moveType){
@@ -115,12 +117,23 @@ public class Frog implements GameLifeCycle {
                 break;
 
             case "oneFront":
+                this.correctFrogPosition = this.frogPosition + 1;
+                if (this.correctFrogPosition > 9){
+                    this.correctFrogPosition = 0;
+                }
                 break;
 
             case "twoBack":
+                this.correctFrogPosition = this.frogPosition - 2;
+                if (this.correctFrogPosition == -1){
+                    this.correctFrogPosition = this.nenuphars.length - 1;
+                }else {
+                    this.correctFrogPosition = this.nenuphars.length - 2;
+                }
                 break;
 
             case "jump":
+                this.correctFrogPosition = this.ia.futureFrogPosition;
                 break;
 
             default:
@@ -129,26 +142,35 @@ public class Frog implements GameLifeCycle {
     }
 
     public void playerTurn(){
-        log.info("Player turn");
         for (Nenuphar value : this.nenuphars) {
             value.ignoreInput = false;
             value.nenupharImgView.setOpacity(1);
         }
+        this.info.setVisible(true);
     }
 
     public void iaTurn(){
-        log.info("IA turn");
         for (Nenuphar value : this.nenuphars) {
             value.ignoreInput = true;
             value.nenupharImgView.setOpacity(0.5);
             value.errorImgView.setVisible(false);
         }
+        this.info.setVisible(false);
         this.iaPlay();
+    }
+
+    public void createInfo(){
+        Region region = this.gameContext.getRoot();
+        this.info = new ImageView("data/frog/images/frogInfo.png");
+        this.info.setFitWidth(region.getWidth());
+        this.info.setFitHeight(region.getHeight());
+        this.info.setVisible(false);
+        this.gameContext.getChildren().add(this.info);
     }
 
     @Override
     public void dispose() {
         this.gameContext.getChildren().clear();
-        this.gameContext.showRoundStats(stats, this);
+        this.gameContext.showRoundStats(this.stats, this);
     }
 }
