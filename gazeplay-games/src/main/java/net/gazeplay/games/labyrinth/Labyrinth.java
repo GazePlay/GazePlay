@@ -14,6 +14,7 @@ import net.gazeplay.commons.utils.stats.Stats;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 public class Labyrinth extends Parent implements GameLifeCycle {
@@ -28,6 +29,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     int nbBoxesLine = 4;
     int nbBoxesColumns = 6;
     int iteration = 1;
+    int actualSeed;
 
     double entiereRecX;
     double entiereRecY;
@@ -131,7 +133,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     }
 
     public void nextLvl(){
-        if (this.iteration < 8){
+        if (this.iteration < 7){
             this.iteration ++;
             this.gameContext.getChildren().clear();
             this.nbBoxesColumns += 1;
@@ -169,115 +171,196 @@ public class Labyrinth extends Parent implements GameLifeCycle {
         return walls;
     }
 
+    public int generateSeed(){
+        Random seed = new Random();
+        return seed.nextInt(2);
+    }
+
     private int[][] constructionWallMatrix() {
-        /*return new int[][]
-            {
-                {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1},
-                {0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1},
-                {0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1},
-                {0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0},
-                {1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0},
-            };
-
-         */
-        //Initialisation
-        int[][] lab = new int[nbBoxesLine][nbBoxesColumns];
-        int[][] ret = new int[nbBoxesLine][nbBoxesColumns];
-        for (int i = 0; i < nbBoxesLine; i++) {
-            for (int j = 0; j < nbBoxesColumns; j++) {
-                lab[i][j] = 1;
-                ret[i][j] = 1;
-            }
-        }
-        lab[0][0] = 0;
-        ret[0][0] = 0;
-
-        //Goals to dig
-        int nbObj = (int) (1.5 * Math.cbrt(nbBoxesColumns * nbBoxesLine));
-        int objX, objY;     //My goal to reach
-        int robX, robY;     //My digger robot
-        int r;              //My rand var
-        int rmax = 10;      //My bond of my rand var
-        int noise = (int) (Math.sqrt(nbObj));
-        for (int i = 0; i < nbObj; i++) {
-            objX = (int) (nbBoxesLine * (i % (int) (Math.sqrt(nbObj)) / (Math.sqrt(nbObj) - 2) + (randomGenerator.nextDouble() - 0.5) / noise));
-            if (objX < 0) {
-                objX = 0;
-            }
-            if (objX >= nbBoxesLine) {
-                objX = nbBoxesLine - 1;
-            }
-            objY = (int) (nbBoxesColumns * ((int) (i / Math.sqrt(nbObj)) / (Math.sqrt(nbObj) - 2) + (randomGenerator.nextDouble() - 0.5) / noise));
-            if (objY < 0) {
-                objY = 0;
-            }
-            if (objY >= nbBoxesColumns) {
-                objY = nbBoxesColumns - 1;
-            }
-            robX = objX;
-            robY = objY;
-            while (lab[robX][robY] == 1) {
-                robX = randomGenerator.nextInt(nbBoxesLine);
-                robY = randomGenerator.nextInt(nbBoxesColumns);
-            }
-            while (lab[objX][objY] == 1) {
-                r = randomGenerator.nextInt(rmax);
-                if (r == 0) {    //Je m'éloigne en x
-                    if (robX > objX) {
-                        if (robX != nbBoxesLine - 1) {
-                            robX++;
-                        }
-                    } else {
-                        if (robX != 0) {
-                            robX--;
-                        }
-                    }
-                } else if (r == 1) {   //Je m'éloigne en y
-                    if (robY > objY) {
-                        if (robY != nbBoxesColumns - 1) {
-                            robY++;
-                        }
-                    } else {
-                        if (robY != 0) {
-                            robY--;
-                        }
-                    }
-                } else if (r < rmax / 2 + 1) {    //Je m'approche en x
-                    if (robX > objX) {
-                        if (robX != 0) {
-                            robX--;
-                        }
-                    } else {
-                        if (robX != nbBoxesLine - 1) {
-                            robX++;
-                        }
-                    }
-                } else {      //Je m'approche en y
-                    if (robY > objY) {
-                        if (robY != 0) {
-                            robY--;
-                        }
-                    } else {
-                        if (robY != nbBoxesColumns - 1) {
-                            robY++;
-                        }
-                    }
+        this.actualSeed =  this.generateSeed();
+        switch (this.iteration){
+            case 1:
+                if (this.actualSeed == 0){
+                    return new int[][]
+                        {
+                            {0, 0, 0, 0, 0, 1},
+                            {0, 1, 1, 1, 0, 0},
+                            {0, 0, 0, 1, 1, 1},
+                            {1, 1, 0, 0, 0, 0}
+                        };
+                }else {
+                    return new int[][]
+                        {
+                            {0, 1, 0, 0, 0, 0},
+                            {0, 0, 0, 1, 1, 0},
+                            {1, 1, 0, 1, 1, 0},
+                            {1, 0, 0, 0, 1, 0}
+                        };
                 }
-                if (lab[robX][robY] == 1) {
-                    listAnim.add(robX);
-                    listAnim.add(robY);
-                }
-                lab[robX][robY] = 0;
-            }
-        }
 
-        //Return
-        if (doAnim) {
-            return ret;
+            case 2:
+                if (this.actualSeed == 0){
+                    return new int[][]
+                        {
+                            {0, 1, 0, 0, 0, 1, 0},
+                            {0, 1, 0, 1, 0, 0, 0},
+                            {0, 0, 0, 1, 1, 1, 1},
+                            {0, 1, 0, 1, 0, 0, 0},
+                            {0, 1, 0, 0, 0, 1, 0}
+                        };
+                }else {
+                    return new int[][]
+                        {
+                            {0, 0, 0, 0, 0, 0, 0},
+                            {0, 1, 1, 1, 1, 0, 1},
+                            {0, 1, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 1, 0, 1, 0},
+                            {1, 1, 1, 0, 0, 1, 0}
+                        };
+                }
+
+            case 3:
+                if (this.actualSeed == 0){
+                    return new int[][]
+                        {
+                            {0, 1, 1, 1, 1, 1, 1, 1},
+                            {0, 0, 0, 1, 0, 0, 0, 0},
+                            {0, 1, 0, 0, 0, 1, 1, 0},
+                            {0, 1, 1, 1, 0, 0, 0, 1},
+                            {0, 0, 0, 0, 0, 1, 0, 0},
+                            {1, 1, 1, 1, 1, 1, 1, 0}
+                        };
+                }else {
+                    return new int[][]
+                        {
+                            {0, 1, 1, 1, 1, 1, 1, 1},
+                            {0, 0, 0, 0, 0, 0, 1, 1},
+                            {0, 1, 1, 1, 1, 0, 1, 1},
+                            {0, 0, 0, 1, 1, 0, 0, 0},
+                            {0, 1, 0, 0, 1, 1, 0, 1},
+                            {1, 1, 1, 0, 1, 0, 0, 0}
+                        };
+                }
+
+            case 4:
+                if (this.actualSeed == 0){
+                    return new int[][]
+                        {
+                            {0, 1, 1, 1, 1, 1, 0, 0, 0},
+                            {0, 1, 1, 1, 0, 0, 0, 1, 0},
+                            {0, 1, 0, 0, 0, 1, 1, 1, 1},
+                            {0, 1, 0, 1, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 1, 1, 1, 0, 1, 1},
+                            {0, 1, 1, 0, 0, 0, 0, 1, 1},
+                            {0, 0, 0, 0, 1, 1, 0, 0, 0}
+                        };
+                }else {
+                    return new int[][]
+                        {
+                            {0, 0, 0, 0, 0, 1, 1, 1, 1},
+                            {0, 1, 1, 1, 0, 1, 0, 0, 0},
+                            {0, 0, 0, 1, 0, 0, 0, 1, 0},
+                            {1, 1, 0, 1, 1, 1, 1, 0, 0},
+                            {1, 0, 0, 0, 1, 1, 1, 0, 1},
+                            {1, 0, 1, 0, 0, 1, 1, 0, 1},
+                            {0, 0, 1, 1, 0, 1, 0, 0, 0}
+                        };
+                }
+
+            case 5:
+                if (this.actualSeed == 0){
+                    return new int[][]
+                        {
+                            {0, 1, 0, 0, 0, 0, 0, 1, 0, 0},
+                            {0, 0, 0, 1, 1, 1, 0, 0, 0, 1},
+                            {0, 1, 0, 0, 0, 0, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 1, 0, 0, 0, 0, 0},
+                            {0, 1, 1, 1, 1, 1, 1, 0, 1, 1},
+                            {0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 1, 1, 1, 1, 1, 1, 1},
+                            {1, 1, 0, 0, 0, 0, 0, 0, 0, 0}
+                        };
+                }else {
+                    return new int[][]
+                        {
+                            {0, 1, 0, 0, 0, 0, 0, 1, 1, 1},
+                            {0, 0, 0, 1, 1, 1, 0, 0, 1, 1},
+                            {0, 1, 1, 0, 0, 1, 1, 0, 1, 1},
+                            {0, 0, 0, 0, 0, 1, 1, 0, 0, 0},
+                            {0, 1, 1, 1, 0, 1, 1, 0, 1, 1},
+                            {0, 1, 0, 0, 0, 1, 1, 0, 0, 0},
+                            {1, 1, 0, 1, 0, 0, 0, 1, 1, 0},
+                            {1, 1, 0, 1, 1, 1, 0, 1, 0, 0}
+                        };
+                }
+
+            case 6:
+                if (this.actualSeed == 0){
+                    return new int[][]
+                        {
+                            {0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1},
+                            {0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0},
+                            {0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0},
+                            {0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1},
+                            {0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+                            {0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1},
+                            {0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0},
+                            {1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0},
+                            {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0}
+                        };
+                }else {
+                    return new int[][]
+                        {
+                            {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                            {0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1},
+                            {0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1},
+                            {0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1},
+                            {0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0},
+                            {0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1},
+                            {0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1},
+                            {0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1},
+                            {1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0}
+                        };
+                }
+
+            case 7:
+                if (this.actualSeed == 0){
+                    return new int[][]
+                        {
+                            {0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
+                            {0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1},
+                            {0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0},
+                            {0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1},
+                            {0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1},
+                            {0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0},
+                            {0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0},
+                            {0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0},
+                            {0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0}
+                        };
+                }else {
+                    return new int[][]
+                        {
+                            {0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
+                            {0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1},
+                            {0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0},
+                            {0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1},
+                            {0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1},
+                            {0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0},
+                            {1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0},
+                            {0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0}
+                        };
+                }
+
+            default:
+                return new int[][]
+                    {
+                        {0, 0},
+                        {0, 0}
+                    };
         }
-        return lab;
     }
 
     boolean isFreeForMouse(final int i, final int j) {

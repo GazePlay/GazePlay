@@ -4,6 +4,7 @@ import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Group;
 import javafx.scene.control.ProgressIndicator;
@@ -21,6 +22,8 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
+
+import java.util.Objects;
 
 import static net.gazeplay.games.whereisit.WhereIsItGameType.*;
 
@@ -285,8 +288,20 @@ class PictureCard extends Group {
          */
         private boolean ignoreAnyInput = false;
 
+        EventType<? extends Event> inputEventEntered;
+        EventType<? extends Event> inputEventExited;
+
         @Override
         public void handle(Event e) {
+
+            if (Objects.equals(gameContext.getConfiguration().getEyeTracker(), "tobii")){
+                inputEventEntered = GazeEvent.GAZE_ENTERED;
+                inputEventExited = GazeEvent.GAZE_EXITED;
+            }else {
+                inputEventEntered = MouseEvent.MOUSE_EXITED;
+                inputEventExited = MouseEvent.MOUSE_EXITED;
+            }
+
             if (ignoreAnyInput) {
                 return;
             }
@@ -295,9 +310,9 @@ class PictureCard extends Group {
                 return;
             }
 
-            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+            if (e.getEventType() == inputEventEntered) {
                 onEntered();
-            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+            } else if (e.getEventType() == inputEventExited) {
                 onExited();
             }
 

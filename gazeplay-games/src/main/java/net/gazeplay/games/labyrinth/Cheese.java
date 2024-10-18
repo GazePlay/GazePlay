@@ -45,11 +45,20 @@ class Cheese extends Parent {
     }
 
     void moveCheese() {
-        int x, y;
-        do {
-            y = randomGenerator.nextInt(gameInstance.nbBoxesLine);
-            x = randomGenerator.nextInt(gameInstance.nbBoxesColumns);
-        } while (!gameInstance.isFreeForCheese(y, x));
+        int x ,y;
+
+        if (this.gameInstance.actualSeed == 0){
+            do {
+                y = randomGenerator.nextInt(gameInstance.nbBoxesLine);
+                x = gameInstance.nbBoxesColumns - 1;
+            } while (!gameInstance.isFreeForCheese(y, x));
+        }else {
+            do {
+                y = gameInstance.nbBoxesLine - 1;
+                x = randomGenerator.nextInt(gameInstance.nbBoxesColumns);
+            } while (!gameInstance.isFreeForCheese(y, x));
+        }
+
 
         indexY = y;
         indexX = x;

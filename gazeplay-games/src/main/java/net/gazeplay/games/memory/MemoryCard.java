@@ -5,9 +5,11 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -19,6 +21,8 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.LevelsReport;
 import net.gazeplay.commons.utils.stats.Stats;
+
+import java.util.Objects;
 
 @Slf4j
 public class MemoryCard extends Parent {
@@ -234,11 +238,23 @@ public class MemoryCard extends Parent {
     }
 
     private EventHandler<Event> buildEvent() {
+
+        EventType<? extends Event> inputEventEntered;
+        EventType<? extends Event> inputEventExited;
+
+        if (Objects.equals(gameContext.getConfiguration().getEyeTracker(), "tobii")){
+            inputEventEntered = GazeEvent.GAZE_ENTERED;
+            inputEventExited = GazeEvent.GAZE_EXITED;
+        }else {
+            inputEventEntered = MouseEvent.MOUSE_EXITED;
+            inputEventExited = MouseEvent.MOUSE_EXITED;
+        }
+
         return e -> {
 
             if (turned) {
                 // If the cursor was on a card and then moved away while 2 cards are being turned, the mouse is no longer above the card.
-                if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                if (e.getEventType() == inputEventExited) {
                     this.mouseIsOverCard = false;
                 }
                 return;
@@ -247,7 +263,7 @@ public class MemoryCard extends Parent {
                 return;
             }
             /* First card */
-            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+            if (e.getEventType() == inputEventEntered) {
                 this.mouseIsOverCard = true;
                 if (timelineProgressBar != null) {
                     timelineProgressBar.stop();
@@ -319,7 +335,7 @@ public class MemoryCard extends Parent {
 
                 timelineProgressBar.play();
 
-            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+            } else if (e.getEventType() == inputEventExited) {
                 this.mouseIsOverCard = false;
                 if (timelineProgressBar != null) {
                     timelineProgressBar.stop();
