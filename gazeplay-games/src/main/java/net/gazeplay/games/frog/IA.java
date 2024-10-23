@@ -6,7 +6,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -34,19 +33,14 @@ public class IA {
 
     public void iaMoves(int iteration){
         if (iteration < 7){
-            log.info("Move one back");
             this.moveOneBack();
         }else if (iteration < 12){
-            log.info("Move one front");
             this.moveOneFront();
         }else if (iteration < 19){
-            log.info("Move two back");
             this.moveTwoBack();
         }else if (iteration < 27){
-            log.info("Move one back again");
             this.moveOneBack();
         }else if (iteration < 33){
-            log.info("Move jump");
             this.specialMoveFrog();
             this.moveJump();
         }else {
@@ -57,7 +51,6 @@ public class IA {
     public void createTimeline(){
         autoMove = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
             if (this.cyclePassed < 2){
-                log.info("Timeline Cycle");
                 this.cyclePassed++;
                 this.updateFrogPosition();
                 this.frog.moveFrogTo(this.frog.nenuphars[this.frog.frogPosition]);

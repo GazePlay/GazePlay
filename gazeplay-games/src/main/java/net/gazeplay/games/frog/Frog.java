@@ -4,25 +4,33 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.stats.Stats;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Random;
 
 @Slf4j
 public class Frog implements GameLifeCycle {
 
+    private String gameName = "Frog";
     private final IGameContext gameContext;
     private final Stats stats;
     private final ReplayablePseudoRandom randomGenerator;
+    public Timestamp timestamp;
     IA ia;
     Nenuphar[] nenuphars;
     ImageView frog;
@@ -34,6 +42,12 @@ public class Frog implements GameLifeCycle {
     double screenWidth;
     double screenHeight;
     ImageView info;
+    String pathStatsGame;
+    SimpleDateFormat sdf;
+    ArrayList<Long> computerTimestamp = new ArrayList<>();
+    ArrayList<Integer> step = new ArrayList<>();
+    String startTime;
+    String endTime;
 
     public Frog(IGameContext gameContext, Stats stats) {
         super();
@@ -41,6 +55,8 @@ public class Frog implements GameLifeCycle {
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(this.randomGenerator.getSeed());
+
+        this.generateStatsFolder();
     }
 
     public Frog(IGameContext gameContext, Stats stats, double gameSeed) {
@@ -48,6 +64,57 @@ public class Frog implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+
+        this.generateStatsFolder();
+    }
+
+    public void generateStatsFolder(){
+        String username = System.getProperty("user.name");
+        String directory = "C:/Users/" + username + "/Documents/Picardie_Project";
+        String subDirectory = directory + "/" + this.gameName;
+
+        File picardieProjet = new File(directory);
+        if (!picardieProjet.exists()){
+            picardieProjet.mkdirs();
+        }
+
+        File subFolder = new File(subDirectory);
+        if (!subFolder.exists()){
+            subFolder.mkdirs();
+        }
+
+        int index = 1;
+        File dir = new File(subDirectory, this.gameName + index + "_" + DateUtils.today());
+        while (dir.exists()){
+            index++;
+            dir = new File(subDirectory, this.gameName + index + "_" + DateUtils.today());
+        }
+        dir.mkdirs();
+        this.pathStatsGame = dir.getPath();
+    }
+
+    public void firstStat(){
+        this.sdf = new SimpleDateFormat("HH:mm:ss.SSS");
+        this.timestamp = new Timestamp(System.currentTimeMillis());
+
+        this.computerTimestamp.add(this.timestamp.getTime());
+        this.step.add(this.actualIteration);
+        this.startTime = this.sdf.format(this.timestamp);
+
+        for (Nenuphar nenuphar: this.nenuphars){
+            nenuphar.eventNenuphar.add("");
+        }
+    }
+
+    public void updateStats(int indexNenuphar){
+        this.computerTimestamp.add(new Timestamp(System.currentTimeMillis()).getTime());
+        this.step.add(this.actualIteration);
+
+        for (int i=0; i<this.nenuphars.length; i++){
+            if (i != indexNenuphar){
+                this.nenuphars[i].eventNenuphar.add("");
+            }
+        }
     }
 
     @Override
@@ -73,6 +140,7 @@ public class Frog implements GameLifeCycle {
         this.gameContext.getChildren().add(this.frog);
 
         this.ia = new IA(this, this.gameContext);
+        this.firstStat();
         this.iaPlay();
     }
 
@@ -170,7 +238,81 @@ public class Frog implements GameLifeCycle {
 
     @Override
     public void dispose() {
+        this.endTime = String.valueOf(new Timestamp(System.currentTimeMillis()).getTime() - this.timestamp.getTime());
         this.gameContext.getChildren().clear();
+        this.createExcelFile();
         this.gameContext.showRoundStats(this.stats, this);
+    }
+
+    @SuppressWarnings("PMD")
+    public void createExcelFile(){
+        String pathStats = this.pathStatsGame  + "/Stats_" + DateUtils.today() + ".xlsx";
+        this.stats.actualFile = this.pathStatsGame  + "/Stats_" + DateUtils.today() + ".xlsx";
+
+        SXSSFWorkbook workbook = new SXSSFWorkbook();
+        Sheet sheet = workbook.createSheet(this.gameName);
+
+        Object[][] bookData = new Object[this.computerTimestamp.size()+1][15];
+
+        bookData[0][0] = "Recording timestamp";
+        bookData[0][1] = "Computer timestamp";
+        bookData[0][2] = "Recording start time";
+        bookData[0][3] = "Recording duration";
+        bookData[0][4] = "Step";
+        bookData[0][5] = "Event Nenuphar 1";
+        bookData[0][6] = "Event Nenuphar 2";
+        bookData[0][7] = "Event Nenuphar 3";
+        bookData[0][8] = "Event Nenuphar 4";
+        bookData[0][9] = "Event Nenuphar 5";
+        bookData[0][10] = "Event Nenuphar 6";
+        bookData[0][11] = "Event Nenuphar 7";
+        bookData[0][12] = "Event Nenuphar 8";
+        bookData[0][13] = "Event Nenuphar 9";
+        bookData[0][14] = "Event Nenuphar 10";
+
+        /*log.info("Computer timestamp -> " + this.computerTimestamp);
+        log.info("Start time -> " + this.startTime);
+        log.info("End time -> " + this.endTime);
+        log.info("Step -> " + this.step);
+
+        for (Nenuphar nenuphar: this.nenuphars){
+            log.info("Event nenuphar -> " + nenuphar.eventNenuphar);
+        }*/
+
+        for (int i=0; i<this.computerTimestamp.size(); i++){
+            bookData[i+1][0] = String.valueOf(this.computerTimestamp.get(i) - this.computerTimestamp.get(0));
+            bookData[i+1][1] = String.valueOf(this.computerTimestamp.get(i));
+            bookData[i+1][2] = String.valueOf(this.startTime);
+            bookData[i+1][3] = String.valueOf(this.endTime);
+            bookData[i+1][4] = String.valueOf(this.step.get(i));
+
+            for (int j=0; j<this.nenuphars.length; j++){
+                bookData[i+1][5+j] = String.valueOf(this.nenuphars[j].eventNenuphar.get(i));
+            }
+        }
+
+        int rowCount = 0;
+
+        for (Object[] aBook : bookData) {
+            Row row = sheet.createRow(rowCount++);
+
+            int columnCount = 0;
+
+            for (Object field : aBook) {
+                Cell cell = row.createCell(columnCount++);
+                if (field instanceof String) {
+                    cell.setCellValue((String) field);
+                } else if (field instanceof Integer) {
+                    cell.setCellValue((Integer) field);
+                }
+            }
+        }
+
+        try (FileOutputStream outputStream = new FileOutputStream(pathStats)) {
+            workbook.write(outputStream);
+        } catch (Exception e){
+            log.info("Error creation xls for GazePlay Eval stats game !");
+            e.printStackTrace();
+        }
     }
 }

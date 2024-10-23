@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
+import java.util.ArrayList;
+
 @Slf4j
 public class Nenuphar extends Group {
 
@@ -26,6 +28,7 @@ public class Nenuphar extends Group {
     Boolean haveFrog = false;
     boolean ignoreInput = true;
     int indexNenuphar;
+    ArrayList<String> eventNenuphar = new ArrayList<>();
 
     private Timeline progressIndicatorAnimationTimeLine;
     private ProgressIndicator progressIndicator;
@@ -157,6 +160,9 @@ public class Nenuphar extends Group {
             progressIndicator.setProgress(0);
             progressIndicator.setVisible(true);
             progressIndicatorAnimationTimeLine.playFromStart();
+
+            eventNenuphar.add("Entered");
+            frog.updateStats(indexNenuphar);
         }
 
         private void onEnteredOnceWhileMoved(){
@@ -175,6 +181,9 @@ public class Nenuphar extends Group {
             progressIndicator.setVisible(false);
             progressIndicator.setProgress(0);
             this.moved = false;
+
+            eventNenuphar.add("Exited");
+            frog.updateStats(indexNenuphar);
         }
 
     }
