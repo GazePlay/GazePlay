@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.Group;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
@@ -17,6 +18,7 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Slf4j
 public class Nenuphar extends Group {
@@ -24,14 +26,17 @@ public class Nenuphar extends Group {
     IGameContext gameContext;
     Frog frog;
     ImageView nenupharImgView;
-    ImageView errorImgView;
     Boolean haveFrog = false;
     boolean ignoreInput = true;
     int indexNenuphar;
     ArrayList<String> eventNenuphar = new ArrayList<>();
-
+    ArrayList<String> fixationLengthNenuphar = new ArrayList<>();
     private Timeline progressIndicatorAnimationTimeLine;
     private ProgressIndicator progressIndicator;
+
+    EventType<? extends Event> inputEventEntered;
+    EventType<? extends Event> inputEventMoved;
+    EventType<? extends Event> inputEventExited;
 
     public Nenuphar(double screenWidth, double screenHeight, Image nenupharImg, int index, int nbNenuphars, IGameContext gameContext, Frog frog){
         this.gameContext = gameContext;
@@ -39,11 +44,11 @@ public class Nenuphar extends Group {
         this.indexNenuphar = index;
 
         this.drawNenuphars(screenWidth, screenHeight, nenupharImg, index, nbNenuphars);
-        this.drawWrongAnswer();
 
         this.progressIndicator = buildProgressIndicator();
         gameContext.getChildren().add(progressIndicator);
 
+        this.generateEvent();
         CustomInputEventHandler customInputEventHandler = new CustomInputEventHandler();
         nenupharImgView.addEventFilter(MouseEvent.ANY, customInputEventHandler);
         nenupharImgView.addEventFilter(GazeEvent.ANY, customInputEventHandler);
@@ -69,17 +74,6 @@ public class Nenuphar extends Group {
         nenupharImgView.setOpacity(0.5);
         gameContext.getChildren().add(nenupharImgView);
         gameContext.getGazeDeviceManager().addEventFilter(nenupharImgView);
-    }
-
-    public void drawWrongAnswer(){
-        errorImgView = new ImageView("data/common/images/error.png");
-        errorImgView.setFitWidth(nenupharImgView.getFitWidth());
-        errorImgView.setFitHeight(nenupharImgView.getFitHeight());
-        errorImgView.setX(nenupharImgView.getX());
-        errorImgView.setY(nenupharImgView.getY());
-        errorImgView.setOpacity(0.5);
-        errorImgView.setVisible(false);
-        gameContext.getChildren().add(errorImgView);
     }
 
     private ProgressIndicator buildProgressIndicator() {
@@ -113,27 +107,35 @@ public class Nenuphar extends Group {
 
     private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(Frog frog) {
         return actionEvent -> {
+
+            eventNenuphar.add("Validate");
+            fixationLengthNenuphar.add(String.valueOf(gameContext.getConfiguration().getFixationLength()));
+            frog.updateStats(indexNenuphar);
+
             this.newProgressIndicator();
-            this.checkAnswer();
+            frog.frogPosition = frog.correctFrogPosition;
+            frog.moveFrogTo(frog.nenuphars[frog.correctFrogPosition]);
+            frog.iaTurn();
         };
     }
 
-    public void checkAnswer(){
-        if (this.indexNenuphar == this.frog.correctFrogPosition){
-            frog.frogPosition = this.indexNenuphar;
-            frog.moveFrogTo(this);
-            frog.iaTurn();
-        }else {
-            this.ignoreInput = true;
-            this.nenupharImgView.setOpacity(0.5);
-            this.errorImgView.setVisible(true);
-        }
-    }
 
     public void newProgressIndicator() {
         this.gameContext.getChildren().remove(progressIndicator);
         this.progressIndicator = buildProgressIndicator();
         this.gameContext.getChildren().add(progressIndicator);
+    }
+
+    public void generateEvent(){
+        if (Objects.equals(gameContext.getConfiguration().getEyeTracker(), "tobii")){
+            inputEventEntered = GazeEvent.GAZE_ENTERED;
+            inputEventMoved = GazeEvent.GAZE_MOVED;
+            inputEventExited = GazeEvent.GAZE_EXITED;
+        }else {
+            inputEventEntered = MouseEvent.MOUSE_ENTERED;
+            inputEventMoved = MouseEvent.MOUSE_MOVED;
+            inputEventExited = MouseEvent.MOUSE_EXITED;
+        }
     }
 
     private class CustomInputEventHandler implements EventHandler<Event> {
@@ -142,12 +144,15 @@ public class Nenuphar extends Group {
 
         @Override
         public void handle(Event e) {
+
             if (!ignoreInput & !haveFrog) {
-                if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                if (e.getEventType() == inputEventEntered) {
+                    log.info("Entered");
                     onEntered();
-                } else if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_MOVED){
+                } else if (e.getEventType() == inputEventMoved){
                     onEnteredOnceWhileMoved();
-                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                } else if (e.getEventType() == inputEventExited) {
+                    log.info("Exited");
                     onExited();
                 }
             }
@@ -162,6 +167,7 @@ public class Nenuphar extends Group {
             progressIndicatorAnimationTimeLine.playFromStart();
 
             eventNenuphar.add("Entered");
+            fixationLengthNenuphar.add("");
             frog.updateStats(indexNenuphar);
         }
 
@@ -177,13 +183,19 @@ public class Nenuphar extends Group {
         }
 
         private void onExited() {
+
+            double fixationPercentage = progressIndicator.getProgress();
+
             progressIndicatorAnimationTimeLine.stop();
             progressIndicator.setVisible(false);
             progressIndicator.setProgress(0);
             this.moved = false;
 
-            eventNenuphar.add("Exited");
-            frog.updateStats(indexNenuphar);
+            if (fixationPercentage != 0.0){
+                eventNenuphar.add("Exited");
+                fixationLengthNenuphar.add(String.valueOf(gameContext.getConfiguration().getFixationLength() * fixationPercentage));
+                frog.updateStats(indexNenuphar);
+            }
         }
 
     }

@@ -32,19 +32,23 @@ public class IA {
     }
 
     public void iaMoves(int iteration){
-        if (iteration < 7){
+        if (iteration == 1){
             this.moveOneBack();
-        }else if (iteration < 12){
-            this.moveOneFront();
-        }else if (iteration < 19){
+        }else if (iteration == 7){
+            this.frog.dispose();
+            //this.moveOneFront();
+        }else if (iteration == 12){
             this.moveTwoBack();
-        }else if (iteration < 27){
+        }else if (iteration == 19){
             this.moveOneBack();
-        }else if (iteration < 33){
+        }else if (iteration == 27){
             this.specialMoveFrog();
             this.moveJump();
-        }else {
+        }else if (iteration == 34){
             this.frog.dispose();
+        }else {
+            this.frog.setGoodAnswer(this.moveType);
+            this.frog.playerTurn();
         }
     }
 

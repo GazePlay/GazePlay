@@ -36,7 +36,7 @@ public class Frog implements GameLifeCycle {
     ImageView frog;
     int frogPosition;
     int correctFrogPosition;
-    int actualIteration = 1;
+    int actualIteration = 0;
     int nbNenuphars = 10;
     Rectangle2D screensBounds;
     double screenWidth;
@@ -46,6 +46,7 @@ public class Frog implements GameLifeCycle {
     SimpleDateFormat sdf;
     ArrayList<Long> computerTimestamp = new ArrayList<>();
     ArrayList<Integer> step = new ArrayList<>();
+    ArrayList<Integer> goodAnswer = new ArrayList<>();
     String startTime;
     String endTime;
 
@@ -98,21 +99,25 @@ public class Frog implements GameLifeCycle {
         this.timestamp = new Timestamp(System.currentTimeMillis());
 
         this.computerTimestamp.add(this.timestamp.getTime());
-        this.step.add(this.actualIteration);
         this.startTime = this.sdf.format(this.timestamp);
+        this.step.add(this.actualIteration);
+        this.goodAnswer.add(this.correctFrogPosition);
 
         for (Nenuphar nenuphar: this.nenuphars){
             nenuphar.eventNenuphar.add("");
+            nenuphar.fixationLengthNenuphar.add("");
         }
     }
 
     public void updateStats(int indexNenuphar){
         this.computerTimestamp.add(new Timestamp(System.currentTimeMillis()).getTime());
         this.step.add(this.actualIteration);
+        this.goodAnswer.add(this.correctFrogPosition);
 
         for (int i=0; i<this.nenuphars.length; i++){
             if (i != indexNenuphar){
                 this.nenuphars[i].eventNenuphar.add("");
+                this.nenuphars[i].fixationLengthNenuphar.add("");
             }
         }
     }
@@ -145,8 +150,8 @@ public class Frog implements GameLifeCycle {
     }
 
     public void iaPlay(){
-        this.ia.iaMoves(this.actualIteration);
         this.actualIteration++;
+        this.ia.iaMoves(this.actualIteration);
     }
 
     public void generateRandomStart(){
@@ -201,7 +206,11 @@ public class Frog implements GameLifeCycle {
                 break;
 
             case "jump":
-                this.correctFrogPosition = this.ia.futureFrogPosition;
+                if (this.correctFrogPosition != this.ia.futureFrogPosition){
+                    this.correctFrogPosition = this.ia.futureFrogPosition;
+                }else {
+                    this.correctFrogPosition = this.ia.pastFrogPosition;
+                }
                 break;
 
             default:
@@ -221,8 +230,8 @@ public class Frog implements GameLifeCycle {
         for (Nenuphar value : this.nenuphars) {
             value.ignoreInput = true;
             value.nenupharImgView.setOpacity(0.5);
-            value.errorImgView.setVisible(false);
         }
+
         this.info.setVisible(false);
         this.iaPlay();
     }
@@ -252,32 +261,34 @@ public class Frog implements GameLifeCycle {
         SXSSFWorkbook workbook = new SXSSFWorkbook();
         Sheet sheet = workbook.createSheet(this.gameName);
 
-        Object[][] bookData = new Object[this.computerTimestamp.size()+1][15];
+        Object[][] bookData = new Object[this.computerTimestamp.size()+1][26];
 
         bookData[0][0] = "Recording timestamp";
         bookData[0][1] = "Computer timestamp";
         bookData[0][2] = "Recording start time";
         bookData[0][3] = "Recording duration";
         bookData[0][4] = "Step";
-        bookData[0][5] = "Event Nenuphar 1";
-        bookData[0][6] = "Event Nenuphar 2";
-        bookData[0][7] = "Event Nenuphar 3";
-        bookData[0][8] = "Event Nenuphar 4";
-        bookData[0][9] = "Event Nenuphar 5";
-        bookData[0][10] = "Event Nenuphar 6";
-        bookData[0][11] = "Event Nenuphar 7";
-        bookData[0][12] = "Event Nenuphar 8";
-        bookData[0][13] = "Event Nenuphar 9";
-        bookData[0][14] = "Event Nenuphar 10";
-
-        /*log.info("Computer timestamp -> " + this.computerTimestamp);
-        log.info("Start time -> " + this.startTime);
-        log.info("End time -> " + this.endTime);
-        log.info("Step -> " + this.step);
-
-        for (Nenuphar nenuphar: this.nenuphars){
-            log.info("Event nenuphar -> " + nenuphar.eventNenuphar);
-        }*/
+        bookData[0][5] = "Good answer";
+        bookData[0][6] = "Event Nenuphar 1";
+        bookData[0][7] = "Fixation Length Nenuphar 1";
+        bookData[0][8] = "Event Nenuphar 2";
+        bookData[0][9] = "Fixation Length Nenuphar 2";
+        bookData[0][10] = "Event Nenuphar 3";
+        bookData[0][11] = "Fixation Length Nenuphar 3";
+        bookData[0][12] = "Event Nenuphar 4";
+        bookData[0][13] = "Fixation Length Nenuphar 4";
+        bookData[0][14] = "Event Nenuphar 5";
+        bookData[0][15] = "Fixation Length Nenuphar 5";
+        bookData[0][16] = "Event Nenuphar 6";
+        bookData[0][17] = "Fixation Length Nenuphar 6";
+        bookData[0][18] = "Event Nenuphar 7";
+        bookData[0][19] = "Fixation Length Nenuphar 7";
+        bookData[0][20] = "Event Nenuphar 8";
+        bookData[0][21] = "Fixation Length Nenuphar 8";
+        bookData[0][22] = "Event Nenuphar 9";
+        bookData[0][23] = "Fixation Length Nenuphar 9";
+        bookData[0][24] = "Event Nenuphar 10";
+        bookData[0][25] = "Fixation Length Nenuphar 10";
 
         for (int i=0; i<this.computerTimestamp.size(); i++){
             bookData[i+1][0] = String.valueOf(this.computerTimestamp.get(i) - this.computerTimestamp.get(0));
@@ -285,9 +296,11 @@ public class Frog implements GameLifeCycle {
             bookData[i+1][2] = String.valueOf(this.startTime);
             bookData[i+1][3] = String.valueOf(this.endTime);
             bookData[i+1][4] = String.valueOf(this.step.get(i));
+            bookData[i+1][5] = String.valueOf(this.goodAnswer.get(i)+1);
 
             for (int j=0; j<this.nenuphars.length; j++){
-                bookData[i+1][5+j] = String.valueOf(this.nenuphars[j].eventNenuphar.get(i));
+                bookData[i+1][6+j+j] = String.valueOf(this.nenuphars[j].eventNenuphar.get(i));
+                bookData[i+1][7+j+j] = String.valueOf(this.nenuphars[j].fixationLengthNenuphar.get(i));
             }
         }
 
