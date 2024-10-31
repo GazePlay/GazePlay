@@ -41,10 +41,12 @@ public class GameMenuController {
         @NonNull GazePlay gazePlay,
         @NonNull Parent root,
         @NonNull GameSpec gameSpec,
-        String gameName
+        String gameName,
+        Configuration configuration
     ) {
         String gazeplayType = GazePlayArgs.returnArgs();
         Collection<IGameVariant> variants = gameSpec.getGameVariantGenerator().getVariants();
+        configuration.getBackgroundColorProperty().setValue("0x008080ff");
         if (variants.size() > 1) {
             root.setEffect(new BoxBlur());
             root.setDisable(true);

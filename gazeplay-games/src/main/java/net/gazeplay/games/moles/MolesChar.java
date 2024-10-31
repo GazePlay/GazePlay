@@ -227,7 +227,7 @@ public class MolesChar extends Parent {
         gameInstance.getGameContext().getChildren().remove(moleMoved);
         gameContext.getGazeDeviceManager().removeEventFilter(this.moleMoved);
 
-        double timeGoIn = 1500;
+        double timeGoIn = 3000;
         if (touched) {
             timeGoIn = 500;
         }

@@ -246,7 +246,7 @@ public class MemoryCard extends Parent {
             inputEventEntered = GazeEvent.GAZE_ENTERED;
             inputEventExited = GazeEvent.GAZE_EXITED;
         }else {
-            inputEventEntered = MouseEvent.MOUSE_EXITED;
+            inputEventEntered = MouseEvent.MOUSE_ENTERED;
             inputEventExited = MouseEvent.MOUSE_EXITED;
         }
 
