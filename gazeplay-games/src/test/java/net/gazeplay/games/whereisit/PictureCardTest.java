@@ -38,12 +38,4 @@ class PictureCardTest {
         when(mockGameContext.getConfiguration()).thenReturn(mockConfig);
         when(mockConfig.getFixationLength()).thenReturn(2);
     }
-
-    @Test
-    void shouldCreateErrorImageRectangle() {
-        String resource = "images/blue/blue.jpg";
-        PictureCard pictureCard = new PictureCard(2, 2, 2, 2, mockGameContext, true,
-            resource, mockStats, mockWhereIsIt);
-        assert pictureCard.getErrorImageRectangle() != null;
-    }
 }

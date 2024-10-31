@@ -147,12 +147,10 @@ public class Nenuphar extends Group {
 
             if (!ignoreInput & !haveFrog) {
                 if (e.getEventType() == inputEventEntered) {
-                    log.info("Entered");
                     onEntered();
                 } else if (e.getEventType() == inputEventMoved){
                     onEnteredOnceWhileMoved();
                 } else if (e.getEventType() == inputEventExited) {
-                    log.info("Exited");
                     onExited();
                 }
             }

@@ -21,17 +21,26 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.difficulty.SourceSet;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.games.WhereIsItVaildator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
 import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
+import net.gazeplay.games.frog.Nenuphar;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -67,6 +76,27 @@ public class WhereIsIt implements GameLifeCycle {
     private final ReplayablePseudoRandom randomGenerator;
 
     private final ArrayList<TargetAOI> targetAOIList;
+    int winnerImageIndexAmongDisplayedImages;
+    List<PictureCard> pictureCardList;
+    private String gameName = "Animals";
+    String pathStatsGame;
+    SimpleDateFormat sdf;
+    ArrayList<Long> computerTimestamp = new ArrayList<>();
+    ArrayList<Integer> step = new ArrayList<>();
+    ArrayList<Integer> goodAnswer = new ArrayList<>();
+    String startTime;
+    String endTime;
+    public Timestamp timestamp;
+    Boolean firstTime = true;
+
+    ArrayList<String> eventImage1 = new ArrayList<>();
+    ArrayList<String> fixationLengthImage1 = new ArrayList<>();
+    ArrayList<String> eventImage2 = new ArrayList<>();
+    ArrayList<String> fixationLengthImage2 = new ArrayList<>();
+    ArrayList<String> eventImage3 = new ArrayList<>();
+    ArrayList<String> fixationLengthImage3 = new ArrayList<>();
+    ArrayList<String> eventImage4 = new ArrayList<>();
+    ArrayList<String> fixationLengthImage4 = new ArrayList<>();
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
                      final IGameContext gameContext, final Stats stats) {
@@ -81,6 +111,8 @@ public class WhereIsIt implements GameLifeCycle {
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
+
+        this.generateStatsFolder();
     }
 
     public WhereIsIt(final WhereIsItGameType gameType, final int nbLines, final int nbColumns, final boolean fourThree,
@@ -95,6 +127,120 @@ public class WhereIsIt implements GameLifeCycle {
         this.gameContext.startScoreLimiter();
         this.gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
+
+        this.generateStatsFolder();
+    }
+
+    public void generateStatsFolder(){
+        String username = System.getProperty("user.name");
+        String directory = "C:/Users/" + username + "/Documents/Picardie_Project";
+        String subDirectory = directory + "/" + this.gameName;
+
+        File picardieProjet = new File(directory);
+        if (!picardieProjet.exists()){
+            picardieProjet.mkdirs();
+        }
+
+        File subFolder = new File(subDirectory);
+        if (!subFolder.exists()){
+            subFolder.mkdirs();
+        }
+
+        int index = 1;
+        File dir = new File(subDirectory, this.gameName + index + "_" + DateUtils.today());
+        while (dir.exists()){
+            index++;
+            dir = new File(subDirectory, this.gameName + index + "_" + DateUtils.today());
+        }
+        dir.mkdirs();
+        this.pathStatsGame = dir.getPath();
+    }
+
+    public void firstStat(){
+        if (firstTime){
+            firstTime = false;
+
+            this.sdf = new SimpleDateFormat("HH:mm:ss.SSS");
+            this.timestamp = new Timestamp(System.currentTimeMillis());
+
+            this.computerTimestamp.add(this.timestamp.getTime());
+            this.startTime = this.sdf.format(this.timestamp);
+            this.step.add(this.iteration-1);
+            this.goodAnswer.add(this.winnerImageIndexAmongDisplayedImages);
+
+            eventImage1.add("");
+            eventImage2.add("");
+            eventImage3.add("");
+            eventImage4.add("");
+            fixationLengthImage1.add("");
+            fixationLengthImage2.add("");
+            fixationLengthImage3.add("");
+            fixationLengthImage4.add("");
+        }
+    }
+
+    public void updateStats(int indexImg){
+        this.computerTimestamp.add(new Timestamp(System.currentTimeMillis()).getTime());
+        this.step.add(this.iteration);
+        this.goodAnswer.add(this.winnerImageIndexAmongDisplayedImages);
+    }
+
+    public void updatePictureCard(int index, String event, String value){
+        switch (index){
+            case 0 :
+                eventImage1.add(event);
+                eventImage2.add("");
+                eventImage3.add("");
+                eventImage4.add("");
+                fixationLengthImage1.add(value);
+                fixationLengthImage2.add("");
+                fixationLengthImage3.add("");
+                fixationLengthImage4.add("");
+                break;
+
+            case 1 :
+                eventImage1.add("");
+                eventImage2.add(event);
+                eventImage3.add("");
+                eventImage4.add("");
+                fixationLengthImage1.add("");
+                fixationLengthImage2.add(value);
+                fixationLengthImage3.add("");
+                fixationLengthImage4.add("");
+                break;
+
+            case 2 :
+                eventImage1.add("");
+                eventImage2.add("");
+                eventImage3.add(event);
+                eventImage4.add("");
+                fixationLengthImage1.add("");
+                fixationLengthImage2.add("");
+                fixationLengthImage3.add(value);
+                fixationLengthImage4.add("");
+                break;
+
+            case 3 :
+                eventImage1.add("");
+                eventImage2.add("");
+                eventImage3.add("");
+                eventImage4.add(event);
+                fixationLengthImage1.add("");
+                fixationLengthImage2.add("");
+                fixationLengthImage3.add("");
+                fixationLengthImage4.add(value);
+                break;
+
+            default:
+                eventImage1.add("");
+                eventImage2.add("");
+                eventImage3.add("");
+                eventImage4.add("");
+                fixationLengthImage1.add("");
+                fixationLengthImage2.add("");
+                fixationLengthImage3.add("");
+                fixationLengthImage4.add("");
+        }
     }
 
     @Override
@@ -104,7 +250,7 @@ public class WhereIsIt implements GameLifeCycle {
         final int numberOfImagesToDisplayPerRound = nbLines * nbColumns;
         log.debug("numberOfImagesToDisplayPerRound = {}", numberOfImagesToDisplayPerRound);
 
-        final int winnerImageIndexAmongDisplayedImages = randomGenerator.nextInt(numberOfImagesToDisplayPerRound);
+        winnerImageIndexAmongDisplayedImages = randomGenerator.nextInt(numberOfImagesToDisplayPerRound);
         log.debug("winnerImageIndexAmongDisplayedImages = {}", winnerImageIndexAmongDisplayedImages);
 
         currentRoundDetails = pickAndBuildRandomPictures(numberOfImagesToDisplayPerRound, randomGenerator,
@@ -121,6 +267,7 @@ public class WhereIsIt implements GameLifeCycle {
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
         gameContext.firstStart();
+        this.firstStat();
 
         if (gameType.toString().contains("SOUNDS")) {
             final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
@@ -247,7 +394,9 @@ public class WhereIsIt implements GameLifeCycle {
     }
 
     public void endGame(){
+        this.endTime = String.valueOf(new Timestamp(System.currentTimeMillis()).getTime() - this.timestamp.getTime());
         this.gameContext.getChildren().clear();
+        this.createExcelFile();
         this.gameContext.showRoundStats(stats, this);
     }
 
@@ -340,7 +489,7 @@ public class WhereIsIt implements GameLifeCycle {
         final GameSizing gameSizing = new GameSizingComputer(nbLines, nbColumns, fourThree)
             .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
 
-        final List<PictureCard> pictureCardList = new ArrayList<>();
+        pictureCardList = new ArrayList<>();
         String questionSoundPath = null;
         String question = null;
         List<Image> pictograms = null;
@@ -363,7 +512,7 @@ public class WhereIsIt implements GameLifeCycle {
 
                 final PictureCard pictureCard = new PictureCard(gameSizing.width * posX + gameSizing.shift,
                     gameSizing.height * posY, gameSizing.width, gameSizing.height, gameContext,
-                    winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this);
+                    winnerImageIndexAmongDisplayedImages == i, randomImageFile + "", stats, this, i);
 
                 pictureCardList.add(pictureCard);
 
@@ -531,5 +680,86 @@ public class WhereIsIt implements GameLifeCycle {
         double[] probas = {8 * lvlReplays * binomProba(1, 1, 0.5), 8 * lvlReplays * binomProba(1, 0, 0.5)};
 
         return Math.pow(tp - probas[0], 2) / probas[0] + Math.pow(fp - probas[1], 2) / probas[1];
+    }
+
+    public void createExcelFile(){
+        String pathStats = this.pathStatsGame  + "/Stats_" + DateUtils.today() + ".xlsx";
+        this.stats.actualFile = this.pathStatsGame  + "/Stats_" + DateUtils.today() + ".xlsx";
+
+        SXSSFWorkbook workbook = new SXSSFWorkbook();
+        Sheet sheet = workbook.createSheet(this.gameName);
+
+        Object[][] bookData = new Object[this.computerTimestamp.size()+1][14];
+
+        bookData[0][0] = "Recording timestamp";
+        bookData[0][1] = "Computer timestamp";
+        bookData[0][2] = "Recording start time";
+        bookData[0][3] = "Recording duration";
+        bookData[0][4] = "Step";
+        bookData[0][5] = "Good answer";
+        bookData[0][6] = "Event Image 1";
+        bookData[0][7] = "Fixation Length Image 1";
+        bookData[0][8] = "Event Image 2";
+        bookData[0][9] = "Fixation Length Image 2";
+        bookData[0][10] = "Event Image 3";
+        bookData[0][11] = "Fixation Length Image 3";
+        bookData[0][12] = "Event Image 4";
+        bookData[0][13] = "Fixation Length Image 4";
+
+        log.info("CT size -> " + this.computerTimestamp.size());
+        log.info("ST size -> " + this.startTime);
+        log.info("ET size -> " + this.endTime);
+        log.info("S size -> " + this.step.size());
+        log.info("GA size -> " + this.goodAnswer.size());
+
+        log.info("PCE1 size -> " + eventImage1.size());
+        log.info("PCF1 size -> " + fixationLengthImage1.size());
+        log.info("PCE2 size -> " + eventImage2.size());
+        log.info("PCF2 size -> " + fixationLengthImage2.size());
+        log.info("PCE3 size -> " + eventImage3.size());
+        log.info("PCF3 size -> " + fixationLengthImage3.size());
+        log.info("PCE4 size -> " + eventImage4.size());
+        log.info("PCF4 size -> " + fixationLengthImage4.size());
+
+        for (int i=0; i<this.computerTimestamp.size(); i++){
+            bookData[i+1][0] = String.valueOf(this.computerTimestamp.get(i) - this.computerTimestamp.get(0));
+            bookData[i+1][1] = String.valueOf(this.computerTimestamp.get(i));
+            bookData[i+1][2] = String.valueOf(this.startTime);
+            bookData[i+1][3] = String.valueOf(this.endTime);
+            bookData[i+1][4] = String.valueOf(this.step.get(i));
+            bookData[i+1][5] = String.valueOf(this.goodAnswer.get(i)+1);
+            bookData[i+1][6] = String.valueOf(eventImage1.get(i));
+            bookData[i+1][7] = String.valueOf(fixationLengthImage1.get(i));
+            bookData[i+1][8] = String.valueOf(eventImage2.get(i));
+            bookData[i+1][9] = String.valueOf(fixationLengthImage2.get(i));
+            bookData[i+1][10] = String.valueOf(eventImage3.get(i));
+            bookData[i+1][11] = String.valueOf(fixationLengthImage3.get(i));
+            bookData[i+1][12] = String.valueOf(eventImage4.get(i));
+            bookData[i+1][13] = String.valueOf(fixationLengthImage4.get(i));
+        }
+
+        int rowCount = 0;
+
+        for (Object[] aBook : bookData) {
+            Row row = sheet.createRow(rowCount++);
+
+            int columnCount = 0;
+
+            for (Object field : aBook) {
+                Cell cell = row.createCell(columnCount++);
+                if (field instanceof String) {
+                    cell.setCellValue((String) field);
+                } else if (field instanceof Integer) {
+                    cell.setCellValue((Integer) field);
+                }
+            }
+        }
+
+        try (FileOutputStream outputStream = new FileOutputStream(pathStats)) {
+            workbook.write(outputStream);
+        } catch (Exception e){
+            log.info("Error creation xls for GazePlay Eval stats game !");
+            e.printStackTrace();
+        }
     }
 }

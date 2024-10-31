@@ -23,9 +23,8 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.util.ArrayList;
 import java.util.Objects;
-
-import static net.gazeplay.games.whereisit.WhereIsItGameType.*;
 
 @Slf4j
 @ToString
@@ -57,8 +56,13 @@ class PictureCard extends Group {
 
     private final WhereIsIt gameInstance;
 
+    EventType<? extends Event> inputEventEntered;
+    EventType<? extends Event> inputEventExited;
+
+    int index;
+
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext,
-                boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsIt gameInstance) {
+                boolean winner, @NonNull String imagePath, @NonNull Stats stats, WhereIsIt gameInstance, int index) {
 
         log.info("imagePath = {}", imagePath);
 
@@ -74,6 +78,7 @@ class PictureCard extends Group {
         this.gameContext = gameContext;
         this.stats = stats;
         this.gameInstance = gameInstance;
+        this.index = index;
 
         this.imagePath = imagePath;
 
@@ -86,12 +91,12 @@ class PictureCard extends Group {
         this.getChildren().add(progressIndicator);
         this.getChildren().add(errorImageRectangle);
 
-        customInputEventHandler = new PictureCard.CustomInputEventHandler();
+        this.generateEvent();
+        customInputEventHandler = new CustomInputEventHandler();
 
         gameContext.getGazeDeviceManager().addEventFilter(imageRectangle);
 
         this.addEventFilter(MouseEvent.ANY, customInputEventHandler);
-
         this.addEventFilter(GazeEvent.ANY, customInputEventHandler);
     }
 
@@ -113,6 +118,9 @@ class PictureCard extends Group {
         return actionEvent -> {
 
             log.debug("FINISHED");
+
+            gameInstance.updatePictureCard(index, "Validate", String.valueOf(gameContext.getConfiguration().getFixationLength()));
+            gameInstance.updateStats(index);
 
             selected = true;
 
@@ -165,7 +173,7 @@ class PictureCard extends Group {
         fullAnimation.getChildren().add(translateToCenterTransition);
         fullAnimation.getChildren().add(scaleToFullScreenTransition);
 
-        if (gameInstance.iteration == 10){
+        if (gameInstance.iteration == 3){
             gameContext.updateScore(stats, gameInstance);
             gameInstance.dispose();
             gameContext.clear();
@@ -279,6 +287,16 @@ class PictureCard extends Group {
         return result;
     }
 
+    public void generateEvent(){
+        if (Objects.equals(gameContext.getConfiguration().getEyeTracker(), "tobii")){
+            inputEventEntered = GazeEvent.GAZE_ENTERED;
+            inputEventExited = GazeEvent.GAZE_EXITED;
+        }else {
+            inputEventEntered = MouseEvent.MOUSE_ENTERED;
+            inputEventExited = MouseEvent.MOUSE_EXITED;
+        }
+    }
+
     private class CustomInputEventHandler implements EventHandler<Event> {
 
         /**
@@ -288,31 +306,24 @@ class PictureCard extends Group {
          */
         private boolean ignoreAnyInput = false;
 
-        EventType<? extends Event> inputEventEntered;
-        EventType<? extends Event> inputEventExited;
-
         @Override
         public void handle(Event e) {
 
-            if (Objects.equals(gameContext.getConfiguration().getEyeTracker(), "tobii")){
-                inputEventEntered = GazeEvent.GAZE_ENTERED;
-                inputEventExited = GazeEvent.GAZE_EXITED;
-            }else {
-                inputEventEntered = MouseEvent.MOUSE_EXITED;
-                inputEventExited = MouseEvent.MOUSE_EXITED;
-            }
-
             if (ignoreAnyInput) {
+                log.info("Ignore input");
                 return;
             }
 
             if (selected) {
+                log.info("Selected");
                 return;
             }
 
             if (e.getEventType() == inputEventEntered) {
+                log.info("Entered");
                 onEntered();
             } else if (e.getEventType() == inputEventExited) {
+                log.info("Exited");
                 onExited();
             }
 
@@ -328,15 +339,23 @@ class PictureCard extends Group {
             progressIndicator.setVisible(true);
 
             progressIndicatorAnimationTimeLine.playFromStart();
+
+            gameInstance.updatePictureCard(index, "Entered", "");
+            gameInstance.updateStats(index);
         }
 
         private void onExited() {
-            log.info("EXITED {}", imagePath);
+            double fixationPercentage = progressIndicator.getProgress();
 
             progressIndicatorAnimationTimeLine.stop();
 
             progressIndicator.setVisible(false);
             progressIndicator.setProgress(0);
+
+            if (fixationPercentage > 0.0 && fixationPercentage < gameContext.getConfiguration().getFixationLength()){
+                gameInstance.updatePictureCard(index, "Exited", String.valueOf(gameContext.getConfiguration().getFixationLength() * fixationPercentage));
+                gameInstance.updateStats(index);
+            }
         }
 
     }
