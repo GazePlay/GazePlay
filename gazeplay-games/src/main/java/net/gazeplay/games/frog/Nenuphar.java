@@ -191,7 +191,7 @@ public class Nenuphar extends Group {
             progressIndicator.setProgress(0);
             this.moved = false;
 
-            if (fixationPercentage != 0.0){
+            if (fixationPercentage > 0.0 && fixationPercentage < gameContext.getConfiguration().getFixationLength()){
                 eventNenuphar.add("Exited");
                 fixationLengthNenuphar.add(String.valueOf(gameContext.getConfiguration().getFixationLength() * fixationPercentage));
                 frog.updateStats(indexNenuphar);

@@ -35,8 +35,7 @@ public class IA {
         if (iteration == 1){
             this.moveOneBack();
         }else if (iteration == 7){
-            this.frog.dispose();
-            //this.moveOneFront();
+            this.moveOneFront();
         }else if (iteration == 12){
             this.moveTwoBack();
         }else if (iteration == 19){

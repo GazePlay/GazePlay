@@ -16,6 +16,8 @@ import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
+import java.util.Objects;
+
 /*
  * Abstract class for all Mouse version containing arrows
  */
@@ -52,20 +54,21 @@ public abstract class MouseArrows extends Mouse {
 
         placementFleche();
 
-        this.buttonUp.addEventHandler(MouseEvent.ANY, buttonUpEvent);
-        this.buttonUp.addEventHandler(GazeEvent.ANY, buttonUpEvent);
+        if (Objects.equals(gameContext.getConfiguration().getEyeTracker(), "tobii")){
+            this.buttonUp.addEventHandler(GazeEvent.ANY, buttonUpEvent);
+            this.buttonDown.addEventHandler(GazeEvent.ANY, buttonDownEvent);
+            this.buttonLeft.addEventHandler(GazeEvent.ANY, buttonLeftEvent);
+            this.buttonRight.addEventHandler(GazeEvent.ANY, buttonRightEvent);
+        }else {
+            this.buttonUp.addEventHandler(MouseEvent.ANY, buttonUpEvent);
+            this.buttonDown.addEventHandler(MouseEvent.ANY, buttonDownEvent);
+            this.buttonLeft.addEventHandler(MouseEvent.ANY, buttonLeftEvent);
+            this.buttonRight.addEventHandler(MouseEvent.ANY, buttonRightEvent);
+        }
+
         gameContext.getGazeDeviceManager().addEventFilter(this.buttonUp);
-
-        this.buttonDown.addEventHandler(MouseEvent.ANY, buttonDownEvent);
-        this.buttonDown.addEventHandler(GazeEvent.ANY, buttonDownEvent);
         gameContext.getGazeDeviceManager().addEventFilter(this.buttonDown);
-
-        this.buttonLeft.addEventHandler(MouseEvent.ANY, buttonLeftEvent);
-        this.buttonLeft.addEventHandler(GazeEvent.ANY, buttonLeftEvent);
         gameContext.getGazeDeviceManager().addEventFilter(this.buttonLeft);
-
-        this.buttonRight.addEventHandler(MouseEvent.ANY, buttonRightEvent);
-        this.buttonRight.addEventHandler(GazeEvent.ANY, buttonRightEvent);
         gameContext.getGazeDeviceManager().addEventFilter(this.buttonRight);
 
         this.getChildren().addAll(buttonUp, buttonDown, buttonLeft, buttonRight);
@@ -126,6 +129,16 @@ public abstract class MouseArrows extends Mouse {
 
             if (indiceY - 1 >= 0 && gameInstance.isFreeForMouse(indiceY - 1, indiceX) && isActivated(e)) {
 
+                gameInstance.eventButtonUp.add("Entered");
+                gameInstance.fixationLengthButtonUp.add("");
+                gameInstance.eventButtonDown.add("");
+                gameInstance.fixationLengthButtonDown.add("");
+                gameInstance.eventButtonRight.add("");
+                gameInstance.fixationLengthButtonRight.add("");
+                gameInstance.eventButtonLeft.add("");
+                gameInstance.fixationLengthButtonLeft.add("");
+                gameInstance.updateStats();
+
                 indicatorUp.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 indicatorUp.setOpacity(1);
                 indicatorUp.setProgress(0);
@@ -134,6 +147,17 @@ public abstract class MouseArrows extends Mouse {
                     new KeyValue(indicatorUp.progressProperty(), 1)));
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
+
+                    gameInstance.eventButtonUp.add("Validate");
+                    gameInstance.fixationLengthButtonUp.add(String.valueOf(gameContext.getConfiguration().getFixationLength()));
+                    gameInstance.eventButtonDown.add("");
+                    gameInstance.fixationLengthButtonDown.add("");
+                    gameInstance.eventButtonRight.add("");
+                    gameInstance.fixationLengthButtonRight.add("");
+                    gameInstance.eventButtonLeft.add("");
+                    gameInstance.fixationLengthButtonLeft.add("");
+                    gameInstance.updateStats();
+
                     indicatorUp.setOpacity(0);
                     reOrientateMouse(indiceX, indiceY, indiceX, indiceY - 1);
                     indiceY = indiceY - 1;
@@ -146,6 +170,19 @@ public abstract class MouseArrows extends Mouse {
                 timelineProgressBar.play();
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+
+                double fixation = gameContext.getConfiguration().getFixationLength() * indicatorUp.getProgress();
+                if (fixation > 0.0 && fixation < gameContext.getConfiguration().getFixationLength()){
+                    gameInstance.eventButtonUp.add("Exited");
+                    gameInstance.fixationLengthButtonUp.add(String.valueOf(fixation));
+                    gameInstance.eventButtonDown.add("");
+                    gameInstance.fixationLengthButtonDown.add("");
+                    gameInstance.eventButtonRight.add("");
+                    gameInstance.fixationLengthButtonRight.add("");
+                    gameInstance.eventButtonLeft.add("");
+                    gameInstance.fixationLengthButtonLeft.add("");
+                    gameInstance.updateStats();
+                }
 
                 Timeline timeline = new Timeline();
                 timeline.play();
@@ -164,6 +201,16 @@ public abstract class MouseArrows extends Mouse {
             if (indiceY + 1 < gameInstance.nbBoxesLine && gameInstance.isFreeForMouse(indiceY + 1, indiceX)
                 && isActivated(e)) {
 
+                gameInstance.eventButtonUp.add("");
+                gameInstance.fixationLengthButtonUp.add("");
+                gameInstance.eventButtonDown.add("Entered");
+                gameInstance.fixationLengthButtonDown.add("");
+                gameInstance.eventButtonRight.add("");
+                gameInstance.fixationLengthButtonRight.add("");
+                gameInstance.eventButtonLeft.add("");
+                gameInstance.fixationLengthButtonLeft.add("");
+                gameInstance.updateStats();
+
                 indicatorDown.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 indicatorDown.setOpacity(1);
                 indicatorDown.setProgress(0);
@@ -172,6 +219,17 @@ public abstract class MouseArrows extends Mouse {
                     new KeyValue(indicatorDown.progressProperty(), 1)));
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
+
+                    gameInstance.eventButtonUp.add("");
+                    gameInstance.fixationLengthButtonUp.add("");
+                    gameInstance.eventButtonDown.add("Validate");
+                    gameInstance.fixationLengthButtonDown.add(String.valueOf(gameContext.getConfiguration().getFixationLength()));
+                    gameInstance.eventButtonRight.add("");
+                    gameInstance.fixationLengthButtonRight.add("");
+                    gameInstance.eventButtonLeft.add("");
+                    gameInstance.fixationLengthButtonLeft.add("");
+                    gameInstance.updateStats();
+
                     indicatorDown.setOpacity(0);
                     reOrientateMouse(indiceX, indiceY, indiceX, indiceY + 1);
                     indiceY = indiceY + 1;
@@ -185,6 +243,19 @@ public abstract class MouseArrows extends Mouse {
                 timelineProgressBar.play();
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+
+                double fixation = gameContext.getConfiguration().getFixationLength() * indicatorDown.getProgress();
+                if (fixation > 0.0 && fixation < gameContext.getConfiguration().getFixationLength()){
+                    gameInstance.eventButtonUp.add("");
+                    gameInstance.fixationLengthButtonUp.add("");
+                    gameInstance.eventButtonDown.add("Exited");
+                    gameInstance.fixationLengthButtonDown.add(String.valueOf(fixation));
+                    gameInstance.eventButtonRight.add("");
+                    gameInstance.fixationLengthButtonRight.add("");
+                    gameInstance.eventButtonLeft.add("");
+                    gameInstance.fixationLengthButtonLeft.add("");
+                    gameInstance.updateStats();
+                }
 
                 Timeline timeline = new Timeline();
                 timeline.play();
@@ -202,6 +273,16 @@ public abstract class MouseArrows extends Mouse {
             if (indiceX + 1 < gameInstance.nbBoxesColumns && gameInstance.isFreeForMouse(indiceY, indiceX + 1)
                 && isActivated(e)) {
 
+                gameInstance.eventButtonUp.add("");
+                gameInstance.fixationLengthButtonUp.add("");
+                gameInstance.eventButtonDown.add("");
+                gameInstance.fixationLengthButtonDown.add("");
+                gameInstance.eventButtonRight.add("Entered");
+                gameInstance.fixationLengthButtonRight.add("");
+                gameInstance.eventButtonLeft.add("");
+                gameInstance.fixationLengthButtonLeft.add("");
+                gameInstance.updateStats();
+
                 indicatorRight.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 indicatorRight.setOpacity(1);
                 indicatorRight.setProgress(0);
@@ -210,6 +291,17 @@ public abstract class MouseArrows extends Mouse {
                     new KeyValue(indicatorRight.progressProperty(), 1)));
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
+
+                    gameInstance.eventButtonUp.add("");
+                    gameInstance.fixationLengthButtonUp.add("");
+                    gameInstance.eventButtonDown.add("");
+                    gameInstance.fixationLengthButtonDown.add("");
+                    gameInstance.eventButtonRight.add("Validate");
+                    gameInstance.fixationLengthButtonRight.add(String.valueOf(gameContext.getConfiguration().getFixationLength()));
+                    gameInstance.eventButtonLeft.add("");
+                    gameInstance.fixationLengthButtonLeft.add("");
+                    gameInstance.updateStats();
+
                     indicatorRight.setOpacity(0);
                     reOrientateMouse(indiceX, indiceY, indiceX + 1, indiceY);
                     indiceX = indiceX + 1;
@@ -222,6 +314,19 @@ public abstract class MouseArrows extends Mouse {
                 timelineProgressBar.play();
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+
+                double fixation = gameContext.getConfiguration().getFixationLength() * indicatorRight.getProgress();
+                if (fixation > 0.0 && fixation < gameContext.getConfiguration().getFixationLength()){
+                    gameInstance.eventButtonUp.add("");
+                    gameInstance.fixationLengthButtonUp.add("");
+                    gameInstance.eventButtonDown.add("");
+                    gameInstance.fixationLengthButtonDown.add("");
+                    gameInstance.eventButtonRight.add("Exited");
+                    gameInstance.fixationLengthButtonRight.add(String.valueOf(fixation));
+                    gameInstance.eventButtonLeft.add("");
+                    gameInstance.fixationLengthButtonLeft.add("");
+                    gameInstance.updateStats();
+                }
 
                 Timeline timeline = new Timeline();
                 timeline.play();
@@ -240,6 +345,16 @@ public abstract class MouseArrows extends Mouse {
 
             if (indiceX - 1 >= 0 && gameInstance.isFreeForMouse(indiceY, indiceX - 1) && isActivated(e)) {
 
+                gameInstance.eventButtonUp.add("");
+                gameInstance.fixationLengthButtonUp.add("");
+                gameInstance.eventButtonDown.add("");
+                gameInstance.fixationLengthButtonDown.add("");
+                gameInstance.eventButtonRight.add("");
+                gameInstance.fixationLengthButtonRight.add("");
+                gameInstance.eventButtonLeft.add("Entered");
+                gameInstance.fixationLengthButtonLeft.add("");
+                gameInstance.updateStats();
+
                 indicatorLeft.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 indicatorLeft.setOpacity(1);
                 indicatorLeft.setProgress(0);
@@ -248,6 +363,17 @@ public abstract class MouseArrows extends Mouse {
                     new KeyValue(indicatorLeft.progressProperty(), 1)));
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
+
+                    gameInstance.eventButtonUp.add("");
+                    gameInstance.fixationLengthButtonUp.add("");
+                    gameInstance.eventButtonDown.add("");
+                    gameInstance.fixationLengthButtonDown.add("");
+                    gameInstance.eventButtonRight.add("");
+                    gameInstance.fixationLengthButtonRight.add("");
+                    gameInstance.eventButtonLeft.add("Validate");
+                    gameInstance.fixationLengthButtonLeft.add(String.valueOf(gameContext.getConfiguration().getFixationLength()));
+                    gameInstance.updateStats();
+
                     indicatorLeft.setOpacity(0);
                     reOrientateMouse(indiceX, indiceY, indiceX - 1, indiceY);
                     indiceX = indiceX - 1;
@@ -260,6 +386,19 @@ public abstract class MouseArrows extends Mouse {
                 timelineProgressBar.play();
 
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+
+                double fixation = gameContext.getConfiguration().getFixationLength() * indicatorLeft.getProgress();
+                if (fixation > 0.0 && fixation < gameContext.getConfiguration().getFixationLength()){
+                    gameInstance.eventButtonUp.add("");
+                    gameInstance.fixationLengthButtonUp.add("");
+                    gameInstance.eventButtonDown.add("");
+                    gameInstance.fixationLengthButtonDown.add("");
+                    gameInstance.eventButtonRight.add("");
+                    gameInstance.fixationLengthButtonRight.add("");
+                    gameInstance.eventButtonLeft.add("Exited");
+                    gameInstance.fixationLengthButtonLeft.add(String.valueOf(fixation));
+                    gameInstance.updateStats();
+                }
 
                 Timeline timeline = new Timeline();
                 timeline.play();
