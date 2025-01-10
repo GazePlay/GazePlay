@@ -52,8 +52,8 @@ public class IA {
     }
 
     public void createTimeline(){
-        autoMove = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
-            if (this.cyclePassed < 2){
+        autoMove = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            if (this.cyclePassed < 1){
                 this.cyclePassed++;
                 this.updateFrogPosition();
                 this.frog.moveFrogTo(this.frog.nenuphars[this.frog.frogPosition]);
@@ -118,10 +118,12 @@ public class IA {
 
             case "twoBack":
                 this.frog.frogPosition -= 2;
-                if (this.frog.frogPosition == -1){
-                    this.frog.frogPosition = this.frog.nenuphars.length - 1;
-                }else {
-                    this.frog.frogPosition = this.frog.nenuphars.length - 2;
+                if (this.frog.frogPosition < 0){
+                    if (this.frog.frogPosition == -1){
+                        this.frog.frogPosition = this.frog.nenuphars.length - 1;
+                    }else {
+                        this.frog.frogPosition = this.frog.nenuphars.length - 2;
+                    }
                 }
                 break;
 

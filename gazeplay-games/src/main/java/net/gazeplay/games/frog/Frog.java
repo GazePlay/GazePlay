@@ -198,10 +198,12 @@ public class Frog implements GameLifeCycle {
 
             case "twoBack":
                 this.correctFrogPosition = this.frogPosition - 2;
-                if (this.correctFrogPosition == -1){
-                    this.correctFrogPosition = this.nenuphars.length - 1;
-                }else {
-                    this.correctFrogPosition = this.nenuphars.length - 2;
+                if (this.correctFrogPosition < 0){
+                    if (this.correctFrogPosition == -1){
+                        this.correctFrogPosition = this.nenuphars.length - 1;
+                    }else {
+                        this.correctFrogPosition = this.nenuphars.length - 2;
+                    }
                 }
                 break;
 
