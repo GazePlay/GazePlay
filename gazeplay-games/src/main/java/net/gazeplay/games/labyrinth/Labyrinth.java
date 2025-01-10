@@ -220,7 +220,7 @@ public class Labyrinth extends Parent implements GameLifeCycle {
     }
 
     public void nextLvl(){
-        if (this.iteration < 1){
+        if (this.iteration < 7){
             this.iteration ++;
             this.gameContext.getChildren().clear();
             this.nbBoxesColumns += 1;
