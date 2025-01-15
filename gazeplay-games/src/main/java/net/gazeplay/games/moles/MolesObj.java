@@ -221,7 +221,7 @@ public class MolesObj extends Parent {
         canTouched = false;
         out = false;
         progressIndicatorMoles.setOpacity(0);
-        gameInstance.getTargetAOIList().get(TargetAOIListIndex).setTimeEnded(System.currentTimeMillis());
+        //gameInstance.getTargetAOIList().get(TargetAOIListIndex).setTimeEnded(System.currentTimeMillis());
 
         this.mole.opacityProperty().set(0.5);
         gameInstance.getGameContext().getChildren().remove(moleMoved);

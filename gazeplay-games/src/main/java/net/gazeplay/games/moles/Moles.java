@@ -2,17 +2,23 @@ package net.gazeplay.games.moles;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.animation.Transition;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,7 +50,7 @@ public class Moles extends Parent implements GameLifeCycle {
 
     private final Stats stats;
 
-    private int nbMolesWhacked;
+    private int nbMolesWhacked = 0;
 
     public int limitMoleEntity = 0;
     public int limitObjEntity = 2;
@@ -67,6 +73,9 @@ public class Moles extends Parent implements GameLifeCycle {
     private final ReplayablePseudoRandom randomGenerator;
 
     private MolesGameVariant variant;
+    private Text ruleText;
+    private String textRule = "Tape les taupes";
+    private int difficulty = 1;
     Timeline difficulty1;
     Timeline difficulty2;
 
@@ -97,7 +106,53 @@ public class Moles extends Parent implements GameLifeCycle {
 
     @Override
     public void launch() {
+        final Transition animation = createRuleTransition();
+        animation.play();
+    }
 
+    public Transition createRuleTransition(){
+        ruleText = new Text(this.textRule);
+        ruleText.setTranslateY(0);
+
+        final String color = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<>() {
+            @Override
+            public String visitLight() {
+                return "titleB";
+            }
+
+            @Override
+            public String visitDark() {
+                return "titleW";
+            }
+        });
+
+        ruleText.setId(color);
+
+        final Dimension2D gamePaneDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
+        final double positionX = gamePaneDimension2D.getWidth() / 2 - ruleText.getBoundsInParent().getWidth() * 2;
+        final double positionY = gamePaneDimension2D.getHeight() / 2 - ruleText.getBoundsInParent().getHeight() / 2;
+
+        ruleText.setX(positionX);
+        ruleText.setY(positionY);
+        ruleText.setTextAlignment(TextAlignment.CENTER);
+        StackPane.setAlignment(ruleText, Pos.CENTER);
+
+        gameContext.getChildren().add(ruleText);
+
+        final TranslateTransition fullAnimation = new TranslateTransition(
+            Duration.millis(gameContext.getConfiguration().getQuestionLength() / 2.0), ruleText);
+
+        fullAnimation.setDelay(Duration.millis(gameContext.getConfiguration().getQuestionLength()));
+
+        fullAnimation.setOnFinished(actionEvent -> {
+            gameContext.getChildren().remove(ruleText);
+            this.startGame();
+        });
+
+        return fullAnimation;
+    }
+
+    public void startGame(){
         if (currentRoundDetails != null) {
             if (currentRoundDetails.molesList != null) {
                 gameContext.getChildren().removeAll(currentRoundDetails.molesList);
@@ -129,8 +184,6 @@ public class Moles extends Parent implements GameLifeCycle {
         imageFondTrans.setFill(new ImagePattern(new Image("data/whackmole/images/molesGroundTransparent.png")));
         adjustBackground(imageFondTrans);
         gameContext.getChildren().add(imageFondTrans);
-
-        this.nbMolesWhacked = 0;
 
         /* Score display */
         lab = new Label();
@@ -173,7 +226,9 @@ public class Moles extends Parent implements GameLifeCycle {
             this.limitObjEntity = 1;
 
             difficulty1.stop();
-            difficulty2.playFromStart();
+            this.textRule = "Tape uniquement les taupes avec une carrote";
+            this.reset();
+            //difficulty2.playFromStart();
         });
 
         difficulty1.setCycleCount(3);
@@ -226,7 +281,13 @@ public class Moles extends Parent implements GameLifeCycle {
         };
 
         minuteur.schedule(tache, 0, 500);
-        difficulty1.playFromStart();
+
+        if (this.difficulty == 1){
+            this.difficulty++;
+            difficulty1.playFromStart();
+        }else {
+            difficulty2.playFromStart();
+        }
     }
 
     @Override
@@ -242,6 +303,21 @@ public class Moles extends Parent implements GameLifeCycle {
 
         this.gameContext.getChildren().clear();
         this.gameContext.showRoundStats(stats, this);
+    }
+
+    public void reset(){
+        stats.setTargetAOIList(targetAOIList);
+        if (currentRoundDetails != null) {
+            if (currentRoundDetails.molesList != null) {
+                gameContext.getChildren().removeAll(currentRoundDetails.molesList);
+                currentRoundDetails.molesList.clear();
+            }
+            currentRoundDetails = null;
+        }
+        nbMolesOut = new AtomicInteger(0);
+        nbObjOut = new AtomicInteger(0);
+        this.gameContext.getChildren().clear();
+        this.launch();
     }
 
     /* Select a mole not out for the moment and call "getOut()" */
