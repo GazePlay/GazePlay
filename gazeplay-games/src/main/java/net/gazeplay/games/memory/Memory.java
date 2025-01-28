@@ -11,11 +11,20 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Slf4j
@@ -48,7 +57,8 @@ public class Memory implements GameLifeCycle {
     @Setter
     private int nbColumns;
     int iteration = 1;
-
+    private String gameName = "Memory";
+    String pathStatsGame;
     private String difficulty;
     List<Image> listImgCards;
     String[] allCards;
@@ -83,6 +93,16 @@ public class Memory implements GameLifeCycle {
     @Getter
     @Setter
     private int level = 2;
+    SimpleDateFormat sdf;
+    ArrayList<Long> computerTimestamp = new ArrayList<>();
+    ArrayList<Integer> step = new ArrayList<>();
+    String startTime;
+    String endTime;
+    public Timestamp timestamp;
+    Boolean firstTime = true;
+
+    ArrayList<String> eventImage = new ArrayList<>();
+    ArrayList<String> fixationLengthImage = new ArrayList<>();
 
 
     public Memory(final MemoryGameType gameType, final IGameContext gameContext, final int nbLines, final int nbColumns, final String difficulty, final Stats stats,
@@ -103,7 +123,7 @@ public class Memory implements GameLifeCycle {
         this.nbCorrectCards = 0;
         this.nbWrongCards = 0;
         this.gameContext.startTimeLimiter();
-
+        this.generateStatsFolder();
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
 
@@ -129,7 +149,7 @@ public class Memory implements GameLifeCycle {
         this.nbCorrectCards = 0;
         this.nbWrongCards = 0;
         this.gameContext.startTimeLimiter();
-
+        this.generateStatsFolder();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
 
         this.imageLibrary = ImageUtils.createImageLibrary(Utils.getImagesSubdirectory("magiccards"), Utils.getImagesSubdirectory("default"), randomGenerator);
@@ -137,6 +157,67 @@ public class Memory implements GameLifeCycle {
 
         gameContext.start();
 
+    }
+
+    public void generateStatsFolder(){
+        String username = System.getProperty("user.name");
+        String directory = "C:/Users/" + username + "/Documents/Picardie_Project";
+        String subDirectory = directory + "/" + this.gameName;
+
+        File picardieProjet = new File(directory);
+        if (!picardieProjet.exists()){
+            picardieProjet.mkdirs();
+        }
+
+        File subFolder = new File(subDirectory);
+        if (!subFolder.exists()){
+            subFolder.mkdirs();
+        }
+
+        int index = 1;
+        File dir = new File(subDirectory, this.gameName + index + "_" + DateUtils.today());
+        while (dir.exists()){
+            index++;
+            dir = new File(subDirectory, this.gameName + index + "_" + DateUtils.today());
+        }
+        dir.mkdirs();
+        this.pathStatsGame = dir.getPath();
+    }
+
+    public void firstStat(){
+        if (firstTime){
+            firstTime = false;
+
+            this.sdf = new SimpleDateFormat("HH:mm:ss.SSS");
+            this.timestamp = new Timestamp(System.currentTimeMillis());
+
+            this.computerTimestamp.add(this.timestamp.getTime());
+            this.startTime = this.sdf.format(this.timestamp);
+            this.step.add(this.iteration-1);
+            eventImage.add("");
+            fixationLengthImage.add("");
+        }
+    }
+
+    public void onWrong(){
+        this.computerTimestamp.add(new Timestamp(System.currentTimeMillis()).getTime());
+        this.step.add(this.iteration);
+        eventImage.add("Wrong pair");
+        fixationLengthImage.add("");
+    }
+
+    public void onCorrect(){
+        this.computerTimestamp.add(new Timestamp(System.currentTimeMillis()).getTime());
+        this.step.add(this.iteration);
+        eventImage.add("Correct pair");
+        fixationLengthImage.add("");
+    }
+
+    public void onSelectedImg(String event, String value){
+        this.computerTimestamp.add(new Timestamp(System.currentTimeMillis()).getTime());
+        this.step.add(this.iteration);
+        eventImage.add(event);
+        fixationLengthImage.add(value);
     }
 
     public void getAllCards(){
@@ -202,6 +283,7 @@ public class Memory implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(stats);
 
         gameContext.onGameStarted(3000);
+        this.firstStat();
     }
 
     @Override
@@ -217,6 +299,7 @@ public class Memory implements GameLifeCycle {
 
     public void endGame(){
         this.gameContext.getChildren().clear();
+        this.createExcelFile();
         this.gameContext.showRoundStats(stats, this);
     }
 
@@ -372,5 +455,57 @@ public class Memory implements GameLifeCycle {
 
     public String getDifficulty() {
         return difficulty;
+    }
+
+    public void createExcelFile(){
+        String pathStats = this.pathStatsGame  + "/Stats_" + DateUtils.today() + ".xlsx";
+        this.stats.actualFile = this.pathStatsGame  + "/Stats_" + DateUtils.today() + ".xlsx";
+
+        SXSSFWorkbook workbook = new SXSSFWorkbook();
+        Sheet sheet = workbook.createSheet(this.gameName);
+
+        Object[][] bookData = new Object[this.computerTimestamp.size()+1][14];
+
+        bookData[0][0] = "Recording timestamp";
+        bookData[0][1] = "Computer timestamp";
+        bookData[0][2] = "Recording start time";
+        bookData[0][3] = "Recording duration";
+        bookData[0][4] = "Step";
+        bookData[0][5] = "Event Image";
+        bookData[0][6] = "Fixation Length Image";
+
+        for (int i=0; i<this.computerTimestamp.size(); i++){
+            bookData[i+1][0] = String.valueOf(this.computerTimestamp.get(i) - this.computerTimestamp.get(0));
+            bookData[i+1][1] = String.valueOf(this.computerTimestamp.get(i));
+            bookData[i+1][2] = String.valueOf(this.startTime);
+            bookData[i+1][3] = String.valueOf(this.endTime);
+            bookData[i+1][4] = String.valueOf(this.step.get(i));
+            bookData[i+1][5] = String.valueOf(eventImage.get(i));
+            bookData[i+1][6] = String.valueOf(fixationLengthImage.get(i));
+        }
+
+        int rowCount = 0;
+
+        for (Object[] aBook : bookData) {
+            Row row = sheet.createRow(rowCount++);
+
+            int columnCount = 0;
+
+            for (Object field : aBook) {
+                Cell cell = row.createCell(columnCount++);
+                if (field instanceof String) {
+                    cell.setCellValue((String) field);
+                } else if (field instanceof Integer) {
+                    cell.setCellValue((Integer) field);
+                }
+            }
+        }
+
+        try (FileOutputStream outputStream = new FileOutputStream(pathStats)) {
+            workbook.write(outputStream);
+        } catch (Exception e){
+            log.info("Error creation xls for GazePlay Eval stats game !");
+            e.printStackTrace();
+        }
     }
 }

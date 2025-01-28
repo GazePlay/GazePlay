@@ -706,21 +706,6 @@ public class WhereIsIt implements GameLifeCycle {
         bookData[0][12] = "Event Image 4";
         bookData[0][13] = "Fixation Length Image 4";
 
-        log.info("CT size -> " + this.computerTimestamp.size());
-        log.info("ST size -> " + this.startTime);
-        log.info("ET size -> " + this.endTime);
-        log.info("S size -> " + this.step.size());
-        log.info("GA size -> " + this.goodAnswer.size());
-
-        log.info("PCE1 size -> " + eventImage1.size());
-        log.info("PCF1 size -> " + fixationLengthImage1.size());
-        log.info("PCE2 size -> " + eventImage2.size());
-        log.info("PCF2 size -> " + fixationLengthImage2.size());
-        log.info("PCE3 size -> " + eventImage3.size());
-        log.info("PCF3 size -> " + fixationLengthImage3.size());
-        log.info("PCE4 size -> " + eventImage4.size());
-        log.info("PCF4 size -> " + fixationLengthImage4.size());
-
         for (int i=0; i<this.computerTimestamp.size(); i++){
             bookData[i+1][0] = String.valueOf(this.computerTimestamp.get(i) - this.computerTimestamp.get(0));
             bookData[i+1][1] = String.valueOf(this.computerTimestamp.get(i));

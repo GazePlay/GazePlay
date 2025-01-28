@@ -130,6 +130,7 @@ public class MemoryCard extends Parent {
     private void onCorrectCardSelected() {
 
         gameInstance.incNbCorrectCards();
+        gameInstance.onCorrect();
         log.debug("nbCorrect = {}", gameInstance.getNbCorrectCards());
 
         stats.incrementNumberOfGoalsReached();
@@ -181,6 +182,7 @@ public class MemoryCard extends Parent {
     private void onWrongCardSelected() {
 
         gameInstance.incNbWrongCards();
+        gameInstance.onWrong();
         log.debug("nbWrong = {}", gameInstance.getNbWrongCards());
 
         if (gameInstance.currentRoundDetails == null) {
@@ -264,6 +266,9 @@ public class MemoryCard extends Parent {
             }
             /* First card */
             if (e.getEventType() == inputEventEntered) {
+
+                gameInstance.onSelectedImg("Entered", String.valueOf(gameContext.getConfiguration().getFixationLength()));
+
                 this.mouseIsOverCard = true;
                 if (timelineProgressBar != null) {
                     timelineProgressBar.stop();
@@ -280,6 +285,7 @@ public class MemoryCard extends Parent {
 
                 timelineProgressBar.setOnFinished(actionEvent -> {
 
+                    gameInstance.onSelectedImg("Validate", String.valueOf(gameContext.getConfiguration().getFixationLength()));
                     if (cardAlreadyTurned == -1) { /* 1st card */
                         gameInstance.nbTurnedCards = gameInstance.nbTurnedCards + 1;
                         turned = true;
@@ -336,6 +342,7 @@ public class MemoryCard extends Parent {
                 timelineProgressBar.play();
 
             } else if (e.getEventType() == inputEventExited) {
+                gameInstance.onSelectedImg("Exited", String.valueOf(gameContext.getConfiguration().getFixationLength()));
                 this.mouseIsOverCard = false;
                 if (timelineProgressBar != null) {
                     timelineProgressBar.stop();

@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -29,9 +30,18 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
+import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -58,7 +68,8 @@ public class Moles extends Parent implements GameLifeCycle {
     private AtomicInteger nbMolesOut = new AtomicInteger(0);
     @Getter
     private AtomicInteger nbObjOut = new AtomicInteger(0);
-
+    private String gameName = "Taupe";
+    String pathStatsGame;
     private Label lab;
 
     private RoundDetails currentRoundDetails;
@@ -74,10 +85,23 @@ public class Moles extends Parent implements GameLifeCycle {
 
     private MolesGameVariant variant;
     private Text ruleText;
-    private String textRule = "Tape les taupes";
-    private int difficulty = 1;
+    private ImageView imgMoles;
+    private String textRule = "Tape les taupes avec une carrote";
+    public int difficulty = 1;
     Timeline difficulty1;
     Timeline difficulty2;
+    Timeline difficulty3;
+    SimpleDateFormat sdf;
+    ArrayList<Long> computerTimestamp = new ArrayList<>();
+    ArrayList<Integer> step = new ArrayList<>();
+    String startTime;
+    ArrayList<Integer> score = new ArrayList<>();
+    String endTime;
+    public Timestamp timestamp;
+    Boolean firstTime = true;
+
+    ArrayList<String> eventImage = new ArrayList<>();
+    ArrayList<String> fixationLengthImage = new ArrayList<>();
 
     Moles(IGameContext gameContext, Stats stats, final MolesGameVariant type) {
         super();
@@ -90,6 +114,7 @@ public class Moles extends Parent implements GameLifeCycle {
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
         this.variant = type;
+        this.generateStatsFolder();
     }
 
     Moles(IGameContext gameContext, Stats stats, final MolesGameVariant type, double gameSeed) {
@@ -102,6 +127,56 @@ public class Moles extends Parent implements GameLifeCycle {
         gameContext.startTimeLimiter();
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
         this.variant = type;
+        this.generateStatsFolder();
+    }
+
+    public void generateStatsFolder(){
+        String username = System.getProperty("user.name");
+        String directory = "C:/Users/" + username + "/Documents/Picardie_Project";
+        String subDirectory = directory + "/" + this.gameName;
+
+        File picardieProjet = new File(directory);
+        if (!picardieProjet.exists()){
+            picardieProjet.mkdirs();
+        }
+
+        File subFolder = new File(subDirectory);
+        if (!subFolder.exists()){
+            subFolder.mkdirs();
+        }
+
+        int index = 1;
+        File dir = new File(subDirectory, this.gameName + index + "_" + DateUtils.today());
+        while (dir.exists()){
+            index++;
+            dir = new File(subDirectory, this.gameName + index + "_" + DateUtils.today());
+        }
+        dir.mkdirs();
+        this.pathStatsGame = dir.getPath();
+    }
+
+    public void firstStat(){
+        if (firstTime){
+            firstTime = false;
+
+            this.sdf = new SimpleDateFormat("HH:mm:ss.SSS");
+            this.timestamp = new Timestamp(System.currentTimeMillis());
+
+            this.computerTimestamp.add(this.timestamp.getTime());
+            this.startTime = this.sdf.format(this.timestamp);
+            this.step.add(this.difficulty);
+            this.score.add(this.nbMolesWhacked);
+            eventImage.add("");
+            fixationLengthImage.add("");
+        }
+    }
+
+    public void onSelectedImg(String event, String value){
+        this.computerTimestamp.add(new Timestamp(System.currentTimeMillis()).getTime());
+        this.step.add(this.difficulty);
+        this.score.add(this.nbMolesWhacked);
+        eventImage.add(event);
+        fixationLengthImage.add(value);
     }
 
     @Override
@@ -113,6 +188,16 @@ public class Moles extends Parent implements GameLifeCycle {
     public Transition createRuleTransition(){
         ruleText = new Text(this.textRule);
         ruleText.setTranslateY(0);
+
+        if (this.difficulty < 3){
+            imgMoles = new ImageView(new Image("data/whackmole/images/molesCarrot.png"));
+            imgMoles.setFitWidth(200);
+            imgMoles.setFitHeight(200);
+        }else {
+            imgMoles = new ImageView(new Image("data/whackmole/images/moles.png"));
+            imgMoles.setFitWidth(200);
+            imgMoles.setFitHeight(200);
+        }
 
         final String color = gameContext.getConfiguration().getBackgroundStyle().accept(new BackgroundStyleVisitor<>() {
             @Override
@@ -137,7 +222,12 @@ public class Moles extends Parent implements GameLifeCycle {
         ruleText.setTextAlignment(TextAlignment.CENTER);
         StackPane.setAlignment(ruleText, Pos.CENTER);
 
+        imgMoles.setX(positionX);
+        imgMoles.setY(positionY);
+        StackPane.setAlignment(imgMoles, Pos.BOTTOM_CENTER);
+
         gameContext.getChildren().add(ruleText);
+        gameContext.getChildren().add(imgMoles);
 
         final TranslateTransition fullAnimation = new TranslateTransition(
             Duration.millis(gameContext.getConfiguration().getQuestionLength() / 2.0), ruleText);
@@ -212,7 +302,9 @@ public class Moles extends Parent implements GameLifeCycle {
         gameContext.getGazeDeviceManager().addStats(stats);
         this.updateDifficulty1();
         this.updateDifficulty2();
+        this.updateDifficulty3();
         play();
+        this.firstStat();
     }
 
     public void updateDifficulty1(){
@@ -226,9 +318,8 @@ public class Moles extends Parent implements GameLifeCycle {
             this.limitObjEntity = 1;
 
             difficulty1.stop();
-            this.textRule = "Tape uniquement les taupes avec une carrote";
+            this.textRule = "Tape les taupes avec une carrote";
             this.reset();
-            //difficulty2.playFromStart();
         });
 
         difficulty1.setCycleCount(3);
@@ -241,11 +332,30 @@ public class Moles extends Parent implements GameLifeCycle {
         }));
 
         difficulty2.setOnFinished(event -> {
+
+            this.limitMoleEntity = 1;
+            this.limitObjEntity = 1;
+
             difficulty2.stop();
-            this.dispose();
+            this.textRule = "Tape les taupes qui n'ont pas de carrote";
+            this.reset();
         });
 
         difficulty2.setCycleCount(3);
+    }
+
+    public void updateDifficulty3(){
+        difficulty3 = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+            this.limitMoleEntity ++;
+            this.limitObjEntity ++;
+        }));
+
+        difficulty3.setOnFinished(event -> {
+            difficulty3.stop();
+            this.dispose();
+        });
+
+        difficulty3.setCycleCount(3);
     }
 
     void adjustBackground(Rectangle image) {
@@ -285,8 +395,11 @@ public class Moles extends Parent implements GameLifeCycle {
         if (this.difficulty == 1){
             this.difficulty++;
             difficulty1.playFromStart();
-        }else {
+        }else if (this.difficulty == 2){
+            this.difficulty++;
             difficulty2.playFromStart();
+        }else {
+            difficulty3.playFromStart();
         }
     }
 
@@ -302,6 +415,7 @@ public class Moles extends Parent implements GameLifeCycle {
         }
 
         this.gameContext.getChildren().clear();
+        this.createExcelFile();
         this.gameContext.showRoundStats(stats, this);
     }
 
@@ -468,5 +582,59 @@ public class Moles extends Parent implements GameLifeCycle {
         gameContext.updateScore(stats, this, limiterEndEventHandler, limiterEndEventHandler);
         lab.setText(s);
 
+    }
+
+    public void createExcelFile(){
+        String pathStats = this.pathStatsGame  + "/Stats_" + DateUtils.today() + ".xlsx";
+        this.stats.actualFile = this.pathStatsGame  + "/Stats_" + DateUtils.today() + ".xlsx";
+
+        SXSSFWorkbook workbook = new SXSSFWorkbook();
+        Sheet sheet = workbook.createSheet(this.gameName);
+
+        Object[][] bookData = new Object[this.computerTimestamp.size()+1][14];
+
+        bookData[0][0] = "Recording timestamp";
+        bookData[0][1] = "Computer timestamp";
+        bookData[0][2] = "Recording start time";
+        bookData[0][3] = "Recording duration";
+        bookData[0][4] = "Step";
+        bookData[0][5] = "Event Image";
+        bookData[0][6] = "Fixation Length Image";
+        bookData[0][7] = "Score";
+
+        for (int i=0; i<this.computerTimestamp.size(); i++){
+            bookData[i+1][0] = String.valueOf(this.computerTimestamp.get(i) - this.computerTimestamp.get(0));
+            bookData[i+1][1] = String.valueOf(this.computerTimestamp.get(i));
+            bookData[i+1][2] = String.valueOf(this.startTime);
+            bookData[i+1][3] = String.valueOf(this.endTime);
+            bookData[i+1][4] = String.valueOf(this.step.get(i));
+            bookData[i+1][5] = String.valueOf(eventImage.get(i));
+            bookData[i+1][6] = String.valueOf(fixationLengthImage.get(i));
+            bookData[i+1][7] = String.valueOf(this.score.get(i));
+        }
+
+        int rowCount = 0;
+
+        for (Object[] aBook : bookData) {
+            Row row = sheet.createRow(rowCount++);
+
+            int columnCount = 0;
+
+            for (Object field : aBook) {
+                Cell cell = row.createCell(columnCount++);
+                if (field instanceof String) {
+                    cell.setCellValue((String) field);
+                } else if (field instanceof Integer) {
+                    cell.setCellValue((Integer) field);
+                }
+            }
+        }
+
+        try (FileOutputStream outputStream = new FileOutputStream(pathStats)) {
+            workbook.write(outputStream);
+        } catch (Exception e){
+            log.info("Error creation xls for GazePlay Eval stats game !");
+            e.printStackTrace();
+        }
     }
 }

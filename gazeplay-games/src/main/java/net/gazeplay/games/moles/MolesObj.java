@@ -138,7 +138,7 @@ public class MolesObj extends Parent {
 
             /* If the mole is out and touched */
             if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-
+                gameInstance.onSelectedImg("Entered carrot mole", String.valueOf(gameContext.getConfiguration().getFixationLength()));
                 progressIndicatorMoles.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
                 progressIndicatorMoles.setOpacity(1);
                 progressIndicatorMoles.toFront();
@@ -151,10 +151,12 @@ public class MolesObj extends Parent {
 
                 timelineProgressBarMoles.setOnFinished((ActionEvent actionEvent) -> {
                     canTouched = false;
-
+                    gameInstance.onSelectedImg("Validate carrot mole", String.valueOf(gameContext.getConfiguration().getFixationLength()));
                     if (!touched && out) {
                         gameContext.getSoundManager().add("data/whackmole/sounds/"+(bonk++%2==0 ? "bonk1.wav":"bonk2.wav"));
-                        gameInstance.oneMoleWhacked();
+                        if (gameInstance.difficulty < 3){
+                            gameInstance.oneMoleWhacked();
+                        }
                         touched = true;
                         goIn();
                     }
@@ -162,6 +164,7 @@ public class MolesObj extends Parent {
 
                 timelineProgressBarMoles.play();
             } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
+                gameInstance.onSelectedImg("Exited carrot mole", String.valueOf(gameContext.getConfiguration().getFixationLength()));
                 if (timelineProgressBarMoles != null) {
                     timelineProgressBarMoles.stop();
                 }

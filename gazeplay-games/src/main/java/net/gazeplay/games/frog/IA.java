@@ -39,7 +39,7 @@ public class IA {
         }else if (iteration == 12){
             this.moveTwoBack();
         }else if (iteration == 19){
-            this.moveOneBack();
+            this.moveOneBackAgain();
         }else if (iteration == 27){
             this.specialMoveFrog();
             this.moveJump();
@@ -76,19 +76,29 @@ public class IA {
         autoMove.playFromStart();
     }
 
+    public void moveOneBackAgain(){
+        this.moveType = "oneBack";
+        this.frog.setGoodAnswer(this.moveType);
+        this.frog.playerTurn();
+    }
+
     public void moveOneFront(){
         this.moveType = "oneFront";
-        autoMove.playFromStart();
+        this.frog.setGoodAnswer(this.moveType);
+        this.frog.playerTurn();
     }
 
     public void moveTwoBack(){
         this.moveType = "twoBack";
-        autoMove.playFromStart();
+        this.frog.setGoodAnswer(this.moveType);
+        this.frog.playerTurn();
     }
 
     public void moveJump(){
         this.moveType = "jump";
-        autoMove.playFromStart();
+        this.firstJump = true;
+        this.frog.setGoodAnswer(this.moveType);
+        this.frog.playerTurn();
     }
 
     public void specialMoveFrog(){
