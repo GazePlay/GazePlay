@@ -323,19 +323,15 @@ public class Memory implements GameLifeCycle {
         int iteration = (this.nbLines * nbColumns) / 2;
         Random random = new Random();
         int index;
-        boolean cardAdded;
 
         for (int i=0; i<iteration; i++){
-            cardAdded = false;
-            do {
                 index = random.nextInt(this.allCards.length);
-                String nameCard = this.allCards[index];
                 Image getCard = new Image("data/magiccards/cards/" + this.allCards[index]);
                 if (!this.listImgCards.contains(getCard)){
-                    this.listImgCards.add(new Image("data/magiccards/cards/" + nameCard));
-                    cardAdded = true;
+                    this.listImgCards.add(getCard);
+                }else {
+                    i--;
                 }
-            } while (!cardAdded);
         }
     }
 
