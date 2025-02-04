@@ -21,8 +21,6 @@ public class IA {
     int futureFrogPosition;
     String moveType = "";
     Timeline autoMove;
-    int cyclePassed = 0;
-
     public IA(Frog frog, IGameContext gameContext){
         this.frog = frog;
         this.gameContext = gameContext;
@@ -41,7 +39,6 @@ public class IA {
         }else if (iteration == 19){
             this.moveOneBackAgain();
         }else if (iteration == 27){
-            this.specialMoveFrog();
             this.moveJump();
         }else if (iteration == 34){
             this.frog.dispose();
@@ -53,17 +50,13 @@ public class IA {
 
     public void createTimeline(){
         autoMove = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            if (this.cyclePassed < 1){
-                this.cyclePassed++;
-                this.updateFrogPosition();
-                this.frog.moveFrogTo(this.frog.nenuphars[this.frog.frogPosition]);
-            }
+            this.updateFrogPosition();
+            this.frog.moveFrogTo(this.frog.nenuphars[this.frog.frogPosition]);
         }));
 
         autoMove.setOnFinished(event -> {
             autoMove.stop();
             this.firstJump = true;
-            this.cyclePassed = 0;
             this.frog.setGoodAnswer(this.moveType);
             this.frog.playerTurn();
         });
@@ -96,71 +89,14 @@ public class IA {
 
     public void moveJump(){
         this.moveType = "jump";
-        this.firstJump = true;
         this.frog.setGoodAnswer(this.moveType);
         this.frog.playerTurn();
     }
 
-    public void specialMoveFrog(){
-        if (!this.possiblePosition.contains(this.frog.frogPosition)){
-            Random randomPos = new Random();
-            int newPos = this.possiblePosition.get(randomPos.nextInt(this.possiblePosition.size()));
-            this.frog.moveFrogTo(this.frog.nenuphars[newPos]);
-            this.frog.frogPosition = newPos;
-        }
-    }
-
     public void updateFrogPosition(){
-        switch (this.moveType){
-            case "oneBack":
-                this.frog.frogPosition -= 1;
-                if (this.frog.frogPosition < 0){
-                    this.frog.frogPosition = this.frog.nenuphars.length - 1;
-                }
-                break;
-
-            case "oneFront":
-                this.frog.frogPosition += 1;
-                if (this.frog.frogPosition > 9){
-                    this.frog.frogPosition = 0;
-                }
-                break;
-
-            case "twoBack":
-                this.frog.frogPosition -= 2;
-                if (this.frog.frogPosition < 0){
-                    if (this.frog.frogPosition == -1){
-                        this.frog.frogPosition = this.frog.nenuphars.length - 1;
-                    }else {
-                        this.frog.frogPosition = this.frog.nenuphars.length - 2;
-                    }
-                }
-                break;
-
-            case "jump":
-                if (this.firstJump){
-                    this.firstJump = false;
-                    this.pastFrogPosition = this.frog.frogPosition;
-
-                    Random randomJump = new Random();
-                    int newPosJump;
-
-                    if ((this.frog.frogPosition == 2) || (this.frog.frogPosition == 3)){
-                        newPosJump = randomJump.nextInt(2) + 7;
-
-                    }else {
-                        newPosJump = randomJump.nextInt(2) + 2;
-                    }
-
-                    this.futureFrogPosition = newPosJump;
-                    this.frog.frogPosition = newPosJump;
-                }else {
-                    this.frog.frogPosition = this.pastFrogPosition;
-                }
-                break;
-
-            default:
-                break;
+        this.frog.frogPosition -= 1;
+        if (this.frog.frogPosition < 0){
+            this.frog.frogPosition = this.frog.nenuphars.length - 1;
         }
     }
 }

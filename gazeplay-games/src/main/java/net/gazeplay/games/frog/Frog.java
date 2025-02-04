@@ -208,10 +208,49 @@ public class Frog implements GameLifeCycle {
                 break;
 
             case "jump":
-                if (this.correctFrogPosition != this.ia.futureFrogPosition){
-                    this.correctFrogPosition = this.ia.futureFrogPosition;
-                }else {
-                    this.correctFrogPosition = this.ia.pastFrogPosition;
+                switch (this.frogPosition){
+                    case 0:
+                        this.correctFrogPosition = 5;
+                        break;
+
+                    case 1:
+                        this.correctFrogPosition = 6;
+                        break;
+
+                    case 2:
+                        this.correctFrogPosition = 7;
+                        break;
+
+                    case 3:
+                        this.correctFrogPosition = 8;
+                        break;
+
+                    case 4:
+                        this.correctFrogPosition = 9;
+                        break;
+
+                    case 5:
+                        this.correctFrogPosition = 0;
+                        break;
+
+                    case 6:
+                        this.correctFrogPosition = 1;
+                        break;
+
+                    case 7:
+                        this.correctFrogPosition = 2;
+                        break;
+
+                    case 8:
+                        this.correctFrogPosition = 3;
+                        break;
+
+                    case 9:
+                        this.correctFrogPosition = 4;
+                        break;
+
+                    default:
+                        break;
                 }
                 break;
 
