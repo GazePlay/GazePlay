@@ -61,6 +61,9 @@ public class MolesChar extends Parent {
     public final EventHandler<Event> enterEvent;
     private int bonk;
 
+    public TranslateTransition translationOut;
+    public TranslateTransition translationIn;
+
     @Setter
     private int TargetAOIListIndex;
 
@@ -153,9 +156,11 @@ public class MolesChar extends Parent {
                     canTouched = false;
                     gameInstance.onSelectedImg("Validate mole", String.valueOf(gameContext.getConfiguration().getFixationLength()));
                     if (!touched && out) {
-                        gameContext.getSoundManager().add("data/whackmole/sounds/"+(bonk++%2==0 ? "bonk1.wav":"bonk2.wav"));
                         if (gameInstance.difficulty == 3){
+                            gameContext.getSoundManager().add("data/whackmole/sounds/bonk1.wav");
                             gameInstance.oneMoleWhacked();
+                        }else {
+                            gameContext.getSoundManager().add("data/whackmole/sounds/error.wav");
                         }
                         touched = true;
                         goIn();
@@ -182,13 +187,13 @@ public class MolesChar extends Parent {
 
         gameInstance.getNbMolesOut().incrementAndGet();
 
-        final TranslateTransition translation = new TranslateTransition(new Duration(1500), this);
-        translation.setByX(0);
-        translation.setByY(-this.distTranslation);
+        translationOut = new TranslateTransition(new Duration(1500), this);
+        translationOut.setByX(0);
+        translationOut.setByY(-this.distTranslation);
 
         this.mole.opacityProperty().set(0.5);
 
-        translation.setOnFinished(actionEvent -> {
+        translationOut.setOnFinished(actionEvent -> {
 
             canTouched = true;
 
@@ -217,7 +222,7 @@ public class MolesChar extends Parent {
             timeMoleOut.play();
         });
 
-        translation.play();
+        translationOut.play();
     }
 
     private void goIn() {
@@ -230,20 +235,20 @@ public class MolesChar extends Parent {
         gameInstance.getGameContext().getChildren().remove(moleMoved);
         gameContext.getGazeDeviceManager().removeEventFilter(this.moleMoved);
 
-        double timeGoIn = 3000;
+        double timeGoIn = 1500;
         if (touched) {
             timeGoIn = 500;
         }
         touched = false;
-        final TranslateTransition translation = new TranslateTransition(new Duration(timeGoIn), this);
-        translation.setByX(0);
-        translation.setByY(this.distTranslation);
-        translation.setOnFinished(actionEvent -> {
+        translationIn = new TranslateTransition(new Duration(timeGoIn), this);
+        translationIn.setByX(0);
+        translationIn.setByY(this.distTranslation);
+        translationIn.setOnFinished(actionEvent -> {
             gameInstance.getNbMolesOut().decrementAndGet();
             mole.opacityProperty().set(0);
             canGoOut = true;
         });
-        translation.play();
+        translationIn.play();
     }
 
 }

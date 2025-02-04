@@ -232,7 +232,7 @@ public class Moles extends Parent implements GameLifeCycle {
         final TranslateTransition fullAnimation = new TranslateTransition(
             Duration.millis(gameContext.getConfiguration().getQuestionLength() / 2.0), ruleText);
 
-        fullAnimation.setDelay(Duration.millis(gameContext.getConfiguration().getQuestionLength()));
+        fullAnimation.setDelay(Duration.millis(3000));
 
         fullAnimation.setOnFinished(actionEvent -> {
             gameContext.getChildren().remove(ruleText);
@@ -314,9 +314,8 @@ public class Moles extends Parent implements GameLifeCycle {
 
         difficulty1.setOnFinished(event -> {
 
-            this.limitMoleEntity = 1;
-            this.limitObjEntity = 1;
-
+            minuteur.purge();
+            minuteur.cancel();
             difficulty1.stop();
             this.textRule = "Tape les taupes avec une carrote";
             this.reset();
@@ -333,9 +332,8 @@ public class Moles extends Parent implements GameLifeCycle {
 
         difficulty2.setOnFinished(event -> {
 
-            this.limitMoleEntity = 1;
-            this.limitObjEntity = 1;
-
+            minuteur.purge();
+            minuteur.cancel();
             difficulty2.stop();
             this.textRule = "Tape les taupes qui n'ont pas de carrote";
             this.reset();
@@ -393,12 +391,25 @@ public class Moles extends Parent implements GameLifeCycle {
         minuteur.schedule(tache, 0, 500);
 
         if (this.difficulty == 1){
-            this.difficulty++;
+            nbMolesOut = new AtomicInteger(0);
+            nbObjOut = new AtomicInteger(0);
+            this.limitMoleEntity = 0;
+            this.limitObjEntity = 2;
+            this.nbMolesWhacked = 0;
             difficulty1.playFromStart();
         }else if (this.difficulty == 2){
-            this.difficulty++;
+            nbMolesOut = new AtomicInteger(0);
+            nbObjOut = new AtomicInteger(0);
+            this.limitMoleEntity = 1;
+            this.limitObjEntity = 1;
+            this.nbMolesWhacked = 0;
             difficulty2.playFromStart();
         }else {
+            nbMolesOut = new AtomicInteger(0);
+            nbObjOut = new AtomicInteger(0);
+            this.limitMoleEntity = 1;
+            this.limitObjEntity = 1;
+            this.nbMolesWhacked = 0;
             difficulty3.playFromStart();
         }
     }
@@ -411,6 +422,10 @@ public class Moles extends Parent implements GameLifeCycle {
                 gameContext.getChildren().removeAll(currentRoundDetails.molesList);
                 currentRoundDetails.molesList.clear();
             }
+            if (currentRoundDetails.molesObjList != null) {
+                gameContext.getChildren().removeAll(currentRoundDetails.molesObjList);
+                currentRoundDetails.molesObjList.clear();
+            }
             currentRoundDetails = null;
         }
 
@@ -420,17 +435,22 @@ public class Moles extends Parent implements GameLifeCycle {
     }
 
     public void reset(){
+        this.gameContext.getChildren().clear();
+
         stats.setTargetAOIList(targetAOIList);
-        if (currentRoundDetails != null) {
-            if (currentRoundDetails.molesList != null) {
-                gameContext.getChildren().removeAll(currentRoundDetails.molesList);
-                currentRoundDetails.molesList.clear();
-            }
-            currentRoundDetails = null;
-        }
+        gameContext.getChildren().removeAll(currentRoundDetails.molesList);
+        currentRoundDetails.molesList.clear();
+        gameContext.getChildren().removeAll(currentRoundDetails.molesObjList);
+        currentRoundDetails.molesObjList.clear();
+        currentRoundDetails = null;
+
         nbMolesOut = new AtomicInteger(0);
         nbObjOut = new AtomicInteger(0);
-        this.gameContext.getChildren().clear();
+        this.limitMoleEntity = 0;
+        this.limitObjEntity = 0;
+        this.nbMolesWhacked = 0;
+        this.difficulty++;
+
         this.launch();
     }
 
