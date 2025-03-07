@@ -244,7 +244,7 @@ class PictureCard extends Group {
         Timeline transition = new Timeline();
         transition.getKeyFrames().add(new KeyFrame(new Duration(config.getTransitionTime())));
         transition.setOnFinished(event -> {
-            gameInstance.dispose();
+            gameInstance.nextRoundItem();
             gameContext.clear();
             gameInstance.launch();
         });
@@ -361,12 +361,7 @@ class PictureCard extends Group {
     public void endGame() {
 
         progressIndicator.setVisible(false);
-        gameInstance.finalStats();
-        gameContext.updateScore(stats, gameInstance);
-        gameInstance.resetFromReplay();
         gameInstance.dispose();
-        gameContext.clear();
-        gameContext.showRoundStats(stats, gameInstance);
     }
 
     private class CustomInputEventHandlerMouse implements EventHandler<Event> {

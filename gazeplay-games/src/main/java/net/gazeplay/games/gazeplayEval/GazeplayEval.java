@@ -302,8 +302,6 @@ public class GazeplayEval implements GameLifeCycle {
     public Timeline waitForInput(){
         Configuration config = ActiveConfigurationContext.getInstance();
 
-        log.info("INPUT TIME : {}", config.getDelayBeforeSelectionTime());
-
         Timeline transition = new Timeline();
         transition.getKeyFrames().add(new KeyFrame(new Duration(config.getDelayBeforeSelectionTime())));
         transition.setOnFinished(event -> {
@@ -318,8 +316,6 @@ public class GazeplayEval implements GameLifeCycle {
     public Timeline waitForTransition(){
 
         Configuration config = ActiveConfigurationContext.getInstance();
-
-        log.info("TRANSITION TIME : {}", config.getTransitionTime());
 
         Timeline transition = new Timeline();
         transition.getKeyFrames().add(new KeyFrame(new Duration(config.getTransitionTime())));
@@ -360,6 +356,7 @@ public class GazeplayEval implements GameLifeCycle {
         Timeline question = new Timeline();
         question.getKeyFrames().add(new KeyFrame(new Duration(config.getQuestionTime())));
         question.setOnFinished(event -> {
+            goNext = false;
             this.choicePicturePair();
         });
         return question;
@@ -551,8 +548,8 @@ public class GazeplayEval implements GameLifeCycle {
         }
     }
 
-    @Override
-    public void dispose() {
+
+    public void nextRoundItem(){
         if (currentRoundDetails != null) {
             if (currentRoundDetails.getPictureCardList() != null) {
                 gameContext.getChildren().removeAll(currentRoundDetails.getPictureCardList());
@@ -560,6 +557,15 @@ public class GazeplayEval implements GameLifeCycle {
             currentRoundDetails = null;
         }
         stats.setTargetAOIList(targetAOIList);
+    }
+
+    @Override
+    public void dispose() {
+        this.finalStats();
+        gameContext.updateScore(stats, this);
+        this.resetFromReplay();
+        gameContext.clear();
+        gameContext.showRoundStats(stats, this);
     }
 
     public void resetFromReplay(){
