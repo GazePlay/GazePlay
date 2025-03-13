@@ -58,7 +58,7 @@ class PictureCard extends Group {
     private Timeline progressIndicatorAnimationTimeLine;
     private boolean selected;
     private boolean alreadySee;
-    private int valueProgressIndicator = 500;
+    private int valueProgressIndicator = 1000;
     public List<Long> timeImg = new ArrayList<>();
     public Chrono chrono;
     public int imgIndex;
@@ -374,6 +374,8 @@ class PictureCard extends Group {
         private boolean ignoreAnyInput = false;
         private boolean moved = false;
 
+        Configuration config = ActiveConfigurationContext.getInstance();
+
         @Override
         public void handle(Event e) {
             if (ignoreAnyInput) {
@@ -384,18 +386,28 @@ class PictureCard extends Group {
                 return;
             }
 
-            if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
-                onEntered();
-            } else if (e.getEventType() == MouseEvent.MOUSE_MOVED || e.getEventType() == GazeEvent.GAZE_MOVED){
-                onEnteredOnceWhileMoved();
-            } else if (e.getEventType() == MouseEvent.MOUSE_EXITED || e.getEventType() == GazeEvent.GAZE_EXITED) {
-                onExited();
+            if (Objects.equals(config.getEyeTracker(), "tobii")){
+                if (e.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    onEntered("tobii");
+                } else if (e.getEventType() == GazeEvent.GAZE_MOVED){
+                    onEnteredOnceWhileMoved("tobii");
+                } else if (e.getEventType() == GazeEvent.GAZE_EXITED) {
+                    onExited("tobii");
+                }
+            }else {
+                if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                    onEntered("Mouse");
+                } else if (e.getEventType() == MouseEvent.MOUSE_MOVED){
+                    onEnteredOnceWhileMoved("Mouse");
+                } else if (e.getEventType() == MouseEvent.MOUSE_EXITED) {
+                    onExited("Mouse");
+                }
             }
         }
 
-        private void onEntered() {
+        private void onEntered(String type) {
             this.moved = true;
-            log.info("ENTERED {}", imageName);
+            log.info("ENTERED " + type +" : {}", imageName);
 
             if (alreadySee){
                 chrono.start();
@@ -409,11 +421,11 @@ class PictureCard extends Group {
             progressIndicatorAnimationTimeLine.playFromStart();
         }
 
-        private void onEnteredOnceWhileMoved(){
+        private void onEnteredOnceWhileMoved(String type){
             if (!this.moved){
 
                 this.moved = true;
-                log.info("ENTERED {}", imageName);
+                log.info("ENTERED MOVED " + type +" : {}", imageName);
 
                 if (alreadySee){
                     chrono.start();
@@ -428,8 +440,8 @@ class PictureCard extends Group {
             }
         }
 
-        private void onExited() {
-            log.info("EXITED {}", imageName);
+        private void onExited(String type) {
+            log.info("EXITED " + type +" : {}", imageName);
 
             progressIndicatorAnimationTimeLine.stop();
             progressIndicator.setVisible(false);
