@@ -125,25 +125,25 @@ Voici un exemple complet de dossier `where-it-is` avec lequel vous pouvez jouer 
 
 ### Afficher l'aperçu du regard
 
-1. Avoir l'application Tobii Experience (https://gaming.tobii.com/getstarted/?srsltid=AfmBOop_m1XTNm-KJDwc2UtMK_dvzpV3pRiEke9sjl3SdJ3h-7uQikFM)
-2. Installer l'add-on Tobii Ghost (https://gaming.tobii.com/for-creators/?srsltid=AfmBOopzwp_33D7zxBAjdXpivpsAMQhmvWJ32dvR0pFcqQNRCHfmp_U_)
+1. [Avoir l'application Tobii Experience](https://gaming.tobii.com/getstarted/?srsltid=AfmBOop_m1XTNm-KJDwc2UtMK_dvzpV3pRiEke9sjl3SdJ3h-7uQikFM)
+2. [Installer l'add-on Tobii Ghost](https://gaming.tobii.com/for-creators/?srsltid=AfmBOopzwp_33D7zxBAjdXpivpsAMQhmvWJ32dvR0pFcqQNRCHfmp_U_)
 
-Une fois votre Tobii 5 brancher et lancer avec Tobii Experience, lancé Tobii Ghost <br>
-Dans Tobbi Ghost, cliquez sur l'onglet "Settings" en haut a droite de "Home" <br>
+Une fois votre Tobii 5 branché et lancé avec Tobii Experience, lancé Tobii Ghost
+Dans Tobbi Ghost, cliquez sur l'onglet "Settings" en haut à droite de "Home"
 {% include figure image_path="/assets/images/tutorial/tobiiGhostMenu.png" alt="Menu principal Tobii Ghost" caption="Choisir menu dans Tobii Ghost" %}
 
-Vous aller arriver dans un panel avec plein d'option possible <br>
+Vous allez arriver dans un panel avec plein d'option possible.
 {% include figure image_path="/assets/images/tutorial/tobiiGhostSettings.png" alt="Menu options Tobii Ghost" caption="Liste des options dans Tobii Ghost" %}
 
 Si ce n'est pas le cas, il faudra alors choisir l'une des 2 options :
 - Twitch
 - Application d'enregistrement
 
-Puis de quitter l'installation de celui-ci<br>
+Puis de quitter l'installation de celui-ci
 
-Ensuite il suffit juste de cliquer sur l'option "Tobii Ghost" à droite et de le mettre sur "On"<br>
-Et faire pareil pour l'option juste en dessous "Preview"<br>
-Une bulle apparaitra sur votre écran et montrera ou vous regarder avec l'Eye Tracker
+Ensuite, il suffit juste de cliquer sur l'option "Tobii Ghost" à droite et de le mettre sur "On".
+Et faire pareil pour l'option juste en dessous "Preview".
+Une bulle apparaîtra sur votre écran et montrera ou vous regardez avec l'Eye Tracker.
 
 ## Comment créer le raccourci d'un jeu ?
 

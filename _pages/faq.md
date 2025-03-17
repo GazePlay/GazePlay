@@ -120,6 +120,30 @@ Then you just have to change the location of the folder in the configuration men
 
 Here is a complete example of a `where-it-is` folder that you can play with or get inspired to create your own variations: <a href="https://github.com/GazePlay/GazePlay/raw/gh-pages/assets/example-where-is-it.zip" download>example-where-it-is</a>.
 
+## Tobii 5 Eye Tracker
+
+### Display the gaze preview
+
+1. [Download the Tobii Experience app](https://gaming.tobii.com/getstarted/?srsltid=AfmBOop_m1XTNm-KJDwc2UtMK_dvzpV3pRiEke9sjl3SdJ3h-7uQikFM)
+2. [Install the Tobii Ghost add-on](https://gaming.tobii.com/for-creators/?srsltid=AfmBOopzwp_33D7zxBAjdXpivpsAMQhmvWJ32dvR0pFcqQNRCHfmp_U_)
+
+Once your Tobii 5 is connected and running Tobii Experience, launch Tobii Ghost.
+In Tobii Ghost, click the "Settings" tab in the top right corner of "Home"
+{% include figure image_path="/assets/images/tutorial/tobiiGhostMenu.png" alt="Tobii Ghost Main Menu" caption="Choose menu in Tobii Ghost" %}
+
+You will arrive at a panel with many possible options.
+{% include figure image_path="/assets/images/tutorial/tobiiGhostSettings.png" alt="Tobii Ghost Options Menu" caption="List of options in Tobii Ghost" %}
+
+If this isn't the case, you will need to choose one of the two options:
+- Twitch
+- Recording Application
+
+Then quit the installation.
+
+Next, simply click on the "Tobii Ghost" option on the right and set it to "On."
+And do the same for the option just below, "Preview."
+A bubble will appear on your screen and show where you are looking with the Eye Tracker.
+
 ## How can I create a shortcut for a game?
 
 1. Launch GazePlay and go to settings via the blue gear.
