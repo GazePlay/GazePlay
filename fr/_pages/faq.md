@@ -128,8 +128,8 @@ Voici un exemple complet de dossier `where-it-is` avec lequel vous pouvez jouer 
 1. [Avoir l'application Tobii Experience](https://gaming.tobii.com/getstarted/?srsltid=AfmBOop_m1XTNm-KJDwc2UtMK_dvzpV3pRiEke9sjl3SdJ3h-7uQikFM)
 2. [Installer l'add-on Tobii Ghost](https://gaming.tobii.com/for-creators/?srsltid=AfmBOopzwp_33D7zxBAjdXpivpsAMQhmvWJ32dvR0pFcqQNRCHfmp_U_)
 
-Une fois votre Tobii 5 branché et lancé avec Tobii Experience, lancé Tobii Ghost
-Dans Tobbi Ghost, cliquez sur l'onglet "Settings" en haut à droite de "Home"
+Une fois votre Tobii 5 branché et lancé avec Tobii Experience, lancez Tobii Ghost
+Dans Tobbi Ghost, cliquez sur l'onglet "Settings" en haut à gauche
 {% include figure image_path="/assets/images/tutorial/tobiiGhostMenu.png" alt="Menu principal Tobii Ghost" caption="Choisir menu dans Tobii Ghost" %}
 
 Vous allez arriver dans un panel avec plein d'option possible.

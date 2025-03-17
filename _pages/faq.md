@@ -128,7 +128,7 @@ Here is a complete example of a `where-it-is` folder that you can play with or g
 2. [Install the Tobii Ghost add-on](https://gaming.tobii.com/for-creators/?srsltid=AfmBOopzwp_33D7zxBAjdXpivpsAMQhmvWJ32dvR0pFcqQNRCHfmp_U_)
 
 Once your Tobii 5 is connected and running Tobii Experience, launch Tobii Ghost.
-In Tobii Ghost, click the "Settings" tab in the top right corner of "Home"
+In Tobii Ghost, click the "Settings" tab in the top let corner
 {% include figure image_path="/assets/images/tutorial/tobiiGhostMenu.png" alt="Tobii Ghost Main Menu" caption="Choose menu in Tobii Ghost" %}
 
 You will arrive at a panel with many possible options.
