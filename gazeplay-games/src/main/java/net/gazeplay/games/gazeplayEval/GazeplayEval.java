@@ -79,6 +79,7 @@ public class GazeplayEval implements GameLifeCycle {
     private final Timeline timelineTransition = waitForTransition();
     private final Timeline timelineQuestion = waitForQuestion();
     private final Timeline timelineInput = waitForInput();
+    private final Timeline timelineChangeItem = changeItem();
     public ImageView whiteCrossPicture;
     private Text questionText;
     public CustomInputEventHandlerKeyboard customInputEventHandlerKeyboard = new CustomInputEventHandlerKeyboard();
@@ -88,6 +89,7 @@ public class GazeplayEval implements GameLifeCycle {
     public int nbCountErrorSave = 0;
     private int totalItemsAddedManually = 0;
     private String outputFile = "";
+    private boolean endItem = false;
 
     public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats) {
         this.gameContext = gameContext;
@@ -347,6 +349,26 @@ public class GazeplayEval implements GameLifeCycle {
         }
     }
 
+    public Timeline changeItem(){
+        Configuration config = ActiveConfigurationContext.getInstance();
+
+        Timeline changeItem = new Timeline();
+        changeItem.getKeyFrames().add(new KeyFrame(new Duration(config.getTransitionTime())));
+        changeItem.setOnFinished(event -> {
+            this.endItem = false;
+            this.launch();
+        });
+
+        return changeItem;
+    }
+
+    public void waitRoom(){
+        this.nextRoundItem();
+        gameContext.clear();
+        this.endItem = true;
+        this.changeItem().playFromStart();
+    }
+
     public Timeline waitForQuestion(){
 
         Configuration config = ActiveConfigurationContext.getInstance();
@@ -540,7 +562,6 @@ public class GazeplayEval implements GameLifeCycle {
 
     public void choicePicturePair(){
         this.whiteCrossPicture.setVisible(false);
-        this.playSound(BIP_SOUND);
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
             p.hideProgressIndicator();
             p.setVisibleImagePicture(true);
@@ -768,6 +789,12 @@ public class GazeplayEval implements GameLifeCycle {
 
         @Override
         public void handle(KeyEvent key) {
+
+            if (key.getCode().isArrowKey() && endItem){
+                endItem = false;
+                changeItem().stop();
+                launch();
+            }
 
             if (key.getCode().isArrowKey() && goNext){
                 timelineQuestion.stop();

@@ -239,18 +239,8 @@ class PictureCard extends Group {
     }
 
     public void waitBeforeNextRound(){
-        Configuration config = ActiveConfigurationContext.getInstance();
-
-        Timeline transition = new Timeline();
-        transition.getKeyFrames().add(new KeyFrame(new Duration(config.getTransitionTime())));
-        transition.setOnFinished(event -> {
-            gameInstance.nextRoundItem();
-            gameContext.clear();
-            gameInstance.launch();
-        });
-
         gameInstance.removeEventHandlerPictureCard();
-        transition.playFromStart();
+        gameInstance.waitRoom();
     }
 
     private ImageView createImageView(double posX, double posY, double width, double height,
