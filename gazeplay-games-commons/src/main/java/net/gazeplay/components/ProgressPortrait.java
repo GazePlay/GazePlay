@@ -15,6 +15,8 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import lombok.Getter;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.ImageLibrary;
@@ -22,6 +24,7 @@ import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.games.Utils;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ProgressPortrait extends StackPane {
 
@@ -90,15 +93,20 @@ public class ProgressPortrait extends StackPane {
     }
 
     public void active2() {
-        this.addEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
-        this.addEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);
+        Configuration config = ActiveConfigurationContext.getInstance();
+
         this.setDisable(false);
         this.button.setDisable(false);
         this.setOpacity(1);
         this.indicator.setOpacity(0);
 
-        this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterbuttonHandler);
-        this.addEventFilter(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
+        if (Objects.equals(config.getEyeTracker(), "tobii")){
+            this.addEventFilter(GazeEvent.GAZE_ENTERED, enterbuttonHandler);
+            this.addEventFilter(GazeEvent.GAZE_EXITED, exitbuttonHandler);
+        }else {
+            this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterbuttonHandler);
+            this.addEventFilter(MouseEvent.MOUSE_EXITED, exitbuttonHandler);
+        }
     }
 
     public void init() {

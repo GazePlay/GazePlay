@@ -147,8 +147,8 @@ public class StatDisplayUtils {
             yEyeCoordinates.setName("Y coordinate");
 
             for (FixationPoint p : points) {
-                xEyeCoordinates.getData().add(new Data<>(p.getTimeGaze(), p.getY()));
-                yEyeCoordinates.getData().add(new Data<>(p.getTimeGaze(), p.getX()));
+                xEyeCoordinates.getData().add(new Data<>(p.getTimeGaze(), p.getX()));
+                yEyeCoordinates.getData().add(new Data<>(p.getTimeGaze(), p.getY()));
             }
 
             colorBands.getData().addAll(xEyeCoordinates, yEyeCoordinates);

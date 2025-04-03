@@ -18,11 +18,12 @@ import lombok.NonNull;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
 
-import static net.gazeplay.games.whereisit.WhereIsItGameType.*;
+import java.util.Objects;
 
 @Slf4j
 @ToString
@@ -91,9 +92,17 @@ class PictureCard extends Group {
 
         gameContext.getGazeDeviceManager().addEventFilter(imageRectangle);
 
-        this.addEventFilter(MouseEvent.ANY, customInputEventHandler);
+        this.checkEventType(customInputEventHandler);
+    }
 
-        this.addEventFilter(GazeEvent.ANY, customInputEventHandler);
+    public void checkEventType(CustomInputEventHandler customInputEventHandler){
+        Configuration config = ActiveConfigurationContext.getInstance();
+
+        if (Objects.equals(config.getEyeTracker(), "tobii")){
+            this.addEventHandler(GazeEvent.ANY, customInputEventHandler);
+        }else {
+            this.addEventHandler(MouseEvent.ANY, customInputEventHandler);
+        }
     }
 
     private Timeline createProgressIndicatorTimeLine(WhereIsIt gameInstance) {

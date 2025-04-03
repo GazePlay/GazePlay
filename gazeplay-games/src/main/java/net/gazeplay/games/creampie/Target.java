@@ -12,6 +12,7 @@ import javafx.util.Duration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
@@ -97,13 +98,15 @@ public class Target extends ProgressPortrait {
         assignIndicatorUpdatable(enterEvent, gameContext);
         gameContext.getGazeDeviceManager().addEventFilter(this);
         active();
+
     }
 
     private void enter() {
 
         stats.incrementNumberOfGoalsReached();
         gameContext.updateScore(stats, gameInstance);
-        this.removeEventHandler(MouseEvent.MOUSE_ENTERED, enterEvent);
+        this.removeEventHandler(MouseEvent.ANY, enterEvent);
+        this.removeEventHandler(GazeEvent.ANY, enterEvent);
 
         final Animation animation = createAnimation();
         animation.play();

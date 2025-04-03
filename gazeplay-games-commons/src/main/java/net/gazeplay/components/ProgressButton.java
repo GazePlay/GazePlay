@@ -15,7 +15,11 @@ import javafx.util.Duration;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
+
+import java.util.Objects;
 
 @Slf4j
 public class ProgressButton extends StackPane {
@@ -83,15 +87,20 @@ public class ProgressButton extends StackPane {
     }
 
     public void active2() {
-        this.addEventFilter(GazeEvent.GAZE_ENTERED, enterButtonHandler);
-        this.addEventFilter(GazeEvent.GAZE_EXITED, exitButtonHandler);
+        Configuration config = ActiveConfigurationContext.getInstance();
+
         this.setDisable(false);
         this.button.setDisable(false);
         this.setOpacity(1);
         this.indicator.setOpacity(0);
 
-        this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterButtonHandler);
-        this.addEventFilter(MouseEvent.MOUSE_EXITED, exitButtonHandler);
+        if (Objects.equals(config.getEyeTracker(), "tobii")){
+            this.addEventFilter(GazeEvent.GAZE_ENTERED, enterButtonHandler);
+            this.addEventFilter(GazeEvent.GAZE_EXITED, exitButtonHandler);
+        }else {
+            this.addEventFilter(MouseEvent.MOUSE_ENTERED, enterButtonHandler);
+            this.addEventFilter(MouseEvent.MOUSE_EXITED, exitButtonHandler);
+        }
     }
 
     public void init(boolean imageResized) {

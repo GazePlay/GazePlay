@@ -15,8 +15,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.components.GazeIndicator;
+
+import java.util.Objects;
 
 @Slf4j
 public class ColorBox extends StackPane {
@@ -72,12 +76,21 @@ public class ColorBox extends StackPane {
 
         ColorEventHandler eventHandler = new ColorEventHandler(this);
 
-        button.addEventHandler(MouseEvent.ANY, eventHandler);
-        button.addEventHandler(GazeEvent.ANY, eventHandler);
+        this.checkEventType(eventHandler);
 
         this.getChildren().add(button);
 
         toolBox.getColorsGame().getGameContext().getGazeDeviceManager().addEventFilter(this);
+    }
+
+    public void checkEventType(ColorEventHandler eventHandler){
+        Configuration config = ActiveConfigurationContext.getInstance();
+
+        if (Objects.equals(config.getEyeTracker(), "tobii")){
+            button.addEventHandler(GazeEvent.ANY, eventHandler);
+        }else {
+            button.addEventHandler(MouseEvent.ANY, eventHandler);
+        }
     }
 
     public void updateHeight() {
