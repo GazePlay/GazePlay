@@ -101,6 +101,7 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_LIMITER_SCORE_ENABLED = false;
     private static final int DEFAULT_VALUE_LIMITER_SCORE = 90;
     /* Bera settings */
+    private static final int DEFAULT_VALUE_FRAME_GAZE_POSITION = 20000;
     private static final int DEFAULT_VALUE_TRANSITION_TIME = 2000;
     private static final int DEFAULT_VALUE_DELAY_BEFORE_SELECTION_TIME = 1000;
     private static final boolean DEFAULT_VALUE_QUESTION_TIME_ENABLED = false;
@@ -108,7 +109,6 @@ public class Configuration {
     private static final boolean DEFAULT_VALUE_COLUMNAR_IMAGES_ENABLED = false;
     private static final boolean DEFAULT_VALUE_SOUND_ENABLED = true;
     private static final boolean DEFAULT_VALUE_SOA_ENABLED = false;
-    private static final int DEFAULT_VALUE_FRAME_GAZE_POSITION = 20;
     private static final String DEFAULT_VALUE_FEEDBACK = Feedback.standard.toString();
     /* Eye-tracking settings */
     private static final String DEFAULT_VALUE_EYE_TRACKER = EyeTracker.tobii.toString();

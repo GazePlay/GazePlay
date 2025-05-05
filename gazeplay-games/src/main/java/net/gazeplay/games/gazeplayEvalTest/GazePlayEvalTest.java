@@ -135,11 +135,17 @@ public class GazePlayEvalTest implements GameLifeCycle {
                 this.generateGame(value.split(","), i);
             }
             this.indexEndGame = configFile.size();
+            this.setStats();
             this.setSound();
             this.getGazePosition(config);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void setStats(){
+        this.stats.nameScores = this.listNameScores;
+        this.stats.scores = this.listScoresPoints;
     }
 
     public void generateStatsFolder(){
@@ -655,10 +661,10 @@ public class GazePlayEvalTest implements GameLifeCycle {
         for (int i=0; i<this.listImages.length; i++){
             content.append("Planche ").append(i + 1).append(" :").append(System.lineSeparator());
             content.append(System.lineSeparator());
-            content.append("Image en haut à gauche : ").append(this.listImages[i][0]).append(System.lineSeparator());
-            content.append("Image en haut à droite : ").append(this.listImages[i][1]).append(System.lineSeparator());
-            content.append("Image en bas à gauche : ").append(this.listImages[i][2]).append(System.lineSeparator());
-            content.append("Image en bas à droite : ").append(this.listImages[i][3]).append(System.lineSeparator());
+            content.append("Image en haut gauche : ").append(this.listImages[i][0]).append(System.lineSeparator());
+            content.append("Image en haut droite : ").append(this.listImages[i][1]).append(System.lineSeparator());
+            content.append("Image en bas gauche : ").append(this.listImages[i][2]).append(System.lineSeparator());
+            content.append("Image en bas droite : ").append(this.listImages[i][3]).append(System.lineSeparator());
             content.append("Son : ").append(this.listSounds[i]).append(System.lineSeparator());
             content.append(System.lineSeparator());
         }
@@ -694,7 +700,6 @@ public class GazePlayEvalTest implements GameLifeCycle {
         String nameTimepoint = "";
         int countTimepoint = 1;
         for (int i=1; i<this.countStats; i++){
-
             if (!nameTimepoint.equals(this.idImg.get(i - 1))){
                 nameTimepoint = this.idImg.get(i - 1);
                 countTimepoint = 1;
@@ -729,6 +734,7 @@ public class GazePlayEvalTest implements GameLifeCycle {
         }
 
         try (FileOutputStream outputStream = new FileOutputStream(pathStats)) {
+            log.info("Excel file created !");
             workbook.write(outputStream);
         } catch (Exception e){
             log.info("Error creation xls for GazePlay Eval stats game !");
