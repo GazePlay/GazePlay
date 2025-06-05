@@ -316,6 +316,48 @@ windowsAfsrx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
 linuxDistTar.dependsOn(downloadAndExtractLinuxDependecies)
 macosDistTar.dependsOn(downloadAndExtractMacosJRE)
 
+tasks.named('resolveMainClassName') {
+    dependsOn tasks.named('unzipAfsrDistribution')
+    dependsOn tasks.named('unzipBeraDistribution')
+}
+
+tasks.named('unzipBeraDistribution') {
+    dependsOn tasks.named('unzipAfsrDistribution')
+    dependsOn tasks.named('unzipDistribution')
+    dependsOn tasks.named('unzipDistributionx32')
+}
+
+tasks.named('unzipAfsrDistribution') {
+    dependsOn tasks.named('unzipDistribution')
+    dependsOn tasks.named('unzipDistributionx32')
+}
+
+tasks.named('unzipDistributionx32') {
+    dependsOn tasks.named('unzipDistribution')
+}
+
+
+tasks.named('distTar') {
+    dependsOn tasks.named('unzipAfsrDistribution')
+    dependsOn tasks.named('unzipBeraDistribution')
+}
+
+tasks.named('distZip') {
+    dependsOn tasks.named('unzipAfsrDistribution')
+    dependsOn tasks.named('unzipBeraDistribution')
+}
+
+tasks.named('armDistZip') {
+    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('scriptsForRelease')
+    dependsOn tasks.named('extractOpenJFXForLibavPluginARM')
+    dependsOn tasks.named('extractARMJRE')
+    dependsOn tasks.named('unzipAfsrDistribution')
+    dependsOn tasks.named('unzipBeraDistribution')
+    dependsOn tasks.named('unzipDistribution')
+    dependsOn tasks.named('unzipDistributionx32')
+}
+
 tasks.named('armDistTar') {
     dependsOn tasks.named('downloadAndExtractARMDependecies')
     dependsOn tasks.named('downloadLicenses')
@@ -332,9 +374,31 @@ tasks.named('noJREDistZip') {
     dependsOn tasks.named('scriptsForRelease')
 }
 
+tasks.named('linuxDistZip') {
+    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('scriptsForRelease')
+    dependsOn tasks.named('extractOpenJFXForLibavPlugin')
+    dependsOn tasks.named('extractLinuxJRE')
+    dependsOn tasks.named('extractTobiiDriversForLinux')
+    dependsOn tasks.named('unzipAfsrDistribution')
+    dependsOn tasks.named('unzipBeraDistribution')
+    dependsOn tasks.named('unzipDistribution')
+    dependsOn tasks.named('unzipDistributionx32')
+}
+
 tasks.named('linuxDistTar') {
     dependsOn tasks.named('downloadLicenses')
     dependsOn tasks.named('scriptsForRelease')
+}
+
+tasks.named('macosDistZip') {
+    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('scriptsForRelease')
+    dependsOn tasks.named('extractMacosJRE')
+    dependsOn tasks.named('unzipAfsrDistribution')
+    dependsOn tasks.named('unzipBeraDistribution')
+    dependsOn tasks.named('unzipDistribution')
+    dependsOn tasks.named('unzipDistributionx32')
 }
 
 tasks.named('macosDistTar') {
@@ -347,9 +411,29 @@ tasks.named('windowsAfsrDistZip') {
     dependsOn tasks.named('scriptsForRelease')
 }
 
+tasks.named('windowsAfsrDistTar') {
+    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('scriptsForRelease')
+    dependsOn tasks.named('extractWindowsJRE')
+    dependsOn tasks.named('unzipAfsrDistribution')
+    dependsOn tasks.named('unzipBeraDistribution')
+    dependsOn tasks.named('unzipDistribution')
+    dependsOn tasks.named('unzipDistributionx32')
+}
+
 tasks.named('windowsAfsrx32DistZip') {
     dependsOn tasks.named('downloadLicenses')
     dependsOn tasks.named('scriptsForRelease')
+}
+
+tasks.named('windowsAfsrx32DistTar') {
+    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('scriptsForRelease')
+    dependsOn tasks.named('extractWindowsJREx32')
+    dependsOn tasks.named('unzipAfsrDistribution')
+    dependsOn tasks.named('unzipBeraDistribution')
+    dependsOn tasks.named('unzipDistribution')
+    dependsOn tasks.named('unzipDistributionx32')
 }
 
 tasks.named('windowsBeraDistZip') {
@@ -357,9 +441,38 @@ tasks.named('windowsBeraDistZip') {
     dependsOn tasks.named('scriptsForRelease')
 }
 
+tasks.named('windowsBeraDistTar') {
+    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('scriptsForRelease')
+    dependsOn tasks.named('extractWindowsJRE')
+    dependsOn tasks.named('unzipAfsrDistribution')
+    dependsOn tasks.named('unzipBeraDistribution')
+}
+
 tasks.named('windowsBerax32DistZip') {
     dependsOn tasks.named('downloadLicenses')
     dependsOn tasks.named('scriptsForRelease')
+}
+
+tasks.named('windowsBerax32DistTar') {
+    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('scriptsForRelease')
+    dependsOn tasks.named('extractWindowsJREx32')
+    dependsOn tasks.named('unzipAfsrDistribution')
+    dependsOn tasks.named('unzipBeraDistribution')
+}
+
+tasks.named('windowsx32DistZip') {
+    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('scriptsForRelease')
+}
+
+tasks.named('windowsx32DistTar') {
+    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('scriptsForRelease')
+    dependsOn tasks.named('extractWindowsJREx32')
+    dependsOn tasks.named('unzipAfsrDistribution')
+    dependsOn tasks.named('unzipBeraDistribution')
 }
 
 tasks.named('windowsDistZip') {
@@ -367,9 +480,12 @@ tasks.named('windowsDistZip') {
     dependsOn tasks.named('scriptsForRelease')
 }
 
-tasks.named('windowsx32DistZip') {
+tasks.named('windowsDistTar') {
     dependsOn tasks.named('downloadLicenses')
     dependsOn tasks.named('scriptsForRelease')
+    dependsOn tasks.named('extractWindowsJRE')
+    dependsOn tasks.named('unzipAfsrDistribution')
+    dependsOn tasks.named('unzipBeraDistribution')
 }
 
 tasks.withType(Tar){
