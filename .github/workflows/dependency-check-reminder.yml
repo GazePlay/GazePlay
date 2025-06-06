@@ -20,7 +20,7 @@ jobs:
           cat > issue.md <<EOF
 ## 🔁 Rappel semestriel : vérification des dépendances
 
-📅 Rappel généré automatiquement le **${{ steps.date.outputs.today }}**
+📅 Rappel généré automatiquement le **$TODAY**
 
 ### 🔍 Vérifications à faire :
 - [ ] Vérification si mise à jour des dépendances Java (Gradle, Spring, autres libs)
@@ -30,6 +30,8 @@ jobs:
 - [ ] Vérification si mise à jour des bibliothèques
 - [ ] Vérification si mise à jour des workflows GitHub Actions
 EOF
+        env:
+          TODAY: ${{ steps.date.outputs.today }}
 
       - name: Créer une issue de rappel
         uses: peter-evans/create-issue-from-file@v5
