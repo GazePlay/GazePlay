@@ -1,15 +1,26 @@
-on:
-  push:
-    branches:
-      - master
-
 name: Release GazePlay
 
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch  
+    
 jobs:
   release:
     runs-on: ubuntu-latest
     
     steps:
+
+      - name: Show version type selected
+        run: echo "Version selected is -> ${{ github.event.inputs.bump }}"
 
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
@@ -81,13 +92,32 @@ jobs:
         id: new-tag
         run: |
           latest_tag=$(curl -s https://api.github.com/repos/${{ env.REPO_NAME }}/releases/latest | jq -r .tag_name)
-          version="${latest_tag#v}"
+          version="${latest_tag#v}"  # strip leading 'v'
           IFS='.' read -r major minor patch <<< "$version"
-          patch=$((patch + 1))
+
+          case "${{ github.event.inputs.bump }}" in
+            major)
+              major=$((major + 1))
+              minor=0
+              patch=0
+              ;;
+            minor)
+              minor=$((minor + 1))
+              patch=0
+              ;;
+            patch)
+              patch=$((patch + 1))
+              ;;
+            *)
+              echo "Option invalide: $bump"
+              exit 1
+              ;;
+          esac
+
           new_tag="v$major.$minor.$patch"
-          echo "Dernier tag: $latest_tag"
-          echo "Nouveau tag : $new_tag"
           echo "tag=$new_tag" >> $GITHUB_OUTPUT
+          echo "Dernier tag : $latest_tag"
+          echo "Nouveau tag : $new_tag"
           
       # add this to add afsr installer 32bits to the release
       # ./build/distributions/gazeplay-afsr-windows-x32-installer.exe   
