@@ -18,18 +18,18 @@ jobs:
       - name: Générer le contenu dynamique
         run: |
           cat > issue.md <<EOF
-## 🔁 Rappel semestriel : vérification des dépendances
-
-📅 Rappel généré automatiquement le **$TODAY**
-
-### 🔍 Vérifications à faire :
-- [ ] Vérification si mise à jour des dépendances Java (Gradle, Spring, autres libs)
-- [ ] Vérification si mise à jour du JDK utilisé
-- [ ] Vérification si mise à jour de JavaFX
-- [ ] Vérification si mise à jour des plugins Gradle
-- [ ] Vérification si mise à jour des bibliothèques
-- [ ] Vérification si mise à jour des workflows GitHub Actions
-EOF
+          ## 🔁 Rappel semestriel : vérification des dépendances
+          
+          📅 Rappel généré automatiquement le **$TODAY**
+          
+          ### 🔍 Vérifications à faire :
+          - [ ] Vérification si mise à jour des dépendances Java (Gradle, Spring, autres libs)
+          - [ ] Vérification si mise à jour du JDK utilisé
+          - [ ] Vérification si mise à jour de JavaFX
+          - [ ] Vérification si mise à jour des plugins Gradle
+          - [ ] Vérification si mise à jour des bibliothèques
+          - [ ] Vérification si mise à jour des workflows GitHub Actions
+          EOF
         env:
           TODAY: ${{ steps.date.outputs.today }}
 
