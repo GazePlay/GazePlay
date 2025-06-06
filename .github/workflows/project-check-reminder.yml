@@ -1,9 +1,9 @@
-name: 📆 Rappel semestriel de vérification des dépendances
+name: Project Check Reminder
 
 on:
   schedule:
-    - cron: '0 8 1 1 *'  # 1er janvier à 08:00 UTC
-    - cron: '0 8 1 7 *'  # 1er juillet à 08:00 UTC
+    - cron: '0 8 1 2 *'  # 1er février à 08:00 UTC
+    - cron: '0 8 1 8 *'  # 1er août à 08:00 UTC
   workflow_dispatch:
 
 jobs:
