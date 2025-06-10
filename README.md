@@ -12,3 +12,9 @@ Last updated on 02/20/2025
 JRE -> Java 17 (Azul Zulu), supported until 2029
 JavaFx -> 21, supported until (at least) 2028
 Gradle -> 8
+## Maintenance
+Check the workflow "project-check-reminder.yml", it is a workflow which allows us to recall all February 1 and August 1 of each year by creating an outcome to check the state of our dependencies, Gradle, JDK and Javafx.
+You can find the file in .github/workflow/project-check-reminder.yml
+## Release
+To make a release, this happens manually in the Actions tab on the Restity Github of the project.
+Just throw it and choose the number to modify for the release (major, minor or patch)
