@@ -100,13 +100,16 @@ jobs:
               major=$((major + 1))
               minor=0
               patch=0
+              nexPatch=$((patch + 1))
               ;;
             minor)
               minor=$((minor + 1))
               patch=0
+              nexPatch=$((patch + 1))
               ;;
             patch)
               patch=$((patch + 1))
+              nexPatch=$((patch + 1))
               ;;
             *)
               echo "Option invalide: $bump"
@@ -115,9 +118,27 @@ jobs:
           esac
 
           new_tag="v$major.$minor.$patch"
+          next_tag="$major.$minor.$nexPatch"
           echo "tag=$new_tag" >> $GITHUB_OUTPUT
-          echo "Dernier tag : $latest_tag"
-          echo "Nouveau tag : $new_tag"
+          echo "nextTag=$next_tag" >> $GITHUB_OUTPUT
+
+      - name: Update version project for gradle
+        run: |
+          version="${{ steps.new-tag.outputs.nextTag }}"
+
+          if grep -q '^version=' gradle.properties; then
+            sed -i "s/^version=.*/version=${version}/" gradle.properties
+          else
+            echo "version=${version}" >> gradle.properties
+          fi
+
+      - name: Setup next release
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add gradle.properties
+          git commit -m "Setup next release for gradle"
+          git push
           
       # add this to add afsr installer 32bits to the release
       # ./build/distributions/gazeplay-afsr-windows-x32-installer.exe   
