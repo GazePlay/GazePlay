@@ -16,45 +16,45 @@ Autres projets de l'[InterAACtionGroup](http://www.interaaction.com/) :
 
 ## Références scientifiques
 
-Didier Schwab, Amela Fejza, Loïc Vial, Yann Robert.<br>
-The GazePlay Project: Open and Free Eye-trackers Games and a Community for People with Multiple Disabilities.<br>
-[[link to the publication here](https://hal.archives-ouvertes.fr/hal-01804271)]
+- Didier Schwab, Amela Fejza, Loïc Vial, Yann Robert.<br>
+- The GazePlay Project: Open and Free Eye-trackers Games and a Community for People with Multiple Disabilities.<br>
+[[lien vers la publication ici](https://hal.archives-ouvertes.fr/hal-01804271)]
 
-Didier Schwab.<br>
-GazePlay: Creation of a community to help the development of a Free and Open-source platform to make eye-tracker Video Games accessible to everyone.<br>
-[[link to the publication here](https://hal.archives-ouvertes.fr/hal-01630628)]
+- Didier Schwab.<br>
+- GazePlay: Creation of a community to help the development of a Free and Open-source platform to make eye-tracker Video Games accessible to everyone.<br>
+[[lien vers la publication ici](https://hal.archives-ouvertes.fr/hal-01630628)]
 
-Didier Schwab.<br>
-Cognitive Ability Estimation and Reinforcement with Eye-tracking Games for Children with Multiple Disabilities.<br>
-[[link to the publication here](https://hal.archives-ouvertes.fr/hal-01806290)]
+- Didier Schwab.<br>
+- Cognitive Ability Estimation and Reinforcement with Eye-tracking Games for Children with Multiple Disabilities.<br>
+[[lien vers la publication ici](https://hal.archives-ouvertes.fr/hal-01806290)]
 
-Pierre-Alexandre Andrieu-Devilly, Marc Gandit, Didier Schwab, Lisa Quillion-Dupré, Emmanuel Monfort.<br>
-Unlocking cognitive potential: Exploring a virtual environment for cognitive training in healthy aging and mild cognitive impairment.<br>
-[[link to the publication here](https://hal.science/hal-04980322v1)]
+- Pierre-Alexandre Andrieu-Devilly, Marc Gandit, Didier Schwab, Lisa Quillion-Dupré, Emmanuel Monfort.<br>
+- Unlocking cognitive potential: Exploring a virtual environment for cognitive training in healthy aging and mild cognitive impairment.<br>
+[[lien vers la publication ici](https://hal.science/hal-04980322v1)]
 
-Pierre-Alexandre Andrieu-Devilly, Marc Gandit, Didier Schwab, Christelle Nahas, Lisa Quillion-Dupré, Emmanuel Monfort.<br>
-Presence and cognitive performances in virtual environment for cognitive training: an exploratory study in healthy aging and mild cognitive impairment.<br>
-[[link to the publication here](https://hal.science/hal-04213523v1)]
+- Pierre-Alexandre Andrieu-Devilly, Marc Gandit, Didier Schwab, Christelle Nahas, Lisa Quillion-Dupré, Emmanuel Monfort.<br>
+- Presence and cognitive performances in virtual environment for cognitive training: an exploratory study in healthy aging and mild cognitive impairment.<br>
+[[lien vers la publication ici](https://hal.science/hal-04213523v1)]
 
-Charlène Aubinet, Lucie Mazué, Mélanie Mulero, Jordan Arrigo, Didier Schwab, Steve Majerus, Olivia Gosseries.<br>
-The Eye-Tracked Brief Evaluation of Receptive Aphasia: a new tool to assess residual language comprehension abilitities in post-comatose patients.<br>
-[[link to the publication here](https://hal.science/hal-04039719v1)]
+- Charlène Aubinet, Lucie Mazué, Mélanie Mulero, Jordan Arrigo, Didier Schwab, Steve Majerus, Olivia Gosseries.<br>
+- The Eye-Tracked Brief Evaluation of Receptive Aphasia: a new tool to assess residual language comprehension abilitities in post-comatose patients.<br>
+[[lien vers la publication ici](https://hal.science/hal-04039719v1)]
 
-Jordan Arrigo, Amélie Rochet-Capellan, Didier Schwab.<br>
-GAZEPLAY-EVAL: a platform for implementing language assessment tests for people with complex communication problems.<br>
-[[link to the publication here](https://hal.science/hal-04118893v1)]
+- Jordan Arrigo, Amélie Rochet-Capellan, Didier Schwab.<br>
+- GAZEPLAY-EVAL: a platform for implementing language assessment tests for people with complex communication problems.<br>
+[[lien vers la publication ici](https://hal.science/hal-04118893v1)]
 
-Nairit Bandyopadhyay, Sébastien Riou, Didier Schwab.<br>
-Webcam as Alternate Option for Eye-Trackers in Gaze Gaming Software: GazePlay.<br>
-[[link to the publication here](https://hal.science/hal-03357649v1)]
+- Nairit Bandyopadhyay, Sébastien Riou, Didier Schwab.<br>
+- Webcam as Alternate Option for Eye-Trackers in Gaze Gaming Software: GazePlay.<br>
+[[lien vers la publication ici](https://hal.science/hal-03357649v1)]
 
-Didier Schwab, Sébastien Riou, Amela Fejza, Loïc Vial, Johana Marku, Wafaa El Husseini, E K Sannara, Miles Bardon , Yann Robert.<br>
-The GazePlay project: open, free games and a community for people with multiple disabilities.<br>
-[[link to the publication here](https://hal.science/hal-03004915v1)]
+- Didier Schwab, Sébastien Riou, Amela Fejza, Loïc Vial, Johana Marku, Wafaa El Husseini, E K Sannara, Miles Bardon , Yann Robert.<br>
+- The GazePlay project: open, free games and a community for people with multiple disabilities.<br>
+[[lien vers la publication ici](https://hal.science/hal-03004915v1)]
 
-Didier Schwab, Amela Fejza, Loïc Vial, Yann Robert.<br>
-The GazePlay Project : Overview in February 2018.<br>
-[[link to the publication here](https://hal.science/hal-01981318v1)]
+- Didier Schwab, Amela Fejza, Loïc Vial, Yann Robert.<br>
+- The GazePlay Project : Overview in February 2018.<br>
+[[lien vers la publication ici](https://hal.science/hal-01981318v1)]
 
 ## Ils parlent de GazePlay
 
