@@ -18,18 +18,43 @@ Autres projets de l'[InterAACtionGroup](http://www.interaaction.com/) :
 
 Didier Schwab, Amela Fejza, Loïc Vial, Yann Robert.
 The GazePlay Project: Open and Free Eye-trackers Games and a Community for People with Multiple Disabilities.
-ICCHP 2018 – 16th International Conference on Computers Helping People with Special Needs, Jul 2018, Linz, Austria. pp.254-261.
-[[lien](https://hal.archives-ouvertes.fr/hal-01804271)]
+[[link](https://hal.archives-ouvertes.fr/hal-01804271)]
 
 Didier Schwab.
 GazePlay: Creation of a community to help the development of a Free and Open-source platform to make eye-tracker Video Games accessible to everyone.
-5ème EUROPEAN RETT-SYNDROME CONGRESS, Nov 2017, Berlin, Germany.
-[[lien](https://hal.archives-ouvertes.fr/hal-01630628)]
+[[link](https://hal.archives-ouvertes.fr/hal-01630628)]
 
 Didier Schwab.
 Cognitive Ability Estimation and Reinforcement with Eye-tracking Games for Children with Multiple Disabilities.
-Grenoble Workshop on Models and Analysis of Eye Movements, Jun 2018, Grenoble, France.
-[[lien](https://hal.archives-ouvertes.fr/hal-01806290)]
+[[link](https://hal.archives-ouvertes.fr/hal-01806290)]
+
+Pierre-Alexandre Andrieu-Devilly, Marc Gandit, Didier Schwab, Lisa Quillion-Dupré, Emmanuel Monfort.
+Unlocking cognitive potential: Exploring a virtual environment for cognitive training in healthy aging and mild cognitive impairment.
+[[link](https://hal.science/hal-04980322v1)]
+
+Pierre-Alexandre Andrieu-Devilly, Marc Gandit, Didier Schwab, Christelle Nahas, Lisa Quillion-Dupré, Emmanuel Monfort.
+Presence and cognitive performances in virtual environment for cognitive training: an exploratory study in healthy aging and mild cognitive impairment.
+[[link](https://hal.science/hal-04213523v1)]
+
+Charlène Aubinet, Lucie Mazué, Mélanie Mulero, Jordan Arrigo, Didier Schwab, Steve Majerus, Olivia Gosseries.
+The Eye-Tracked Brief Evaluation of Receptive Aphasia: a new tool to assess residual language comprehension abilitities in post-comatose patients.
+[[link](https://hal.science/hal-04039719v1)]
+
+Jordan Arrigo, Amélie Rochet-Capellan, Didier Schwab.
+GAZEPLAY-EVAL: a platform for implementing language assessment tests for people with complex communication problems.
+[[link](https://hal.science/hal-04118893v1)]
+
+Nairit Bandyopadhyay, Sébastien Riou, Didier Schwab.
+Webcam as Alternate Option for Eye-Trackers in Gaze Gaming Software: GazePlay.
+[[link](https://hal.science/hal-03357649v1)]
+
+Didier Schwab, Sébastien Riou, Amela Fejza, Loïc Vial, Johana Marku, Wafaa El Husseini, E K Sannara, Miles Bardon , Yann Robert.
+The GazePlay project: open, free games and a community for people with multiple disabilities.
+[[link](https://hal.science/hal-03004915v1)]
+
+Didier Schwab, Amela Fejza, Loïc Vial, Yann Robert.
+The GazePlay Project : Overview in February 2018.
+[[link](https://hal.science/hal-01981318v1)]
 
 ## Ils parlent de GazePlay
 
