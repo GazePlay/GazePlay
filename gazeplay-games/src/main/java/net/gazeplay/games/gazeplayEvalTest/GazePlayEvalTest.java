@@ -767,6 +767,9 @@ public class GazePlayEvalTest implements GameLifeCycle {
                 finalStats();
                 clearScreen();
                 goToStats();
+            } else if (key.getCode().equals(KeyCode.ENTER)) {
+                clearScreen();
+                generateGame();
             }
         }
     }
