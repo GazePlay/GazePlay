@@ -591,9 +591,11 @@ public class Stats implements GazeMotionListener {
                 }
             };
 
-            gameContextScene.getRoot().addEventFilter(GazeEvent.ANY, recordGazeMovements);
-            gameContextScene.getRoot().addEventFilter(MouseEvent.ANY, recordMouseMovements);
-
+            if (ActiveConfigurationContext.getInstance().getEyeTracker().equals("tobii")){
+                gameContextScene.getRoot().addEventFilter(GazeEvent.ANY, recordGazeMovements);
+            }else {
+                gameContextScene.getRoot().addEventFilter(MouseEvent.ANY, recordMouseMovements);
+            }
         });
         currentRoundStartTime = lifeCycle.getStartTime();
     }
@@ -1083,6 +1085,10 @@ public class Stats implements GazeMotionListener {
         saveImageAsPng(bImageGaze, gazeMetricsFileGaze);
         log.info("Heatmap created !");
 
+        this.resetHeatMapGaze();
+    }
+
+    public void resetHeatMapGaze(){
         heatMap = instantiateHeatMapData(gameContextScene, heatMapPixelSize);
         fixationSequence = new ArrayList<LinkedList<FixationPoint>>(List.of(new LinkedList<FixationPoint>(), new LinkedList<FixationPoint>()));
     }

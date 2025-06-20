@@ -509,6 +509,7 @@ public class GazeplayEval implements GameLifeCycle {
 
         this.playSound(this.IMAGE_SOUND);
 
+        this.stats.resetHeatMapGaze();
         this.startGetGazePosition();
         this.startDisplayDuration();
     }
