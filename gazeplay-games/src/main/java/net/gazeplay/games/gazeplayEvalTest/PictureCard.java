@@ -132,10 +132,15 @@ class PictureCard extends Group {
     }
 
     public void removeEventHandler(){
+        imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);
+        imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandlerMouse);
+        gameContext.getGazeDeviceManager().removeEventFilter(imageRectangle);
         customInputEventHandlerMouse.ignoreAnyInput = true;
+        progressIndicator.setVisible(false);
     }
 
     public void onCardSelected() {
+        log.info("Chosen image {}", imageName);
         gameInstance.calculScores(this.imageName);
         stats.incrementNumberOfGoalsReached();
         gameContext.updateScore(stats, gameInstance);
@@ -285,6 +290,7 @@ class PictureCard extends Group {
             progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
             progressIndicator.setProgress(0);
             progressIndicator.setVisible(true);
+            gameInstance.pauseDisplayDuration();
             progressIndicatorAnimationTimeLine.playFromStart();
         }
 
@@ -300,6 +306,7 @@ class PictureCard extends Group {
                 progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
                 progressIndicator.setProgress(0);
                 progressIndicator.setVisible(true);
+                gameInstance.pauseDisplayDuration();
                 progressIndicatorAnimationTimeLine.playFromStart();
             }
         }
@@ -308,6 +315,7 @@ class PictureCard extends Group {
             log.info("EXITED {}", imageName);
 
             progressIndicatorAnimationTimeLine.stop();
+            gameInstance.continueDisplayDuration();
 
             progressIndicator.setVisible(false);
             progressIndicator.setProgress(0);

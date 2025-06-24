@@ -279,8 +279,10 @@ public class GazeplayEval implements GameLifeCycle {
         this.createDisplayDuration = new Timeline(new KeyFrame(Duration.millis(this.displayDuration[this.indexFileImage]), event -> {
             log.info("DD passe !");
             if(this.increaseIndexFileImage()){
-                this.stats.screenHeatMapGaze(this.pathStatsGame);
+                this.removeEventHandlerPictureCard();
                 this.stopGetGazePosition();
+                this.stopDisplayDuration();
+                this.getScreenHeatmapGaze();
                 this.finalStats();
                 this.gameContext.updateScore(stats, this);
                 this.resetFromReplay();
@@ -288,8 +290,11 @@ public class GazeplayEval implements GameLifeCycle {
                 this.gameContext.clear();
                 this.gameContext.showRoundStats(stats, this);
             }else {
-                this.stats.screenHeatMapGaze(this.pathStatsGame);
+                this.removeEventHandlerPictureCard();
                 this.stopGetGazePosition();
+                this.stopDisplayDuration();
+                this.getScreenHeatmapGaze();
+                this.gameContext.updateScore(stats, this);
                 this.dispose();
                 this.gameContext.clear();
                 this.launch();
@@ -304,6 +309,7 @@ public class GazeplayEval implements GameLifeCycle {
 
     @Override
     public void launch() {
+        log.info("Image board n°" + this.indexFileImage);
         this.startTimer();
 
         this.nbImageSee = 0;
@@ -341,6 +347,7 @@ public class GazeplayEval implements GameLifeCycle {
         if (this.indexFileImage == 0){
             this.generateInstructionScreen();
         } else if (this.indexFileImage == (this.indexEndGame/2)) {
+            log.info("Break ! (Image board counter = " + this.indexFileImage + ")");
             this.generateBreakScreen();
         } else if (this.indexFileImage == this.indexEndGame){
             this.generateEndScreen();
@@ -582,6 +589,16 @@ public class GazeplayEval implements GameLifeCycle {
         this.createDisplayDuration();
         log.info("Start timeline DD");
         this.createDisplayDuration.playFromStart();
+    }
+
+    public void pauseDisplayDuration(){
+        log.info("Pause timeline DD");
+        this.createDisplayDuration.pause();
+    }
+
+    public void continueDisplayDuration(){
+        log.info("Continue timeline DD");
+        this.createDisplayDuration.play();
     }
 
     public void stopDisplayDuration(){
