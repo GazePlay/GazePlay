@@ -154,7 +154,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     }
 
     synchronized void onGazeUpdate(Point2D gazePositionOnScreen, String event) {
-        // notifyAllGazeMotionListeners(gazePositionOnScreen);
+        notifyAllGazeMotionListeners(gazePositionOnScreen);
         final double positionX = gazePositionOnScreen.getX();
         final double positionY = gazePositionOnScreen.getY();
         updatePosition(positionX, positionY, event, false);
