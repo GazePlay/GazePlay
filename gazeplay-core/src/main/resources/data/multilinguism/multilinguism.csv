@@ -47,6 +47,7 @@ Memory,Kujtesa,الذاكرة,Памяць,记忆,Memory,Μνήμη,Memory,Muist
 MemoryLetters,Kujtesa (shkronjat),الذاكرة (بالحروف),Памяць (літары),记忆（字母）,Memory (Buchstaben),Μνήμη (γράμματα),Memory (letters),Muisti (kirjaimet),Memory (lettres),मेमोरी (अक्षर),Memorija (slova),Memori (huruf),Memoria (lettere),メモリー（文字）,Geheugenspel (brieven),Pamięć (litery),Memória (letras),Память (буквы),Memoria (letras),Bộ nhớ (chữ cái),Memori (huruf)
 MemoryNumbers,Kujtesa (numrat),الذاكرة (أرقام),Памяць (лічбы),记忆（数字）,Memory (Zahlen),Μνήμη (αριθμοί),Memory (numbers),Muisti (numerot),Memory (nombres),मेमोरी (संख्या),Memorija (brojevi),Memori (angka),Memoria (numeri),メモリー（数字）,Geheugenspel (cijfers),Pamięć (liczby),Memória (números),Память (числа),Memoria (números),Bộ nhớ (số),Memori (nombor)
 Ninja,Ninja!,نينجا!,Ніндзя!,忍者！,Ninja!,Νίντζα!,Ninja!,Ninja!,Ninja !,निंजा!,Ninja!,Ninja!,Ninja!,忍者！,Ninja !,Ninja!,Ninja!,Ниндзя!,¡Ninja!,Nhẫn giả!,Ninja!
+OddShape,,,,,,,Find the odd shape,,Trouve la forme différente,,,,,,,,,,,,
 OpenMemory,Kujtesa e hapur,الذاكرة مفتوحة,Адкрыйце Памяць,记忆打开,Memory offen,Ανοίξτε μνήμη,Open Memory,Avaa Muisti,Memory ouvert,ओपन मेमोरी,Otvorena Memorija,Buka Memori,Memoria aperta,メモリーオープン,Gehengenspel open,Otwarta pamięć,Memória aberta,Открытая память,Memoria abierta,Mở bộ nhớ,Buka Memori
 OpenMemoryLetters,Kujtesa e hapur (shkronjat),الذاكرة مفتوحة (بالحروف),Адкрытая памяць (літары),记忆打开（字母）,Memory offen (Buchstaben),Ανοιχτή μνήμη (γράμματα),Open Memory (letters),Avaa muisti (kirjaimet),Memory ouvert (lettres),ओपन मेमोरी (अक्षर),Otvorena Memorija (slova),Buka Memori (huruf),Memoria aperta (lettere),メモリーオープン（文字）,Gehengenspel open (brieven),Otwarta pamięć (litery),Memória aberta (letras),Открытая память (буквы),Memoria abierta (letras),Mở bộ nhớ (chữ cái),Buka Memori (huruf)
 OpenMemoryNumbers,Kujtesa e hapur (numrat),الذاكرة مفتوحة (أرقام),Адкрытая памяць (лічбы),记忆打开（数字）,Memory offen (Zahlen),Ανοιχτή μνήμη (αριθμοί),Open Memory (numbers),Avaa muisti (numerot),Memory ouvert (nombres),ओपन मेमोरी (संख्या),Otvorena Memorija (brojevi),Buka Memori (angka),Memoria aperta (numeri),メモリーオープン (数字),Gehengenspel open (cijfers),Otwarta pamięć (liczby),Memória aberta (números),Открытая память (числа),Memoria abierta (números),Mở bộ nhớ (số),Buka Memori (nombor)
@@ -231,6 +232,7 @@ UniqueTrain,,,,,,,Only one train at a time,,Un seul train à la fois,,,,,,,,,,,,
 Stations,,,,,,,Stations,,Gares,,,,,,,,,,,,
 Map1,,,,,,,Map 1,,Carte 1,,,,,,,,,,,,
 Map2,,,,,,,Map 2,,Carte 2,,,,,,,,,,,,
+Harder,,,,,,,Harder,,Plus difficile,,,,,,,,,,,,
 
 # CONTEXT TITLES
 ConfigTitle,Konfigurimi,ترتيب,Канфігурацыя,恭喜你！,Konfiguration,Διαμόρφωση,Configuration,asetuksen nimi,Configuration,विन्यास,Konfiguracija,Konfigurasi,Configurazione,構成,Configuratie,Konfiguracja,Configuraçaô,Конфигурация,Configuración,Tùy chỉnh,Konfigurasi
