@@ -764,30 +764,28 @@ public class GazePlayEvalTest implements GameLifeCycle {
 
         @Override
         public void handle(KeyEvent key) {
-            if (typeScreen.equals("instruction")){
-                if (key.getCode().equals(KeyCode.SPACE)) {
-                    gameContext.getSoundManager().stop();
-                    clearScreen();
-                    generateCrossFixationScreen();
-                }
-            } else if (typeScreen.equals("end")) {
-                if (key.getCode().equals(KeyCode.SPACE)) {
-                    gameContext.getSoundManager().stop();
-                    clearScreen();
-                    goToStats();
-                }
-            } else if (typeScreen.equals("break")) {
-                if (key.getCode().equals(KeyCode.P)) {
-                    clearScreen();
-                    generateCrossFixationScreen();
-                }
-            } else if (key.getCode().equals(KeyCode.ESCAPE)) {
+            if (key.getCode().equals(KeyCode.BACK_SPACE)) {
                 finalStats();
                 clearScreen();
                 goToStats();
             } else if (key.getCode().equals(KeyCode.ENTER)) {
                 clearScreen();
                 generateGame();
+            } else if (key.getCode().equals(KeyCode.SPACE)) {
+                if (typeScreen.equals("instruction")){
+                    gameContext.getSoundManager().stop();
+                    clearScreen();
+                    generateCrossFixationScreen();
+                } else if (typeScreen.equals("end")) {
+                    gameContext.getSoundManager().stop();
+                    clearScreen();
+                    goToStats();
+                }
+            } else if (key.getCode().equals(KeyCode.P)) {
+                if (typeScreen.equals("break")) {
+                    clearScreen();
+                    generateCrossFixationScreen();
+                }
             }
         }
     }
