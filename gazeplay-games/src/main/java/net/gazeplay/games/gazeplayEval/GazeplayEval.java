@@ -2,6 +2,7 @@ package net.gazeplay.games.gazeplayEval;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -30,6 +31,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 @Slf4j
@@ -85,6 +88,13 @@ public class GazeplayEval implements GameLifeCycle {
     public String eyeTracker;
     public String typeScreen;
 
+    public List<List<Object>> allScreens;
+    public Timeline transitionScreenT;
+    public Timeline instructionScreenT;
+    public Timeline stimuliScreenT;
+    public int maxItemSelected;
+    public int nbItemSelected = 0;
+
     public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats) {
         this.gameContext = gameContext;
         this.gameVariant = gameVariant;
@@ -98,7 +108,8 @@ public class GazeplayEval implements GameLifeCycle {
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, CustomInputEventHandler);
         this.eyeTracker = ActiveConfigurationContext.getInstance().getEyeTracker();
 
-        this.loadConfig();
+        this.testEval();
+        //this.loadConfig();
     }
 
     public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats, double gameSeed) {
@@ -113,11 +124,11 @@ public class GazeplayEval implements GameLifeCycle {
         this.gameContext.getPrimaryScene().addEventFilter(KeyEvent.KEY_PRESSED, CustomInputEventHandler);
         this.eyeTracker = ActiveConfigurationContext.getInstance().getEyeTracker();
 
-        this.loadConfig();
-
+        this.testEval();
+        //this.loadConfig();
     }
 
-    public void loadConfig(){
+    /*public void loadConfig(){
         Configuration config = ActiveConfigurationContext.getInstance();
         generateStatsFolder();
         File gameDirectory = new File(config.getFileDir() + "\\evals\\" + this.gameVariant.getNameGame() + "\\config.json");
@@ -141,6 +152,96 @@ public class GazeplayEval implements GameLifeCycle {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }*/
+
+    public void testEval() {
+        Configuration config = ActiveConfigurationContext.getInstance();
+        generateStatsFolder();
+        Path jsonPath = Path.of(config.getFileDir() + "\\evals\\" + this.gameVariant.getNameGame() + "\\evalData.json");
+
+        try {
+            this.allScreens = JTCconvert(jsonPath);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        this.setStats();
+        this.indexEndGame = this.allScreens.size();
+    }
+
+    public static List<List<Object>> JTCconvert(Path jsonPath) throws Exception {
+
+        try (Reader reader = Files.newBufferedReader(jsonPath)) {
+
+            JsonArray root = new JsonParser().parse(reader).getAsJsonArray();
+            List<List<Object>> result = new ArrayList<>();
+
+            for (JsonElement element : root) {
+                JsonObject obj = element.getAsJsonObject();
+                String type = obj.get("Type").getAsString().toLowerCase();
+
+                switch (type) {
+                    case "transition" -> result.add(parseTransition(obj));
+                    case "instruction" -> result.add(parseInstruction(obj));
+                    case "stimuli" -> result.add(parseStimuli(obj));
+                }
+            }
+            return result;
+        }
+    }
+
+    private static List<Object> parseTransition(JsonObject obj) {
+
+        return List.of(
+            "transition",
+            obj.get("Mettre un temps avant passage à l'écran suivant").getAsBoolean(),
+            obj.get("Combien de temps").getAsInt(),
+            obj.get("Mettre une croix de fixation").getAsBoolean(),
+            obj.get("Mettre un temps de fixation").getAsBoolean(),
+            obj.get("Combien de temps de fixation").getAsInt()
+        );
+    }
+
+    private static List<Object> parseInstruction(JsonObject obj) {
+
+        return List.of(
+            "instruction",
+            obj.get("Mettre un temps avant passage à l'écran suivant").getAsBoolean(),
+            obj.get("Combien de temps").getAsInt(),
+            obj.get("Ajouter un media").getAsBoolean(),
+            obj.get("Type de media").getAsString(),
+            obj.get("Nom du fichier").getAsString(),
+            obj.get("Mettre une croix de fixation").getAsBoolean(),
+            obj.get("Combien de temps de fixation").getAsInt()
+        );
+    }
+
+    private static List<Object> parseStimuli(JsonObject obj) {
+
+        List<Object> row = new ArrayList<>();
+
+        row.add("stimuli");
+        row.add(obj.get("Nombre de lignes").getAsInt());
+        row.add(obj.get("Nombre de colonnes").getAsInt());
+        row.add(obj.get("Mettre un temps avant passage à l'écran suivant").getAsBoolean());
+        row.add(obj.get("Combien de temps").getAsInt());
+        row.add(obj.get("Combien de temps de fixation").getAsInt());
+        row.add(obj.get("Combien de stimuli à sélectionner").getAsInt());
+        row.add(obj.get("Position stimuli aléatoire").getAsBoolean());
+        row.add(obj.get("Caché stimuli après selection").getAsBoolean());
+
+        JsonObject stimuli = obj.getAsJsonObject("Liste des stimuli");
+
+        stimuli.entrySet().stream()
+            .sorted(Map.Entry.comparingByKey())
+            .forEach(e ->
+                row.add(e.getValue()
+                    .getAsJsonObject()
+                    .get("imageName")
+                    .getAsString())
+            );
+
+        return row;
     }
 
     public void setStats(){
@@ -150,7 +251,7 @@ public class GazeplayEval implements GameLifeCycle {
 
     public void generateStatsFolder(){
         String username = System.getProperty("user.name");
-        String directory = "C:/Users/" + username + "/Documents/ANR_Project";
+        String directory = "C:/Users/" + username + "/Documents/GazePlayLearning_Eval";
 
         File anrProjet = new File(directory);
         if (!anrProjet.exists()){
@@ -164,11 +265,11 @@ public class GazeplayEval implements GameLifeCycle {
             dir = new File(directory, "Eval" + index + "_" + DateUtils.today());
         }
         dir.mkdirs();
-        this.pathStatsGame = "C:/Users/" + username + "/Documents/ANR_Project/" + "Eval" + index + "_" + DateUtils.today();
+        this.pathStatsGame = "C:/Users/" + username + "/Documents/GazePlayLearning_Eval/" + "Eval" + index + "_" + DateUtils.today();
         this.countStats = 0;
     }
 
-    public void generateTab(JsonArray configFile){
+    /*public void generateTab(JsonArray configFile){
         this.rows = new int[configFile.size()-1];
         this.cols = new int[configFile.size()-1];
         this.listImages = new String[configFile.size()-1][];
@@ -179,9 +280,9 @@ public class GazeplayEval implements GameLifeCycle {
 
         this.gameName = String.valueOf(configFile.get(0).getAsJsonArray().get(0)).replace("\"", "");
         configFile.remove(0);
-    }
+    }*/
 
-    public JsonArray shuffleJsonArray(JsonArray configFile){
+    /*public JsonArray shuffleJsonArray(JsonArray configFile){
         Random rnd = new Random();
         for (int i = configFile.size() - 1; i >= 0; i--) {
             int j = rnd.nextInt(i + 1);
@@ -191,9 +292,9 @@ public class GazeplayEval implements GameLifeCycle {
             configFile.set(i, object);
         }
         return configFile;
-    }
+    }*/
 
-    public void generateGame(String[] values, int index){
+    /*public void generateGame(String[] values, int index){
         this.rows[index] = Integer.parseInt(values[0]);
         this.cols[index] = Integer.parseInt(values[1]);
 
@@ -212,7 +313,7 @@ public class GazeplayEval implements GameLifeCycle {
         this.nbImages[index] = Integer.parseInt(values[nbImg+4]);
         this.listLengthFixation[index] = Double.parseDouble(values[nbImg+5]);
         this.displayDuration[index] = Double.parseDouble(values[nbImg+6]);
-    }
+    }*/
 
     public void setSound(){
         if (this.indexFileImage < this.indexEndGame){
@@ -274,7 +375,7 @@ public class GazeplayEval implements GameLifeCycle {
         return nameId;
     }
 
-    public void createDisplayDuration(){
+    /*public void createDisplayDuration(){
         log.info("Create timeline DD !");
         this.createDisplayDuration = new Timeline(new KeyFrame(Duration.millis(this.displayDuration[this.indexFileImage]), event -> {
             log.info("DD passe !");
@@ -301,7 +402,7 @@ public class GazeplayEval implements GameLifeCycle {
             }
         }));
         this.createDisplayDuration.setCycleCount(1);
-    }
+    }*/
 
     public void getScreenHeatmapGaze(){
         this.stats.screenHeatMapGaze(this.pathStatsGame);
@@ -309,7 +410,6 @@ public class GazeplayEval implements GameLifeCycle {
 
     @Override
     public void launch() {
-        log.info("Image board n°" + this.indexFileImage);
         this.startTimer();
 
         this.nbImageSee = 0;
@@ -317,7 +417,7 @@ public class GazeplayEval implements GameLifeCycle {
 
         //gameContext.setLimiterAvailable();
 
-        currentRoundDetails = pickAndBuildRandomPictures();
+        //currentRoundDetails = pickAndBuildRandomPictures();
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
@@ -327,13 +427,13 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public boolean checkAllPictureCardChecked() {
-        this.nbImageSee++;
-        return this.nbImageSee == this.nbImages[this.indexFileImage];
+        this.nbItemSelected++;
+        return this.nbItemSelected == this.maxItemSelected;
     }
 
     public void incrementPos(){
         this.posX++;
-        if (this.posX == this.cols[this.indexFileImage]){
+        if (this.posX == (Integer) this.allScreens.get(this.indexFileImage).get(2)){
             this.posX = 0;
             this.posY++;
         }
@@ -344,21 +444,138 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public void generateScreen(){
-        if (this.indexFileImage == 0){
+        /*if (this.indexFileImage == 0){
             this.generateInstructionScreen();
         } else if (this.indexFileImage == (this.indexEndGame/2)) {
-            log.info("Break ! (Image board counter = " + this.indexFileImage + ")");
             this.generateBreakScreen();
         } else if (this.indexFileImage == this.indexEndGame){
             this.generateEndScreen();
         } else {
             this.generateCrossFixationScreen();
+        }*/
+
+        if (this.indexFileImage >= this.allScreens.size()){
+            this.dispose();
+            this.gameContext.clear();
+            this.gameContext.showRoundStats(stats, this);
+        }else {
+            String type = this.allScreens.get(this.indexFileImage).get(0).toString();
+
+            if (Objects.equals(type, "transition")){
+                if ((boolean) this.allScreens.get(this.indexFileImage).get(3)){
+                    this.generateCrossFixationScreen((boolean) this.allScreens.get(this.indexFileImage).get(4), (Integer) this.allScreens.get(this.indexFileImage).get(5));
+                }
+                if ((boolean) this.allScreens.get(this.indexFileImage).get(1)){
+                    this.transitionScreenT = new Timeline(new KeyFrame(Duration.seconds(((Number) this.allScreens.get(this.indexFileImage).get(2)).doubleValue()), event -> {
+                        this.clearScreen();
+                        this.increaseIndex();
+                        this.stats.resetHeatMapGaze();
+                        this.generateScreen();
+                    }));
+                    this.transitionScreenT.setCycleCount(1);
+                    this.transitionScreenT.playFromStart();
+                }
+            } else if (Objects.equals(type, "instruction")) {
+                log.info("Start instruction");
+                if ((boolean) this.allScreens.get(this.indexFileImage).get(3)){
+                    if (Objects.equals(this.allScreens.get(this.indexFileImage).get(4), "Image")){
+                        this.generateInstructionScreen((String) this.allScreens.get(this.indexFileImage).get(5), (boolean) this.allScreens.get(this.indexFileImage).get(6), (Integer) this.allScreens.get(this.indexFileImage).get(7));
+                    }
+                }
+                if ((boolean) this.allScreens.get(this.indexFileImage).get(1)){
+                    this.instructionScreenT = new Timeline(new KeyFrame(Duration.seconds(((Number) this.allScreens.get(this.indexFileImage).get(2)).doubleValue()), event -> {
+                        this.clearScreen();
+                        this.increaseIndex();
+                        this.stats.resetHeatMapGaze();
+                        this.generateScreen();
+                    }));
+                    this.instructionScreenT.setCycleCount(1);
+                    this.instructionScreenT.playFromStart();
+                }
+            } else if (Objects.equals(type, "stimuli")) {
+                this.maxItemSelected = (Integer) this.allScreens.get(this.indexFileImage).get(6);
+                this.generateStimuliScreen((Integer) this.allScreens.get(this.indexFileImage).get(1), (Integer) this.allScreens.get(this.indexFileImage).get(2), ((Number) this.allScreens.get(this.indexFileImage).get(5)).doubleValue());
+                if ((boolean) this.allScreens.get(this.indexFileImage).get(3)){
+                    this.stimuliScreenT = new Timeline(new KeyFrame(Duration.seconds(((Number) this.allScreens.get(this.indexFileImage).get(4)).doubleValue()), event -> {
+                        this.clearScreen();
+                        this.increaseIndex();
+                        this.stats.resetHeatMapGaze();
+                        this.generateScreen();
+                    }));
+                    this.stimuliScreenT.setCycleCount(1);
+                    this.stimuliScreenT.playFromStart();
+                }
+            } else {
+                this.dispose();
+                this.gameContext.clear();
+                this.gameContext.showRoundStats(stats, this);
+            }
         }
     }
 
-    public void generateInstructionScreen(){
+    public void stopTransitionTimeline(){
+        this.transitionScreenT.stop();
+    }
+
+    public void stopInstructionTimeline(){
+        this.instructionScreenT.stop();
+    }
+    
+    public void increaseIndex(){
+        this.indexFileImage++;
+    }
+
+    public void generateStimuliScreen(int rows, int cols, double fixaTime){
+        this.typeScreen = "stimuli";
+        this.posX = 0;
+        this.posY = 0;
+
+        final GameSizing gameSizing = new GameSizingComputer(rows, cols, fourThree)
+            .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
+
+        List<String> images = this.getImages();
+
+        for (int i=0; i<(rows*cols); i++){
+            gameContext.getChildren().add(new PictureCard(
+                    gameSizing.width * posX,
+                    gameSizing.height * posY + 10,
+                    gameSizing.width,
+                    gameSizing.height -10,
+                    gameContext,
+                    gameVariant,
+                    images.get(i),
+                    fixaTime,
+                    stats,
+                    this,
+                    this.isFirstPosition()));
+
+                targetAOIList.add(new TargetAOI(
+                    gameSizing.width * posX,
+                    gameSizing.height * posY,
+                    (int) gameSizing.height,
+                    System.currentTimeMillis()
+                ));
+                this.incrementPos();
+        }
+    }
+
+    public List<String> getImages(){
+        List<String> images = new ArrayList<>();
+        images.add((String) this.allScreens.get(this.indexFileImage).get(9));
+        images.add((String) this.allScreens.get(this.indexFileImage).get(10));
+        images.add((String) this.allScreens.get(this.indexFileImage).get(11));
+        images.add((String) this.allScreens.get(this.indexFileImage).get(12));
+
+        if ((Boolean) this.allScreens.get(this.indexFileImage).get(7)){
+            Collections.shuffle(images);
+        }
+
+        return images;
+    }
+
+    public void generateInstructionScreen(String imageName, boolean setFixaImg, int timeImg){
         this.typeScreen = "instruction";
-        final GameSizing gameSizing = new GameSizingComputer(1, 2, fourThree)
+        final GameSizing gameSizing = new GameSizingComputer(1, 1, fourThree)
             .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
 
         gameContext.getChildren().add(new ScreenCard(
@@ -368,34 +585,21 @@ public class GazeplayEval implements GameLifeCycle {
             gameSizing.height-10,
             gameContext,
             gameVariant,
-            "oculometrie.png",
-            stats,
+            imageName,
             this,
             "instruction",
-            true
+            true,
+            setFixaImg,
+            timeImg
         ));
 
-        gameContext.getChildren().add(new ScreenCard(
-            gameSizing.width,
-            10,
-            gameSizing.width,
-            gameSizing.height-10,
-            gameContext,
-            gameVariant,
-            "question.png",
-            stats,
-            this,
-            "instruction",
-            false
-        ));
-
-        Configuration config = ActiveConfigurationContext.getInstance();
+        /*Configuration config = ActiveConfigurationContext.getInstance();
         final String soundPathInstruction = config.getFileDir() + "/evals/" + this.gameVariant.getNameGame() + "/sounds/Consigne.m4a";
-        gameContext.getSoundManager().add(soundPathInstruction);
+        gameContext.getSoundManager().add(soundPathInstruction);*/
     }
 
-    public void generateCrossFixationScreen(){
-        this.typeScreen = "cross";
+    public void generateCrossFixationScreen(boolean setFixaCross, int timeCross){
+        this.typeScreen = "transition";
 
         final GameSizing gameSizing = new GameSizingComputer(1, 1, fourThree)
             .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
@@ -408,14 +612,15 @@ public class GazeplayEval implements GameLifeCycle {
             gameContext,
             gameVariant,
             "blackCrossMini.png",
-            stats,
             this,
             "cross",
-            true
+            true,
+            setFixaCross,
+            timeCross
         ));
     }
 
-    public void generateBreakScreen(){
+    /*public void generateBreakScreen(){
         this.typeScreen = "break";
 
         final GameSizing gameSizing = new GameSizingComputer(1, 1, fourThree)
@@ -427,16 +632,14 @@ public class GazeplayEval implements GameLifeCycle {
             gameSizing.width,
             gameSizing.height,
             gameContext,
-            gameVariant,
             "picto_pause.png",
-            stats,
             this,
             "break",
             true
         ));
-    }
+    }*/
 
-    public void generateEndScreen(){
+    /*public void generateEndScreen(){
         this.typeScreen = "end";
 
         final GameSizing gameSizing = new GameSizingComputer(1, 1, fourThree)
@@ -448,9 +651,7 @@ public class GazeplayEval implements GameLifeCycle {
             gameSizing.width,
             gameSizing.height,
             gameContext,
-            gameVariant,
             "feux_artifice.png",
-            stats,
             this,
             "end",
             true
@@ -459,7 +660,7 @@ public class GazeplayEval implements GameLifeCycle {
         Configuration config = ActiveConfigurationContext.getInstance();
         final String soundPathEnd = config.getFileDir() + "/evals/" + this.gameVariant.getNameGame() + "/sounds/Cloture.m4a";
         gameContext.getSoundManager().add(soundPathEnd);
-    }
+    }*/
 
     public void generateGame(){
         final List<Rectangle> pictogramesList = new ArrayList<>(20); // storage of actual Pictogramm nodes in order to delete
@@ -517,11 +718,11 @@ public class GazeplayEval implements GameLifeCycle {
         this.playSound(this.IMAGE_SOUND);
 
         this.stats.resetHeatMapGaze();
-        this.startGetGazePosition();
-        this.startDisplayDuration();
+        /*this.startGetGazePosition();
+        this.startDisplayDuration();*/
     }
 
-    RoundDetails pickAndBuildRandomPictures() {
+    /*RoundDetails pickAndBuildRandomPictures() {
 
         this.posX = 0;
         this.posY = 0;
@@ -563,7 +764,7 @@ public class GazeplayEval implements GameLifeCycle {
 
         return new RoundDetails(pictureCardList, 0, questionSoundPath, question,
             pictograms);
-    }
+    }*/
 
     public Boolean isFirstPosition(){
         return this.posX==0;
@@ -575,7 +776,7 @@ public class GazeplayEval implements GameLifeCycle {
         }
     }
 
-    public void startGetGazePosition(){
+    /*public void startGetGazePosition(){
         log.info("Start timeline GP");
         this.getGazePositionXY.play();
     }
@@ -604,7 +805,7 @@ public class GazeplayEval implements GameLifeCycle {
     public void stopDisplayDuration(){
         log.info("Stop timeline DD");
         this.createDisplayDuration.stop();
-    }
+    }*/
 
     public void goToStats(){
         gameContext.showRoundStats(stats, this);
@@ -646,7 +847,7 @@ public class GazeplayEval implements GameLifeCycle {
 
     @Override
     public void dispose() {
-        this.getGazePositionXY.stop();
+        //this.getGazePositionXY.stop();
         if (currentRoundDetails != null) {
             if (currentRoundDetails.getPictureCardList() != null) {
                 gameContext.getChildren().removeAll(currentRoundDetails.getPictureCardList());
@@ -655,6 +856,7 @@ public class GazeplayEval implements GameLifeCycle {
         }
         stats.setTargetAOIList(targetAOIList);
     }
+
     public void resetFromReplay(){
         this.totalItemsAddedManually = 0;
         this.indexFileImage = 0;
@@ -778,7 +980,7 @@ public class GazeplayEval implements GameLifeCycle {
                 if (typeScreen.equals("instruction")){
                     gameContext.getSoundManager().stop();
                     clearScreen();
-                    generateCrossFixationScreen();
+                    //generateCrossFixationScreen();
                 } else if (typeScreen.equals("end")) {
                     gameContext.getSoundManager().stop();
                     clearScreen();
@@ -787,7 +989,7 @@ public class GazeplayEval implements GameLifeCycle {
             } else if (key.getCode().equals(KeyCode.P)) {
                 if (typeScreen.equals("break")) {
                     clearScreen();
-                    generateCrossFixationScreen();
+                    //generateCrossFixationScreen();
                 }
             }
         }

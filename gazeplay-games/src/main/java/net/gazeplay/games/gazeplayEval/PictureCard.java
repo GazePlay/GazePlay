@@ -104,7 +104,7 @@ class PictureCard extends Group {
         Timeline result = new Timeline();
 
         result.getKeyFrames()
-            .add(new KeyFrame(new Duration(this.valueProgressIndicator), new KeyValue(progressIndicator.progressProperty(), 1)));
+            .add(new KeyFrame(new Duration(this.valueProgressIndicator * 1000), new KeyValue(progressIndicator.progressProperty(), 1)));
 
         EventHandler<ActionEvent> progressIndicatorAnimationTimeLineOnFinished = createProgressIndicatorAnimationTimeLineOnFinished(
             gameInstance);
@@ -147,17 +147,13 @@ class PictureCard extends Group {
     }
 
     public void waitBeforeNextRound(){
-        gameInstance.removeEventHandlerPictureCard();
-        if(gameInstance.increaseIndexFileImage()){
-            this.endGame();
-        }else {
-            gameInstance.stopDisplayDuration();
-            gameInstance.stopGetGazePosition();
-            gameInstance.getScreenHeatmapGaze();
-            gameInstance.dispose();
-            gameContext.clear();
-            gameInstance.launch();
-        }
+        //gameInstance.removeEventHandlerPictureCard();
+        /*gameInstance.stopDisplayDuration();
+        gameInstance.stopGetGazePosition();*/
+        gameInstance.getScreenHeatmapGaze();
+        gameInstance.clearScreen();
+        gameInstance.increaseIndex();
+        gameInstance.generateScreen();
     }
 
     private ImageView createImageView(double posX, double posY, double width, double height,
@@ -227,7 +223,7 @@ class PictureCard extends Group {
         return result;
     }
 
-    public void endGame() {
+    /*public void endGame() {
 
         progressIndicator.setVisible(false);
         gameInstance.stopDisplayDuration();
@@ -238,8 +234,7 @@ class PictureCard extends Group {
         gameInstance.resetFromReplay();
         gameInstance.dispose();
         gameContext.clear();
-        gameInstance.generateEndScreen();
-    }
+    }*/
 
     private class CustomInputEventHandlerMouse implements EventHandler<Event> {
 
@@ -289,8 +284,8 @@ class PictureCard extends Group {
             progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
             progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
             progressIndicator.setProgress(0);
-            progressIndicator.setVisible(false);
-            gameInstance.pauseDisplayDuration();
+            progressIndicator.setVisible(true);
+            //gameInstance.pauseDisplayDuration();
             progressIndicatorAnimationTimeLine.playFromStart();
         }
 
@@ -305,8 +300,8 @@ class PictureCard extends Group {
                 progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
                 progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
                 progressIndicator.setProgress(0);
-                progressIndicator.setVisible(false);
-                gameInstance.pauseDisplayDuration();
+                progressIndicator.setVisible(true);
+                //gameInstance.pauseDisplayDuration();
                 progressIndicatorAnimationTimeLine.playFromStart();
             }
         }
@@ -315,7 +310,7 @@ class PictureCard extends Group {
             log.info("EXITED {}", imageName);
 
             progressIndicatorAnimationTimeLine.stop();
-            gameInstance.continueDisplayDuration();
+            //gameInstance.continueDisplayDuration();
 
             progressIndicator.setVisible(false);
             progressIndicator.setProgress(0);

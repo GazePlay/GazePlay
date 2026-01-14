@@ -18,9 +18,14 @@ import javafx.util.Duration;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GazeplayEvalGameVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.utils.stats.Stats;
+
+import java.io.File;
+import java.util.Objects;
 
 @Slf4j
 public class ScreenCard extends Group {
@@ -33,16 +38,21 @@ public class ScreenCard extends Group {
     private final IGameContext gameContext;
     private Timeline progressIndicatorAnimationTimeLine;
     private CustomInputEventHandler customInputEventHandler;
+    private int timeFixationCross;
+    private final GazeplayEvalGameVariant gameVariant;
 
     ScreenCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, @NonNull GazeplayEvalGameVariant gameVariant,
-               @NonNull String imageName, @NonNull Stats stats, GazeplayEval gameInstance, String type, Boolean firstPosition){
+               @NonNull String imageName, GazeplayEval gameInstance, String type, Boolean firstPosition, Boolean setFixaCross, int timeFixaCross){
 
         this.type = type;
         this.gameInstance = gameInstance;
         this.gameContext = gameContext;
+        this.gameVariant = gameVariant;
+        this.timeFixationCross = timeFixaCross;
 
-        if (type.equals("cross")) {
-            this.imageRectangle = createCenteredImageView(posX, posY, width, height, imageName, firstPosition);
+        this.imageRectangle = createCenteredImageView(imageName);
+
+        if (setFixaCross) {
             this.gazeArea = createGazeArea(imageName);
             this.progressIndicator = buildProgressIndicator(posX, posY);
             customInputEventHandler = new CustomInputEventHandler();
@@ -52,41 +62,23 @@ public class ScreenCard extends Group {
             this.getChildren().add(gazeArea);
             this.getChildren().add(imageRectangle);
             this.getChildren().add(progressIndicator);
-        } else if (type.equals("end") || type.equals("break")){
-            this.imageRectangle = createCenteredImageView(posX, posY, width, height, imageName, firstPosition);
-            this.getChildren().add(imageRectangle);
-        } else {
-            this.imageRectangle = createImageView(posX, posY, width, height, imageName, firstPosition);
-            this.getChildren().add(imageRectangle);
-        }
-
-    }
-
-    private ImageView createImageView(double posX, double posY, double width, double height,
-                                      @NonNull String imageName, Boolean firstPosition) {
-
-        final Image image = new Image("data/common/images/" + imageName);
-
-        ImageView result = new ImageView(image);
-
-        result.setFitWidth(width/2);
-        result.setFitHeight(height/2);
-        result.setX(posX);
-        result.setY(posY);
-        result.setTranslateY(result.getFitHeight() / 2);
-        result.setPreserveRatio(true);
-
-        if (firstPosition){
-            result.setTranslateX(result.getFitWidth());
         }else {
-            result.setTranslateX(result.getFitWidth() / 2);
+            this.getChildren().add(imageRectangle);
         }
 
-        return result;
     }
 
-    public ImageView createCenteredImageView(double posX, double posY, double width, double height, @NonNull String imageName, Boolean firstPosition) {
-        final Image image = new Image("data/common/images/" + imageName);
+    public ImageView createCenteredImageView(@NonNull String imageName) {
+
+        final Image image;
+        if (Objects.equals(this.type, "cross")) {
+            image = new Image("data/common/images/" + imageName);
+        }else {
+            Configuration config = ActiveConfigurationContext.getInstance();
+            File file = new File(config.getFileDir() + "\\evals\\" +  this.gameVariant.getNameGame() + "\\images\\" + imageName);
+            image = new Image(file.toURI().toString());
+        }
+
         ImageView result = new ImageView(image);
 
         final Region root = gameContext.getRoot();
@@ -99,7 +91,14 @@ public class ScreenCard extends Group {
     }
 
     public Rectangle createGazeArea(@NonNull String imageName){
-        final Image image = new Image("data/common/images/" + imageName);
+        final Image image;
+        if (Objects.equals(this.type, "cross")) {
+            image = new Image("data/common/images/" + imageName);
+        }else {
+            Configuration config = ActiveConfigurationContext.getInstance();
+            File file = new File(config.getFileDir() + "\\evals\\" +  this.gameVariant.getNameGame() + "\\images\\" + imageName);
+            image = new Image(file.toURI().toString());
+        }
 
         gazeArea = new Rectangle();
         gazeArea.setX(this.imageRectangle.getX() - 25);
@@ -136,7 +135,7 @@ public class ScreenCard extends Group {
         Timeline result = new Timeline();
 
         result.getKeyFrames()
-            .add(new KeyFrame(new Duration(1000), new KeyValue(progressIndicator.progressProperty(), 1)));
+            .add(new KeyFrame(new Duration(this.timeFixationCross * 1000), new KeyValue(progressIndicator.progressProperty(), 1)));
 
         EventHandler<ActionEvent> progressIndicatorAnimationTimeLineOnFinished = createProgressIndicatorAnimationTimeLineOnFinished(
             gameInstance);
@@ -155,8 +154,15 @@ public class ScreenCard extends Group {
             customInputEventHandler.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
 
+            if (Objects.equals(this.type, "transition")){
+                gameInstance.stopTransitionTimeline();
+            } else if (Objects.equals(this.type, "instruction")) {
+                gameInstance.stopInstructionTimeline();
+            }
+
             gameInstance.clearScreen();
-            gameInstance.generateGame();
+            gameInstance.increaseIndex();
+            gameInstance.generateScreen();
         };
     }
 
@@ -203,7 +209,7 @@ public class ScreenCard extends Group {
             progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
             progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
             progressIndicator.setProgress(0);
-            progressIndicator.setVisible(false);
+            progressIndicator.setVisible(true);
             progressIndicatorAnimationTimeLine.playFromStart();
         }
 
@@ -217,7 +223,7 @@ public class ScreenCard extends Group {
                 progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
                 progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
                 progressIndicator.setProgress(0);
-                progressIndicator.setVisible(false);
+                progressIndicator.setVisible(true);
                 progressIndicatorAnimationTimeLine.playFromStart();
             }
         }
