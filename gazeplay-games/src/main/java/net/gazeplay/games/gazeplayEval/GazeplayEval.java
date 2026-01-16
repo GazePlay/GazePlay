@@ -94,6 +94,7 @@ public class GazeplayEval implements GameLifeCycle {
     public Timeline stimuliScreenT;
     public int maxItemSelected;
     public int nbItemSelected = 0;
+    public String actualSound;
 
     public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats) {
         this.gameContext = gameContext;
@@ -109,7 +110,6 @@ public class GazeplayEval implements GameLifeCycle {
         this.eyeTracker = ActiveConfigurationContext.getInstance().getEyeTracker();
 
         this.testEval();
-        //this.loadConfig();
     }
 
     public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats, double gameSeed) {
@@ -125,34 +125,7 @@ public class GazeplayEval implements GameLifeCycle {
         this.eyeTracker = ActiveConfigurationContext.getInstance().getEyeTracker();
 
         this.testEval();
-        //this.loadConfig();
     }
-
-    /*public void loadConfig(){
-        Configuration config = ActiveConfigurationContext.getInstance();
-        generateStatsFolder();
-        File gameDirectory = new File(config.getFileDir() + "\\evals\\" + this.gameVariant.getNameGame() + "\\config.json");
-        JsonParser jsonParser = new JsonParser();
-        try  (FileReader reader = new FileReader(gameDirectory)) {
-            Object obj = jsonParser.parse(reader);
-            JsonArray configFile = (JsonArray) obj;
-            this.generateTab(configFile);
-            configFile = this.shuffleJsonArray(configFile);
-            for (int i=0; i<configFile.size(); i++){
-                String value = String.valueOf(configFile.get(i));
-                value = value.replace("[", "");
-                value = value.replace("]", "");
-                value = value.replace("\"", "");
-                this.generateGame(value.split(","), i);
-            }
-            this.indexEndGame = configFile.size();
-            this.setStats();
-            this.setSound();
-            this.getGazePosition(config);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }*/
 
     public void testEval() {
         Configuration config = ActiveConfigurationContext.getInstance();
@@ -211,7 +184,7 @@ public class GazeplayEval implements GameLifeCycle {
             obj.get("Ajouter un media").getAsBoolean(),
             obj.get("Type de media").getAsString(),
             obj.get("Nom du fichier").getAsString(),
-            obj.get("Mettre une croix de fixation").getAsBoolean(),
+            obj.get("Mettre un temps de fixation").getAsBoolean(),
             obj.get("Combien de temps de fixation").getAsInt()
         );
     }
@@ -229,6 +202,8 @@ public class GazeplayEval implements GameLifeCycle {
         row.add(obj.get("Combien de stimuli à sélectionner").getAsInt());
         row.add(obj.get("Position stimuli aléatoire").getAsBoolean());
         row.add(obj.get("Caché stimuli après selection").getAsBoolean());
+        row.add(obj.get("Mettre un son").getAsBoolean());
+        row.add(obj.get("Nom du fichier").getAsString());
 
         JsonObject stimuli = obj.getAsJsonObject("Liste des stimuli");
 
@@ -315,7 +290,7 @@ public class GazeplayEval implements GameLifeCycle {
         this.displayDuration[index] = Double.parseDouble(values[nbImg+6]);
     }*/
 
-    public void setSound(){
+    /*public void setSound(){
         if (this.indexFileImage < this.indexEndGame){
             Configuration config = ActiveConfigurationContext.getInstance();
             final String directorySounds = config.getFileDir() + "/evals/" + this.gameVariant.getNameGame() + "/sounds/";
@@ -336,7 +311,7 @@ public class GazeplayEval implements GameLifeCycle {
                 gameContext.getSoundManager().add(soundPath);
             }
         }
-    }
+    }*/
 
     public void getGazePosition(Configuration config){
         log.info("Create timeline GP !");
@@ -444,16 +419,6 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public void generateScreen(){
-        /*if (this.indexFileImage == 0){
-            this.generateInstructionScreen();
-        } else if (this.indexFileImage == (this.indexEndGame/2)) {
-            this.generateBreakScreen();
-        } else if (this.indexFileImage == this.indexEndGame){
-            this.generateEndScreen();
-        } else {
-            this.generateCrossFixationScreen();
-        }*/
-
         if (this.indexFileImage >= this.allScreens.size()){
             this.dispose();
             this.gameContext.clear();
@@ -494,7 +459,12 @@ public class GazeplayEval implements GameLifeCycle {
                 }
             } else if (Objects.equals(type, "stimuli")) {
                 this.maxItemSelected = (Integer) this.allScreens.get(this.indexFileImage).get(6);
-                this.generateStimuliScreen((Integer) this.allScreens.get(this.indexFileImage).get(1), (Integer) this.allScreens.get(this.indexFileImage).get(2), ((Number) this.allScreens.get(this.indexFileImage).get(5)).doubleValue());
+                this.generateStimuliScreen(
+                    (Integer) this.allScreens.get(this.indexFileImage).get(1),
+                    (Integer) this.allScreens.get(this.indexFileImage).get(2),
+                    ((Number) this.allScreens.get(this.indexFileImage).get(5)).doubleValue(),
+                    (String) this.allScreens.get(this.indexFileImage).get(10)
+                    );
                 if ((boolean) this.allScreens.get(this.indexFileImage).get(3)){
                     this.stimuliScreenT = new Timeline(new KeyFrame(Duration.seconds(((Number) this.allScreens.get(this.indexFileImage).get(4)).doubleValue()), event -> {
                         this.clearScreen();
@@ -513,6 +483,12 @@ public class GazeplayEval implements GameLifeCycle {
         }
     }
 
+    public void playSound(String nameSound){
+        Configuration config = ActiveConfigurationContext.getInstance();
+        this.actualSound = config.getFileDir() + "/evals/" + this.gameVariant.getNameGame() + "/audio/" + nameSound;
+        gameContext.getSoundManager().add(this.actualSound);
+    }
+
     public void stopTransitionTimeline(){
         this.transitionScreenT.stop();
     }
@@ -525,7 +501,7 @@ public class GazeplayEval implements GameLifeCycle {
         this.indexFileImage++;
     }
 
-    public void generateStimuliScreen(int rows, int cols, double fixaTime){
+    public void generateStimuliScreen(int rows, int cols, double fixaTime, String nameSound){
         this.typeScreen = "stimuli";
         this.posX = 0;
         this.posY = 0;
@@ -557,6 +533,7 @@ public class GazeplayEval implements GameLifeCycle {
                 ));
                 this.incrementPos();
         }
+        this.playSound(nameSound);
     }
 
     public List<String> getImages(){
@@ -592,10 +569,6 @@ public class GazeplayEval implements GameLifeCycle {
             setFixaImg,
             timeImg
         ));
-
-        /*Configuration config = ActiveConfigurationContext.getInstance();
-        final String soundPathInstruction = config.getFileDir() + "/evals/" + this.gameVariant.getNameGame() + "/sounds/Consigne.m4a";
-        gameContext.getSoundManager().add(soundPathInstruction);*/
     }
 
     public void generateCrossFixationScreen(boolean setFixaCross, int timeCross){
@@ -619,152 +592,6 @@ public class GazeplayEval implements GameLifeCycle {
             timeCross
         ));
     }
-
-    /*public void generateBreakScreen(){
-        this.typeScreen = "break";
-
-        final GameSizing gameSizing = new GameSizingComputer(1, 1, fourThree)
-            .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
-
-        gameContext.getChildren().add(new ScreenCard(
-            0,
-            0,
-            gameSizing.width,
-            gameSizing.height,
-            gameContext,
-            "picto_pause.png",
-            this,
-            "break",
-            true
-        ));
-    }*/
-
-    /*public void generateEndScreen(){
-        this.typeScreen = "end";
-
-        final GameSizing gameSizing = new GameSizingComputer(1, 1, fourThree)
-            .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
-
-        gameContext.getChildren().add(new ScreenCard(
-            0,
-            0,
-            gameSizing.width,
-            gameSizing.height,
-            gameContext,
-            "feux_artifice.png",
-            this,
-            "end",
-            true
-        ));
-
-        Configuration config = ActiveConfigurationContext.getInstance();
-        final String soundPathEnd = config.getFileDir() + "/evals/" + this.gameVariant.getNameGame() + "/sounds/Cloture.m4a";
-        gameContext.getSoundManager().add(soundPathEnd);
-    }*/
-
-    public void generateGame(){
-        final List<Rectangle> pictogramesList = new ArrayList<>(20); // storage of actual Pictogramm nodes in order to delete
-
-        final List<Image> listOfPictos = currentRoundDetails.getPictos();
-
-        if (listOfPictos != null && !listOfPictos.isEmpty() && listOfPictos.size() <= NBMAXPICTO) {
-
-            final Dimension2D screenDimension = gameContext.getCurrentScreenDimensionSupplier().get();
-            final double screenWidth = screenDimension.getWidth();
-
-            final double nbPicto = listOfPictos.size();
-
-            double pictoSize = screenWidth / (nbPicto + 1);
-
-            log.debug("screenWidth/(nbPicto) : {}", pictoSize);
-
-            pictoSize = Math.min(pictoSize, MAXSIZEPICTO);
-
-            log.debug("Picto Size: {}", pictoSize);
-
-            int i = 0;
-            final double shift = screenWidth / 2 - ((nbPicto / 2) * pictoSize * 1.1);
-
-            log.debug("shift Size: {}", shift);
-
-            final Dimension2D gamePaneDimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-            final double positionY = gamePaneDimension2D.getHeight() / 2;
-
-            for (final Image picto : listOfPictos) {
-
-                final Rectangle pictoRectangle = new Rectangle(pictoSize, pictoSize);
-                pictoRectangle.setFill(new ImagePattern(picto));
-                pictoRectangle.setY(positionY + 100);
-                pictoRectangle.setX(shift + (i++ * pictoSize * 1.1));
-                pictogramesList.add(pictoRectangle);
-            }
-
-            gameContext.getChildren().addAll(pictogramesList);
-        }
-
-        gameContext.getChildren().removeAll(pictogramesList);
-
-        gameContext.getChildren().addAll(currentRoundDetails.getPictureCardList());
-
-        for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
-            p.toFront();
-            p.setOpacity(1);
-        }
-
-        stats.notifyNewRoundReady();
-
-        gameContext.onGameStarted(2000);
-
-        this.playSound(this.IMAGE_SOUND);
-
-        this.stats.resetHeatMapGaze();
-        /*this.startGetGazePosition();
-        this.startDisplayDuration();*/
-    }
-
-    /*RoundDetails pickAndBuildRandomPictures() {
-
-        this.posX = 0;
-        this.posY = 0;
-
-        final GameSizing gameSizing = new GameSizingComputer(this.rows[this.indexFileImage], this.cols[this.indexFileImage], fourThree)
-            .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
-
-        final List<PictureCard> pictureCardList = new ArrayList<>();
-        String questionSoundPath = null;
-        String question = null;
-        List<Image> pictograms = null;
-
-        for (int i=0; i<this.listImages[this.indexFileImage].length; i++){
-            if (Objects.equals(this.listImages[this.indexFileImage][i], "null")){
-                this.incrementPos();
-            } else {
-                pictureCardList.add(new PictureCard(
-                    gameSizing.width * posX,
-                    gameSizing.height * posY + 10,
-                    gameSizing.width,
-                    gameSizing.height -10,
-                    gameContext,
-                    gameVariant,
-                    this.listImages[this.indexFileImage][i],
-                    this.listLengthFixation[this.indexFileImage],
-                    stats,
-                    this,
-                    this.isFirstPosition()));
-
-                targetAOIList.add(new TargetAOI(
-                    gameSizing.width * posX,
-                    gameSizing.height * posY,
-                    (int) gameSizing.height,
-                    System.currentTimeMillis()
-                ));
-                this.incrementPos();
-            }
-        }
-
-        return new RoundDetails(pictureCardList, 0, questionSoundPath, question,
-            pictograms);
-    }*/
 
     public Boolean isFirstPosition(){
         return this.posX==0;
@@ -816,7 +643,6 @@ public class GazeplayEval implements GameLifeCycle {
         if (this.indexFileImage == this.indexEndGame){
             return true;
         }else {
-            this.setSound();
             return false;
         }
     }
@@ -975,7 +801,6 @@ public class GazeplayEval implements GameLifeCycle {
                 goToStats();
             } else if (key.getCode().equals(KeyCode.ENTER)) {
                 clearScreen();
-                generateGame();
             } else if (key.getCode().equals(KeyCode.SPACE)) {
                 if (typeScreen.equals("instruction")){
                     gameContext.getSoundManager().stop();
@@ -987,10 +812,7 @@ public class GazeplayEval implements GameLifeCycle {
                     goToStats();
                 }
             } else if (key.getCode().equals(KeyCode.P)) {
-                if (typeScreen.equals("break")) {
-                    clearScreen();
-                    //generateCrossFixationScreen();
-                }
+                playSound(actualSound);
             }
         }
     }

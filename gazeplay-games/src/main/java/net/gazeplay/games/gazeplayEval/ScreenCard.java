@@ -160,6 +160,7 @@ public class ScreenCard extends Group {
                 gameInstance.stopInstructionTimeline();
             }
 
+            gameInstance.getScreenHeatmapGaze();
             gameInstance.clearScreen();
             gameInstance.increaseIndex();
             gameInstance.generateScreen();
