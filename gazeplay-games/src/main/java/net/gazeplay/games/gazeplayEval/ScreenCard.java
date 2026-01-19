@@ -71,7 +71,7 @@ public class ScreenCard extends Group {
     public ImageView createCenteredImageView(@NonNull String imageName) {
 
         final Image image;
-        if (Objects.equals(this.type, "cross")) {
+        if (Objects.equals(this.type, "transition")) {
             image = new Image("data/common/images/" + imageName);
         }else {
             Configuration config = ActiveConfigurationContext.getInstance();
@@ -92,7 +92,7 @@ public class ScreenCard extends Group {
 
     public Rectangle createGazeArea(@NonNull String imageName){
         final Image image;
-        if (Objects.equals(this.type, "cross")) {
+        if (Objects.equals(this.type, "transition")) {
             image = new Image("data/common/images/" + imageName);
         }else {
             Configuration config = ActiveConfigurationContext.getInstance();

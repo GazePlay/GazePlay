@@ -320,34 +320,12 @@ public class GazeplayEval implements GameLifeCycle {
             this.countStats++;
             this.listGazePositionX.add(pos[0]);
             this.listGazePositionY.add(pos[1]);
-            this.idImg.add(this.getId());
             this.posImgHG.add(this.listImages[this.indexFileImage][0]);
             this.posImgHD.add(this.listImages[this.indexFileImage][1]);
             this.posImgBG.add(this.listImages[this.indexFileImage][2]);
             this.posImgBD.add(this.listImages[this.indexFileImage][3]);
         }));
         this.getGazePositionXY.setCycleCount(Timeline.INDEFINITE);
-    }
-
-    public String getId(){
-        String nameId = "";
-        String tmpNameId = "";
-
-        if (this.listImages[this.indexFileImage][0].contains("C_")){
-            tmpNameId = this.listImages[this.indexFileImage][0].split("_")[1];
-            nameId = tmpNameId.split("\\.")[0];
-        } else if (this.listImages[this.indexFileImage][1].contains("C_")) {
-            tmpNameId = this.listImages[this.indexFileImage][1].split("_")[1];
-            nameId = tmpNameId.split("\\.")[0];
-        }else if (this.listImages[this.indexFileImage][2].contains("C_")) {
-            tmpNameId = this.listImages[this.indexFileImage][2].split("_")[1];
-            nameId = tmpNameId.split("\\.")[0];
-        }else if (this.listImages[this.indexFileImage][3].contains("C_")) {
-            tmpNameId = this.listImages[this.indexFileImage][3].split("_")[1];
-            nameId = tmpNameId.split("\\.")[0];
-        }
-
-        return nameId;
     }
 
     /*public void createDisplayDuration(){
@@ -441,7 +419,6 @@ public class GazeplayEval implements GameLifeCycle {
                     this.transitionScreenT.playFromStart();
                 }
             } else if (Objects.equals(type, "instruction")) {
-                log.info("Start instruction");
                 if ((boolean) this.allScreens.get(this.indexFileImage).get(3)){
                     if (Objects.equals(this.allScreens.get(this.indexFileImage).get(4), "Image")){
                         this.generateInstructionScreen((String) this.allScreens.get(this.indexFileImage).get(5), (boolean) this.allScreens.get(this.indexFileImage).get(6), (Integer) this.allScreens.get(this.indexFileImage).get(7));
@@ -489,11 +466,17 @@ public class GazeplayEval implements GameLifeCycle {
         gameContext.getSoundManager().add(this.actualSound);
     }
 
+    public void replaySound(){
+        gameContext.getSoundManager().add(this.actualSound);
+    }
+
     public void stopTransitionTimeline(){
+        log.info("Stop transition timeline");
         this.transitionScreenT.stop();
     }
 
     public void stopInstructionTimeline(){
+        log.info("Stop instruction timeline");
         this.instructionScreenT.stop();
     }
     
@@ -538,10 +521,11 @@ public class GazeplayEval implements GameLifeCycle {
 
     public List<String> getImages(){
         List<String> images = new ArrayList<>();
-        images.add((String) this.allScreens.get(this.indexFileImage).get(9));
-        images.add((String) this.allScreens.get(this.indexFileImage).get(10));
-        images.add((String) this.allScreens.get(this.indexFileImage).get(11));
-        images.add((String) this.allScreens.get(this.indexFileImage).get(12));
+        int nbImages = (Integer) this.allScreens.get(this.indexFileImage).get(1) * (Integer) this.allScreens.get(this.indexFileImage).get(2);
+        int startIndex = this.allScreens.get(this.indexFileImage).size() - nbImages;
+        for (int i=startIndex; i<this.allScreens.get(this.indexFileImage).size(); i++){
+            images.add((String) this.allScreens.get(this.indexFileImage).get(i));
+        }
 
         if ((Boolean) this.allScreens.get(this.indexFileImage).get(7)){
             Collections.shuffle(images);
@@ -586,7 +570,7 @@ public class GazeplayEval implements GameLifeCycle {
             gameVariant,
             "blackCrossMini.png",
             this,
-            "cross",
+            "transition",
             true,
             setFixaCross,
             timeCross
@@ -812,7 +796,7 @@ public class GazeplayEval implements GameLifeCycle {
                     goToStats();
                 }
             } else if (key.getCode().equals(KeyCode.P)) {
-                playSound(actualSound);
+                replaySound();
             }
         }
     }
