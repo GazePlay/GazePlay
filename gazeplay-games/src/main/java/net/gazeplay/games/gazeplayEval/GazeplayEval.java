@@ -8,17 +8,23 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GazeplayEvalGameVariant;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
@@ -95,6 +101,7 @@ public class GazeplayEval implements GameLifeCycle {
     public int maxItemSelected;
     public int nbItemSelected = 0;
     public String actualSound;
+    public Text instructionText;
 
     public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats) {
         this.gameContext = gameContext;
@@ -422,6 +429,34 @@ public class GazeplayEval implements GameLifeCycle {
                 if ((boolean) this.allScreens.get(this.indexFileImage).get(3)){
                     if (Objects.equals(this.allScreens.get(this.indexFileImage).get(4), "Image")){
                         this.generateInstructionScreen((String) this.allScreens.get(this.indexFileImage).get(5), (boolean) this.allScreens.get(this.indexFileImage).get(6), (Integer) this.allScreens.get(this.indexFileImage).get(7));
+                    }else if (Objects.equals(this.allScreens.get(this.indexFileImage).get(4), "Texte")){
+                        Text instructionText = new Text(
+                            (String) this.allScreens.get(this.indexFileImage).get(5)
+                        );
+
+                        instructionText.setTextAlignment(TextAlignment.CENTER);
+                        
+                        instructionText.setWrappingWidth(
+                            gameContext.getGamePanelDimensionProvider().getDimension2D().getWidth() * 0.8
+                        );
+
+                        final String color = gameContext.getConfiguration().getBackgroundStyle()
+                            .accept(new BackgroundStyleVisitor<>() {
+                                @Override public String visitLight() { return "titleB"; }
+                                @Override public String visitDark()  { return "titleW"; }
+                            });
+
+                        instructionText.setId(color);
+
+                        StackPane centerPane = new StackPane(instructionText);
+                        StackPane.setAlignment(instructionText, Pos.CENTER);
+
+                        centerPane.setPrefSize(
+                            gameContext.getGamePanelDimensionProvider().getDimension2D().getWidth(),
+                            gameContext.getGamePanelDimensionProvider().getDimension2D().getHeight()
+                        );
+
+                        gameContext.getChildren().add(centerPane);
                     }
                 }
                 if ((boolean) this.allScreens.get(this.indexFileImage).get(1)){
@@ -467,17 +502,23 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public void replaySound(){
-        gameContext.getSoundManager().add(this.actualSound);
+        if ((boolean) this.allScreens.get(this.indexFileImage).get(9)){
+            gameContext.getSoundManager().add(this.actualSound);
+        }
     }
 
     public void stopTransitionTimeline(){
         log.info("Stop transition timeline");
-        this.transitionScreenT.stop();
+        if (this.transitionScreenT != null){
+            this.transitionScreenT.stop();
+        }
     }
 
     public void stopInstructionTimeline(){
         log.info("Stop instruction timeline");
-        this.instructionScreenT.stop();
+        if (this.instructionScreenT != null){
+            this.instructionScreenT.stop();
+        }
     }
     
     public void increaseIndex(){
@@ -516,7 +557,9 @@ public class GazeplayEval implements GameLifeCycle {
                 ));
                 this.incrementPos();
         }
-        this.playSound(nameSound);
+        if ((boolean) this.allScreens.get(this.indexFileImage).get(9)){
+            this.playSound(nameSound);
+        }
     }
 
     public List<String> getImages(){
@@ -779,22 +822,13 @@ public class GazeplayEval implements GameLifeCycle {
 
         @Override
         public void handle(KeyEvent key) {
-            if (key.getCode().equals(KeyCode.BACK_SPACE)) {
-                finalStats();
+            if (key.getCode().equals(KeyCode.SPACE)) {
+                stopTransitionTimeline();
+                stopInstructionTimeline();
+                getScreenHeatmapGaze();
                 clearScreen();
-                goToStats();
-            } else if (key.getCode().equals(KeyCode.ENTER)) {
-                clearScreen();
-            } else if (key.getCode().equals(KeyCode.SPACE)) {
-                if (typeScreen.equals("instruction")){
-                    gameContext.getSoundManager().stop();
-                    clearScreen();
-                    //generateCrossFixationScreen();
-                } else if (typeScreen.equals("end")) {
-                    gameContext.getSoundManager().stop();
-                    clearScreen();
-                    goToStats();
-                }
+                increaseIndex();
+                generateScreen();
             } else if (key.getCode().equals(KeyCode.P)) {
                 replaySound();
             }
