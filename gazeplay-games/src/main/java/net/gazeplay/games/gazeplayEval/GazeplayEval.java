@@ -435,7 +435,7 @@ public class GazeplayEval implements GameLifeCycle {
                         );
 
                         instructionText.setTextAlignment(TextAlignment.CENTER);
-                        
+
                         instructionText.setWrappingWidth(
                             gameContext.getGamePanelDimensionProvider().getDimension2D().getWidth() * 0.8
                         );
@@ -457,6 +457,8 @@ public class GazeplayEval implements GameLifeCycle {
                         );
 
                         gameContext.getChildren().add(centerPane);
+                    }else if (Objects.equals(this.allScreens.get(this.indexFileImage).get(4), "Son")){
+                        this.playSound((String) this.allScreens.get(this.indexFileImage).get(5));
                     }
                 }
                 if ((boolean) this.allScreens.get(this.indexFileImage).get(1)){
@@ -471,6 +473,7 @@ public class GazeplayEval implements GameLifeCycle {
                 }
             } else if (Objects.equals(type, "stimuli")) {
                 this.maxItemSelected = (Integer) this.allScreens.get(this.indexFileImage).get(6);
+                this.nbItemSelected = 0;
                 this.generateStimuliScreen(
                     (Integer) this.allScreens.get(this.indexFileImage).get(1),
                     (Integer) this.allScreens.get(this.indexFileImage).get(2),
@@ -518,6 +521,13 @@ public class GazeplayEval implements GameLifeCycle {
         log.info("Stop instruction timeline");
         if (this.instructionScreenT != null){
             this.instructionScreenT.stop();
+        }
+    }
+
+    public void stopStimuliTimeline(){
+        log.info("Stop stimuli timeline");
+        if (this.stimuliScreenT != null){
+            this.stimuliScreenT.stop();
         }
     }
     

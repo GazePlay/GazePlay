@@ -150,6 +150,7 @@ class PictureCard extends Group {
         //gameInstance.removeEventHandlerPictureCard();
         /*gameInstance.stopDisplayDuration();
         gameInstance.stopGetGazePosition();*/
+        gameInstance.stopStimuliTimeline();
         gameInstance.getScreenHeatmapGaze();
         gameInstance.clearScreen();
         gameInstance.increaseIndex();
