@@ -15,6 +15,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -39,6 +42,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 @Slf4j
@@ -459,6 +463,33 @@ public class GazeplayEval implements GameLifeCycle {
                         gameContext.getChildren().add(centerPane);
                     }else if (Objects.equals(this.allScreens.get(this.indexFileImage).get(4), "Son")){
                         this.playSound((String) this.allScreens.get(this.indexFileImage).get(5));
+                    }else if (Objects.equals(this.allScreens.get(this.indexFileImage).get(4), "Video")){
+                        Configuration config = ActiveConfigurationContext.getInstance();
+                        String videoPath = Paths.get(
+                            config.getFileDir() +
+                                "\\evals\\" +
+                                this.gameVariant.getNameGame() +
+                                "\\videos\\" +
+                                this.allScreens.get(this.indexFileImage).get(5)
+                        ).toUri().toString();
+
+                        Media media = new Media(videoPath);
+                        MediaPlayer mediaPlayer = new MediaPlayer(media);
+                        MediaView mediaView = new MediaView(mediaPlayer);
+
+                        mediaView.setPreserveRatio(true);
+
+                        Dimension2D dim = gameContext.getGamePanelDimensionProvider().getDimension2D();
+                        mediaView.setFitWidth(dim.getWidth() * 0.8);
+                        mediaView.setFitHeight(dim.getHeight() * 0.8);
+
+                        StackPane centerPane = new StackPane(mediaView);
+                        centerPane.setPrefSize(dim.getWidth(), dim.getHeight());
+                        StackPane.setAlignment(mediaView, Pos.CENTER);
+
+                        gameContext.getChildren().add(centerPane);
+
+                        mediaPlayer.play();
                     }
                 }
                 if ((boolean) this.allScreens.get(this.indexFileImage).get(1)){

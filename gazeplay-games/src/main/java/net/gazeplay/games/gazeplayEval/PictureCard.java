@@ -164,14 +164,20 @@ class PictureCard extends Group {
         File file = new File(config.getFileDir() + "\\evals\\" +  this.gameVariant.getNameGame() + "\\images\\" + imageName);
         final Image image = new Image(file.toURI().toString());
 
+        if (image.isError()) {
+            System.err.println("Erreur image : " + file);
+            image.getException().printStackTrace();
+        }
+
         ImageView result = new ImageView(image);
 
+        result.setPreserveRatio(true);
         result.setFitWidth(width/2);
         result.setFitHeight(height/2);
         result.setX(posX);
         result.setY(posY);
         result.setTranslateY(result.getFitHeight() / 2);
-        result.setPreserveRatio(true);
+
 
         if (this.firstPosition){
             result.setTranslateX(result.getFitWidth());
