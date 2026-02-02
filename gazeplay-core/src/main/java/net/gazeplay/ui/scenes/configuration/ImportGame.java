@@ -293,13 +293,13 @@ public class ImportGame extends Stage {
                 Label text = new Label(nameGame);
 
                 Button delete = new Button("x");
-                delete.setPrefWidth(10);
-                delete.setPrefHeight(10);
+                delete.setPrefWidth(20);
+                delete.setPrefHeight(20);
                 StackPane.setAlignment(delete, Pos.TOP_RIGHT);
                 delete.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) event -> {
                     final Stage dialog = removeDialogue(nameGame, preview);
 
-                    final String dialogTitle = translator.translate("Remove");
+                    final String dialogTitle = translator.translate("removeEval");
                     dialog.setTitle(dialogTitle);
 
                     dialog.toFront();

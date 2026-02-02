@@ -645,6 +645,12 @@ public class GazeplayEval implements GameLifeCycle {
         final GameSizing gameSizing = new GameSizingComputer(1, 1, fourThree)
             .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
 
+        final String backgroundStyle = gameContext.getConfiguration().getBackgroundStyle()
+            .accept(new BackgroundStyleVisitor<>() {
+                @Override public String visitLight() { return "blackCrossMini.png"; }
+                @Override public String visitDark()  { return "whiteCrossMini.png"; }
+            });
+
         gameContext.getChildren().add(new ScreenCard(
             0,
             10,
@@ -652,7 +658,7 @@ public class GazeplayEval implements GameLifeCycle {
             gameSizing.height-10,
             gameContext,
             gameVariant,
-            "blackCrossMini.png",
+            backgroundStyle,
             this,
             "transition",
             true,

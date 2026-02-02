@@ -309,7 +309,7 @@ Light,,,Светлы,,,,Light,,Clair,,,,,,,,,Светлый,Claro,,
 
 # FOLDERS SETTINGS
 FileDir,Direktoria,دليل الملف,Каталог файлаў,文件夹,Dateiverzeichnis,Κατάλογος αρχείων,Files Directory,tallennuspaikka,Répertoire des fichiers,,Datoteka,Direktori Fail,Cartella,,Bestands locatie,Katalog plików,Diretório de Arquivos,Каталог файлов,Directorio,Thư mục,Direktori Fail
-ImportEval,,,,,,,Import eval,,Importer une eval,,,,,,,,,,,,
+ImportEval,,,,,,,Import evaluation,,Importer une evaluation,,,,,,,,,,,,
 MusicFolder,Direktoria e muzikës,ملف الموسيقى,Тэчка Музыка,音乐目录,Musikmappe,φάκελος μουσικής,music folder,musiikkikansio,Dossier musiques,,Datoteka Muzika,folder muzik,Cartella musica,,Muziek folder,folder muzyczny,*pasta de musica,Папка Музыка,Carpeta de música,Thư mục âm nhạc,Folder muzik
 VideoFolder,,,Тэчка з відэа,视频文件夹,,,Video folder,,Répertoire des vidéos,,,,,,Video map,,,Папка с видео,,,
 WhereIsItDirectory,Direktoria “Ku është?”,دليل اللعبة اين هذا؟,Дзе гэта? папка гульні,《它在哪》游戏目录,Spielverzeichnis « Wo ist es? »,Που είναι; Ευρετήριο παιχνιδιών,« Where is it? » Game directory,missä se on-hakemisto,Répertoire du jeu « Où est-ce ? >,,Gdje je? Datoteka igre,« Di mana? » Arahan permainan,"Cartella gioco ""Dov'è?""""artella ",,« Waar is het » Spel bestandslocatie,Gdzie to jest? Katalog gier,Duracaõ de afichagem das perguntas,Где это? папка игры,"Directorio del juego ""¿Donde está?""""irectorio del ",Thư mục game,« Di mana? » Arahan permainan
@@ -336,8 +336,9 @@ Exit FullScreen,Çaktivizo Ekranin e plotë,الخروج من كامل الشا�
 
 # CUSTOM FILES CHOOSER
 customFileChooser,,,Выбраць персаналізаваную тэчку,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,Выбрать персонализированную папку,,,
-importEvalChooser,,,,,,,Import Eval chooser,,Sélecteur d'eval personnalisés,,,,,,,,,,,,
-addNewEval,,,,,,,Add a new eval,,Ajouter un nouveau eval,,,,,,,,,,,,
+importEvalChooser,,,,,,,Import Evaluation Chooser,,Sélecteur d'evaluations personnalisés,,,,,,,,,,,,
+addNewEval,,,,,,,Add a new evaluation,,Ajouter une nouvelle evaluation,,,,,,,,,,,,
+removeEval,,,,,,,Do you want remove this evaluation ?,,Voulez-vous vraiment supprimer cette évaluation ?,,,,,,,,,,,,
 addNewImages,,,Дадаць выявы,,,,Add new images ...,,Ajouter de nouvelles images ...,,,,,,,,,Добавить изображения,Agregar nuevas imágenes ...,,
 addNewImagethumbup,,,Дадаць новую шчаслівую карцінку,,,,Add new image happy ...,,Ajouter de nouvelles image content ...,,,,,,,,,Добавить новую счастливую картинку,Añadir nuevo contenido de la imagen ...,,
 addNewImagethumbdown,,,Дадаць новую сумную карцінку,,,,Add new image unhappy...,,Ajouter une nouvelle image pas content ...,,,,,,,,,Добавить новую грустную картинку,Añade nuevas imágenes que no son felices ...,,
