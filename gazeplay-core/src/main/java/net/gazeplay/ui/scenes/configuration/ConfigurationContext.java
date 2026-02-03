@@ -219,13 +219,20 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
 
-        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "BeraSettings", COLON));
+        addCategoryTitle(grid, currentFormRow, new I18NText(translator, "EvalSettings", COLON));
 
-        {
+        /*{
             I18NText label = new I18NText(translator, "TransitionTime", COLON);
 
             Spinner<Double> input = buildSpinner(1, 3, (double) config.getTransitionTime() / 1000,
                 0.5, config.getTransitionTimeProperty());
+
+            addToGrid(grid, currentFormRow, label, input);
+        }*/
+        {
+            I18NText label = new I18NText(translator, "ImportEval", COLON);
+
+            Node input = buildImportEvals(config, configurationContext, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }
@@ -237,7 +244,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
-        {
+        /*{
             I18NText label = new I18NText(translator, "ActivateAutomaticModeQuestion", COLON);
             CheckBox input = buildCheckBox(config.getQuestionTimeEnabledProperty());
 
@@ -256,14 +263,14 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             CheckBox input = buildCheckBox(config.getColumnarImagesEnabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
-        }
+        }*/
         {
             I18NText label = new I18NText(translator, "ActivateSound", COLON);
             CheckBox input = buildCheckBox(config.getSoundEnabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
-        {
+        /*{
             I18NText label = new I18NText(translator, "ActivateSoa", COLON);
             CheckBox input = buildCheckBox(config.getSoaEnabledProperty());
 
@@ -282,7 +289,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             ChoiceBox<String> input = buildFeedbackConfigChooser(config, translator);
 
             addToGrid(grid, currentFormRow, label, input);
-        }
+        }*/
         addCategoryTitle(grid, currentFormRow, new I18NText(translator, "SeeResult", COLON));
         {
             I18NText label = new I18NText(translator, "ResultDir", COLON);
@@ -350,13 +357,6 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             I18NText label = new I18NText(translator, "FileDir", COLON);
 
             Node input = buildImageChooser(config, configurationContext, translator);
-
-            addToGrid(grid, currentFormRow, label, input);
-        }
-        {
-            I18NText label = new I18NText(translator, "ImportEval", COLON);
-
-            Node input = buildImportEvals(config, configurationContext, translator);
 
             addToGrid(grid, currentFormRow, label, input);
         }

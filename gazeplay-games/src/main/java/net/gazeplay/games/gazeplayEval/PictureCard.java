@@ -121,7 +121,6 @@ class PictureCard extends Group {
             imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);
             imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandlerMouse);
             gameContext.getGazeDeviceManager().removeEventFilter(imageRectangle);
-            customInputEventHandlerMouse.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
 
             this.onCardSelected();
@@ -131,13 +130,13 @@ class PictureCard extends Group {
         };
     }
 
-    public void removeEventHandler(){
+    /*public void removeEventHandler(){
         imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);
         imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandlerMouse);
         gameContext.getGazeDeviceManager().removeEventFilter(imageRectangle);
         customInputEventHandlerMouse.ignoreAnyInput = true;
         progressIndicator.setVisible(false);
-    }
+    }*/
 
     public void onCardSelected() {
         log.info("Chosen image {}", imageName);
@@ -250,12 +249,11 @@ class PictureCard extends Group {
          * do not want the game to continue to process input, as the user input is irrelevant while the animation is
          * in progress
          */
-        private boolean ignoreAnyInput = false;
         private boolean moved = false;
 
         @Override
         public void handle(Event e) {
-            if (ignoreAnyInput) {
+            if (gameInstance.ignoreAnyInput) {
                 return;
             }
 

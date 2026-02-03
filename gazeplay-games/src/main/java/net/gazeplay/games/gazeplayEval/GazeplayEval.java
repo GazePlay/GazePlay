@@ -97,11 +97,13 @@ public class GazeplayEval implements GameLifeCycle {
     public ArrayList<String> posImgBD = new ArrayList<>();
     public String eyeTracker;
     public String typeScreen;
+    public boolean ignoreAnyInput = true;
 
     public List<List<Object>> allScreens;
     public Timeline transitionScreenT;
     public Timeline instructionScreenT;
     public Timeline stimuliScreenT;
+    public Timeline delayBeforeSelectionT;
     public int maxItemSelected;
     public int nbItemSelected = 0;
     public String actualSound;
@@ -408,12 +410,15 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public void generateScreen(){
+        Configuration config = ActiveConfigurationContext.getInstance();
+
         if (this.indexFileImage >= this.allScreens.size()){
             this.dispose();
             this.gameContext.clear();
             this.gameContext.showRoundStats(stats, this);
         }else {
             String type = this.allScreens.get(this.indexFileImage).get(0).toString();
+            this.ignoreAnyInput = true;
 
             if (Objects.equals(type, "transition")){
                 if ((boolean) this.allScreens.get(this.indexFileImage).get(3)){
@@ -464,7 +469,6 @@ public class GazeplayEval implements GameLifeCycle {
                     }else if (Objects.equals(this.allScreens.get(this.indexFileImage).get(4), "Son")){
                         this.playSound((String) this.allScreens.get(this.indexFileImage).get(5));
                     }else if (Objects.equals(this.allScreens.get(this.indexFileImage).get(4), "Video")){
-                        Configuration config = ActiveConfigurationContext.getInstance();
                         String videoPath = Paths.get(
                             config.getFileDir() +
                                 "\\evals\\" +
@@ -526,6 +530,17 @@ public class GazeplayEval implements GameLifeCycle {
                 this.gameContext.clear();
                 this.gameContext.showRoundStats(stats, this);
             }
+
+            if (config.getDelayBeforeSelectionTime() > 0) {
+                log.info("Delay before selection time: " + config.getDelayBeforeSelectionTime());
+                this.delayBeforeSelectionT = new Timeline(new KeyFrame(Duration.millis(config.getDelayBeforeSelectionTime()), event -> {
+                    this.ignoreAnyInput = false;
+                }));
+                this.delayBeforeSelectionT.setCycleCount(1);
+                this.delayBeforeSelectionT.playFromStart();
+            }else {
+                this.ignoreAnyInput = false;
+            }
         }
     }
 
@@ -559,6 +574,13 @@ public class GazeplayEval implements GameLifeCycle {
         log.info("Stop stimuli timeline");
         if (this.stimuliScreenT != null){
             this.stimuliScreenT.stop();
+        }
+    }
+
+    public void stopDelayTimeline(){
+        log.info("Stop delay timeline");
+        if (this.delayBeforeSelectionT != null){
+            this.delayBeforeSelectionT.stop();
         }
     }
     
@@ -739,11 +761,11 @@ public class GazeplayEval implements GameLifeCycle {
         }
     }
 
-    public void removeEventHandlerPictureCard(){
+    /*public void removeEventHandlerPictureCard(){
         for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
             p.removeEventHandler();
         }
-    }
+    }*/
 
     @Override
     public void dispose() {
@@ -872,6 +894,8 @@ public class GazeplayEval implements GameLifeCycle {
             if (key.getCode().equals(KeyCode.SPACE)) {
                 stopTransitionTimeline();
                 stopInstructionTimeline();
+                stopStimuliTimeline();
+                stopDelayTimeline();
                 getScreenHeatmapGaze();
                 clearScreen();
                 increaseIndex();

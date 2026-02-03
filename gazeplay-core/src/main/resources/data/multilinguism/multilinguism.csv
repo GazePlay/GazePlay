@@ -246,6 +246,7 @@ Loading...,,,Загрузка,,,,Loading...,,Chargement...,,,,,,,,,Загруз�
 # SETTING SECTIONS
 LanguageSettings,,,Налады мовы,,,,Language Settings,,Paramètres de Langage,,,,,,,,,Настройки языка,,,
 BeraSettings,,,,,,,Settings for Bera games,,Paramètres pour les jeux Bera,,,,,,,,,,,,
+EvalSettings,,,,,,,Settings for evaluation,,Paramètres pour les évaluations,,,,,,,,,,,,
 GamesSettings,,,Наладкі гульні,游戏设置,,,Games Settings,,Paramètres de Jeux,,,,,,,,,Настройки игры,,,
 EyeTrackerSettings,,,Наладкі Айтрэкеру,眼动追踪设置,,,Eye-Tracker Settings,,Paramètres de l'Oculomètre,,,,,,,,,Настройки АйТрекера,,,
 GraphicsSettings,,,Графічныя налады,图像设置,,,Graphics Settings,,Paramètres Graphiques,,,,,,,,,Графические настройки,,,

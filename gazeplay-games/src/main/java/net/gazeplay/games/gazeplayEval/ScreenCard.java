@@ -40,6 +40,7 @@ public class ScreenCard extends Group {
     private CustomInputEventHandler customInputEventHandler;
     private int timeFixationCross;
     private final GazeplayEvalGameVariant gameVariant;
+    private boolean selected;
 
     ScreenCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, @NonNull GazeplayEvalGameVariant gameVariant,
                @NonNull String imageName, GazeplayEval gameInstance, String type, Boolean firstPosition, Boolean setFixaCross, int timeFixaCross){
@@ -49,6 +50,7 @@ public class ScreenCard extends Group {
         this.gameContext = gameContext;
         this.gameVariant = gameVariant;
         this.timeFixationCross = timeFixaCross;
+        this.selected = false;
 
         this.imageRectangle = createCenteredImageView(imageName);
 
@@ -148,10 +150,10 @@ public class ScreenCard extends Group {
     private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(GazeplayEval gameInstance) {
         return actionEvent -> {
 
+            selected = true;
             imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandler);
             imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandler);
             gameContext.getGazeDeviceManager().removeEventFilter(imageRectangle);
-            customInputEventHandler.ignoreAnyInput = true;
             progressIndicator.setVisible(false);
 
             if (Objects.equals(this.type, "transition")){
@@ -174,12 +176,15 @@ public class ScreenCard extends Group {
          * do not want the game to continue to process input, as the user input is irrelevant while the animation is
          * in progress
          */
-        private boolean ignoreAnyInput = false;
         private boolean moved = false;
 
         @Override
         public void handle(Event e) {
-            if (ignoreAnyInput) {
+            if (gameInstance.ignoreAnyInput) {
+                return;
+            }
+
+            if (selected) {
                 return;
             }
 
