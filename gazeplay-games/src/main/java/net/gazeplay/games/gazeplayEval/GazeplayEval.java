@@ -104,6 +104,7 @@ public class GazeplayEval implements GameLifeCycle {
     public Timeline instructionScreenT;
     public Timeline stimuliScreenT;
     public Timeline delayBeforeSelectionT;
+    public MediaPlayer  mediaPlayerVideo;
     public int maxItemSelected;
     public int nbItemSelected = 0;
     public String actualSound;
@@ -412,6 +413,10 @@ public class GazeplayEval implements GameLifeCycle {
     public void generateScreen(){
         Configuration config = ActiveConfigurationContext.getInstance();
 
+        gameContext.getSoundManager().stop();
+        gameContext.getSoundManager().clear();
+        this.stopMediaPlayerVideo();
+
         if (this.indexFileImage >= this.allScreens.size()){
             this.dispose();
             this.gameContext.clear();
@@ -478,8 +483,8 @@ public class GazeplayEval implements GameLifeCycle {
                         ).toUri().toString();
 
                         Media media = new Media(videoPath);
-                        MediaPlayer mediaPlayer = new MediaPlayer(media);
-                        MediaView mediaView = new MediaView(mediaPlayer);
+                        this.mediaPlayerVideo = new MediaPlayer(media);
+                        MediaView mediaView = new MediaView(this.mediaPlayerVideo);
 
                         mediaView.setPreserveRatio(true);
 
@@ -493,7 +498,7 @@ public class GazeplayEval implements GameLifeCycle {
 
                         gameContext.getChildren().add(centerPane);
 
-                        mediaPlayer.play();
+                        this.mediaPlayerVideo.play();
                     }
                 }
                 if ((boolean) this.allScreens.get(this.indexFileImage).get(1)){
@@ -567,6 +572,12 @@ public class GazeplayEval implements GameLifeCycle {
         log.info("Stop instruction timeline");
         if (this.instructionScreenT != null){
             this.instructionScreenT.stop();
+        }
+    }
+
+    public void stopMediaPlayerVideo(){
+        if (this.mediaPlayerVideo != null){
+            this.mediaPlayerVideo.stop();
         }
     }
 
