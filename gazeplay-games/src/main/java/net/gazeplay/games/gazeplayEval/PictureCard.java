@@ -50,6 +50,7 @@ class PictureCard extends Group {
 
     private final Stats stats;
     private final String imageName;
+    private final String soundName;
     private final CustomInputEventHandlerMouse customInputEventHandlerMouse;
     private final GazeplayEval gameInstance;
     private ProgressIndicator progressIndicator;
@@ -62,7 +63,7 @@ class PictureCard extends Group {
     private boolean firstPosition;
 
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, @NonNull GazeplayEvalGameVariant gameVariant,
-                @NonNull String imageName, Double fixationLength, @NonNull Stats stats, GazeplayEval gameInstance, Boolean firstPosition) {
+                @NonNull String imageName, @NonNull String soundName, Double fixationLength, @NonNull Stats stats, GazeplayEval gameInstance, Boolean firstPosition) {
 
         log.info("imagePath = {}", imageName);
 
@@ -80,6 +81,7 @@ class PictureCard extends Group {
         this.stats = stats;
         this.gameInstance = gameInstance;
         this.imageName = imageName;
+        this.soundName = soundName;
         this.valueProgressIndicator = fixationLength;
         this.firstPosition = firstPosition;
 
@@ -118,6 +120,8 @@ class PictureCard extends Group {
         return actionEvent -> {
 
             selected = true;
+            gameInstance.playSoundImage(this.soundName);
+            gameInstance.disableSelectionWithSound(this.soundName);
             imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);
             imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandlerMouse);
             gameContext.getGazeDeviceManager().removeEventFilter(imageRectangle);
@@ -162,11 +166,6 @@ class PictureCard extends Group {
         Configuration config = ActiveConfigurationContext.getInstance();
         File file = new File(config.getFileDir() + "\\evals\\" +  this.gameVariant.getNameGame() + "\\images\\" + imageName);
         final Image image = new Image(file.toURI().toString());
-
-        if (image.isError()) {
-            System.err.println("Erreur image : " + file);
-            image.getException().printStackTrace();
-        }
 
         ImageView result = new ImageView(image);
 

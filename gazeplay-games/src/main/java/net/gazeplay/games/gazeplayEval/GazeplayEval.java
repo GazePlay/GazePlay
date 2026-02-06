@@ -223,11 +223,17 @@ public class GazeplayEval implements GameLifeCycle {
 
         stimuli.entrySet().stream()
             .sorted(Map.Entry.comparingByKey())
-            .forEach(e ->
+            .forEach(e ->{
                 row.add(e.getValue()
                     .getAsJsonObject()
                     .get("imageName")
-                    .getAsString())
+                    .getAsString());
+
+                row.add(e.getValue().
+                    getAsJsonObject().
+                    get("soundName").
+                    getAsString());
+            }
             );
 
         return row;
@@ -555,6 +561,33 @@ public class GazeplayEval implements GameLifeCycle {
         gameContext.getSoundManager().add(this.actualSound);
     }
 
+    public void playSoundImage(String nameSound){
+        Configuration config = ActiveConfigurationContext.getInstance();
+        gameContext.getSoundManager().stop();
+        gameContext.getSoundManager().clear();
+        gameContext.getSoundManager().add(config.getFileDir() + "/evals/" + this.gameVariant.getNameGame() + "/audio/" + nameSound);
+    }
+
+    public void disableSelectionWithSound(String nameSound){
+        Configuration config = ActiveConfigurationContext.getInstance();
+        this.ignoreAnyInput = true;
+
+        File soundFile = new File(
+            config.getFileDir() + "/evals/"
+                + this.gameVariant.getNameGame()
+                + "/audio/" + nameSound
+        );
+
+        Media media = new Media(soundFile.toURI().toString());
+        MediaPlayer player = new MediaPlayer(media);
+
+        player.setOnEndOfMedia(() -> {
+            this.ignoreAnyInput = false;
+        });
+
+        player.play();
+    }
+
     public void replaySound(){
         if ((boolean) this.allScreens.get(this.indexFileImage).get(9)){
             gameContext.getSoundManager().add(this.actualSound);
@@ -607,7 +640,7 @@ public class GazeplayEval implements GameLifeCycle {
         final GameSizing gameSizing = new GameSizingComputer(rows, cols, fourThree)
             .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
 
-        List<String> images = this.getImages();
+        List<List<String>> imagesAndSounds = this.getImages();
 
         for (int i=0; i<(rows*cols); i++){
             gameContext.getChildren().add(new PictureCard(
@@ -617,7 +650,8 @@ public class GazeplayEval implements GameLifeCycle {
                     gameSizing.height -10,
                     gameContext,
                     gameVariant,
-                    images.get(i),
+                    imagesAndSounds.get(i).get(0),
+                imagesAndSounds.get(i).get(1),
                     fixaTime,
                     stats,
                     this,
@@ -636,19 +670,19 @@ public class GazeplayEval implements GameLifeCycle {
         }
     }
 
-    public List<String> getImages(){
-        List<String> images = new ArrayList<>();
+    public List<List<String>> getImages(){
+        List<List<String>> imagesAndSounds = new ArrayList<>();
         int nbImages = (Integer) this.allScreens.get(this.indexFileImage).get(1) * (Integer) this.allScreens.get(this.indexFileImage).get(2);
-        int startIndex = this.allScreens.get(this.indexFileImage).size() - nbImages;
-        for (int i=startIndex; i<this.allScreens.get(this.indexFileImage).size(); i++){
-            images.add((String) this.allScreens.get(this.indexFileImage).get(i));
+        int startIndex = this.allScreens.get(this.indexFileImage).size() - (nbImages*2);
+        for (int i=startIndex; i<this.allScreens.get(this.indexFileImage).size(); i+=2){
+            imagesAndSounds.add(new ArrayList<>(List.of((String) this.allScreens.get(this.indexFileImage).get(i), (String) this.allScreens.get(this.indexFileImage).get(i+1))));
         }
 
         if ((Boolean) this.allScreens.get(this.indexFileImage).get(7)){
-            Collections.shuffle(images);
+            Collections.shuffle(imagesAndSounds);
         }
 
-        return images;
+        return imagesAndSounds;
     }
 
     public void generateInstructionScreen(String imageName, boolean setFixaImg, int timeImg){
