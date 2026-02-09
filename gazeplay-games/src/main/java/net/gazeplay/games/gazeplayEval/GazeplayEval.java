@@ -9,8 +9,6 @@ import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -18,8 +16,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
@@ -109,6 +105,7 @@ public class GazeplayEval implements GameLifeCycle {
     public int nbItemSelected = 0;
     public String actualSound;
     public Text instructionText;
+    public boolean soundIsPlaying = false;
 
     public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats) {
         this.gameContext = gameContext;
@@ -563,14 +560,46 @@ public class GazeplayEval implements GameLifeCycle {
 
     public void playSoundImage(String nameSound){
         Configuration config = ActiveConfigurationContext.getInstance();
-        gameContext.getSoundManager().stop();
-        gameContext.getSoundManager().clear();
-        gameContext.getSoundManager().add(config.getFileDir() + "/evals/" + this.gameVariant.getNameGame() + "/audio/" + nameSound);
+        if (config.isSoaEnabled()){
+            this.soundIsPlaying = true;
+            this.stimuliScreenT.pause();
+        }
+
+        File soundFile = new File(
+            config.getFileDir() + "/evals/"
+                + this.gameVariant.getNameGame()
+                + "/audio/" + nameSound
+        );
+
+        Media media = new Media(soundFile.toURI().toString());
+        MediaPlayer player = new MediaPlayer(media);
+
+        player.setOnEndOfMedia(() -> {
+            if (config.isSoaEnabled()){
+                this.soundIsPlaying = false;
+                if (this.checkAllPictureCardChecked()){
+                    this.stopStimuliTimeline();
+                    this.getScreenHeatmapGaze();
+                    this.clearScreen();
+                    this.increaseIndex();
+                    this.generateScreen();
+                }else {
+                    this.stimuliScreenT.play();
+                }
+            }
+        });
+
+        player.play();
     }
 
     public void disableSelectionWithSound(String nameSound){
         Configuration config = ActiveConfigurationContext.getInstance();
         this.ignoreAnyInput = true;
+
+        if (config.isSoaEnabled()){
+            this.soundIsPlaying = true;
+            this.stimuliScreenT.pause();
+        }
 
         File soundFile = new File(
             config.getFileDir() + "/evals/"
@@ -583,6 +612,19 @@ public class GazeplayEval implements GameLifeCycle {
 
         player.setOnEndOfMedia(() -> {
             this.ignoreAnyInput = false;
+
+            if (config.isSoaEnabled()){
+                this.soundIsPlaying = false;
+                if (this.checkAllPictureCardChecked()){
+                    this.stopStimuliTimeline();
+                    this.getScreenHeatmapGaze();
+                    this.clearScreen();
+                    this.increaseIndex();
+                    this.generateScreen();
+                }else {
+                    this.stimuliScreenT.play();
+                }
+            }
         });
 
         player.play();
@@ -592,6 +634,11 @@ public class GazeplayEval implements GameLifeCycle {
         if ((boolean) this.allScreens.get(this.indexFileImage).get(9)){
             gameContext.getSoundManager().add(this.actualSound);
         }
+    }
+
+    public boolean isSelectionDisabled(){
+        Configuration config = ActiveConfigurationContext.getInstance();
+        return config.isSoundEnabled();
     }
 
     public void stopTransitionTimeline(){

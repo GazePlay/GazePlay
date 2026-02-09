@@ -120,15 +120,19 @@ class PictureCard extends Group {
         return actionEvent -> {
 
             selected = true;
-            gameInstance.playSoundImage(this.soundName);
-            gameInstance.disableSelectionWithSound(this.soundName);
+            if (gameInstance.isSelectionDisabled()){
+                gameInstance.disableSelectionWithSound(this.soundName);
+            }else {
+                gameInstance.playSoundImage(this.soundName);
+            }
+
             imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);
             imageRectangle.removeEventFilter(GazeEvent.ANY, customInputEventHandlerMouse);
             gameContext.getGazeDeviceManager().removeEventFilter(imageRectangle);
             progressIndicator.setVisible(false);
 
             this.onCardSelected();
-            if (gameInstance.checkAllPictureCardChecked()){
+            if (gameInstance.checkAllPictureCardChecked() && !gameInstance.soundIsPlaying){
                 this.waitBeforeNextRound();
             }
         };
