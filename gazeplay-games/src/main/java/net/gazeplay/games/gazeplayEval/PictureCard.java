@@ -120,6 +120,7 @@ class PictureCard extends Group {
         return actionEvent -> {
 
             selected = true;
+            log.info("selection disabled = {}", gameInstance.isSelectionDisabled());
             if (gameInstance.isSelectionDisabled()){
                 gameInstance.disableSelectionWithSound(this.soundName);
             }else {
@@ -132,9 +133,9 @@ class PictureCard extends Group {
             progressIndicator.setVisible(false);
 
             this.onCardSelected();
-            if (gameInstance.checkAllPictureCardChecked() && !gameInstance.soundIsPlaying){
+            /*if (gameInstance.checkAllPictureCardChecked() && !gameInstance.soundIsPlaying){
                 this.waitBeforeNextRound();
-            }
+            }*/
         };
     }
 

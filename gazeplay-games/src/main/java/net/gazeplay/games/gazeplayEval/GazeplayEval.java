@@ -420,6 +420,9 @@ public class GazeplayEval implements GameLifeCycle {
         gameContext.getSoundManager().clear();
         this.stopMediaPlayerVideo();
 
+        log.info("index file image = {}", this.indexFileImage);
+        log.info("screen size = {}", this.allScreens.size());
+
         if (this.indexFileImage >= this.allScreens.size()){
             this.dispose();
             this.gameContext.clear();
@@ -562,19 +565,10 @@ public class GazeplayEval implements GameLifeCycle {
         Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isSoaEnabled()){
             this.soundIsPlaying = true;
-            this.stimuliScreenT.pause();
+            this.pauseStimuliTimeline();
         }
 
-        File soundFile = new File(
-            config.getFileDir() + "/evals/"
-                + this.gameVariant.getNameGame()
-                + "/audio/" + nameSound
-        );
-
-        Media media = new Media(soundFile.toURI().toString());
-        MediaPlayer player = new MediaPlayer(media);
-
-        player.setOnEndOfMedia(() -> {
+        if (Objects.equals(nameSound, "")){
             if (config.isSoaEnabled()){
                 this.soundIsPlaying = false;
                 if (this.checkAllPictureCardChecked()){
@@ -584,33 +578,51 @@ public class GazeplayEval implements GameLifeCycle {
                     this.increaseIndex();
                     this.generateScreen();
                 }else {
-                    this.stimuliScreenT.play();
+                    this.playStimuliTimeline();
                 }
             }
-        });
+        }else {
+            File soundFile = new File(
+                config.getFileDir() + "/evals/"
+                    + this.gameVariant.getNameGame()
+                    + "/audio/" + nameSound
+            );
 
-        player.play();
+            Media media = new Media(soundFile.toURI().toString());
+            MediaPlayer player = new MediaPlayer(media);
+
+            player.setOnEndOfMedia(() -> {
+                if (config.isSoaEnabled()){
+                    this.soundIsPlaying = false;
+                    if (this.checkAllPictureCardChecked()){
+                        this.stopStimuliTimeline();
+                        this.getScreenHeatmapGaze();
+                        this.clearScreen();
+                        this.increaseIndex();
+                        this.generateScreen();
+                    }else {
+                        this.playStimuliTimeline();
+                    }
+                }
+            });
+
+            player.play();
+        }
     }
 
     public void disableSelectionWithSound(String nameSound){
+        log.info("selection disableSelectionWithSound !");
         Configuration config = ActiveConfigurationContext.getInstance();
         this.ignoreAnyInput = true;
 
+        log.info("is sound enabled = {}", config.isSoaEnabled());
         if (config.isSoaEnabled()){
             this.soundIsPlaying = true;
-            this.stimuliScreenT.pause();
+            this.pauseStimuliTimeline();
         }
 
-        File soundFile = new File(
-            config.getFileDir() + "/evals/"
-                + this.gameVariant.getNameGame()
-                + "/audio/" + nameSound
-        );
-
-        Media media = new Media(soundFile.toURI().toString());
-        MediaPlayer player = new MediaPlayer(media);
-
-        player.setOnEndOfMedia(() -> {
+        log.info("name sound value = {}", nameSound);
+        if (Objects.equals(nameSound, "")){
             this.ignoreAnyInput = false;
 
             if (config.isSoaEnabled()){
@@ -622,12 +634,40 @@ public class GazeplayEval implements GameLifeCycle {
                     this.increaseIndex();
                     this.generateScreen();
                 }else {
-                    this.stimuliScreenT.play();
+                    this.playStimuliTimeline();
                 }
             }
-        });
+        }else {
+            log.info("Run sound media !");
+            File soundFile = new File(
+                config.getFileDir() + "/evals/"
+                    + this.gameVariant.getNameGame()
+                    + "/audio/" + nameSound
+            );
 
-        player.play();
+            Media media = new Media(soundFile.toURI().toString());
+            MediaPlayer player = new MediaPlayer(media);
+
+            player.setOnEndOfMedia(() -> {
+                log.info("End of media !");
+                this.ignoreAnyInput = false;
+
+                if (config.isSoaEnabled()){
+                    this.soundIsPlaying = false;
+                    if (this.checkAllPictureCardChecked()){
+                        this.stopStimuliTimeline();
+                        this.getScreenHeatmapGaze();
+                        this.clearScreen();
+                        this.increaseIndex();
+                        this.generateScreen();
+                    }else {
+                        this.playStimuliTimeline();
+                    }
+                }
+            });
+
+            player.play();
+        }
     }
 
     public void replaySound(){
@@ -665,6 +705,18 @@ public class GazeplayEval implements GameLifeCycle {
         log.info("Stop stimuli timeline");
         if (this.stimuliScreenT != null){
             this.stimuliScreenT.stop();
+        }
+    }
+
+    public void pauseStimuliTimeline(){
+        if (this.stimuliScreenT != null){
+            this.stimuliScreenT.pause();
+        }
+    }
+
+    public void playStimuliTimeline(){
+        if (this.stimuliScreenT != null){
+            this.stimuliScreenT.play();
         }
     }
 
@@ -719,8 +771,11 @@ public class GazeplayEval implements GameLifeCycle {
 
     public List<List<String>> getImages(){
         List<List<String>> imagesAndSounds = new ArrayList<>();
+        log.info("All screens size = {}", this.allScreens.get(this.indexFileImage).size());
         int nbImages = (Integer) this.allScreens.get(this.indexFileImage).get(1) * (Integer) this.allScreens.get(this.indexFileImage).get(2);
+        log.info("nbImages = {}", nbImages);
         int startIndex = this.allScreens.get(this.indexFileImage).size() - (nbImages*2);
+        log.info("startIndex = {}", startIndex);
         for (int i=startIndex; i<this.allScreens.get(this.indexFileImage).size(); i+=2){
             imagesAndSounds.add(new ArrayList<>(List.of((String) this.allScreens.get(this.indexFileImage).get(i), (String) this.allScreens.get(this.indexFileImage).get(i+1))));
         }
