@@ -210,6 +210,7 @@ public class GazeplayEval implements GameLifeCycle {
         row.add(obj.get("Mettre un temps avant passage à l'écran suivant").getAsBoolean());
         row.add(obj.get("Combien de temps").getAsInt());
         row.add(obj.get("Combien de temps de fixation").getAsInt());
+        row.add(obj.get("Choix de sélection").getAsString());
         row.add(obj.get("Combien de stimuli à sélectionner").getAsInt());
         row.add(obj.get("Position stimuli aléatoire").getAsBoolean());
         row.add(obj.get("Caché stimuli après selection").getAsBoolean());
@@ -230,6 +231,11 @@ public class GazeplayEval implements GameLifeCycle {
                     getAsJsonObject().
                     get("soundName").
                     getAsString());
+
+                    row.add(e.getValue().
+                        getAsJsonObject().
+                        get("goodAnswer").
+                        getAsBoolean());
             }
             );
 
@@ -750,7 +756,7 @@ public class GazeplayEval implements GameLifeCycle {
                     gameContext,
                     gameVariant,
                     imagesAndSounds.get(i).get(0),
-                imagesAndSounds.get(i).get(1),
+                    imagesAndSounds.get(i).get(1),
                     fixaTime,
                     stats,
                     this,
@@ -771,13 +777,14 @@ public class GazeplayEval implements GameLifeCycle {
 
     public List<List<String>> getImages(){
         List<List<String>> imagesAndSounds = new ArrayList<>();
-        log.info("All screens size = {}", this.allScreens.get(this.indexFileImage).size());
         int nbImages = (Integer) this.allScreens.get(this.indexFileImage).get(1) * (Integer) this.allScreens.get(this.indexFileImage).get(2);
-        log.info("nbImages = {}", nbImages);
-        int startIndex = this.allScreens.get(this.indexFileImage).size() - (nbImages*2);
-        log.info("startIndex = {}", startIndex);
-        for (int i=startIndex; i<this.allScreens.get(this.indexFileImage).size(); i+=2){
-            imagesAndSounds.add(new ArrayList<>(List.of((String) this.allScreens.get(this.indexFileImage).get(i), (String) this.allScreens.get(this.indexFileImage).get(i+1))));
+        int startIndex = this.allScreens.get(this.indexFileImage).size() - (nbImages*3);
+        for (int i=startIndex; i<this.allScreens.get(this.indexFileImage).size(); i+=3){
+            imagesAndSounds.add(new ArrayList<>(List.of(
+                (String) this.allScreens.get(this.indexFileImage).get(i),
+                (String) this.allScreens.get(this.indexFileImage).get(i+1),
+                (String) this.allScreens.get(this.indexFileImage).get(i+2)
+            )));
         }
 
         if ((Boolean) this.allScreens.get(this.indexFileImage).get(7)){
