@@ -211,7 +211,7 @@ public class GazeplayEval implements GameLifeCycle {
         row.add(obj.get("Combien de temps").getAsInt());
         row.add(obj.get("Combien de temps de fixation").getAsInt());
         row.add(obj.get("Choix de sélection").getAsString());
-        row.add(obj.get("Combien de stimuli à sélectionner").getAsInt());
+        row.add(obj.get("Combien à sélectionner").getAsInt());
         row.add(obj.get("Position stimuli aléatoire").getAsBoolean());
         row.add(obj.get("Caché stimuli après selection").getAsBoolean());
         row.add(obj.get("Mettre un son").getAsBoolean());
@@ -232,10 +232,10 @@ public class GazeplayEval implements GameLifeCycle {
                     get("soundName").
                     getAsString());
 
-                    row.add(e.getValue().
-                        getAsJsonObject().
-                        get("goodAnswer").
-                        getAsBoolean());
+                row.add(e.getValue().
+                    getAsJsonObject().
+                    get("goodAnswer").
+                    getAsBoolean());
             }
             );
 
@@ -524,13 +524,13 @@ public class GazeplayEval implements GameLifeCycle {
                     this.instructionScreenT.playFromStart();
                 }
             } else if (Objects.equals(type, "stimuli")) {
-                this.maxItemSelected = (Integer) this.allScreens.get(this.indexFileImage).get(6);
+                this.maxItemSelected = (Integer) this.allScreens.get(this.indexFileImage).get(7);
                 this.nbItemSelected = 0;
                 this.generateStimuliScreen(
                     (Integer) this.allScreens.get(this.indexFileImage).get(1),
                     (Integer) this.allScreens.get(this.indexFileImage).get(2),
                     ((Number) this.allScreens.get(this.indexFileImage).get(5)).doubleValue(),
-                    (String) this.allScreens.get(this.indexFileImage).get(10)
+                    (String) this.allScreens.get(this.indexFileImage).get(11)
                     );
                 if ((boolean) this.allScreens.get(this.indexFileImage).get(3)){
                     this.stimuliScreenT = new Timeline(new KeyFrame(Duration.seconds(((Number) this.allScreens.get(this.indexFileImage).get(4)).doubleValue()), event -> {
@@ -677,7 +677,7 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public void replaySound(){
-        if ((boolean) this.allScreens.get(this.indexFileImage).get(9)){
+        if ((boolean) this.allScreens.get(this.indexFileImage).get(10)){
             gameContext.getSoundManager().add(this.actualSound);
         }
     }
@@ -757,6 +757,7 @@ public class GazeplayEval implements GameLifeCycle {
                     gameVariant,
                     imagesAndSounds.get(i).get(0),
                     imagesAndSounds.get(i).get(1),
+                    imagesAndSounds.get(i).get(2),
                     fixaTime,
                     stats,
                     this,
@@ -770,7 +771,7 @@ public class GazeplayEval implements GameLifeCycle {
                 ));
                 this.incrementPos();
         }
-        if ((boolean) this.allScreens.get(this.indexFileImage).get(9)){
+        if ((boolean) this.allScreens.get(this.indexFileImage).get(10)){
             this.playSound(nameSound);
         }
     }
@@ -787,7 +788,7 @@ public class GazeplayEval implements GameLifeCycle {
             )));
         }
 
-        if ((Boolean) this.allScreens.get(this.indexFileImage).get(7)){
+        if ((Boolean) this.allScreens.get(this.indexFileImage).get(8)){
             Collections.shuffle(imagesAndSounds);
         }
 

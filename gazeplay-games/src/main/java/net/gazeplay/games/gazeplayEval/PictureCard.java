@@ -51,6 +51,7 @@ class PictureCard extends Group {
     private final Stats stats;
     private final String imageName;
     private final String soundName;
+    private final String goodAnswer;
     private final CustomInputEventHandlerMouse customInputEventHandlerMouse;
     private final GazeplayEval gameInstance;
     private ProgressIndicator progressIndicator;
@@ -63,7 +64,7 @@ class PictureCard extends Group {
     private boolean firstPosition;
 
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, @NonNull GazeplayEvalGameVariant gameVariant,
-                @NonNull String imageName, @NonNull String soundName, Double fixationLength, @NonNull Stats stats, GazeplayEval gameInstance, Boolean firstPosition) {
+                @NonNull String imageName, @NonNull String soundName, @NonNull String goodAnswer, Double fixationLength, @NonNull Stats stats, GazeplayEval gameInstance, Boolean firstPosition) {
 
         log.info("imagePath = {}", imageName);
 
@@ -82,6 +83,7 @@ class PictureCard extends Group {
         this.gameInstance = gameInstance;
         this.imageName = imageName;
         this.soundName = soundName;
+        this.goodAnswer = goodAnswer;
         this.valueProgressIndicator = fixationLength;
         this.firstPosition = firstPosition;
 
@@ -120,7 +122,7 @@ class PictureCard extends Group {
         return actionEvent -> {
 
             selected = true;
-            log.info("selection disabled = {}", gameInstance.isSelectionDisabled());
+            log.info("goodAnswer = {}", this.goodAnswer);
             if (gameInstance.isSelectionDisabled()){
                 gameInstance.disableSelectionWithSound(this.soundName);
             }else {
