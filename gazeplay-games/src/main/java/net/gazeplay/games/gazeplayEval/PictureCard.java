@@ -51,7 +51,7 @@ class PictureCard extends Group {
     private final Stats stats;
     private final String imageName;
     private final String soundName;
-    private final String goodAnswer;
+    private final Boolean goodAnswer;
     private final CustomInputEventHandlerMouse customInputEventHandlerMouse;
     private final GazeplayEval gameInstance;
     private ProgressIndicator progressIndicator;
@@ -64,7 +64,7 @@ class PictureCard extends Group {
     private boolean firstPosition;
 
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, @NonNull GazeplayEvalGameVariant gameVariant,
-                @NonNull String imageName, @NonNull String soundName, @NonNull String goodAnswer, Double fixationLength, @NonNull Stats stats, GazeplayEval gameInstance, Boolean firstPosition) {
+                @NonNull String imageName, @NonNull String soundName, @NonNull Boolean goodAnswer, Double fixationLength, @NonNull Stats stats, GazeplayEval gameInstance, Boolean firstPosition) {
 
         log.info("imagePath = {}", imageName);
 
@@ -124,9 +124,9 @@ class PictureCard extends Group {
             selected = true;
             log.info("goodAnswer = {}", this.goodAnswer);
             if (gameInstance.isSelectionDisabled()){
-                gameInstance.disableSelectionWithSound(this.soundName);
+                gameInstance.disableSelectionWithSound(this.soundName, this.goodAnswer);
             }else {
-                gameInstance.playSoundImage(this.soundName);
+                gameInstance.playSoundImage(this.soundName, this.goodAnswer);
             }
 
             imageRectangle.removeEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);

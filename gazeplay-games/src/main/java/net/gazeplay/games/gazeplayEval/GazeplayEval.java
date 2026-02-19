@@ -402,8 +402,15 @@ public class GazeplayEval implements GameLifeCycle {
         this.generateScreen();
     }
 
-    public boolean checkAllPictureCardChecked() {
-        this.nbItemSelected++;
+    public boolean checkAllPictureCardChecked(boolean goodAnswer) {
+        if (this.allScreens.get(this.indexFileImage).get(2) == "Tout"){
+            this.nbItemSelected++;
+        }else {
+            if (goodAnswer){
+                this.nbItemSelected++;
+            }
+        }
+
         return this.nbItemSelected == this.maxItemSelected;
     }
 
@@ -567,7 +574,7 @@ public class GazeplayEval implements GameLifeCycle {
         gameContext.getSoundManager().add(this.actualSound);
     }
 
-    public void playSoundImage(String nameSound){
+    public void playSoundImage(String nameSound, Boolean goodAnswer){
         Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isSoaEnabled()){
             this.soundIsPlaying = true;
@@ -577,7 +584,7 @@ public class GazeplayEval implements GameLifeCycle {
         if (Objects.equals(nameSound, "")){
             if (config.isSoaEnabled()){
                 this.soundIsPlaying = false;
-                if (this.checkAllPictureCardChecked()){
+                if (this.checkAllPictureCardChecked(goodAnswer)){
                     this.stopStimuliTimeline();
                     this.getScreenHeatmapGaze();
                     this.clearScreen();
@@ -600,7 +607,7 @@ public class GazeplayEval implements GameLifeCycle {
             player.setOnEndOfMedia(() -> {
                 if (config.isSoaEnabled()){
                     this.soundIsPlaying = false;
-                    if (this.checkAllPictureCardChecked()){
+                    if (this.checkAllPictureCardChecked(goodAnswer)){
                         this.stopStimuliTimeline();
                         this.getScreenHeatmapGaze();
                         this.clearScreen();
@@ -616,7 +623,7 @@ public class GazeplayEval implements GameLifeCycle {
         }
     }
 
-    public void disableSelectionWithSound(String nameSound){
+    public void disableSelectionWithSound(String nameSound, Boolean goodAnswer){
         log.info("selection disableSelectionWithSound !");
         Configuration config = ActiveConfigurationContext.getInstance();
         this.ignoreAnyInput = true;
@@ -633,7 +640,7 @@ public class GazeplayEval implements GameLifeCycle {
 
             if (config.isSoaEnabled()){
                 this.soundIsPlaying = false;
-                if (this.checkAllPictureCardChecked()){
+                if (this.checkAllPictureCardChecked(goodAnswer)){
                     this.stopStimuliTimeline();
                     this.getScreenHeatmapGaze();
                     this.clearScreen();
@@ -660,7 +667,7 @@ public class GazeplayEval implements GameLifeCycle {
 
                 if (config.isSoaEnabled()){
                     this.soundIsPlaying = false;
-                    if (this.checkAllPictureCardChecked()){
+                    if (this.checkAllPictureCardChecked(goodAnswer)){
                         this.stopStimuliTimeline();
                         this.getScreenHeatmapGaze();
                         this.clearScreen();
@@ -745,23 +752,23 @@ public class GazeplayEval implements GameLifeCycle {
         final GameSizing gameSizing = new GameSizingComputer(rows, cols, fourThree)
             .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
 
-        List<List<String>> imagesAndSounds = this.getImages();
+        List<List<Object>> imagesAndSounds = this.getImages();
 
         for (int i=0; i<(rows*cols); i++){
             gameContext.getChildren().add(new PictureCard(
-                    gameSizing.width * posX,
-                    gameSizing.height * posY + 10,
-                    gameSizing.width,
-                    gameSizing.height -10,
-                    gameContext,
-                    gameVariant,
-                    imagesAndSounds.get(i).get(0),
-                    imagesAndSounds.get(i).get(1),
-                    imagesAndSounds.get(i).get(2),
-                    fixaTime,
-                    stats,
-                    this,
-                    this.isFirstPosition()));
+                gameSizing.width * posX,
+                gameSizing.height * posY + 10,
+                gameSizing.width,
+                gameSizing.height -10,
+                gameContext,
+                gameVariant,
+                (String) imagesAndSounds.get(i).get(0),
+                (String) imagesAndSounds.get(i).get(1),
+                (Boolean) imagesAndSounds.get(i).get(2),
+                fixaTime,
+                stats,
+                this,
+                this.isFirstPosition()));
 
                 targetAOIList.add(new TargetAOI(
                     gameSizing.width * posX,
@@ -776,15 +783,15 @@ public class GazeplayEval implements GameLifeCycle {
         }
     }
 
-    public List<List<String>> getImages(){
-        List<List<String>> imagesAndSounds = new ArrayList<>();
+    public List<List<Object>> getImages(){
+        List<List<Object>> imagesAndSounds = new ArrayList<>();
         int nbImages = (Integer) this.allScreens.get(this.indexFileImage).get(1) * (Integer) this.allScreens.get(this.indexFileImage).get(2);
         int startIndex = this.allScreens.get(this.indexFileImage).size() - (nbImages*3);
         for (int i=startIndex; i<this.allScreens.get(this.indexFileImage).size(); i+=3){
             imagesAndSounds.add(new ArrayList<>(List.of(
                 (String) this.allScreens.get(this.indexFileImage).get(i),
                 (String) this.allScreens.get(this.indexFileImage).get(i+1),
-                (String) this.allScreens.get(this.indexFileImage).get(i+2)
+                (Boolean) this.allScreens.get(this.indexFileImage).get(i+2)
             )));
         }
 
