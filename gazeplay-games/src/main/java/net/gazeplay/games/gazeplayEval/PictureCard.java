@@ -64,7 +64,7 @@ class PictureCard extends Group {
     private boolean firstPosition;
 
     PictureCard(double posX, double posY, double width, double height, @NonNull IGameContext gameContext, @NonNull GazeplayEvalGameVariant gameVariant,
-                @NonNull String imageName, @NonNull String soundName, @NonNull Boolean goodAnswer, Double fixationLength, @NonNull Stats stats, GazeplayEval gameInstance, Boolean firstPosition) {
+                @NonNull String imageName, @NonNull String soundName, @NonNull boolean goodAnswer, Double fixationLength, @NonNull Stats stats, GazeplayEval gameInstance, Boolean firstPosition) {
 
         log.info("imagePath = {}", imageName);
 

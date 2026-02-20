@@ -39,6 +39,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 @Slf4j
@@ -403,10 +404,15 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public boolean checkAllPictureCardChecked(boolean goodAnswer) {
-        if (this.allScreens.get(this.indexFileImage).get(2) == "Tout"){
+        log.info("checkAllPictureCardChecked");
+        log.info("value = {}", this.allScreens.get(this.indexFileImage).get(6));
+        if (Objects.equals(this.allScreens.get(this.indexFileImage).get(6), "Tout")){
+            log.info("Tout");
             this.nbItemSelected++;
         }else {
+            log.info("Selection bonne réponse uniquement");
             if (goodAnswer){
+                log.info("goodAnswer");
                 this.nbItemSelected++;
             }
         }
@@ -545,6 +551,7 @@ public class GazeplayEval implements GameLifeCycle {
                         this.increaseIndex();
                         this.stats.resetHeatMapGaze();
                         this.generateScreen();
+                        log.info("Stimuli screen timeout");
                     }));
                     this.stimuliScreenT.setCycleCount(1);
                     this.stimuliScreenT.playFromStart();
@@ -574,7 +581,7 @@ public class GazeplayEval implements GameLifeCycle {
         gameContext.getSoundManager().add(this.actualSound);
     }
 
-    public void playSoundImage(String nameSound, Boolean goodAnswer){
+    public void playSoundImage(String nameSound, boolean goodAnswer){
         Configuration config = ActiveConfigurationContext.getInstance();
         if (config.isSoaEnabled()){
             this.soundIsPlaying = true;
@@ -623,7 +630,7 @@ public class GazeplayEval implements GameLifeCycle {
         }
     }
 
-    public void disableSelectionWithSound(String nameSound, Boolean goodAnswer){
+    public void disableSelectionWithSound(String nameSound, boolean goodAnswer){
         log.info("selection disableSelectionWithSound !");
         Configuration config = ActiveConfigurationContext.getInstance();
         this.ignoreAnyInput = true;
@@ -764,7 +771,7 @@ public class GazeplayEval implements GameLifeCycle {
                 gameVariant,
                 (String) imagesAndSounds.get(i).get(0),
                 (String) imagesAndSounds.get(i).get(1),
-                (Boolean) imagesAndSounds.get(i).get(2),
+                (boolean) imagesAndSounds.get(i).get(2),
                 fixaTime,
                 stats,
                 this,
@@ -791,11 +798,11 @@ public class GazeplayEval implements GameLifeCycle {
             imagesAndSounds.add(new ArrayList<>(List.of(
                 (String) this.allScreens.get(this.indexFileImage).get(i),
                 (String) this.allScreens.get(this.indexFileImage).get(i+1),
-                (Boolean) this.allScreens.get(this.indexFileImage).get(i+2)
+                (boolean) this.allScreens.get(this.indexFileImage).get(i+2)
             )));
         }
 
-        if ((Boolean) this.allScreens.get(this.indexFileImage).get(8)){
+        if ((boolean) this.allScreens.get(this.indexFileImage).get(8)){
             Collections.shuffle(imagesAndSounds);
         }
 
@@ -851,7 +858,7 @@ public class GazeplayEval implements GameLifeCycle {
         ));
     }
 
-    public Boolean isFirstPosition(){
+    public boolean isFirstPosition(){
         return this.posX==0;
     }
 
@@ -952,34 +959,62 @@ public class GazeplayEval implements GameLifeCycle {
 
     public void finalStats() {
 
-        stats.timeGame = System.currentTimeMillis() - this.currentRoundStartTime;
+        /*stats.timeGame = System.currentTimeMillis() - this.currentRoundStartTime;
         stats.nameScores = this.listNameScores;
         stats.scores = this.listScoresPoints;
         stats.totalItemsAddedManually = this.totalItemsAddedManually;
         createTxtFile();
-        createExcelFile();
+        createExcelFile();*/
     }
 
-    public void createTxtFile(){
-        File evalTraining = new File(this.pathStatsGame, "Eval_" + DateUtils.today() + ".txt");
-        StringBuilder content = new StringBuilder();
+    public void instructionTextFile(){
+        Path path = Path.of(this.pathStatsGame + "/Eval_Infos_" + DateUtils.today() + ".txt");
 
-        for (int i=0; i<this.listImages.length; i++){
-            content.append("Planche ").append(i + 1).append(" :").append(System.lineSeparator());
-            content.append(System.lineSeparator());
-            content.append("Image en haut gauche : ").append(this.listImages[i][0]).append(System.lineSeparator());
-            content.append("Image en haut droite : ").append(this.listImages[i][1]).append(System.lineSeparator());
-            content.append("Image en bas gauche : ").append(this.listImages[i][2]).append(System.lineSeparator());
-            content.append("Image en bas droite : ").append(this.listImages[i][3]).append(System.lineSeparator());
-            content.append("Son : ").append(this.listSounds[i]).append(System.lineSeparator());
-            content.append(System.lineSeparator());
-        }
+        try (BufferedWriter writer = Files.newBufferedWriter(
+            path,
+            StandardOpenOption.CREATE,   // crée le fichier s’il n’existe pas
+            StandardOpenOption.APPEND    // ajoute à la fin
+        )) {
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(evalTraining))){
-            writer.write(content.toString());
+            writer.write("");
+            writer.newLine(); // saut de ligne
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        }
+    }
+
+    public void transitionTextFile(){
+        Path path = Path.of(this.pathStatsGame + "/Eval_Infos_" + DateUtils.today() + ".txt");
+
+        try (BufferedWriter writer = Files.newBufferedWriter(
+            path,
+            StandardOpenOption.CREATE,   // crée le fichier s’il n’existe pas
+            StandardOpenOption.APPEND    // ajoute à la fin
+        )) {
+
+            writer.write("");
+            writer.newLine(); // saut de ligne
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stimuliTextFile(){
+        Path path = Path.of(this.pathStatsGame + "/Eval_Infos_" + DateUtils.today() + ".txt");
+
+        try (BufferedWriter writer = Files.newBufferedWriter(
+            path,
+            StandardOpenOption.CREATE,   // crée le fichier s’il n’existe pas
+            StandardOpenOption.APPEND    // ajoute à la fin
+        )) {
+
+            writer.write("");
+            writer.newLine(); // saut de ligne
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
