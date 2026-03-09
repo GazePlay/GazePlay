@@ -33,7 +33,9 @@ import net.gazeplay.commons.utils.stats.TargetAOI;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -107,6 +109,10 @@ public class GazeplayEval implements GameLifeCycle {
     public String actualSound;
     public Text instructionText;
     public boolean soundIsPlaying = false;
+    private Workbook workbook;
+    private Sheet sheet;
+    private int rowIndexExcel = 0;
+    private String pathFileExcel;
 
     public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats) {
         this.gameContext = gameContext;
@@ -141,7 +147,8 @@ public class GazeplayEval implements GameLifeCycle {
 
     public void testEval() {
         Configuration config = ActiveConfigurationContext.getInstance();
-        generateStatsFolder();
+        this.generateStatsFolder();
+        this.createExcelFile();
         Path jsonPath = Path.of(config.getFileDir() + "\\evals\\" + this.gameVariant.getNameGame() + "\\evalData.json");
 
         try {
@@ -265,6 +272,7 @@ public class GazeplayEval implements GameLifeCycle {
         }
         dir.mkdirs();
         this.pathStatsGame = "C:/Users/" + username + "/Documents/GazePlayLearning_Eval/" + "Eval" + index + "_" + DateUtils.today();
+        this.pathFileExcel = this.pathStatsGame  + "/Stats_" + DateUtils.today() + ".xlsx";
         this.countStats = 0;
     }
 
@@ -445,6 +453,7 @@ public class GazeplayEval implements GameLifeCycle {
         if (this.indexFileImage >= this.allScreens.size()){
             this.dispose();
             this.gameContext.clear();
+            this.closeExcelFile();
             this.gameContext.showRoundStats(stats, this);
         }else {
             String type = this.allScreens.get(this.indexFileImage).get(0).toString();
@@ -967,120 +976,40 @@ public class GazeplayEval implements GameLifeCycle {
         createExcelFile();*/
     }
 
-    public void instructionTextFile(){
-        Path path = Path.of(this.pathStatsGame + "/Eval_Infos_" + DateUtils.today() + ".txt");
-
-        try (BufferedWriter writer = Files.newBufferedWriter(
-            path,
-            StandardOpenOption.CREATE,   // crée le fichier s’il n’existe pas
-            StandardOpenOption.APPEND    // ajoute à la fin
-        )) {
-
-            writer.write("");
-            writer.newLine(); // saut de ligne
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void transitionTextFile(){
-        Path path = Path.of(this.pathStatsGame + "/Eval_Infos_" + DateUtils.today() + ".txt");
-
-        try (BufferedWriter writer = Files.newBufferedWriter(
-            path,
-            StandardOpenOption.CREATE,   // crée le fichier s’il n’existe pas
-            StandardOpenOption.APPEND    // ajoute à la fin
-        )) {
-
-            writer.write("");
-            writer.newLine(); // saut de ligne
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void stimuliTextFile(){
-        Path path = Path.of(this.pathStatsGame + "/Eval_Infos_" + DateUtils.today() + ".txt");
-
-        try (BufferedWriter writer = Files.newBufferedWriter(
-            path,
-            StandardOpenOption.CREATE,   // crée le fichier s’il n’existe pas
-            StandardOpenOption.APPEND    // ajoute à la fin
-        )) {
-
-            writer.write("");
-            writer.newLine(); // saut de ligne
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     @SuppressWarnings("PMD")
     public void createExcelFile(){
 
-        String pathStats = this.pathStatsGame  + "/Stats_" + DateUtils.today() + ".xlsx";
         this.stats.actualFile = this.pathStatsGame  + "/Stats_" + DateUtils.today() + ".xlsx";
 
-        SXSSFWorkbook workbook = new SXSSFWorkbook();
-        Sheet sheet = workbook.createSheet(this.gameName);
+        this.workbook = new XSSFWorkbook();
+        this.sheet = this.workbook.createSheet("Résultats");
 
-        Object[][] bookData = new Object[this.countStats+1][8];
+        // En-têtes
+        Row header = sheet.createRow(this.rowIndexExcel++);
 
-        bookData[0][0] = "Timepoint";
-        bookData[0][1] = "Coordonnées X";
-        bookData[0][2] = "Coordonnées Y";
-        bookData[0][3] = "Img ID";
-        bookData[0][4] = "Img HG";
-        bookData[0][5] = "Img HD";
-        bookData[0][6] = "Img BG";
-        bookData[0][7] = "Img BD";
+        header.createCell(0).setCellValue("Stimuli");
+        header.createCell(1).setCellValue("Réponse attendue");
+        header.createCell(2).setCellValue("Réponse donnée");
+        header.createCell(3).setCellValue("Temps écran (ms)");
+    }
 
-        String nameTimepoint = "";
-        int countTimepoint = 1;
-        for (int i=1; i<this.countStats; i++){
+    public void addLineExcel(String stimuli, String attendu, String reponse, long temps) {
 
-            if (!nameTimepoint.equals(this.idImg.get(i - 1))){
-                nameTimepoint = this.idImg.get(i - 1);
-                countTimepoint = 1;
-            }
+        Row row = this.sheet.createRow(this.rowIndexExcel++);
 
-            bookData[i][0] = String.valueOf(countTimepoint);
-            bookData[i][1] = String.valueOf(this.listGazePositionX.get(i-1));
-            bookData[i][2] = String.valueOf(this.listGazePositionY.get(i-1));
-            bookData[i][3] = this.idImg.get(i-1);
-            bookData[i][4] = this.posImgHG.get(i-1);
-            bookData[i][5] = this.posImgHD.get(i-1);
-            bookData[i][6] = this.posImgBG.get(i-1);
-            bookData[i][7] = this.posImgBD.get(i-1);
-            countTimepoint++;
-        }
+        row.createCell(0).setCellValue(stimuli);
+        row.createCell(1).setCellValue(attendu);
+        row.createCell(2).setCellValue(reponse);
+        row.createCell(3).setCellValue(temps);
+    }
 
-        int rowCount = 0;
+    public void closeExcelFile() {
 
-        for (Object[] aBook : bookData) {
-            Row row = sheet.createRow(rowCount++);
-
-            int columnCount = 0;
-
-            for (Object field : aBook) {
-                Cell cell = row.createCell(columnCount++);
-                if (field instanceof String) {
-                    cell.setCellValue((String) field);
-                } else if (field instanceof Integer) {
-                    cell.setCellValue((Integer) field);
-                }
-            }
-        }
-
-        try (FileOutputStream outputStream = new FileOutputStream(pathStats)) {
-            log.info("Excel file created !");
-            workbook.write(outputStream);
-        } catch (Exception e){
-            log.info("Error creation xls for GazePlay Eval stats game !");
-            e.printStackTrace();
+        try (FileOutputStream fileOut = new FileOutputStream(this.pathFileExcel)) {
+            this.workbook.write(fileOut);
+            this.workbook.close();
+        }catch (IOException e) {
+            log.info("Error close excel file -> " + e.getMessage());
         }
     }
 
