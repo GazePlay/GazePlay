@@ -113,6 +113,11 @@ public class GazeplayEval implements GameLifeCycle {
     private Sheet sheet;
     private int rowIndexExcel = 0;
     private String pathFileExcel;
+    private ArrayList<String> statsListStimuli = new ArrayList<>();
+    private ArrayList<String> statsListStimuliAnswer = new ArrayList<>();
+    public ArrayList<String> statsListStimuliAnswerGiven = new ArrayList<>();
+    public StringBuilder listStimuliAnswerGiven = new StringBuilder();
+    private ArrayList<String> statsListStimuliTimer = new ArrayList<>();
 
     public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats) {
         this.gameContext = gameContext;
@@ -395,7 +400,7 @@ public class GazeplayEval implements GameLifeCycle {
 
     @Override
     public void launch() {
-        this.startTimer();
+        //this.startTimer();
 
         this.nbImageSee = 0;
         this.canRemoveItemManually = true;
@@ -423,6 +428,11 @@ public class GazeplayEval implements GameLifeCycle {
                 log.info("goodAnswer");
                 this.nbItemSelected++;
             }
+        }
+
+        if (this.nbItemSelected == this.maxItemSelected){
+            this.statsListStimuliAnswerGiven.add(this.listStimuliAnswerGiven.toString());
+            this.listStimuliAnswerGiven.setLength(0);
         }
 
         return this.nbItemSelected == this.maxItemSelected;
@@ -565,6 +575,7 @@ public class GazeplayEval implements GameLifeCycle {
                     this.stimuliScreenT.setCycleCount(1);
                     this.stimuliScreenT.playFromStart();
                 }
+                this.currentRoundStartTime = System.currentTimeMillis();
             } else {
                 this.dispose();
                 this.gameContext.clear();
@@ -605,6 +616,7 @@ public class GazeplayEval implements GameLifeCycle {
                     this.getScreenHeatmapGaze();
                     this.clearScreen();
                     this.increaseIndex();
+                    this.statsListStimuliTimer.add(String.valueOf(System.currentTimeMillis() - currentRoundStartTime));
                     this.generateScreen();
                 }else {
                     this.playStimuliTimeline();
@@ -628,6 +640,7 @@ public class GazeplayEval implements GameLifeCycle {
                         this.getScreenHeatmapGaze();
                         this.clearScreen();
                         this.increaseIndex();
+                        this.statsListStimuliTimer.add(String.valueOf(System.currentTimeMillis() - currentRoundStartTime));
                         this.generateScreen();
                     }else {
                         this.playStimuliTimeline();
@@ -661,6 +674,7 @@ public class GazeplayEval implements GameLifeCycle {
                     this.getScreenHeatmapGaze();
                     this.clearScreen();
                     this.increaseIndex();
+                    this.statsListStimuliTimer.add(String.valueOf(System.currentTimeMillis() - currentRoundStartTime));
                     this.generateScreen();
                 }else {
                     this.playStimuliTimeline();
@@ -688,6 +702,7 @@ public class GazeplayEval implements GameLifeCycle {
                         this.getScreenHeatmapGaze();
                         this.clearScreen();
                         this.increaseIndex();
+                        this.statsListStimuliTimer.add(String.valueOf(System.currentTimeMillis() - currentRoundStartTime));
                         this.generateScreen();
                     }else {
                         this.playStimuliTimeline();
@@ -765,6 +780,9 @@ public class GazeplayEval implements GameLifeCycle {
         this.posX = 0;
         this.posY = 0;
 
+        StringBuilder listStimuli = new StringBuilder();
+        StringBuilder listStimuliAnswer = new StringBuilder();
+
         final GameSizing gameSizing = new GameSizingComputer(rows, cols, fourThree)
             .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
 
@@ -784,19 +802,31 @@ public class GazeplayEval implements GameLifeCycle {
                 fixaTime,
                 stats,
                 this,
-                this.isFirstPosition()));
+                this.isFirstPosition()
+            ));
 
-                targetAOIList.add(new TargetAOI(
-                    gameSizing.width * posX,
-                    gameSizing.height * posY,
-                    (int) gameSizing.height,
-                    System.currentTimeMillis()
-                ));
-                this.incrementPos();
+            targetAOIList.add(new TargetAOI(
+                gameSizing.width * posX,
+                gameSizing.height * posY,
+                (int) gameSizing.height,
+                System.currentTimeMillis()
+            ));
+
+            this.incrementPos();
+
+            listStimuli.append((String) imagesAndSounds.get(i).get(0)).append(" ");
+
+            if ((boolean) imagesAndSounds.get(i).get(2)){
+                listStimuliAnswer.append((String) imagesAndSounds.get(i).get(0)).append(" ");
+            }
         }
+
         if ((boolean) this.allScreens.get(this.indexFileImage).get(10)){
             this.playSound(nameSound);
         }
+
+        this.statsListStimuli.add(listStimuli.toString());
+        this.statsListStimuliAnswer.add(listStimuliAnswer.toString());
     }
 
     public List<List<Object>> getImages(){
@@ -925,6 +955,7 @@ public class GazeplayEval implements GameLifeCycle {
         if (name.contains("C_")){
             this.scores++;
         }
+
     }
 
     private void next(String value) {
@@ -978,7 +1009,7 @@ public class GazeplayEval implements GameLifeCycle {
 
     @SuppressWarnings("PMD")
     public void createExcelFile(){
-
+        log.info("Create excel file");
         this.stats.actualFile = this.pathStatsGame  + "/Stats_" + DateUtils.today() + ".xlsx";
 
         this.workbook = new XSSFWorkbook();
@@ -993,19 +1024,30 @@ public class GazeplayEval implements GameLifeCycle {
         header.createCell(3).setCellValue("Temps écran (ms)");
     }
 
-    public void addLineExcel(String stimuli, String attendu, String reponse, long temps) {
+    public void addLineExcel() {
 
-        Row row = this.sheet.createRow(this.rowIndexExcel++);
+        Row row;
 
-        row.createCell(0).setCellValue(stimuli);
+        for (int i = 0; i < this.statsListStimuli.size(); i++) {
+            row = this.sheet.createRow(this.rowIndexExcel++);
+            row.createCell(0).setCellValue(this.statsListStimuli.get(i));
+            row.createCell(1).setCellValue(this.statsListStimuliAnswer.get(i));
+            row.createCell(2).setCellValue(this.statsListStimuliAnswerGiven.get(i));
+            row.createCell(3).setCellValue(this.statsListStimuliTimer.get(i));
+        }
+
+        /*row.createCell(0).setCellValue(stimuli);
         row.createCell(1).setCellValue(attendu);
         row.createCell(2).setCellValue(reponse);
-        row.createCell(3).setCellValue(temps);
+        row.createCell(3).setCellValue(temps);*/
     }
 
     public void closeExcelFile() {
 
+        log.info("Try Close excel file at -> " + this.pathFileExcel);
         try (FileOutputStream fileOut = new FileOutputStream(this.pathFileExcel)) {
+            log.info("File created !");
+            this.addLineExcel();
             this.workbook.write(fileOut);
             this.workbook.close();
         }catch (IOException e) {

@@ -123,6 +123,7 @@ class PictureCard extends Group {
 
             selected = true;
             log.info("goodAnswer = {}", this.goodAnswer);
+            gameInstance.listStimuliAnswerGiven.append(this.imageName).append(" ");
             if (gameInstance.isSelectionDisabled()){
                 gameInstance.disableSelectionWithSound(this.soundName, this.goodAnswer);
             }else {
