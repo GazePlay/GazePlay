@@ -103,7 +103,7 @@ public class GazeplayEval implements GameLifeCycle {
     public Timeline instructionScreenT;
     public Timeline stimuliScreenT;
     public Timeline delayBeforeSelectionT;
-    public MediaPlayer  mediaPlayerVideo;
+    public MediaPlayer mediaPlayerVideo;
     public int maxItemSelected;
     public int nbItemSelected = 0;
     public String actualSound;
@@ -113,6 +113,7 @@ public class GazeplayEval implements GameLifeCycle {
     private Sheet sheet;
     private int rowIndexExcel = 0;
     private String pathFileExcel;
+    private MediaPlayer player;
     private ArrayList<String> statsListStimuli = new ArrayList<>();
     private ArrayList<String> statsListStimuliAnswer = new ArrayList<>();
     public ArrayList<String> statsListStimuliAnswerGiven = new ArrayList<>();
@@ -435,6 +436,7 @@ public class GazeplayEval implements GameLifeCycle {
             this.listStimuliAnswerGiven.setLength(0);
         }
 
+        log.info(String.valueOf(this.nbItemSelected == this.maxItemSelected));
         return this.nbItemSelected == this.maxItemSelected;
     }
 
@@ -542,7 +544,9 @@ public class GazeplayEval implements GameLifeCycle {
 
                         gameContext.getChildren().add(centerPane);
 
-                        this.mediaPlayerVideo.play();
+                        this.mediaPlayerVideo.setOnReady(() -> {
+                            this.mediaPlayerVideo.play();
+                        });
                     }
                 }
                 if ((boolean) this.allScreens.get(this.indexFileImage).get(1)){
@@ -630,9 +634,12 @@ public class GazeplayEval implements GameLifeCycle {
             );
 
             Media media = new Media(soundFile.toURI().toString());
-            MediaPlayer player = new MediaPlayer(media);
+            this.player = new MediaPlayer(media);
 
             player.setOnEndOfMedia(() -> {
+                this.player.stop();
+                this.player.dispose();
+
                 if (config.isSoaEnabled()){
                     this.soundIsPlaying = false;
                     if (this.checkAllPictureCardChecked(goodAnswer)){
@@ -648,7 +655,9 @@ public class GazeplayEval implements GameLifeCycle {
                 }
             });
 
-            player.play();
+            this.player.setOnReady(() -> {
+                this.player.play();
+            });
         }
     }
 
@@ -689,11 +698,13 @@ public class GazeplayEval implements GameLifeCycle {
             );
 
             Media media = new Media(soundFile.toURI().toString());
-            MediaPlayer player = new MediaPlayer(media);
+            this.player = new MediaPlayer(media);
 
-            player.setOnEndOfMedia(() -> {
+            this.player.setOnEndOfMedia(() -> {
                 log.info("End of media !");
                 this.ignoreAnyInput = false;
+                this.player.stop();
+                this.player.dispose();
 
                 if (config.isSoaEnabled()){
                     this.soundIsPlaying = false;
@@ -710,7 +721,9 @@ public class GazeplayEval implements GameLifeCycle {
                 }
             });
 
-            player.play();
+            this.player.setOnReady(() -> {
+                this.player.play();
+            });
         }
     }
 
@@ -742,6 +755,7 @@ public class GazeplayEval implements GameLifeCycle {
     public void stopMediaPlayerVideo(){
         if (this.mediaPlayerVideo != null){
             this.mediaPlayerVideo.stop();
+            this.mediaPlayerVideo.dispose();
         }
     }
 

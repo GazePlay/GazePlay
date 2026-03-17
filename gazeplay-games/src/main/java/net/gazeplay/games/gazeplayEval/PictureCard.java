@@ -213,7 +213,13 @@ class PictureCard extends Group {
 
         gazeArea.setFill(Color.TRANSPARENT);
         gazeArea.setStroke(Color.BLUE);
-        gazeArea.setOpacity(0.0);
+
+        if (Objects.equals(this.imageName, "")){
+            gazeArea.setOpacity(1.0);
+        }else {
+            gazeArea.setOpacity(0.0);
+        }
+
 
         return gazeArea;
     }
