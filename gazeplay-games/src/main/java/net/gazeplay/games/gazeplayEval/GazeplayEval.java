@@ -30,10 +30,7 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -111,6 +108,7 @@ public class GazeplayEval implements GameLifeCycle {
     public boolean soundIsPlaying = false;
     private Workbook workbook;
     private Sheet sheet;
+    private CellStyle styleWorkbook;
     private int rowIndexExcel = 0;
     private String pathFileExcel;
     private MediaPlayer player;
@@ -828,10 +826,10 @@ public class GazeplayEval implements GameLifeCycle {
 
             this.incrementPos();
 
-            listStimuli.append((String) imagesAndSounds.get(i).get(0)).append(" ");
+            listStimuli.append((String) imagesAndSounds.get(i).get(0)).append("\n");
 
             if ((boolean) imagesAndSounds.get(i).get(2)){
-                listStimuliAnswer.append((String) imagesAndSounds.get(i).get(0)).append(" ");
+                listStimuliAnswer.append((String) imagesAndSounds.get(i).get(0)).append("\n");
             }
         }
 
@@ -839,8 +837,16 @@ public class GazeplayEval implements GameLifeCycle {
             this.playSound(nameSound);
         }
 
-        this.statsListStimuli.add(listStimuli.toString());
-        this.statsListStimuliAnswer.add(listStimuliAnswer.toString());
+        this.statsListStimuli.add(checkImageName(listStimuli.toString()));
+        this.statsListStimuliAnswer.add(checkImageName(listStimuliAnswer.toString()));
+    }
+
+    public String checkImageName(String nameImage){
+        if (Objects.equals(nameImage, "")){
+            return "image_vide";
+        }else {
+            return nameImage;
+        }
     }
 
     public List<List<Object>> getImages(){
@@ -1028,6 +1034,8 @@ public class GazeplayEval implements GameLifeCycle {
 
         this.workbook = new XSSFWorkbook();
         this.sheet = this.workbook.createSheet("Résultats");
+        this.styleWorkbook = this.workbook.createCellStyle();
+        this.styleWorkbook.setWrapText(true);
 
         // En-têtes
         Row header = sheet.createRow(this.rowIndexExcel++);
@@ -1048,23 +1056,30 @@ public class GazeplayEval implements GameLifeCycle {
             row.createCell(1).setCellValue(this.statsListStimuliAnswer.get(i));
             row.createCell(2).setCellValue(this.statsListStimuliAnswerGiven.get(i));
             row.createCell(3).setCellValue(this.statsListStimuliTimer.get(i));
-        }
 
-        /*row.createCell(0).setCellValue(stimuli);
-        row.createCell(1).setCellValue(attendu);
-        row.createCell(2).setCellValue(reponse);
-        row.createCell(3).setCellValue(temps);*/
+            row.setHeight((short) -1);
+        }
     }
 
     public void closeExcelFile() {
 
         log.info("Try Close excel file at -> " + this.pathFileExcel);
+
         try (FileOutputStream fileOut = new FileOutputStream(this.pathFileExcel)) {
+
             log.info("File created !");
             this.addLineExcel();
+
+            for (int i = 0; i < 4; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
             this.workbook.write(fileOut);
             this.workbook.close();
-        }catch (IOException e) {
+
+            log.info("File created !");
+
+        } catch (IOException e) {
             log.info("Error close excel file -> " + e.getMessage());
         }
     }

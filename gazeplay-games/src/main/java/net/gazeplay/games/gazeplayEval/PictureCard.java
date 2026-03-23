@@ -21,6 +21,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
+import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.GazeplayEvalGameVariant;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
@@ -49,7 +50,7 @@ class PictureCard extends Group {
     private final double initialPositionY;
 
     private final Stats stats;
-    private final String imageName;
+    private String imageName;
     private final String soundName;
     private final Boolean goodAnswer;
     private final CustomInputEventHandlerMouse customInputEventHandlerMouse;
@@ -87,6 +88,7 @@ class PictureCard extends Group {
         this.valueProgressIndicator = fixationLength;
         this.firstPosition = firstPosition;
 
+        this.checkImageName();
         this.imageRectangle = createImageView(this.initialPositionX, this.initialPositionY, this.initialWidth, this.initialHeight, imageName);
         this.gazeArea = createGazeArea();
         this.progressIndicator = buildProgressIndicator(this.initialWidth, this.initialHeight);
@@ -102,6 +104,13 @@ class PictureCard extends Group {
         this.addEventFilter(MouseEvent.ANY, customInputEventHandlerMouse);
         this.addEventFilter(GazeEvent.ANY, customInputEventHandlerMouse);
 
+    }
+
+    public void checkImageName(){
+        if (Objects.equals(this.imageName, "")){
+            this.imageName = "image_vide";
+        }
+        log.info("check imagePath = {}", imageName);
     }
 
     private Timeline createProgressIndicatorTimeLine(GazeplayEval gameInstance) {
@@ -123,7 +132,7 @@ class PictureCard extends Group {
 
             selected = true;
             log.info("goodAnswer = {}", this.goodAnswer);
-            gameInstance.listStimuliAnswerGiven.append(this.imageName).append(" ");
+            gameInstance.listStimuliAnswerGiven.append(this.imageName).append("\n");
             if (gameInstance.isSelectionDisabled()){
                 gameInstance.disableSelectionWithSound(this.soundName, this.goodAnswer);
             }else {
@@ -211,10 +220,16 @@ class PictureCard extends Group {
             gazeArea.setTranslateX(this.imageRectangle.getFitWidth() / 2);
         }
 
-        gazeArea.setFill(Color.TRANSPARENT);
-        gazeArea.setStroke(Color.BLUE);
+        final Color color = gameContext.getConfiguration().getBackgroundStyle()
+            .accept(new BackgroundStyleVisitor<>() {
+                @Override public Color visitLight() { return Color.BLACK; }
+                @Override public Color visitDark()  { return Color.WHITE; }
+            });
 
-        if (Objects.equals(this.imageName, "")){
+        gazeArea.setFill(Color.TRANSPARENT);
+        gazeArea.setStroke(color);
+
+        if (this.imageName.equals("image_vide")){
             gazeArea.setOpacity(1.0);
         }else {
             gazeArea.setOpacity(0.0);
