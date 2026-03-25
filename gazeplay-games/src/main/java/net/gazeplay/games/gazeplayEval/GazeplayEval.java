@@ -568,6 +568,15 @@ public class GazeplayEval implements GameLifeCycle {
                     );
                 if ((boolean) this.allScreens.get(this.indexFileImage).get(3)){
                     this.stimuliScreenT = new Timeline(new KeyFrame(Duration.seconds(((Number) this.allScreens.get(this.indexFileImage).get(4)).doubleValue()), event -> {
+
+                        if (this.listStimuliAnswerGiven.toString().isEmpty()){
+                            this.listStimuliAnswerGiven.append(" ");
+                        }
+                        this.statsListStimuliAnswerGiven.add(this.listStimuliAnswerGiven.toString());
+                        this.listStimuliAnswerGiven.setLength(0);
+
+                        this.statsListStimuliTimer.add(String.valueOf(this.allScreens.get(this.indexFileImage).get(4)));
+
                         this.clearScreen();
                         this.increaseIndex();
                         this.stats.resetHeatMapGaze();
@@ -630,6 +639,11 @@ public class GazeplayEval implements GameLifeCycle {
                     + this.gameVariant.getNameGame()
                     + "/audio/" + nameSound
             );
+
+            if (this.player.getStatus() == MediaPlayer.Status.PLAYING){
+                this.player.stop();
+                this.player.dispose();
+            }
 
             Media media = new Media(soundFile.toURI().toString());
             this.player = new MediaPlayer(media);
