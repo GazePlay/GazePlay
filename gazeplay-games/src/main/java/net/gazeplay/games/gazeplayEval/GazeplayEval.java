@@ -840,10 +840,10 @@ public class GazeplayEval implements GameLifeCycle {
 
             this.incrementPos();
 
-            listStimuli.append((String) imagesAndSounds.get(i).get(0)).append("\n");
+            listStimuli.append(checkImageName((String) imagesAndSounds.get(i).get(0))).append("\n");
 
             if ((boolean) imagesAndSounds.get(i).get(2)){
-                listStimuliAnswer.append((String) imagesAndSounds.get(i).get(0)).append("\n");
+                listStimuliAnswer.append(checkImageName((String) imagesAndSounds.get(i).get(0))).append("\n");
             }
         }
 
@@ -851,8 +851,8 @@ public class GazeplayEval implements GameLifeCycle {
             this.playSound(nameSound);
         }
 
-        this.statsListStimuli.add(checkImageName(listStimuli.toString()));
-        this.statsListStimuliAnswer.add(checkImageName(listStimuliAnswer.toString()));
+        this.statsListStimuli.add(listStimuli.toString());
+        this.statsListStimuliAnswer.add(listStimuliAnswer.toString());
     }
 
     public String checkImageName(String nameImage){
