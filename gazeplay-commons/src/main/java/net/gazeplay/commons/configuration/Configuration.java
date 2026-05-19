@@ -51,6 +51,7 @@ public class Configuration {
     /* Eye-tracking settings */
     private static final String PROPERTY_NAME_EYE_TRACKER = "EYE_TRACKER";
     private static final String PROPERTY_NAME_FIXATION_LENGTH = "FIXATION_LENGTH";
+    private static final String PROPERTY_NAME_EVAL_OPTIONS = "EVAL_OPTIONS";
     /* Graphics settings */
     private static final String PROPERTY_NAME_CSS_FILE = "CSS_FILE";
     private static final String PROPERTY_NAME_BACKGROUND_STYLE = "BACKGROUND_STYLE";
@@ -113,6 +114,8 @@ public class Configuration {
     /* Eye-tracking settings */
     private static final String DEFAULT_VALUE_EYE_TRACKER = EyeTracker.tobii.toString();
     private static final int DEFAULT_VALUE_FIXATION_LENGTH = 2000;
+    private static final String DEFAULT_VALUE_EVAL_OPTIONS = EvalOptions.Classique.toString();
+
     /* Graphics settings */
     private static final String DEFAULT_VALUE_CSS_FILE = DEFAULT_THEME.getPreferredConfigPropertyValue();
     private static final BackgroundStyle DEFAULT_VALUE_BACKGROUND_STYLE = BackgroundStyle.DARK;
@@ -192,6 +195,8 @@ public class Configuration {
     /* Eye-tracking settings */
     @Getter
     private final StringProperty eyeTrackerProperty;
+    @Getter
+    private final StringProperty evalOptionsProperty;
     @Getter
     private final IntegerProperty fixationLengthProperty;
     /* Graphics settings */
@@ -305,6 +310,7 @@ public class Configuration {
 
         /* Eye-tracking settings */
         eyeTrackerProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EYE_TRACKER, DEFAULT_VALUE_EYE_TRACKER, propertyChangeListener);
+        evalOptionsProperty = new ApplicationConfigBackedStringProperty(applicationConfig, PROPERTY_NAME_EVAL_OPTIONS, DEFAULT_VALUE_EVAL_OPTIONS, propertyChangeListener);
         fixationLengthProperty = new ApplicationConfigBackedIntegerProperty(applicationConfig, PROPERTY_NAME_FIXATION_LENGTH, DEFAULT_VALUE_FIXATION_LENGTH, propertyChangeListener);
 
         /* Graphics settings */
@@ -466,6 +472,10 @@ public class Configuration {
 
     public String getEyeTracker() {
         return eyeTrackerProperty.getValue();
+    }
+
+    public String getEvalOptions() {
+        return evalOptionsProperty.getValue();
     }
 
     public Integer getFixationLength() {
@@ -659,6 +669,10 @@ public class Configuration {
 
     public void setEyeTracker(final String eyeTracker) {
         eyeTrackerProperty.setValue(eyeTracker);
+    }
+
+    public void setEvalOptions(final String evalOptions) {
+        evalOptionsProperty.setValue(evalOptions);
     }
 
     public void setFixationLength(final int fixationLength) {

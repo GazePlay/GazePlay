@@ -237,6 +237,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
             addToGrid(grid, currentFormRow, label, input);
         }
         {
+            I18NText label = new I18NText(translator, "EvalOptions", COLON);
+
+            ChoiceBox<EvalOptions> input = buildEvalOptionsConfigChooser(config);
+
+            addToGrid(grid, currentFormRow, label, input);
+        }
+        {
             I18NText label = new I18NText(translator, "DelayBeforeSelection", COLON);
 
             Spinner<Double> input = buildSpinner(0, 3, (double) config.getDelayBeforeSelectionTime() / 1000,
@@ -1298,6 +1305,22 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             final String newPropertyValue = newValue.name();
             configuration.setEyeTracker(newPropertyValue);
+        });
+
+        return choiceBox;
+    }
+
+    static ChoiceBox<EvalOptions> buildEvalOptionsConfigChooser(Configuration configuration) {
+        ChoiceBox<EvalOptions> choiceBox = new ChoiceBox<>();
+
+        choiceBox.getItems().addAll(EvalOptions.values());
+
+        choiceBox.setPrefWidth(PREF_WIDTH);
+        choiceBox.setPrefHeight(PREF_HEIGHT);
+
+        choiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            final String newPropertyValue = newValue.name();
+            configuration.setEvalOptions(newPropertyValue);
         });
 
         return choiceBox;
