@@ -1315,6 +1315,9 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
         choiceBox.getItems().addAll(EvalOptions.values());
 
+        EvalOptions selectedEvalOptions = findSelectedEvalOptions(configuration);
+        choiceBox.getSelectionModel().select(selectedEvalOptions);
+
         choiceBox.setPrefWidth(PREF_WIDTH);
         choiceBox.setPrefHeight(PREF_HEIGHT);
 
@@ -1330,6 +1333,15 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         for (EyeTracker currentEyeTracker : EyeTracker.values()) {
             if (currentEyeTracker.name().equals(configuration.getEyeTracker())) {
                 return currentEyeTracker;
+            }
+        }
+        return null;
+    }
+
+    private static EvalOptions findSelectedEvalOptions(Configuration configuration) {
+        for (EvalOptions currentEvalOptions : EvalOptions.values()) {
+            if (currentEvalOptions.name().equals(configuration.getEvalOptions())) {
+                return currentEvalOptions;
             }
         }
         return null;

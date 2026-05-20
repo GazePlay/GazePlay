@@ -459,6 +459,7 @@ public class GazeplayEval implements GameLifeCycle {
 
         log.info("index file image = {}", this.indexFileImage);
         log.info("screen size = {}", this.allScreens.size());
+        log.info("Eval options = {}", config.getEvalOptions());
 
         if (this.indexFileImage >= this.allScreens.size()){
             this.dispose();
