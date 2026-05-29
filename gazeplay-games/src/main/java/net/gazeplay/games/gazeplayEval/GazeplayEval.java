@@ -9,10 +9,14 @@ import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -31,14 +35,13 @@ import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 @Slf4j
@@ -581,7 +584,7 @@ public class GazeplayEval implements GameLifeCycle {
                         this.clearScreen();
                         this.increaseIndex();
                         this.stats.resetHeatMapGaze();
-                        this.generateScreen();
+                        this.checkoptionsEval();
                         log.info("Stimuli screen timeout");
                     }));
                     this.stimuliScreenT.setCycleCount(1);
@@ -629,7 +632,7 @@ public class GazeplayEval implements GameLifeCycle {
                     this.clearScreen();
                     this.increaseIndex();
                     this.statsListStimuliTimer.add(String.valueOf(System.currentTimeMillis() - currentRoundStartTime));
-                    this.generateScreen();
+                    this.checkoptionsEval();
                 }else {
                     this.playStimuliTimeline();
                 }
@@ -661,7 +664,7 @@ public class GazeplayEval implements GameLifeCycle {
                         this.clearScreen();
                         this.increaseIndex();
                         this.statsListStimuliTimer.add(String.valueOf(System.currentTimeMillis() - currentRoundStartTime));
-                        this.generateScreen();
+                        this.checkoptionsEval();
                     }else {
                         this.playStimuliTimeline();
                     }
@@ -697,7 +700,7 @@ public class GazeplayEval implements GameLifeCycle {
                     this.clearScreen();
                     this.increaseIndex();
                     this.statsListStimuliTimer.add(String.valueOf(System.currentTimeMillis() - currentRoundStartTime));
-                    this.generateScreen();
+                    this.checkoptionsEval();
                 }else {
                     this.playStimuliTimeline();
                 }
@@ -727,7 +730,7 @@ public class GazeplayEval implements GameLifeCycle {
                         this.clearScreen();
                         this.increaseIndex();
                         this.statsListStimuliTimer.add(String.valueOf(System.currentTimeMillis() - currentRoundStartTime));
-                        this.generateScreen();
+                        this.checkoptionsEval();
                     }else {
                         this.playStimuliTimeline();
                     }
@@ -800,6 +803,90 @@ public class GazeplayEval implements GameLifeCycle {
     
     public void increaseIndex(){
         this.indexFileImage++;
+    }
+
+    public void checkoptionsEval(){
+        Configuration config = ActiveConfigurationContext.getInstance();
+        String evalOptionsValue = config.getEvalOptions();
+
+        if (evalOptionsValue.equals("Classique")){
+            this.generateScreen();
+        }else {
+            this.generateEvalOptionsScreen(evalOptionsValue);
+        }
+    }
+
+    public void generateEvalOptionsScreen(String evalOptionsValue){
+        this.typeScreen = "evalOptions";
+
+        Label restartText = new Label("Recommencer");
+        restartText.setStyle("-fx-font-size: 24px;");
+
+        FontIcon restartIcon = new FontIcon("fas-redo-alt");
+        restartIcon.setIconSize(80);
+
+        VBox restartContent = new VBox(15);
+        restartContent.setAlignment(Pos.CENTER);
+        restartContent.getChildren().addAll(restartText, restartIcon);
+
+        Button restartButton = new Button();
+        restartButton.setGraphic(restartContent);
+
+        restartButton.setPrefSize(260, 260);
+
+        /*restartButton.setStyle("""
+                -fx-background-radius: 20;
+                -fx-padding: 20;
+                """);*/
+
+        // =========================
+        // Bouton CONTINUER
+        // =========================
+
+        Label continueText = new Label("Continuer");
+        continueText.setStyle("-fx-font-size: 24px;");
+
+        FontIcon continueIcon = new FontIcon("fas-arrow-right");
+        continueIcon.setIconSize(80);
+
+        VBox continueContent = new VBox(15);
+        continueContent.setAlignment(Pos.CENTER);
+        continueContent.getChildren().addAll(continueText, continueIcon);
+
+        Button continueButton = new Button();
+        continueButton.setGraphic(continueContent);
+
+        continueButton.setPrefSize(260, 260);
+
+        /*continueButton.setStyle("""
+                -fx-background-radius: 20;
+                -fx-padding: 20;
+                """);*/
+
+        // =========================
+        // HBOX contenant les boutons
+        // =========================
+
+        HBox buttonsBox = new HBox(40); // espace entre boutons
+        buttonsBox.setAlignment(Pos.CENTER);
+
+        buttonsBox.getChildren().addAll(restartButton, continueButton);
+
+        // =========================
+        // ROOT STACKPANE
+        // =========================
+
+        StackPane root = new StackPane();
+        root.getChildren().add(buttonsBox);
+        StackPane.setAlignment(buttonsBox, Pos.CENTER);
+
+        root.setPrefSize(
+            gameContext.getGamePanelDimensionProvider().getDimension2D().getWidth(),
+            gameContext.getGamePanelDimensionProvider().getDimension2D().getHeight()
+        );
+
+        gameContext.getChildren().add(root);
+
     }
 
     public void generateStimuliScreen(int rows, int cols, double fixaTime, String nameSound){
@@ -1111,7 +1198,7 @@ public class GazeplayEval implements GameLifeCycle {
                 getScreenHeatmapGaze();
                 clearScreen();
                 increaseIndex();
-                generateScreen();
+                checkoptionsEval();
             } else if (key.getCode().equals(KeyCode.P)) {
                 replaySound();
             }
