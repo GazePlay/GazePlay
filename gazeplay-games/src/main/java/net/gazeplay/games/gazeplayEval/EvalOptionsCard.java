@@ -1,24 +1,39 @@
 package net.gazeplay.games.gazeplayEval;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.IGameContext;
+import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-public class EvalOptionsCard {
+@Slf4j
+public class EvalOptionsCard extends Group {
 
     String evalOptionValue;
     IGameContext gameContext;
     GazeplayEval gameInstance;
 
     ProgressIndicator progressIndicator;
+    CustomInputEventHandlerRestartButton customInputEventHandlerRestartButton;
+    CustomInputEventHandlerContinueButton customInputEventHandlerContinueButton;
+    Timeline progressIndicatorAnimationTimeLine;
 
     Button restartButton;
     Button continueButton;
@@ -29,13 +44,26 @@ public class EvalOptionsCard {
         this.gameInstance = gameInstance;
 
         this.createButtons();
+        this.progressIndicator = buildProgressIndicator();
 
         switch (evalOptionValue) {
             case "Autonomie_Soutient_Oral":
-                this.manualOption();
+                this.manualOralOption();
+                break;
+
+            case "Autonomie_Soutient_Visuel":
+                this.manualVisualOption();
+                break;
+
+            case "Autonomie_Total":
+                this.autonomieTotalOption();
+                break;
+
+            default:
                 break;
         }
-        this.progressIndicator = buildProgressIndicator();
+
+        gameContext.getChildren().add(progressIndicator);
     }
 
     public void createButtons(){
@@ -69,7 +97,7 @@ public class EvalOptionsCard {
 
         continueButton.setPrefSize(260, 260);
 
-        HBox buttonsBox = new HBox(40);
+        HBox buttonsBox = new HBox(150);
         buttonsBox.setAlignment(Pos.CENTER);
 
         buttonsBox.getChildren().addAll(restartButton, continueButton);
@@ -86,15 +114,51 @@ public class EvalOptionsCard {
         gameContext.getChildren().add(root);
     }
 
-    public void manualOption(){
+    public void manualOralOption(){
         this.continueButton.setOnMouseClicked(event -> {
+            gameInstance.clearScreen();
             gameInstance.generateScreen();
         });
 
         this.restartButton.setOnMouseClicked(event -> {
+            gameInstance.clearScreen();
             gameInstance.decreaseIndex();
             gameInstance.generateScreen();
         });
+    }
+
+    public void manualVisualOption(){
+        this.manualOralOption();
+        customInputEventHandlerRestartButton = new CustomInputEventHandlerRestartButton();
+        customInputEventHandlerContinueButton = new CustomInputEventHandlerContinueButton();
+
+        this.restartButton.addEventFilter(MouseEvent.ANY, customInputEventHandlerRestartButton);
+        this.restartButton.addEventFilter(GazeEvent.ANY, customInputEventHandlerRestartButton);
+
+        this.continueButton.addEventFilter(MouseEvent.ANY, customInputEventHandlerContinueButton);
+        this.continueButton.addEventFilter(GazeEvent.ANY, customInputEventHandlerContinueButton);
+    }
+
+    public void autonomieTotalOption(){
+        this.continueButton.setOnAction(event -> {
+            gameInstance.clearScreen();
+            gameInstance.generateScreen();
+        });
+
+        this.restartButton.setOnAction(event -> {
+            gameInstance.clearScreen();
+            gameInstance.decreaseIndex();
+            gameInstance.generateScreen();
+        });
+
+        customInputEventHandlerRestartButton = new CustomInputEventHandlerRestartButton();
+        customInputEventHandlerContinueButton = new CustomInputEventHandlerContinueButton();
+
+        this.restartButton.addEventFilter(MouseEvent.ANY, customInputEventHandlerRestartButton);
+        this.restartButton.addEventFilter(GazeEvent.ANY, customInputEventHandlerRestartButton);
+
+        this.continueButton.addEventFilter(MouseEvent.ANY, customInputEventHandlerContinueButton);
+        this.continueButton.addEventFilter(GazeEvent.ANY, customInputEventHandlerContinueButton);
     }
 
     private ProgressIndicator buildProgressIndicator() {
@@ -110,8 +174,160 @@ public class EvalOptionsCard {
         result.setMinWidth(minWidth);
         result.setMinHeight(minHeight);
         result.setOpacity(0.5);
+        result.toFront();
         result.setVisible(false);
 
         return result;
+    }
+
+    private Timeline createProgressIndicatorTimeLine(Button selectedButton) {
+        Timeline result = new Timeline();
+
+        result.getKeyFrames()
+            .add(new KeyFrame(new Duration(3000), new KeyValue(progressIndicator.progressProperty(), 1)));
+
+        EventHandler<ActionEvent> progressIndicatorAnimationTimeLineOnFinished = createProgressIndicatorAnimationTimeLineOnFinished(
+            selectedButton);
+
+        result.setOnFinished(progressIndicatorAnimationTimeLineOnFinished);
+
+        return result;
+    }
+
+    private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(Button selectedButton) {
+        return actionEvent -> {
+            progressIndicator.setVisible(false);
+            if (this.evalOptionValue.equals("Autonomie_Soutient_Visuel")){
+                restartButton.setStyle("");
+                continueButton.setStyle("");
+
+                selectedButton.setStyle("""
+                     -fx-border-color: red;
+                     -fx-border-width: 5;
+                """);
+
+            } else if (this.evalOptionValue.equals("Autonomie_Total")) {
+                selectedButton.fire();
+            }
+
+        };
+    }
+
+    private class CustomInputEventHandlerRestartButton implements EventHandler<Event> {
+
+        private boolean moved = false;
+
+        @Override
+        public void handle(Event event) {
+            if (gameInstance.eyeTracker.equals("tobii")){
+                if (event.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    onEntered();
+                } else if (event.getEventType() == GazeEvent.GAZE_MOVED){
+                    onEnteredOnceWhileMoved();
+                } else if (event.getEventType() == GazeEvent.GAZE_EXITED) {
+                    onExited();
+                }
+            }else {
+                if (event.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                    onEntered();
+                } else if (event.getEventType() == MouseEvent.MOUSE_MOVED){
+                    onEnteredOnceWhileMoved();
+                } else if (event.getEventType() == MouseEvent.MOUSE_EXITED) {
+                    onExited();
+                }
+            }
+        }
+
+        private void onEntered() {
+            this.moved = true;
+            progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(restartButton);
+            progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+            progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
+            progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
+            progressIndicator.setProgress(0);
+            progressIndicator.setVisible(true);
+            progressIndicatorAnimationTimeLine.playFromStart();
+        }
+
+        private void onEnteredOnceWhileMoved(){
+            if (!this.moved){
+                this.moved = true;
+                progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(restartButton);
+                progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+                progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
+                progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
+                progressIndicator.setProgress(0);
+                progressIndicator.setVisible(true);
+                progressIndicatorAnimationTimeLine.playFromStart();
+            }
+        }
+
+        private void onExited() {
+            progressIndicatorAnimationTimeLine.stop();
+
+            progressIndicator.setVisible(false);
+            progressIndicator.setProgress(0);
+
+            this.moved = false;
+        }
+    }
+
+    private class CustomInputEventHandlerContinueButton implements EventHandler<Event> {
+
+        private boolean moved = false;
+
+        @Override
+        public void handle(Event event) {
+            if (gameInstance.eyeTracker.equals("tobii")){
+                if (event.getEventType() == GazeEvent.GAZE_ENTERED) {
+                    onEntered();
+                } else if (event.getEventType() == GazeEvent.GAZE_MOVED){
+                    onEnteredOnceWhileMoved();
+                } else if (event.getEventType() == GazeEvent.GAZE_EXITED) {
+                    onExited();
+                }
+            }else {
+                if (event.getEventType() == MouseEvent.MOUSE_ENTERED) {
+                    onEntered();
+                } else if (event.getEventType() == MouseEvent.MOUSE_MOVED){
+                    onEnteredOnceWhileMoved();
+                } else if (event.getEventType() == MouseEvent.MOUSE_EXITED) {
+                    onExited();
+                }
+            }
+        }
+
+        private void onEntered() {
+            this.moved = true;
+            progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(continueButton);
+            progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+            progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
+            progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
+            progressIndicator.setProgress(0);
+            progressIndicator.setVisible(true);
+            progressIndicatorAnimationTimeLine.playFromStart();
+        }
+
+        private void onEnteredOnceWhileMoved(){
+            if (!this.moved){
+                this.moved = true;
+                progressIndicatorAnimationTimeLine = createProgressIndicatorTimeLine(continueButton);
+                progressIndicator.setStyle(" -fx-progress-color: " + gameContext.getConfiguration().getProgressBarColor());
+                progressIndicator.setMinWidth(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
+                progressIndicator.setMinHeight(100.0 * gameContext.getConfiguration().getProgressBarSize() / 100);
+                progressIndicator.setProgress(0);
+                progressIndicator.setVisible(true);
+                progressIndicatorAnimationTimeLine.playFromStart();
+            }
+        }
+
+        private void onExited() {
+            progressIndicatorAnimationTimeLine.stop();
+
+            progressIndicator.setVisible(false);
+            progressIndicator.setProgress(0);
+
+            this.moved = false;
+        }
     }
 }
