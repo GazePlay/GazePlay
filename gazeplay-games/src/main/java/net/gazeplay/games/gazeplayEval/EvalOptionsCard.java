@@ -44,7 +44,7 @@ public class EvalOptionsCard extends Group {
         this.gameInstance = gameInstance;
 
         this.createButtons();
-        this.progressIndicator = buildProgressIndicator();
+        this.buildProgressIndicator();
 
         switch (evalOptionValue) {
             case "Autonomie_Soutient_Oral":
@@ -161,23 +161,23 @@ public class EvalOptionsCard extends Group {
         this.continueButton.addEventFilter(GazeEvent.ANY, customInputEventHandlerContinueButton);
     }
 
-    private ProgressIndicator buildProgressIndicator() {
+    private void buildProgressIndicator() {
         // progressIndicator 2cm de diamètre
         double minWidth = 75;
         double minHeight = 75;
 
-        final Region root = gameContext.getRoot();
+        this.progressIndicator = new ProgressIndicator(0);
+        this.progressIndicator.setMinWidth(minWidth);
+        this.progressIndicator.setMinHeight(minHeight);
+        this.progressIndicator.setOpacity(0.5);
+        this.progressIndicator.toFront();
+        this.progressIndicator.setMouseTransparent(true);
+        this.progressIndicator.setVisible(false);
+    }
 
-        ProgressIndicator result = new ProgressIndicator(0);
-        result.setTranslateX((root.getWidth()/2) - (minWidth/2));
-        result.setTranslateY((root.getHeight()/2) - (minHeight/2));
-        result.setMinWidth(minWidth);
-        result.setMinHeight(minHeight);
-        result.setOpacity(0.5);
-        result.toFront();
-        result.setVisible(false);
-
-        return result;
+    private void progressIndicatorPosition(Button selectedButton){
+        this.progressIndicator.setTranslateX(selectedButton.getLayoutX() + (selectedButton.getWidth()/2) - (this.progressIndicator.getWidth()/2));
+        this.progressIndicator.setTranslateY(selectedButton.getLayoutY() + (selectedButton.getHeight()/2) - (this.progressIndicator.getHeight()/2));
     }
 
     private Timeline createProgressIndicatorTimeLine(Button selectedButton) {
@@ -220,6 +220,7 @@ public class EvalOptionsCard extends Group {
         @Override
         public void handle(Event event) {
             if (gameInstance.eyeTracker.equals("tobii")){
+                progressIndicatorPosition(restartButton);
                 if (event.getEventType() == GazeEvent.GAZE_ENTERED) {
                     onEntered();
                 } else if (event.getEventType() == GazeEvent.GAZE_MOVED){
@@ -228,6 +229,7 @@ public class EvalOptionsCard extends Group {
                     onExited();
                 }
             }else {
+                progressIndicatorPosition(restartButton);
                 if (event.getEventType() == MouseEvent.MOUSE_ENTERED) {
                     onEntered();
                 } else if (event.getEventType() == MouseEvent.MOUSE_MOVED){
@@ -279,6 +281,7 @@ public class EvalOptionsCard extends Group {
         @Override
         public void handle(Event event) {
             if (gameInstance.eyeTracker.equals("tobii")){
+                progressIndicatorPosition(continueButton);
                 if (event.getEventType() == GazeEvent.GAZE_ENTERED) {
                     onEntered();
                 } else if (event.getEventType() == GazeEvent.GAZE_MOVED){
@@ -287,6 +290,7 @@ public class EvalOptionsCard extends Group {
                     onExited();
                 }
             }else {
+                progressIndicatorPosition(continueButton);
                 if (event.getEventType() == MouseEvent.MOUSE_ENTERED) {
                     onEntered();
                 } else if (event.getEventType() == MouseEvent.MOUSE_MOVED){

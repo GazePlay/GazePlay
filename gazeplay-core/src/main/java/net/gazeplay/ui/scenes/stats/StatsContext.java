@@ -330,12 +330,12 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         if (gazeplayType.equals("bera")){
             AtomicInteger currentFormRow = new AtomicInteger(0);
-                if (!stats.nameScores.isEmpty()){
+                /*if (!stats.nameScores.isEmpty()){
                     addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually)));
                     for (int i=0; i<stats.nameScores.size(); i++){
                         addToGridCenterNoTranslator(grid, currentFormRow, new Text("- " + stats.nameScores.get(i) + " : "), new Text(String.valueOf(stats.scores.get(i))));
                     }
-                }
+                }*/
         }else {
             AtomicInteger currentFormRow = new AtomicInteger(1);
 

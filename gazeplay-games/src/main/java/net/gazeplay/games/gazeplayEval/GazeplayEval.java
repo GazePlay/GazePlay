@@ -398,6 +398,14 @@ public class GazeplayEval implements GameLifeCycle {
 
     public void getScreenHeatmapGaze(){
         this.stats.screenHeatMapGaze(this.pathStatsGame);
+        this.afterScreenHeatMap();
+    }
+
+    public void afterScreenHeatMap(){
+        this.clearScreen();
+        this.increaseIndex();
+        this.statsListStimuliTimer.add(String.valueOf(System.currentTimeMillis() - currentRoundStartTime));
+        this.checkOptionsEval();
     }
 
     @Override
@@ -629,10 +637,6 @@ public class GazeplayEval implements GameLifeCycle {
                 if (this.checkAllPictureCardChecked(goodAnswer)){
                     this.stopStimuliTimeline();
                     this.getScreenHeatmapGaze();
-                    this.clearScreen();
-                    this.increaseIndex();
-                    this.statsListStimuliTimer.add(String.valueOf(System.currentTimeMillis() - currentRoundStartTime));
-                    this.checkOptionsEval();
                 }else {
                     this.playStimuliTimeline();
                 }
@@ -661,10 +665,6 @@ public class GazeplayEval implements GameLifeCycle {
                     if (this.checkAllPictureCardChecked(goodAnswer)){
                         this.stopStimuliTimeline();
                         this.getScreenHeatmapGaze();
-                        this.clearScreen();
-                        this.increaseIndex();
-                        this.statsListStimuliTimer.add(String.valueOf(System.currentTimeMillis() - currentRoundStartTime));
-                        this.checkOptionsEval();
                     }else {
                         this.playStimuliTimeline();
                     }
@@ -697,10 +697,6 @@ public class GazeplayEval implements GameLifeCycle {
                 if (this.checkAllPictureCardChecked(goodAnswer)){
                     this.stopStimuliTimeline();
                     this.getScreenHeatmapGaze();
-                    this.clearScreen();
-                    this.increaseIndex();
-                    this.statsListStimuliTimer.add(String.valueOf(System.currentTimeMillis() - currentRoundStartTime));
-                    this.checkOptionsEval();
                 }else {
                     this.playStimuliTimeline();
                 }
@@ -727,10 +723,6 @@ public class GazeplayEval implements GameLifeCycle {
                     if (this.checkAllPictureCardChecked(goodAnswer)){
                         this.stopStimuliTimeline();
                         this.getScreenHeatmapGaze();
-                        this.clearScreen();
-                        this.increaseIndex();
-                        this.statsListStimuliTimer.add(String.valueOf(System.currentTimeMillis() - currentRoundStartTime));
-                        this.checkOptionsEval();
                     }else {
                         this.playStimuliTimeline();
                     }
@@ -1133,9 +1125,7 @@ public class GazeplayEval implements GameLifeCycle {
                 stopStimuliTimeline();
                 stopDelayTimeline();
                 getScreenHeatmapGaze();
-                clearScreen();
-                increaseIndex();
-                checkOptionsEval();
+                afterScreenHeatMap();
             } else if (key.getCode().equals(KeyCode.P)) {
                 replaySound();
             }
