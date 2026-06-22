@@ -47,11 +47,11 @@ public class EvalOptionsCard extends Group {
         this.buildProgressIndicator();
 
         switch (evalOptionValue) {
-            case "Autonomie_Soutient_Oral":
+            case "Autonomie_Soutien_Oral":
                 this.manualOralOption();
                 break;
 
-            case "Autonomie_Soutient_Visuel":
+            case "Autonomie_Soutien_Visuel":
                 this.manualVisualOption();
                 break;
 
@@ -197,7 +197,7 @@ public class EvalOptionsCard extends Group {
     private EventHandler<ActionEvent> createProgressIndicatorAnimationTimeLineOnFinished(Button selectedButton) {
         return actionEvent -> {
             progressIndicator.setVisible(false);
-            if (this.evalOptionValue.equals("Autonomie_Soutient_Visuel")){
+            if (this.evalOptionValue.equals("Autonomie_Soutien_Visuel")){
                 restartButton.setStyle("");
                 continueButton.setStyle("");
 

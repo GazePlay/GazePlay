@@ -277,13 +277,13 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
             addToGrid(grid, currentFormRow, label, input);
         }
-        {
+        /*{
             I18NText label = new I18NText(translator, "ActivateSoa", COLON);
             CheckBox input = buildCheckBox(config.getSoaEnabledProperty());
 
             addToGrid(grid, currentFormRow, label, input);
         }
-        /*{
+        {
             I18NText label = new I18NText(translator, "FrameGazePosition", COLON);
             Spinner<Double> input = buildSpinner(10, 1000, (double) config.getFrameGazePosition() /1000,
                 1, config.getFrameGazePositionProperty());

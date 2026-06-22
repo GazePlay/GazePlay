@@ -108,15 +108,17 @@ public class GazeplayEval implements GameLifeCycle {
     public int nbItemSelected = 0;
     public String actualSound;
     public Text instructionText;
-    public boolean soundIsPlaying = false;
     private Workbook workbook;
     private Sheet sheet;
     private CellStyle styleWorkbook;
     private int rowIndexExcel = 0;
     private String pathFileExcel;
     private MediaPlayer player;
+    private Boolean previousGoodAnswer;
     private ArrayList<String> statsListStimuli = new ArrayList<>();
+    public StringBuilder listStimuli = new StringBuilder();
     private ArrayList<String> statsListStimuliAnswer = new ArrayList<>();
+    public StringBuilder listStimuliAnswer = new StringBuilder();
     public ArrayList<String> statsListStimuliAnswerGiven = new ArrayList<>();
     public StringBuilder listStimuliAnswerGiven = new StringBuilder();
     private ArrayList<String> statsListStimuliTimer = new ArrayList<>();
@@ -449,6 +451,18 @@ public class GazeplayEval implements GameLifeCycle {
         return this.nbItemSelected == this.maxItemSelected;
     }
 
+    public boolean lastGoodPictureCard(boolean goodAnswer){
+        if (Objects.equals(this.allScreens.get(this.indexFileImage).get(6), "Tout")){
+            return (this.nbItemSelected + 1) == this.maxItemSelected;
+        }else {
+            if (goodAnswer){
+                return (this.nbItemSelected + 1) == this.maxItemSelected;
+            }else {
+                return false;
+            }
+        }
+    }
+
     public void incrementPos(){
         this.posX++;
         if (this.posX == (Integer) this.allScreens.get(this.indexFileImage).get(2)){
@@ -589,9 +603,9 @@ public class GazeplayEval implements GameLifeCycle {
 
                         this.statsListStimuliTimer.add(String.valueOf(this.allScreens.get(this.indexFileImage).get(4)));
 
+                        this.stats.screenHeatMapGaze(this.pathStatsGame);
                         this.clearScreen();
                         this.increaseIndex();
-                        this.stats.resetHeatMapGaze();
                         this.checkOptionsEval();
                         log.info("Stimuli screen timeout");
                     }));
@@ -626,48 +640,47 @@ public class GazeplayEval implements GameLifeCycle {
 
     public void playSoundImage(String nameSound, boolean goodAnswer){
         Configuration config = ActiveConfigurationContext.getInstance();
-        if (config.isSoaEnabled()){
-            this.soundIsPlaying = true;
-            this.pauseStimuliTimeline();
-        }
 
         if (Objects.equals(nameSound, "")){
-            if (config.isSoaEnabled()){
-                this.soundIsPlaying = false;
-                if (this.checkAllPictureCardChecked(goodAnswer)){
-                    this.stopStimuliTimeline();
-                    this.getScreenHeatmapGaze();
-                }else {
-                    this.playStimuliTimeline();
-                }
+            if (this.checkAllPictureCardChecked(goodAnswer)){
+                this.stopStimuliTimeline();
+                this.getScreenHeatmapGaze();
             }
         }else {
+
+            if (this.player != null){
+                this.player.stop();
+                this.player.dispose();
+
+                if (this.lastGoodPictureCard(goodAnswer)){
+                    this.ignoreAnyInput = true;
+                }else {
+                    if (this.checkAllPictureCardChecked(previousGoodAnswer)){
+                        this.stopStimuliTimeline();
+                        this.getScreenHeatmapGaze();
+                    }
+                }
+            }
+
+            this.previousGoodAnswer = goodAnswer;
+
             File soundFile = new File(
                 config.getFileDir() + "/evals/"
                     + this.gameVariant.getNameGame()
                     + "/audio/" + nameSound
             );
 
-            if (this.player.getStatus() == MediaPlayer.Status.PLAYING){
-                this.player.stop();
-                this.player.dispose();
-            }
-
             Media media = new Media(soundFile.toURI().toString());
             this.player = new MediaPlayer(media);
 
             player.setOnEndOfMedia(() -> {
-                this.player.stop();
                 this.player.dispose();
+                this.player = null;
+                this.ignoreAnyInput = false;
 
-                if (config.isSoaEnabled()){
-                    this.soundIsPlaying = false;
-                    if (this.checkAllPictureCardChecked(goodAnswer)){
-                        this.stopStimuliTimeline();
-                        this.getScreenHeatmapGaze();
-                    }else {
-                        this.playStimuliTimeline();
-                    }
+                if (this.checkAllPictureCardChecked(goodAnswer)){
+                    this.stopStimuliTimeline();
+                    this.getScreenHeatmapGaze();
                 }
             });
 
@@ -678,31 +691,19 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public void disableSelectionWithSound(String nameSound, boolean goodAnswer){
-        log.info("selection disableSelectionWithSound !");
         Configuration config = ActiveConfigurationContext.getInstance();
         this.ignoreAnyInput = true;
+        this.pauseStimuliTimeline();
 
-        log.info("is sound enabled = {}", config.isSoaEnabled());
-        if (config.isSoaEnabled()){
-            this.soundIsPlaying = true;
-            this.pauseStimuliTimeline();
-        }
-
-        log.info("name sound value = {}", nameSound);
         if (Objects.equals(nameSound, "")){
             this.ignoreAnyInput = false;
-
-            if (config.isSoaEnabled()){
-                this.soundIsPlaying = false;
-                if (this.checkAllPictureCardChecked(goodAnswer)){
-                    this.stopStimuliTimeline();
-                    this.getScreenHeatmapGaze();
-                }else {
-                    this.playStimuliTimeline();
-                }
+            if (this.checkAllPictureCardChecked(goodAnswer)){
+                this.stopStimuliTimeline();
+                this.getScreenHeatmapGaze();
+            }else {
+                this.playStimuliTimeline();
             }
         }else {
-            log.info("Run sound media !");
             File soundFile = new File(
                 config.getFileDir() + "/evals/"
                     + this.gameVariant.getNameGame()
@@ -713,19 +714,14 @@ public class GazeplayEval implements GameLifeCycle {
             this.player = new MediaPlayer(media);
 
             this.player.setOnEndOfMedia(() -> {
-                log.info("End of media !");
-                this.ignoreAnyInput = false;
-                this.player.stop();
                 this.player.dispose();
+                this.ignoreAnyInput = false;
 
-                if (config.isSoaEnabled()){
-                    this.soundIsPlaying = false;
-                    if (this.checkAllPictureCardChecked(goodAnswer)){
-                        this.stopStimuliTimeline();
-                        this.getScreenHeatmapGaze();
-                    }else {
-                        this.playStimuliTimeline();
-                    }
+                if (this.checkAllPictureCardChecked(goodAnswer)){
+                    this.stopStimuliTimeline();
+                    this.getScreenHeatmapGaze();
+                }else {
+                    this.playStimuliTimeline();
                 }
             });
 
@@ -823,9 +819,6 @@ public class GazeplayEval implements GameLifeCycle {
         this.posX = 0;
         this.posY = 0;
 
-        StringBuilder listStimuli = new StringBuilder();
-        StringBuilder listStimuliAnswer = new StringBuilder();
-
         final GameSizing gameSizing = new GameSizingComputer(rows, cols, fourThree)
             .computeGameSizing(gameContext.getGamePanelDimensionProvider().getDimension2D());
 
@@ -870,6 +863,9 @@ public class GazeplayEval implements GameLifeCycle {
 
         this.statsListStimuli.add(listStimuli.toString());
         this.statsListStimuliAnswer.add(listStimuliAnswer.toString());
+
+        this.listStimuli.setLength(0);
+        this.listStimuliAnswer.setLength(0);
     }
 
     public String checkImageName(String nameImage){
@@ -1083,7 +1079,7 @@ public class GazeplayEval implements GameLifeCycle {
 
         for (int i = 0; i < this.statsListStimuli.size(); i++) {
             row = this.sheet.createRow(this.rowIndexExcel++);
-            row.createCell(0).setCellValue(this.statsListStimuli.get(i));
+            row.createCell(0).setCellValue(this.statsListStimuli.get(0));
             row.createCell(1).setCellValue(this.statsListStimuliAnswer.get(i));
             row.createCell(2).setCellValue(this.statsListStimuliAnswerGiven.get(i));
             row.createCell(3).setCellValue(this.statsListStimuliTimer.get(i));

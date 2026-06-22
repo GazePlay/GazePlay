@@ -3,9 +3,9 @@ package net.gazeplay.commons.configuration;
 public enum EvalOptions {
 
     Classique("Classique"),
-    Autonomie_Total("Autonomie Total"),
-    Autonomie_Soutient_Oral("Autonomie Soutient Oral"),
-    Autonomie_Soutient_Visuel("Autonomie Soutient Visuel");
+    Autonomie_Total("Autonomie Totale"),
+    Autonomie_Soutien_Oral("Autonomie Soutien Oral"),
+    Autonomie_Soutien_Visuel("Autonomie Soutien Visuel");
 
     private final String displayName;
 
