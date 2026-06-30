@@ -161,7 +161,6 @@ class PictureCard extends Group {
 
     public void onCardSelected() {
         log.info("Chosen image {}", imageName);
-        gameInstance.calculScores(this.imageName);
         stats.incrementNumberOfGoalsReached();
         gameContext.updateScore(stats, gameInstance);
     }

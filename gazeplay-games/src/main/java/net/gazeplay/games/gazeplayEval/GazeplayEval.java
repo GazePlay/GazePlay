@@ -9,14 +9,10 @@ import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -36,7 +32,6 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -122,6 +117,9 @@ public class GazeplayEval implements GameLifeCycle {
     public ArrayList<String> statsListStimuliAnswerGiven = new ArrayList<>();
     public StringBuilder listStimuliAnswerGiven = new StringBuilder();
     private ArrayList<String> statsListStimuliTimer = new ArrayList<>();
+    private ArrayList<String> screenId = new ArrayList<>();
+    private List<List<Object>> imagesAndSounds = new ArrayList<>();
+    private boolean replayScreen = false;
 
     public GazeplayEval(final boolean fourThree, final IGameContext gameContext, final GazeplayEvalGameVariant gameVariant, final Stats stats) {
         this.gameContext = gameContext;
@@ -285,75 +283,6 @@ public class GazeplayEval implements GameLifeCycle {
         this.countStats = 0;
     }
 
-    /*public void generateTab(JsonArray configFile){
-        this.rows = new int[configFile.size()-1];
-        this.cols = new int[configFile.size()-1];
-        this.listImages = new String[configFile.size()-1][];
-        this.listSounds = new String[configFile.size()-1];
-        this.nbImages = new int[configFile.size()-1];
-        this.listLengthFixation = new double[configFile.size()-1];
-        this.displayDuration = new double[configFile.size()-1];
-
-        this.gameName = String.valueOf(configFile.get(0).getAsJsonArray().get(0)).replace("\"", "");
-        configFile.remove(0);
-    }*/
-
-    /*public JsonArray shuffleJsonArray(JsonArray configFile){
-        Random rnd = new Random();
-        for (int i = configFile.size() - 1; i >= 0; i--) {
-            int j = rnd.nextInt(i + 1);
-            rnd.setSeed(System.currentTimeMillis());
-            JsonElement object = configFile.get(j);
-            configFile.set(j, configFile.get(i));
-            configFile.set(i, object);
-        }
-        return configFile;
-    }*/
-
-    /*public void generateGame(String[] values, int index){
-        this.rows[index] = Integer.parseInt(values[0]);
-        this.cols[index] = Integer.parseInt(values[1]);
-
-        int nbImg = this.rows[index]*this.cols[index];
-        String[] listImgTmp = new String[nbImg];
-        for (int j=3; j<(3+nbImg); j++){
-            listImgTmp[j-3] = values[j];
-        }
-        if (Objects.equals(values[nbImg + 7], "true")){
-            List<String> list = Arrays.asList(listImgTmp);
-            Collections.shuffle(list);
-            list.toArray(listImgTmp);
-        }
-        this.listImages[index] = listImgTmp;
-        this.listSounds[index] = values[nbImg+3];
-        this.nbImages[index] = Integer.parseInt(values[nbImg+4]);
-        this.listLengthFixation[index] = Double.parseDouble(values[nbImg+5]);
-        this.displayDuration[index] = Double.parseDouble(values[nbImg+6]);
-    }*/
-
-    /*public void setSound(){
-        if (this.indexFileImage < this.indexEndGame){
-            Configuration config = ActiveConfigurationContext.getInstance();
-            final String directorySounds = config.getFileDir() + "/evals/" + this.gameVariant.getNameGame() + "/sounds/";
-            this.IMAGE_SOUND = directorySounds + this.listSounds[this.indexFileImage];
-        }
-    }
-
-    public void playSound(String soundPath){
-        Configuration config = ActiveConfigurationContext.getInstance();
-        if (config.isSoundEnabled()){
-            if (config.isSoaEnabled()){
-                Timeline soundSOA = new Timeline(new KeyFrame(Duration.millis(2000), event -> {
-                    gameContext.getSoundManager().add(soundPath);
-                }));
-                soundSOA.setCycleCount(1);
-                soundSOA.playFromStart();
-            }else {
-                gameContext.getSoundManager().add(soundPath);
-            }
-        }
-    }*/
-
     public void getGazePosition(Configuration config){
         log.info("Create timeline GP !");
         this.getGazePositionXY = new Timeline(new KeyFrame(Duration.millis((config.getFrameGazePosition()/1000.0)), ev -> {
@@ -416,10 +345,6 @@ public class GazeplayEval implements GameLifeCycle {
 
         this.nbImageSee = 0;
         this.canRemoveItemManually = true;
-
-        //gameContext.setLimiterAvailable();
-
-        //currentRoundDetails = pickAndBuildRandomPictures();
 
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
@@ -760,6 +685,7 @@ public class GazeplayEval implements GameLifeCycle {
         if (this.mediaPlayerVideo != null){
             this.mediaPlayerVideo.stop();
             this.mediaPlayerVideo.dispose();
+            this.mediaPlayerVideo = null;
         }
     }
 
@@ -795,6 +721,7 @@ public class GazeplayEval implements GameLifeCycle {
 
     public void decreaseIndex(){
         this.indexFileImage--;
+        this.replayScreen = true;
     }
 
     public void checkOptionsEval(){
@@ -861,6 +788,7 @@ public class GazeplayEval implements GameLifeCycle {
             this.playSound(nameSound);
         }
 
+        this.screenId.add(Integer.toString(this.indexFileImage));
         this.statsListStimuli.add(listStimuli.toString());
         this.statsListStimuliAnswer.add(listStimuliAnswer.toString());
 
@@ -877,22 +805,26 @@ public class GazeplayEval implements GameLifeCycle {
     }
 
     public List<List<Object>> getImages(){
-        List<List<Object>> imagesAndSounds = new ArrayList<>();
-        int nbImages = (Integer) this.allScreens.get(this.indexFileImage).get(1) * (Integer) this.allScreens.get(this.indexFileImage).get(2);
-        int startIndex = this.allScreens.get(this.indexFileImage).size() - (nbImages*3);
-        for (int i=startIndex; i<this.allScreens.get(this.indexFileImage).size(); i+=3){
-            imagesAndSounds.add(new ArrayList<>(List.of(
-                (String) this.allScreens.get(this.indexFileImage).get(i),
-                (String) this.allScreens.get(this.indexFileImage).get(i+1),
-                (boolean) this.allScreens.get(this.indexFileImage).get(i+2)
-            )));
+        if (this.replayScreen){
+            this.replayScreen = false;
+        }else {
+            this.imagesAndSounds = new ArrayList<>();
+            int nbImages = (Integer) this.allScreens.get(this.indexFileImage).get(1) * (Integer) this.allScreens.get(this.indexFileImage).get(2);
+            int startIndex = this.allScreens.get(this.indexFileImage).size() - (nbImages*3);
+            for (int i=startIndex; i<this.allScreens.get(this.indexFileImage).size(); i+=3){
+                this.imagesAndSounds.add(new ArrayList<>(List.of(
+                    (String) this.allScreens.get(this.indexFileImage).get(i),
+                    (String) this.allScreens.get(this.indexFileImage).get(i+1),
+                    (boolean) this.allScreens.get(this.indexFileImage).get(i+2)
+                )));
+            }
+
+            if ((boolean) this.allScreens.get(this.indexFileImage).get(8)){
+                Collections.shuffle(this.imagesAndSounds);
+            }
         }
 
-        if ((boolean) this.allScreens.get(this.indexFileImage).get(8)){
-            Collections.shuffle(imagesAndSounds);
-        }
-
-        return imagesAndSounds;
+        return this.imagesAndSounds;
     }
 
     public void generateInstructionScreen(String imageName, boolean setFixaImg, int timeImg){
@@ -985,44 +917,6 @@ public class GazeplayEval implements GameLifeCycle {
         this.createDisplayDuration.stop();
     }*/
 
-    public void goToStats(){
-        gameContext.showRoundStats(stats, this);
-    }
-
-    public boolean increaseIndexFileImage() {
-        this.indexFileImage = this.indexFileImage + 1;
-        if (this.indexFileImage == this.indexEndGame){
-            return true;
-        }else {
-            return false;
-        }
-    }
-
-    public void calculScores(String name){
-        if (name.contains("C_")){
-            this.scores++;
-        }
-
-    }
-
-    private void next(String value) {
-        currentRoundDetails.getPictureCardList().get(0).waitBeforeNextRound();
-    }
-
-    private void removeItemAddedManually() {
-        if (this.totalItemsAddedManually != 0 && this.canRemoveItemManually) {
-            this.nbCountError = this.nbCountErrorSave + 1;
-            this.totalItemsAddedManually -= 1;
-            this.canRemoveItemManually = false;
-        }
-    }
-
-    /*public void removeEventHandlerPictureCard(){
-        for (final PictureCard p : currentRoundDetails.getPictureCardList()) {
-            p.removeEventHandler();
-        }
-    }*/
-
     @Override
     public void dispose() {
         //this.getGazePositionXY.stop();
@@ -1033,25 +927,6 @@ public class GazeplayEval implements GameLifeCycle {
             currentRoundDetails = null;
         }
         stats.setTargetAOIList(targetAOIList);
-    }
-
-    public void resetFromReplay(){
-        this.totalItemsAddedManually = 0;
-        this.indexFileImage = 0;
-        this.nbCountError = 0;
-        this.nbCountErrorSave = 0;
-        this.nbImageSee = 0;
-        //Arrays.fill(this.scores, 0);
-    }
-
-    public void finalStats() {
-
-        /*stats.timeGame = System.currentTimeMillis() - this.currentRoundStartTime;
-        stats.nameScores = this.listNameScores;
-        stats.scores = this.listScoresPoints;
-        stats.totalItemsAddedManually = this.totalItemsAddedManually;
-        createTxtFile();
-        createExcelFile();*/
     }
 
     @SuppressWarnings("PMD")
