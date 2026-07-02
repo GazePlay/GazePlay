@@ -30,10 +30,13 @@ import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.DateUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -108,6 +111,7 @@ public class GazeplayEval implements GameLifeCycle {
     private CellStyle styleWorkbook;
     private int rowIndexExcel = 0;
     private String pathFileExcel;
+    private String pathFileCsv;
     private MediaPlayer player;
     private Boolean previousGoodAnswer;
     private ArrayList<String> statsListStimuli = new ArrayList<>();
@@ -155,7 +159,8 @@ public class GazeplayEval implements GameLifeCycle {
     public void testEval() {
         Configuration config = ActiveConfigurationContext.getInstance();
         this.generateStatsFolder();
-        this.createExcelFile();
+        //this.createExcelFile();
+        this.createCsvFile();
         Path jsonPath = Path.of(config.getFileDir() + "\\evals\\" + this.gameVariant.getNameGame() + "\\evalData.json");
 
         try {
@@ -280,6 +285,7 @@ public class GazeplayEval implements GameLifeCycle {
         dir.mkdirs();
         this.pathStatsGame = "C:/Users/" + username + "/Documents/GazePlayLearning_Eval/" + "Eval" + index + "_" + DateUtils.today();
         this.pathFileExcel = this.pathStatsGame  + "/Stats_" + DateUtils.today() + ".xlsx";
+        this.pathFileCsv = this.pathStatsGame  + "/Stats_" + DateUtils.today() + ".csv";
         this.countStats = 0;
     }
 
@@ -414,7 +420,8 @@ public class GazeplayEval implements GameLifeCycle {
         if (this.indexFileImage >= this.allScreens.size()){
             this.dispose();
             this.gameContext.clear();
-            this.closeExcelFile();
+            //this.closeExcelFile();
+            this.closeCsvFile();
             this.gameContext.showRoundStats(stats, this);
         }else {
             String type = this.allScreens.get(this.indexFileImage).get(0).toString();
@@ -943,9 +950,10 @@ public class GazeplayEval implements GameLifeCycle {
         Row header = sheet.createRow(this.rowIndexExcel++);
 
         header.createCell(0).setCellValue("Stimuli");
-        header.createCell(1).setCellValue("Réponse attendue");
-        header.createCell(2).setCellValue("Réponse donnée");
-        header.createCell(3).setCellValue("Temps écran (ms)");
+        header.createCell(1).setCellValue("ID écran");
+        header.createCell(2).setCellValue("Réponse attendue");
+        header.createCell(3).setCellValue("Réponse donnée");
+        header.createCell(4).setCellValue("Temps écran (ms)");
     }
 
     public void addLineExcel() {
@@ -954,10 +962,11 @@ public class GazeplayEval implements GameLifeCycle {
 
         for (int i = 0; i < this.statsListStimuli.size(); i++) {
             row = this.sheet.createRow(this.rowIndexExcel++);
-            row.createCell(0).setCellValue(this.statsListStimuli.get(0));
-            row.createCell(1).setCellValue(this.statsListStimuliAnswer.get(i));
-            row.createCell(2).setCellValue(this.statsListStimuliAnswerGiven.get(i));
-            row.createCell(3).setCellValue(this.statsListStimuliTimer.get(i));
+            row.createCell(0).setCellValue(this.statsListStimuli.get(i));
+            row.createCell(1).setCellValue(this.screenId.get(i));
+            row.createCell(2).setCellValue(this.statsListStimuliAnswer.get(i));
+            row.createCell(3).setCellValue(this.statsListStimuliAnswerGiven.get(i));
+            row.createCell(4).setCellValue(this.statsListStimuliTimer.get(i));
 
             row.setHeight((short) -1);
         }
@@ -983,6 +992,62 @@ public class GazeplayEval implements GameLifeCycle {
 
         } catch (IOException e) {
             log.info("Error close excel file -> " + e.getMessage());
+        }
+    }
+
+    public void createCsvFile() {
+
+        log.info("Create csv file");
+
+        this.pathFileCsv = this.pathStatsGame
+            + "/Stats_"
+            + DateUtils.today()
+            + ".csv";
+    }
+
+    public void closeCsvFile() {
+
+        log.info("Try create csv file -> {}", this.pathFileCsv);
+
+        CSVFormat format = CSVFormat.DEFAULT.builder()
+            .setDelimiter(';')                 // Compatible Excel FR
+            .setRecordSeparator(System.lineSeparator())
+            .setHeader(
+                "Stimuli",
+                "ID écran",
+                "Réponse attendue",
+                "Réponse donnée",
+                "Temps écran (ms)")
+            .build();
+
+        try (OutputStream os = Files.newOutputStream(Path.of(this.pathFileCsv))) {
+
+            // BOM UTF-8 pour Microsoft Excel
+            os.write(0xEF);
+            os.write(0xBB);
+            os.write(0xBF);
+
+            try (Writer writer = new OutputStreamWriter(os, StandardCharsets.UTF_8);
+                 CSVPrinter printer = new CSVPrinter(writer, format)) {
+
+                for (int i = 0; i < this.statsListStimuli.size(); i++) {
+
+                    printer.printRecord(
+                        this.statsListStimuli.get(i),
+                        this.screenId.get(i),
+                        this.statsListStimuliAnswer.get(i),
+                        this.statsListStimuliAnswerGiven.get(i),
+                        this.statsListStimuliTimer.get(i)
+                    );
+                }
+
+                printer.flush();
+            }
+
+            log.info("CSV created!");
+
+        } catch (IOException e) {
+            log.error("Error creating csv file", e);
         }
     }
 
