@@ -270,7 +270,7 @@ Generate,,,,,,,Generate Shortcut,,Générer le raccourcis,,,,,,,,,,,,
 
 # BERA SETTINGS
 TransitionTime,,,,,,,Transition time,,Temps de transition,,,,,,,,,,,,
-DelayBeforeSelection,,,,,,,Delay before selection,,Délai avant sélection,,,,,,,,,,,,
+DelayBeforeSelection,,,,,,,Delay before selection,,Délai avant sélection (en secondes),,,,,,,,,,,,
 ActivateAutomaticModeQuestion,,,,,,,Activate automatic mode for questions,,Activer le mode automatique pour les questions,,,,,,,,,,,,
 QuestionTime,,,,,,,Time for ask the question,,Temps pour énoncer la question,,,,,,,,,,,,
 HorizontalImages,,,,,,,Columnar images,,Images en colonnes,,,,,,,,,,,,
@@ -298,7 +298,7 @@ Time,,,Час (у секундах),时间 (秒),,,Time (seconds),,Temps (second
 # EYE-TRACKER SETTINGS
 EyeTracker,Eye Tracker,تعقب العين,Айтрэкер,眼球跟踪,Eyetracker,Συσκευή εντοπισμού ματιού,Eye Tracker,katseohjattava,Oculomètre,,Instrument za praćenje pogleda (Eye Tracker),Tracker Mata,Tracciatore oculare (eye tracker),,Oogsturingsmodule,tropiciel oka,Seguimento do olhar,АйТрекер,Eye tracker,Theo dõi ánh mắt,Tracker Mata
 FixationLength,Koha e fiksimit (sekonda),مدة التثبيت (بالثواني),Час фіксацыі (у секундах),注视时长（秒）,Dauer der Fixierung (Sekunden),Μήκος σταθεροποίησης (δευτερόλεπτα),Fixation Length (seconds),kiinnittämisen pituus,Durée de la fixation (secondes),,Dužina fiksiranog pogleda (u sekundama),Panjang Penekanan (saat),Durata fissazione (secondi),,Fixatietijd (seconden),Czas poprawki (sekundy),Duracaõ de fixação,Длина фиксации (в секундах),Duración de la fijación,Độ dài cố định (giây),Panjang Penekanan (saat)
-EvalOptions,,,,,,,,,Type d'éval,,,,,,,,,,,,
+EvalOptions,,,,,,,,,Mode de passage des évaluations,,,,,,,,,,,,
 
 # GRAPHICS SETTINGS
 LayoutFile,Stilet,ملف نموذجي,Табліца стыляў,,Style Sheets,Φύλλα στυλ,Style Sheets,asettelutiedosto,Fichier de style,,Raspored datoteka,Helaian Gaya,Fogli di stile,,Stijlen,Arkusze stylów,Diretório do jogo « Onde é »,Таблица стилей,Hojas de estilo,Tập tin Định dạng,Helaian Gaya
@@ -338,7 +338,7 @@ Exit FullScreen,Çaktivizo Ekranin e plotë,الخروج من كامل الشا�
 
 # CUSTOM FILES CHOOSER
 customFileChooser,,,Выбраць персаналізаваную тэчку,,,,Custom file chooser,,Sélecteur de fichiers personnalisés,,,,,,,,,Выбрать персонализированную папку,,,
-importEvalChooser,,,,,,,Import Evaluation Chooser,,Sélecteur d'evaluations personnalisés,,,,,,,,,,,,
+importEvalChooser,,,,,,,Import Evaluation Chooser,,Sélecteur d'évaluations personnalisées,,,,,,,,,,,,
 addNewEval,,,,,,,Add a new evaluation,,Ajouter une nouvelle evaluation,,,,,,,,,,,,
 removeEval,,,,,,,Do you want remove this evaluation ?,,Voulez-vous vraiment supprimer cette évaluation ?,,,,,,,,,,,,
 addNewImages,,,Дадаць выявы,,,,Add new images ...,,Ajouter de nouvelles images ...,,,,,,,,,Добавить изображения,Agregar nuevas imágenes ...,,

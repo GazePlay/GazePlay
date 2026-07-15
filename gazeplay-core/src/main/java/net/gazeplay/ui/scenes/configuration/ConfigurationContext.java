@@ -5,10 +5,7 @@ import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Dimension2D;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -26,6 +23,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -246,10 +244,33 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         {
             I18NText label = new I18NText(translator, "DelayBeforeSelection", COLON);
 
+            Label info = new Label("ⓘ");
+
+            Tooltip tooltip = new Tooltip();
+
+            Label message = new Label("Durée pendant laquelle la sélection est impossible à l’apparition d’un écran de stimuli");
+
+            tooltip.setGraphic(message);
+            tooltip.setShowDelay(Duration.ZERO);
+            tooltip.setHideDelay(Duration.ZERO);
+
+            info.setOnMouseEntered(e -> {
+                Point2D p = info.localToScreen(
+                    info.getBoundsInLocal().getMinX(),
+                    info.getBoundsInLocal().getMinY()
+                );
+
+                tooltip.show(info, p.getX(), p.getY() - tooltip.getHeight());
+            });
+
+            info.setOnMouseExited(e -> {
+                tooltip.hide();
+            });
+
             Spinner<Double> input = buildSpinner(0, 3, (double) config.getDelayBeforeSelectionTime() / 1000,
                 0.5, config.getDelayBeforeSelectionTimeProperty());
 
-            addToGrid(grid, currentFormRow, label, input);
+            addInfoToGrid(grid, currentFormRow, label, info, input);
         }
         /*{
             I18NText label = new I18NText(translator, "ActivateAutomaticModeQuestion", COLON);
@@ -760,6 +781,35 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
         } else {
             grid.add(label, columnIndexLabelRight, currentRowIndex);
             GridPane.setHalignment(label, HPos.RIGHT);
+            grid.add(input, columnIndexInputRight, currentRowIndex);
+            GridPane.setHalignment(input, HPos.RIGHT);
+        }
+    }
+
+    void addInfoToGrid(GridPane grid, AtomicInteger currentFormRow, I18NText label, Label info, final Node input) {
+        int columnIndexLabelLeft = 1;
+        int columnIndexInfoLeft = 3;
+        int columnIndexInputLeft = 2;
+        int columnIndexLabelRight = 2;
+        int columnIndexInfoRight = 0;
+        int columnIndexInputRight = 1;
+
+        final int currentRowIndex = currentFormRow.incrementAndGet();
+
+        label.setId("item");
+
+        if (currentLanguageAlignmentIsLeftAligned) {
+            grid.add(label, columnIndexLabelLeft, currentRowIndex);
+            GridPane.setHalignment(label, HPos.LEFT);
+            grid.add(info, columnIndexInfoLeft, currentRowIndex);
+            GridPane.setHalignment(info, HPos.LEFT);
+            grid.add(input, columnIndexInputLeft, currentRowIndex);
+            GridPane.setHalignment(input, HPos.LEFT);
+        } else {
+            grid.add(label, columnIndexLabelRight, currentRowIndex);
+            GridPane.setHalignment(label, HPos.RIGHT);
+            grid.add(info, columnIndexInfoRight, currentRowIndex);
+            GridPane.setHalignment(info, HPos.RIGHT);
             grid.add(input, columnIndexInputRight, currentRowIndex);
             GridPane.setHalignment(input, HPos.RIGHT);
         }

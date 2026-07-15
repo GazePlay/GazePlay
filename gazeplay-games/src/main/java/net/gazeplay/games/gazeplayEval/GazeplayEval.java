@@ -999,7 +999,7 @@ public class GazeplayEval implements GameLifeCycle {
 
         log.info("Create csv file");
 
-        this.pathFileCsv = this.pathStatsGame
+        this.stats.actualFile = this.pathStatsGame
             + "/Stats_"
             + DateUtils.today()
             + ".csv";

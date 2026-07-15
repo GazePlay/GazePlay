@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.*;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GazePlay;
@@ -43,6 +44,7 @@ public class ImportGame extends Stage {
     private ConfigurationContext configurationContext;
     private Translator translator;
     private GazePlay gazePlay;
+    private Stage primaryStage;
 
     private FlowPane flowPanes = new FlowPane();
 
@@ -61,7 +63,7 @@ public class ImportGame extends Stage {
         this.setMinWidth(500);
         this.setMinHeight(500);
 
-        final Stage primaryStage = gazePlay.getPrimaryStage();
+        this.primaryStage = gazePlay.getPrimaryStage();
         this.initOwner(primaryStage);
         this.initModality(Modality.WINDOW_MODAL);
         this.initStyle(StageStyle.UTILITY);
@@ -130,6 +132,25 @@ public class ImportGame extends Stage {
         BorderPane.setAlignment(addButtonStackPane, Pos.CENTER);
         background.setTop(addButtonStackPane);
         background.setCenter(scrollPane);
+
+        I18NButton valider = new I18NButton(translator, "Done");
+        valider.setStyle(
+            "-fx-background-color: green;" +
+                "-fx-text-fill: white;"
+        );
+        valider.setPrefWidth(200);
+
+        valider.setOnAction(event -> {
+            this.primaryStage.getScene().getRoot().setEffect(null);
+            Stage stage = (Stage) valider.getScene().getWindow();
+            stage.close();
+        });
+
+        HBox bottom = new HBox(valider);
+        bottom.setAlignment(Pos.CENTER);
+        bottom.setPadding(new Insets(20));
+
+        background.setBottom(bottom);
 
         section = new StackPane();
         section.layoutYProperty().bind(input.heightProperty());
@@ -291,6 +312,10 @@ public class ImportGame extends Stage {
                 backgroundPreview.setFill(Color.WHITE);
 
                 Label text = new Label(nameGame);
+                text.setWrapText(true);
+                text.setMaxWidth(90);
+                text.setAlignment(Pos.CENTER);
+                text.setTextAlignment(TextAlignment.CENTER);
 
                 Button delete = new Button("x");
                 delete.setPrefWidth(20);
