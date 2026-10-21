@@ -70,13 +70,13 @@ merge the rounds of a version 1 file twice. The historical files can be correcte
 
 ## Technical changes
 - Java runtime bundled with the distributions updated from Java 17.0.2 (January 2022) to **Java 21.0.12.1** (Azul
-  Zulu, supported until 2031) with JavaFX 23.0.8, checked by SHA-256 after download. The program itself still runs on
-  Java 17 and later (version without Java runtime).
+  Zulu, supported until 2031) with JavaFX 23.0.8, checked by SHA-256 after download. **The version without Java runtime
+  now needs Java 21 and JavaFX 21 or later** (Java 17 is no longer enough).
 - Spring Boot removed (it was only used to wire the application); start-up is plain Java.
 - Gradle 9, dependencies updated (POI, Gson, Guava, org.json with security fixes, logging), versions gathered in
   `gradle/libs.versions.toml`.
 - Tests: they no longer touch the real `~/GazePlay` folder, run without window, and run in the continuous integration on
-  Java 17 and 21, with a launch test of the application and of the Linux distribution.
+  Java 21 and 25, with a real launch of the Windows, macOS and Linux distributions.
 
 ## Not verified
 - Eye trackers (Tobii, EyeTribe): no hardware test was done.

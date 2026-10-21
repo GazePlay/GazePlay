@@ -10,11 +10,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Set up JDK 17 (Azul Zulu)
+      - name: Set up JDK 21 (Azul Zulu)
         uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
 
       - name: Run SpotBugs
         run: |
@@ -29,15 +29,15 @@ jobs:
           path: '**/build/spotbugs/'
 
   test:
-    # The JavaFX media of the tests (17.0.20) plays audio with the ffmpeg of the system up to ffmpeg 5 (libavcodec 59):
-    # Ubuntu 22.04 has ffmpeg 4.4, Ubuntu 24.04 (ubuntu-latest) ffmpeg 6.1, which it cannot use
-    runs-on: ubuntu-22.04
+    # The JavaFX media of the tests (21.0.13) plays audio with the ffmpeg of the system, up to ffmpeg 6 (Ubuntu 24.04 has
+    # 6.1). Pinned like package-linux: ubuntu-latest moves to Ubuntu 26
+    runs-on: ubuntu-24.04
 
-    # 17: bundled runtime and bytecode target; 21: next LTS, to know when the runtime can move (see MODERNIZATION.md)
+    # 21: bytecode target and Java of the bundled runtimes; 25: next LTS, to know when the runtime can move
     strategy:
       fail-fast: false
       matrix:
-        java: [ '17', '21' ]
+        java: [ '21', '25' ]
 
     steps:
       - name: Checkout code
@@ -88,11 +88,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Set up JDK 17 (Azul Zulu)
+      - name: Set up JDK 21 (Azul Zulu)
         uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
 
       # The bundled runtime (Zulu 21 with JavaFX 23) plays audio with the ffmpeg of the system (ffmpeg 6 supported)
       - name: Install virtual X server and ffmpeg
@@ -132,11 +132,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Set up JDK 17 (Azul Zulu)
+      - name: Set up JDK 21 (Azul Zulu)
         uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
 
       - name: Build the Windows distribution
         shell: pwsh
@@ -162,11 +162,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Set up JDK 17 (Azul Zulu)
+      - name: Set up JDK 21 (Azul Zulu)
         uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
 
       - name: Build the macOS Apple Silicon distribution
         run: |

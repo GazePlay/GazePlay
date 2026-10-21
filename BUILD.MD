@@ -4,8 +4,8 @@ Commands are given for the Unix shell (`./gradlew`); on Windows use `gradlew` in
 
 ## Prerequisites
 
-- A JDK 17 or newer (the CI uses Azul Zulu 17 and 21). The code is compiled for Java 17 (`options.release = 17`)
-  whatever the JDK.
+- A JDK 21 or newer (the CI uses Azul Zulu 21 and 25). The code is compiled for Java 21 (`options.release = 21`)
+  whatever the JDK; with an older JDK the build stops at once with an explicit message.
 - Nothing else: the Gradle wrapper (Gradle 9.8.2, checksum pinned in `gradle/wrapper/gradle-wrapper.properties`)
   downloads Gradle. All versions of libraries and plugins are in [gradle/libs.versions.toml](gradle/libs.versions.toml).
 
@@ -71,8 +71,9 @@ aarch64, macOS x64 and Apple Silicon; the 32 bits builds were dropped in October
 - The archives are cached in `~/.m2/repository/jre` under their own versioned name, and their **SHA-256 is checked**
   after each download ([gradle/jre.gradle](gradle/jre.gradle)). To change the runtime version, update in the same
   change the version and all the checksums in `gradle/jre.gradle`.
-- JavaFX: the code is compiled and tested against JavaFX 17 (`javafx` in `gradle/libs.versions.toml`), the oldest
-  version it supports, so that it also runs with the JavaFX of the system (no-JRE distribution). The bundled Zulu
+- JavaFX: the code is compiled and tested against JavaFX 21 (`javafx` in `gradle/libs.versions.toml`), the oldest
+  version it supports, so that it also runs with the JavaFX of the system (no-JRE distribution: Java 21 and JavaFX 21
+  or newer). The bundled Zulu
   runtimes ship a newer JavaFX (23.0.8 in Zulu 21.0.12.1, see `lib/javafx.properties` of the runtime), with their own
   media plugins: launch a distribution with its runtime after a runtime update.
 - Build one distribution, e.g. `./gradlew windowsDistZip`, `./gradlew linuxDistTar`, `./gradlew noJREDistZip`, or all

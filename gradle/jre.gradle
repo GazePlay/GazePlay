@@ -2,8 +2,8 @@ import java.security.DigestInputStream
 import java.security.MessageDigest
 
 // Java runtimes bundled with the distributions: Azul Zulu 21 (LTS, supported until 2031) with JavaFX. Zulu 21.0.12.1 FX
-// bundles JavaFX 23.0.8, while the code is compiled for Java 17 against JavaFX libs.versions.javafx (17.0.20, the oldest
-// API it supports, see BUILD.MD), so that the no-JRE distribution still runs on Java 17.
+// bundles JavaFX 23.0.8, while the code is compiled for Java 21 against JavaFX libs.versions.javafx (21.x, the oldest
+// API it supports, see BUILD.MD): the no-JRE distribution runs with Java 21 and JavaFX 21 or newer.
 // 64 bits only (Windows x64, Linux x64, Linux aarch64, macOS x64 and aarch64): the 32 bits builds were dropped in October 2026.
 ext.jreSource = 'https://cdn.azul.com/zulu/bin'
 ext.zuluVersion = '21.52.203'

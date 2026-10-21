@@ -2,9 +2,10 @@
 # See MODERNIZATION.md for the reasons of each choice before upgrading.
 
 [versions]
-# Oldest JavaFX supported (API of the compilation and of the tests): the no-JRE distribution runs with any JavaFX 17+,
-# the bundled Zulu runtimes ship a newer one (23.0.8 in Zulu 21.0.12.1), see BUILD.MD
-javafx = "17.0.21"
+# Oldest JavaFX supported (API of the compilation and of the tests): the no-JRE distribution runs with any JavaFX 21+,
+# the bundled Zulu runtimes ship a newer one (23.0.8 in Zulu 21.0.12.1), see BUILD.MD. JavaFX 17 was left in October
+# 2026, when its free public updates ended
+javafx = "21.0.13"
 slf4j = "2.0.20"
 logback = "1.6.5"
 lombok = "1.18.48"
@@ -14,8 +15,8 @@ spotbugs = "4.10.5"
 pmd = "7.28.0"
 junit = "6.1.3"
 testfx = "4.0.18"
-# 21.x requires a Java 21 runtime for the tests
-monocle = "17.0.10"
+# Same major version as javafx (internal JavaFX API); requires Java 21
+monocle = "21.0.2"
 mockito = "5.24.0"
 # 4.x: the Windows 32 bits binary is gone, it is no longer needed (64 bits distributions only)
 jave = "4.2.0"

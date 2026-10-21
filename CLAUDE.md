@@ -15,7 +15,7 @@ Contexte de travail pour Claude Code. Synthèse de l'audit technique et de l'ét
 
 ## Architecture réelle (faits)
 
-- Java 17, Gradle 8.14 multi-modules. Spring Boot 3.4.5 sert surtout de *service locator* (19 fichiers, tous dans `core` sauf 2 dans `commons`, **0 dans les jeux**). picocli et JavaFX 21.0.1 à la compilation, mais **la JRE embarquée est Zulu FX 17.0.2** (`gradle/jre.gradle`), d'où un décalage de version.
+- *(Audit d'origine ; depuis l'étape 16 : Java 21 et JavaFX 21 à la compilation, Gradle 9.8.2.)* Java 17, Gradle 8.14 multi-modules. Spring Boot 3.4.5 sert surtout de *service locator* (19 fichiers, tous dans `core` sauf 2 dans `commons`, **0 dans les jeux**). picocli et JavaFX 21.0.1 à la compilation, mais **la JRE embarquée est Zulu FX 17.0.2** (`gradle/jre.gradle`), d'où un décalage de version.
 - Modules : `commons` (configuration, regard, `Stats`), `games-commons` (contrat des jeux), `core` (application), `games` (53 paquets, 77 `SpecSource`, 73 launchers, 290 Mo de ressources), `dist`. `melordi` et `picto-pick`, distribués mais inaccessibles, ont été **retirés** (étape 9). `side-projects`, `gazeplay-api` et `old-website`, morts ou expérimentaux, ont été **retirés** (étape 14).
 - **Une JVM par partie** : `GameMenuController.createBuilder` lance `java -cp … GazePlayLauncher --game …` sans `-Xmx` ni `--add-exports`. Le menu attend 6 s dans un thread hors FX. L'enfant termine par `System.exit` (`StatDisplayUtils:50-53`).
 - Jeux découverts via `games-catalog.txt` / `evals-catalog.txt`, générés au build (`gazeplay-core/build.gradle:77-125`) d'après les noms de fichiers `*SpecSource`.

@@ -10,6 +10,13 @@ plugins {
     alias(libs.plugins.download)
 }
 
+// The code is compiled for Java 21 (options.release below): an older JDK cannot compile it. Clear message instead of
+// "invalid target release: 21" (IntelliJ: Settings > Build Tools > Gradle > Gradle JVM)
+if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)) {
+    throw new GradleException("GazePlay needs a JDK 21 or newer to build, Gradle runs on Java ${JavaVersion.current()} " +
+        "(JAVA_HOME, or the Gradle JVM in the settings of IntelliJ)")
+}
+
 // Same JavaFX modules as the subprojects: needed by "./gradlew run" (it used to fail with an empty --add-modules)
 javafx {
     version = libs.versions.javafx.get()
@@ -114,8 +121,8 @@ subprojects {
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
-        // Bytecode and API of Java 17 whatever the JDK running the build
-        options.release = 17
+        // Bytecode and API of Java 21 (LTS), the Java of all the bundled runtimes, whatever the JDK running the build
+        options.release = 21
     }
 
     test {

@@ -774,7 +774,32 @@ Suite complète **395 tests, 0 échec** (8 tests de moins : ceux des classes sup
   - jeu direct : idem, code 0, aucune JVM restante ;
   - **contrôle négatif** : un jeu inexistant (`--game JeuInexistant`) fait bien échouer le contrôle (« GazePlay stopped », code 1).
   - Piège corrigé au passage : le script se termine explicitement par `exit 0`, sinon `$LASTEXITCODE` resterait vide et le workflow verrait un échec.
-- **Non vérifié avant le push** : les machines GitHub Windows et macOS (affichage, audio) et la distribution macOS Intel (pas de machine x64 dans la CI). Les jobs le diront.
+- **CI (run 39611734902, commit `09ed215af`) : entièrement verte dès le premier essai.** Les 6 lancements sont confirmés dans les journaux (« GazePlay was running without error after 40 s ») : menu et jeu sur **Windows x64, Linux x64 et macOS Apple Silicon**, avec le runtime embarqué. Les machines Windows et macOS n'ont demandé aucune configuration d'affichage ni d'audio.
+- **Non vérifié** : la distribution macOS Intel (pas de machine x64 dans la CI) et ARM Linux (pas de machine ARM Linux).
+
+---
+
+## 2q. Étape 16 — Java 21 et JavaFX 21 à la compilation (21/10/2026)
+
+**Décision du mainteneur** (21/10/2026) : passer en Java 21.
+- **Pourquoi Java 17 restait** : uniquement `options.release = 17`, pour que la distribution sans JRE tourne sur un Java 17 installé. Toutes les distributions embarquent déjà Java 21 depuis l'étape 10. Avec lui restaient JavaFX 17 (version la plus ancienne prise en charge), Monocle 17 (Monocle 21 exige Java 21) et JDK 17 dans la CI.
+- **Pourquoi maintenant** :
+  - le support public gratuit de JavaFX 17 par Gluon se termine en octobre 2026 ;
+  - l'écart entre les tests (JavaFX 17) et ce qui est livré (JavaFX 23) diminue ;
+  - le langage Java 21 devient disponible.
+
+**Fait** :
+- `options.release = 21`. Avec un JDK plus ancien, le build s'arrête aussitôt sur un message explicite (« GazePlay needs a JDK 21 or newer to build... ») au lieu de `invalid target release: 21`. Vérifié avec le JDK 17 local.
+- **JavaFX 17.0.21 → 21.0.13** (dernière 21.x) et **Monocle 17.0.10 → 21.0.2**.
+- **CI** :
+  - JDK 21 dans tous les jobs (`ci.yml`, `cd.yml`, `release.yml`) ;
+  - matrice de tests **21 et 25**, pour anticiper la LTS suivante ;
+  - le job de tests revient sur **Ubuntu 24.04**, car JavaFX 21.0.13 gère ffmpeg 6 (`libavplugin-ffmpeg-60`, vérifié dans le jar). Il est épinglé comme `package-linux`.
+- **Documentation** : `BUILD.MD`, `INTELLIJ.md`, `INSTALLATION-EN.MD` et `INSTALLATION-FR.MD` (azul-21), notes de version, `gradle/jre.gradle`.
+- **Impact pour les utilisateurs** : la distribution sans JRE exige désormais **Java 21 et JavaFX 21 ou plus récents**. Les distributions avec runtime ne changent pas (Java 21 embarqué).
+- **Impact pour les développeurs** : IntelliJ doit utiliser un JDK 21, à la fois comme SDK du projet et comme Gradle JVM (`azul-21.0.7` est déjà installé sur le poste du mainteneur).
+- **Vérifié en local** (JDK Zulu 21.0.7) : compilation sans erreur ; suite complète **395 tests, 0 échec** ; `smokeTest` 2/2 ; SpotBugs vert.
+- **Non vérifié avant le push** : les tests sous JDK 25 (pas de JDK 25 en local) ; la CI le dira.
 
 ---
 

@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Set up JDK 17 (Azul Zulu)
+      - name: Set up JDK 21 (Azul Zulu)
         uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
       - name: Package with Gradle (no test)
         run: |
           ./gradlew --stacktrace --info packageApp -x test
