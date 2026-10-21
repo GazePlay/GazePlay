@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="GazePlay" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="net.gazeplay.GazePlayLauncher" />
+    <module name="gazeplay.gazeplay-core.main" />
+    <option name="PROGRAM_PARAMETERS" value="" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
