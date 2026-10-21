@@ -20,7 +20,6 @@ import net.gazeplay.commons.configuration.BackgroundStyleVisitor;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gamevariants.difficulty.SourceSet;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
-import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.ResourceFileManager;
 import net.gazeplay.commons.utils.games.WhereIsItVaildator;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -144,8 +143,7 @@ public class WhereIsIt implements GameLifeCycle {
         gameContext.firstStart();
 
         if (gameType.toString().contains("SOUNDS")) {
-            final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
-            backgroundMusicManager.pause();
+            gameContext.pauseBackgroundMusic();
         }
     }
 

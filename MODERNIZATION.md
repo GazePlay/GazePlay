@@ -829,7 +829,7 @@ Suite complète **395 tests, 0 échec** (8 tests de moins : ceux des classes sup
 
 ---
 
-## 2s. Étape 18 — État statique modifiable : étapes 1 à 3 (21/10/2026)
+## 2s. Étape 18 — État statique modifiable : étapes 1 à 5 (21/10/2026)
 
 Recommandation validée par le mainteneur : avancer par petites étapes. Étapes 1 à 3 faites ici ; `ActiveConfigurationContext` (étape 4) et les sons (étape 5) restent à faire.
 
@@ -853,9 +853,26 @@ Recommandation validée par le mainteneur : avancer par petites étapes. Étapes
 
 **Vérifié** (JDK 25) : compilation ; suite complète **397 tests, 0 échec** ; `smokeTest` 2/2 ; SpotBugs vert.
 
-**Reste (étapes 4 et 5)** :
-- `ActiveConfigurationContext` : faire utiliser aux jeux `gameContext.getConfiguration()`, et passer la configuration par les constructeurs dans `core` et `commons` depuis `CompositionRoot`. Façade gardée tant qu'il reste des appelants ; code Eval exclu.
-- `BackgroundMusicManager` et `ForegroundSoundsUtils.lastSoundPlayer` : les fournir par le contexte de jeu, qui expose déjà un `SoundManager`.
+### Étapes 4 et 5 (21/10/2026, faites à la demande du mainteneur)
+
+**Constat de conception, qui a changé le plan.** `ActiveConfigurationContext` change d'objet à chaque changement de profil (`switchToUser`). Transmettre un objet `Configuration` par les constructeurs des écrans, comme je l'avais proposé, serait **une erreur** : un écran créé avant le changement de profil lirait l'ancien profil. Le bon point d'accès est celui qui relit la configuration à chaque appel : `IGameContext.getConfiguration()`. Les jeux l'utilisaient déjà à 226 endroits.
+
+**Étape 4 — fait** :
+- **Plus aucun jeu (hors Eval) n'appelle le singleton de configuration.** `Piano` et `Simon`, les deux derniers, passent par `gameContext.getConfiguration()`.
+- `GameContext` utilise sa propre méthode `getConfiguration()` au lieu du singleton (raccourci « quitter », panneau de contrôle). La méthode est documentée : elle relit le profil actif à chaque appel.
+- Code Eval (`GazeplayEval`, `IGameVariant.toGameVariant` pour les variantes Eval) : non touché, à la demande du mainteneur.
+
+**Étape 5 — fait** :
+- Nouvelle méthode du contrat des jeux, `IGameContext.pauseBackgroundMusic()`, implémentée par `GameContext`. *Sounds of Life* et *Where is it* l'utilisent au lieu d'appeler directement `BackgroundMusicManager`. **Plus aucun jeu (hors Eval) n'utilise les singletons de musique ni de configuration.**
+- C'est un ajout au contrat, sans effet sur les jeux existants. Test : `GameContextTest.shouldPauseTheBackgroundMusicForTheGames`.
+
+**Décision du mainteneur (21/10/2026) : le chantier des singletons s'arrête ici.** Raisons :
+- Les singletons restants (`ActiveConfigurationContext` dans `core` et `commons`, `BackgroundMusicManager`, `ForegroundSoundsUtils`) sont de **vrais services propres au processus** : le profil actif de la session, une seule musique de fond et une seule sortie de sons ponctuels par JVM, avec une partie par JVM.
+- Ils ont déjà un point d'injection pour les tests (`setInstance`), utilisé par les tests existants.
+- Les supprimer demanderait de faire passer un fournisseur de configuration (`Supplier<Configuration>`) par une trentaine de classes et leurs tests, ainsi que par le contrat de `Stats`, que les 73 jeux construisent eux-mêmes. Le gain réel serait faible au regard du risque.
+- **Ce qui a été obtenu** : les jeux ne dépendent plus que de leur contexte (`IGameContext`). C'était l'objectif utile, car c'est le contrat que les nouveaux jeux suivent.
+
+**Vérifié** (JDK 25) : compilation ; suite complète **398 tests, 0 échec** ; `smokeTest` 2/2 ; SpotBugs vert.
 
 ---
 

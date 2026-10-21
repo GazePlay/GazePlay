@@ -17,7 +17,6 @@ import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
@@ -72,7 +71,7 @@ public class Piano extends Parent implements GameLifeCycle {
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom();
         this.stats.setGameSeed(randomGenerator.getSeed());
-        this.config = ActiveConfigurationContext.getInstance();
+        this.config = gameContext.getConfiguration();
         this.tuileColor = this.config.getTileColors();
         this.gameVariant = gameVariant;
     }
@@ -81,7 +80,7 @@ public class Piano extends Parent implements GameLifeCycle {
         this.gameContext = gameContext;
         this.stats = stats;
         this.randomGenerator = new ReplayablePseudoRandom(gameSeed);
-        this.config = ActiveConfigurationContext.getInstance();
+        this.config = gameContext.getConfiguration();
         this.tuileColor = this.config.getTileColors();
         this.gameVariant = gameVariant;
     }

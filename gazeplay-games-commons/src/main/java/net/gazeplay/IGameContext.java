@@ -38,6 +38,12 @@ public interface IGameContext {
     @NonNull
     SoundManager getSoundManager();
 
+    /**
+     * Pauses the background music of GazePlay, e.g. for a game whose sounds must be heard alone. The games used to call
+     * the music manager of the application directly.
+     */
+    void pauseBackgroundMusic();
+
     @NonNull
     Translator getTranslator();
 

@@ -13,7 +13,6 @@ import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
-import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.commons.utils.stats.TargetAOI;
 
@@ -131,8 +130,7 @@ public class SoundsOfLife implements GameLifeCycle {
     
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);
-        final BackgroundMusicManager backgroundMusicManager = BackgroundMusicManager.getInstance();
-        backgroundMusicManager.pause();
+        gameContext.pauseBackgroundMusic();
     }
 
     @Override

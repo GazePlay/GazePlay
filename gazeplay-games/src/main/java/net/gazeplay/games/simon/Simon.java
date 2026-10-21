@@ -6,7 +6,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.IGameContext;
-import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 import java.util.ArrayList;
@@ -72,7 +71,7 @@ public class Simon  extends Parent implements GameLifeCycle {
     }
 
     protected void playSound(String soundPath){
-        Configuration config = ActiveConfigurationContext.getInstance();
+        Configuration config = gameContext.getConfiguration();
         if (config.isSoundEnabled()){
             gameContext.getSoundManager().add("data/simonGame/songs/"+soundPath+".wav");
         }

@@ -37,6 +37,7 @@ import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.I18NButton;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.*;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.ForegroundSoundsUtils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
@@ -214,7 +215,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public void createQuitShortcut(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame) {
-        Configuration config = ActiveConfigurationContext.getInstance();
+        Configuration config = getConfiguration();
         final Scene scene = gazePlay.getPrimaryScene();
 
         EventHandler<KeyEvent> buttonHandler = new EventHandler<>() {
@@ -235,7 +236,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     }
 
     public void createControlPanel(@NonNull GazePlay gazePlay, @NonNull Stats stats, GameLifeCycle currentGame, boolean inReplayMode) {
-        Configuration config = ActiveConfigurationContext.getInstance();
+        Configuration config = getConfiguration();
         MusicControl musicControl = getMusicControl();
         AnimationSpeedRatioControl animationSpeedRatioControl = AnimationSpeedRatioControl.getInstance();
         FixationLengthControl fixationLengthControl = FixationLengthControl.getInstance();
@@ -430,6 +431,15 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         gazePlay.onDisplayStats(statsContext);
     }
 
+    @Override
+    public void pauseBackgroundMusic() {
+        BackgroundMusicManager.getInstance().pause();
+    }
+
+    /**
+     * The configuration of the active profile, read at each call: a profile change (menu) is seen by the next call.
+     * The games read it through this method rather than through the static accessor.
+     */
     @Override
     public @NonNull Configuration getConfiguration() {
         return ActiveConfigurationContext.getInstance();

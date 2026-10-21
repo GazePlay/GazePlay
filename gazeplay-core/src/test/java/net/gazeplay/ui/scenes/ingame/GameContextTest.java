@@ -16,6 +16,7 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.soundsmanager.SoundManager;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.Bravo;
+import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.stats.StatsContext;
@@ -124,6 +125,26 @@ class GameContextTest {
 
         verify(mockList, never()).add(any());
         verify(mockRoot, never()).addEventFilter(any(), any());
+    }
+
+    /**
+     * The games pause the background music through their context (they used to call the music manager directly).
+     */
+    @Test
+    void shouldPauseTheBackgroundMusicForTheGames() {
+        BackgroundMusicManager musicManager = mock(BackgroundMusicManager.class);
+        BackgroundMusicManager.setInstance(musicManager);
+        try {
+            when(mockRoot.getChildren()).thenReturn(mockList);
+            GameContext gameContext = new GameContext(mockGazePlay, mockTranslator, mockRoot, mockGamingRoot, mockBravo,
+                mockHBox, mockGazeDeviceManager, mockSoundManager, mockConfigPane);
+
+            gameContext.pauseBackgroundMusic();
+
+            verify(musicManager).pause();
+        } finally {
+            BackgroundMusicManager.setInstance(new BackgroundMusicManager());
+        }
     }
 
     @Test
