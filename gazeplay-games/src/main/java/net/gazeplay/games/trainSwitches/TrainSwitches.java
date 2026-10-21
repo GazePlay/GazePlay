@@ -1,5 +1,6 @@
 package net.gazeplay.games.trainSwitches;
 
+import lombok.extern.slf4j.Slf4j;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -29,6 +30,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@Slf4j
 public class TrainSwitches implements GameLifeCycle {
 
     // Context
@@ -80,7 +82,7 @@ public class TrainSwitches implements GameLifeCycle {
     public TrainSwitches(final IGameContext gameContext, final Stats stats, int level, String variantType, int numberOfTrains){
         this.gameContext = gameContext;
         this.level = level;
-        System.out.println("level " + level);
+        log.debug("level {}", level);
         this.variantType = variantType;
         this.stats = stats;
         trainToSend = numberOfTrains;

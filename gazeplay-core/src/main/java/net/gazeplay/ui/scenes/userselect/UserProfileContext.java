@@ -30,7 +30,6 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GamePanelDimensionProvider;
 import net.gazeplay.GazePlay;
-import net.gazeplay.GazePlayArgs;
 import net.gazeplay.commons.app.LogoFactory;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -72,13 +71,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         cardHeight = gamePanelDimensionProvider.getDimension2D().getHeight() / 4;
         cardWidth = gamePanelDimensionProvider.getDimension2D().getWidth() / 8;
 
-        String gazeplayType = GazePlayArgs.returnArgs();
-
-        if (gazeplayType.equals("afsrGazeplay")) {
-            afsrGazeplayUserProfileContext(gazePlay, screenDimension);
-        } else {
-            gazeplayUserProfileContext(gazePlay, screenDimension);
-        }
+        gazeplayUserProfileContext(gazePlay, screenDimension);
     }
 
     public void gazeplayUserProfileContext(GazePlay gazePlay, Dimension2D screenDimension) {
@@ -115,43 +108,6 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
                 + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
         }
      }
-
-    public void afsrGazeplayUserProfileContext(GazePlay gazePlay, Dimension2D screenDimension) {
-        final Node logo = LogoFactory.getInstance().createLogoAnimated(gazePlay.getPrimaryStage());
-
-        final HBox topRightPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(topRightPane);
-        topRightPane.setAlignment(Pos.TOP_CENTER);
-
-        final CustomButton exitButton = createExitButton(screenDimension);
-        topRightPane.getChildren().add(exitButton);
-
-        final Node userPickerChoicePane = createUserPickerChoicePane(gazePlay);
-
-        final VBox centerCenterPane = new VBox();
-        centerCenterPane.setSpacing(40);
-        centerCenterPane.setAlignment(Pos.TOP_CENTER);
-        centerCenterPane.getChildren().add(userPickerChoicePane);
-
-        final BorderPane topPane = new BorderPane();
-        HBox logosBox = new HBox();
-        logosBox.getChildren().add(logo);
-        logosBox.setSpacing(20);
-
-        ImageView iv = new ImageView(new Image("data/common/images/logos/Logo-AFSR.png"));
-        iv.fitHeightProperty().bind(logosBox.heightProperty().multiply(0.5));
-        iv.setPreserveRatio(true);
-        logosBox.getChildren().add(iv);
-        logosBox.setAlignment(Pos.CENTER);
-        topPane.setCenter(logosBox);
-        topPane.setRight(topRightPane);
-
-        root.setTop(topPane);
-        root.setCenter(centerCenterPane);
-        root.setStyle("-fx-background-color: rgba(0,0,0,1); " + "-fx-background-radius: 8px; "
-            + "-fx-border-radius: 8px; " + "-fx-border-width: 5px; " + "-fx-border-color: rgba(60, 63, 65, 0.7); "
-            + "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);");
-    }
 
     @Override
     public ObservableList<Node> getChildren() {
@@ -397,7 +353,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
 
     private CustomButton createExitButton(final Dimension2D screenDimension) {
         final CustomButton exitButton = new CustomButton("data/common/images/power-off.png", screenDimension);
-        exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
+        exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> getGazePlay().quit());
         return exitButton;
     }
 
@@ -511,7 +467,7 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
             try {
                 s = getImage(dialog, chooseImageButton);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.warn("Cannot load the image of the profile", e);
             }
             if (s != null) {
                 chooseImageButton.setText(s);

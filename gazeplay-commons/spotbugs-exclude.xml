@@ -7,4 +7,15 @@
         <Package name="~.*"/>
         <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2,THROWS_METHOD_THROWS_RUNTIMEEXCEPTION,THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION"/>
     </Match>
+    <!-- Explicit injection points of the shared singletons (tests, composition root): storing the object is the goal -->
+    <Match>
+        <Class name="net.gazeplay.commons.configuration.ActiveConfigurationContext"/>
+        <Method name="setInstance"/>
+        <Bug pattern="EI_EXPOSE_STATIC_REP2"/>
+    </Match>
+    <Match>
+        <Class name="net.gazeplay.commons.utils.games.BackgroundMusicManager"/>
+        <Method name="setInstance"/>
+        <Bug pattern="EI_EXPOSE_STATIC_REP2"/>
+    </Match>
 </FindBugsFilter>

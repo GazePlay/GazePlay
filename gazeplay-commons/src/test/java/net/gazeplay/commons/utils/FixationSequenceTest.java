@@ -2,7 +2,6 @@ package net.gazeplay.commons.utils;
 
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
-import net.gazeplay.TestingUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,45 +44,76 @@ class FixationSequenceTest {
             )
     ));
 
-    @Test
-    void shouldCreateFixationSequence() throws InterruptedException {
+    /**
+     * Runs on the JavaFX thread and reports the failures (the assertions used to run inside Platform.runLater, where a
+     * failure is not reported).
+     */
+    private static <T> T onFxThread(java.util.function.Supplier<T> action) {
+        java.util.concurrent.CompletableFuture<T> result = new java.util.concurrent.CompletableFuture<>();
         Platform.runLater(() -> {
-            FixationSequence sequence = new FixationSequence(1920, 1080, fixationPoints, FixationSequence.MOUSE_FIXATION_SEQUENCE);
-            assertEquals(3, sequence.getSequence().size());
-            assertEquals(1080, sequence.getImage().heightProperty().get());
-            assertEquals(1920, sequence.getImage().widthProperty().get());
+            try {
+                result.complete(action.get());
+            } catch (Throwable e) {
+                result.completeExceptionally(e);
+            }
         });
-        TestingUtils.waitForRunLater();
+        return result.join();
+    }
 
-        Platform.runLater(() -> {
-            FixationSequence sequence = new FixationSequence(1920, 1080, fixationPoints, FixationSequence.GAZE_FIXATION_SEQUENCE);
-            assertEquals(3, sequence.getSequence().size());
+    /**
+     * The reduction keeps 5 points (only the points at 15 px or less from the last kept point are merged), then the
+     * points of 100 ms or less are not drawn and removed: 4 remain. The last point used to be ignored by the reduction,
+     * so (300, 400) only got 100 ms and was removed too: there were 3 points.
+     */
+    @Test
+    void shouldCreateFixationSequence() {
+        for (int index : List.of(FixationSequence.MOUSE_FIXATION_SEQUENCE, FixationSequence.GAZE_FIXATION_SEQUENCE)) {
+            FixationSequence sequence = onFxThread(() -> new FixationSequence(1920, 1080, fixationPoints, index));
+            assertEquals(4, sequence.getSequence().size());
             assertEquals(1080, sequence.getImage().heightProperty().get());
             assertEquals(1920, sequence.getImage().widthProperty().get());
-        });
-        TestingUtils.waitForRunLater();
+        }
     }
 
     @Test
-    void shouldSaveImageToFile() throws InterruptedException {
-        Platform.runLater(() -> {
+    void shouldSaveImageToFile() {
+        for (int index : List.of(FixationSequence.MOUSE_FIXATION_SEQUENCE, FixationSequence.GAZE_FIXATION_SEQUENCE)) {
             File testFile = new File("image.png");
-            FixationSequence sequence = new FixationSequence(1920, 1080, fixationPoints, FixationSequence.MOUSE_FIXATION_SEQUENCE);
-            sequence.saveToFile(testFile);
+            onFxThread(() -> {
+                new FixationSequence(1920, 1080, fixationPoints, index).saveToFile(testFile);
+                return null;
+            });
 
             assertTrue(testFile.isFile());
-            testFile.delete();
-        });
-        TestingUtils.waitForRunLater();
+            assertTrue(testFile.delete());
+        }
+    }
 
-        Platform.runLater(() -> {
-            File testFile = new File("image.png");
-            FixationSequence sequence = new FixationSequence(1920, 1080, fixationPoints, FixationSequence.GAZE_FIXATION_SEQUENCE);
-            sequence.saveToFile(testFile);
+    /**
+     * The points closer than the tolerance to the last kept point are merged into it, their durations added. The
+     * last point of the sequence used to be ignored, merged or not.
+     */
+    @Test
+    void shouldReduceTheVerticesUpToTheLastPoint() {
+        LinkedList<FixationPoint> points = new LinkedList<>(List.of(
+            new FixationPoint(0, 100, 10, 10),
+            new FixationPoint(100, 200, 15, 12),
+            new FixationPoint(300, 50, 400, 400),
+            new FixationPoint(350, 70, 405, 401)));
 
-            assertTrue(testFile.isFile());
-            testFile.delete();
-        });
-        TestingUtils.waitForRunLater();
+        LinkedList<FixationPoint> reduced = FixationSequence.vertexReduction(points, 15);
+
+        assertEquals(2, reduced.size());
+        assertEquals(300, reduced.get(0).getGazeDuration());
+        assertEquals(120, reduced.get(1).getGazeDuration());
+    }
+
+    @Test
+    void shouldKeepADistantLastPoint() {
+        LinkedList<FixationPoint> points = new LinkedList<>(List.of(
+            new FixationPoint(0, 100, 10, 10),
+            new FixationPoint(100, 200, 500, 500)));
+
+        assertEquals(2, FixationSequence.vertexReduction(points, 15).size());
     }
 }

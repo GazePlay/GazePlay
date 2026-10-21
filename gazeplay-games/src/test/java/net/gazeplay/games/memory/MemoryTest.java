@@ -7,10 +7,8 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.stats.Stats;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.util.HashMap;
@@ -18,7 +16,6 @@ import java.util.HashMap;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(ApplicationExtension.class)
-@RunWith(MockitoJUnitRunner.class)
 class MemoryTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)

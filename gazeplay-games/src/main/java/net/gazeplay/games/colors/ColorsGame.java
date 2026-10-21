@@ -255,9 +255,9 @@ public class ColorsGame implements GameLifeCycle {
 
         // When size will be calculated, update size of rectangle, but do this only
         // once
-        final ChangeListener listener = new ChangeListener() {
+        final ChangeListener<Number> listener = new ChangeListener<>() {
             @Override
-            public void changed(final ObservableValue observable, final Object oldValue, final Object newValue) {
+            public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
                 updateRectangle();
                 updateToolBox();
                 colorToolBox.widthProperty().removeListener(this);

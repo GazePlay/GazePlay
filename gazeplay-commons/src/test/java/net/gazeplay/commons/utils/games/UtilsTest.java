@@ -1,14 +1,12 @@
 package net.gazeplay.commons.utils.games;
 
-import mockit.MockUp;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
 import java.util.Map;
@@ -17,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 class UtilsTest {
 
     @Mock
@@ -34,12 +31,12 @@ class UtilsTest {
     void setup() {
         MockitoAnnotations.initMocks(this);
         when(mockConfiguration.getFileDir()).thenReturn(localDataFolder);
-        new MockUp<ActiveConfigurationContext>() {
-            @mockit.Mock
-            public Configuration getInstance() {
-                return mockConfiguration;
-            }
-        };
+        ActiveConfigurationContext.setInstance(mockConfiguration);
+    }
+
+    @AfterEach
+    void restoreActiveConfiguration() {
+        ActiveConfigurationContext.switchToDefaultUser();
     }
 
     @Test

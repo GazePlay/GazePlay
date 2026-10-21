@@ -1,38 +1,40 @@
 package net.gazeplay.commons.utils.stats;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import javafx.application.Platform;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
-import mockit.MockUp;
 import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.FixationSequence;
-import net.gazeplay.commons.utils.games.DateUtils;
-import net.gazeplay.commons.utils.games.GazePlayDirectories;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
 @ExtendWith(ApplicationExtension.class)
 class StatsTest {
 
@@ -40,6 +42,11 @@ class StatsTest {
     private Scene mockScene;
 
     private Stats stats;
+
+    @AfterEach
+    void restoreActiveConfiguration() {
+        ActiveConfigurationContext.switchToDefaultUser();
+    }
 
     @BeforeEach
     void setUp() {
@@ -55,10 +62,7 @@ class StatsTest {
 
     @Test
     void shouldInstantiateHeatMapData() {
-        when(mockScene.getHeight()).thenReturn(30.0);
-        when(mockScene.getWidth()).thenReturn(60.0);
-
-        double[][] result = Stats.instantiateHeatMapData(mockScene, 3.0);
+        double[][] result = new HeatMapGrid(60.0, 30.0, 3.0).counts();
 
         assertEquals(10, result.length);
         assertEquals(20, result[0].length);
@@ -118,43 +122,23 @@ class StatsTest {
 
     @Test
     void shouldCreateVideoRecording() {
-        File buildDir = new File(System.getProperty("user.dir"), "build");
-
-        new MockUp<GazePlayDirectories>() {
-            @mockit.Mock
-            public File getUserStatsFolder(String user) {
-                return buildDir;
-            }
-        };
-
+        // user.home is a temporary folder during tests (see build.gradle)
         stats.startVideoRecording();
         stats.endVideoRecording();
 
-        File gameFolder = new File(buildDir, "testGame");
-        File todayDirectory = new File(gameFolder, DateUtils.today());
+        File todayDirectory = stats.getGameStatsOfTheDayDirectory();
+        assertTrue(todayDirectory.getPath().contains("testGame"));
         assertNotEquals(0, todayDirectory.list().length);
     }
 
     @Test
     void shouldCreateVideoRecordingWhenStartsAndStops() {
         Stats statsSpy = spy(stats);
-        File buildDir = new File(System.getProperty("user.dir"), "build");
 
         Configuration mockConfig = mock(Configuration.class);
         when(mockConfig.isVideoRecordingEnabled()).thenReturn(true);
-
-        new MockUp<GazePlayDirectories>() {
-            @mockit.Mock
-            public File getUserStatsFolder(String user) {
-                return buildDir;
-            }
-        };
-        new MockUp<ActiveConfigurationContext>() {
-            @mockit.Mock
-            public Configuration getInstance() {
-                return mockConfig;
-            }
-        };
+        when(mockConfig.getUserName()).thenReturn("");
+        ActiveConfigurationContext.setInstance(mockConfig);
 
         when(statsSpy.gameContextScene.getRoot()).thenReturn(new Pane());
 
@@ -177,7 +161,7 @@ class StatsTest {
         statsSpy.start();
         statsSpy.gazeMoved(new Point2D(20.0, 40.0));
 
-        verify(statsSpy).incrementHeatMap(20, 40);
+        verify(statsSpy).incrementHeatMap(20, 40, true);
     }
 
     @Test
@@ -192,48 +176,99 @@ class StatsTest {
         testFile.delete();
     }
 
+    /**
+     * With the fixation sequence disabled in the settings, the sequence is null when the statistics are saved.
+     */
     @Test
-    void shouldSaveStats() throws InterruptedException {
-        File buildDir = new File(System.getProperty("user.dir"), "build");
-        BufferedImage image = new BufferedImage(30, 40, BufferedImage.TYPE_INT_RGB);
-        Configuration mockConfig = mock(Configuration.class);
-        when(mockConfig.isHeatMapDisabled()).thenReturn(false);
-        when(mockConfig.isFixationSequenceDisabled()).thenReturn(false);
-
-        new MockUp<GazePlayDirectories>() {
-            @mockit.Mock
-            public File getUserStatsFolder(String user) {
-                return buildDir;
-            }
-        };
-        new MockUp<SwingFXUtils>() {
-            @mockit.Mock
-            BufferedImage fromFXImage(Image wi, BufferedImage bi) {
-                return image;
-            }
-        };
-        new MockUp<ActiveConfigurationContext>() {
-            public Configuration getInstance() {
-                return mockConfig;
-            }
-        };
-
+    void shouldSaveStatsWithTheFixationSequenceDisabled() throws InterruptedException {
+        Configuration config = mock(Configuration.class);
+        when(config.getUserName()).thenReturn("");
+        when(config.isHeatMapDisabled()).thenReturn(false);
+        when(config.isFixationSequenceDisabled()).thenReturn(true);
+        when(config.isVideoRecordingEnabled()).thenReturn(false);
+        when(config.isAreaOfInterestDisabled()).thenReturn(false);
+        when(config.isMultipleScreenshotsEnabled()).thenReturn(false);
+        when(config.getHeatMapOpacity()).thenReturn(0.7);
+        when(config.getHeatMapColors()).thenReturn(List.of(javafx.scene.paint.Color.BLUE, javafx.scene.paint.Color.RED));
+        ActiveConfigurationContext.setInstance(config);
         when(stats.gameContextScene.getRoot()).thenReturn(new Pane());
+        when(mockScene.snapshot(null)).thenReturn(new WritableImage(40, 30));
 
         stats.start();
-        stats.gazeMoved(new Point2D(30, 40));
-        stats.gazeMoved(new Point2D(20, 50));
+        stats.takeScreenShot();
 
+        CompletableFuture<SavedStatsInfo> saved = new CompletableFuture<>();
         Platform.runLater(() -> {
             try {
-                stats.saveStats();
-            } catch (IOException e) {
-                e.printStackTrace();
+                saved.complete(stats.saveStats());
+            } catch (Throwable e) {
+                saved.completeExceptionally(e);
             }
         });
         TestingUtils.waitForRunLater();
 
-        assertNotEquals(0, buildDir.list().length);
+        SavedStatsInfo info = saved.join();
+        assertTrue(info.getReplayDataFile().isFile());
+        assertTrue(info.getHeatMapCsvFile().isFile());
+        assertTrue(info.getGazeMetricsFileGaze().isFile());
+    }
+
+    @Test
+    void shouldSaveStats() throws InterruptedException {
+        // Default configuration of the temporary user.home: heatmap and fixation sequence enabled
+        when(stats.gameContextScene.getRoot()).thenReturn(new Pane());
+        when(mockScene.snapshot(null)).thenReturn(new WritableImage(40, 30));
+
+        stats.start();
+        stats.gazeMoved(new Point2D(30, 40));
+        stats.gazeMoved(new Point2D(20, 50));
+        stats.takeScreenShot();
+
+        CompletableFuture<SavedStatsInfo> saved = new CompletableFuture<>();
+        Platform.runLater(() -> {
+            try {
+                saved.complete(stats.saveStats());
+            } catch (Throwable e) {
+                saved.completeExceptionally(e);
+            }
+        });
+        TestingUtils.waitForRunLater();
+
+        SavedStatsInfo info = saved.join();
+        assertTrue(info.getHeatMapCsvFile().isFile());
+        assertTrue(info.getGazeMetricsFileMouse().isFile());
+        assertTrue(info.getGazeMetricsFileGaze().isFile());
+        assertTrue(info.getGazeMetricsFileMouseAndGaze().isFile());
+        assertTrue(info.getScreenshotFile().isFile());
+        assertTrue(info.getReplayDataFile().isFile());
+        assertEquals(stats.getGameStatsOfTheDayDirectory(), info.getHeatMapCsvFile().getParentFile());
+        // Format version 2: one heatmap per source next to heatmap.csv (same name, suffix Gaze or Mouse)
+        String heatMapName = info.getHeatMapCsvFile().getName();
+        assertTrue(new File(info.getHeatMapCsvFile().getParentFile(), heatMapName.replace("-heatmap.csv", "-heatmapGaze.csv")).isFile());
+        assertTrue(new File(info.getHeatMapCsvFile().getParentFile(), heatMapName.replace("-heatmap.csv", "-heatmapMouse.csv")).isFile());
+
+        // replayData.json is a persistent format (read by the replay and by researchers): pin its structure
+        JsonObject replayData;
+        try {
+            replayData = JsonParser.parseString(Files.readString(info.getReplayDataFile().toPath(), Charset.defaultCharset()))
+                .getAsJsonObject();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        assertEquals(2, replayData.get("formatVersion").getAsInt());
+        assertEquals(Set.of("formatVersion", "gameSeed", "gameName", "gameVariant", "gameStartedTime", "screenAspectRatio",
+            "sceneAspectRatio", "statsNbGoalsReached", "statsNbGoalsToReach", "statsNbUnCountedGoalsReached",
+            "statsNbMistakes", "lifeCycle", "roundsDurationReport", "fixationSequence", "coordinatesAndTimeStamp"),
+            replayData.keySet());
+        // stopTime is written even when null (round not stopped yet)
+        assertEquals(Set.of("startTime", "stopTime"), replayData.getAsJsonObject("lifeCycle").keySet());
+        assertEquals(Set.of("totalAdditiveDuration", "durationBetweenGoals"),
+            replayData.getAsJsonObject("roundsDurationReport").keySet());
+        // Two lists: mouse, then gaze; the samples given to gazeMoved() go to the gaze list
+        JsonArray fixationSequence = replayData.getAsJsonArray("fixationSequence");
+        assertEquals(2, fixationSequence.size());
+        assertEquals(Set.of("timeGaze", "gazeDuration", "x", "y"),
+            fixationSequence.get(1).getAsJsonArray().get(0).getAsJsonObject().keySet());
     }
 
     @Test

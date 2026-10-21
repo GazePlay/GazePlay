@@ -3,10 +3,8 @@ package net.gazeplay;
 import net.gazeplay.commons.ui.Translator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
@@ -17,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 class GameSummaryComparatorTest {
 
     @Mock
@@ -40,12 +37,12 @@ class GameSummaryComparatorTest {
 
     @Test
     void shouldSortAbsolutePriorityInCorrectOrder() {
-        actionGameSummary = GameSummary.builder().category(GameCategories.Category.ACTION_REACTION).absolutePriority(3).build();
-        selectionGameSummary = GameSummary.builder().category(GameCategories.Category.SELECTION).build();
-        memorizationGameSummary = GameSummary.builder().category(GameCategories.Category.MEMORIZATION).absolutePriority(2).build();
-        logicGameSummary = GameSummary.builder().category(GameCategories.Category.LOGIC_MATHS).absolutePriority(1).build();
-        literacyGameSummary = GameSummary.builder().category(GameCategories.Category.LITERACY).build();
-        multimediaGameSummary = GameSummary.builder().category(GameCategories.Category.MULTIMEDIA).build();
+        actionGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.ACTION_REACTION).absolutePriority(3).build();
+        selectionGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.SELECTION).build();
+        memorizationGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.MEMORIZATION).absolutePriority(2).build();
+        logicGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.LOGIC_MATHS).absolutePriority(1).build();
+        literacyGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.LITERACY).build();
+        multimediaGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.MULTIMEDIA).build();
 
         // This list is intentionally in the wrong order
         ArrayList<GameSpec> specs = new ArrayList<>(List.of(
@@ -69,12 +66,12 @@ class GameSummaryComparatorTest {
 
     @Test
     void shouldSortCategoriesInCorrectOrder() {
-        actionGameSummary = GameSummary.builder().category(GameCategories.Category.ACTION_REACTION).build();
-        selectionGameSummary = GameSummary.builder().category(GameCategories.Category.SELECTION).build();
-        memorizationGameSummary = GameSummary.builder().category(GameCategories.Category.MEMORIZATION).build();
-        logicGameSummary = GameSummary.builder().category(GameCategories.Category.LOGIC_MATHS).build();
-        literacyGameSummary = GameSummary.builder().category(GameCategories.Category.LITERACY).build();
-        multimediaGameSummary = GameSummary.builder().category(GameCategories.Category.MULTIMEDIA).build();
+        actionGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.ACTION_REACTION).build();
+        selectionGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.SELECTION).build();
+        memorizationGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.MEMORIZATION).build();
+        logicGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.LOGIC_MATHS).build();
+        literacyGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.LITERACY).build();
+        multimediaGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.MULTIMEDIA).build();
 
         // This list is intentionally in the wrong order
         ArrayList<GameSpec> specs = new ArrayList<>(List.of(
@@ -99,12 +96,12 @@ class GameSummaryComparatorTest {
     @Test
     void shouldSortPriorityInCorrectOrder() {
         // Ignore the variable names, these need to be the same category to test the priority
-        actionGameSummary = GameSummary.builder().category(GameCategories.Category.ACTION_REACTION).priority(2).build();
-        selectionGameSummary = GameSummary.builder().category(GameCategories.Category.ACTION_REACTION).priority(1).build();
-        memorizationGameSummary = GameSummary.builder().category(GameCategories.Category.ACTION_REACTION).priority(4).build();
-        logicGameSummary = GameSummary.builder().category(GameCategories.Category.ACTION_REACTION).priority(0).build();
-        literacyGameSummary = GameSummary.builder().category(GameCategories.Category.ACTION_REACTION).priority(3).build();
-        multimediaGameSummary = GameSummary.builder().category(GameCategories.Category.ACTION_REACTION).priority(5).build();
+        actionGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.ACTION_REACTION).priority(2).build();
+        selectionGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.ACTION_REACTION).priority(1).build();
+        memorizationGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.ACTION_REACTION).priority(4).build();
+        logicGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.ACTION_REACTION).priority(0).build();
+        literacyGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.ACTION_REACTION).priority(3).build();
+        multimediaGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").category(GameCategories.Category.ACTION_REACTION).priority(5).build();
 
         // This list is intentionally in the wrong order
         ArrayList<GameSpec> specs = new ArrayList<>(List.of(
@@ -135,12 +132,12 @@ class GameSummaryComparatorTest {
         });
 
         // Ignore the variable names, these need to be the same category to test the name code
-        actionGameSummary = GameSummary.builder().nameCode("Action").category(GameCategories.Category.ACTION_REACTION).build();
-        selectionGameSummary = GameSummary.builder().nameCode("Selection").category(GameCategories.Category.ACTION_REACTION).build();
-        memorizationGameSummary = GameSummary.builder().nameCode("Memorization").category(GameCategories.Category.ACTION_REACTION).build();
-        logicGameSummary = GameSummary.builder().nameCode("Logic").category(GameCategories.Category.ACTION_REACTION).build();
-        literacyGameSummary = GameSummary.builder().nameCode("Literacy").category(GameCategories.Category.ACTION_REACTION).build();
-        multimediaGameSummary = GameSummary.builder().nameCode("Multimedia").category(GameCategories.Category.ACTION_REACTION).build();
+        actionGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").nameCode("Action").category(GameCategories.Category.ACTION_REACTION).build();
+        selectionGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").nameCode("Selection").category(GameCategories.Category.ACTION_REACTION).build();
+        memorizationGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").nameCode("Memorization").category(GameCategories.Category.ACTION_REACTION).build();
+        logicGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").nameCode("Logic").category(GameCategories.Category.ACTION_REACTION).build();
+        literacyGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").nameCode("Literacy").category(GameCategories.Category.ACTION_REACTION).build();
+        multimediaGameSummary = GameSummary.builder().gameThumbnail("thumbnail.png").nameCode("Multimedia").category(GameCategories.Category.ACTION_REACTION).build();
 
         // This list is intentionally in the wrong order
         ArrayList<GameSpec> specs = new ArrayList<>(List.of(

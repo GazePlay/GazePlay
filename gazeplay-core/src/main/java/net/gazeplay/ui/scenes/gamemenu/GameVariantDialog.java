@@ -227,7 +227,7 @@ public class GameVariantDialog extends Stage {
             } else if (gameSpec.getGameSummary().getNameCode().equals("SurviveAgainstRobotsMouse")){
                 button.setTextAlignment(TextAlignment.CENTER);
                 String variantString = String.valueOf(((EnumGameVariant<?>) variant).getEnumValue());
-                System.out.println("variant robots: " + variantString);
+                log.debug("variant robots: {}", variantString);
                 indexOfTheVariant = switch (variantString) {
                     case "DIFFICULTY_EASY_AUTO_MOUSE", "DIFFICULTY_NORMAL_AUTO_MOUSE", "DIFFICULTY_HARD_AUTO_MOUSE" -> 1;
                     default -> 0;
@@ -242,7 +242,7 @@ public class GameVariantDialog extends Stage {
             }
             choicePanes.get(indexOfTheVariant).getChildren().add(button);
 
-            System.out.println("nameGame : "+ gameSpec.getGameSummary().getNameCode());
+            log.debug("nameGame : {}", gameSpec.getGameSummary().getNameCode());
 
             if ((gameSpec.getGameSummary().getNameCode().equals("Bottle") ||
                 gameSpec.getGameSummary().getNameCode().equals("EggGame") ||
@@ -292,7 +292,7 @@ public class GameVariantDialog extends Stage {
                     categories[4] = new RadioButton(translator.translate("Niveau24-29"));
                     categories[5] = new RadioButton(translator.translate("Niveau30-33"));
 
-                    System.out.println("categories length : "+categories.length);
+                    log.debug("categories length : {}", categories.length);
 
                 }else if (gameSpec.getGameSummary().getNameCode().equals("Simon")){
                     categories = new RadioButton[3];
@@ -412,7 +412,7 @@ public class GameVariantDialog extends Stage {
                         IntStringGameVariant v = (IntStringGameVariant) variant;
                         int numberOfTrains = 10;
                         numberOfTrains = Integer.parseInt(numberField.getText());
-                        System.out.println("Nombred de trains"+numberOfTrains);
+                        log.debug("number of trains : {}", numberOfTrains);
                         v.setNumber2(numberOfTrains);
                         gameMenuController.chooseAndStartNewGameProcess(gazePlay, gameSpec, v);
                     } else {

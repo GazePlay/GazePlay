@@ -118,7 +118,7 @@ public class AnimationSpeedRatioControl {
 
     public void registerKeyHandler(@NonNull Scene primaryScene, final Slider animationSpeedRatioSlider) {
 
-        EventHandler increaseSpeedEventHandler = (EventHandler<KeyEvent>) event -> {
+        EventHandler<KeyEvent> increaseSpeedEventHandler = event -> {
             final double sliderSpeedValue = Math.floor(animationSpeedRatioSlider.getValue());
             if (sliderSpeedValue < animationSpeedRatioSlider.getMax()) {
                 animationSpeedRatioSlider.setValue(sliderSpeedValue + 1);
@@ -126,7 +126,7 @@ public class AnimationSpeedRatioControl {
                 log.info("max speed for effects reached !");
             }
         };
-        EventHandler decreaseSpeedEventHandler = (EventHandler<KeyEvent>) event -> {
+        EventHandler<KeyEvent> decreaseSpeedEventHandler = event -> {
             final double sliderSpeedValue = Math.floor(animationSpeedRatioSlider.getValue());
             if (sliderSpeedValue > animationSpeedRatioSlider.getMin()) {
                 animationSpeedRatioSlider.setValue(sliderSpeedValue - 1);

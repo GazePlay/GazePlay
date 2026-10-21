@@ -9,17 +9,14 @@ import net.gazeplay.commons.utils.stats.Stats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import static org.mockito.Mockito.when;
 
 @ExtendWith(ApplicationExtension.class)
-@RunWith(MockitoJUnitRunner.class)
 class MemoryCardTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)

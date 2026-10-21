@@ -92,7 +92,7 @@ public class FixationLengthControl {
 
     public void registerKeyHandler(@NonNull Scene primaryScene, final Slider fixationLengthRatioSlider) {
 
-        EventHandler increaseFixationLengthEventHandler = (EventHandler<KeyEvent>) event -> {
+        EventHandler<KeyEvent> increaseFixationLengthEventHandler = event -> {
             final int sliderFixationValue = (int) fixationLengthRatioSlider.getValue();
             if (sliderFixationValue < fixationLengthRatioSlider.getMax()) {
                 fixationLengthRatioSlider.setValue(sliderFixationValue + 100.0);
@@ -100,7 +100,7 @@ public class FixationLengthControl {
                 log.info("max fixation length reached !");
             }
         };
-        EventHandler decreaseFixationLengthEventHandler = (EventHandler<KeyEvent>) event -> {
+        EventHandler<KeyEvent> decreaseFixationLengthEventHandler = event -> {
             final int sliderFixationValue = (int) fixationLengthRatioSlider.getValue();
             if (sliderFixationValue > fixationLengthRatioSlider.getMin()) {
                 fixationLengthRatioSlider.setValue(sliderFixationValue - 100.0);

@@ -3,20 +3,16 @@ import org.apache.tools.ant.filters.ReplaceTokens
 task('packageAllDists').dependsOn(
         'linuxDistTar',
         'windowsDistZip',
-        'windowsx32DistZip',
-        'windowsBeraDistZip',
-        'windowsBerax32DistZip',
-        'windowsAfsrDistZip',
-        'windowsAfsrx32DistZip',
         'macosDistTar',
+        'macosAarch64DistTar',
         'armDistTar',
         'assembleNoJREDist'
 )
 
 task packageApp(dependsOn: ['packageAllDists',
-                            'downloadLicenses',
+                            'generateLicenseReport',
                             'scriptsForRelease'], group: 'distribution') {
-    tasks.findByName('packageAllDists').mustRunAfter('downloadLicenses')
+    tasks.findByName('packageAllDists').mustRunAfter('generateLicenseReport')
     tasks.findByName('packageAllDists').mustRunAfter('scriptsForRelease')
 }
 

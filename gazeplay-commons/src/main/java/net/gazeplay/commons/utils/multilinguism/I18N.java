@@ -59,7 +59,12 @@ public class I18N {
                 } else {
                     data = line.split(",");
                     String key = data[0].strip();
-                    for (int i = 1; i < data.length; i++) {
+                    if (data.length > languages.length) {
+                        // A malformed line must not prevent the whole file (and the game using it) from loading
+                        log.error("Line '{}' of {} has {} columns but the header has only {}, extra columns are ignored",
+                            key, resourceLocation, data.length, languages.length);
+                    }
+                    for (int i = 1; i < Math.min(data.length, languages.length); i++) {
                         translations.put(new Entry(key, languages[i].strip()), data[i].strip());
                     }
                 }

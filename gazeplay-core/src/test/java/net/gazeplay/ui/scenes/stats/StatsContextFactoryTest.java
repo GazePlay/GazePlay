@@ -4,7 +4,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Dimension2D;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import mockit.MockUp;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -12,13 +11,12 @@ import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
@@ -30,7 +28,6 @@ import java.util.Locale;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 @ExtendWith(ApplicationExtension.class)
 class StatsContextFactoryTest {
 
@@ -56,6 +53,11 @@ class StatsContextFactoryTest {
         new File("file.csv")
     );
 
+    @AfterEach
+    void restoreGlobalState() {
+        ActiveConfigurationContext.switchToDefaultUser();
+    }
+
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
@@ -64,14 +66,10 @@ class StatsContextFactoryTest {
         when(mockTranslator.currentLocale()).thenReturn(Locale.ENGLISH);
         when(mockStats.getSavedStatsInfo()).thenReturn(mockSavedStatsInfo);
         when(mockConfig.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));
+        when(mockConfig.isAreaOfInterestDisabled()).thenReturn(true);
         when(mockStats.getFixationSequence()).thenReturn(new ArrayList<>(List.of(new LinkedList<>(), new LinkedList<>())));
 
-        new MockUp<ActiveConfigurationContext>() {
-            @mockit.Mock
-            public Configuration getInstance() {
-                return mockConfig;
-            }
-        };
+        ActiveConfigurationContext.setInstance(mockConfig);
     }
 
     @Test

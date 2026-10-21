@@ -1,34 +1,28 @@
+apply plugin: 'java-test-fixtures'
+
+// Test fixtures (TestingUtils, shared test resources) see the same libraries as the main code, JavaFX included
+configurations.testFixturesImplementation.extendsFrom(configurations.implementation)
+
 dependencies {
-    implementation 'commons-io:commons-io:2.11.0'
-    implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'org.rxtx:rxtx:2.1.7'
-    implementation files("${rootDir}/lib/EyeTribeJavaFx.jar")
-    implementation 'ch.qos.logback:logback-classic:1.2.11'
-    implementation 'ch.qos.logback:logback-core:1.2.11'
-    implementation 'org.slf4j:slf4j-api:1.7.36'
-    implementation 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
-    implementation 'com.google.guava:guava:31.1-jre'
-    implementation 'com.github.GazePlay:TobiiStreamEngineForJava:5.0'
-    implementation 'com.automation-remarks:video-recorder-core:2.0'
-    implementation 'com.github.vatbub:mslinks:1.0.6.2'
-    implementation 'ws.schild:jave-core:3.3.1'
-    implementation 'com.mageddo.tobby-transactional-outbox:spring:1.5.1'
-    runtimeOnly 'org.slf4j:jcl-over-slf4j:1.7.36'
-    runtimeOnly 'org.slf4j:log4j-over-slf4j:1.7.36'
-    runtimeOnly 'io.github.classgraph:classgraph:4.8.146'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.2.5.RELEASE'
-
-    implementation 'org.reflections:reflections:0.10.2'
-
-    implementation 'org.aeonbits.owner:owner:1.0.12'
-    implementation 'org.json:json:20220320'
-    // https://mvnrepository.com/artifact/org.json/json
-    implementation group: 'org.json', name: 'json', version: '20220320'
+    implementation project(':gazeplay-results')
+    implementation project(':gazeplay-gaze')
+    implementation libs.commons.io
+    implementation libs.gson
+    implementation libs.guava
+    // Bundles the Monte Screen Recorder classes (org.monte.*) used by Stats to record videos of the games
+    implementation(libs.video.recorder.core) {
+        // Only its bundled Monte Screen Recorder classes (org.monte.*) are used, and they reference none of its
+        // dependencies (checked in the bytecode): owner-java8 (duplicate classes of owner), zt-exec, commons-lang3,
+        // awaitility, hamcrest, objenesis and the vulnerable log4j 1.2.17 are not shipped
+        transitive = false
+    }
 
 
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation project(':gazeplay-core').sourceSets.test.output
+
 }
+
+// Captured here: the configuration cache cannot serialize a reference to the build script used when the jar is written
+def runtimeClasspathFiles = configurations.runtimeClasspath
 
 jar {
     manifest {
@@ -36,14 +30,14 @@ jar {
                 "Implementation-Title": project.name,
                 "Implementation-Version": project.version,
                 "Implementation-Vendor": "Univ. Grenoble Alpes - LIG - GETALP",
-                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' '),
-                "JavaFX-Version": javafxVersion,
+                // Lazy: resolved when the jar is written, not when the project is configured
+                "Class-Path": "${-> runtimeClasspathFiles.collect { it.getName() }.join(' ')}",
+                "JavaFX-Version": libs.versions.javafx.get(),
                 "Built-By": System.properties['user.name']
         )
     }
 }
 
 test {
-    jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
     exclude '**/VersionInfoTest.class'
 }

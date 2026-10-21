@@ -17,14 +17,15 @@ class MultilinguismTest {
 
     @Test
     void shouldGetFrenchTranslation() {
-        String result = multilinguism.getTranslation("Exit", "fra");
-        assertEquals("Quitter", result);
+        // The test fixture is a subset of the real translation file
+        String result = multilinguism.getTranslation("Exit FullScreen", "fra");
+        assertEquals("Sortir du plein écran", result);
     }
 
     @Test
     void shouldGetDefaultEnglishTranslation() {
-        String result = multilinguism.getTranslation("Exit", "wrong");
-        assertEquals("Exit", result);
+        String result = multilinguism.getTranslation("Exit FullScreen", "wrong");
+        assertEquals("Exit FullScreen", result);
     }
 
     @Test

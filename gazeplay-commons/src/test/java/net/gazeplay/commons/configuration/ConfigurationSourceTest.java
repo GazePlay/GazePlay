@@ -1,13 +1,15 @@
 package net.gazeplay.commons.configuration;
 
-import mockit.Mock;
-import mockit.MockUp;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ConfigurationSourceTest {
 
@@ -35,13 +37,12 @@ class ConfigurationSourceTest {
     }
 
     @Test
-    void shouldCreateFromProfile() {
-        new MockUp<GazePlayDirectories>() {
-            @Mock
-            public File getUserProfileDirectory(String id) {
-                return resourcesFolder;
-            }
-        };
+    void shouldCreateFromProfile() throws IOException {
+        // user.home is a temporary folder during tests (see build.gradle)
+        File profileDirectory = GazePlayDirectories.getUserProfileDirectory("test");
+        assertTrue(profileDirectory.mkdirs() || profileDirectory.isDirectory());
+        Files.copy(new File(resourcesFolder, "GazePlay.properties").toPath(),
+            new File(profileDirectory, "GazePlay.properties").toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         Configuration result = ConfigurationSource.createFromProfile("test");
 

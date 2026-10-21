@@ -26,6 +26,7 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
+import net.gazeplay.games.HighScores;
 import net.gazeplay.commons.utils.games.ImageLibrary;
 import net.gazeplay.commons.utils.games.ImageUtils;
 import net.gazeplay.commons.utils.multilinguism.Multilinguism;
@@ -33,14 +34,7 @@ import net.gazeplay.commons.utils.multilinguism.MultilinguismFactory;
 import net.gazeplay.components.ProgressButton;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
 
 @Slf4j
 public class SpaceGame extends AnimationTimer implements GameLifeCycle {
@@ -494,34 +488,8 @@ public class SpaceGame extends AnimationTimer implements GameLifeCycle {
     }
 
     private int getsetHighscore(final int score) {
-        final File f = new File(GazePlayDirectories.getUserStatsFolder(configuration.getUserName()), "/space-game/highscore.dat");
-        try {
-            ArrayList<Integer> highscores = new ArrayList();
-            if (!f.createNewFile()) {
-                final Scanner scanner = new Scanner(f, StandardCharsets.UTF_8);
-                scanner.useDelimiter(":");
-                while (scanner.hasNextInt()) {
-                    highscores.add(scanner.nextInt());
-                }
-            }
-            highscores.add(score);
-
-            Collections.sort(highscores);
-            if (highscores.size() > 3) {
-                highscores = new ArrayList(highscores.subList(highscores.size() - 3, highscores.size()));
-            }
-
-            final Writer writer = new OutputStreamWriter(Files.newOutputStream(f.toPath()), StandardCharsets.UTF_8);
-            for (final int i : highscores) {
-                writer.write(i + ":");
-            }
-            writer.close();
-
-            return highscores.get(highscores.size() - 1);
-        } catch (final IOException ex) {
-            ex.printStackTrace();
-        }
-        return score;
+        return HighScores.addAndGetBest(
+            new File(new File(GazePlayDirectories.getUserStatsFolder(configuration.getUserName()), "space-game"), "highscore.dat"), score);
     }
 
     private void death() {

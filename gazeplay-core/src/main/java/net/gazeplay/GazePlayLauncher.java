@@ -8,8 +8,7 @@ import net.gazeplay.commons.threads.GroupingThreadFactory;
 import net.gazeplay.commons.threads.LoggingUncaughtExceptionHandler;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import picocli.CommandLine;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 import java.io.File;
@@ -21,7 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ThreadFactory;
 
 @Slf4j
-@SpringBootApplication
 public class GazePlayLauncher {
 
     @Setter
@@ -29,17 +27,10 @@ public class GazePlayLauncher {
 
     public static void main(String[] args) {
 
-        try {
-            if (args[0].contains("afsr")){
-                log.info("AFSR GAZEPLAY");
-                saveArgs("afsrGazeplay");
-            } else if (args[0].contains("bera")){
-                log.info("BERA GAZEPLAY");
-                saveArgs("bera");
-            }
-        } catch (Exception e) {
-            log.info("GAZEPLAY");
-            saveArgs("gazeplay");
+        final String edition = GazePlayArgs.editionToSave(args);
+        if (edition != null) {
+            log.info("Edition: {}", edition);
+            saveArgs(edition);
         }
 
         Thread.currentThread().setName(GazePlayLauncher.class.getSimpleName() + "-main");
@@ -53,13 +44,23 @@ public class GazePlayLauncher {
 
             initGazePlayDirectory();
 
-            System.exit(SpringApplication.exit(SpringApplication.run(GazePlayLauncher.class, args)));
+            System.exit(run(args));
         };
 
         ThreadFactory threadFactory = new CustomThreadFactory("application-bootsrap",
             new GroupingThreadFactory("application-bootsrap-group"));
         Thread bootstrapThread = threadFactory.newThread(rootTask);
         bootstrapThread.start();
+    }
+
+    /**
+     * Parses the command line (see {@link MainCommand}) and runs the JavaFX application until it is closed.
+     *
+     * @return the exit code of the process
+     */
+    static int run(String[] args) {
+        final CompositionRoot compositionRoot = new CompositionRoot();
+        return new CommandLine(new MainCommand(compositionRoot)).execute(args);
     }
 
     private static void initGazePlayDirectory() {
@@ -98,27 +99,19 @@ public class GazePlayLauncher {
     @SuppressWarnings("PMD")
     private static void saveArgs(String args){
 
-        String os = System.getProperty("os.name").toLowerCase();
         FileWriter myWritter = null;
 
         try {
-            if (os.contains("nux") || os.contains("mac")){
-                File myFile = new File("argsGazeplay.txt");
+            File myFile = GazePlayArgs.getArgsFile();
+            if (myFile != null) {
+                File myFolder = myFile.getParentFile();
+                if (myFolder != null) {
+                    boolean createFolder = myFolder.mkdirs();
+                    log.info("Folder created, path = " + createFolder);
+                }
                 log.info("Fil args is : " + myFile);
-                myWritter = new FileWriter("argsGazeplay.txt", StandardCharsets.UTF_8);
+                myWritter = new FileWriter(myFile, StandardCharsets.UTF_8);
                 myWritter.write(args);
-            }else if (os.contains("win")){
-                String userName = System.getProperty("user.name");
-                File myFolder = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay");
-                boolean createFolder = myFolder.mkdirs();
-                log.info("Folder created, path = " + createFolder);
-                File myFile = new File("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt");
-                log.info("Fil args is : " + myFile);
-                myWritter = new FileWriter("C:\\Users\\" + userName + "\\Documents\\Gazeplay\\argsGazeplay.txt", StandardCharsets.UTF_8);
-                myWritter.write(args);
-            }
-            else{
-                log.info("OS non reconnu !");
             }
         } catch (IOException e){
             log.info(String.valueOf(e));
@@ -128,7 +121,7 @@ public class GazePlayLauncher {
                     myWritter.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.warn("Cannot close the edition file", e);
             }
         }
     }

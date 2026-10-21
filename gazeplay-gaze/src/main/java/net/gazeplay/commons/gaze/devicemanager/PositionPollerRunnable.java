@@ -1,0 +1,100 @@
+package net.gazeplay.commons.gaze.devicemanager;
+
+import javafx.geometry.Dimension2D;
+import javafx.geometry.Point2D;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import tobii.Tobii;
+
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+@Slf4j
+public class PositionPollerRunnable implements Runnable {
+
+    /**
+     * Value returned by the Tobii wrapper (TobiiStreamEngineForJava 5.0) when it has no gaze data: on error, and
+     * continuously when no eye tracker is connected (checked on Windows x64: "Init code error -2", then (0.5, 0.5) at
+     * each call). Without this check, GazePlay received a fixed gaze at the center of the screen (anomaly R9).
+     * A real measure exactly equal to these two floats is practically impossible.
+     */
+    static final float NO_GAZE_DATA = 0.5f;
+
+    private final Supplier<Dimension2D> screenDimensionSupplier;
+
+    private final Supplier<Point2D> screenPositionSupplier;
+
+    private final Consumer<GazeSample> sampleConsumer;
+
+    private final Supplier<float[]> gazePositionSource;
+
+    private boolean noGazeDataReported = false;
+
+    @Setter
+    private transient boolean stopRequested = false;
+
+    public PositionPollerRunnable(final Supplier<Dimension2D> screenDimensionSupplier, final Supplier<Point2D> screenPositionSupplier, final Consumer<GazeSample> sampleConsumer) {
+        this(screenDimensionSupplier, screenPositionSupplier, sampleConsumer, Tobii::gazePosition);
+    }
+
+    PositionPollerRunnable(final Supplier<Dimension2D> screenDimensionSupplier, final Supplier<Point2D> screenPositionSupplier,
+                           final Consumer<GazeSample> sampleConsumer, final Supplier<float[]> gazePositionSource) {
+        this.screenDimensionSupplier = screenDimensionSupplier;
+        this.screenPositionSupplier = screenPositionSupplier;
+        this.sampleConsumer = sampleConsumer;
+        this.gazePositionSource = gazePositionSource;
+    }
+
+    @Override
+    public void run() {
+        while (!stopRequested) {
+            try {
+                poll();
+            } catch (final RuntimeException e) {
+                log.warn("Exception while polling position of gaze", e);
+            }
+
+            // sleep is mandatory to avoid too much calls to gazePosition()
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException | RuntimeException e) {
+                log.warn("Exception while sleeping until next poll", e);
+            }
+        }
+    }
+
+    void poll() {
+        // The acquisition time is taken here, on the polling thread, before the hop to the JavaFX thread
+        nextGazePoint().ifPresent(point -> sampleConsumer.accept(GazeSample.now(point, GazeSample.Source.GAZE)));
+    }
+
+    /**
+     * @return the position of the gaze on the screen, or empty when the eye tracker gives no gaze data
+     */
+    Optional<Point2D> nextGazePoint() {
+        final float[] pointAsFloatArray = gazePositionSource.get();
+
+        final float xRatio = pointAsFloatArray[0];
+        final float yRatio = pointAsFloatArray[1];
+
+        if (xRatio == NO_GAZE_DATA && yRatio == NO_GAZE_DATA) {
+            if (!noGazeDataReported) {
+                noGazeDataReported = true;
+                log.warn("The Tobii eye tracker gives no gaze data (no eye tracker connected?): ignored until it does");
+            }
+            return Optional.empty();
+        }
+
+        final Dimension2D screenDimension = screenDimensionSupplier.get();
+        final double positionX = xRatio * screenDimension.getWidth();
+        final double positionY = yRatio * screenDimension.getHeight();
+
+        final Point2D screenPosition = screenPositionSupplier.get();
+        final double offsetX = screenPosition.getX();
+        final double offsetY = screenPosition.getY();
+
+        return Optional.of(new Point2D(positionX + offsetX, positionY + offsetY));
+    }
+
+}

@@ -47,7 +47,7 @@ public class MidiReader {
             prevTick = -1;
             key = -1;
         } catch (InvalidMidiDataException | IOException e) {
-            e.printStackTrace();
+            log.error("Cannot read the MIDI file", e);
         }
 
     }

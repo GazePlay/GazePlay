@@ -1,6 +1,4 @@
 dependencies {
-    implementation 'commons-io:commons-io:2.11.0'
-    implementation 'com.mageddo.tobby-transactional-outbox:spring:1.5.1'
 }
 ext.jreModules = ['java.base',  \
     'java.compiler',  \

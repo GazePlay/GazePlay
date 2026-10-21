@@ -72,9 +72,8 @@ public class SoundsOfLife implements GameLifeCycle {
 
         String path = "data/soundsoflife/" + gameVariant.toString().toLowerCase() + "/";
 
-        JsonParser parser = new JsonParser();
         JsonObject jsonRoot;
-        jsonRoot = (JsonObject) parser.parse(new InputStreamReader(
+        jsonRoot = (JsonObject) JsonParser.parseReader(new InputStreamReader(
             Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + "elements.json")), StandardCharsets.UTF_8));
 
         String backgroundPath = path + jsonRoot.get("background").getAsString();

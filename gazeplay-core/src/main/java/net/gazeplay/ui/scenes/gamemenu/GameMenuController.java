@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.*;
@@ -17,9 +18,6 @@ import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import net.gazeplay.ui.scenes.loading.LoadingContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,13 +27,17 @@ import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 @Slf4j
-@Component
 public class GameMenuController {
 
-    @Autowired
-    private ApplicationContext applicationContext;
+    @Getter
+    private final Supplier<GameContext> gameContextFactory;
+
+    public GameMenuController(final Supplier<GameContext> gameContextFactory) {
+        this.gameContextFactory = gameContextFactory;
+    }
 
     public void onGameSelection(
         @NonNull GazePlay gazePlay,
@@ -105,7 +107,7 @@ public class GameMenuController {
             try {
                 Thread.sleep(6000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.warn("Interrupted while waiting for the game to start", e);
             }
 
             ((LoadingContext) gazePlay.getPrimaryScene().getRoot()).stopAnimation();
@@ -118,7 +120,7 @@ public class GameMenuController {
         try {
             builder.inheritIO().start();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Cannot start the game process", e);
         }
     }
 
@@ -157,7 +159,7 @@ public class GameMenuController {
         GameSpec selectedGameSpec,
         IGameVariant gameVariant
     ) {
-        GameContext gameContext = applicationContext.getBean(GameContext.class);
+        GameContext gameContext = gameContextFactory.get();
         gazePlay.onGameLaunch(gameContext);
 
         IGameLauncher gameLauncher = selectedGameSpec.getGameLauncher();

@@ -23,6 +23,7 @@ import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.utils.FixationPoint;
 import net.gazeplay.commons.utils.stats.LifeCycle;
+import net.gazeplay.commons.utils.stats.ReplayDataFormat;
 import net.gazeplay.commons.utils.stats.RoundsDurationReport;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
@@ -34,7 +35,6 @@ import org.everit.json.schema.ValidationException;
 import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.springframework.context.ApplicationContext;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -48,6 +48,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 @Slf4j
 public class ReplayingGameFromJson {
@@ -95,7 +96,7 @@ public class ReplayingGameFromJson {
     );
 
     List<GameSpec> gamesList;
-    private final ApplicationContext applicationContext;
+    private final Supplier<GameContext> gameContextFactory;
     private GameContext gameContext;
     private final GazePlay gazePlay;
     private double currentGameSeed;
@@ -119,10 +120,10 @@ public class ReplayingGameFromJson {
 
     private String fileName;
 
-    public ReplayingGameFromJson(GazePlay gazePlay, ApplicationContext applicationContext, List<GameSpec> games) {
-        this.applicationContext = applicationContext;
+    public ReplayingGameFromJson(GazePlay gazePlay, Supplier<GameContext> gameContextFactory, List<GameSpec> games) {
+        this.gameContextFactory = gameContextFactory;
         this.gazePlay = gazePlay;
-        this.gameContext = applicationContext.getBean(GameContext.class);
+        this.gameContext = gameContextFactory.get();
         this.gamesList = games;
     }
 
@@ -147,14 +148,14 @@ public class ReplayingGameFromJson {
             Schema schema = SchemaLoader.load(rawSchema);
             schema.validate(object); // throws a ValidationException if this object is invalid
         } catch (ValidationException e) {
-            e.printStackTrace();
+            log.warn("The replay file {} does not match its JSON schema", replayDataFile, e);
         }
 
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = Files.newBufferedReader(replayDataFile.toPath(), Charset.defaultCharset());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Cannot read the replay file {}", replayDataFile, e);
         }
         assert bufferedReader != null;
         Gson gson = new Gson();
@@ -163,7 +164,10 @@ public class ReplayingGameFromJson {
         currentGameNameCode = json.getGameName();
         currentGameVariant = json.getGameVariant();
         coordinatesAndTimeStamp = json.getCoordinatesAndTimeStamp();
-        fixationSequence = json.getFixationSequence();
+        // Files are read as written, whatever their version (they are never rewritten): version 2 stores the fixation
+        // coordinates in the right fields, the memory keeps the convention of version 1
+        fixationSequence = ReplayDataFormat.fromFile(ReplayDataFormat.versionOf(json.getFormatVersion()),
+            json.getFixationSequence());
         nbGoalsReached = json.getStatsNbGoalsReached();
         nbGoalsToReach = json.getStatsNbGoalsToReach();
         nbUnCountedGoalsReached = json.getStatsNbUnCountedGoalsReached();
@@ -215,7 +219,7 @@ public class ReplayingGameFromJson {
     }
 
     public void getSpecAndVariant() {
-        gameContext = applicationContext.getBean(GameContext.class);
+        gameContext = gameContextFactory.get();
         gazePlay.onGameLaunch(gameContext);
         for (GameSpec gameSpec : gamesList) {
             if (currentGameNameCode.equals(gameSpec.getGameSummary().getNameCode())) {
@@ -437,6 +441,11 @@ class JsonFile {
     private String gameName;
     @Getter
     private String gameVariantClass;
+    /**
+     * Absent from the files written before version 2.
+     */
+    @Getter
+    private Integer formatVersion;
     @Getter
     private String gameVariant;
     @Getter

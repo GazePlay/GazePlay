@@ -79,7 +79,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
 
     Configuration config = ActiveConfigurationContext.getInstance();
 
-    ConfigurationContext(GazePlay gazePlay) {
+    public ConfigurationContext(GazePlay gazePlay) {
         super(gazePlay, new BorderPane());
 
         Translator translator = gazePlay.getTranslator();
@@ -976,7 +976,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                     Runtime.getRuntime().exec("cmd xdg-open," + path);
                 }
             } catch (Exception e1) {
-                e1.printStackTrace();
+                log.warn("Cannot open the folder {}", path, e1);
             }
         });
 
@@ -1203,7 +1203,7 @@ public class ConfigurationContext extends GraphicalContext<BorderPane> {
                 try {
                     slwithvariant.saveTo(configuration.getShortcutDir() + "\\" + gameBox.getText() + (currentSelectedVariant == null ? "" : (" - " + variantBox.getText())) + ".lnk");
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.warn("Cannot create the shortcut of the game", e);
                 }
             }
         });

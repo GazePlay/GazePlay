@@ -5,7 +5,6 @@ import javafx.geometry.Dimension2D;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
@@ -30,10 +29,9 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
 
     private final List<GazeMotionListener> gazeMotionListeners = new CopyOnWriteArrayList<>();
 
-    @Getter
+    // Also the lock of the dispatch: not exposed (it had unused public getters)
     private final Map<IdentityKey<Node>, GazeInfos> shapesEventFilter = Collections.synchronizedMap(new HashMap<>());
 
-    @Getter
     private final Map<IdentityKey<Node>, GazeInfos> shapesEventHandler = Collections.synchronizedMap(new HashMap<>());
 
     private final List<Node> toRemove = new LinkedList<>();
@@ -105,7 +103,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
     }
 
 
-    public GazeInfos gameScene = null;
+    private GazeInfos gameScene = null;
 
     public void addStats(Stats stats) {
         gameScene = new GazeInfos(stats.gameContextScene.getRoot());
@@ -120,10 +118,7 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
                     log.warn("EventFilter to remove not found");
                 } else {
                     if (removed.isOnGaze() || removed.isOnMouse()) {
-                        Platform.runLater(
-                            () ->
-                                removed.getNode().fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, System.currentTimeMillis(), 0, 0))
-                        );
+                        fire(removed.getNode(), new GazeEvent(GazeEvent.GAZE_EXITED, System.currentTimeMillis(), 0, 0));
                     }
                 }
                 toRemove.remove(node);
@@ -153,46 +148,69 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         }
     }
 
-    synchronized void onGazeUpdate(Point2D gazePositionOnScreen, String event) {
-        // notifyAllGazeMotionListeners(gazePositionOnScreen);
-        final double positionX = gazePositionOnScreen.getX();
-        final double positionY = gazePositionOnScreen.getY();
-        updatePosition(positionX, positionY, event, false);
+    /**
+     * Single entry point of the positions given by the gaze sources: the dispatch to the nodes runs on the JavaFX
+     * thread, reached once per sample. It used to be reached once per node and per sample (one Platform.runLater for
+     * each event), and the EyeTribe positions were dispatched on the thread of its SDK, which read the JavaFX nodes
+     * outside of the JavaFX thread.
+     */
+    public void onGazeSample(final GazeSample sample) {
+        if (Platform.isFxApplicationThread()) {
+            dispatch(sample, false);
+        } else {
+            Platform.runLater(() -> dispatch(sample, false));
+        }
     }
 
+    void onGazeUpdate(Point2D gazePositionOnScreen, String event) {
+        onGazeSample(GazeSample.now(gazePositionOnScreen, GazeSample.Source.fromEventName(event)));
+    }
+
+    /**
+     * Replay of the recorded samples, on the JavaFX thread (the replay draws them on a canvas).
+     */
     @Override
-    synchronized public void onSavedMovementsUpdate(Point2D gazePositionOnScene, String event) {
+    public void onSavedMovementsUpdate(Point2D gazePositionOnScene, String event) {
         if (gameScene != null) {
             Point2D gazePositionOnScreen = gameScene.getNode().localToScreen(gazePositionOnScene);
             if (gazePositionOnScreen != null) {
-                final double positionX = gazePositionOnScreen.getX();
-                final double positionY = gazePositionOnScreen.getY();
-                updatePosition(positionX, positionY, event, true);
+                dispatch(GazeSample.now(gazePositionOnScreen, GazeSample.Source.fromEventName(event)), true);
             }
         }
     }
 
-    void updatePosition(double positionX, double positionY, String event, Boolean isBeingReplayed) {
+    /**
+     * Fires the events of a sample on the registered nodes, then on the root of the game (whose filters record the
+     * statistics). The events are fired directly, on a copy of the registered nodes: a handler may add, remove or clear
+     * the nodes during the dispatch (e.g. a game ending on GAZE_ENTERED) without affecting it, as when the events were
+     * queued with Platform.runLater (pinned by GazeDispatchCharacterizationTest).
+     */
+    private void dispatch(final GazeSample sample, final boolean isBeingReplayed) {
+        if (isInReplayMode && !isBeingReplayed) {
+            return;
+        }
 
-        if (!isInReplayMode || (isInReplayMode && isBeingReplayed)) {
+        add();
+        delete();
 
-            add();
-            delete();
+        final GazeInfos root = gameScene;
+        if (root == null) {
+            return;
+        }
+        final List<GazeInfos> nodes;
+        synchronized (shapesEventFilter) {
+            nodes = new ArrayList<>(shapesEventFilter.values());
+        }
 
-            synchronized (shapesEventFilter) {
-                Collection<GazeInfos> c = shapesEventFilter.values();
-                for (GazeInfos gi : c) {
-                    if (gameScene != null && gi.getNode() != gameScene.getNode()) {
-                        eventFire(positionX, positionY, gi, event, c);
-                    }
-                }
-
-                if (gameScene != null) {
-                    eventFire(positionX, positionY, gameScene, event);
-                }
-
+        final double positionX = sample.screenPosition().getX();
+        final double positionY = sample.screenPosition().getY();
+        final String event = sample.source().eventName();
+        for (GazeInfos gi : nodes) {
+            if (gi.getNode() != root.getNode()) {
+                eventFire(positionX, positionY, gi, event);
             }
         }
+        eventFire(positionX, positionY, root, event);
     }
 
     public boolean contains(Node node, double positionX, double positionY) {
@@ -203,81 +221,48 @@ public abstract class AbstractGazeDeviceManager implements GazeDeviceManager {
         return false;
     }
 
-
-    public void eventFire(double positionX, double positionY, GazeInfos gi, String event) {
-        eventFire(positionX, positionY, gi, event, null);
+    private static void fire(final Node node, final GazeEvent event) {
+        node.fireEvent(event);
     }
 
-    public boolean eventFire(double positionX, double positionY, GazeInfos gi, String event, Collection<GazeInfos> c) {
-        Node node = gi.getNode();
-        if (!node.isDisable()) {
+    /**
+     * Updates the gaze (or mouse) state of a node for a position and fires the matching event: GAZE_ENTERED, then
+     * GAZE_MOVED with the time of the entry, then GAZE_EXITED with the time -1. Gaze and mouse have separate states.
+     *
+     * @return true if the position is on the node
+     */
+    public boolean eventFire(double positionX, double positionY, GazeInfos gi, String event) {
+        final Node node = gi.getNode();
+        if (node.isDisable()) {
+            return false;
+        }
+        final boolean gaze = event.equals("gaze");
+        final boolean wasOn = gaze ? gi.isOnGaze() : gi.isOnMouse();
+        final Point2D localPosition = node.screenToLocal(positionX, positionY);
 
-            Point2D localPosition = node.screenToLocal(positionX, positionY);
-
-            if (localPosition != null && contains(node, positionX, positionY)) {
-                if (event.equals("gaze")) {
-                    if (gi.isOnGaze()) {
-                        Platform.runLater(
-                            () ->
-                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-                        );
-                        return true;
-                    } else {
-
-                        gi.setOnGaze(true);
-                        gi.setTime(System.currentTimeMillis());
-                        Platform.runLater(
-                            () ->
-                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-                        );
-                        return true;
-                    }
+        if (localPosition != null && contains(node, positionX, positionY)) {
+            if (!wasOn) {
+                if (gaze) {
+                    gi.setOnGaze(true);
                 } else {
-                    if (gi.isOnMouse()) {
-                        Platform.runLater(
-                            () ->
-                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_MOVED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-
-                        );
-                        return true;
-                    } else {
-
-                        gi.setOnMouse(true);
-                        gi.setTime(System.currentTimeMillis());
-                        Platform.runLater(
-                            () ->
-                                node.fireEvent(new GazeEvent(GazeEvent.GAZE_ENTERED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-
-                        );
-                        return true;
-                    }
+                    gi.setOnMouse(true);
                 }
-            } else {// gaze is not on the shape
-                if (event.equals("gaze")) {
-                    if (gi.isOnGaze()) {// gaze was on the shape previously
-                        gi.setOnGaze(false);
-                        gi.setTime(-1);
-                        if (localPosition != null) {
-                            Platform.runLater(
-                                () ->
-                                    node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
-                            );
-                        }
-                    }
-                } else {
-                    if (gi.isOnMouse()) {// gaze was on the shape previously
-                        gi.setOnMouse(false);
-                        gi.setTime(-1);
-                        if (localPosition != null) {
-                            Platform.runLater(
-                                () ->
-                                    node.fireEvent(new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()))
+                gi.setTime(System.currentTimeMillis());
+            }
+            fire(node, new GazeEvent(wasOn ? GazeEvent.GAZE_MOVED : GazeEvent.GAZE_ENTERED, gi.getTime(),
+                localPosition.getX(), localPosition.getY()));
+            return true;
+        }
 
-                            );
-                        }
-                    }
-                }
-
+        if (wasOn) { // the position left the node
+            if (gaze) {
+                gi.setOnGaze(false);
+            } else {
+                gi.setOnMouse(false);
+            }
+            gi.setTime(-1);
+            if (localPosition != null) {
+                fire(node, new GazeEvent(GazeEvent.GAZE_EXITED, gi.getTime(), localPosition.getX(), localPosition.getY()));
             }
         }
         return false;

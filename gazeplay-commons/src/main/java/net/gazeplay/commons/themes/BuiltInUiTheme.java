@@ -12,9 +12,8 @@ public enum BuiltInUiTheme {
 
     SYSTEM("System", null),
 
-    AFSRGREEN("AFSR-Green", "afsr-green.css"),
-
-    AFSRPURPLE("AFSR-Purple", "afsr-purple.css"),
+    // AFSR-Green and AFSR-Purple were removed with the AFSR edition (October 2026): a saved "builtin:AFSRGREEN" or
+    // "builtin:AFSRPURPLE" value is no longer found, and the default theme is used (CssUtil, configuration screen)
 
     ORANGE("Orange", "main-orange.css"),
 

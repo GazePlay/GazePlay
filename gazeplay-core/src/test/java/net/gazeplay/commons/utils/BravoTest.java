@@ -11,17 +11,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GamePanelDimensionProvider;
 import net.gazeplay.ui.scenes.ingame.GameContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationExtension;
 
@@ -29,13 +26,12 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @Slf4j
 @ExtendWith(ApplicationExtension.class)
-@RunWith(MockitoJUnitRunner.class)
 public class BravoTest {
 
     @Mock
@@ -107,14 +103,12 @@ public class BravoTest {
             Scene scene;
 
             primaryStage.setTitle(getClass().getSimpleName());
-            primaryStage.setFullScreen(true);
 
             root = new BorderPane();
 
             Screen screen = Screen.getMainScreen();
             scene = new Scene(root, screen.getWidth(), screen.getHeight(), Color.BLACK);
 
-            primaryStage.setOnCloseRequest((WindowEvent we) -> System.exit(0));
             primaryStage.setScene(scene);
 
             bravo = new Bravo();

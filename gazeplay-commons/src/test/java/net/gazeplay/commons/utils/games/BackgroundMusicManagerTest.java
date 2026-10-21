@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import mockit.MockUp;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -14,10 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
@@ -29,7 +26,6 @@ import java.util.Base64;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
 @ExtendWith(ApplicationExtension.class)
 class BackgroundMusicManagerTest {
 
@@ -163,47 +159,35 @@ class BackgroundMusicManagerTest {
 
     @Test
     void shouldDownloadAndGetFromCache() throws IOException {
-        File testFile = new File("testFolder");
+        // user.home is a temporary folder during tests (see build.gradle); a local URL keeps the test offline
+        File cacheFolder = new File(GazePlayDirectories.getGazePlayFolder(), "cache");
+        URL resource = new File(localDataFolder, "song.mp3").toURI().toURL();
 
-        new MockUp<GazePlayDirectories>() {
-            @mockit.Mock
-            public File getGazePlayFolder() {
-                return testFile;
-            }
-        };
-
-        URL resource = new URL("https://opengameart.org/sites/default/files/TalkingCuteChiptune_0.mp3");
         File result = musicManagerSpy.downloadAndGetFromCache(resource, resource.toExternalForm());
 
-        File expected = new File(testFile, "cache/music/" +
+        File expected = new File(cacheFolder, "music/" +
             new String(Base64.getEncoder().encode(resource.toExternalForm().getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8));
         assertEquals(expected, result);
+        assertTrue(expected.isFile());
 
-        FileUtils.deleteDirectory(testFile);
+        FileUtils.deleteDirectory(cacheFolder);
     }
 
     @Test
     void shouldFindExistingInCache() throws IOException {
-        File testFile = new File("testFolder");
-
-        new MockUp<GazePlayDirectories>() {
-            @mockit.Mock
-            public File getGazePlayFolder() {
-                return testFile;
-            }
-        };
-
+        File cacheFolder = new File(GazePlayDirectories.getGazePlayFolder(), "cache");
         URL resource = new URL("https://opengameart.org/sites/default/files/TalkingCuteChiptune_0.mp3");
-        File folder = new File(testFile, "cache/music");
+        File folder = new File(cacheFolder, "music");
         folder.mkdirs();
 
         File expected = new File(folder,
             new String(Base64.getEncoder().encode(resource.toExternalForm().getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8));
         expected.createNewFile();
 
+        // Nothing is downloaded: the file is already in the cache
         File result = musicManagerSpy.downloadAndGetFromCache(resource, resource.toExternalForm());
 
         assertEquals(expected, result);
-        FileUtils.deleteDirectory(testFile);
+        FileUtils.deleteDirectory(cacheFolder);
     }
 }

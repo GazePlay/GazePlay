@@ -32,7 +32,7 @@ public class Difference extends Circle {
         timer = 0;
         setOpacity(0);
 
-        final EventHandler handler = (EventHandler<Event>) e -> {
+        final EventHandler<Event> handler = e -> {
             if (getOpacity() == 0) {
                 if (e.getEventType() == MouseEvent.MOUSE_ENTERED || e.getEventType() == GazeEvent.GAZE_ENTERED) {
                     timer = System.currentTimeMillis();

@@ -106,7 +106,7 @@ public class Horses implements GameLifeCycle {
      */
     private void selectTeam(final TEAMS team) {
         chosenTeams.add(team);
-        final ArrayList<Pawn> pawnList = new ArrayList();
+        final ArrayList<Pawn> pawnList = new ArrayList<>();
         final ArrayList<Position> spawnPositions = spawnPoints.get(team);
         for (int i = 0; i < nbPawns; i++) {
 
@@ -287,9 +287,8 @@ public class Horses implements GameLifeCycle {
             jsonPath = "data/horses/positionsSimplified.json";
         }
 
-        final JsonParser parser = new JsonParser();
         final JsonObject positions;
-        positions = (JsonObject) parser.parse(new InputStreamReader(
+        positions = (JsonObject) JsonParser.parseReader(new InputStreamReader(
             Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(jsonPath)), StandardCharsets.UTF_8));
 
         nbPawns = positions.get("nbPawns").getAsInt();

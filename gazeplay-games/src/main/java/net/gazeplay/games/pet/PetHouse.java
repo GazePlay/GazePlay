@@ -7,6 +7,8 @@ import javafx.animation.TranslateTransition;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,7 +28,6 @@ import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.ProgressButton;
-import tobii.Tobii;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -182,21 +183,15 @@ public class PetHouse extends Parent implements GameLifeCycle {
                 - gameContext.getPrimaryStage().getX() - hand.getWidth() / 2);
             hand.setY(offsety + MouseInfo.getPointerInfo().getLocation().getY()
                 - gameContext.getPrimaryStage().getY() - hand.getHeight() / 2);
-        } else if (e.getEventType() == GazeEvent.GAZE_MOVED) {
-            final float[] pointAsFloatArray = Tobii.gazePosition();
+        } else if (e.getEventType() == GazeEvent.GAZE_MOVED && e.getSource() instanceof Node && hand.getParent() != null) {
+            // Position carried by the event (any eye tracker): it used to be read again from the Tobii wrapper, so
+            // the hand stayed at the center of the screen with an EyeTribe, or without eye tracker
+            final GazeEvent gazeEvent = (GazeEvent) e;
+            final Point2D scenePosition = ((Node) e.getSource()).localToScene(gazeEvent.getX(), gazeEvent.getY());
+            final Point2D handPosition = hand.getParent().sceneToLocal(scenePosition);
 
-            final float xRatio = pointAsFloatArray[0];
-            final float yRatio = pointAsFloatArray[1];
-
-            final Dimension2D dimension2D = gameContext.getGamePanelDimensionProvider().getDimension2D();
-
-            final double positionX = xRatio * dimension2D.getWidth();
-            final double positionY = yRatio * dimension2D.getHeight();
-
-            hand.setX(offsetx + positionX - gameContext.getPrimaryStage().getX()
-                - hand.getWidth() / 2);
-            hand.setY(offsety + positionY - gameContext.getPrimaryStage().getY()
-                - hand.getHeight() / 2);
+            hand.setX(offsetx + handPosition.getX() - hand.getWidth() / 2);
+            hand.setY(offsety + handPosition.getY() - hand.getHeight() / 2);
         }
 
         hand.toFront();

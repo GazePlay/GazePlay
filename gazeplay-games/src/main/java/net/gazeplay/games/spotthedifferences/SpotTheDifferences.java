@@ -119,9 +119,8 @@ public class SpotTheDifferences implements GameLifeCycle {
         this.gameContext.getGazeDeviceManager().addEventFilter(nextButton);
         nextButton.active();
 
-        final JsonParser parser = new JsonParser();
-        instances = (JsonArray) parser
-            .parse(new InputStreamReader(
+        instances = (JsonArray) JsonParser
+            .parseReader(new InputStreamReader(
                 Objects.requireNonNull(
                     ClassLoader.getSystemResourceAsStream("data/spotthedifferences/instances.json")),
                 StandardCharsets.UTF_8));

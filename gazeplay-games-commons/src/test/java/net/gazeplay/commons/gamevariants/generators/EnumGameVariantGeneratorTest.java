@@ -4,10 +4,8 @@ import net.gazeplay.commons.gamevariants.IGameVariant;
 import net.gazeplay.commons.ui.Translator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
@@ -23,7 +21,6 @@ enum TestEnum {
     TEST1, TEST2
 }
 
-@RunWith(MockitoJUnitRunner.class)
 class EnumGameVariantGeneratorTest {
 
     @Mock

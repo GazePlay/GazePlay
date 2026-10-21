@@ -261,8 +261,7 @@ public class Piano extends Parent implements GameLifeCycle {
             try {
                 loadMusic(true);
             } catch (final IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.error("Cannot load the music", e);
             }
         });
         this.getChildren().add(b);
@@ -272,7 +271,7 @@ public class Piano extends Parent implements GameLifeCycle {
             loadMusic(false);
 
         } catch (final IOException e) {
-            e.printStackTrace();
+            log.error("Cannot load the music", e);
         }
         stats.notifyNewRoundReady();
         gameContext.getGazeDeviceManager().addStats(stats);

@@ -1,17 +1,56 @@
+import java.security.DigestInputStream
+import java.security.MessageDigest
+
+// Java runtimes bundled with the distributions: Azul Zulu 21 (LTS, supported until 2031) with JavaFX. Zulu 21.0.12.1 FX
+// bundles JavaFX 23.0.8, while the code is compiled for Java 17 against JavaFX libs.versions.javafx (17.0.20, the oldest
+// API it supports, see BUILD.MD), so that the no-JRE distribution still runs on Java 17.
+// 64 bits only (Windows x64, Linux x64, Linux aarch64, macOS x64 and aarch64): the 32 bits builds were dropped in October 2026.
 ext.jreSource = 'https://cdn.azul.com/zulu/bin'
-ext.zuluVersion = '17.32.13'
-ext.jreVersion = '17.0.2'
-ext.jre = '17'
+ext.zuluVersion = '21.52.203'
+ext.jreVersion = '21.0.12.1'
+ext.jre = '21'
 ext.jreFolder = "${buildDir}/jre"
 
-ext.downloadLocation = new File(project.repositories.mavenLocal().url).getAbsolutePath();
+ext.downloadLocation = new File(System.getProperty('user.home'), '.m2/repository').getAbsolutePath()
+// (same folder as before, without declaring mavenLocal() as a dependency repository)
+
+// SHA-256 published by Azul for each archive; the Tobii drivers have no published checksum, the
+// value is the one of the release asset downloaded on 2026-10-20. Archives are cached under their own name, so that
+// a version change can no longer reuse a previous download.
+ext.downloadChecksums = [
+    'zulu21.52.203-ca-fx-jre21.0.12.1-win_x64.zip'         : '2cb4e16da18812247cb151971fcede513a6d427a40083a497e099142fc1ed77b',
+    'zulu21.52.203-ca-fx-jre21.0.12.1-linux_x64.tar.gz'    : '9488605a66a6192529c22896d2e7d268f25e2230d2fe7e560ec8acacd279ae5e',
+    'zulu21.52.203-ca-fx-jre21.0.12.1-macosx_x64.tar.gz'   : '00e1f0462850c610c89e875372d8e22eb2501af9dae7096048ad30c7f121aeb6',
+    'zulu21.52.203-ca-fx-jre21.0.12.1-macosx_aarch64.tar.gz': '8ee02b3f4c79ea571a30fb975551dfaa8a3b0e4e94e7a9f151dd3d5c5fcd865f',
+    'zulu21.52.203-ca-fx-jre21.0.12.1-linux_aarch64.tar.gz': 'd797de573936bd98e547dd5fdd61455924f9fffee5a430956a521b3224c72ad5',
+    'TobiiDriversForLinux.tar.gz'                          : 'c88b5db34ddef3bed7f7af3b465017136d0f667ebdf69ebcc9e8de7437dc5269',
+]
+
+ext.verifyChecksum = { File file ->
+    def expected = downloadChecksums[file.name]
+    if (expected == null) {
+        throw new GradleException("No checksum declared in gradle/jre.gradle for ${file.name}")
+    }
+    def digest = MessageDigest.getInstance('SHA-256')
+    file.withInputStream { input ->
+        new DigestInputStream(input, digest).withStream { stream ->
+            byte[] buffer = new byte[65536]
+            while (stream.read(buffer) != -1) {
+            }
+        }
+    }
+    def actual = digest.digest().encodeHex().toString()
+    if (actual != expected) {
+        file.delete()
+        throw new GradleException("Checksum mismatch for ${file.name}: expected ${expected}, got ${actual} (file deleted)")
+    }
+}
 
 apply from: "${rootDir}/gradle/jre/linux.gradle"
 apply from: "${rootDir}/gradle/jre/macos.gradle"
 apply from: "${rootDir}/gradle/jre/windows.gradle"
-apply from: "${rootDir}/gradle/jre/windows-32.gradle"
 apply from: "${rootDir}/gradle/jre/arm.gradle"
 
 task('downloadAndExtractJREs', group: 'custom jre') {
-    dependsOn downloadAndExtractLinuxJREwithLibavPlugin, downloadAndExtractWindowsJRE, downloadAndExtractWindowsJREx32, downloadAndExtractMacosJRE, downloadAndExtractARMJREwithLibavPlugin
+    dependsOn downloadAndExtractLinuxJREwithLibavPlugin, downloadAndExtractWindowsJRE, downloadAndExtractMacosJRE, downloadAndExtractMacosAarch64JRE, downloadAndExtractARMJREwithLibavPlugin
 }

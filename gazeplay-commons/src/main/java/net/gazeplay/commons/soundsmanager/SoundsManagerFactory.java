@@ -1,11 +1,9 @@
 package net.gazeplay.commons.soundsmanager;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-@Component
 @Slf4j
 public class SoundsManagerFactory {
 

@@ -1,5 +1,6 @@
 package net.gazeplay.games.gazeRace;
 
+import lombok.extern.slf4j.Slf4j;
 import javafx.animation.AnimationTimer;
 import javafx.animation.RotateTransition;
 import javafx.geometry.Dimension2D;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+@Slf4j
 public class GazeRace extends Parent implements GameLifeCycle {
 
 
@@ -202,7 +204,7 @@ public class GazeRace extends Parent implements GameLifeCycle {
                     if (mphGeneral <= 15){
                         mphGeneral += 0.2;
                     }
-                    System.out.println(mphGeneral);
+                    log.debug("speed : {}", mphGeneral);
                     if (nbSecond % 3 == 0){
                         stats.incrementNumberOfGoalsReached();
                         gameContext.updateScore(stats, GazeRace.this);

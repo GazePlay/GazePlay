@@ -25,11 +25,21 @@ public class DateUtils {
     }
 
     /**
-     * @return current time in the format HH:MM:ss
+     * @return current time in the format HH:mm:ss
      */
     public static String timeNow() {
-        final DateFormat dateFormat = new SimpleDateFormat("HH:MM:ss");
-        final Date date = new Date();
+        return time(new Date());
+    }
+
+    /**
+     * The pattern used to be "HH:MM:ss", which printed the month instead of the minutes (e.g. 14:10:05
+     * for 14:37:05 in October). Files written with the old pattern keep wrong minutes in their "Time" column; the
+     * minutes can be recovered from the yyyy-MM-dd-HH-mm-ss prefix of their name (...-info-game.csv).
+     *
+     * @return the given time in the format HH:mm:ss
+     */
+    static String time(final Date date) {
+        final DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         return dateFormat.format(date);
     }
 

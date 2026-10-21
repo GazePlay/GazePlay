@@ -21,16 +21,21 @@ import net.gazeplay.ui.scenes.stats.AreaOfInterest;
 import net.gazeplay.ui.scenes.stats.ScanpathView;
 import net.gazeplay.ui.scenes.stats.StatsContext;
 import net.gazeplay.ui.scenes.userselect.UserProfileContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
-
 import java.util.function.Supplier;
 
 @Slf4j
-@Component
 public class GazePlay {
+
+    /**
+     * Creates the screens of the application, each time they are displayed (see {@link CompositionRoot}).
+     */
+    public interface Screens {
+        HomeMenuScreen newHomeMenuScreen();
+
+        ConfigurationContext newConfigurationContext();
+
+        UserProfileContext newUserProfileContext();
+    }
 
     @Setter
     @Getter
@@ -40,21 +45,20 @@ public class GazePlay {
     @Getter
     private Scene primaryScene;
 
-    @Autowired
     @Getter
-    private Translator translator;
+    private final Translator translator;
 
-    @Autowired
     @Getter
-    private GamesLocator gamesLocator;
+    private final GamesLocator gamesLocator;
 
-    @Autowired
+    /**
+     * Set after construction: the supplier itself depends on the stage of this object.
+     */
     @Getter
-    @Lazy
+    @Setter
     private Supplier<Dimension2D> currentScreenDimensionSupplier;
 
-    @Autowired
-    private ApplicationContext applicationContext;
+    private final Screens screens;
 
     HomeMenuScreen homeMenuScreen;
     ConfigurationContext configurationContext;
@@ -63,7 +67,10 @@ public class GazePlay {
     Boolean loadedHomePage = false;
     Boolean loadedSettingsPage = false;
 
-    public GazePlay() {
+    public GazePlay(final Translator translator, final GamesLocator gamesLocator, final Screens screens) {
+        this.translator = translator;
+        this.gamesLocator = gamesLocator;
+        this.screens = screens;
     }
 
     public void onGameLaunch(GameContext gameContext) {
@@ -109,9 +116,16 @@ public class GazePlay {
         this.loadedHomePage = false;
         this.loadedSettingsPage = false;
 
-        userProfileScreen = applicationContext.getBean(UserProfileContext.class);
+        userProfileScreen = screens.newUserProfileContext();
         userProfileScreen.setUpOnStage(primaryScene);
         primaryStage.show();
+    }
+
+    /**
+     * Quits GazePlay (exit buttons of the menus).
+     */
+    public void quit() {
+        System.exit(0);
     }
 
     public void toggleFullScreen() {
@@ -136,14 +150,14 @@ public class GazePlay {
             this.loadedHomePage = true;
             BackgroundMusicManager.getInstance().checkDefaultMusic();
             this.loadSettingsPage();
-            homeMenuScreen = applicationContext.getBean(HomeMenuScreen.class);
+            homeMenuScreen = screens.newHomeMenuScreen();
         }
     }
 
     public void loadSettingsPage() {
         if (!this.loadedSettingsPage) {
             this.loadedSettingsPage = true;
-            configurationContext = applicationContext.getBean(ConfigurationContext.class);
+            configurationContext = screens.newConfigurationContext();
         }
     }
 }

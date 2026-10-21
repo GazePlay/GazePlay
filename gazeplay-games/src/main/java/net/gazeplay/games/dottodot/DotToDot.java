@@ -104,9 +104,8 @@ public class DotToDot implements GameLifeCycle {
         int indexElement = randomGenerator.nextInt(5);
         log.info("level = {}, index = {}", level, indexElement);
 
-        JsonParser parser = new JsonParser();
         JsonObject jsonRoot;
-        jsonRoot = (JsonObject) parser.parse(new InputStreamReader(
+        jsonRoot = (JsonObject) JsonParser.parseReader(new InputStreamReader(
             Objects.requireNonNull(ClassLoader.getSystemResourceAsStream(path + folder + "elements" + level + indexElement + ".json")), StandardCharsets.UTF_8));
 
         /* Uncomment this part when images will be available */

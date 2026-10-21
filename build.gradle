@@ -2,21 +2,18 @@ plugins {
     id 'application'
     id 'distribution'
     id 'jacoco'
-    id 'org.openjfx.javafxplugin' version '0.1.0'
-    id 'io.freefair.lombok' version '6.4.3'
-    id 'com.github.hierynomus.license-report' version '0.16.1'
-    id 'com.github.spotbugs' version '6.1.11'
-    id 'net.researchgate.release' version '2.6.0'
-    id "de.undercouch.download" version '4.0.4'
-
-    id 'org.springframework.boot' version '3.4.5'
-    id 'io.spring.dependency-management' version '1.1.4'
+    alias(libs.plugins.javafx)
+    alias(libs.plugins.lombok)
+    alias(libs.plugins.license.report)
+    alias(libs.plugins.spotbugs)
+    alias(libs.plugins.release)
+    alias(libs.plugins.download)
 }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'info.picocli:picocli-spring-boot-starter:4.7.5'
-    annotationProcessor 'info.picocli:picocli-codegen:4.7.5'
+// Same JavaFX modules as the subprojects: needed by "./gradlew run" (it used to fail with an empty --add-modules)
+javafx {
+    version = libs.versions.javafx.get()
+    modules = ['javafx.controls', 'javafx.swing', 'javafx.media']
 }
 
 spotbugsMain.enabled = true
@@ -24,7 +21,13 @@ spotbugsTest.enabled = false
 
 logging.captureStandardOutput LogLevel.INFO
 
-ext.javafxVersion = "21.0.1"
+// Licenses of all the libraries shipped with GazePlay (build/reports/dependency-license, included in the distributions)
+licenseReport {
+    // The runtime classpath of the root project is exactly what is shipped (it depends on every module); resolving
+    // the configurations of the subprojects from this task is not allowed in parallel builds
+    projects = [project]
+    configurations = ['runtimeClasspath']
+}
 
 apply from: "${rootDir}/gradle/package.gradle"
 apply from: "${rootDir}/gradle/installer.gradle"
@@ -35,84 +38,84 @@ allprojects {
     group = 'com.github.gazeplay'
 
     repositories {
-        mavenLocal()
         mavenCentral()
-        jcenter()
 
+        // Only for the GazePlay builds of the Tobii wrapper (com.github.GazePlay:TobiiStreamEngineForJava)
         maven {
             url = 'https://jitpack.io'
-        }
-
-        maven {
-            url = 'https://raw.github.com/agomezmoron/screen-recorder/mvn-repo'
+            content {
+                includeGroup 'com.github.GazePlay'
+            }
         }
     }
 }
 
+// The JavaFX test JVMs of the modules run one at a time: running them concurrently made the JavaFX toolkit crash
+// now and then (native crash once on JDK 17, cascade of PulseReceiver errors once on JDK 21). Compilation stays parallel.
+abstract class JavaFxTestsLimiter implements org.gradle.api.services.BuildService<org.gradle.api.services.BuildServiceParameters.None> {
+}
+def javaFxTestsLimiter = gradle.sharedServices.registerIfAbsent('javaFxTests', JavaFxTestsLimiter) {
+    maxParallelUsages = 1
+}
+
 subprojects {
+    // Explicit access to the version catalog (implicit lookup in the parent project is deprecated)
+    def libs = rootProject.extensions.getByName('libs')
+
+    // gazeplay-results holds the computations of the results and must stay free of JavaFX (checked at compilation)
+    def usesJavaFx = project.name != 'gazeplay-results'
+
     apply plugin: 'java'
-    apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'maven-publish'
     apply plugin: 'jacoco'
-    apply plugin: 'org.openjfx.javafxplugin'
+    if (usesJavaFx) {
+        apply plugin: 'org.openjfx.javafxplugin'
+    }
     apply plugin: 'io.freefair.lombok'
-    apply plugin: 'com.github.hierynomus.license-report'
     apply plugin: 'com.github.spotbugs'
     apply plugin: "pmd"
     apply plugin: 'distribution'
 
-    sourceSets {
-        integrationTest {
-            java {
-                compileClasspath += main.output + test.output
-                runtimeClasspath += main.output + test.output
-                srcDir file('src/integration-test/java')
-            }
-            resources.srcDir file('src/integration-test/resources')
+    apply from: "${rootDir}/gradle/pmd.gradle"
+
+    lombok {
+        // 1.18.30+ is required by JDK 21, 1.18.40+ by JDK 25
+        version = libs.versions.lombok.get()
+    }
+
+    if (usesJavaFx) {
+        javafx {
+            version = libs.versions.javafx.get()
+            // javafx.web (WebKit) was only used by the removed LatestNewsPopup
+            modules = ['javafx.controls', 'javafx.swing', 'javafx.media']
         }
     }
 
-    apply from: "${rootDir}/gradle/integration.gradle"
-    apply from: "${rootDir}/gradle/pmd.gradle"
-
-    configurations {
-        integrationTestImplementation.extendsFrom testImplementation
-        integrationTestRuntime.extendsFrom testRuntime
-        runtimeOnly.canBeResolved(true)
-    }
-
-    javafx {
-        version = javafxVersion
-        modules = ['javafx.controls', 'javafx.swing', 'javafx.media', 'javafx.web']
-    }
-
     spotbugs {
-        toolVersion = '4.9.3'
+        toolVersion = libs.versions.spotbugs.get()
         excludeFilter = file("spotbugs-exclude.xml")
     }
 
     spotbugsMain.enabled = true
     spotbugsTest.enabled = false
 
-    downloadLicenses {
-        dependencyConfiguration = 'compileClasspath'
-        includeProjectDependencies = true
-    }
-
     dependencies {
-        testImplementation 'org.junit.jupiter:junit-jupiter:5.6.0'
-        testImplementation "org.testfx:testfx-core:4.0.16-alpha"
-        testImplementation "org.testfx:testfx-junit5:4.0.16-alpha"
-        testImplementation "org.testfx:openjfx-monocle:jdk-11+26"
-        testImplementation "org.jmockit:jmockit:1.49"
-        testImplementation "org.mockito:mockito-core:3.12.+"
+        // Every module logs through SLF4J (Lombok @Slf4j); only the application (core) ships logback
+        implementation libs.slf4j.api
+        testRuntimeOnly libs.logback.classic
+
+        testImplementation platform(libs.junit.bom)
+        testImplementation libs.junit.jupiter
+        testRuntimeOnly libs.junit.platform.launcher
+        testImplementation libs.testfx.core
+        testImplementation libs.testfx.junit5
+        testImplementation libs.openjfx.monocle
+        testImplementation libs.mockito.core
     }
 
-    sourceCompatibility = '17'
-    targetCompatibility = '17'
-
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
+        // Bytecode and API of Java 17 whatever the JDK running the build
+        options.release = 17
     }
 
     test {
@@ -122,12 +125,40 @@ subprojects {
         }
     }
 
-    tasks.withType(Test) {
+    tasks.withType(Test).configureEach {
+        usesService(javaFxTestsLimiter)
         maxHeapSize = "3g"
+
+        // Hermetic tests: never read or write the real ~/GazePlay folder, nor depend on the edition file
+        // (argsGazeplay.txt) of the machine running the build. A fresh home is created for each run.
+        def testHome = layout.buildDirectory.dir("test-home/${name}").get().asFile
+        systemProperty 'user.home', testHome.absolutePath
+        systemProperty 'gazeplay.argsFile', new File(testHome, 'argsGazeplay.txt').absolutePath
+        // JavaFX runs without any window (Monocle) unless -Pgui is given, e.g. to watch a test while debugging.
+        // AWT (screen recording, robot) is not affected and still needs a display (xvfb in the CI).
+        if (!project.hasProperty('gui')) {
+            systemProperty 'testfx.robot', 'glass'
+            systemProperty 'testfx.headless', 'true'
+            systemProperty 'glass.platform', 'Monocle'
+            systemProperty 'monocle.platform', 'Headless'
+            systemProperty 'prism.order', 'sw'
+            systemProperty 'prism.text', 't2k'
+            // Monocle extends internal classes of JavaFX: needed when JavaFX is loaded as named modules (e.g. JDK 21)
+            jvmArgs '--add-exports', 'javafx.graphics/com.sun.glass.ui=ALL-UNNAMED',
+                '--add-opens', 'javafx.graphics/com.sun.glass.ui=ALL-UNNAMED',
+                '--add-exports', 'javafx.graphics/com.sun.javafx.application=ALL-UNNAMED',
+                '--add-exports', 'javafx.graphics/com.sun.javafx.util=ALL-UNNAMED',
+                '--add-exports', 'javafx.base/com.sun.javafx.logging=ALL-UNNAMED'
+        }
+        doFirst {
+            testHome.deleteDir()
+            testHome.mkdirs()
+            new File(testHome, 'argsGazeplay.txt').setText('gazeplay', 'UTF-8')
+        }
     }
 
     jacoco {
-        toolVersion '0.8.3' // We need this version for JMockit to work.
+        toolVersion = libs.versions.jacoco.get()
     }
 
     tasks.jacocoTestReport.dependsOn('test')
@@ -138,10 +169,15 @@ dependencies {
     implementation project(':gazeplay-games')
     implementation project(':gazeplay-games-commons')
     implementation project(':gazeplay-commons')
-    implementation project(':gazeplay-melordi')
-    implementation project(':gazeplay-picto-pick')
 
-    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+}
+
+// JAVE (AOI videos) ships ffmpeg for 6 platforms, about 20 MB each: each distribution keeps only the binary of its
+// platform (JAVE selects it from os.name/os.arch at runtime). The macOS runtime is x64: osx64, not osxm1.
+def onlyJaveNativeBinary = { String platform ->
+    return { FileTreeElement element ->
+        element.name.startsWith('jave-nativebin-') && !element.name.startsWith("jave-nativebin-${platform}-")
+    }
 }
 
 distributions {
@@ -160,81 +196,12 @@ distributions {
         setDistributionBaseName "${project.name}-windows-x64"
         contents {
             with distributions.main.contents
+            exclude onlyJaveNativeBinary('win64')
             from("build/reports")
             from("build/bin/gazeplay-windows.bat") {
                 into 'bin'
             }
             from("build/jre/windows-x64") {
-                into 'lib/jre'
-            }
-        }
-    }
-
-    windowsx32{
-        setDistributionBaseName "${project.name}-windows-x32"
-        contents {
-            with distributions.main.contents
-            from("build/reports")
-            from("build/bin/gazeplay-windows.bat") {
-                into 'bin'
-            }
-            from("build/jre/windows-x32") {
-                into 'lib/jre'
-            }
-        }
-    }
-
-    windowsAfsr{
-        setDistributionBaseName "${project.name}-afsr-windows-x64"
-        contents {
-            with distributions.main.contents
-            from("build/reports")
-            from("build/bin/gazeplay-afsr-windows.bat") {
-                into 'bin'
-            }
-            from("build/jre/windows-x64") {
-                into 'lib/jre'
-            }
-        }
-    }
-
-    windowsAfsrx32{
-        setDistributionBaseName "${project.name}-afsr-windows-x32"
-        contents {
-            with distributions.main.contents
-            from("build/reports")
-            from("build/bin/gazeplay-afsr-windows.bat") {
-                into 'bin'
-            }
-            from("build/jre/windows-x32") {
-                into 'lib/jre'
-            }
-        }
-    }
-
-    windowsBera{
-        setDistributionBaseName "${project.name}-bera-windows-x64"
-        contents {
-            with distributions.main.contents
-            from("build/reports")
-            from("build/bin/gazeplay-bera-windows.bat") {
-                into 'bin'
-            }
-            from("build/jre/windows-x64") {
-                into 'lib/jre'
-            }
-        }
-    }
-
-    windowsBerax32{
-        setDistributionBaseName "${project.name}-bera-windows-x32"
-        contents {
-            with distributions.main.contents
-            from("build/reports")
-            from("build/bin/gazeplay-bera-windows.bat") {
-                into 'bin'
-            }
-            from("build/jre/windows-x32") {
                 into 'lib/jre'
             }
         }
@@ -244,14 +211,9 @@ distributions {
         setDistributionBaseName "${project.name}-linux-x64"
         contents {
             with distributions.main.contents
+            exclude onlyJaveNativeBinary('linux64')
             from("build/reports")
             from("build/bin/gazeplay-linux.sh") {
-                into 'bin'
-            }
-            from("build/bin/gazeplay-afsr-linux.sh") {
-                into 'bin'
-            }
-            from("build/bin/gazeplay-bera-linux.sh") {
                 into 'bin'
             }
             from("build/jre/linux-x64") {
@@ -267,14 +229,9 @@ distributions {
         setDistributionBaseName "${project.name}-arm"
         contents {
             with distributions.main.contents
+            exclude onlyJaveNativeBinary('linux-arm64')
             from("build/reports")
             from("build/bin/gazeplay-arm.sh") {
-                into 'bin'
-            }
-            from("build/bin/gazeplay-bera-arm.sh") {
-                into 'bin'
-            }
-            from("build/bin/gazeplay-afsr-arm.sh") {
                 into 'bin'
             }
             from("build/jre/arm") {
@@ -287,14 +244,9 @@ distributions {
         setDistributionBaseName "${project.name}-macos"
         contents {
             with distributions.main.contents
+            exclude onlyJaveNativeBinary('osx64')
             from("build/reports")
             from("build/bin/gazeplay-macos.sh") {
-                into 'bin'
-            }
-            from("build/bin/gazeplay-afsr-macos.sh") {
-                into 'bin'
-            }
-            from("build/bin/gazeplay-bera-macos.sh") {
                 into 'bin'
             }
             from("build/jre/macos") {
@@ -302,190 +254,100 @@ distributions {
             }
         }
     }
+
+    // Apple Silicon: same launch scripts, native runtime and ffmpeg (the x64 one needs Rosetta 2)
+    macosAarch64 {
+        setDistributionBaseName "${project.name}-macos-aarch64"
+        contents {
+            with distributions.main.contents
+            exclude onlyJaveNativeBinary('osxm1')
+            from("build/reports")
+            from("build/bin/gazeplay-macos.sh") {
+                into 'bin'
+            }
+            from("build/jre/macos-aarch64") {
+                into 'lib/jre'
+            }
+        }
+    }
 }
 
 task('downloadAndExtractLinuxDependecies').dependsOn('downloadAndExtractLinuxJREwithLibavPlugin', 'downloadAndExtractTobiiDriversForLinux')
-task('downloadAndExtractARMDependecies').dependsOn('downloadAndExtractARMJREwithLibavPlugin', 'downloadAndExtractTobiiDriversForLinux')
+task('downloadAndExtractARMDependecies').dependsOn('downloadAndExtractARMJREwithLibavPlugin')
 
 windowsDistZip.dependsOn(downloadAndExtractWindowsJRE)
-windowsx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
-windowsBeraDistZip.dependsOn(downloadAndExtractWindowsJRE)
-windowsBerax32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
-windowsAfsrDistZip.dependsOn(downloadAndExtractWindowsJRE)
-windowsAfsrx32DistZip.dependsOn(downloadAndExtractWindowsJREx32)
 linuxDistTar.dependsOn(downloadAndExtractLinuxDependecies)
 macosDistTar.dependsOn(downloadAndExtractMacosJRE)
-
-tasks.named('resolveMainClassName') {
-    dependsOn tasks.named('unzipAfsrDistribution')
-    dependsOn tasks.named('unzipBeraDistribution')
-}
-
-tasks.named('unzipBeraDistribution') {
-    dependsOn tasks.named('unzipAfsrDistribution')
-    dependsOn tasks.named('unzipDistribution')
-    dependsOn tasks.named('unzipDistributionx32')
-}
-
-tasks.named('unzipAfsrDistribution') {
-    dependsOn tasks.named('unzipDistribution')
-    dependsOn tasks.named('unzipDistributionx32')
-}
-
-tasks.named('unzipDistributionx32') {
-    dependsOn tasks.named('unzipDistribution')
-}
-
-
-tasks.named('distTar') {
-    dependsOn tasks.named('unzipAfsrDistribution')
-    dependsOn tasks.named('unzipBeraDistribution')
-}
-
-tasks.named('distZip') {
-    dependsOn tasks.named('unzipAfsrDistribution')
-    dependsOn tasks.named('unzipBeraDistribution')
-}
+macosAarch64DistTar.dependsOn(downloadAndExtractMacosAarch64JRE)
 
 tasks.named('armDistZip') {
-    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('generateLicenseReport')
     dependsOn tasks.named('scriptsForRelease')
-    dependsOn tasks.named('extractOpenJFXForLibavPluginARM')
     dependsOn tasks.named('extractARMJRE')
-    dependsOn tasks.named('unzipAfsrDistribution')
-    dependsOn tasks.named('unzipBeraDistribution')
     dependsOn tasks.named('unzipDistribution')
-    dependsOn tasks.named('unzipDistributionx32')
 }
 
 tasks.named('armDistTar') {
     dependsOn tasks.named('downloadAndExtractARMDependecies')
-    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('generateLicenseReport')
     dependsOn tasks.named('scriptsForRelease')
 }
 
 tasks.named('noJREDistTar') {
-    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('generateLicenseReport')
     dependsOn tasks.named('scriptsForRelease')
 }
 
 tasks.named('noJREDistZip') {
-    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('generateLicenseReport')
     dependsOn tasks.named('scriptsForRelease')
 }
 
 tasks.named('linuxDistZip') {
-    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('generateLicenseReport')
     dependsOn tasks.named('scriptsForRelease')
-    dependsOn tasks.named('extractOpenJFXForLibavPlugin')
     dependsOn tasks.named('extractLinuxJRE')
     dependsOn tasks.named('extractTobiiDriversForLinux')
-    dependsOn tasks.named('unzipAfsrDistribution')
-    dependsOn tasks.named('unzipBeraDistribution')
     dependsOn tasks.named('unzipDistribution')
-    dependsOn tasks.named('unzipDistributionx32')
 }
 
 tasks.named('linuxDistTar') {
-    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('generateLicenseReport')
     dependsOn tasks.named('scriptsForRelease')
 }
 
 tasks.named('macosDistZip') {
-    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('generateLicenseReport')
     dependsOn tasks.named('scriptsForRelease')
     dependsOn tasks.named('extractMacosJRE')
-    dependsOn tasks.named('unzipAfsrDistribution')
-    dependsOn tasks.named('unzipBeraDistribution')
     dependsOn tasks.named('unzipDistribution')
-    dependsOn tasks.named('unzipDistributionx32')
 }
 
 tasks.named('macosDistTar') {
-    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('generateLicenseReport')
     dependsOn tasks.named('scriptsForRelease')
 }
 
-tasks.named('windowsAfsrDistZip') {
-    dependsOn tasks.named('downloadLicenses')
+tasks.named('macosAarch64DistZip') {
+    dependsOn tasks.named('generateLicenseReport')
     dependsOn tasks.named('scriptsForRelease')
+    dependsOn tasks.named('downloadAndExtractMacosAarch64JRE')
 }
 
-tasks.named('windowsAfsrDistTar') {
-    dependsOn tasks.named('downloadLicenses')
+tasks.named('macosAarch64DistTar') {
+    dependsOn tasks.named('generateLicenseReport')
     dependsOn tasks.named('scriptsForRelease')
-    dependsOn tasks.named('extractWindowsJRE')
-    dependsOn tasks.named('unzipAfsrDistribution')
-    dependsOn tasks.named('unzipBeraDistribution')
-    dependsOn tasks.named('unzipDistribution')
-    dependsOn tasks.named('unzipDistributionx32')
-}
-
-tasks.named('windowsAfsrx32DistZip') {
-    dependsOn tasks.named('downloadLicenses')
-    dependsOn tasks.named('scriptsForRelease')
-}
-
-tasks.named('windowsAfsrx32DistTar') {
-    dependsOn tasks.named('downloadLicenses')
-    dependsOn tasks.named('scriptsForRelease')
-    dependsOn tasks.named('extractWindowsJREx32')
-    dependsOn tasks.named('unzipAfsrDistribution')
-    dependsOn tasks.named('unzipBeraDistribution')
-    dependsOn tasks.named('unzipDistribution')
-    dependsOn tasks.named('unzipDistributionx32')
-}
-
-tasks.named('windowsBeraDistZip') {
-    dependsOn tasks.named('downloadLicenses')
-    dependsOn tasks.named('scriptsForRelease')
-}
-
-tasks.named('windowsBeraDistTar') {
-    dependsOn tasks.named('downloadLicenses')
-    dependsOn tasks.named('scriptsForRelease')
-    dependsOn tasks.named('extractWindowsJRE')
-    dependsOn tasks.named('unzipAfsrDistribution')
-    dependsOn tasks.named('unzipBeraDistribution')
-}
-
-tasks.named('windowsBerax32DistZip') {
-    dependsOn tasks.named('downloadLicenses')
-    dependsOn tasks.named('scriptsForRelease')
-}
-
-tasks.named('windowsBerax32DistTar') {
-    dependsOn tasks.named('downloadLicenses')
-    dependsOn tasks.named('scriptsForRelease')
-    dependsOn tasks.named('extractWindowsJREx32')
-    dependsOn tasks.named('unzipAfsrDistribution')
-    dependsOn tasks.named('unzipBeraDistribution')
-}
-
-tasks.named('windowsx32DistZip') {
-    dependsOn tasks.named('downloadLicenses')
-    dependsOn tasks.named('scriptsForRelease')
-}
-
-tasks.named('windowsx32DistTar') {
-    dependsOn tasks.named('downloadLicenses')
-    dependsOn tasks.named('scriptsForRelease')
-    dependsOn tasks.named('extractWindowsJREx32')
-    dependsOn tasks.named('unzipAfsrDistribution')
-    dependsOn tasks.named('unzipBeraDistribution')
 }
 
 tasks.named('windowsDistZip') {
-    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('generateLicenseReport')
     dependsOn tasks.named('scriptsForRelease')
 }
 
 tasks.named('windowsDistTar') {
-    dependsOn tasks.named('downloadLicenses')
+    dependsOn tasks.named('generateLicenseReport')
     dependsOn tasks.named('scriptsForRelease')
     dependsOn tasks.named('extractWindowsJRE')
-    dependsOn tasks.named('unzipAfsrDistribution')
-    dependsOn tasks.named('unzipBeraDistribution')
 }
 
 tasks.withType(Tar){
@@ -496,19 +358,17 @@ tasks.withType(Tar){
 distZip {
     duplicatesStrategy = 'exclude'
 }
-[bootJar, bootDistTar, bootDistZip]*.enabled = false
 
 release {
     failOnPublishNeeded = false
     failOnCommitNeeded = false
 }
 
-mainClassName = 'net.gazeplay.GazePlayLauncher'
+application {
+    mainClass = 'net.gazeplay.GazePlayLauncher'
+}
 
 defaultTasks 'clean', 'build', 'checkPMDReport'
 startScripts.enabled = false
 
 afterReleaseBuild.dependsOn generateWindowsInstallerInDocker
-afterReleaseBuild.dependsOn generateWindowsInstallerInDockerx32
-afterReleaseBuild.dependsOn generateWindowsAfsrInstallerInDocker
-afterReleaseBuild.dependsOn generateWindowsBeraInstallerInDocker

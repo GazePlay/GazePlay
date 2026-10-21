@@ -1,0 +1,11 @@
+<FindBugsFilter>
+    <!-- Same general rules as the other modules -->
+    <Match>
+        <Source name="~.*" />
+        <Bug code="RV,UMAC,SING,CT,AT,US,FS"/>
+    </Match>
+    <Match>
+        <Package name="~.*"/>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2,THROWS_METHOD_THROWS_RUNTIMEEXCEPTION,THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION"/>
+    </Match>
+</FindBugsFilter>

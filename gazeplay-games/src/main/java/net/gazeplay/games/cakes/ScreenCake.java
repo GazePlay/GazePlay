@@ -11,7 +11,7 @@ import net.gazeplay.components.ProgressButton;
 
 import java.util.LinkedList;
 
-public class ScreenCake extends LinkedList {
+public class ScreenCake extends LinkedList<ProgressButton> {
 
     public IGameContext gameContext;
 

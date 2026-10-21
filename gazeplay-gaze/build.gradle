@@ -1,0 +1,8 @@
+// Acquisition of the gaze: samples (GazeSample), events fired on the nodes (GazeEvent) and the eye trackers seen as
+// GazeSource (Tobii, EyeTribe), with their native libraries. The dispatch of the samples to the nodes of a game stays in
+// gazeplay-commons (AbstractGazeDeviceManager), since it records the statistics of the game. The packages are those of
+// gazeplay-commons, where these classes were before.
+dependencies {
+    implementation files("${rootDir}/lib/EyeTribeJavaFx.jar")
+    implementation libs.tobii.stream.engine
+}

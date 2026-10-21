@@ -6,7 +6,6 @@ import javafx.scene.control.MenuItem;
 import net.gazeplay.commons.VersionInfo;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import org.apache.commons.io.IOUtils;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +18,6 @@ public class MenuUtils {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         String licenseFileAsString = loadLicenseFileAsString(classLoader);
 
-        @Nullable
         Optional<String> versionNumber = VersionInfo.findVersionInfo(VersionInfo.artifactId);
 
         MenuItem licenseMenuItem = new MenuItem(licenseFileAsString);

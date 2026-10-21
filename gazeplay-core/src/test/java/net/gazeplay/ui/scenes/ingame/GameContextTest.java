@@ -7,7 +7,6 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import mockit.MockUp;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
@@ -20,13 +19,12 @@ import net.gazeplay.commons.utils.Bravo;
 import net.gazeplay.commons.utils.stats.SavedStatsInfo;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.ui.scenes.stats.StatsContext;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
@@ -40,7 +38,6 @@ import static org.mockito.Mockito.*;
 /**
  * This test class demonstrates how to use JMockit and Mockito within the same tests.
  */
-@RunWith(MockitoJUnitRunner.class)
 @ExtendWith(ApplicationExtension.class)
 class GameContextTest {
 
@@ -95,15 +92,15 @@ class GameContextTest {
         new File("file.csv")
     );
 
+    @AfterEach
+    void restoreGlobalState() {
+        ActiveConfigurationContext.switchToDefaultUser();
+    }
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        new MockUp<ActiveConfigurationContext>() {
-            @mockit.Mock
-            public Configuration getInstance() {
-                return mockConfiguration;
-            }
-        };
+        ActiveConfigurationContext.setInstance(mockConfiguration);
         when(mockStats.getFixationSequence()).thenReturn(new ArrayList<>(List.of(new LinkedList<>(), new LinkedList<>())));
     }
 
@@ -131,12 +128,6 @@ class GameContextTest {
 
     @Test
     void shouldRemoveEventFiltersWhenRecording() {
-        new MockUp<StatsContext>() {
-            @mockit.Mock
-            public StatsContext newInstance(final GazePlay gazePlay, final Stats stats) {
-                return mock(StatsContext.class);
-            }
-        };
 
         when(mockConfiguration.isVideoRecordingEnabled()).thenReturn(true);
         when(mockConfiguration.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));
@@ -162,12 +153,6 @@ class GameContextTest {
 
     @Test
     void shouldNotRemoveEventFiltersWhenNotRecording() {
-        new MockUp<StatsContext>() {
-            @mockit.Mock
-            public StatsContext newInstance(final GazePlay gazePlay, final Stats stats) {
-                return mock(StatsContext.class);
-            }
-        };
 
         when(mockConfiguration.isVideoRecordingEnabled()).thenReturn(false);
         when(mockConfiguration.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));

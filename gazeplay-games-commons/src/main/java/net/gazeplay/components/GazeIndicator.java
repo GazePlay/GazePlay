@@ -36,7 +36,7 @@ public class GazeIndicator extends ProgressIndicator implements IGazeProgressInd
     private EventHandler<ActionEvent> finishHandler;
     private final OnFinishIndicatorEvent onFinishHandler;
 
-    private final Map<Node, EventHandler> nodedToListenTo;
+    private final Map<Node, EventHandler<Event>> nodedToListenTo;
 
     public static final long TIME_DISPLAYED_AFTER_FINISHED_MS = 1000;
 
@@ -151,7 +151,7 @@ public class GazeIndicator extends ProgressIndicator implements IGazeProgressInd
 
     }
 
-    protected EventHandler buildEventHandler(final Node node) {
+    protected EventHandler<Event> buildEventHandler(final Node node) {
 
         final GazeIndicator thisIndicator = this;
 
@@ -169,7 +169,7 @@ public class GazeIndicator extends ProgressIndicator implements IGazeProgressInd
     @Override
     public boolean addNodeToListen(final Node node, final GazeDeviceManager gazeDeviceManager) {
 
-        final EventHandler eventHandler = buildEventHandler(node);
+        final EventHandler<Event> eventHandler = buildEventHandler(node);
 
         node.addEventFilter(MouseEvent.ANY, eventHandler);
         node.addEventFilter(GazeEvent.ANY, eventHandler);
@@ -184,7 +184,7 @@ public class GazeIndicator extends ProgressIndicator implements IGazeProgressInd
     @Override
     public boolean removeNodeToListen(final Node node, final GazeDeviceManager gazeDeviceManager) {
 
-        final EventHandler eventHandler = this.nodedToListenTo.remove(node);
+        final EventHandler<Event> eventHandler = this.nodedToListenTo.remove(node);
         node.removeEventFilter(MouseEvent.ANY, eventHandler);
         node.removeEventFilter(GazeEvent.ANY, eventHandler);
 

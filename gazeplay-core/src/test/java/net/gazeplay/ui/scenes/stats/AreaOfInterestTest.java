@@ -12,10 +12,8 @@ import net.gazeplay.commons.utils.stats.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
@@ -27,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 @ExtendWith(ApplicationExtension.class)
 class AreaOfInterestTest {
 
@@ -109,7 +106,7 @@ class AreaOfInterestTest {
             670.0 - 15
         };
 
-        Double[] actual = AreaOfInterest.calculateRectangle(input);
+        Double[] actual = AoiGeometry.calculateRectangle(input);
 
         assertArrayEquals(expected, actual);
     }
@@ -117,21 +114,21 @@ class AreaOfInterestTest {
     @Test
     void shouldCalculateOrientation() {
         // Collinear
-        assertEquals(0, AreaOfInterest.orientation(
+        assertEquals(0, AoiGeometry.orientation(
             new Point2D(0, 0),
             new Point2D(1, 1),
             new Point2D(2, 2)
         ));
 
         // Clockwise
-        assertEquals(1, AreaOfInterest.orientation(
+        assertEquals(1, AoiGeometry.orientation(
             new Point2D(2, 5),
             new Point2D(1, 2),
             new Point2D(0, 0)
         ));
 
         // Counterclockwise
-        assertEquals(-1, AreaOfInterest.orientation(
+        assertEquals(-1, AoiGeometry.orientation(
             new Point2D(0, 0),
             new Point2D(1, 2),
             new Point2D(2, 5)
@@ -154,7 +151,7 @@ class AreaOfInterestTest {
             1d, 2d, 2d, 1d, 4d, 2d, 3d, 5d, 1.25, 3d
         };
 
-        Double[] actual = AreaOfInterest.calculateConvexHull(input);
+        Double[] actual = AoiGeometry.calculateConvexHull(input);
 
         assertArrayEquals(expected, actual);
     }

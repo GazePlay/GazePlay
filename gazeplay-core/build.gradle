@@ -1,38 +1,44 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 dependencies {
-    implementation 'com.github.agomezmoron:screen-recorder:0.0.3'
+    implementation project(':gazeplay-results')
+    implementation project(':gazeplay-gaze')
     implementation project(':gazeplay-commons')
     implementation project(':gazeplay-games-commons')
-    implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'org.rxtx:rxtx:2.1.7'
-    implementation files("${rootDir}/lib/EyeTribeJavaFx.jar")
-    implementation 'ch.qos.logback:logback-classic:1.2.11'
-    implementation 'ch.qos.logback:logback-core:1.2.11'
-    implementation 'org.slf4j:slf4j-api:1.7.36'
-    implementation 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
-    implementation 'javax.media:jmf:2.1.1e'
-    implementation 'ws.schild:jave-all-deps:2.5.0'
-    implementation 'ws.schild:jave-core:2.5.0'
-    implementation 'io.github.classgraph:classgraph:4.8.146'
-    implementation 'commons-io:commons-io:2.11.0'
-    implementation 'com.mageddo.tobby-transactional-outbox:spring:1.5.1'
-    runtimeOnly 'org.slf4j:jcl-over-slf4j:1.7.36'
-    runtimeOnly 'org.slf4j:log4j-over-slf4j:1.7.36'
-    implementation 'org.json:json:20220320'
-    implementation 'com.github.everit-org.json-schema:org.everit.json.schema:1.12.1'
-    implementation 'com.github.vatbub:mslinks:1.0.6.2'
-    implementation 'info.picocli:picocli-spring-boot-starter:4.6.3'
+    implementation libs.gson
+    // JAVE (ffmpeg): conversion of the screen recordings for the screen of the areas of interest
+    implementation(libs.jave.core) {
+        // commons-logging API provided by jcl-over-slf4j (duplicate classes otherwise)
+        exclude group: 'commons-logging'
+    }
+    runtimeOnly libs.jave.nativebin.win64
+    runtimeOnly libs.jave.nativebin.linux64
+    runtimeOnly libs.jave.nativebin.osx64
+    runtimeOnly libs.jave.nativebin.osxm1
+    runtimeOnly libs.jave.nativebin.linux.arm64
+    implementation libs.commons.io
+    implementation libs.json
+    implementation(libs.everit.json.schema) {
+        // commons-logging API provided by jcl-over-slf4j (duplicate classes otherwise)
+        exclude group: 'commons-logging'
+    }
+    implementation libs.mslinks
+    implementation libs.picocli
 
     runtimeOnly project(':gazeplay-games')
 
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'com.ginsberg:junit5-system-exit:1.1.2'
+    // Logging of the application: logback, plus bridges for the libraries using commons-logging or log4j 1
+    implementation libs.sysout.over.slf4j
+    runtimeOnly libs.logback.classic
+    runtimeOnly libs.slf4j.jcl
+    runtimeOnly libs.slf4j.log4j
+    runtimeOnly libs.log4j.to.slf4j
+
+    testImplementation testFixtures(project(':gazeplay-commons'))
 }
 
-test {
-    jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
-}
+// Captured here: the configuration cache cannot serialize a reference to the build script used when the jar is written
+def runtimeClasspathFiles = configurations.runtimeClasspath
 
 jar {
     manifest {
@@ -41,8 +47,9 @@ jar {
                 "Implementation-Version": project.version,
                 "Implementation-Vendor": "Univ. Grenoble Alpes - LIG - GETALP",
                 "Main-Class": 'net.gazeplay.GazePlayLauncher',
-                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' '),
-                "JavaFX-Version": javafxVersion,
+                // Lazy: resolved when the jar is written, not when the project is configured
+                "Class-Path": "${-> runtimeClasspathFiles.collect { it.getName() }.join(' ')}",
+                "JavaFX-Version": libs.versions.javafx.get(),
                 "Built-By": System.properties['user.name']
         )
     }
@@ -69,59 +76,58 @@ tasks.named('processResources') {
     dependsOn createLicence
 }
 
-def generatedResources = "${buildDir}/generated-resources/main"
+// Catalogs of the games and of the GazePlay Eval evaluations: the *SpecSource classes of gazeplay-games, read by
+// CatalogBasedGamesLocator. Everything is resolved when the build is configured (no access to the project during the
+// execution, deprecated by Gradle), the inputs are declared (the catalogs are regenerated only when a source changes)
+// and the lists are sorted (reproducible builds).
+def generatedResources = layout.buildDirectory.dir('generated-resources/main')
+def gamesJavaSources = project(':gazeplay-games').layout.projectDirectory.dir('src/main/java').asFile
 
-sourceSets.main.output.dir(generatedResources, builtBy: 'generateGamesCatalog')
-sourceSets.main.output.dir(generatedResources, builtBy: 'generateEvalsCatalog')
-
-task generateGamesCatalog {
-    outputs.dir generatedResources
-
-    doLast {
-        def sourceSet = project(':gazeplay-games').sourceSets.findByName('main').java
-        def packages = sourceSet
-                .filter { it.path.endsWith('.java') }
-                .filter { it.path.contains('SpecSource') }
-                .filter { !it.path.contains('GazeplayEval')}
-                .collect {
-                    it.path
-                            .substring(sourceSet.srcDirs[0].path.length() + 1)
-                            .replace('/', '.')
-                            .replace('\\', '.')
-                            .replace('.java', '')
-                }
-                .unique()
-
-        def file = new File(generatedResources, "games-catalog.txt")
-        if (file.exists()) {
-            file.delete()
+def registerCatalogTask = { String taskName, String fileName, boolean evaluations ->
+    def catalogFile = generatedResources.map { it.file(fileName) }
+    tasks.register(taskName) {
+        inputs.dir(gamesJavaSources).withPathSensitivity(PathSensitivity.RELATIVE)
+        outputs.file(catalogFile)
+        doLast {
+            def root = gamesJavaSources.toPath()
+            def classes = java.nio.file.Files.walk(root).withCloseable { paths ->
+                paths.map { root.relativize(it).toString().replace(File.separator, '/') }
+                    .filter { it.endsWith('.java') && it.contains('SpecSource') }
+                    .filter { it.contains('GazeplayEval') == evaluations }
+                    .map { it.replace('/', '.').replace('.java', '') }
+                    .sorted()
+                    .collect(java.util.stream.Collectors.toList())
+            }
+            def file = catalogFile.get().asFile
+            file.parentFile.mkdirs()
+            file.text = classes.collect { it + '\n' }.join('')
         }
-        packages.each { file.append(it + '\n') }
+    }
+}
+registerCatalogTask('generateGamesCatalog', 'games-catalog.txt', false)
+registerCatalogTask('generateEvalsCatalog', 'evals-catalog.txt', true)
+
+sourceSets.main.output.dir(generatedResources, builtBy: ['generateGamesCatalog', 'generateEvalsCatalog'])
+
+// The launch smoke test starts the real application in a child JVM: slower, run separately (also in the CI)
+tasks.named('test') {
+    useJUnitPlatform {
+        excludeTags 'smoke'
     }
 }
 
-task generateEvalsCatalog {
-    outputs.dir generatedResources
-
-    doLast {
-        def sourceSet = project(':gazeplay-games').sourceSets.findByName('main').java
-        def packages = sourceSet
-                .filter { it.path.endsWith('.java') }
-                .filter { it.path.contains('GazeplayEval') }
-                .filter { it.path.contains('SpecSource') }
-                .collect {
-                    it.path
-                            .substring(sourceSet.srcDirs[0].path.length() + 1)
-                            .replace('/', '.')
-                            .replace('\\', '.')
-                            .replace('.java', '')
-                }
-                .unique()
-
-        def file = new File(generatedResources, "evals-catalog.txt")
-        if (file.exists()) {
-            file.delete()
-        }
-        packages.each { file.append(it + '\n') }
+tasks.register('smokeTest', Test) {
+    description = 'Launches GazePlay without window (menu, then a game) and checks that it starts without error.'
+    group = 'verification'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform {
+        includeTags 'smoke'
+    }
+    def smokeHome = layout.buildDirectory.dir('smoke-home').get().asFile
+    systemProperty 'smoke.home', smokeHome.absolutePath
+    doFirst {
+        smokeHome.deleteDir()
+        smokeHome.mkdirs()
     }
 }

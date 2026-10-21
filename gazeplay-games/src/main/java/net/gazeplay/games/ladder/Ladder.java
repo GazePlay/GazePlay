@@ -1,5 +1,6 @@
 package net.gazeplay.games.ladder;
 
+import lombok.extern.slf4j.Slf4j;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Dimension2D;
@@ -19,6 +20,7 @@ import net.gazeplay.components.ProgressButton;
 
 import java.util.ArrayList;
 
+@Slf4j
 public class Ladder implements GameLifeCycle {
 
     private final IGameContext gameContext;
@@ -104,7 +106,7 @@ public class Ladder implements GameLifeCycle {
         try {
             translateTransition.stop();
         } catch (Exception e) {
-            System.out.println("translateTransition is not running, can't stop it !");
+            log.debug("translateTransition is not running, can't stop it !");
         }
     }
 

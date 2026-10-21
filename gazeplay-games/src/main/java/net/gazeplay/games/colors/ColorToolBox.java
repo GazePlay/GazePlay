@@ -113,7 +113,7 @@ public class ColorToolBox extends Pane {
     @Setter
     private ColorBox selectedColorBox;
 
-    private EventHandler disableColorizeButton = null;
+    private EventHandler<ActionEvent> disableColorizeButton = null;
 
     private boolean previousEnableColor;
 
@@ -219,7 +219,7 @@ public class ColorToolBox extends Pane {
             try {
                 TimeUnit.MILLISECONDS.sleep(10);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.warn("Interrupted while opening the color dialog", e);
             }
             customColorDialog.requestFocus();
         };
@@ -309,7 +309,7 @@ public class ColorToolBox extends Pane {
             try {
                 TimeUnit.MILLISECONDS.sleep(10);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.warn("Interrupted while printing", e);
             }
             gameContext.getPrimaryStage().requestFocus();
 
@@ -517,9 +517,9 @@ public class ColorToolBox extends Pane {
         final Pane colorizeButtonPane = new StackPane(colorize);
         final Pane stopColorizeButtonPane = new StackPane(stopColorize);
 
-        final EventHandler enableColorizeButton = (Event event1) -> colorsGame.setEnableColorization(false);
+        final EventHandler<ActionEvent> enableColorizeButton = event1 -> colorsGame.setEnableColorization(false);
 
-        disableColorizeButton = (Event event1) -> colorsGame.setEnableColorization(true);
+        disableColorizeButton = event1 -> colorsGame.setEnableColorization(true);
 
         colorsGame.getDrawingEnable().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {

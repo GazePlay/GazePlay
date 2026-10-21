@@ -1,0 +1,6 @@
+// Computations and files of the results (heatmap, fixation sequence, replayData.json), free of JavaFX so that they
+// can be tested alone and reused (e.g. to reprocess historical files). The packages are those of gazeplay-commons,
+// where these classes were before.
+dependencies {
+    implementation libs.gson
+}

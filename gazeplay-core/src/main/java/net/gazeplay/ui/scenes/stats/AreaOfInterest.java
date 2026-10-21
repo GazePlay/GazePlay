@@ -35,10 +35,6 @@ import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.utils.HomeButton;
 import net.gazeplay.commons.utils.stats.*;
 import net.gazeplay.ui.GraphicalContext;
-import ws.schild.jave.Encoder;
-import ws.schild.jave.EncodingAttributes;
-import ws.schild.jave.MultimediaObject;
-import ws.schild.jave.VideoAttributes;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -157,30 +153,20 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
         final StackPane stackPane = new StackPane();
 
         if (config.isVideoRecordingEnabled()) {
-            final File source;
-            final File target;
             try {
-                source = new File(stats.getDirectoryOfVideo() + ".avi");
-                target = new File(stats.getDirectoryOfVideo() + ".mp4");
-
-                // Audio Attributes
-                final VideoAttributes videoAttributes = new VideoAttributes();
-                videoAttributes.setCodec("mpeg4");
-
-                // Encoding attributes
-                final EncodingAttributes attrs = new EncodingAttributes();
-                attrs.setFormat("mp4");
-                attrs.setVideoAttributes(videoAttributes);
-
-                // Encode
-                final Encoder encoder = new Encoder();
-                encoder.encode(new MultimediaObject(source), target, attrs);
+                // The recorder is stopped asynchronously at the end of the game: the file must be complete
+                if (!stats.awaitVideoRecordingEnd(10, TimeUnit.SECONDS)) {
+                    log.warn("The video recording did not end within 10 s, its file may be incomplete");
+                }
+                final File source = stats.getVideoFile()
+                    .orElseThrow(() -> new IllegalStateException("No video recorded"));
+                final File target = VideoConverter.toMp4(source);
                 final Media media = new Media(target.toURI().toString());
                 player = new MediaPlayer(media);
                 final MediaView mediaView = new MediaView(player);
                 stackPane.getChildren().add(mediaView);
             } catch (final Exception ex) {
-                ex.printStackTrace();
+                log.warn("Cannot play the video of the areas of interest", ex);
             }
         } else {
             final SavedStatsInfo savedStatsInfo = stats.getSavedStatsInfo();
@@ -505,41 +491,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
      * @return Double array containing all X and Y values of each rectangle point in
      * sequence.
      */
-    static Double[] calculateRectangle(final Point2D[] point2D) {
-        double leftPoint = point2D[0].getX();
-        double rightPoint = point2D[0].getX();
-        double topPoint = point2D[0].getY();
-        double bottomPoint = point2D[0].getY();
-
-        for (int i = 1; i < point2D.length; i++) {
-            if (point2D[i].getX() < leftPoint) {
-                leftPoint = point2D[i].getX();
-            }
-            if (point2D[i].getX() > rightPoint) {
-                rightPoint = point2D[i].getX();
-            }
-            if (point2D[i].getY() > topPoint) {
-                topPoint = point2D[i].getY();
-            }
-            if (point2D[i].getY() < bottomPoint) {
-                bottomPoint = point2D[i].getY();
-            }
-        }
-
-        final Double[] squarePoints = new Double[8];
-        final int bias = 15;
-
-        squarePoints[0] = leftPoint - bias;
-        squarePoints[1] = topPoint + bias;
-        squarePoints[2] = rightPoint + bias;
-        squarePoints[3] = topPoint + bias;
-        squarePoints[4] = rightPoint + bias;
-        squarePoints[5] = bottomPoint - bias;
-        squarePoints[6] = leftPoint - bias;
-        squarePoints[7] = bottomPoint - bias;
-        return squarePoints;
-    }
-
     /**
      * Determines the orientation of an ordered triplet of 2D points on a plane.
      * The points provided can be counterclockwise, clockwise and collinear.
@@ -550,18 +501,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
      * @return Will return 0 if the points are collinear, 1 if the points are clockwise,
      * or -1 if the points are counterclockwise.
      */
-    static int orientation(final Point2D p1, final Point2D p2, final Point2D p3) {
-
-        final int val = (int) ((p2.getY() - p1.getY()) * (p3.getX() - p2.getX())
-            - (p2.getX() - p1.getX()) * (p3.getY() - p2.getY()));
-
-        if (val == 0) {
-            return 0;
-        }
-
-        return (val > 0) ? 1 : -1;
-    }
-
     /**
      * Implements Jarvis's Algorithm to calculate the points on a Convex Hull.
      * It starts by calculating the left-most point and will loop through all
@@ -572,42 +511,6 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
      * sequence.
      * @see Point2D
      */
-    static Double[] calculateConvexHull(final Point2D[] points) {
-        final int numberOfPoints = points.length;
-        final ArrayList<Double> convexHullPoints = new ArrayList<>();
-        final Vector<Point2D> hull = new Vector<>();
-
-        // Finding the index of the lowest X value, or left-most point, in all points.
-        int lowestValueIndex = 0;
-        for (int i = 1; i < numberOfPoints; i++) {
-            if (points[i].getX() < points[lowestValueIndex].getX()) {
-                lowestValueIndex = i;
-            }
-        }
-
-        int point = lowestValueIndex, q;
-        do {
-            hull.add(points[point]);
-            q = (point + 1) % numberOfPoints;
-            for (int i = 0; i < numberOfPoints; i++) {
-                if (orientation(points[point], points[i], points[q]) < 0) { // Checking if the points are convex.
-                    q = i;
-                }
-            }
-            point = q;
-        } while (point != lowestValueIndex);
-
-        for (final Point2D temp : hull) {
-            convexHullPoints.add(temp.getX());
-            convexHullPoints.add(temp.getY());
-        }
-
-        Double[] hullPointsArray = new Double[convexHullPoints.size()];
-        convexHullPoints.toArray(hullPointsArray);
-
-        return hullPointsArray;
-    }
-
     /**
      * Creates a rectangle surrounding each Area Of Interest in the provided
      * list. The rectangle is added as a transparent Polygon to each TargetAOI.
@@ -628,7 +531,7 @@ public class AreaOfInterest extends GraphicalContext<BorderPane> {
             };
 
             final Double[] polygonPoints;
-            polygonPoints = calculateRectangle(point2D);
+            polygonPoints = AoiGeometry.calculateRectangle(point2D);
 
             final Polygon targetArea;
             targetArea = new Polygon();

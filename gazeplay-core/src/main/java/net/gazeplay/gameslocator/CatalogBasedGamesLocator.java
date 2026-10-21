@@ -15,16 +15,12 @@ import java.util.stream.Stream;
 @Slf4j
 public class CatalogBasedGamesLocator extends AbstractGamesLocator {
 
-    private static String catalogResourceLocation = "games-catalog.txt";
-
     @Override
     protected List<Class> findGameSpecSourceClasses() {
 
-        String gazeplayType = GazePlayArgs.returnArgs();
-
-        if (gazeplayType.contains("bera")){
-            catalogResourceLocation = "evals-catalog.txt";
-        }
+        // Chosen at each call: it used to be a static field switched to the BERA catalog and never switched back
+        final String catalogResourceLocation =
+            GazePlayArgs.returnArgs().contains("bera") ? "evals-catalog.txt" : "games-catalog.txt";
 
         Stream<String> linesStream = Stream.generate(new Supplier<>() {
 

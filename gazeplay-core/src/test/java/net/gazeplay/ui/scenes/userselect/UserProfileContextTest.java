@@ -1,6 +1,5 @@
 package net.gazeplay.ui.scenes.userselect;
 
-import com.ginsberg.junit.exit.ExpectSystemExitWithStatus;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Dimension2D;
@@ -18,9 +17,6 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import mockit.MockUp;
-import mockit.Mocked;
-import mockit.Verifications;
 import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
@@ -30,15 +26,13 @@ import net.gazeplay.commons.utils.CustomButton;
 import net.gazeplay.commons.utils.FileUtils;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
@@ -47,14 +41,11 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
 @ExtendWith(ApplicationExtension.class)
 class UserProfileContextTest {
 
@@ -73,7 +64,6 @@ class UserProfileContextTest {
     @Mock
     private Stage mockStage;
 
-    private static String profileRoot = "profiles";
     private static String profileDirectory = "test1";
     private static String exampleFile = "test.txt";
     private static String hiddenDirectory = ".hidden";
@@ -86,9 +76,16 @@ class UserProfileContextTest {
             + "resources" + sep;
     private final Dimension2D screenDimension = new Dimension2D(1920, 1080);
 
-    @BeforeAll
-    static void setupMockProfiles() throws IOException {
-        File rootDir = new File(profileRoot);
+    /**
+     * Profiles of the temporary user.home used during tests (see build.gradle).
+     */
+    private static File profileRoot() {
+        return GazePlayDirectories.getProfilesDirectory();
+    }
+
+    @BeforeEach
+    void setupMockProfiles() throws IOException {
+        File rootDir = profileRoot();
 
         File hiddenDir = new File(rootDir, hiddenDirectory);
         hiddenDir.mkdirs();
@@ -102,6 +99,19 @@ class UserProfileContextTest {
         realFile.createNewFile();
     }
 
+    @AfterEach
+    void tearDownMockProfiles() throws IOException {
+        FileUtils.deleteDirectoryRecursively(profileRoot());
+    }
+
+    private final BackgroundMusicManager originalMusicManager = BackgroundMusicManager.getInstance();
+
+    @AfterEach
+    void restoreGlobalState() {
+        ActiveConfigurationContext.switchToDefaultUser();
+        BackgroundMusicManager.setInstance(originalMusicManager);
+    }
+
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
@@ -113,23 +123,8 @@ class UserProfileContextTest {
         when(mockScene.getStylesheets()).thenReturn(FXCollections.observableArrayList());
     }
 
-    @AfterAll
-    static void tearDownMockProfiles() {
-        new File(profileRoot, hiddenDirectory).delete();
-        new File(profileRoot, profileDirectory).delete();
-        new File(profileRoot, exampleFile).delete();
-        new File(profileRoot).delete();
-    }
-
     @Test
     void shouldFindAllUsersProfiles() {
-        new MockUp<GazePlayDirectories>() {
-            @mockit.Mock
-            public File getProfilesDirectory() {
-                return new File(profileRoot);
-            }
-        };
-
         List<String> result = UserProfileContext.findAllUsersProfiles();
 
         assertTrue(result.contains(profileDirectory));
@@ -139,12 +134,7 @@ class UserProfileContextTest {
 
     @Test
     void shouldReturnEmptyListIfNoProfiles() {
-        new MockUp<GazePlayDirectories>() {
-            @mockit.Mock
-            public File getProfilesDirectory() {
-                return new File("bad/path");
-            }
-        };
+        FileUtils.deleteDirectoryRecursively(profileRoot());
 
         List<String> result = UserProfileContext.findAllUsersProfiles();
 
@@ -153,13 +143,6 @@ class UserProfileContextTest {
 
     @Test
     void shouldCreateUserPickerChoicePane() {
-        new MockUp<GazePlayDirectories>() {
-            @mockit.Mock
-            public File getProfilesDirectory() {
-                return new File(profileRoot);
-            }
-        };
-
         UserProfileContext context = new UserProfileContext(mockGazePlay);
 
         ScrollPane result = context.createUserPickerChoicePane(mockGazePlay);
@@ -191,15 +174,6 @@ class UserProfileContextTest {
     @Test
     void shouldCreateDefaultUser() {
         when(mockTranslator.translate("DefaultUser")).thenReturn("Default User");
-        AtomicBoolean called = new AtomicBoolean(false);
-
-        new MockUp<BackgroundMusicManager>() {
-            @mockit.Mock
-            public void onConfigurationChanged() {
-                called.set(true);
-            }
-        };
-
         UserProfileContext context = new UserProfileContext(mockGazePlay);
         FlowPane choicePanel = new FlowPane();
         ImagePattern imagePattern = new ImagePattern(new Image("bear.jpg"));
@@ -212,23 +186,19 @@ class UserProfileContextTest {
         assertEquals("Default User", result.getName());
         assertNotNull(picture.getFill());
 
-        content.fireEvent(TestingUtils.clickOnTarget(content));
+        try (MockedStatic<BackgroundMusicManager> musicManager = mockStatic(BackgroundMusicManager.class, CALLS_REAL_METHODS)) {
+            musicManager.when(BackgroundMusicManager::onConfigurationChanged).thenAnswer(invocation -> null);
+
+            content.fireEvent(TestingUtils.clickOnTarget(content));
+
+            musicManager.verify(BackgroundMusicManager::onConfigurationChanged);
+        }
         verify(mockGazePlay).onReturnToMenu();
-        assertTrue(called.get());
     }
 
     @Test
-    void shouldCreateNamedUser(@Mocked ActiveConfigurationContext configurationContext) {
+    void shouldCreateNamedUser() {
         when(mockTranslator.translate("DefaultUser")).thenReturn("Default User");
-        AtomicBoolean called = new AtomicBoolean(false);
-
-        new MockUp<BackgroundMusicManager>() {
-            @mockit.Mock
-            public void onConfigurationChanged() {
-                called.set(true);  // Really, this should be the same as the ActiveConfigurationContext
-                // but I just couldn't make it work...
-            }
-        };
 
         UserProfileContext context = new UserProfileContext(mockGazePlay);
         FlowPane choicePanel = new FlowPane();
@@ -247,13 +217,16 @@ class UserProfileContextTest {
         assertTrue(deleteButton.getStyleClass().containsAll(List.of("gameChooserButton", "button")));
         assertTrue(editButton.getStyleClass().containsAll(List.of("gameChooserButton", "button")));
 
-        content.fireEvent(TestingUtils.clickOnTarget(content));
-        verify(mockGazePlay).onReturnToMenu();
-        assertTrue(called.get());
+        try (MockedStatic<BackgroundMusicManager> musicManager = mockStatic(BackgroundMusicManager.class, CALLS_REAL_METHODS);
+             MockedStatic<ActiveConfigurationContext> configurationContext = mockStatic(ActiveConfigurationContext.class, CALLS_REAL_METHODS)) {
+            musicManager.when(BackgroundMusicManager::onConfigurationChanged).thenAnswer(invocation -> null);
 
-        new Verifications() {{
-            ActiveConfigurationContext.switchToUser("Test User");
-        }};
+            content.fireEvent(TestingUtils.clickOnTarget(content));
+
+            musicManager.verify(BackgroundMusicManager::onConfigurationChanged);
+            configurationContext.verify(() -> ActiveConfigurationContext.switchToUser("Test User"));
+        }
+        verify(mockGazePlay).onReturnToMenu();
     }
 
     @Test
@@ -289,7 +262,6 @@ class UserProfileContextTest {
     }
 
     @Test
-    @ExpectSystemExitWithStatus(0)
     void shouldCreateExitButton() {
         UserProfileContext context = new UserProfileContext(mockGazePlay);
         BorderPane topPane = (BorderPane) context.getRoot().getTop();
@@ -298,6 +270,8 @@ class UserProfileContextTest {
         CustomButton exitButton = (CustomButton) topRightPane.getChildren().get(0);
 
         exitButton.fireEvent(TestingUtils.clickOnTarget(exitButton));
+
+        verify(mockGazePlay).quit();
     }
 
     @Test

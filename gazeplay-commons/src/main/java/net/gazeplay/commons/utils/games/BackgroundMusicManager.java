@@ -46,6 +46,13 @@ public class BackgroundMusicManager {
         instance = new BackgroundMusicManager();
     }
 
+    /**
+     * Replaces the shared instance, e.g. by a mock in tests. The caller is responsible for restoring the previous one.
+     */
+    public static void setInstance(final BackgroundMusicManager backgroundMusicManager) {
+        instance = backgroundMusicManager;
+    }
+
     @Getter
     private final List<MediaPlayer> playlist = new ArrayList<>();
 

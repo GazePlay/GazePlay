@@ -1,10 +1,16 @@
 package net.gazeplay.commons.utils.multilinguism;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class I18NTest {
@@ -61,5 +67,22 @@ class I18NTest {
     void shouldThrowExceptionForNonExistingKey() {
         final I18N translator = new I18N("data/multilinguism/translation.csv");
         assert translator.translate("item9", "eng") == null;
+    }
+
+    /**
+     * A line with more columns than the header used to throw an ArrayIndexOutOfBoundsException, which made the whole
+     * game using the file crash (e.g. "Where is the shape?" in every language).
+     */
+    @Test
+    void shouldIgnoreExtraColumnsOfAMalformedLine(@TempDir Path tempDir) throws IOException {
+        final Path file = tempDir.resolve("malformed.csv");
+        Files.writeString(file, ",eng,fra\nok,Yes,Oui\nshifted,One,Un,Extra\n", StandardCharsets.UTF_8);
+
+        final I18N translator = new I18N(file.toString());
+
+        assertEquals("Yes", translator.translate("ok", "eng"));
+        assertEquals("Oui", translator.translate("ok", "fra"));
+        assertEquals("One", translator.translate("shifted", "eng"));
+        assertEquals("Un", translator.translate("shifted", "fra"));
     }
 }

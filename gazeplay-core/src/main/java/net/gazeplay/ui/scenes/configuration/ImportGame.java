@@ -368,10 +368,10 @@ public class ImportGame extends Stage {
         }
 
         if(directory.delete()) {
-            System.out.println(directory + " is deleted");
+            log.debug("{} is deleted", directory);
         }
         else {
-            System.out.println("Directory not deleted");
+            log.warn("Directory {} not deleted", directory);
         }
     }
 

@@ -87,7 +87,7 @@ public class Strategy {
     }
 
     public Integer randomCupOneChoice(final boolean isYChoice) {
-        final ArrayList<Integer> numbersToChooseFrom = new ArrayList();
+        final ArrayList<Integer> numbersToChooseFrom = new ArrayList<>();
         for (int index = 0; index < maxCellsX; index++) {
             if (isYChoice && index == maxCellsY / 2) {
                 continue;
@@ -99,15 +99,15 @@ public class Strategy {
         return numbersToChooseFrom.get(cupChoice);
     }
 
-    public ArrayList randomCupTwoChoices(final boolean isYChoice) {
-        final ArrayList<Integer> numbersToChooseFrom = new ArrayList();
+    public ArrayList<Integer> randomCupTwoChoices(final boolean isYChoice) {
+        final ArrayList<Integer> numbersToChooseFrom = new ArrayList<>();
         for (int index = 0; index < maxCellsX; index++) {
             if (isYChoice && index == maxCellsY / 2) {
                 continue;
             }
             numbersToChooseFrom.add(index);
         }
-        final ArrayList<Integer> choices = new ArrayList();
+        final ArrayList<Integer> choices = new ArrayList<>();
         for (int index = 0; index < 2; index++) {
             final int cupChoice = randomGenerator.nextInt(numbersToChooseFrom.size());
             choices.add(numbersToChooseFrom.get(cupChoice));

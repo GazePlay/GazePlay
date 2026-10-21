@@ -15,4 +15,12 @@ public class ActiveConfigurationContext {
         instance = ConfigurationSource.createFromDefaultProfile();
     }
 
+    /**
+     * Replaces the active configuration, e.g. by a mock in tests. {@link #switchToDefaultUser()} restores the default
+     * profile.
+     */
+    public static void setInstance(final Configuration configuration) {
+        instance = configuration;
+    }
+
 }

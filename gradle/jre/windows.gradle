@@ -9,8 +9,9 @@ def x64filename = "zulu${zuluVersion}-ca-fx-jre${jreVersion}-win_x64"
 
 task downloadWindowsJRE(type: Download, group: 'custom jre') {
     src "${jreSource}/${x64filename}.zip"
-    dest new File("${downloadLocation}/jre", 'windows-x64.zip')
+    dest new File("${downloadLocation}/jre", "${x64filename}.zip")
     overwrite false
+    doLast { verifyChecksum(dest) }
 }
 
 task extractWindowsJRE(dependsOn: downloadWindowsJRE, type: Copy, group: 'custom jre') {

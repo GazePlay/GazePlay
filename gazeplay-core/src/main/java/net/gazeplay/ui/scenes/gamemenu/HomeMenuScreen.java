@@ -82,13 +82,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         this.gameMenuFactory = gameMenuFactory;
         this.thumbnailImage = new ThumbnailImage();
 
-        String gazeplayType = GazePlayArgs.returnArgs();
-
-        if (gazeplayType.equals("afsrGazeplay")) {
-            afsrGazeplayHomeMenuScreen(gazePlay, gamesLocator);
-        } else {
-            gazeplayHomeMenuScreen(gazePlay, gamesLocator);
-        }
+        gazeplayHomeMenuScreen(gazePlay, gamesLocator);
 
     }
 
@@ -195,149 +189,6 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         topPane.setRight(topRightPane);
         topPane.setCenter(topLogoPane);
         topPane.setBottom(topBotPane);
-        //gamesStatisticsPane.refreshPreferredSize();
-
-        StackPane centerStackPane = new StackPane();
-        errorMessage = new StackPane();
-        Rectangle errorBackground = new Rectangle();
-        errorBackground.setFill(new Color(1, 0, 0, 0.75));
-        errorMessageLabel = new Label("Error message goes here");
-        errorBackground.widthProperty().bind(errorMessageLabel.widthProperty().multiply(1.2));
-        errorBackground.heightProperty().bind(errorMessageLabel.heightProperty().multiply(1.2));
-        errorMessage.getChildren().addAll(errorBackground, errorMessageLabel);
-        centerStackPane.getChildren().add(centerPanel);
-        centerStackPane.getChildren().add(errorMessage);
-
-        errorMessage.setOnMouseClicked((event) -> {
-            final Timeline opacityTimeline = new Timeline(new KeyFrame(Duration.seconds(0.5),
-                new KeyValue(errorMessage.opacityProperty(), 0, Interpolator.EASE_OUT)));
-            opacityTimeline.setOnFinished(e -> errorMessage.setMouseTransparent(true));
-            this.centerPanel.setEffect(null);
-            opacityTimeline.play();
-        });
-
-        errorMessage.setOpacity(0);
-        errorMessage.setMouseTransparent(true);
-
-        root.setTop(topPane);
-        root.setBottom(bottomPane);
-        root.setCenter(centerStackPane);
-    }
-
-    public void afsrGazeplayHomeMenuScreen(GazePlay gazePlay, GamesLocator gamesLocator) {
-        Dimension2D screenDimension = gazePlay.getCurrentScreenDimensionSupplier().get();
-
-        CustomButton exitButton = createExitButton(screenDimension);
-        //CustomButton logoutButton = createLogoutButton(gazePlay, screenDimension);
-
-        ConfigurationButton configurationButton = ConfigurationButtonFactory.createConfigurationButton(gazePlay);
-
-        Configuration config = ActiveConfigurationContext.getInstance();
-
-        HBox leftControlPane = QuickControlPanel.getInstance().createQuickControlPanel(gazePlay, getMusicControl(), configurationButton, config);
-
-        I18NButton toggleFullScreenButton = createToggleFullScreenButtonInGameScreen(gazePlay);
-
-        HBox rightControlPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(rightControlPane);
-        rightControlPane.setAlignment(Pos.CENTER);
-        rightControlPane.getChildren().add(toggleFullScreenButton);
-
-        final List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
-
-        CustomButton replayGameButton = createReplayGameButton(gazePlay, screenDimension, games);
-
-
-        I18NTooltip tooltipExit = new I18NTooltip(gazePlay.getTranslator(), "Exit");
-        //I18NTooltip tooltipLogout = new I18NTooltip(gazePlay.getTranslator(), "Logout");
-        I18NTooltip tooltipLogoutOptions = new I18NTooltip(gazePlay.getTranslator(), "Options");
-        I18NTooltip tooltipReplay = new I18NTooltip(gazePlay.getTranslator(), "Replay");
-
-        I18NTooltip.install(exitButton, tooltipExit);
-        //I18NTooltip.install(logoutButton, tooltipLogout);
-        I18NTooltip.install(configurationButton, tooltipLogoutOptions);
-        I18NTooltip.install(replayGameButton, tooltipReplay);
-
-        gamesStatisticsPane = new GamesStatisticsPane(gazePlay.getTranslator(), games, config.isDarkThemeEnabled());
-
-        MiddleDownArrowButton = createDownArrowButton(screenDimension);
-        VBox downArrowPane = new VBox();
-        downArrowPane.setAlignment(Pos.CENTER);
-        downArrowPane.getChildren().add(MiddleDownArrowButton);
-        AnimationTimer scrollDownTimer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() + 0.002);
-            }
-        };
-        downArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
-        downArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
-        downArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollDownTimer.start());
-        downArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollDownTimer.stop());
-
-        BorderPane bottomPane = new BorderPane();
-        bottomPane.setLeft(leftControlPane);
-        bottomPane.setCenter(gamesStatisticsPane);
-        bottomPane.setRight(rightControlPane);
-        bottomPane.setTop(downArrowPane);
-
-        Node logo = LogoFactory.getInstance().createLogoStatic(gazePlay.getPrimaryStage());
-
-        HBox logosBox = new HBox();
-        logosBox.getChildren().add(logo);
-        logosBox.setSpacing(20);
-        logosBox.setAlignment(Pos.CENTER);
-
-        ImageView iv = new ImageView(new Image("data/common/images/logos/Logo-AFSR.png"));
-        iv.fitHeightProperty().bind(((ImageView) logo).fitHeightProperty().multiply(0.7));
-        iv.setPreserveRatio(true);
-        logosBox.getChildren().add(iv);
-
-        StackPane topLogoPane = new StackPane();
-        topLogoPane.setPadding(new Insets(15, 15, 15, 15));
-        topLogoPane.getChildren().add(logosBox);
-
-        HBox topRightPane = new HBox();
-        ControlPanelConfigurator.getSingleton().customizeControlPaneLayout(topRightPane);
-        topRightPane.setAlignment(Pos.TOP_CENTER);
-        topRightPane.getChildren().addAll(replayGameButton, /*logoutButton,*/ exitButton);
-
-        ProgressIndicator dwellTimeIndicator = new ProgressIndicator(0);
-        Node gamePickerChoicePane = createGamePickerChoicePane(games, config, dwellTimeIndicator);
-
-        centerPanel = new VBox();
-        centerPanel.setSpacing(40);
-        centerPanel.setAlignment(Pos.TOP_CENTER);
-        centerPanel.getChildren().add(gamePickerChoicePane);
-
-        final MenuBar menuBar = MenuUtils.buildMenuBar();
-
-        MiddleUpArrowButton = createUpArrowButton(screenDimension);
-        VBox upArrowPane = new VBox();
-        upArrowPane.setAlignment(Pos.CENTER);
-        upArrowPane.getChildren().add(MiddleUpArrowButton);
-        AnimationTimer scrollUpTimer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                choicePanelScroller.setVvalue(choicePanelScroller.getVvalue() - 0.002);
-            }
-        };
-        upArrowPane.addEventHandler(MouseEvent.MOUSE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
-        upArrowPane.addEventHandler(MouseEvent.MOUSE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
-        upArrowPane.addEventHandler(GazeEvent.GAZE_ENTERED, (EventHandler<Event>) e -> scrollUpTimer.start());
-        upArrowPane.addEventHandler(GazeEvent.GAZE_EXITED, (EventHandler<Event>) e -> scrollUpTimer.stop());
-
-        VBox topBotPane = new VBox();
-        topBotPane.setAlignment(Pos.CENTER);
-        topBotPane.getChildren().add(buildFilterByCategory(config, gazePlay.getTranslator(), dwellTimeIndicator));
-        topBotPane.getChildren().add(upArrowPane);
-
-        BorderPane topPane = new BorderPane();
-        topPane.setTop(menuBar);
-        topPane.setRight(topRightPane);
-        topPane.setCenter(topLogoPane);
-        topPane.setBottom(topBotPane);
-
         //gamesStatisticsPane.refreshPreferredSize();
 
         StackPane centerStackPane = new StackPane();
@@ -519,7 +370,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
 
     private CustomButton createExitButton(Dimension2D screenDimension) {
         CustomButton exitButton = new CustomButton("data/common/images/power-off.png", screenDimension);
-        exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> System.exit(0));
+        exitButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> getGazePlay().quit());
         return exitButton;
     }
 
@@ -547,7 +398,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
         CustomButton replayButton = new CustomButton("data/common/images/replay_button.png", screenDimension);
         replayButton.addEventHandler(MouseEvent.MOUSE_CLICKED, (EventHandler<Event>) e -> {
             try {
-                ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getApplicationContext(), games);
+                ReplayingGameFromJson replayingGame = new ReplayingGameFromJson(gazePlay, gameMenuFactory.getGameMenuController().getGameContextFactory(), games);
                 replayingGame.pickJSONFile(replayingGame.getFileName());
                 if (ReplayingGameFromJson.replayIsAllowed(replayingGame.getCurrentGameNameCode())) {
                     replayingGame.replayGame();
@@ -565,7 +416,7 @@ public class HomeMenuScreen extends GraphicalContext<BorderPane> {
                     errorMessage.setMouseTransparent(false);
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
+                log.warn("Cannot open the folder", ex);
             }
         });
         return replayButton;

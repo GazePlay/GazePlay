@@ -1,5 +1,6 @@
 package net.gazeplay.games.simon;
 
+import lombok.extern.slf4j.Slf4j;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -14,6 +15,7 @@ import javafx.util.Duration;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.gaze.devicemanager.GazeEvent;
 
+@Slf4j
 public class Bouton extends Arc {
 
     private final IGameContext gameContext;
@@ -111,7 +113,7 @@ public class Bouton extends Arc {
             new KeyValue(progressIndicator.progressProperty(), 1)));
 
         timelineProgressBar.setOnFinished(actionEvent -> {
-            System.out.println(couleur);
+            log.debug("colour : {}", couleur);
             gameInstance.playSound(note);
             gameInstance.playerSequence.add(couleur);
             stopTimer();

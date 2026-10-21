@@ -2,19 +2,28 @@ package net.gazeplay.commons.configuration;
 
 import javafx.scene.paint.Color;
 import lombok.extern.slf4j.Slf4j;
-import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
@@ -34,9 +43,13 @@ class ConfigurationTest {
 
     private Locale original;
 
+    @TempDir
+    File tempDir;
+
     @BeforeEach
     void setup() throws IOException {
-        testProperties = new File(localDataFolder, "GazePlay-test.properties");
+        // Work on a copy outside of the source tree, as the configuration is saved on each change
+        testProperties = new File(tempDir, "GazePlay-test.properties");
         File originalFile = new File(localDataFolder, "GazePlay.properties");
         Files.copy(originalFile.toPath(), testProperties.toPath());
 
@@ -50,7 +63,7 @@ class ConfigurationTest {
 
         original = Locale.getDefault();
         Locale.setDefault(Locale.CHINA);
-        applicationConfig = ConfigFactory.create(ApplicationConfig.class, properties);
+        applicationConfig = new ApplicationConfig(properties);
         configuration = new Configuration(testProperties, applicationConfig);
     }
 
@@ -74,9 +87,69 @@ class ConfigurationTest {
             log.debug("Error in loading test properties: ", ie);
         }
 
-        assertEquals(newPath, properties.getProperty("WHEREISITDIR"));
+        assertEquals(newPath, properties.getProperty("WHERE_IS_IT_DIR"));
 
         configuration.getWhereIsItDirProperty().set(oldPath);
+    }
+
+    @Test
+    void shouldSaveWithoutLeavingTemporaryFiles() throws IOException {
+        configuration.setUserName("someone");
+
+        try (Stream<Path> files = Files.list(tempDir.toPath())) {
+            assertEquals(List.of(testProperties.toPath()), files.collect(Collectors.toList()));
+        }
+        Properties saved = new Properties();
+        try (InputStream is = Files.newInputStream(testProperties.toPath())) {
+            saved.load(is);
+        }
+        assertEquals("someone", saved.getProperty("USER_NAME"));
+        assertEquals(properties.getProperty("FILE_DIR"), saved.getProperty("FILE_DIR"));
+    }
+
+    /**
+     * The configuration file used to be truncated then rewritten in place: a failure during the write (crash, full
+     * disk...) left a partial file, and every setting missing from it silently came back to its default value.
+     */
+    @Test
+    void shouldKeepThePreviousFileWhenSavingFails() throws IOException {
+        byte[] original = Files.readAllBytes(testProperties.toPath());
+        ApplicationConfig failingConfig = new ApplicationConfig(properties) {
+            @Override
+            public synchronized void store(OutputStream out, String comments) throws IOException {
+                out.write("EYE_TRACKER=mou".getBytes(StandardCharsets.ISO_8859_1));
+                throw new IOException("Simulated failure during the write");
+            }
+        };
+        Configuration failingConfiguration = new Configuration(testProperties, failingConfig);
+
+        failingConfiguration.setUserName("someone");
+
+        assertArrayEquals(original, Files.readAllBytes(testProperties.toPath()));
+        try (Stream<Path> files = Files.list(tempDir.toPath())) {
+            assertEquals(List.of(testProperties.toPath()), files.collect(Collectors.toList()));
+        }
+    }
+
+    /**
+     * On Windows, a file opened without delete sharing (as java.io.FileInputStream does, or an antivirus) cannot be
+     * replaced: the change must still be saved, by rewriting the file in place as before.
+     */
+    @Test
+    @EnabledOnOs(OS.WINDOWS)
+    void shouldStillSaveWhenTheFileCannotBeReplaced() throws IOException {
+        try (InputStream lockingReader = new FileInputStream(testProperties)) {
+            configuration.setUserName("someone");
+        }
+
+        Properties saved = new Properties();
+        try (InputStream is = Files.newInputStream(testProperties.toPath())) {
+            saved.load(is);
+        }
+        assertEquals("someone", saved.getProperty("USER_NAME"));
+        try (Stream<Path> files = Files.list(tempDir.toPath())) {
+            assertEquals(List.of(testProperties.toPath()), files.collect(Collectors.toList()));
+        }
     }
 
     @Test
@@ -91,7 +164,7 @@ class ConfigurationTest {
 
     @Test
     void shouldGetEyeTracker() {
-        assertEquals(properties.get("EYETRACKER"), configuration.getEyeTracker());
+        assertEquals(properties.get("EYE_TRACKER"), configuration.getEyeTracker());
     }
 
     @Test
@@ -101,7 +174,7 @@ class ConfigurationTest {
 
     @Test
     void shouldGetFileDir() {
-        assertEquals(properties.get("FILEDIR"), configuration.getFileDir());
+        assertEquals(properties.get("FILE_DIR"), configuration.getFileDir());
     }
 
     @Test
@@ -117,27 +190,27 @@ class ConfigurationTest {
 
     @Test
     void shouldGetFixationLength() {
-        assertEquals(properties.get("FIXATIONLENGTH"), configuration.getFixationLength().toString());
+        assertEquals(properties.get("FIXATION_LENGTH"), configuration.getFixationLength().toString());
     }
 
     @Test
     void shouldGetCssFile() {
-        assertEquals(properties.get("CSSFILE"), configuration.getCssFile());
+        assertEquals(properties.get("CSS_FILE"), configuration.getCssFile());
     }
 
     @Test
     void shouldGetWhereIsItDir() {
-        assertEquals(properties.get("WHEREISITDIR"), configuration.getWhereIsItDir());
+        assertEquals(properties.get("WHERE_IS_IT_DIR"), configuration.getWhereIsItDir());
     }
 
     @Test
     void shouldGetQuestionLength() {
-        assertEquals(properties.get("QUESTIONLENGTH"), Long.toString(configuration.getQuestionLength()));
+        assertEquals(properties.get("QUESTION_LENGTH"), Long.toString(configuration.getQuestionLength()));
     }
 
     @Test
     void shouldGetIsEnableRewardSound() {
-        assertEquals(properties.get("ENABLE_REWARD_SOUND"), configuration.isRewardSoundEnabled().toString());
+        assertEquals(properties.get("REWARD_SOUND_ENABLED"), configuration.isRewardSoundEnabled().toString());
     }
 
     @Test
@@ -169,22 +242,22 @@ class ConfigurationTest {
 
     @Test
     void shouldGetIsVideoRecordingEnabled() {
-        assertEquals(properties.get("VIDEO_RECORDING_DISABLED"), configuration.isVideoRecordingEnabled().toString());
+        assertEquals(properties.get("VIDEO_RECORDING_ENABLED"), configuration.isVideoRecordingEnabled().toString());
     }
 
     @Test
     void shouldGetIsFixationSequenceDisabled() {
-        assertEquals(properties.get("FIXATIONSEQUENCE_DISABLED"), configuration.isFixationSequenceDisabled().toString());
+        assertEquals(properties.get("FIXATION_SEQUENCE_DISABLED"), configuration.isFixationSequenceDisabled().toString());
     }
 
     @Test
     void shouldGetMusicFolder() {
-        assertEquals(properties.get("MUSIC_FOLDER"), configuration.getMusicDir());
+        assertEquals(properties.get("MUSIC_DIR"), configuration.getMusicDir());
     }
 
     @Test
     void shouldGetVideoFolder() {
-        assertEquals(properties.get("VIDEO_FOLDER"), configuration.getVideoDir());
+        assertEquals(properties.get("VIDEO_DIR"), configuration.getVideoDir());
     }
 
     @Test
@@ -242,6 +315,6 @@ class ConfigurationTest {
 
     @Test
     void shouldGetIsLatestNewsDisplayForced() {
-        assertEquals(properties.get("FORCE_DISPLAY_NEWS"), configuration.isLatestNewsDisplayForced().toString());
+        assertEquals(properties.get("DISPLAY_NEWS_FORCED"), configuration.isLatestNewsDisplayForced().toString());
     }
 }

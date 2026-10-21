@@ -2,10 +2,8 @@ package net.gazeplay.commons.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
-import org.aeonbits.owner.ConfigFactory;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -31,9 +29,16 @@ public class ConfigurationSource {
     public static Configuration createFromPropertiesResource(final File propertiesFile) {
         Properties properties;
 
+        // First launch, or new profile: not an error (it used to be logged as one, with a stack trace)
+        if (!propertiesFile.exists()) {
+            log.info("No Properties file {} yet: default settings", propertiesFile);
+            return new Configuration(propertiesFile, new ApplicationConfig(new Properties()));
+        }
+
         try {
             log.info("Loading Properties from : {}", propertiesFile);
             properties = loadProperties(propertiesFile);
+            LegacyConfigurationKeys.migrate(properties);
             log.info("Properties loaded : {}", properties);
         } catch (final IOException e) {
             log.error("Failure while loading Properties file {}", propertiesFile, e);
@@ -41,7 +46,7 @@ public class ConfigurationSource {
             log.info("Properties loaded : {}", properties);
         }
 
-        final ApplicationConfig applicationConfig = ConfigFactory.create(ApplicationConfig.class, properties);
+        final ApplicationConfig applicationConfig = new ApplicationConfig(properties);
         return new Configuration(propertiesFile, applicationConfig);
     }
 

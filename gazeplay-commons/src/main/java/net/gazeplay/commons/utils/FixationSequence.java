@@ -157,7 +157,8 @@ public class FixationSequence {
         final LinkedList<FixationPoint> reducedPolyline = new LinkedList<>();
         reducedPolyline.add(pivotVertex);
 
-        for (int i = 1; i < allPoints.size() - 1; i++) {
+        // Up to the last point included (it used to be ignored)
+        for (int i = 1; i < allPoints.size(); i++) {
             distance = Math.sqrt(Math.pow(pivotVertex.getY() - allPoints.get(i).getY(), 2)
                 + Math.pow(pivotVertex.getX() - allPoints.get(i).getX(), 2));
 

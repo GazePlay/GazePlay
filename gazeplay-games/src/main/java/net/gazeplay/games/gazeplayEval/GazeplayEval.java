@@ -584,138 +584,50 @@ public class GazeplayEval implements GameLifeCycle {
         return formatDate.format(now);
     }
 
+    EvalReport buildReport() {
+        return new EvalReport(this.gameName, this.getDate(), stats.timeGame, this.nbImages, this.nbSounds,
+            this.totalItemsAddedManually, this.isAnonymous, this.userProfil, this.indexEndGame, this.nbImagesPerRound,
+            this.listImages, this.listImagesDescription, this.listSounds, this.listSoundsDescription,
+            this.resultsChoiceImages, this.listNameScores, this.scores, this.maxValue);
+    }
+
     public void createCsvFile(){
 
         File pathDirectory = stats.getGameStatsOfTheDayDirectory();
-        String pathFile = pathDirectory + "\\" + this.gameName + "-" + DateUtils.dateTimeNow() + ".csv";
+        // new File(directory, name) instead of a hard-coded "\\" separator, which only worked on Windows
+        String pathFile = new File(pathDirectory, this.gameName + "-" + DateUtils.dateTimeNow() + ".csv").getPath();
         this.stats.actualFile = pathFile;
 
-        try {
-            PrintWriter out = new PrintWriter(pathFile, StandardCharsets.UTF_16);
-            out.append("\r\n");
-            out.append("Nom de l'évaluation : ").append(this.gameName).append("\r\n");
-            out.append("Fait le ").append(this.getDate()).append("\r\n");
-            out.append("Temps de l'évaluation : ").append(String.valueOf(stats.timeGame / 100.)).append(" secondes \r\n");
-            out.append("Nombre d'images: ").append(String.valueOf(this.nbImages)).append("\r\n");
-            out.append("Number de sons : ").append(String.valueOf(this.nbSounds)).append("\r\n");
-            out.append("Nombre d'items ajoutés manuellement : ").append(String.valueOf(this.totalItemsAddedManually)).append("\r\n");
-            out.append("\r\n");
-            if (!this.isAnonymous){
-                out.append("Profil de la personne : ").append("\r\n");
-                out.append("Nom : ").append(this.userProfil[0]).append("\r\n");
-                out.append("Prénom : ").append(this.userProfil[1]).append("\r\n");
-                out.append("Genre : ").append(this.userProfil[2]).append("\r\n");
-                out.append("Age : ").append(this.userProfil[3]).append("\r\n");
-                out.append("Date de naissance : ").append(this.userProfil[4]).append("\r\n");
-                out.append("Lieu de naissance : ").append(this.userProfil[5]).append("\r\n");
-                out.append("\r\n");
-            }
-            for (int i=0; i<this.indexEndGame; i++){
-                out.append("Item ").append(String.valueOf(i+1)).append("\r\n");
-                for (int j=0; j<this.nbImagesPerRound; j++){
-                    out.append("- Nom de l'image -> ").append(this.listImages[i][j]).append("\r\n");
-                    out.append("- Description de l'image -> ").append(this.listImagesDescription[i][j]).append("\r\n");
-                }
-                out.append("- Son utilisé -> ").append(this.listSounds[i]).append("\r\n");
-                out.append("- Description du son -> ").append(this.listSoundsDescription[i]).append("\r\n");
-                out.append("- Résultat -> ").append(this.resultsChoiceImages[i]).append("\r\n");
-                out.append("\r\n");
-            }
-            out.append("Scores ").append("\r\n");
-            for (int k=0; k<this.listNameScores.length; k++){
-                out.append("- ").append(this.listNameScores[k]).append(" -> ").append(String.valueOf(this.scores[k])).append(" / ").append(String.valueOf(this.maxValue[k])).append("\r\n");
-            }
-            out.close();
+        try (PrintWriter out = new PrintWriter(pathFile, StandardCharsets.UTF_16)) {
+            out.append(buildReport().toCsv());
         } catch (Exception e) {
             log.info("Error creation csv for GazePlay Eval stats game !");
             e.printStackTrace();
         }
     }
 
-    @SuppressWarnings("PMD")
     public void createExcelFile(){
 
         File pathDirectory = stats.getGameStatsOfTheDayDirectory();
-        String pathFile = pathDirectory + "\\" + this.gameName + "-" + DateUtils.dateTimeNow() + ".xlsx";
+        String pathFile = new File(pathDirectory, this.gameName + "-" + DateUtils.dateTimeNow() + ".xlsx").getPath();
         this.stats.actualFile = pathFile;
 
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet(this.gameName);
-
-        Object[][] bookData = new Object[(this.indexEndGame*(5 + 2*this.nbImagesPerRound)) + 8 + this.listNameScores.length][2];
-
-        int nbElems = (this.nbImagesPerRound * 2) + 3;
-        int item = 1;
-        int indexImage = 0;
-        int nextImages = 0;
-        int start = 6;
-
-        bookData[0] = new Object[]{"Nom de l'évaluation : ", this.gameName};
-        bookData[1] = new Object[]{"Fait le : ", this.getDate()};
-        bookData[2] = new Object[]{"Temps de l'évaluation: ", stats.timeGame / 100. + " secondes"};
-        bookData[3] = new Object[]{"Nombre d'images : ", String.valueOf(this.nbImages)};
-        bookData[4] = new Object[]{"Nombre de sons : ", String.valueOf(this.nbSounds)};
-        bookData[5] = new Object[]{"Nombre d'items ajoutés manuellement : ", String.valueOf(this.totalItemsAddedManually)};
-
-        if (!this.isAnonymous){
-            bookData[6] = new Object[]{"", ""};
-            bookData[7] = new Object[]{"Profil de la personne : ", ""};
-            bookData[8] = new Object[]{"Nom : ", this.userProfil[0]};
-            bookData[9] = new Object[]{"Prénom : ", this.userProfil[1]};
-            bookData[10] = new Object[]{"Genre : ", this.userProfil[2]};
-            bookData[11] = new Object[]{"Age : ", this.userProfil[3]};
-            bookData[12] = new Object[]{"Date de naissance : ", this.userProfil[4]};
-            bookData[13] = new Object[]{"Lieu de naissance : ", this.userProfil[5]};
-            start = 14;
-        }
-
-        for (int i=0; i<this.indexEndGame; i++){
-            bookData[start] = new Object[]{"", ""};
-            bookData[start+1] = new Object[]{"Item " + item, ""};
-
-            for (int j=(start+2); j<this.nbImagesPerRound+(start+2); j=j+2){
-                for (int k=0; k<this.nbImagesPerRound; k++){
-                    bookData[j + nextImages] = new Object[]{"- Nom de l'image -> ", this.listImages[indexImage][k]};
-                    bookData[j+1 + nextImages] = new Object[]{"- Description de l'image -> ", this.listImagesDescription[indexImage][k]};
-                    nextImages += 2;
-                }
-
-                bookData[j + nextImages] = new Object[]{"- Son utilisé -> ", this.listSounds[indexImage]};
-                bookData[j + nextImages +1] = new Object[]{"- Description du son -> ", this.listSoundsDescription[indexImage]};
-                bookData[j + nextImages +2] = new Object[]{"- Résultat -> ", this.resultsChoiceImages[indexImage]};
-
-                indexImage += 1;
-            }
-
-            item += 1;
-            start = start + nbElems + 2;
-            nextImages = 0;
-        }
-        bookData[start] = new Object[]{"", ""};
-        bookData[start+1] = new Object[]{"Scores"};
-        for (int l=0; l<this.listNameScores.length; l++){
-            bookData[start+2+l] = new Object[]{"- " + this.listNameScores[l] + " -> ", this.scores[l] + " / " + this.maxValue[l]};
-        }
-
-        int rowCount = 0;
-
-        for (Object[] aBook : bookData) {
-            Row row = sheet.createRow(rowCount++);
-
-            int columnCount = 0;
-
-            for (Object field : aBook) {
-                Cell cell = row.createCell(columnCount++);
-                if (field instanceof String) {
-                    cell.setCellValue((String) field);
-                } else if (field instanceof Integer) {
-                    cell.setCellValue((Integer) field);
+        try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+            XSSFSheet sheet = workbook.createSheet(this.gameName);
+            int rowCount = 0;
+            for (String[] rowData : buildReport().toExcelRows()) {
+                Row row = sheet.createRow(rowCount++);
+                int columnCount = 0;
+                for (String field : rowData) {
+                    Cell cell = row.createCell(columnCount++);
+                    if (field != null) {
+                        cell.setCellValue(field);
+                    }
                 }
             }
-        }
-
-        try (FileOutputStream outputStream = new FileOutputStream(pathFile)) {
-            workbook.write(outputStream);
+            try (FileOutputStream outputStream = new FileOutputStream(pathFile)) {
+                workbook.write(outputStream);
+            }
         } catch (Exception e){
             log.info("Error creation xls for GazePlay Eval stats game !");
             e.printStackTrace();

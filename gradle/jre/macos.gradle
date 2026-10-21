@@ -6,26 +6,47 @@ def jreVersion = project.ext.jreVersion
 def jreFolder = project.ext.jreFolder
 def jre = project.ext.jre
 
-def filename = "zulu${zuluVersion}-ca-fx-jre${jreVersion}-macosx_x64"
+// One set of tasks per architecture: macOS x64 (tasks ...MacosJRE, folder build/jre/macos, unchanged names) and Apple
+// Silicon (tasks ...MacosAarch64JRE, folder build/jre/macos-aarch64)
+def registerMacosRuntime = { String taskSuffix, String zuluArch, String folderName ->
+    def filename = "zulu${zuluVersion}-ca-fx-jre${jreVersion}-macosx_${zuluArch}"
 
-task downloadMacosJRE(type: Download, group: 'custom jre') {
-    src "${jreSource}/${filename}.tar.gz"
-    dest new File("${downloadLocation}/jre", 'macos.tar.gz')
-    overwrite false
-}
+    def download = tasks.register("download${taskSuffix}", Download) {
+        group = 'custom jre'
+        src "${jreSource}/${filename}.tar.gz"
+        dest new File("${downloadLocation}/jre", "${filename}.tar.gz")
+        overwrite false
+        doLast { verifyChecksum(dest) }
+    }
 
-task extractMacosJRE(dependsOn: downloadMacosJRE, type: Copy, group: 'custom jre') {
-    from tarTree(downloadMacosJRE.dest)
-    into "${jreFolder}/macos"
-}
+    def extract = tasks.register("extract${taskSuffix}", Copy) {
+        group = 'custom jre'
+        dependsOn download
+        from { tarTree(download.get().dest) }
+        into "${jreFolder}/${folderName}"
+    }
 
-task downloadAndExtractMacosJRE(dependsOn: extractMacosJRE, group: 'custom jre') {
-    doLast {
-        copy {
-            from("${jreFolder}/macos/${filename}/zulu-${jre}.jre/Contents/Home")
-            into "${jreFolder}/macos"
+    tasks.register("downloadAndExtract${taskSuffix}") {
+        group = 'custom jre'
+        dependsOn extract
+        doLast {
+            // The Zulu 17 archives hold the runtime in zulu-17.jre/Contents/Home, the Zulu 21 ones directly in
+            // Contents/Home. A missing folder used to give an empty runtime without any error.
+            def home = ["${jreFolder}/${folderName}/${filename}/zulu-${jre}.jre/Contents/Home",
+                        "${jreFolder}/${folderName}/${filename}/Contents/Home"]
+                .collect { file(it) }.find { new File(it, 'bin/java').isFile() }
+            if (home == null) {
+                throw new GradleException("No Java runtime (Contents/Home/bin/java) found in ${filename}")
+            }
+            copy {
+                from home
+                into "${jreFolder}/${folderName}"
+            }
+
+            delete "${jreFolder}/${folderName}/${filename}"
         }
-
-        delete "${jreFolder}/macos/${filename}"
     }
 }
+
+registerMacosRuntime('MacosJRE', 'x64', 'macos')
+registerMacosRuntime('MacosAarch64JRE', 'aarch64', 'macos-aarch64')

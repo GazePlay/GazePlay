@@ -24,9 +24,6 @@ import net.gazeplay.commons.ui.I18NText;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.ThumbnailImage;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -35,7 +32,6 @@ import static javafx.scene.input.MouseEvent.MOUSE_PRESSED;
 
 @Slf4j
 @Data
-@Component
 public class GameMenuFactory {
 
     private final static double THUMBNAIL_WIDTH_RATIO = 1;
@@ -43,11 +39,7 @@ public class GameMenuFactory {
 
     private final static long FAVORITE_SWITCH_FIXATION_DURATION_IN_MILLISECONDS = 1000;
 
-    @Autowired
-    private ApplicationContext applicationContext;
-
-    @Autowired
-    private GameMenuController gameMenuController;
+    private final GameMenuController gameMenuController;
 
     public GameButtonPane createGameButton(
         @NonNull final GazePlay gazePlay,
@@ -272,7 +264,7 @@ public class GameMenuFactory {
             private final boolean wasFavorite;
         }
 
-        EventHandler favoriteGameSwitchEventHandler = new EventHandler<MouseEvent>() {
+        EventHandler<MouseEvent> favoriteGameSwitchEventHandler = new EventHandler<>() {
 
             private final AtomicReference<EventState> enteredState = new AtomicReference<>();
             private final AtomicReference<EventState> exitedState = new AtomicReference<>();

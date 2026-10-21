@@ -92,7 +92,7 @@ public class ElementSizeControl {
 
     public void registerKeyHandler(@NonNull Scene primaryScene, final Slider elementSizeRatioSlider) {
 
-        EventHandler increaseElementSizeEventHandler = (EventHandler<KeyEvent>) event -> {
+        EventHandler<KeyEvent> increaseElementSizeEventHandler = event -> {
             final int sliderElementSizeValue = (int) elementSizeRatioSlider.getValue();
             if (sliderElementSizeValue < elementSizeRatioSlider.getMax()) {
                 elementSizeRatioSlider.setValue(sliderElementSizeValue + 1);
@@ -100,7 +100,7 @@ public class ElementSizeControl {
                 log.info("max fixation length reached !");
             }
         };
-        EventHandler decreaseElementSizeEventHandler = (EventHandler<KeyEvent>) event -> {
+        EventHandler<KeyEvent> decreaseElementSizeEventHandler = event -> {
             final int sliderElementSizeValue = (int) elementSizeRatioSlider.getValue();
             if (sliderElementSizeValue > elementSizeRatioSlider.getMin()) {
                 elementSizeRatioSlider.setValue(sliderElementSizeValue - 1);

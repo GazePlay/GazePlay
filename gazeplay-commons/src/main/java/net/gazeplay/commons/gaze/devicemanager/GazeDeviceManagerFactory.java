@@ -7,27 +7,28 @@ import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.EyeTracker;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
-@Component
 @Slf4j
 public class GazeDeviceManagerFactory {
 
     private final AtomicReference<GazeDeviceManager> currentInstanceReference = new AtomicReference<>();
 
-    @Autowired
     @Setter
     private Supplier<Dimension2D> currentScreenDimensionSupplier;
 
-    @Autowired
     @Setter
     private Supplier<Point2D> currentScreenPositionSupplier;
 
     public GazeDeviceManagerFactory() {
+    }
+
+    public GazeDeviceManagerFactory(final Supplier<Dimension2D> currentScreenDimensionSupplier,
+                                    final Supplier<Point2D> currentScreenPositionSupplier) {
+        this.currentScreenDimensionSupplier = currentScreenDimensionSupplier;
+        this.currentScreenPositionSupplier = currentScreenPositionSupplier;
     }
 
     public synchronized GazeDeviceManager get() {
@@ -52,23 +53,14 @@ public class GazeDeviceManagerFactory {
 
         switch (eyeTracker) {
             case tobii:
-                gazeDeviceManager = new TobiiGazeDeviceManager();
+                gazeDeviceManager = new GazeSourceDeviceManager(new TobiiGazeSource());
                 break;
             case eyetribe:
-                gazeDeviceManager = new EyeTribeGazeDeviceManager();
+                gazeDeviceManager = new GazeSourceDeviceManager(new EyeTribeGazeSource());
                 break;
             default:
-                gazeDeviceManager = new AbstractGazeDeviceManager() {
-                    @Override
-                    public void init(final Supplier<Dimension2D> currentScreenDimensionSupplier, final Supplier<Point2D> currentScreenPositionSupplier) {
-                    }
-
-                    @Override
-                    public void destroy() {
-
-                    }
-
-                };
+                // mouse_control: no gaze sample (the games use the mouse events directly)
+                gazeDeviceManager = new GazeSourceDeviceManager(GazeSource.NONE);
         }
 
         gazeDeviceManager.init(currentScreenDimensionSupplier, currentScreenPositionSupplier);

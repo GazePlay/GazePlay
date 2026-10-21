@@ -283,8 +283,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
 
         double buttonSize = primaryStage.getWidth() / 10;
 
-        if (buttonSize < GameContextFactoryBean.BUTTON_MIN_HEIGHT) {
-            buttonSize = GameContextFactoryBean.BUTTON_MIN_HEIGHT;
+        if (buttonSize < GameContextFactory.BUTTON_MIN_HEIGHT) {
+            buttonSize = GameContextFactory.BUTTON_MIN_HEIGHT;
         }
 
         double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + replayButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();
@@ -299,8 +299,8 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     public void updateControllPanel(ScrollPane scrollPane, I18NButton toggleFullScreenButtonInGameScreen, Stage primaryStage) {
         double buttonSize = primaryStage.getWidth() / 10;
 
-        if (buttonSize < GameContextFactoryBean.BUTTON_MIN_HEIGHT) {
-            buttonSize = GameContextFactoryBean.BUTTON_MIN_HEIGHT;
+        if (buttonSize < GameContextFactory.BUTTON_MIN_HEIGHT) {
+            buttonSize = GameContextFactory.BUTTON_MIN_HEIGHT;
         }
 
         double offset = buttonSize + homeButton.getBoundsInLocal().getWidth() + replayButton.getBoundsInLocal().getWidth() + toggleFullScreenButtonInGameScreen.getBoundsInLocal().getWidth();

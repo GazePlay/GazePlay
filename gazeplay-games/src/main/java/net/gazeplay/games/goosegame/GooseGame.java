@@ -76,8 +76,7 @@ public class GooseGame implements GameLifeCycle {
         this.stats.setGameSeed(random.getSeed());
 
         // JSON file used to store the position of each square, later used for pawn movement
-        final JsonParser parser = new JsonParser();
-        final JsonArray positions = (JsonArray) parser.parse(new InputStreamReader(
+        final JsonArray positions = (JsonArray) JsonParser.parseReader(new InputStreamReader(
             Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("data/goosegame/positions.json")),
             StandardCharsets.UTF_8));
 
@@ -246,8 +245,7 @@ public class GooseGame implements GameLifeCycle {
         this.random = new ReplayablePseudoRandom(gameSeed);
 
         // JSON file used to store the position of each square, later used for pawn movement
-        final JsonParser parser = new JsonParser();
-        final JsonArray positions = (JsonArray) parser.parse(new InputStreamReader(
+        final JsonArray positions = (JsonArray) JsonParser.parseReader(new InputStreamReader(
             Objects.requireNonNull(ClassLoader.getSystemResourceAsStream("data/goosegame/positions.json")),
             StandardCharsets.UTF_8));
 

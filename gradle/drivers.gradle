@@ -1,11 +1,13 @@
-def downloadLocation = new File(project.repositories.mavenLocal().url).getAbsolutePath();
+def downloadLocation = new File(System.getProperty('user.home'), '.m2/repository').getAbsolutePath()
+// (same folder as before, without declaring mavenLocal() as a dependency repository)
 def tobiiDriverFilename = 'tobiiDrivers'
 def tobiiDriversForLinux = "${buildDir}/${tobiiDriverFilename}"
 
 task downloadTobiiDriversForLinux(type: Download, group: 'custom tobiiDrivers') {
     src 'https://github.com/GazePlay/TobiiStreamEngineForJava/releases/download/4.0/TobiiDriversForLinux.tar.gz'
-    dest new File("${downloadLocation}/tobiiDrivers", 'linux.tar.gz')
+    dest new File("${downloadLocation}/tobiiDrivers", 'TobiiDriversForLinux.tar.gz')
     overwrite false
+    doLast { verifyChecksum(dest) }
 }
 
 task extractTobiiDriversForLinux(dependsOn: downloadTobiiDriversForLinux, type: Copy, group: 'custom tobiiDrivers') {

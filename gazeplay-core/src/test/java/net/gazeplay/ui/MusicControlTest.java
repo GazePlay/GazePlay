@@ -4,23 +4,20 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.StackPane;
-import mockit.MockUp;
 import net.gazeplay.GazePlay;
 import net.gazeplay.commons.ui.Translator;
 import net.gazeplay.commons.utils.games.BackgroundMusicManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
 @ExtendWith(ApplicationExtension.class)
 class MusicControlTest {
 
@@ -37,6 +34,13 @@ class MusicControlTest {
 
     private MusicControl musicControl;
 
+    private final BackgroundMusicManager originalMusicManager = BackgroundMusicManager.getInstance();
+
+    @AfterEach
+    void restoreGlobalState() {
+        BackgroundMusicManager.setInstance(originalMusicManager);
+    }
+
     @BeforeEach
     void setup() {
         initMocks();
@@ -46,14 +50,8 @@ class MusicControlTest {
     }
 
     void initMocks() {
-        new MockUp<BackgroundMusicManager>() {
-            @mockit.Mock
-            public BackgroundMusicManager getInstance() {
-                return mockMusicManager;
-            }
-        };
-
         MockitoAnnotations.initMocks(this);
+        BackgroundMusicManager.setInstance(mockMusicManager);
         when(mockGazePlay.getTranslator()).thenReturn(mockTranslator);
         when(mockTranslator.translate()).thenReturn("translation");
         when(mockMusicManager.getIsMusicChanging()).thenReturn(new SimpleBooleanProperty(false));

@@ -6,24 +6,22 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
-import mockit.MockUp;
 import net.gazeplay.GamePanelDimensionProvider;
 import net.gazeplay.IGameContext;
 import net.gazeplay.commons.configuration.AnimationSpeedRatioSource;
+import net.gazeplay.commons.configuration.ActiveConfigurationContext;
 import net.gazeplay.commons.configuration.BackgroundStyle;
 import net.gazeplay.commons.configuration.Configuration;
 import net.gazeplay.commons.gaze.devicemanager.GazeDeviceManager;
 import net.gazeplay.commons.random.ReplayablePseudoRandom;
-import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.components.RandomPositionGenerator;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
@@ -32,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
 @ExtendWith(ApplicationExtension.class)
 class DivisorTest {
 
@@ -45,8 +42,8 @@ class DivisorTest {
     @Mock
     private GamePanelDimensionProvider mockProvider;
 
-    @Mock
-    private BackgroundStyle mockBackgroundStyle;
+    // BackgroundStyle is an enum with constant-specific bodies, which the inline mock maker cannot mock
+    private final BackgroundStyle backgroundStyle = BackgroundStyle.DARK;
 
     @Mock
     private Stats mockStats;
@@ -58,6 +55,17 @@ class DivisorTest {
             + "src" + sep
             + "test" + sep
             + "resources" + sep;
+
+    private static void useActiveFilesDirectory(String filesDirectory) {
+        Configuration activeConfiguration = mock(Configuration.class);
+        when(activeConfiguration.getFileDir()).thenReturn(filesDirectory);
+        ActiveConfigurationContext.setInstance(activeConfiguration);
+    }
+
+    @AfterEach
+    void restoreActiveConfiguration() {
+        ActiveConfigurationContext.switchToDefaultUser();
+    }
 
     @BeforeEach
     void setup() {
@@ -85,10 +93,9 @@ class DivisorTest {
         });
 
         when(mockProvider.getDimension2D()).thenReturn(new Dimension2D(1920, 1080));
-        when(mockConfiguration.getBackgroundStyle()).thenReturn(mockBackgroundStyle);
+        when(mockConfiguration.getBackgroundStyle()).thenReturn(backgroundStyle);
         when(mockConfiguration.isBackgroundEnabled()).thenReturn(true);
         when(mockConfiguration.getAnimationSpeedRatioProperty()).thenReturn(new SimpleDoubleProperty());
-        when(mockBackgroundStyle.accept(any())).thenReturn(0.5);
     }
 
     @Test
@@ -106,12 +113,8 @@ class DivisorTest {
 
     @Test
     void shouldLaunchCustom() {
-        new MockUp<Utils>() {
-            @mockit.Mock
-            public File getImagesSubdirectory(String dir) {
-                return new File(localDataFolder, "images/" + dir);
-            }
-        };
+        // Utils.getImagesSubdirectory("portraits") resolves to <files directory>/images/portraits
+        useActiveFilesDirectory(localDataFolder);
 
         Divisor divisor = new Divisor(mockGameContext, mockStats, false);
 
@@ -125,12 +128,8 @@ class DivisorTest {
 
     @Test
     void shouldLaunchDefault() {
-        new MockUp<Utils>() {
-            @mockit.Mock
-            public File getImagesSubdirectory(String dir) {
-                return new File("wrong/path");
-            }
-        };
+        // An empty files directory in the temporary user.home (see build.gradle): no custom images
+        useActiveFilesDirectory(new File(System.getProperty("user.home"), "empty-files").getAbsolutePath());
 
         Divisor divisor = new Divisor(mockGameContext, mockStats, false);
 

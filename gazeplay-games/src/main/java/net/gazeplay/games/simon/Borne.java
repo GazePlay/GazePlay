@@ -1,5 +1,6 @@
 package net.gazeplay.games.simon;
 
+import lombok.extern.slf4j.Slf4j;
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -19,6 +20,7 @@ import net.gazeplay.IGameContext;
 
 import java.util.ArrayList;
 
+@Slf4j
 public class Borne extends Parent {
     private final IGameContext gameContext;
     private final Simon gameInstance;
@@ -195,20 +197,20 @@ public class Borne extends Parent {
 
     private void resetComputerAnimationClassic(){
         boolean increment = gameInstance.playerSequence.equals(gameInstance.computerSequence);
-        System.out.println(gameInstance.playerSequence.size() == gameInstance.computerSequence.size());
-        System.out.println(resetComputerAnimation);
+        log.debug("sequences of the same size : {}", gameInstance.playerSequence.size() == gameInstance.computerSequence.size());
+        log.debug("resetComputerAnimation : {}", resetComputerAnimation);
         if (!resetComputerAnimation){
             gameInstance.playerSequence.clear();
         }
         if (increment){
             gameInstance.addNoteToComputerSequence();
-            System.out.println(gameInstance.computerSequence.size());
+            log.debug("computer sequence size : {}", gameInstance.computerSequence.size());
         }
 
-        System.out.println("player 1 : " + player1);
-        System.out.println("player 2 : " + player2);
+        log.debug("player 1 : {}", player1);
+        log.debug("player 2 : {}", player2);
 
-        System.out.println("turn : " + turn);
+        log.debug("turn : {}", turn);
 
         if (!increment){
             if (turn){
@@ -245,7 +247,7 @@ public class Borne extends Parent {
     }
 
     private void playSongAnimation(Bouton bouton){
-        System.out.println("playsong for : " + bouton.couleur);
+        log.debug("playsong for : {}", bouton.couleur);
         nextNote = false;
         bouton.isActivated = false;
         gameInstance.playSound(bouton.note);

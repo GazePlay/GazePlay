@@ -12,9 +12,20 @@ import java.net.URL;
 @Slf4j
 public class ForegroundSoundsUtils {
 
+    /**
+     * Private lock: synchronizing on the class itself exposed the lock to any other code.
+     */
+    private static final Object LOCK = new Object();
+
     private static MediaPlayer lastSoundPlayer;
 
-    public static synchronized void playSound(String resource) {
+    public static void playSound(String resource) {
+        synchronized (LOCK) {
+            playSoundLocked(resource);
+        }
+    }
+
+    private static void playSoundLocked(String resource) {
         log.debug("Try to play " + resource);
         URL url = ClassLoader.getSystemResource(resource);
         String path;
@@ -39,10 +50,12 @@ public class ForegroundSoundsUtils {
         lastSoundPlayer = soundPlayer;
     }
 
-    public static synchronized void stopSound() {
-        MediaPlayer activeSoundPlayer = lastSoundPlayer;
-        if (activeSoundPlayer != null) {
-            activeSoundPlayer.stop();
+    public static void stopSound() {
+        synchronized (LOCK) {
+            MediaPlayer activeSoundPlayer = lastSoundPlayer;
+            if (activeSoundPlayer != null) {
+                activeSoundPlayer.stop();
+            }
         }
     }
 

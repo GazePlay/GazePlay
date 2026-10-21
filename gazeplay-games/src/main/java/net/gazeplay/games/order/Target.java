@@ -26,7 +26,7 @@ import java.awt.geom.Point2D;
  */
 public class Target extends Parent {
     private final int num;
-    private final EventHandler enterEvent;
+    private final EventHandler<Event> enterEvent;
     private final Order gameInstance;
     private final IGameContext gameContext;
     private final ProgressIndicator progressIndicator;

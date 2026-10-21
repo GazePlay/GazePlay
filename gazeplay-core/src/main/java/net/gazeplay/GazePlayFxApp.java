@@ -25,7 +25,6 @@ import net.gazeplay.ui.scenes.gamemenu.GameMenuController;
 import net.gazeplay.ui.scenes.gamemenu.GameVariantDialog;
 import net.gazeplay.ui.scenes.userselect.User;
 import net.gazeplay.ui.scenes.userselect.UserProfileContext;
-import org.springframework.context.ApplicationContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +34,7 @@ import java.util.List;
 public class GazePlayFxApp extends Application {
 
     @Setter
-    private static ApplicationContext applicationContext;
+    private static CompositionRoot compositionRoot;
 
     @Setter
     private static ReusableOptions applicationOptions;
@@ -52,15 +51,15 @@ public class GazePlayFxApp extends Application {
 
     @Override
     public void init() {
-        final ApplicationContext context = applicationContext;
+        final CompositionRoot root = compositionRoot;
         this.options = applicationOptions;
         //
         log.info("options = {}", options);
         //
-        gazePlay = context.getBean(GazePlay.class);
-        gameMenuController = context.getBean(GameMenuController.class);
-        gamesLocator = context.getBean(GamesLocator.class);
-        translator = context.getBean(Translator.class);
+        gazePlay = root.getGazePlay();
+        gameMenuController = root.getGameMenuController();
+        gamesLocator = root.getGamesLocator();
+        translator = root.getTranslator();
     }
 
     @Override
@@ -159,12 +158,12 @@ public class GazePlayFxApp extends Application {
                         String replayFileName = replayJsonFileOptions.getJsonFileName();
                         if (replayFileName != null) {
                             final List<GameSpec> games = gamesLocator.listGames(gazePlay.getTranslator());
-                            ReplayingGameFromJson replayingGameFromJson = new ReplayingGameFromJson(gazePlay, applicationContext, games);
+                            ReplayingGameFromJson replayingGameFromJson = new ReplayingGameFromJson(gazePlay, compositionRoot.getGameContextFactory(), games);
                             try {
                                 replayingGameFromJson.pickJSONFile(replayJsonFileOptions.getJsonFileName());
                                 replayingGameFromJson.drawLines();
                             } catch (IOException ex) {
-                                ex.printStackTrace();
+                                log.error("Cannot replay the file {}", replayJsonFileOptions.getJsonFileName(), ex);
                             }
                         } else {
                             if (selectedVariantCode != null) {

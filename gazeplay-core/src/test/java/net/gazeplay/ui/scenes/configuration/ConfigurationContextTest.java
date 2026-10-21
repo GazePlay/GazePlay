@@ -16,10 +16,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
-import mockit.Expectations;
-import mockit.MockUp;
-import mockit.Mocked;
-import mockit.Verifications;
 import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
@@ -33,17 +29,16 @@ import net.gazeplay.commons.utils.games.BackgroundMusicManager;
 import net.gazeplay.commons.utils.games.GazePlayDirectories;
 import net.gazeplay.commons.utils.games.Utils;
 import net.gazeplay.ui.scenes.gamemenu.GameButtonOrientation;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
@@ -57,7 +52,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @Slf4j
-@RunWith(MockitoJUnitRunner.class)
 @ExtendWith(ApplicationExtension.class)
 class ConfigurationContextTest {
 
@@ -72,6 +66,24 @@ class ConfigurationContextTest {
 
     @Mock
     private ConfigurationContext mockContext;
+
+    /**
+     * The real Configuration setters write into the JavaFX property returned by the matching getter. Reproduces that
+     * on the mock, so that a test can observe the value written by the UI component.
+     */
+    private static <T> org.mockito.stubbing.Stubber writeInto(Property<T> property) {
+        return doAnswer(invocation -> {
+            property.setValue(invocation.getArgument(0));
+            return null;
+        });
+    }
+
+    private final BackgroundMusicManager originalMusicManager = BackgroundMusicManager.getInstance();
+
+    @AfterEach
+    void restoreGlobalState() {
+        BackgroundMusicManager.setInstance(originalMusicManager);
+    }
 
     @BeforeEach
     void setup() {
@@ -107,28 +119,40 @@ class ConfigurationContextTest {
                 notDisplayedElts = 2;
             }
 
-            assertEquals(70 - notDisplayedElts, children.size());
+            // Layout of the "gazeplay" edition (the "bera" edition builds another grid)
+            assertEquals(72 - notDisplayedElts, children.size());
+            // Language settings
             assertTrue(children.get(3) instanceof MenuButton);
+            // Games settings: quit key, question length, reask on fail, reward sound, limiters, piano tile colors
             assertTrue(children.get(9 - notDisplayedElts) instanceof ChoiceBox);
             assertTrue(children.get(11 - notDisplayedElts) instanceof Spinner);
             assertTrue(children.get(13 - notDisplayedElts) instanceof CheckBox);
             assertTrue(children.get(15 - notDisplayedElts) instanceof CheckBox);
             assertTrue(children.get(17 - notDisplayedElts) instanceof HBox);
             assertTrue(children.get(19 - notDisplayedElts) instanceof HBox);
-            assertTrue(children.get(23 - notDisplayedElts) instanceof ChoiceBox);
-            assertTrue(children.get(25 - notDisplayedElts) instanceof Spinner);
-            assertTrue(children.get(29 - notDisplayedElts) instanceof ChoiceBox);
-            assertTrue(children.get(31 - notDisplayedElts) instanceof HBox);
-            assertTrue(children.get(33 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(21 - notDisplayedElts) instanceof HBox);
+            // Eye-tracker settings: eye-tracker, fixation length
+            assertTrue(children.get(25 - notDisplayedElts) instanceof ChoiceBox);
+            assertTrue(children.get(27 - notDisplayedElts) instanceof Spinner);
+            // Graphics settings: theme, background color, menu orientation, background enabled, dark theme
+            assertTrue(children.get(31 - notDisplayedElts) instanceof ChoiceBox);
+            assertTrue(children.get(33 - notDisplayedElts) instanceof HBox);
             assertTrue(children.get(35 - notDisplayedElts) instanceof ChoiceBox);
-            assertTrue(children.get(51 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(53 - notDisplayedElts) instanceof ChoiceBox);
-            assertTrue(children.get(55 - notDisplayedElts) instanceof HBox);
-            assertTrue(children.get(59 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(61 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(37 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(39 - notDisplayedElts) instanceof HBox);
+            // Folders settings: files, music, video, where is it
+            assertTrue(children.get(43 - notDisplayedElts) instanceof Button);
+            assertTrue(children.get(45 - notDisplayedElts) instanceof HBox);
+            assertTrue(children.get(47 - notDisplayedElts) instanceof HBox);
+            assertTrue(children.get(49 - notDisplayedElts) instanceof HBox);
+            // Stats settings: heatmap (disabled, opacity, colors), AOI (enabled, convex hull), sequence, video
+            assertTrue(children.get(55 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(57 - notDisplayedElts) instanceof ChoiceBox);
+            assertTrue(children.get(59 - notDisplayedElts) instanceof HBox);
+            assertTrue(children.get(63 - notDisplayedElts) instanceof CheckBox);
             assertTrue(children.get(65 - notDisplayedElts) instanceof CheckBox);
-            assertTrue(children.get(67 - notDisplayedElts) instanceof CheckBox);
             assertTrue(children.get(69 - notDisplayedElts) instanceof CheckBox);
+            assertTrue(children.get(71 - notDisplayedElts) instanceof CheckBox);
         });
         TestingUtils.waitForRunLater();
 
@@ -310,6 +334,7 @@ class ConfigurationContextTest {
 
         when(mockConfig.getCssFile()).thenReturn("builtin:BLUE");
         when(mockConfig.getCssFileProperty()).thenReturn(cssFileProperty);
+        writeInto(cssFileProperty).when(mockConfig).setCssFile(anyString());
         when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
         when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
         when(mockScene.getStylesheets()).thenReturn(stylesheets);
@@ -334,6 +359,7 @@ class ConfigurationContextTest {
 
         when(mockConfig.getCssFile()).thenReturn("builtin:WRONG");
         when(mockConfig.getCssFileProperty()).thenReturn(cssFileProperty);
+        writeInto(cssFileProperty).when(mockConfig).setCssFile(anyString());
         when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
         when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
         when(mockScene.getStylesheets()).thenReturn(stylesheets);
@@ -352,11 +378,7 @@ class ConfigurationContextTest {
     @ParameterizedTest
     @EnumSource(ConfigurationContext.DirectoryType.class)
     void shouldCreateDirectoryChooser(ConfigurationContext.DirectoryType type) throws InterruptedException {
-        new MockUp<BackgroundMusicManager>() {
-            public BackgroundMusicManager getInstance() {
-                return mock(BackgroundMusicManager.class);
-            }
-        };
+        BackgroundMusicManager.setInstance(mock(BackgroundMusicManager.class));
 
         StringProperty fileDirProperty = new SimpleStringProperty(System.getProperty("user.home") + "/GazePlay/");
         Scene mockScene = mock(Scene.class);
@@ -375,8 +397,12 @@ class ConfigurationContextTest {
         when(mockConfig.getWhereIsItDirProperty()).thenReturn(fileDirProperty);
         when(mockConfig.getFileDir()).thenReturn(fileDirProperty.getValue());
         when(mockConfig.getFileDirProperty()).thenReturn(fileDirProperty);
-        when(mockConfig.getMusicDir()).thenReturn(fileDirProperty.getValue());
+        when(mockConfig.getMusicDir()).thenAnswer(invocation -> fileDirProperty.getValue());
         when(mockConfig.getMusicDirProperty()).thenReturn(fileDirProperty);
+        writeInto(fileDirProperty).when(mockConfig).setVideoDir(anyString());
+        writeInto(fileDirProperty).when(mockConfig).setWhereIsItDir(anyString());
+        writeInto(fileDirProperty).when(mockConfig).setFileDir(anyString());
+        writeInto(fileDirProperty).when(mockConfig).setMusicDir(anyString());
 
         when(mockContext.getGazePlay()).thenReturn(mockGazePlay);
         when(mockGazePlay.getPrimaryScene()).thenReturn(mockScene);
@@ -411,6 +437,8 @@ class ConfigurationContextTest {
                 when(mockConfig.getCountry()).thenReturn(countryProperty.getValue());
                 when(mockConfig.getLanguageProperty()).thenReturn(languageProperty);
                 when(mockConfig.getCountryProperty()).thenReturn(countryProperty);
+                writeInto(languageProperty).when(mockConfig).setLanguage(anyString());
+                writeInto(countryProperty).when(mockConfig).setCountry(anyString());
 
                 utilities.when(ActiveConfigurationContext::getInstance).thenReturn(mockConfig);
                 MenuButton result = context.buildLanguageChooser(mockConfig, context);
@@ -433,6 +461,7 @@ class ConfigurationContextTest {
 
         when(mockConfig.getEyeTracker()).thenReturn(eyeTrackerProperty.getValue());
         when(mockConfig.getEyeTrackerProperty()).thenReturn(eyeTrackerProperty);
+        writeInto(eyeTrackerProperty).when(mockConfig).setEyeTracker(anyString());
 
         ChoiceBox<EyeTracker> result = ConfigurationContext.buildEyeTrackerConfigChooser(mockConfig);
 
@@ -461,6 +490,7 @@ class ConfigurationContextTest {
         StringProperty buttonOrientationProperty = new SimpleStringProperty("HORIZONTAL");
         when(mockConfig.getMenuButtonsOrientationProperty()).thenReturn(buttonOrientationProperty);
         when(mockConfig.getMenuButtonsOrientation()).thenReturn(buttonOrientationProperty.getValue());
+        writeInto(buttonOrientationProperty).when(mockConfig).setMenuButtonsOrientation(anyString());
 
         ChoiceBox<GameButtonOrientation> result = ConfigurationContext.buildGameButtonOrientationChooser(mockConfig);
 
@@ -470,76 +500,35 @@ class ConfigurationContextTest {
         assertEquals("VERTICAL", buttonOrientationProperty.getValue());
     }
 
+    /**
+     * Since commit 850e26f9a ("Now music don't start by default"), changing the music folder never resumes playback,
+     * even if music was playing before.
+     */
     @Test
-    void shouldChangeTheMusicFolderAndPlayIfWasPlaying(@Mocked BackgroundMusicManager mockMusicManager,
-                                                       @Mocked Configuration mockConfiguration) {
-        StringProperty mockMusicFolderProperty = new SimpleStringProperty();
-
-        new Expectations() {{
-            mockMusicManager.isPlaying();
-            result = true;
-
-            BackgroundMusicManager.getInstance();
-            result = mockMusicManager;
-
-            mockConfiguration.getMusicDirProperty();
-            result = mockMusicFolderProperty;
-        }};
+    void shouldChangeTheMusicFolderWithoutResumingPlayback() {
+        BackgroundMusicManager mockMusicManager = mock(BackgroundMusicManager.class);
+        BackgroundMusicManager.setInstance(mockMusicManager);
+        Configuration mockConfiguration = mock(Configuration.class);
 
         ConfigurationContext.changeMusicFolder("mockFolder", mockConfiguration);
 
-        new Verifications() {{
-            mockMusicManager.play();
-            times = 1;
-        }};
+        verify(mockConfiguration).setMusicDir("mockFolder");
+        verify(mockMusicManager).emptyPlaylist();
+        verify(mockMusicManager).getAudioFromFolder("mockFolder");
+        verify(mockMusicManager, never()).play();
     }
 
     @Test
-    void shouldChangeTheMusicFolderAndNotPlayIfWasNotPlaying(@Mocked BackgroundMusicManager mockMusicManager,
-                                                             @Mocked Configuration mockConfiguration) {
-        StringProperty mockMusicFolderProperty = new SimpleStringProperty();
-
-        new Expectations() {{
-            mockMusicManager.isPlaying();
-            result = false;
-
-            BackgroundMusicManager.getInstance();
-            result = mockMusicManager;
-
-            mockConfiguration.getMusicDirProperty();
-            result = mockMusicFolderProperty;
-        }};
-
-        ConfigurationContext.changeMusicFolder("mockFolder", mockConfiguration);
-
-        new Verifications() {{
-            mockMusicManager.play();
-            times = 0;
-        }};
-    }
-
-    @Test
-    void shouldChangeTheMusicFolderWithBlankFolder(@Mocked BackgroundMusicManager mockMusicManager,
-                                                   @Mocked Configuration mockConfiguration) {
-        StringProperty mockMusicFolderProperty = new SimpleStringProperty();
+    void shouldChangeTheMusicFolderWithBlankFolder() {
+        BackgroundMusicManager mockMusicManager = mock(BackgroundMusicManager.class);
+        BackgroundMusicManager.setInstance(mockMusicManager);
+        Configuration mockConfiguration = mock(Configuration.class);
         String expectedFolder = System.getProperty("user.home") + File.separator + "GazePlay" + File.separator + "music";
-
-        new Expectations() {{
-            mockMusicManager.isPlaying();
-            result = false;
-
-            BackgroundMusicManager.getInstance();
-            result = mockMusicManager;
-
-            mockConfiguration.getMusicDirProperty();
-            result = mockMusicFolderProperty;
-        }};
 
         ConfigurationContext.changeMusicFolder("", mockConfiguration);
 
-        new Verifications() {{
-            mockMusicManager.getAudioFromFolder(expectedFolder);
-        }};
+        verify(mockConfiguration).setMusicDir(expectedFolder);
+        verify(mockMusicManager).getAudioFromFolder(expectedFolder);
     }
 
     @Test
@@ -595,9 +584,11 @@ class ConfigurationContextTest {
             StringProperty quitProperty = new SimpleStringProperty("Y");
 
             when(mockConfig.getQuitKeyProperty()).thenReturn(quitProperty);
+            writeInto(quitProperty).when(mockConfig).setQuitKey(anyString());
 
             ChoiceBox<String> result = context.buildQuitKeyChooser(mockConfig);
-            assertEquals(6, result.getItems().size());
+            // Only Q and E are offered since the quit key chooser was restricted
+            assertEquals(2, result.getItems().size());
 
             result.setValue("Q");
             assertEquals("Q", quitProperty.getValue());
@@ -613,6 +604,10 @@ class ConfigurationContextTest {
 
             when(mockConfig.getHeatMapOpacityProperty()).thenReturn(heatMapProperty);
             when(mockConfig.getHeatMapOpacity()).thenReturn(heatMapProperty.getValue());
+            doAnswer(invocation -> {
+                heatMapProperty.set(invocation.getArgument(0));
+                return null;
+            }).when(mockConfig).setHeatMapOpacity(anyDouble());
 
             ChoiceBox<Double> result = context.buildHeatMapOpacityChoiceBox(mockConfig);
 

@@ -331,31 +331,32 @@ public class StatsContext extends GraphicalContext<BorderPane> {
 
         if (gazeplayType.equals("bera")){
             AtomicInteger currentFormRow = new AtomicInteger(0);
+            // stats.timeGame is in milliseconds; it used to be divided by 100 and displayed as seconds (anomaly R8)
 
-            if (stats.variantType.equals("SentenceComprehension")){
+            if ("SentenceComprehension".equals(stats.variantType)){
 
-                addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 100.) + "s"));
+                addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 1000.) + "s"));
 
                 addToGridCenter(grid, currentFormRow, translator, "Morphosyntax", new Text(""));
                 addToGridCenter(grid, currentFormRow, translator, "TotalMorphosyntax", new Text(String.valueOf(stats.totalMorphosyntax) + "/10"));
                 addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsMorphosyntax) + "/5"));
                 addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsMorphosyntax) + "/5"));
                 addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsMorphosyntax) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsMorphosyntax) + "/5"));
+                addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreRightTargetItemsMorphosyntax) + "/5"));
 
                 addToGridCenter(grid, currentFormRow, translator, "SentenceComprehension", new Text(""));
                 addToGridCenter(grid, currentFormRow, translator, "TotalItemsAddManually", new Text(String.valueOf(stats.totalItemsAddedManually) + "/10"));
                 addToGridCenter(grid, currentFormRow, translator, "TotalSentenceComprehension", new Text(String.valueOf(stats.total) + "/10"));
-            }else if (stats.variantType.equals("WordComprehension")){
+            }else if ("WordComprehension".equals(stats.variantType)){
 
-                addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 100) + "s"));
+                addToGridCenter(grid, currentFormRow, translator, "TimeGame", new Text(String.valueOf(stats.timeGame / 1000.) + "s"));
 
                 addToGridCenter(grid, currentFormRow, translator, "Phonology", new Text(""));
                 addToGridCenter(grid, currentFormRow, translator, "TotalPhonology", new Text(String.valueOf(stats.totalPhonology) + "/10"));
                 addToGridCenter(grid, currentFormRow, translator, "SimpleScoreItems", new Text(String.valueOf(stats.simpleScoreItemsPhonology) + "/5"));
                 addToGridCenter(grid, currentFormRow, translator, "ComplexScoreItems", new Text(String.valueOf(stats.complexScoreItemsPhonology) + "/5"));
                 addToGridCenter(grid, currentFormRow, translator, "ScoreLeftTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsPhonology) + "/5"));
-                addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreLeftTargetItemsPhonology) + "/5"));
+                addToGridCenter(grid, currentFormRow, translator, "ScoreRightTargetItems", new Text(String.valueOf(stats.scoreRightTargetItemsPhonology) + "/5"));
 
                 addToGridCenter(grid, currentFormRow, translator, "Semantic", new Text(""));
                 addToGridCenter(grid, currentFormRow, translator, "TotalSemantic", new Text(String.valueOf(stats.totalSemantic) + "/10"));
@@ -639,7 +640,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
         try {
             desktop.open(new File(stats.actualFile));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn("Cannot open the file {}", stats.actualFile, e);
         }
     }
 
@@ -652,7 +653,7 @@ public class StatsContext extends GraphicalContext<BorderPane> {
                 Runtime.getRuntime().exec("cmd xdg-open," + pathFile);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn("Cannot open the folder", e);
         }
     }
 }

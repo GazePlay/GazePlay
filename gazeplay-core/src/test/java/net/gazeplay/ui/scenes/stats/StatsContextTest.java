@@ -8,7 +8,6 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import mockit.MockUp;
 import net.gazeplay.GazePlay;
 import net.gazeplay.TestingUtils;
 import net.gazeplay.commons.configuration.ActiveConfigurationContext;
@@ -22,15 +21,15 @@ import net.gazeplay.commons.utils.stats.Stats;
 import net.gazeplay.stats.ExplorationGamesStats;
 import net.gazeplay.stats.HiddenItemsGamesStats;
 import net.gazeplay.stats.ShootGamesStats;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.io.File;
@@ -42,7 +41,6 @@ import java.util.Locale;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
 @ExtendWith(ApplicationExtension.class)
 class StatsContextTest {
 
@@ -65,6 +63,11 @@ class StatsContextTest {
         new File("file.csv")
     );
 
+    @AfterEach
+    void restoreGlobalState() {
+        ActiveConfigurationContext.switchToDefaultUser();
+    }
+
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
@@ -80,16 +83,12 @@ class StatsContextTest {
         when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
         SimpleDoubleProperty widthProperty = new SimpleDoubleProperty(100);
         ImageView metrics = spy(new ImageView("bear.jpg"));
-        new MockUp<StatDisplayUtils>() {
-            @mockit.Mock
-            public ImageView buildGazeMetrics(Stats stats, Region root) {
-                return metrics;
-            }
-        };
-
         BorderPane rootSpy = spy(new BorderPane());
         when(rootSpy.widthProperty()).thenReturn(widthProperty);
-        new StatsContext(mockGazePlay, rootSpy, mockStats, null);
+        try (MockedStatic<StatDisplayUtils> statDisplayUtils = mockStatic(StatDisplayUtils.class, CALLS_REAL_METHODS)) {
+            statDisplayUtils.when(() -> StatDisplayUtils.buildGazeMetrics(any(), any())).thenReturn(metrics);
+            new StatsContext(mockGazePlay, rootSpy, mockStats, null);
+        }
 
         widthProperty.set(200);
         verify(metrics).setFitWidth(200 * 0.35);
@@ -100,16 +99,12 @@ class StatsContextTest {
         when(mockTranslator.currentLocale()).thenReturn(new Locale("ara"));
         SimpleDoubleProperty heightProperty = new SimpleDoubleProperty(100);
         ImageView metrics = spy(new ImageView("bear.jpg"));
-        new MockUp<StatDisplayUtils>() {
-            @mockit.Mock
-            public ImageView buildGazeMetrics(Stats stats, Region root) {
-                return metrics;
-            }
-        };
-
         BorderPane rootSpy = spy(new BorderPane());
         when(rootSpy.heightProperty()).thenReturn(heightProperty);
-        new StatsContext(mockGazePlay, rootSpy, mockStats, null);
+        try (MockedStatic<StatDisplayUtils> statDisplayUtils = mockStatic(StatDisplayUtils.class, CALLS_REAL_METHODS)) {
+            statDisplayUtils.when(() -> StatDisplayUtils.buildGazeMetrics(any(), any())).thenReturn(metrics);
+            new StatsContext(mockGazePlay, rootSpy, mockStats, null);
+        }
 
         heightProperty.set(200);
         verify(metrics).setFitHeight(200 * 0.35);
@@ -133,13 +128,9 @@ class StatsContextTest {
 
         Configuration mockConfig = mock(Configuration.class);
         when(mockConfig.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));
+        when(mockConfig.isAreaOfInterestDisabled()).thenReturn(true);
 
-        new MockUp<ActiveConfigurationContext>() {
-            @mockit.Mock
-            public Configuration getInstance() {
-                return mockConfig;
-            }
-        };
+        ActiveConfigurationContext.setInstance(mockConfig);
 
         BorderPane root = new BorderPane();
         new StatsContext(mockGazePlay, root, mockStats, null);
@@ -220,6 +211,7 @@ class StatsContextTest {
 
         Configuration mockConfig = mock(Configuration.class);
         when(mockConfig.getAreaOfInterestDisabledProperty()).thenReturn(new SimpleBooleanProperty(true));
+        when(mockConfig.isAreaOfInterestDisabled()).thenReturn(true);
         when(mockConfig.isFixationSequenceDisabled()).thenReturn(false);
         RadioButton radioButton = new RadioButton();
         CustomButton button = new CustomButton("bear.jpg", 300);

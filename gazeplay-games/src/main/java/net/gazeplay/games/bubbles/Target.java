@@ -54,7 +54,7 @@ public class Target extends ProgressPortrait {
 
     private double radius;
 
-    private EventHandler exitEvent;
+    private EventHandler<Event> exitEvent;
 
     private PauseTransition wait;
 

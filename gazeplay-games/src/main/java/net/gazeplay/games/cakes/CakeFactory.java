@@ -306,7 +306,9 @@ public class CakeFactory extends Parent implements GameLifeCycle {
     }
 
     private void createStack() {
-        p = new List[6];
+        @SuppressWarnings("unchecked") // an array of a generic type cannot be created directly
+        final List<ProgressButton>[] layers = new List[6];
+        p = layers;
         for (int i = 0; i < 6; i++) {
             p[i] = new LinkedList<>();
             p[i].addAll(new ScreenCake(i, this, variant.equals(CakeGameVariant.ONELAYER)));
