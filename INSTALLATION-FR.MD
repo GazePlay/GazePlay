@@ -4,17 +4,16 @@
 
 Il faut avoir: 
 * un compte github.
-* un compte jetbrains pour Intellij. (vous pouvez les créer au fur et à mesure de l'installation)
+* IntelliJ IDEA, édition Community (gratuite) ou Ultimate.
 
 <br>Précision : 
 * le compte github est gratuit.
-* le compte jetbrains est gratuit pour les étudiants. (il faut renseigner votre adresse mail étudiante)
+* depuis octobre 2026, GazePlay n'utilise plus Spring : l'édition gratuite Community d'IntelliJ suffit. Détails,
+  configurations de lancement et dépannage : [INTELLIJ.md](INTELLIJ.md).
 
-## Etape 1 : Installer Intellij ultimate edition 
+## Etape 1 : Installer Intellij
 
-Le téléchargement d'Intellij **VERSION ULTIMATE** est ici : https://www.jetbrains.com/fr-fr/idea/download/#section=windows
-<br>
-Si vous ne téléchargez pas la version ultimate ça ne marchera pas car spring n'est pas pris en charge par la version classique.
+Le téléchargement d'Intellij est ici : https://www.jetbrains.com/fr-fr/idea/download/#section=windows
 
 ![telechargement intellij](AssetsInstallation/DL-intellij-FR.png)
 
@@ -55,7 +54,8 @@ Pour ce faire : file -> project structure -> Project
 
 ## Etape 5 : Vérifier les paramètres de Gradle
 
-Vérifier que Gradle utilise le JDK Azul 17, sinon changer le.
+Vérifier que Gradle utilise le JDK Azul 17, sinon changer le. Régler aussi « Build and run using » et « Run tests
+using » sur Gradle : les tests doivent toujours passer par Gradle, qui les isole de votre vrai dossier GazePlay.
 ![gradleSettings](AssetsInstallation/gradleSettings.png)
 
 ## Etape 6 : Build le projet
@@ -64,15 +64,11 @@ Pour lancer le build : appuyer sur le marteau vert en haut à droite de l'écran
 
 ![build](AssetsInstallation/build.png)
 
-Normalement on obtient ceci.
-
-![buildsuccessfull](AssetsInstallation/editconfig.png)
-
-Si l'edit configuration n'est pas créé suite au build, redémarrer l'intellij.
-
 ## Etape 7 : lancer le projet
 
-Pour lancer le projet : appuyer sur la flèche verte en haut à droite de l'écran et gazeplay va se lancer.
+Choisir la configuration **GazePlay** dans la liste en haut à droite de l'écran (elle est fournie par le projet, dans
+le dossier `.run/` ; recharger le projet Gradle si elle n'apparaît pas), puis appuyer sur la flèche verte et gazeplay va
+se lancer. Les anciennes configurations de type « Spring Boot » ne fonctionnent plus : les supprimer.
 
 ![run](AssetsInstallation/run.png)
 

@@ -13,6 +13,9 @@ Vous pouvez également installer GazePlay en téléchargeant [le fichier zip]({{
 * `gazeplay-macos.sh` sur MacOS
 * `gazeplay-linux.sh` sur Linux
 
+Sous Linux, les sons et la musique de GazePlay demandent les bibliothèques ffmpeg du système (`sudo apt install ffmpeg`
+sous Ubuntu et Debian).
+
 ### Problèmes?
 Lisez notre [FAQ]({{site.baseurl}}/faq/fr) pour obtenir de l'aide.
 

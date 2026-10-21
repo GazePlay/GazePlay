@@ -11,9 +11,9 @@ jobs:
   package:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Set up JDK 17 (Azul Zulu)
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
           java-version: '17'
@@ -26,7 +26,7 @@ jobs:
           chmod -R 777 build/jre
           ./gradlew --stacktrace --info generateWindowsInstallerInDocker
       - name: Save Package Job Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: package-artifacts
           path: build/distributions/
@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get Package Job Artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: package-artifacts
           path: package-artifacts

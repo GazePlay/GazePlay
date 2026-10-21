@@ -34,7 +34,7 @@ jobs:
           TODAY: ${{ steps.date.outputs.today }}
 
       - name: Créer une issue de rappel
-        uses: peter-evans/create-issue-from-file@v5
+        uses: peter-evans/create-issue-from-file@fca9117c27cdc29c6c4db3b86c48e4115a786710 # v6.0.0, pinned
         with:
           title: 📦 Vérification semestrielle des dépendances
           content-filepath: issue.md

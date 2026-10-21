@@ -675,8 +675,26 @@ Branche poussée sur `origin/addClaudeCode` à la demande du mainteneur. Seul `c
 - **Deuxième run (39588142673)** : `package-linux` lit désormais le bon dossier utilisateur (journal dans `/tmp/gazeplay-home`). L'application démarre, charge le catalogue et tourne 40 s, mais la musique échoue encore, comme dans `smokeTest`, alors que ffmpeg est installé. **L'hypothèse ffmpeg seule était donc incomplète.** Hypothèse retenue : la machine GitHub n'a **aucune sortie audio**, et le moteur multimédia de JavaFX sous Linux (GStreamer, sortie ALSA) ne peut pas créer de lecteur sans carte son.
   - **Correctif proposé** : sortie audio virtuelle. PulseAudio démarre avec un périphérique de sortie « null » et ALSA est routé vers PulseAudio (`libasound2-plugins`, `/etc/asound.conf`).
   - `HOME=` est retiré du lancement de la distribution (`user.home` passe par `JAVA_TOOL_OPTIONS`), afin que le client PulseAudio retrouve sa configuration.
-  - Les tests restent stricts. **À confirmer par le run suivant.**
+  - Les tests restent stricts.
+- **Troisième run (39589291873) : entièrement vert.** SpotBugs, tests JDK 17 et 21 sous Linux (avec `smokeTest`), construction et lancement réel de la distribution Linux sans aucune erreur dans le journal. L'hypothèse de la sortie audio est **confirmée**.
 - **Constat pour les utilisateurs** : sous Linux, la musique et les sons de GazePlay demandent les bibliothèques ffmpeg du système. La distribution Linux (JavaFX 23) gère ffmpeg 4 à 7 environ (`libavplugin-ffmpeg-56` à `62`). La version sans JRE, avec le JavaFX 17 de Maven, ne gère que ffmpeg 4 et 5 : sons muets sur Ubuntu 24.04 (comportement préexistant). **Recommandation** : l'indiquer dans la documentation d'installation Linux (`sudo apt install ffmpeg`).
+
+---
+
+## 2n. Étape 13 — Actions GitHub et guides d'installation (21/10/2026)
+
+- **Actions GitHub** : le run vert signalait que les actions v4 tournaient sur Node.js 20, déprécié, et que `setup-java` v4 n'est plus maintenu. Passage aux dernières versions majeures, sans changement incompatible pour notre usage (notes de version lues) :
+  - `actions/checkout` v7, `actions/setup-java` v6, `actions/upload-artifact` v7, `actions/download-artifact` v8. Depuis v8, le contrôle d'empreinte des téléchargements est obligatoire, ce qui ne concerne que `cd.yml`, entre ses deux jobs ;
+  - actions tierces **épinglées par SHA**, comme `free-disk-space`, car elles disposent d'un jeton d'écriture : `ncipollo/release-action` v1.21.0, `peter-evans/create-issue-from-file` v6.0.0 ;
+  - `release.yml` : l'étape `setup-node` (Node.js 16, en fin de vie depuis 2023) est retirée, car rien n'utilisait Node.js.
+- **Machines de CI** : `package-linux` est épinglé sur `ubuntu-24.04`, où la sortie audio virtuelle a été validée. `ubuntu-latest` passe à Ubuntu 26 à partir du 19/10/2026. Les tests restent sur `ubuntu-22.04` (ffmpeg 4.4 pour JavaFX 17).
+- **Guides d'installation pour les développeurs** (`INSTALLATION-EN.MD`, `INSTALLATION-FR.MD`) : ils imposaient IntelliJ **Ultimate**, à cause de Spring, et s'appuyaient sur la configuration de lancement créée automatiquement par Spring. Désormais :
+  - IntelliJ Community suffit ;
+  - Gradle est utilisé pour le build et les tests ;
+  - le lancement passe par la configuration partagée **GazePlay** (`.run/`), avec un lien vers `INTELLIJ.md` ;
+  - la mention « azul-11 » est corrigée en « azul-17 ».
+- **Pages d'installation du site** (`docs/_pages/installation.md`, version française) : note sur ffmpeg, nécessaire au son sous Linux. **Non fait, à signaler** : ces pages pointent encore vers l'installeur 1.7.2.
+- **Vérifié** : la CI s'exécutera au prochain push.
 
 ---
 
