@@ -33,6 +33,8 @@ import java.util.List;
 @Slf4j
 public class GazePlayFxApp extends Application {
 
+    // Static on purpose: JavaFX creates the Application itself (Application.launch), the launcher cannot give it
+    // its components through a constructor. Set once by MainCommand before the launch, read in start()
     @Setter
     private static CompositionRoot compositionRoot;
 

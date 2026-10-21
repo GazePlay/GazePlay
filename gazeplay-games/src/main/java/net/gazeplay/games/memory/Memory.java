@@ -26,7 +26,8 @@ public class Memory implements GameLifeCycle {
 
     private static final float cardRatio = 0.75f;
 
-    private static int minHeight = 30;
+    // Changed during the game (smaller for many cards): an instance field, it was a static shared by all instances
+    private int minHeight = 30;
 
     public enum MemoryGameType {
 

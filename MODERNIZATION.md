@@ -829,6 +829,36 @@ Suite complète **395 tests, 0 échec** (8 tests de moins : ceux des classes sup
 
 ---
 
+## 2s. Étape 18 — État statique modifiable : étapes 1 à 3 (21/10/2026)
+
+Recommandation validée par le mainteneur : avancer par petites étapes. Étapes 1 à 3 faites ici ; `ActiveConfigurationContext` (étape 4) et les sons (étape 5) restent à faire.
+
+**Inventaire** : 11 champs statiques modifiables, plus les singletons `ActiveConfigurationContext` (37 fichiers), `BackgroundMusicManager` (7) et `ForegroundSoundsUtils`.
+
+**Étape 1 — valeurs changées pendant une partie : champs d'instance**
+- `Memory.minHeight` : statique, passé à 10 par une partie de plus de 2 lignes et **conservé pour les parties suivantes** de la même JVM. C'est maintenant un champ d'instance, recalculé par partie.
+- `TrainSwitches.DELAY_BETWEEN_TRAINS` : écrit comme une constante, mais **modifié** par le réglage de vitesse. Il devient le champ d'instance `delayBetweenTrains`.
+- En production, une JVM par partie limitait l'effet de ces deux champs. Il apparaissait surtout dans les tests ou en rejouant.
+
+**Code mort retiré**
+- `IntStringGameVariant.positions` et `contrastStyles` : tableaux **publics et modifiables**, jamais utilisés (réserves « pour plus tard »).
+- `GazePlayLauncher.doStartBootstrapThread` : public, jamais lu.
+
+**Étape 2 — crochets de test sans utilisateur**
+- `GameContext.runAsynchronousStatsPersist` : rien ne le modifiait, il valait donc toujours `false`. Les 3 copies du bloc d'enregistrement des résultats, avec leur branche asynchrone jamais exécutée, sont remplacées par une méthode privée `saveStats(Stats)` qui fait exactement ce qui s'exécutait (enregistrement direct avant l'écran de statistiques). **Comportement inchangé.**
+
+**Étape 3 — statiques imposés, documentés**
+- `GazePlayFxApp.compositionRoot` / `applicationOptions` : JavaFX crée lui-même l'`Application` (`Application.launch`), qui ne peut donc recevoir ses composants par un constructeur. C'est commenté dans le code.
+- `Stats.configMenuOpen` : **conservé statique, avec un commentaire**. Le menu de réglages appartient à l'écran de jeu, construit avant que les jeux créent leurs `Stats`. En faire un champ d'instance obligerait à modifier le contrat des 73 launchers. Avec une partie par JVM, c'est l'état de l'écran de jeu du processus : pas de risque réel.
+
+**Vérifié** (JDK 25) : compilation ; suite complète **397 tests, 0 échec** ; `smokeTest` 2/2 ; SpotBugs vert.
+
+**Reste (étapes 4 et 5)** :
+- `ActiveConfigurationContext` : faire utiliser aux jeux `gameContext.getConfiguration()`, et passer la configuration par les constructeurs dans `core` et `commons` depuis `CompositionRoot`. Façade gardée tant qu'il reste des appelants ; code Eval exclu.
+- `BackgroundMusicManager` et `ForegroundSoundsUtils.lastSoundPlayer` : les fournir par le contexte de jeu, qui expose déjà un `SoundManager`.
+
+---
+
 ## 9. Reprise à la prochaine session (mise à jour le 21/10/2026, étape 10)
 
 ### 9.1 État exact au moment de la pause

@@ -40,7 +40,8 @@ public class TrainSwitches implements GameLifeCycle {
     private final Stats stats;
 
     // Game
-    private static int DELAY_BETWEEN_TRAINS = 3000;
+    // Changed by the speed setting: an instance field, it was a static written as a constant
+    private int delayBetweenTrains = 3000;
     private final static int INITIAL_DELAY = 5000;
     private final static int PAUSE_DELAY = 3000;
     private final ArrayList<Section> sections;
@@ -230,14 +231,14 @@ public class TrainSwitches implements GameLifeCycle {
                 transition.setRate(newValue.doubleValue());
             }
 
-            DELAY_BETWEEN_TRAINS = (int) (3000 / newValue.doubleValue());
+            delayBetweenTrains = (int) (3000 / newValue.doubleValue());
 
             if(!isPaused.get()){
                 sendTrainTimer.cancel();
                 sendTrainTimer = new Timer();
-                long initialDelay = DELAY_BETWEEN_TRAINS - java.time.Duration.between(lastTrainSentInstant, Instant.now()).toMillis();
+                long initialDelay = delayBetweenTrains - java.time.Duration.between(lastTrainSentInstant, Instant.now()).toMillis();
                 if (initialDelay<0) initialDelay=0;
-                sendTrainTimer.schedule(getSendTrainTask(), initialDelay, DELAY_BETWEEN_TRAINS);
+                sendTrainTimer.schedule(getSendTrainTask(), initialDelay, delayBetweenTrains);
             }
         });
 
@@ -246,7 +247,7 @@ public class TrainSwitches implements GameLifeCycle {
         if(variantType.equals("UniqueTrain")){
             sendTrainTimer.schedule(getSendTrainTask(), INITIAL_DELAY);
         }else{
-            sendTrainTimer.schedule(getSendTrainTask(), INITIAL_DELAY, DELAY_BETWEEN_TRAINS);
+            sendTrainTimer.schedule(getSendTrainTask(), INITIAL_DELAY, delayBetweenTrains);
         }
 
         gameContext.getChildren().add(progressIndicator);
@@ -283,12 +284,12 @@ public class TrainSwitches implements GameLifeCycle {
         // Restart a timer to send train with the right delay
         sendTrainTimer = new Timer();
         long elapsed = java.time.Duration.between(lastTrainSentInstant, lastTimerStoppedInstant).toMillis();
-        if(elapsed> DELAY_BETWEEN_TRAINS){
+        if(elapsed> delayBetweenTrains){
             elapsed = 0;
         }else{
-            elapsed = DELAY_BETWEEN_TRAINS - elapsed;
+            elapsed = delayBetweenTrains - elapsed;
         }
-        sendTrainTimer.schedule(getSendTrainTask(), elapsed, DELAY_BETWEEN_TRAINS);
+        sendTrainTimer.schedule(getSendTrainTask(), elapsed, delayBetweenTrains);
     }
 
     // Handle for progress indicator when entering resume button
@@ -355,13 +356,13 @@ public class TrainSwitches implements GameLifeCycle {
                         // If trains are already all sent, restart a timer
                         if (trainSent >= trainToSend++){
                             long startDelay = java.time.Duration.between(lastTimerStoppedInstant, Instant.now()).toMillis();
-                            if(startDelay>= DELAY_BETWEEN_TRAINS){
+                            if(startDelay>= delayBetweenTrains){
                                 startDelay = 0;
                             }else{
-                                startDelay = DELAY_BETWEEN_TRAINS - startDelay;
+                                startDelay = delayBetweenTrains - startDelay;
                             }
                             sendTrainTimer = new Timer();
-                            sendTrainTimer.schedule(getSendTrainTask(), startDelay, DELAY_BETWEEN_TRAINS);
+                            sendTrainTimer.schedule(getSendTrainTask(), startDelay, delayBetweenTrains);
                         }
                     }
                 }

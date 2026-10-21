@@ -214,6 +214,8 @@ public class Stats implements GazeMotionListener {
         javafx.scene.paint.Color.CHOCOLATE
     };
 
+    // Static on purpose: the configuration menu belongs to the game screen, built before the games create their
+    // Stats. One game per JVM: it is the state of the game screen of this process
     private static boolean configMenuOpen = false;
 
     /**

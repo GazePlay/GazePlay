@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.GameLifeCycle;
 import net.gazeplay.GamePanelDimensionProvider;
@@ -70,9 +69,6 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     long startTime = 0;
     long endTime = 0;
     boolean limiteUsed = false;
-
-    @Setter
-    private static boolean runAsynchronousStatsPersist = false;
 
     @Getter
     private final Translator translator;
@@ -357,19 +353,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         soundManager.clear();
         soundManager.destroy();
 
-        Runnable asynchronousStatsPersistTask = () -> {
-            try {
-                stats.saveStats();
-            } catch (IOException e) {
-                log.error("Failed to save stats file", e);
-            }
-        };
-
-        if (runAsynchronousStatsPersist) {
-            AsyncUiTaskExecutor.getInstance().getExecutorService().execute(asynchronousStatsPersistTask);
-        } else {
-            asynchronousStatsPersistTask.run();
-        }
+        saveStats(stats);
 
         StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
 
@@ -394,25 +378,25 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
         soundManager.clear();
         soundManager.destroy();
 
-        Runnable asynchronousStatsPersistTask = () -> {
-            try {
-                stats.saveStats();
-            } catch (IOException e) {
-                log.error("Failed to save stats file", e);
-            }
-        };
-
-        if (runAsynchronousStatsPersist) {
-            AsyncUiTaskExecutor.getInstance().getExecutorService().execute(asynchronousStatsPersistTask);
-        } else {
-            asynchronousStatsPersistTask.run();
-        }
+        saveStats(stats);
 
         StatsContext statsContext = StatsContextFactory.newInstance(gazePlay, stats);
 
         this.clear();
 
         gazePlay.onDisplayStats(statsContext);
+    }
+
+    /**
+     * Saves the results of the game. It used to be run in the background when a static flag was set, which nothing
+     * did: the results were always saved here, before the statistics screen.
+     */
+    private static void saveStats(final Stats stats) {
+        try {
+            stats.saveStats();
+        } catch (IOException e) {
+            log.error("Failed to save stats file", e);
+        }
     }
 
     public HomeButton createHomeButtonInGameScreenWithoutHandler(@NonNull GazePlay gazePlay) {
@@ -472,19 +456,7 @@ public class GameContext extends GraphicalContext<Pane> implements IGameContext 
     public void showRoundStats(Stats stats, GameLifeCycle currentGame) {
         stats.stop();
 
-        Runnable asynchronousStatsPersistTask = () -> {
-            try {
-                stats.saveStats();
-            } catch (IOException e) {
-                log.error("Failed to save stats file", e);
-            }
-        };
-
-        if (runAsynchronousStatsPersist) {
-            AsyncUiTaskExecutor.getInstance().getExecutorService().execute(asynchronousStatsPersistTask);
-        } else {
-            asynchronousStatsPersistTask.run();
-        }
+        saveStats(stats);
 
         Dimension2D screenDimension = getGazePlay().getCurrentScreenDimensionSupplier().get();
 

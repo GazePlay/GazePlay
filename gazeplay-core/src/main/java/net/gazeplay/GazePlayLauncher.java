@@ -1,6 +1,5 @@
 package net.gazeplay;
 
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.gazeplay.commons.VersionInfo;
 import net.gazeplay.commons.threads.CustomThreadFactory;
@@ -21,9 +20,6 @@ import java.util.concurrent.ThreadFactory;
 
 @Slf4j
 public class GazePlayLauncher {
-
-    @Setter
-    public static boolean doStartBootstrapThread = true;
 
     public static void main(String[] args) {
 

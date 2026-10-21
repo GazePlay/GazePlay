@@ -26,23 +26,6 @@ public class IntStringGameVariant implements IGameVariant {
         this.stringValue = stringValue;
     }
 
-    // The following commented code will be used later for different positions of EggGame
-    public static String[] positions = new String[]{
-        "TOPLEFT",
-        "TOPCENTER",
-        "TOPRIGHT",
-        "MIDDLELEFT",
-        "MIDDLECENTER",
-        "MIDDLERIGHT",
-        "BOTTOMLEFT",
-        "BOTTOMCENTER",
-        "BOTTOMRIGHT"};
-
-    // The following commented code will be used later for High-Contrast Color Game
-    public static String[] contrastStyles = new String[]{
-        "NORMAL", "HIGH"
-    };
-
     @Override
     public String getLabel(final Translator translator) {
         return number + " " + translator.translate(stringValue);
