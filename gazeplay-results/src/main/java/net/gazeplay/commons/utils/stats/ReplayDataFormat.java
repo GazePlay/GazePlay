@@ -42,8 +42,10 @@ public final class ReplayDataFormat {
     }
 
     /**
-     * @return the sequences read from a file of the given version, in the convention used in memory
+     * @return the sequences read from a file of the given version, in the convention used in memory; null when the
+     * file has none, as the replay received before this conversion existed (an empty list would change the replay)
      */
+    @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull")
     public static ArrayList<LinkedList<FixationPoint>> fromFile(
         final int version, final List<LinkedList<FixationPoint>> inFile) {
         if (inFile == null) {

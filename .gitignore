@@ -17,3 +17,8 @@ gazeplay.log.*
 .gradle/
 build
 out
+
+# Files written by GazePlay when launched from the repository (they live in ~/GazePlay)
+/argsGazeplay.txt
+/GazePlay.properties
+gazeplay.log

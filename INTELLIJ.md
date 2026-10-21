@@ -33,8 +33,8 @@ La structure des modules a changé :
 1. Ouvrez le dossier du dépôt (`File > Open`, puis le dossier `GazePlay`).
 2. Ouvrez la fenêtre **Gradle**, à droite, puis cliquez sur **Reload All Gradle Projects** (flèches circulaires).
 3. Vérifiez que la fenêtre **Project** montre ces modules : `gazeplay-results`, `gazeplay-gaze`, `gazeplay-commons`,
-   `gazeplay-games-commons`, `gazeplay-core`, `gazeplay-games`, `gazeplay-dist`, `gazeplay-side-projects`. S'il reste un
-   module `melordi` ou `picto-pick`, faites un clic droit dessus, puis **Remove Module**.
+   `gazeplay-games-commons`, `gazeplay-core`, `gazeplay-games`, `gazeplay-dist`. S'il reste un module `melordi`,
+   `picto-pick` ou `side-projects`, faites un clic droit dessus, puis **Remove Module**.
 
 Le premier chargement télécharge Gradle 9.8.2 et les dépendances : comptez quelques minutes.
 

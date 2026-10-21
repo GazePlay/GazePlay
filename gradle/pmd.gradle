@@ -1,5 +1,9 @@
 import groovy.xml.XmlSlurper
 
+pmd {
+    toolVersion = rootProject.extensions.getByName('libs').versions.pmd.get()
+}
+
 pmdMain.group = 'verification'
 pmdTest.group = 'verification'
 

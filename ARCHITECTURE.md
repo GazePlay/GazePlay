@@ -14,7 +14,9 @@ Short map of the code, for developers. The history of the changes and the open d
 | `gazeplay-core` | The application: launcher, composition root, menus, configuration screen, statistics screens, game catalog. |
 | `gazeplay-games` | The games (one package per game, one `*SpecSource` per game entry) and GazePlay Eval (`gazeplayEval`). |
 | `gazeplay-dist` | Launch scripts of the distributions. |
-| `gazeplay-side-projects` | Experiments (Arduino, lightning simulator), not shipped. `gazeplay-melordi` and `gazeplay-picto-pick`, shipped but unreachable and unused by the games, were removed (October 2026). |
+
+Removed in October 2026, unused: `gazeplay-melordi` and `gazeplay-picto-pick` (shipped but unreachable),
+`gazeplay-side-projects` (experiments: Arduino, lightning simulator), `gazeplay-api` and `old-website`.
 
 Versions of all libraries and plugins: `gradle/libs.versions.toml`.
 

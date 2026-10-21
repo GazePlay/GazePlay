@@ -698,6 +698,61 @@ Branche poussée sur `origin/addClaudeCode` à la demande du mainteneur. Seul `c
 
 ---
 
+## 2o. Étape 14 — Bilan complet : code mort et versions (21/10/2026)
+
+Demande du mainteneur : vérifier que tout l'inutilisé est retiré et que toutes les dépendances sont à leur dernière version. Le code Eval est laissé de côté (« j'y reviendrai plus tard »).
+
+### Versions (Maven Central, Gradle Plugin Portal, Azul ; vérifiées le 21/10/2026)
+- **À jour** : toutes les bibliothèques du catalogue, les 6 plugins, Gradle 9.8.2, Zulu 21.0.12.1 FX, Lombok, JaCoCo, SpotBugs 4.10.5.
+- **Mis à jour** :
+  - **JavaFX 17.0.20 → 17.0.21** (API de compilation et des tests). Le commentaire du catalogue, devenu faux (« Same JavaFX as the bundled runtimes »), est corrigé ;
+  - **PMD 7.24.0 → 7.28.0**. La version n'était pas déclarée : c'était celle par défaut de Gradle. Elle est maintenant fixée (`pmd` dans le catalogue, `gradle/pmd.gradle`).
+- **Exceptions justifiées** :
+  - Monocle reste en 17.0.10, car la 21.0.2 exige Java 21 pour exécuter les tests ;
+  - JavaFX reste en 17.x à la compilation (version la plus ancienne prise en charge, voir 2g) ;
+  - les dépendances transitives anciennes (`joda-time` 2.10.2 et `commons-collections` 3.2.2, apportées par `everit-json-schema`) ne sont pas forcées.
+
+### Dépendances inutilisées
+- Chaque dépendance déclarée a été vérifiée module par module (imports et noms complets). Le catalogue n'a plus aucune entrée inutilisée (contrôle automatique).
+- **Retirées** : `rxtx` et le module qui l'utilisait (voir ci-dessous).
+- **Justifiées** : `commons-io` dans `core` (utilisé par son nom complet). Les ponts `log4j-over-slf4j` (Log4j 1.2 appelé par `video-recorder-core`) et `jcl-over-slf4j` (Commons Logging appelé par `commons-validator` et `commons-digester`, via `everit-json-schema`) ont été vérifiés dans le bytecode des jars livrés.
+
+### Code mort retiré (vérifié : aucune référence, ni par réflexion, ni dans les données, ni dans `side-projects` pour les 8 premières)
+- 8 classes jamais référencées :
+  - `ColorBands`, `DllUtils`, `EagerImageLibrary`, `ConvexHullProps` (commons) ;
+  - `IntStringListVariantGenerator`, `StackPaneButton` (games-commons) ;
+  - `ProgressiveColorPicker`, `MouseArrowsV1` (games).
+- `ImageDirectoryLocator` et son test : la classe ne servait qu'à ce test.
+- **Module `gazeplay-side-projects` (décision du mainteneur)** : expériences non livrées (Arduino « windmill », simulateur d'éclairs, TestGaze). Avec lui disparaissent :
+  - `SecondScreen`, `SecondScreenFactory` et `Lighting` de `commons.gaze` (écran secondaire « éclairé » par le regard) et leurs tests ;
+  - la dépendance RXTX ;
+  - l'exclusion PMD.
+
+  La fonction « double écran » de GazePlay (`CurrentScreenSupplier`) n'est pas concernée.
+- Dossiers et fichiers morts :
+  - `gazeplay-api/` (un `MavenWrapperDownloader.java` orphelin) ;
+  - `old-website/` (24 Mo, aucune référence, dernière modification en 2019 ; le site est dans `docs/`) ;
+  - `lib/RXTXcomm.jar` ;
+  - `GazePlay.properties` (2019, chemin `/Users/admin`) et `argsGazeplay.txt` à la racine, fichiers d'exécution commités par erreur. Le `.gitignore` les exclut désormais, avec `gazeplay.log`.
+- Ressources : `data/gazeMediaPlayer` (icônes d'un jeu retiré) et 4 vignettes orphelines (`gazeMedia.png`, `gazePlay.jpg`, `videogrid.png`, `youtube.png`). Environ 1,4 Mo. Le site charge ses vignettes depuis `master` : il n'est pas affecté.
+- PMD : les exclusions de modules supprimés (`melordi`, `picto-pick`, `side-projects`, `org/tc33`) sont retirées du jeu de règles.
+
+### Contrôles sans résultat (rien à retirer)
+- PMD 7.28.0 sur tous les modules : **aucun** membre privé, variable ou import inutilisé (`Unused*`, `UnnecessaryImport`).
+- Tous les dossiers de `data/` et sous-dossiers de `data/common` sont référencés. Le `data/common/default` de `games` (images sans fond du labyrinthe) n'est pas un doublon de celui de `core`.
+- Toutes les ressources de test sont utilisées. Tous les scripts de `gradle/` sont appliqués.
+
+### Non vérifié, signalé
+- **Méthodes publiques inutilisées** : non recherchées (pas d'outil fiable sans analyse globale ; JavaFX et Lombok créent des appels implicites).
+- **Clés de traduction inutilisées** (`multilinguism.csv`, fichiers des jeux) : non retirées. Une partie des clés est construite dynamiquement (noms de jeux, catégories, variantes), donc un contrôle par recherche textuelle donnerait des faux positifs.
+- **Site** (`docs/_pages/games.md`) : il présente 3 jeux qui n'existent plus dans le code (*VideoPlayer with Feedback*, *Media Player*, *Video Grid*) et pointe vers l'installeur 1.7.2.
+- Code Eval : laissé de côté, à la demande du mainteneur.
+
+### Vérifié
+Suite complète **395 tests, 0 échec** (8 tests de moins : ceux des classes supprimées) ; `smokeTest` 2/2 ; SpotBugs vert ; `--dry-run` de `packageApp` et de l'installeur OK ; JavaFX 17.0.21 et PMD 7.28.0 effectivement résolus. **Action côté IntelliJ** : recharger le projet Gradle (module `side-projects` retiré).
+
+---
+
 ## 9. Reprise à la prochaine session (mise à jour le 21/10/2026, étape 10)
 
 ### 9.1 État exact au moment de la pause
