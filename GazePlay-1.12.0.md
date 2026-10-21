@@ -54,6 +54,8 @@ merge the rounds of a version 1 file twice. The historical files can be correcte
   instead of being reset silently.
 - The settings file is written atomically: a crash during the save no longer leaves an empty file.
 - Areas of interest: the video of the game was never shown.
+- Profiles screen: with Java 25, it failed on Windows for a profile without picture; an empty music folder setting made
+  GazePlay search the whole current folder for music.
 - *Biboule Jump* and *Space Game*: the high score was not saved until statistics had been saved once for the game.
 - *Pet House*: the hand followed the eye tracker directly instead of the gaze events.
 - EyeTribe eye trackers: the gaze positions were handled outside of the user interface thread, which could cause
@@ -69,14 +71,14 @@ merge the rounds of a version 1 file twice. The historical files can be correcte
   the screen recorder is now redirected to the GazePlay logs.
 
 ## Technical changes
-- Java runtime bundled with the distributions updated from Java 17.0.2 (January 2022) to **Java 21.0.12.1** (Azul
-  Zulu, supported until 2031) with JavaFX 23.0.8, checked by SHA-256 after download. **The version without Java runtime
-  now needs Java 21 and JavaFX 21 or later** (Java 17 is no longer enough).
+- Java runtime bundled with the distributions updated from Java 17.0.2 (January 2022) to **Java 25.0.4.1** (Azul
+  Zulu, LTS supported until 2033) with JavaFX 25.0.4, checked by SHA-256 after download. **The version without Java
+  runtime now needs Java 25 and JavaFX 21 or later** (Java 17 is no longer enough).
 - Spring Boot removed (it was only used to wire the application); start-up is plain Java.
 - Gradle 9, dependencies updated (POI, Gson, Guava, org.json with security fixes, logging), versions gathered in
   `gradle/libs.versions.toml`.
 - Tests: they no longer touch the real `~/GazePlay` folder, run without window, and run in the continuous integration on
-  Java 21 and 25, with a real launch of the Windows, macOS and Linux distributions.
+  Java 25 and 26, with a real launch of the Windows, macOS and Linux distributions.
 
 ## Not verified
 - Eye trackers (Tobii, EyeTribe): no hardware test was done.

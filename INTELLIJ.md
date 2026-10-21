@@ -10,7 +10,7 @@ Boot. Les commandes en ligne et la construction des distributions sont décrites
 | Spring Boot démarrait l'application (`@SpringBootApplication`) | Java simple : `GazePlayLauncher.main` → `CompositionRoot` construit les composants |
 | Configurations IntelliJ de type **Spring Boot** (IntelliJ Ultimate uniquement) | Configurations de type **Application**, disponibles aussi dans IntelliJ **Community** |
 | Classe principale `net.gazeplay.GazePlayLauncher` | **Inchangée** : `net.gazeplay.GazePlayLauncher` |
-| Zulu 17 | **Zulu 21 obligatoire** depuis le 21/10/2026 : le code est compilé pour Java 21. Avec un JDK 17, le build s'arrête avec le message « GazePlay needs a JDK 21 or newer » |
+| Zulu 17 | **Zulu 25 obligatoire** depuis le 21/10/2026 : le code est compilé pour Java 25. Avec un JDK plus ancien, le build s'arrête avec le message « GazePlay needs a JDK 25 or newer » |
 | JavaFX 21 à la compilation | JavaFX 21.0.13 à la compilation, fourni par Gradle : votre JDK n'a pas besoin d'inclure JavaFX |
 
 Les anciennes configurations Spring Boot de votre IntelliJ ne fonctionnent plus : supprimez-les toutes
@@ -21,8 +21,8 @@ une autre option retirée, échouent avec `Unknown option` et l'application s'ar
 ## 1. Prérequis
 
 - IntelliJ IDEA, édition Community ou Ultimate.
-- Un **JDK 21** ou plus récent, par exemple Azul Zulu 21 (*File > Project Structure > SDKs > + > Download JDK*, ou un
-  JDK déjà installé, comme `azul-21.0.7`).
+- Un **JDK 25** ou plus récent, par exemple Azul Zulu 25 (*File > Project Structure > SDKs > + > Download JDK*,
+  fournisseur Azul Zulu, version 25).
 - Le plugin Lombok, intégré à IntelliJ et actif par défaut.
 
 ## 2. Recharger le projet Gradle
@@ -45,7 +45,7 @@ Le premier chargement télécharge Gradle 9.8.2 et les dépendances : comptez qu
 
 | Réglage | Valeur |
 |---|---|
-| Gradle JVM | Zulu **21** (par exemple `azul-21.0.7`), pas Zulu 17 |
+| Gradle JVM | Zulu **25** (pas Zulu 17 ni 21) |
 | Build and run using | **Gradle** |
 | Run tests using | **Gradle** (indispensable, voir la section 6) |
 
@@ -53,8 +53,8 @@ Le premier chargement télécharge Gradle 9.8.2 et les dépendances : comptez qu
 
 | Réglage | Valeur |
 |---|---|
-| SDK | Zulu **21** |
-| Language level | 21 |
+| SDK | Zulu **25** |
+| Language level | 25 |
 
 ## 4. Lancer l'application
 

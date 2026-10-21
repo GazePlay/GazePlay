@@ -81,6 +81,20 @@ class BackgroundMusicManagerTest {
         }
     }
 
+    /**
+     * Regression test: an empty folder setting (e.g. an old MUSIC_FOLDER=) is no folder. Since Java 25, new File("") is
+     * the current folder, which used to be searched recursively for music.
+     */
+    @Test
+    void shouldIgnoreAnEmptyAudioFolder() {
+        int before = musicManagerSpy.getPlaylist().size();
+
+        musicManagerSpy.getAudioFromFolder("");
+        musicManagerSpy.getAudioFromFolder("   ");
+
+        assertEquals(before, musicManagerSpy.getPlaylist().size());
+    }
+
     @Test
     void shouldCreateMediaPlayer() {
         assertNotNull(mediaPlayer);

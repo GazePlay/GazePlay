@@ -10,11 +10,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Set up JDK 21 (Azul Zulu)
+      - name: Set up JDK 25 (Azul Zulu)
         uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
-          java-version: '21'
+          java-version: '25'
 
       - name: Run SpotBugs
         run: |
@@ -33,11 +33,11 @@ jobs:
     # 6.1). Pinned like package-linux: ubuntu-latest moves to Ubuntu 26
     runs-on: ubuntu-24.04
 
-    # 21: bytecode target and Java of the bundled runtimes; 25: next LTS, to know when the runtime can move
+    # 25: bytecode target and Java of the bundled runtimes; 26: latest Java, to see the next changes coming
     strategy:
       fail-fast: false
       matrix:
-        java: [ '21', '25' ]
+        java: [ '25', '26' ]
 
     steps:
       - name: Checkout code
@@ -88,11 +88,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Set up JDK 21 (Azul Zulu)
+      - name: Set up JDK 25 (Azul Zulu)
         uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
-          java-version: '21'
+          java-version: '25'
 
       # The bundled runtime (Zulu 21 with JavaFX 23) plays audio with the ffmpeg of the system (ffmpeg 6 supported)
       - name: Install virtual X server and ffmpeg
@@ -132,11 +132,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Set up JDK 21 (Azul Zulu)
+      - name: Set up JDK 25 (Azul Zulu)
         uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
-          java-version: '21'
+          java-version: '25'
 
       - name: Build the Windows distribution
         shell: pwsh
@@ -162,11 +162,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Set up JDK 21 (Azul Zulu)
+      - name: Set up JDK 25 (Azul Zulu)
         uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
-          java-version: '21'
+          java-version: '25'
 
       - name: Build the macOS Apple Silicon distribution
         run: |

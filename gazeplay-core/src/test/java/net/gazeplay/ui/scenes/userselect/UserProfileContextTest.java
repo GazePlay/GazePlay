@@ -171,6 +171,21 @@ class UserProfileContextTest {
         assertTrue(result2.getImage().getUrl().contains("DefaultUser.png"));
     }
 
+    /**
+     * Regression test: a profile without picture has an empty value. Since Java 25, new File("") is the current folder
+     * and exists: the screen of the profiles failed when opening it as an image (AccessDeniedException on Windows).
+     */
+    @Test
+    void shouldGetDefaultProfilePictureForAnEmptyValueOrAFolder() {
+        when(mockConfig.getUserPicture()).thenReturn("").thenReturn(localDataFolder);
+
+        ImagePattern result1 = UserProfileContext.lookupProfilePicture(mockConfig);
+        ImagePattern result2 = UserProfileContext.lookupProfilePicture(mockConfig);
+
+        assertTrue(result1.getImage().getUrl().contains("DefaultUser.png"));
+        assertTrue(result2.getImage().getUrl().contains("DefaultUser.png"));
+    }
+
     @Test
     void shouldCreateDefaultUser() {
         when(mockTranslator.translate("DefaultUser")).thenReturn("Default User");

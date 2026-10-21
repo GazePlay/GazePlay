@@ -4,7 +4,7 @@ Commands are given for the Unix shell (`./gradlew`); on Windows use `gradlew` in
 
 ## Prerequisites
 
-- A JDK 21 or newer (the CI uses Azul Zulu 21 and 25). The code is compiled for Java 21 (`options.release = 21`)
+- A JDK 25 or newer (the CI uses Azul Zulu 25 and 26). The code is compiled for Java 25 (`options.release = 25`)
   whatever the JDK; with an older JDK the build stops at once with an explicit message.
 - Nothing else: the Gradle wrapper (Gradle 9.8.2, checksum pinned in `gradle/wrapper/gradle-wrapper.properties`)
   downloads Gradle. All versions of libraries and plugins are in [gradle/libs.versions.toml](gradle/libs.versions.toml).
@@ -61,7 +61,7 @@ This uses your real `~/GazePlay` folder (profiles, settings, results). Options: 
 
 ## Distributions
 
-The distributions bundle a Java runtime: Azul Zulu 21 with JavaFX, 64 bits only (Windows x64, Linux x64, Linux ARM
+The distributions bundle a Java runtime: Azul Zulu 25 with JavaFX, 64 bits only (Windows x64, Linux x64, Linux ARM
 aarch64, macOS x64 and Apple Silicon; the 32 bits builds were dropped in October 2026). Download and extract them once:
 
 ```
@@ -72,9 +72,9 @@ aarch64, macOS x64 and Apple Silicon; the 32 bits builds were dropped in October
   after each download ([gradle/jre.gradle](gradle/jre.gradle)). To change the runtime version, update in the same
   change the version and all the checksums in `gradle/jre.gradle`.
 - JavaFX: the code is compiled and tested against JavaFX 21 (`javafx` in `gradle/libs.versions.toml`), the oldest
-  version it supports, so that it also runs with the JavaFX of the system (no-JRE distribution: Java 21 and JavaFX 21
-  or newer). The bundled Zulu
-  runtimes ship a newer JavaFX (23.0.8 in Zulu 21.0.12.1, see `lib/javafx.properties` of the runtime), with their own
+  version it supports, so that it also runs with the JavaFX of the system (no-JRE distribution: Java 25 and JavaFX 21
+  or newer). There is no Monocle 25 for the window-less tests, hence JavaFX 21 and not 25. The bundled Zulu
+  runtimes ship a newer JavaFX (25.0.4 in Zulu 25.0.4.1, see `lib/javafx.properties` of the runtime), with their own
   media plugins: launch a distribution with its runtime after a runtime update.
 - Build one distribution, e.g. `./gradlew windowsDistZip`, `./gradlew linuxDistTar`, `./gradlew noJREDistZip`, or all
   of them with `./gradlew packageApp`. They are written to `build/distributions`.

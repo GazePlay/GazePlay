@@ -799,7 +799,33 @@ Suite complète **395 tests, 0 échec** (8 tests de moins : ceux des classes sup
 - **Impact pour les utilisateurs** : la distribution sans JRE exige désormais **Java 21 et JavaFX 21 ou plus récents**. Les distributions avec runtime ne changent pas (Java 21 embarqué).
 - **Impact pour les développeurs** : IntelliJ doit utiliser un JDK 21, à la fois comme SDK du projet et comme Gradle JVM (`azul-21.0.7` est déjà installé sur le poste du mainteneur).
 - **Vérifié en local** (JDK Zulu 21.0.7) : compilation sans erreur ; suite complète **395 tests, 0 échec** ; `smokeTest` 2/2 ; SpotBugs vert.
-- **Non vérifié avant le push** : les tests sous JDK 25 (pas de JDK 25 en local) ; la CI le dira.
+- **CI (run 39613700879)** : entièrement verte, y compris les tests sous **JDK 25** (avec un bytecode 21) et les 6 lancements de distributions.
+
+---
+
+## 2r. Étape 17 — Java 25 : runtimes livrés, bytecode et CI (21/10/2026)
+
+**Décision du mainteneur** (21/10/2026) : passer à Java/JDK 25, et rester sur Gradle 9.8.2, la dernière version publiée (Gradle 10 n'est pas sorti).
+
+**Fait** :
+- **Runtimes livrés** : Zulu **25.0.4.1** FX (LTS, support jusqu'en 2033) pour Windows x64, Linux x64, Linux aarch64, macOS x64 et macOS aarch64. Les 5 sommes SHA-256 viennent d'Azul (`gradle/jre.gradle`). Ils embarquent **JavaFX 25.0.4**.
+  - **Vérifié** : les 5 archives ont été téléchargées et vérifiées par `downloadAndExtractJREs` ; `JAVA_VERSION="25.0.4.1"` et `javafx.version=25.0.4` dans chacune. La disposition macOS (`Contents/Home`) est prise en charge par la correction de l'étape 10.
+- **Bytecode** : `options.release = 25` (class version 69, vérifiée). Le message explicite demande un JDK 25 si Gradle tourne sur un JDK plus ancien.
+- **API JavaFX de compilation et des tests : reste en 21.0.13.** Il n'existe pas de Monocle 25 (la 21.0.2 est la plus récente), et les tests sans fenêtre en dépendent. JavaFX 21 tourne sous Java 25 : c'est vérifié par la suite complète. Les utilisateurs reçoivent JavaFX 25.0.4.
+- **CI** : JDK 25 dans tous les jobs ; matrice de tests **25 et 26** (Java 26 est la dernière version publiée, pour voir venir les changements).
+- **Bugs révélés par Java 25 et corrigés.** Depuis JDK 25, `new File("")` désigne le dossier courant et `exists()` renvoie vrai :
+  - **écran des profils** : un profil sans image (valeur vide) faisait échouer l'écran, avec `AccessDeniedException` en ouvrant le dossier courant comme une image, sous Windows. 10 tests de `UserProfileContextTest` échouaient. Correction : valeur vide ignorée, `isFile()` ;
+  - **musique** : un dossier de musique vide (par exemple un ancien réglage `MUSIC_FOLDER=`) aurait fait **parcourir récursivement tout le dossier courant**. Correction : valeur vide ignorée ;
+  - **feuille de style personnalisée** (`CssUtil`) : une valeur vide aurait été prise pour un fichier existant. Correction : valeur vide ignorée, `isFile()` ;
+  - tests de non-régression : `UserProfileContextTest.shouldGetDefaultProfilePictureForAnEmptyValueOrAFolder` et `BackgroundMusicManagerTest.shouldIgnoreAnEmptyAudioFolder`.
+  - **Leçon** : sous Linux, ouvrir un dossier en lecture ne lève pas d'exception. Le bug n'apparaissait que sous Windows, d'où l'intérêt des tests locaux sous Windows en plus de la CI Linux.
+- **Vérifié en local** (JDK Zulu 25.0.4.1, Windows 11) :
+  - suite complète **397 tests, 0 échec** ; `smokeTest` 2/2 ; SpotBugs 4.10.5 vert sur le bytecode 25 ;
+  - `windowsDistZip` avec le runtime Zulu 25 FX : lancement réel du menu puis d'un jeu avec le script de la CI, sans erreur.
+- **Impact** :
+  - utilisateurs : la version sans JRE exige **Java 25** (et JavaFX 21 ou plus) ;
+  - développeurs : IntelliJ doit utiliser un **JDK 25**, à la fois comme SDK et comme Gradle JVM.
+- **Non vérifié avant le push** : les tests sous JDK 26, et les distributions Linux et macOS avec Java 25. La CI le dira.
 
 ---
 

@@ -3,8 +3,8 @@
 
 [versions]
 # Oldest JavaFX supported (API of the compilation and of the tests): the no-JRE distribution runs with any JavaFX 21+,
-# the bundled Zulu runtimes ship a newer one (23.0.8 in Zulu 21.0.12.1), see BUILD.MD. JavaFX 17 was left in October
-# 2026, when its free public updates ended
+# the bundled Zulu 25 runtimes ship a newer one, see BUILD.MD. JavaFX 17 was left in October 2026, when its free public
+# updates ended. Not 25.x: there is no Monocle 25 for the window-less tests (21.0.2 is the latest)
 javafx = "21.0.13"
 slf4j = "2.0.20"
 logback = "1.6.5"

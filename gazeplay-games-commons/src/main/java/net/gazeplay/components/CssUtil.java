@@ -29,7 +29,8 @@ public class CssUtil {
         if (configuredBuiltInUiTheme.isPresent()) {
             styleSheetPath = configuredBuiltInUiTheme.get().getStyleSheetPath();
         } else {
-            if (cssfile == null || !new File(cssfile).exists()) {
+            // Blank and isFile(): since Java 25, new File("") is the current folder and exists
+            if (cssfile == null || cssfile.isBlank() || !new File(cssfile).isFile()) {
                 styleSheetPath = BuiltInUiTheme.DEFAULT_THEME.getStyleSheetPath();
             } else {
                 styleSheetPath = cssfile;

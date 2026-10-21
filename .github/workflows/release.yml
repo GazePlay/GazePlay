@@ -35,11 +35,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Set up JDK 21 (Azul Zulu)
+      - name: Set up JDK 25 (Azul Zulu)
         uses: actions/setup-java@v6
         with:
           distribution: 'zulu'
-          java-version: '21'
+          java-version: '25'
           
       - name: Download JREs
         run: |

@@ -10,10 +10,10 @@ plugins {
     alias(libs.plugins.download)
 }
 
-// The code is compiled for Java 21 (options.release below): an older JDK cannot compile it. Clear message instead of
-// "invalid target release: 21" (IntelliJ: Settings > Build Tools > Gradle > Gradle JVM)
-if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)) {
-    throw new GradleException("GazePlay needs a JDK 21 or newer to build, Gradle runs on Java ${JavaVersion.current()} " +
+// The code is compiled for Java 25 (options.release below): an older JDK cannot compile it. Clear message instead of
+// "invalid target release: 25" (IntelliJ: Settings > Build Tools > Gradle > Gradle JVM)
+if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_25)) {
+    throw new GradleException("GazePlay needs a JDK 25 or newer to build, Gradle runs on Java ${JavaVersion.current()} " +
         "(JAVA_HOME, or the Gradle JVM in the settings of IntelliJ)")
 }
 
@@ -121,8 +121,8 @@ subprojects {
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
-        // Bytecode and API of Java 21 (LTS), the Java of all the bundled runtimes, whatever the JDK running the build
-        options.release = 21
+        // Bytecode and API of Java 25 (LTS), the Java of all the bundled runtimes, whatever the JDK running the build
+        options.release = 25
     }
 
     test {

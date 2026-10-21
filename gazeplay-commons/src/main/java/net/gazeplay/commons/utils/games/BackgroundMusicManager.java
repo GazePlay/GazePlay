@@ -119,6 +119,12 @@ public class BackgroundMusicManager {
     public void getAudioFromFolder(String folderPath) {
 
         log.info("audio folder : {}", folderPath);
+        // An empty value (e.g. an old MUSIC_FOLDER= setting) is no folder: since Java 25, new File("") is the current
+        // folder, which would have been searched recursively for music
+        if (folderPath == null || folderPath.isBlank()) {
+            log.warn("no audio folder");
+            return;
+        }
         final File folder = new File(folderPath);
         if (!folder.exists()) {
             // throw new RuntimeException("invalid path for audio folder : " + folderPath);

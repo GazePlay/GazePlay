@@ -38,15 +38,15 @@ Puis sélectionner le projet gazeplay et cloner.
 
 ![clone](AssetsInstallation/clone.png)
 
-## Etape 4 : télécharger le SDK azul-21
+## Etape 4 : télécharger le SDK azul-25
 
-Dans Intellij, il faut télécharger le SDK azul-21.
+Dans Intellij, il faut télécharger le SDK azul-25.
 <br>
 Pour ce faire : file -> project structure -> SDKs -> "+" -> download JDK
 
 ![telechargement azul](AssetsInstallation/DL-azul-FR.png)
 
-Assurez-vous que le projet est bien configuré sur l'azul-21 téléchargé précédemment.
+Assurez-vous que le projet est bien configuré sur l'azul-25 téléchargé précédemment.
 <br> 
 Pour ce faire : file -> project structure -> Project
 
@@ -54,7 +54,7 @@ Pour ce faire : file -> project structure -> Project
 
 ## Etape 5 : Vérifier les paramètres de Gradle
 
-Vérifier que Gradle utilise le JDK Azul 21, sinon changer le. Régler aussi « Build and run using » et « Run tests
+Vérifier que Gradle utilise le JDK Azul 25, sinon changer le. Régler aussi « Build and run using » et « Run tests
 using » sur Gradle : les tests doivent toujours passer par Gradle, qui les isole de votre vrai dossier GazePlay.
 ![gradleSettings](AssetsInstallation/gradleSettings.png)
 

@@ -196,9 +196,11 @@ public class UserProfileContext extends GraphicalContext<BorderPane> {
         ImagePattern imagePattern = new ImagePattern(new Image("data/common/images/DefaultUser.png"));
         final String userPicture = currentUserProfileConfiguration.getUserPicture();
 
-        if (userPicture != null) {
+        // A profile without picture has an empty value: since Java 25, new File("") is the current folder and exists,
+        // and opening it as an image failed (AccessDeniedException on Windows)
+        if (userPicture != null && !userPicture.isBlank()) {
             final File userPictureFile = new File(userPicture);
-            if (userPictureFile.exists()) {
+            if (userPictureFile.isFile()) {
                 try (InputStream is = Files.newInputStream(userPictureFile.toPath())) {
                     imagePattern = new ImagePattern(new Image(is));
                 } catch (final IOException e) {
