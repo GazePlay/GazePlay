@@ -753,6 +753,31 @@ Suite complète **395 tests, 0 échec** (8 tests de moins : ceux des classes sup
 
 ---
 
+## 2p. Étape 15 — Tester ce qui est livré, sur Windows, macOS et Linux (21/10/2026)
+
+**Constat** : les tests compilent et tournent avec JavaFX 17.0.21, alors que les utilisateurs reçoivent JavaFX 23.0.8 (embarqué dans Zulu 21). Seule la distribution Linux était lancée en CI, et seulement jusqu'au menu.
+- La suite unitaire ne peut pas tourner telle quelle sur JavaFX 23 : Monocle 17, qui l'affiche sans fenêtre, dépend des classes internes de JavaFX 17.
+- La vérification fidèle consiste donc à **lancer les vraies distributions avec leur runtime embarqué**.
+
+**Fait** :
+- `.github/scripts/launch-distribution.sh` (Linux, macOS) et `.github/scripts/launch-distribution.ps1` (Windows) démarrent une distribution comme le ferait un utilisateur :
+  - avec son script de lancement, depuis un autre dossier, sans terminal ;
+  - avec un dossier utilisateur isolé (`JAVA_TOOL_OPTIONS=-Duser.home=...`) et en mode souris.
+  
+  Au bout de 40 s, ils vérifient que la JVM tourne encore, que le catalogue des jeux est chargé et qu'aucune exception ni erreur n'a été journalisée (seules les absences de fichiers attendues au premier lancement sont tolérées).
+- `ci.yml` :
+  - `package-linux` utilise le script et lance **le menu puis un jeu** (`--game WhereIsTheShape`) ;
+  - **nouveau `package-windows`** (`windows-latest`) : construit `windowsDistZip` (Zulu 21 FX win_x64), l'extrait, lance le menu puis un jeu ;
+  - **nouveau `package-macos`** (`macos-latest`, Apple Silicon) : construit `macosAarch64DistTar` et fait les mêmes deux lancements.
+- **Vérifié en local sous Windows 11** (vraie archive `windowsDistZip`, runtime embarqué) :
+  - menu : en marche après 30 s, sans erreur ;
+  - jeu direct : idem, code 0, aucune JVM restante ;
+  - **contrôle négatif** : un jeu inexistant (`--game JeuInexistant`) fait bien échouer le contrôle (« GazePlay stopped », code 1).
+  - Piège corrigé au passage : le script se termine explicitement par `exit 0`, sinon `$LASTEXITCODE` resterait vide et le workflow verrait un échec.
+- **Non vérifié avant le push** : les machines GitHub Windows et macOS (affichage, audio) et la distribution macOS Intel (pas de machine x64 dans la CI). Les jobs le diront.
+
+---
+
 ## 9. Reprise à la prochaine session (mise à jour le 21/10/2026, étape 10)
 
 ### 9.1 État exact au moment de la pause
