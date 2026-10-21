@@ -661,6 +661,21 @@ Décisions données le 20/10/2026 :
 
 ---
 
+## 2m. Première exécution de la CI sur GitHub (21/10/2026)
+
+Branche poussée sur `origin/addClaudeCode` à la demande du mainteneur. Seul `ci.yml` se déclenche sur un push : `cd.yml` ne réagit qu'à `master` et `release.yml` se lance à la main. Run 39586962314 :
+- **SpotBugs** : vert.
+- **Tests (JDK 17 et 21, Linux)** : **tous les tests unitaires passent**. Seul `smokeTest`, dans son cas « menu », échoue sur `MediaException: Could not create player!` pour la musique de fond.
+  - **Cause** : sous Linux, JavaFX lit l'audio avec le ffmpeg du système, absent de la machine GitHub.
+  - De plus, le JavaFX 17.0.20 des tests ne gère que ffmpeg 4 et 5 (`libavplugin-ffmpeg-56` à `59`, vérifié dans le jar), alors qu'`ubuntu-latest` (24.04) fournit ffmpeg 6.1.
+  - **Correctif** : job de tests sur `ubuntu-22.04` (ffmpeg 4.4), avec installation de `ffmpeg`. Le test reste strict ; l'erreur n'est pas ajoutée aux erreurs tolérées.
+- **package-linux** : la distribution a été construite et lancée.
+  - **Erreur de ma part** : la vérification isolait le dossier utilisateur avec `HOME=...`, or Java sous Linux prend `user.home` dans la base des comptes, pas dans `$HOME`. GazePlay a donc écrit son journal dans `/home/runner/GazePlay`, le `tail` du journal attendu a échoué et `set -e` a arrêté le script. Le réglage du mode souris n'avait pas été lu non plus.
+  - **Correctif** : `JAVA_TOOL_OPTIONS=-Duser.home=/tmp/gazeplay-home`, `ffmpeg` installé (le runtime livré, avec JavaFX 23, gère ffmpeg 6), et `tail` tolérant pour que le diagnostic s'affiche toujours.
+- **Constat pour les utilisateurs** : sous Linux, la musique et les sons de GazePlay demandent les bibliothèques ffmpeg du système. La distribution Linux (JavaFX 23) gère ffmpeg 4 à 7 environ (`libavplugin-ffmpeg-56` à `62`). La version sans JRE, avec le JavaFX 17 de Maven, ne gère que ffmpeg 4 et 5 : sons muets sur Ubuntu 24.04 (comportement préexistant). **Recommandation** : l'indiquer dans la documentation d'installation Linux (`sudo apt install ffmpeg`).
+
+---
+
 ## 9. Reprise à la prochaine session (mise à jour le 21/10/2026, étape 10)
 
 ### 9.1 État exact au moment de la pause

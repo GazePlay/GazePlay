@@ -29,7 +29,9 @@ jobs:
           path: '**/build/spotbugs/'
 
   test:
-    runs-on: ubuntu-latest
+    # The JavaFX media of the tests (17.0.20) plays audio with the ffmpeg of the system up to ffmpeg 5 (libavcodec 59):
+    # Ubuntu 22.04 has ffmpeg 4.4, Ubuntu 24.04 (ubuntu-latest) ffmpeg 6.1, which it cannot use
+    runs-on: ubuntu-22.04
 
     # 17: bundled runtime and bytecode target; 21: next LTS, to know when the runtime can move (see MODERNIZATION.md)
     strategy:
@@ -47,9 +49,10 @@ jobs:
           distribution: 'zulu'
           java-version: ${{ matrix.java }}
 
-      # JavaFX tests (TestFX ApplicationExtension) need a display
-      - name: Install virtual X server
-        run: sudo apt-get update && sudo apt-get install -y xvfb
+      # JavaFX tests (TestFX ApplicationExtension) need a display; JavaFX media needs the ffmpeg libraries of the system
+      # (without them the background music fails to load and the launch test reports the error)
+      - name: Install virtual X server and ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y xvfb ffmpeg
 
       # Tests are hermetic: Gradle points user.home and the edition file to build/test-home (see build.gradle)
       - name: Run tests
@@ -79,8 +82,9 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Install virtual X server
-        run: sudo apt-get update && sudo apt-get install -y xvfb
+      # The bundled runtime (Zulu 21 with JavaFX 23) plays audio with the ffmpeg of the system (ffmpeg 6 supported)
+      - name: Install virtual X server and ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y xvfb ffmpeg
 
       - name: Build the Linux distribution
         run: |
@@ -94,17 +98,19 @@ jobs:
           echo "EYE_TRACKER=mouse_control" > /tmp/gazeplay-home/GazePlay/GazePlay.properties
           tar -xzf build/distributions/gazeplay-linux-x64-*.tar.gz -C /tmp/gazeplay-dist
           cd /tmp
-          # Started from another folder than bin/, without terminal, with a fresh home: it must still be running after 40 s
+          # Started from another folder than bin/, without terminal, with a fresh home: it must still be running after 40 s.
+          # Java takes user.home from the account database, not from $HOME: it is given through JAVA_TOOL_OPTIONS, read
+          # by the JVM whatever the launcher script
           set +e
-          HOME=/tmp/gazeplay-home timeout 40 xvfb-run --auto-servernum \
+          HOME=/tmp/gazeplay-home JAVA_TOOL_OPTIONS=-Duser.home=/tmp/gazeplay-home timeout 40 xvfb-run --auto-servernum \
             sh /tmp/gazeplay-dist/gazeplay-linux-x64-*/bin/gazeplay-linux.sh --default-user < /dev/null > /tmp/gazeplay.log 2>&1
           status=$?
           set -e
           # The launcher turns the console log off: the log of GazePlay is in its folder
           LOG=/tmp/gazeplay-home/GazePlay/gazeplay.log
-          tail -50 /tmp/gazeplay.log; tail -50 "$LOG"
+          tail -50 /tmp/gazeplay.log; tail -50 "$LOG" || echo "No log in $LOG"
           if [ "$status" != "124" ]; then echo "GazePlay stopped (exit code $status)"; exit 1; fi
           grep -q "Games found : " "$LOG" || { echo "The game catalog was not loaded"; exit 1; }
-          if cat /tmp/gazeplay.log "$LOG" | grep -E "Exception| ERROR " | grep -vE "Failure while loading Properties file|NoSuchFileException|UnixException|at java.base/|ConfigurationSource"; then
+          if cat /tmp/gazeplay.log "$LOG" | grep -E "Exception| ERROR " | grep -vE "NoSuchFileException|UnixException|at java.base/|ConfigurationSource"; then
             echo "Unexpected errors"; exit 1
           fi
