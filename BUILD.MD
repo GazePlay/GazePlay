@@ -1,68 +1,94 @@
-# Build instructions 
-In these instructions, actions performed in the Windows command line are prefixed with `>`, and those on the Unix
-shell are prefixed with `$`. Select the command appropriate for your platform.
+# Build instructions
 
-## How to build the software from source
-Once you have cloned the repository, run the following command:
+Commands are given for the Unix shell (`./gradlew`); on Windows use `gradlew` instead.
+
+## Prerequisites
+
+- A JDK 17 or newer (the CI uses Azul Zulu 17 and 21). The code is compiled for Java 17 (`options.release = 17`)
+  whatever the JDK.
+- Nothing else: the Gradle wrapper (Gradle 9.8.2, checksum pinned in `gradle/wrapper/gradle-wrapper.properties`)
+  downloads Gradle. All versions of libraries and plugins are in [gradle/libs.versions.toml](gradle/libs.versions.toml).
+
+## Compile and test
+
 ```
-> gradlew
-$ ./gradlew
-```
-You may decide to add the `-PSpotBugs=true` flag to check for bugs. This is disabled by default.
-e.g. `gradlew -PSpotBugs=true`
-
-## [Creating a custom JRE](gazeplay-dist/README.md)
-
-## Utilising Spotbugs feature
-You can make Gradle find any potential bugs by running a standard `gradlew` build.
-
-Then, download the [Spotbugs GUI](http://repo.maven.apache.org/maven2/com/github/spotbugs/spotbugs/4.0.0-beta3/spotbugs-4.0.0-beta3.zip) 
-and run the GUI from `/lib/spotbugs.jar`. Open the generated XML file in this software to see where all the potential
-bugs are.
-
-## How to build the software, for distribution
-```
-# Make sure local repository is clean, so that you get the same result as a first time user
-> gradlew clean
-$ ./gradlew clean
-
-# Running the packageApp task will compile all code, generate JAR files for all modules and dependencies, and package
-everything up into Zip and Tar formats.
-> gradlew packageApp
-$ ./gradlew packageApp
+./gradlew compileJava compileTestJava
+./gradlew :gazeplay-results:test :gazeplay-gaze:test :gazeplay-commons:test :gazeplay-games-commons:test :gazeplay-core:test :gazeplay-games:test
 ```
 
-## Distributing JREs
+- The tests are **hermetic**: Gradle points `user.home` and the edition file (`-Dgazeplay.argsFile`) to
+  `build/test-home`, recreated at each run. Do not run them from an IDE with your real home folder: they would read
+  and write `~/GazePlay`.
+- JavaFX runs **without any window** (Monocle). Add `-Pgui` to see the windows while debugging.
+- The test JVMs of the modules run one at a time (concurrent JavaFX test JVMs made the toolkit crash now and then).
+- The video recording tests use `java.awt.Robot` and need a display: on a Linux machine without screen, use
+  `xvfb-run ./gradlew ...`.
 
-There are a number of JRE related tasks in [jre.gradle](../gradle/jre.gradle) that will download a specific JRE from
-[Zulu Community JREs](https://www.azul.com/downloads/zulu-community), that include JavaFX. 
-Each platform has the same tasks; 
-* Download the JRE
-* Unzip the JRE to your Maven local repository
-* Copy the JRE to the build folder when creating distributions.
+Launch smoke test: starts the real application in a child JVM (menu, then a game) and checks that it keeps running
+without error:
 
-Before running `distribution` for the first time, you must run
 ```
-> gradlew downloadAndExtractJREs
-$ ./gradlew downloadAndExtractJREs
+./gradlew :gazeplay-core:smokeTest
 ```
 
-The JREs will be downloaded to your local Maven repository. By default, this will be `/home/user/.m2/repository/jre` on 
-UNIX, and `C:\Users\current user\.m2\repository\jre` on Windows.
+Faster repeated builds while developing: add `--configuration-cache` (supported by compilation and tests; not by the
+packaging tasks, because of the license report plugin).
 
-Any future builds will rely on these folders being present locally. You can always rerun the task to restore your 
-repository.
+Coverage report (JaCoCo): `./gradlew :gazeplay-commons:jacocoTestReport`, then open
+`gazeplay-commons/build/reports/jacoco/test/html/index.html`.
 
-The JRE can then be found in [the build folder](../build/jre) and will be built into the distribution for the relevant OS.
+## Static analysis
 
-## How to release the software, for version tagging in the official SCM and binary distribution
 ```
-# Make sure local repository is clean, so that you get the same result as a first time user
-> gradlew clean
-$ ./gradlew clean
-
-# Run the release task and follow the on-screen instructions. This will fail if any changes haven't been commited or 
-pushed.
-> gradlew release
-$ ./gradlew release
+./gradlew spotbugsMain
 ```
+
+SpotBugs runs on every module and fails the build on any finding; intended exceptions are listed, with their reason, in
+the `spotbugs-exclude.xml` file of each module. PMD (`./gradlew pmdMain`) is configured but fails on many existing
+violations: it is not part of the CI.
+
+## Run GazePlay from the sources
+
+```
+./gradlew run
+./gradlew run --args="--default-user --game WhereIsTheShape --variant DimensionDifficultyGameVariant:2:2:Easy"
+./gradlew run --args="--help"
+```
+
+or run `net.gazeplay.GazePlayLauncher` from the IDE (IntelliJ: see [INTELLIJ.md](INTELLIJ.md), with ready-made run configurations in `.run/`) (the runtime classpath of `gazeplay-core` includes the games).
+This uses your real `~/GazePlay` folder (profiles, settings, results). Options: `--default-user`, `--user <name>`,
+`--game <nameCode>`, `--variant <variant>`, `--width <w> --height <h>`, `--random-game`, `--replayJsonFile <file>` (the AFSR and BERA editions were removed in October 2026).
+
+## Distributions
+
+The distributions bundle a Java runtime: Azul Zulu 21 with JavaFX, 64 bits only (Windows x64, Linux x64, Linux ARM
+aarch64, macOS x64 and Apple Silicon; the 32 bits builds were dropped in October 2026). Download and extract them once:
+
+```
+./gradlew downloadAndExtractJREs
+```
+
+- The archives are cached in `~/.m2/repository/jre` under their own versioned name, and their **SHA-256 is checked**
+  after each download ([gradle/jre.gradle](gradle/jre.gradle)). To change the runtime version, update in the same
+  change the version and all the checksums in `gradle/jre.gradle`.
+- JavaFX: the code is compiled and tested against JavaFX 17 (`javafx` in `gradle/libs.versions.toml`), the oldest
+  version it supports, so that it also runs with the JavaFX of the system (no-JRE distribution). The bundled Zulu
+  runtimes ship a newer JavaFX (23.0.8 in Zulu 21.0.12.1, see `lib/javafx.properties` of the runtime), with their own
+  media plugins: launch a distribution with its runtime after a runtime update.
+- Build one distribution, e.g. `./gradlew windowsDistZip`, `./gradlew linuxDistTar`, `./gradlew noJREDistZip`, or all
+  of them with `./gradlew packageApp`. They are written to `build/distributions`.
+- Each distribution only ships the ffmpeg binary (JAVE, used for the AOI videos) of its own platform.
+- The launch scripts are in `gazeplay-dist/src/main/bin`; the licenses of the shipped libraries are generated by
+  `./gradlew generateLicenseReport` into `build/reports/dependency-license` (included in the distributions).
+
+The Windows installers are built with Inno Setup in Docker: `./gradlew generateWindowsInstallerInDocker`.
+
+## Release
+
+```
+./gradlew clean
+./gradlew release
+```
+
+Follow the on-screen instructions. The release fails if changes are not committed or pushed. The GitHub workflow
+`release.yml` does the same on demand, including the download of the runtimes.
